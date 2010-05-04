@@ -30,12 +30,15 @@ ob_start();?>
 
 <?php if(count($authorities) > 1): ?>
 <h2>Choix de la collectivité</h2>
-
-<ul>
-<?php foreach($authorities as $id=>$name): ?>
-	<li><a href='admin_services.php?authority_id=<?php echo $id?>'><?php echo $name?></a></li>
-<?php endforeach;?>
-</ul>
+	<?php if ( ! $authority_id): ?>
+	<ul>
+	<?php foreach($authorities as $id=>$name): ?>
+		<li><a href='admin_services.php?authority_id=<?php echo $id?>'><?php echo $name?></a></li>
+	<?php endforeach;?>
+	</ul>
+	<?php else : ?>
+		<a href='admin_services.php'>Voir une autre collectivité</a>
+	<?php endif;?>
 <?php endif;?>
 
 <?php if ($authority_id) : ?>

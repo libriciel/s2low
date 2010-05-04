@@ -12,7 +12,7 @@ if (! ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY){
 
 
 $authority = new Authority();
-$authorities = $authority->getAuthoritiesList($where);
+$authorities = $authority->getAllAuthorities();
 
 
 foreach ($authorities as $authority){

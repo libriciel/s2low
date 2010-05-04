@@ -109,7 +109,7 @@
 					<tr>
 						<th>Sélection</th> 
 						<th>Objet</th>
-						<th>Status</th>
+						<th>Statuts</th>
 						<th>Date d'envoi</th>
 						<th>Détail</th>
 					</tr>

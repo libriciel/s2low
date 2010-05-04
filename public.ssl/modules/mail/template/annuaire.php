@@ -12,8 +12,12 @@ function coche_case(value){
 	for (i = 0; i<tab.length; ++i) {
 		tab[i].checked = value;
 	}
+}
 
-
+function retirer(){
+	form = document.getElementById('form_generique');
+	form.groupe_id.value=form.old_groupe_id.value;
+	form.submit();
 }
 -->
 </script>
@@ -47,6 +51,7 @@ endif;?>
  	
  	<!-- <div class='entoure'>  -->
 	  	<form action="index.php?command=annuaire" method="post" id='form_generique'> 	
+	  	<input type='hidden' name='action_h' value=''>
 	 	<div class='actionmail'>
 			<a class='normal' href="ajouter-annuaire.php">Nouveau contact</a>&nbsp;|&nbsp;
 			<a class='normal' href="ajouter-groupe.php">Nouveau groupe</a>&nbsp;|&nbsp;
@@ -55,26 +60,27 @@ endif;?>
 			<?php endif;?>		
 			<a class='normal' href="import_annuaire_result.php">Importer</a>
 			<br/>
-	  		Pour la sélection : <input class="submit_button" value="Supprimer" type="submit" />
+			
+			<br/>
+	  		Actions sur les contacts sélectionnés :
+	  		<br/>
+	  		 <input class="submit_button" value="Supprimer" type="submit" />
 	  		<br/>
 			<?php if (count($groupeArray)) : ?>  	
 			<?php if ($groupe_id) : ?>
+		 		<input class="submit_button" value="Retirer de <?php echo $groupe_name ?>" type="submit" onclick='javascript:retirer();'/>
 				<input type='hidden' name='old_groupe_id' value='<?php echo $groupe_id?>' />
 			<?php endif;?>	
+			<br/>
 			<select name='groupe_id' id='select_group' onchange='javascript:onChangeGroupSelect()'>
-				<option value='0'>Groupe ... </option>
-				<optgroup label="Ajouter à">
+				<option value='0'>Ajouter à ... </option>
 				<?php foreach($groupeArray as $groupe):?>
 		 			<option value='<?php echo $groupe['id'] ?>'><?php echo $groupe['name'] ?></option>
 		 		<?php endforeach?>
-		 		</optgroup>
-		 		<?php if ($groupe_id) : ?>
-		 		<optgroup label="Supprimer de">
-		 			<option value='<?php echo $groupe_id ?>'><?php echo $groupe_name ?></option>
-		 		</optgroup>
-		 		<?php endif;?>
 			</select>
+			<br/>
 			
+	
 			<noscript>
 				<input type='submit' value='changement de groupe'/>
 			</noscript>

@@ -33,14 +33,19 @@ class ServiceUser {
 	
 	function getPossibleParent($authority_id,$service_id){
 		$result = array();
+		
+		$enfant = array($service_id);
+		do {
+			$old_enfant = $enfant;
+			$enfant = $this->getServiceEnfant($old_enfant);
+		} while($enfant != $old_enfant);
+			
 		$allService = $this->getServiceUser($authority_id);
 		foreach($allService as $service){
-			if ($service['id'] == $service_id){
+			if (in_array($service['id'],$enfant)){
 				continue;
 			}
-			if ($service['parent_id'] == $service_id){
-				continue;
-			}
+			
 			$result[] = $service;
 		}
 		return $result;
@@ -111,7 +116,6 @@ class ServiceUser {
 	public function getAllEnfant($id_service){
 		$sql = "SELECT service_user.* FROM service_user WHERE parent_id = $id_service";
 		return $this->db->fetchAll($sql);
-		
 	}
 	
 	function areCollegues($id_user1,$id_user2){

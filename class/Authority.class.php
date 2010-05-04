@@ -412,6 +412,11 @@ class Authority extends DataObject {
     return $this->data;
   }
   
+  
+  public function getAllAuthorities(){
+  	return $this->db->fetchAll("SELECT id,name,siren FROM authorities");
+  }
+  
 
   /**********************/
   /* Méthodes statiques */
