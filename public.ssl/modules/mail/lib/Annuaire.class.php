@@ -1,0 +1,159 @@
+<?php 
+require_once(SITEROOT . "/class/FileUploader.class.php");
+require_once(SITEROOT . "/class/Mailer.class.php");
+require_once(SITEROOT . "/class/Database.class.php");
+
+require_once(dirname(__FILE__)."/../om/mail_annuaire.class.php");
+
+
+class Annuaire {
+	
+	private $tabError;
+	private $tabOK;
+	private $tabAlreadyExist;
+	
+	private $authority_id;
+	
+	private $bd;
+	
+	public function __construct(Database $bd,$authority_id){
+		$this->tabError = array();
+		$this->tabOk = array();
+		$this->tabAlreadyExist = array();
+		$this->authority_id = $authority_id;
+		$this->bd = $bd;
+	}
+	
+	public function mailExists($email){
+		$sql = "SELECT * FROM mail_annuaire WHERE mail_address='$email' AND authority_id=".$this->authority_id;
+		$result = $this->bd->select($sql);
+		return $result->num_row();		
+	}
+	
+	public function import(FileUploader $uploader){
+		while($res = $uploader->getLigne()){
+			$this->traiteLigne($res);
+		}
+	}
+	
+	private function traiteLigne($ligne){
+		$ligne_array = explode(',',$ligne);
+		if (count($ligne_array) < 2){
+			$this->tabError[] = $ligne;
+			return false;
+		}
+		$description = trim($ligne_array[0]);
+		$email = trim($ligne_array[1]);
+		
+		$groupe_name = "";
+		if (isset($ligne_array[2])) {
+			$groupe_name = trim($ligne_array[2]);
+		}
+		$mailer = new Mailer();
+		if (! $mailer->isValidMail($email)){
+			$this->tabError[] = $ligne;
+			return false;
+		}
+		$chaine = "$description &lt;$email&gt";
+		
+		if ($this->mailExists($email)){
+			$this->tabAlreadyExist[] = $chaine;
+			return false;
+		}
+		
+		$id_user = $this->saveAnnuaire($email,$description);
+		
+		
+		$this->tabOK[] = $chaine;		
+		
+		if ($groupe_name){
+			$this->addUserToGroupe($id_user,$groupe_name);			
+		}
+	}
+	
+	private function addUserToGroupe($id_user,$groupeName){
+		$groupe = new GroupeMail();
+		$id_groupe = $groupe->getGroupeIdFromName($groupeName,$this->authority_id);
+		if (! $id_groupe){
+			$groupe->set("authority_id",$this->authority_id);
+			$groupe->set('name',$groupeName);
+			$id_groupe = $groupe->save(false);				
+		}
+		$groupe = new GroupeMail($id_groupe);
+		$groupe->addUser($id_user);
+	}
+	
+	private function saveAnnuaire($email,$description){
+		$annuaire=new mail_annuaire();
+  		$annuaire->set("mail_address",$email);
+  		$annuaire->set("description",$description);
+  		$annuaire->set("authority_id",$this->authority_id);
+  		$annuaire->save(false);
+  		return $annuaire->getId();
+	}
+	
+	public function getTabError(){
+		return $this->tabError;
+	}
+		
+	public function getTabOK(){
+		return $this->tabOK;
+	}
+	
+	public function getTabAlreadyExist() {
+		return $this->tabAlreadyExist;
+	}
+	
+	public function getNbContact(){
+		$sql = "SELECT count(*) as nb FROM mail_annuaire WHERE authority_id=".$this->authority_id;
+		$result = $this->bd->select($sql);
+		$ligne = $result->get_next_row();
+		return $ligne['nb'];
+		
+	}
+	
+	public function getListeMailAndGroupe($begin){
+		$tabMail = array();
+		
+		$sql = "SELECT name FROM mail_groupe WHERE name ILIKE '$begin%' AND authority_id=".$this->authority_id . " ORDER BY name";
+		$result = $this->bd->select($sql);
+		while ($row = $result->get_next_row()) {
+			$tabMail[] = $row['name'] . " (groupe)";
+		}
+			
+		$sql = "SELECT description,mail_address FROM mail_annuaire ".
+				" WHERE (mail_address ILIKE '$begin%' OR description ILIKE '$begin%') AND authority_id =".$this->authority_id .
+				" ORDER by description,mail_address";
+		$result = $this->bd->select($sql);
+		while ($row = $result->get_next_row()) {
+			if ($row['description']){
+				$tabMail[] = '"'.$row['description'] . '" ['.$row['mail_address'].']';
+				//$tabMail[] = $row['mail_address'] . $row['description'];
+			} else {
+				$tabMail[] = $row['mail_address'];
+			}			  	
+		}
+		return $tabMail;
+	}
+	
+	public function getAllMail(){
+		$result = array();
+		$sql = 	"SELECT * FROM mail_annuaire ".
+				" LEFT JOIN mail_user_groupe ON mail_annuaire.id=mail_user_groupe.id_user " .
+				//" LEFT JOIN mail_groupe ON mail_user_groupe.id_groupe = mail_groupe.id".
+				" WHERE mail_annuaire.authority_id=".$this->authority_id;	
+		foreach ($this->bd->fetchAll($sql) as $info){
+			//print_r($info);
+			if (empty($result[$info['id']])){
+				$result[$info['id']] = $info;
+				$result[$info['id']]['groupe'] = array();
+				if ($info['id_groupe']){
+					$result[$info['id']]['groupe'][] = $info['id_groupe'];
+				} 
+			} else {
+				$result[$info['id']]['groupe'][] = $info['id_groupe'];
+			}
+		}
+		return $result;
+	}
+}

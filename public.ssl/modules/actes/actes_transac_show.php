@@ -1,0 +1,486 @@
+<?php
+
+
+/*
+ * TéDéTIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ *
+ * contact@alternancesoft.com
+ *
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
+ *
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusÃctes©e par le CEA, le CNRS et l'INRIA 
+ * sur le site "http://www.cecill.info".
+ *
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ *
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ *
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
+ * termes.
+*/
+?>
+<?php
+
+/**
+ * \file actes_transac_show.php
+ * \brief Page d'affichage d'une transaction Actes
+ * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \date 27.07.2006
+ * 
+ *
+ * Cette page affiche les détails d'une transaction Actes et 
+ * permet de demander son annulation et de la valider
+ *
+ * Modifications :
+ * Auteur   Date       Commentaire
+ *
+ */
+
+// Configuration
+require_once ("../../../config/config.php");
+require_once (SITEROOT . '/class/include.class.php');
+require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
+require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesPermission.class.php');
+
+
+// Instanciation du module courant
+$module = new Module();
+if (!$module->initByName("actes")) {
+  $_SESSION["error"] = "Erreur d'initialisation du module";
+  header("Location: " . WEBSITE_SSL);
+  exit ();
+}
+
+$me = new User();
+
+if (!$me->authenticate()) {
+  $_SESSION["error"] = "Échec de l'authentification";
+  header("Location: " . WEBSITE);
+  exit ();
+}
+
+if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+  $_SESSION["error"] = "Accès refusé";
+  header("Location: " . WEBSITE_SSL);
+  exit ();
+}
+
+$id = Helpers :: getVarFromGet("id");
+if (empty($id) ){
+	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+	exit ();
+}
+
+
+$trans = new ActesTransaction();
+$trans->setId($id);
+if ( ! $trans->init()) {
+    $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit ();
+}
+
+$envelope = new ActesEnvelope($trans->get("envelope_id"));
+$envelope->init();
+
+$owner = new User($envelope->get("user_id"));
+$owner->init();
+
+$serviceUser = new ServiceUser(DatabasePool::getInstance());
+$permission = new ActesPermission($serviceUser);
+
+if ( ! $permission->canView($me,$owner)){
+	$_SESSION["error"] = "Accès refusé";
+	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+	exit ();
+}
+
+$myAuthority = new Authority($me->get("authority_id"));
+$transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
+
+
+$transactionTypes = $trans->get("transactionTypes");
+$transStatus = $trans->getCurrentStatus();
+
+$doc = new HTMLLayout();
+
+$doc->setTitle("Tedetis : visualisation d'une transaction");
+
+$doc->buildMenu($me);
+
+
+$html .= "<div id=\"content\">\n";
+
+$html .= "<p style='text-align:center'><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+
+$html .= "<h2>Visualisation d'une transaction</h2>\n";
+$html .= "<div class=\"data_table\">\n";
+$html .= "<table class=\"data\">\n";
+$html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
+$html .= $doc->getHTMLArrayline("Dossier suivie par", htmlspecialchars($owner->get("givenname") . " " . $owner->get("name")));
+
+// Contenu différent en fonction du type de transaction
+switch ($trans->get("type")) {
+  case 1 :
+    $html .= $doc->getHTMLArrayline("Nature de l'acte", $transNatures[$trans->get("nature_code")]);
+    $html .= $doc->getHTMLArrayline("Numéro de l'acte", htmlspecialchars($trans->get("number")));
+    $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
+    $html .= $doc->getHTMLArrayline("Objet", nl2br(htmlspecialchars($trans->get("subject"))));
+    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières", htmlspecialchars($trans->get("classification")));
+    $html .= $doc->getHTMLArrayline("Identifiant unique", htmlspecialchars($trans->get("unique_id")));
+
+    $arch_url = $trans->get("archive_url");
+
+    if (!empty ($arch_url)) {
+      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . htmlspecialchars($trans->get("archive_url")) . "</a>";
+    } else {
+      $url = "Non définie";
+    }
+    $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
+
+    if ($trans->get("broadcasted") == 't')
+      $notification = "Notifiée à " . $trans->get("broadcast_emails");
+    else
+      $notification = "Non notifiée";
+    $html .= $doc->getHTMLArrayline("Notification", $notification);
+    break;
+    
+  case 2 :
+  case 3 :
+  case 4 :
+  case 5 : 
+    $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
+    $related_trans->init();
+    
+    
+    $html .= $doc->getHTMLArrayline("Date de réception du document :  ", $related_trans->get("decision_date"));
+    
+    if ($related_trans->get("related_transaction_id")){
+		    	
+    	$files = $related_trans->fetchFilesList();
+		foreach ($files as $file) {
+    		$html .= $doc->getHTMLArrayline("Document reçu :  ",
+    			"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>"
+    	 	);
+		}
+    	
+    	$related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
+        $related_trans->init();	
+		$html .= $doc->getHTMLArrayline("Date d'envoie :  ", $related_trans->get("decision_date"));
+		$html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");		
+		
+    } else {
+    	  $html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
+    }
+	
+    
+    
+    break;
+    
+  case 6 :
+    $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
+    $related_trans->init();
+
+    $html .= $doc->getHTMLArrayline("Acte à annuler", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>");
+    break;
+
+  case 7 :
+
+    break;
+}
+
+$html .= "</table>\n";
+$html .= "</div>\n";
+$html .= "<br />\n";
+
+// Fichier archive présent ou non ?
+$status = $trans->getCurrentStatus();
+$archiveDeleted = false;
+/*if ($trans->get("type") != 1 || $status > 4 || $status <= 0) {
+  $archiveDeleted = true;
+}*/
+if ($trans->get("type") == 6 ||
+ 	$trans->get("type") == 7 ||
+ 	 $status <= 0 || 
+ 	 $status == 5 ||
+ 	 $status == 6 
+ 	 ) {
+	$archiveDeleted = true;
+}
+// Fichiers contenus dans la transaction
+$html .= "<h3>Fichiers contenus dans l'archive transmise (";
+
+$archiveName = htmlspecialchars(basename($envelope->get("file_path")));
+$html .= ($archiveDeleted) ? $archiveName : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
+
+$html .= ")</h3>\n";
+$html .= "<div class=\"data_table\">\n";
+$html .= "<table class=\"file_list\">\n";
+$html .= " <tr>\n";
+$html .= "  <th>Fichier</th>\n";
+$html .= "  <th>Type de fichier</th>\n";
+$html .= "  <th>Taille du fichier</th>\n";
+$html .= " </tr>\n";
+
+$files = $trans->fetchFilesList();
+
+if (is_array($files)) {
+  foreach ($files as $file) {
+    $html .= " <tr>\n";
+    $html .= "  <td class=\"long_field\">";
+
+    $html .= "<dl>\n";
+
+    if (strlen($file["posted_filename"]) > 0) {
+      $html .= "<dt>Nom original&nbsp;:</dt>\n";
+      $html .= "<dd>";
+
+      if ($archiveDeleted){
+		$html .=  $file["posted_filename"];
+      } else {
+            $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>" ; 
+            $html .= "&nbsp;&nbsp;";
+            $html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
+			$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+            $html .= "</dd>";
+      }
+     }
+
+    $html .= "<dt>Nom métier&nbsp;:</dt>\n";
+    $html .= "<dd>";
+
+    if (strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
+      $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["name"] . "</a>";
+    } else {
+      $html .= $file["name"];
+    }
+
+    $html .= "</dd>";
+    $html .= "</dl>\n";
+    $html .= "</td>\n";
+    $html .= "  <td>" . $file["mimetype"] . "</td>\n";
+    $html .= "  <td>" . $file["size"] . " octets</td>\n";
+    $html .= " </tr>\n";
+  }
+} else {
+  $html .= " <tr>\n";
+  $html .= "  <td colspan=\"3\">Pas de fichier trouvé</td>";
+  $html .= " </tr>\n";
+}
+
+$html .= "</table>\n";
+$html .= "</div>\n";
+// Affichage du Workflow
+$workflow = $trans->fetchWorkflow();
+$status = ActesTransaction :: getStatusList();
+
+$html .= "<h3>Cycle de vie de la transaction</h3>\n";
+
+if (count($workflow) > 0) {
+  $html .= "<div class=\"data_table\">\n";
+  $html .= "<table class=\"workflow_list\">\n";
+  $html .= " <tr>\n";
+  $html .= "  <th>État</th>\n";
+  $html .= "  <th>Date</th>\n";
+  $html .= "  <th>Message</th>\n";
+  $html .= " </tr>\n";
+
+  
+  
+     // modifié par TH 18-04-2008 ajouter un petit icon de pdf lien ver le ficher .pdf qund on est bien sur 
+    // etat="aquitement reçu.
+  	$create_pdf_html.="<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
+	$create_pdf_html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+	
+	//---fin de modification
+	
+  foreach ($workflow as $stage) {
+    $html .= " <tr>\n";
+
+    //modified by TH 18-04-2008
+	//---------begin
+
+	//$id = Helpers :: getVarFromGet("id"); with this identifier, we can easily findout all the infomation in the acte.
+
+	
+   if ($status[$stage["status_id"]]=="Acquittement reçu" )
+    {
+    	
+    	$html .= "  <td>" . $status[$stage["status_id"]].$create_pdf_html."</td>\n";
+    }
+    else
+    	$html .= "  <td>" . $status[$stage["status_id"]] . "</td>\n";
+    	
+	//---------end
+ 
+    $html .= "  <td>" . Helpers :: getDateFromBDDDate($stage["date"], true) . "</td>\n";
+    $html .= "  <td class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
+    $html .= " </tr>\n";
+  }
+
+  $html .= "</table>\n";
+  $html .= "</div>\n";
+} else {
+  $html .= "Le cycle de vie est vide pour cette transaction.\n";
+}
+
+$courrier = $trans->getCourrierInfo();
+if (count($courrier) != 0){
+	$html .= "<h3>Document reçu relatif à l'acte</h3>\n";
+	 $html .= "<div class=\"data_table\">\n";
+  $html .= "<table class=\"workflow_list\">\n";
+  $html .= " <tr>\n";
+  $html .= "  <th>Type</th>\n";
+  $html .= "  <th>sens</th>\n";
+  $html .= "  <th>action</th>\n";
+  $html .= " </tr>\n";
+	foreach ($courrier as $id=>$info) {
+		  $html .= " <tr>\n";
+  		$html .= "  <td>".$transactionTypes[$info["type"]]."</td>\n";
+  		$html .= "  <td>".$info["sens"]."</td>\n";
+  		$html .= "  <td>
+  		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" .$id . "\"><img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"> </a></td>\n";
+  		$html .= " </tr>\n";
+	}
+	
+  $html .= "</table>\n";
+  $html .= "</div>\n";
+	
+}
+
+
+if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWrite($me,$owner) ) {
+  $actionHtml = "";
+
+  // Formulaire de notification a posteriori
+  // Affichés quand la transaction a été acquittée par le MIAT et non notifiée
+  if ($trans->get("type") == 1 && $transStatus == 4 && $trans->get("broadcasted") == 'f') {
+    // adresses emails de diffusion
+    
+
+    $org = new Authority($me->get("authority_id"));
+    $broadcast_email = $org->get("default_broadcast_email");
+    if ($broadcast_email != NULL) {
+      $broadcast_email .= ",";
+      $defaut = true;
+    } else
+      $defaut = false;
+
+    $broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
+    $broadcast_email = explode(",", $broadcast_email);
+
+    $actionHtml .= "<div class=\"action\">\n";
+    $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_notify.php\" method=\"post\">\n";
+    $actionHtml .= "<p><input type=\"submit\" class=\"submit_button\" value=\"Notifier la transaction\" /><br/>\n";
+    $actionHtml .= "      <label>Emission des documents sources : <input type=\"checkbox\" class=\"checkbox\" name=\"send_sources\" checked='checked' /></label><br/>\n";
+
+    foreach ($broadcast_email as $email) {
+      if ($defaut) {
+        $checked = 'checked="checked"';
+        $defaut = false;
+      } else
+        $checked = '';
+      if ($email != "" && $email != NULL)
+        $actionHtml .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+    }
+    $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+    $actionHtml .= "</p></form>\n";
+    $actionHtml .= "</div>\n";
+  }
+}
+// Boutons de cloture de la transaction
+// Affichés quand la transaction a été acquittée par le MIAT
+if ($trans->get("type") == 1 && $transStatus == 4) {
+  
+	if ($trans->canValidate()) {
+		$actionHtml .= "<div class=\"action\">\n";
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
+		$actionHtml .= "<p>Acte validé par le ministère&nbsp;:&nbsp;";
+		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+		$actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
+		$actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Validée&nbsp;»\" />\n";
+		$actionHtml .= "</p></form>\n";
+		$actionHtml .= "</div>\n";
+	}
+  
+  $actionHtml .= "<div class=\"action\">\n";
+  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
+  $actionHtml .= "<p>Acte refusé par le ministère&nbsp;:&nbsp;";
+  $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+  $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
+  $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
+  $actionHtml .= "</p></form>\n";
+  $actionHtml .= "</div>\n";
+}
+
+// Bouton d'annulation en fonction du type et de l'état
+// Doit être une transaction de transmission d'acte
+// et être dans l'état Acquittement reçu
+if ($trans->get("type") == 1 && $transStatus == 4) {
+  $actionHtml .= "<div class=\"action\">\n";
+  if (!$trans->hasPendingCancelTrans()) {
+    if ($module->getParam("paper") == "on") {
+      $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode «&nbsp;papier&nbsp;» actif. Pas d'annulation possible.</label>";
+    } else {
+      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n";
+      $actionHtml .= "<p>Annulation&nbsp;:&nbsp;";
+      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"bouton-danger\" />\n";
+      $actionHtml .= "</p></form>\n";
+    }
+  } else {
+    $actionHtml .= "Une demande d'annulation est en cours pour cet acte.";
+  }
+  $actionHtml .= "</div>\n";
+}
+
+// Boutons de réponse à un courrier
+
+if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5) {
+      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
+      $actionHtml .= "<p>Répondre &nbsp;:&nbsp;";
+      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"bouton-danger\" />\n";
+      $actionHtml .= "</p></form>\n";
+}
+
+
+if ($transStatus > 3) {
+  $actionHtml .= "<div class=\"action\">\n";
+  $actionHtml .= "Horodatage : <a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $logEntry["id"] . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
+  $actionHtml .= "</div>\n";
+}
+
+if (isset($actionHtml) && $permission->canWrite($me,$owner)) {
+  $html .= "<h3>Actions</h3>\n";
+  $html .= $actionHtml;
+}
+
+$html .= "</div>\n";
+
+$doc->addBody($html);
+
+$doc->buildFooter();
+
+$doc->display();
+?>

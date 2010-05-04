@@ -1,0 +1,1674 @@
+<?php
+
+
+/*
+ * TéDéTIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ *
+ * contact@alternancesoft.com
+ *
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
+ *
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+ * sur le site "http://www.cecill.info".
+ *
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ *
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ *
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
+ * termes.
+*/
+?>
+<?php
+
+
+/**
+ * \class ActesTransaction ActesTransaction.class.php
+ * \brief Cette classe permet de gérer les transactions ACTES
+ * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \date 27.07.2006
+ * 
+ *
+ * Cette classe fournit des méthodes de gestion des transactions
+ * Actes
+ *
+ * Modifications :
+ * Auteur   Date       Commentaire
+ *
+ */
+
+require_once (SITEROOT . "/class/DataObject.class.php");
+require_once (SITEROOT . "/class/Parapheur.class.php");
+require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
+
+class ActesTransaction extends DataObject {
+	
+	//Constante pour les messages 3 et 4
+	const TYPE_REFUS = 3;
+	const TYPE_ENVOIE = 4;
+	
+  protected $objectName = "actes_transactions";
+
+  protected $envelope_id;
+  protected $type;
+  protected $related_transaction_id;
+  protected $nature_code;
+  protected $nature_descr;
+  protected $subject;
+  protected $number;
+  protected $classif1;
+  protected $classif2;
+  protected $classif3;
+  protected $classif4;
+  protected $classif5;
+  protected $classification;
+  protected $classification_date;
+  protected $decision_date;
+  protected $unique_id;
+  protected $archive_url;
+  protected $broadcasted;
+  protected $broadcast_send_sources;
+  protected $broadcast_emails;
+  
+  protected $type_reponse; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
+
+  public $files = array ();
+  private $fileNameSerial;
+
+  protected $related_transaction;
+
+  protected $last_classification_date;
+
+  protected $xmlFileName;
+  protected $xmlFilesize;
+  protected $xmlObj;
+
+  private $workflow = array ();
+
+  protected $rootDir;
+  protected $destDir;
+
+  protected $dbFields = array (
+    "envelope_id" => array (
+      "descr" => "Identifiant enveloppe",
+      "type" => "isInt",
+      "mandatory" => true
+    ),
+    "type" => array (
+      "descr" => "Type de transaction",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+    "related_transaction_id" => array (
+      "descr" => "Transaction reliée",
+      "type" => "isInt",
+      "mandatory" => false
+    ),
+    "nature_code" => array (
+      "descr" => "Nature de l'acte",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+    "nature_descr" => array (
+      "descr" => "Description nature de l'acte",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+    "subject" => array (
+      "descr" => "Objet de l'acte",
+      "type" => "isString",
+      "maxlength" => 499,
+      "mandatory" => true
+    ),
+    "number" => array (
+      "descr" => "Numéro de l'acte",
+      "type" => "isString",
+      "maxlength" => 15,
+      "mandatory" => true,
+      "regexp" => '/^[0-9A-Z][0-9A-Z_]*[0-9A-Z]$/',
+      "regexp_txt" => "ne peut contenir que des chiffres, des lettres en majuscules et _"
+    ),
+    "classification" => array (
+      "descr" => "Classification matières/sous-matières",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+    "classification_date" => array (
+      "descr" => "Date classification matières/sous-matières utilisée",
+      "type" => "isDate",
+      "mandatory" => true
+    ),
+    "decision_date" => array (
+      "descr" => "Date de la décision",
+      "type" => "isDate",
+      "mandatory" => true
+    ),
+    "unique_id" => array (
+      "descr" => "Identifiant unique",
+      "type" => "isString",
+      "mandatory" => false
+    ),
+    "archive_url" => array (
+      "descr" => "URL d'accès à l'archive",
+      "type" => "isString",
+      "maxlength" => 1023,
+      "mandatory" => false
+    ),
+    "broadcast_send_sources" => array (
+      "descr" => "Joindre ou non les sources à la notification",
+      "type" => "isString",
+      "maxlength" => 1023,
+      "mandatory" => false
+    ),
+    "broadcast_emails" => array (
+      "descr" => "Liste des destinataires de la notification",
+      "type" => "isString",
+      "maxlength" => 1023,
+      "mandatory" => false
+    ),
+    "broadcasted" => array (
+      "descr" => "Indique si la notification a été effectuée",
+      "type" => "isString",
+      "maxlength" => 1023,
+      "mandatory" => false
+    )
+  );
+
+  protected $transactionTypes = array (
+    "1" => "Transmission d'actes",
+  	"2" => "Courrier simple",
+  	"3" => "Demande de pièces complémentaires",
+  	"4" => "Lettre d'observation",
+  	"5" => "Déféré au Tribunal Administratif",
+    "6" => "Annulation",
+    "7" => "Demande de classification"
+  );
+
+  /**
+   * \brief Constructeur d'une transaction
+   * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   */
+  public function __construct($id = false) {
+    parent :: __construct($id);
+
+    $this->fileNameSerial = 1;
+  }
+
+  /**
+   * \brief Méthode initialisant l'entité avec l'identifiant courant
+   * \return true si succès, false sinon
+  */
+  public function init() {
+    if (!parent :: init()) {
+      return false;
+    }
+
+    // Traitement des codes matières
+    $classif = explode(".", $this->classification);
+
+    for ($i = 1; $i <= 5; $i++) {
+      if (isset ($classif[$i-1])) {
+        $cl = "classif" . $i;
+        $this-> $cl = $classif[$i-1];
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode permettant de fixer la valeur d'un attribut
+   * \param $name chaîne : Nom de l'attribut
+   * \param $val : valeur de l'attribut
+  */
+  public function set($name, $val) {
+    switch ($name) {
+      case "decision_date" :
+      case "classification_date" :
+        if (!preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $val)) {
+          return false;
+        }
+        /*$year = substr($val, 0, 4);
+        $month = substr($val, 5, 2);
+        $day = substr($val, 8, 2);
+        
+        $val = mktime(12, 0, 0, $month, $day, $year);*/
+        break;
+      case "destDir" :
+        parent :: set("rootDir", ACTES_FILES_UPLOAD_ROOT);
+        break;
+    }
+
+    parent :: set($name, $val);
+  }
+
+  /**
+   * \brief Méthode vérifiant qu'aucune autre transaction n'a le même numéro interne pour la collectivité
+   * \param $authority_id entier : Identifiant de la collectivité concernée
+   * \return True si la transaction est unique, false sinon
+  */
+  public function isUnique($authority_id) {
+    if (isset ($this->number)) {
+      $sql = "SELECT actes_transactions.id FROM actes_transactions LEFT JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id LEFT JOIN users ON actes_envelopes.user_id=users.id WHERE actes_transactions.number='" . $this->number . "' AND users.authority_id=" . $authority_id;
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError()) {
+        if ($result->num_row() > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+
+  /**
+   * \brief Méthode d'obtention de l'état courant d'un transaction
+   * \return L'identifiant de l'état courant de la transaction
+   */
+  public function getCurrentStatus() {
+    if (isset ($this->id) && !empty ($this->id)) {
+      $sql = "SELECT status_id FROM actes_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM actes_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $this->id . " ORDER BY atw.id DESC LIMIT 1";
+
+      //$sql = "SELECT atw.status_id FROM actes_transactions at LEFT JOIN actes_transactions_workflow atw ON at.id=atw.transaction_id WHERE at.id=" . $this->id . " ORDER BY atw.date DESC LIMIT 1";
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError()) {
+        $row = $result->get_next_row();
+        return $row["status_id"];
+      }
+
+      return false;
+    }
+  }
+  /**
+   * \brief Méthode permettant de récuperer l'enveloppe de retour si elle existe
+   * \param $status_id entier : l'enveloppe attaché au status de la transaction 
+   * \return le flux XML de retour
+   */
+	public function getFluxRetour($status_id) {
+		$sql = "SELECT flux_retour FROM actes_transactions_workflow" .
+				" WHERE transaction_id = " . $this->id . 
+				" AND status_id = $status_id";
+	    $result = $this->db->select($sql);
+
+		if (!$result->isError()) {
+        	$row = $result->get_next_row();
+        	return $row["flux_retour"];
+      	}
+      	return false;
+	}
+
+
+  /**
+   * \brief Méthode qui détermine si une transaction est considérée comme étant fermée
+   * \return L'identifiant de l'état courant de la transaction
+   */
+  public function isClose() {
+    $currentStatus = $this->getCurrentStatus();
+    if ($currentStatus <= 0 || ($this->type == 7 && $currentStatus > 2) || ($this->type != 7 && $currentStatus > 4)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Méthode pour déterminer si la transaction est déjà passée par un état donné
+   * \return True si la transaction est passé par cet état, false sinon
+   */
+  public function hasStatus($status_id) {
+    if (isset ($this->id) && !empty ($this->id)) {
+      $sql = "SELECT id FROM actes_transactions_workflow atw WHERE atw.status_id=" . $status_id . " AND atw.transaction_id=" . $this->id;
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError() && $result->num_row() == 1) {
+        return true;
+      }
+
+      return false;
+    }
+  }
+
+  /**
+   * \brief Méthode qui positionne une transaction dans un état spécifié
+   * \param $new_status_id entier : Identifiant du nouveau statut à positionner
+   * \param $message chaîne : Message accompagnant le changement d'état
+   * \return True en cas de succès, false sinon
+   */
+  public function setNewStatus($new_status_id, $message) {
+    $date = date("Y-m-d H:i:s");
+    $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message) VALUES(" . $this->id . ", " . $new_status_id . ", '" . $date . "', '" . addslashes($message) . "')";
+
+    if (!$this->db->exec($sql)) {
+      $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+  * \brief Méthode qui positionne les éléments relatifs à une notification manuelle
+  * \param $emails chaîne : emails des destinataires
+  * \param $send_sources entier : Envoi des fichiers sources (0/1)
+  * \return True en cas de succès, false sinon
+  */
+  public function setNotification($emails, $send_sources) {
+    $sql = "UPDATE actes_transactions SET broadcast_send_sources = " . $send_sources . ", broadcast_emails = '" . $emails . "' WHERE id = " . $this->id;
+
+    if (!$this->db->exec($sql)) {
+      $this->errorMsg = "Erreur lors de la définition des paramètres de notification.";
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode retournant un nom de fichier (non enveloppe) formaté au standard de la transmission Actes
+   * \param $env ActesEnvelope : Object enveloppe correspondant
+   * \param $use_serial boolean (optionnel) : Ajouter le numéro de série à la fin du nom de fichier puis l'incrémenter (true par défaut)
+   * \return Le nom du fichier sans extension
+   */
+  public function getStdFileName($env, $use_serial = true) {
+    if ($this->type == 6) {
+      $trans = $this->related_transaction;
+    } else {
+      $trans = $this;
+    }
+
+    $nature_descr = ActesTransaction :: getTransactionNatureDescr($trans->nature_code);
+
+    // Racine
+    $name = $this->destDir . "/";
+
+    // Nom du fichier
+    // Département
+    $name .= $env->get("department");
+
+    // Siren
+    $name .= "-" . $env->get("siren");
+
+    // Date de l'acte YYYYMMDD
+    $name .= "-";
+    if ($this->type != 7) {
+      $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
+    }
+
+    // Numéro de l'acte interne à la collectivité
+    $name .= "-";
+    if ($this->type != 7) {
+      $name .= $trans->number;
+    }
+
+    // Code de la nature de l'acte
+    $name .= "-";
+    if ($this->type != 7) {
+      $name .= $nature_descr["short_descr"];
+    }
+
+    // Type de message
+    switch ($this->type) {
+      case "1" :
+        $name .= "-1-1";
+        break;
+      case "2" : 
+      	$name .= "-2-2";
+      	break;
+      case "3" : 
+      	$name .= "-3-".$this->type_reponse;
+      	break;
+      case "4" : 
+      	$name .= "-4-".$this->type_reponse;
+      	break;
+      case "6" :
+        $name .= "-6-1";
+        break;
+        break;
+      case "7" :
+        $name .= "-7-1";
+        break;
+    }
+
+    if ($use_serial) {
+      // Numéro de série
+      $name .= "_" . $this->fileNameSerial;
+
+      $this->fileNameSerial++;
+    }
+
+    return $name;
+  }
+
+  /**
+   * \brief Méthode d'ajout d'une signature de l'acte
+   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
+   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succès, false sinon
+   */
+  public function addActeSign($sign, $readFile = true) {
+    return $this->addSign("acte", $sign, $readFile);
+  }
+
+  /**
+   * \brief Méthode d'ajout d'une signature de pièce jointe
+   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
+   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succès, false sinon
+   */
+  public function addAttachmentSign($sign, $readFile = true) {
+    return $this->addSign("attachment", $sign, $readFile);
+  }
+
+  /**
+   * \brief Méthode d'ajout d'une signature d'un fichier
+   * \param $type chaîne : Type de fichier, "acte" ou "attachment"
+   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
+   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succès, false sinon
+   */
+  public function addSign($type, $sign, $readFile) {
+    // Lecture du contenu du fichier
+    if ($readFile) {
+      if (($signStr = file_get_contents($sign)) === false) {
+        $this->errorMsg = "Erreur lors de la lecture du fichier signature";
+        return false;
+      } else {
+        // Suppression retour à la ligne éventuel
+        $signStr = rtrim($signStr);
+      }
+    } else {
+      $signStr = rtrim($sign);
+    }
+
+    if (!$this->storeSign($type, $signStr)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de stockag ede la signature dans le tableau des fichiers
+   * \param $type chaîne : Type de fichier, "acte" ou "attachment"
+   * \param $sign chaîne : Chaîne de signature
+   */
+  public function storeSign($type, $sign) {
+    if ($type == "acte") {
+      $this->files[$type]["sign"] = $sign;
+    }
+    elseif ($type == "attachment") {
+      $file_num = count($this->files[$type]) - 1;
+      $this->files[$type][$file_num]["sign"] = $sign;
+    } else {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de vérification des signatures des fichiers joints
+   * \return True en cas de succès, false sinon
+   */
+  public function checkSign() {
+    $ret_status = true;
+
+    $files = array ();
+    $files[] = $this->files["acte"];
+
+    if (isset ($this->files["attachment"]) && is_array($this->files["attachment"])) {
+      foreach ($this->files["attachment"] as $file) {
+        $files[] = $file;
+      }
+    }
+
+    foreach ($files as $file) {
+    	if (isset ($file["sign"]) && !empty ($file["sign"])) {
+	        $content = file_get_contents($this->rootDir . "/" . $file["name"]);
+	        
+			$parapheur = new Parapheur($content);
+			$ret = $parapheur->verify($file["sign"]);
+	                    
+			if (!$ret) {
+				$ret_status = false;
+				$this->errorMsg .= "<br />Fichier " . basename($file["name"]) . " : " . $parapheur->getLastError();
+			}
+    	}
+	        
+      }
+    return $ret_status;
+  }
+
+  /**
+   * \brief Méthode d'ajout du fichier de l'acte
+   * \param $name chaîne : Nom du fichier
+   * \param $dest_name chaîne : Nom du fichier destination
+   * \param $path chaîne (optionnel) : Chemin du fichier dans le système de fichier
+   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
+   * \return True en cas de succès, false sinon
+   */
+  public function addActeFile($name, $dest_name, $path = null, $validate = true) {
+    if (!$this->addFile("acte", $name, $dest_name, $path, $validate)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode d'ajout d'un fichier de pièce jointe
+   * \param $name chaîne : Nom du fichier
+   * \param $dest_name chaîne : Nom du fichier destination
+   * \param $path chaîne (optionnel) : Chemin du fichier dans le système de fichier
+   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
+   * \return True en cas de succès, false sinon
+   */
+  public function addAttachmentFile($name, $dest_name, $path = null, $validate = true) {
+    if (!$this->addFile("attachment", $name, $dest_name, $path, $validate)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode générique d'ajout d'un fichier
+   * \param $type chaîne : Type de fichier à ajouter "acte" ou "attachment"
+   * \param $name chaîne : Nom du fichier
+   * \param $dest_name chaîne : Nom du fichier destination
+   * \param $path chaîne : Chemin du fichier dans le système de fichier
+   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
+   * \return True en cas de succès, false sinon
+   */
+  public function addFile($type, $name, $dest_name, $path = false, $validate = true) {
+    $ext = null;
+
+    // Si le chemin n'est pas spécifié et les deux noms fournis identiques
+    // c'est que le fichier se trouve déjà dans son emplacement définitif (dans le cas d'import de .tar.gz)
+    $import = false;
+    if (!$path && strcmp($name, $dest_name) == 0) {
+      $path = $this->rootDir . "/" . $dest_name;
+      $import = true;
+    }
+
+    if ($validate && $path) {
+      if (!file_exists($path)) {
+        $this->errorMsg = "Fichier non présent : " . basename($path);
+        return false;
+      }
+
+      if (!$mimeType = @ mime_content_type($path)) {
+        $this->errorMsg = "Erreur analyse mimetype.";
+        return false;
+      }
+
+      if (!$size = @ filesize($path)) {
+        $this->errorMsg = "Erreur détermination taille fichier.";
+        return false;
+      }
+
+      switch ($type) {
+        case "acte" :
+          if (strcmp($mimeType, "application/pdf") != 0) {
+            $this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF requis.";
+            return false;
+          } else {
+            $ext = "pdf";
+          }
+          break;
+        case "attachment" :
+          if (strcmp($mimeType, "application/pdf") == 0) {
+            $ext = "pdf";
+          }
+          elseif (strcmp($mimeType, "image/jpeg") == 0) {
+            $ext = "jpg";
+          }
+          elseif (strcmp($mimeType, "image/png") == 0) {
+            $ext = "png";
+          } else {
+            $this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
+            return false;
+          }
+      }
+    }
+
+    $new_name = $dest_name;
+
+    if ($type == "acte") {
+      if (!$import) {
+        $new_name .= ".pdf";
+      }
+
+      $this->files["acte"] = array (
+        "name" => $new_name,
+        "posted_filename" => $name,
+        "mimetype" => $mimeType,
+        "size" => $size
+      );
+    } else {
+      if (!$import) {
+        if (!$ext) {
+          $ext = preg_replace("/^.*\.([^.]+)$/", "\${1}", $name);
+        }
+
+        $new_name .= "." . $ext;
+      }
+
+      $this->files["attachment"][] = array (
+        "name" => $new_name,
+        "posted_filename" => $name,
+        "mimetype" => $mimeType,
+        "size" => $size
+      );
+    }
+
+    // Mise en place du fichier dans le répertoire de destination
+    if (!$import) {
+      if ($path) {
+        if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $new_name))) {
+          $this->errorMsg = "Erreur système. Abandon";
+          return false;
+        } else {
+          if (!copy($path, $this->rootDir . "/" . $new_name)) {
+            $this->errorMsg = "Erreur système. Abandon";
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de création du message métier XML de la transaction
+   * \param $xml_name chaîne : Nom du fichier à créer
+   * \return True en cas de succès, false sinon
+   */
+  public function generateMessageXMLFile($xml_name) {
+    switch ($this->type) {
+      case "1" :
+        $xml = $this->generateActeXMLFile($xml_name);
+        break;
+        
+      case "2" :
+      case "3" :
+      case "4" : 
+	  	$xml = $this->generateReponseCourrierXMLFile($xml_name);
+      	break;
+      	        
+      case "6" :
+        $xml = $this->generateCancelXMLFile($xml_name);
+        break;
+      case "7" :
+        $xml = $this->generateClassifRequestXMLFile($xml_name);
+        break;
+      default :
+        $this->errorMsg = "Mauvais type de transaction.";
+        return false;
+    }
+
+    if ($xml === false) {
+      return false;
+    }
+
+    if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
+      $this->errorMsg = "Erreur système de fichiers (createDirTree).";
+      return false;
+    }
+
+    if (! file_put_contents($this->rootDir . "/" . $this->xmlFileName, $xml)) {    	
+      $this->errorMsg = "Erreur système de fichiers (file_put_contents).";
+      return false;
+    }
+
+    if (!$this->xmlFilesize = @ filesize($this->rootDir . "/" . $this->xmlFileName)) {
+      $this->errorMsg = "Erreur système de fichiers (filesize).";
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de création du message métier XML d'une transmission d'acte
+   * \param $xml_name chaîne : Nom du fichier à créer
+   * \return Le XML généré ou false en cas d'échec
+   */
+  public function generateActeXMLFile($xml_name) {
+    $xml_name .= "_0.xml";
+
+    $this->xmlFileName = $xml_name;
+
+    $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+    $xml .= "<actes:Acte\n";
+    $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
+    $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
+    $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+    $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
+    $xml .= "actes:Date=\"" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->decision_date)) . "\"\n";
+    $xml .= "actes:NumeroInterne=\"" . Helpers :: escapeForXML($this->number) . "\"\n";
+    $xml .= "actes:CodeNatureActe=\"" . Helpers :: escapeForXML($this->nature_code) . "\">\n";
+
+    // Les codes matières
+    for ($i = 1; $i <= 5; $i++) {
+      $var = "classif" . $i;
+      if (isset ($this-> $var) && !empty ($this-> $var) && is_numeric($this-> $var)) {
+        $xml .= " <actes:CodeMatiere" . $i . " actes:CodeMatiere=\"" . $this-> $var . "\"/>\n";
+      }
+    }
+
+    $xml .= " <actes:Objet>" . Helpers :: escapeForXML($this->subject) . "</actes:Objet>\n";
+    $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
+    $xml .= " <actes:Document>\n";
+    $xml .= "  <actes:NomFichier>" . Helpers :: escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";
+
+    if (isset ($this->files["acte"]["sign"])) {
+      $xml .= "  <actes:Signature>" . Helpers :: escapeForXML($this->files["acte"]["sign"]) . "</actes:Signature>\n";
+    }
+
+    $xml .= " </actes:Document>\n";
+    $xml .= " <actes:Annexes actes:Nombre=\"" . count($this->files["attachment"]) . "\">\n";
+
+    if (isset ($this->files["attachment"])) {
+      foreach ($this->files["attachment"] as $key => $file) {
+        $xml .= "  <actes:Annexe>\n";
+        $xml .= "   <actes:NomFichier>" . Helpers :: escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
+        if (isset ($file["sign"])) {
+          $xml .= "  <actes:Signature>" . Helpers :: escapeForXML($file["sign"]) . "</actes:Signature>\n";
+        }
+        $xml .= "  </actes:Annexe>\n";
+      }
+    }
+
+    $xml .= " </actes:Annexes>\n";
+    $xml .= "</actes:Acte>\n";
+
+    return $xml;
+  }
+
+  /**
+   * \brief Méthode de création du message métier XML d'une demande d'annulation
+   * \param $xml_name chaîne : Nom du fichier à créer
+   * \return Le XML généré ou false en cas d'échec
+   */
+  public function generateCancelXMLFile($xml_name) {
+    $xml_name .= "_0.xml";
+
+    $this->xmlFileName = $xml_name;
+
+    $xml = null;
+
+    if (!empty ($this->related_transaction->unique_id)) {
+      $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+      $xml .= "<actes:Annulation\n";
+      $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
+      $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
+      $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+      $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
+      $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\"/>\n";
+    } else {
+      $this->errorMsg = "Info manquante pour générer le XML.";
+    }
+
+    return $xml;
+  }
+
+  /**
+   * \brief Méthode de création du message métier XML d'une demande de classification
+   * \param $xml_name chaîne : Nom du fichier à créer
+   * \return Le XML généré ou false en cas d'échec
+   */
+  public function generateClassifRequestXMLFile($xml_name) {
+    $xml_name .= "_0.xml";
+
+    $this->xmlFileName = $xml_name;
+
+    $xml = null;
+
+    if (!empty ($this->last_classification_date)) {
+      $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+      $xml .= "<actes:DemandeClassification \n";
+      $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
+      $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
+      $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+      $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\">\n";
+      $xml .= " <actes:DateClassification>" . $this->last_classification_date . "</actes:DateClassification>\n";
+      $xml .= "</actes:DemandeClassification>\n";
+    } else {
+
+      $this->errorMsg = "Info manquante pour générer le XML.";
+    }
+
+    return $xml;
+  }
+
+  public function generateReponseCourrierXMLFile($xml_name){
+	$xml_name .= "_0.xml";
+    $this->xmlFileName = $xml_name;
+  	
+  	switch($this->type) {
+  		case 2: 
+  			$root =  "ReponseCourrierSimple";
+  			break;
+  		case 3 :
+  	      	if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
+      			$root = "RefusPieceComplementaire";
+      		} elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+      			$root = "PieceComplementaire";
+      		} else {
+      			$this->errorMsg = "Vous devez choisir un type de réponse";
+      			return false;
+      		}
+      		break;
+  		case 4 :
+  	      	if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
+      			$root = "RejetLettreObservations";
+      		} elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+      			$root = "ReponseLettreObservations";
+      		} else {
+      			$this->errorMsg = "Vous devez choisir un type de réponse";
+      			return false;
+      		}
+      	break;
+  		default:
+  			return null;
+  	}
+  	
+	    
+    $xml="<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+    $xml .= "<actes:$root xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
+    $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+    $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
+    $xml .= "actes:DateCourrierPref=\"".$this->decision_date."\" \n"; 
+    $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\" > \n";
+  	
+    if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+		$xml .= "<actes:Documents>";
+  	}
+  	   	    
+    $xml .= "<actes:Document>";
+    $xml .= "<actes:NomFichier>";
+  	$xml .= Helpers :: escapeForXML(basename($this->files["acte"]["name"])); 
+    $xml .= "</actes:NomFichier>\n";
+    $xml .= "</actes:Document>\n";
+    
+    if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+	    if (isset ($this->files["attachment"])) {
+      		foreach ($this->files["attachment"] as $key => $file) {
+	        	$xml .= "  <actes:Document>\n";
+	       		$xml .= "   <actes:NomFichier>" . Helpers :: escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
+		        $xml .= "</actes:Document>\n";
+	    	}
+	    }
+		$xml .= "</actes:Documents>";
+    }
+	     
+    $xml .= "</actes:$root>\n";
+
+    return $xml;
+  }
+  
+  
+  /**
+   * \brief Méthode d'importation d'un fichier XML de description d'une transaction
+   * \param $xmlFile chaîne : Chemin vers le fichier XML de description (relatif à ACTES_FILES_UPLOAD_ROOT)
+   * \return True en cas de succès, false sinon
+  */
+  public function createFromXML($xmlFile) {
+  	
+  	
+    $absXmlFile = ACTES_FILES_UPLOAD_ROOT . "/" . $xmlFile;
+    $this->xmlFileName = $xmlFile;
+
+    if (!file_exists($absXmlFile)) {
+      $this->errorMsg = "Fichier XML introuvable.";
+      return false;
+    }
+
+    if (!$this->xmlFilesize = filesize($absXmlFile)) {
+      $this->errorMsg = "Erreur système.";
+      return false;
+    }
+
+    if (($this->xmlObj = @ simplexml_load_file($absXmlFile)) === false) {
+      $this->errorMsg = "Impossible d'importer le fichier message XML.";
+      return false;
+    }
+
+    //echo $this->xmlObj->AsXML();
+
+    // Extraction des informations du XML pour initialiser la transaction
+    $namespaces = $this->xmlObj->getDocNamespaces();
+    // Récupération des éléments dans le namespace "actes"
+    $actesItems = $this->xmlObj->children($namespaces["actes"]);
+
+    $rep = true;
+    
+    // Détermination du type de transaction
+    switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
+	    	
+    	case "actes:Acte" :
+        $this->type = 1;
+        $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
+        // Date de la décision
+        $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
+        // Numéro interne
+        $this->number = Helpers :: getFromXMLElt($acte_attr["NumeroInterne"]);
+        // Nature de l'acte
+        $this->nature_code = Helpers :: getFromXMLElt($acte_attr["CodeNatureActe"]);
+        $descrs = ActesTransaction :: getTransactionNatureDescr($this->nature_code);
+        $this->nature_descr = $descrs["descr"];
+
+        // Classification matière
+        for ($i = 1; $i <= 5; $i++) {
+          if (isset ($actesItems-> {
+            "CodeMatiere" . $i })) {
+            $classif_attr = $actesItems-> {
+              "CodeMatiere" . $i }
+            ->attributes($namespaces["actes"]);
+            if (isset ($classif_attr["CodeMatiere"])) {
+              $this-> {
+                "classif" . $i }
+              = Helpers :: getFromXMLElt($classif_attr["CodeMatiere"]);
+            }
+          }
+        }
+
+        // Objet de l'acte
+        $this->subject = Helpers :: getFromXMLElt($actesItems->Objet);
+
+        $this->classification_date = Helpers :: getFromXMLElt($actesItems->ClassificationDateVersion);
+
+        // Fichier de l'acte
+        $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+        if (!$this->addActeFile($actePath, $actePath)) {
+          return false;
+        }
+
+        if (isset ($actesItems->Document->Signature)) {
+          if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
+            $this->errorMsg = "Erreur interne.";
+            return false;
+          }
+        }
+
+        // Fichiers pièces jointes
+        if (isset ($actesItems->Annexes)) {
+          foreach ($actesItems->Annexes->Annexe as $annexe) {
+            $attachmentPath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($annexe->NomFichier);
+            if (!$this->addAttachmentFile($attachmentPath, $attachmentPath)) {
+              return false;
+            }
+
+            if (isset ($annexe->Signature)) {
+              if (!$this->storeSign("attachment", Helpers :: getFromXMLElt($annexe->Signature))) {
+                $this->errorMsg = "Erreur interne.";
+                return false;
+              }
+            }
+          }
+        }
+
+        break;
+        
+		case "actes:ReponseCourrierSimple": 
+			$rep = $this->setDataFromCourrier(2,$xmlFile);
+        	break;
+
+		case "actes:RefusPieceComplementaire":
+			$rep = $this->setDataFromCourrier(3,$xmlFile,true);
+			break;
+			
+        case "actes:PieceComplementaire" : 
+			$rep = $this->setDataFromCourrier(3,$xmlFile,false);
+        	break;
+        
+        case "actes:RejetLettreObservations": 
+			$rep = $this->setDataFromCourrier(4,$xmlFile,true);
+        	break;
+        	
+        case "actes:ReponseLettreObservations": 
+			$rep = $this->setDataFromCourrier(4,$xmlFile,false);
+        	break;
+        
+      case "actes:Annulation" :
+        $this->type = 6;
+        $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
+
+        $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
+
+        if (!$this->related_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
+          $this->errorMsg = "Transaction de référence introuvable.";
+          return false;
+        }
+
+        $related_trans = new ActesTransaction($related_id);
+        if (!$related_trans->init()) {
+          $this->errorMsg = "Erreur d'initialisation de la transaction de référence.";
+          return false;
+        }
+
+        $this->number = $related_trans->get("number");
+
+        break;
+
+      case "actes:DemandeClassification" :
+        $this->type = 7;
+        break;
+
+      default :
+        $this->errorMsg = "Mauvais type de transaction.";
+        return false;
+        break;
+    }
+	if ($rep == false ) return false;  
+    //print_r($this);
+
+    return true;
+  }
+
+  
+  private function setDataFromCourrier($type,$xmlFile,$isRefus = false){
+  	
+  		$this->type = $type;
+  		
+  		$namespaces = $this->xmlObj->getDocNamespaces();
+  		
+  		$actesItems = $this->xmlObj->children($namespaces["actes"]);
+  		
+		$acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
+			
+		$this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
+			$this->decision_date = Helpers :: getFromXMLElt($acte_attr["DateCourrierPref"]);
+			
+		if (!$this->related_transaction_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
+        	$this->errorMsg = "Transaction de référence introuvable.";
+         	return false;
+       	}
+			
+		$related_trans = new ActesTransaction($this->related_transaction_id);
+        	
+        if (!$related_trans->init()) {
+        	$this->errorMsg = "Erreur d'initialisation de la transaction de référence.";
+        	return false;
+        }
+
+        $this->number = $related_trans->get("number");
+
+        if ($type == 3 && $isRefus == false ){
+        	foreach($actesItems->Documents->Document as $fichiers) {
+        		$actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
+				if (!$this->addActeFile($actePath, $actePath)) {
+			         return false;
+				}        		
+        	}
+        		
+        } else {
+			$actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+			
+			if (!$this->addActeFile($actePath, $actePath)) {
+		         return false;
+			}
+		
+			if (isset ($actesItems->Document->Signature)) {
+		        if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
+					$this->errorMsg = "Erreur interne.";
+					return false;
+		        }
+	        }
+        }
+        
+        
+	return true;        	
+  }
+  
+  /**
+   * \brief Méthode de suppression des différents fichiers associés à la transaction
+   * \return True en cas de succès, false sinon
+  */
+  public function purgeFiles() {
+    // Fichier XML de l'acte
+    if (isset ($this->xmlFileName) && !empty ($this->xmlFileName)) {
+      if (!unlink($this->rootDir . "/" . $this->xmlFileName)) {
+        $this->errorMsg = "Ne peut supprimer un fichier temporaire.";
+        return false;
+      }
+    }
+
+    // Fichier de l'acte
+    if (isset ($this->files["acte"])) {
+      if (!unlink($this->rootDir . "/" . $this->files["acte"]["name"])) {
+        $this->errorMsg = "Ne peut supprimer un fichier temporaire.";
+        return false;
+      }
+    }
+
+    // Fichier des pièces jointes
+    if (isset ($this->files["attachment"])) {
+      foreach ($this->files["attachment"] as $file) {
+        if (strlen($file["name"]) > 0) {
+          if (!unlink($this->rootDir . "/" . $file["name"])) {
+            $this->errorMsg = "Ne peut supprimer un fichier temporaire.";
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de récupération de la liste des fichiers associés à cette transaction
+   * \return Un tableau de description des fichiers
+   */
+  public function fetchFilesList() {
+    if (isset ($this->id) && count($this->files) <= 0) {
+      $this->files = array ();
+
+      if (!($this->files = ActesIncludedFile :: fetchFilesList($this->id))) {
+        $this->errorMsg = "Erreur de récupération de la liste des fichiers.";
+        $this->files = array ();
+      }
+    }
+
+    return $this->files;
+  }
+
+  /**
+   * \brief Méthode de récupération du cycle de vie de cette transaction
+   * \return Un tableau contenant le workflow de la transaction
+   */
+  public function fetchWorkflow() {
+    if (isset ($this->id) && count($this->workflow) <= 0) {
+      $sql = "SELECT id, status_id, date, message FROM actes_transactions_workflow WHERE transaction_id=" . $this->id . " ORDER BY date, id ASC";
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError()) {
+        $this->workflow = $result->get_all_rows();
+      }
+    }
+
+    return $this->workflow;
+  }
+
+  /**
+   * \brief Méthode de détermination si la transaction en cours a une demande d'annulation en cours
+   * \return True si une demande d'annulation est en cours, false sinon
+   */
+  public function hasPendingCancelTrans() {
+    if (isset ($this->id)) {
+      $sql = "SELECT id FROM actes_transactions WHERE actes_transactions.type='6' AND actes_transactions.related_transaction_id=" . $this->id;
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError() && $result->num_row() > 0) {
+        while ($row = $result->get_next_row()) {
+          $cancel_trans = new ActesTransaction($row["id"]);
+
+          if (!$cancel_trans->init()) {
+            return false;
+          }
+
+          $status = $cancel_trans->getCurrentStatus();
+
+          if ($status > 0 && $status < 4) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * \brief Méthode d'enregistrement d'une transaction dans la base de données
+   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+   * \return true si succès, false sinon
+   */
+  public function save($validate = true) {
+    $new = false;
+    if ($this->isNew()) {
+      $new = true;
+    }
+
+    if ($this->type == 1) {
+      $done = false;
+      $this->classification = "";
+      $i = 1;
+      while ($i <= 5 && !$done) {
+        $var = "classif" . $i;
+        if (isset ($this-> $var) && !empty ($this-> $var) && is_numeric($this-> $var)) {
+          $this->classification .= ($i > 1) ? "." . $this-> $var : $this-> $var;
+        } else {
+          // Les deux premiers numéros de classification sont obligatoires
+          if ($i <= 2) {
+            $this->errorMsg = "Les deux premiers niveaux de classification sont obligatoires.";
+            return false;
+          } else {
+            $done = true;
+          }
+        }
+
+        $i++;
+      }
+    }
+
+    // Si la transaction n'est pas une transmission d'acte on désactive
+    // le contrôle des champs car tous les champs ne sont plus obligatoire
+    if ($this->type != 1) {
+      $validate = false;
+    }
+
+    if (!($sql = parent :: save($validate, true))) {
+      return false;
+    }
+
+    //echo $sql;
+    //exit();
+
+    if (!$this->db->begin()) {
+      $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
+      return false;
+    }
+
+    if (!$this->db->exec($sql)) {
+      $this->errorMsg = "Erreur lors de la sauvegarde de la transaction.";
+      $this->db->rollback();
+      return false;
+    }
+
+    if ($new) {
+      // Ajout de l'état initial
+      if (!$this->setNewStatus(1, "Dépôt initial")) {
+        $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
+        $this->db->rollback();
+        return false;
+      }
+
+      // Ajout des fichiers inclus
+      $files = array (
+        array (
+          "name" => $this->xmlFileName,
+          "size" => $this->xmlFilesize,
+          "mimetype" => "text/xml"
+        )
+      );
+
+      if (isset ($this->files["acte"])) {
+        $files = array_merge($files, array (
+          $this->files["acte"]
+        ));
+      }
+
+      if (isset ($this->files["attachment"])) {
+        $files = array_merge($files, $this->files["attachment"]);
+      }
+
+      foreach ($files as $file) {
+        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature) VALUES(" . $this->envelope_id . ", " . $this->id . ", '" . basename($file["name"]) . "', '" . $file["posted_filename"] . "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . $file["sign"] . "')";
+
+        if (!$this->db->exec($sql)) {
+          $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";
+          $this->db->rollback();
+          return false;
+        }
+      }
+    }
+
+    if (!$this->db->commit()) {
+      $this->errorMsg = "Erreur lors de la validation de la transaction.";
+      $this->db->rollback();
+      return false;
+    }
+
+    /*if ($new) {
+      $this->warnTransactionalEngine();
+    }*/
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode de suppression d'une transaction de la base de données
+   * \param $id integer (optionnel) Numéro d'identifiant de la transaction, si non spécifié, entité en cours
+   * \return true si succès, false sinon
+  */
+  public function delete($id = false) {
+    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    if (!$id) {
+      if (isset ($this->id) && !empty ($this->id)) {
+        $id = $this->id;
+      } else {
+        $this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+        return false;
+      }
+    }
+
+    if (!$this->db->begin()) {
+      $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
+      return false;
+    }
+
+    $sql = "DELETE FROM actes_included_files WHERE transaction_id=" . $id;
+
+    if (!$this->db->exec($sql)) {
+      $this->errorMsg = "Erreur lors de la suppression des fichiers reliés à la transaction.";
+      $this->db->rollback();
+      return false;
+    }
+
+    $sql = "DELETE FROM actes_transactions_workflow WHERE transaction_id=" . $id;
+
+    if (!$this->db->exec($sql)) {
+      $this->errorMsg = "Erreur lors de la suppression des états reliés à la transaction.";
+      $this->db->rollback();
+      return false;
+    }
+
+    if (!parent :: delete($id)) {
+      $this->db->rollback();
+      return false;
+    }
+
+    if (!$this->db->commit()) {
+      $this->errorMsg = "Erreur lors de la validation de la transaction.";
+      $this->db->rollback();
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * \brief Méthode avertissant le moteur transactionnel qu'une nouvelle transaction est a traiter
+   * \return True en cas de succès, false sinon
+   *
+   * Non utilisée
+   */
+  public function warnTransactionalEngine() {
+    if (isset ($this->id) && !empty ($this->id)) {
+      $cHandle = curl_init(ACTES_NEW_TRANS_URL . "?id=" . $this->id);
+
+      curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
+
+      $ret = curl_exec($cHandle);
+
+      curl_close($cHandle);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * \brief Méthode déterminant si un utilisateur peut modifier la transaction courante
+   * \param $user objet User : utilisateur considéré
+   * \return True en cas d'authorisation, false sinon
+   */
+  public function userCanEdit($user) {
+    if ($user->isSuper()) {
+      return true;
+    }
+
+    $owner = new User($this->user_id);
+    $owner->init();
+
+    $envelope = new ActesEnvelope($this->envelope_id);
+    $envelope->init();
+
+    if (!($user->isAuthorityAdmin() && $user->get("authority_id") == $owner->get("authority_id")) && !($user->getId() == $envelope->get("user_id") && $user->canEdit('actes'))) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  
+  //Renvoie des informations sur les courriers de retour de la préfécture
+  //Message 2, 3, 4 et 5
+  public function getCourrierInfo(){
+  	$renvoie = array();
+  	$sql = "SELECT at1.id as id, at2.id as related_transaction_id,at1.type as type ".
+  			" FROM actes_transactions at1 LEFT JOIN actes_transactions at2 ON at1.id=at2.related_transaction_id  ". 
+  			" WHERE at1.related_transaction_id=".$this->id ." AND (at2.type != '6' OR at2.type IS NULL) ";
+  	
+  	$result = $this->db->select($sql);
+
+  	if ($result->isError()) {
+  		$this->errorMsg = "Impossible de récupere les transactions relatives.";
+  		return false;
+  	}
+	
+  	while ($row = $result->get_next_row()) {
+  		/*$sql2 = "SELECT * FROM actes_transactions_workflow " . 
+  		" JOIN actes_status ON actes_transactions_workflow.status_id=actes_status.id ". 
+  		"WHERE transaction_id = " . $row["id"] . " ORDER by date DESC LIMIT 1";
+		$result2 = $this->db->select($sql2);
+		$row2 = $result2->get_next_row();*/
+		if ($row["related_transaction_id"] == "") {  					
+    		$renvoie[$row["id"]] = array("type" => $row["type"],
+    								"sens" => "reçu");
+		} else {
+			$renvoie[$row["related_transaction_id"]] = array("type" => $row["type"],
+    								"sens" => "envoye");
+		}
+  	}
+	return $renvoie;
+  }
+  
+  
+
+  /**********************/
+  /* Méthodes statiques */
+  /**********************/
+
+  /**
+   * \brief Méthode de récupération de l'identifiant d'une transaction d'après son unique_id
+   * \return Un tableau de natures de transaction
+   * 
+   * Commentaire : ce serait plus logique de renvoyer l'objet (EP 07/03/08)
+   * 
+   */
+  public static function getTransactionFromUniqueId($unique_id) {
+  	
+    $sql = "SELECT id FROM actes_transactions WHERE unique_id='" .
+    	 addslashes($unique_id) . "' AND type='1'";
+
+   	$db = & DatabasePool :: getInstance();
+	
+    $result = $db->select($sql);
+
+    if (!$result->isError() && $result->num_row() == 1) {
+      $row = $result->get_next_row();
+      return $row["id"];
+    }
+    
+    //On a pas trouvé, on va essayer dans les messages métier.
+    $sql = "SELECT * FROM actes_included_files " . 
+			" WHERE filename='" . addslashes($unique_id) . 
+			"_0.xml' ";
+	 
+	$result = $db->select($sql);
+	 
+	if (!$result->isError() && $result->num_row() == 1) {
+      $row = $result->get_next_row();
+      return $row["transaction_id"];
+    }
+    
+    return false;
+  }
+
+  /**
+   * \brief Méthode de récupération des différentes natures de transaction
+   * \return Un tableau de natures de transaction
+   */
+  public static function getTransactionNatures() {
+    $sql = "SELECT id, short_descr, descr FROM actes_natures ORDER BY descr ASC";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    $types = array ();
+
+    if (!$result->isError()) {
+      return $result->get_all_row();
+    }
+
+    return false;
+  }
+
+  /**
+   * \brief Méthode de récupération des descriptions courtes et longue de la nature d'un acte en fonction de son identifiant
+   * \param $id integer : identifiant de la nature à rechercher
+   * \return Un tableau associatif contenant les descriptions ou false en cas d'erreur
+   *
+   */
+  public static function getTransactionNatureDescr($id) {
+    if (!empty ($id)) {
+      $sql = "SELECT short_descr, descr FROM actes_natures WHERE id=" . $id;
+
+      $db = & DatabasePool :: getInstance();
+
+      $result = $db->select($sql);
+
+      if (!$result->isError() && $result->num_row() == 1) {
+        $row = $result->get_next_row();
+        return array (
+          "short_descr" => $row["short_descr"],
+          "descr" => $row["descr"]
+        );
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * \brief Méthode de récupération des natures de transaction
+   * \return Un tableau de natures de transaction
+   *
+   * Cette méthode renvoie un tableau dont les clefs sont l'identifiant numérique
+   * de la nature et dont les valeurs sont la description de la nature de transaction
+   *
+   */
+  public static function getTransactionNaturesIdDescr() {
+    $sql = "SELECT id, descr FROM actes_natures ORDER BY descr ASC";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    $types = array ();
+
+    if (!$result->isError()) {
+      while ($row = $result->get_next_row()) {
+        $types[$row["id"]] = $row["descr"];
+      }
+    }
+
+    return $types;
+  }
+
+  /**
+   * \brief Méthode d'obtention de la liste des transactions et tous leurs attributs
+   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+   * \return tableau des transactions
+  */
+  public static function getTransactionsList($cond = "") {
+    // TODO: utiliser le pager pour multipages
+    $sql = "SELECT actes_transactions.id, actes_transactions.envelope_id, actes_transactions.type, actes_transactions.related_transaction_id, actes_transactions.nature_code, actes_transactions.nature_descr, actes_transactions.subject, actes_transactions.number, actes_transactions.classification, actes_transactions.classification_date, actes_transactions.decision_date, actes_transactions.unique_id, actes_transactions.archive_url FROM actes_transactions " . $cond;
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      return $result->get_all_rows();
+    }
+
+    return array ();
+  }
+
+  /**
+   * \brief Méthode d'obtention de la liste des statuts des transactions
+   * \return Tableau des statuts de transactions
+  */
+  public static function getStatusList() {
+    $sql = "SELECT id, name FROM actes_status";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    $types = array ();
+
+    if (!$result->isError()) {
+      while ($row = $result->get_next_row()) {
+        $types[$row["id"]] = $row["name"];
+      }
+    }
+
+    return $types;
+  }
+  
+  /**
+   * @param:
+   * @return: 
+   * 
+   */
+   public function removeTransmisStatus()
+   {
+   	$sql = "DELETE FROM actes_transactions_workflow where transaction_id=".$this->id."and status_id=3";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->exec($sql);
+
+    return $result;
+   } 
+   
+   
+	public function canValidate(){
+		assert('$this->id');
+		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 
+				" FROM actes_transactions_workflow " .
+				" WHERE transaction_id=".$this->id.
+				" AND status_id=4" ; //FIXME constante magique 4 dans la base de données....
+		$result = $this->db->fetchAll($sql);
+		if (! $result){
+			return false;
+		}
+		return $result[0]['can_validate'] == 't';  
+	}
+}

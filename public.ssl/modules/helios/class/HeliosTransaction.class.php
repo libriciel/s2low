@@ -1,0 +1,637 @@
+<?php
+
+
+/*
+ * Tedetis - Copyright 2006 Alternance-Soft
+ * Contributeur : C. Pop, Mars 2007
+ *
+ * contact@alternancesoft.com
+ *
+ * Ce logiciel est un programme informatique servant � la
+ * dématérialisation de l'administration. 
+ *
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * sur le site "http://www.cecill.info".
+ *
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ *
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  � l'utilisation,  � la modification et/ou au
+ * développement et � la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe � 
+ * manipuler et qui le réserve donc � des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités � charger  et  tester  l'adéquation  du
+ * logiciel � leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+ * �l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ *
+ * Le fait que vous puissiez accéder � cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+*/
+
+/**
+ * \class HeliosTransaction HeliosTransaction.class.php
+ * \brief Cette classe permet de g�er les transactions HELIOS
+ * \author Cristina Pop <cpop@alternancesoft.com> et J��e Schell <j.schell@alternancesoft.com>
+ * \date 20.02.2006
+ * 
+ *
+ * Cette classe fournit des m�hodes de gestion des transactions
+ * Helios
+ *
+ * Modifications :
+ * Auteur   Date       Commentaire
+ *
+ */
+
+//deschide baza de date si recupeezaza toate tranzactiile userului
+//dat
+//apelata metoda sa din index.php
+
+require_once (SITEROOT . "/class/DataObject.class.php");
+require_once (SITEROOT . "/class/Parapheur.class.php");
+//require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
+
+class HeliosTransaction extends DataObject {
+  protected $objectName = "helios_transactions";
+
+  protected $id;
+  protected $user_id;
+  protected $filename;
+
+  public $allStatus = array ();
+
+  public $files = array ();
+  private $fileNameSerial;
+
+  protected $related_transaction;
+
+  protected $last_classification_date;
+
+  protected $xmlFileName;
+  protected $xmlFilesize;
+  protected $xmlObj;
+
+  private $workflow = array ();
+
+  protected $destDir;
+
+  protected $dbFields = array (
+      //"id" => array( "descr" => "Identifiant de la transaction", "type" => "isInt", "mandatory" => true),
+  	"user_id" => array (
+      "descr" => "Identifiant de l'utilisateur qui a cr� la transaction",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+    "filename" => array (
+      "descr" => "Nom du fichier post�",
+      "type" => "isString",
+      "mandatory" => true
+    ),
+
+
+    "file_size" => array( 
+    	"descr" => "taille du fichier post�",
+    	"type" => "isInt",
+    	"mandatory" => true
+  	),
+  	"submission_date" => array(
+  		"descr" => "date de la postulation",
+  		"type" => "isDate",
+  		"mandatory" => true
+  	),
+  	"sha1" => array(
+  		"descr" => "le code sha1 calculer par le contenu du fichier",
+  		"type" => "isString",
+  		"mandatory" => true
+  	),
+  	"siren" => array(
+  		"descr" => "siren de son propre collectivite",
+  		"type" => "isString",
+  		"mandatory" =>true
+  	)
+
+  );
+
+  /*
+    protected $transactionTypes = array( "1" => "Transmission d'actes",
+  								 "6" => "Annulation",
+  								 "7" => "Demande de classification"
+  								 );
+  */
+
+  /**
+   * \brief Constructeur d'une transaction
+   * \param id integer Num�ro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   */
+  public function __construct($id = false) {
+    parent :: __construct($id);
+
+    $this->fileNameSerial = 1;
+  }
+
+  /**
+   * \brief M�hode initialisant l'entit�avec l'identifiant courant
+   * \return true si succ�s, false sinon
+  */
+  public function init() {
+    if (!parent :: init()) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * \brief M�hode permettant de fixer la valeur d'un attribut
+   * \param $name cha�e : Nom de l'attribut
+   * \param $val : valeur de l'attribut
+  */
+  //cred ca fixeaza valori pentru atributele clasei...!
+
+  public function set($name, $val) {
+    switch ($name) {
+      case "user_id" :
+      case "filename" :
+      case "signed" :
+        }
+    parent :: set($name, $val);
+  }
+
+  //added
+  /**
+     * \brief M�thode permettant d'obtenir l'id d'une transaction � partir du nom de fichier
+     * \param $name cha�e : Nom du fichioer
+     * \return id si okay, si non false
+    */
+  public function get_IdTransaction($filename) {
+
+    $sql = "SELECT id FROM helios_transactions" . " WHERE filename=" . $filename;
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      $row = $result->get_next_row();
+      return $row["id"];
+    } else {
+      return false;
+    }
+    /*
+    	  if (! $result->isError()) {
+    		while ($row = $result->get_next_row()) {
+    		  if (! isset($classif[$row["id"]])) {
+    			$classif[$row["id"]] = array();
+    		  }
+    		}
+    	  }
+    	
+    	 $classif[$row["id"]]["id"] = $row["id"];
+    */
+
+    //->ex 	
+  }
+
+  //added
+  /*
+   * \brief M�hode pour obtenir toutes les transactions pour un utilisateur (idUser) donn�
+   * 
+   */
+  //tmp...
+  public function getAllTransactionsForAUser_1($userID) {
+    $t1 = "helios_transactions";
+    $t2 = "helios_transactions_workflow";
+    $t3 = "helios_status";
+
+    $sql = "SELECT user_id, transaction_id, filename, name, date ";
+    $sql .= " FROM " . $t1 . "," . $t2 . "," . $t3 . " ";
+    $sql .= " WHERE " . $t1 . ".id=" . $t2 . ".transaction_id AND " . $t1 . ".user_id=" . $userID;
+    $sql .= " AND " . $t2 . ".status_id=" . $t3 . ".id";
+
+    $result = $this->db->select($sql);
+
+    if (!$result->isError() && $result->num_row() > 0) {
+      $this->allStatus = $result->get_all_rows();
+
+      /*
+      
+           if (! $result->isError() && $result->num_row() > 0) {
+                 while ($row = $result->get_next_row()) {
+                   $hoursId[] = $row["transmission_window_id"];
+                 }
+           } else {
+                 return false;
+           }
+           daca nu fac aceste operatii in idnex.html (acces ptrintr-un obiect ht)
+           si ptr fiecare linie afisez...
+      */
+    }
+    return $allStatus;
+  }
+
+  public static function getAllTransactionsForAUser($userID) {
+    $t1 = "helios_transactions";
+    $t2 = "helios_transactions_workflow";
+    $t3 = "helios_status";
+
+    $sql = "SELECT transaction_id, filename, name, date ";
+    $sql .= " FROM " . $t1 . "," . $t2 . "," . $t3 . " ";
+    $sql .= " WHERE " . $t1 . ".id=" . $t2 . ".transaction_id AND " . $t1 . ".user_id=" . $userID;
+    $sql .= " AND " . $t2 . ".status_id=" . $t3 . ".id";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      return $result->get_all_rows();
+    }
+
+    return false;
+  }
+
+  /*
+   * \brief M�thhode d'obtention de la liste des statuts des transactions
+    * \return Tableau des statuts de transactions
+   */
+  /*
+  public static function getStatusList() {
+    $sql = "SELECT id, name FROM helios_status";
+  
+    $db =& DatabasePool::getInstance();
+  
+    $result = $db->select($sql);
+  
+  $types = array();
+  
+    if (! $result->isError()) {
+    while ($row = $result->get_next_row()) {
+  	$types[$row["id"]] = $row["name"];
+    }
+    }
+  
+    return $types;
+  }
+  */
+
+  /**
+    * \brief M�hode d'obtention de la liste des enveloppes et tous leurs attributs
+    * \param $cond (optionnel) cha�e : Cha�e contenant les conditions (SQL) �appliquer �la fin de la requ�e BDD
+    * \return Tableau des enveloppes
+    */
+  public function getDocumentList($cond = "") {
+    $tmp = "";
+    if (!$this->pagerInit('DISTINCT helios_transactions.id, helios_transactions.user_id, helios_transactions.filename', ' helios_transactions LEFT JOIN users ON helios_transactions.user_id=users.id ', $cond)) {
+      //,$cond)) { //AICI FILTRUL
+      //DISTINCT helios_transactions.id, helios_transactions.user_id, users.name, helios_transactions.filename, helios_transactions_workflow.transaction_id, helios_transactions_workflow.status_id, helios_transactions_workflow.date, helios_transactions_workflow.message ',	   	
+
+      //'DISTINCT actes_envelopes.id, actes_envelopes.user_id, actes_envelopes.siren, actes_envelopes.submission_date, actes_envelopes.department, actes_envelopes.district, actes_envelopes.authority_type_code, actes_envelopes.name, actes_envelopes.telephone, actes_envelopes.email, actes_envelopes.file_path, actes_envelopes.return_mail, actes_envelopes.file_size',
+      // 'actes_envelopes LEFT JOIN actes_transactions ON actes_envelopes.id=actes_transactions.envelope_id LEFT JOIN users ON actes_envelopes.user_id=users.id', $cond)) {
+      return false;
+    }
+
+    return $this->data;
+  }
+
+  /*
+   * \brief M�hode d'obtention du nom d efichier qui correponde �une transaction
+   * \param $transaction_id
+   * \return filename
+   * 
+   */
+  //de testat
+  public function getFilenameForId($id) {
+    $sql = "SELECT filename FROM helios_transactions" . " WHERE id=" . $id;
+
+    $db = & DatabasePool :: getInstance();
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      $row = $result->get_next_row();
+      return $row["filename"];
+    } else {
+      return false;
+    }
+  }
+  public function getSha1ForId($id)
+  {
+   	$sql = "SELECT sha1 FROM helios_transactions" . " WHERE id=" . $id;
+
+    $db = & DatabasePool :: getInstance();
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      $row = $result->get_next_row();
+      return $row["sha1"];
+    } else {
+      return false;
+    }
+  }
+  
+  public function getAcquitFilenameForId($id) {
+    $sql = "SELECT acquit_filename FROM helios_transactions" . " WHERE id=" . $id;
+
+    $db = & DatabasePool :: getInstance();
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      $row = $result->get_next_row();
+      return $row["acquit_filename"];
+    } else {
+      return false;
+    }
+  }
+  
+  
+
+  //de testat!!!!!
+  //la mine: ActesEnvelope -> HeliosTransaction si ActesTransaction-> HeliosTransactionWorkFlow
+
+  /**
+   * \brief M�hode d'obtention de la liste des ids de transactions pour un fichier
+   * \param $id integer : Identifiant du fichier est l'id de la trasnaction
+   * \return Tableau d'objet HeliosTransaction correspondant au fichier
+  */
+  public static function getTransactionsForFichier($id) {
+    $transac = array ();
+
+    if (!empty ($id)) {
+      $sql = "SELECT helios_transactions_workflow.id FROM helios_transactions_workflow WHERE helios_transactions_workflow.transaction_id = " . $id;
+
+      $db = & DatabasePool :: getInstance();
+
+      $result = $db->select($sql);
+
+      if (!$result->isError()) {
+        while ($row = $result->get_next_row()) {
+          $obj = new HeliosTransactionWorkflow($row["id"]); //cred!!!!=> obtine inregistrarea completa
+          if ($obj->init()) {
+            $transac[] = $obj;
+          }
+        }
+      }
+    }
+
+    return $transac;
+  }
+
+  /**
+   * \brief M�hode d'obtention de l'�at courant d'un transaction
+   * \return L'identifiant de l'�at courant de la transaction
+   */
+  public function getCurrentStatus() {
+    if (isset ($this->id) && !empty ($this->id)) {
+      $sql = "SELECT status_id, message FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $this->id . " ORDER BY atw.id DESC LIMIT 1";
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError()) {
+        $row = $result->get_next_row();
+        return $row["status_id"];
+      }
+
+      return false;
+    }
+  }
+
+ /**
+  * \brief M�hode de r�up�ation du cycle de vie de cette transaction
+  * \return Un tableau contenant le workflow de la transaction
+  */
+  public function fetchWorkflow() {
+    if (isset ($this->id)) { // && count($this->workflow) <= 0) {
+      $sql = "SELECT id, status_id, date, message FROM helios_transactions_workflow WHERE transaction_id=" . $this->id . " ORDER BY date, id ASC";
+
+      $result = $this->db->select($sql);
+
+      if (!$result->isError()) {
+        $this->workflow = $result->get_all_rows();
+      }
+    }
+
+    return $this->workflow;
+  }
+
+  /**
+   *  \brief M�hode d'obtention de l'id de l'user qui correponde �une transaction
+   * \param $transaction_id
+   * \return user name
+   * //de testat
+   */
+  public function getUserForId($id) {
+    $sql = "SELECT user_id FROM helios_transactions" . " WHERE id=" . $id;
+
+    $db = & DatabasePool :: getInstance();
+    $result = $db->select($sql);
+
+    if (!$result->isError()) {
+      $row = $result->get_next_row();
+      return $row["user_id"];
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * \brief M�thode qui renvoie le fichier au navigateur
+   */
+  public function sendFile($sha1,$filename) {
+    if (!file_exists(HELIOS_FILES_UPLOAD_ROOT . "/" . $sha1)) {
+      $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";
+      echo "<br>helios Tansaction_class: sendFile " . $this->errorMsg;
+      return false;
+    }
+
+    $ret_value = true;
+    //AICI pot incerca sa modific parametrii...
+    if (!Helpers :: sendFileToBrowser(HELIOS_FILES_UPLOAD_ROOT . "/" . $sha1, $filename, "text/xml")) {
+      $this->errorMsg = "Erreur envoi fichier";
+      echo "<br> heliosTansaction_class: sendFile " . $this->errorMsg;
+      $ret_value = false;
+    }
+
+    return $ret_value;
+  }
+  
+  public function sendAcquit($filename) {
+    if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null) {
+      $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";
+      echo "<br>helios Tansaction_class: sendAcquit " . $this->errorMsg;
+      return false;
+    }
+
+    $ret_value = true;
+    //AICI pot incerca sa modific parametrii...
+    if (!Helpers :: sendFileToBrowser(HELIOS_RESPONSES_ROOT . $filename, $filename, "text/xml")) {
+      $this->errorMsg = "Erreur envoi fichier";
+      echo "<br> heliosTansaction_class: sendAcquit " . $this->errorMsg;
+      $ret_value = false;
+    }
+
+    return $ret_value;
+  }
+
+  /**
+   * \brief M�hode d'obtention de la liste des statuts des transactions
+   * \return Tableau des statuts de transactions
+   */
+  public static function getStatusList() {
+    $sql = "SELECT id, name FROM helios_status";
+
+    $db = & DatabasePool :: getInstance();
+
+    $result = $db->select($sql);
+    $types = array ();
+
+    if (!$result->isError()) {
+      while ($row = $result->get_next_row()) {
+        $types[$row["id"]] = $row["name"];
+      }
+    }
+    return $types;
+  }
+
+ /**
+  *  \brief get list de transaction
+  *  \param $authority_id: optional , pour sp�cialiser la collectivit�.
+  *  \reuturn table de transactions
+  * 
+  */ 
+  public static function getTransationHistory($authority_id = false) {
+		$sql = "SELECT DISTINCT ht.id, ht.filename, ht.sha1, ht.file_size, atw.date, auth.siren, auth.department, auth.district";
+		$sql .=" FROM helios_transactions ht,authorities auth, users, helios_transactions_workflow atw";
+		$sql .= " WHERE ht.user_id=users.id AND users.authority_id=auth.id AND atw.transaction_id=ht.id";
+		// On veut r�cup�rer la date o� la transaction a �t� transmise => statut 3
+		$sql .= " AND atw.status_id=3";
+		
+		if ($authority_id) {
+		  $sql .= " AND auth.id=" . $authority_id;
+		}
+		
+		$sql .= " ORDER BY atw.date DESC";
+	
+		$db =& DatabasePool::getInstance();
+	
+		$result = $db->select($sql);
+
+		$trans = array();
+	 
+		if (! $result->isError()) {
+		  while ($row = $result->get_next_row()) {
+			$trans[] = $row;
+		  }
+		}
+		return $trans;
+  }
+  
+  /**
+   * this function is due to calculate the number of the transaction effective, return the number of the transactions.
+   *
+   * @param string $author_filter 
+   * @param bool $transmitted
+   * @param boll $byMoth
+   * @param bool $byYear
+   * @return int
+   */
+  public static function countTransactions( $author_filter=null,$transmitted=false, $byMoth=false, $byYear=false)
+  {
+  	$sql="SELECT DISTINCT ht.id FROM users,helios_transactions ht,helios_transactions_workflow htw where ht.id=htw.transaction_id AND users.id=ht.user_id ";
+	
+
+  	if ($author_filter != null)
+  	{
+  		$sql.=$author_filter;
+  	}
+  	if ($transmitted)
+  	{
+  		//3 = transmis
+  		$sql.=" AND htw.status_id=3";
+  	}
+  	if ($byMoth)
+  	{
+  		$sql.=" AND ht.submission_date >='".date('Y-m-01 00:00:00')."'";
+  	}
+  	else if ($byYear)
+  	{
+  		$sql.=" AND ht.submission_date >='".date('Y-01-01 00:00:00')."'";
+  	}
+  	
+  	$db =& DatabasePool::getInstance();
+	
+		$result = $db->select($sql);
+
+	 $trans=0;
+		if (! $result->isError()) {
+		  while ($row = $result->get_next_row()) {
+			$trans++;
+		  }
+		}
+		return $trans;
+  }
+  
+  /**
+   * this function is due to connecte with db for the information of every transaction. and calculate the volume of the tranactions selected.
+   *
+   * @param string $author_filter
+   * @param bool $transmitted
+   * @param bool $byMoth
+   * @param bool $byYear
+   * @return int size of all transaction. 
+   */
+  public static function countTransactionVol($author_filter, $transmitted=false, $byMoth=false, $byYear=false)
+  {
+  	
+  	$sql="SELECT DISTINCT ht.id, ht.file_size FROM users,helios_transactions ht,helios_transactions_workflow htw where ht.id=htw.transaction_id AND users.id=ht.user_id ";
+ 
+  	if ($author_filter != null)
+  	{
+  		$sql.=$author_filter;
+  	}
+  	if ($transmitted)
+  	{
+  		//3 = transmis
+  		$sql.=" AND htw.status_id=3";
+  	}
+  	if ($byMoth)
+  	{
+  		$sql.=" AND ht.submission_date >='".date('Y-m-01 00:00:00')."'";
+  	}
+  	else if ($byYear)
+  	{
+  		$sql.=" AND ht.submission_date >='".date('Y-01-01 00:00:00')."'";
+  	}
+  	$db =& DatabasePool::getInstance();
+	
+		$result = $db->select($sql);
+	
+		$trans=0; 
+		if (! $result->isError()) {
+		  while ($row = $result->get_next_row()) {
+			$trans+=$row["file_size"];
+		  }
+		}
+		return $trans;
+  }
+  
+  public function CheckDuplicate()
+  {
+  	$sql .= "select sha1 FROM helios_transactions WHERE sha1='".$this->sha1."'";
+	
+		$db =& DatabasePool::getInstance();
+	
+		$result = $db->select($sql);
+		if (! $result->isError() && $result->get_next_row()) 
+			return true;
+		return false;
+  }
+  
+}

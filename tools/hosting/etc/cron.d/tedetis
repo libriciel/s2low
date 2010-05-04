@@ -1,0 +1,16 @@
+# m h dom mon dow user command
+# SHELL=/bin/sh
+# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Invocation de la servlet du tiers de teletransmission
+#*/2 * * * * root /usr/bin/wget -O - -q http://127.0.0.1:8080/tedetis/WakeupServlet >/dev/null 2>&1
+
+# Invocation de la servlet du tiers de teletransmission
+#*/2 * * * * root /usr/bin/wget -O - -q http://127.0.0.1:8080/tedetis/MailReception >/dev/null 2>&1
+
+
+# Récupération des listes de révocation des certificats
+0 0 * * * root /usr/local/lib/tedetis/update_ca_crl /etc/tedetis/ssl/validca && /etc/init.d/apache2 restart >/dev/null 2>&1
+
+# Nettoyage des messages recus ages de plus de 2 mois
+30 0 * * * root find /tdt-workspace/received_mails/ -type f -mtime +93 -exec rm {} \;

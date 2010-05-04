@@ -1,0 +1,695 @@
+body{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	margin: 0px;
+    padding: 0px 0px 10px 0px;
+	overflow: auto;
+    background-color: white;
+    text-align: left;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+a img { 
+    border: none;
+}
+
+input,select,textarea {
+	border : 1px solid #aaaaaa;
+	background-color : #FFFFFF;
+    padding: 1px;
+}
+
+input.checkbox {
+        border : 0px;
+}
+
+a.bouton { 
+    margin: 15px;
+    padding: 3px;
+    font-size: 11px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    background-color: #bbc7e1;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+input.submit_button {
+  background-color: #bbc7e1;
+  border-color: black;
+  color: black;
+  font-weight: bold;
+  margin: 5px;
+  padding: 2px;
+  font-size: 11px;
+  overflow: visible;
+  width: auto;
+}
+
+/*
+Style du bandeau d'en-tete
+*/
+#header {
+    margin: 0px;
+    padding: 0px;
+	text-align: left;
+	background-color: transparent;
+}
+
+#home_header1 {
+    text-align: left;
+    padding: 0px;
+    margin: 0px;
+}
+
+#home_header1 img {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+#home_header2 {
+    text-align: left;
+    padding: 0px;
+    margin: -3px 0px 30px 0px;	
+}
+
+#home_header2 img {
+    padding: 0px;
+    margin: 0px;
+}
+
+#hmenu{
+   text-align: right;
+    margin: 0px 50px;
+    padding: 2px 15px;
+}
+
+/*
+Style du menu de gauche
+*/
+#menu-area {
+	float: left;
+    margin: 15px 0px 0px 0px;
+    padding-bottom: 5px;
+	background-color: transparent;
+	width: 190px;
+    text-align: center;
+}
+
+#menu { 
+	background-color: transparent;
+	padding: 5px 0px 5px 5px;
+    margin: 5px 0px 5px 5px;
+    font-size: 11px;
+    border-right: 2px solid #aaaaaa;
+    text-align: left;
+}
+
+#menu ul { 
+    margin: 0px;
+}
+
+#menu a:hover { 
+    color: #ff6600;
+	background-color: #d6deeb;
+    text-decoration: none;
+}
+
+#menu #menu-header {
+    font-size: 11px;
+    text-align: left;
+    margin: 0px 15px 0px 0px;
+    padding: 0px 0px 5px 0px;
+    border-bottom: 1px solid #aaaaaa;
+}
+
+#menu .text-menu { 
+    padding-left: 20px;
+}
+
+#menu li {
+    margin: 0px;
+    padding: 0px;
+}
+
+#menu li a {
+    display: block;
+    padding: 2px 2px 2px 5px;
+}
+
+#menu .menu-list-title { 
+    font-size: 12px;
+    color: #555555;
+    list-style-type: none;
+    margin: 7px 0px 7px -20px;
+    padding: 6px 0px 10px 30px;
+    font-weight: bold;
+    background: url("/custom/images/menu_title_background.jpg") no-repeat top left;
+}
+
+/*
+ Boite à erreur
+*/
+#errorbox {
+    margin: 15px 20px 10px 10px;
+    /*width: 700px;*/
+    padding: 5px 15px;
+    border-color: #ff6600;
+    border-width: 2px;
+    border-style: solid;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: left;
+}
+
+#errorbox #close_button_area { 
+    display: inline;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#errorbox #close_button_area a {
+    border: none;
+}
+
+/*
+Style du contenu principal
+*/
+#content {
+	margin-left: 200px;
+    width: 770px;
+	overflow: visible;
+	padding: 10px;
+    text-align: left;
+    font-size: 11px;
+}
+
+#content a { 
+    border-bottom: 1px dashed black;
+}
+
+#content a.bouton { 
+    border-bottom: 1px solid black;
+}
+
+#content a:hover { 
+    text-decoration: none;
+    border-bottom: 1px solid black;
+}
+
+#content a.icon {
+    border-bottom: none;
+}
+
+#content a.icon:hover {
+    border-bottom: none;
+}
+
+#content .bouton-danger {
+    margin-top: 10px;
+    background: #CC0000;
+    color: white;
+    font-weight: bold;
+    border-style: dashed;
+    border-color: black;
+    border-width: 1px;
+}
+
+#content p.home {
+    margin-left: 20px;
+    margin-bottom: 25px;
+}
+
+#content h2.home {
+	color: #555555;
+    font-size: 14px;
+	font-weight: bold;
+    border: none;
+    margin: 0px;
+}
+
+#content #mention { 
+    margin: 0px;
+    padding: 0px;
+}
+
+#content #mention p.home {
+    margin-bottom: 0px;
+}
+
+#content #mention_hebergement {
+    float: left;
+    clear: left;
+    padding: 0px;
+    padding-right: 50px;
+    margin-right: 50px;
+    border-right: 2px solid #aaaaaa;
+}
+
+
+#content #mention_partenaires { 
+    padding: 0px;
+}
+
+#content #mention_partenaires img { 
+    margin-left: 20px;
+}
+
+#content h1 {
+	color: #ff6600;
+	font-weight: bold;
+    font-size: 18px;
+    text-align: left;
+}
+
+#content h2 {
+	color: #555555;
+	border-bottom: 1px ridge #555555;
+	padding: 3px;
+	font-weight: bold;
+    font-size: 14px;
+	margin-bottom: 10px;
+    text-align: left;
+}
+
+#content div.data_table {
+    text-align: center;
+}
+
+#content h3 {
+	color: #555555;
+	border-left: 1px ridge #555555;
+	padding: 3px;
+	font-weight:bold;
+    font-size: 12px;
+	margin-left: 30px;
+    text-align: left;
+}
+
+#content table {
+    text-align: center;
+}
+
+#content table.data {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11px;
+}
+
+#content table * .long_field { 
+    text-align: left;
+}
+
+#content th.data {
+    background-color: #bbc7e1;
+    color: black;
+	font-size: 11px;
+    text-align: center
+}
+
+#content table.logs {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 11px;
+}
+
+#content tr.alternate1 {
+    background-color: #FFFFFF;
+}
+
+#content tr.alternate2 {
+    background-color: #bbc7e1;
+}
+
+#content td.td-input{
+	padding-left: 10px;
+    text-align: left;
+}
+
+#content td.td-register {
+    font-weight: bold;
+    font-size: 11px;
+	color: black;
+	background-color: #bbc7e1;
+	text-align: right;
+	padding: 3px;
+	width: 50%;
+}
+
+#content dd.inactive,dt.inactive {
+  color: grey;
+  font-style: italic;
+}
+
+#content .list_form { 
+  margin: 5px 5px 15px 20%;
+}
+
+#content .list_form dt {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+#content .list_form dt a {
+  font-weight: normal;
+  text-decoration: none;
+  border-bottom: 1px black dashed;
+}
+
+#content .list_form dt a:hover {
+  text-decoration: none;
+  border-bottom: 1px black solid;
+}
+
+#content .list_form dd input {
+  margin-bottom: 4px;
+}
+
+#content .toggle_title { 
+  cursor: pointer;
+}
+
+#content #form_progress { 
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* zone de filtrage */
+#content #filtering_area {
+  font-size: 11px;
+  text-align: center;
+}
+
+#content #filtering_area table {
+  font-size: 11px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#content #filtering_area td { 
+  padding: 0px;
+  margin: 0px;
+}
+
+#content #filtering_area td.title { 
+  text-align: right;
+}
+
+#content #filtering_area td.value { 
+  text-align: left;
+}
+
+#content #filtering_area select {
+  font-size: 11px;
+}
+
+/* zone de bouton d'actions */
+#content #actions_area {
+  text-align: center;
+}
+
+#content #actions_area p {
+  text-align: left;
+}
+
+/* Mail système */
+
+#content td.td_mailAddress {
+    font-size: 11px;
+	background-color: #bbc7e1;
+	text-align: left;
+
+}
+#content td.td_mailDescription {
+	padding-left: 2px;
+	text-align: left;
+}
+
+/* Liste d'attribut */
+#attribute_list { 
+  text-align: left;
+  font-size: 11px;
+}
+
+#attribute_list dt { 
+  font-weight: bold;
+}
+
+#attribute_list .tree_level_1 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+#attribute_list .tree_level_2 { 
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+#attribute_list .tree_level_3 { 
+  font-size: 11px;
+  margin-left: 25px;
+}
+
+#attribute_list .tree_level_4 { 
+  font-size: 11px;
+  margin-left: 35px;
+}
+
+#attribute_list .tree_level_5 { 
+  font-size: 11px;
+  margin-left: 45px;
+}
+
+/* Style zone d'informations */
+
+#info_area { 
+  border: 0px;
+  border-top: 1px solid black;
+  float: left;
+  clear: left;
+  padding: 5px 0px 10px 5px;
+  margin: 30px 5px 15px 0px;
+  width: 175px;
+  font-size: 11px;
+  font-weight: normal;
+  text-align: justify;
+  color: #555555;
+}
+
+#info_area .button_area { 
+  margin: 2px 0px 0px 0px;
+  padding: 0px;
+  text-align: center;
+} 
+
+#info_area h3 {
+	color: #555555;
+	border-left: 1px ridge #555555;
+	padding: 3px;
+	font-weight:bold;
+    font-size: 12px;
+	margin-left: 0px;
+    text-align: left;
+}
+
+/* Style du pager */
+
+#pager {
+  border: 0px;
+  float: left;
+  clear: left;
+  padding: 5px 0px 10px 10px;
+  margin: 5px 5px 15px 0px;
+  width: 190px;
+  font-size: 11px;
+  font-weight: bold;
+  text-align: left;
+  color: #555555;
+}
+
+#pager h1 {
+  font-size: 12px;
+  margin: 0px 20px 5px 0px;
+  border-bottom: 1px solid #aaaaaa;
+}
+
+#pager h2 {
+  font-size: 11px;
+  margin-left: 0px;
+}
+
+#pager .links_area {
+  text-align: center;
+  padding-right: 10px;
+  margin-bottom: 10px;
+}
+
+/*
+Style du pied de page
+*/
+#footer{
+	color: black;
+	clear: both;
+	text-align: center;
+    width: 950px;
+    margin: 25px 35px 15px 35px;
+    border-top: 1px solid #aaaaaa;
+}
+#footer a {
+	color: black;
+    border-bottom: 1px dashed #aaaaaa;
+	text-decoration: none;
+}
+#footer a:hover {
+	color: black;
+	text-decoration: none;
+    border-bottom: 1px solid #aaaaaa;
+}
+
+/* Module Actes */
+
+.actes_files_form {
+  margin-right: 50px;
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #fffecc;
+  border: 1px dashed black;
+}
+
+.actes_files_form dl {
+  margin: 0px;
+  padding: 0px;
+}
+
+dl.envelopes_list dt { 
+  font-size: 11px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+#content .expander {
+  margin: 0px;
+  padding: 0px 3px;
+  border: 1px solid black;
+  font-family: monospace;
+}
+
+#content .expander:hover {
+  text-decoration: none;
+}
+
+table.transactions_list {
+  font-size: 11px;
+}
+
+table.transactions_list th {
+  background-color: #bbc7e1;
+}
+
+table.transactions_list td, table.transactions_list th {
+  border-top: 1px solid #aaaaaa;
+  border-left: 1px solid #aaaaaa;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  padding: 5px;
+  text-align: center;
+}
+
+table.workflow_list {
+  font-size: 11px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.file_list {
+  font-size: 11px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.file_list td, table.file_list th { 
+  border-top: 1px solid #aaaaaa;
+  border-left: 1px solid #aaaaaa;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  padding: 5px;
+  text-align: center;
+}
+
+table.file_list dl {
+  margin: 0px;
+}
+
+table.file_list dt {
+  font-style: italic;
+}
+
+table.workflow_list td, table.workflow_list th {
+  border-top: 1px solid #aaaaaa;
+  border-left: 1px solid #aaaaaa;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  padding: 5px;
+  text-align: center;
+}
+
+.action { 
+  margin-left: 60px;
+  margin-bottom: 15px;
+}
+
+#content a.normal { border-bottom: 1px none blue; color: blue; background-color: transparent;}
+#content a.normal:hover { border-bottom: 1px block blue; color: blue; text-decoration: underline;}
+
+div.groupemail {float: left;}
+div.entoure { border: 1px dashed blue;  float:right; overflow: auto}
+
+div.listmail { float:left;}
+div.actionmail {text-align: right; float: right;}
+
+
+div.selected { background-color: #bbc7e1; }
+
+.groupemail {
+margin-right:0px;
+position:relative;
+left:1px;
+}
+
+.groupemail div.normal {
+padding:10px 4px 10px 4px;
+background-color:#F7F8F9;
+border-right:1px solid #C7D9FD;
+}
+
+.groupemail div.selected {
+background-color:#EBF2FF;
+border:1px solid #C7D9FD;
+border-right:1px solid #EBF2FF;
+}
+
+
+.listmail {
+padding:4px;
+background-color:#EBF2FF;
+border:1px solid #C7D9FD;
+min-height:300px;
+}

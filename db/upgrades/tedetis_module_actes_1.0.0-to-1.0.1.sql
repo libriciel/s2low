@@ -1,0 +1,1 @@
+ALTER TABLE actes_classification_requests ADD xml_data text DEFAULT NULL;

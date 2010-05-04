@@ -1,0 +1,472 @@
+<?php
+
+/*
+ * Tedetis - Copyright 2006 Alternance-Soft
+ * Module Helios
+ * Contributeur : Cristina Pop, Mars 2007 
+ *
+ * contact@alternancesoft.com
+ *
+ * Ce logiciel est un programme informatique servant à la
+ * dématérialisation de l'administration. 
+ *
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * sur le site "http://www.cecill.info".
+ *
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordées par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ *
+ * A cet régard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur autant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs sysèmes et ou de leurs données et, plus généralement, 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ *
+ * Le fait que vous puissiez accèder à cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+*/
+?>
+<?php
+
+/**
+ * \file public.ssl/modules/helios/index.php
+ * \brief Page d'accueil du module ACTES
+ * \author Cristina.Pop <cpop@alternancesoft.com>
+ * \date 19.03.2007
+ * 
+ *
+ * Cette page affiche la liste des transactions du module
+ * Helios et permet de les modifier ou d'en créer de nouvelles
+ *
+ * Modifications :
+ * Auteur   Date       Commentaire
+ *
+ */
+
+// Configuration
+require_once ("../../../config/config.php");
+require_once (SITEROOT . '/class/include.class.php');
+
+require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
+require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
+
+
+// Instanciation du module courant
+$module = new Module();
+if (!$module->initByName("helios")) {
+  $_SESSION["error"] = "Erreur d'initialisation du module";
+  header("Location: " . WEBSITE_SSL);
+  exit ();
+}
+
+$me = new User();
+
+if (!$me->authenticate()) {
+  $_SESSION["error"] = "Echec de l'authentification";
+  header("Location: " . WEBSITE);
+  exit ();
+}
+
+if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+  $_SESSION["error"] = "Accès refusé";
+  header("Location: " . WEBSITE_SSL);
+  exit ();
+}
+
+
+
+
+$fstatus = Helpers :: getVarFromGet("status");
+$fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
+$fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
+$fmin_ack_date = Helpers :: getVarFromGet("min_ack_date");
+$fmax_ack_date = Helpers :: getVarFromGet("max_ack_date");
+$fnum =Helpers :: getVarFromGet("num");
+$fauthority = Helpers :: getVarFromGet("authority");
+
+
+$doc = new HTMLLayout();
+
+//JS
+
+$js =<<<EOJS
+<script type="text/javascript">
+//<![CDATA[
+function show_all() {
+  toggle_all("block", "-");
+}
+
+function hide_all() {
+  toggle_all("none", "+");
+}
+
+function toggle_all(style, symbol) {
+  done = false;
+  i = 0;
+
+  while (! done) {
+	var content = document.getElementById("envelope_content_" + i);
+	var expander = document.getElementById("expander_" + i);
+
+	if (content && expander) {
+	  content.style.display = style;
+	  expander.innerHTML = symbol;
+	} else {
+	  done = true;
+	}
+	i++;
+  }
+}
+
+function toggle_envelope_content(id) {
+  var content = document.getElementById("envelope_content_" + id);
+  var expander = document.getElementById("expander_" + id);
+
+  if (content.style.display == "block") {
+	content.style.display = "none";
+	expander.innerHTML = "+";
+  } else {
+	content.style.display = "block";
+	expander.innerHTML = "-";
+  }  
+}
+
+function GereChkbox(conteneur, a_faire) {
+  var blnEtat=null;
+  var Tab = document.getElementsByTagName("input");
+  for(var i = 0; i < Tab.length; i++){  
+	Chckbox=Tab[i];
+	if (Chckbox.getAttribute("type")=="checkbox") {
+		blnEtat = (a_faire=='0') ? false : (a_faire=='1') ? true : (Chckbox.checked) ? false : true;
+		Chckbox.checked=blnEtat;
+	}
+  }
+}
+
+function afficheWarning(){
+  var n = 0;
+  var liste = document.getElementsByTagName("input");
+  for(var i = 0; i < liste.length; i++){
+    if (liste[i].getAttribute("type")=="checkbox"){
+      if(liste[i].checked) n++;
+    }
+  }
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnés ?\\n";
+  msg += "Cette action est non réversible et est sous votre entière responsabilité";
+  return confirm(msg);
+}
+//]]>
+</script>
+EOJS;
+//---->JS
+
+//!!!!ok am nevoie de JS
+$doc->addHeader($js);
+
+$doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
+
+$doc->setTitle("Tedetis : module helios");
+
+$doc->buildMenu($me);
+
+//deja HELIOS!!!!
+$html = "<div id=\"content\">\n";
+$html .= "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
+
+$status = HeliosTransaction :: getStatusList();
+$status["10"] = "En cours";
+$status["all"] = "Tous les états";
+
+//filtrage aria
+$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";
+$html .= "<div id=\"filtering_area\" style=\"display: block;\">\n";
+$html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/index.php\" method=\"get\">\n";
+
+//temp
+//$html .="<br> <hr> ".phpinfo();
+
+
+$html .= "<table>\n";
+
+//fstatus: status selecté
+if ($fstatus != "10" && empty ($fstatus)) {
+  $fstatus = "10";
+}
+
+
+$html .= "<tr>\n";
+
+$html .= "<td class=\"title\">Etat&nbsp;:</td>\n";
+$html .= "<td class=\"value\">" . $doc->getHTMLSelect("status", $status, $fstatus) . "</td>\n";
+$html .= "<td class=\"title\">Le nom de fichier contient&nbsp;:\n</td>";
+$html .= "<td class=\"value\"><input type=\"text\" name=\"num\" size=\"20\" maxlength=\"25\"";
+
+//$fnum: le nom du fichier contient...
+if (strlen($fnum) > 0) {
+  $html .= " value=\"" . $fnum . "\"";
+}
+
+
+$html .= " /></td>\n";
+
+//des autres options...
+
+//les dates
+$html .= "<tr>\n";
+//date minimale de postage
+$html .= "<td class=\"title\">Date de postage minimale&nbsp;:</td>\n";
+$html .= "<td class=\"value\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_submission_date) . "\"/>\n";
+$html .= "    <script type=\"text/javascript\">\n";
+$html .= "    //<![CDATA[\n";
+$html .= "    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');\n";
+$html .= "    //]]>\n";
+$html .= "    </script>\n";
+
+$html .= "    <a href=\"#datepicker\" id=\"datepicker_min_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_submission_date.toggleDatePicker(); return false;\">";
+
+if ($fmin_submission_date) {
+  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date));
+} else {
+  $html .= "[&nbsp;Choisir une date&nbsp;]";
+}
+$html .= "</a>\n";
+$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_min_submission_date_calendar\"></div></td>\n";
+
+//la date minimale d'aquittement
+$html .= "<td class=\"title\">Date d'acquittement minimale&nbsp;:</td>\n";
+$html .= "<td class=\"value\"><input id=\"min_ack_date\" name=\"min_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_ack_date) . "\"/>\n";
+$html .= "    <script type=\"text/javascript\">\n";
+$html .= "    //<![CDATA[\n";
+$html .= "    obj_min_ack_date = new DatePicker('min_ack_date', 'fr');\n";
+$html .= "    //]]>\n";
+$html .= "    </script>\n";
+
+$html .= "    <a href=\"#datepicker\" id=\"datepicker_min_ack_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_ack_date.toggleDatePicker(); return false;\">";
+
+if ($fmin_ack_date) {
+  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date));
+} else {
+  $html .= "[&nbsp;Choisir une date&nbsp;]";
+}
+$html .= "</a>\n";
+$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_min_ack_date_calendar\"></div></td>\n";
+$html .= "</tr>\n";
+
+//fin datele minimale...
+
+//begin date maximale
+$html .= "<tr>\n";
+$html .= "<td class=\"title\">Date de postage maximale&nbsp;:</td>\n";
+$html .= "<td class=\"value\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_submission_date) . "\"/>\n";
+$html .= "    <script type=\"text/javascript\">\n";
+$html .= "    //<![CDATA[\n";
+$html .= "    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');\n";
+$html .= "    //]]>\n";
+$html .= "    </script>\n";
+
+$html .= "    <a href=\"#datepicker\" id=\"datepicker_max_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_submission_date.toggleDatePicker(); return false;\">";
+
+if ($fmax_submission_date) {
+  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date));
+} else {
+  $html .= "[&nbsp;Choisir une date&nbsp;]";
+}
+$html .= "</a>\n";
+$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_max_submission_date_calendar\"></div></td>\n";
+
+$html .= "<td class=\"title\">Date d'acquittement maximale&nbsp;:</td>\n";
+$html .= "<td class=\"value\"><input id=\"max_ack_date\" name=\"max_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_ack_date) . "\"/>\n";
+$html .= "    <script type=\"text/javascript\">\n";
+$html .= "    //<![CDATA[\n";
+$html .= "    obj_max_ack_date = new DatePicker('max_ack_date', 'fr');\n";
+$html .= "    //]]>\n";
+$html .= "    </script>\n";
+
+$html .= "    <a href=\"#datepicker\" id=\"datepicker_max_ack_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_ack_date.toggleDatePicker(); return false;\">";
+
+if ($fmax_ack_date) {
+  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date));
+} else {
+  $html .= "[&nbsp;Choisir une date&nbsp;]";
+}
+$html .= "</a>\n";
+$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_max_ack_date_calendar\"></div></td>\n";
+$html .= "</tr>\n";
+//END date maximale
+
+
+$html .= "<tr>\n";
+
+//colectivitïvité  pour superuser
+$colspan = 4;
+if ($me->isSuper()) {
+  $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
+
+  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName(), $fauthority) . "</td>\n";
+
+  $colspan = 2;
+}
+
+$html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
+$html .= "<td colspan=\"" . $colspan . "\"><a href=\"" . WEBSITE_SSL . "/modules/helios/index.php\" class=\"bouton\">Remise&nbsp;à&nbsp;zéro</a></td>\n";
+$html .= "</tr>\n";
+
+$html .= "</table>\n";
+$html .= "</form>\n";
+$html .= "</div>\n"; //filtrage aria
+
+
+  $html .= "<div id=\"actions_area\">\n";
+  $html .= "<h2>Actions</h2>\n";
+if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
+  if ($module->getParam("paper") == "on") {
+    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de crï¿½r de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dï¿½atï¿½ialisï¿½).</p>\n";
+  } else {
+ $html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_fichier_import.php\" class=\"bouton\">Importer un fichier</a>\n";
+	
+  }
+
+}
+$html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bouton\" title=\"afficher la liste des réponses reçues\">Réponse d'Hélios</a>\n";
+  $html .= "</div>\n";
+
+$filter = array ();
+// Construction chaine de filtrage
+if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivitï¿½
+ //verification $authority
+   if (isset ($fauthority) && strlen($fauthority) > 0) {
+    $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
+  }
+}
+
+elseif ($me->isAdmin()) { // Un admin d'une collectivitï¿½ne voit que les transactions de sa collectivitï¿½  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
+} else {
+  // Un utilisateur ne voit que ses propres transactions
+  $filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
+}
+
+if (isset ($fstatus) && is_numeric($fstatus)) {
+  if ($fstatus == "10") {
+    // Le statut 10 signifie les transactions en cours
+    //-1 = il y a des problème, just pour test dans plateform de ovh.
+    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3)";
+  } else {
+    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) = " . addslashes($fstatus);
+  }
+}
+
+if (isset ($fnum) && !empty ($fnum)) {
+  $filter[] .= "helios_transactions.filename LIKE '%" . addslashes($fnum) . "%'";
+}
+
+
+// On ajoute les filtres relatifs aux dates
+if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) >= '" . addslashes($fmin_submission_date) . "'";
+}
+if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) <= '" . addslashes($fmax_submission_date) . "'";
+}
+if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) ) >= '" . addslashes($fmin_ack_date) . "'";
+}
+if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) ) <= '" . addslashes($fmax_ack_date) . "'";
+}
+
+$where = "";
+if (count($filter) > 0) {
+  $where = "WHERE " . implode($filter, " AND ");
+}
+
+
+$ht=new HeliosTransaction();
+//$envelopes : en fait, des docs financiers..
+
+ $envelopes = $ht->getDocumentList($where);
+
+
+$i = 0;
+
+$html .= "<h2>Liste des fichiers postés</h2>\n";
+
+
+//
+if (count($envelopes) > 0) {
+   if ($me->isAdmin()) {
+      $owner = new User($envelope["user_id"]);
+      $owner->init();
+    }
+
+    $sortWay = ($_GET["sortway"] == "asc") ? "desc" : "asc";
+
+    //if ($me->isSuper()) {
+    //  $zeAuthority = new Authority($owner->get("authority_id"));
+    //  $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
+    //}
+
+    
+    
+    $html .= "<table class=\"transactions_list\">\n";
+  
+    $html .= " <tr>\n";
+    $html .= "  <th>Nom de fichier</th>\n";
+    $html .= "  <th>Date de postage</th>\n";
+    $html .= "  <th>Etat actuel</th>\n";
+    $html .= "  <th>Actions</th>\n";
+    $html .= " </tr>\n";
+
+
+ foreach ($envelopes as $envelope) {
+  
+      $transaction_id=$envelope["id"];
+
+      $html .= "<tr>\n";
+ 
+ 
+      $html .= " <td>" . $envelope["filename"]. "</td>\n";
+      $html .= " <td>" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
+      $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";   
+      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dï¿½ail\" /></a></td>\n";
+      $html .= "</tr>\n";
+    
+
+    $i++;
+  }
+
+    $html .= "</table>\n";
+  
+} else {
+  $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
+}
+$html .= "</div>\n";
+
+//pour la pagination...
+
+
+
+$doc->buildPager($ht);
+
+$doc->addBody($html);
+
+$doc->buildFooter();
+
+$doc->display();
+?>

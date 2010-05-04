@@ -1,0 +1,81 @@
+<?php 
+
+require_once("Zend/Pdf.php");
+
+
+
+class TamponPDF {
+	
+	const DEFAULT_FONT_SIZE = 10;
+	const DEFAULT_ALPHA_TRANSPARENCY = 0.5;
+	
+	private $docOrigine;
+	private $setText;
+	private $font;
+	private $fontSize;
+	private $alphaTransparency;
+	
+	public function __construct(Zend_Pdf $docOrigine){
+		$this->docOrigine = $docOrigine;
+		$this->setText(array("Affiché le " . date("d/m/Y")));
+		$this->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA)
+		);
+		$this->setFontSize(self::DEFAULT_FONT_SIZE);
+		$this->setAlphaTransparency(self::DEFAULT_ALPHA_TRANSPARENCY);
+	}
+
+	public function setText(array $textLine){
+		$this->textLine = $textLine;
+	}
+
+	public function setFont(Zend_Pdf_Resource_Font $font){
+		$this->font = $font;	
+	}
+	
+	public function setFontSize($fontSize){
+		$this->fontSize = $fontSize;
+	}
+	
+	public function setAlphaTransparency($alpha){
+		$this->alphaTransparency = $alpha;
+	}
+	
+	public function getFileAsString(){
+		foreach ($this->docOrigine->pages as $page){
+			$this->drawTampon($page);
+		}
+		return $this->docOrigine->render();
+	}
+	
+	public function render(){
+		foreach ($this->docOrigine->pages as $page){
+			$this->drawTampon($page);
+		}
+		$this->sendDocumentToBrowser();
+	}
+	
+	private function drawTampon(Zend_Pdf_Page $page){
+		$page->setFont($this->font, $this->fontSize);
+		$page->setAlpha($this->alphaTransparency);
+	
+		$width  = $page->getWidth();
+		$height = $page->getHeight();
+	
+		$page -> drawRectangle($width - 200, $height - 10,$width - 10,$height - 60,
+				Zend_Pdf_Page::SHAPE_DRAW_STROKE);
+	
+		$image = Zend_Pdf_Image::imageWithPath(SITEROOT.'/public.ssl/custom/images/logo_s2low.jpg');
+	
+		$page->drawImage($image, $width - 112, $height - 58,$width - 12,$height - 45);			
+				
+		foreach($this->textLine as $i => $t){
+			$page->drawText($t, $width - 195, $height - 22 - $i*15 ,'iso-8859-1');
+		}
+	}
+	
+	private function sendDocumentToBrowser(){
+		header('Content-type: application/pdf');
+		header('Content-Disposition: inline; filename=doc.pdf');
+		echo $this->docOrigine->render();
+	}
+}
