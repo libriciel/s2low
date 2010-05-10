@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
 CREATE TABLE authority_types (
 	id integer PRIMARY KEY,
 	parent_type_id integer,
