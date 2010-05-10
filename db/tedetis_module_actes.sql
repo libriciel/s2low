@@ -1,3 +1,6 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 CREATE SEQUENCE actes_envelopes_id_seq;
 CREATE TABLE actes_envelopes (
 	id integer PRIMARY KEY DEFAULT nextval('actes_envelopes_id_seq'),

@@ -178,7 +178,6 @@ class User extends DataObject {
 	public function authenticate() {
 	  	
 		$this->retrieveInfoFromClientCertificate();
-		
 		$ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
 				
 		if (! $ids) {

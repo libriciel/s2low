@@ -54,7 +54,6 @@
 // Configuration
 require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
-
 $me = new User();
 
 if (! $me->authenticate()) {

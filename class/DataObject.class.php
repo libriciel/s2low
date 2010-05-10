@@ -501,6 +501,9 @@ class DataObject {
   */
   protected function pagerFetchData() {
 	$offset = ($this->currentPage - 1) * $this->displayItems;
+	if ($offset < 0){
+		$offset = 0;	
+	}
 	$sql = "SELECT " . $this->fields . " FROM " . $this->from . " " . $this->cond;
 
 	if (! empty($this->order)) {

@@ -1,3 +1,6 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 ALTER TABLE users ADD login character varying(128) DEFAULT NULL;
 ALTER TABLE users ADD password character varying(128) DEFAULT NULL;
 

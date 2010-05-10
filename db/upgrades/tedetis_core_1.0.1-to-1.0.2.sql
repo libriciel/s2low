@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
 CREATE SEQUENCE authority_groups_id_seq;
 CREATE TABLE authority_groups (
 	id integer PRIMARY KEY DEFAULT nextval('authority_groups_id_seq'),

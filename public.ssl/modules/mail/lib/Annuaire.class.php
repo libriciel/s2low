@@ -77,7 +77,8 @@ class Annuaire {
 		if (! $id_groupe){
 			$groupe->set("authority_id",$this->authority_id);
 			$groupe->set('name',$groupeName);
-			$id_groupe = $groupe->save(false);				
+			$groupe->save(false);	
+			$id_groupe = $groupe->getGroupeIdFromName($groupeName,$this->authority_id);
 		}
 		$groupe = new GroupeMail($id_groupe);
 		$groupe->addUser($id_user);

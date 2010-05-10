@@ -134,7 +134,7 @@ class ActesIncludedFile extends DataObject {
 	  $cmd = 'tar xzf ' . ACTES_FILES_UPLOAD_ROOT . '/' . $this->envelope->get("file_path") . " -C " . $tmpDir . " " . $this->filename;
 	  
 	  //$status = system($cmd, $ret);
-	  Trace::wrap_exec($cmd, &$status, &$ret);
+	  Trace::wrap_exec($cmd, $status, $ret);
 
 	  $ret_value = true;
 

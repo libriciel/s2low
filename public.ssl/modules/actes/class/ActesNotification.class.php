@@ -145,7 +145,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		}
 		//FIXME beuark !
 		$cmd = "tar xzf $filePath  -C ".$directory_unzip;
-		Trace::wrap_exec($cmd, &$status, &$ret);
+		Trace::wrap_exec($cmd, $status, $ret);
 		chdir($directory_unzip);
 		
 		$files = scandir($directory_unzip);
@@ -158,7 +158,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		}
 		
 		$cmd = "tar czf ".$filePath_tampon." * ";
-		Trace::wrap_exec($cmd, &$status, &$ret);
+		Trace::wrap_exec($cmd, $status, $ret);
 		
 		return $filePath_tampon;
 	}

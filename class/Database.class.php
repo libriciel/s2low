@@ -158,7 +158,7 @@ class Database {
     // Connexion à la base    host=sheep port=5432 dbname=marie user=mouton password=baaaa    
     $connection_string= "dbname=".$this->base." user=".$this->user." password=".$this->password;
     if ($this->host != "") $connection_string="host=".$this->host." ".$connection_string;
-    $this->link = @pg_connect($connection_string);
+    $this->link = pg_connect($connection_string);
     if ($this->link == FALSE) {
       //Traitement de l'erreur
       //$error=pg_last_error(); echo $error;

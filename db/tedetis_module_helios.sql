@@ -1,3 +1,6 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 CREATE SEQUENCE helios_transactions_id_seq;
 CREATE TABLE helios_transactions (
     id integer DEFAULT nextval('helios_transactions_id_seq'::regclass) NOT NULL,

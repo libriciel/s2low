@@ -1,3 +1,6 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 CREATE TABLE actes_messages_status (
     id integer PRIMARY KEY not null,
     nom character(64)

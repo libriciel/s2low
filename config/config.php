@@ -2,7 +2,7 @@
 
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
 
-define('SITEROOT', "/home/eric/adullactWS/TedetisPHP/");
+define('SITEROOT', "/home/eric/adullact/s2low/TedetisPHP/");
 
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://127.0.0.3");
@@ -60,7 +60,7 @@ define('TEDETIS_KEY_PASS','tedetis');
 
 define('TEDETIS_TMP_PATH','/tmp/');
 
-define("VERIFICATION_SIREN",true);
+define("VERIFICATION_SIREN",false);
 
 //////////////////////////////////
 ///// Paramètre module Actes /////

@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
 ALTER TABLE actes_included_files ADD posted_filename VARCHAR(512);
 
 ALTER TABLE actes_transactions ADD archive_url VARCHAR(1024);

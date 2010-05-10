@@ -1,3 +1,7 @@
+
+SET CLIENT_ENCODING TO 'LATIN9';
+
+
 --
 -- Name: mail_annuaire_id_seq; Type: SEQUENCE; Schema: public; Owner: tedetis
 --

@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
 ALTER TABLE actes_classification_codes ALTER COLUMN description TYPE CHARACTER VARYING(256);
 
 ALTER TABLE authorities ALTER COLUMN broadcast_email TYPE text;

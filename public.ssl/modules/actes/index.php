@@ -178,7 +178,6 @@ $doc->buildMenu($me);
 
 // Initialisation de variables
 $trans = new ActesTransaction();
-
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 $transTypes = $trans->get("transactionTypes");
 $transTypes["0"] = "Tous les types";
@@ -339,7 +338,6 @@ if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
   }
   $html .= "</div>\n";
 }
-
 $filter = array ();
 // Construction chaîne de filtrage
 if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités
@@ -415,6 +413,7 @@ if (count($filter) > 0) {
 
 $env = new ActesEnvelope();
 $envelopes = $env->getEnvelopesList($where);
+
 $i = 0;
 
 $html .= "<h2>Liste des enveloppes de transactions</h2>\n";
