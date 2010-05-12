@@ -211,6 +211,14 @@ class mailController {
    	
    	global $me, $module;
    	
+
+	//HACK
+	if (empty($_POST) && empty($_FILES)){
+		$returnMsg = "le fichier ".$file['name']." est trop gros (".ini_get('upload_max_filesize')." maximum)" ;
+		include dirname(__FILENAME__)."/template/sendfailed.php"; 
+        	return false;
+	}
+
    	//vérification de mail adress.
 	$mailTo=Helpers :: getVarFromPost("mailto");
     $mailCC=Helpers :: getVarFromPost("mailcc");
