@@ -168,9 +168,12 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		
 		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
 		require_once(SITEROOT."/class/TamponPDF.class.php");
-		
-		$pdf = Zend_Pdf::load($file);
-
+	
+		try {	
+			$pdf = Zend_Pdf::load($file);
+		} catch (Exception $e){
+			return file_get_contents($file);
+		}
 		$tampon = new TamponPDF($pdf);
 		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['decision_date'])),
 		"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),

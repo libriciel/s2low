@@ -160,13 +160,17 @@ class ActesIncludedFile extends DataObject {
 			set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
 			require_once(SITEROOT."/class/TamponPDF.class.php");
 			
-			$pdf = Zend_Pdf::load($tmpDir . "/" .$this->filename);
+			try {	
+				$pdf = Zend_Pdf::load($tmpDir . "/" .$this->filename);
 	
-			$tampon = new TamponPDF($pdf);
-			$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['decision_date'])),
-			"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-			"Affiché le " ));
-			$tampon->render();
+				$tampon = new TamponPDF($pdf);
+				$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['decision_date'])),
+				"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
+				"Affiché le " ));
+				$tampon->render();
+			} catch (Exception $e){
+				Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype);
+			}
 		
 		} else 	if (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
 		  $this->errorMsg = "Erreur envoi fichier";
