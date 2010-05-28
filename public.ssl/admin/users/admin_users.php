@@ -1,11 +1,11 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ * Tï¿½Dï¿½TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jï¿½rï¿½me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant Ã  la
+ * Ce logiciel est un programme informatique servant ï¿½  la
  * dÃ©matÃ©rialisation de l'administration. 
  *
  * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
@@ -21,17 +21,17 @@
  * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
  * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
- * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
- * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * associÃ©s au chargement,  ï¿½  l'utilisation,  ï¿½  la modification et/ou au
+ * dÃ©veloppement et ï¿½  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½  
+ * manipuler et qui le rÃ©serve donc ï¿½  des dÃ©veloppeurs et des professionnels
  * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
- * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * utilisateurs sont donc invitÃ©s ï¿½  charger  et  tester  l'adÃ©quation  du
+ * logiciel ï¿½  leurs besoins dans des conditions permettant d'assurer la
  * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * ï¿½ l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * Le fait que vous puissiez accÃ©der ï¿½  cet en-tÃªte signifie que vous avez 
  * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
@@ -40,7 +40,7 @@
 /**
  * \file admin_users.php
  * \brief Page d'accueil de la section modification ou ajout d'utilisateur
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \author Jï¿½rï¿½me Schell <j.schell@alternancesoft.com>
  * \date 16.03.2006
  * 
  *
@@ -60,13 +60,13 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "ï¿½chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "Accï¿½s refusï¿½";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -88,10 +88,10 @@ $html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des utilisateurs";
 
 if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+  $html .= " de la collectivitï¿½ ï¿½&nbsp;" . $myAuthority->get("name") . "&nbsp;ï¿½";
 } elseif ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+  $html .= " du groupe ï¿½&nbsp;" . $myGroup->get("name") . "&nbsp;ï¿½";
 }
 
 $html .= "</h1>\n";
@@ -101,7 +101,7 @@ $html .= "<form action=\"admin_users.php\" method=\"get\">\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table>\n";
 $html .= "<tr>\n";
-$html .= "<td class=\"title\">Le rôle est&nbsp;:</td>\n";
+$html .= "<td class=\"title\">Le rï¿½le est&nbsp;:</td>\n";
 $html .= "<td class=\"value\">" . $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) . "</td>\n";
 $html .= "<td class=\"title\">Le nom contient&nbsp;:</td>\n";
 $html .= "<td class=\"value\"><input type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
@@ -117,13 +117,13 @@ $html .= "<tr>\n";
 $colspan = 4;
 if ($me->isGroupAdminOrSuper()) {
   if ($me->isGroupAdmin()) {
-	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id");
+	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
 	$colspan = 2;
   } else {
-	$cond = "";
+	$cond = " ORDER BY authorities.name ASC";
   }
 
-  $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
+  $html .= "<td class=\"title\">Collectivitï¿½&nbsp;:</td>\n";
   $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
 }
 
@@ -146,16 +146,16 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
 $html .= "<tr>\n";
 $html .= " <th class=\"data\">Nom</th>\n";
-$html .= " <th class=\"data\">Adresse électronique</th>\n";
+$html .= " <th class=\"data\">Adresse ï¿½lectronique</th>\n";
 $html .= " <th class=\"data\">R&ocirc;le</th>\n";
-$html .= " <th class=\"data\">État</th>\n";
+$html .= " <th class=\"data\">ï¿½tat</th>\n";
 $html .= " <th class=\"data\">Collectivit&eacute;</th>\n";
 $html .= " <th class=\"data\">Actions</th>\n";
 $html .= "</tr>\n";
 
 $filter = array();
-// Construction chaîne de filtrage
-if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et tous les groupes
+// Construction chaï¿½ne de filtrage
+if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivitï¿½s et tous les groupes
   if (isset($fauthority) && is_numeric($fauthority)) {
 	$filter[] .= "users.authority_id=" . addslashes($fauthority);
   }
@@ -164,7 +164,7 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et t
 	$filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
   }
 } elseif ($me->isGroupAdmin()) {
-  // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
+  // Un admin de groupe ne voit forcï¿½ment que les utilisateurs des collectivitï¿½ appartenant ï¿½ son groupe
   if (isset($fauthority) && strlen($fauthority) > 0) {
 	$auth = new Authority($fauthority);
 	if ($auth->isInGroup($me->get("authority_group_id"))) {
@@ -173,7 +173,7 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et t
   }
   $filter[] .= "authorities.authority_group_id='" . $me->get("authority_group_id") . "'";
 } elseif ($me->isAuthorityAdmin()) {
-  // Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
+  // Un admin d'une collectivitï¿½ ne voit forcï¿½ment que les utilisateurs de sa collectivitï¿½
   $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 }
 
@@ -190,7 +190,7 @@ if (count($filter) > 0) {
   $where = "WHERE " . implode($filter, " AND ");
 }
 
-// Récupération de la liste des utilisateurs en fonction du filtre
+// Rï¿½cupï¿½ration de la liste des utilisateurs en fonction du filtre
 $users = $me->getUsersList($where);
 $i = 0;
 

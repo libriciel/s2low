@@ -1,11 +1,11 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ * Tï¿½Dï¿½TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jï¿½rï¿½me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant Ã  la
+ * Ce logiciel est un programme informatique servant ï¿½  la
  * dÃ©matÃ©rialisation de l'administration. 
  *
  * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
@@ -21,17 +21,17 @@
  * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
  * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
- * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
- * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * associÃ©s au chargement,  ï¿½  l'utilisation,  ï¿½  la modification et/ou au
+ * dÃ©veloppement et ï¿½  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½  
+ * manipuler et qui le rÃ©serve donc ï¿½  des dÃ©veloppeurs et des professionnels
  * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
- * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * utilisateurs sont donc invitÃ©s ï¿½  charger  et  tester  l'adÃ©quation  du
+ * logiciel ï¿½  leurs besoins dans des conditions permettant d'assurer la
  * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * ï¿½ l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * Le fait que vous puissiez accÃ©der ï¿½  cet en-tÃªte signifie que vous avez 
  * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
@@ -40,7 +40,7 @@
 /**
  * \file admin_user_edit.php
  * \brief Page de modification ou d'ajout d'utilisateur
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \author Jï¿½rï¿½me Schell <j.schell@alternancesoft.com>
  * \date 16.03.2006
  * 
  *
@@ -59,13 +59,13 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "ï¿½chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "Accï¿½s refusï¿½";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -105,7 +105,7 @@ if (! $me->isSuper() && $mod) {
 		$canUserEdit = $me->canEditUser($new_id);
 	}
   if (! $canUserEdit) {
-	$_SESSION["error"] = "Impossible de modifier cet utilisateur. Accès refusé.";
+	$_SESSION["error"] = "Impossible de modifier cet utilisateur. Accï¿½s refusï¿½.";
 	header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
 	exit();
   }
@@ -123,10 +123,10 @@ $html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des utilisateurs";
 
 if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+  $html .= " de la collectivitï¿½ ï¿½&nbsp;" . $myAuthority->get("name") . "&nbsp;ï¿½";
 } elseif ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+  $html .= " du groupe ï¿½&nbsp;" . $myGroup->get("name") . "&nbsp;ï¿½";
 }
 
 $html .= "</h1>\n";
@@ -180,19 +180,19 @@ $html .= "  <td class=\"td-register\">Mot de passe*&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Mot de passe (à nouveau)*&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Mot de passe (ï¿½ nouveau)*&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"password\" name=\"password2\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
 $html .= " </tr>\n";
-$html .= "<tr><td>*uniquement nécessaire si deux utilisateurs ont le même certificat</td></tr>";
+$html .= "<tr><td>*uniquement nï¿½cessaire si deux utilisateurs ont le mï¿½me certificat</td></tr>";
 
 $html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Adresse électronique&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Adresse ï¿½lectronique&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"text\" name=\"email\" value=\"";
 $html .= ($val = Helpers::getFromSession("email")) ? htmlspecialchars($val) : htmlspecialchars($him->get("email"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Téléphone&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Tï¿½lï¿½phone&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"text\" name=\"telephone\" value=\"";
 $html .= ($val = Helpers::getFromSession("telephone")) ? htmlspecialchars($val) : htmlspecialchars($him->get("telephone"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
@@ -202,7 +202,7 @@ $html .= "  <td class=\"td-register\">Importer le certificat utilisateur (format
 $html .= "  <td class=\"td-input\"><input type=\"file\" name=\"certificate\" />".htmlspecialchars($him->get('subject_dn'))."</td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">État&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">ï¿½tat&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\">\n";
 $status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
 
@@ -213,15 +213,15 @@ $html .= " </tr>\n";
 
 if ($me->isGroupAdminOrSuper()) {
   if ($me->isGroupAdmin()) {
-	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id");
+	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
   } else {
-	$cond = "";
+	$cond = " ORDER BY authorities.name ASC";
   }
 
   $authorities = Authority::getAuthoritiesIdName($cond);
 
   $html .= " <tr>\n";
-  $html .= "  <td class=\"td-register\">Collectivité&nbsp;:</td>\n";
+  $html .= "  <td class=\"td-register\">Collectivitï¿½&nbsp;:</td>\n";
   $html .= "  <td class=\"td-input\">\n";
 
   if (! $mod || $new_id) {
@@ -237,7 +237,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " <tr> \n";
-$html .= "  <td class=\"td-register\">Rôle&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Rï¿½le&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\">\n";
 
 $roles = $me->get("roleTypes");
@@ -245,7 +245,7 @@ $roles = $me->get("roleTypes");
 $hisRole = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
 
 if (! $me->isSuper()) {
-  // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
+  // Les admin simple et de groupe ne peut pas crï¿½er un super admin ni un admin de groupe
   $tmp = array();
 
   foreach ($roles as $role => $descr) {
@@ -274,16 +274,16 @@ if ($me->isSuper()) {
   $html .= " </tr>\n";
 }
 
-// Récupération des modules actifs globalement
+// Rï¿½cupï¿½ration des modules actifs globalement
 $modules = Module::getActiveModulesList();
 
-// Récupération des modules authorisés pour la collectivité
+// Rï¿½cupï¿½ration des modules authorisï¿½s pour la collectivitï¿½
 $authModules = array();
 if ($mod) {
   $authModules = Module::getModulesForAuthority($him->get("authority_id"));
 } else {
   if ($me->isGroupAdminOrSuper()) {
-	// On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
+	// On ne sait pas ï¿½ l'avance ï¿½ quelle collectivitï¿½ appartiendra l'utilisateur
 	foreach ($modules as $module) {
 	  if ($me->isGroupAdmin()) {
 		if ($me->canGrantModule($module["name"])) {
@@ -338,16 +338,16 @@ $html .= "</form>\n";
 
 $ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
 
-$html .= "<h2>Autre rôle de l'utilisateur</h2>";
+$html .= "<h2>Autre rï¿½le de l'utilisateur</h2>";
 if (count($ids_cert) > 1){
 	$html .= "<div class=\"data_table\">\n";
 	$html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
 	$html .= "<tr>\n";
 	$html .= " <th class=\"data\">Login</th>\n";
 	$html .= " <th class=\"data\">Nom</th>\n";
-	$html .= " <th class=\"data\">Adresse électronique</th>\n";
+	$html .= " <th class=\"data\">Adresse ï¿½lectronique</th>\n";
 	$html .= " <th class=\"data\">R&ocirc;le</th>\n";
-	$html .= " <th class=\"data\">État</th>\n";
+	$html .= " <th class=\"data\">ï¿½tat</th>\n";
 	$html .= " <th class=\"data\">Collectivit&eacute;</th>\n";
 	$html .= " <th class=\"data\">Actions</th>\n";
 	$html .= "</tr>\n";
@@ -377,12 +377,12 @@ if (count($ids_cert) > 1){
 }
 
 if ($him->get('login')) {
-	$html .="<a href='admin_user_edit.php?new_id=".($id?$id:$new_id)."'>Créer un nouveau rôle avec le même certificat </a>";
+	$html .="<a href='admin_user_edit.php?new_id=".($id?$id:$new_id)."'>Crï¿½er un nouveau rï¿½le avec le mï¿½me certificat </a>";
 	if ($him->get('subject_dn')){
 		$html .= "(".htmlspecialchars($him->get('subject_dn')) .")";	
 	}
 } else {
-	$html .= "Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login";
+	$html .= "Si vous voulez crï¿½er un autre utilisateur a partir du mï¿½me certificat, vous devez saisir le champ login";
 }
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());

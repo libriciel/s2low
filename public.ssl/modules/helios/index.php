@@ -7,34 +7,34 @@
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant ï¿½ la
+ * dï¿½matï¿½rialisation de l'administration. 
  *
- * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franï¿½ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusï¿½e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordées par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pÃ¨se sur l'auteur du programme,  le
+ * En contrepartie de l'accessibilitï¿½ au code source et des droits de copie,
+ * de modification et de redistribution accordï¿½es par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitï¿½e.  Pour les mï¿½mes raisons,
+ * seule une responsabilitï¿½ restreinte pÃ¨se sur l'auteur du programme,  le
  * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet régard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur autant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs sysèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet rï¿½gard  l'attention de l'utilisateur est attirï¿½e sur les risques
+ * associï¿½s au chargement,  ï¿½ l'utilisation,  ï¿½ la modification et/ou au
+ * dï¿½veloppement et ï¿½ la reproduction du logiciel par l'utilisateur autant 
+ * donnï¿½ sa spï¿½cificitï¿½ de logiciel libre, qui peut le rendre complexe ï¿½ 
+ * manipuler et qui le rï¿½serve donc ï¿½ des dï¿½veloppeurs et des professionnels
+ * avertis possï¿½dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitï¿½s ï¿½ charger  et  tester  l'adï¿½quation  du
+ * logiciel ï¿½ leurs besoins dans des conditions permettant d'assurer la
+ * sï¿½curitï¿½ de leurs sysï¿½mes et ou de leurs donnï¿½es et, plus gï¿½nï¿½ralement, 
+ * ï¿½ l'utiliser et l'exploiter dans les mï¿½mes conditions de sï¿½curitï¿½. 
  *
- * Le fait que vous puissiez accèder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accï¿½der ï¿½ cet en-tï¿½te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptï¿½ les
  * termes.
 */
 ?>
@@ -48,7 +48,7 @@
  * 
  *
  * Cette page affiche la liste des transactions du module
- * Helios et permet de les modifier ou d'en créer de nouvelles
+ * Helios et permet de les modifier ou d'en crï¿½er de nouvelles
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -80,7 +80,7 @@ if (!$me->authenticate()) {
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "Accï¿½s refusï¿½";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -163,8 +163,8 @@ function afficheWarning(){
       if(liste[i].checked) n++;
     }
   }
-  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnés ?\\n";
-  msg += "Cette action est non réversible et est sous votre entière responsabilité";
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sï¿½lectionnï¿½s ?\\n";
+  msg += "Cette action est non rï¿½versible et est sous votre entiï¿½re responsabilitï¿½";
   return confirm(msg);
 }
 //]]>
@@ -184,11 +184,11 @@ $doc->buildMenu($me);
 
 //deja HELIOS!!!!
 $html = "<div id=\"content\">\n";
-$html .= "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
+$html .= "<h1>Helios - Dï¿½matï¿½rialisation de documents financiers</h1>\n";
 
 $status = HeliosTransaction :: getStatusList();
 $status["10"] = "En cours";
-$status["all"] = "Tous les états";
+$status["all"] = "Tous les ï¿½tats";
 
 //filtrage aria
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";
@@ -201,7 +201,7 @@ $html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/index.php\" method=\
 
 $html .= "<table>\n";
 
-//fstatus: status selecté
+//fstatus: status selectï¿½
 if ($fstatus != "10" && empty ($fstatus)) {
   $fstatus = "10";
 }
@@ -314,18 +314,18 @@ $html .= "</tr>\n";
 
 $html .= "<tr>\n";
 
-//colectivitïvité  pour superuser
+//colectivitï¿½vitï¿½  pour superuser
 $colspan = 4;
 if ($me->isSuper()) {
-  $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
-
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName(), $fauthority) . "</td>\n";
+  $html .= "<td class=\"title\">Collectivitï¿½&nbsp;:</td>\n";
+  $cond = " ORDER BY authorities.name ASC";
+  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
 
   $colspan = 2;
 }
 
 $html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-$html .= "<td colspan=\"" . $colspan . "\"><a href=\"" . WEBSITE_SSL . "/modules/helios/index.php\" class=\"bouton\">Remise&nbsp;à&nbsp;zéro</a></td>\n";
+$html .= "<td colspan=\"" . $colspan . "\"><a href=\"" . WEBSITE_SSL . "/modules/helios/index.php\" class=\"bouton\">Remise&nbsp;ï¿½&nbsp;zï¿½ro</a></td>\n";
 $html .= "</tr>\n";
 
 $html .= "</table>\n";
@@ -337,14 +337,14 @@ $html .= "</div>\n"; //filtrage aria
   $html .= "<h2>Actions</h2>\n";
 if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
   if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de crï¿½r de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dï¿½atï¿½ialisï¿½).</p>\n";
+    $html .= "<p>Le systï¿½me est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de crï¿½r de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dï¿½atï¿½ialisï¿½).</p>\n";
   } else {
  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_fichier_import.php\" class=\"bouton\">Importer un fichier</a>\n";
 	
   }
 
 }
-$html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bouton\" title=\"afficher la liste des réponses reçues\">Réponse d'Hélios</a>\n";
+$html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bouton\" title=\"afficher la liste des rï¿½ponses reï¿½ues\">Rï¿½ponse d'Hï¿½lios</a>\n";
   $html .= "</div>\n";
 
 $filter = array ();
@@ -365,7 +365,7 @@ elseif ($me->isAdmin()) { // Un admin d'une collectivitï¿½ne voit que les transa
 if (isset ($fstatus) && is_numeric($fstatus)) {
   if ($fstatus == "10") {
     // Le statut 10 signifie les transactions en cours
-    //-1 = il y a des problème, just pour test dans plateform de ovh.
+    //-1 = il y a des problï¿½me, just pour test dans plateform de ovh.
     $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3)";
   } else {
     $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) = " . addslashes($fstatus);
@@ -405,7 +405,7 @@ $ht=new HeliosTransaction();
 
 $i = 0;
 
-$html .= "<h2>Liste des fichiers postés</h2>\n";
+$html .= "<h2>Liste des fichiers postï¿½s</h2>\n";
 
 
 //
@@ -419,7 +419,7 @@ if (count($envelopes) > 0) {
 
     //if ($me->isSuper()) {
     //  $zeAuthority = new Authority($owner->get("authority_id"));
-    //  $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
+    //  $html .= " de la collectivitï¿½" . htmlspecialchars($zeAuthority->get("name"));
     //}
 
     
@@ -454,7 +454,7 @@ if (count($envelopes) > 0) {
     $html .= "</table>\n";
   
 } else {
-  $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
+  $html .= "Pas de transaction trouvï¿½e correspondant aux critï¿½res de filtrage.";
 }
 $html .= "</div>\n";
 

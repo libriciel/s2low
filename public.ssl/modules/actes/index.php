@@ -2,12 +2,12 @@
 
 
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ * Tï¿½Dï¿½TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jï¿½rï¿½me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant Ã  la
+ * Ce logiciel est un programme informatique servant ï¿½  la
  * dÃ©matÃ©rialisation de l'administration. 
  *
  * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
@@ -23,17 +23,17 @@
  * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
  * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
- * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
- * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * associÃ©s au chargement,  ï¿½  l'utilisation,  ï¿½  la modification et/ou au
+ * dÃ©veloppement et ï¿½  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½  
+ * manipuler et qui le rÃ©serve donc ï¿½  des dÃ©veloppeurs et des professionnels
  * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
- * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * utilisateurs sont donc invitÃ©s ï¿½  charger  et  tester  l'adÃ©quation  du
+ * logiciel ï¿½  leurs besoins dans des conditions permettant d'assurer la
  * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * ï¿½ l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * Le fait que vous puissiez accÃ©der ï¿½  cet en-tÃªte signifie que vous avez 
  * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
@@ -44,12 +44,12 @@
 /**
  * \file public.ssl/modules/actes/index.php
  * \brief Page d'accueil du module ACTES
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \author Jï¿½rï¿½me Schell <j.schell@alternancesoft.com>
  * \date 27.07.2006
  * 
  *
  * Cette page affiche la liste des transactions du module
- * ACTES et permet de les modifier ou d'en créer de nouvelles
+ * ACTES et permet de les modifier ou d'en crï¿½er de nouvelles
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -72,13 +72,13 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "ï¿½chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "Accï¿½s refusï¿½";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -159,8 +159,8 @@ function afficheWarning(){
       if(liste[i].checked) n++;
     }
   }
-  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnées ?\\n";
-  msg += "Cette action est non réversible et est sous votre entière responsabilité.";
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sï¿½lectionnï¿½es ?\\n";
+  msg += "Cette action est non rï¿½versible et est sous votre entiï¿½re responsabilitï¿½.";
   return confirm(msg);
 }
 //]]>
@@ -183,11 +183,11 @@ $transTypes = $trans->get("transactionTypes");
 $transTypes["0"] = "Tous les types";
 $status = ActesTransaction :: getStatusList();
 $status["10"] = "En cours";
-$status["all"] = "Tous les états";
+$status["all"] = "Tous les ï¿½tats";
 //
 
 $html = "<div id=\"content\">\n";
-$html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
+$html .= "<h1>ACTES - Dï¿½matï¿½rialisation du contrï¿½le de lï¿½galitï¿½</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";
 $html .= "<div id=\"filtering_area\" style=\"display: block;\">\n";
 $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/index.php\" method=\"get\">\n";
@@ -197,7 +197,7 @@ if ($ftype != "0" && empty($ftype)) {
   $ftype = "1";
 }
 
-# Le statut par défaut est "En cours" (10)
+# Le statut par dï¿½faut est "En cours" (10)
 if ($fstatus != "10" && $fstatus != "all" && ! is_numeric($fstatus)) {
   $fstatus = "10";
 }
@@ -210,9 +210,9 @@ $html .= "<td class=\"value\">" . $doc->getHTMLSelect("nature", $transNatures, $
 
 $html .= "</tr>\n";
 $html .= "<tr>\n";
-$html .= "<td class=\"title\">État&nbsp;:</td>\n";
+$html .= "<td class=\"title\">ï¿½tat&nbsp;:</td>\n";
 $html .= "<td class=\"value\">" . $doc->getHTMLSelect("status", $status, $fstatus) . "</td>\n";
-$html .= "<td class=\"title\">Le numéro contient&nbsp;:\n</td>";
+$html .= "<td class=\"title\">Le numï¿½ro contient&nbsp;:\n</td>";
 $html .= "<td class=\"value\"><input type=\"text\" name=\"num\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fnum) > 0) {
@@ -241,8 +241,8 @@ if ($fmin_submission_date) {
   $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
-  // On définit une date par défaut pour accelerer les appels...
-   // Il faudra trouver la source réelle du problème...
+  // On dï¿½finit une date par dï¿½faut pour accelerer les appels...
+   // Il faudra trouver la source rï¿½elle du problï¿½me...
   $fmin_submission_date='1977-01-01';
 }
 $html .= "</a>\n";
@@ -312,15 +312,15 @@ $html .= "<tr>\n";
 
 $colspan = 4;
 if ($me->isSuper()) {
-  $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
-
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName(), $fauthority) . "</td>\n";
+  $html .= "<td class=\"title\">Collectivitï¿½&nbsp;:</td>\n";
+  $cond = " ORDER BY authorities.name ASC";
+  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
 
   $colspan = 2;
 }
 
 $html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-$html .= "<td colspan=\"" . $colspan . "\"><a href=\"" . WEBSITE_SSL . "/modules/actes/index.php\" class=\"bouton\">Remise&nbsp;à&nbsp;zéro</a></td>\n";
+$html .= "<td colspan=\"" . $colspan . "\"><a href=\"" . WEBSITE_SSL . "/modules/actes/index.php\" class=\"bouton\">Remise&nbsp;ï¿½&nbsp;zï¿½ro</a></td>\n";
 $html .= "</tr>\n";
 $html .= "</table>\n";
 $html .= "</form>\n";
@@ -330,25 +330,25 @@ if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
   $html .= "<div id=\"actions_area\">\n";
   $html .= "<h2>Actions</h2>\n";
   if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le système est actuellement en mode «&nbsp;papier&nbsp;». Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématérialisés).</p>\n";
+    $html .= "<p>Le systï¿½me est actuellement en mode ï¿½&nbsp;papier&nbsp;ï¿½. Dans ce mode il est impossible de crï¿½er de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dï¿½matï¿½rialisï¿½s).</p>\n";
   } else {
-    $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php\" class=\"bouton\">Créer une transaction</a>\n";
+    $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php\" class=\"bouton\">Crï¿½er une transaction</a>\n";
     $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_import.php\" class=\"bouton\">Importer une enveloppe</a>\n";
     $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php\" class=\"bouton\">Traitement par lots</a>\n";
   }
   $html .= "</div>\n";
 }
 $filter = array ();
-// Construction chaîne de filtrage
-if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités
+// Construction chaï¿½ne de filtrage
+if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivitï¿½s
   if (isset ($fauthority) && strlen($fauthority) > 0) {
     $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
   }
 }
-elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité
+elseif ($me->isAdmin()) { // Un admin d'une collectivitï¿½ ne voit que les transactions de sa collectivitï¿½
   $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 } else {
-  // Un utilisateur ne voit que ses propres transactions ou de ces collègues de services....
+  // Un utilisateur ne voit que ses propres transactions ou de ces collï¿½gues de services....
   $serviceUser = new ServiceUser(DatabasePool::getInstance());
   $collegues = $serviceUser->getMesCollegues($me->getId());
   $id_col = $me->getId();
@@ -373,7 +373,7 @@ if (isset ($fstatus) && is_numeric($fstatus)) {
   if ($fstatus == "10") {
     // Le statut 10 signifie les transactions en cours
     
-  	//modifié par HTan, pour bug 190=> lenteur de la plateforme.
+  	//modifiï¿½ par HTan, pour bug 190=> lenteur de la plateforme.
   	// je supprimer date = (SELECT MAX(date) FROM actes_transactions_workflow WHERE transaction_id = atw.transaction_id) 
   	// parce que:
   	// 		1. il a propose de faire ca.
@@ -403,7 +403,7 @@ if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
   $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4) <= '" . addslashes($fmax_ack_date) . "'";
 }
 
-//Permettait de palier le problème d'indexation
+//Permettait de palier le problï¿½me d'indexation
 //$filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 1) >= '1977-01-01'";
 
 $where = "";
@@ -420,7 +420,7 @@ $html .= "<h2>Liste des enveloppes de transactions</h2>\n";
 
 if (count($envelopes) > 0) {
   $html .= "<form id=\"div_chck\" onsubmit=\"return afficheWarning()\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" method=\"post\">\n";
-  $html .= "<div><a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Déplier toutes les enveloppes\">[&nbsp;Tout déplier&nbsp;]</a>\n";
+  $html .= "<div><a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Dï¿½plier toutes les enveloppes\">[&nbsp;Tout dï¿½plier&nbsp;]</a>\n";
   $html .= "<a href=\"#tedetis\" onclick=\"javascript:hide_all();\" title=\"Replier toutes les enveloppes\">[&nbsp;Tout replier&nbsp;]</a></div>\n";
   $html .= "<dl class=\"envelopes_list\">\n";
 
@@ -434,35 +434,35 @@ if (count($envelopes) > 0) {
 
     $sortWay = ($_GET["sortway"] == "asc") ? "desc" : "asc";
 
-    $html .= "<dt><a href=\"#tedetis\" onclick=\"toggle_envelope_content(" . $i . ");\" id=\"expander_" . $i . "\" class=\"expander\">-</a> Enveloppe n°";
+    $html .= "<dt><a href=\"#tedetis\" onclick=\"toggle_envelope_content(" . $i . ");\" id=\"expander_" . $i . "\" class=\"expander\">-</a> Enveloppe nï¿½";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "id",
       "sortway" => $sortWay
-    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> déposée le ";
+    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> dï¿½posï¿½e le ";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "submission_date",
       "sortway" => $sortWay
-    )) . "\" title=\"Trier par date de dépôt\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
+    )) . "\" title=\"Trier par date de dï¿½pï¿½t\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
     $html .= (count($transactions) > 1) ? " transactions" : " transaction";
     
     if ($me->isSuper()) {
       $zeAuthority = new Authority($owner->get("authority_id"));
-      $html .= " de la collectivité " . htmlspecialchars($zeAuthority->get("name"));
+      $html .= " de la collectivitï¿½ " . htmlspecialchars($zeAuthority->get("name"));
     } 
     
     $html .= "</dt>\n";
     $html .= "<dd id=\"envelope_content_" . $i . "\" class=\"envelope_content\" style=\"display: block\">\n";
     $html .= "<table class=\"transactions_list\">\n";
     $html .= " <tr>\n";
-    $html .= "  <th>Sél.</th>\n";
+    $html .= "  <th>Sï¿½l.</th>\n";
     $html .= "  <th>Type de transaction</th>\n";
-    $html .= "  <th>Numéro de l'acte</th>\n";
-   	$html .= "  <th>Numéro Interne de l'acte</th>\n";
+    $html .= "  <th>Numï¿½ro de l'acte</th>\n";
+   	$html .= "  <th>Numï¿½ro Interne de l'acte</th>\n";
     $html .= "  <th>Objet</th>\n";
     $html .= "  <th>Nature</th>\n";
-    $html .= "  <th>État</th>\n";
+    $html .= "  <th>ï¿½tat</th>\n";
     //$html .= "  <th>Identifiant unique</th>\n";
-    $html .= " <th>courrier ministère</th>";
+    $html .= " <th>courrier ministï¿½re</th>";
     $html .= " <th>Suivie par</th>";
     $html .= "  <th>Actions</th>\n";
     $html .= " </tr>\n";
@@ -502,11 +502,11 @@ if (count($envelopes) > 0) {
       
       
       
-	  $html .= "   <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a>";
+	  $html .= "   <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dï¿½tail\" /></a>";
     
 
 	  if ($transaction->get("archive_url")) {
-		$html .= "   <a href=\"" . $transaction->get("archive_url") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/icone_archivage.png\" alt=\"image_archivage\" title=\"Accéder à l'archivage de cette transaction\" /></a>";
+		$html .= "   <a href=\"" . $transaction->get("archive_url") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/icone_archivage.png\" alt=\"image_archivage\" title=\"Accï¿½der ï¿½ l'archivage de cette transaction\" /></a>";
 	  }
 	  
 	  $html .= " </td>\n";
@@ -519,17 +519,17 @@ if (count($envelopes) > 0) {
   }
 
   $html .= "</dl>\n";
-  $html .= "<div><a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sélectionner\">[&nbsp;Tout sélectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout désélectionner\">[&nbsp;Tout desélectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sélection\">[&nbsp;Inverser la sélection&nbsp;]</a></div>\n";
+  $html .= "<div><a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sï¿½lectionner\">[&nbsp;Tout sï¿½lectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout dï¿½sï¿½lectionner\">[&nbsp;Tout desï¿½lectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sï¿½lection\">[&nbsp;Inverser la sï¿½lection&nbsp;]</a></div>\n";
 
-  // Cloture des transaction sélectionnées
+  // Cloture des transaction sï¿½lectionnï¿½es
   $html .= "<div class=\"action\">\n";
-  $html .= "Passer les transactions sélectionnées en état&nbsp;<select name=\"status\"><option value=\"valid\">Validé</option><option value=\"invalid\">Refusé</option></select>";
-  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exécuter\"/>\n";
+  $html .= "Passer les transactions sï¿½lectionnï¿½es en ï¿½tat&nbsp;<select name=\"status\"><option value=\"valid\">Validï¿½</option><option value=\"invalid\">Refusï¿½</option></select>";
+  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exï¿½cuter\"/>\n";
   $html .= "</div>\n</form>";
 } else {
-  $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
+  $html .= "Pas de transaction trouvï¿½e correspondant aux critï¿½res de filtrage.";
 }
 $html .= "</div>\n";
 
