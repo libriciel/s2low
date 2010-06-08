@@ -1,45 +1,5 @@
 <?php
 
-
-/*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, AoÃ»t 2006 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant Ã  la
- * dÃ©matÃ©rialisation de l'administration. 
- *
- * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÃctes©e par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
- * de modification et de redistribution accordÃ©s par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
- * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÃ©dants successifs.
- *
- * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
- * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
- * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
- * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
- * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
- * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * Ã l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
- *
- * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
- * termes.
-*/
-?>
-<?php
-
 /**
  * \file actes_transac_show.php
  * \brief Page d'affichage d'une transaction Actes
@@ -117,6 +77,9 @@ if ( ! $permission->canView($me,$owner)){
 
 $myAuthority = new Authority($me->get("authority_id"));
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
+
+$status = ActesTransaction :: getStatusList();
+$workflow = $trans->fetchWorkflow();
 
 
 $transactionTypes = $trans->get("transactionTypes");
@@ -260,9 +223,18 @@ if (is_array($files)) {
       } else {
             $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>" ; 
             $html .= "&nbsp;&nbsp;";
-            $html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
-			$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
-            $html .= "</dd>";
+            
+            
+            //TODO Horrible hack....
+            foreach ($workflow as $stage) {
+            
+            	if ($stage['status_id'] == 4){
+            		$html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
+					$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+            	}
+            }
+			
+			$html .= "</dd>";
       }
      }
 
@@ -291,8 +263,6 @@ if (is_array($files)) {
 $html .= "</table>\n";
 $html .= "</div>\n";
 // Affichage du Workflow
-$workflow = $trans->fetchWorkflow();
-$status = ActesTransaction :: getStatusList();
 
 $html .= "<h3>Cycle de vie de la transaction</h3>\n";
 
@@ -315,7 +285,7 @@ if (count($workflow) > 0) {
 	//---fin de modification
 	
   foreach ($workflow as $stage) {
-    $html .= " <tr>\n";
+    $html .= "<tr>\n";
 
     //modified by TH 18-04-2008
 	//---------begin
@@ -323,7 +293,7 @@ if (count($workflow) > 0) {
 	//$id = Helpers :: getVarFromGet("id"); with this identifier, we can easily findout all the infomation in the acte.
 
 	
-   if ($status[$stage["status_id"]]=="Acquittement reçu" )
+   if ($stage["status_id"]==4 )
     {
     	
     	$html .= "  <td>" . $status[$stage["status_id"]].$create_pdf_html."</td>\n";
@@ -359,7 +329,7 @@ if (count($courrier) != 0){
   		$html .= "  <td>".$transactionTypes[$info["type"]]."</td>\n";
   		$html .= "  <td>".$info["sens"]."</td>\n";
   		$html .= "  <td>
-  		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" .$id . "\"><img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"> </a></td>\n";
+  		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" .$id . "\"><img alt=\"pdf\" src=\"../../custom/images/erreur.png\"> </a></td>\n";
   		$html .= " </tr>\n";
 	}
 	

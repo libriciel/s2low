@@ -2,7 +2,7 @@
 
 ini_set("error_reporting", E_ALL & ~E_NOTICE);
 
-define('SITEROOT', "/home/eric/adullact/s2low/TedetisPHP/");
+define('SITEROOT', "/home/eric/slow/TedetisPHP/");
 
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://127.0.0.3");
