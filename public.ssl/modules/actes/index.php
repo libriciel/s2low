@@ -434,7 +434,7 @@ if (count($envelopes) > 0) {
 
     $sortWay = ($_GET["sortway"] == "asc") ? "desc" : "asc";
 
-    $html .= "<dt><a href=\"#tedetis\" onclick=\"toggle_envelope_content(" . $i . ");\" id=\"expander_" . $i . "\" class=\"expander\">-</a> Enveloppe nÂ°";
+    $html .= "<dt><a href=\"#tedetis\" onclick=\"toggle_envelope_content(" . $i . ");\" id=\"expander_" . $i . "\" class=\"expander\">-</a> Enveloppe n°";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "id",
       "sortway" => $sortWay
