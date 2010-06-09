@@ -67,13 +67,13 @@ class Group extends DataObject {
 
   protected $dbFields = array(
 							  "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true, "unique" => true ),
-							  "status" => array( "descr" => "ï¿½tat", "type" => "isInt", "mandatory" => true)
+							  "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true)
 							  );
 
 
   /**
    * \brief Constructeur d'un groupe de collectivité
-   * \param id integer Numéro d'id d'un groupe de collectivité½ existante avec lequel initialiser l'objet
+   * \param id integer Numéro d'id d'un groupe de collectivité existante avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
     parent::__construct($id);
@@ -312,11 +312,11 @@ class Group extends DataObject {
 
   /**
    * \brief Méthode d'obtention de la liste des groupes et tous leurs attributs
-   * \param $cond (optionnel) chaï¿½ne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requïpête BDD
+   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
    * \return tableau des groupes
   */
   public function getGroupsList($cond = "") {
-	if (! $this->pagerInit('authority_groups.id, authority_groups.name, authority_groups.status', 'authority_groups', $cond)) {
+	if (! $this->pagerInit('authority_groups.id, authority_groups.name, authority_groups.status', 'authority_groups', $cond, 'authority_groups.name', null, null, 'asc')) {
 	  return false;
 	}
 
