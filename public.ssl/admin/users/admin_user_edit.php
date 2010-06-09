@@ -237,7 +237,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " <tr> \n";
-$html .= "  <td class=\"td-register\">Rï¿½le&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Rôle&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\">\n";
 
 $roles = $me->get("roleTypes");
