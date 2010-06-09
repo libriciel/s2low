@@ -1,51 +1,49 @@
 <?php
-
-
 /*
- * Tedetis - Copyright 2006 Alternance-Soft
- * Contributeur : C. Pop, Mars 2007
+ * TéDéTIS - Copyright 2006 Alternance-Soft
+ * Contributeur : C. Pop Mars 2007
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ï¿½ la
- * dÃ©matÃ©rialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant à la
+ * dématèrialisation de l'administration. 
  *
- * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
- * de modification et de redistribution accordÃ©s par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
- * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
  *
- * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  ï¿½ l'utilisation,  ï¿½ la modification et/ou au
- * dÃ©veloppement et ï¿½ la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½ 
- * manipuler et qui le rÃ©serve donc ï¿½ des dÃ©veloppeurs et des professionnels
- * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s ï¿½ charger  et  tester  l'adÃ©quation  du
- * logiciel ï¿½ leurs besoins dans des conditions permettant d'assurer la
- * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * ï¿½l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
  *
- * Le fait que vous puissiez accÃ©der ï¿½ cet en-tÃªte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
 
 /**
  * \class HeliosTransaction HeliosTransaction.class.php
- * \brief Cette classe permet de gï¿½er les transactions HELIOS
+ * \brief Cette classe permet de gérerer les transactions HELIOS
  * \author Cristina Pop <cpop@alternancesoft.com> et Jï¿½ï¿½e Schell <j.schell@alternancesoft.com>
  * \date 20.02.2006
  * 
  *
- * Cette classe fournit des mï¿½hodes de gestion des transactions
+ * Cette classe fournit des méthodes de gestion des transactions
  * Helios
  *
  * Modifications :
@@ -88,7 +86,7 @@ class HeliosTransaction extends DataObject {
   protected $dbFields = array (
       //"id" => array( "descr" => "Identifiant de la transaction", "type" => "isInt", "mandatory" => true),
   	"user_id" => array (
-      "descr" => "Identifiant de l'utilisateur qui a crï¿½ la transaction",
+      "descr" => "Identifiant de l'utilisateur qui a créé la transaction",
       "type" => "isString",
       "mandatory" => true
     ),
@@ -100,7 +98,7 @@ class HeliosTransaction extends DataObject {
 
 
     "file_size" => array( 
-    	"descr" => "taille du fichier postï¿½",
+    	"descr" => "taille du fichier posté",
     	"type" => "isInt",
     	"mandatory" => true
   	),
@@ -131,7 +129,7 @@ class HeliosTransaction extends DataObject {
 
   /**
    * \brief Constructeur d'une transaction
-   * \param id integer Numï¿½ro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
     parent :: __construct($id);
@@ -140,8 +138,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Mï¿½hode initialisant l'entitï¿½avec l'identifiant courant
-   * \return true si succï¿½s, false sinon
+   * \brief Méthode initialisant l'entité avec l'identifiant courant
+   * \return true si succés, false sinon
   */
   public function init() {
     if (!parent :: init()) {
@@ -151,8 +149,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Mï¿½hode permettant de fixer la valeur d'un attribut
-   * \param $name chaï¿½e : Nom de l'attribut
+   * \brief Méthode permettant de fixer la valeur d'un attribut
+   * \param $name chaîne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   //cred ca fixeaza valori pentru atributele clasei...!
@@ -169,7 +167,7 @@ class HeliosTransaction extends DataObject {
   //added
   /**
      * \brief Méthode permettant d'obtenir l'id d'une transaction à partir du nom de fichier
-     * \param $name chaï¿½e : Nom du fichioer
+     * \param $name chaîne : Nom du fichier
      * \return id si okay, si non false
     */
   public function get_IdTransaction($filename) {
@@ -203,7 +201,7 @@ class HeliosTransaction extends DataObject {
 
   //added
   /*
-   * \brief Mï¿½hode pour obtenir toutes les transactions pour un utilisateur (idUser) donnï¿½
+   * \brief Méthode pour obtenir toutes les transactions pour un utilisateur (idUser) donné
    * 
    */
   //tmp...
@@ -284,8 +282,8 @@ class HeliosTransaction extends DataObject {
   */
 
   /**
-    * \brief Mï¿½hode d'obtention de la liste des enveloppes et tous leurs attributs
-    * \param $cond (optionnel) chaï¿½e : Chaï¿½e contenant les conditions (SQL) ï¿½appliquer ï¿½la fin de la requï¿½e BDD
+    * \brief Méthode d'obtention de la liste des enveloppes et tous leurs attributs
+    * \param $cond (optionnel) chaï¿½e : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
     * \return Tableau des enveloppes
     */
   public function getDocumentList($cond = "") {
@@ -303,7 +301,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /*
-   * \brief Mï¿½hode d'obtention du nom d efichier qui correponde ï¿½une transaction
+   * \brief Méthode d'obtention du nom d efichier qui correponde à une transaction
    * \param $transaction_id
    * \return filename
    * 
@@ -357,7 +355,7 @@ class HeliosTransaction extends DataObject {
   //la mine: ActesEnvelope -> HeliosTransaction si ActesTransaction-> HeliosTransactionWorkFlow
 
   /**
-   * \brief Mï¿½hode d'obtention de la liste des ids de transactions pour un fichier
+   * \brief Méthode d'obtention de la liste des ids de transactions pour un fichier
    * \param $id integer : Identifiant du fichier est l'id de la trasnaction
    * \return Tableau d'objet HeliosTransaction correspondant au fichier
   */
@@ -385,8 +383,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Mï¿½hode d'obtention de l'ï¿½at courant d'un transaction
-   * \return L'identifiant de l'ï¿½at courant de la transaction
+   * \brief Méthode d'obtention de l'état courant d'un transaction
+   * \return L'identifiant de l'état courant de la transaction
    */
   public function getCurrentStatus() {
     if (isset ($this->id) && !empty ($this->id)) {
@@ -404,7 +402,7 @@ class HeliosTransaction extends DataObject {
   }
 
  /**
-  * \brief Mï¿½hode de rï¿½upï¿½ation du cycle de vie de cette transaction
+  * \brief Méthode de récupération du cycle de vie de cette transaction
   * \return Un tableau contenant le workflow de la transaction
   */
   public function fetchWorkflow() {
@@ -422,7 +420,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   *  \brief Mï¿½hode d'obtention de l'id de l'user qui correponde ï¿½une transaction
+   *  \brief Méthhode d'obtention de l'id de l'user qui correponde à une transaction
    * \param $transaction_id
    * \return user name
    * //de testat
@@ -442,7 +440,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Mï¿½thode qui renvoie le fichier au navigateur
+   * \brief Méthode qui renvoie le fichier au navigateur
    */
   public function sendFile($sha1,$filename) {
     if (!file_exists(HELIOS_FILES_UPLOAD_ROOT . "/" . $sha1)) {
@@ -481,7 +479,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Mï¿½hode d'obtention de la liste des statuts des transactions
+   * \brief Méthode d'obtention de la liste des statuts des transactions
    * \return Tableau des statuts de transactions
    */
   public static function getStatusList() {
@@ -502,7 +500,7 @@ class HeliosTransaction extends DataObject {
 
  /**
   *  \brief get list de transaction
-  *  \param $authority_id: optional , pour spï¿½cialiser la collectivitï¿½.
+  *  \param $authority_id: optional , pour spécialiser la collectivité.
   *  \reuturn table de transactions
   * 
   */ 
@@ -510,7 +508,7 @@ class HeliosTransaction extends DataObject {
 		$sql = "SELECT DISTINCT ht.id, ht.filename, ht.sha1, ht.file_size, atw.date, auth.siren, auth.department, auth.district";
 		$sql .=" FROM helios_transactions ht,authorities auth, users, helios_transactions_workflow atw";
 		$sql .= " WHERE ht.user_id=users.id AND users.authority_id=auth.id AND atw.transaction_id=ht.id";
-		// On veut rï¿½cupï¿½rer la date oï¿½ la transaction a ï¿½tï¿½ transmise => statut 3
+		// On veut récupérer la date à la transaction a ététransmise => statut 3
 		$sql .= " AND atw.status_id=3";
 		
 		if ($authority_id) {
