@@ -1,51 +1,51 @@
 <?php
 /*
- * Tï¿½Dï¿½TIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jï¿½rï¿½me Schell, AoÃ»t 2006 
+ * TéDéTIS - Copyright 2006 Alternance-Soft
+ * Contributeur : Jérôme Schell, Août 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ï¿½  la
- * dÃ©matÃ©rialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant à la
+ * dématèrialisation de l'administration. 
  *
- * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
- * de modification et de redistribution accordÃ©s par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
- * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
  *
- * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  ï¿½  l'utilisation,  ï¿½  la modification et/ou au
- * dÃ©veloppement et ï¿½  la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½  
- * manipuler et qui le rÃ©serve donc ï¿½  des dÃ©veloppeurs et des professionnels
- * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s ï¿½  charger  et  tester  l'adÃ©quation  du
- * logiciel ï¿½  leurs besoins dans des conditions permettant d'assurer la
- * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * ï¿½ l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
  *
- * Le fait que vous puissiez accÃ©der ï¿½  cet en-tÃªte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
 ?>
 <?php
 /**
  * \file logs_view.php
- * \brief Page d'affichage du journal d'ï¿½vï¿½nements
- * \author Jï¿½rï¿½me Schell <j.schell@alternancesoft.com>
+ * \brief Page d'affichage du journal d'évènements
+ * \author Jérôme Schell <j.schell@alternancesoft.com>
  * \date 18.08.2006
  * 
  *
- * Cette page affiche les entrï¿½es du journal concernant l'utilisateur 
- * connectï¿½.
+ * Cette page affiche les entrées du journal concernant l'utilisateur 
+ * connectïé.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -59,7 +59,7 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "ï¿½chec de l'authentification";
+  $_SESSION["error"] = "Echec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -81,13 +81,13 @@ $doc->setTitle("Tedetis : Journal d'ï¿½vï¿½nements");
 $doc->buildMenu($me);
 
 $html = "<div id=\"content\">\n";
-$html .= "<h1>Journal d'ï¿½vï¿½nements";
+$html .= "<h1>Journal d'évènements";
 
 if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivitï¿½ ï¿½&nbsp;" . $myAuthority->get("name") . "&nbsp;ï¿½";
+  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
 } elseif ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe ï¿½&nbsp;" . $myGroup->get("name") . "&nbsp;ï¿½";
+  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
 }
 
 $html .= "</h1>\n";
@@ -98,7 +98,7 @@ $html .= "<table>\n";
 $html .= "<tr>\n";
 $html .= "<td class=\"title\">Module&nbsp;:</td>\n";
 $html .= "<td class=\"value\">" . $doc->getHTMLSelect("module", Module::getActiveModulesNames(), $fmodule) . "</td>\n";
-$html .= "<td class=\"title\">Sï¿½vï¿½ritï¿½&nbsp;:</td>\n";
+$html .= "<td class=\"title\">Sévérité&nbsp;:</td>\n";
 $html .= "<td class=\"value\">" . $doc->getHTMLSelect("severity", $log->get("severities"), $fseverity) . "</td>\n";
 $html .= "</tr>\n";
 $html .= "<tr>\n";
@@ -131,7 +131,7 @@ if ($me->isAdmin()) {
 	  $cond = " ORDER BY authorities.name ASC";
 	}
 
-	$html .= "<td class=\"title\">Collectivitï¿½&nbsp;:</td>\n";
+	$html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
 	$html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
 	$colspan = 2;
   }
@@ -146,7 +146,7 @@ $html .= "</form>\n";
 $html .= "</div><br />\n";
 
 $filter = array();
-// Construction chaï¿½ne de filtrage
+// Construction chaîne de filtrage
 if ($me->isAdmin()) {
   if (isset($fuser) && strlen($fuser) > 0) {
 	$filter[] .= "(users.name ILIKE '%" . addslashes($fuser) . "%' OR users.givenname ILIKE '%" . addslashes($fuser) . "%')";
@@ -160,7 +160,7 @@ if ($me->isAdmin()) {
 	if (isset($fauthority) && strlen($fauthority) > 0) {
 	  $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
 	}
-  } elseif ($me->isAuthorityAdmin()) { // Un admin d'une collectivitï¿½ ne voit forcï¿½ment que les entrï¿½es concernant sa collectivitï¿½
+  } elseif ($me->isAuthorityAdmin()) { // Un admin d'une collectivité ne voit forcément que les entrées concernant sa collectivité
 	$filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
   }
 } else {
@@ -196,14 +196,14 @@ $logEntries = $log->getLogEntriesList($where);
 $severities = $log->get("severities");
 
 
-$html .= "<h2>Entrï¿½es du journal</h2>\n";
+$html .= "<h2>Entrées du journal</h2>\n";
 
 if (count($logEntries) > 0) {
   $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"logs\">";
   $html .= "<tr>\n";
   $html .= " <th class=\"data\">Date</th>\n";
-  $html .= " <th class=\"data\">Crï¿½ï¿½ par</th>\n";
-  $html .= " <th class=\"data\">Sï¿½vï¿½ritï¿½</th>\n";
+  $html .= " <th class=\"data\">Créé par</th>\n";
+  $html .= " <th class=\"data\">Sévérité</th>\n";
   $html .= " <th class=\"data\">Module</th>\n";
   $html .= " <th class=\"data\">Utilisateur</th>\n";
   $html .= " <th class=\"data\">Message</th>\n";
@@ -228,7 +228,7 @@ if (count($logEntries) > 0) {
 	$html .= " <td>" . htmlspecialchars($logEntry["module"]) . "</td>\n";
 	$html .= " <td>" . (($owner) ? htmlspecialchars($owner->getPrettyName()) : "") . "</td>\n";
 	$html .= " <td class=\"long_field\">" . nl2br(htmlspecialchars($logEntry["message"])) . "</td>\n";
-	$html .= " <td><a href=\"" . WEBSITE_SSL . "/common/logs_get_timestamp.php?id=" . $logEntry["id"] . "\" title=\"Tï¿½lï¿½charger une archive contenant l'entrï¿½e de journal nï¿½" .$logEntry["id"] . " et sa signature\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/timestamping_icon.png\" alt=\"timestamp\" /></a></td>\n";
+	$html .= " <td><a href=\"" . WEBSITE_SSL . "/common/logs_get_timestamp.php?id=" . $logEntry["id"] . "\" title=\"Télécharger une archive contenant l'entrée de journal n°" .$logEntry["id"] . " et sa signature\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/timestamping_icon.png\" alt=\"timestamp\" /></a></td>\n";
 	$html .= "</tr>\n";
 
 	$i = ($i + 1) % 2;
@@ -236,7 +236,7 @@ if (count($logEntries) > 0) {
 
   $html .= "</table>\n";
 } else {
-  $html .= "Pas d'entrï¿½e de journal correspondant au filtrage spï¿½cifiï¿½.";
+  $html .= "Pas d'entrée de journal correspondant au filtrage spécifié.";
 }
 
 

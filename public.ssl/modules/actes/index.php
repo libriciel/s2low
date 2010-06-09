@@ -373,7 +373,7 @@ if (isset ($fstatus) && is_numeric($fstatus)) {
   if ($fstatus == "10") {
     // Le statut 10 signifie les transactions en cours
     
-  	//modifiÃ© par HTan, pour bug 190=> lenteur de la plateforme.
+  	//modifié par HTan, pour bug 190=> lenteur de la plateforme.
   	// je supprimer date = (SELECT MAX(date) FROM actes_transactions_workflow WHERE transaction_id = atw.transaction_id) 
   	// parce que:
   	// 		1. il a propose de faire ca.
