@@ -403,6 +403,18 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
   $actionHtml .= "</div>\n";
 }
 
+if ($trans->get("type") == 1 && $transStatus >= 4 && ! $trans->get('archive_url')){
+	  
+  $actionHtml .= "<div class=\"action\">\n";
+  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
+  $actionHtml .= "<p>Archivage légale&nbsp;:&nbsp;";
+  $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+  $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Archiver manuellement\" />\n";
+  $actionHtml .= "</p></form>\n";
+  $actionHtml .= "</div>\n";
+}
+
+
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
