@@ -2,6 +2,7 @@
 
 require_once(dirname(__FILE__)."/../../../../class/Database.class.php");
 require_once(dirname(__FILE__)."/../../../../class/Mailer.class.php");
+
 require_once("ActesPdf.class.php");
 
 class ActesNotification {
@@ -39,7 +40,6 @@ class ActesNotification {
 	}
 	
 	private function sendNotification(array $transactionInfo){
-		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
 			$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);

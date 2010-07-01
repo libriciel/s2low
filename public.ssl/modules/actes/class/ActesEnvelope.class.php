@@ -658,12 +658,23 @@ class ActesEnvelope extends DataObject {
    * \return True en cas de succès, false si l'archive n'est pas conforme
    */
   public function externalArchiveCheck() {
+  	
+  	
 	if (isset($this->file_path) && ! empty($this->file_path)) {
-	  $cHandle = curl_init(ACTES_CHECK_ARCHIVE_SERVLET . "?file=" . $this->file_path);
+		return $this->externalArchiveCheckFromFile($this->file_path);
+	
+	}
+  }
+  
+  public function externalArchiveCheckFromFile($file_path){
+    
+  	$trace = Trace::getInstance();
+  	$trace->log("Check du fichier $file_path");
+  	
+  	$cHandle = curl_init(ACTES_CHECK_ARCHIVE_SERVLET . "?file=" . $file_path);
 	
 	  curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
 	  curl_setopt($cHandle, CURLOPT_HEADER, false);
-	  
 	  if (($ret = curl_exec($cHandle)) === false) {
 		$this->errorMsg = "Erreur de communication interne.";
 		curl_close($cHandle);
@@ -671,16 +682,14 @@ class ActesEnvelope extends DataObject {
 	  }
 
 	  curl_close($cHandle);
-
+	  print_r($ret);
 	  $res = explode("\n", $ret);
-
 	  if (strcmp(trim($res[0]), "OK") == 0) {
 		return true;
 	  } else {
 		$this->errorMsg = utf8_decode(stripslashes($res[1]));
 		return false;
 	  }
-	}
   }
 
 

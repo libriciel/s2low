@@ -76,7 +76,7 @@ $log = new Log();
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Tedetis : Journal d'ï¿½vï¿½nements");
+$doc->setTitle("Tedetis : Journal d'évènements");
 
 $doc->buildMenu($me);
 
