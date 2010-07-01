@@ -202,7 +202,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			
 			return file_get_contents($file);
 		}
-
+		return $txt;
 	}
 	
 	private function setBroadcasted($transactionId) {
