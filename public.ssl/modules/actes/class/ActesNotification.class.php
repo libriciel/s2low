@@ -30,6 +30,8 @@ class ActesNotification {
 		$result = $this->db->select($sql);
 		
 		while ($row = $result->get_next_row()){
+			
+			echo "Notification de la transaction " . $row['transaction_id'] ." \n";
 			$this->sendNotification($row);
 		}
 	}
@@ -40,6 +42,7 @@ class ActesNotification {
 	}
 	
 	private function sendNotification(array $transactionInfo){
+		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
 			$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
@@ -64,8 +67,6 @@ class ActesNotification {
 				$mailer->addFile($fichier);
 			}
 		}
-		
-		
 		
 		$trans = new ActesTransaction();
 		$trans->setId($transactionInfo['transaction_id']);
@@ -178,7 +179,12 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['decision_date'])),
 		"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
 		"Affiché le " ));
-		return $tampon->getFileAsString();
+		try {
+			$txt =  $tampon->getFileAsString();
+		} catch (Exception $e){
+			
+			return file_get_contents($file);
+		}
 
 	}
 	

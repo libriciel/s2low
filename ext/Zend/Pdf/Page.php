@@ -436,6 +436,9 @@ class Zend_Pdf_Page
         if ($this->_contents == '') {
             return;
         }
+        if ( ! $this->_pageDictionary->Contents){
+        	throw new Exception("Bug de ZendPDF, pas de tampon ! ");
+        }
 
         if ($this->_pageDictionary->Contents->getType() != Zend_Pdf_Element::TYPE_ARRAY) {
             /**
