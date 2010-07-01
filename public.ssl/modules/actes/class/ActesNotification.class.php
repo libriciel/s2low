@@ -44,16 +44,27 @@ class ActesNotification {
 	private function sendNotification(array $transactionInfo){
 		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
-			$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
+			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
+			$emailsliste=explode(',',$transactionInfo['default_broadcast_email']);
+            foreach($emailsliste as $email){
+            	echo("Email : $email");
+                $this->sendMail($transactionInfo,$email,true);
+            }
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
 		}
 		if ($transactionInfo['broadcast_emails']){
-			$this->sendMail($transactionInfo,explode(',',$transactionInfo['broadcast_emails']),$transactionInfo['broadcast_send_sources'] == 1);
+			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['broadcast_emails']),$transactionInfo['broadcast_send_sources'] == 1);
+			$emailsliste=explode(',',$transactionInfo['broadcast_emails']);
+            foreach($emailsliste as $email){
+            	echo("Email : $email");
+            	$this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
+            }
 			$this->setBroadcasted($transactionInfo['transaction_id']);
 		}
 	}
 	
-	private function sendMail($transactionInfo,array $emails,$withFile){
+	//private function sendMail($transactionInfo,array $emails,$withFile){
+	private function sendMail($transactionInfo,$emails,$withFile){
 		if (! $emails){
 			return;
 		}
@@ -62,9 +73,12 @@ class ActesNotification {
 	
 		$mailer = new Mailer();
 		
-		foreach($emails as $email){
-			$mailer->addRecipient($email);
-		}
+		//foreach($emails as $email){
+		//	$mailer->addRecipient($email);
+		//}
+		
+		$mailer->addRecipient($emails);
+		
 		if ($withFile){
 			foreach ($lesFichiers as $fichier){
 				$mailer->addFile($fichier);
