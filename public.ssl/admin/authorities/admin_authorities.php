@@ -59,7 +59,7 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Echec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }

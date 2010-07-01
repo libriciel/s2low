@@ -92,7 +92,7 @@ $retour  = @$client->__soapCall("wsDepot", array("bordereau.xml", $seda, "versem
 
 
 //TODO : 
-$trans->set("archive_url", 'http://www.google.fr');
+$trans->set("archive_url", 'http://testasalae.dev.adullact.org');
 $trans->save();
 
 $_SESSION["error"] = "Transaction archivée avec succès";

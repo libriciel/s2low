@@ -1,4 +1,8 @@
 <?php 
+
+/**
+ * PEV  16-06-2010  ligne 132 : remplacement de NOtification par Notification
+ */
 require_once (SITEROOT . '/class/ExtendPdf.class.php');
 
 class ActesPdf {
@@ -125,7 +129,7 @@ class ActesPdf {
 		$this->pdf->myRow(array("","Classification matières/sous-matières:",$trans->get("classification")));
 		$this->pdf->myRow(array("","Identifiant unique:",$trans->get("unique_id")));
 		$this->pdf->myRow(array("","URL d'archivage:",$arch_url));
-		$this->pdf->myRow(array("","NOtification:",$notification));
+		$this->pdf->myRow(array("","Notification:",$notification));
 	}
 	
 	/**

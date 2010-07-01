@@ -118,7 +118,7 @@ class ExtendPdf extends FPDF
 	    {
 	        $w=$this->widths[$i];
 	        
-	        //default aligne ├а gouche.
+	        //default aligne ра gauche.
 	        $a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
 	        //default pas de border
 	        $b=isset($this->border[$i]) ? $this->border[$i] : 0;

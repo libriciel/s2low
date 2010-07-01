@@ -26,11 +26,11 @@ define('SUPPORT_URL', "http://support.invalid.fr/");
 define('HOTLINE_NUM', "xx.xx.xx.xx.xx");
 
 
-// Mode de l'application : dev ou prod (utilisï¿½ dans Database.class.php)
+// Mode de l'application : dev ou prod (utilisé dans Database.class.php)
 //define("MODE", "prod");
 define("MODE", "dev");
 
-// Permission des fichiers et rï¿½pertoires gï¿½nï¿½rï¿½s
+// Permission des fichiers et répertoires générés
 if (MODE == "dev"){
 	define('GENERATED_DIRS_PERMS', 0777);
 	define('GENERATED_FILES_PERMS', 0666);

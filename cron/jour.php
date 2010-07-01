@@ -1,6 +1,6 @@
 <?php 
 
-//Ce script est trÃ¨s gourmand en mÃ©moire s'il y a beaucoup de collectivitÃ© Ã  traiter.
+//Ce script est trèss gourmand en mémoire s'il y a beaucoup de collectivité à  traiter.
 ini_set("memory_limit","100M");
 
 

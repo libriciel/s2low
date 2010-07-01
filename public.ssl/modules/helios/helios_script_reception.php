@@ -62,7 +62,7 @@ $me = new User();
 //l'utilisateur'
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Ehec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
@@ -181,10 +181,10 @@ if (!Antivirus::checkArchiveSanity($uploadfile))
 }
 else
 {
-     Helpers :: returnAndExit(1, "Echec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
+     Helpers :: returnAndExit(1, "Échec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
 }
  /* 
-  //On regarde, sil la transaction est signée, si la signature est bonne
+  //On regarde, si la transaction est signée, si la signature est bonne
   // sinon on envoie même pas à la servlet
   $ok_for_servlet = true;
 //  if ($_FILES['signature']['name'] != null)

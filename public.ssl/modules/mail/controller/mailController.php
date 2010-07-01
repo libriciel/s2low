@@ -50,8 +50,8 @@ class mailController {
 	}
 	
 /**
- * \bref list les email reï¿½u.
- * \bref appelï¿½ just par mailctroller::run();
+ * \bref list les email reçu.
+ * \bref appelé just par mailctroller::run();
  * \param: pas de parametre
  */
 	protected function executeList() {
@@ -62,7 +62,7 @@ class mailController {
      $deleteId=Helpers :: getVarFromPost("list_id");
      
      //---delete l'enregistment choisi.
-     //FIXME : ca n'a rien ï¿½ foutre lï¿½: faire un script intermï¿½diaire
+     //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
      if ($deleteId!=null)
      {
      	foreach ($deleteId as $transId)
@@ -105,13 +105,13 @@ class mailController {
    * 
    * FIXME FIXME
    * 
-   * passer par un script intermï¿½diaire
+   * passer par un script intermédiaire
    * 
    * FIXME FIXME
    * 
    * 
- * \bref crï¿½er un nouvel email.
- * \bref appelï¿½ just par mailctroller::run();
+ * \bref créer un nouvel email.
+ * \bref appelé just par mailctroller::run();
  * \param: pas de parametre
  */
   protected function executeCreate()
@@ -128,9 +128,9 @@ class mailController {
   }
   
   /**
- * \bref afficher le dï¿½tail d'un email.
- * \bref appelï¿½ juste par mailController::run();
- * \param: pas de paramï¿½tre
+ * \bref afficher le détail d'un email.
+ * \bref appelé juste par mailController::run();
+ * \param: pas de paramètre
  */
   protected function executeShow()
   {
@@ -160,7 +160,7 @@ class mailController {
    include dirname(__FILENAME__)."/template/show.php";
   }
   
-	//HACK bï¿½quille pour transformer les mails ...
+	//HACK béquille pour transformer les mails ...
 	private function explodeMail($mail){
 		
 		//BEURK....
@@ -197,8 +197,8 @@ class mailController {
   
 /**
  * \bref envoyer un email.
- * \bref appelï¿½ juste par mailController::run();
- * \param: pas de paramï¿½tre
+ * \bref appelé juste par mailController::run();
+ * \param: pas de paramètre
  */
   protected function executeSend()
   {
@@ -220,7 +220,7 @@ class mailController {
         	return false;
 	}
 
-   	//vï¿½rification de mail adress.
+   	//vérification de mail adress.
 	$mailTo=Helpers :: getVarFromPost("mailto");
     $mailCC=Helpers :: getVarFromPost("mailcc");
     $mailBCC=Helpers :: getVarFromPost("mailbcc");
@@ -234,7 +234,7 @@ class mailController {
     $send_password = Helpers :: getVarFromPost("send_password");
     if ($mailTo==null)
     {
-    	$returnMsg="Vous ï¿½tes obligï¿½ d'avoir un destinataire.";
+    	$returnMsg="Vous êtes obligé d'avoir un destinataire.";
     	include dirname(__FILENAME__)."/template/sendfailed.php";	
     	return false;
     }
@@ -249,13 +249,13 @@ class mailController {
     }
     if ($subject==null)
     {
-    	$returnMsg= "Vous ï¿½tes obligï¿½ d'avoir un objet.";
+    	$returnMsg= "Vous êtes oblige d'avoir un objet.";
       include dirname(__FILENAME__)."/template/sendfailed.php";	
     	return false;
     }
     if ($message==null)
     {
-    	$returnMsg= "Le champ message doit ï¿½tre rempli";
+    	$returnMsg= "Le champ message doit être rempli";
     	include dirname(__FILENAME__)."/template/sendfailed.php";	
     	return false;
     }
@@ -278,9 +278,9 @@ class mailController {
     		return false;
     	}
     }
-    //-------fini de la vï¿½rification
+    //-------fini de la vérification
     //----ini mail tranaction.
-    // mail transaction faut absolutment inite avant tous les autre opï¿½ration car tous les autre tableau need 
+    // mail transaction faut absolutment inite avant tous les autre opération car tous les autre tableau need 
     // mail transaction id.
     $mailTransaction=new mail_transaction();
     $mailTransaction->newSave($me->getId());
@@ -288,8 +288,8 @@ class mailController {
     $mailIncludedFiles=array();
 
     //--------------------------------------------------------------------  
-    //FileNumber = le nombre de File est attachï¿½. Il commence par 1. 
-    //Il est dï¿½fini dans le fichier de javascript file: mail.js
+    //FileNumber = le nombre de File est attaché. Il commence par 1. 
+    //Il est défini dans le fichier de javascript file: mail.js
     $InputFileName=array();
     $FileNumber = Helpers :: getVarFromPost("FileNumber");
     if ($FileNumber !=null)
@@ -299,8 +299,8 @@ class mailController {
        for ($i = 1; $i <= $FileNumber; $i++)
        {
           // le nom de uploadFile pass par var _FILES
-          // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'ï¿½ FileNumber
-          // parcque des fois les utilisateur supprime une fichier qu'il a dï¿½jas ajoutï¿½ et le FileNumber va pas diminuer enmeme temp
+          // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'à FileNumber
+          // parcque des fois les utilisateur supprime une fichier qu'il a déjas ajouté et le FileNumber va pas diminuer enmeme temp
           // donc il y aura de trou entre les nombre.
         if (defined('MAIL_DEBUG'))
 		 		{	
@@ -336,11 +336,11 @@ class mailController {
 	    
 	    require_once (dirname(__FILENAME__)."/om/mail_included_file.class.php");
         
-        // crï¿½er un repertoir de md5
+        // créer un repertoir de md5
   		$newdir=MAIL_FILES_UPLOAD_ROOT.$mailTransaction->getFNDownload().'/';
   		if (!mkdir ($newdir, 0755, true))
   		{
-  			$returnMsg="La crï¿½ation de rï¿½pertoire a echouï¿½.";
+  			$returnMsg="La création de répertoire a echoué.";
   			if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
 			  {
 			    $returnMsg= "\nErreur de journalisation.";
@@ -358,7 +358,7 @@ class mailController {
  		      	$mailIncludedFiles[]=$temp;
  		     else 
  		     {
-	 		     	$returnMsg="Le chargement du fichier sur le server a ï¿½chouï¿½ : " . $temp->getLastError();
+	 		     	$returnMsg="Le chargement du fichier sur le server a échoué : " . $temp->getLastError();
 		 		    if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
 					  {
 					    $returnMsg= "\nErreur de journalisation.";
@@ -399,14 +399,14 @@ class mailController {
 	
 	if (!$mailUtil->sendMail($this->MailMessageEmis,$mailTransaction,$mailIncludedFiles,$send_password))
 	{	
-	  	$returnMsg= "ï¿½chec lors de l'envoi.";
+	  	$returnMsg= "Échec lors de l'envoi.";
 			if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
 		  {
 		    $returnMsg= "\nErreur de journalisation.";
 		    include dirname(__FILENAME__)."/template/sendfailed.php";	
 		    return false;
 		  }
-	  	//traiter les messages d'ï¿½chec.
+	  	//traiter les messages d'échec.
 	  	$mailTransaction->delete();
 	  	foreach ($this->MailMessageEmis as $mailEmis )
 	  	{
@@ -420,7 +420,7 @@ class mailController {
 	  	//-----
 	  	return false;
 	}
-	$msg="Envoi de mail rï¿½ussi.";
+	$msg="Envoi de mail réussi.";
 	if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me))
   {
     $returnMsg= "\nErreur de journalisation.";
@@ -434,9 +434,9 @@ class mailController {
   }
 
 /**
- * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelï¿½ juste par mailController::run();
+ * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelé juste par mailController::run();
  *		
- * \param pas de paramï¿½tre
+ * \param pas de paramètre
  */
   protected function executeAnnuaire()
   {
@@ -476,7 +476,7 @@ class mailController {
   			}
   		}
   		unset($groupe_id);
-  		$_SESSION['last_message'] = "Opï¿½ration effectuï¿½ avec succï¿½s";
+  		$_SESSION['last_message'] = "Opération effectuée avec succés";
   	}
   	
   	if ($old_groupe_id) {
@@ -507,10 +507,10 @@ class mailController {
   
 /**
  * \bref: examiner la boit au lettre de tedetis,
- * \bref		rï¿½cupï¿½rer les nouveau email
- * \bref		trouver le quelle mail n'est pas rï¿½ussi d'envoyeer
+ * \bref		récupérer les nouveau email
+ * \bref		trouver le quelle mail n'est pas réussi d'envoyeer
  * \bref		sauvegarder dans la base de donnee
- * \bref	appelï¿½ just par mailctroller::show();
+ * \bref	appelé just par mailctroller::show();
  * \param: pas de parametre
  */
   protected function SaveError()
@@ -539,7 +539,7 @@ class mailController {
  
 /**
  * \bref save les mail emis dans tableau mail_emis
- * \bref	appelï¿½ just par mailctroller::run();
+ * \bref	appelé just par mailctroller::run();
  * \param: pas de parametre
  */
   protected function SaveMailEmis($mail, $Transaction_id,$type)
@@ -548,7 +548,7 @@ class mailController {
 		return false;
   	 global $me;
   	 //supprime le vircule a la fin.
-  	 // le sï¿½parateur  is vircule
+  	 // le séparateur  is vircule
    	 $Emails=explode(",",$mail);  	
   	 foreach ($Emails as $Email)
      {	
@@ -566,8 +566,8 @@ class mailController {
        			return false;
        		}
        			
-        //vï¿½rifier le mail adress exist dï¿½jas ou pas
-        //si non; met dans MailAnnuaireArray pour traiter apï¿½s.
+        //vérifier le mail adress exist déjas ou pas
+        //si non; met dans MailAnnuaireArray pour traiter aprés.
         	if (MailPeer::VerifierMailAnnuaire($Email,$me->get('authority_id'))==false)
         		$this->MailAnnuaireArray[]=$Email;
      	}

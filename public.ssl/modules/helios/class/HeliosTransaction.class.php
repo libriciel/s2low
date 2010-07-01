@@ -39,7 +39,7 @@
 /**
  * \class HeliosTransaction HeliosTransaction.class.php
  * \brief Cette classe permet de gérerer les transactions HELIOS
- * \author Cristina Pop <cpop@alternancesoft.com> et Jï¿½ï¿½e Schell <j.schell@alternancesoft.com>
+ * \author Cristina Pop <cpop@alternancesoft.com> et Jérômee Schell <j.schell@alternancesoft.com>
  * \date 20.02.2006
  * 
  *
@@ -91,7 +91,7 @@ class HeliosTransaction extends DataObject {
       "mandatory" => true
     ),
     "filename" => array (
-      "descr" => "Nom du fichier postï¿½",
+      "descr" => "Nom du fichier posté",
       "type" => "isString",
       "mandatory" => true
     ),
@@ -283,7 +283,7 @@ class HeliosTransaction extends DataObject {
 
   /**
     * \brief Méthode d'obtention de la liste des enveloppes et tous leurs attributs
-    * \param $cond (optionnel) chaï¿½e : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+    * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
     * \return Tableau des enveloppes
     */
   public function getDocumentList($cond = "") {

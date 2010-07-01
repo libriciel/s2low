@@ -70,7 +70,7 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "éhec de l'authentification";
+  $_SESSION["error"] = "Éhec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -135,7 +135,7 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data\">\n";
 $html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id)); 
 $html .= $doc->getHTMLArrayline("Date de postage" ,Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
-$html .= $doc->getHTMLArrayline("Etat actuel" ,$currentStatus);
+$html .= $doc->getHTMLArrayline("État actuel" ,$currentStatus);
 $html .= $doc->getHTMLArrayline("Taille (octets)" ,$trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1" ,$trans->get("sha1"));
 

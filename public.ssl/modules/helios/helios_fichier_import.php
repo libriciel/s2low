@@ -46,7 +46,7 @@
  * 
  *
  * Cette page affiche un formulaire permettant d'importer
- * un fichier qui contieznt un message concernant un document financier.
+ * un fichier qui contient un message concernant un document financier.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -68,7 +68,7 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "échec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }

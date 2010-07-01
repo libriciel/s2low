@@ -14,7 +14,7 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Echec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
@@ -116,8 +116,8 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicke
 //colectivitïvité  pour superuser
 if ($me->isSuper()) {
   $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
-
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName(), $fauthority) . "</td>\n";
+  $cond = " ORDER BY authorities.name ASC";
+  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
 
 }
 $html .= "<td><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
@@ -189,7 +189,7 @@ if (count($envelops) > 0) {
     $html .= " <tr>\n";
     $html .= "  <th>Nom du fichier</th>\n";
     $html .= "  <th>Date de réception</th>\n";
-    $html .= "  <th>Etat</th>\n";
+    $html .= "  <th>État</th>\n";
     $html .= "  <th>Action</th>\n";
     $html .= " </tr>\n";
 	 	foreach ($envelops as $envelope) {

@@ -8,34 +8,34 @@
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ï¿½ la
- * dÃ©matÃ©rialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant à la
+ * dématèrialisation de l'administration. 
  *
- * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
- * de modification et de redistribution accordÃ©s par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
- * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÃ©dants successifs.
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
  *
- * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
- * associÃ©s au chargement,  ï¿½ l'utilisation,  ï¿½ la modification et/ou au
- * dÃ©veloppement et ï¿½ la reproduction du logiciel par l'utilisateur Ã©tant 
- * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe ï¿½ 
- * manipuler et qui le rÃ©serve donc ï¿½ des dÃ©veloppeurs et des professionnels
- * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÃ©s ï¿½ charger  et  tester  l'adÃ©quation  du
- * logiciel ï¿½ leurs besoins dans des conditions permettant d'assurer la
- * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
- * ï¿½l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
  *
- * Le fait que vous puissiez accÃ©der ï¿½ cet en-tÃªte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
 ?>
@@ -77,7 +77,7 @@ if (!$module->initByName("etat_civil")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Echec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
@@ -173,8 +173,8 @@ function afficheWarning(){
       if(liste[i].checked) n++;
     }
   }
-  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sï¿½ectionnï¿½s ?\\n";
-  msg += "Cette action est non rï¿½ersible et est sous votre entiï¿½e responsabilitï¿½";
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnées ?\\n";
+  msg += "Cette action est non réversible et est sous votre entière responsabilité";
   return confirm(msg);
 }
 //]]>
@@ -256,7 +256,7 @@ $html .= "<td class=\"value\">" . $doc->getHTMLSelect("status", $status, $fstatu
 $html .= "<td class=\"title\">Le nom de fichier contient&nbsp;:\n</td>";
 $html .= "<td class=\"value\"><input type=\"text\" name=\"num\" size=\"20\" maxlength=\"25\"";
 
-//$fnum cred ca vine de la "numï¿½o contient"
+//$fnum cred ca vine de la "numéro contient"
 if (strlen($fnum) > 0) {
   $html .= " value=\"" . $fnum . "\"";
 }
@@ -360,10 +360,10 @@ $html .= "</tr>\n";
 
 $html .= "<tr>\n";
 
-//colectivitï¿½!!  Ptr superuser!!!!
+//colectivité!!  Ptr superuser!!!!
 $colspan = 4;
 if ($me->isSuper()) {
-  $html .= "<td class=\"title\">Collectivitï¿½nbsp;:</td>\n";
+  $html .= "<td class=\"title\">Collectiviténbsp;:</td>\n";
 
   $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName(), $fauthority) . "</td>\n";
 
@@ -383,9 +383,9 @@ if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
   $html .= "<div id=\"actions_area\">\n";
   $html .= "<h2>Actions</h2>\n";
   if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le systï¿½e est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de crï¿½r de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dï¿½atï¿½ialisï¿½).</p>\n";
+    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématèrialisé).</p>\n";
   } else {
-  //  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php\" class=\"bouton\">Crï¿½r une transaction</a>\n";
+  //  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php\" class=\"bouton\">Créer une transaction</a>\n";
   //  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_import.php\" class=\"bouton\">Importer une enveloppe</a>\n";
   //  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php\" class=\"bouton\">Gestion par lots</a>\n";
   $html .= "<a href=\"" . WEBSITE_SSL . "/modules/etat_civil/etat_civil_fichier_import.php\" class=\"bouton\">Importer un fichier</a>\n";
@@ -396,15 +396,15 @@ if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
 
 
 $filter = array ();
-// Construction chaï¿½e de filtrage
-if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivitï¿½
+// Construction chaînee de filtrage
+if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivité
  //verifica $authority
    if (isset ($fauthority) && strlen($fauthority) > 0) {
     $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
   }
 }
 
-elseif ($me->isAdmin()) { // Un admin d'une collectivitï¿½ne voit que les transactions de sa collectivitï¿½  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
+elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 } else {
   // Un utilisateur ne voit que ses propres transactions
   $filter[] .= "etat_civil_transactions.user_id='" . $me->getId() . "'";
@@ -496,7 +496,7 @@ if (count($envelopes) > 0) {
   //ATENTIE nu am nevoie de chck!!!!
   //$html .= "<form id=\"div_chck\" onsubmit=\"return afficheWarning()\" action=\"" . WEBSITE_SSL . "/modules/etat_civil/actes_transac_close.php\" method=\"post\">\n </form>";
   /*
-  $html .= "<a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Dï¿½lier toutes les enveloppes\">[&nbsp;Tout dï¿½lier&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Déplier toutes les enveloppes\">[&nbsp;Tout déplier&nbsp;]</a>\n";
   $html .= "<a href=\"#tedetis\" onclick=\"javascript:hide_all();\" title=\"Replier toutes les enveloppes\">[&nbsp;Tout replier&nbsp;]</a>\n";
   $html .= "<dl class=\"envelopes_list\">\n";
 */
@@ -514,12 +514,12 @@ if (count($envelopes) > 0) {
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "id",
       "sortway" => $sortWay
-    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> dï¿½osï¿½ le ";
+    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> déposé le ";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "date",
       "sortway" => $sortWay
- //   )) . "\" title=\"Trier par date de dï¿½ï¿½\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
-    )) . "\" title=\"Trier par date de dï¿½ï¿½\">" . Helpers :: getDateFromBDDDate(etat_civilTransactionWorkflow::getDatePoste($envelope["id"]), true) . "</a>";
+ //   )) . "\" title=\"Trier par date de dépôt\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
+    )) . "\" title=\"Trier par date de dépôt\">" . Helpers :: getDateFromBDDDate(etat_civilTransactionWorkflow::getDatePoste($envelope["id"]), true) . "</a>";
  */
    // $html .= (count($transactions) > 1) ? " transactions" : " transaction";
 
@@ -533,12 +533,12 @@ if (count($envelopes) > 0) {
     $html .= "<table class=\"transactions_list\">\n";
    //AICI trebuie sa decid ce afisez!!!!!
      $html .= " <tr>\n";
-    //$html .= "  <th>Sï¿½.</th>\n";
+    //$html .= "  <th>Sél.</th>\n";
     $html .= "  <th>Nom de fichier</th>\n";
     $html .= "  <th>Etat actuel</th>\n";
     //$html .= "  <th>Objet</th>\n";
     //$html .= "  <th>Nature</th>\n";
-    //$html .= "  <th>ï¿½at</th>\n";
+    //$html .= "  <th>Éat</th>\n";
     //$html .= "  <th>Identifiant unique</th>\n";
     $html .= "  <th>Actions</th>\n";
     $html .= " </tr>\n";
@@ -558,7 +558,7 @@ $transaction_id=$envelope["id"];
       $html .= " <td>" . $envelope["filename"]. "</td>\n";
       $html .= " <td>" . etat_civilTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";
      
-      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/etat_civil_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dï¿½ail\" /></a></td>\n";
+      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/etat_civil_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a></td>\n";
       $html .= "</tr>\n";
     
       //$html .= " <td>" . $transactionTypes[$transaction->get("type")] . "</td>\n";
@@ -589,14 +589,14 @@ $transaction_id=$envelope["id"];
 
  // $html .= "</dl>\n";
 /*
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sï¿½ectionner\">[&nbsp;Tout sï¿½ectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout dï¿½ï¿½ectionner\">[&nbsp;Tout desï¿½ectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sï¿½ection\">[&nbsp;Inverser la sï¿½ection&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sélectionner\">[&nbsp;Tout sélectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout désélectionner\">[&nbsp;Tout desélectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sélection\">[&nbsp;Inverser la sélection&nbsp;]</a>\n";
 
-  // Cloture des transaction sï¿½ectionnï¿½s
+  // Cloture des transaction sélectionnées
   $html .= "<div class=\"action\">\n";
-  $html .= "Passer les transactions sï¿½ectionnï¿½s en ï¿½at&nbsp;<select name=\"status\"><option value=\"valid\">Validï¿½/option><option value=\"invalid\">Refusï¿½/option></select>";
-  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exï¿½uter\"/>\n";
+  $html .= "Passer les transactions sélectionnées en état&nbsp;<select name=\"status\"><option value=\"valid\">Validé/option><option value=\"invalid\">Refusé/option></select>";
+  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exécuter\"/>\n";
   $html .= "</div>\n</form>";
 */
 } else {
@@ -616,17 +616,17 @@ $html .= "</div>\n";
   
 
   $html .= "</dl>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sï¿½ectionner\">[&nbsp;Tout sï¿½ectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout dï¿½ï¿½ectionner\">[&nbsp;Tout desï¿½ectionner&nbsp;]</a>\n";
-  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sï¿½ection\">[&nbsp;Inverser la sï¿½ection&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','1');\" title=\"Tout sélectionner\">[&nbsp;Tout sélectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','0');\" title=\"Tout désélectionner\">[&nbsp;Tout desélectionner&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"GereChkbox('div_chck','2');\" title=\"Inverser la sélection\">[&nbsp;Inverser la sélection&nbsp;]</a>\n";
 
-  // Cloture des transaction sï¿½ectionnï¿½s
+  // Cloture des transaction sélectionnées
   $html .= "<div class=\"action\">\n";
-  $html .= "Passer les transactions sï¿½ectionnï¿½s en ï¿½at&nbsp;<select name=\"status\"><option value=\"valid\">Validï¿½/option><option value=\"invalid\">Refusï¿½/option></select>";
-  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exï¿½uter\"/>\n";
+  $html .= "Passer les transactions sélectionnées en état&nbsp;<select name=\"status\"><option value=\"valid\">Validé/option><option value=\"invalid\">Refusé/option></select>";
+  $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Exécuter\"/>\n";
   $html .= "</div>\n</form>";
 } else {
-  $html .= "Pas de transaction trouvï¿½ correspondant aux critï¿½es de filtrage.";
+  $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
 }
 $html .= "</div>\n";
 */
@@ -722,7 +722,7 @@ if (count($transactions) > 0) {
   //?! actes_transactions_close
   $html .= "<form id=\"div_chck\" onsubmit=\"return afficheWarning()\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" method=\"post\">\n";
 
-  $html .= "<a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Dï¿½lier toutes les enveloppes\">[&nbsp;Tout dï¿½lier&nbsp;]</a>\n";
+  $html .= "<a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Déplier toutes les enveloppes\">[&nbsp;Tout déplier&nbsp;]</a>\n";
   $html .= "<a href=\"#tedetis\" onclick=\"javascript:hide_all();\" title=\"Replier toutes les enveloppes\">[&nbsp;Tout replier&nbsp;]</a>\n";
   $html .= "<dl class=\"envelopes_list\">\n";
 
@@ -743,30 +743,30 @@ if (count($transactions) > 0) {
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "id",
       "sortway" => $sortWay
-    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> dï¿½osï¿½ le ";
+    )) . "\" title=\"Trier par identifiant\">" . $envelope["id"] . "</a> déposé le ";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (
       "order" => "submission_date",
       "sortway" => $sortWay
-    )) . "\" title=\"Trier par date de dï¿½ï¿½\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
+    )) . "\" title=\"Trier par date de dépôt\">" . Helpers :: getDateFromBDDDate($envelope["submission_date"], true) . "</a> contenant " . count($transactions);
     $html .= (count($transactions) > 1) ? " transactions" : " transaction";
  }//tmp
 }//tmp
 /*
     if ($me->isSuper()) {
       $zeAuthority = new Authority($owner->get("authority_id"));
-      $html .= " de la collectivitï¿½" . htmlspecialchars($zeAuthority->get("name"));
+      $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
     }
 
     $html .= "</dt>\n";
     $html .= "<dd id=\"envelope_content_" . $i . "\" class=\"envelope_content\" style=\"display: block\">\n";
     $html .= "<table class=\"transactions_list\">\n";
     $html .= " <tr>\n";
-    $html .= "  <th>Sï¿½.</th>\n";
+    $html .= "  <th>Sél.</th>\n";
     $html .= "  <th>Type de transaction</th>\n";
-    $html .= "  <th>Numï¿½o de l'acte</th>\n";
+    $html .= "  <th>Numéro de l'acte</th>\n";
     $html .= "  <th>Objet</th>\n";
     $html .= "  <th>Nature</th>\n";
-    $html .= "  <th>ï¿½at</th>\n";
+    $html .= "  <th>État</th>\n";
     //$html .= "  <th>Identifiant unique</th>\n";
     $html .= "  <th>Actions</th>\n";
     $html .= " </tr>\n";
@@ -790,7 +790,7 @@ if (count($transactions) > 0) {
       $html .= " <td>" . $transaction->get("nature_descr") . "</td>\n";
       $html .= " <td>" . $status[$transaction->getCurrentStatus()] . "</td>\n";
       //$html .= " <td>" . $transaction->get("unique_id") . "</td>\n";
-      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dï¿½ail\" /></a></td>\n";
+      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a></td>\n";
       $html .= "</tr>\n";
     }
 

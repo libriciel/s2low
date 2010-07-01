@@ -17,12 +17,12 @@ $trace = Trace::getInstance();
 $mailUtil = new MailUtil();
 $mailUtil_test_path = SITEROOT ."test/mailUtil/";
 
-/*test(	"Test d'un rï¿½pertoire sans virus",
+/*test(	"Test d'un répertoire sans virus",
 		true,
 		$mailUtil->checkSanity($mailUtil_test_path."sans_virus")
 	);
 
-test(	"Test d'un rï¿½pertoire avec virus",
+test(	"Test d'un répertoire avec virus",
 		false,
 		$mailUtil->checkSanity($mailUtil_test_path."avec_virus")
 	);*/

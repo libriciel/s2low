@@ -337,7 +337,7 @@ $html .= "</div>\n"; //filtrage aria
   $html .= "<h2>Actions</h2>\n";
 if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
   if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de crér de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématèrialisé).</p>\n";
+    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématèrialisé).</p>\n";
   } else {
  $html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_fichier_import.php\" class=\"bouton\">Importer un fichier</a>\n";
 	
@@ -405,7 +405,7 @@ $ht=new HeliosTransaction();
 
 $i = 0;
 
-$html .= "<h2>Liste des fichiers postï¿½s</h2>\n";
+$html .= "<h2>Liste des fichiers postés</h2>\n";
 
 
 //
@@ -444,7 +444,7 @@ if (count($envelopes) > 0) {
       $html .= " <td>" . $envelope["filename"]. "</td>\n";
       $html .= " <td>" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
       $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";   
-      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dï¿½ail\" /></a></td>\n";
+      $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a></td>\n";
       $html .= "</tr>\n";
     
 

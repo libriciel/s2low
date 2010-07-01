@@ -1,14 +1,12 @@
 <?php
-
-
 /*
  * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, AoÃ»t 2006 
+ * Contributeur : Jérôme Schell, Août 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant Ã   la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant à la
+ * dématèrialisation de l'administration. 
  *
  * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
@@ -23,17 +21,17 @@
  * titulaire des droits patrimoniaux et les concédants successifs.
  *
  * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à   l'utilisation,  à   la modification et/ou au
- * développement et à   la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe Ã   
- * manipuler et qui le réserve donc à   des développeurs et des professionnels
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
  * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à   charger  et  tester  l'adéquation  du
- * logiciel à   leurs besoins dans des conditions permettant d'assurer la
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
  * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * Ã  l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
  *
- * Le fait que vous puissiez accéder à cet en-tte signifie que vous avez 
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
  * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
@@ -72,7 +70,7 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Echec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
@@ -502,11 +500,11 @@ if (count($envelopes) > 0) {
       
       
       
-	  $html .= "   <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le dÃ©tail\" /></a>";
+	  $html .= "   <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction->getId() . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a>";
     
 
 	  if ($transaction->get("archive_url")) {
-		$html .= "   <a href=\"" . $transaction->get("archive_url") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/icone_archivage.png\" alt=\"image_archivage\" title=\"AccÃ©der Ã  l'archivage de cette transaction\" /></a>";
+		$html .= "   <a href=\"" . $transaction->get("archive_url") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/icone_archivage.png\" alt=\"image_archivage\" title=\"Accéder à  l'archivage de cette transaction\" /></a>";
 	  }
 	  
 	  $html .= " </td>\n";

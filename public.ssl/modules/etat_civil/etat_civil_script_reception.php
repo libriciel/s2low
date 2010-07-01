@@ -11,7 +11,7 @@
 // Configuration
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
-//ï¿½inclure les classes dont j'ai besoin...'
+//à inclure les classes dont j'ai besoin...'
 require_once (SITEROOT . '/public.ssl/modules/etat_civil/class/etat_civilTransaction.class.php');
 require_once (SITEROOT . '/public.ssl/modules/etat_civil/class/etat_civilTransactionWorkflow.class.php');
 require_once (SITEROOT . '/class/User.class.php');
@@ -28,13 +28,13 @@ $me = new User();
 //l'utilisateur'
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Ehec de l'authentification";
+  $_SESSION["error"] = "Échec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 //echo "OK authentification <br>";
 
-///recuperation de donnï¿½s sur moi-mï¿½e ;)
+///recuperation de données sur moi-mêmee ;)
 $nomUSer=$me->get("name");//?!...
 $userId=$me->getId();
 
@@ -67,7 +67,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
     
   //   echo "UPLOADFILE ".$uploadfile."<br>"."TMP: ".$tmp."<br>"; 
 
-     //un premier teste que le fichier a ï¿½ï¿½bien recu    
+     //un premier teste que le fichier a bien été recu    
      if (strcmp($uploadfile,$tmp)==0){
         echo "<br> ko recuperation du fichier\n";
         exit;    
@@ -77,7 +77,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 // echo "<br> ****** FILE: ".$uploadfile."<br>";
 
      
-//echo 'Voici quelques informations de d?ogage :';
+//echo 'Voici quelques informations de débogage :';
 //echo "<br> ScriptRec: saucisson recu: ";
 //print_r($_FILES);
     //********************************************************************************//
@@ -88,8 +88,8 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 	  /***********************************************************************************/
  //     echo "Acces à la BD <br>";
 	 
-	  //recuperation du nom de proprietaire du fichier postï¿½..
-	  //instances de 2 tables impliquï¿½
+	  //recuperation du nom de proprietaire du fichier posté..
+	  //instances de 2 tables impliqué
 	  
       $ht = new etat_civilTransaction();
       $htw = new etat_civilTransactionWorkflow();
@@ -98,7 +98,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
   
           //insertion (idUSer, filename) dans la table etat_civil_transactions  => un id de la transaction
           // où filename = le nom du fichier inclut dans le fichier message 
-      	  //OBS : la valeur de l'id est automatiquement enregistrï¿½par save() (ï¿½voir DataObjet)
+      	  //OBS : la valeur de l'id est automatiquement enregistré par save() (à voir DataObjet)
 //echo " & ".$userId."...<br>"; 
       	  $ht-> set("filename",$uploadFile_baseName);
       	  $ht-> set("user_id",$userId);
@@ -108,7 +108,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
       	  if (!$R){
     	  	  $_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table etat_civil_transactions.";
 	          header("Location: " . WEBSITE_SSL . "/modules/etat_civil/index.php");
-//echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions.";
+//echo "Erreur de l'initialisaton de l'accès à la table etat_civil_transactions.";
 	          exit();
       	  }
 //echo "Ok: inregistrarea in BD etat_civilTrans.<br>";
@@ -117,23 +117,23 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 //echo "ID transactie:".$id_transaction."<br>";
         //insertion (transaction_id,"POSTE",'date',msg) dans la table etat_civil_transactions_workflows
          $htw->set("transaction_id",$id_transaction);
-         $htw->set("status_id",1);//POSTï¿½         
+         $htw->set("status_id",1);//POSTE         
          $htw->set("date",date('Y-m-d H:i:s'));     
          $htw->set("message","Fichier bien réçu à la plate-forme etat_civil");
          if (!$htw->save(false)){          	
-        	 $_SESSION["error"] = "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions_workflow.";
+        	 $_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table etat_civil_transactions_workflow.";
 	         header("Location: " . WEBSITE_SSL . "/modules/etat_civil/index.php");
-echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions_workflow.";	     
+echo "Erreur de l'initialisaton de l'accès à la table etat_civil_transactions_workflow.";	     
 	         exit();
          }  
 //echo "Bien enregistré en transactionWorkflow...<br>";      
       //tmp 
-      //1. determine id d'user ï¿½partir de son nom (SON NOM?!)
+      //1. determine id d'user à partir de son nom (SON NOM?!)
       //   $user_id=$u.get("name"); 
       //2.  $ht.set("filename",$uploadfile);
       //   $ht.set("user_id",user-id); $ht.save(); Id_transaction=ht.getID();
       //3. htw.set("transaction_id",Id_transaction); htw.set("status","POSTE"); 
-      //   htw.set("message","Le fichier ".$uploadfile." a ï¿½ï¿½bien rï¿½u ï¿½la plate-forme);
+      //   htw.set("message","Le fichier ".$uploadfile." a bien été reçu à la plate-forme);
       //   htw.set("date",date("Y-m-d H:i:s"); $htw.save(); 
    
 		
@@ -141,12 +141,12 @@ echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions
 		
       //transmission du fichier au servlet  
       //*********************************************************************************        
-        //preparation de donees ï¿½envoyer par POST
+        //preparation de donees à envoyer par POST
  
  //echo "Partea cu servletul... Start!<br>";
 //echo "var: ".$uploadfile." dest:".$destination."<br>";
          
-       //preparation de donees ï¿½envoyer par POST 
+       //preparation de donees à envoyer par POST 
      	$postData = array();
         $fileToSend="@".$uploadfile;
 
@@ -161,9 +161,9 @@ echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions
         curl_setopt($ch, CURLOPT_POST, 1 );
         //seems no need to tell it enctype='multipart/data' it already knows
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData );
-//pour rï¿½uperer le rï¿½ultat envoyï¿½par servlet : ok ou ko
+//pour récuperer le résultat envoyé par servlet : ok ou ko
 //BUG: pour le moment le servlet semble que ne valide pas les fichiers xml... :(
-//TO WORK: on combine le resultat envoyï¿½par le servlet avec le "ok" du curl...
+//TO WORK: on combine le resultat envoyé par le servlet avec le "ok" du curl...
 	$res=curl_exec($ch);
 //echo "Php Rezultat recu: ".$res."<br>";
          //si erreur curl
@@ -173,7 +173,7 @@ echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions
 	 }else{ //no erreur ni reception, ni curl...
        		echo "OK \n".$id_transaction;
  	 }
-      } else { //erreur ï¿½la reception du fichier...
+      } else { //erreur à la reception du fichier...
 		echo "KO \n";
       }
 
@@ -194,7 +194,7 @@ echo "Erreur de l'initialisaton de l'accï¿½s ï¿½la table etat_civil_transactions
         //seems no need to tell it enctype='multipart/data' it already knows
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData );
         
-        //$res: pour rï¿½uperer le rï¿½ultat envoyï¿½par servlet : ok ou ko
+        //$res: pour récuperer le résultat envoyé par servlet : ok ou ko
 //BUG: pour le moment il semble que le servlet ne valide pas le fichier xml... :(
 
      	$res=curl_exec($ch);
@@ -205,10 +205,10 @@ echo "Rezultat: ".$res." !!<br>";
         //Reponse en fonction de la reception du fichier & la validation xsd...
 	    if ((!curl_errno($ch)) and (!strcmp($res,"ok"))) {
       		    echo "ok \n";
-	    }else{ //soit erreur ï¿½la reception du fichier, soit fichier invalide...
+	    }else{ //soit erreur à la reception du fichier, soit fichier invalide...
        	    	echo "ko fichier invalide \n";
  	    }
-      } else { //erreur ï¿½la reception du fichier...
+      } else { //erreur à la reception du fichier...
 		echo "Erreur reception du fichier ko \n";
       }
 */
