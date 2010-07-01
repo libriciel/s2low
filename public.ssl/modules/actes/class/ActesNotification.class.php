@@ -54,6 +54,9 @@ class ActesNotification {
 	}
 	
 	private function sendMail($transactionInfo,array $emails,$withFile){
+		if (! $emails){
+			return;
+		}
 		$mailContent = $this->getMailContent($transactionInfo);
 		$lesFichiers = $this->getFichiers($transactionInfo);	
 	
