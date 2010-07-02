@@ -359,6 +359,8 @@ class ActesTransaction extends DataObject {
    * \return True en cas de succès, false sinon
    */
   public function setNewStatus($new_status_id, $message) {
+  	//TODO vérifier que le status est pas déjà positionné
+  	
     $date = date("Y-m-d H:i:s");
     $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message) VALUES(" . $this->id . ", " . $new_status_id . ", '" . $date . "', '" . addslashes($message) . "')";
 

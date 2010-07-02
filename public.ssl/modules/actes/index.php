@@ -389,20 +389,17 @@ if (isset ($fnum) && !empty ($fnum)) {
 
 // On ajoute les filtres relatifs aux dates
 if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {
-  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) ) >= '" . addslashes($fmin_submission_date) . "'";
+  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) LIMIT 1 ) >= '" . addslashes($fmin_submission_date) . "' ";
 }
 if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
-  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) ) <= '" . addslashes($fmax_submission_date) . "'";
+  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) LIMIT 1 ) <= '" . addslashes($fmax_submission_date) . "' LIMIT 1";
 }
 if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
-  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4) >= '" . addslashes($fmin_ack_date) . "'";
+  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4  LIMIT 1) >= '" . addslashes($fmin_ack_date) . "' ";
 }
 if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
-  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4) <= '" . addslashes($fmax_ack_date) . "'";
+  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4  LIMIT 1) <= '" . addslashes($fmax_ack_date) . "'";
 }
-
-//Permettait de palier le problème d'indexation
-//$filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 1) >= '1977-01-01'";
 
 $where = "";
 if (count($filter) > 0) {

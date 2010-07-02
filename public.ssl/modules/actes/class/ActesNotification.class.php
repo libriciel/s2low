@@ -77,8 +77,11 @@ class ActesNotification {
 		//	$mailer->addRecipient($email);
 		//}
 		
-		$mailer->addRecipient($emails);
-		
+		$err = $mailer->addRecipient($emails);
+		if (! $err){
+			echo "$emails invalide ! \n";
+			return;
+		}
 		if ($withFile){
 			foreach ($lesFichiers as $fichier){
 				$mailer->addFile($fichier);

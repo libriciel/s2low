@@ -682,12 +682,13 @@ class ActesEnvelope extends DataObject {
 	  }
 
 	  curl_close($cHandle);
-	  print_r($ret);
 	  $res = explode("\n", $ret);
+	  
 	  if (strcmp(trim($res[0]), "OK") == 0) {
 		return true;
 	  } else {
-		$this->errorMsg = utf8_decode(stripslashes($res[1]));
+		$trace->log("Erreur lors de la validation de l'enveloppe : $ret");
+	  	$this->errorMsg = $ret;
 		return false;
 	  }
   }
