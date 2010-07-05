@@ -9,10 +9,10 @@ require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.cla
 
 $env = new ActesEnvelope();
 
-$err = $env->externalArchiveCheckFromFile("SLO-EACT--786069567--20100701-4.tar.gz");
+$err = $env->externalArchiveCheckFromFile("SLO-EACT--223400011--20100701-16.tar.gz");
 
 if (!$err){
 	echo " Erreur : " . $env->getErrorMsg();
 } else {
-echo "ok";
+	echo "ok";
 }

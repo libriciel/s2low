@@ -1,6 +1,6 @@
 <?php
 
-ini_set("error_reporting", E_ALL & ~E_NOTICE);
+ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 define('SITEROOT', "/home/eric/slow/TedetisPHP/");
 
@@ -84,7 +84,7 @@ define('ANTIVIRUS_TMP_PATH',' /tmp/');
 
 
 // Adresse de la servlet effectuant le controle des archives
-define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8180/TedetisActes/ValideArchive');
+define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8080/TedetisActes/ValideArchive');
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
 define('ACTES_TDT_MAIL_ADDRESS', 'eric@babette.com');

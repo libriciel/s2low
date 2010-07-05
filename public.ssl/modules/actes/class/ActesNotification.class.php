@@ -47,7 +47,6 @@ class ActesNotification {
 			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
 			$emailsliste=explode(',',$transactionInfo['default_broadcast_email']);
             foreach($emailsliste as $email){
-            	echo("Email : $email");
                 $this->sendMail($transactionInfo,$email,true);
             }
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
@@ -56,7 +55,6 @@ class ActesNotification {
 			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['broadcast_emails']),$transactionInfo['broadcast_send_sources'] == 1);
 			$emailsliste=explode(',',$transactionInfo['broadcast_emails']);
             foreach($emailsliste as $email){
-            	echo("Email : $email");
             	$this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
             }
 			$this->setBroadcasted($transactionInfo['transaction_id']);
@@ -151,15 +149,17 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		$result = array();
 		$lesFichiers = $this->db->fetchAll($sql);
 		foreach($lesFichiers as $f){
-			$result[] = $this->tamponnerTGZ($this->filePath . "/" . $f['file_path'],$transactionInfo);
+			$result = $this->tamponnerTGZ($this->filePath . "/" . $f['file_path'],$transactionInfo);
 		}
+		
+		
 		return $result;
 	}
 	
 	private function tamponnerTGZ($filePath,$transactionInfo){
 		
 		$directory_unzip = $filePath."_unzip";
-		$filePath_tampon = dirname($filePath)."/".basename($filePath,"tar.gz")."_tampon.tar.gz";
+		//$filePath_tampon = dirname($filePath)."/".basename($filePath,"tar.gz")."_tampon.tar.gz";
 		
 		if (! file_exists($directory_unzip)){
 			mkdir($directory_unzip);
@@ -169,6 +169,8 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		Trace::wrap_exec($cmd, $status, $ret);
 		chdir($directory_unzip);
 		
+		$result = array();
+		
 		$files = scandir($directory_unzip);
 		foreach($files as $file){
 			$path_parts = pathinfo($file);
@@ -176,12 +178,13 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 				$fileString = $this->tamponnerPDF($file,$transactionInfo);
 				file_put_contents($file,$fileString);
 			}
+			$result[] = $file;
 		}
 		
-		$cmd = "tar czf ".$filePath_tampon." * ";
+		/*$cmd = "tar czf ".$filePath_tampon." * ";
 		Trace::wrap_exec($cmd, $status, $ret);
-		
-		return $filePath_tampon;
+		*/
+		return $result;
 	}
 	
 	
