@@ -61,6 +61,15 @@ require_once("DataObject.class.php");
 
 //FIXME Les Module n'ont pas à être dans la base de données ....
 class Module extends DataObject {
+	
+	
+	//Ajouté par EP afin de ne pas avoir a cherché l'id du module dans la base ....
+	const ACTES = 1;
+	const HELIOS = 2;
+	const MAIL = 3;
+	
+	
+	
   protected $objectName = "modules";
   protected $prettyName = "Module";
   

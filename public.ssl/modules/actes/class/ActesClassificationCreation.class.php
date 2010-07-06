@@ -2,6 +2,9 @@
 
 require_once("ActesEnvelope.class.php");
 require_once("ActesClassification.class.php");
+require_once( SITEROOT . "class/Module.class.php");
+require_once( SITEROOT . "class/User.class.php");
+
 
 class ActesClassificationCreation {
 	
@@ -113,7 +116,14 @@ class ActesClassificationCreation {
 	}
 	
 	private function setDefaultUser(){
-		$sql = "SELECT id FROM users WHERE authority_id=".$this->authority->getId()." LIMIT 1";
+		$sql = "SELECT users.id " . 
+				" FROM users " . 
+				" JOIN users_perms ON users.id = users_perms.user_id " . 
+				" WHERE authority_id=".$this->authority->getId().
+				" AND status=1 " .
+				" AND module_id =  ". Module::ACTES;
+				" AND perm = '".User::PERM_MODIFICATION."' " . 
+				" LIMIT 1 " ;
 		$id_user = $this->db->getOneValue($sql);
 		if (! $id_user){
 			return false;
