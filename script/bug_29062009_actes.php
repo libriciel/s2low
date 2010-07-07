@@ -17,7 +17,7 @@ $sql = "SELECT actes_transactions_workflow.*, " .
 		" JOIN actes_status ON actes_transactions_workflow.status_id = actes_status.id".
 		" JOIN actes_transactions ON actes_transactions_workflow.transaction_id = actes_transactions.id " .
 		" JOIN actes_envelopes ON  actes_transactions.envelope_id=actes_envelopes.id "  . 
-		" WHERE DATE(date)='2010-06-29'";
+		" WHERE DATE(date)='2010-06-29' AND actes_transactions_workflow.status_id != 1";
 
 $result = $db->select($sql);
 
