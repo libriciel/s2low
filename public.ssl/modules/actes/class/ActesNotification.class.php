@@ -101,7 +101,7 @@ class ActesNotification {
 		$monpdf = $pdf->output("bordereau_acquittement.pdf","S");
 		$mailer->addStringAsFile("bordereau_acquittement.pdf",$monpdf);
 		
-		$mailer->sendMail("Notification d'accusé de réception pour l'acte " . $transactionInfo['transaction_id'] , $mailContent);
+		$mailer->sendMail("Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] , $mailContent);
 	}
 	
 	public function getTransactionInfo($transactionId){
@@ -199,7 +199,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			return file_get_contents($file);
 		}
 		$tampon = new TamponPDF($pdf);
-		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['decision_date'])),
+		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
 		"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
 		"Affiché le " ));
 		try {
