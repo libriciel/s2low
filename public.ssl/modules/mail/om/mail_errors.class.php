@@ -57,7 +57,7 @@ class mail_errors extends DataObject
 	protected $date_registered;
 	protected $message_retour;
   protected $dbFields =  array(
-  "mail_message_emis_id"      => array( "descr" => "Identifiant mail", "type" => "isInt", "mandatory" => true),
+  "mail_message_emis_id"      => array( "descr" => "Identifiant mail", "type" => "isString", "mandatory" => true),
   "message_retour"       => array("descr" =>"---", "type" =>"isString", "mandatory"=>true),
   "date_registered"       => array("descr" =>"---", "type" =>"isString", "mandatory"=>true),
   );	
