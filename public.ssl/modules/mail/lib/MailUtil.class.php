@@ -328,7 +328,6 @@ Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus
 
   public function GetMailMessage()
   {
-
 	$mbox = imap_open("{".IMAP_SERVER."/novalidate-cert}",IMAP_LOGIN, IMAP_PASS);
 	//echo imap_last_error();
 	$headers = imap_headers($mbox);
