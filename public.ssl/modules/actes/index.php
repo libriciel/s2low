@@ -392,7 +392,7 @@ if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {
   $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) LIMIT 1 ) >= '" . addslashes($fmin_submission_date) . "' ";
 }
 if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
-  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) LIMIT 1 ) <= '" . addslashes($fmax_submission_date) . "' LIMIT 1";
+  $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND ( atw.status_id = 1 OR atw.status_id = 7 ) LIMIT 1 ) <= '" . addslashes($fmax_submission_date) . "'";
 }
 if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
   $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4  LIMIT 1) >= '" . addslashes($fmin_ack_date) . "' ";
@@ -400,6 +400,8 @@ if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
 if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
   $filter[] .= "(SELECT date FROM actes_transactions_workflow atw WHERE actes_transactions.id = atw.transaction_id AND atw.status_id = 4  LIMIT 1) <= '" . addslashes($fmax_ack_date) . "'";
 }
+
+
 
 $where = "";
 if (count($filter) > 0) {
