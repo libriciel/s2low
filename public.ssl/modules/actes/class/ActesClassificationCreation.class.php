@@ -121,8 +121,10 @@ class ActesClassificationCreation {
 				" JOIN users_perms ON users.id = users_perms.user_id " . 
 				" WHERE authority_id=".$this->authority->getId().
 				" AND status=1 " .
-				" AND module_id =  ". Module::ACTES;
-				" AND perm = '".User::PERM_MODIFICATION."' " . 
+				" AND role='USER'" .
+				" AND module_id =  ". Module::ACTES .
+				" AND perm = '".User::PERM_MODIFICATION."' " .
+				" ORDER BY users.id ASC " .
 				" LIMIT 1 " ;
 		$id_user = $this->db->getOneValue($sql);
 		if (! $id_user){
