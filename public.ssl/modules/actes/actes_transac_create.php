@@ -360,7 +360,7 @@ if (!$trans->save()) {
   $env->delete();
   Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 } else {
-  $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
+  $msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
   }
