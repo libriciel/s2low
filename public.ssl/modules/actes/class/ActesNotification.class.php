@@ -96,7 +96,7 @@ class ActesNotification {
 		$owner = new User($envelope->get("user_id"));
 		$owner->init();
 		$pdf=new ActesPdf($trans,$owner);	
-		//construire le fichier pdf. 
+		$pdf->addEmailNotificationField();
 		$pdf->create_pdf();
 		$monpdf = $pdf->output("bordereau_acquittement.pdf","S");
 		$mailer->addStringAsFile("bordereau_acquittement.pdf",$monpdf);

@@ -1,8 +1,5 @@
 <?php 
 
-/**
- * PEV  16-06-2010  ligne 132 : remplacement de NOtification par Notification
- */
 require_once (SITEROOT . '/class/ExtendPdf.class.php');
 
 class ActesPdf {
@@ -12,6 +9,8 @@ class ActesPdf {
 	private $user;
 	
 	private $img;
+
+	private $addEmailNotificationField;
 	
 	public function __construct(ActesTransaction $actesTransaction,User $user) {
 		$this->img = SITEROOT . "public.ssl/custom/images/home_banner.jpg"; 
@@ -19,6 +18,10 @@ class ActesPdf {
   		$this->user = $user;
   	}
 
+  	public function addEmailNotificationField(){
+  		$this->addEmailNotificationField = true;
+  	}
+  	
 	public function create_pdf() {
 
 		$author = new Authority($this->user->get("authority_id"));
@@ -92,6 +95,17 @@ class ActesPdf {
 		$this->pdf->Ln(7);
 	}
 	
+	
+	private function getNotifieA($trans){
+		if ($trans->get("broadcasted") == 't' ) {
+      		return "Notifiée à " . $trans->get("broadcast_emails");
+		}
+		if ($this->addEmailNotificationField && $trans->get("broadcast_emails")){
+			return "Notifiée à " . $trans->get("broadcast_emails");
+		}
+    	return "Non notifiée";
+	}
+	
   /**
   * \brief ajouter la table de tansaction
   * \param $trans= objet de ActesTransaction
@@ -102,11 +116,8 @@ class ActesPdf {
 		//traiter des requêtes
 		$transactionTypes = $trans->get("transactionTypes");
 		$transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
-		
-		if ($trans->get("broadcasted") == 't')
-      		$notification = "Notifiée à " . $trans->get("broadcast_emails");
-    	else
-      		$notification = "Non notifiée";
+		$notification = $this->getNotifieA($trans);
+	
       		
       	$arch_url = $trans->get("archive_url");
 		if (empty($arch_url))
