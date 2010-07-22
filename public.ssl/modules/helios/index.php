@@ -385,10 +385,10 @@ if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
   $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) <= '" . addslashes($fmax_submission_date) . "'";
 }
 if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) ) >= '" . addslashes($fmin_ack_date) . "'";
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) >= '" . addslashes($fmin_ack_date) . "'";
 }
 if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) ) <= '" . addslashes($fmax_ack_date) . "'";
+  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) <= '" . addslashes($fmax_ack_date) . "'";
 }
 
 $where = "";
