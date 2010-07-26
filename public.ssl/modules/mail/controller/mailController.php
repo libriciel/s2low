@@ -222,8 +222,9 @@ class mailController {
 
    	//vérification de mail adress.
 	$mailTo=Helpers :: getVarFromPost("mailto");
-    $mailCC=Helpers :: getVarFromPost("mailcc");
-    $mailBCC=Helpers :: getVarFromPost("mailbcc");
+    $mailCC=Helpers :: getVarFromPost("mailcc");   
+    $mailBCC=Helpers :: getVarFromPost("mailcci");
+   
     
     $mailTo = $this->explodeMail($mailTo);
     $mailCC = $this->explodeMail($mailCC);
@@ -395,6 +396,7 @@ class mailController {
   	
   	$this->SaveMailEmis($mailTo,$Transaction_id,"mailTo");
 	$this->SaveMailEmis($mailCC,$Transaction_id,"mailCC");
+	
 	$this->SaveMailEmis($mailBCC,$Transaction_id,"mailBCC");
 	
 	if (!$mailUtil->sendMail($this->MailMessageEmis,$mailTransaction,$mailIncludedFiles,$send_password))
