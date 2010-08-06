@@ -72,7 +72,6 @@
 	</table>
 	<h3>Pièces jointes&nbsp;:</h3>
 	<div id="file">
-	<input type='hidden' name='MAX_FILE_SIZE' value='<?php echo ini_get('upload_max_filesize') ?>' />
 
 	<input class="submit_button" type="button" name="ajouter" value="Joindre un fichier" onclick="InsertNewFile();" />
 	</div>
