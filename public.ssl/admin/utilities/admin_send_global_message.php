@@ -102,19 +102,20 @@ if (! $recipients = $module->getUsers()) {
   exit();
 }
 
-$mailer = new Mailer();
 foreach($recipients as $recipient){
+	$mailer = new Mailer();
 	$mailer->addComplexRecipient($recipient); 
+
+	if (! $mailer->sendMail($subject, $body)) {
+	  $msg = "Erreur lors de l'envoi de message a " . $recipient['email'] . " utilisateurs du module " . $module->get("name") . ".\n";
+	  $msg .= $mailer->getLastError();
+	  $status = 3;
+	}
 }
 
-if (! $mailer->sendMail($subject, $body)) {
-  $msg = "Erreur lors de l'envoi de message aux " . count($recipients) . " utilisateurs du module " . $module->get("name") . ".\n";
-  $msg .= $mailer->getLastError();
-  $status = 3;
-} else {
-  $msg = "Envoi de message aux " . count($recipients) . " utilisateurs du module " . $module->get("name") . ". Résultat ok.";
-  $status = 1;
-}
+$msg = "Envoi de message aux " . count($recipients) . " utilisateurs du module " . $module->get("name") . ". Résultat ok.";
+$status = 1;
+
 
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, $status, false, 'SADM', $module->get("name"), $me)) {
   $msg .= "\nErreur de journalisation.";
