@@ -78,7 +78,7 @@ if ( ! $permission->canView($me,$owner)){
 $myAuthority = new Authority($me->get("authority_id"));
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
-$status = ActesTransaction :: getStatusList();
+$status_list = ActesTransaction :: getStatusList();
 $workflow = $trans->fetchWorkflow();
 
 
@@ -296,10 +296,10 @@ if (count($workflow) > 0) {
    if ($stage["status_id"]==4 )
     {
     	
-    	$html .= "  <td>" . $status[$stage["status_id"]].$create_pdf_html."</td>\n";
+    	$html .= "  <td>" . $status_list[$stage["status_id"]].$create_pdf_html."</td>\n";
     }
     else
-    	$html .= "  <td>" . $status[$stage["status_id"]] . "</td>\n";
+    	$html .= "  <td>" . $status_list[$stage["status_id"]] . "</td>\n";
     	
 	//---------end
  
