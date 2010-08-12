@@ -52,7 +52,7 @@
  *
  * Modifications :
  * Auteur   Date       Commentaire
- *
+ * PEV		10/08/2010 des problemes d'encodage sur les dates. Ligne 241,242,261,262,285,286,304 et 305 : utf8_decode la date.
  */
 
 // Configuration
@@ -238,8 +238,8 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_min_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_submission_date.toggleDatePicker(); return false;\">";
 
 if ($fmin_submission_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date));
+  //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date)));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
@@ -258,8 +258,8 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_min_ack_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_ack_date.toggleDatePicker(); return false;\">";
 
 if ($fmin_ack_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date));
+  //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date)));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
@@ -282,8 +282,8 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_max_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_submission_date.toggleDatePicker(); return false;\">";
 
 if ($fmax_submission_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date));
+  //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date)));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
@@ -301,8 +301,8 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_max_ack_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_ack_date.toggleDatePicker(); return false;\">";
 
 if ($fmax_ack_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date));
+  //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date)));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
