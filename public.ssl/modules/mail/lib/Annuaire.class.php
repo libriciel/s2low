@@ -1,4 +1,9 @@
-<?php 
+<?php
+/** 
+ * Modifications :
+ * Auteur   Date       Commentaire
+ * PEV		10/08/2010 des problemes d'encodage sur les dates. Ligne 136, utf8_encode la date.
+ */
 require_once(SITEROOT . "/class/FileUploader.class.php");
 require_once(SITEROOT . "/class/Mailer.class.php");
 require_once(SITEROOT . "/class/Database.class.php");
@@ -128,7 +133,7 @@ class Annuaire {
 		$result = $this->bd->select($sql);
 		while ($row = $result->get_next_row()) {
 			if ($row['description']){
-				$tabMail[] = '"'.$row['description'] . '" ['.$row['mail_address'].']';
+				$tabMail[] = '"'.utf8_encode( $row['description'] ). '" ['.$row['mail_address'].']';
 				//$tabMail[] = $row['mail_address'] . $row['description'];
 			} else {
 				$tabMail[] = $row['mail_address'];
