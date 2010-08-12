@@ -48,7 +48,7 @@
  *
  * Modifications :
  * Auteur   Date       Commentaire
- *
+ * PEV		10/08/2010 des problemes d'encodage sur les dates. Ligne 312, utf8_encode la date.
  */
 
 require_once(SITEROOT . "/class/Trace.class.php");
@@ -309,7 +309,7 @@ class Helpers {
 	if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
 	  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
-	  $str = strftime("%e %B %Y", $timestamp);
+	  $str = utf8_decode( strftime("%e %B %Y", $timestamp) );
 
 	  if ($with_hours) {
 		$str .= strftime(' à %Hh%Mmin%Ss', $timestamp);
