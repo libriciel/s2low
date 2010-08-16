@@ -143,7 +143,7 @@ if (is_array($certificate) && count($certificate) > 0 && is_uploaded_file($certi
   }
 }
 
-if ($new_id){	
+//if ($new_id){	
 	if (! $password || ! $login){
 		$_SESSION["error"] = "Le login et le mot de passe sont obligatoire pour cloner un certificat<br />";
 		header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id");
@@ -155,7 +155,7 @@ if ($new_id){
 		exit();
 	}
 	$him->cloneCertificat($new_id);
-}
+//}
 
 
 
