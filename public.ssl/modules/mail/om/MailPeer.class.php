@@ -45,7 +45,7 @@
  * Cette classe fournit des méthodes de traiter les requete de base de donner et les objets de tableaux.
  * Modifications :
  * Auteur   Date       Commentaire
- *
+ * PEV		15/08/2010	Avec Postgres 8.4 les requêtes impliquant la table mail_error posait des problèmes. Les requêtes avaient pour condiction un char = un int.
  */
 
 require_once (MAIL_SITEROOT."/om/mail_transaction.class.php");
@@ -163,7 +163,7 @@ class MailPeer {
 	  if (! empty($trans_id)) 
 	  	{
 			$sql = "SELECT mail_message_emis.email, mail_errors.message_retour FROM mail_errors, mail_message_emis where";
-		    $sql.= " mail_errors.mail_message_emis_id = mail_message_emis.id and mail_message_emis.mail_transaction_id=".$trans_id;
+		    $sql.= " mail_errors.mail_message_emis_id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id=".$trans_id;
 			$db =& DatabasePool::getInstance();
 		    $result = $db->select($sql);
 			return $result->get_all_rows();
@@ -208,7 +208,7 @@ class MailPeer {
   	$db =& DatabasePool::getInstance();
   	
   	$sql="DELETE FROM mail_errors WHERE mail_message_emis_id IN ";
-  	$sql.="(SELECT mail_message_emis.id FROM mail_message_emis WHERE mail_transaction_id=$transId)";		
+  	$sql.="(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis WHERE mail_transaction_id=$transId)";		
     if (! $db->exec($sql)) {
   		$message[]= "Erreur lors de la suppression de mail_errors ";
 
