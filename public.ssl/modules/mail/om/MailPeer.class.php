@@ -163,7 +163,7 @@ class MailPeer {
 	  if (! empty($trans_id)) 
 	  	{
 			$sql = "SELECT mail_message_emis.email, mail_errors.message_retour FROM mail_errors, mail_message_emis where";
-		    $sql.= " mail_errors.mail_message_emis_id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id=".$trans_id;
+		    $sql.= " mail_errors.id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id=".$trans_id;
 			$db =& DatabasePool::getInstance();
 		    $result = $db->select($sql);
 			return $result->get_all_rows();
@@ -207,7 +207,7 @@ class MailPeer {
   	$message=array();
   	$db =& DatabasePool::getInstance();
   	
-  	$sql="DELETE FROM mail_errors WHERE mail_message_emis_id IN ";
+  	$sql="DELETE FROM mail_errors WHERE id IN ";
   	$sql.="(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis WHERE mail_transaction_id=$transId)";		
     if (! $db->exec($sql)) {
   		$message[]= "Erreur lors de la suppression de mail_errors ";
