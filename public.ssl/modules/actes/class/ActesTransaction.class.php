@@ -1335,7 +1335,12 @@ class ActesTransaction extends DataObject {
       }
 
       foreach ($files as $file) {
-        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature) VALUES(" . $this->envelope_id . ", " . $this->id . ", '" . basename($file["name"]) . "', '" . $file["posted_filename"] . "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . $file["sign"] . "')";
+        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature) VALUES(" 
+        		. $this->envelope_id . ", " .
+        		 $this->id . ", '" . 
+        		 basename($file["name"]) . "', '" .
+        		 addslashes($file["posted_filename"]) .
+        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . $file["sign"] . "')";
 
         if (!$this->db->exec($sql)) {
           $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";
