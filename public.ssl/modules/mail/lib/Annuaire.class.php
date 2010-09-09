@@ -121,14 +121,16 @@ class Annuaire {
 	public function getListeMailAndGroupe($begin){
 		$tabMail = array();
 		
-		$sql = "SELECT name FROM mail_groupe WHERE name ILIKE '$begin%' AND authority_id=".$this->authority_id . " ORDER BY name";
+		$begin = $this->bd->quote("$begin%");
+		
+		$sql = "SELECT name FROM mail_groupe WHERE name ILIKE $begin AND authority_id=".$this->authority_id . " ORDER BY name";
 		$result = $this->bd->select($sql);
 		while ($row = $result->get_next_row()) {
 			$tabMail[] = $row['name'] . " (groupe)";
 		}
 			
 		$sql = "SELECT description,mail_address FROM mail_annuaire ".
-				" WHERE (mail_address ILIKE '$begin%' OR description ILIKE '$begin%') AND authority_id =".$this->authority_id .
+				" WHERE (mail_address ILIKE $begin OR description ILIKE $begin) AND authority_id =".$this->authority_id .
 				" ORDER by description,mail_address";
 		$result = $this->bd->select($sql);
 		while ($row = $result->get_next_row()) {

@@ -25,5 +25,7 @@ $command=$_GET["command"];
 $MailCtl=new mailController();
 $MailCtl->run($command);
 
+
+
 //affichier le pied.
 $doc->DisplayFoot();

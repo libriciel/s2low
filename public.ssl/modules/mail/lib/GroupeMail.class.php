@@ -38,8 +38,11 @@ class GroupeMail extends DataObject {
 	
 	
 	public function getGroupeIdFromName($name,$authority_id){
-		$sql = "SELECT id FROM mail_groupe WHERE name='$name' AND authority_id=$authority_id";
+		
 		$db =& DatabasePool::getInstance();
+		
+		$sql = "SELECT id FROM mail_groupe WHERE name=".$db->quote($name)." AND authority_id=$authority_id";
+		
 		$result = $db->select($sql);
 		if ($result->num_row() == 0){
 			return false;
