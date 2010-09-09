@@ -146,20 +146,19 @@ class Annuaire {
 	
 	public function getAllMail(){
 		$result = array();
-		$sql = 	"SELECT * FROM mail_annuaire ".
+		$sql = 	"SELECT mail_annuaire.*, mail_groupe.name as groupe_name FROM mail_annuaire ".
 				" LEFT JOIN mail_user_groupe ON mail_annuaire.id=mail_user_groupe.id_user " .
-				//" LEFT JOIN mail_groupe ON mail_user_groupe.id_groupe = mail_groupe.id".
+				" LEFT JOIN mail_groupe ON mail_user_groupe.id_groupe = mail_groupe.id".
 				" WHERE mail_annuaire.authority_id=".$this->authority_id;	
 		foreach ($this->bd->fetchAll($sql) as $info){
-			//print_r($info);
 			if (empty($result[$info['id']])){
 				$result[$info['id']] = $info;
 				$result[$info['id']]['groupe'] = array();
-				if ($info['id_groupe']){
-					$result[$info['id']]['groupe'][] = $info['id_groupe'];
+				if ($info['groupe_name']){
+					$result[$info['id']]['groupe'][] = $info['groupe_name'];
 				} 
 			} else {
-				$result[$info['id']]['groupe'][] = $info['id_groupe'];
+				$result[$info['id']]['groupe'][] = $info['groupe_name'];
 			}
 		}
 		return $result;

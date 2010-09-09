@@ -4,6 +4,10 @@ require_once("include/init.php");
 require_once("controller/mailController.php");
 //commencer traiter la layout normal correspond de le système.
 require_once ("lib/MailLayout.class.php");
+
+$api=Helpers :: getVarFromPost("api");
+
+if ( ! $api ){
 $doc = new MailLayout();
  
 //pour list.php
@@ -19,7 +23,7 @@ $doc->setTitle(WEBSITE_TITLE);
 $doc->buildMenu($me);
 $doc->addBody($html);
 $doc->DisplayHead();
-
+}
 //commencer de distribuer des information.
 $command=$_GET["command"];
 $MailCtl=new mailController();

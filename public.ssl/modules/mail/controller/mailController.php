@@ -431,6 +431,14 @@ class mailController {
   }
    // traitement fini
    //afficher la page
+   
+  	$api=Helpers :: getVarFromPost("api");
+  	if ($api == 1){
+  		echo "OK\n";
+  		echo "id_mail : " . $mailTransaction->getID();
+  		exit;
+  	}
+  
    include dirname(__FILENAME__)."/template/send.php";	
    return true;  
   }
