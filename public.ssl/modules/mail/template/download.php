@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/../../../../config/config.php');
 $filename=$_GET['filename'];
+
 $root=$_GET['root'];
 	
 switch(strrchr(basename($filename), ".")) {

@@ -95,7 +95,7 @@
 			 		<td><?php echo $mailIncludeFile->getFileName(); ?></td>
 			 		<td><?php echo $mailIncludeFile->getFileSize(); ?></td>
 			 		<td><?php echo $mailIncludeFile->getFileType(); ?></td>
-			 		<td><a href="template/download.php?filename=<?php echo $mailIncludeFile->getFileName(); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+			 		<td><a href="template/download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
 			 	</tr>
 			 	<?php }?>
 			 	<tr>
