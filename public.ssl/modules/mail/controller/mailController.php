@@ -1,13 +1,15 @@
 <?php
 
 
-require_once (dirname(__FILENAME__)."/om/MailPeer.class.php");
-require_once (dirname(__FILENAME__)."/om/mail_transaction.class.php");
+require_once ( dirname(__FILE__) . "/../om/MailPeer.class.php");
+require_once ( dirname(__FILE__) . "/../om/mail_transaction.class.php");
 
 class mailController {
 	
   private $MailMessageEmis=array ();
   private $MailAnnuaireArray=array();
+  
+  private $lastError;
 	
   /**
    * \bref dispatch le message.
@@ -31,7 +33,7 @@ class mailController {
 				$this->executeShow();
 				break;
 			case "send" :
-				$this->executeSend();
+				$this->executeSendAndDisplayResult();
 			   break;
 			case "SaveError":
 				$this->SaveError();
@@ -195,139 +197,142 @@ class mailController {
 		return implode(",",$result);
 	}
   
-/**
- * \bref envoyer un email.
- * \bref appelé juste par mailController::run();
- * \param: pas de paramètre
- */
-  protected function executeSend()
-  {
+	public function getLastError(){
+		return $this->lastError;
+	}
+	
+	
+	public function executeSendAndDisplayResult(){
+		
+		$result = $this->executeSend();
+		
+		if ( ! $result){
+			$returnMsg = $this->getLastError(); ;
+			include dirname(__FILENAME__)."/template/sendfailed.php"; 
+		} 
+		
+		include dirname(__FILENAME__)."/template/send.php";	
+ 		
+	}
+	
+	public function logError($message){
+		global $me, $module;
+		$result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError , 3, false, 'USER', $module->get("name"), $me);
+		if (! $result){
+			$this->lastError .= "\nErreur de journalisation.";
+		}  
+	}
+	
+	
+	public function executeSend() {
 		//FIXME fonction trop grande ...
   	
-  	
-  	require_once (dirname(__FILENAME__)."/om/mail_message_emis.class.php");
-  	require_once (dirname(__FILENAME__)."/om/MailPeer.class.php");    
-  	require_once (dirname(__FILENAME__)."/lib/mailfunction.php");      
-   	require_once (dirname(__FILENAME__)."/lib/MailUtil.class.php");
-   	
-   	global $me, $module;
-   	
+		
+	  	require_once (dirname(__FILE__)."/../om/mail_message_emis.class.php");
+	  	require_once (dirname(__FILE__)."/../om/MailPeer.class.php");    
+	  	require_once (dirname(__FILE__)."/../lib/mailfunction.php");      
+	   	require_once (dirname(__FILE__)."/../lib/MailUtil.class.php");
+	   	
+	   	global $me, $module;
+	   
+		//HACK
+		if (empty($_POST) && empty($_FILES)){
+			$this->lastError = "le fichier ".$file['name']." est trop gros (".ini_get('upload_max_filesize')." maximum)" ;
+	       	return false;
+		}
 
-	//HACK
-	if (empty($_POST) && empty($_FILES)){
-		$returnMsg = "le fichier ".$file['name']." est trop gros (".ini_get('upload_max_filesize')." maximum)" ;
-		include dirname(__FILENAME__)."/template/sendfailed.php"; 
-        	return false;
-	}
+	   	//vérification de mail adress.
+		$mailTo=Helpers :: getVarFromPost("mailto");
+	    $mailCC=Helpers :: getVarFromPost("mailcc");   
+	    $mailBCC=Helpers :: getVarFromPost("mailcci");
+	   
+	    
+	    $mailTo = $this->explodeMail($mailTo);
+	    $mailCC = $this->explodeMail($mailCC);
+	    $mailBCC = $this->explodeMail($mailBCC);
+	  
+	    $subject=Helpers :: getVarFromPost("objet");
+	    $message=Helpers :: getVarFromPost("message");
+	    $send_password = Helpers :: getVarFromPost("send_password");
+	    
+	    if ( ! $mailTo ) {
+	    	$this->lastError = "Le destinataire est obligatoire";
+	    	return false;
+	    }
+	    
+    	if (checkAllEmail($mailTo)==false) {
+			$this->lastError = "L'adresse email incorrecte !\n mailto=$mailTo ";
+			return false;
+		}
 
-   	//vérification de mail adress.
-	$mailTo=Helpers :: getVarFromPost("mailto");
-    $mailCC=Helpers :: getVarFromPost("mailcc");   
-    $mailBCC=Helpers :: getVarFromPost("mailcci");
-   
-    
-    $mailTo = $this->explodeMail($mailTo);
-    $mailCC = $this->explodeMail($mailCC);
-    $mailBCC = $this->explodeMail($mailBCC);
-  
-    $subject=Helpers :: getVarFromPost("objet");
-    $message=Helpers :: getVarFromPost("message");
-    $send_password = Helpers :: getVarFromPost("send_password");
-    if ($mailTo==null)
-    {
-    	$returnMsg="Vous êtes obligé d'avoir un destinataire.";
-    	include dirname(__FILENAME__)."/template/sendfailed.php";	
-    	return false;
-    }
-    else
-    {
-    	if (checkAllEmail($mailTo)==false)
-    	{
-    		$returnMsg= "mailTo: Adresse email incorrecte !\n mailto=$mailTo ";
-    		include dirname(__FILENAME__)."/template/sendfailed.php";	
+		if ( ! $subject ) {
+    		$this->lastError = "L'objet du mail est obligatoire";
     		return false;
-    	}
-    }
-    if ($subject==null)
-    {
-    	$returnMsg= "Vous êtes oblige d'avoir un objet.";
-      include dirname(__FILENAME__)."/template/sendfailed.php";	
-    	return false;
-    }
-    if ($message==null)
-    {
-    	$returnMsg= "Le champ message doit être rempli";
-    	include dirname(__FILENAME__)."/template/sendfailed.php";	
-    	return false;
-    }
-    if ($mailCC)
-    {
-    	if (checkAllEmail($mailCC)==false)
-    	{
-    		$returnMsg= "mailCC: Adresse email incorrecte !";
-    		include dirname(__FILENAME__)."/template/sendfailed.php";	
+		}
+		
+		if ( ! $message ) {
+	    	$this->lastError =  "Le corps du message ne peut pas être vide";
+	    	return false;
+		}
+		if ($mailCC && ! checkAllEmail($mailCC)) {
+    		$this->lastError =  "mailCC: Adresse email incorrecte !";
     		return false;
     	}
     	
-    }
-    if ($mailBCC)
-    {
-    	if (checkAllEmail($mailBCC)==false)
-    	{
-    		$returnMsg="mailBCC: Adresse email incorrecte !";
-    		include dirname(__FILENAME__)."/template/sendfailed.php";	
+    	if ($mailBCC && ! checkAllEmail($mailBCC)) {
+    		$this->lastError =  "mailBCC: Adresse email incorrecte !";
     		return false;
-    	}
-    }
-    //-------fini de la vérification
-    //----ini mail tranaction.
-    // mail transaction faut absolutment inite avant tous les autre opération car tous les autre tableau need 
-    // mail transaction id.
-    $mailTransaction=new mail_transaction();
-    $mailTransaction->newSave($me->getId());
-    $Transaction_id=$mailTransaction->getId();
-    $mailIncludedFiles=array();
+	    }
+    
+		//-------fini de la vérification
+	    //----ini mail tranaction.
+	    // mail transaction faut absolutment inite avant tous les autre opération car tous les autre tableau need 
+	    // mail transaction id.
+	    $mailTransaction=new mail_transaction();
+	    $mailTransaction->newSave($me->getId());
+	    $Transaction_id=$mailTransaction->getId();
+	    $mailIncludedFiles=array();
 
-    //--------------------------------------------------------------------  
-    //FileNumber = le nombre de File est attaché. Il commence par 1. 
-    //Il est défini dans le fichier de javascript file: mail.js
-    $InputFileName=array();
-    $FileNumber = Helpers :: getVarFromPost("FileNumber");
-    if ($FileNumber !=null)
-    {
-      
-       require_once (dirname(__FILENAME__)."/om/mail_included_file.class.php");
-       for ($i = 1; $i <= $FileNumber; $i++)
-       {
-          // le nom de uploadFile pass par var _FILES
-          // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'à FileNumber
-          // parcque des fois les utilisateur supprime une fichier qu'il a déjas ajouté et le FileNumber va pas diminuer enmeme temp
-          // donc il y aura de trou entre les nombre.
-        if (defined('MAIL_DEBUG'))
-		 		{	
-        	echo "filenumber=".$i;  
-       		echo "filename=".$_FILES['uploadFile'. $i]['name'];
- 				}
-        if  ( $_FILES['uploadFile'. $i]['name'] != null)
-        {
-        	$InputFileName[]='uploadFile'. $i;
-           
-        }
-      }
-   }
-    //----------------------
+	    //--------------------------------------------------------------------  
+	    //FileNumber = le nombre de File est attaché. Il commence par 1. 
+	    //Il est défini dans le fichier de javascript file: mail.js
+	    $InputFileName=array();
+	    $FileNumber = Helpers :: getVarFromPost("FileNumber");
+	    if ($FileNumber !=null)
+	    {
+	      
+	       require_once (dirname(__FILE__)."/../om/mail_included_file.class.php");
+	       for ($i = 1; $i <= $FileNumber; $i++)
+	       {
+	          // le nom de uploadFile pass par var _FILES
+	          // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'à FileNumber
+	          // parcque des fois les utilisateur supprime une fichier qu'il a déjas ajouté et le FileNumber va pas diminuer enmeme temp
+	          // donc il y aura de trou entre les nombre.
+	        if (defined('MAIL_DEBUG'))
+			 		{	
+	        	echo "filenumber=".$i;  
+	       		echo "filename=".$_FILES['uploadFile'. $i]['name'];
+	 				}
+	        if  ( $_FILES['uploadFile'. $i]['name'] != null)
+	        {
+	        	$InputFileName[]='uploadFile'. $i;
+	           
+	        }
+	      }
+	   		}
+   		 //----------------------
 
 
-	$mailUtil = new MailUtil();
+		$mailUtil = new MailUtil();
 	
-	//TODO : MAL
-	global $myAuthority;
+		//TODO : MAL
+		global $myAuthority;
 	
-	$mailUtil->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
+		$mailUtil->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
 	
-	if ($myAuthority->get('email_mail_securise')){
-		$mailUtil->setFrom($myAuthority->get('email_mail_securise'));
-	}
+		if ($myAuthority->get('email_mail_securise')){
+			$mailUtil->setFrom($myAuthority->get('email_mail_securise'));
+		}
 	
   	if (count($InputFileName)>0)
   	{
@@ -335,20 +340,14 @@ class mailController {
 	    $mailTransaction->set("fn_download",md5("mail".$now));
 	    $mailTransaction->save(false);
 	    
-	    require_once (dirname(__FILENAME__)."/om/mail_included_file.class.php");
+	    require_once (dirname(__FILE__)."/../om/mail_included_file.class.php");
         
         // créer un repertoir de md5
   		$newdir=MAIL_FILES_UPLOAD_ROOT.$mailTransaction->getFNDownload().'/';
   		if (!mkdir ($newdir, 0755, true))
   		{
-  			$returnMsg="La création de répertoire a echoué.";
-  			if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
-			  {
-			    $returnMsg= "\nErreur de journalisation.";
-			    include dirname(__FILENAME__)."/template/sendfailed.php";	
-			    return false;
-			  }  
-  			include dirname(__FILENAME__)."/template/sendfailed.php";	
+  			$this->lastError ="La création de répertoire a echoué.";
+  			$this->logError();
   			return false;
   		}
   		$mailFiles=array();
@@ -359,16 +358,10 @@ class mailController {
  		      	$mailIncludedFiles[]=$temp;
  		     else 
  		     {
-	 		     	$returnMsg="Le chargement du fichier sur le server a échoué : " . $temp->getLastError();
-		 		    if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
-					  {
-					    $returnMsg= "\nErreur de journalisation.";
-					    include dirname(__FILENAME__)."/template/sendfailed.php";	
-					    return false;
-					  }
-	 		     	include dirname(__FILENAME__)."/template/sendfailed.php";	
+	 		     	$this->lastError ="Le chargement du fichier sur le server a échoué : " . $temp->getLastError();
+		 			$this->logError();
 	 		     	return false;
-	 		    }
+			}
  	    }
 	    foreach ($mailIncludedFiles as $mailIncludeFile)
 	    {
@@ -377,14 +370,8 @@ class mailController {
 	    $Zipfile=$newdir."mail.zip";
 	    if (!$mailUtil->zip($mailFiles,$Zipfile))
 	    {
-	      $returnMsg= $mailUtil->errorMsg;
-				if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
-			  {
-			    $returnMsg= "\nErreur de journalisation.";
-			    include dirname(__FILENAME__)."/template/sendfailed.php";	
-			    return false;
-			  }
-	      include dirname(__FILENAME__)."/template/sendfailed.php";	
+	      $this->lastError = $mailUtil->errorMsg;
+			$this->logError();
 	      return false;
 	    }
   	}
@@ -401,13 +388,8 @@ class mailController {
 	
 	if (!$mailUtil->sendMail($this->MailMessageEmis,$mailTransaction,$mailIncludedFiles,$send_password))
 	{	
-	  	$returnMsg= "Échec lors de l'envoi.";
-			if (!Log :: newEntry(LOG_ISSUER_NAME, $returnMsg, 3, false, 'USER', $module->get("name"), $me))
-		  {
-		    $returnMsg= "\nErreur de journalisation.";
-		    include dirname(__FILENAME__)."/template/sendfailed.php";	
-		    return false;
-		  }
+	  	$this->lastError = "Échec lors de l'envoi.";
+		$this->logError();
 	  	//traiter les messages d'échec.
 	  	$mailTransaction->delete();
 	  	foreach ($this->MailMessageEmis as $mailEmis )
@@ -418,29 +400,17 @@ class mailController {
 	  	{
 	  		$file->delete();
 	  	}
-	  	include dirname(__FILENAME__)."/template/sendfailed.php";	
-	  	//-----
 	  	return false;
 	}
 	$msg="Envoi de mail réussi.";
 	if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me))
   {
-    $returnMsg= "\nErreur de journalisation.";
-    include dirname(__FILENAME__)."/template/sendfailed.php";	
+    $this->lastError = "\nErreur de journalisation.";
+
     return false;
   }
-   // traitement fini
-   //afficher la page
-   
-  	$api=Helpers :: getVarFromPost("api");
-  	if ($api == 1){
-  		echo "OK\n";
-  		echo "id_mail : " . $mailTransaction->getID();
-  		exit;
-  	}
   
-   include dirname(__FILENAME__)."/template/send.php";	
-   return true;  
+   return $mailTransaction->getID();  
   }
 
 /**
