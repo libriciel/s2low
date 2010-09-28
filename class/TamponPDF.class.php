@@ -80,10 +80,10 @@ class TamponPDF {
 	
 	private function sendDocumentToBrowser(){
 		header('Content-type: application/pdf');
-		header("Content-Disposition: inline; filename=$this->namefile");
+		header("Content-Disposition: attachment; filename=$this->namefile");
 		header("Expires: 0");
-        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-        header("Pragma: public");
+		header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+		header("Pragma: public");
 		echo $this->docOrigine->render();
 	}
 }
