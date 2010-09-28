@@ -167,6 +167,7 @@ class ActesIncludedFile extends DataObject {
 				$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
 				"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
 				"Affiché le " ));
+				$tampon->setNameFile($this->filename);
 				$tampon->render();
 			} catch (Exception $e){
 				Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype);

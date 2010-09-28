@@ -14,14 +14,15 @@ class TamponPDF {
 	private $font;
 	private $fontSize;
 	private $alphaTransparency;
+	private $namefile;
 	
 	public function __construct(Zend_Pdf $docOrigine){
 		$this->docOrigine = $docOrigine;
 		$this->setText(array("Affiché le " . date("d/m/Y")));
-		$this->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA)
-		);
+		$this->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA));
 		$this->setFontSize(self::DEFAULT_FONT_SIZE);
 		$this->setAlphaTransparency(self::DEFAULT_ALPHA_TRANSPARENCY);
+		$this->namefile = 'doc.pdf';
 	}
 
 	public function setText(array $textLine){
@@ -54,6 +55,10 @@ class TamponPDF {
 		$this->sendDocumentToBrowser();
 	}
 	
+	public function setNameFile($name){
+        $this->namefile = $name;
+    }
+	
 	private function drawTampon(Zend_Pdf_Page $page){
 		$page->setFont($this->font, $this->fontSize);
 		$page->setAlpha($this->alphaTransparency);
@@ -75,7 +80,10 @@ class TamponPDF {
 	
 	private function sendDocumentToBrowser(){
 		header('Content-type: application/pdf');
-		header('Content-Disposition: inline; filename=doc.pdf');
+		header("Content-Disposition: inline; filename=$this->namefile");
+		header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+        header("Pragma: public");
 		echo $this->docOrigine->render();
 	}
 }
