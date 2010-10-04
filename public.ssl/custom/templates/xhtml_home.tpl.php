@@ -27,8 +27,8 @@
  <h1>Bienvenue sur la plate-forme S²LOW&nbsp;-&nbsp;ADULLACT</h1>
  <h2 class="home">Offre <img src="<?php echo WEBSITE ?>/custom/images/logo_s2low.jpg" title="SLOW" alt="Logo Slow" /></h2>
  <p class="home">Cette plate-forme permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales et s'inscrit dans le cadre du projet national de eGouvernement.<br />
-Elle permet dès maintenant la transmission des actes aux préfectures via le protocole ACTES mis en place par le MIAT.<br />
-Les transmissions d'information vers le Trésor Public (états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics) seront activées très prochainement.<br />
+Elle permet dès maintenant la transmission des actes aux préfectures via le protocole ACTES mis en place par le MIOCT.<br />
+Les transmissions d'information vers le Trésor Public (états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics), HELIOS, sont réalisables via notre plate-forme.<br />
 
 L'accès aux services est réservé aux personnes autorisées disposant d'un certificat électronique à cet effet.<br /><br />
 
