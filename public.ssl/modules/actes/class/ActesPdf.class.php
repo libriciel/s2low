@@ -125,8 +125,8 @@ class ActesPdf {
 			
 		//obtenir tous les info et commencer de les ajouter dans tableau
 		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(65);
-		$this->pdf->Cell(40,10,"Paramètre de la transaction:",0,1);
+		$this->myRectangle(60);
+		$this->pdf->Cell(40,10,"Paramètre de la transaction :",0,1);
 		$this->pdf->SetFont('Arial','i',10);
 		$this->pdf->SetMyWidths(array(10,70,80));
 		$this->pdf->SetMyAligns(array('0','L','L'));
@@ -155,8 +155,8 @@ class ActesPdf {
 		
 		//obtenir tous les info et commencer de les ajouter dans tableau
 		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(65);
-		$this->pdf->Cell(40,10,"Fichier de vie de la transaction",0,1);
+		$this->myRectangle(69);
+		$this->pdf->Cell(40,10,"Fichier contenus dans l'archive :",0,1);
 
 		$this->pdf->SetMyWidths(array(2,100,40,50));
 		$this->pdf->SetMyAligns(array('C','C','C','C'));
@@ -199,8 +199,8 @@ class ActesPdf {
 		$status = ActesTransaction :: getStatusList();
 		
 		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(70);
-		$this->pdf->Cell(40,10,"Cycle Contenu dans l'archivage",0,1);
+		$this->myRectangle(65);
+		$this->pdf->Cell(40,10,"Cycle de vie de la transaction :",0,1);
 		$this->pdf->SetMyWidths(array(10,50,60,60));
 		$this->pdf->SetMyAligns(array('C','C','C','C'));
 		$this->pdf->SetMyBorder(array('0','R','RL','L'));
