@@ -21,7 +21,7 @@ if ($result){
 	echo "OK:$mailId\n";
 } else {
 	$erreur = $MailCtl->getLastError();
-	echo "erreur:$erreur\n";
+	echo "ERROR:$erreur\n";
 }
 
 
