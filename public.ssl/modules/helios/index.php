@@ -356,7 +356,8 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivité
   }
 }
 
-elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
+elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
+  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 } else {
   // Un utilisateur ne voit que ses propres transactions
   $filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
