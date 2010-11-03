@@ -8,7 +8,7 @@ $mailList = new MailList($db,$me->getId());
 
 $id = Helpers::getVarFromGet("id");
 if (!$id){
-	echo "Usage : ".__FILE__."?id=xxxx";
+	echo "Usage : ".WEBSITE_SSL."/modules/mail/api/detail-mail.php?id=xxxx";
 	exit;
 }
 
