@@ -17,7 +17,7 @@ ob_start();
 $mailId = $MailCtl->executeSend();
 ob_end_clean();
 
-if ($result){
+if ($mailId){
 	echo "OK:$mailId\n";
 } else {
 	$erreur = $MailCtl->getLastError();
