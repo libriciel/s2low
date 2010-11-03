@@ -261,7 +261,7 @@ class mailController {
 	    }
 	    
     	if (checkAllEmail($mailTo)==false) {
-			$this->lastError = "L'adresse email incorrecte !\n mailto=$mailTo ";
+			$this->lastError = "L'adresse email est incorrecte !\n mailto=$mailTo ";
 			return false;
 		}
 
