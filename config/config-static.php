@@ -12,7 +12,7 @@ define('LOG_ISSUER_NAME', 'Interface Web');
 
 // Version et date de l'application
 define('PRODUCT_RELEASE', '1.1');
-define('PRODUCT_RELEASE_DATE', '28/10/2009');
+define('PRODUCT_RELEASE_DATE', '16/11/2010');
 
 //////////////////////////////////
 ///// Paramètre module Mail  /////
