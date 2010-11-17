@@ -43,4 +43,25 @@ class MailList {
 		return $result;
 	}
 	
+	public function delete($id_mail_transaction){
+	  
+	  	
+	  	$sql="DELETE FROM mail_errors " .
+	  		 " WHERE id IN " .
+	  			"(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis " . 
+	  			" WHERE mail_transaction_id=$id_mail_transaction)";		
+	 	$this->db->exec($sql);
+	 	  	
+	  	$sql="DELETE FROM mail_message_emis WHERE mail_transaction_id=$id_mail_transaction";
+	 	$this->db->exec($sql);
+	  			
+	    
+	  	$sql="DELETE FROM mail_included_file WHERE mail_transaction_id=$id_mail_transaction ";	
+	 	$this->db->exec($sql);
+	  		
+	  	$sql="DELETE FROM mail_transaction WHERE id= $id_mail_transaction";		
+	 	$this->db->exec($sql);
+	  		  		
+	}
+	
 }
