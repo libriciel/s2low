@@ -20,6 +20,8 @@ class TestTedetisApi {
 		$this->certificateFile = $certificateFile;
 		$this->certificateKey = $certificateKey;
 		$this->certificateKeyPass = $certificateKeyPass;
+
+		print_r($this);
 	}
 	
 	public function get($url){
