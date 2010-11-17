@@ -67,7 +67,7 @@ function checkEmail($email,$antispam = false)
 function checkAllEmail($emailtext)
 {	
 	$mailer = new Mailer();
- 	$emailtext=substr($emailtext,0,-1);
+ 	// $emailtext=substr($emailtext,0,-1);
    // le séparateur  is vircule
     $mails=explode(",",$emailtext);  	
     foreach ($mails as $mail)

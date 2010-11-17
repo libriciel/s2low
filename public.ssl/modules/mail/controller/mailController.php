@@ -163,7 +163,7 @@ class mailController {
   }
   
 	//HACK béquille pour transformer les mails ...
-	private function explodeMail($mail){
+	public function explodeMail($mail){
 		
 		//BEURK....
 		global $me;
