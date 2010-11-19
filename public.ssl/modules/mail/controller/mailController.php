@@ -171,6 +171,10 @@ class mailController {
 		$result = array();
 		$lesMails = explode(",",$mail);
 		foreach($lesMails as $un_mail){
+			$un_mail = trim($un_mail);
+			if (  ! $un_mail){
+				continue;
+			}
 			$matches  = array();
 			if (preg_match('/(.*) \(groupe\)/',$un_mail,$matches)){
 				$groupe_name = $matches[1];
