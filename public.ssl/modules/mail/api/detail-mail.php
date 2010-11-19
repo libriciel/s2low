@@ -26,7 +26,7 @@ foreach($detail['file'] as $file){
 }
 
 foreach($detail['mail_emis'] as $emis){
-	echo "emis:".$emis['email'].":".$emis['type_envoi'].":".$emis['ack']."\n";
+	echo "emis:".$emis['email'].":".$emis['type_envoi'].":".$emis['ack'].":".$emis['ack_date']."\n";
 }
 echo "\n\n==message==\n\n";
 echo $detail['message'];
