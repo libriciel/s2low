@@ -86,7 +86,7 @@ $doc->DisplayHead();
 
 	<div class="col_gauche">Message :</div>
 	<div class="col_droite">
-	<?php echo nl2br(htmlentities($mailTransaction->getMessage())); ?>
+	<?php echo nl2br(strip_tags($mailTransaction->getMessage())); ?>
 	</div>
 	<br class="clear" />
 
