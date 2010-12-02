@@ -1,4 +1,4 @@
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery-1.2.6.min.js"></script>
+<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery-1.4.4.min.js"></script>
 <script src="<?php echo WEBSITE_SSL ?>/javascript/jquery.autocomplete.min.js"></script>    
 <link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/custom/styles/jquery.autocomplete.css" type="text/css" />
 
