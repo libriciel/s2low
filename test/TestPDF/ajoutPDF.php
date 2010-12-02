@@ -7,7 +7,7 @@ set_include_path(dirname(__FILE__)."/../../ext/" . PATH_SEPARATOR .   get_includ
 
 require_once(dirname(__FILE__)."/../../class/TamponPDF.class.php");
 		
-$pdf = Zend_Pdf::load("2010_07_01_36.pdf");
+$pdf = Zend_Pdf::load("/tmp/20101126_1AR206.pdf");
 
 $tampon = new TamponPDF($pdf);
 $tampon->setText(array("Envoyé en préfécture le 01/01/2010",
