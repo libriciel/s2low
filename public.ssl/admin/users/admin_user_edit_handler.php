@@ -156,13 +156,16 @@ if ($new_id){
 	}
 	$him->cloneCertificat($new_id);
 } else {
-	
-	if ($login && $him->getIdFromLogin($login)){
-		$_SESSION["error"] = "Ce login est déja utilisé<br />";
-		header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-		exit();
+	if ($login){
+		
+		$the_id = $him->getIdFromLogin($login);
+		
+		if ($the_id && $id != $the_id){
+			$_SESSION["error"] = "Ce login est déja utilisé<br />";
+			header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+			exit();
+		}
 	}
-	
 }
 
 
