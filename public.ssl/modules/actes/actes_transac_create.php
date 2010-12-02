@@ -59,6 +59,24 @@ require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
+
+function convertText($text) {
+         $cp1252_map = array(
+                "&#8211;"  => "-",
+"&#8212;"  => "-",
+"&#8216;"  => "'",
+"&#8217;"  => "'",
+"&#8218;"  => ",",
+"&#8220;"  => '"',
+"&#8221;"  => '"',
+"&#8222;"  => '"',
+"&#8224;"  => '"',
+"&#8230;"  => "..."
+              );
+              return strtr($text, $cp1252_map);
+        }
+
+
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
@@ -93,6 +111,7 @@ $decision_date = Helpers :: getVarFromPost("decision_date", true);
 $subject = Helpers :: getVarFromPost("subject", true);
 // pour corriger le bug 210 qund objet a un "\'" de dans, on le remplace comme un "'"
 $subject = str_replace("\\","",$subject);
+$subject = convertText($subject);
 $batchFileId = Helpers :: getVarFromPost("batchfile");
 $actePDFFile = $_FILES["acte_pdf_file"];
 $actePDFFileSign = $_FILES["acte_pdf_file_sign"];
