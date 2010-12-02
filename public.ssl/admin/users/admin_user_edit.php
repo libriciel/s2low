@@ -363,13 +363,14 @@ if (count($ids_cert) > 1){
 		}
 		$he = new User($id_other);
 		$he->init();
+		$he_authority = new Authority($he->get("authority_id"));
  		$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
  		$html .= " <td>" . $he->get("login") . "</td>\n"; 		
   		$html .= " <td>" . $he->get("givenname") . " " . $he->get("name") . "</td>\n";
   		$html .= " <td><a href=\"mailto:" .$he->get("email"). "\">" . $he->get("email") . "</a></td>\n";
   		$html .= " <td>" . $rolesList[$he->get("role")] . "</td>\n";
   		$html .= " <td>" . $statusList[$he->get("status")] . "</td>\n";
-  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id"). "\">" . $he->get("authority_name")  . "</a></td>\n";
+  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id"). "\">" . $he_authority->get("name")  . "</a></td>\n";
   		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
   		$html .= "</tr>\n";
   		 $i = ($i + 1) % 2;
