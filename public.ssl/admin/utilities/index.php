@@ -73,6 +73,13 @@ if (! $me->isSuper()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
+@ $tedetis_version = file_get_contents(TEDETIS_VERSION_SERVLET);
+if (  $tedetis_version ){
+	$tedetis_version = utf8_decode($tedetis_version);
+} else {
+	$tedetis_version = "Le Tedetis ne semble pas disponible (".TEDETIS_VERSION_SERVLET.")";
+}
+
 $caCerts = Helpers::getAuthorizedCACerts();
 
 $doc = new HTMLLayout();
@@ -133,9 +140,20 @@ if (count($caCerts) > 0) {
 } else {
   $html .= "Pas de certificat d'autorité de certification trouvé.";
 }
+$html .= "</div>\n";
 
+ob_start();
+?>
+
+<h2>Version du Tedetis </h2>
+
+<p><?php echo $tedetis_version ?></p>
+
+<?php 
+$html .= ob_get_contents();
+ob_clean();
 $html .= "</div>\n";
-$html .= "</div>\n";
+
 
 $doc->addBody($html);
 

@@ -157,5 +157,6 @@ define('MAIL_TEXT',"Le serveur sécurisé TdT de l'ADULLACT vous informe qu'un  me
 require_once('config-static.php');
 
 
+define('TEDETIS_VERSION_SERVLET', 'http://127.0.0.1:8080/TedetisActes/Version');
 
 

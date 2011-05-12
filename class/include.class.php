@@ -47,6 +47,5 @@ require_once(SITEROOT . 'class/Log.class.php');
 require_once(SITEROOT . 'class/Trace.class.php');
 require_once(SITEROOT . 'class/ServiceUser.class.php');
 require_once( SITEROOT . 'ext/mime_content_type.func.php');
-require_once( SITEROOT . "class/Versionning.class.php");
 
 session_start();
