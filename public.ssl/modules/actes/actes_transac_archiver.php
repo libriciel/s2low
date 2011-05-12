@@ -82,6 +82,7 @@ $client = new SoapClient(ASALAE_WSDL);
 // Appel de la fonctions SOAP : génération du fichier SEDA 
 $seda = @$client->__soapCall("wsGSeda", array($options, IDENTIFIANT_VERSANT, MOT_DE_PASSE));
 
+
 //-------TODO et quel fichier ?
 $document  = file_get_contents($file_to_send);
 //------

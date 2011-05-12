@@ -83,7 +83,11 @@ class ActesClassification extends DataObject {
    */
   public function initWithLastSuccessful($authority_id) {
  	if (is_numeric($authority_id)) {
-	  $sql = "SELECT acr.id, acr.request_date, acr.requested_by, acr.version_date, acr.xml_data FROM actes_classification_requests acr LEFT JOIN users ON acr.requested_by=users.id WHERE users.authority_id=" . $authority_id . " AND acr.xml_data IS NOT NULL ORDER BY request_date DESC, version_date DESC LIMIT 1";
+	  $sql = "SELECT acr.id, acr.request_date, acr.requested_by, acr.version_date, acr.xml_data " . 
+	  			" FROM actes_classification_requests acr " . 
+	  			" LEFT JOIN users ON acr.requested_by=users.id " .
+	  			" WHERE users.authority_id=" . $authority_id . " AND acr.xml_data IS NOT NULL " . 
+	  			" ORDER BY request_date DESC, version_date DESC LIMIT 1";
 
 	  $result = $this->db->select($sql);
 	  
