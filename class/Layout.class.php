@@ -106,18 +106,11 @@ class Layout {
  */
 
 class HTMLLayout extends Layout {
+
+	protected $template = false;
 	
-  /**
-   * Modifications :
-   * Modifié par TH, private=>protected, pour hériter cette variable.
-   * Date 21-04-2008
-  */
-  protected $template = false;
-  
-  
-  	
 	private $errorDisabled;
-  
+	
   public function __construct($template = false) {
     if ($template) {
       $this->template = $template;
@@ -247,6 +240,7 @@ class HTMLLayout extends Layout {
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
   public function buildFooter($displayInline = false) {
+  	
     $html = "<div id=\"footer\">\n";
 
 	if (defined("WEBMASTER")) {
@@ -257,8 +251,15 @@ class HTMLLayout extends Layout {
 	  $html .= "<a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - ";
 	}
 
-	$html .= "Offre S²LOW - Logiciel <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">v" . PRODUCT_RELEASE . " du " . PRODUCT_RELEASE_DATE . "</a>\n";
-    $html .= "</div>\n";
+	$versionning = VersionningFactory::getInstance();
+	$versionningInfo = $versionning->getAllInfo();
+	
+	$html .= "Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">".
+  	$versionningInfo['version-complete'] . "</a>\n";
+
+
+	
+	$html .= "</div>\n";
 
     if ($displayInline) {
       echo $html;
