@@ -258,11 +258,6 @@ if (!$env->checkArchiveConformity()) {
 // Purge des fichiers intermédiaires
 $env->purgeFiles();
 
-//print_r($env);
-//print_r($trans);
-
-//exit();
-
 if (!$env->save()) {
   $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {

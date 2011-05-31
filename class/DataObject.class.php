@@ -323,8 +323,6 @@ class DataObject {
       $sql .= " WHERE id='". $this->id . "'";
     }
 
-    //echo $sql;
-    //exit();
 
     if ($return_rather_than_exec) {
       return $sql;

@@ -188,7 +188,12 @@ class ActesTransaction extends DataObject {
       "type" => "isString",
       "maxlength" => 1023,
       "mandatory" => false
-    )
+    ),
+     "type_reponse" => array (
+      "descr" => "Type de la réponse pour les réponse ministère LO et Demande de PC",
+      "type" => "isInt",
+      "mandatory" => false
+    ),
   );
 
   protected $transactionTypes = array (
@@ -201,6 +206,23 @@ class ActesTransaction extends DataObject {
     "7" => "Demande de classification"
   );
 
+	public static function getTypeReponse($transactionType,$reponseType){
+		
+		$typeReponse = array(
+		3	=> array(4 => "Transmission de pièces complémentaires",
+					3 => "Refus explicite d'envoi de pièces complémentaires"
+					),
+		4 => array(4 => "Lettre de justification de l'acte",
+					3 => "Rejet explicite d'une lettre d'observations")
+		);
+		if ( empty($typeReponse[$transactionType][$reponseType])){
+			return false;
+		}
+		return $typeReponse[$transactionType][$reponseType];
+		
+	}
+  
+  
   /**
    * \brief Constructeur d'une transaction
    * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
@@ -245,11 +267,6 @@ class ActesTransaction extends DataObject {
         if (!preg_match("/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/", $val)) {
           return false;
         }
-        /*$year = substr($val, 0, 4);
-        $month = substr($val, 5, 2);
-        $day = substr($val, 8, 2);
-        
-        $val = mktime(12, 0, 0, $month, $day, $year);*/
         break;
       case "destDir" :
         parent :: set("rootDir", ACTES_FILES_UPLOAD_ROOT);
@@ -1286,10 +1303,12 @@ class ActesTransaction extends DataObject {
     // Si la transaction n'est pas une transmission d'acte on désactive
     // le contrôle des champs car tous les champs ne sont plus obligatoire
     if ($this->type != 1) {
-      $validate = false;
-    }
-
-    if (!($sql = parent :: save($validate, true))) {
+    	$validate = false;
+	}
+	
+    $sql = parent :: save($validate, true);
+    
+    if ( ! $sql ) {
       return false;
     }
 

@@ -1,21 +1,5 @@
 <?php
 
-/**
- * \file actes_transac_show.php
- * \brief Page d'affichage d'une transaction Actes
- * \author Jérôme Schell <j.schell@alternancesoft.com>
- * \date 27.07.2006
- * 
- *
- * Cette page affiche les détails d'une transaction Actes et 
- * permet de demander son annulation et de la valider
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
-
-// Configuration
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
@@ -82,7 +66,7 @@ $status_list = ActesTransaction :: getStatusList();
 $workflow = $trans->fetchWorkflow();
 
 
-$transactionTypes = $trans->get("transactionTypes");
+$transactionTypes = $trans->get("transactionTypes") ;
 $transStatus = $trans->getCurrentStatus();
 
 $doc = new HTMLLayout();
@@ -100,6 +84,10 @@ $html .= "<h2>Visualisation d'une transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
+if ($trans->get("type_reponse")){
+	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
+}
+
 $html .= $doc->getHTMLArrayline("Dossier suivie par", htmlspecialchars($owner->get("givenname") . " " . $owner->get("name")));
 
 // Contenu différent en fonction du type de transaction
