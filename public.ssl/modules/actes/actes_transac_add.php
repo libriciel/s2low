@@ -292,11 +292,14 @@ if ($batchMode) {
 
 $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
 
+
+
 if (!$batchMode) {
   $html .= ", 'acte_pdf_file', 'Fichier PDF contenant l\'acte', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
 }
 
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
+$html .='<input type="hidden" name="MAX_FILE_SIZE" value="100000" /> ';
 
 if ($batchMode) {
   $html .= "<input type=\"hidden\" name=\"batchfile\" value=\"" . $zeBatchFile->getId() . "\" />\n";
@@ -381,12 +384,12 @@ $html .= "   <dd id=\"attachments_fields\"></dd>\n";
 // adresses emails de diffusion
 $org = new Authority($me->get("authority_id"));
 $broadcast_email = $org->get("default_broadcast_email");
-#echo "TEST : ".  $org->get("default_broadcast_email") . "/" . $org->get("broadcast_email");
 if ($broadcast_email != NULL) {
   $broadcast_email .= ",";
   $defaut = true;
 } else
   $defaut = false;
+  
 $broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
 
@@ -410,7 +413,6 @@ if ($batchMode) {
 }
 
 $html .= "</dl>\n";
-#$html .= "</div>\n";
 
 $html .= "<div id=\"form_progress\"><input class=\"submit_button\" type=\"submit\" value=\"Créer la transaction\" /></div>\n";
 $html .= "</div>\n";

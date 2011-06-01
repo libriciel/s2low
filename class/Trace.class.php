@@ -36,6 +36,10 @@
  		if (! $this->fichier){
  			$this->open();
  		}
+ 		if (! $this->fichier){
+ 			echo "impossible d'ouvrir le fichier de log : ". TRACE_FILE_PATH ;
+ 			return;
+ 		}
  		fwrite($this->fichier,"[$date] [$level] - $message\n");
  	}
  	

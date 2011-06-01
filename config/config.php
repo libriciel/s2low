@@ -1,6 +1,6 @@
 <?php
 
-ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+//ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 define('SITEROOT', "/home/eric/slow/TedetisPHP/");
 

@@ -44,7 +44,6 @@ class ActesNotification {
 	private function sendNotification(array $transactionInfo){
 		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
-			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['default_broadcast_email']),true);
 			$emailsliste=explode(',',$transactionInfo['default_broadcast_email']);
             foreach($emailsliste as $email){
                 $this->sendMail($transactionInfo,$email,true);
@@ -52,7 +51,6 @@ class ActesNotification {
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
 		}
 		if ($transactionInfo['broadcast_emails']){
-			//$this->sendMail($transactionInfo,explode(',',$transactionInfo['broadcast_emails']),$transactionInfo['broadcast_send_sources'] == 1);
 			$emailsliste=explode(',',$transactionInfo['broadcast_emails']);
             foreach($emailsliste as $email){
             	$this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
@@ -61,7 +59,6 @@ class ActesNotification {
 		}
 	}
 	
-	//private function sendMail($transactionInfo,array $emails,$withFile){
 	private function sendMail($transactionInfo,$emails,$withFile){
 		if (! $emails){
 			return;
@@ -70,11 +67,7 @@ class ActesNotification {
 		$lesFichiers = $this->getFichiers($transactionInfo);	
 	
 		$mailer = new Mailer();
-		
-		//foreach($emails as $email){
-		//	$mailer->addRecipient($email);
-		//}
-		
+				
 		$err = $mailer->addRecipient($emails);
 		if (! $err){
 			echo "$emails invalide ! \n";

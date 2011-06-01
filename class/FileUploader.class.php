@@ -22,7 +22,7 @@ class FileUploader {
 		$this->forbidenExtension = array();
 	}
 	
-	public function upload($formFileName) { 
+	public function verifOK($formFileName){
 		if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName] ) {
 			$this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
 	  	 	return false;
@@ -40,6 +40,14 @@ class FileUploader {
 			$this->lastError = "Le fichier semble vide";
 			return false;
 		}		
+		return true;
+	}
+	
+	public function upload($formFileName) { 
+		
+		if ( ! $this->verifOK($formFileName)){
+			return false;
+		}
 		
 		$this->extension=strtolower(substr($this->fileName,strrpos($this->fileName,".")+1));
 		 
