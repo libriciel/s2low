@@ -84,7 +84,9 @@ class MailPeer {
 		
 		$MailEmisArray = array();
 
-	  	$sql = "SELECT id FROM mail_message_emis where mail_transaction_id = $trans_id";
+	  	$sql = "SELECT id FROM mail_message_emis " .
+	  			" WHERE mail_transaction_id = $trans_id" .
+	  			" ORDER BY email";
 		
 	  	$result = $db->select($sql);
 		   
