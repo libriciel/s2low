@@ -372,10 +372,14 @@ class HTMLLayout extends Layout {
 		if ($this->errorDisabled){
 			return;
 		}
+		
 		ob_start();
-		$this->afficheErrors($_SESSION["error"]);
+		if (isset($_SESSION["error"])) { 
+			$this->afficheErrors($_SESSION["error"]);
+		}
 		$html = ob_get_contents();
 		ob_end_clean();
+	
 		//$this->addBody($html);
 		// Gros hack moisi à cause d'IE qui bug à l'affichage
 		// il faut "injecter" la zone d'erreur à l'intérieur de la zone "content"

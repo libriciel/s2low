@@ -170,8 +170,17 @@ if (! $trans->generateMessageXMLFile($xml_name)) {
 
 $env->addTransaction($trans);
 
+
+
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
+
+$authority_id = $me->get("authority_id");
+
+$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
+$serialNumber = $actesEnvelopeSerial->getNext($authority_id);
+
 // Génération du fichier XML de l'enveloppe
-if (! $env->generateEnvelopeXMLFile()) {
+if (! $env->generateEnvelopeXMLFile($serialNumber)) {
   Helpers::returnAndExit(1, "Erreur lors de la génération de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
 }
 

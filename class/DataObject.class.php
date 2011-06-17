@@ -82,7 +82,7 @@ class DataObject {
    * \param id integer (optionnel) Numéro d'id d'une entité existante avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
-    $this->db =& DatabasePool::getInstance();
+    $this->db = DatabasePool::getInstance();
 
     if ($id) {
       $this->id = $id;
@@ -201,7 +201,7 @@ class DataObject {
 		$this->errorMsg .= $attr["descr"] . " doit être présent.\n";
 	  } else {
 		if (isset($this->$name) && ! empty($this->$name)) {
-		  if ($attr["unique"] && ! $this->checkUnicity($name)) {
+		  if (! empty($attr["unique"]) && ! $this->checkUnicity($name)) {
 			  $this->errorMsg .= $attr["descr"] . " doit être unique.\n";
 		  } else {
 			switch ($attr["type"]) {
@@ -374,11 +374,11 @@ class DataObject {
 
 		$str .= addslashes($this->dbFields[$args[$i]]["type"]);
 
-		if ($this->dbFields[$args[$i]]["maxlength"]) {
+		if (! empty($this->dbFields[$args[$i]]["maxlength"])) {
 		  $str .= "maxLength" . $this->dbFields[$args[$i]]["maxlength"] . "!";
 		}
 
-		if ($this->dbFields[$args[$i]]["regexp"]) {
+		if (! empty($this->dbFields[$args[$i]]["regexp"])) {
 		  // On enlève les caractères / au début et à la fin de la regexp, javascript les rajoute automatiquement
 		  $str .= "RegExp" . substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
 		}

@@ -6,7 +6,7 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.ph
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
 
-function convertText($text) {
+function cp1252_to_iso88591($text) {
 	$cp1252_map = array(
 						"&#8211;"  => "-",
 						"&#8212;"  => "-",
@@ -21,9 +21,7 @@ function convertText($text) {
 					);
 	return strtr($text, $cp1252_map);
 }
-
-        
-
+$extraRedirect = "";
 if (empty($_POST)){
 	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ".ini_get("post_max_size") .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 }
@@ -62,25 +60,23 @@ $decision_date = Helpers :: getVarFromPost("decision_date", true);
 $subject = Helpers :: getVarFromPost("subject", true);
 // pour corriger le bug 210 qund objet a un "\'" de dans, on le remplace comme un "'"
 $subject = str_replace("\\","",$subject);
-$subject = convertText($subject);
+$subject = cp1252_to_iso88591($subject);
 $batchFileId = Helpers :: getVarFromPost("batchfile");
 $actePDFFile = $_FILES["acte_pdf_file"];
 $actePDFFileSign = $_FILES["acte_pdf_file_sign"];
+if (isset($_FILES["acte_attachments"])) {
 $acteAttachments = $_FILES["acte_attachments"];
-$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
-
-
+}
+if (isset($_FILES["acte_attachments_sign"])){
+	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
+}
 
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
 
 $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
 
-if (strstr($subject,"&"))
-{
-  Helpers :: returnAndExit(1, "L'objet d'une transaction ne doit pas contenir une caractère '&'.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-	
-}
+
 if ($broadcast_string){
 	$broadcast_emails = implode($broadcast_string,",");
 } else {
@@ -230,17 +226,10 @@ if (isset ($actePDFFile) || $batchMode) {
 }
 
 // Fichiers des pièces jointes
-//if (! $batchMode) { // Pas de pièces jointes en mode lot
 if (isset ($acteAttachments)) {
   for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
     if (strlen($acteAttachments["tmp_name"][$i])) {
       if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
-        // Sauvegarde dans la session pour réaffichage en cas d'erreur dans le formulaire
-        // Désactivé, de toute façon on ne peut pas préremplir un champ de type file
-        /*Helpers::putInSession("attachment_file" . ($i + 1), $acteAttachments["name"][$i]);
-        if (isset($acteAttachmentsSign["tmp_name"][$i]) {
-        Helpers::putInSession("attachment_sign_file" . ($i + 1), $acteAttachmentsSign["name"][$i]);
-        }*/
 
         $dest_name = $trans->getStdFileName($env);
         if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i])) {
@@ -261,7 +250,6 @@ if (isset ($acteAttachments)) {
     }
   }
 }
-//}
 
 // Vérification des signatures éventuelles des fichiers
 if (!$trans->checkSign()) {
@@ -280,10 +268,16 @@ if (!$trans->generateMessageXMLFile($xml_name)) {
 }
 
 $env->addTransaction($trans);
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
+
+$authority_id = $me->get("authority_id");
+
+$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
+$serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 // Génération du fichier XML de l'enveloppe
-if (!$env->generateEnvelopeXMLFile()) {
-  Helpers :: returnAndExit(1, "Erreur lors de la génération de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+if (!$env->generateEnvelopeXMLFile($serialNumber)) {
+  Helpers :: returnAndExit(1, "Erreur lors de la génération de l'enveloppe. ".$env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 }
 
 // Création de l'archive .tar.gz
@@ -291,12 +285,6 @@ if (!$env->generateArchiveFile()) {
   Helpers :: returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 }
 
-
-// Contrôle de l'archive (anti-virus et taille)
-/*if (!$env->checkArchiveConformity()) {
-  Helpers :: returnAndExit(1, "L'archive générée n'est pas conforme. filename=".$env->get("file_path")."\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-}
-*/
 if (!$env->checkArchiveSize())
 	Helpers :: returnAndExit(1, "la taille d'archive générée n'est pas conforme. filename=".$env->get("file_path")."\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 if (!$env->checkArchiveSanity())
@@ -306,10 +294,6 @@ if (!$env->checkArchiveSanity())
 // Purge des fichiers intermédiaires
 $env->purgeFiles();
 
-//print_r($env);
-//print_r($trans);
-
-//exit();
 
 if (!$env->save()) {
   $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
@@ -373,4 +357,3 @@ if (!$trans->save()) {
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
   }
 }
-?>

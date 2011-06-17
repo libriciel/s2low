@@ -263,11 +263,9 @@ if (count($workflow) > 0) {
   $html .= "  <th>Message</th>\n";
   $html .= " </tr>\n";
 
-  
-  
      // modifié par TH 18-04-2008 ajouter un petit icon de pdf lien ver le ficher .pdf qund on est bien sur 
     // etat="aquitement reçu.
-  	$create_pdf_html.="<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
+  	$create_pdf_html ="<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
 	$create_pdf_html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
 	
 	//---fin de modification
@@ -437,7 +435,7 @@ if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5) {
 
 if ($transStatus > 3) {
   $actionHtml .= "<div class=\"action\">\n";
-  $actionHtml .= "Horodatage : <a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $logEntry["id"] . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
+  $actionHtml .= "Horodatage : <a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
   $actionHtml .= "</div>\n";
 }
 
@@ -453,4 +451,4 @@ $doc->addBody($html);
 $doc->buildFooter();
 
 $doc->display();
-?>
+

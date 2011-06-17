@@ -66,13 +66,13 @@ class DatabasePool {
    * @return une référence vers un objet de type Database permettant de faire des requêtes sur la base choisie
    *
    */
-  function &getInstance($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
+  public static function getInstance($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
     static $pool = array();
 
     // On cherche si l'on a une instance correspondant aux paramètres spécifiés
     $found = false;
     while (list($key, $conn) = each($pool) && ! $found) {
-      if ($conn->host == $host && $conn->user == $user && $conn->password == $password && $conn->base == $base) {
+      if ($conn && $conn->host == $host && $conn->user == $user && $conn->password == $password && $conn->base == $base) {
     $found = true;
     $goodKey = $key;
       }

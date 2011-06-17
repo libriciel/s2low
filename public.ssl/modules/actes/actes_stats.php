@@ -129,6 +129,7 @@ $doc->setTitle("Tedetis : Actes - Statistiques");
 
 $doc->buildMenu($me);
 
+$html = "";
 $html .= "<div id=\"content\">\n";
 $html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
 $html .= "<h2>Statistiques de transmission des enveloppes";

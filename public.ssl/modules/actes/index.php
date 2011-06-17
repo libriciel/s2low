@@ -1,60 +1,5 @@
 <?php
-/*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à la
- * dématèrialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
- *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
 
-
-/**
- * \file public.ssl/modules/actes/index.php
- * \brief Page d'accueil du module ACTES
- * \author Jérôme Schell <j.schell@alternancesoft.com>
- * \date 27.07.2006
- * 
- *
- * Cette page affiche la liste des transactions du module
- * ACTES et permet de les modifier ou d'en créer de nouvelles
- *
- * Modifications :
- * Auteur   Date       Commentaire
- * PEV		10/08/2010 des problemes d'encodage sur les dates. Ligne 238, 239, 260, 261, 281, 282, 300, 301  : utf8_decode la date.
- */
-
-// Configuration
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
@@ -90,6 +35,17 @@ $fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
 $fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
 $fmin_ack_date = Helpers :: getVarFromGet("min_ack_date");
 $fmax_ack_date = Helpers :: getVarFromGet("max_ack_date");
+
+$sortWay =  Helpers :: getVarFromGet("sortway");
+if ($sortWay == "asc"){
+	//WTF !
+	//En fait, lorsque l'on clique sur l'identifiant d'une enveloppe, on trie les enveloppe par identifiant
+	//un reclic inverse l'ordre de tri ici
+	$sortWay = "desc";
+} else {
+	$sortWay = "asc";
+}
+
 
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -415,7 +371,7 @@ $i = 0;
 
 $html .= "<h2>Liste des enveloppes de transactions</h2>\n";
 
-if (count($envelopes) > 0) {
+if (isset($envelopes) && count($envelopes) > 0) {
   $html .= "<form id=\"div_chck\" onsubmit=\"return afficheWarning()\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" method=\"post\">\n";
   $html .= "<div><a href=\"#tedetis\" onclick=\"javascript:show_all();\" title=\"Déplier toutes les enveloppes\">[&nbsp;Tout déplier&nbsp;]</a>\n";
   $html .= "<a href=\"#tedetis\" onclick=\"javascript:hide_all();\" title=\"Replier toutes les enveloppes\">[&nbsp;Tout replier&nbsp;]</a></div>\n";
@@ -429,7 +385,7 @@ if (count($envelopes) > 0) {
       $owner->init();
     }
 
-    $sortWay = ($_GET["sortway"] == "asc") ? "desc" : "asc";
+   
 
     $html .= "<dt><a href=\"#tedetis\" onclick=\"toggle_envelope_content(" . $i . ");\" id=\"expander_" . $i . "\" class=\"expander\">-</a> Enveloppe n°";
     $html .= "<a href=\"" . Helpers :: getURLWithParam(array (

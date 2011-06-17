@@ -64,9 +64,14 @@ class ActesClassificationCreation {
 		}
 		
 		$env->addTransaction($trans);
-		
+		require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
+
+
+		$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
+		$serialNumber = $actesEnvelopeSerial->getNext($authority->getId());
+
 		// Génération du fichier XML de l'enveloppe
-		if (! $env->generateEnvelopeXMLFile()) {
+		if (! $env->generateEnvelopeXMLFile($serialNumber)) {
 			$this->lastMessage = "Erreur lors de la génération de l'enveloppe.";
 			return false;
 		}

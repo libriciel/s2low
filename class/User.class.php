@@ -176,7 +176,7 @@ class User extends DataObject {
    * \brief Méthode d'authentification de l'utilisateur
    * \return true si succès, false sinon
    *
-   * Cette méthode vérifie qu'un utilisateur est bien authorisé à se connecter au système.
+   * Cette méthode vérifie qu'un utilisateur est bien autorisé à se connecter au système.
    * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
    * et initialiser les données de l'utilisateur.
   */
@@ -577,7 +577,7 @@ class User extends DataObject {
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
    * \return true si succès, false sinon
   */
-  public function save($validate = true) {
+  public function save($validate = true,$bouchon_4_strict_standard = true) {
 	if (isset($this->certFilePath)) {
 	  if (! $this->importCert()) {
 		return false;

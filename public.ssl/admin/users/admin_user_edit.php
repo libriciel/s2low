@@ -356,6 +356,7 @@ if (count($ids_cert) > 1){
 	$statusList = $me->get("statusTypes");
 	$rolesList = $me->get("roleTypes");
 	
+	$i = 0;
 	
 	foreach($ids_cert as $id_other){
 		if ($id_other == $him->getId()){

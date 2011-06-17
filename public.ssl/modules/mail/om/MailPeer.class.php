@@ -113,7 +113,7 @@ class MailPeer {
 	  	{
 			$sql = "SELECT id FROM mail_included_file where";
 		    $sql.= " mail_transaction_id =".$trans_id;
-			$db =& DatabasePool::getInstance();
+			$db = DatabasePool::getInstance();
 		    $result = $db->select($sql);
 		    if (! $result->isError()) 
 		    {

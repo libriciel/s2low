@@ -212,7 +212,7 @@ class Group extends DataObject {
    * \param $validate booléen (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
    * \return true si succés, false sinon
    */
-  public function save($validate = true) {
+  public function save($validate = true,$bouchon_4_strict_standard = true) {
     if (! ($sql = parent::save($validate, true))) {
 	  return false;
 	}

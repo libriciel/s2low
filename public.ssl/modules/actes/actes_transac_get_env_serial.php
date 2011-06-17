@@ -1,94 +1,19 @@
 <?php
-/*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à la
- * dématèrialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
- *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
-/**
- * \file actes_transac_get_env_serial.php
- * \brief Page de demande du prochain numéro de série d'enveloppe pour la collectivité
- * \author Jérôme Schell <j.schell@alternancesoft.com>
- * \date 11.08.2006
- * 
- *
- * Cette page renvoie un numéro de série à utiliser pour la construction d'enveloppe
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
+require_once(dirname(__FILE__)."/../../../init/init-www-actes.php");
 
-// Configuration
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
+verifIsGroupAdminOrSuper($me);
+verifModePapier($module);
 
-// Instanciation du module courant
-$module = new Module();
-if (! $module->initByName("actes")) {
-  echo "KO\nErreur d'initialisation du module";
-  exit();
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
+
+$authority_id = $me->get("authority_id");
+
+$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
+$serialNumber = $actesEnvelopeSerial->getNext($authority_id);
+
+if ( ! $serialNumber) {
+	 echo "KO\nErreur récupération numéro de série\n";
+	 exit;
 }
 
-$me = new User();
-
-if (! $me->authenticate()) {
-  echo "KO\nÉchec de l'authentification";
-  exit();
-}
-
-if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-  echo "KO\nAccès refusé";
-  exit();
-}
-
-if ($module->getParam("paper") == "on") {
-  echo "KO\nMode « papier » actif. Accès interdit.";
-  exit();
-}
-
-$myAuthority = new Authority($me->get("authority_id"));
-
-$zeEnv = new ActesEnvelope();
-
-if (($serial = $zeEnv->getNextEnvelopeSerial($myAuthority)) !== false) {
-  echo "OK\n" . $serial . "\n";
-  exit();
-} else {
-  echo "KO\nErreur récupération numéro de série\n";
-  exit();
-}
-?>
+echo "OK\n" . $serialNumber . "\n";

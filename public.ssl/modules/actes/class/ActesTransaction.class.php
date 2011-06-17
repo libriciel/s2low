@@ -1,58 +1,4 @@
 <?php
-/*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à la
- * dématèrialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
- *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
-
-
-/**
- * \class ActesTransaction ActesTransaction.class.php
- * \brief Cette classe permet de gérer les transactions ACTES
- * \author Jérôme Schell <j.schell@alternancesoft.com>
- * \date 27.07.2006
- * 
- *
- * Cette classe fournit des méthodes de gestion des transactions
- * Actes
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
 
 require_once (SITEROOT . "/class/DataObject.class.php");
 require_once (SITEROOT . "/class/Parapheur.class.php");
@@ -801,7 +747,7 @@ class ActesTransaction extends DataObject {
       }
     }
 
-    $xml .= " <actes:Objet>" . Helpers :: escapeForXML($this->subject) . "</actes:Objet>\n";
+    $xml .= " <actes:Objet>" . XML_escaping($this->subject) . "</actes:Objet>\n";
     $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
     $xml .= " <actes:Document>\n";
     $xml .= "  <actes:NomFichier>" . Helpers :: escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";
@@ -811,7 +757,7 @@ class ActesTransaction extends DataObject {
     }
 
     $xml .= " </actes:Document>\n";
-    $xml .= " <actes:Annexes actes:Nombre=\"" . count($this->files["attachment"]) . "\">\n";
+    $xml .= " <actes:Annexes actes:Nombre=\"" .(isset($this->files["attachment"])?count($this->files["attachment"]):0) . "\">\n";
 
     if (isset ($this->files["attachment"])) {
       foreach ($this->files["attachment"] as $key => $file) {
@@ -1272,7 +1218,7 @@ class ActesTransaction extends DataObject {
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
    * \return true si succès, false sinon
    */
-  public function save($validate = true) {
+  public function save($validate = true,$bouchon_4_strict_standard = true) {
     $new = false;
     if ($this->isNew()) {
       $new = true;
@@ -1358,8 +1304,8 @@ class ActesTransaction extends DataObject {
         		. $this->envelope_id . ", " .
         		 $this->id . ", '" . 
         		 basename($file["name"]) . "', '" .
-        		 addslashes($file["posted_filename"]) .
-        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . $file["sign"] . "')";
+        		 addslashes(isset($file["posted_filename"])?$file["posted_filename"]:"") .
+        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"])?$file["sign"]:"") . "')";
 
         if (!$this->db->exec($sql)) {
           $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";
@@ -1609,7 +1555,7 @@ class ActesTransaction extends DataObject {
   public static function getTransactionNaturesIdDescr() {
     $sql = "SELECT id, descr FROM actes_natures ORDER BY descr ASC";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -1651,7 +1597,7 @@ class ActesTransaction extends DataObject {
   public static function getStatusList() {
     $sql = "SELECT id, name FROM actes_status";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
