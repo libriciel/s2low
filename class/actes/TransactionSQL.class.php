@@ -52,8 +52,8 @@ class TransactionSQL {
 		$this->sqlQuery = $sqlQuery;
 		$this->limit = 10;
 		$this->offset = 0;
-		$this->filter[] = "1=?";
-		$this->value[] = '1';
+		$this->filter = array();
+		$this->value = array();
 	}
 	
 	public function getTypes(){
@@ -81,7 +81,7 @@ class TransactionSQL {
 	
 	public function setOrder($order,$sortway){
 		
-		$this->order = ($order=='id')?'envelope_id':'submission_date';
+		$this->order = ($order=='id')?'actes_transactions.id':'submission_date';
 		$this->sortWay = ($sortway=='asc')?'ASC':'DESC';
 	}
 	
@@ -89,12 +89,12 @@ class TransactionSQL {
 		if (! $authority_id){
 			return ;
 		}
-		$this->filter[] .= "users.authority_id=?";
+		$this->filter[] .= "actes_transactions.authority_id=?";
 		$this->value[] =$authority_id;
 	}
 	
 	public function setUserId(array $user_id){
-		$this->filter[] .= "actes_envelopes.user_id IN (".implode(',',$this->user_id).")";
+		$this->filter[] .= "actes_transactions.user_id IN (".implode(',',$this->user_id).")";
 	}
 	
 	public function setNature($nature){
@@ -118,20 +118,10 @@ class TransactionSQL {
 			return;
 		}
 		if ($status == self::EN_COURS){
-			 $this->filter[] = "(SELECT status_id FROM actes_transactions_workflow atw " . 
-			 					" WHERE atw.transaction_id=actes_transactions.id " .
-			 					" ORDER BY atw.id DESC LIMIT 1) " .
-			 					"  IN (1, 2, 3, 4)";
+			 $this->filter[] = "actes_transactions.last_status_id  IN (1, 2, 3, 4)";
 			
 		} else {
-			$this->filter[] .= "(SELECT status_id " .
-								" FROM actes_transactions_workflow atw " .
-								" WHERE date = " . 
-								"( SELECT MAX(date) " .
-								" FROM actes_transactions_workflow " .
-								" WHERE transaction_id = atw.transaction_id) " .
-								" AND atw.transaction_id=actes_transactions.id " .
-								" ORDER BY atw.id DESC LIMIT 1) = ?" ;
+			$this->filter[] .= "actes_transactions.last_status_id  = ?" ;
 			$this->value[] = $status;
 		}
 	}
@@ -183,8 +173,15 @@ class TransactionSQL {
 		$this->value[] = $date;
 	}
 	
+	private function getWhere(){
+		if (! $this->filter){
+			return "";
+		}
+		return "WHERE " . implode($this->filter, " AND ");
+	}
+	
 	public function getAll(){
-		$where = "WHERE " . implode($this->filter, " AND ");
+	
 		
 		$sql = "SELECT " .
 				" envelope_id,  " .
@@ -198,7 +195,7 @@ class TransactionSQL {
 				" JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
 				" JOIN users ON actes_envelopes.user_id=users.id " .
 				" JOIN authorities ON users.authority_id=authorities.id " .
-				$where .		
+				$this->getWhere() .		
 				" ORDER BY $this->order $this->sortWay " .
 				" LIMIT $this->limit OFFSET $this->offset";
 		$result = $this->sqlQuery->query($sql,$this->value);
@@ -216,11 +213,10 @@ class TransactionSQL {
 		if ($this->filter) {
 		  $where = "WHERE " . implode($this->filter, " AND ");
 		}
-		$sql = "SELECT count(*) " .
+		$sql = "SELECT count(id)   " .
 				" FROM actes_transactions  " .
-				" JOIN  actes_envelopes ON actes_envelopes.id=actes_transactions.envelope_id ".
-				" JOIN users ON actes_envelopes.user_id=users.id " .
-				" $where ";
+				// " JOIN  actes_envelopes ON actes_envelopes.id=actes_transactions.envelope_id ".
+				$this->getWhere() ;
 		return $this->sqlQuery->queryOne($sql,$this->value);
 	}
 	

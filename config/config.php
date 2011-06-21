@@ -22,7 +22,8 @@ define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@invalid.fr>");
 define('DB_HOST', "localhost");
 define('DB_USER', "tedetis");
 define('DB_PASSWORD', "tedetis");
-define('DB_DATABASE', "tedetis");
+//define('DB_DATABASE', "tedetis");
+define('DB_DATABASE', "tedetis3");
 
 // Nombre d'élément affichés par défaut par page dans les listes
 define('DEFAULT_ITEMS_PER_PAGE', 10);

@@ -5,6 +5,17 @@ class PagerHTML {
 	public function getHTML($page_number,$nb_element_total,$nb_element_par_page){
 				
 		$nb_total_page = ceil($nb_element_total / $nb_element_par_page);
+		
+		
+		$page = array(1,2,3,$page_number  - 1 , $page_number , $page_number +1,$nb_total_page-2,$nb_total_page-1,$nb_total_page );
+		$page = array_unique($page);
+		sort($page);
+		foreach($page as $i => $nb_page){
+			if ($nb_page>$nb_total_page || $nb_page<=0){
+				unset($page[$i]);
+			}
+		}
+		$last_page = 0;	
 		ob_start();
 		?>
 		<div id="pager">
@@ -24,14 +35,18 @@ class PagerHTML {
 			</div>
 			<h2>Page&nbsp;:</h2>
 			<div class="links_area">
-				<?php for ($i = 1; $i <= $nb_total_page; $i++) : ?>
+				<?php foreach ($page as $i) : ?>
+					<?php if ($last_page + 1 != $i) :?>
+						&nbsp;...&nbsp;
+					<?php endif;?>
+					<?php $last_page = $i; ?>
 					<?php  if ($page_number == $i) : ?>
 						<?php echo $i ?>
 					<?php else: ?>
 					<a href="<?php echo get_url(array("page" => $i)) ?>"
 				 		title="Afficher la page <?php echo  $i ?>"> <?php echo $i ?></a>
 					<?php endif; ?>
-				<?php endfor;?>
+				<?php endforeach;?>
 			</div>
 			<div class="links_area">
 				<?php if ($page_number > 1) : ?>
@@ -40,11 +55,11 @@ class PagerHTML {
 	 				&lt;&lt;&lt;
 				<?php endif;?>
 				&nbsp;|&nbsp;
-				<?php if ($page_number < $nb_total_page) : ?>
+				<?php  if ($page_number < $nb_total_page) : ?>
 					<a href="<?php echo get_url(array("page" => ($page_number + 1))) ?>" title="Afficher la page suivante">&gt;&gt;&gt;</a>
-				<?php else : ?>
+				<?php  else : ?>
 					&gt;&gt;&gt;
-				<?php endif;?>
+				<?php  endif;?>
 			</div>
 		</div>
 		<?php 		
