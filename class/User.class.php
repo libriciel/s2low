@@ -437,7 +437,9 @@ class User extends DataObject {
    * \return True si l'utilisateur peut accéder ou false sinon
   */
   public function canAccess($module) {
-	if (! $this->isGroupAdminOrSuper()) {
+  	if ($this->isGroupAdminOrSuper()) {
+  		return true;
+  	} 	
 	  // La collectivité a-t'elle accès au module
 	  $authority = new Authority($this->authority_id);
 
@@ -456,9 +458,7 @@ class User extends DataObject {
 	  if ($this->getPerm($module) == "RO" || $this->getPerm($module) == "RW" ) {
 	 	return true;
 	  }
-	} else {
-	  return true;
-	}
+	
   }
 
   /**
@@ -537,7 +537,9 @@ class User extends DataObject {
 
 	  $authModules = Module::getModulesForAuthority($this->authority_id);
 
-	  $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id WHERE users_perms.user_id='" . $this->id . "' AND modules.status=1";
+	  $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name " .
+	  		" FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id " .
+	  		" WHERE users_perms.user_id='" . $this->id . "' AND modules.status=1";
 
 	  $result = $this->db->select($sql);
 

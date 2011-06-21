@@ -6,21 +6,6 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.ph
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
 
-function cp1252_to_iso88591($text) {
-	$cp1252_map = array(
-						"&#8211;"  => "-",
-						"&#8212;"  => "-",
-						"&#8216;"  => "'",
-						"&#8217;"  => "'",
-						"&#8218;"  => ",",
-						"&#8220;"  => '"',
-						"&#8221;"  => '"',
-						"&#8222;"  => '"',
-						"&#8224;"  => '"',
-						"&#8230;"  => "..."
-					);
-	return strtr($text, $cp1252_map);
-}
 $extraRedirect = "";
 if (empty($_POST)){
 	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ".ini_get("post_max_size") .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
@@ -58,8 +43,6 @@ for ($i = 1; $i <= 5; $i++) {
 $number = Helpers :: getVarFromPost("number", true);
 $decision_date = Helpers :: getVarFromPost("decision_date", true);
 $subject = Helpers :: getVarFromPost("subject", true);
-// pour corriger le bug 210 qund objet a un "\'" de dans, on le remplace comme un "'"
-$subject = str_replace("\\","",$subject);
 $subject = cp1252_to_iso88591($subject);
 $batchFileId = Helpers :: getVarFromPost("batchfile");
 $actePDFFile = $_FILES["acte_pdf_file"];
@@ -73,7 +56,6 @@ if (isset($_FILES["acte_attachments_sign"])){
 
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
-
 $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
 
 
@@ -99,8 +81,10 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
       $owner->init();
 
       // Vérification des permissions sur le lot
-      if (($me->isAuthorityAdmin && $me->get("authority_id") == $owner->get("authority_id")) || ($me->getId() == $owner->getId())) {
+      if (($me->isAuthorityAdmin && $me->get("authority_id") == $owner->get("authority_id")) || 
+      		($me->getId() == $owner->getId())) {
         $batchMode = true;
+        $extraRedirect = "?batchfile=" . $zeBatchFile->getId();
       }
     }
   }
@@ -108,9 +92,7 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
   // Les vérifs ont échouées
   if (!$batchMode) {
     Helpers :: returnAndExit(1, "Échec de la transaction en mode lot.", WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
-  } else {
-    $extraRedirect = "?batchfile=" . $zeBatchFile->getId();
-  }
+  } 
 }
 
 $env = new ActesEnvelope();
@@ -315,7 +297,9 @@ if (!$trans->save()) {
   $env->deleteArchiveFile();
   $env->delete();
   Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-} else {
+} 
+
+
   $msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
@@ -335,8 +319,8 @@ if (!$trans->save()) {
     }
 
 
-	//On incrémente le suffixe
-	$zeBatch->incNextSuffix();
+//On incrémente le suffixe
+$zeBatch->incNextSuffix();
     // On marque le fichier du lot comme Traité
     $zeBatchFile->setProcessed();
     $zeBatchFile->set("transaction_id", $trans->getId());
@@ -356,4 +340,4 @@ if (!$trans->save()) {
     Helpers :: purgeTempSession();
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
   }
-}
+

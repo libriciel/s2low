@@ -1,15 +1,10 @@
 <?php 
 
 require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
-
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesTransactionXML.class.php");
-require_once(SITEROOT."/public.ssl/modules/actes/class/ActesEnveloppeXML.class.php");
+
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesClassification.class.php");
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php");
-require_once(SITEROOT."/public.ssl/modules/actes/class/ActesArchive.class.php");
-
-require_once(SITEROOT."/class/AuthoritySQL.class.php");
-require_once(SITEROOT."/class/UserSQL.class.php");
 
 $userSQL = new UserSQL($sqlQuery);
 $userInfo = $userSQL->getInfo($me->getId());

@@ -2,6 +2,7 @@
 
 require_once (SITEROOT . "/class/DataObject.class.php");
 require_once (SITEROOT . "/class/Parapheur.class.php");
+
 require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
 
 class ActesTransaction extends DataObject {
@@ -32,6 +33,7 @@ class ActesTransaction extends DataObject {
   protected $broadcasted;
   protected $broadcast_send_sources;
   protected $broadcast_emails;
+  protected $last_status_id;
   
   protected $type_reponse; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
 
@@ -137,6 +139,11 @@ class ActesTransaction extends DataObject {
     ),
      "type_reponse" => array (
       "descr" => "Type de la réponse pour les réponse ministère LO et Demande de PC",
+      "type" => "isInt",
+      "mandatory" => false
+    ),
+    "last_status_id" => array (
+      "descr" => "",
       "type" => "isInt",
       "mandatory" => false
     ),
@@ -332,6 +339,9 @@ class ActesTransaction extends DataObject {
       return false;
     }
 
+    $sql = "UPDATE actes_transactions SET last_status_id=$new_status_id " .
+    		" WHERE id=$this->id";
+    $this->db->exec($sql);
     return true;
   }
 
@@ -925,7 +935,6 @@ class ActesTransaction extends DataObject {
       return false;
     }
 
-    //echo $this->xmlObj->AsXML();
 
     // Extraction des informations du XML pour initialiser la transaction
     $namespaces = $this->xmlObj->getDocNamespaces();
@@ -1052,7 +1061,6 @@ class ActesTransaction extends DataObject {
         break;
     }
 	if ($rep == false ) return false;  
-    //print_r($this);
 
     return true;
   }

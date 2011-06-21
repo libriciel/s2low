@@ -422,10 +422,7 @@ class mailController {
  *		
  * \param pas de paramètre
  */
-  protected function executeAnnuaire()
-  {
-  	require_once (dirname(__FILENAME__)."/om/mail_annuaire.class.php");
-  	require_once (dirname(__FILENAME__)."/om/MailPeer.class.php");
+  protected function executeAnnuaire() {
   	global $me;
   	$email = Helpers :: getVarFromPost("email");
   
@@ -483,10 +480,7 @@ class mailController {
 			}
 		}
 	}
-	
-	
-	
-  	include dirname(__FILENAME__)."/template/annuaire.php";	 
+		include __DIR__."/../template/annuaire.php";	 
   }
   
 /**
@@ -568,16 +562,13 @@ class mailController {
   	$maxLengh=count($emails);
   	
   	echo $maxLengh;
-  	//return;
-  	for ($i=0;$i<$maxLengh;$i++)
-  	{
+  	for ($i=0;$i<$maxLengh;$i++) {
   		$annuaire=new mail_annuaire();
   		$annuaire->set("user_id",$me->getId());
   		$annuaire->set("mail_address",$emails[$i]);
   		$annuaire->set("description",$descriptions[$i]);
   		$annuaire->save(false);
   	}
-  	//-----------------------------------
   	include dirname(__FILENAME__)."/template/newemail.php";	 
   }
 

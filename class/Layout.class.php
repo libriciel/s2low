@@ -15,7 +15,7 @@ class Layout {
   public function setTitle($str) {
     $this->title = $str;
   }
-
+  
   /**
    * \brief Méthode d'ajout de contenu dans l'en-tête du document
    * \param $str chaîne : chaîne de caractères à ajouter dans le document
@@ -40,6 +40,8 @@ class Layout {
   {
   	$this->templateFile=$template;
   }
+  
+ 
 
 }
 
@@ -74,7 +76,7 @@ class HTMLLayout extends Layout {
   public function disableError(){
   	$this->errorDisabled = true;
   }
-
+  
   /**
    * \brief Méthode permettant de construire un menu
    * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
@@ -182,11 +184,10 @@ class HTMLLayout extends Layout {
       echo $html;
     } else {
       $this->addBody($html);
-      //$this->includeErrors();
     }
   }
-
-
+  
+  
   /**
    * \brief Méthode de construction du pied de page du document
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
@@ -208,8 +209,10 @@ class HTMLLayout extends Layout {
 	
 	$html .= "Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">".
   	$versionningInfo['version-complete'] . "</a>\n";
-
-
+	global $debut;
+  	if ($debut){
+  		$html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms";
+  	}
 	
 	$html .= "</div>\n";
 
@@ -411,6 +414,17 @@ class HTMLLayout extends Layout {
 		$this->includeErrors();
 		require_once(HTML_TEMPLATE_PATH . "/" . "new.generic.tpl.php");
 	}
+	
+
+  	public function addCSS($css){
+  	  	$this->addHeader("<link rel='stylesheet' type='text/css' href='$css' />");
+  	}
+	
+  	public function addJavascript($javascript){
+  		$this->addHeader("<script src='$javascript' type='text/javascript'></script>");
+  	}
+  	
+	
   /**
    * \brief Méthode générant l'affichage du document
   */

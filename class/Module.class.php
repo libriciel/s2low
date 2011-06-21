@@ -285,24 +285,28 @@ class Module extends DataObject {
 	$zeUser = new User($user);
 	$zeUser->init();
 
-	if (! $zeUser->isSuper()) {
-	  $modules = Module::getModulesForAuthority($zeUser->get("authority_id"));
-
-	  $perms = array();
-
-	  foreach ($modules as $key => $val) {
-		$zeMod = new Module($key);
-		$zeMod->init();
-		if ($zeUser->canAccess($zeMod->get('name'))) {
-		  $perms[$key] = array("name" => $zeMod->get("name"), "description" => $zeMod->get("description"), "menu_entry" => $zeMod->get("menu_entry"));
-		}
-	  }
-	} else {
-	  $modules = Module::getActiveModulesList();
+	if ( $zeUser->isSuper()) {
+		$modules = Module::getActiveModulesList();
 
 	  foreach ($modules as $key => $val) {
 		$perms[$val["id"]] = array("name" => $val["name"], "description" => $val["description"], "menu_entry" => $val["menu_entry"]);
 	  }
+	
+	  return $perms;
+	}
+		
+	$modules = Module::getModulesForAuthority($zeUser->get("authority_id"));
+
+	$perms = array();
+
+	foreach ($modules as $key => $val) {
+		$zeMod = new Module($key);
+		$zeMod->init();
+		if ($zeUser->canAccess($zeMod->get('name'))) {
+		  $perms[$key] = array("name" => $zeMod->get("name"), 
+		  					"description" => $zeMod->get("description"), 
+		  					"menu_entry" => $zeMod->get("menu_entry"));
+		}
 	}
 
 	return $perms;

@@ -1,8 +1,27 @@
 <?php 
 
-// Configuration
-require_once("../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once( __DIR__ . "/../init/init.php");
+
+
+$x509Certificate = new X509Certificate();
+$certificateInfo = $x509Certificate->retrieveClientInfo();
+
+$userSQL = new UserSQL($sqlQuery);
+$allUser = $userSQL->getInfoFromCertificateInfo($certificateInfo);
+
+if (! $allUser) {
+	sortir("Certificat invalide");
+}
+
+if (count($allUser) == 1){
+	$connexion = new Connexion();
+	$connexion->connect($allUser[0]['id']);
+	header("Location: index.php");
+	exit;
+}
+
+
+
 
 
 $doc = new HTMLLayout();

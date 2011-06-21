@@ -11,7 +11,7 @@
 *
 */
 
-@ require_once ("Fpdf.class.php");
+require_once ("FPDF.class.php");
 
 class ExtendPdf extends FPDF
 {

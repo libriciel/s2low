@@ -137,6 +137,7 @@ class ActesEnvelope extends DataObject {
 	  $xml .= " <actes:AdressesRetour>\n";
 
 	  $emails = explode('|', $this->return_mail);
+	  $emails = array_unique($emails);
 	  foreach ($emails as $email) {
 		$xml .= "  <actes:Email>" . $email . "</actes:Email>\n";
 	  }
@@ -858,8 +859,6 @@ class ActesEnvelope extends DataObject {
 	  return false;
 	}
 
-    //echo $sql;
-    //exit();
 
 	if (! $this->db->begin()) {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
@@ -882,7 +881,6 @@ class ActesEnvelope extends DataObject {
 		return false;
 	  }
 	}
-
 
 	if (! $this->db->commit()) {
       $this->errorMsg = "Erreur lors de la validation de la transaction.";

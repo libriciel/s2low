@@ -1,50 +1,49 @@
 <?php
 
-require_once(dirname(__FILE__)."/../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once("init.php");
+
+$connexion = new Connexion();
+if (!$connexion->isConnected()){
+	header("Location: " . WEBSITE_SSL."/login.php");
+	exit;
+}
+
+$userSQL = new UserSQL($sqlQuery);
+$userInfo = $userSQL->getInfo($connexion->getId());
+
+$authoritySQL = new AuthoritySQL($sqlQuery);
+$authorityInfo = $authoritySQL->getInfo($userInfo['authority_id']);
 
 
-// Instanciation du module courant
-$module = new Module();
-if (! $module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+$groupeInfo = false;
+if ($authorityInfo['authority_group_id']){
+	$groupSQL = new GroupSQL($sqlQuery);
+	$groupeInfo = $groupSQL->getInfo($authorityInfo['authority_group_id']);
+}
+
+$moduleSQL = new ModuleSQL($sqlQuery);
+$moduleInfo = $moduleSQL->getInfoByName("actes",$userInfo['authority_id']);
+$droitModuleInfo = $moduleSQL->getInfoModuleAuthority($moduleInfo['id'],$userInfo['authority_id']);
+$permUser = $moduleSQL->getInfoPerms($moduleInfo['id'],$connexion->getId());
+
+
+$droit = new Droit();
+if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser)){
+	sortir("Accès refusé");
 }
 
 
-$me = new User();
-
-if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
-}
-
-if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
-}
-
-
-function verifIsGroupAdminOrSuper($me){
-	if ($me->isGroupAdminOrSuper()) {
-	  echo "KO\nAccès refusé";
-	  exit();
+$exit_if_not_group_or_super_admin = function() use ($droit,$userInfo){
+	if (! $droit->isGroupOrSuperAdmin($userInfo)){
+		sortir("Accès refusé");
 	}
-}
+};
 
-function verifModePapier($module){
-	if ($module->getParam("paper") == "on") {
-	  echo "KO\nMode « papier » actif. Accès interdit.";
-	  exit();
-	}
-}
 
-require_once(dirname(__FILE__)."/../class/SQLQuery.class.php");
-$sqlQuery = new SQLQuery(DB_DATABASE);
-$sqlQuery->setDatabaseHost(DB_HOST);
-$sqlQuery->setCredential(DB_USER,DB_PASSWORD);
+
+
+
+
+
 
 

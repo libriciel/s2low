@@ -1,5 +1,5 @@
 <?php
-
+$debut = microtime(true);
 require_once(SITEROOT . '/class/Layout.class.php');
 require_once(SITEROOT . '/class/User.class.php');
 require_once(SITEROOT . '/class/Group.class.php');

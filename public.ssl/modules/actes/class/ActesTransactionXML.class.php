@@ -1,5 +1,7 @@
 <?php 
+
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesTransaction.class.php");
+
 
 class ActesTransactionsXML {
 
@@ -87,11 +89,5 @@ class ActesTransactionsXML {
 		return $xml;
 	}
 	
-	public function getInfo($xmlContent){
-		$actes = simplexml_load_string($xmlContent);
-		$transactionInfo["date_decision"] = $actes["@attributes"]["actes:Date"];
-		
-		return $transactionInfo;
-	}
 	
 }

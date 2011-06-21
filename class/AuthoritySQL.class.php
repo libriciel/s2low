@@ -12,5 +12,13 @@ class AuthoritySQL {
 		return $this->sqlQuery->queryOne($sql,$id);
 	}
 	
+	public function getAll() {
+		$result = array();
+		$sql = "SELECT authorities.id, authorities.name FROM authorities ORDER BY authorities.name ASC";
+    	foreach($this->sqlQuery->query($sql) as $line){
+    		$result[$line['id']] = $line['name'];
+    	}
+		return $result;
+  	}
 	
 }

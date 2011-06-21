@@ -38,14 +38,24 @@ class SQLQuery {
 		return $pdo;
 	}
 	
+	private function getStatementFromQuery($query){
+		static $tabQuery;
+		if (empty($tabQuery[$query])){
+			$tabQuery[$query] = $this->getPdo()->prepare($query);
+			
+		}
+		return $tabQuery[$query];
+	}
+	
 	public function query($query,$param = false){
 		if ( ! is_array($param)){
 			$param = func_get_args();
 			array_shift($param);
     	}
-		
+    	
+    	
     	try {
-    		$pdoStatement = $this->getPdo()->prepare($query);
+    		$pdoStatement = $this->getStatementFromQuery($query);
     	} catch (Exception $e) {	
     		throw new Exception($e->getMessage() . " - " .$query);
 		}	

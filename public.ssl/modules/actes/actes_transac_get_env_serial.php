@@ -1,8 +1,7 @@
 <?php
 require_once(dirname(__FILE__)."/../../../init/init-www-actes.php");
 
-verifIsGroupAdminOrSuper($me);
-verifModePapier($module);
+$exit_if_not_group_or_super_admin();
 
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 

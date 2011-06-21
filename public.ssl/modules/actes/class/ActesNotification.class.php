@@ -1,5 +1,4 @@
 <?php 
-
 require_once(dirname(__FILE__)."/../../../../class/Database.class.php");
 require_once(dirname(__FILE__)."/../../../../class/Mailer.class.php");
 

@@ -59,4 +59,25 @@ class ActesEnveloppeXML {
 	
 		return $xml;
 	  }
+
+	public function getInfo($xml_content){
+		
+		$XML2Array = new XML2Array();
+		$XML2Array->setUniqueNode(array('IDSGAR','IDPref','IDSousPref','Destinataire','IDCL','Emetteur','AdressesRetour','Formulaire','Nom','Telephone','NomFichier'));
+		$XML2Array->setNode2Remonte(array('Formulaire'));
+		$result = $XML2Array->getArray($xml_content);
+		
+		unset($result['schemaLocation']);
+		foreach(array('IDSGAR','IDPref','IDSousPref') as $type)
+		if (isset($result['Emetteur'][$type])){
+			$result['Emetteur']= $result['Emetteur'][$type];
+			$result['Emetteur']['type'] = $type;			
+		}
+		if (isset($result['Destinataire'])){
+			$result['Destinataire'] = $result['Destinataire']['SIREN'];
+		}
+
+		return $result;	
+	}
+
 }
