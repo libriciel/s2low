@@ -19,4 +19,4 @@ ALTER TABLE actes_transactions ADD CONSTRAINT
 at_authority_id FOREIGN KEY (authority_id) REFERENCES authorities(id);
 
 UPDATE actes_transactions  SET user_id=actes_envelopes.user_id FROM actes_envelopes WHERE actes_transactions.envelope_id=actes_envelopes.id;
-UPDATE actes_transactions  SET authority_id=users.authority_id FROM users WHERE users.authority_id=actes_transactions.user_id;
+UPDATE actes_transactions  SET authority_id=users.authority_id FROM users WHERE users.id=actes_transactions.user_id;

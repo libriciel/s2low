@@ -204,7 +204,6 @@ class ListeActesHTML {
 
 	public function displayEnvelope($envelope,$i){
 		global $sortWay;
-		
 		?>
 			<dt>
 				<a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander">-</a>
