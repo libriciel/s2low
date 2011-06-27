@@ -1,11 +1,14 @@
 <?php 
 require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
 
+$modulesInfo = $moduleSQL->getModulesForUser($userInfo);
+$menuHTML = new MenuHTML();
+
 $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : outils de test");
+$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 
-$doc->buildMenu($me);
 
 ob_start();
 ?>

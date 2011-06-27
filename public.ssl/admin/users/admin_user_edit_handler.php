@@ -210,7 +210,7 @@ $authModules = Module::getModulesForAuthority($him->get("authority_id"));
 $him->resetPerms();
 
 foreach ($modules as $module) {
-  if ($authModules[$module["id"]] || $him->isGroupAdmin()) {
+  if (isset($authModules[$module["id"]]) && ($authModules[$module["id"]] || $him->isGroupAdmin())) {
 	$him->setPerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]));
   }
 }

@@ -135,6 +135,9 @@ $trans->set("nature_code", $nature_code);
 $trans->set("nature_descr", $transNatures[$nature_code]);
 $trans->set("subject", $subject);
 $trans->set("number", $number);
+$trans->set("user_id",$me->getId());
+$trans->set("authority_id",$me->get("authority_id"));
+
 for ($i = 1; $i <= 5; $i++) {
   $trans->set("classif" . $i, ${ "classif" . $i });
 }

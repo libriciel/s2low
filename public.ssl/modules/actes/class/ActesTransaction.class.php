@@ -147,6 +147,16 @@ class ActesTransaction extends DataObject {
       "type" => "isInt",
       "mandatory" => false
     ),
+    "user_id" => array (
+      "descr" => "",
+      "type" => "isInt",
+      "mandatory" => false
+    ),
+	"authority_id" => array (
+      "descr" => "",
+      "type" => "isInt",
+      "mandatory" => false
+    ),
   );
 
   protected $transactionTypes = array (

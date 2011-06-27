@@ -184,7 +184,8 @@ class User extends DataObject {
 	  	
 		$this->retrieveInfoFromClientCertificate();
 		$ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
-				
+
+		
 		if (! $ids) {
 			return false;
 		}

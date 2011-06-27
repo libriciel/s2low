@@ -24,3 +24,4 @@ function sortir($message) {
 	header("Location: " . WEBSITE_SSL);
 	exit;
 };
+

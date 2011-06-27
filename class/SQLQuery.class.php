@@ -34,6 +34,7 @@ class SQLQuery {
 			}
 			$pdo = new PDO($dsn,$this->login,$this->password);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION ); 
+			$this->query("SET CLIENT_ENCODING TO LATIN9");
 		}
 		return $pdo;
 	}

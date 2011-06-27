@@ -1,17 +1,10 @@
 <?php 
 
 require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
-require_once(SITEROOT."/public.ssl/modules/actes/class/ActesTransactionXML.class.php");
 
+require_once(SITEROOT."/public.ssl/modules/actes/class/ActesTransactionXML.class.php");
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesClassification.class.php");
 require_once(SITEROOT."/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php");
-
-$userSQL = new UserSQL($sqlQuery);
-$userInfo = $userSQL->getInfo($me->getId());
-
-$authority_id = $userInfo["authority_id"];
-$authoritySQL = new AuthoritySQL($sqlQuery);
-$authorityInfo = $authoritySQL->getInfo($authority_id);
 
 $actesTransactionsXML = new ActesTransactionsXML();
 
@@ -20,7 +13,7 @@ $transactionInfo['numero_interne'] = strtoupper(uniqid());
 $transactionInfo['code_nature']  = 1;
 $transactionInfo['classification']  = array(1,1);
 $transactionInfo['objet'] = "Enveloppe de test #{$transactionInfo['numero_interne']}";
-$transactionInfo['classification_date_version'] =  ActesClassification :: getLastRevisionDate($authority_id);
+$transactionInfo['classification_date_version'] =  ActesClassification :: getLastRevisionDate($userInfo['authority_id']);
 $transactionInfo["type"] = 1 ;
 
 $transactionInfo["nom_fichier"] = $actesTransactionsXML->getNewFileName($authorityInfo,$transactionInfo,1,"pdf");
@@ -30,12 +23,12 @@ $transaction_file_name = $actesTransactionsXML->getTransactionFileName($authorit
 
 $transactionXML = $actesTransactionsXML->getXML($transactionInfo);
 
-$myAuthority = new Authority($me->get("authority_id"));
+$myAuthority = new Authority($userInfo['authority_id']);
 
 $actesEnveloppeXML = new ActesEnveloppeXML();
 
 $actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
-$serialNumber = $actesEnvelopeSerial->getNext($authority_id);
+$serialNumber = $actesEnvelopeSerial->getNext($userInfo['authority_id']);
 
 $enveloppe_file_name = $actesEnveloppeXML->getName(ACTES_APPLI_NAME,$authorityInfo['siren'],$serialNumber);
 $enveloppeXML = $actesEnveloppeXML->getEnveloppe($authorityInfo,$userInfo,array($transaction_file_name));
