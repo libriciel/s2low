@@ -1,17 +1,7 @@
 <?php
-/**
-* \class ExtendPdf ExtendPdf.class.php
-* \brief Classe extend par Fpdf, ajouter des nouvelle fonction d'affichage 
-* \author TH <htan@ntsys.fr>
-* \date 18.04.2008
-*
-*
-* Modifications :
-* Auteur   Date       Commentaire
-*
-*/
 
-require_once ("FPDF.class.php");
+
+@ require_once ("FPDF.class.php");
 
 class ExtendPdf extends FPDF
 {

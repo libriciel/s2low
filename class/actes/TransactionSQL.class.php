@@ -242,4 +242,15 @@ class TransactionSQL {
 	  	}
 		return $result;
 	}
+	
+	
+	public function delete($id){
+		$sql = "DELETE FROM actes_included_files WHERE transaction_id=?";
+		$this->sqlQuery->query($sql,$id);
+		$sql  = "DELETE FROM actes_transactions_workflow WHERE transaction_id=?";
+		$this->sqlQuery->query($sql,$id);
+		$sql = "DELETE FROM actes_transactions WHERE id=?";
+		$this->sqlQuery->query($sql,$id);
+	}
+	
 }

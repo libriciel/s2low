@@ -218,8 +218,11 @@ if (is_array($files)) {
             foreach ($workflow as $stage) {
             
             	if ($stage['status_id'] == 4){
-            		$html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
-					$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+            		
+            		if (preg_match("#\.pdf$#",$file["posted_filename"])) {
+	            		$html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
+						$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+            		}
             	}
             }
 			
@@ -438,6 +441,14 @@ if ($transStatus > 3) {
   $actionHtml .= "<div class=\"action\">\n";
   $actionHtml .= "Horodatage : <a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
   $actionHtml .= "</div>\n";
+}
+
+if ($me->isSuper()) {
+       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera héradiqué DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+      $actionHtml .= "<p>Effacer de la base de donnée (TRES DANGEREUX)&nbsp;:&nbsp;";
+      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"bouton-danger\" />\n";
+      $actionHtml .= "</p></form>\n";
 }
 
 if (isset($actionHtml) && $permission->canWrite($me,$owner)) {

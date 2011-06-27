@@ -523,8 +523,10 @@ class ActesTransaction extends DataObject {
     $ret_status = true;
 
     $files = array ();
-    $files[] = $this->files["acte"];
-
+    
+    if (isset($this->files["acte"])){
+    	$files[] = $this->files["acte"];
+    }
     if (isset ($this->files["attachment"]) && is_array($this->files["attachment"])) {
       foreach ($this->files["attachment"] as $file) {
         $files[] = $file;
@@ -616,36 +618,41 @@ class ActesTransaction extends DataObject {
         return false;
       }
 
-      switch ($type) {
-        case "acte" :
-          if (strcmp($mimeType, "application/pdf") != 0) {
-            $this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF requis.";
-            return false;
-          } else {
-            $ext = "pdf";
-          }
-          break;
-        case "attachment" :
-          if (strcmp($mimeType, "application/pdf") == 0) {
-            $ext = "pdf";
-          }
-          elseif (strcmp($mimeType, "image/jpeg") == 0) {
-            $ext = "jpg";
-          }
-          elseif (strcmp($mimeType, "image/png") == 0) {
-            $ext = "png";
-          } else {
-            $this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
-            return false;
-          }
+      
+      $typeA = array('application/pdf' => 'pdf',
+      					'application/xml' => 'xml',
+      					'image/jpeg' => 'jpg',
+      					'image/png' => 'png',
+      					);
+      if (isset($typeA[$mimeType])){
+      	$ext = $typeA[$mimeType];
+      } else {
+      	$ext = "";
       }
+
+      
+      if ($type == 'acte'){
+      	if (! in_array($ext,array('pdf','xml'))){
+			$this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF ou XML requis.";
+      		return false;
+      	}
+ 	  } elseif($type == "attachment") {
+ 	  	if (! in_array($ext,array('pdf','xml'))){
+			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
+			return false;
+ 	  	}
+      } else {
+      	//Ben, dans le code initiale, on fait rien ....
+      	//C'est probablement un bug...
+      }
+      
     }
 
     $new_name = $dest_name;
 
     if ($type == "acte") {
-      if (!$import) {
-        $new_name .= ".pdf";
+      if ( ! $import) {
+        $new_name .= ".$ext";
       }
 
       $this->files["acte"] = array (

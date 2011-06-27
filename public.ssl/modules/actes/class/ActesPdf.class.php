@@ -64,7 +64,7 @@ class ActesPdf {
 
 		//affichier le pdf sur  IE. la dernier parametre de output() 
 		// "I"=ouvrir par IE, "D"=télécharger
-		if ($this->user_id){
+		if (isset($this->user_id)){
 			$this->output($owner->get("name").".pdf");
 		}
 	}
