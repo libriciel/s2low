@@ -9,6 +9,7 @@ $authority_filtre =  $recuperateur->get("authority");
 $fnature =  $recuperateur->get("nature");
 $ftype =  $recuperateur->get("type");
 $fnum =  $recuperateur->get("num");
+$objet = $recuperateur->get("objet");
 
 if (isset( $_GET['status']) && $_GET['status'] === '0'){
 	$fstatus = 0;
@@ -57,7 +58,7 @@ $transactionSQL->setDateMinSubmission($fmin_submission_date);
 $transactionSQL->setDateMaxSubmission($fmax_submission_date);
 $transactionSQL->setDateMinAck($fmin_ack_date);
 $transactionSQL->setDateMaxAck($fmax_ack_date);
-
+$transactionSQL->setObjet($objet);
 $transactionSQL->setOrder($order,$sortWay);
 $transactionSQL->setPageNumber($page_number,$taille_page);
 
@@ -85,7 +86,7 @@ if ($droit->isSuperAdmin($userInfo)){
  	$listeActesHTML->addActionBox();
 }
 
-$listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, $fstatus,$fnum);
+$listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, $fstatus,$fnum,$objet);
 $listeActesHTML->setDate($fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date);
 
 

@@ -135,6 +135,15 @@ class TransactionSQL {
 		$this->value[] = "%$numero%";
 	}
 	
+	public function setObjet($objet){
+		if (! $objet){
+			return;
+		}
+		$this->filter[] = "actes_transactions.subject LIKE ?";
+		$this->value[] = "%$objet%";
+	}
+	
+	
 	public function setDateMinSubmission($date){
 		if (! $date)  {
 			return;

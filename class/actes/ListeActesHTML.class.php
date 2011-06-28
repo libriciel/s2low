@@ -15,7 +15,7 @@ class ListeActesHTML {
 	private $status;
 	private $fstatus;
 	private $fnum;
-	
+	private $objet;
 	
 	public function addCollectivite($allCollectivite,$filtreAuthority){
 		$this->allCollectivite = $allCollectivite;
@@ -33,7 +33,7 @@ class ListeActesHTML {
 		$this->fmax_ack_date = $fmax_ack_date;
 	}
 	
-	public function setCritere($transTypes, $ftype,$transNatures, $fnature,$status,$fstatus,$fnum){
+	public function setCritere($transTypes, $ftype,$transNatures, $fnature,$status,$fstatus,$fnum,$objet){
 		$this->transTypes = $transTypes; 
 		$this->ftype = $ftype;
 		$this->transNatures = $transNatures;
@@ -41,6 +41,7 @@ class ListeActesHTML {
 		$this->status  = $status;
 		$this->fstatus = $fstatus;
 		$this->num = $fnum;
+		$this->objet = $objet;
 	}
 	
 	public function display($enveloppe){
@@ -72,7 +73,7 @@ class ListeActesHTML {
 	
 	public function displayForm(){
 		global $transTypes, $ftype,$transNatures, $fnature,$status, 
-			$fstatus,$fnum,$fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date;		
+			$fstatus,$fnum,$fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date,$objet;		
 		?>
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering_area');">Filtrage</h2>
 <div id="filtering_area" style="display: block;">
@@ -93,6 +94,15 @@ class ListeActesHTML {
 					<input type="text" name="num" size="20" maxlength="25" value="<?php echo $fnum ?>" />
 				</td>
 			</tr>
+			<tr>
+				<td class="title">&nbsp;</td>
+				<td class="value">&nbsp;</td>
+				<td class="title">L'objet contient&nbsp;</td>
+				<td class="value">
+					<input type="text" name="objet" size="20" maxlength="25" value="<?php echo $objet ?>" />
+				</td>
+			</tr>
+				
 			<tr>
 				<td class="title">Date de postage minimale&nbsp;:</td>
 				<td class="value">
