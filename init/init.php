@@ -2,7 +2,9 @@
 
 set_include_path( 	get_include_path() . PATH_SEPARATOR .
 					__DIR__ . "/../class/" . PATH_SEPARATOR . 
-					__DIR__ . "/../class/actes");
+					__DIR__ . "/../class/actes"  . PATH_SEPARATOR . 
+					__DIR__ . "/../class/mailsec"
+					);
 					
 
 function __autoload($class_name) {

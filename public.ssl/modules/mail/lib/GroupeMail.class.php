@@ -58,6 +58,8 @@ class GroupeMail extends DataObject {
 				" ORDER BY mail_groupe.name";
 		$result = $this->db->select($sql);
 		
+		$tabResult= array();
+		
 		while ($ligne = $result->get_next_row()){
 			$tabResult[$ligne['id']] = $ligne;
 			$tabResult[$ligne['id']]['nb_contact'] = 0;	

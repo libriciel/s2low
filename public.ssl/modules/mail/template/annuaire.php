@@ -94,7 +94,8 @@ endif;?>
 		<?php foreach ($mailAnnuaireArray as $mailAnnuaire) : ?>
 			<div class='normal' title='<?php echo $mailAnnuaire['mail_address']?>'>
 				<input type="checkbox" name="checkbox_id[]" value="<?php echo $mailAnnuaire['id']; ?>" />
-				<?php echo $mailAnnuaire['description']?$mailAnnuaire['description']:$mailAnnuaire['mail_address']; ?>
+				<a href='edit-annuaire.php?id=<?php echo $mailAnnuaire['id']?>'><?php echo $mailAnnuaire['description']?$mailAnnuaire['description']:$mailAnnuaire['mail_address']; ?>
+				</a>
 			</div>
 			<?php endforeach?>
 		</div>
