@@ -17,6 +17,9 @@ class X509Certificate {
 	}
 	
 	public function getExpirationDate($certificateContentPEM){
+		if (! $certificateContentPEM){
+			return;
+		}
 		$info = openssl_x509_parse(openssl_x509_read($certificateContentPEM));
 		preg_match_all("#(\d\d)#",$info['validTo'],$matches);
 		$m = $matches[0];

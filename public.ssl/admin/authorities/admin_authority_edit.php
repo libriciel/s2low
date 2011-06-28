@@ -92,7 +92,9 @@ if ($me->isGroupAdminOrSuper()) {
  
 $html .= " </tr>\n";
 
-//TODO: le mot de passe n'est pas caché, il faut soit faire un md5 sur le mot de passe et ici on affiche pas mot de passe. quand il chnange on le cripte par md5 et le sauvgarder dans base de donné.
+//TODO: le mot de passe n'est pas caché, il faut soit faire un md5 sur 
+// le mot de passe et ici on affiche pas mot de passe.
+// quand il chnange on le cripte par md5 et le sauvgarder dans base de donné.
 //en ce moment je pas le temp de tout faire et je laiss pour après.
 //********************************
 $accessHelios=0;
@@ -131,9 +133,9 @@ if ($authority->getModulePermByName("helios"))
 
   foreach($groups as $key =>$value)
   {
-  	  $group = new Group($key);
-  		$sirenList[] = $group->getAuthorizedSiren();
-  		$groupIds[]=$key;
+  	$group = new Group($key);
+	$sirenList[] = $group->getAuthorizedSiren();
+  	$groupIds[]=$key;
   }
   
     $valueString   =  "";  

@@ -17,5 +17,4 @@ class Connexion {
 		$_SESSION['id_login'] = $id_u;
 	}
 	
-	
 }

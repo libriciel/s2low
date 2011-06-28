@@ -181,7 +181,9 @@ class Group extends DataObject {
   */
   public function initSiren() {
 	if (isset($this->id)) {
-	  $sql = "SELECT siren FROM authority_group_siren WHERE authority_group_id=" . $this->id;
+	  $sql = "SELECT siren FROM authority_group_siren " .
+	  			" WHERE authority_group_id={$this->id}" .
+	  			" ORDER BY siren";
 
 	  $result = $this->db->select($sql);
 

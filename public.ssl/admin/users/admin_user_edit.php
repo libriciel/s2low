@@ -154,8 +154,9 @@ $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Importer le certificat utilisateur (format PEM)&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"file\" name=\"certificate\" /><br/>". 
 htmlspecialchars($him->get('subject_dn')) . "<br/>\n";
-
+if ($him->get('certificate')){
 $html .= "Expire le " .date("d/m/Y H:m:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
+}
 $html .= "</td>";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
