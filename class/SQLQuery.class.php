@@ -54,7 +54,6 @@ class SQLQuery {
 			array_shift($param);
     	}
     	
-    	
     	try {
     		$pdoStatement = $this->getStatementFromQuery($query);
     	} catch (Exception $e) {	
@@ -89,4 +88,7 @@ class SQLQuery {
 		}
 		return $result;
 	}
+	
+	
+	
 }

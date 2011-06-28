@@ -40,6 +40,7 @@ $exit_if_not_group_or_super_admin = function() use ($droit,$userInfo){
 };
 
 
+$modulesInfo = $moduleSQL->getModulesForUser($userInfo);
 
 
 

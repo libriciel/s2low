@@ -48,4 +48,14 @@ class Droit {
 		return in_array($userInfo['role'],array('SADM','GADM','ADM'));
 	}
 	
+	public function isGroupAdmin(array $userInfo){
+		return $userInfo['role'] == 'GADM';
+	}	
+	
+	public function isAuthorityAdmin(array $userInfo){
+		return $userInfo['role'] == 'ADM';
+	}	
+	
+	
+	
 }
