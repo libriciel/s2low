@@ -51,6 +51,8 @@ class Mailer {
 	}
 
   public function sendMail($subject, $body) {
+  	
+  	
   	assert('$subject');
   	assert('$body');
   	assert('$this->recipients');
@@ -77,7 +79,7 @@ class Mailer {
 		$hdrs = $mime->headers($hdrs);
 			
 		$mail =new pearMail();
-  		if (!$mail->send($recipient, $hdrs, $body,$from)) {
+  		if (!$mail->send($recipient, $hdrs, $body,'')) {
   			$this->lastError = "Erreur lors de l'envoi d'un message vers $recipient" ;
         	return false;
   		}		

@@ -94,7 +94,7 @@ class TransactionSQL {
 	}
 	
 	public function setUserId(array $user_id){
-		$this->filter[] .= "actes_transactions.user_id IN (".implode(',',$this->user_id).")";
+		$this->filter[] .= "actes_transactions.user_id IN (".implode(',',$user_id).")";
 	}
 	
 	public function setNature($nature){
@@ -248,7 +248,7 @@ class TransactionSQL {
 		$sql = "DELETE FROM actes_included_files WHERE transaction_id=?";
 		$this->sqlQuery->query($sql,$id);
 		$sql  = "DELETE FROM actes_transactions_workflow WHERE transaction_id=?";
-		$this->sqlQuery->query($sql,$id);
+		$this->sqlQuery->query($sql,$id); 
 		$sql = "DELETE FROM actes_transactions WHERE id=?";
 		$this->sqlQuery->query($sql,$id);
 	}

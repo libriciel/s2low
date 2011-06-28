@@ -21,17 +21,14 @@ class ActesNotification {
 	}
 	
 	public function sendAutomaticNotification(){
-		$sql = "SELECT actes_transactions.id as transaction_id,* FROM actes_transactions ".
-				" JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id ".
-				" JOIN actes_transactions_workflow ON  actes_transactions_workflow.transaction_id = actes_transactions.id".
-				" JOIN authorities ON authorities.siren = actes_envelopes.siren ".
-				" WHERE actes_transactions_workflow.status_id = 4  AND auto_broadcasted=false ";
-		$result = $this->db->select($sql);
+		$sql = "SELECT actes_transactions.id  FROM actes_transactions ".
+				" WHERE last_status_id = 4  AND auto_broadcasted=false ";
 		
+		$result = $this->db->select($sql);
+
 		while ($row = $result->get_next_row()){
-			
-			echo "Notification de la transaction " . $row['transaction_id'] ." \n";
-			$this->sendNotification($row);
+			echo "Notification de la transaction {$row['id']}\n";
+			$this->sendNotificationManuel($row['id']);
 		}
 	}
 	
@@ -41,17 +38,18 @@ class ActesNotification {
 	}
 	
 	private function sendNotification(array $transactionInfo){
+		$defaultBroadcastEmail =explode(',',$transactionInfo['default_broadcast_email']);
+		$brodcastEmail =explode(',',$transactionInfo['broadcast_emails']);
+		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
-			$emailsliste=explode(',',$transactionInfo['default_broadcast_email']);
-            foreach($emailsliste as $email){
-                $this->sendMail($transactionInfo,$email,true);
+            foreach($defaultBroadcastEmail as $email){              
+            	$this->sendMail($transactionInfo,$email,true);
             }
 			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
 		}
 		if ($transactionInfo['broadcast_emails']){
-			$emailsliste=explode(',',$transactionInfo['broadcast_emails']);
-            foreach($emailsliste as $email){
+            foreach($brodcastEmail as $email){
             	$this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
             }
 			$this->setBroadcasted($transactionInfo['transaction_id']);
@@ -93,7 +91,7 @@ class ActesNotification {
 		$monpdf = $pdf->output("bordereau_acquittement.pdf","S");
 		$mailer->addStringAsFile("bordereau_acquittement.pdf",$monpdf);
 		
-		$mailer->sendMail("Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] , $mailContent);
+		$mailer->sendMail("[{$transactionInfo['name']}] Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] , $mailContent);
 	}
 	
 	public function getTransactionInfo($transactionId){
@@ -101,13 +99,14 @@ class ActesNotification {
 				"actes_transactions.decision_date, actes_transactions.unique_id, " .
 				"actes_envelopes.submission_date, actes_transactions_workflow.date, " .
 				"actes_transactions.broadcast_emails, actes_transactions.archive_url, " .
-				"actes_transactions.broadcast_send_sources, authorities.default_broadcast_email " .
+				"actes_transactions.broadcast_send_sources, authorities.default_broadcast_email, " .
+				" actes_transactions.auto_broadcasted,authorities.name " .
 				"FROM actes_transactions, actes_envelopes, authorities, actes_transactions_workflow " .
 				" WHERE actes_transactions.envelope_id = actes_envelopes.id " .
 				" AND authorities.siren = actes_envelopes.siren" .
 				"  AND actes_transactions.id = " . $transactionId . 
 				"  AND actes_transactions_workflow.transaction_id = " . $transactionId . 
-				"  AND actes_transactions_workflow.status_id = 4 ";
+				"  AND actes_transactions.last_status_id = 4 ";
 
 		return $this->db->getOneLine($sql);
 	}
