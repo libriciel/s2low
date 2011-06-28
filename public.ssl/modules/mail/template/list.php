@@ -5,7 +5,7 @@
   	<div id="actions_area"> 
 			<a href="index.php?command=create" class="bouton">Nouveau message</a>
 	</div>
-<?php if ($deleteMessage != null) 
+<?php if (! empty($deleteMessage)) 
 	{	foreach($deleteMessage as $message)
 			echo "<p>$message</p>";
 	}

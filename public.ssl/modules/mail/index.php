@@ -25,7 +25,11 @@ $doc->addBody($html);
 $doc->DisplayHead();
 }
 //commencer de distribuer des information.
-$command=$_GET["command"];
+if (isset($_GET["command"])){
+	$command=$_GET["command"];
+} else {
+	$command = "";
+}
 $MailCtl=new mailController();
 $MailCtl->run($command);
 

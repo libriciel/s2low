@@ -1,6 +1,5 @@
 <?php
 
-
 require_once ( dirname(__FILE__) . "/../om/MailPeer.class.php");
 require_once ( dirname(__FILE__) . "/../om/mail_transaction.class.php");
 
@@ -60,6 +59,10 @@ class mailController {
      
      global $me;   
      global $doc;
+     $etat = "";
+     $sujet = "";
+     $SendDateFrom = "";
+     $SendDateTo = "";
      $search=Helpers :: getVarFromPost("search");
      $deleteId=Helpers :: getVarFromPost("list_id");
      
@@ -99,7 +102,7 @@ class mailController {
   	 }
   	 
    	 $doc->buildPager($MailTransaction,true);
-	include dirname(__FILENAME__)."/template/list.php";	
+	include __DIR__."/../template/list.php";	
   }
 
   /**
@@ -121,12 +124,12 @@ class mailController {
    //traitement des information
     global $me;
     global $module;
-   	require_once (dirname(__FILENAME__)."/om/MailPeer.class.php");     
-  	require_once (dirname(__FILENAME__)."/om/mail_annuaire.class.php");    
+   	require_once (__DIR__."/../om/MailPeer.class.php");     
+  	require_once (__DIR__."/../om/mail_annuaire.class.php");    
   
    //fini de la tratement
    //affichier la page
-   include dirname(__FILENAME__)."/template/create.php";
+   include (__DIR__."/../template/create.php");
   }
   
   /**
@@ -136,10 +139,10 @@ class mailController {
  */
   protected function executeShow()
   {
-   require_once (dirname(__FILENAME__)."/om/MailPeer.class.php");
-   require_once (dirname(__FILENAME__)."/om/mail_message_emis.class.php");
-   require_once (dirname(__FILENAME__)."/om/mail_included_file.class.php");
-   require_once (dirname(__FILENAME__)."/om/mail_errors.class.php");
+   require_once (__DIR__."/../om/MailPeer.class.php");
+   require_once (__DIR__."/../om/mail_message_emis.class.php");
+   require_once (__DIR__."/../om/mail_included_file.class.php");
+   require_once (__DIR__."/../om/mail_errors.class.php");
    
    $error=$this->SaveError();
    //traitement des information
@@ -159,7 +162,7 @@ class mailController {
    $mailIncludeFileArray=MailPeer::GetIncludeFiles($trans_id);
   //fini de la tratement
    //affichier la page
-   include dirname(__FILENAME__)."/template/show.php";
+   include __DIR__."/../template/show.php";
   }
   
 	//HACK béquille pour transformer les mails ...
@@ -212,10 +215,10 @@ class mailController {
 		
 		if ( ! $result){
 			$returnMsg = $this->getLastError(); ;
-			include dirname(__FILENAME__)."/template/sendfailed.php"; 
+			include __DIR__."/../template/sendfailed.php"; 
 		} 
 		
-		include dirname(__FILENAME__)."/template/send.php";	
+		include __DIR__."/../template/send.php";	
  		
 	}
 	
@@ -317,7 +320,7 @@ class mailController {
 	        	echo "filenumber=".$i;  
 	       		echo "filename=".$_FILES['uploadFile'. $i]['name'];
 	 				}
-	        if  ( $_FILES['uploadFile'. $i]['name'] != null)
+	        if  ( !  empty($_FILES['uploadFile'. $i]['name']))
 	        {
 	        	$InputFileName[]='uploadFile'. $i;
 	           
@@ -344,7 +347,7 @@ class mailController {
 	    $mailTransaction->set("fn_download",md5("mail".$now));
 	    $mailTransaction->save(false);
 	    
-	    require_once (dirname(__FILE__)."/../om/mail_included_file.class.php");
+	    require_once ( __DIR__."/../om/mail_included_file.class.php");
         
         // créer un repertoir de md5
   		$newdir=MAIL_FILES_UPLOAD_ROOT.$mailTransaction->getFNDownload().'/';
@@ -558,7 +561,7 @@ class mailController {
  
   protected function executeSaveNewEmail()
   {
-  	require_once (dirname(__FILENAME__)."/om/mail_annuaire.class.php");
+  	require_once ( __DIR__."/../om/mail_annuaire.class.php");
   	global $me;
   	$emails = Helpers :: getVarFromPost("newMailAddress");
   	$descriptions = Helpers :: getVarFromPost("newMailDescription");
@@ -572,7 +575,7 @@ class mailController {
   		$annuaire->set("description",$descriptions[$i]);
   		$annuaire->save(false);
   	}
-  	include dirname(__FILENAME__)."/template/newemail.php";	 
+  	include __DIR__."/../template/newemail.php";	 
   }
 
 

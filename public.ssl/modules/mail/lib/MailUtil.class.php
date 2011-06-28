@@ -299,7 +299,7 @@ Pour en prendre connaissance veuillez cliquer sur ce lien.\n";
 				echo "<p>mail file number =".$MailFileNumber;"</p>";	
 				echo "$MailEmis->getEmail()";
 	    	}	
-	    	$htmlpart="<p><a href=\"".WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId()."\">Lire le courrier et confirmer la réception</a></p>";
+	    	$htmlpart="<p><a href=\"".WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId()."\">Confirmer la réception et lire le courrier en cliquant sur ce lien</a></p>";
 			$htmlpart.="<p>Note de sécurité :</p>
 <p>Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus CLAMAV -</p>";
 	    	$htmlpart.='</BODY></HTML>';
