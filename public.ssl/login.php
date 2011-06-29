@@ -21,9 +21,6 @@ if (count($allUser) == 1){
 }
 
 
-
-
-
 $doc = new HTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);

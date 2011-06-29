@@ -94,7 +94,7 @@ class TransactionSQL {
 	}
 	
 	public function setUserId(array $user_id){
-		$this->filter[] .= "actes_transactions.user_id IN (".implode(',',$user_id).")";
+		$this->filter[] = "actes_transactions.user_id IN (".implode(',',$user_id).")";
 	}
 	
 	public function setNature($nature){
