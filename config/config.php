@@ -7,8 +7,6 @@ ini_set("error_reporting", E_ALL );
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
 
-define('SITEROOT', "/home/eric/slow/TedetisPHP/");
-
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://127.0.0.3");
 define('WEBSITE_SSL', "https://192.168.1.87");
