@@ -1,17 +1,19 @@
 <?php
 require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
 
-if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+if (! $droit->isSuperAdmin($userInfo)){
+	sortir("Accès refusé");
 }
+
+
+$menuHTML = new MenuHTML();
 
 $doc = new HTMLLayout();
 
 $doc->setTitle("Utilitaires module ACTES");
 
-$doc->buildMenu($me);
+
+$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Utilitaires - ACTES</h1>\n";

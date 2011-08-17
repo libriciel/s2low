@@ -1,15 +1,12 @@
 <?php
 
-//ini_set("error_reporting", E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 ini_set("error_reporting", E_ALL );
-//ini_set("error_reporting", E_ALL | E_STRICT);
 
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
-
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://127.0.0.3");
-define('WEBSITE_SSL', "https://192.168.1.87");
+define('WEBSITE_SSL', "https://127.0.0.3");
 
 define('WEBMASTER', "webmaster@invalid.fr");
 // Adresse du From des emails émis
@@ -20,8 +17,7 @@ define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@invalid.fr>");
 define('DB_HOST', "localhost");
 define('DB_USER', "tedetis");
 define('DB_PASSWORD', "tedetis");
-//define('DB_DATABASE', "tedetis");
-define('DB_DATABASE', "tedetis3");
+define('DB_DATABASE', "tedetis");
 
 // Nombre d'élément affichés par défaut par page dans les listes
 define('DEFAULT_ITEMS_PER_PAGE', 10);
@@ -91,7 +87,7 @@ define('ANTIVIRUS_TMP_PATH',' /tmp/');
 define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8080/TedetisActes/ValideArchive');
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
-define('ACTES_TDT_MAIL_ADDRESS', 'eric@babette.com');
+define('ACTES_TDT_MAIL_ADDRESS', 'eric@zeljko.com');
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
 define('ACTES_FILES_UPLOAD_ROOT', '/tdt-workspace/actes/uploads');

@@ -56,6 +56,18 @@ class Droit {
 		return $userInfo['role'] == 'ADM';
 	}	
 	
+	public function hasDroit(array $userInfo, array $authorityInfo){
+
+		if ($this->isSuperAdmin($userInfo)){
+			return true;
+		}
+		
+		if ( ! $this->isGroupAdmin($userInfo)){
+			return false;
+		}
+		return $authorityInfo['authority_group_id'] == $userInfo['authority_group_id'];
+		
+	}
 	
 	
 }

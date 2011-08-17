@@ -307,6 +307,8 @@ $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Adresse électronique pour le module de mail sécurisé:</td>\n";
 $html .= "  <td class=\"td-input\"><input type=\"text\" name=\"email_mail_securise\" value=\"" . htmlspecialchars($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></td>\n";
 $html .= " </tr>\n";
+
+
 if ($me->isGroupAdminOrSuper()) {
 	$modules = Module::getActiveModulesList();
 
@@ -333,12 +335,8 @@ $html .= ($mod) ? "Valider les modifications" : "Ajouter la collectivité";
 $html .= "\" /></center>\n";
 $html .= "</form>\n";
 
-/*if ($mod && $me->isSuper()) {
-  $html .= "<form action=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette collectivité ?')\" method=\"post\">\n";
-  $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $authority->getId(). "\" />\n";
-  $html .= "<input type=\"submit\" value=\"Supprimer cette collectivité\" class=\"bouton-danger\" />\n";
-  $html .= "</form>\n";
-}*/
+
+$html .="<a href='admin_authority_sae.php?id=".$id."'>Configurer la connexion SAE »</a>";
 
 $html .= "</div>\n";
 
