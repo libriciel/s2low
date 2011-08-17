@@ -16,10 +16,10 @@ class Asalae {
 		$this->WSDL = $authorityInfo['sae_wsdl'];
 		$this->login = $authorityInfo['sae_login'];
 		$this->password = $authorityInfo['sae_password'];
-		$this->identifiantVersant = $authorityInfo['sae_id_versant'];
-		$this->identifiantArchive = $authorityInfo['sae_id_archive'];
+		/*$this->identifiantVersant = $authorityInfo['sae_id_versant'];
+		$this->identifiantArchive = $authorityInfo['sae_id_archive'];*/
 		$this->numeroAgrement = $authorityInfo['sae_numero_aggrement'];
-		$this->originatingAgency = $authorityInfo['sae_originating_agency'];
+		//$this->originatingAgency = $authorityInfo['sae_originating_agency'];
 	}
 
 	public function getLastError(){

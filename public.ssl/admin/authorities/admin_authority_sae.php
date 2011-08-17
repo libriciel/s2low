@@ -46,7 +46,6 @@ ob_start();
 		</center>
 	</form>
 
-	<a href='admin_sae_test.php?id=<?php echo $id ?>'>Tester la connectivité</a>
 </div>
 <?php 
 $html = ob_get_contents();

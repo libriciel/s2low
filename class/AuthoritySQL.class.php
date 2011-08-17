@@ -26,10 +26,11 @@ class AuthoritySQL {
 			'sae_wsdl' => "SAE WSDL",
 			'sae_login' => "SAE Login",
 			'sae_password' => "SAE mot de passe",
-			'sae_id_versant' =>  "SAE Identificant service versant",
-			'sae_id_archive' => "SAE Identificant archive",
+			//'sae_id_versant' =>  "SAE Identificant service versant",
+			//'sae_id_archive' => "SAE Identificant archive",
+  			//'sae_originating_agency' => 'SAE Originating Agency',
+  		
 			'sae_numero_aggrement' => "SAE Numéro d'aggrément",
-			'sae_originating_agency' => 'SAE Originating Agency',
 		);
   	}
   	
