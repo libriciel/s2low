@@ -95,7 +95,7 @@ class HTMLLayout extends Layout {
       $html .= "<div id=\"menu-header\">\n";
       $html .= "Bienvenue " . $user->getPrettyName() . "<br />\n";;
       $html .= "Rôle&nbsp;: " . $user->getRoleDescr();
-      if ($user->isLogged()){
+      if ($user->isLogged() && 	$_SESSION['nb_id'] > 1 ) {
       	$html .= "<br/><a href='".WEBSITE_SSL."/logout.php'>déconnexion</a>";
       }
       $html .= "</div>\n";

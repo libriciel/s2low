@@ -184,7 +184,6 @@ class User extends DataObject {
 	  	
 		$this->retrieveInfoFromClientCertificate();
 		$ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
-
 		
 		if (! $ids) {
 			return false;
@@ -197,8 +196,11 @@ class User extends DataObject {
 		
 		if (count($ids) > 1){
 			$this->id = $_SESSION['id_login'];
+			$_SESSION['nb_id'] = count($ids);			
 		} else {		
 	    	$this->id = $ids[0];
+	    	$_SESSION['id_login'] = $this->id;
+	    	$_SESSION['nb_id'] = 1;			
 		}
 		
 		return ($this->init() && $this->isActive());
