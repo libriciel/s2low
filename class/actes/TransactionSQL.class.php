@@ -207,6 +207,7 @@ class TransactionSQL {
 				$this->getWhere() .		
 				" ORDER BY $this->order $this->sortWay " .
 				" LIMIT $this->limit OFFSET $this->offset";
+	
 		$result = $this->sqlQuery->query($sql,$this->value);
 		foreach($result as $i => $line){
 			$result[$i]['type_str'] = self::$transactionTypes[$line['type']];

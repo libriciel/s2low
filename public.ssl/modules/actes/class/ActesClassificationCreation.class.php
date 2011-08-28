@@ -196,6 +196,8 @@ class ActesClassificationCreation {
 		$trans->set("type", "7");
 		$trans->set("last_classification_date",$last_classification_date);
 		$trans->set("destDir", $this->authority->get("siren") . "/" );
+		$trans->set("authority_id",$this->authority->getId());
+		$trans->set("user_id",$this->user->getId());
 		return $trans;
 	}
 	

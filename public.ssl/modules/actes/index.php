@@ -62,6 +62,8 @@ $transactionSQL->setOrder($order,$sortWay);
 $transactionSQL->setPageNumber($page_number,$taille_page);
 
 $envelopes = $transactionSQL->getAll();
+
+
 $nb_transactions = $transactionSQL->getNbTransaction();
 
 $transTypes = $transactionSQL->getTypes();
