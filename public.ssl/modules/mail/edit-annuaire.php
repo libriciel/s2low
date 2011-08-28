@@ -2,6 +2,9 @@
 
 require_once( __DIR__ . "/../../../init/init-www-mailsec.php");
 
+if (! $droit->isAuthorityAdmin($userInfo)){
+	exit;
+}
 $recuperateur = new Recuperateur($_GET);
 $menuHTML = new MenuHTML();
 

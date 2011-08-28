@@ -3,7 +3,9 @@
 
 require_once("include/init.php");
 
-
+if (! $me->isAuthorityAdmin()){
+  		exit;
+  	}
 $groupe_id = Helpers::getVarFromGet('groupe_id');
 
 $groupe = new GroupeMail($groupe_id);

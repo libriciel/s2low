@@ -10,6 +10,14 @@ class mailController {
   
   private $lastError;
 	
+  
+  public function exitIfNotAdmin(){
+	global $me;  	
+  	if (! $me->isAuthorityAdmin()){
+  		exit;
+  	}
+  }
+  
   /**
    * \bref dispatch le message.
    * 
@@ -38,13 +46,16 @@ class mailController {
 				$this->SaveError();
 				break;
 			case "annuaire":
+				$this->exitIfNotAdmin();
 				$this->executeAnnuaire();
 				break;
 			case "savenewemail":
 				$this->executeSaveNewEmail();
 				break;
 			case "import_annuaire" : 
+				$this->exitIfNotAdmin();
 				$this->executeImportAnnuaire();
+				break;
 			default:
 				$this->executeList();
 		}

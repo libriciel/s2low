@@ -1,6 +1,8 @@
 <?php 
 require_once("include/init.php");
-
+if (! $me->isAuthorityAdmin()){
+  		exit;
+  	}
 if (isset($_SESSION['last_annuaire'])) {
 	$annuaire = $_SESSION['last_annuaire'];
 	
@@ -44,7 +46,7 @@ function affiche20Premier($texte,$tab){
 <div id="content">
 <?php $doc->afficheErrors(); ?>
  <h1>Carnet d'adresse</h1>
-<?php if($annuaire) : ?>
+<?php if(! empty($annuaire)) : ?>
 	<h2>Résultat de l'import</h2>
 	<?php affiche20Premier("Nombre de nouvelle adresse email enregistré",$tabOK) ?>
  	<?php affiche20Premier("Nombre d'adresse email déjà dans la base",$tabAlreadyExists) ?>

@@ -1,7 +1,9 @@
 <?php 
 
 require_once("include/init.php");
-
+if (! $me->isAuthorityAdmin()){
+  		exit;
+  	}
 require_once(SITEROOT . "/class/FileUploader.class.php");
 
 if (! isset($_FILES['carnet'])){
