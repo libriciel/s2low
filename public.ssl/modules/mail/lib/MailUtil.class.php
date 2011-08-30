@@ -264,9 +264,7 @@ Content-Transfer-Encoding: quoted-printable
 	  	 $from = "-f{$from}";  
 	  	 
 		
-		$text = "Le serveur sécurisé TdT de l'ADULLACT vous informe qu'un  message recommandé mail 
-avec d'éventuelles pièces attachées vous a été posté. 
-Pour en prendre connaissance veuillez cliquer sur ce lien.\n";
+		$text=MAIL_TEXT;
 		if ($mailTransaction->getPassword() ) {
 			$text.="\n\n";
 			if ($send_password) {
