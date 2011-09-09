@@ -62,7 +62,7 @@ class Droit {
 			return true;
 		}
 		
-		if ( ! $this->isGroupAdmin($userInfo)){
+		if ( ! $this->isGroupAdmin($userInfo) && ! $this->isAuthorityAdmin($userInfo)){
 			return false;
 		}
 		return $authorityInfo['authority_group_id'] == $userInfo['authority_group_id'];

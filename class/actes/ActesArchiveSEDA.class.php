@@ -84,11 +84,11 @@ class ActesArchiveSEDA {
 		}
 		
 		$archiveTransfer->Contains->ArchivalAgreement = $this->numeroAggrement;
-		$archiveTransfer->Contains->ArchivalAgreement['SchemeName'] = "Convention de transfert";
-		$archiveTransfer->Contains->ArchivalAgreement['SchemeAgencyName'] = $this->authorityName;
+		$archiveTransfer->Contains->ArchivalAgreement['schemeName'] = "Convention de transfert";
+		$archiveTransfer->Contains->ArchivalAgreement['schemeAgencyName'] = $this->authorityName;
 		
 		$archiveTransfer->Contains->ArchivalProfile = "ACTES 1.4";
-		$archiveTransfer->Contains->ArchivalProfile['SchemeName'] = "Profil de données";
+		$archiveTransfer->Contains->ArchivalProfile['schemeName'] = "Profil de données";
 		
 		$archiveTransfer->Contains->DescriptionLanguage = "fr";
 		$archiveTransfer->Contains->DescriptionLanguage['listVersionID'] = "edition 2009";
@@ -114,41 +114,47 @@ class ActesArchiveSEDA {
 		
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordContent = $this->authorityName;
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference = $this->siren;
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['SchemeName'] = "SIRENE";
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['SchemeAgencyName'] = "INSEE";	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['schemeName'] = "SIRENE";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['schemeAgencyName'] = "INSEE";	
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordType = "corpname";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordType["listVersionID"] = "edition 2009";
+		
 		
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordContent = "Contrôle de légalité";
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['SchemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['SchemeAgencyName'] = "Direction des archives de france";	
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['SchemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['SchemeVersionId'] = "version 2009";			
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeAgencyName'] = "Direction des archives de france";	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeVersionID'] = "version 2009";			
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordType = "subject";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordType["listVersionID"] = "edition 2009";
+		
 		
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordContent = $transactionsInfo['nature_descr'];
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference = $transactionsInfo['nature_code'];
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['SchemeName'] = "ACTES.codeNatureActe";
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['SchemeAgencyName'] = "Ministère de l'intérieur, de l'outre mer et des collectivités territoriales";	
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['SchemeVersionId'] = "ACTES V1.4";			
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['schemeName'] = "ACTES.codeNatureActe";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['schemeAgencyName'] = "Ministère de l'intérieur, de l'outre mer et des collectivités territoriales";	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordReference['schemeVersionID'] = "ACTES V1.4";			
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordType = "genreform";
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[2]->KeywordType["listVersionID"] = "edition 2009";
 		
 		if ($transactionsInfo['classification'][0] != 9 ){
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordContent = $this->getSujetActes($transactionsInfo['classification']);
-			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['SchemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
-			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['SchemeAgencyName'] = "Direction des archives de france";	
-			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['SchemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
-			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['SchemeVersionId'] = "version 2009";			
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeAgencyName'] = "Direction des archives de france";	
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeVersionID'] = "version 2009";			
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordType = "subject";
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordType["listVersionID"] = "edition 2009";	
 		}
 		
 		$archiveTransfer->Contains->AccessRestriction->Code = $this->getAccessRestriction($transactionsInfo['classification'],$transactionsInfo['nature_code']);
-		$archiveTransfer->Contains->AccessRestriction->Code['listVersionID'] = "edition2009";
+		$archiveTransfer->Contains->AccessRestriction->Code['listVersionID'] = "edition 2009";
 		$archiveTransfer->Contains->AccessRestriction->StartDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
 		
-		$archiveTransfer->Contains->Appraisal->Code = "Detruire";
-		$archiveTransfer->Contains->Appraisal->Code['listVersionID'] = "edition2009";
-		$archiveTransfer->Contains->Appraisal->Duration = $this->getDuration($transactionsInfo['nature_code']);
-		$archiveTransfer->Contains->Appraisal->StartDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
+		$archiveTransfer->Contains->AppraisalRules->Code = "Detruire";
+		$archiveTransfer->Contains->AppraisalRules->Code['listVersionID'] = "edition 2009";
+		$archiveTransfer->Contains->AppraisalRules->Duration = $this->getDuration($transactionsInfo['nature_code']);
+		$archiveTransfer->Contains->AppraisalRules->StartDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
 		
 		$archiveTransfer->Contains->Contains[0] = $this->getContainsElement("Transmission d'un acte soumis au contrôle de légalité");
 		$archiveTransfer->Contains->Contains[0]->Contains[0] = $this->getContainsElementWithDocument("Actes",array($this->actesFileName));
@@ -170,7 +176,7 @@ class ActesArchiveSEDA {
 	private function getContainsElementWithDocument($description,array $allFileInfo){
 		$contains = new ZenXML("Contains");
 		$contains->DescriptionLevel = "item";
-		$contains->DescriptionLevel['listVersionID'] = "edition2009";
+		$contains->DescriptionLevel['listVersionID'] = "edition 2009";
 		$contains->Name =  $description ;
 		foreach($allFileInfo as $i => $fileInfo){
 			if (is_array($fileInfo)){
@@ -193,7 +199,7 @@ class ActesArchiveSEDA {
 	public function getContainsElement($description){
 		$contains = new ZenXML("Contains");		
 		$contains->DescriptionLevel = "file";
-		$contains->DescriptionLevel['listVersionID'] = "edition2009";
+		$contains->DescriptionLevel['listVersionID'] = "edition 2009";
 		$contains->Name = $description;
 		return $contains;
 	}
