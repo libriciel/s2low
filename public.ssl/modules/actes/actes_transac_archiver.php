@@ -40,7 +40,7 @@ $tgzExtractor = new TGZExtractor('/tmp');
 $tgzExtractor->extract($file_to_send,$actesFile[1]['filename']);
 
 $actesArchivesSEDA = new ActesArchiveSEDA("/tmp/");
-$actesArchivesSEDA->setAuthorityInfo($authorityInfo['siren'],$authorityInfo['name'],$authorityInfo['sae_numero_aggrement']);
+$actesArchivesSEDA->setAuthorityInfo($authorityInfo);
 $actesArchivesSEDA->setActesFileName($actesFile[1]['filename']);
 $actesArchivesSEDA->setTransactionStatusInfo($actesTransactionsStatusInfo);
 
@@ -62,7 +62,6 @@ if (! $archive_path){
 
 $bordereau = $actesArchivesSEDA->getBordereau($transactionsInfo);
 
-header("Content-type: text/xml;");
 
 if (! $bordereau){
 	$_SESSION['error'] = $actesArchivesSEDA->getLastError();
@@ -75,15 +74,16 @@ $result = $asalae->sendArchive($bordereau,$archive_path);
 
 if (! $result){
 	$_SESSION['error'] ="Erreur lors de l'archivage : " . $asalae->getLastError();
+} else {
+	$msg = "Envoie de la transaction au SAE ({$authorityInfo['sae_wsdl']})";
+	$actesTransactionsSQL->archiver($id,$msg,$authorityInfo['sae_wsdl']);
+	
+	$_SESSION['error'] = "L'archive a été déposé";
+	
+	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$userInfo['id'])) {
+      $_SESSION['error'] .= "\nErreur de journalisation.\n";
+    }
 }
 
-$_SESSION['error'] = "L'archive a été déposé";
 header("Location: actes_transac_show.php?id=$id");
 
-
-
-exit;
-
-//TODO : 
-$trans->set("archive_url", 'http://testasalae.dev.adullact.org');
-$trans->save();

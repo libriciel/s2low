@@ -7,9 +7,7 @@ class ActesArchiveSEDA {
 	private $tmpFolder;
 	private $file2Add;
 	
-	private $siren;
-	private $authorityName;
-	private $numeroAggrement;
+	private $authorityInfo;
 	private $actesTransactionsStatusInfo;
 	
 	private $actesFilePath;
@@ -26,10 +24,8 @@ class ActesArchiveSEDA {
 		return $this->lastError;
 	}
 	
-	public function setAuthorityInfo($siren,$name,$numeroAggrement){
-		$this->siren = $siren;
-		$this->authorityName = $name;
-		$this->numeroAggrement = $numeroAggrement;
+	public function setAuthorityInfo(array $authorityInfo){
+		$this->authorityInfo = $authorityInfo;
 	}
 	
 	public function setActesFileName($actesFileName){
@@ -68,24 +64,18 @@ class ActesArchiveSEDA {
 		$archiveTransfer->TransferIdentifier = $transactionsInfo['unique_id'];
 		$archiveTransfer->TransferIdentifier['schemeName'] = "Codification interne";
 		
-		$archiveTransfer->TransferringAgency->Identification = $this->siren;
-		$archiveTransfer->TransferringAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->TransferringAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->TransferringAgency->Name = $this->authorityName;
+		$archiveTransfer->TransferringAgency->Identification = $this->authorityInfo['sae_id_versant'];
 		
-		$archiveTransfer->ArchivalAgency->Identification = $this->siren;
-		$archiveTransfer->ArchivalAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->ArchivalAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->ArchivalAgency->Name = $this->authorityName;
+		$archiveTransfer->ArchivalAgency->Identification = $this->authorityInfo['sae_id_archive'];
 		
 		foreach($this->file2Add as $i => $fileName){
 			$archiveTransfer->Integrity[$i]->Contains = sha1_file($this->tmpFolder.$fileName);
 			$archiveTransfer->Integrity[$i]->UnitIdentifier = $fileName;
 		}
 		
-		$archiveTransfer->Contains->ArchivalAgreement = $this->numeroAggrement;
+		$archiveTransfer->Contains->ArchivalAgreement = $this->authorityInfo['sae_numero_aggrement'];
 		$archiveTransfer->Contains->ArchivalAgreement['schemeName'] = "Convention de transfert";
-		$archiveTransfer->Contains->ArchivalAgreement['schemeAgencyName'] = $this->authorityName;
+		$archiveTransfer->Contains->ArchivalAgreement['schemeAgencyName'] = $this->authorityInfo['name'];
 		
 		$archiveTransfer->Contains->ArchivalProfile = "ACTES 1.4";
 		$archiveTransfer->Contains->ArchivalProfile['schemeName'] = "Profil de données";
@@ -103,17 +93,13 @@ class ActesArchiveSEDA {
 		$archiveTransfer->Contains->ContentDescription->Language = "fr";
 		$archiveTransfer->Contains->ContentDescription->Language['listVersionID'] = "edition 2009";
 		
-		$archiveTransfer->Contains->ContentDescription->LatestDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
-		$archiveTransfer->Contains->ContentDescription->OldestDate = date('c',strtotime($transactionsInfo['decision_date']));
+		$archiveTransfer->Contains->ContentDescription->LatestDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
+		$archiveTransfer->Contains->ContentDescription->OldestDate = date('Y-m-d',strtotime($transactionsInfo['decision_date']));
 		
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->siren;
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Name = $this->authorityName;
-
-		
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordContent = $this->authorityName;
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference = $this->siren;
+		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->authorityInfo['sae_originating_agency'];
+	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordContent = $this->authorityInfo['name'];
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference = $this->authorityInfo['siren'];
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['schemeName'] = "SIRENE";
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['schemeAgencyName'] = "INSEE";	
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordType = "corpname";
@@ -147,15 +133,17 @@ class ActesArchiveSEDA {
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordType["listVersionID"] = "edition 2009";	
 		}
 		
+		$archiveTransfer->Contains->Appraisal->Code = "detruire";
+		$archiveTransfer->Contains->Appraisal->Code['listVersionID'] = "edition 2009";
+		$archiveTransfer->Contains->Appraisal->Duration = $this->getDuration($transactionsInfo['nature_code']);
+		$archiveTransfer->Contains->Appraisal->StartDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
+	
+		
 		$archiveTransfer->Contains->AccessRestriction->Code = $this->getAccessRestriction($transactionsInfo['classification'],$transactionsInfo['nature_code']);
 		$archiveTransfer->Contains->AccessRestriction->Code['listVersionID'] = "edition 2009";
-		$archiveTransfer->Contains->AccessRestriction->StartDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
+		$archiveTransfer->Contains->AccessRestriction->StartDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
 		
-		$archiveTransfer->Contains->AppraisalRules->Code = "Detruire";
-		$archiveTransfer->Contains->AppraisalRules->Code['listVersionID'] = "edition 2009";
-		$archiveTransfer->Contains->AppraisalRules->Duration = $this->getDuration($transactionsInfo['nature_code']);
-		$archiveTransfer->Contains->AppraisalRules->StartDate = date('c',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
-		
+			
 		$archiveTransfer->Contains->Contains[0] = $this->getContainsElement("Transmission d'un acte soumis au contrôle de légalité");
 		$archiveTransfer->Contains->Contains[0]->Contains[0] = $this->getContainsElementWithDocument("Actes",array($this->actesFileName));
 		
@@ -163,17 +151,18 @@ class ActesArchiveSEDA {
 			$archiveTransfer->Contains->Contains[0]->Contains[] = $this->getContainsElementWithDocument("Annexe(s) d'un acte soumis au contrôle de légalité",$this->annexe);
 		}
 
-		$arActes = $this->getContainsElementWithDocument(	"Accusé de réception d'un acte soumis au contrôle de légalité",
-															array($this->arActes));
+		$arActes = $this->getContainsElementWithDocument("Accusé de réception d'un acte soumis au contrôle de légalité",
+															array($this->arActes),
+															$this->actesTransactionsStatusInfo['date']
+															);
 		
-		unset($arActes->Document[0]->Attachment['mimecode']);
-		$arActes->Document[0]->Receipt = date('c',strtotime($this->actesTransactionsStatusInfo['date']));
+		unset($arActes->Document[0]->Attachment['mimeCode']);
 		$archiveTransfer->Contains->Contains[0]->Contains[] = $arActes;
 		
 		return $archiveTransfer->asXML();
 	}
 	
-	private function getContainsElementWithDocument($description,array $allFileInfo){
+	private function getContainsElementWithDocument($description,array $allFileInfo,$receiptDate = false){
 		$contains = new ZenXML("Contains");
 		$contains->DescriptionLevel = "item";
 		$contains->DescriptionLevel['listVersionID'] = "edition 2009";
@@ -186,12 +175,16 @@ class ActesArchiveSEDA {
 				$fileName = $fileInfo;
 				$fileType = "application/pdf";
 			}
-			$contains->Document[$i]->Attachment['mimecode'] = $fileType;
+			$contains->Document[$i]->Attachment['mimeCode'] = $fileType;
 			$contains->Document[$i]->Attachment['filename'] = $fileName;
 			$contains->Document[$i]->Control = "false";
 			$contains->Document[$i]->Copy = "true";
 			$contains->Document[$i]->Description = "Acte";
+			if ($receiptDate) {
+				$contains->Document[$i]->Receipt = date('c',strtotime($receiptDate));
+			}
 			$contains->Document[$i]->Type = "CDO";
+			$contains->Document[$i]->Type["listVersionID"] = "edition 2009";
 		}
 		return $contains;
 	}
