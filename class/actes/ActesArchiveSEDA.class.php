@@ -240,7 +240,7 @@ class ActesArchiveSEDA {
 	}
 	
 	public function getAccessRestriction($classification,$nature){
-		if ($classification[0] == 4 && in_array(array(3,4),$nature)){
+		if ($classification[0] == 4 && in_array($nature,array(3,4))){
 			return "AR048";
 		}
 		return "AR038";

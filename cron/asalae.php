@@ -36,17 +36,22 @@ foreach($allTransactions as $transactionInfo){
 	echo "Transaction {$transactionInfo['unique_id']} : ";
 	$asalae = new Asalae($transactionInfo);
 	$message = $asalae->getReply($transactionInfo['unique_id']);
+
 	if  ( ! $message ){
 		echo  $asalae->getLastError() ."\n";	
 	} else {
-		
-		/*$msg = "La transaction {$transactionInfo['id']} a été reçu par le SAE ";
-		$actesTransactionsSQL->updateStatus($transactionInfo['id'],15,$msg,$message);
-		
+		$xml = simplexml_load_string($message);
+		$nodeName = strval($xml->getName());
+		if ($nodeName == 'ArchiveTransferAcceptance'){
+			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE ";
+			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$message);
+		} else {
+			$msg = "La transaction {$transactionInfo['id']} a été refusée par le SAE ";
+			$actesTransactionsSQL->updateStatus($transactionInfo['id'],14,$msg,$message);
+		}
 		Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false);
-	    echo $msg . "\n";*/
+	    echo $msg . "\n";
 	}
-	echo $message;
 }
 
 

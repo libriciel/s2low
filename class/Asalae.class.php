@@ -52,7 +52,7 @@ class Asalae {
 	private function getMessage($id_transfer, $type_message){
 		$client = new SoapClient($this->WSDL);
 		$resultat = $client->wsGetMessage(	'ArchiveTransfer', 
-											'ArchiveTransferAcknowledgement', 
+											 $type_message,
 											$id_transfer, 
 											$this->login,
 											$this->password);
