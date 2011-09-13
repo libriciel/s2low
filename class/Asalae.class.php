@@ -41,6 +41,41 @@ class Asalae {
 		return false;
 	}
 	
+	public function getAcuseReception($id_transfert){
+		return $this->getMessage($id_transfert,'ArchiveTransferAcknowledgement');
+	}
+	
+	public function getReply($id_transfer){
+		return $this->getMessage($id_transfer,'ArchiveTransferReply');
+	}
+	
+	private function getMessage($id_transfer, $type_message){
+		$client = new SoapClient($this->WSDL);
+		$resultat = $client->wsGetMessage(	'ArchiveTransfer', 
+											'ArchiveTransferAcknowledgement', 
+											$id_transfer, 
+											$this->login,
+											$this->password);
+		if ( intval($resultat) == 0){
+			return $resultat;
+		}
+		
+		$error = array( 1 => "identifiant de connexion non trouvé",
+							"mot de passe incorrect",
+							"connecteur non actif",
+							"type de l'échange non reconnu",
+							"type de message non reconnu",
+							"acteur Seda (service) non lié au connecteur dans as@lae",
+							"message origine non trouvé",
+							"message demandé non trouvé",
+		);
+		$this->lastError  = "Code $resultat : {$error[$resultat]}";
+		return false;
+	}
+
+	
+	
+	
 	
 	public function getErrorString($number){
 		$error = array("connexion réussie","identifiant de connexion inconnu","mot de passe incorrect","connecteur non actif");
