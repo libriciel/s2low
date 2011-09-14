@@ -49,4 +49,11 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->query($sql,$status_id);	
 	}
 	
+	public function getEnvelopeToDelete(){
+		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id  FROM actes_transactions " .
+				" JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
+				" WHERE last_status_id=13 ";
+		return $this->sqlQuery->query($sql);	
+	}
+	
 }

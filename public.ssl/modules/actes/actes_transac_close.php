@@ -109,5 +109,3 @@ if (count($liste_id) == 1) {
 }
   
 Helpers::returnAndExit($status, $sortie, $retour);
- 
-?>

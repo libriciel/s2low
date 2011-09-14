@@ -262,7 +262,7 @@ class ListeActesHTML {
 							foreach ($envelope['courrier_info'] as $id => $info): ?>
 								<a href="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_show.php?id=<?php echo $id ?>">
 									<?php echo $info["type_str"] ?>
-									(<?php echo $info["sens"] ?>) 
+									(<?php echo isset($info["sens"])?$info["sens"]:"envoyé" ?>) 
 								</a>
 								<br/>
 							<?php endforeach; ?>

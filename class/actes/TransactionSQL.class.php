@@ -39,7 +39,9 @@ class TransactionSQL {
 		11 => 'Aquittement de document reçu',
 		12 => 'Envoyé au SAE',
 		13 => 'Archivé par le SAE',
-		14 => 'Erreur lors de l\'archivage'
+		14 => 'Erreur lors de l\'archivage',
+		15 => 'Reçu par le SAE',
+		16 => 'Détruite',
 
 	); 
 	
