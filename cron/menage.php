@@ -14,7 +14,7 @@ foreach($allEnvelopes as $envelopeInfo){
 	$msg = "Les fichiers de l'envelope {$envelopeInfo['id']} ont été détruits";
 	
 	$actesTransactionsSQL->updateStatus($envelopeInfo['transaction_id'],16,$msg);
-	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false);
+	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$envelopeInfo['user_id']);
 	
 	echo $msg."\n";
 	

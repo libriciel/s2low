@@ -50,7 +50,7 @@ define('AUTHORIZED_SIGN_CA_PATH', '/etc/tedetis/ssl/validca');
 
 
 // Constantes générales
-define('TRACE_FILE_PATH','/tmp/tedetis-trace.log');
+define('TRACE_FILE_PATH','/home/eric/log/tedetis-trace.log');
 
 define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan');
 

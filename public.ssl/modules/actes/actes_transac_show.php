@@ -175,7 +175,9 @@ if ($trans->get("type") == 6 ||
  	$trans->get("type") == 7 ||
  	 $status <= 0 || 
  	 $status == 5 ||
- 	 $status == 6 
+ 	 $status == 6 ||
+ 	 $status == 16 
+ 	 
  	 ) {
 	$archiveDeleted = true;
 }
@@ -393,7 +395,7 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
   $actionHtml .= "</div>\n";
 }
 
-if ($trans->get("type") == 1 && ($transStatus >= 4 && ! $trans->get('archive_url')) || $transStatus == 14) {
+if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) ) {
 	  
   $actionHtml .= "<div class=\"action\">\n";
   $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";

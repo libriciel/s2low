@@ -75,8 +75,9 @@ $result = $asalae->sendArchive($bordereau,$archive_path);
 if (! $result){
 	$_SESSION['error'] ="Erreur lors de l'archivage : " . $asalae->getLastError();
 } else {
-	$msg = "Envoie de la transaction au SAE ({$authorityInfo['sae_wsdl']})";
-	$actesTransactionsSQL->archiver($id,$msg,$authorityInfo['sae_wsdl']);
+	$msg = "Envoie de la transaction {$transactionsInfo['id']}  au SAE ({$authorityInfo['sae_wsdl']})";
+	
+	$actesTransactionsSQL->updateStatus($transactionsInfo['id'],12,$msg);
 	
 	$_SESSION['error'] = "L'archive a été déposé";
 	

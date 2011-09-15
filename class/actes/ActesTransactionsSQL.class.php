@@ -22,12 +22,11 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->query($sql,$id);
 	}
 	
-	public function archiver($transaction_id,$message,$archive_url){
-		$this->updateStatus($transaction_id,12,$message);
+	public function setArchiveURL($transaction_id,$archive_url){
 		$sql = "UPDATE actes_transactions SET archive_url=? " .
     			" WHERE id=?";
 		$this->sqlQuery->query($sql,$archive_url,$transaction_id);
-	}		
+	}
 	
 	public function updateStatus($transaction_id,$status_id,$message,$flux_retour=''){
   	
@@ -50,9 +49,10 @@ class ActesTransactionsSQL {
 	}
 	
 	public function getEnvelopeToDelete(){
-		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id  FROM actes_transactions " .
+		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .
+				" FROM actes_transactions " .
 				" JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
-				" WHERE last_status_id=13 ";
+				" WHERE last_status_id=13 OR last_status_id = 5";
 		return $this->sqlQuery->query($sql);	
 	}
 	

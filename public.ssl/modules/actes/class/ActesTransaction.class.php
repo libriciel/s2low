@@ -1653,7 +1653,6 @@ class ActesTransaction extends DataObject {
     return $result;
    } 
    
-   
 	public function canValidate(){
 		assert('$this->id');
 		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 

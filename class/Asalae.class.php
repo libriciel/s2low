@@ -72,10 +72,6 @@ class Asalae {
 		$this->lastError  = "Code $resultat : {$error[$resultat]}";
 		return false;
 	}
-
-	
-	
-	
 	
 	public function getErrorString($number){
 		$error = array("connexion réussie","identifiant de connexion inconnu","mot de passe incorrect","connecteur non actif");
@@ -84,5 +80,11 @@ class Asalae {
 		}
 		return $error[$number];
 	}
+	
+	public function getURL($wsdl,$cote){
+		$tab = parse_url($wsdl);
+		return "{$tab['scheme']}://{$tab['host']}/archives/viewByArchiveIdentifier/$cote";
+	}
+	
 
 }

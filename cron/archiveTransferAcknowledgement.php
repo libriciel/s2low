@@ -16,11 +16,13 @@ foreach($allTransactions as $transactionInfo){
 	if  ( ! $message ){
 		echo  $asalae->getLastError() ."\n";	
 	} else {
+		$xml = simplexml_load_string($message);
+		$xml_message = utf8_decode(strval($xml->ReplyCode) . " - " . strval($xml->Comment));
 		
-		$msg = "La transaction {$transactionInfo['id']} a été reçu par le SAE ";
+		$msg = "La transaction {$transactionInfo['id']} a été reçu par le SAE : \n$xml_message"; 
 		$actesTransactionsSQL->updateStatus($transactionInfo['id'],15,$msg,$message);
 		
-		Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false);
+		Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$transactionInfo['user_id']);
 	    echo $msg . "\n";
 	}
 }
