@@ -42,11 +42,19 @@ for ($i = 1; $i <= 5; $i++) {
 
 $number = Helpers :: getVarFromPost("number", true);
 $decision_date = Helpers :: getVarFromPost("decision_date", true);
+
+if (strtotime($decision_date) > time()){
+	Helpers :: returnAndExit(1, "La date de décision est une date dans le futur", WEBSITE_SSL );
+}
+
+
 $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
 $batchFileId = Helpers :: getVarFromPost("batchfile");
 $actePDFFile = $_FILES["acte_pdf_file"];
-$actePDFFileSign = $_FILES["acte_pdf_file_sign"];
+if (isset($_FILES["acte_pdf_file_sign"])){
+	$actePDFFileSign = $_FILES["acte_pdf_file_sign"];
+}
 if (isset($_FILES["acte_attachments"])) {
 $acteAttachments = $_FILES["acte_attachments"];
 }
