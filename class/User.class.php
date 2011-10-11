@@ -213,8 +213,8 @@ class User extends DataObject {
 	
 	public function login($login,$password){
 		$this->retrieveInfoFromClientCertificate();
-    	$sql = "SELECT id FROM users WHERE subject_dn='" . $this->subject_dn . "' AND issuer_dn='" . $this->issuer_dn . "'" .
-    			" AND login='$login' AND password='$password'";
+		 $sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
+                        " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";
 	 	$result = $this->db->select($sql);
 		if ($result->isError() || $result->num_row() != 1){
 			$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
