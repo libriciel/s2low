@@ -191,7 +191,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		}
 		$tampon = new TamponPDF($pdf);
 		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-		"Reçu en préfécture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
+		"Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
 		"Affiché le " ));
 		try {
 			$txt =  $tampon->getFileAsString();
