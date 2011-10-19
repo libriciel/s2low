@@ -802,7 +802,7 @@ class User extends DataObject {
 	}
 
 	public function getIdFromLogin($login){
-		$sql = "SELECT id FROM users WHERE users.login='$login'";
+		$sql = "SELECT id FROM users WHERE users.login='".pg_escape_string($login)."' AND subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'";
 		$result = $this->db->select($sql);
 		if ($result->num_row() == 0 ){
 			return false;
