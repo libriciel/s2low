@@ -227,7 +227,7 @@ class Module extends DataObject {
 	$users = array();
 
 	if (! empty($this->id)) {
-	  $sql = "SELECT DISTINCT users.id, users.givenname, users.name, users.email FROM users LEFT JOIN users_perms ON users.id=users_perms.user_id LEFT JOIN modules ON users_perms.module_id=modules.id WHERE modules.id=" . $this->id . " AND (users_perms.perm='RO' OR users_perms.perm='RW')";
+	  $sql = "SELECT DISTINCT users.id, users.givenname, users.name, users.email FROM users LEFT JOIN users_perms ON users.id=users_perms.user_id LEFT JOIN modules ON users_perms.module_id=modules.id WHERE modules.id=" . $this->id . " AND (users_perms.perm='RO' OR users_perms.perm='RW') AND users.status=1";
   	
 	  $result = $this->db->select($sql);
    
