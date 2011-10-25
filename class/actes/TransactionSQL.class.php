@@ -145,7 +145,7 @@ class TransactionSQL {
 		if (! $objet){
 			return;
 		}
-		$this->filter[] = "actes_transactions.subject LIKE ?";
+		$this->filter[] = "actes_transactions.subject ILIKE ?";
 		$this->value[] = "%$objet%";
 	}
 	
