@@ -50,29 +50,38 @@ class MenuHTML  {
 			<?php endif;?>
  		</div>
  		<ul class="text-menu">
- 			
- 			
- 			<?php if ($userInfo['role'] != 'USER') : ?>
- 				<li class="menu-list-title">Administration</li>
- 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_users.php">Gestion des utilisateurs</a></li>
-				<li><a href="<?php echo WEBSITE_SSL ?>/admin/services/admin_services.php">Gestion des services</a></li>	
+ 			<?php if (in_array($userInfo['role'],array('SADM','GADM','ADM'))) : ?>
+ 			<li class="menu-list-title">Administration</li>
  			<?php endif;?>
+ 			
  			<?php if ($userInfo['role'] == 'SADM') : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/admin/modules/admin_modules.php">Gestion des modules</a></li>
 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php\">Gestion des groupes</a></li>
-				<li><a href="<?php echo WEBSITE_SSL ?>/admin/utilities/index.php">Utilitaires système</a></li>
- 			<?php endif;?>
+			<?php endif;?>
  			<?php if (in_array($userInfo['role'],array('SADM','GADM'))) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>
 			<?php endif?>
- 			<?php if ($userInfo['role'] == 'ADM') : ?>
+			<?php if ($userInfo['role'] == 'ADM') : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivité</a></li>
  				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_edit.php?id=<?php echo $userInfo["authority_id"] ?>">Paramètres collectivité</a></li>			
  			<?php endif;?>
- 			
+ 			<?php if ($userInfo['role'] != 'USER') : ?>
+ 				
+ 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_users.php">Gestion des utilisateurs</a></li>
+				<li><a href="<?php echo WEBSITE_SSL ?>/admin/services/admin_services.php">Gestion des services</a></li>	
+ 			<?php endif;?>
+ 		
+ 		
+ 		
+ 			 <?php if ($userInfo['role'] == 'SADM') : ?>			
+				<li><a href="<?php echo WEBSITE_SSL ?>/admin/utilities/index.php">Utilitaires système</a></li>
+ 			<?php endif;?>
  			<?php foreach ($module_admin as $module) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/admin/index.php">Utilitaires module <?php echo $module["name"] ?></a></li>
  			<?php endforeach;?>
+
+	
+
  			
  			<li class="menu-list-title">Modules</li>
  			<?php if (count($modulesInfo) == 0): ?>
