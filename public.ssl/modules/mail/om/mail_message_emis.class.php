@@ -44,7 +44,8 @@ class mail_message_emis extends DataObject {
 		$this->id=md5($email.$type_envois.$now);
 		$this->ack=0;
 		$sql="INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
-		$sql.="('".$this->id."', '".$mail_transaction_id."', '".$email."', '".$type_envois."', '0')";
+		$sql.="('".$this->id."', '".$mail_transaction_id."', ".$this->db->quote($email).", '".$type_envois."', '0')";
+		
 	    return  $this->db->exec($sql);
 	}
 	

@@ -184,10 +184,11 @@ class MailPeer {
   {
   	  if (!empty($mail))
   	  {
-  	  	$sql="SELECT id FROM mail_annuaire WHERE ";
-  	  	$sql.=" mail_address='".$mail."' and authority_id=".$authority_id;
   	  	$db =& DatabasePool::getInstance();
-		$result = $db->select($sql);
+  	  	
+  	  	$sql="SELECT id FROM mail_annuaire WHERE ";
+  	  	$sql.=" mail_address=".$db->quote($mail)." and authority_id=".$authority_id;
+  	  			$result = $db->select($sql);
 		$idArray=$result->get_all_rows();
 		if (count($idArray)>0)
 			return true;

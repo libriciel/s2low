@@ -135,8 +135,7 @@ class Annuaire {
 		$result = $this->bd->select($sql);
 		while ($row = $result->get_next_row()) {
 			if ($row['description']){
-				$tabMail[] = '"'.utf8_encode( $row['description'] ). '" ['.$row['mail_address'].']';
-				//$tabMail[] = $row['mail_address'] . $row['description'];
+				$tabMail[] = '"'. $row['description']  .'" ['.$row['mail_address'].']';
 			} else {
 				$tabMail[] = $row['mail_address'];
 			}			  	
