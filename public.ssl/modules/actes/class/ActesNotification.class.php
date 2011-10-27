@@ -43,6 +43,9 @@ class ActesNotification {
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
+			//envoie du mail au proprietaire de l'acte
+			$this->sendMail($transactionInfo,$transactionInfo['email'],true);
+			//envoie du mail a toutes les adresses renseignees dans defaut
             foreach($defaultBroadcastEmail as $email){              
             	$this->sendMail($transactionInfo,$email,true);
             }
@@ -100,7 +103,7 @@ class ActesNotification {
 				"actes_envelopes.submission_date, actes_transactions_workflow.date, " .
 				"actes_transactions.broadcast_emails, actes_transactions.archive_url, " .
 				"actes_transactions.broadcast_send_sources, authorities.default_broadcast_email, " .
-				" actes_transactions.auto_broadcasted,authorities.name " .
+				" actes_transactions.auto_broadcasted,authorities.name, actes_envelopes.email " .
 				"FROM actes_transactions, actes_envelopes, authorities, actes_transactions_workflow " .
 				" WHERE actes_transactions.envelope_id = actes_envelopes.id " .
 				" AND authorities.siren = actes_envelopes.siren" .
