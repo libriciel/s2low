@@ -104,7 +104,7 @@ $accessHelios=0;
 
 
 		
-if ($authority->getModulePermByName("helios"))
+if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 {
 	$html .=" <tr>\n";
 	$html .= "  <td class=\"td-register\">HELIOS ftp login&nbsp;:</td>\n";
