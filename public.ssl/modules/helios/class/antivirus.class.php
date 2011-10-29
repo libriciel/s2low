@@ -10,11 +10,7 @@ class Antivirus
 	 */
 
  	public static function checkArchiveSanity($path) {
-	/*if ($path || (isset($this->sha1) && ! empty($this->sha1))) {
-	  if (! $path) {
-		$path = HELIOS_FILES_UPLOAD_ROOT . '/' . $this->sha1;
-	  }
-	  */
+
 		$new_file = ANTIVIRUS_TMP_PATH . basename($path);
 		Trace::wrap_exec("cp $path $new_file",$output, $ret);
 		//$r = copy($path, $new_file);

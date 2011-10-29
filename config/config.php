@@ -6,7 +6,7 @@ setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://127.0.0.3");
-define('WEBSITE_SSL', "https://127.0.0.3");
+define('WEBSITE_SSL', "https://192.168.1.5");
 
 define('WEBMASTER', "webmaster@invalid.fr");
 // Adresse du From des emails émis

@@ -5,7 +5,10 @@ require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
+require_once (SITEROOT . '/class/FileUploader.class.php');
 
+
+$errorMsg = "";
 $extraRedirect = "";
 if (empty($_POST)){
 	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ".ini_get("post_max_size") .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
@@ -174,6 +177,9 @@ $env->set("destDir", $dest);
 // lors de l'import de l'un d'eux. On trace les erreurs avec un booléen.
 $fileImportError = false;
 
+$uploader = new FileUploader();
+
+
 // Validation du type des fichiers uploadés
 // Fichier de l'acte
 if (isset ($actePDFFile) || $batchMode) {
@@ -181,17 +187,19 @@ if (isset ($actePDFFile) || $batchMode) {
     $acteFilePath = $zeBatchFile->getAbsoluteFilePath();
     $acteFileName = $zeBatchFile->getDisplayName();
   } else {
-    if (is_uploaded_file($actePDFFile["tmp_name"])) {
-      $acteFilePath = $actePDFFile["tmp_name"];
-      $acteFileName = $actePDFFile["name"];
-    } else {
-      Helpers :: returnAndExit(1, "Envoi de fichier illégal.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
-    }
+  	
+	if (! $uploader->verifOK("acte_pdf_file")){
+		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+	}
+  	
+	$acteFilePath = $actePDFFile["tmp_name"];
+	$acteFileName = $actePDFFile["name"];
+	
   }
 
   $dest_name = $trans->getStdFileName($env);
   if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath)) {
-    $errorMsg = "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
+    $errorMsg .= "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
     $fileImportError = true;
   } else {
     // Ajout de la signature si présente
@@ -220,10 +228,19 @@ if (isset ($actePDFFile) || $batchMode) {
 
 // Fichiers des pièces jointes
 if (isset ($acteAttachments)) {
-  for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
-    if (strlen($acteAttachments["tmp_name"][$i])) {
-      if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
-
+	
+	
+	if (! $uploader->verifOKAll("acte_attachments")){
+		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+	}
+	
+	
+	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
+		if (! strlen($acteAttachments["tmp_name"][$i])){
+			continue;
+		}
+	
+		
         $dest_name = $trans->getStdFileName($env);
         if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i])) {
           $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
@@ -237,11 +254,8 @@ if (isset ($acteAttachments)) {
             }
           }
         }
-      } else {
-        Helpers :: returnAndExit(1, "Envoi de fichier illégal.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
-      }
+      
     }
-  }
 }
 
 // Vérification des signatures éventuelles des fichiers

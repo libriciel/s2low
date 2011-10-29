@@ -22,6 +22,27 @@ class FileUploader {
 		$this->forbidenExtension = array();
 	}
 	
+	
+	public function verifOKAll($formFileName){
+		if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName] ) {
+			$this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
+	  	 	return false;
+		}
+		
+		foreach( $_FILES[$formFileName]['error'] as  $i => $errorCode){
+			if ( $errorCode !=  UPLOAD_ERR_OK  ){
+			 	$this->setErrorMessage($errorCode);
+			 	return false;
+			}
+	
+			if($_FILES[$formFileName]['size'][$i]<=0) {
+				$this->lastError = "Le fichier semble vide";
+				return false;
+			}
+		}		
+		return true;
+	}
+	
 	public function verifOK($formFileName){
 		if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName] ) {
 			$this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
@@ -84,9 +105,24 @@ class FileUploader {
 			case  UPLOAD_ERR_INI_SIZE   :
 				$message = "La taille du fichier excède la taille maximum (".ini_get('upload_max_filesize').")";
 				break;
+			case UPLOAD_ERR_FORM_SIZE : 
+				$message = "Le fichier dépasse la taille limite autorisé par le formulaire";
+				break;
+			case UPLOAD_ERR_PARTIAL: 
+				$message = "Le fichier n'a été que partiellement reçu";
+				break;	
 			case  UPLOAD_ERR_NO_FILE   :
 				$message = "Aucun fichier n'a été présenté"; 
 				break;
+			case UPLOAD_ERR_NO_TMP_DIR: 
+				$message = "Erreur de configuration : le répertoire temporaire n'existe pas";
+				break;
+			case UPLOAD_ERR_CANT_WRITE  : 
+				$message = "Erreur de configuration : Impossible d'écrire dans le répertoire temporaire";
+				break;
+			case UPLOAD_ERR_EXTENSION  : 
+				$message = "Une extension PHP empeche l'upload du fichier!";
+				break;			
 			default: 
 				$message = "Erreur lors du chargement du fichier (code $code)";
 				break;

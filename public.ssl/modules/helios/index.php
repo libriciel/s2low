@@ -1,61 +1,5 @@
 <?php
 
-/*
- * Tedetis - Copyright 2006 Alternance-Soft
- * Module Helios
- * Contributeur : Cristina Pop, Mars 2007 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordées par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concèdants successifs.
- *
- * A cet régard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur autant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
-
-/**
- * \file public.ssl/modules/helios/index.php
- * \brief Page d'accueil du module ACTES
- * \author Cristina.Pop <cpop@alternancesoft.com>
- * \date 19.03.2007
- * 
- *
- * Cette page affiche la liste des transactions du module
- * Helios et permet de les modifier ou d'en créer de nouvelles
- *
- * Modifications :
- * Auteur   Date       Commentaire
- * PEV		10/08/2010 des problemes d'encodage sur les dates. Ligne 241,242,261,262,285,286,304 et 305 : utf8_decode la date.
- */
-
-// Configuration
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 
@@ -84,8 +28,6 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
-
-
 
 
 $fstatus = Helpers :: getVarFromGet("status");
@@ -412,11 +354,11 @@ $html .= "<h2>Liste des fichiers postés</h2>\n";
 //
 if (count($envelopes) > 0) {
    if ($me->isAdmin()) {
-      $owner = new User($envelope["user_id"]);
+      $owner = new User($envelopes[0]["user_id"]);
       $owner->init();
     }
 
-    $sortWay = ($_GET["sortway"] == "asc") ? "desc" : "asc";
+    $sortWay = (isset($_GET['sortway']) && ($_GET["sortway"] == "asc")) ? "desc" : "asc";
 
     //if ($me->isSuper()) {
     //  $zeAuthority = new Authority($owner->get("authority_id"));
