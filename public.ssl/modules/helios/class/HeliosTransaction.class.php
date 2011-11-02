@@ -288,17 +288,15 @@ class HeliosTransaction extends DataObject {
     */
   public function getDocumentList($cond = "") {
     $tmp = "";
-    if (!$this->pagerInit('DISTINCT helios_transactions.id, helios_transactions.user_id, helios_transactions.filename', ' helios_transactions LEFT JOIN users ON helios_transactions.user_id=users.id ', $cond)) {
-      //,$cond)) { //AICI FILTRUL
-      //DISTINCT helios_transactions.id, helios_transactions.user_id, users.name, helios_transactions.filename, helios_transactions_workflow.transaction_id, helios_transactions_workflow.status_id, helios_transactions_workflow.date, helios_transactions_workflow.message ',	   	
-
-      //'DISTINCT actes_envelopes.id, actes_envelopes.user_id, actes_envelopes.siren, actes_envelopes.submission_date, actes_envelopes.department, actes_envelopes.district, actes_envelopes.authority_type_code, actes_envelopes.name, actes_envelopes.telephone, actes_envelopes.email, actes_envelopes.file_path, actes_envelopes.return_mail, actes_envelopes.file_size',
-      // 'actes_envelopes LEFT JOIN actes_transactions ON actes_envelopes.id=actes_transactions.envelope_id LEFT JOIN users ON actes_envelopes.user_id=users.id', $cond)) {
-      return false;
+    if (!$this->pagerInit('DISTINCT helios_transactions.id, helios_transactions.user_id, helios_transactions.filename, authorities.name as authority_name', 
+    			' helios_transactions LEFT JOIN users ON helios_transactions.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id ', 
+    			$cond)) {
+            return false;
     }
 
     return $this->data;
   }
+  
 
   /*
    * \brief Méthode d'obtention du nom d efichier qui correponde à une transaction

@@ -20,13 +20,13 @@ require_once( __DIR__."/../../init/init.php");
 
 define("TMP_PATH","/tmp/");
 
-function sortir($message,$code_erreur = -1){
+function sortir2($message,$code_erreur = -1){
 	echo $message.PHP_EOL;
 	exit($code_erreur);
 }
 
 if ($argc != 2){
-	sortir("Usage:\n {$argv[0]} archive_actes.tar.gz\nou\n{$argv[0]} repository");
+	sortir2("Usage:\n {$argv[0]} archive_actes.tar.gz\nou\n{$argv[0]} repository");
 }
 
 $archive_path = $argv[1];
@@ -37,13 +37,13 @@ $envelopeFile = new EnvelopeFile(__DIR__."/../../xsd/actesv1_1.xsd");
 
 $infoEnvelope = $envelopeFile->getInfo($archive_path);
 if (! $infoEnvelope ){
-	sortir("L'archive n'est pas conforme : " . $envelopeFile->getLastError(),-2);
+	sortir2("L'archive n'est pas conforme : " . $envelopeFile->getLastError(),-2);
 }
 
 print_r($infoEnvelope);
 
 
-sortir("L'archive est conforme",0);
+sortir2("L'archive est conforme",0);
 
 
 

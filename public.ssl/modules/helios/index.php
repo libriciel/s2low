@@ -30,6 +30,14 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 
+$serviceUser = new ServiceUser(DatabasePool::getInstance());
+$collegues = $serviceUser->getMesCollegues($me->getId());
+$collegue[] = $me->getId();
+foreach($collegues as $info){
+	$collegue[] =  $info['id_user'];
+}
+
+
 $fstatus = Helpers :: getVarFromGet("status");
 $fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
 $fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
@@ -301,8 +309,9 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivité
 elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
   $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 } else {
-  // Un utilisateur ne voit que ses propres transactions
-  $filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
+  // Un utilisateur ne voit que ses propres transactions  
+  //$filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
+  $filter[] .= "helios_transactions.user_id IN (".implode(",",$collegue).")";
 }
 
 if (isset ($fstatus) && is_numeric($fstatus)) {
@@ -353,10 +362,10 @@ $html .= "<h2>Liste des fichiers postés</h2>\n";
 
 //
 if (count($envelopes) > 0) {
-   if ($me->isAdmin()) {
+   //if ($me->isAdmin()) {
       $owner = new User($envelopes[0]["user_id"]);
       $owner->init();
-    }
+    //}
 
     $sortWay = (isset($_GET['sortway']) && ($_GET["sortway"] == "asc")) ? "desc" : "asc";
 
@@ -373,20 +382,29 @@ if (count($envelopes) > 0) {
     $html .= "  <th>Nom de fichier</th>\n";
     $html .= "  <th>Date de postage</th>\n";
     $html .= "  <th>Etat actuel</th>\n";
+    $html .= "  <th>Suivie par</th>\n";
+    if ($me->isGroupAdminOrSuper()) {
+		$html .= "  <th>Collectivité</th>\n";
+    }
     $html .= "  <th>Actions</th>\n";
+    
     $html .= " </tr>\n";
 
 
  foreach ($envelopes as $envelope) {
   
       $transaction_id=$envelope["id"];
-
+	
       $html .= "<tr>\n";
  
  
       $html .= " <td>" . $envelope["filename"]. "</td>\n";
       $html .= " <td>" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
-      $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";   
+      $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";
+		$html .= " <td>" . $owner->getPrettyName() . "</td>\n";
+ 		if ($me->isGroupAdminOrSuper()) {
+			$html .= "  <td>". $envelope['authority_name'] ."</td>\n";
+    	}
       $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" .$envelope["id"]. "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Afficher le détail\" /></a></td>\n";
       $html .= "</tr>\n";
     
