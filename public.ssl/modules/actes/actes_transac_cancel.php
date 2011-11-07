@@ -57,7 +57,8 @@ $rel_envelope = new ActesEnvelope($rel_trans->get("envelope_id"));
 $rel_envelope->init();
 
 // Vérification des permissions
-if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $rel_envelope->get("user_id") && $me->canEdit($module->get("name")))) {
+if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) 
+&& ! ($me->getId() == $rel_envelope->get("user_id") && $me->canEdit($module->get("name")))) {
   Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
