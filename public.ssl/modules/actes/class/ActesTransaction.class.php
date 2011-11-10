@@ -636,6 +636,19 @@ class ActesTransaction extends DataObject {
 			$this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF ou XML requis.";
       		return false;
       	}
+      	
+      	if ($ext == "xml"){
+      		if ($this->nature_code != 5){
+      			$this->errorMsg = "Seul les documents budgétaires et financiers peuvent être au format XML.";
+      			return false;
+      		}
+      		if ($this->classif1 != 7 || $this->classif2 != 1){
+      			$this->errorMsg = "Seul la classification 7.1 est autorisé pour la transmission au format XML";
+      			return false;
+      		}      		
+      	}
+      	
+      	
  	  } elseif($type == "attachment") {
  	  	if (! in_array($ext,array('pdf','xml','jpg','png'))){
 			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
