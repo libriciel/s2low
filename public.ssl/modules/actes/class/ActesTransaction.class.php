@@ -654,6 +654,12 @@ class ActesTransaction extends DataObject {
 			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
 			return false;
  	  	}
+ 	  	
+ 	  	if ( $this->files["acte"]['mimetype'] == 'application/xml'){
+ 	  		$this->errorMsg = "Les pièces jointes ne sont pas autorisés avec un acte au format XML";
+ 	  		return false;
+ 	  	}
+ 	  	
       } else {
       	//Ben, dans le code initiale, on fait rien ....
       	//C'est probablement un bug...

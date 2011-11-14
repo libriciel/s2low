@@ -61,7 +61,7 @@ $permission = new ActesPermission($serviceUser);
 
 if ( ! $permission->canView($me,$owner)){
 	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit ();
 }
 
