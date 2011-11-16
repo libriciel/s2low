@@ -199,7 +199,7 @@ $rolesList = $me->get("roleTypes");
 
 foreach ($users as $user) {
   $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-  $html .= " <td>" . $user["givenname"] . " " . $user["name"] . "</td>\n";
+  $html .= " <td>" . $user["name"] . " " . $user["givenname"] . "</td>\n";
   $html .= " <td><a href=\"mailto:" . $user["email"] . "\">" . $user["email"] . "</a></td>\n";
   $html .= " <td>" . $rolesList[$user["role"]] . "</td>\n";
   $html .= " <td>" . $statusList[$user["status"]] . "</td>\n";
