@@ -568,6 +568,7 @@ class ActesEnvelope extends DataObject {
 		
 		if ( $ret != 0 ){
 			$t = Trace::getInstance();
+			$this->errorMsg="Impossible de copier $path vers $new_file";
 			$t->log("Impossible de copier $path vers $new_file",Trace::$TRACE_ERROR);
 			return false;
 		}
@@ -575,7 +576,7 @@ class ActesEnvelope extends DataObject {
 		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
 	 	
 		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . $new_file, $output, $ret);
-		Trace::wrap_exec("rm $new_file",$output, $ret);
+		Trace::wrap_exec("rm $new_file",$output, $ret2);
 		
 
 	  switch ($ret) {

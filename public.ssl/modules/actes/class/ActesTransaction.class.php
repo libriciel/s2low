@@ -581,6 +581,7 @@ class ActesTransaction extends DataObject {
 
     return true;
   }
+  
 
   /**
    * \brief Méthode générique d'ajout d'un fichier
@@ -603,32 +604,26 @@ class ActesTransaction extends DataObject {
     }
 
     if ($validate && $path) {
-      if (!file_exists($path)) {
-        $this->errorMsg = "Fichier non présent : " . basename($path);
-        return false;
-      }
+    	if (!file_exists($path)) {
+			$this->errorMsg = "Fichier non présent : " . basename($path);
+        	return false;
+      	}
 
-      if (!$mimeType = @ mime_content_type($path)) {
-        $this->errorMsg = "Erreur analyse mimetype.";
-        return false;
-      }
-
-      if (!$size = @ filesize($path)) {
-        $this->errorMsg = "Erreur détermination taille fichier.";
-        return false;
-      }
-
+      	if (!$mimeType = @ mime_content_type($path)) {
+        	$this->errorMsg = "Erreur analyse mimetype.";
+        	return false;
+      	}
       
-      $typeA = array('application/pdf' => 'pdf',
+		$typeA = array('application/pdf' => 'pdf',
       					'application/xml' => 'xml',
       					'image/jpeg' => 'jpg',
       					'image/png' => 'png',
-      					);
-      if (isset($typeA[$mimeType])){
-      	$ext = $typeA[$mimeType];
-      } else {
-      	$ext = "";
-      }
+      	);
+		if (isset($typeA[$mimeType])){
+			$ext = $typeA[$mimeType];
+		} else {
+			$ext = "";
+		}
 
       
       if ($type == 'acte'){
@@ -648,7 +643,6 @@ class ActesTransaction extends DataObject {
       		}      		
       	}
       	
-      	
  	  } elseif($type == "attachment") {
  	  	if (! in_array($ext,array('pdf','xml','jpg','png'))){
 			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
@@ -664,7 +658,11 @@ class ActesTransaction extends DataObject {
       	//Ben, dans le code initiale, on fait rien ....
       	//C'est probablement un bug...
       }
-      
+    	
+      	if (!$size = @ filesize($path)) {
+        	$this->errorMsg = "Erreur détermination taille fichier.";
+        	return false;
+      	}
     }
 
     $new_name = $dest_name;
@@ -1016,6 +1014,12 @@ class ActesTransaction extends DataObject {
 
         // Fichier de l'acte
         $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+        
+        if (count($actesItems->Document->NomFichier) != 1 ){
+        	$this->errorMsg = "Impossible de traiter plusieurs document actes";
+        	return false;	
+        }
+        
         if (!$this->addActeFile($actePath, $actePath)) {
           return false;
         }
@@ -1031,6 +1035,7 @@ class ActesTransaction extends DataObject {
         if (isset ($actesItems->Annexes)) {
           foreach ($actesItems->Annexes->Annexe as $annexe) {
             $attachmentPath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($annexe->NomFichier);
+            
             if (!$this->addAttachmentFile($attachmentPath, $attachmentPath)) {
               return false;
             }

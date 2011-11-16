@@ -149,6 +149,7 @@ foreach ($transacs as $trans) {
   $trans->set("user_id",$me->getId());
 	$trans->set("authority_id",$me->get("authority_id"));
 	
+	
   if (! $trans->save()) {
 	$msg = "Erreur lors de l'enregistrement de la transaction.\n" . $trans->getErrorMsg();
 	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
