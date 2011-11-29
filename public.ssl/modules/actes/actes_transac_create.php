@@ -53,6 +53,7 @@ if (strtotime($decision_date) > time()){
 
 $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
+
 $batchFileId = Helpers :: getVarFromPost("batchfile");
 $actePDFFile = $_FILES["acte_pdf_file"];
 if (isset($_FILES["acte_pdf_file_sign"])){
