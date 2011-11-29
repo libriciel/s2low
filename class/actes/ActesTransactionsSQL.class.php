@@ -41,6 +41,12 @@ class ActesTransactionsSQL {
     	$this->sqlQuery->query($sql,$status_id,$transaction_id);
 	}
 	
+	public function getArchiveFStatus($status_id){
+		$sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
+				" WHERE last_status_id=? ";
+		return $this->sqlQuery->query($sql,$status_id);
+	}
+	
 	public function getArchiveFromStatus($status_id){
 		$sql = "SELECT  *,actes_transactions.id as id FROM actes_transactions " .
 				" JOIN authorities ON actes_transactions.authority_id=authorities.id " .

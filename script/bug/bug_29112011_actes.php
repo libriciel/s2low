@@ -11,13 +11,10 @@ require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
-$all = $actesTransactionsSQL->getArchiveFromStatus(1);
+$all = $actesTransactionsSQL->getArchiveFStatus(1);
 
-/* foreach($all as $transactionInfo){ */
-	/* $id = $transactionInfo['id'];*/
-
-	$id = 123;
-	
+ foreach($all as $transactionInfo){ 
+	$id = $transactionInfo['id'];
 	
 	echo "\nAnalyse de la transaction $id ...\n";
 	
@@ -65,7 +62,7 @@ $all = $actesTransactionsSQL->getArchiveFromStatus(1);
 	
 	$cmd = "rm -rf $tmpDir";
 	Trace::wrap_exec($cmd, $status, $ret);
-/* } */
+} 
 
 
 
