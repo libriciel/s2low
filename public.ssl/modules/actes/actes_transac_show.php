@@ -395,7 +395,7 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
   $actionHtml .= "</div>\n";
 }
 
-if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) ) {
+if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->canValidate()) {
 	  
   $actionHtml .= "<div class=\"action\">\n";
   $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
