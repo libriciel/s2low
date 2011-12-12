@@ -62,4 +62,4 @@ if (! $transaction['status'] ){
 }
 
 $transaction['resultat'] = "OK";
-$heliosAPIResponse->display($transaction,"transaction");
+$heliosAPIResponse->displayAndExit($transaction,"transaction");
