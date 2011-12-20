@@ -19,4 +19,11 @@
 	<natures>
 		<nature>org.eclipse.php.core.PHPNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>db/upgrades/tedetis_actes_v1_to_v1.1.sql</name>
+			<type>1</type>
+			<location>/home/pviver/tedetis_actes_v1_to_v1.1.sql</location>
+		</link>
+	</linkedResources>
 </projectDescription>
