@@ -6,6 +6,6 @@
 		<a href="index.php?command=create" class="bouton">Nouveau message</a>
 		<a href="index.php?command=lsit" class="bouton">Messages envoyés</a>
 	</div>
-	<h2>L'envoie a echoué</h2> 
+	<h2>L'envoi a echoué</h2> 
 	
 	<p><?php echo $returnMsg ?></p>
