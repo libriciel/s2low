@@ -24,7 +24,7 @@ $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 ob_start();
 ?>
 <div id="content">
-	<h1>ACTES - Dématèrialisation du contrôle de légalité</h1>
+	<h1>ACTES - Dématérialisation du contrôle de légalité</h1>
 	<h2>Modification des propriétés SAE de <?php echo $authorityInfo['name']?></h2>
 	<a href='admin_authority_edit.php?id=<?php echo $id ?>'>« revenir au formulaire standard</a><br/>
 	<form action='admin_authority_sae_controler.php' method='post'>

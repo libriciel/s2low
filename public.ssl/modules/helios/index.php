@@ -134,7 +134,7 @@ $doc->buildMenu($me);
 
 //deja HELIOS!!!!
 $html = "<div id=\"content\">\n";
-$html .= "<h1>Helios - Dématèrialisation de documents financiers</h1>\n";
+$html .= "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
 
 $status = HeliosTransaction :: getStatusList();
 $status["10"] = "En cours";

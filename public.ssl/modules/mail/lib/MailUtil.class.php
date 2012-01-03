@@ -5,7 +5,7 @@
  * contact@alternancesoft.com
  *
  * Ce logiciel est un programme informatique servant à la
- * dématèrialisation de l'administration. 
+ * dématérialisation de l'administration. 
  *
  * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez

@@ -103,7 +103,7 @@ $doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
 ob_start();
 ?>
 <div id="content">
-	<h1>ACTES - Dématèrialisation du contrôle de légalité</h1>
+	<h1>ACTES - Dématérialisation du contrôle de légalité</h1>
 <?php 
 $listeActesHTML->display($envelopes);
 ?>	
