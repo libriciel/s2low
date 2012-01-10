@@ -275,12 +275,9 @@ Content-Transfer-Encoding: quoted-printable
 		}
 		
 		$html='<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
-				<HTML>
-				<HEAD>
-				  <META HTTP-EQUIV="Content-Type" CONTENT="text/html;>
-				  <META NAME="GENERATOR" CONTENT="GtkHTML/3.12.1">
-				</HEAD>
-				<BODY>';
+<html>
+  <body bgcolor="#ffffff" text="#000000">
+';
 		$html.= "<p>".nl2br($text)."</p>";
 
 		$hdrs = array(
@@ -297,9 +294,13 @@ Content-Transfer-Encoding: quoted-printable
 				echo "<p>mail file number =".$MailFileNumber;"</p>";	
 				echo "$MailEmis->getEmail()";
 	    	}	
-	    	$htmlpart="<p><a href=\"".WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId()."\">Confirmer la réception et lire le courrier en cliquant sur ce lien</a></p>";
-			$htmlpart.="<p>Note de sécurité :</p>
-<p>Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus CLAMAV -</p>";
+	    	$htmlpart='';	
+			$htmlpart.='
+<a href="'.WEBSITE.'/modules/mail/?command=show&mail_emis_id='.$MailEmis->getId().'" >Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
+<p>Note de securite :</p>
+<p>Tous les documents mis a disposition par ce lien ont ete testes par l\'anti-virus CLAMAV -</p>
+';
+
 	    	$htmlpart.='</BODY></HTML>';
 			
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
@@ -316,6 +317,7 @@ Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus
 			$hdrs = $mime->headers($hdrs);
 			
 			$mail =new pearMail();
+			$mail->sep = $crlf;
   			if (!$mail->send($MailEmis->getEmail(), $hdrs, $body,$from)) {
   				
         		return false;
