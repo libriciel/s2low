@@ -79,6 +79,7 @@ class Mailer {
 		$hdrs = $mime->headers($hdrs);
 			
 		$mail =new pearMail();
+		$mail->set = $crlf;
   		if (!$mail->send($recipient, $hdrs, $body,'')) {
   			$this->lastError = "Erreur lors de l'envoi d'un message vers $recipient" ;
         	return false;
