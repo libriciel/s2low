@@ -27,3 +27,4 @@ function sortir($message) {
 	exit;
 };
 
+

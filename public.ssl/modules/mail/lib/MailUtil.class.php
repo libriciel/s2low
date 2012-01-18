@@ -183,41 +183,6 @@ class MailUtil {
  	}
  	
  	/**
- 	 * \brief 	Envoie un mail signé au format smime
- 	 * \param	$to destinataire
- 	 * \param	$subject le sujet du mail
- 	 * \param   $transaction_id l'identifiant de la transaction (ajouter dans le champs X-Tedetis)
- 	 * \param	$body le corps du mail 
- 	 * \return	true si ok false sinon. $this->errorMsg contient le message d'erreur
- 	 */ 	 
- 	public function sendSignedMail($to, $subject,$transaction_id, $body){
- 		$headers = array(
- 			'from' => $this->from,
- 			'X-Tedetis' => $transaction_id
- 		);
- 		
- 		$file = TEDETIS_MAIL_TMP_PATH."msg-$transaction_id.txt";
- 		$file_signature = $file.".smime";
- 		$fp = fopen($file, "w");
- 		$data = 'Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-';
- 		fwrite($fp,$data);
-		fwrite($fp, $body);		
-		fclose($fp);   	
- 		
- 		if (! $this->pkcs7_sign($file,$file_signature,$headers)){
- 			return false;
- 		}
- 
-    	$data = file_get_contents($file_signature);
-    	$parts = explode("\n\n", $data, 2);
-    	mail($to, $subject, $parts[1], $parts[0]);
-    	return true; 		
- 	}
- 	
- 	/**
  	 * \brief 	Signe un fichier $file en PKCS7
  	 * \param	$file le fichier à signer
  	 * \param	$file_signature le fichier résultat
@@ -274,6 +239,7 @@ Content-Transfer-Encoding: quoted-printable
 			}
 		}
 		
+
 		$html='<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
 <html>
   <body bgcolor="#ffffff" text="#000000">
@@ -286,6 +252,8 @@ Content-Transfer-Encoding: quoted-printable
 				'Reply-To' => $this->from,
 				'Return-path' => $this->from
               );
+             
+             
 		    	
 	  	foreach ($MailMessageEmis as $MailEmis )
    		{
@@ -301,7 +269,7 @@ Content-Transfer-Encoding: quoted-printable
 <p>Tous les documents mis a disposition par ce lien ont ete testes par l\'anti-virus CLAMAV -</p>
 ';
 
-	    	$htmlpart.='</BODY></HTML>';
+	    	$htmlpart.='';
 			
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
 			$textpart.="\n -Note de sécurité :
@@ -314,13 +282,14 @@ Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus
 			
 			//do not ever try to call these lines in reverse order
 			$body = $mime->get();
-			$hdrs = $mime->headers($hdrs);
+			$hdrs = $mime->headers($hdrs);	
+			$hdrs['Subject']= "=?ISO-8859-1?Q?".strtr(imap_8bit($this->subject),' ','_')."?=";
+		
 			
 			$mail =new pearMail();
 			$mail->sep = $crlf;
   			if (!$mail->send($MailEmis->getEmail(), $hdrs, $body,$from)) {
-  				
-        		return false;
+	        		return false;
   			}
     	}	
      return true;

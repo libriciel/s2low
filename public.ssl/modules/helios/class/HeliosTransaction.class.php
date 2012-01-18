@@ -618,9 +618,8 @@ class HeliosTransaction extends DataObject {
 		return $trans;
   }
   
-  public function CheckDuplicate()
-  {
-  	$sql .= "select sha1 FROM helios_transactions WHERE sha1='".$this->sha1."'";
+  public function CheckDuplicate() {
+  		$sql = "select sha1 FROM helios_transactions WHERE sha1='".$this->sha1."'";
 	
 		$db =& DatabasePool::getInstance();
 	

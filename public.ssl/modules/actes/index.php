@@ -67,7 +67,7 @@ $envelopes = $transactionSQL->getAll();
 $nb_transactions = $transactionSQL->getNbTransaction();
 
 $transTypes = $transactionSQL->getTypes();
-$transTypes["0"] = "Tous les types";
+$transTypes["all"] = "Tous les types";
 
 $transNatures = $transactionSQL->getNatures();
 

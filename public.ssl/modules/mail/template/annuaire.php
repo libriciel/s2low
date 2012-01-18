@@ -40,7 +40,7 @@ endif;?>
 	 		</div>
 	 		<?php foreach($groupeArray as $groupe):?>
 	 			<div class='normal <?php if($groupe_id == $groupe['id']) echo "selected"?>'>
-	 				<span  ><a href='index.php?command=annuaire&groupe_id=<?php echo $groupe['id'] ?>'><?php echo $groupe['name'] ?></a></span>
+	 				<span  ><a href='index.php?command=annuaire&groupe_id=<?php echo $groupe['id'] ?>'><?php echo$groupe['name'] ?></a></span>
 	 				<span ><?php echo $groupe['nb_contact']?></span>
 	 				
 	 			</div>
@@ -94,7 +94,7 @@ endif;?>
 		<?php foreach ($mailAnnuaireArray as $mailAnnuaire) : ?>
 			<div class='normal' title='<?php echo $mailAnnuaire['mail_address']?>'>
 				<input type="checkbox" name="checkbox_id[]" value="<?php echo $mailAnnuaire['id']; ?>" />
-				<a href='edit-annuaire.php?id=<?php echo $mailAnnuaire['id']?>'><?php echo $mailAnnuaire['description']?$mailAnnuaire['description']:$mailAnnuaire['mail_address']; ?>
+				<a href='edit-annuaire.php?id=<?php echo $mailAnnuaire['id']?>'><?php hecho($mailAnnuaire['description']?$mailAnnuaire['description']:$mailAnnuaire['mail_address']); ?>
 				</a>
 			</div>
 			<?php endforeach?>

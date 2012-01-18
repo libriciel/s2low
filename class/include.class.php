@@ -18,7 +18,9 @@ session_start();
  * Ce fichier à l'air d'être inclu dans tous les scripts S²low
  * 
  */
-
+function hecho($message,$quot_style=ENT_QUOTES){
+	echo htmlspecialchars($message,$quot_style);
+}
 
 //Cette variable est utilisée partout sans être initialisé...
 $html = "";

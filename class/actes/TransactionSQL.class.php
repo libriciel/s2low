@@ -112,7 +112,7 @@ class TransactionSQL {
 	}
 	
 	public function setType($type) {
-		if (! $type){
+		if (! $type || $type == 'all'){
 			return;
 		}
 		$this->filter[] = "actes_transactions.type=?";

@@ -266,10 +266,11 @@ $html .= "<tr>\n";
 
 //collectivité  pour superuser
 $colspan = 4;
-if ($me->isSuper()) {
+if ($me->isGroupAdminOrSuper()) {
   $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
   $cond = " ORDER BY authorities.name ASC";
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
+  
+  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", $me->getAllPossibleAuthority(), $fauthority) . "</td>\n";
 
   $colspan = 2;
 }

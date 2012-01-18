@@ -77,7 +77,7 @@ class Mailer {
         //do not ever try to call these lines in reverse order
 		$body = $mime->get();
 		$hdrs = $mime->headers($hdrs);
-			
+		
 		$mail =new pearMail();
 		$mail->set = $crlf;
   		if (!$mail->send($recipient, $hdrs, $body,'')) {
