@@ -197,7 +197,7 @@ class DataObject {
 	$this->errorMsg = "";
 
 	foreach ($this->dbFields as $name => $attr) {
-	  if ($attr["mandatory"] && (! isset($this->$name) || strlen($this->$name) <= 0)) {
+	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || strlen($this->$name) <= 0)) {
 		$this->errorMsg .= $attr["descr"] . " doit être présent.\n";
 	  } else {
 		if (isset($this->$name) && ! empty($this->$name)) {
