@@ -300,7 +300,7 @@ $html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bo
 
 $filter = array ();
 // Construction chaine de filtrage
-if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivité
+if ($me->isGroupAdminOrSuper()) { // Le super utilisateur voit toutes les collectivité
  //verification $authority
    if (isset ($fauthority) && strlen($fauthority) > 0) {
     $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";

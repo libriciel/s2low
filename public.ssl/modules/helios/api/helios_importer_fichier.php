@@ -87,11 +87,10 @@ try{
 	  $siren=$myAuthority->get('siren');
 	  $ht->set("siren",$siren);
 	  
-	 	if ($ht->CheckDuplicate()== true)
-	 	{
+	 	if ($ht->CheckDuplicate()== true) {
 	 		unlink($uploadfile);
-	  	$errorMsg="doublon détecté. Ce fichier a déjà été posté";
-		  throw new Exception('KO');
+	  		$msg="doublon détecté. Ce fichier a déjà été posté";
+		  	throw new Exception('KO');
 	 	}
 	  //change the upload file name to sha1 to allow duplicate name.
 	  rename($uploadfile,$uploaddir.$SHA1);  
@@ -134,7 +133,7 @@ try{
 catch (Exception $e) {
        $resultatElement->appendChild( $doc->createTextNode( "KO" ) );
 }
-  $messageElement->appendChild( $doc->createTextNode( $msg));	
+  $messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));	
   $doc->save($xmlFile); 
 if (!Helpers::sendFileToBrowser($xmlFile, basename($xmlFile), "text/xml")) {
 	echo "error: impossible de envoyer ce xml "; 
