@@ -35,6 +35,7 @@ class ActesNotification {
 	public function sendNotificationManuel($transactionId){
 		$transactionInfo = $this->getTransactionInfo($transactionId);
 		$this->sendNotification($transactionInfo);
+		$this->deletedirectoryunzip($transactionInfo);
 	}
 	
 	private function sendNotification(array $transactionInfo){
@@ -215,5 +216,26 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		$sql = "UPDATE actes_transactions SET auto_broadcasted = TRUE " .
 					" WHERE actes_transactions.id = " . $transactionId;
 		$this->db->exec($sql);
+	}
+	
+	/**
+	 * La fonction tamponnerTGZ extrait l'enveloppe tgz envoyée au MIOCT
+	 * pour récupérer les pdf et les tamponner. Cette extraction n'est plus utile par 
+	 * la suite. Il faut donc supprimer le dossier. 
+	 */
+	private function deletedirectoryunzip($transactionInfo){
+		$sql = "SELECT file_path " .
+			"FROM actes_transactions LEFT JOIN actes_envelopes " . 
+			"ON actes_transactions.envelope_id=actes_envelopes.id " .
+			"WHERE actes_transactions.id = " .$transactionInfo['transaction_id'] ;
+		$listefichiers=array();
+		$listefichiers = $this->db->fetchAll($sql);
+		foreach($listefichiers as $f){
+			$directory_unzip = $this->filePath . "/" . $f['file_path']."_unzip";
+			if (file_exists($directory_unzip)){
+				$cmd = "rm -r $directory_unzip";
+                Trace::wrap_exec($cmd, $status, $ret);	
+			}
+		}
 	}
 }
