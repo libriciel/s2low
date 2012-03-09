@@ -236,10 +236,16 @@ class User extends DataObject {
 		if ( ! isset($_SERVER['SSL_CLIENT_VERIFY']) || $_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
 		}
-	
+		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
+        	return false;
+        }
+        
 		// Si l'utilisateur est authentifié par certificat
 		$this->subject_dn = $_SERVER['SSL_CLIENT_S_DN'];
-	    $this->issuer_dn = $_SERVER['SSL_CLIENT_I_DN'];		
+	    $this->issuer_dn = "";
+        foreach ($tab['issuer'] as $key => $val) {
+        	$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
+		}	
 	}
 	
   /**
@@ -703,7 +709,7 @@ class User extends DataObject {
 
 	  $this->issuer_dn = "";
 	  foreach ($tab['issuer'] as $key => $val) {
-		$this->issuer_dn .= "/" . $key . "=" . $val;
+		$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
 	  }
 
       $this->subject_dn = $tab["name"];
