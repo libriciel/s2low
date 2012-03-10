@@ -119,6 +119,7 @@ class ActesEnvelope extends DataObject {
   	
 	$this->envXmlFile = $this->destDir . "/" . ACTES_APPLI_NAME . "--" . $this->siren . '--' . date('Ymd') . '-' . $serial . '.xml';
 
+
 	$xml  = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
     $xml .= "<actes:EnveloppeCLMISILL xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\" ";
     $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ";
@@ -226,6 +227,7 @@ class ActesEnvelope extends DataObject {
 		$this->file_path = dirname($this->envXmlFile) . "/" . ACTES_APPLI_TRIGRAMME . '-' . preg_replace("/^(.*)\.([^.]+)$/", "\${1}", basename($this->envXmlFile)) . '.tar.gz';
 	  }
 
+
 	  if (count($this->transactions) > 0) {
 		// En cas d'importation on remet dans l'archive tous les fichiers présents à l'origine
 		// (qui se trouvent dans tmpDir)
@@ -234,6 +236,9 @@ class ActesEnvelope extends DataObject {
 		}
 
 		$filesDir = $this->rootDir . "/" . $this->destDir;
+		
+		
+		
 		$filesDir .= (empty($this->tmpDir)) ? "" : "/" . $this->tmpDir;
 
 		if (! chdir($filesDir)) {

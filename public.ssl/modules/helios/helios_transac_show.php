@@ -126,7 +126,7 @@ if (count($workflow) > 0) {
   foreach ($workflow as $stage) {
 	$html .= " <tr>\n";
 	$html .= "  <td>" . $status[$stage["status_id"]] ;
-  	if($stage["status_id"] == 4 || $stage["status_id"] == 6 )
+  	if($stage["status_id"] == 4 || $stage["status_id"] == 6  || $stage["status_id"] == 8)
        $html .= " <a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_acquit.php?id=" .$id. "\" title=\"Télécharger l'acquittement\">voir</a> </h3>";
     $html .= "</td>\n";
 	$html .= "  <td>" . Helpers::getDateFromBDDDate($stage["date"], true) . "</td>\n";

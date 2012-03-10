@@ -129,6 +129,7 @@ if ($me->get("telephone")) {
   $telephone = $myAuthority->get("telephone");
 }
 
+
 // Initialisation de l'enveloppe
 $env->set("user_id", $me->getId());
 $env->set("siren", $myAuthority->get("siren"));
@@ -171,6 +172,9 @@ if (!$trans->isUnique($myAuthority->getId())) {
 
 // Destination de création des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
+
+
+
 $trans->set("destDir", $dest);
 $env->set("destDir", $dest);
 

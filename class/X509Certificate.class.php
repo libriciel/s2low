@@ -11,15 +11,22 @@ class X509Certificate {
 		if ($_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
 		}
+		
+		$result['subject'] = $_SERVER['SSL_CLIENT_S_DN'];
+		
+		if (empty($_SERVER['SSL_CLIENT_CERT'])){
+			$result['issuer'] = $_SERVER['SSL_CLIENT_I_DN'];
+			return $result;
+		}
+		
 		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
-       	return false;
+       		return false;
         }
  
         $result['issuer'] = "";
         foreach ($tab['issuer'] as $key => $val) {
  	       $result['issuer'] .= "/" . $key . "=" . utf8_decode($val);
         }
-		$result['subject'] = $_SERVER['SSL_CLIENT_S_DN'];
 		return $result;		
 	}
 	
