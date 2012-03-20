@@ -63,7 +63,7 @@ try{
 		$pes_retourElement->appendChild($doc->createElement("date",$envelope["date"]));
 		$root->appendChild($pes_retourElement);
 	}
-	$msg="list réussi";
+	$msg="liste réussi";
 }
 catch (Exception $e) {
     $resultatElement->appendChild( $doc->createTextNode( "KO" ));
