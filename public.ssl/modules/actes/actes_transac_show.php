@@ -5,6 +5,8 @@ require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesPermission.class.php');
 
+require_once( __DIR__ . "/../../../init/init-www-actes.php");
+
 $actionHtml = "";
 
 // Instanciation du module courant
@@ -395,7 +397,12 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
   $actionHtml .= "</div>\n";
 }
 
-if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->canValidate()) {
+$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
+$transactionsInfo = $actesTransactionsSQL->getInfo($trans->getId());
+$authoritySQL = new AuthoritySQL($sqlQuery);
+$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
+
+if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->canValidate() && $authorityInfo['sae_wsdl']) {
 	  
   $actionHtml .= "<div class=\"action\">\n";
   $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
