@@ -347,7 +347,7 @@ $html .= "     <label>Emission des documents sources : <input type=\"checkbox\" 
 
 foreach ($broadcast_email as $email) {
   if ($defaut) {
-    $checked = 'checked="checked"';
+    $checked = 'checked="checked" disabled="disabled"';
     $defaut = false;
   } else
     $checked = '';

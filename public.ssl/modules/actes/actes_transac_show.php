@@ -358,7 +358,7 @@ if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWr
 
     foreach ($broadcast_email as $email) {
       if ($defaut) {
-        $checked = 'checked="checked"';
+        $checked = 'checked="checked" disabled="disabled"';
         $defaut = false;
       } else
         $checked = '';
