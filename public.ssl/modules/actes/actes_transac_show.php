@@ -343,12 +343,10 @@ if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWr
     
 
     $org = new Authority($me->get("authority_id"));
-    $broadcast_email = $org->get("default_broadcast_email");
-    if ($broadcast_email != NULL) {
-      $broadcast_email .= ",";
-      $defaut = true;
-    } else
-      $defaut = false;
+    $defaultbroadcast_email = $org->get("default_broadcast_email");
+    if ($defaultbroadcast_email != NULL)
+        $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
+
 
     $broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
     $broadcast_email = explode(",", $broadcast_email);
@@ -358,15 +356,19 @@ if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWr
     $actionHtml .= "<p><input type=\"submit\" class=\"submit_button\" value=\"Notifier la transaction\" /><br/>\n";
     $actionHtml .= "      <label>Emission des documents sources : <input type=\"checkbox\" class=\"checkbox\" name=\"send_sources\" checked='checked' /></label><br/>\n";
 
+	foreach ($defaultbroadcast_email as $email) {
+    	$checked = 'checked="checked" disabled="disabled"';
+    	if ($email != "" && $email != NULL)
+        	$actionHtml .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+	}
+
     foreach ($broadcast_email as $email) {
-      if ($defaut) {
-        $checked = 'checked="checked" disabled="disabled"';
-        $defaut = false;
-      } else
         $checked = '';
       if ($email != "" && $email != NULL)
         $actionHtml .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
     }
+
+    
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "</p></form>\n";
     $actionHtml .= "</div>\n";

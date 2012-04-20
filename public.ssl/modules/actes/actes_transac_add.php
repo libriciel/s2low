@@ -331,13 +331,11 @@ $html .= "   <dd id=\"attachments_fields\"></dd>\n";
 
 // adresses emails de diffusion
 $org = new Authority($me->get("authority_id"));
-$broadcast_email = $org->get("default_broadcast_email");
-if ($broadcast_email != NULL) {
-  $broadcast_email .= ",";
-  $defaut = true;
-} else
-  $defaut = false;
+$defaultbroadcast_email = $org->get("default_broadcast_email");
+if ($defaultbroadcast_email != NULL)
+  $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
   
+
 $broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
 
@@ -345,11 +343,13 @@ $html .= "     <dt>Diffusion automatique de la notification : <input type=\"chec
 $html .= "     <dd><div id=\"broadcast_email\" style=\"visibility:visible\">\n";
 $html .= "     <label>Emission des documents sources : <input type=\"checkbox\" class=\"checkbox\" name=\"send_sources\" checked='checked' /></label><br/>\n";
 
-foreach ($broadcast_email as $email) {
-  if ($defaut) {
+foreach ($defaultbroadcast_email as $email) {
     $checked = 'checked="checked" disabled="disabled"';
-    $defaut = false;
-  } else
+    if ($email != "" && $email != NULL)
+                $html .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+}
+
+foreach ($broadcast_email as $email) {
     $checked = '';
     if ($email != "" && $email != NULL)
   		$html .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
