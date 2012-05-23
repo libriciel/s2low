@@ -282,9 +282,7 @@ Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus
 			
 			//do not ever try to call these lines in reverse order
 			$body = $mime->get();
-			$hdrs = $mime->headers($hdrs);	
-			$hdrs['Subject']= "=?ISO-8859-1?Q?".strtr(imap_8bit($this->subject),' ','_')."?=";
-		
+			$hdrs = $mime->headers($hdrs);			
 			
 			$mail =new pearMail();
 			$mail->sep = $crlf;
