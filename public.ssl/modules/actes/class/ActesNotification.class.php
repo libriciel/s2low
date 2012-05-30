@@ -224,6 +224,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 	 * la suite. Il faut donc supprimer le dossier. 
 	 */
 	private function deletedirectoryunzip($transactionInfo){
+		chdir(TEDETIS_TMP_PATH);
 		$sql = "SELECT file_path " .
 			"FROM actes_transactions LEFT JOIN actes_envelopes " . 
 			"ON actes_transactions.envelope_id=actes_envelopes.id " .
