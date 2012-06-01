@@ -83,6 +83,18 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+
+$html .= "<h2>V1.2.2 du 01.06.2012<h2>";
+$html .= "<ul>";
+$html .= "<li>Module ACTES : les PDFs optimisés sont pris en comptes pour apposer le cartouche/tampon";
+$html .= "<li>Module ACTES : les adresses mails par défaut ne sont plus décochables";
+$html .= "<li>Module ACTES : le bouton versement SEDA s'affiche uniquement lorsque la collectivité est paramétrée";
+$html .= "<li>Module MAIL : la limite du nombre de caractères pour les adresses mails du carnet d'adresses est passée de 50 à 100.";
+$html .= "<li>Module ACTES : correction bug : la suppression des fichiers temporaires entrainaient un warning dans les logs";
+$html .= "<li>Module MAIL : correction bug : les sujets des mails dépassant 74 caractères subissaient un problème d'encodage ";
+$html .= "<li>Module HELIOS : correction bug : le mot list est remplacé par liste";
+$html .= "</ul>";
+
 $html .= "<h2>V1.2.1 du 20.03.2012</h2>";
 $html .= "<ul><li>Module ACTES et MAIL : correction bug : modification des entêtes des mails envoyés pour ne plus avoir de BAD HEADER";
 $html .= "<li>Module HELIOS : correction bug : en cas d erreur à lors de la transmis d un flux, un message indiquant le problème est fourni";
