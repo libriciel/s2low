@@ -91,6 +91,7 @@ $html .= "<li>Module ACTES : les adresses mails par défaut ne sont plus décochab
 $html .= "<li>Module ACTES : le bouton versement SEDA s'affiche uniquement lorsque la collectivité est paramétrée";
 $html .= "<li>Module MAIL : la limite du nombre de caractères pour les adresses mails du carnet d'adresses est passée de 50 à 100.";
 $html .= "<li>Module ACTES : correction bug : la suppression des fichiers temporaires entrainaient un warning dans les logs";
+$html .= "<li>Module ACTES : correction bug : lors de la réception d'un courrier Ministèriel, celui est désormais rattaché au propriétaire de l'acte concerné";
 $html .= "<li>Module MAIL : correction bug : les sujets des mails dépassant 74 caractères subissaient un problème d'encodage ";
 $html .= "<li>Module HELIOS : correction bug : le mot list est remplacé par liste";
 $html .= "</ul>";
