@@ -99,32 +99,39 @@ class ActesIncludedFile extends DataObject {
 		  $browserName = $this->filename;
 		}
 
+                $pdftkise='/tmp/' .$this->filename;
 		$path_parts = pathinfo($this->filename);
 		
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
 				
-			
-			$transactionId = $this->get("transaction_id");
-			$actesNotification = new ActesNotification($this->db);
-			$transactionInfo = $actesNotification->getTransactionInfo($transactionId);
-			set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-			require_once(SITEROOT."/class/TamponPDF.class.php");
-			
-			try {	
-				$pdf = Zend_Pdf::load($tmpDir . "/" .$this->filename);
-	
-				$tampon = new TamponPDF($pdf);
-				$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-				"Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-				"Affiché le " ));
-				$tampon->setNameFile($this->filename);
-				$tampon->render();
-			} catch (Exception $e){
-				Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype);
-			}
-		
-		} else 	if (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
+			$cmdpdftk='pdftk '. $tmpDir . '/' .$this->filename." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
+                        Trace::wrap_exec($cmdpdftk, $status, $ret);
+                        if ($status === false || $ret != 0) {
+                                $this->errorMsg = "Erreur lors de la convertion via pdftk (code " . $ret . ")";
+                                $ret_value = false;
+                        }
+                        else{
+                            $transactionId = $this->get("transaction_id");
+                            $actesNotification = new ActesNotification($this->db);
+                            $transactionInfo = $actesNotification->getTransactionInfo($transactionId);
+                            set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
+                            require_once(SITEROOT."/class/TamponPDF.class.php");
+
+                            try {	
+                                    $pdf = Zend_Pdf::load($pdftkise);
+
+                                    $tampon = new TamponPDF($pdf);
+                                    $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
+                                    "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
+                                    "Affiché le " ));
+                                    $tampon->setNameFile($this->filename);
+                                    $tampon->render();
+                            } catch (Exception $e){
+                                    Helpers::sendFileToBrowser($pdftkise, $browserName, $this->filetype);
+                            }
+                        }
+		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
 		  $this->errorMsg = "Erreur envoi fichier";
 		  $ret_value = false;
 		}
@@ -134,6 +141,11 @@ class ActesIncludedFile extends DataObject {
 		  $this->errorMsg = "Erreur suppression fichier";
 		  $ret_value = false;
 		}
+                
+                if (! unlink($pdftkise)) {
+                  $this->errorMsg = "Erreur suppression du fichier modifie par pdftk";
+                  $ret_value = false;
+                }
 	  }
 
 	  // Suppression du répertoire temporaire
