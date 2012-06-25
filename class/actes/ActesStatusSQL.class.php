@@ -2,7 +2,7 @@
 
 class ActesStatusSQL {
 	
-	public function __construct($sqlQuery){
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
 	
@@ -14,5 +14,5 @@ class ActesStatusSQL {
 		}
 		return $result;
 	}
-	
+
 }

@@ -62,4 +62,36 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->query($sql);	
 	}
 	
+		
+	public function getNextNumeroTransfert(){
+		$sql = "SELECT count(*) + 1 FROM actes_transactions_workflow WHERE status_id=? AND date(date) = date(now());";
+		return $this->sqlQuery->queryOne($sql,12);
+	}
+	
+	public function getRelatedTransaction($id){
+		$result = array();
+		$sql = "SELECT * ".
+  				" FROM actes_transactions ". 
+  				" WHERE related_transaction_id=?";
+		foreach($this->sqlQuery->query($sql,$id) as $line){
+			$result[] = $line;
+			$result = array_merge($result,$this->getRelatedTransaction($line['id']));
+		}
+		return $result;
+	}
+	
+	public function getLatestDate($id){
+		$all_id = array($id);
+		$relatedTransaction = $this->getRelatedTransaction($id);
+		foreach($relatedTransaction as $transaction){
+			$all_id[] = $transaction['id'];
+		}
+		$sql = "SELECT max(date) " .
+				" FROM actes_transactions_workflow " .
+				" WHERE status_id IN (4,11,7) " .
+				" AND transaction_id IN (".implode(",",$all_id).")";
+		return $this->sqlQuery->queryOne($sql);
+	}
+	
+	
 }

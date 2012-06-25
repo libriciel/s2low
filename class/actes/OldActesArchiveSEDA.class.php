@@ -1,8 +1,5 @@
 <?php 
 
-//Conforme aux demandes du CG86
-//Document utilisé : profil_actes_juin2012.ods
-
 class ActesArchiveSEDA {
 	
 	private $lastError;
@@ -17,19 +14,10 @@ class ActesArchiveSEDA {
 	private $annexe;
 	private $arActes;
 	
-	private $numero_transfert;
-	
-	private $relatedTransaction;
-	private $latestDate;
 	
 	public function __construct($tmpFolder){
 		$this->tmpFolder = $tmpFolder;
 		$this->file2Add = array();
-		$this->annexe=array();
-	}
-	
-	public function setNumeroTransfert($numero_transfert){
-		$this->numero_transfert = $numero_transfert;
 	}
 	
 	public function getLastError(){
@@ -45,10 +33,6 @@ class ActesArchiveSEDA {
 		$this->file2Add[] = $actesFileName;
 	}
 	
-	public function setLatestDate($latestDate){
-		$this->latestDate = $latestDate;
-	}
-	
 	public function setTransactionStatusInfo(array $actesTransactionsStatusInfo){
 		$this->actesTransactionsStatusInfo = $actesTransactionsStatusInfo;
 		$this->arActes = "ARActes-{$actesTransactionsStatusInfo['transaction_id']}.xml";
@@ -61,15 +45,6 @@ class ActesArchiveSEDA {
 		$this->file2Add[] = $annexeFileName;
 	}
 
-	public function addRelatedTransaction($relatedTransaction,array $all_file){
-		foreach($all_file as $f){
-			$this->file2Add[] = $f[0];
-			$relatedTransaction['file_name'] = $f[0];
-			$relatedTransaction['file_type'] = $f[1]; 
-		}
-		$this->relatedTransaction[] = $relatedTransaction;
-	}
-	
 	public function getArchive(){
 		$fileName = uniqid().".tar.gz";
 		$command = "tar cvzf {$this->tmpFolder}/$fileName --directory {$this->tmpFolder} " . implode(" ",$this->file2Add);
@@ -86,66 +61,43 @@ class ActesArchiveSEDA {
 		$archiveTransfer['xmlns'] = "fr:gouv:ae:archive:draft:standard_echange_v0.2";
 		$archiveTransfer->Comment = "Transfert d'un acte soumis au contrôle de légalité";
 		$archiveTransfer->Date = date('c');//"2011-08-12T11:03:32+02:00";
-		$archiveTransfer->TransferIdentifier = $this->authorityInfo['sae_numero_aggrement'] ."-". date("Y-m-d") ."-".$this->numero_transfert;
-		$archiveTransfer->TransferIdentifier['schemeAgencyName'] = "S²LOW - ADULLACT";
+		$archiveTransfer->TransferIdentifier = $transactionsInfo['unique_id'];
+		$archiveTransfer->TransferIdentifier['schemeName'] = "Codification interne";
 		
-		$archiveTransfer->TransferringAgency->Identification = $this->authorityInfo['sae_id_versant']; 
-		/*$archiveTransfer->TransferringAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->TransferringAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->TransferringAgency->Name = "S²low - ADULLACT";*/
-		
+		$archiveTransfer->TransferringAgency->Identification = $this->authorityInfo['sae_id_versant'];
 		
 		$archiveTransfer->ArchivalAgency->Identification = $this->authorityInfo['sae_id_archive'];
-		
-		/*$archiveTransfer->ArchivalAgency->Identification = $this->authorityInfo['siren'];
-		$archiveTransfer->ArchivalAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->ArchivalAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->ArchivalAgency->Name = $this->authorityInfo['name'];*/
 		
 		foreach($this->file2Add as $i => $fileName){
 			$archiveTransfer->Integrity[$i]->Contains = sha1_file($this->tmpFolder.$fileName);
 			$archiveTransfer->Integrity[$i]->UnitIdentifier = $fileName;
 		}
 		
-		
 		$archiveTransfer->Contains->ArchivalAgreement = $this->authorityInfo['sae_numero_aggrement'];
 		$archiveTransfer->Contains->ArchivalAgreement['schemeName'] = "Convention de transfert";
-		$archiveTransfer->Contains->ArchivalAgreement['schemeAgencyName'] = "S²LOW - ADULLACT";
+		$archiveTransfer->Contains->ArchivalAgreement['schemeAgencyName'] = $this->authorityInfo['name'];
 		
-		$archiveTransfer->Contains->ArchivalProfile = "ACTES";
+		$archiveTransfer->Contains->ArchivalProfile = "ACTES 1.4";
 		$archiveTransfer->Contains->ArchivalProfile['schemeName'] = "Profil de données";
-		$archiveTransfer->Contains->ArchivalProfile['schemeAgencyName'] = "Profil élaboré par les Archives départementales de l'Aube, validé par le SIAF et mis en oeuvre sur la plateforme S2LOW.";
 		
 		$archiveTransfer->Contains->DescriptionLanguage = "fr";
 		$archiveTransfer->Contains->DescriptionLanguage['listVersionID'] = "edition 2009";
 		$archiveTransfer->Contains->DescriptionLevel = "file";
 		$archiveTransfer->Contains->DescriptionLevel['listVersionID'] = "edition 2009";
+		$archiveTransfer->Contains->Name = $transactionsInfo['unique_id'];
 		
-		$archiveTransfer->Contains->Name = "Contrôle de légalité : " . $transactionsInfo['nature_descr'] . 
-											", en date du " .
-											date('d/m/Y',strtotime($transactionsInfo['decision_date'])) .
-											", ".
-											$this->authorityInfo['name'];
-		
-		$archiveTransfer->Contains->ContentDescription->CustodialHistory = " Actes dématérialisés soumis au contrôle de légalité télétransmis via la plateforme S2LOW de l'ADULLACT pour ".$this->authorityInfo['name'].". Les données archivées sont structurées selon le schéma métier Actes (Aide au contrôle de légalité dématérialisé) établi par le Ministère de l'intérieur, de l'outre mer et des collectivités territoriales. La description a été établie selon les règles du standard d'échange de données pour l'archivage version 0.2";
+		$archiveTransfer->Contains->ContentDescription->CustodialHistory = "Actes dématérialisés soumis au contrôle de légalité, les données archivées sont structurées selon le schéma Actes (Aide au contrôle de légalité dématérialisé) établi par le ministère de l'intérieur, de l'outre mer et des collectivités territoriales. La description a été établie selon les règles du standard d'échange de données pour l'archivage version 0.2";
 			
 		$archiveTransfer->Contains->ContentDescription->Description = $transactionsInfo['subject'];
 		
 		$archiveTransfer->Contains->ContentDescription->Language = "fr";
 		$archiveTransfer->Contains->ContentDescription->Language['listVersionID'] = "edition 2009";
 		
-		$archiveTransfer->Contains->ContentDescription->LatestDate = date('Y-m-d',strtotime($this->latestDate));
+		$archiveTransfer->Contains->ContentDescription->LatestDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
 		$archiveTransfer->Contains->ContentDescription->OldestDate = date('Y-m-d',strtotime($transactionsInfo['decision_date']));
 		
-		/*$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->authorityInfo['siren'];
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Name =  $this->authorityInfo['name'];*/
-		
 		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->authorityInfo['sae_originating_agency'];
-		
-		
-		
+	
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordContent = $this->authorityInfo['name'];
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference = $this->authorityInfo['siren'];
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference['schemeName'] = "SIRENE";
@@ -156,7 +108,7 @@ class ActesArchiveSEDA {
 		
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordContent = "Contrôle de légalité";
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
-		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeAgencyName'] = "Direction des Archives de France";	
+		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeAgencyName'] = "Direction des archives de france";	
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordReference['schemeVersionID'] = "version 2009";			
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[1]->KeywordType = "subject";
@@ -174,75 +126,67 @@ class ActesArchiveSEDA {
 		if ($transactionsInfo['classification'][0] != 9 ){
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordContent = $this->getSujetActes($transactionsInfo['classification']);
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeName'] = "Thésaurus pour la description et l'indexation des archives locales anciennes, modernes et contemporaines_liste d'autorité Actions";
-			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeAgencyName'] = "Direction des Archives de France";	
+			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeAgencyName'] = "Direction des archives de france";	
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeDataURI'] = "http://www.archivesdefrance.culture.gouv.fr/gerer/classement/normesoutils/thesaurus/";	
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordReference['schemeVersionID'] = "version 2009";			
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordType = "subject";
 			$archiveTransfer->Contains->ContentDescription->ContentDescriptive[3]->KeywordType["listVersionID"] = "edition 2009";	
 		}
 		
-		$archiveTransfer->Contains->Appraisal->Code = "conserver";
+		$archiveTransfer->Contains->Appraisal->Code = "detruire";
 		$archiveTransfer->Contains->Appraisal->Code['listVersionID'] = "edition 2009";
-		$archiveTransfer->Contains->Appraisal->Duration = "P1Y";
-		$archiveTransfer->Contains->Appraisal->StartDate = date('Y-m-d',strtotime($this->latestDate));
-
+		$archiveTransfer->Contains->Appraisal->Duration = $this->getDuration($transactionsInfo['nature_code']);
+		$archiveTransfer->Contains->Appraisal->StartDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
+	
+		
 		$archiveTransfer->Contains->AccessRestriction->Code = $this->getAccessRestriction($transactionsInfo['classification'],$transactionsInfo['nature_code']);
 		$archiveTransfer->Contains->AccessRestriction->Code['listVersionID'] = "edition 2009";
-		$archiveTransfer->Contains->AccessRestriction->StartDate = date('Y-m-d',strtotime($this->latestDate));
+		$archiveTransfer->Contains->AccessRestriction->StartDate = date('Y-m-d',strtotime($this->actesTransactionsStatusInfo['date'] ." + 2 month"));
 		
+			
+		$archiveTransfer->Contains->Contains[0] = $this->getContainsElement("Transmission d'un acte soumis au contrôle de légalité");
+		$archiveTransfer->Contains->Contains[0]->Contains[0] = $this->getContainsElementWithDocument("Actes",array($this->actesFileName));
 		
-		$archiveTransfer->Contains->Contains[0] = $this->getDL("Contains","Acte soumis au contrôle de légalité", $transactionsInfo['id']);
-		
-		$archiveTransfer->Contains->Contains[0]->Contains[0]->DescriptionLevel="item";
-		$archiveTransfer->Contains->Contains[0]->Contains[0]->DescriptionLevel['listVersionID']="edition 2009";
-		$archiveTransfer->Contains->Contains[0]->Contains[0]->Name="Acte";
-		
-		$archiveTransfer->Contains->Contains[0]->Contains[0]->Document = $this->getDocument($this->actesFileName, "application/pdf",false,"Acte");
-		
-		if ($this->annexe) {
-			$c = $this->getDL("Contains","Annexe(s) d'un acte soumis au contrôle de légalité");
-			foreach($this->annexe as $i => $annexe){
-				$c->Document[$i] = $this->getDocument($annexe[0],$annexe[1],false,"Annexe n° ".($i+1));
-			}
-			$archiveTransfer->Contains->Contains[0]->Contains[] =  $c;
+		if($this->annexe){
+			$archiveTransfer->Contains->Contains[0]->Contains[] = $this->getContainsElementWithDocument("Annexe(s) d'un acte soumis au contrôle de légalité",$this->annexe);
 		}
-		$c = $this->getDL("Contains","Accusé de réception d'un acte soumis au contrôle de légalité",$transactionsInfo['id']);
-		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date']);
-		$archiveTransfer->Contains->Contains[0]->Contains[] = $c;
+
+		$arActes = $this->getContainsElementWithDocument("Accusé de réception d'un acte soumis au contrôle de légalité",
+															array($this->arActes),
+															$this->actesTransactionsStatusInfo['date']
+															);
+		
+		unset($arActes->Document[0]->Attachment['mimeCode']);
+		$archiveTransfer->Contains->Contains[0]->Contains[] = $arActes;
 		
 		return $archiveTransfer->asXML();
 	}
 	
-	
-	public function getDL($node_name,$name,$id = false){
-		$node = new ZenXML($node_name);
-		$node->DescriptionLevel = "file"; 
-		$node->DescriptionLevel['listVersionID'] = "edition 2009";
-		$node->Name =$name;
-		if ($id !== false ){
-			$node->TransferringAgencyObjectIdentifier = $id;
-			$node->TransferringAgencyObjectIdentifier['schemeAgencyName'] = "Ministère de l'intérieur, de l'outre-mer et des collectivités territoriales";
+	private function getContainsElementWithDocument($description,array $allFileInfo,$receiptDate = false){
+		$contains = new ZenXML("Contains");
+		$contains->DescriptionLevel = "item";
+		$contains->DescriptionLevel['listVersionID'] = "edition 2009";
+		$contains->Name =  $description ;
+		foreach($allFileInfo as $i => $fileInfo){
+			if (is_array($fileInfo)){
+				$fileName = $fileInfo[0];
+				$fileType = $fileInfo[1];
+			} else  {
+				$fileName = $fileInfo;
+				$fileType = "application/pdf";
+			}
+			$contains->Document[$i]->Attachment['mimeCode'] = $fileType;
+			$contains->Document[$i]->Attachment['filename'] = $fileName;
+			$contains->Document[$i]->Control = "false";
+			$contains->Document[$i]->Copy = "true";
+			$contains->Document[$i]->Description = "Acte";
+			if ($receiptDate) {
+				$contains->Document[$i]->Receipt = date('c',strtotime($receiptDate));
+			}
+			$contains->Document[$i]->Type = "CDO";
+			$contains->Document[$i]->Type["listVersionID"] = "edition 2009";
 		}
-		return $node;
-	}
-	
-	private function getDocument($filename,$mimetype,$receipt = false,$description = false){
-		$document = new ZenXML("Document");
-		//$document->Attachment = $mimetype;
-		$document->Attachment['mimeCode'] = $mimetype;
-		$document->Attachment['filename'] = $filename;
-		$document->Control = "false";
-		if ($receipt){
-			$document->Receipt = date("c",strtotime($receipt));
-		}
-		//$document->Copy = "false";
-		if ($description !== false){
-			$document->Description = $description;
-		}		
-		$document->Type = "CDO";
-		$document->Type["listVersionID"] = "edition 2009";
-		
-		return $document;
+		return $contains;
 	}
 	
 	public function getContainsElement($description){

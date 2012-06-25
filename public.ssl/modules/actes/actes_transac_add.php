@@ -336,7 +336,7 @@ if ($defaultbroadcast_email != NULL)
   $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
   
 
-$broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
+$broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
 
 $html .= "     <dt>Diffusion automatique de la notification : <input type=\"checkbox\" checked=\"checked\" name=\"show_broadcast_email\" onclick=\"hide_bloc('broadcast_email');\"/></dt>\n";

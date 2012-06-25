@@ -348,7 +348,7 @@ if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWr
         $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
 
 
-    $broadcast_email .= ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
+    $broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
     $broadcast_email = explode(",", $broadcast_email);
 
     $actionHtml .= "<div class=\"action\">\n";
@@ -412,7 +412,15 @@ if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->ca
   $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
   $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
   $actionHtml .= "</p></form>\n";
+  
+   if (MODE == "dev"){
+  	$actionHtml .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_testbordereau.php?id=".$trans->getId()."\" >(mode_dev) Voir le bordereau</a>\n";
+  }
+  
   $actionHtml .= "</div>\n";
+  
+  
+  
 }
 
 

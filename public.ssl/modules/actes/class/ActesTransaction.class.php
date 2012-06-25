@@ -1489,11 +1489,6 @@ class ActesTransaction extends DataObject {
   	}
 	
   	while ($row = $result->get_next_row()) {
-  		/*$sql2 = "SELECT * FROM actes_transactions_workflow " . 
-  		" JOIN actes_status ON actes_transactions_workflow.status_id=actes_status.id ". 
-  		"WHERE transaction_id = " . $row["id"] . " ORDER by date DESC LIMIT 1";
-		$result2 = $this->db->select($sql2);
-		$row2 = $result2->get_next_row();*/
 		if ($row["related_transaction_id"] == "") {  					
     		$renvoie[$row["id"]] = array("type" => $row["type"],
     								"sens" => "reçu");
@@ -1678,6 +1673,9 @@ class ActesTransaction extends DataObject {
    } 
    
 	public function canValidate(){
+		if (MODE == "dev"){
+			return true;
+		}
 		assert('$this->id');
 		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 
 				" FROM actes_transactions_workflow " .
