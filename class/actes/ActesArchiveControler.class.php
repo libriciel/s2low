@@ -40,8 +40,6 @@ class ActesArchiveControler {
 		$actesFile = $actesTransactionsSQL->getAllFile($id);
 		
 		
-		
-		
 		$file_to_send =  ACTES_FILES_UPLOAD_ROOT . "/" .  $actesEnvelopeInfo['file_path'];
 		
 		$tgzExtractor = new TGZExtractor('/tmp');
@@ -52,7 +50,7 @@ class ActesArchiveControler {
 		
 		$actesArchivesSEDA = new ActesArchiveSEDA("/tmp/");
 		$actesArchivesSEDA->setAuthorityInfo($authorityInfo);
-		$actesArchivesSEDA->setActesFileName($actesFile[1]['filename']);
+		$actesArchivesSEDA->setActesFileName($actesFile[1]['filename'],$actesFile[1]['signature']);
 		$actesArchivesSEDA->setTransactionStatusInfo($actesTransactionsStatusInfo);
 		$actesArchivesSEDA->setNumeroTransfert($numero_transfert);
 		$actesArchivesSEDA->setLatestDate($latest_date);
@@ -63,7 +61,7 @@ class ActesArchiveControler {
 		
 		foreach($actesFile as $annexe){
 			$tgzExtractor->extract($file_to_send,$annexe['filename']);
-			$actesArchivesSEDA->addAnnexe($annexe['filename'],$annexe['filetype']);
+			$actesArchivesSEDA->addAnnexe($annexe['filename'],$annexe['filetype'],$annexe['signature']);
 		}
 		
 		foreach($relatedTransaction as $transaction){

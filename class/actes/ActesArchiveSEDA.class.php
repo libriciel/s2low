@@ -14,6 +14,7 @@ class ActesArchiveSEDA {
 	private $actesTransactionsStatusInfo;
 	
 	private $actesFilePath;
+	private $actesIsSigned;
 	private $annexe;
 	private $arActes;
 	
@@ -40,9 +41,10 @@ class ActesArchiveSEDA {
 		$this->authorityInfo = $authorityInfo;
 	}
 	
-	public function setActesFileName($actesFileName){
+	public function setActesFileName($actesFileName,$is_signed = false){
 		$this->actesFileName =  $actesFileName;
 		$this->file2Add[] = $actesFileName;
+		$this->actesIsSigned = $is_signed;
 	}
 	
 	public function setLatestDate($latestDate){
@@ -56,8 +58,8 @@ class ActesArchiveSEDA {
 		$this->file2Add[] = $this->arActes;
 	}
 	
-	public function addAnnexe($annexeFileName,$annexeFileType){
-		$this->annexe[] = array($annexeFileName,$annexeFileType);
+	public function addAnnexe($annexeFileName,$annexeFileType,$has_signature){
+		$this->annexe[] = array($annexeFileName,$annexeFileType,$has_signature);
 		$this->file2Add[] = $annexeFileName;
 	}
 
@@ -197,17 +199,18 @@ class ActesArchiveSEDA {
 		$archiveTransfer->Contains->Contains[0]->Contains[0]->DescriptionLevel['listVersionID']="edition 2009";
 		$archiveTransfer->Contains->Contains[0]->Contains[0]->Name="Acte";
 		
-		$archiveTransfer->Contains->Contains[0]->Contains[0]->Document = $this->getDocument($this->actesFileName, "application/pdf",false,"Acte");
+		
+		$archiveTransfer->Contains->Contains[0]->Contains[0]->Document = $this->getDocument($this->actesFileName, "application/pdf",false,"Acte", $this->actesIsSigned);
 		
 		if ($this->annexe) {
 			$c = $this->getDL("Contains","Annexe(s) d'un acte soumis au contrôle de légalité");
 			foreach($this->annexe as $i => $annexe){
-				$c->Document[$i] = $this->getDocument($annexe[0],$annexe[1],false,"Annexe n° ".($i+1));
+				$c->Document[$i] = $this->getDocument($annexe[0],$annexe[1],false,"Annexe n° ".($i+1),$annexe[2]);
 			}
 			$archiveTransfer->Contains->Contains[0]->Contains[] =  $c;
 		}
-		$c = $this->getDL("Contains","Accusé de réception d'un acte soumis au contrôle de légalité",$transactionsInfo['id']);
-		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date']);
+		$c = $this->getDL("Contains","Accusé de réception d'un acte soumis au contrôle de légalité",$transactionsInfo['unique_id']);
+		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date'],false,true);
 		$archiveTransfer->Contains->Contains[0]->Contains[] = $c;
 		
 		return $archiveTransfer->asXML();
@@ -226,12 +229,12 @@ class ActesArchiveSEDA {
 		return $node;
 	}
 	
-	private function getDocument($filename,$mimetype,$receipt = false,$description = false){
+	private function getDocument($filename,$mimetype,$receipt = false,$description = false,$is_original = true){
 		$document = new ZenXML("Document");
 		$document->Attachment['mimeCode'] = $mimetype;
 		$document->Attachment['filename'] = $filename;
 		$document->Control = "false";
-		$document->Copy = "false";
+		$document->Copy = $is_original?"false":"true";
 		if ($description !== false){
 			$document->Description = $description;
 		}		
