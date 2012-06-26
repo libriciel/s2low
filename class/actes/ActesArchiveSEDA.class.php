@@ -191,7 +191,7 @@ class ActesArchiveSEDA {
 		$archiveTransfer->Contains->AccessRestriction->StartDate = date('Y-m-d',strtotime($this->latestDate));
 		
 		
-		$archiveTransfer->Contains->Contains[0] = $this->getDL("Contains","Acte soumis au contrôle de légalité", $transactionsInfo['id']);
+		$archiveTransfer->Contains->Contains[0] = $this->getDL("Contains","Acte soumis au contrôle de légalité", $transactionsInfo['unique_id']);
 		
 		$archiveTransfer->Contains->Contains[0]->Contains[0]->DescriptionLevel="item";
 		$archiveTransfer->Contains->Contains[0]->Contains[0]->DescriptionLevel['listVersionID']="edition 2009";
@@ -228,17 +228,16 @@ class ActesArchiveSEDA {
 	
 	private function getDocument($filename,$mimetype,$receipt = false,$description = false){
 		$document = new ZenXML("Document");
-		//$document->Attachment = $mimetype;
 		$document->Attachment['mimeCode'] = $mimetype;
 		$document->Attachment['filename'] = $filename;
 		$document->Control = "false";
-		if ($receipt){
-			$document->Receipt = date("c",strtotime($receipt));
-		}
-		//$document->Copy = "false";
+		$document->Copy = "false";
 		if ($description !== false){
 			$document->Description = $description;
 		}		
+		if ($receipt){
+			$document->Receipt = date("c",strtotime($receipt));
+		}
 		$document->Type = "CDO";
 		$document->Type["listVersionID"] = "edition 2009";
 		
