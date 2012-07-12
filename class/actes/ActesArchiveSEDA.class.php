@@ -18,19 +18,16 @@ class ActesArchiveSEDA {
 	private $annexe;
 	private $arActes;
 	
-	private $numero_transfert;
 	
 	private $relatedTransaction;
 	private $latestDate;
+	
+	private $transfer_identifier;
 	
 	public function __construct($tmpFolder){
 		$this->tmpFolder = $tmpFolder;
 		$this->file2Add = array();
 		$this->annexe=array();
-	}
-	
-	public function setNumeroTransfert($numero_transfert){
-		$this->numero_transfert = $numero_transfert;
 	}
 	
 	public function getLastError(){
@@ -82,13 +79,22 @@ class ActesArchiveSEDA {
 		}
 		return $this->tmpFolder."$fileName";
 	}
+
+	public function calcTransferIdentifier($numero_transfert){
+		assert('$this->authorityInfo');
+		return $this->authorityInfo['sae_numero_aggrement'] ."-". date("Y-m-d") ."-".$numero_transfert;
+	}
+	
+	public function setTransferIdentifier($transfer_identifier){
+		$this->transfer_identifier = $transfer_identifier;
+	}
 	
 	public function getBordereau($transactionsInfo){
 		$archiveTransfer = new ZenXML('ArchiveTransfer');
 		$archiveTransfer['xmlns'] = "fr:gouv:ae:archive:draft:standard_echange_v0.2";
 		$archiveTransfer->Comment = "Transfert d'un acte soumis au contrôle de légalité";
 		$archiveTransfer->Date = date('c');//"2011-08-12T11:03:32+02:00";
-		$archiveTransfer->TransferIdentifier = $this->authorityInfo['sae_numero_aggrement'] ."-". date("Y-m-d") ."-".$this->numero_transfert;
+		$archiveTransfer->TransferIdentifier = $this->transfer_identifier;
 		$archiveTransfer->TransferIdentifier['schemeAgencyName'] = "S²LOW - ADULLACT";
 		
 		$archiveTransfer->TransferringAgency->Identification = $this->authorityInfo['sae_id_versant']; 

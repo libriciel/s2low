@@ -48,12 +48,16 @@ class ActesArchiveControler {
 		$relatedTransaction = $actesTransactionsSQL->getRelatedTransaction($id);
 		
 		
+		
+		
 		$actesArchivesSEDA = new ActesArchiveSEDA("/tmp/");
 		$actesArchivesSEDA->setAuthorityInfo($authorityInfo);
 		$actesArchivesSEDA->setActesFileName($actesFile[1]['filename'],$actesFile[1]['signature']);
 		$actesArchivesSEDA->setTransactionStatusInfo($actesTransactionsStatusInfo);
-		$actesArchivesSEDA->setNumeroTransfert($numero_transfert);
 		$actesArchivesSEDA->setLatestDate($latest_date);
+		
+		$sae_transfer_identifier = $actesArchivesSEDA->calcTransferIdentifier($numero_transfert);
+		$actesArchivesSEDA->setTransferIdentifier($sae_transfer_identifier);
 		
 		
 		array_shift ($actesFile);
@@ -93,11 +97,9 @@ class ActesArchiveControler {
 			header("Location: actes_transac_show.php?id=$id");
 			exit;
 		}
-		
-
-		
+				
 		$bordereau = $actesArchivesSEDA->getBordereau($transactionsInfo);
-		return array($actesTransactionsSQL,$transactionsInfo,$bordereau,$archive_path);
+		return array($actesTransactionsSQL,$transactionsInfo,$bordereau,$archive_path,$sae_transfer_identifier);
 		
 	}
 	

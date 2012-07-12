@@ -12,7 +12,7 @@ foreach($allTransactions as $transactionInfo){
 	
 	echo "Transaction {$transactionInfo['unique_id']} : ";
 	$asalae = new Asalae($transactionInfo);
-	$message = $asalae->getAcuseReception($transactionInfo['unique_id']);
+	$message = $asalae->getAcuseReception($transactionInfo['sae_transfer_identifier']);
 	if  ( ! $message ){
 		echo  $asalae->getLastError() ."\n";	
 	} else {

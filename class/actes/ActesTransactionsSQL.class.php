@@ -93,5 +93,10 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->queryOne($sql);
 	}
 	
+	public function setSAETransferIdentifier($id,$transfer_identifier){
+		$sql = "UPDATE actes_transactions SET sae_transfer_identifier=? WHERE id=?";
+		$this->sqlQuery->query($sql,$transfer_identifier,$id);
+	}
+	
 	
 }

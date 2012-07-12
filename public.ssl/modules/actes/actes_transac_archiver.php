@@ -7,7 +7,7 @@ $id = $recuperateur->getInt('id');
 
 $actesArchiveControler = new ActesArchiveControler();
 
-list($actesTransactionsSQL,$transactionsInfo,$bordereau,$archive_path) = $actesArchiveControler->getBordereau($id);
+list($actesTransactionsSQL,$transactionsInfo,$bordereau,$archive_path,$sae_transfer_identifier) = $actesArchiveControler->getBordereau($id);
 
 if (! $bordereau){
 	$_SESSION['error'] = $actesArchivesSEDA->getLastError();
@@ -24,6 +24,7 @@ if (! $result){
 	$msg = "Envoie de la transaction {$transactionsInfo['id']}  au SAE ({$authorityInfo['sae_wsdl']})";
 	
 	$actesTransactionsSQL->updateStatus($transactionsInfo['id'],12,$msg);
+	$actesTransactionsSQL->setSAETransferIdentifier($transactionsInfo['id'],$sae_transfer_identifier);
 	
 	$_SESSION['error'] = "L'archive a été déposé";
 	

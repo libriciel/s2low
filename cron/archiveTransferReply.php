@@ -11,7 +11,7 @@ foreach($allTransactions as $transactionInfo){
 	
 	echo "Transaction {$transactionInfo['unique_id']} : ";
 	$asalae = new Asalae($transactionInfo);
-	$message = $asalae->getReply($transactionInfo['unique_id']);
+	$message = $asalae->getReply($transactionInfo['sae_transfer_identifier']);
 
 	if  ( ! $message ){
 		echo  $asalae->getLastError() ."\n";	
