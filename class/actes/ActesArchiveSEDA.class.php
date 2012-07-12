@@ -28,6 +28,7 @@ class ActesArchiveSEDA {
 		$this->tmpFolder = $tmpFolder;
 		$this->file2Add = array();
 		$this->annexe=array();
+		$this->actesFileName  = "";
 	}
 	
 	public function getLastError(){
@@ -97,18 +98,8 @@ class ActesArchiveSEDA {
 		$archiveTransfer->TransferIdentifier = $this->transfer_identifier;
 		$archiveTransfer->TransferIdentifier['schemeAgencyName'] = "S²LOW - ADULLACT";
 		
-		$archiveTransfer->TransferringAgency->Identification = $this->authorityInfo['sae_id_versant']; 
-		/*$archiveTransfer->TransferringAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->TransferringAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->TransferringAgency->Name = "S²low - ADULLACT";*/
-		
-		
-		$archiveTransfer->ArchivalAgency->Identification = $this->authorityInfo['sae_id_archive'];
-		
-		/*$archiveTransfer->ArchivalAgency->Identification = $this->authorityInfo['siren'];
-		$archiveTransfer->ArchivalAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->ArchivalAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->ArchivalAgency->Name = $this->authorityInfo['name'];*/
+		$archiveTransfer->TransferringAgency = "####SAE_ID_VERSANT####";
+		$archiveTransfer->ArchivalAgency = "####SAE_ID_ARCHIVE####";
 		
 		foreach($this->file2Add as $i => $fileName){
 			$archiveTransfer->Integrity[$i]->Contains = sha1_file($this->tmpFolder.$fileName);
@@ -144,15 +135,8 @@ class ActesArchiveSEDA {
 		
 		$archiveTransfer->Contains->ContentDescription->LatestDate = date('Y-m-d',strtotime($this->latestDate));
 		$archiveTransfer->Contains->ContentDescription->OldestDate = date('Y-m-d',strtotime($transactionsInfo['decision_date']));
-		
-		/*$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->authorityInfo['siren'];
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeName'] = "SIRENE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification['schemeAgencyName'] = "INSEE";
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Name =  $this->authorityInfo['name'];*/
-		
-		$archiveTransfer->Contains->ContentDescription->OriginatingAgency->Identification = $this->authorityInfo['sae_originating_agency'];
-		
-		
+
+		$archiveTransfer->Contains->ContentDescription->OriginatingAgency = "####SAE_ORIGINATING_AGENCY####";
 		
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordContent = $this->authorityInfo['name'];
 		$archiveTransfer->Contains->ContentDescription->ContentDescriptive[0]->KeywordReference = $this->authorityInfo['siren'];
@@ -219,7 +203,11 @@ class ActesArchiveSEDA {
 		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date'],false,true);
 		$archiveTransfer->Contains->Contains[0]->Contains[] = $c;
 		
-		return $archiveTransfer->asXML();
+		$xml_string =  $archiveTransfer->asXML();
+		$xml_string = str_replace("####SAE_ID_VERSANT####", $this->authorityInfo['sae_id_versant'], $xml_string);
+		$xml_string = str_replace("####SAE_ID_ARCHIVE####", $this->authorityInfo['sae_id_archive'], $xml_string);
+		$xml_string = str_replace("####SAE_ORIGINATING_AGENCY####", $this->authorityInfo['sae_originating_agency'], $xml_string);
+		return $xml_string;
 	}
 	
 	

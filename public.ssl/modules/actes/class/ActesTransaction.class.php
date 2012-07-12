@@ -157,6 +157,12 @@ class ActesTransaction extends DataObject {
       "type" => "isInt",
       "mandatory" => false
     ),
+    "sae_transfer_identifier" => array(
+      "descr" => "",
+      "type" => "isString",
+		"maxlength" => 256,
+      "mandatory" => false
+    ),
   );
 
   protected $transactionTypes = array (

@@ -15,5 +15,17 @@ foreach(AuthoritySQL::getSAEProperties() as $name => $label){
 }
 $authoritySQL->updateSAE($id,$info);
 
-$_SESSION["error"] = "Les informations ont été mises à jour";
+$sedaTest = new SEDATest();
+$actesArchiveSEDA = new ActesArchiveSEDA("/tmp");
+
+$authorityInfo = $authoritySQL->getInfo($id);
+$actesArchiveSEDA->setAuthorityInfo($authorityInfo);
+$bordereau = $actesArchiveSEDA->getBordereau($sedaTest->getTransactionTest());
+
+
+if ( ! $sedaTest->validateBordereau($bordereau)){
+	$_SESSION["error"]  = "Erreur sur le fichier XML : <br/>" . $sedaTest->getLastError();
+} else {
+	$_SESSION["error"] = "Les informations ont été mises à jour";
+}
 header("Location: admin_authority_sae.php?id=$id");

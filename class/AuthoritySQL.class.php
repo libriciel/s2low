@@ -28,10 +28,13 @@ class AuthoritySQL {
 			'sae_password' => "SAE mot de passe", 
 			'sae_id_versant' =>  "SAE Identifiant service versant",//TransferringAgency
 			'sae_id_archive' => "SAE Identifiant service d'archive", //ArchivalAgency
-  			'sae_originating_agency' => "SAE Identifiant service producteur", //OriginatingAgency
-  		
+  			'sae_originating_agency' => "SAE Identifiant service producteur", //OriginatingAgency  		
 			'sae_numero_aggrement' => "SAE Accord de versement",
 		);
+  	}
+  	
+  	public static function isTextarea($properties){
+  		return in_array($properties, array('sae_id_versant','sae_id_archive','sae_originating_agency'));
   	}
   	
   	public function updateSAE($id,array $info){

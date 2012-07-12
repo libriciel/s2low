@@ -111,6 +111,10 @@ switch ($trans->get("type")) {
       $url = "Non définie";
     }
     $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
+    if ($trans->get("sae_transfer_identifier")) {
+		$html .= $doc->getHTMLArrayline("Identifiant de transfert d'archivage", htmlspecialchars($trans->get("sae_transfer_identifier")));
+    }
+    
 
     if ($trans->get("broadcasted") == 't')
       $notification = "Notifiée à " . $trans->get("broadcast_emails");
