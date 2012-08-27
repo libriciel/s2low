@@ -1,5 +1,4 @@
 <?php
-
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
@@ -46,6 +45,9 @@ if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_
   header("Location: " . WEBSITE_SSL);
   exit();
 }
+
+
+/****************/
 
 $doc = new HTMLLayout();
 

@@ -208,12 +208,21 @@ class User extends DataObject {
 	}
 
 	public function isLogged(){
-		return isset($_SESSION['id_login']) && $_SESSION['id_login'] ;
+		
+		if (isset($_SESSION['id_login']) && $_SESSION['id_login']){
+			return true;
+		}
+		if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])){
+			return $this->login($_SERVER['PHP_AUTH_USER'],md5($_SERVER['PHP_AUTH_PW']));
+		}
+		return false;
+		
 	}
+	
 	
 	public function login($login,$password){
 		$this->retrieveInfoFromClientCertificate();
-		 $sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
+		$sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
                         " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";
 	 	$result = $this->db->select($sql);
 		if ($result->isError() || $result->num_row() != 1){
@@ -229,6 +238,11 @@ class User extends DataObject {
   
 	public function logout(){
 		unset($_SESSION['id_login']);
+	}
+	
+	public function getCertificateInfo(){
+		$this->retrieveInfoFromClientCertificate();
+		return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn);
 	}
 	
 	private function retrieveInfoFromClientCertificate(){

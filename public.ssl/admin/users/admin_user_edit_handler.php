@@ -4,16 +4,25 @@ require_once(SITEROOT . '/class/include.class.php');
 
 $me = new User();
 
+$api = Helpers::getVarFromPost("api");
+
+function exitOrDisplayError($api,$erreur_msg,$location){
+	if ($api){
+		$jsonOutput = new JSONoutput();
+		$jsonOutput->displayErrorAndExit($erreur_msg);
+	} else {
+		$_SESSION["error"] = $erreur_msg;
+		header("Location: $location " );
+		exit;
+	}
+}
+
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+	exitOrDisplayError($api,"Échec de l'authentification",WEBSITE);
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -42,28 +51,21 @@ $mod = false;
 if (isset($id) && ! empty($id)) {
   $him->setId($id);
   if (! $him->init()) {
-    $_SESSION["error"] = "Erreur lors de la modification de l'utilisateur";
-    header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-    exit();
+  	exitOrDisplayError($api,"Erreur lors de la modification de l'utilisateur",WEBSITE_SSL . "/admin/users/admin_users.php");
   } else {
 	// On vérifie que l'utilisateur courant à le droit de modifier cet utilisateur
 	if (! $me->canEditUser($id)) {
-	  $_SESSION["error"] = "Accès refusé pour la modification de cet utilisateur";
-	  header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-	  exit();
+		exitOrDisplayError($api,"Accès refusé pour la modification de cet utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
 	}
-
 	$mod = true;
   }
 }
 
 if ($role == 'GADM' && ! $authority_group_id){
-	$_SESSION["error"] = "Vous devez indiquez un groupe pour créer un administrateur de groupe";
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php". "?id=" . $him->getId() ."&new_id=$new_id");
-	exit();
+	exitOrDisplayError($api,"Vous devez indiquez un groupe pour créer un administrateur de groupe", WEBSITE_SSL . "/admin/users/admin_user_edit.php". "?id=" . $him->getId() ."&new_id=$new_id");
 }
 
-if ($password != $password2){
+if (! $api && $password != $password2){
 	  $_SESSION["error"] = "Les mots de passe ne correspondent pas";
 	  header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php". "?id=" . $him->getId() ."&new_id=$new_id");
 	  exit();
@@ -89,22 +91,16 @@ if (is_array($certificate) && count($certificate) > 0 && is_uploaded_file($certi
   $him->set("certFilePath", $certificate["tmp_name"]);
 } else {
   if (! $mod && ! $new_id) {
-	$_SESSION["error"] = "Le certificat utilisateur est obligatoire<br />";
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-	exit();
+  	exitOrDisplayError($api,"Le certificat utilisateur est obligatoire", WEBSITE_SSL . "/admin/users/admin_users.php");	
   }
 }
 
 if ($new_id){	
 	if (! $password || ! $login){
-		$_SESSION["error"] = "Le login et le mot de passe sont obligatoire pour cloner un certificat<br />";
-		header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id");
-		exit();
+		exitOrDisplayError($api, "Le login et le mot de passe sont obligatoire pour cloner un certificat", WEBSITE_SSL ."/admin/users/admin_user_edit.php?new_id=$new_id");	
 	}
 	if ($him->getIdFromLogin($login)){
-		$_SESSION["error"] = "Ce login est déja utilisé<br />";
-		header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id");
-		exit();
+		exitOrDisplayError($api, "Ce login est déja utilisé", WEBSITE_SSL ."/admin/users/admin_user_edit.php?new_id=$new_id");				
 	}
 	$him->cloneCertificat($new_id);
 } else {
@@ -113,9 +109,7 @@ if ($new_id){
 		$the_id = $him->getIdFromLogin($login);
 		
 		if ($the_id && $id != $the_id){
-			$_SESSION["error"] = "Ce login est déja utilisé<br />";
-			header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-			exit();
+			exitOrDisplayError($api, "Ce login est déja utilisé", WEBSITE_SSL ."/admin/users/admin_users.php");
 		}
 	}
 }
@@ -133,9 +127,8 @@ if (! $mod || $new_id) {
 	if ($authority->isInGroup($me->get("authority_group_id"))) {
 	  $him->set("authority_id", $authority_id);
 	} else {
-	  $_SESSION["error"] = "La collectivité n'appartient pas au groupe courant<br />";
-	  header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
-	  exit();
+		exitOrDisplayError($api, "La collectivité n'appartient pas au groupe courant", 
+		WEBSITE_SSL ."/admin/users/admin_users.php");
 	}
   } else {
 	// Un admin de collectivité ne peut créer que des utilisateurs appartenant à sa collectivité
@@ -166,31 +159,38 @@ foreach ($modules as $module) {
 	$him->setPerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]));
   }
 }
-//if (! $him->save($genNewCert)) {
+
 if (! $him->save()) {
   $msg = "Erreur lors de l'enregistrement de l'utilisateur :\n" . $him->getErrorMsg();
   if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
 	$msg .= "\nErreur de journalisation.";
   }
 
-  $_SESSION["error"] = nl2br($msg);
 
   if ($him->isNew()) {
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id");
+	$location =  WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id";
   } else {
 	Helpers::purgeTempSession();
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId()."&new_id=$new_id");
+	$location = WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId()."&new_id=$new_id";
   }
-  exit();
-} else {
-  $msg = ($mod) ? "Modification" : "Création";
-  $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
-  if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
-	$msg .= "\nErreur de journalisation.";
-  }
+  
+  exitOrDisplayError($api, nl2br($msg), $location);
+  
+} 
 
-  $_SESSION["error"] = nl2br($msg);
-  Helpers::purgeTempSession();
-  header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId() );
-  exit();
+$msg = ($mod) ? "Modification" : "Création";
+$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+	$msg .= "\nErreur de journalisation.";
 }
+
+
+if ($api){
+	$jsonOutput = new JSONoutput();
+	$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$him->getId()));
+} else {
+	$_SESSION["error"] = nl2br($msg);
+	Helpers::purgeTempSession();
+	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId() );
+}
+

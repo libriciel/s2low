@@ -1,7 +1,5 @@
 <?php 
-
 require_once( __DIR__ . "/../init/init.php");
-
 
 $x509Certificate = new X509Certificate();
 $certificateInfo = $x509Certificate->retrieveClientInfo();
@@ -19,7 +17,6 @@ if (count($allUser) == 1){
 	header("Location: index.php");
 	exit;
 }
-
 
 $doc = new HTMLLayout();
 

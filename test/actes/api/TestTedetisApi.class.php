@@ -29,11 +29,11 @@ class TestTedetisApi {
 		
 		curl_setopt($ch, CURLOPT_URL, $this->beginUrl . $url);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);        
-		curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		curl_setopt($ch, CURLOPT_SSLCERT,$this->certificateFile);
 		curl_setopt($ch, CURLOPT_SSLKEY, $this->certificateKey);
-		curl_setopt($ch,CURLOPT_SSLKEYPASSWD,$this->certificateKeyPass);
-		curl_setopt($ch,CURLOPT_POST,true);
+		curl_setopt($ch, CURLOPT_SSLKEYPASSWD,$this->certificateKeyPass);
+		curl_setopt($ch, CURLOPT_POST,true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, array('api'=>1));
 
 		$this->lastData = curl_exec($ch)."\n";

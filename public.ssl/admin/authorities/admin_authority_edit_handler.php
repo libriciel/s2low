@@ -6,21 +6,28 @@ require_once( SITEROOT . '/class/Mailer.class.php');
 
 $me = new User();
 
+$api = Helpers::getVarFromPost("api");
+
+function exitOrDisplayError($api,$erreur_msg,$location){
+	if ($api){
+		$jsonOutput = new JSONoutput();
+		$jsonOutput->displayErrorAndExit($erreur_msg);
+	} else {
+		$_SESSION["error"] = $erreur_msg;
+		header("Location: $location " );
+		exit;
+	}
+}
+
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Éhec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+	exitOrDisplayError($api,"Échec de l'authentification",WEBSITE);
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
 }
 
-// Recuperation des variables du POST
 $id = Helpers::getVarFromPost("id");
-$mode = Helpers::getVarFromPost("mode");
 $name = Helpers::getVarFromPost("name");
 $siren = Helpers::getVarFromPost("siren");
 $authorityGroupId = Helpers::getVarFromPost("authority_group_id");
@@ -54,13 +61,9 @@ if (isset($id) && ! empty($id)) {
   $authority->setId($id);
   $mod = true;
   if (! $authority->init()) {
-    $_SESSION["error"] = "Erreur lors de la modification de la collectivité";
-    header($form_location);
-    exit;
+	exitOrDisplayError($api,"Erreur lors de la modification de la collectivité",$form_location);
   }
-  
-  $form_location = "Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id";
-  
+  $form_location = "Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
 }
 
 
@@ -70,16 +73,12 @@ if (isset($id) && ! empty($id)) {
 // et modif de sa collectivité uniquement
 if (! $me->isGroupAdminOrSuper()) {
   if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
-	$_SESSION["error"] = "Accès refusé.";
-	header($form_location);
-	exit();
+  	exitOrDisplayError($api,"Accès refusé.",$form_location);
   }
 } elseif ($me->isGroupAdmin()) {
   // Si mode modif on vérifie que la collectivité appartient bien au groupe dont l'utilisateur est admin
   if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
-	$_SESSION["error"] = "Accès refusé.";
-	header($form_location);
-	exit();
+  	exitOrDisplayError($api,"Accès refusé.",$form_location);
   }
 
   // Vérification que le SIREN est bien autorisé pour ce groupe
@@ -88,9 +87,7 @@ if (! $me->isGroupAdminOrSuper()) {
   $sirenList = $group->getAuthorizedSiren();
 
   if (array_search($siren, $sirenList) === false) {
-	$_SESSION["error"] = "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name");
-	header($form_location);
-	exit();
+  	exitOrDisplayError($api,"Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"),$form_location);
   }
 
   // On force le authority_group_id à celui de l'admin du groupe
@@ -101,13 +98,12 @@ if (! $me->isGroupAdminOrSuper()) {
 //Vérification de l'email de la collectivité pour le module mail sec
 $mailer = new Mailer();
 if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || strstr($email_mail_securise," ")) ) {
-	$_SESSION['error'] = "L'email " . htmlentities($email_mail_securise) . " n'est pas valide.";
  	if ($authority->isNew()) {
-		header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
-	} else {
-		header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId());
+ 		$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
+ 	} else {
+		$location = WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
  	}  	
- 	exit;
+ 	exitOrDisplayError($api,"L'email " . htmlentities($email_mail_securise) . " n'est pas valide.",$location);
 }
 
 
@@ -154,21 +150,27 @@ if (! $authority->save($savePerms)) {
 	$msg .= "\nErreur de journalisation.";
   }
 
-  $_SESSION["error"] = nl2br($msg);
-
   if ($authority->isNew()) {
-	header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
+	$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
   } else {
-	header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId());
+	$location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
   }  
-  exit();
-} else {
-  $msg = ($mod) ? "Modification" : "Création";
-  $msg .= " de la collectivité " . $authority->get("name") . " (id=" . $authority->getId() . "). Résultat ok.";
-  if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
-	$msg .= "\nErreur de journalisation.";
-  }
+  
+  exitOrDisplayError($api, nl2br($msg),$location);
 
-  $_SESSION["error"] = nl2br($msg);
-  header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId());
+}
+
+$msg = ($mod) ? "Modification" : "Création";
+$msg .= " de la collectivité " . $authority->get("name") . " (id=" . $authority->getId() . "). Résultat ok.";
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+	$msg .= "\nErreur de journalisation.";
+}
+
+if ($api){
+	$jsonOutput = new JSONoutput();
+	$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$authority->getId()));
+} else {
+	$_SESSION["error"] = nl2br($msg);
+	header("Location: ". WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId() );
+	exit;
 }

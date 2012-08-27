@@ -11,6 +11,7 @@ require_once(SITEROOT . 'class/Trace.class.php');
 require_once(SITEROOT . 'class/ServiceUser.class.php');
 require_once( SITEROOT . 'ext/mime_content_type.func.php');
 require_once( SITEROOT . 'class/XMLHelper.php');
+require_once( SITEROOT . 'class/JSONoutput.class.php');
 
 session_start();
 
@@ -24,3 +25,5 @@ function hecho($message,$quot_style=ENT_QUOTES){
 
 //Cette variable est utilisée partout sans être initialisé...
 $html = "";
+
+$jsonOutput = new JSONoutput();
