@@ -29,10 +29,7 @@ class ActesArchiveControler {
 			header("Location: actes_transac_show.php?id=$id");
 			exit;
 		}
-		
-	
-		
-		
+				
 		$actesEnvelopeSQL = new ActesEnvelopeSQL($sqlQuery);
 		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
 		
@@ -72,7 +69,7 @@ class ActesArchiveControler {
 			$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transaction['envelope_id']);
 			$actesFile = $actesTransactionsSQL->getAllFile($transaction['id']);
 			$file_to_send =  ACTES_FILES_UPLOAD_ROOT . "/" .  $actesEnvelopeInfo['file_path'];
-			
+						
 			if ($transaction['type_reponse']){
 				$filename = $actesFile[1]['filename'];
 				array_shift ($actesFile);
@@ -88,6 +85,8 @@ class ActesArchiveControler {
 				$tgzExtractor->extract($file_to_send,$annexe['filename']);
 				$af[] = array($annexe['filename'],$annexe['filetype']);
 			}
+			$transaction['status_info'] =  $actesTransactionsSQL->getStatusInfo($transaction['id'],8);
+			$transaction['status_info_recu'] =  $actesTransactionsSQL->getStatusInfo($transaction['id'],11);
 			$actesArchivesSEDA->addRelatedTransaction($transaction,$af);
 		}
 		

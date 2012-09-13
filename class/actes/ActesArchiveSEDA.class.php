@@ -65,9 +65,21 @@ class ActesArchiveSEDA {
 		foreach($all_file as $f){
 			$this->file2Add[] = $f[0];
 			$relatedTransaction['file_name'] = $f[0];
-			$relatedTransaction['file_type'] = $f[1]; 
+			$relatedTransaction['file_type']= $f[1];
+			$relatedTransaction['many_file_name'][] = $f[0];
+			$relatedTransaction['many_file_type'][] = $f[1]; 
 		}
 		$this->relatedTransaction[] = $relatedTransaction;
+		if(! empty($relatedTransaction['status_info']['flux_retour'])){
+			$ar = "AR1-{$relatedTransaction['id']}.xml";
+			file_put_contents($this->tmpFolder . $ar,$relatedTransaction['status_info']['flux_retour']);
+			$this->file2Add[] = $ar;
+		}
+		if(! empty($relatedTransaction['status_info_recu']['flux_retour'])){
+			$ar = "AR2-{$relatedTransaction['id']}.xml";
+			file_put_contents($this->tmpFolder . $ar,$relatedTransaction['status_info_recu']['flux_retour']);
+			$this->file2Add[] = $ar;
+		}
 	}
 	
 	public function getArchive(){
@@ -203,11 +215,112 @@ class ActesArchiveSEDA {
 		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date'],false,true);
 		$archiveTransfer->Contains->Contains[0]->Contains[] = $c;
 		
+		foreach($this->relatedTransaction as $i => $relatedTransactionInfo){
+			//print_r($relatedTransactionInfo);
+			if ($relatedTransactionInfo['related_transaction_id'] != $transactionsInfo['id']){
+				continue;
+			}
+			
+			$archiveTransfer->Contains->Contains[$i+1] =$this->getDL("Contains",$this->getRelatedTransactionName($relatedTransactionInfo['type']), $transactionsInfo['unique_id']);
+			$archiveTransfer->Contains->Contains[$i+1]->Contains[0]->DescriptionLevel="item";
+			$archiveTransfer->Contains->Contains[$i+1]->Contains[0]->DescriptionLevel['listVersionID']="edition 2009";
+			$archiveTransfer->Contains->Contains[$i+1]->Contains[0]->Name= $this->getRelatedTransactionType($relatedTransactionInfo['type']);
+			$archiveTransfer->Contains->Contains[$i+1]->Contains[0]->Document 
+				= $this->getDocument($relatedTransactionInfo['file_name'],"application/pdf",false,$this->getRelatedTransactionType($relatedTransactionInfo['type']),false,$transactionsInfo['decision_date']);
+
+			$nb_contains_contains  = 1 ;
+			if(! empty($relatedTransactionInfo['status_info']['flux_retour'])){
+				$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains] 
+					= $this->getDL("Contains",$this->getARName($relatedTransactionInfo['type']));
+				$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains]->Document 
+					= $this->getDocument("AR1-{$relatedTransactionInfo['id']}.xml","application/xml",false,"Accusé de réception",false,false,false);
+				$nb_contains_contains  = 2 ;
+			}
+			
+				
+			foreach($this->relatedTransaction as $reponseTransaction){
+				if ($reponseTransaction['related_transaction_id'] != $relatedTransactionInfo['id']){
+					continue;
+				}
+				$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains] 
+					= $this->getDL("Contains",$this->getReponseName($reponseTransaction['type']));
+				foreach($reponseTransaction['many_file_name'] as $file_nb => $file_name){
+					$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains]->Document[$file_nb] 
+						= $this->getDocument($file_name,$reponseTransaction['many_file_type'][$file_nb],false,$this->getReponseDocumentName($reponseTransaction['type']),false,false,$reponseTransaction['decision_date']);
+				}
+				$nb_contains_contains++;
+				if (! empty($reponseTransaction['status_info_recu']['flux_retour'])){
+					$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains] 
+						= $this->getDL("Contains",$this->getARRecuType($relatedTransactionInfo['type']));
+					$archiveTransfer->Contains->Contains[$i+1]->Contains[$nb_contains_contains]->Document 
+						= $this->getDocument("AR2-{$reponseTransaction['id']}.xml","application/xml",false,"Accusé de réception",false,$reponseTransaction['status_info_recu']['date'],false);
+		
+					$nb_contains_contains++;
+				}
+			}	
+		}
+		
+		
 		$xml_string =  $archiveTransfer->asXML();
 		$xml_string = str_replace("####SAE_ID_VERSANT####", $this->authorityInfo['sae_id_versant'], $xml_string);
 		$xml_string = str_replace("####SAE_ID_ARCHIVE####", $this->authorityInfo['sae_id_archive'], $xml_string);
 		$xml_string = str_replace("####SAE_ORIGINATING_AGENCY####", $this->authorityInfo['sae_originating_agency'], $xml_string);
 		return $xml_string;
+	}
+	
+	public function getARRecuType($type){
+		$array = array(	
+				3=>"Accusé de réception d'une réponse à une demande de pièces complémentaires",
+				4=>"Accusé de réception d'une réponse à une lettre d'observations",
+		);
+		return $array[$type];
+	}
+		
+
+	
+	public function getARName($type){
+		$array = array(	
+				3=>"Accusé de réception d'une demande de pièces complémentaires",
+				4=>"Accusé de réception d'une lettre d'observations",
+		);
+		return $array[$type];
+		
+	}
+	
+	public function getReponseDocumentName($type){
+			$array = array(	
+						2=>"Réponse à un courrier simple",
+						3=>"Réponse",
+						4=>"Réponse",
+						);
+		return $array[$type];
+	}
+	
+	public function getReponseName($type){
+		$array = array(	
+						2=>"Réponse à un courrier simple",
+						3=>"Réponse à une demande de pièces complémentaires",
+						4=>"Réponse à une lettre d'observations",
+						);
+		return $array[$type];
+	}
+	
+	public function getRelatedTransactionName($type){
+		$array = array(	
+						2=>"Envoi d'un courrier simple",
+						3=>"Envoi d'une demande de pièces complémentaires",
+						4=>"Envoi d'une lettre d'observations",
+						5=>"Déféré au tribunal administratif");
+		return $array[$type];
+	}
+	
+	public function getRelatedTransactionType($type){
+		$array = array(	
+						2=>"Courrier simple",
+						3=>"Demande de pièces complémentaires",
+						4=>"Lettre d'observations",
+						5=>"Déféré au tribunal administratif");
+		return $array[$type];
 	}
 	
 	
@@ -223,7 +336,7 @@ class ActesArchiveSEDA {
 		return $node;
 	}
 	
-	private function getDocument($filename,$mimetype,$receipt = false,$description = false,$is_original = true){
+	private function getDocument($filename,$mimetype,$receipt = false,$description = false,$is_original = true,$receipt_submission=false,$response=false){
 		$document = new ZenXML("Document");
 		$document->Attachment['mimeCode'] = $mimetype;
 		$document->Attachment['filename'] = $filename;
@@ -234,6 +347,13 @@ class ActesArchiveSEDA {
 		}		
 		if ($receipt){
 			$document->Receipt = date("c",strtotime($receipt));
+		}
+		if ($receipt_submission){
+			//$document->ReceiptSubmission = date("c",strtotime($receipt_submission));
+			$document->Receipt = date("c",strtotime($receipt_submission));
+		}
+		if ($response){
+			$document->Response = date("c",strtotime($response));
 		}
 		$document->Type = "CDO";
 		$document->Type["listVersionID"] = "edition 2009";
