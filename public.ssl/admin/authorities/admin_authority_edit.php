@@ -260,7 +260,7 @@ $html .= "  <td class=\"td-input\"><input type=\"text\" name=\"default_broadcast
 $html .= " </tr>\n";
 $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Adresse électronique de diffusion d'informations&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"broadcast_email\" value=\"" . htmlspecialchars($authority->get("broadcast_email")) . "\" size=\"30\" maxlength=\"600\" /></td>\n";
+$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"broadcast_email\" value=\"" . htmlspecialchars($authority->get("broadcast_email")) . "\" size=\"30\" maxlength=\"2000\" /></td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Adresse&nbsp;:</td>\n";
