@@ -60,22 +60,35 @@ class TamponPDF {
     }
 	
 	private function drawTampon(Zend_Pdf_Page $page){
-		$page->setFont($this->font, $this->fontSize);
-		$page->setAlpha($this->alphaTransparency);
-	
 		$width  = $page->getWidth();
-		$height = $page->getHeight();
-	
-		$page -> drawRectangle($width - 200, $height - 10,$width - 10,$height - 60,
-				Zend_Pdf_Page::SHAPE_DRAW_STROKE);
-	
-		$image = Zend_Pdf_Image::imageWithPath(SITEROOT.'/public.ssl/custom/images/logo_s2low.jpg');
-	
-		$page->drawImage($image, $width - 112, $height - 58,$width - 12,$height - 45);			
-				
-		foreach($this->textLine as $i => $t){
-			$page->drawText($t, $width - 195, $height - 22 - $i*15 ,'iso-8859-1');
-		}
+                $height = $page->getHeight();
+                echo "[".$width ." ----  ".$height."]";
+
+                $page->setFont($this->font, $this->fontSize);
+                $page->setAlpha($this->alphaTransparency);
+                 if($height > 590 && $height < 597 && $width > 840 && $width < 844){
+                        $page -> drawRectangle(820 , 200, 770 , 30,
+                                        Zend_Pdf_Page::SHAPE_DRAW_STROKE);
+                        $image = Zend_Pdf_Image::imageWithPath(SITEROOT.'/public.ssl/custom/images/logo_s2low.jpg');
+                        $page -> rotate(810,194,-1.575);
+                        foreach($this->textLine as $i => $t){
+                                $page->drawText($t, 810,194-$i*15 ,'iso-8859-1');
+                        }
+                        $page -> rotate(825,150,-3.14);
+                        $page->drawImage($image, 775, 140, 700, 127);
+                }else{
+                        $page -> drawRectangle($width - 200, $height - 10,$width - 10,$height - 60,
+                                        Zend_Pdf_Page::SHAPE_DRAW_STROKE);
+
+                        $image = Zend_Pdf_Image::imageWithPath(SITEROOT.'/public.ssl/custom/images/logo_s2low.jpg');
+
+                        $page->drawImage($image, $width - 112, $height - 58,$width - 12,$height - 45);
+
+                        foreach($this->textLine as $i => $t){
+                                $page->drawText($t, $width - 195, $height - 22 - $i*15 ,'iso-8859-1');
+                        }
+                }//fin else
+
 	}
 	
 	private function sendDocumentToBrowser(){
