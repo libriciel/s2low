@@ -62,7 +62,7 @@ class TamponPDF {
 	private function drawTampon(Zend_Pdf_Page $page){
 		$width  = $page->getWidth();
                 $height = $page->getHeight();
-                echo "[".$width ." ----  ".$height."]";
+                //echo "[".$width ." ----  ".$height."]";
 
                 $page->setFont($this->font, $this->fontSize);
                 $page->setAlpha($this->alphaTransparency);
