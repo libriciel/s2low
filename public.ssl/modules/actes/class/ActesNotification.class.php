@@ -9,6 +9,8 @@ class ActesNotification {
 	private $db;
 	private $lesFichiers;
 	private $filePath;
+        private $pdfgenerate = false;
+        private $pdftampone;
 	
 	public function __construct(Database $db){
 		$this->db = $db;
@@ -44,28 +46,41 @@ class ActesNotification {
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 		
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
-			//envoie du mail au proprietaire de l'acte
-			$this->sendMail($transactionInfo,$transactionInfo['email'],true);
-			//envoie du mail a toutes les adresses renseignees dans defaut
-            foreach($defaultBroadcastEmail as $email){              
-            	$this->sendMail($transactionInfo,$email,true);
-            }
-			$this->setAutoBroadcasted($transactionInfo['transaction_id']);
-		}
+                    //envoie du mail au proprietaire de l'acte
+                    $this->sendMail($transactionInfo,$transactionInfo['email'],true);
+                    //envoie du mail a toutes les adresses renseignees dans defaut
+                    foreach($defaultBroadcastEmail as $email){              
+                        $this->sendMail($transactionInfo,$email,true);
+                    }//fin foreach
+                    
+                    $this->setAutoBroadcasted($transactionInfo['transaction_id']);
+		}//fin if
+                
 		if ($transactionInfo['broadcast_emails']){
-            foreach($brodcastEmail as $email){
-            	$this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
-            }
-			$this->setBroadcasted($transactionInfo['transaction_id']);
-		}
+                    foreach($brodcastEmail as $email){
+                        $this->sendMail($transactionInfo,$email,$transactionInfo['broadcast_send_sources'] == 1);
+                    }//fin foreach
+                    $this->setBroadcasted($transactionInfo['transaction_id']);
+		}//fin if
+                
+                $pdfgenerate = false;
 	}
 	
 	private function sendMail($transactionInfo,$emails,$withFile){
 		if (! $emails){
 			return;
 		}
+                
+                echo "$emails\n";
+                
 		$mailContent = $this->getMailContent($transactionInfo);
-		$lesFichiers = $this->getFichiers($transactionInfo);	
+                if(! $this->pdfgenerate){
+                        $lesFichiers = $this->getFichiers($transactionInfo);
+                }
+                else
+                {
+                        $lesFichiers = $this->pdftampone;
+                }
 	
 		$mailer = new Mailer();
 				
@@ -147,7 +162,8 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			$result = $this->tamponnerTGZ($this->filePath . "/" . $f['file_path'],$transactionInfo);
 		}
 		
-		
+		$this->pdftampone = $result;
+                $this->pdfgenerate = true;
 		return $result;
 	}
 	
@@ -188,10 +204,20 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
 		require_once(SITEROOT."/class/TamponPDF.class.php");
 	
+                $pdftkise='/tmp/' .$file;
+                $cmdpdftk='pdftk '.$file." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
+                $status='';
+                $ret='';
+                Trace::wrap_exec($cmdpdftk, $status, $ret);
+                if ($status === false || $ret != 0) {
+                                echo "Erreur lors de la convertion via pdftk (code " . $ret . ")";
+                                $pdftkise=$file;
+                }
+   
 		try {	
-			$pdf = Zend_Pdf::load($file);
+			$pdf = Zend_Pdf::load($pdftkise);
 		} catch (Exception $e){
-			return file_get_contents($file);
+			return file_get_contents($pdftkise);
 		}
 		$tampon = new TamponPDF($pdf);
 		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
@@ -201,7 +227,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			$txt =  $tampon->getFileAsString();
 		} catch (Exception $e){
 			
-			return file_get_contents($file);
+			return file_get_contents($pdftkise);
 		}
 		return $txt; 
 	}
