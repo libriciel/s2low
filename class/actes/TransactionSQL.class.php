@@ -35,7 +35,7 @@ class TransactionSQL {
 		7 => 'Document reçu',
 		8 => 'Acquittement envoyé',
 		9 => 'Document envoyé',
-		10 => "Refus d'envoie",
+		10 => 'Refus d\'envoi',
 		11 => 'Aquittement de document reçu',
 		12 => 'Envoyé au SAE',
 		13 => 'Archivé par le SAE',
