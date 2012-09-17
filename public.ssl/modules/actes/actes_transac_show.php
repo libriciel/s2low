@@ -131,20 +131,20 @@ switch ($trans->get("type")) {
     $related_trans->init();
     
     
-    $html .= $doc->getHTMLArrayline("Date de réception du document :  ", $related_trans->get("decision_date"));
+    $html .= $doc->getHTMLArrayline("Date de réception du document  ", $related_trans->get("decision_date"));
     
     if ($related_trans->get("related_transaction_id")){
 		    	
     	$files = $related_trans->fetchFilesList();
 		foreach ($files as $file) {
-    		$html .= $doc->getHTMLArrayline("Document reçu :  ",
+    		$html .= $doc->getHTMLArrayline("Document reçu   ",
     			"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>"
     	 	);
 		}
     	
     	$related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
         $related_trans->init();	
-		$html .= $doc->getHTMLArrayline("Date d'envoi :  ", $related_trans->get("decision_date"));
+		$html .= $doc->getHTMLArrayline("Date d'envoi   ", $related_trans->get("decision_date"));
 		$html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");		
 		
     } else {
