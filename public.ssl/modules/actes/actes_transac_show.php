@@ -144,7 +144,7 @@ switch ($trans->get("type")) {
     	
     	$related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
         $related_trans->init();	
-		$html .= $doc->getHTMLArrayline("Date d'envoie :  ", $related_trans->get("decision_date"));
+		$html .= $doc->getHTMLArrayline("Date d'envoi :  ", $related_trans->get("decision_date"));
 		$html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");		
 		
     } else {
