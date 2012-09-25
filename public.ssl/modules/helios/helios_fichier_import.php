@@ -165,7 +165,7 @@ $html .= "<input class=\"submit_button\" type=\"submit\" value=\" Importer un fi
 $html .= "</form>";
 
 //pour le test de l'API
-
+/**
 $html .= "<h2>Teste (API) de récuperation du status du fichier à partir de la transaction</h2>\n";
 $html .= "<form method=\"GET\"";
 $html .= " action=\"" . WEBSITE_SSL . "/modules/helios/api/helios_transac_get_status.php\" > ";
@@ -197,7 +197,7 @@ $html .= "<input class=\"submit_button\" type=\"submit\" value=\"changer le stat
 $html .= "</form>";
 
 // sf teste
-
+*/
 $html .= "</div>\n";
 
 $doc->addBody($html);
