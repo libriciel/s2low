@@ -395,14 +395,16 @@ if (count($envelopes) > 0) {
  foreach ($envelopes as $envelope) {
   
       $transaction_id=$envelope["id"];
-	
+      $owner = new User($envelope["user_id"]);
+      $owner->init();
+      
       $html .= "<tr>\n";
  
  
       $html .= " <td>" . $envelope["filename"]. "</td>\n";
       $html .= " <td>" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
       $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";
-		$html .= " <td>" . $owner->getPrettyName() . "</td>\n";
+      $html .= " <td>" . $owner->getPrettyName() . "</td>\n";
  		if ($me->isGroupAdminOrSuper()) {
 			$html .= "  <td>". $envelope['authority_name'] ."</td>\n";
     	}
