@@ -421,7 +421,7 @@ class ActesBatch extends DataObject {
       // Copie du tableau pour recherche des signatures
       $filesDup = $files;
 
-      $this->errorMsg = "";
+      $this->errorMsg = "<span style='font-weight:bold;color:red;'>Echec de la cr&eacute;ation du lot.</span><br />\n";
 
       reset($files);
       while ((list ($key, $file) = each($files))) {
@@ -447,7 +447,7 @@ class ActesBatch extends DataObject {
           	
           	
             if ( $type != "application/pdf") {
-              $this->errorMsg .= "Le fichier " . $filename . " n'est pas du type requis($type). Seul les fichiers PDF sont autorisés.\n";
+              $this->errorMsg .= "Le fichier <span style='font-weight:bold;'>" . $filename . "</span> n'est pas du type requis ($type). <span style='font-weight:bold;'>Seuls les fichiers PDF sont autoris&eacute;s.</span><br />\n";
               $ret_value = false;
             } else {
               // On recherche un fichier de signature associé
