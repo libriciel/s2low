@@ -265,15 +265,14 @@ class MailUtil {
 	    	$htmlpart='';	
 			$htmlpart.='
 <a href="'.WEBSITE.'/modules/mail/?command=show&mail_emis_id='.$MailEmis->getId().'" >Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
-<p>Note de securite :</p>
-<p>Tous les documents mis a disposition par ce lien ont ete testes par l\'anti-virus CLAMAV -</p>
+<p>Information de sécurité : tous les documents ont été testés par l\'anti-virus CLAMAV.</p>
+<p>Pour toute demande d\'information, vous pouvez contacter l\'expéditeur précisé dans le contenu du message sur la plateforme sécurisée.</p>
 ';
 
 	    	$htmlpart.='';
 			
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
-			$textpart.="\n -Note de sécurité :
-Tous les documents mis à disposition par ce lien ont été testés par l'anti-virus CLAMAV - \n";
+			$textpart.="\nInformation de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.\n";
 			
 			$crlf="\n";
 			$mime = new Mail_mime($crlf);
