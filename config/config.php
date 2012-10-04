@@ -152,7 +152,9 @@ define('IMAP_LOGIN','tedetis-mailsec');
 define('IMAP_PASS','Yi7eequa');
 define('IMAP_SERVER','mail.ntsys.fr');
 define('MAIL_MESSAGE',"Vous avez reçu un courrier recommandé par S2LOW");
-define('MAIL_TEXT',"Le serveur sécurisé TdT de l'ADULLACT vous informe qu'un  message recommandé mail avec d'éventuelles pièces attachées vous a été posté. Pour en prendre connaissance veuillez cliquer sur ce lien.");
+define('MAIL_TEXT',"Bonjour,
+    
+Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accès au courrier recommandé.");
 
 require_once('config-static.php');
 
