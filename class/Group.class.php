@@ -54,6 +54,7 @@
 
 require_once("DataObject.class.php");
 require_once("Module.class.php");
+require_once("Siren.class.php");
 
 class Group extends DataObject {
   protected $objectName = "authority_groups";
@@ -123,40 +124,16 @@ class Group extends DataObject {
 	  return false;
 	}
 
+        $theSiren  = new Siren();
 	while ($content = fgets($handle)) {
 	  $content = trim($content);
 
-	  //suppose qu'on a n char,le 1 char est char[0]
 	  if (VERIFICATION_SIREN)
-	  {
-		  //formule est: somme (char numéro impair  +char numéro paire*2)=(multiple de 10)
-		  $j=1;
-		  $sum=0;
-		  for ($i=0;$i<strlen($content);$i++)
-		  {
-		  	$c=substr($content,$i,1);
-		  	$num=(int) $c;
-		  	if ($j==1)
-		  	{
-		  		$sum=$sum+$num;
-		  		$j=0;
-		  	}
-		  	else if($j==0)
-		  	{
-		  		$sum=$sum+$num*2;
-		  		$j=1;
-		  	}
-		  	else
-		  	{
-		  		$this->errorMsg="erreur lors de l'analyse du numéro SIREN ($content).";
-		  		return false; 
-		  	}
-		  }
-		  if (((int)($sum/10))*10 !=$sum)
-		  {
-		  		$this->errorMsg="le numéro SIREN ($content) n'est pas correct.";
-		  		return false;
-		  }
+	  {		
+              if (! $theSiren->isValid($content)) {
+                  $this->errorMsg="erreur lors de l'analyse du numéro SIREN ($content).";
+                  return false;
+              }  
 	  }
 	  if (! empty($content) && strlen($content) <= 9) {
 		$this->sirenList[] = $content;
