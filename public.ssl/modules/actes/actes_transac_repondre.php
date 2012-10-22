@@ -197,7 +197,7 @@ $html .= "<div class=\"list_form\">\n";
 $html .= " <dl>\n";
 
 if ($trans->get("type") == 3 || $trans->get("type") == 4){
-$html .= "  <dt>Nature de l'envoie:</dt>\n";
+$html .= "  <dt>Nature de l'envoi:</dt>\n";
 $html .= "   <dd>" . $doc->getHTMLSelect("type_envoie",$typeReponse[$trans->get("type")], 
 		Helpers :: getFromSession("type_envoie")) . "</dd>\n";
 }
