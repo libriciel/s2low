@@ -378,11 +378,14 @@ if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWr
     $actionHtml .= "</div>\n";
   }
 }
-// Boutons de cloture de la transaction
-// Affichés quand la transaction a été acquittée par le MIAT
-if ($trans->get("type") == 1 && $transStatus == 4) {
+
+//On vérifie qu'il n'y a pas de demande d'annulation en cours
+if (!$trans->hasPendingCancelTrans()) {
+    // Boutons de cloture de la transaction
+    // Affichés quand la transaction a été acquittée par le MIAT
+    if ($trans->get("type") == 1 && $transStatus == 4) {
   
-	if ($trans->canValidate()) {
+        if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
 		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
 		$actionHtml .= "<p>Acte validé par le ministère&nbsp;:&nbsp;";
@@ -391,42 +394,38 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
 		$actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Validée&nbsp;»\" />\n";
 		$actionHtml .= "</p></form>\n";
 		$actionHtml .= "</div>\n";
-	}
+	}//fin if verfiie canValidate
   
-  $actionHtml .= "<div class=\"action\">\n";
-  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
-  $actionHtml .= "<p>Acte refusé par le ministère&nbsp;:&nbsp;";
-  $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-  $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
-  $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
-  $actionHtml .= "</p></form>\n";
-  $actionHtml .= "</div>\n";
-}
+        $actionHtml .= "<div class=\"action\">\n";
+        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
+        $actionHtml .= "<p>Acte refusé par le ministère&nbsp;:&nbsp;";
+        $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+        $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
+        $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
+        $actionHtml .= "</p></form>\n";
+        $actionHtml .= "</div>\n";
+    }//fin if qui verifie type == 1 et status == 4
 
-$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
-$transactionsInfo = $actesTransactionsSQL->getInfo($trans->getId());
-$authoritySQL = new AuthoritySQL($sqlQuery);
-$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
+    $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
+    $transactionsInfo = $actesTransactionsSQL->getInfo($trans->getId());
+    $authoritySQL = new AuthoritySQL($sqlQuery);
+    $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
-if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->canValidate() && $authorityInfo['sae_wsdl']) {
-	  
-  $actionHtml .= "<div class=\"action\">\n";
-  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
-  $actionHtml .= "<p>Archivage SEDA&nbsp;:&nbsp;";
-  $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-  $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
-  $actionHtml .= "</p></form>\n";
+    if ($trans->get("type") == 1 && in_array($transStatus,array(4,14)) && $trans->canValidate() && $authorityInfo['sae_wsdl']) {
+	  $actionHtml .= "<div class=\"action\">\n";
+          $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
+          $actionHtml .= "<p>Archivage SEDA&nbsp;:&nbsp;";
+          $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+          $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
+          $actionHtml .= "</p></form>\n";
   
-   if (MODE == "dev"){
-  	$actionHtml .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_testbordereau.php?id=".$trans->getId()."\" >(mode_dev) Voir le bordereau</a>\n";
-  }
+          if (MODE == "dev"){
+              $actionHtml .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_testbordereau.php?id=".$trans->getId()."\" >(mode_dev) Voir le bordereau</a>\n";
+          }//fin if verifie MODE == dev
   
-  $actionHtml .= "</div>\n";
-  
-  
-  
-}
-
+          $actionHtml .= "</div>\n";
+     }//fin if type == 1 , status = 4 ou 14, transaction canvalidate et configuration pour le sae
+}//fin if qui verifie qu'il n'y a pas d'annulation en cours
 
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
