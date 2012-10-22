@@ -105,6 +105,12 @@ if ($mod && $group->isEmpty($group->getId())) {
 }
 
 $sirenList = $group->getAuthorizedSiren();
+$api = Helpers::getVarFromGet("api");
+
+if ($api){
+        $jsonOutput->display($sirenList);
+        exit;
+}
 
 $html .= "<h2>Liste des SIREN autorisés pour ce groupe</h2>\n";
 
