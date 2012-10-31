@@ -41,7 +41,7 @@ class ZenXML implements ArrayAccess {
 		$attr = "";
 		foreach ($this->attributs as $name => $value){
 			$value = $this->getCDATA($value);
-			$attr.=" $name='$value'";
+			$attr.=" $name=\"$value\"";
 		}
 		return $attr;
 	}
@@ -58,7 +58,8 @@ class ZenXML implements ArrayAccess {
 		$attr = $this->getAttr();
 		$xml = "<{$this->tag_name}$attr>";
 		if ($this->cdata) {
-			$xml .=  $this->getCDATA($this->cdata);
+			//$xml .=  $this->getCDATA($this->cdata);
+                        $xml .=  utf8_encode($this->cdata);
 		}
 		foreach($this->child as $child){
 			$xml .= $child->asXML();
