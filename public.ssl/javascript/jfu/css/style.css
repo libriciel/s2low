@@ -10,9 +10,9 @@
  * http://www.opensource.org/licenses/MIT
 */
 
-body{
+/*body{
 	padding-top: 60px;
-}
+}*/
 
 
 #resultUpload{
@@ -81,4 +81,41 @@ input:focus{
 
 input, textarea, select, .uneditable-input {
 	padding: 0;
+}
+
+td.preview{
+    width: 5px;
+}
+td.preview canvas{
+    width: 1px;
+    height: 1px;
+}
+
+
+td.name{
+    width: 290px;
+}
+td.size{
+    width: 50px;
+}
+td.manualdelete{
+    width: 115px;
+}
+
+.template-upload{
+    height: 40px;
+}
+
+.template-upload .btn-warning{
+    margin: 0;
+}
+
+
+.noMultipleSelect{
+	font-style: italic;
+	color: #ff5555;
+}
+
+.noMultipleSelect a{
+	color: #ff0000;
 }

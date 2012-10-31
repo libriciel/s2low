@@ -15,11 +15,11 @@
 window.locale = {
     "fileupload": {
         "errors": {
-            "maxFileSize": "La taille maximum du fichier est d&eacute;pass&eacute;e.",
+            "maxFileSize": "La taille maximum du fichier est dépassée.",
             "minFileSize": "Le taille minimum du fichier n'est pas atteinte.",
-            "acceptFileTypes": "Type de fichier non autoris&eacute;",
-            "maxNumberOfFiles": "Nombre maximum de fichiers d&eacute;pass&eacute;",
-            "uploadedBytes": "La taille des fichiers envoy&eacute;s est d&eacute;pass&eacute;e.",
+            "acceptFileTypes": "Type de fichier non autorisé",
+            "maxNumberOfFiles": "Nombre maximum de fichiers dépassé",
+            "uploadedBytes": "La taille des fichiers envoyés est dépassée.",
             "emptyResult": "Aucun retour."
         },
         "error": "Erreur",

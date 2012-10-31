@@ -1,3 +1,5 @@
+
+
 /*
  * jQuery File Upload Plugin JS Example 6.7
  * https://github.com/blueimp/jQuery-File-Upload
@@ -13,31 +15,40 @@
 /*global $, window, document */
 
 $(function () {
-	'use strict';
-
+	//	'use strict';
 	$('#fileupload').fileupload({
+//		forceIframeTransport: true,
 		add: function (e, data) {
-			$.blueimpUI.fileupload.prototype.options
-			.add.call(this, e, data);
+			$.blueimpUI.fileupload.prototype.options.add.call(this, e, data);
 			$(this).find('.template-upload').each(function() {
-				var first = $(this).parent().children().first(),
-				firstData,
-				data;
+				var first = $(this).parent().children().first();
+				var firstData;
+				firstData = first.data('data');
 				if (this !== first[0]) {
-					firstData = first.data('data');
-					data = $(this).data('data')
-					firstData.context = firstData.context.add(data.context);
-					firstData.fileInput = firstData.fileInput.add(data.fileInput[0]);
-					firstData.files.push(data.files[0]);
-					$(this).data('data', firstData);
+					var data;
+					data = $(this).data('data');
+					if (data.files.length > 0){
+						firstData.context = firstData.context.add(data.context);
+						firstData.fileInput = firstData.fileInput.add(data.fileInput[0]);
+						firstData.files.push(data.files[0]);
+						$(this).data('data', {
+							files: []
+						});
+					}
+
+					firstData.isValidated = $('#fileupload').data('fileupload')._validate(firstData.files);
+					first.data('data', firstData);
 				}
 			});
+			showHideSubmit();
+			cleanFiles();
 		},
 		submit: function(e, data){
 			var retval = false;
 			var verif = {
 				'intitule': true,
-				'prefix': true
+				'prefix': true,
+				'noErrorFiles': true
 			};
 
 			if ($('#jfu_intitule').val() == ''){
@@ -47,15 +58,22 @@ $(function () {
 				verif.prefix = false;
 			}
 
-			if (verif.intitule && verif.prefix){
+			if ($('.template-upload td.error', this).length > 0){
+				verif.noErrorFiles = false;
+			}
+
+			if (verif.intitule && verif.prefix && verif.noErrorFiles){
 				retval = true;
 			} else {
 				var msg = '';
 				if (!verif.intitule){
-					msg += 'Le champ "Intitulé du lot" est vide !';
+					msg += 'Le champ "Intitulé du lot" est vide.';
 				}
 				if (!verif.prefix){
-					msg += '\nLe champ "Préfixe des numéros internes" est vide !';
+					msg += '\nLe champ "Préfixe des numéros internes" est vide.';
+				}
+				if (!verif.noErrorFiles){
+					msg += '\nDes fichiers ne sont pas valides. Veuillez les supprimer de la liste avant l\'envoi.';
 				}
 				alert(msg);
 			}
@@ -121,26 +139,145 @@ $(function () {
 			$('#jfu_intitule').attr('disabled', 'disabled');
 			$('#jfu_num_prefix').attr('disabled', 'disabled');
 		},
-		'option': {
-			acceptFileTypes: /(\.|\/)(pdf)$/i,
-			process: [
-			{
-				action: 'load',
-				maxFileSize: 100000000 // 100MB
-			}
-			]
-		}
+		acceptFileTypes: /(\.|\/)(pdf)$/i,
+		maxFileSize: s2lowMaxFileSize
 	});
 });
 
 
-//FIXME : trouver un moyen d'intégrer correctement la fonction pemettant la suppression des fichiers de la liste à envoyer
+
 function manualDeleteLine(element){
-	var selected = $('td.name span', $(element).parents('.template-upload')).html();
-	for (var i in $(element).parents('.template-upload').data('data').files){
-		if (typeof($(element).parents('.template-upload').data('data').files[i]) == 'object' && $(element).parents('.template-upload').data('data').files[i].name == selected){
-			$(element).parents('.template-upload').data('data').files.splice(i, 1);
+	var domElementToRemove = $(element).parents('.template-upload');
+	var domElementToRemoveFileName = $('td.name span', domElementToRemove).html();
+	var container = domElementToRemove.parent();
+	var first = $('.template-upload:first', container);
+	var firstFileName = $('td.name span', first).html();
+	var firstData = first.data('data');
+
+	for (var i in firstData.files){
+		if (typeof(firstData.files[i]) == 'object'){
+			if (firstData.files[i].name == domElementToRemoveFileName){
+				firstData.files.splice(i, 1);
+			}
 		}
 	}
-	$(element).parents('.template-upload').remove();
+
+	for (var i in firstData.fileInput){
+		if (typeof(firstData.fileInput[i]) == 'object'){
+			if (i != 'context' && i != 'prevObject'){
+				var files = firstData.fileInput[i].files;
+				if (typeof(files) !== "undefined"){
+					if (firstData.fileInput[i].files[0].name == domElementToRemoveFileName){
+						firstData.fileInput.splice(i, 1);
+					}
+				}else {
+					var str = firstData.fileInput[i].value;
+					if (str.search(domElementToRemoveFileName) != -1){
+						firstData.fileInput.splice(i, 1);
+					}
+				}
+			}
+		}
+	}
+
+	if (domElementToRemoveFileName != firstFileName){
+		domElementToRemove.remove();
+	} else {
+		var fakeData = $('#fakeData');
+		if (fakeData.length == 0){
+			fakeData = $('<div></div>').css('display', 'none').attr('id', 'fakeData');
+			fakeData.data('data', firstData);
+			$('body').append(fakeData);
+		}
+		domElementToRemove.remove();
+		firstData = fakeData.data('data');
+		first = $('.template-upload:first', container);
+	}
+	firstData.isValidated = $('#fileupload').data('fileupload')._validate(firstData.files);
+	first.data('data', firstData);
+	showHideSubmit();
+	cleanFiles();
+}
+
+
+function cleanFiles(params){
+	var defaults = {
+		log: false
+	};
+	$.extend(defaults, params);
+	var first = $('#fileupload tbody.files .template-upload:first');
+	var firstFilename = $('td.name', first).html();
+	var firstData = first.data('data');
+	var cpt = 0;
+
+	$('#fileupload tbody.files .template-upload').each(function(){
+		var msg = cpt + " :";
+		var filename = $('td.name', $(this)).html();
+		if (filename != firstFilename){
+			msg += " not first\n";
+			var data = $(this).data('data');
+			msg += 'files: \n';
+			for (var i in data.files){
+				if (typeof(data.files[i]) == "object"){
+					msg += ' - ' + data.files[i].name;
+					var fileIsPresent = false;
+					for (var j in firstData.files){
+						if (data.files[i].name == firstData.files[j].name){
+							fileIsPresent = true;
+						}
+					}
+					msg += " - is present : " + fileIsPresent + '\n';
+					if (!fileIsPresent){
+						firstData.files.push(data.files[i]);
+						msg += '   pushed\n';
+					}
+				}
+			}
+			$(this).data('data', {
+				files: []
+			});
+			msg += '\n data cleared \n\n';
+		}
+		cpt++;
+		if (defaults.log){
+			console.log(msg);
+		}
+	});
+}
+
+function verifStruct(){
+	var cpt = 0;
+	$('#fileupload tbody.files .template-upload').each(function(){
+		var data = $(this).data('data');
+		var msg = cpt + ': \nfiles: \n';
+		for (var i in data.files){
+			if (typeof(data.files[i]) == "object"){
+				msg += ' - ' + data.files[i].name + '\n';
+			}
+		}
+		console.log(msg);
+		cpt++;
+	});
+}
+
+function showHideSubmit(){
+	if ($('.template-upload td.error').length > 0 || $('.template-upload').length == 0){
+		$('.fileupload-buttonbar .start').css('display', 'none');
+	} else {
+		$('.fileupload-buttonbar .start').css('display', 'inline-block');
+	}
+}
+
+function verifMultiUpload(){
+	var selectMultipleFiles = false;
+	if ( ($.browser.msie && parseFloat($.browser.version) >= 10) ||
+		($.browser.mozilla && parseFloat($.browser.version) >= 3.6) ||
+		($.browser.opera && parseFloat($.browser.version) >= 11) ||
+		($.browser.chrome) ||
+		(typeof($.browser.chrome) == 'undefined' && $.browser.webkit && parseFloat($.browser.version) >= 533.16)
+		){
+		selectMultipleFiles = true;
+		$('.noMultipleSelect').remove();
+	}
+	return selectMultipleFiles;
 }
