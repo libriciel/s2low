@@ -115,6 +115,7 @@ class ActesArchiveSEDA {
 		
 		foreach($this->file2Add as $i => $fileName){
 			$archiveTransfer->Integrity[$i]->Contains = sha1_file($this->tmpFolder.$fileName);
+                        $archiveTransfer->Integrity[$i]->Contains['algorithme'] = "http://www.w3.org/2000/09/xmldsig#sha1";
 			$archiveTransfer->Integrity[$i]->UnitIdentifier = $fileName;
 		}
 		
@@ -133,14 +134,16 @@ class ActesArchiveSEDA {
 		$archiveTransfer->Contains->DescriptionLevel['listVersionID'] = "edition 2009";
 		
 		$archiveTransfer->Contains->Name = "Contrôle de légalité : " . $transactionsInfo['nature_descr'] . 
-											", en date du " .
+											" de ". $this->authorityInfo['name'] .", en date du " .
 											date('d/m/Y',strtotime($transactionsInfo['decision_date'])) .
-											", ".
-											$this->authorityInfo['name'];
+											", télétransmis à la Préfecture le " .
+											date('d/m/Y',strtotime($this->actesTransactionsStatusInfo['date'])) .".";
 		
 		$archiveTransfer->Contains->ContentDescription->CustodialHistory = " Actes dématérialisés soumis au contrôle de légalité télétransmis via la plateforme S2LOW de l'ADULLACT pour ".$this->authorityInfo['name'].". Les données archivées sont structurées selon le schéma métier Actes (Aide au contrôle de légalité dématérialisé) établi par le Ministère de l'intérieur, de l'outre mer et des collectivités territoriales. La description a été établie selon les règles du standard d'échange de données pour l'archivage version 0.2";
 			
-		$archiveTransfer->Contains->ContentDescription->Description = $transactionsInfo['subject'];
+		$archiveTransfer->Contains->ContentDescription->Description = $transactionsInfo['nature_descr'] . " N° ".$transactionsInfo['number'] . 
+										" en date du ". date('d/m/Y',strtotime($transactionsInfo['decision_date'])).
+										" portant sur : " . $transactionsInfo['subject'];
 		
 		$archiveTransfer->Contains->ContentDescription->Language = "fr";
 		$archiveTransfer->Contains->ContentDescription->Language['listVersionID'] = "edition 2009";
@@ -215,7 +218,8 @@ class ActesArchiveSEDA {
 		$c->Document = $this->getDocument($this->arActes, "application/xml",$this->actesTransactionsStatusInfo['date'],false,true);
 		$archiveTransfer->Contains->Contains[0]->Contains[] = $c;
 		
-		foreach($this->relatedTransaction as $i => $relatedTransactionInfo){
+                if (!empty($this->relatedTransaction)){
+                    foreach($this->relatedTransaction as $i => $relatedTransactionInfo){
 			//print_r($relatedTransactionInfo);
 			if ($relatedTransactionInfo['related_transaction_id'] != $transactionsInfo['id']){
 				continue;
@@ -257,14 +261,15 @@ class ActesArchiveSEDA {
 		
 					$nb_contains_contains++;
 				}
-			}	
-		}
-		
+			}//fin foreach $this->relatedTransaction as $responseTransaction
+                    }//fin foreach qui parcours le tableau $this->relatedTransaction
+                }//fin if verifie si le tableau $this->relatedTransaction est vide pour eviter un warning dans les logs
 		
 		$xml_string =  $archiveTransfer->asXML();
 		$xml_string = str_replace("####SAE_ID_VERSANT####", $this->authorityInfo['sae_id_versant'], $xml_string);
 		$xml_string = str_replace("####SAE_ID_ARCHIVE####", $this->authorityInfo['sae_id_archive'], $xml_string);
 		$xml_string = str_replace("####SAE_ORIGINATING_AGENCY####", $this->authorityInfo['sae_originating_agency'], $xml_string);
+                $xml_string = str_replace("&#039;", "'", $xml_string);
 		return $xml_string;
 	}
 	
