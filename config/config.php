@@ -101,7 +101,8 @@ define('ACTES_COMMON_BROADCAST_EMAILS', 'toto@truc.fr');
 // Restreindre ou non plusieurs demandes de classification par jour par collectivité (1 par jour si restreint)
 define('ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY', false);
 
-
+// Message indiquant que le plugin d upload du traitement par lot est en mode dégradé
+define('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE', "La version de votre navigateur ne permet pas d'utiliser les fonctionnalités de sélection multiple de fichiers de manière optimum.<br />Vous devez choisir vos fichiers un par un.");
 //////////////////////////////////
 ///// Paramètre module Helios /////
 /////////////////////////////////
