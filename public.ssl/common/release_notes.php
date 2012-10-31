@@ -93,12 +93,17 @@ $html .= "<li>Module ACTES : correction bug : la position du cartouche est fixe 
 $html .= "<li>Module ACTES : correction bug : l'orthographe du mot envoi a été corrigée sur différentes pages ;";
 $html .= "<li>Module ACTES : correction bug : le caractère : est en trop sur certaines pages ;";
 $html .= "<li>Module HELIOS : correction bug : la colonne suivi indique toujours le même nom ;";
+$html .= "<li>Module ACTES : le versement au SAE intègre les courriers Ministèriel lié à l'acte versé ;";
 $html .= "<li>Module ACTES : Le traitement par lot a été totalement revu et abandonne JAVA ;";
 $html .= "<li>Module ACTES : Les mails de notification de reception d'un courrier Ministèriel sont plus explicites ;";
 $html .= "<li>Module ACTES : Dans les détails d'une transaction, l'identifiant de transafert au SAE est indiqué ;";
+$html .= "<li>Module HELIOS : Les API \"graphique\" ne sont plus présentes dans la page d'import ;";
+$html .= "<li>Module MAIL : Le corps du mail de notification envoyé aux destinataires a été reformulé suites aux demandes des collectivités ;";
 $html .= "<li>Module MAIL : Le nombre de carcatères autorisés dans le carnet d adresses pour les noms des contactes est passé à 100 ;";
+$html .= "<li>Module MAIL : Les champs \"Nom\" et \"Adresse mail\" sont protégés contre l'insertion de code ;";
 $html .= "<li>Admnistration : Le nombre de caractères autorisés dans le champs adresse électronique de diffusion d information est passé à 2000 ;";
 $html .= "<li>Administration : Modification de l'interface de paramétrage du connecteur SAE ;";
+$html .= "<li>Administration : De nouvelles API permettent la gestion des collectivités, des utilisateurs, des groupes ;";
 $html .= "</ul>";
 
 $html .= "<h2>V1.2.2 du 01.06.2012</h2>";
