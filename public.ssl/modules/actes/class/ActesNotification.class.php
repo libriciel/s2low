@@ -63,7 +63,7 @@ class ActesNotification {
                     $this->setBroadcasted($transactionInfo['transaction_id']);
 		}//fin if
                 
-                $pdfgenerate = false;
+                $this->pdfgenerate = false;
 	}
 	
 	private function sendMail($transactionInfo,$emails,$withFile){
@@ -71,7 +71,7 @@ class ActesNotification {
 			return;
 		}
                 
-                echo "$emails\n";
+                echo "Notification a $emails\n";
                 
 		$mailContent = $this->getMailContent($transactionInfo);
                 if(! $this->pdfgenerate){
