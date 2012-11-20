@@ -577,7 +577,7 @@ class User extends DataObject {
 	  if (! $result->isError()) {
 		while ($row = $result->get_next_row()) {
 		  // Ajout de la permission uniquement si la collectivité est autorisée sur ce module
-		  if ($this->isGroupAdminOrSuper() || $authModules[$row["module_id"]]) {
+		  if ($this->isGroupAdminOrSuper() || ! empty($authModules[$row["module_id"]])) {
 			$this->perms[$row["name"]] = array("module_id" => $row["module_id"], "perm" => $row["perm"], "id" => $row["id"]);
 		  }
 		}
