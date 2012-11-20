@@ -20,6 +20,7 @@ $ftype =  Helpers::getVarFromGet("type");
 $fname = Helpers::getVarFromGet("name");
 $fgroup = Helpers::getVarFromGet("group");
 $api = Helpers::getVarFromGet("api");
+$fsiren = Helpers::getVarFromGet("siren");
 
 $authority = new Authority();
 
@@ -40,6 +41,10 @@ if (isset($fgroup) && is_numeric($fgroup)) {
   $filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
 }
 
+if (isset($fsiren) && is_numeric($fsiren)) {
+  $filter[] .= "authorities.siren ILIKE '%" . addslashes($fsiren) ."%'";
+}
+
 $where = "";
 if (count($filter) > 0) {
   $where = "WHERE " . implode($filter, " AND ");
@@ -48,7 +53,7 @@ if (count($filter) > 0) {
 $authorities = $authority->getAuthoritiesList($where);
 
 if ($api){
-	$jsonOutput->retrictAndDisplay($authorities,array('id','name','authority_group_id','address','city','postal_code','telephone'));
+	$jsonOutput->retrictAndDisplay($authorities,array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
 	exit;
 }
 
