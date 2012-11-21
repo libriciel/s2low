@@ -300,14 +300,23 @@ $html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bo
 
 $filter = array ();
 // Construction chaine de filtrage
-if ($me->isGroupAdminOrSuper()) { // Le super utilisateur voit toutes les collectivité
- //verification $authority
+//if ($me->isGroupAdminOrSuper()) { // Le super utilisateur voit toutes les collectivité
+if ($me->isSuper()){
    if (isset ($fauthority) && strlen($fauthority) > 0) {
     $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
   }
-}
-
-elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
+} elseif($me->isGroupAdmin()){
+	$all_authority_id = array_keys($me->getAllPossibleAuthority());	
+  	if (isset ($fauthority) && strlen($fauthority) > 0) {
+  		if (in_array($fauthority,$all_authority_id)){
+    		$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
+  		} else {
+  			$filter[] .=" 1 = 0 ";
+  		}
+  	} else {
+  		$filter[] .= "users.authority_id IN (" . implode(',',$all_authority_id) . ")";
+  	}
+} elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
   $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 } else {
   // Un utilisateur ne voit que ses propres transactions  
@@ -363,19 +372,10 @@ $html .= "<h2>Liste des fichiers postés</h2>\n";
 
 //
 if (count($envelopes) > 0) {
-   //if ($me->isAdmin()) {
       $owner = new User($envelopes[0]["user_id"]);
       $owner->init();
-    //}
 
     $sortWay = (isset($_GET['sortway']) && ($_GET["sortway"] == "asc")) ? "desc" : "asc";
-
-    //if ($me->isSuper()) {
-    //  $zeAuthority = new Authority($owner->get("authority_id"));
-    //  $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
-    //}
-
-    
     
     $html .= "<table class=\"transactions_list\">\n";
   
@@ -422,7 +422,6 @@ if (count($envelopes) > 0) {
 }
 $html .= "</div>\n";
 
-//pour la pagination...
 
 
 
