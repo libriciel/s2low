@@ -13,11 +13,11 @@ $objet = $recuperateur->get("objet");
 if (isset( $_GET['status']) && $_GET['status'] === '0'){
 	$fstatus = 0;
 } else {
-	$fstatus =  $recuperateur->get("status",10);
+	$fstatus =  $recuperateur->get("status",TransactionSQL::EN_COURS);
 }
-# Le statut par défaut est "En cours" (10)
-if ($fstatus != "10" && $fstatus != "all" && ! is_numeric($fstatus)) {
-  $fstatus = "10";
+
+if ($fstatus != TransactionSQL::EN_COURS && $fstatus != "all" && ! is_numeric($fstatus)) {
+  $fstatus = TransactionSQL::EN_COURS;
 }
 
 $fmin_submission_date =  $recuperateur->get("min_submission_date");
@@ -73,7 +73,7 @@ $transNatures = $transactionSQL->getNatures();
 
 
 $status = $transactionSQL->getStatus();
-$status["10"] = "En cours";
+$status[TransactionSQL::EN_COURS] = "En cours";
 $status["all"] = "Tous les états";
 
 $menuHTML = new MenuHTML();
