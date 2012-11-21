@@ -40,7 +40,7 @@ endif;?>
 	 		</div>
 	 		<?php foreach($groupeArray as $groupe):?>
 	 			<div class='normal <?php if($groupe_id == $groupe['id']) echo "selected"?>'>
-	 				<span  ><a href='index.php?command=annuaire&groupe_id=<?php echo $groupe['id'] ?>'><?php echo$groupe['name'] ?></a></span>
+	 				<span  ><a href='index.php?command=annuaire&groupe_id=<?php echo $groupe['id'] ?>'><?php hecho($groupe['name']) ?></a></span>
 	 				<span ><?php echo $groupe['nb_contact']?></span>
 	 				
 	 			</div>
@@ -68,14 +68,14 @@ endif;?>
 	  		<br/>
 			<?php if (count($groupeArray)) : ?>  	
 			<?php if ($groupe_id) : ?>
-		 		<input class="submit_button" value="Retirer de <?php echo $groupe_name ?>" type="submit" onclick='javascript:retirer();'/>
+		 		<input class="submit_button" value="Retirer de <?php hecho($groupe_name) ?>" type="submit" onclick='javascript:retirer();'/>
 				<input type='hidden' name='old_groupe_id' value='<?php echo $groupe_id?>' />
 			<?php endif;?>	
 			<br/>
 			<select name='groupe_id' id='select_group' onchange='javascript:onChangeGroupSelect()'>
 				<option value='0'>Ajouter à ... </option>
 				<?php foreach($groupeArray as $groupe):?>
-		 			<option value='<?php echo $groupe['id'] ?>'><?php echo $groupe['name'] ?></option>
+		 			<option value='<?php echo $groupe['id'] ?>'><?php hecho($groupe['name']) ?></option>
 		 		<?php endforeach?>
 			</select>
 			<br/>

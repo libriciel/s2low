@@ -38,12 +38,12 @@ ob_start();
  				<tr>
   					<td class="td-register">Nom&nbsp;:</td>
   					<td class="td-input">
-  						<input size="40" maxlength="128" name="description" type="text" value="<?php echo $info['description'] ?>"/>
+  						<input size="40" maxlength="128" name="description" type="text" value="<?php hecho($info['description']) ?>"/>
   					</td>
  				</tr>
 	 			<tr>
   					<td class="td-register">Adresse email&nbsp;:</td>
-  					<td class="td-input"><input size="40" maxlength="128" name="email" type="text" value="<?php echo $info['mail_address'] ?>" /></td>
+  					<td class="td-input"><input size="40" maxlength="128" name="email" type="text" value="<?php hecho($info['mail_address']) ?>" /></td>
  				</tr>
 			</tbody>
 		</table>
