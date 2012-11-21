@@ -45,6 +45,8 @@ class TransactionSQL {
 
 	); 
 	
+	private static $etat_en_cours = array(1,2,3,4,7,8);
+	
 	
 	private $sqlQuery;
 	private $filter;
@@ -124,7 +126,7 @@ class TransactionSQL {
 			return;
 		}
 		if ($status == self::EN_COURS){
-			 $this->filter[] = "actes_transactions.last_status_id  IN (1, 2, 3, 4)";
+			 $this->filter[] = "actes_transactions.last_status_id  IN (".implode(',',self::$etat_en_cours).")";
 			
 		} else {
 			$this->filter[] .= "actes_transactions.last_status_id  = ?" ;
