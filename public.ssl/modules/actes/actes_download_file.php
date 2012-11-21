@@ -5,8 +5,6 @@ require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesIncludedFile.class.php');
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesPermission.class.php');
-
 
 // Instanciation du module courant
 $module = new Module();
@@ -76,7 +74,7 @@ $owner->init();
 
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ActesPermission($serviceUser);
+$permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
 	$_SESSION["error"] = "Accès refusé";

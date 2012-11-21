@@ -1,13 +1,9 @@
 <?php
-
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesPermission.class.php');
 
-
-// Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("helios")) {
   $_SESSION["error"] = "Erreur d'initialisation du module";
@@ -54,10 +50,8 @@ if (isset($id) && ! empty($id)) {
   exit();
 }
 
-
-
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ActesPermission($serviceUser);
+$permission = new ModulePermission($serviceUser,"helios");
 
 if ( ! $permission->canView($me,$owner)){
 	$_SESSION["error"] = "Accès refusé";
@@ -70,8 +64,6 @@ $doc = new HTMLLayout();
 $doc->setTitle("Helios : visualisation de transactions pour un fichier");
 
 $doc->buildMenu($me);
-
-//$transStatus = $trans->getCurrentStatus(); //CURRENT STATUS
 
 $currentStatus=HeliosTransactionWorkflow::getCurrentStatus($id);
 $html = "<div id=\"content\">\n";

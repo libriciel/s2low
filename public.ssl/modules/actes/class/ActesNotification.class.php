@@ -36,6 +36,9 @@ class ActesNotification {
 	
 	public function sendNotificationManuel($transactionId){
 		$transactionInfo = $this->getTransactionInfo($transactionId);
+		if (! $transactionInfo){
+			return false;
+		}
 		$this->sendNotification($transactionInfo);
 		$this->deletedirectoryunzip($transactionInfo);
 	}
