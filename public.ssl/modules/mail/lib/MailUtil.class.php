@@ -281,11 +281,16 @@ class MailUtil {
 			
 			//do not ever try to call these lines in reverse order
 			$body = $mime->get();
-			$hdrs = $mime->headers($hdrs);			
+			$hdrs = $mime->headers($hdrs);
+                        
+                        $tomime = new Mail_mime($crlf);
+                        $tohdrs = array('To' => $MailEmis->getEmail());
+                        $tohdrs = $tomime->headers($tohdrs);
+                        $to = $tohdrs['To'];
 			
 			$mail =new pearMail();
 			$mail->sep = $crlf;
-  			if (!$mail->send($MailEmis->getEmail(), $hdrs, $body,$from)) {
+  			if (!$mail->send($to, $hdrs, $body,$from)) {
 	        		return false;
   			}
     	}	
