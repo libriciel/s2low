@@ -113,25 +113,16 @@ define('HELIOS_FILES_UPLOAD_ROOT', '/tdt-workspace/helios/sending/');
 // Repertoire de stockage des reponses
 define('HELIOS_RESPONSES_ROOT', '/tdt-workspace/helios/response/');
 
-/*
- * annuler la vérification de la connection de vpn du coté php. on va toujour accepter la postage avec le tempon.
- * 
-define('HELIOS_SVN',"0"); // 1 pour connecter ver MIAT,0 ver simulateur
-if (HELIOS_SVN)
-{
-	define('HELIOS_FTP_SERVER','91.121.157.192');
-	define('HELIOS_FTP_PORT','2121');
-	define('HELIOS_FTP_LOGIN','user');
-	define('HELIOS_FTP_PASSWORD','password');
-}
-else
-{
-	define('HELIOS_FTP_SERVER','91.121.157.192');
-	define('HELIOS_FTP_PORT','2121');
-	define('HELIOS_FTP_LOGIN','user');
-	define('HELIOS_FTP_PASSWORD','password');
-}
-*/
+//Pour le script de récupération des enveloppe Helios
+define('HELIOS_FTP_SERVER','127.0.0.1');
+define('HELIOS_FTP_PORT','21');
+define('HELIOS_FTP_LOGIN','helios');
+define('HELIOS_FTP_PASSWORD','helios');
+define('HELIOS_FTP_RESPONSE_SERVER_PATH','/home/helios/response/');
+define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/tdt-workspace/helios/response_tmp/');
+define('HELIOS_UPSTART_TOUCH_FILE','/tmp/helios-upstart');
+
+
 
 define('HELIOS_MAX_UPLOAD_SIZE',100*1024*1024);
 define('HELIOS_GENERATED_FILE_PERMISSION','0644');

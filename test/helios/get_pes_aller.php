@@ -1,6 +1,7 @@
 <?php 
 $nom_fic = md5(mt_rand());
 
+$date = date("Y-m-d");
 
 $content = <<< PES_ALLER
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -22,7 +23,7 @@ $content = <<< PES_ALLER
   </Recepteur>
  </Enveloppe>
  <EnTetePES>
-  <DteStr V="AAAA-MM-JJ"/>
+  <DteStr V="$date"/>
 
   <IdPost V="034000"/>
   <IdColl V="12345678912345"/>
