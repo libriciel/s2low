@@ -113,11 +113,13 @@ class ActesArchiveSEDA {
 		$archiveTransfer->TransferringAgency = "####SAE_ID_VERSANT####";
 		$archiveTransfer->ArchivalAgency = "####SAE_ID_ARCHIVE####";
 		
-		foreach($this->file2Add as $i => $fileName){
+		if (!empty($this->file2Add)){
+                    foreach($this->file2Add as $i => $fileName){
 			$archiveTransfer->Integrity[$i]->Contains = sha1_file($this->tmpFolder.$fileName);
                         $archiveTransfer->Integrity[$i]->Contains['algorithme'] = "http://www.w3.org/2000/09/xmldsig#sha1";
 			$archiveTransfer->Integrity[$i]->UnitIdentifier = $fileName;
-		}
+                    }
+                }
 		
 		
 		$archiveTransfer->Contains->ArchivalAgreement = $this->authorityInfo['sae_numero_aggrement'];
@@ -418,6 +420,9 @@ class ActesArchiveSEDA {
 	
 	public function getAccessRestriction($classification,$nature){
 		if ($classification[0] == 4 && in_array($nature,array(3,4))){
+			return "AR048";
+		}
+                if($classification[0] == 8 && $classification[1] == 2 && $nature == 3){
 			return "AR048";
 		}
 		return "AR038";
