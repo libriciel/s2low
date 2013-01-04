@@ -208,7 +208,7 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		require_once(SITEROOT."/class/TamponPDF.class.php");
 	
                 $pdftkise='/tmp/' .$file;
-                $cmdpdftk='pdftk '.$file." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
+                $cmdpdftk='time out 10 pdftk '.$file." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
                 $status='';
                 $ret='';
                 Trace::wrap_exec($cmdpdftk, $status, $ret);

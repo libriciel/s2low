@@ -105,7 +105,7 @@ class ActesIncludedFile extends DataObject {
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
 				
-			$cmdpdftk='pdftk '. $tmpDir . '/' .$this->filename." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
+			$cmdpdftk='timeout 10 pdftk '. $tmpDir . '/' .$this->filename." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
                         Trace::wrap_exec($cmdpdftk, $status, $ret);
                         if ($status === false || $ret != 0) {
                                 $this->errorMsg = "Erreur lors de la convertion via pdftk (code " . $ret . ")";
