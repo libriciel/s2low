@@ -37,7 +37,7 @@ class FTP {
 		}
 		
 		foreach($all_file as $file){
-			$err = ftp_get($ftp, "$local_path/$file", "$remote_path/$file", FTP_ASCII);
+			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
 			echo $file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
 		}
 		
