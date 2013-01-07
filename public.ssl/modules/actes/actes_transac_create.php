@@ -11,7 +11,7 @@ require_once (SITEROOT . '/class/FileUploader.class.php');
 $errorMsg = "";
 $extraRedirect = "";
 if (empty($_POST)){
-	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ".ini_get("post_max_size") .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ". ACTES_ARCHIVE_MAX_SIZE .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 }
 
 // Instanciation du module courant
