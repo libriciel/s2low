@@ -32,7 +32,7 @@
   </script>
   
 	
-<form action="index.php?command=send" method="post"  id="mailform" onSubmit="InsertFileNumber();return checkFormCreateMail();" enctype="multipart/form-data" >
+<form action="index.php?command=send" method="post"  id="mailform" onSubmit="InsertFileNumber();return checkFormCreateMail();" enctype="multipart/form-data" autocomplete="off">
 	<table>
 		<tr>
 			<td class="td_mailAddress">À&nbsp;:</td>	
