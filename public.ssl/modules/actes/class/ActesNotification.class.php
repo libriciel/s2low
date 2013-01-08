@@ -213,8 +213,11 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
                 $ret='';
                 Trace::wrap_exec($cmdpdftk, $status, $ret);
                 if ($status === false || $ret != 0) {
-                                echo "Erreur lors de la convertion via pdftk (code " . $ret . ")";
-                                $pdftkise=$file;
+                    $cmdpdftk='timeout 10 pdfsam-console -f '.$file." -o ".$pdftkise ." concat";
+                    Trace::wrap_exec($cmdpdftk, $status, $ret);
+                    if ($status === false || $ret != 0) {
+                        $pdftkise=$file;
+                    }
                 }
    
 		try {	
