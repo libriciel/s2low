@@ -72,13 +72,14 @@ class ActesIncludedFile extends DataObject {
 	  // Il faut extraire le fichier demandé dans un stockage temporaire
 	  $tmpDir = "/tmp/" . Helpers::genTempName();
 
+          $this->errorMsg='';
 	  if (! @mkdir($tmpDir)) {
-		$this->errorMsg = "Erreur système de fichiers";
+		$this->errorMsg .= "Erreur système de fichiers";
 		return false;
 	  }
 	  
 	  if (! file_exists(ACTES_FILES_UPLOAD_ROOT . '/' . $this->envelope->get("file_path"))) {
-		$this->errorMsg = "Le fichier archive n'est pas/plus disponible.";
+		$this->errorMsg .= "Le fichier archive n'est pas/plus disponible.";
 		return false;
 	  }
 
@@ -90,7 +91,7 @@ class ActesIncludedFile extends DataObject {
 	  $ret_value = true;
 
 	  if ($status === false || $ret != 0) {
-		$this->errorMsg = "Erreur d'extraction du fichier demandé (code " . $ret . ")";
+		$this->errorMsg .= "Erreur d'extraction du fichier demandé (code " . $ret . ")";
 		$ret_value = false;
 	  } else {
 		if (strlen($this->posted_filename)) {
@@ -104,59 +105,68 @@ class ActesIncludedFile extends DataObject {
 		
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
-				
-			$cmdpdftk='timeout 10 pdftk '. $tmpDir . '/' .$this->filename." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
-                        Trace::wrap_exec($cmdpdftk, $status, $ret);
-                        if ($status === false || $ret != 0) {
-                                $this->errorMsg = "Erreur lors de la convertion via pdftk (code " . $ret . ")";
-                                $ret_value = false;
-                        }
-                        else{
-                            $transactionId = $this->get("transaction_id");
-                            $actesNotification = new ActesNotification($this->db);
-                            $transactionInfo = $actesNotification->getTransactionInfo($transactionId);
-                            set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-                            require_once(SITEROOT."/class/TamponPDF.class.php");
-
-                            try {	
-                                    $pdf = Zend_Pdf::load($pdftkise);
-
-                                    $tampon = new TamponPDF($pdf);
-                                    $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
+                    $pathpdforig = $tmpDir . '/' .$this->filename;
+                    $pdftkise = $this->modificationPDF($pathpdforig, $pdftkise);
+                    
+                    $transactionId = $this->get("transaction_id");
+                    $actesNotification = new ActesNotification($this->db);
+                    $transactionInfo = $actesNotification->getTransactionInfo($transactionId);
+                    set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
+                    
+                    require_once(SITEROOT."/class/TamponPDF.class.php");
+                    
+                    try {
+                        $pdf = Zend_Pdf::load($pdftkise);
+                        $tampon = new TamponPDF($pdf);
+                        $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
                                     "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
                                     "Affiché le " ));
-                                    $tampon->setNameFile($this->filename);
-                                    $tampon->render();
-                            } catch (Exception $e){
-                                    Helpers::sendFileToBrowser($pdftkise, $browserName, $this->filetype);
-                            }
-                        }
+                        $tampon->setNameFile($this->filename);
+                        $tampon->render();
+                        
+                    } catch (Exception $e){
+                        Helpers::sendFileToBrowser($pdftkise, $browserName, $this->filetype);
+                    }
 		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
-		  $this->errorMsg = "Erreur envoi fichier";
+		  $this->errorMsg .= "Erreur envoi fichier";
 		  $ret_value = false;
 		}
 
 		// Suppression du fichier
 		if (! unlink($tmpDir . "/" . $this->filename)) {
-		  $this->errorMsg = "Erreur suppression fichier";
+		  $this->errorMsg .= "Erreur suppression fichier";
 		  $ret_value = false;
 		}
                 
                 if (! unlink($pdftkise)) {
-                  $this->errorMsg = "Erreur suppression du fichier modifie par pdftk";
+                  $this->errorMsg .= "Erreur suppression du fichier modifie par pdftk";
                   $ret_value = false;
                 }
 	  }
 
 	  // Suppression du répertoire temporaire
 	  if (! rmdir($tmpDir)) {
-		$this->errorMsg = "Erreur suppression répertoire temporaire";
+		$this->errorMsg .= "Erreur suppression répertoire temporaire";
 		$ret_value = false;
 	  }
 
 	  return $ret_value;
 	}
   }
+  
+  function modificationPDF($pathpdforig, $pathpdfout){
+      $pathpdfout=$pathpdforig;
+      $cmdpdftk='timeout 10 pdftk '. $pathpdforig." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pathpdfout;
+      Trace::wrap_exec($cmdpdftk, $status, $ret);
+      if ($status === false || $ret != 0) {
+          $cmdpdftk='timeout 10 pdfsam-console -f '. $pathpdforig ." -o ". $pathpdfout ." concat";
+          Trace::wrap_exec($cmdpdftk, $status, $ret);
+          if ($status === false || $ret != 0)
+              $this->errorMsg .= "Erreur lors de la convertion via pdftk et pdfsam";
+       }//fin if
+      return $pathpdfout;
+  }
+
 
   /**********************/
   /* Méthodes statiques */
