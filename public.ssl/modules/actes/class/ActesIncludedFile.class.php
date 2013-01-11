@@ -133,36 +133,43 @@ class ActesIncludedFile extends DataObject {
 		}
 
 		// Suppression du fichier
-		if (! unlink($tmpDir . "/" . $this->filename)) {
-		  $this->errorMsg .= "Erreur suppression fichier";
-		  $ret_value = false;
-		}
+                if (file_exists($tmpDir . "/" . $this->filename)){
+                    if (! unlink($tmpDir . "/" . $this->filename)) {
+                        $this->errorMsg .= "Erreur suppression fichier";
+                        $ret_value = false;
+                    }
+                }//fin if test fichier $tmpDir . "/" . $this->filename existe
                 
-                if (! unlink($pdftkise)) {
-                  $this->errorMsg .= "Erreur suppression du fichier modifie par pdftk";
-                  $ret_value = false;
-                }
+                if (file_exists($pdftkise)){
+                    if (! unlink($pdftkise)) {
+                        $this->errorMsg .= "Erreur suppression du fichier modifie par pdftk";
+                        $ret_value = false;
+                    }
+                }//fin if test fichier $pdftkise existe
 	  }
 
 	  // Suppression du répertoire temporaire
-	  if (! rmdir($tmpDir)) {
+          if (file_exists($tmpDir)){
+            if (! rmdir($tmpDir)) {
 		$this->errorMsg .= "Erreur suppression répertoire temporaire";
 		$ret_value = false;
-	  }
+            }
+	  }//fin if test dossier $tmpDir
 
 	  return $ret_value;
 	}
   }
   
   function modificationPDF($pathpdforig, $pathpdfout){
-      $pathpdfout=$pathpdforig;
       $cmdpdftk='timeout 10 pdftk '. $pathpdforig." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pathpdfout;
       Trace::wrap_exec($cmdpdftk, $status, $ret);
       if ($status === false || $ret != 0) {
           $cmdpdftk='timeout 10 pdfsam-console -f '. $pathpdforig ." -o ". $pathpdfout ." concat";
           Trace::wrap_exec($cmdpdftk, $status, $ret);
-          if ($status === false || $ret != 0)
-              $this->errorMsg .= "Erreur lors de la convertion via pdftk et pdfsam";
+          if ($status === false || $ret != 0){
+              $pathpdfout=$pathpdforig;
+              //$this->errorMsg .= "Erreur lors de la convertion via pdftk et pdfsam";
+          }
        }//fin if
       return $pathpdfout;
   }
