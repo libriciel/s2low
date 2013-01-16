@@ -148,6 +148,13 @@ define('MAIL_TEXT',"Bonjour,
     
 Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accès au courrier recommandé.");
 
+/*************************
+ * Paramètre module DIA
+ */
+
+define("DIA_UPLOAD_PATH","/tdt-workspace/dia/");
+
+
 require_once('config-static.php');
 
 

@@ -4,8 +4,14 @@ require_once("init.php");
 
 $connexion = new Connexion();
 if (!$connexion->isConnected()){
-	header("Location: " . WEBSITE_SSL."/login.php");
-	exit;
+	$me = new User();
+	
+	if (!$me->authenticate()) {
+		$_SESSION["error"] = "Échec de l'authentification";
+		header("Location: " . WEBSITE);
+		exit();
+	}
+
 }
 
 $userSQL = new UserSQL($sqlQuery);

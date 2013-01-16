@@ -1,0 +1,69 @@
+function: 
+	version: 
+		description: Version de la plateforme
+		comment: Permet d'obtenir la version de la plateforme. 
+		soap: true
+		output:
+			version:	
+				comment: Numéro de version commerciale
+			revision: 
+				comment: Numéro de révision du dépôt de source officiel de S²low (https://adullact.net/scm/viewvc.php/?root=s2low)
+			version_complete:
+				comment: Version affiché sur la l'interface web de la plateforme 
+	
+	list-dia: 
+		description: Listes des DIA
+		soap: true		
+		input:
+			status:
+				comment: 'status de la DIA 1 = Recu 2 = Recupere 3 = AE Recu 4 = AE Envoyé"
+			page_number:
+				comment: numéro de la page 
+			taille_page:
+				comment: taille de la page
+		output:
+			id:
+				comment: Identifiant unique de la DIA sur S²low
+			date-reception: 
+				comment: Date de réception de la DIA sur S²low
+			filename:
+				comment: Nom du fichier contenant la DIA
+			filesize:
+				comment: Taille du fichier contenant la DIA
+			status:
+				comment: status de la transaction
+			status-txt:
+				comment: libélé du status
+
+	get-dia:
+		description: Réception d'une DIA
+		soap: true
+		input:
+			id:
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+		output:
+			filename:
+				comment: le nom du fichier
+			file_content:
+				comment: le contenu du fichier
+	
+	set-ae: 
+		description: Envoie de l'accusé d'enregistrement
+		soap: true
+		input:
+			id_d: 
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+			file_name:
+				comment: le nom du fichier
+			file_content:
+				comment: le contenu du fichier
+				  
+		output:
+			result:
+				comment: " ok - si l'enregistrement s'est bien déroulé"
+			message: 
+				comment: "Message complémentaire"
+	
+	
