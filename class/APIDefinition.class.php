@@ -50,14 +50,14 @@ class APIDefinition {
 					}	
 				}
 				$this->setDefaultValue(	$functions[$name][self::KEY_INPUT][$param_name],self::KEY_DEFAULT,"");
-				$this->setDefaultValue(	$functions[$name][self::KEY_INPUT][$param_name],'type', 'xsd:String');
+				$this->setDefaultValue(	$functions[$name][self::KEY_INPUT][$param_name],'type', 'xsd:string');
 				
 			}
 			
 			foreach($functions[$name][self::KEY_OUTPUT] as $param_name => $param_properties){
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],array(self::KEY_IS_VARIABLE,self::KEY_IS_MULTIPLE),false);
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],self::KEY_CONTENT,array());
-				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'type',"xsd:String");
+				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'type',"xsd:string");
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'minOccurs', 0);
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'maxOccurs', 1);
 				
