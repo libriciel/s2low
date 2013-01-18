@@ -99,6 +99,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	xmlns:xop="http://www.w3.org/2004/08/xop/include"
 	xmlns:wsp="http://schemas.xmlsoap.org/ws/2002/12/policy" 
 	xmlns:wsam=" http://www.w3.org/2007/05/addressing/metadata"
+	
+	
 	targetNamespace="<?php echo $namespace ?>" 	
 	>
 	<wsdl:types>
@@ -110,7 +112,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	<?php foreach($functions_list as $function_name => $function_properties) : ?>
 	<wsdl:message name="<?php hecho($function_properties['soap-name'])?>">
 		<?php foreach($function_properties[APIDefinition::KEY_INPUT] as $name => $value): ?>
-			<wsdl:part name="<?php hecho($name)?>" element="xsd:anyType"/>
+			<wsdl:part name="<?php hecho($name)?>" type="xsd:anyType"/>
 		<?php endforeach;?>
 	</wsdl:message>	
 	<wsdl:message name="<?php hecho($function_properties['soap-name'])?>Response">
