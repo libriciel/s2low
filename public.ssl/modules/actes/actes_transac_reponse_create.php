@@ -1,5 +1,6 @@
 <?php
 
+$errorMsg = "";
 
 function sortir($message,$api){
 	global $related_id;
@@ -57,9 +58,23 @@ $type_transaction = $related_trans->get("type");
 $type_envoie = Helpers :: getVarFromPost("type_envoie", true);
 
 $actePDFFile = $_FILES["acte_pdf_file"];
-$actePDFFileSign = $_FILES["acte_pdf_file_sign"];
-$acteAttachments = $_FILES["acte_attachments"];
-$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
+if (isset($_FILES["acte_pdf_file_sign"])){
+	$actePDFFileSign = $_FILES["acte_pdf_file_sign"];
+} else {
+	$actePDFFileSign = false;
+}
+
+if (isset($_FILES["acte_attachments"])){
+	$acteAttachments = $_FILES["acte_attachments"];
+} else {
+	$acteAttachments = false;
+}
+
+if (isset($_FILES["acte_attachments_sign"])){
+	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
+} else {
+	$acteAttachmentsSign = false;
+}
 
 $env = new ActesEnvelope();
 $trans = new ActesTransaction();
@@ -82,7 +97,7 @@ $env->set("district", $myAuthority->get("district"));
 $env->set("authority_type_code", $myAuthority->get("authority_type_id"));
 $env->set("return_mail", implode($retMail, '|'));
 $env->set("name", $me->getprettyName());
-$env->set("telephone", $telephone);
+$env->set("telephone", "");
 $env->set("email", $me->get("email"));
 $env->set("file_path", "");
 
@@ -108,18 +123,14 @@ $fileImportError = false;
 
 // Validation du type des fichiers uploadés
 // Fichier de l'acte
-if (isset ($actePDFFile) || $batchMode) {
-  if ($batchMode) {
-    $acteFilePath = $zeBatchFile->getAbsoluteFilePath();
-    $acteFileName = $zeBatchFile->getDisplayName();
-  } else {
+if (isset ($actePDFFile) ) {
+
     if (is_uploaded_file($actePDFFile["tmp_name"])) {
       $acteFilePath = $actePDFFile["tmp_name"];
       $acteFileName = $actePDFFile["name"];
     } else {
  		 sortir( "Envoi de fichier illégal.",$api);    	
     }
-  }
 
   $dest_name = $trans->getStdFileName($env);
   if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath)) {
@@ -128,18 +139,11 @@ if (isset ($actePDFFile) || $batchMode) {
   } else {
     // Ajout de la signature si présente
     $signFile = null;
-    if ($batchMode) {
-      $sign = $zeBatchFile->get("signature");
-      if (!empty ($sign)) {
-        $signFile = $zeBatchFile->get("signature");
-        $readFile = false;
-      }
-    } else {
+
       if (isset ($actePDFFileSign["tmp_name"]) && is_uploaded_file($actePDFFileSign["tmp_name"])) {
         $signFile = $actePDFFileSign["tmp_name"];
         $readFile = true;
       }
-    }
 
     if ($signFile) {
       if (!$trans->addActeSign($signFile, $readFile)) {
