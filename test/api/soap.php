@@ -16,10 +16,20 @@ $client = new SoapClient("https://192.168.1.5/modules/dia/wsdl.php",
 );
 
 
-$id = 10;
-print_r($client->getDIA($id));
 
-print_r($client->setAE($id,"toto.xml","<toto/>"));
+//print_r($client->version());
+
+//print_r($client->listDIA(1));
+/*try {
+print_r($client->getDia(12));
+} catch (Exception $e){
+	echo $e->getMessage();
+}*/
+
+/*$id = 13;
+print_r($client->setAE($id,"titi.xml","<titi/>"));*/
+
+print_r($client->setErreur(15,utf8_encode("j'ai pas envie d'aller à l'école")));
 
 $response = $client->__getLastResponse();
 $xml = simplexml_load_string($response);

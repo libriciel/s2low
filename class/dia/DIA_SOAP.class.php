@@ -19,7 +19,7 @@ class DIA_SOAP {
 			$method = $reflexionClass->getMethod($name);
 			$result = $method->invokeArgs($this->apiAction,$arguments);
 		} catch (Exception $e){
-			$result = $this->getError($e->getMessage());
+			return new SoapFault("DIA:$name", utf8_encode($e->getMessage()));
 		}
 		return utf8_encode_array($result);	
 	}

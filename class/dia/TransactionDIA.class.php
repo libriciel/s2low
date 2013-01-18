@@ -13,6 +13,7 @@ class TransactionDIA {
 	const RECUPERE = 2 ;
 	const AE_RECU = 3;
 	const AE_ENVOYE = 4;
+	const ERREUR = 5;
 	
 	
 	private static $status = array ( 
@@ -21,6 +22,7 @@ class TransactionDIA {
 		2 => 'Récupéré',
 		3 => 'AE reçu sur S²low',
 		4 => 'AE envoyé vers PRESTO',
+		5 => 'Erreur sur la DIA'
 	); 
 	
 	public function __construct($sqlQuery){		
@@ -52,7 +54,6 @@ class TransactionDIA {
 	}
 	
 	public function setOrder($order,$sortway){
-		
 		$this->order = ($order=='id')?'dia_transactions.id':'submission_date';
 		$this->sortWay = ($sortway=='asc')?'ASC':'DESC';
 	}
@@ -130,6 +131,23 @@ class TransactionDIA {
 		}
 		return $result;
 	}
+	
+	public function getAllId(){
+		$sql = "SELECT " .
+				" dia_transactions.id as transaction_id " .
+				" FROM dia_transactions " .
+				" JOIN users ON dia_transactions.user_id=users.id " .
+				" JOIN authorities ON users.authority_id=authorities.id " .
+				$this->getWhere();		
+	
+		$result = array();
+		foreach($this->sqlQuery->query($sql,$this->value) as $i => $line){
+			$result[] = $line['transaction_id'];
+		}
+		
+		return $result;
+	}
+	
 
 	public function getNbTransaction(){
 		$where = "";

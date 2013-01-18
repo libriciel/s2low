@@ -50,11 +50,18 @@ class APIDefinition {
 					}	
 				}
 				$this->setDefaultValue(	$functions[$name][self::KEY_INPUT][$param_name],self::KEY_DEFAULT,"");
+				$this->setDefaultValue(	$functions[$name][self::KEY_INPUT][$param_name],'type', 'xsd:String');
+				
 			}
 			
 			foreach($functions[$name][self::KEY_OUTPUT] as $param_name => $param_properties){
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],array(self::KEY_IS_VARIABLE,self::KEY_IS_MULTIPLE),false);
 				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],self::KEY_CONTENT,array());
+				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'type',"xsd:String");
+				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'minOccurs', 0);
+				$this->setDefaultValue(	$functions[$name][self::KEY_OUTPUT][$param_name],'maxOccurs', 1);
+				
+				
 				foreach($functions[$name][self::KEY_OUTPUT][$param_name][self::KEY_CONTENT] as $content_name => $content_properties){
 					$this->setDefaultValue($functions[$name][self::KEY_OUTPUT][$param_name][self::KEY_CONTENT][$content_name],array(self::KEY_IS_VARIABLE,self::KEY_IS_MULTIPLE),false);
 					$this->setDefaultValue($functions[$name][self::KEY_OUTPUT][$param_name][self::KEY_CONTENT][$content_name],self::KEY_COMMENT,"");
@@ -105,19 +112,35 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 	>
 	<wsdl:types>
 		<xsd:schema elementFormDefault="qualified" targetNamespace="<?php echo $namespace ?>" >
-			<xsd:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="http://www.w3.org/2004/08/xop/include"/>		
+			<xsd:import namespace="http://www.w3.org/2004/08/xop/include" schemaLocation="http://www.w3.org/2004/08/xop/include"/>
+			
+
+			<?php foreach($functions_list as $function_name => $function_properties) : ?>
+			<xsd:element name="<?php hecho($function_properties['soap-name'])?>">
+				<xsd:complexType>
+					<xsd:sequence>
+						<?php foreach($function_properties[APIDefinition::KEY_OUTPUT] as $output_name => $output_properties)  : ?>
+						<xsd:element name="<?php echo $output_name ?>" 
+									type="<?php echo $output_properties['type'] ?>" 
+									minOccurs="<?php echo $output_properties['minOccurs'] ?>"	
+									maxOccurs="<?php echo $output_properties['maxOccurs'] ?>"/>
+						<?php endforeach;?>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>	
+			<?php endforeach;?>		
 		</xsd:schema>
 	</wsdl:types>
 	
 	<?php foreach($functions_list as $function_name => $function_properties) : ?>
 	<wsdl:message name="<?php hecho($function_properties['soap-name'])?>">
 		<?php foreach($function_properties[APIDefinition::KEY_INPUT] as $name => $value): ?>
-			<wsdl:part name="<?php hecho($name)?>" type="xsd:anyType"/>
+			<wsdl:part name="<?php hecho($name)?>" type="<?php echo $value['type'] ?>" />
 		<?php endforeach;?>
 	</wsdl:message>	
 	<wsdl:message name="<?php hecho($function_properties['soap-name'])?>Response">
 	<?php if ($function_properties[APIDefinition::KEY_OUTPUT] ) : ?>
-		<wsdl:part name="return" element="xsd:anyType"/>
+		<wsdl:part name="return" element="tns:<?php hecho($function_properties['soap-name'])?>"/>
 	<?php endif;?>
 	</wsdl:message>
 	<?php endforeach;?>

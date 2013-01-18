@@ -16,25 +16,16 @@ function:
 		soap: true		
 		input:
 			status:
-				comment: 'status de la DIA 1 = Recu 2 = Recupere 3 = AE Recu 4 = AE Envoyé"
-			page_number:
-				comment: numéro de la page 
-			taille_page:
-				comment: taille de la page
+				comment: "status de la DIA 1 = Recu 2 = Recupere 3 = AE Recu 4 = AE Envoyé"
+				type: "xsd:int"
+				
 		output:
 			id:
+				type: "xsd:int"
+				minOccurs: 0
+				maxOccurs: unbounded
 				comment: Identifiant unique de la DIA sur S²low
-			date-reception: 
-				comment: Date de réception de la DIA sur S²low
-			filename:
-				comment: Nom du fichier contenant la DIA
-			filesize:
-				comment: Taille du fichier contenant la DIA
-			status:
-				comment: status de la transaction
-			status-txt:
-				comment: libélé du status
-
+		
 	get-dia:
 		description: Réception d'une DIA
 		soap: true
@@ -42,28 +33,55 @@ function:
 			id:
 				required: true
 				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
+				
 		output:
+			date_reception: 
+				comment: Date de réception de la DIA sur S²low
+			status:
+				comment: status de la transaction
+				type: "xsd:int"
+			status_txt:
+				comment: libelé du status
 			filename:
 				comment: le nom du fichier
+			filesize:
+				comment: Taille du fichier contenant la DIA en octet
+				type: "xsd:int"
 			file_content:
 				comment: le contenu du fichier
+				type: "xsd:anyType"
 	
 	set-ae: 
 		description: Envoie de l'accusé d'enregistrement
 		soap: true
 		input:
-			id_d: 
+			id: 
 				required: true
 				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
 			file_name:
 				comment: le nom du fichier
 			file_content:
 				comment: le contenu du fichier
-				  
+				 type: "xsd:anyType"
 		output:
-			result:
-				comment: " ok - si l'enregistrement s'est bien déroulé"
 			message: 
 				comment: "Message complémentaire"
+	
+	set-erreur:
+		description: Envoie d'une erreur sur une DIA
+		soap: true
+		input:
+			id: 
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
+			message:
+				comment: Message complémentaire
+		output:
+			message: 
+				comment: "Message complémentaire"
+	
 	
 	
