@@ -52,8 +52,10 @@ function:
 				comment: le contenu du fichier
 				type: "xsd:anyType"
 	
-	set-ae: 
-		description: Envoie de l'accusé d'enregistrement
+
+	
+	setAccuseNonPreemption: 
+		description: Envoie de l'accusé de non préemption
 		soap: true
 		input:
 			id: 

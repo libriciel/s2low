@@ -11,18 +11,22 @@ class TransactionDIA {
 	
 	const RECU = 1;
 	const RECUPERE = 2 ;
-	const AE_RECU = 3;
 	const AE_ENVOYE = 4;
 	const ERREUR = 5;
+	const ANP_RECU = 6;
+	const ANP_ENVOYE = 7;
+	
 	
 	
 	private static $status = array ( 
 		-1 => 'Erreur',
 		1 => 'Reçu sur S²low',
-		2 => 'Récupéré',
-		3 => 'AE reçu sur S²low',
 		4 => 'AE envoyé vers PRESTO',
-		5 => 'Erreur sur la DIA'
+		2 => 'Récupéré',		
+		3 => 'code abandonné',
+		5 => 'Erreur sur la DIA',
+		6 => 'Accusé de non préemption recu sur S²low',
+		7 => 'Accusé de non préemption envoyé sur PEC',
 	); 
 	
 	public function __construct($sqlQuery){		
@@ -198,8 +202,17 @@ class TransactionDIA {
 	public function addAE($id,$filename){
 		$sql = "UPDATE dia_transactions SET accuse_enregistrement=? WHERE id=?";
 		$this->sqlQuery->query($sql,$filename,$id);
-		$this->updateStatus($id, self::AE_RECU, "AR reçu par S²low");
+		$this->updateStatus($id, self::AE_ENVOYE, "Accusé d'enregistrement envoyé sur PEC");
 	}
+	
+		
+	public function addANP($id,$filename){
+		$sql = "UPDATE dia_transactions SET accuse_non_preemption=? WHERE id=?";
+		$this->sqlQuery->query($sql,$filename,$id);
+		$this->updateStatus($id, self::ANP_RECU, "Accusé de non préemption reçu par S²low");
+		$this->updateStatus($id, self::ANP_ENVOYE, "Accusé de non préemption envoyé sur PEC");
+	}
+	
 	
 	
 }

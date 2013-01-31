@@ -10,22 +10,22 @@ $transactionDIA = new TransactionDIA($sqlQuery);
 $dia_info = $transactionDIA->getInfo($id);
 
 if (!$dia_info){
-		Helpers :: returnAndExit(1, "Cette DIA n'existe pas", WEBSITE_SSL."/modules/dia/" );
+	Helpers :: returnAndExit(1, "Cette DIA n'existe pas", WEBSITE_SSL."/modules/dia/" );
 }
 
 
 $fileDIA = new FileDIA(DIA_UPLOAD_PATH);
-$tmp_name = $fileDIA->saveFromUpload('ae');
+$tmp_name = $fileDIA->saveFromUpload('anp');
 if (!$tmp_name){
 	Helpers :: returnAndExit(1, $fileDIA->getLastError(), WEBSITE_SSL."/modules/dia/dia_detail.php?id=$id" );
 }
-$fileDIA->setAR($tmp_name,$id);
+$fileDIA->setANP($tmp_name,$id);
 
 
 
-$filename = $_FILES['ae']['name'];
-$filesize = $_FILES['ae']['size'];
+$filename = $_FILES['anp']['name'];
+$filesize = $_FILES['anp']['size'];
 
-$transactionDIA->addAE($id,$filename);
+$transactionDIA->addANP($id,$filename);
 
-Helpers :: returnAndExit(0, "AE importée", WEBSITE_SSL."/modules/dia/dia_detail.php?id=$id" );
+Helpers :: returnAndExit(0, "ANP importée", WEBSITE_SSL."/modules/dia/dia_detail.php?id=$id" );

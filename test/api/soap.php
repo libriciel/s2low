@@ -19,7 +19,7 @@ $client = new SoapClient("https://192.168.1.5/modules/dia/wsdl.php",
 
 //print_r($client->version());
 
-//print_r($client->listDIA(1));
+print_r($client->getDIA(17));
 /*try {
 print_r($client->getDia(12));
 } catch (Exception $e){
@@ -29,7 +29,7 @@ print_r($client->getDia(12));
 /*$id = 13;
 print_r($client->setAE($id,"titi.xml","<titi/>"));*/
 
-print_r($client->setErreur(15,utf8_encode("j'ai pas envie d'aller à l'école")));
+//print_r($client->setErreur(15,utf8_encode("j'ai pas envie d'aller à l'école")));
 
 $response = $client->__getLastResponse();
 $xml = simplexml_load_string($response);

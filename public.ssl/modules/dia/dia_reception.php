@@ -15,4 +15,8 @@ $dia_id = $transactionDIA->createDIA($connexion->getId(), $filename, $filesize);
 $fileDIA->rename($tmp_name,$dia_id);
 
 
+$fileDIA->saveAE($dia_id,"<test/>");
+
+$transactionDIA->addAE($dia_id,"ae.xml");
+
 Helpers :: returnAndExit(0, "DIA importée", WEBSITE_SSL."/modules/dia/dia_detail.php?id=$dia_id" );

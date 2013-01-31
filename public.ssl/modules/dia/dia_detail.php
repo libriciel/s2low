@@ -53,6 +53,15 @@ ob_start();
 		</td>
 	</tr>
 	<?php endif;?>
+	<?php if($dia_info['accuse_non_preemption']) :?>
+	<tr>
+		<td class="td-register">Accusé de non-préemption</td>
+		<td class="td-input"><b>
+			<a href='<?php echo WEBSITE_SSL ?>/modules/dia/get_anp.php?id=<?php echo $dia_info['id']?>'><?php echo $dia_info['accuse_non_preemption'] ?>
+			</a>	</b>
+		</td>
+	</tr>
+	<?php endif;?>
 	</table>
 	</div>
 	<h2>Cycle de vie</h2>
@@ -73,17 +82,17 @@ ob_start();
 				</table>
 		</div>
 	
-	<?php if (in_array($dia_info['last_status_id'],array(1,2))) : ?>
-	<h2>Envoyé l'accusé d'enregistrement</h2>
-	<form method="POST" enctype="multipart/form-data" action="<?php echo WEBSITE_SSL ?>/modules/dia/dia_reception_ae.php" >
+	<?php if (in_array($dia_info['last_status_id'],array(2))) : ?>
+	<h2>Envoyé l'accusé de non-préemption</h2>
+	<form method="POST" enctype="multipart/form-data" action="<?php echo WEBSITE_SSL ?>/modules/dia/dia_reception_anp.php" >
 	<input type="hidden" name="id" value='<?php echo $id ?>' />
 	<table  style='text-align:right'>
 		<tr>
-			<td>Accusé d'enregistrement : </td>
-			<td><input type="file" name="ae"/></td>
+			<td>Accusé de non préemption : </td>
+			<td><input type="file" name="anp"/></td>
 		</tr>
 	</table>
-	<input class="submit_button" type="submit" value=" Importer l'ae" >
+	<input class="submit_button" type="submit" value=" Importer l'anp" >
 	</form>
 	<?php endif;?>
 	

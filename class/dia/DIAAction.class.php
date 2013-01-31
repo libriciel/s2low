@@ -49,18 +49,18 @@ class DIAAction {
 		$result['filesize'] = $info['file_size'];
 		$result['file_content']  = file_get_contents($this->fileDIA->getFilePath($id));
 		
-		if ($info['last_status_id'] == TransactionDIA::RECU) {
+		if ($info['last_status_id'] == TransactionDIA::AE_ENVOYE) {
 			$this->transactionDIA->updateStatus($id,TransactionDIA::RECUPERE,"DIA récupéré via SOAP");
 		}
 		return $result;
 		
 	}
 	
-	public function setAE($id,$filename,$filecontent){
+	public function setAccuseNonPreemption($id,$filename,$filecontent){
 		$this->reponsePossible($id);
-		$this->fileDIA->saveAE($id,$filecontent);
-		$this->transactionDIA->addAE($id,utf8_decode($filename));
-		return array("message" => "AE sauvegardé sur S²low");
+		$this->fileDIA->saveANP($id,$filecontent);
+		$this->transactionDIA->addAccuseNonPreemption($id,utf8_decode($filename));
+		return array("message" => "Accusé de non péremption sauvegardé sur S²low");
 	}
 	
 	public function setErreur($id,$erreur_message){

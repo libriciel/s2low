@@ -40,12 +40,21 @@ class FileDIA {
 		readfile($this->getFilePath($id));
 	}
 	
-	public function setAR($tmp_name,$id){
-		 $this->rename($tmp_name,$id."_ae");
+	public function setANP($tmp_name,$id){
+		 $this->rename($tmp_name,$id."_anp");
+	}
+	
+	public function saveANP($id,$filecontent){
+		file_put_contents($this->dia_upload_path."/{$id}_anp", $filecontent);
 	}
 	
 	public function saveAE($id,$filecontent){
 		file_put_contents($this->dia_upload_path."/{$id}_ae", $filecontent);
+	}
+	
+	public function sendANP($id,$filename){
+		$this->header($filename);
+		readfile($this->getFilePath($id."_anp"));
 	}
 	
 	public function sendAE($id,$filename){
