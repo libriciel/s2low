@@ -19,7 +19,7 @@ $client = new SoapClient("https://192.168.1.5/modules/dia/wsdl.php",
 
 //print_r($client->version());
 
-print_r($client->getDIA(17));
+print_r($client->setAccuseNonPreemption(18,"titit.xml","<titi/>"));
 /*try {
 print_r($client->getDia(12));
 } catch (Exception $e){

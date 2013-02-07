@@ -59,7 +59,7 @@ class DIAAction {
 	public function setAccuseNonPreemption($id,$filename,$filecontent){
 		$this->reponsePossible($id);
 		$this->fileDIA->saveANP($id,$filecontent);
-		$this->transactionDIA->addAccuseNonPreemption($id,utf8_decode($filename));
+		$this->transactionDIA->addANP($id,utf8_decode($filename));
 		return array("message" => "Accusé de non péremption sauvegardé sur S²low");
 	}
 	
