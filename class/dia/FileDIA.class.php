@@ -48,8 +48,28 @@ class FileDIA {
 		file_put_contents($this->dia_upload_path."/{$id}_anp", $filecontent);
 	}
 	
-	public function saveAE($id,$filecontent){
-		file_put_contents($this->dia_upload_path."/{$id}_ae", $filecontent);
+	public function createAE($id){
+		$xml = simplexml_load_file($this->getFilePath($id));
+		$id_dia = strval($xml['Id']);
+		$dia = $xml->children("http://xmlschema.ok-demat.com/DIA");
+
+		ob_start();
+		echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+		?>
+<dia:accuseAEN 	Id="<?php echo $id_dia ?>" 
+				xmlns:xad="http://uri.etsi.org/01903/v1.2.2#" 
+				xmlns:n1="http://www.altova.com/samplexml/other-namespace" 
+				xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				xmlns:dia="http://xmlschema.ok-demat.com/DIA" 
+				xmlns:diaco="http://xmlschema.ok-demat.com/DIA-CO" >
+	<?php echo $dia->identification->asXML(); ?>
+</dia:accuseAEN>
+<?php 
+		
+		$ae_content= ob_get_clean();
+		
+		file_put_contents($this->dia_upload_path."/{$id}_ae", $ae_content);
 	}
 	
 	public function sendANP($id,$filename){

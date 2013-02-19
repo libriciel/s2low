@@ -10,13 +10,13 @@ if (!$tmp_name){
 $filename = $_FILES['dia']['name'];
 $filesize = $_FILES['dia']['size'];
 
+
+
+
 $transactionDIA = new TransactionDIA($sqlQuery);
 $dia_id = $transactionDIA->createDIA($connexion->getId(), $filename, $filesize);
 $fileDIA->rename($tmp_name,$dia_id);
-
-
-$fileDIA->saveAE($dia_id,"<test/>");
+$fileDIA->createAE($dia_id);
 
 $transactionDIA->addAE($dia_id,"ae.xml");
-
 Helpers :: returnAndExit(0, "DIA importée", WEBSITE_SSL."/modules/dia/dia_detail.php?id=$dia_id" );
