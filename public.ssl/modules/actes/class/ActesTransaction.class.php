@@ -650,7 +650,7 @@ class ActesTransaction extends DataObject {
       	}
       	
  	  } elseif($type == "attachment") {
- 	  	if (! in_array($ext,array('pdf','xml','jpg','png'))){
+ 	  	if (! in_array($ext,array('pdf','jpg','png'))){
 			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
 			return false;
  	  	}
