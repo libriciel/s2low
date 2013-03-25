@@ -122,7 +122,7 @@ class ActesNotification {
 				"actes_envelopes.submission_date, actes_transactions_workflow.date, " .
 				"actes_transactions.broadcast_emails, actes_transactions.archive_url, " .
 				"actes_transactions.broadcast_send_sources, authorities.default_broadcast_email, " .
-				" actes_transactions.auto_broadcasted,authorities.name, actes_envelopes.email " .
+				" actes_transactions.auto_broadcasted,authorities.name, actes_envelopes.email, actes_transactions.nature_descr " .
 				"FROM actes_transactions, actes_envelopes, authorities, actes_transactions_workflow " .
 				" WHERE actes_transactions.envelope_id = actes_envelopes.id " .
 				" AND authorities.siren = actes_envelopes.siren" .
@@ -137,7 +137,9 @@ class ActesNotification {
 		ob_start();?>
 L'acte de référence interne <?php echo $transactionInfo['number'] ?> a été acquitté sous l'identifiant unique <?php echo $transactionInfo['unique_id']  ?>
 
-Object : <?php echo $transactionInfo['subject'] ?> 
+Nature de l'Acte : <?php echo $transactionInfo['nature_descr'] ?>
+
+Objet : <?php echo $transactionInfo['subject'] ?> 
 
 Décision du : <?php echo $transactionInfo['decision_date']?> 
 
