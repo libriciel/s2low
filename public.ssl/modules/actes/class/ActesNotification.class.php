@@ -11,6 +11,8 @@ class ActesNotification {
 	private $filePath;
         private $pdfgenerate = false;
         private $pdftampone;
+        private $newmail=true;
+        private $agent=false;
 	
 	public function __construct(Database $db){
 		$this->db = $db;
@@ -48,12 +50,18 @@ class ActesNotification {
 		$brodcastEmail =explode(',',$transactionInfo['broadcast_emails']);
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 		
+                $idcol = $this->getAuthorityId($transactionInfo);
+                $newmail = $this->getNewMailNotif($idcol['authority_id']);
+                $this->newmail = $newmail['new_notification'];
+                
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
                     //envoie du mail au proprietaire de l'acte
                     $this->sendMail($transactionInfo,$transactionInfo['email'],true);
                     //envoie du mail a toutes les adresses renseignees dans defaut
-                    foreach($defaultBroadcastEmail as $email){              
+                    foreach($defaultBroadcastEmail as $email){  
+                        $this->agent=true;
                         $this->sendMail($transactionInfo,$email,true);
+                        $this->agent=false;
                     }//fin foreach
                     
                     $this->setAutoBroadcasted($transactionInfo['transaction_id']);
@@ -76,31 +84,39 @@ class ActesNotification {
                 
                 echo "Notification a $emails\n";
                 
-		$mailContent = $this->getMailContent($transactionInfo);
-                if(! $this->pdfgenerate){
-                        $lesFichiers = $this->getFichiers($transactionInfo);
-                }
-                else
-                {
-                        $lesFichiers = $this->pdftampone;
-                }
-	
 		$mailer = new Mailer();
-				
-		$err = $mailer->addRecipient($emails);
-		if (! $err){
-			echo "$emails invalide ! \n";
-			return;
-		}
-		if ($withFile){
-			foreach ($lesFichiers as $fichier){
-				$mailer->addFile($fichier);
-			}
-		}
-		
-		$trans = new ActesTransaction();
-		$trans->setId($transactionInfo['transaction_id']);
-		$trans->init();
+                if(($this->agent && $this->newmail == 'f') || !$this->agent){
+
+                        if(! $this->pdfgenerate){
+                                $lesFichiers = $this->getFichiers($transactionInfo);
+                        }
+                        else
+                        {
+                                $lesFichiers = $this->pdftampone;
+                        }
+
+                        if ($withFile){
+                              foreach ($lesFichiers as $fichier){
+                                        $mailer->addFile($fichier);
+                                }
+                        }
+                }
+
+
+                $err = $mailer->addRecipient($emails);
+                if (! $err){
+                        echo "$emails invalide ! \n";
+                        return;
+                }
+
+                $trans = new ActesTransaction();
+                $trans->setId($transactionInfo['transaction_id']);
+                $trans->init();
+                if($this->newmail == 't')
+                        $mailer->addStringAsFile("retour.xml",$trans->getFluxRetour(4));
+
+                $mailContent = $this->getMailContent($transactionInfo);
+
 		
 		$envelope = new ActesEnvelope($trans->get("envelope_id"));
 		$envelope->init();
@@ -146,6 +162,12 @@ Décision du : <?php echo $transactionInfo['decision_date']?>
 Transmise le :  <?php echo $transactionInfo['submission_date']?> 
 
 Accusé reçu le :  <?php echo $transactionInfo['date'] ?> 
+
+<?php
+if($this->agent && $this->newmail == 't'){
+?>
+URL pour récupérer les fichiers : <?php $url = WEBSITE_SSL."/modules/actes/actes_transac_show.php?id=".$transactionInfo['transaction_id']; echo $url; ?>
+<?php }?>
 
 <?php if($transactionInfo['archive_url']) : ?>
 Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
@@ -273,4 +295,21 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			}
 		}
 	}
+        
+        private function getAuthorityId($transactionInfo){
+                $sql = "SELECT actes_transactions.authority_id ".
+                        "FROM actes_transactions ".
+                        "WHERE actes_transactions.id = " .$transactionInfo['transaction_id'] ;
+
+                return $this->db->getOneLine($sql);
+        }
+
+        private function getNewMailNotif($authorityid){
+                $sql = "SELECT new_notification ".
+                        "FROM authorities ".
+                        "WHERE authorities.id = ".$authorityid;
+
+                return $this->db->getOneLine($sql);
+        }
+
 }
