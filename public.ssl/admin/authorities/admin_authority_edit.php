@@ -330,6 +330,17 @@ if ($me->isGroupAdminOrSuper()) {
   $html .= " </tr>\n";
 }
 
+$html .= " <tr>\n";
+$html .= "  <td class=\"td-register\">Nouveau système de notification&nbsp;:</td>\n";
+$html .= "  <td class=\"td-input\">";
+$html .= "<label> <input type=\"checkbox\" name=\"newnotif\" value=\"on\" ";
+if ($authority->get("new_notification") != 'f')
+        $html .= " checked=\"checked\"";
+
+$html .= "/></label>";
+$html .= "  </td>\n";
+$html .= " </tr>\n";
+
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<center><input type=\"submit\" class=\"submit_button\" value=\"";
