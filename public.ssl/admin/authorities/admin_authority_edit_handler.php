@@ -51,7 +51,7 @@ $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
 $newmailnotif = Helpers::getVarFromPost("newnotif");
 
-if($newnotif == 'on')
+if($newmailnotif == 'on')
     $newmailnotif='true';
 else
     $newmailnotif='false';
