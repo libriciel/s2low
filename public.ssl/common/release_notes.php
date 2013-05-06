@@ -84,6 +84,11 @@ $html .= "";
 // $html .= "<li>";
 // $html .= "</ul>";
 
+$html .= "<h2>V1.3.2 du 06.05.2013</h2>";
+$html .= "<ul>";
+$html .= "<li>Module ACTES : nouveau système de notification d'acquittement pour les agents télétransmetteur";
+$html .= "</ul>";
+
 $html .= "<h2>V1.3.1 du 15.01.2013</h2>";
 $html .= "<ul>";
 $html .= "<li>Module ACTES : correction bug : la variable pdfgenerate n'était pas correctement réinitialisée. Cela entrainait une erreur sur le PDF joins aux notifications automatiques ;";
