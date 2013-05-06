@@ -49,6 +49,12 @@ $helios_ftp_login=Helpers::getVarFromPost("helios_ftp_login");
 $helios_ftp_password=Helpers::getVarFromPost("helios_ftp_password");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
+$newmailnotif = Helpers::getVarFromPost("newnotif");
+
+if($newnotif == 'on')
+    $newmailnotif='true';
+else
+    $newmailnotif='false';
 
 $authority = new Authority();
 $mod = false;
@@ -131,6 +137,7 @@ $authority->set("city", $city);
 $authority->set("telephone", $telephone);
 $authority->set("fax", $fax);
 $authority->set("email_mail_securise",$email_mail_securise);
+$authority->set("new_notification",$newmailnotif);
 
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
