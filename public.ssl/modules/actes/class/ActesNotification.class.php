@@ -56,12 +56,12 @@ class ActesNotification {
                 
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
                     //envoie du mail au proprietaire de l'acte
+                    $this->agent=true;
                     $this->sendMail($transactionInfo,$transactionInfo['email'],true);
+                    $this->agent=false;
                     //envoie du mail a toutes les adresses renseignees dans defaut
                     foreach($defaultBroadcastEmail as $email){  
-                        $this->agent=true;
                         $this->sendMail($transactionInfo,$email,true);
-                        $this->agent=false;
                     }//fin foreach
                     
                     $this->setAutoBroadcasted($transactionInfo['transaction_id']);
