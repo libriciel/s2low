@@ -175,6 +175,8 @@ class ActesTransaction extends DataObject {
     "7" => "Demande de classification"
   );
 
+	protected $en_attente;
+  
 	public static function getTypeReponse($transactionType,$reponseType){
 		
 		$typeReponse = array(
@@ -1313,8 +1315,6 @@ class ActesTransaction extends DataObject {
       return false;
     }
 
-    //echo $sql;
-    //exit();
 
     if (!$this->db->begin()) {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
@@ -1329,7 +1329,12 @@ class ActesTransaction extends DataObject {
 
     if ($new) {
       // Ajout de l'état initial
-      if (!$this->setNewStatus(1, "Dépôt initial")) {
+      if ($this->en_attente){
+      	$result_set_status = $this->setNewStatus(17, "Dépôt dans un état d'attente");
+      } else {
+      	$result_set_status = $this->setNewStatus(1, "Dépôt initial");
+      }
+      if (!$result_set_status) {
         $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
         $this->db->rollback();
         return false;
@@ -1375,10 +1380,6 @@ class ActesTransaction extends DataObject {
       $this->db->rollback();
       return false;
     }
-
-    /*if ($new) {
-      $this->warnTransactionalEngine();
-    }*/
 
     return true;
   }
@@ -1693,4 +1694,9 @@ class ActesTransaction extends DataObject {
 		}
 		return $result[0]['can_validate'] == 't';  
 	}
+	
+	public function setEnAttente($en_attente){
+		$this->en_attente = $en_attente;
+	}
+	
 }

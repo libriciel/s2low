@@ -38,6 +38,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
 $nature_code = Helpers :: getVarFromPost("nature_code", true);
+$en_attente = Helpers :: getVarFromPost("en_attente", true);
 
 for ($i = 1; $i <= 5; $i++) {
   ${ "classif" . $i } = Helpers :: getVarFromPost("classif" . $i, true);
@@ -150,6 +151,7 @@ $trans->set("subject", $subject);
 $trans->set("number", $number);
 $trans->set("user_id",$me->getId());
 $trans->set("authority_id",$me->get("authority_id"));
+$trans->setEnAttente($en_attente);
 
 for ($i = 1; $i <= 5; $i++) {
   $trans->set("classif" . $i, ${ "classif" . $i });

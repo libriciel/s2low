@@ -457,6 +457,14 @@ if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5) {
       $actionHtml .= "</p></form>\n";
 }
 
+if ($transStatus == 17){
+	  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n";
+      $actionHtml .= "<p>Valider &nbsp;:&nbsp;";
+      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Poster ce document\" class=\"submit_button\" />\n";
+      $actionHtml .= "</p></form>\n";
+}
+
 
 if ($transStatus > 3) {
   $actionHtml .= "<div class=\"action\">\n";

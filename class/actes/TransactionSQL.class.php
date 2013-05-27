@@ -42,10 +42,10 @@ class TransactionSQL {
 		14 => 'Erreur lors de l\'archivage',
 		15 => 'Reçu par le SAE',
 		16 => 'Détruite',
-
+		17 => "En attente d'être postée",
 	); 
 	
-	private static $etat_en_cours = array(1,2,3,4,7,8);
+	private static $etat_en_cours = array(1,2,3,4,7,8,17);
 	
 	
 	private $sqlQuery;
