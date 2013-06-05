@@ -2,6 +2,7 @@
 
 require_once("../include/init.php");
 require_once("../lib/MailList.class.php");
+require_once (MAIL_SITEROOT."/om/mail_transaction.class.php");
 
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db,$me->getId());
@@ -11,6 +12,9 @@ if (!$id){
 	echo "Usage : ".WEBSITE_SSL."/modules/mail/api/detail-mail.php?id=xxxx";
 	exit;
 }
+
+header("content-type: text/plain; charset=iso-8859-15");
+
 
 $detail = $mailList->getDetail($id);
 if (!$detail){
@@ -29,4 +33,4 @@ foreach($detail['mail_emis'] as $emis){
 	echo "emis:".$emis['email'].":".$emis['type_envoi'].":".$emis['ack'].":".$emis['ack_date']."\n";
 }
 echo "\n\n==message==\n\n";
-echo $detail['message'];
+echo cp1252_to_iso88591($detail['message']);
