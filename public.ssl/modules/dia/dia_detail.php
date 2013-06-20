@@ -87,7 +87,7 @@ ob_start();
 				</table>
 		</div>
 	
-	<?php if (in_array($dia_info['last_status_id'],array(2))) : ?>
+	<?php if (in_array($dia_info['last_status_id'],array(2,4))) : ?>
 	<h2>Envoyé l'accusé de non-préemption</h2>
 	<form method="POST" enctype="multipart/form-data" action="<?php echo WEBSITE_SSL ?>/modules/dia/dia_reception_anp.php" >
 	<input type="hidden" name="id" value='<?php echo $id ?>' />

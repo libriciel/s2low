@@ -82,8 +82,13 @@ class FileDIA {
 	
 	public function sendANP($id,$filename){
 		$this->header($filename);
-		readfile($this->getFilePath($id."_anp"));
+		readfile($this->getANP($id));
 	}
+	
+	public function getANP($id){
+		return $this->getFilePath($id."_anp");
+	}
+	
 	
 	public function sendAE($id,$filename){
 		$this->header($filename);

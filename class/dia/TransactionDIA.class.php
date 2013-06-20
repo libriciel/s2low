@@ -216,7 +216,6 @@ class TransactionDIA {
 		$sql = "UPDATE dia_transactions SET accuse_non_preemption=? WHERE id=?";
 		$this->sqlQuery->query($sql,$filename,$id);
 		$this->updateStatus($id, self::ANP_RECU, "Accusé de non préemption reçu par S²low");
-		$this->updateStatus($id, self::ANP_ENVOYE, "Accusé de non préemption envoyé sur PEC");
 	}
 	
 	public function getStatusInfo($id,$status_id){
@@ -234,6 +233,11 @@ class TransactionDIA {
 			$result[] = $line;
 		}
 		return $result;
+	}
+	
+	public function getNeedSendANP(){
+		$sql = "SELECT * FROM dia_transactions WHERE last_status_id=?";
+		return $this->sqlQuery->query($sql,self::ANP_RECU);
 	}
 	
 }

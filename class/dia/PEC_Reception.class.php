@@ -26,6 +26,18 @@ class PEC_Reception {
 				echo "[ERREUR] Impossible de générer l'AE pour la DIA #{$dia_info['id']}: ".$e->getMessage()."\n";
 			}
 		}
+		
+		$dia_list = $this->transactionDIA->getNeedSendANP();
+		
+		foreach($dia_list as $dia_info){
+			try {
+				$this->sendANP($dia_info);
+			} catch (Exception $e){
+				echo "[ERREUR] Impossible de générer le message PEC pour l'ANP de la DIA #{$dia_info['id']}: ".$e->getMessage()."\n";
+			}
+		}
+		
+		
 	}
 	
 	public function retrieveDIAFromDeliveryFolder($delivery_path){
@@ -132,8 +144,27 @@ class PEC_Reception {
 		file_put_contents($folder."/APC_AEN.xml",$ae_content);
 		$message_xml_content = $this->getMessageRetour($dia_info['message_xml']);
 		file_put_contents($folder."/message.xml",$message_xml_content);
-		
+		$this->transactionDIA->updateStatus($dia_info['id'], TransactionDIA::AE_ENVOYE, "Génération de l'AE");
+		$msg = "AR généré pour la DIA {$dia_info['id']}";
+		Log :: newEntry('Script import DIA', $msg, 1, false, 'USER', 'dia', false);				
+		echo "[OK]] $msg\n";
 	}
+
+	public function sendANP($dia_info){
+		$folder = DIA_TO_PRESTO."/ANP-{$dia_info['message_id']}";
+		@ mkdir($folder);
+		$anp = $this->fileDIA->getANP($dia_info['id']);
+		
+		copy($anp,$folder."/".$dia_info['accuse_non_preemption']);
+		$message_xml_content = $this->getMessageRetour($dia_info['message_xml']);
+		file_put_contents($folder."/message.xml",$message_xml_content);
+		
+		$this->transactionDIA->updateStatus($dia_info['id'], TransactionDIA::ANP_ENVOYE, "Accusé de non préemption envoyé sur PEC");
+		$msg = "Message PEC généré pour l'ANP de la DIA {$dia_info['id']}";
+		Log :: newEntry('Script import DIA', $msg, 1, false, 'USER', 'dia', false);				
+		echo "[OK] $msg\n";
+	}
+	
 	
 	public function getMessageRetour($message_aller_content){
 		
@@ -165,6 +196,8 @@ class PEC_Reception {
 		
 		return $dom->saveXML();
 	}
+	
+	
 	
 	
 }
