@@ -50,12 +50,13 @@ class Authority extends DataObject {
 						 "district" => array( "descr" => "Arrondissement", "type" => "isString", "mandatory" => true),
 						 "telephone" => array( "descr" => "Téléphone", "type" => "isString", "mandatory" => false),
 						 "fax" => array( "descr" => "Fax", "type" => "isString", "mandatory" => false),
-  					"ext_siret" =>array("descr"=> "ext_SIRET","type" =>"isString", "mandatory"=>false),
-  					"helios_ftp_login" =>array("descr"=>"helios_ftp_login","type"=>"isString","mandatory" =>false),
-  					"helios_ftp_password" =>array("descr" => "helios_ftp_password", "type" => "isString", "mandatory" =>false),
-    				"helios_ftp_dest" =>array("descr" => "helios_ftp_dest", "type" => "isString", "mandatory" =>false),
-  					"email_mail_securise" => array("descr" => "Email pour le module de mail sécurisé", "type" => "isString", "mandatory" =>false),
-                                         "new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" =>false)
+	  					"ext_siret" =>array("descr"=> "ext_SIRET","type" =>"isString", "mandatory"=>false),
+	  					"helios_ftp_login" =>array("descr"=>"helios_ftp_login","type"=>"isString","mandatory" =>false),
+	  					"helios_ftp_password" =>array("descr" => "helios_ftp_password", "type" => "isString", "mandatory" =>false),
+	    				"helios_ftp_dest" =>array("descr" => "helios_ftp_dest", "type" => "isString", "mandatory" =>false),
+	  					"email_mail_securise" => array("descr" => "Email pour le module de mail sécurisé", "type" => "isString", "mandatory" =>false),
+						"new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" =>false),
+  						"dia_siret" => array( "descr" => "Numéro de SIRET de réception des DIA", "type" => "isString", "mandatory" => false, "unique" => true),
   
 						 );
 

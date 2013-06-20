@@ -50,6 +50,7 @@ $helios_ftp_password=Helpers::getVarFromPost("helios_ftp_password");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
 $newmailnotif = Helpers::getVarFromPost("newnotif");
+$dia_siret = Helpers::getVarFromPost("dia_siret");
 
 if($newmailnotif == 'on')
     $newmailnotif='true';
@@ -138,6 +139,7 @@ $authority->set("telephone", $telephone);
 $authority->set("fax", $fax);
 $authority->set("email_mail_securise",$email_mail_securise);
 $authority->set("new_notification",$newmailnotif);
+$authority->set("dia_siret",$dia_siret);
 
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {

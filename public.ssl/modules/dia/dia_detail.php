@@ -37,12 +37,17 @@ ob_start();
 		<td class="td-register">Identifiant</td>
 		<td class="td-input"><?php echo $dia_info['id'] ?></td>
 	</tr>
+
 	<tr>
-		<td class="td-register">Fichier</td>
+		<td class="td-register">Fichier DIA</td>
 		<td class="td-input"><b>
 			<a href='<?php echo WEBSITE_SSL ?>/modules/dia/get_dia.php?id=<?php echo $dia_info['id']?>'><?php echo $dia_info['filename'] ?>
 			</a>	</b>
 		</td>
+	</tr>
+	<tr>
+		<td class="td-register">Information PEC</td>
+		<td class="td-input"><a href='<?php echo WEBSITE_SSL ?>/modules/dia/get_message_xml.php?id=<?php echo $dia_info['id']?>'><?php echo $dia_info['message_id'] ?></a></td>
 	</tr>
 	<?php if($dia_info['accuse_enregistrement']) :?>
 	<tr>
@@ -95,6 +100,14 @@ ob_start();
 	<input class="submit_button" type="submit" value=" Importer l'anp" >
 	</form>
 	<?php endif;?>
+	<?php //if ($droit->isGroupOrSuperAdmin($userInfo)) : ?>
+	<h2>Supprimer la DIA</h2>
+	<form method="POST" action="<?php echo WEBSITE_SSL ?>/modules/dia/dia-delete.php" onsubmit="return confirm('Cette transaction sera héradiqué DEFINITIVEMENT de la base sans espoir de retour?')">
+	<input type="hidden" name="id" value='<?php echo $id ?>' />
+
+	<input  type="submit" value="Supprimer la DIA" class="bouton-danger" >
+	</form>
+	<?php //endif;?>
 	
 </div>
 <?php 			

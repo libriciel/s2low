@@ -152,8 +152,14 @@ Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par
  * Paramètre module DIA
  */
 
-define("DIA_UPLOAD_PATH","/tdt-workspace/dia/");
+//Répertoire pour les DIA utilisé dans S²low
+define("DIA_UPLOAD_PATH","/tdt-workspace/dia/upload");
 
+//Répertoire pour les DIA reçu via PEC/PRESTO
+define("DIA_DELIVERY_PATH","/tdt-workspace/dia/delivery");
+
+
+define("DIA_UPSTART_TOUCH_FILE",'/tmp/dia-upstart');
 
 require_once('config-static.php');
 

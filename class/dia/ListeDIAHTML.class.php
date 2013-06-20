@@ -3,7 +3,6 @@ class ListeDiaHTML {
 	
 	private $allCollectivite;
 	private $filtreAuthority;
-	private $actionBox;
 	private $fmin_submission_date;
 	private $fmax_submission_date;
 	
@@ -16,10 +15,7 @@ class ListeDiaHTML {
 		$this->filtreAuthority = $filtreAuthority;
 	}
 	
-	public function addActionBox(){
-		$this->actionBox = true;
-	}
-	
+
 	public function setDate($fmin_submission_date,$fmax_submission_date){
 		$this->fmin_submission_date = $fmin_submission_date;
 		$this->fmax_submission_date = $fmax_submission_date;
@@ -109,12 +105,7 @@ class ListeDiaHTML {
 		</table>
 	</form>
 </div>		
-<?php if ($this->actionBox) : ?>
-	<div id="actions_area">
- 		<h2>Actions</h2>
-    	<a href="<?php echo  WEBSITE_SSL ?>/modules/dia/dia_transaction_add.php" class="bouton">Importer un DIA (test)</a>
-  	</div>
-<?php endif;?>
+
 
 		<?php 
 	}

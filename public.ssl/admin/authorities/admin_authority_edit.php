@@ -341,6 +341,12 @@ $html .= "/></label>";
 $html .= "  </td>\n";
 $html .= " </tr>\n";
 
+$html .= " <tr>\n";
+$html .= "  <td class=\"td-register\">Numéro SIRET pour la réception des DIA:</td>\n";
+$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"dia_siret\" value=\"" . htmlspecialchars($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" /></td>\n";
+$html .= " </tr>\n";
+
+
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<center><input type=\"submit\" class=\"submit_button\" value=\"";

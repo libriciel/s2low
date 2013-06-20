@@ -356,7 +356,6 @@ class ActesArchiveSEDA {
 			$document->Receipt = date("c",strtotime($receipt));
 		}
 		if ($receipt_submission){
-			//$document->ReceiptSubmission = date("c",strtotime($receipt_submission));
 			$document->Receipt = date("c",strtotime($receipt_submission));
 		}
 		if ($response){

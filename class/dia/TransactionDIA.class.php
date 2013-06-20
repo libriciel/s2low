@@ -173,13 +173,20 @@ class TransactionDIA {
 	}
 	
 	
-	public function createDIA($user_id,$filename,$filesize){
-		$sql = "INSERT INTO dia_transactions(user_id,filename,file_size,submission_date,last_status_id, accuse_enregistrement) VALUES (?,?,?,now(),?,'')";
-		$this->sqlQuery->query($sql,$user_id,$filename,$filesize,1);
+	public function createDIA($user_id,$filename,$filesize,$message_id,$message_xml){
+		$sql = "INSERT INTO dia_transactions ". 
+				"(user_id,filename,file_size,submission_date,last_status_id, accuse_enregistrement,message_id,message_xml)" .
+				" VALUES (?,?,?,now(),?,'',?,?)";
+		$this->sqlQuery->query($sql,$user_id,$filename,$filesize,1,$message_id,$message_xml);
 		$sql = "SELECT id FROM dia_transactions WHERE user_id=? AND filename=? AND file_size=? ORDER BY submission_date DESC LIMIT 1";
 		$id = $this->sqlQuery->queryOne($sql,$user_id,$filename,$filesize);
 		$this->updateStatus($id, self::RECU, "Récupération de la DIA");
 		return $id;
+	}
+	
+	public function messageExists($message_id){
+		$sql = "SELECT * FROM dia_transactions WHERE message_id=?";
+		return $this->sqlQuery->queryOne($sql,$message_id);
 	}
 	
 	public function getInfo($id){
@@ -204,7 +211,6 @@ class TransactionDIA {
 		$this->sqlQuery->query($sql,$filename,$id);
 		$this->updateStatus($id, self::AE_ENVOYE, "Accusé d'enregistrement envoyé sur PEC");
 	}
-	
 		
 	public function addANP($id,$filename){
 		$sql = "UPDATE dia_transactions SET accuse_non_preemption=? WHERE id=?";

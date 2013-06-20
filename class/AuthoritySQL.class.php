@@ -12,6 +12,11 @@ class AuthoritySQL {
 		return $this->sqlQuery->queryOne($sql,$id);
 	}
 	
+	public function getBySIRET($siret){
+		$sql = "SELECT id FROM authorities where dia_siret=?";
+		return $this->sqlQuery->queryOne($sql,$siret);
+	}
+	
 	public function getAll() {
 		$result = array();
 		$sql = "SELECT authorities.id, authorities.name FROM authorities ORDER BY authorities.name ASC";

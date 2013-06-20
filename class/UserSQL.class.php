@@ -2,7 +2,7 @@
 
 class UserSQL {
 	
-	public function __construct($sqlQuery){
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
 	
@@ -21,14 +21,21 @@ class UserSQL {
 	
 	}
 
-	public function  getRoleStr($role) {
-		
-		$roleTypes = array(
-							   "SADM" => "Super administrateur",
+	public function  getRoleStr($role) {		
+		$roleTypes = array( "SADM" => "Super administrateur",
 							   "GADM" => "Administrateur de groupe",
 							   "ADM" => "Administrateur collectivité",
 							   "USER" => "Utilisateur"
 							   );
 		return $roleTypes[$role];
 	}
+	
+	public function getDIAUser($authority_id){
+		$sql = "SELECT users.id as user_id FROM users " . 
+				" JOIN users_perms ON users.id = users_perms.user_id " .
+				" JOIN modules ON users_perms.module_id = modules.id " .
+				" WHERE authority_id=? AND users_perms.perm='RW' AND modules.name='dia'";
+		return $this->sqlQuery->query($sql,$authority_id);
+	}
+	
 }

@@ -48,6 +48,10 @@ class FileDIA {
 		file_put_contents($this->dia_upload_path."/{$id}_anp", $filecontent);
 	}
 	
+	public function saveDIA($file_path,$id){
+		copy($file_path,$this->dia_upload_path."/{$id}");
+	}
+	
 	public function createAE($id){
 		$xml = simplexml_load_file($this->getFilePath($id));
 		$id_dia = strval($xml['Id']);
@@ -85,6 +89,12 @@ class FileDIA {
 	private function header($filename){
 		header('Content-Type: text/xml');
 		header('Content-disposition: filename="'.$filename.'"');
+	}
+	
+	public function delete($id){
+		@ unlink($this->dia_upload_path."/$id");
+		@ unlink($this->dia_upload_path."/{$id}_ae");
+		@ unlink($this->dia_upload_path."/{$id}_anp");
 	}
 	
 }
