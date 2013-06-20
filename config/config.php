@@ -158,6 +158,8 @@ define("DIA_UPLOAD_PATH","/tdt-workspace/dia/upload");
 //Répertoire pour les DIA reçu via PEC/PRESTO
 define("DIA_DELIVERY_PATH","/tdt-workspace/dia/delivery");
 
+//Répertoire pour les envois vers PEC/PRESTO
+define("DIA_TO_PRESTO","/tdt-workspace/dia/to-presto");
 
 define("DIA_UPSTART_TOUCH_FILE",'/tmp/dia-upstart');
 

@@ -53,7 +53,11 @@ class FileDIA {
 	}
 	
 	public function createAE($id){
-		$xml = simplexml_load_file($this->getFilePath($id));
+		@ $xml = simplexml_load_file($this->getFilePath($id));
+		if (!$xml){
+			throw new Exception("Impossible d'analyser la DIA (erreur d'analyse XML)");
+		}
+		
 		$id_dia = strval($xml['Id']);
 		$dia = $xml->children("http://xmlschema.ok-demat.com/DIA");
 
@@ -72,8 +76,8 @@ class FileDIA {
 <?php 
 		
 		$ae_content= ob_get_clean();
-		
 		file_put_contents($this->dia_upload_path."/{$id}_ae", $ae_content);
+		return $ae_content;
 	}
 	
 	public function sendANP($id,$filename){

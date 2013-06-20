@@ -219,6 +219,21 @@ class TransactionDIA {
 		$this->updateStatus($id, self::ANP_ENVOYE, "Accusé de non préemption envoyé sur PEC");
 	}
 	
+	public function getStatusInfo($id,$status_id){
+		$sql = "SELECT * FROM dia_transactions_workflow WHERE transaction_id=? AND status_id=?";
+		return $this->sqlQuery->queryOne($sql,$id,$status_id);
+	}
 	
+	public function getNeedAE(){
+		$sql = "SELECT * FROM dia_transactions WHERE last_status_id=? or last_status_id=?";
+		$result = array();
+		foreach($this->sqlQuery->query($sql,self::RECU,self::RECUPERE) as $line){
+			if ($this->getStatusInfo($line['id'],self::AE_ENVOYE)){
+				continue;
+			}
+			$result[] = $line;
+		}
+		return $result;
+	}
 	
 }

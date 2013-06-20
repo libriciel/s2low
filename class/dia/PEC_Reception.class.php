@@ -16,7 +16,16 @@ class PEC_Reception {
 	
 	public function go($delivery_path){
 		$this->retrieveDIAFromDeliveryFolder($delivery_path);
-		$this->generateAndSendAE();
+		
+		$dia_list = $this->transactionDIA->getNeedAE();
+		
+		foreach($dia_list as $dia_info){
+			try {
+				$this->generateAndSendAE($dia_info);
+			} catch (Exception $e){
+				echo "[ERREUR] Impossible de générer l'AE pour la DIA #{$dia_info['id']}: ".$e->getMessage()."\n";
+			}
+		}
 	}
 	
 	public function retrieveDIAFromDeliveryFolder($delivery_path){
@@ -114,17 +123,47 @@ class PEC_Reception {
 		$tmp_folder->delete($entry);
 		return true;
 	}
-		
-		
-		
 	
-	
-	public function generateAndSendAE(){
-		//pour chaque message
-		//Créer l'AE
-		//Signer l'AE
-		//Créer le répertoire afin d'envoyer l'AE
+	public function generateAndSendAE($dia_info){
+		$ae_content = $this->fileDIA->createAE($dia_info['id']);
 		
+		$folder = DIA_TO_PRESTO."/AE-{$dia_info['message_id']}";
+		@ mkdir($folder);
+		file_put_contents($folder."/APC_AEN.xml",$ae_content);
+		$message_xml_content = $this->getMessageRetour($dia_info['message_xml']);
+		file_put_contents($folder."/message.xml",$message_xml_content);
+		
+	}
+	
+	public function getMessageRetour($message_aller_content){
+		
+		if (! $message_aller_content){
+			throw new Exception("Le message.xml est vide");
+		}
+		
+		$dom = new DomDocument();
+		$dom->loadXML($message_aller_content); 
+		
+		
+		$sender_node = $dom->getElementsByTagNameNS("http://finances.gouv.fr/dgme/pec/message/v1","Sender")->item(0);
+		$recipient_node = $dom->getElementsByTagNameNS("http://finances.gouv.fr/dgme/pec/message/v1","Recipient")->item(0);
+		
+		$new_recipient = $dom->createElementNS("http://finances.gouv.fr/dgme/pec/message/v1", "Recipient");
+		
+		foreach($sender_node->childNodes as $child){
+			$new_recipient->appendChild($child->cloneNode(true));
+		}
+		
+		$new_sender = $dom->createElementNS("http://finances.gouv.fr/dgme/pec/message/v1", "Sender");
+		foreach($recipient_node->childNodes as $child){
+			$new_sender->appendChild($child->cloneNode(true));
+		}
+		
+		
+		$recipient_node->parentNode->replaceChild($new_recipient,$recipient_node);
+		$sender_node->parentNode->replaceChild($new_sender,$sender_node);
+		
+		return $dom->saveXML();
 	}
 	
 	
