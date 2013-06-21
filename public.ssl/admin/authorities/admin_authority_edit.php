@@ -102,9 +102,6 @@ $html .= " </tr>\n";
 $accessHelios=0;
 
 
-//TODO: si le collectivité en éditer n'as pas le droit d'access de helios ;il faut pas le affichier.
-
-
 		
 if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 {
@@ -341,10 +338,15 @@ $html .= "/></label>";
 $html .= "  </td>\n";
 $html .= " </tr>\n";
 
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Numéro SIRET pour la réception des DIA:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"dia_siret\" value=\"" . htmlspecialchars($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
+
+		
+if ($authority->getModulePermByName("dia") && $me->isAdmin())
+{
+	$html .= " <tr>\n";
+	$html .= "  <td class=\"td-register\">Numéro SIRET pour la réception des DIA:</td>\n";
+	$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"dia_siret\" value=\"" . htmlspecialchars($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" /></td>\n";
+	$html .= " </tr>\n";
+}
 
 
 $html .= "</table>\n";
