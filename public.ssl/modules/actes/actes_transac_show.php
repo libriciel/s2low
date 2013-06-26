@@ -418,10 +418,7 @@ if (!$trans->hasPendingCancelTrans()) {
           $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
           $actionHtml .= "</p></form>\n";
   
-          if (MODE == "dev"){
-              $actionHtml .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_testbordereau.php?id=".$trans->getId()."\" >(mode_dev) Voir le bordereau</a>\n";
-          }//fin if verifie MODE == dev
-  
+         
           $actionHtml .= "</div>\n";
      }//fin if type == 1 , status = 4 ou 14, transaction canvalidate et configuration pour le sae
 }//fin if qui verifie qu'il n'y a pas d'annulation en cours

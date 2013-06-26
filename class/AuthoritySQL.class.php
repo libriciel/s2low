@@ -1,6 +1,4 @@
 <?php 
-
-
 class AuthoritySQL {
 	
 	public function __construct($sqlQuery){
@@ -28,32 +26,26 @@ class AuthoritySQL {
   	
   	public static function getSAEProperties(){
   		return  array(
-			'sae_wsdl' => "SAE WSDL",
-			'sae_login' => "SAE Login",
-			'sae_password' => "SAE mot de passe", 
-			'sae_id_versant' =>  "SAE Identifiant service versant",//TransferringAgency
-			'sae_id_archive' => "SAE Identifiant service d'archive", //ArchivalAgency
-  			'sae_originating_agency' => "SAE Identifiant service producteur", //OriginatingAgency  		
-			'sae_numero_aggrement' => "SAE Accord de versement",
+			'pastell_url' => "URL Pastell",
+			'pastell_login' => "Login Pastell",
+			'pastell_password' => "Mot de passe Pastell", 
+			'pastell_id_e' => "Identifiant collectivité sur pastell (id_e)"
 		);
   	}
   	
-  	public static function isTextarea($properties){
-  		return in_array($properties, array('sae_id_versant','sae_id_archive','sae_originating_agency'));
-  	}
+  	public static function getSAEPropertiesType($properties){
+  		return ($properties=='pastell_password')?"password":"text";
+  	} 
   	
   	public function updateSAE($id,array $info){
-  		$sql = "UPDATE authorities SET sae_wsdl=?,sae_login=?,sae_password=?,sae_id_versant=?,sae_id_archive=?,sae_numero_aggrement=?,sae_originating_agency=? WHERE id = ?";
+  		$sql = "UPDATE authorities SET pastell_url=?,pastell_login=?,pastell_password=?,pastell_id_e=? WHERE id = ?";
     	$data['id'] = $id;
   		
   		$this->sqlQuery->query($sql,
-  								$info['sae_wsdl'],
-  								$info['sae_login'],
-  								$info['sae_password'],
-  								$info['sae_id_versant'],
-  								$info['sae_id_archive'],
-  								$info['sae_numero_aggrement'],
-  								$info['sae_originating_agency'],
+  								$info['pastell_url'],
+  								$info['pastell_login'],
+  								$info['pastell_password'],
+  								$info['pastell_id_e'],
   								$id);
   	}
 	

@@ -11,19 +11,6 @@ $authorityInfo = $authoritySQL->getInfo($id);
 if (! $authorityInfo  || ! $droit->hasDroit($userInfo,$authorityInfo)){
 	sortir("Accès refusé");
 }
-$xml_default="<Description></Description>
-    <Identification>INFORMATION_OBLIGATOIRE</Identification>
-    <Name></Name>
-    <Contact>
-      <PersonName></PersonName>
-      <Responsibility></Responsibility>
-    </Contact>
-    <Address>
-      <BuildingNumber></BuildingNumber>
-      <CityName></CityName>
-      <Postcode></Postcode>
-      <StreetName></StreetName>
-    </Address>";
 
 $menuHTML = new MenuHTML();
 
@@ -41,16 +28,13 @@ ob_start();
 	<form action='admin_authority_sae_controler.php' method='post'>
 	<input type='hidden' name='id' value='<?php echo $id ?>' />
 	<table>
+		
 		<?php foreach(AuthoritySQL::getSAEProperties() as $sae_name => $sae_label):
 			?>
 			<tr>
 				<td class="td-register"><?php echo $sae_label ?>&nbsp;:</td>
 				<td class="td-input">
-					<?php if (AuthoritySQL::isTextarea($sae_name)) : ?>
-						<textarea cols="60" rows="10" name='<?php echo $sae_name?>'><?php echo htmlspecialchars($authorityInfo[$sae_name]?:$xml_default) ?></textarea>
-					<?php else : ?>
-					<input type="text" size="30" name="<?php echo $sae_name ?>" value="<?php echo htmlspecialchars($authorityInfo[$sae_name]) ?>" />
-					<?php endif;?>
+					<input type="<?php echo AuthoritySQL::getSAEPropertiesType($sae_name)?>" size="30" name="<?php echo $sae_name ?>" value="<?php echo htmlspecialchars($authorityInfo[$sae_name]) ?>" />
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -58,8 +42,12 @@ ob_start();
 	</table>
 		<center>
 			<input type="submit" class="submit_button" value="Modifier" />
+			
 		</center>
+		
 	</form>
+
+<a href='admin_authority_sae_text_connexion.php?id=<?php echo $id ?>'>Tester la connexion</a>
 
 </div>
 <?php 

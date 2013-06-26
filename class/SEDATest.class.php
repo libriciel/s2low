@@ -15,8 +15,7 @@ class SEDATest {
 		
 	}
 	
-	public function validateBordereau($bordereau){
-		
+	public function validateBordereau($bordereau){		
 		libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
 		$dom->loadXML($bordereau);

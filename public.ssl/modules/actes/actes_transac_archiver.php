@@ -5,32 +5,21 @@ require_once( __DIR__ . "/../../../init/init-www-actes.php");
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$actesArchiveControler = new ActesArchiveControler();
+$actesArchiveControler = new ActesArchiveControler($sqlQuery);
+$id_d = $actesArchiveControler->sendArchive($connexion->getId(),$id);
 
-list($actesTransactionsSQL,$transactionsInfo,$bordereau,$archive_path,$sae_transfer_identifier) = $actesArchiveControler->getBordereau($id);
-
-if (! $bordereau){
-	$_SESSION['error'] = $actesArchivesSEDA->getLastError();
+if (! $id_d){
+	$_SESSION['error'] = $actesArchiveControler->getLastError();
 	header("Location: actes_transac_show.php?id=$id");
 	exit;
 }
 
-$asalae = new Asalae($authorityInfo);
-$result = $asalae->sendArchive($bordereau,$archive_path);
+$msg = "Envoie de la transaction $id à Pastell";
 
-if (! $result){
-	$_SESSION['error'] ="Erreur lors de l'archivage : " . $asalae->getLastError();
-} else {
-	$msg = "Envoie de la transaction {$transactionsInfo['id']}  au SAE ({$authorityInfo['sae_wsdl']})";
+$_SESSION['error'] = "L'archive a été déposée";
 	
-	$actesTransactionsSQL->updateStatus($transactionsInfo['id'],12,$msg);
-	$actesTransactionsSQL->setSAETransferIdentifier($transactionsInfo['id'],$sae_transfer_identifier);
-	
-	$_SESSION['error'] = "L'archive a été déposé";
-	
-	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$userInfo['id'])) {
-      $_SESSION['error'] .= "\nErreur de journalisation.\n";
-    }
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId())) {
+	$_SESSION['error'] .= "\nErreur de journalisation.\n";
 }
 
 header("Location: actes_transac_show.php?id=$id");

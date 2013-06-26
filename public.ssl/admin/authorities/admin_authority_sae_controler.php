@@ -13,19 +13,11 @@ if (! $authorityInfo  || ! $droit->hasDroit($userInfo,$authorityInfo)){
 foreach(AuthoritySQL::getSAEProperties() as $name => $label){
 	$info[$name] = $recuperateur->get($name,''); 
 }
+$info['pastell_id_e'] = $recuperateur->getInt('pastell_id_e',0);
+
+
 $authoritySQL->updateSAE($id,$info);
 
-$sedaTest = new SEDATest();
-$actesArchiveSEDA = new ActesArchiveSEDA("/tmp");
+$_SESSION["error"] = "Les informations ont été mises à jour";
 
-$authorityInfo = $authoritySQL->getInfo($id);
-$actesArchiveSEDA->setAuthorityInfo($authorityInfo);
-$bordereau = $actesArchiveSEDA->getBordereau($sedaTest->getTransactionTest());
-
-
-if ( ! $sedaTest->validateBordereau($bordereau)){
-	$_SESSION["error"]  = "Erreur sur le fichier XML : <br/>" . $sedaTest->getLastError();
-} else {
-	$_SESSION["error"] = "Les informations ont été mises à jour";
-}
 header("Location: admin_authority_sae.php?id=$id");
