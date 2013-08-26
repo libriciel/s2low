@@ -43,7 +43,14 @@ class ActesArchiveControler {
 			return false;
 		}
 		
-		$xml = simplexml_load_string($reply_sae);
+		@ $xml = simplexml_load_string($reply_sae);
+		
+		if (! $xml){
+			echo "Impossible de lire le fichier reply.xml : $reply_sae\n";
+			return false;
+		}
+		
+		
 		$nodeName = strval($xml->getName());
 		$xml_message = utf8_decode(strval($xml->ReplyCode) . " - " . strval($xml->Comment));
 		
