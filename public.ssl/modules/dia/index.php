@@ -49,7 +49,9 @@ $listeDIAHTML = new ListeDIAHTML();
 
 if ($droit->isSuperAdmin($userInfo)){
 	$listeDIAHTML->addCollectivite($authoritySQL->getAll(),$authority_filtre);
-} 
+} elseif($permUser == 'RW') {
+ 	$listeDIAHTML->addActionBox();
+}
 
 $listeDIAHTML->setCritere($status,$fstatus,$filename);
 $listeDIAHTML->setDate($fmin_submission_date,$fmax_submission_date);

@@ -37,7 +37,15 @@ class PEC_Reception {
 			}
 		}
 		
-		
+	}
+	
+	public function saveDIAInDeliveryFolder($delivery_path,$zip_path){
+		$zip = new ZipArchive();
+		if (! $zip->open($zip_path)){
+			return false;
+		}
+		$zip->extractTo($delivery_path);
+    	$zip->close();
 	}
 	
 	public function retrieveDIAFromDeliveryFolder($delivery_path){
