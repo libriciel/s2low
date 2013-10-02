@@ -16,8 +16,5 @@ foreach($allEnvelopes as $envelopeInfo){
 	$actesTransactionsSQL->updateStatus($envelopeInfo['transaction_id'],16,$msg);
 	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$envelopeInfo['user_id']);
 	
-	echo $msg."\n";
-	
-	
-	
+	echo $msg."\n";	
 }

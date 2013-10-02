@@ -172,6 +172,21 @@ class HeliosTransactionWorkflow extends DataObject {
 
     return false;
   }
+  
+ public static function getCurrentStatusId($transaction_id) {
+    $db = & DatabasePool :: getInstance();
+
+    $sql = "SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $transaction_id . " ORDER BY atw.id DESC LIMIT 1";
+
+    $result = $db->select($sql);
+
+    if (!$result->isError() && $result->num_row() == 1) {
+      $row = $result->get_next_row();
+      return $row["status_id"];
+    }
+
+    return false;
+  }
 
   public static function getCurrentStatus($transaction_id) {
     $db = & DatabasePool :: getInstance();

@@ -9,7 +9,7 @@ $actesArchiveControler = new ActesArchiveControler($sqlQuery);
 $id_d = $actesArchiveControler->sendArchive($connexion->getId(),$id);
 
 if (! $id_d){
-	$_SESSION['error'] = $actesArchiveControler->getLastError();
+	$_SESSION['error'] = "Erreur: " . $actesArchiveControler->getLastError();
 	header("Location: actes_transac_show.php?id=$id");
 	exit;
 }

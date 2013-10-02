@@ -116,7 +116,12 @@ class HeliosTransaction extends DataObject {
   		"descr" => "siren de son propre collectivite",
   		"type" => "isString",
   		"mandatory" =>true
-  	)
+  	),
+  	"archive_url" => array(
+  		"descr" => "",
+  		"type" => "isString",
+  		"mandatory" =>false
+  	),
 
   );
 

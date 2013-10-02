@@ -31,5 +31,3 @@ if ($sleep > 0){
 	echo "Arret du script : $sleep \n";
 	sleep($sleep);
 }
-
-?>

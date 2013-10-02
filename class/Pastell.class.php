@@ -41,7 +41,7 @@ class Pastell {
 		$data = json_decode($data,true);
 		
 		if (isset($data['status']) && $data['status']=='error' ){
-			$this->lastError = "Message de Pastell : " . $data['error-message'];
+			$this->lastError = "Message de Pastell : " . utf8_decode($data['error-message']);
 			return false;
 		}
 		return $data;
@@ -80,7 +80,24 @@ class Pastell {
 		return $id_d;
 	}
 	
-	private function postFile($id_d,$field,$file_path,$file_orig_name = false){
+	public function createHelios($transactionInfo){
+		$result = $this->callAPI("create-document.php?id_e={$this->id_e}&type=helios-generique");
+		$id_d = $result['id_d'];
+		$info = array(	'id_e' => $this->id_e,
+						'id_d'=>$id_d,
+						'objet' => $transactionInfo['filename'],
+						'tedetis_transaction_id' => $transactionInfo['id'],
+						'envoi_sae' => 1,
+		);
+		
+		$result = $this->callAPI("modif-document.php",$info);
+		if (!$result){
+			return false;
+		}
+		return $id_d;
+	}
+	
+	public function postFile($id_d,$field,$file_path,$file_orig_name = false){
 		return $this->callAPI("modif-document.php",
 					array('id_e'=>$this->id_e,'id_d'=>$id_d),
 					array($field=>array($file_path,$file_orig_name)));

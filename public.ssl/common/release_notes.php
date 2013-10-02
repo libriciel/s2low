@@ -338,5 +338,3 @@ $doc->addBody($html);
 $doc->buildFooter();
 
 $doc->display();
-
-?>

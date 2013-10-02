@@ -87,8 +87,13 @@ $html .= $doc->getHTMLArrayline("Taille (octets)" ,$trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1" ,$trans->get("sha1"));
 $html .= $doc->getHTMLArrayline("Suivie par" ,$userInfo->getPrettyName());
 $html .= $doc->getHTMLArrayline("Collectivité" ,$authorityInfo->get("name"));
+$arch_url = $trans->get("archive_url");
 
-$url = "Non définie";
+if (!empty ($arch_url)) {
+      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . htmlspecialchars($trans->get("archive_url")) . "</a>";
+    } else {
+      $url = "Non définie";
+    }
 $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
 $html .= "</table>\n";
 $html .= "</div>\n";
@@ -132,13 +137,22 @@ if (count($workflow) > 0) {
   $html .= "Le cycle de vie est vide pour cette transaction.\n";
 }
 
+$currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
+
+if (in_array($currentStatusId,array(8)) && $authorityInfo->get('sae_wsdl')) {
+	$html .= "<div class=\"action\">\n";
+	$html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_archiver.php\"  method=\"post\">\n";
+	$html .= "<p>Archivage SEDA&nbsp;:&nbsp;";
+	$html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+	$html .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
+	$html .= "</p></form>\n";
+	$html .= "</div>\n";
+}
+
 
 $html .= "</div>\n";
-
 $doc->addBody($html);
 
 $doc->buildFooter();
 
 $doc->display();
-
-?>

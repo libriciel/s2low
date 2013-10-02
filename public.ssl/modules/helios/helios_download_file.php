@@ -29,8 +29,6 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 
 $transaction_id = Helpers :: getVarFromGet("id");
 
-//tmp
-//echo "Transaction:" . $transaction_id;
 
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -42,21 +40,8 @@ $ownerId = $entity->getUserForId($transaction_id);
 $owner = new User($ownerId);
 $owner->init();
 
-// Vérification des permissions
-/*
-if (! $me->isSuper()) {
-  if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $owner->getId() && $me->canAccess($module->get("name")))) {
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-	exit();
-  }
-}
-
-*/
 
 if (!$entity->sendfile($sha1,$filename)) {
   $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();
-  //header("Location: " . WEBSITE_SSL);
   exit ();
 }
-?>

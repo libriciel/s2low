@@ -75,7 +75,6 @@ class ActesArchiveControler {
 		
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$transactionsInfo = $actesTransactionsSQL->getInfo($id);
-		$latest_date = $actesTransactionsSQL->getLatestDate($id);
 		if ( ! $transactionsInfo || $transactionsInfo['user_id'] != $user_id){
 			$this->lastError = "Accès refusé";
 			return false;
@@ -86,7 +85,6 @@ class ActesArchiveControler {
 			return false;
 		}
 		
-		$numero_transfert = $actesTransactionsSQL->getNextNumeroTransfert();
 		
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
@@ -145,6 +143,8 @@ class ActesArchiveControler {
 	
 		$relatedTransaction = $actesTransactionsSQL->getRelatedTransaction($id);
 		$echange_prefecture_type = array();
+		$echange_prefecture = array();
+		$echange_prefecture_ar = array();
 		foreach($relatedTransaction as $transaction){
 			
 			$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transaction['envelope_id']);
@@ -184,7 +184,6 @@ class ActesArchiveControler {
 				$echange_prefecture_type[] = $transaction['type'].'RB';
 				$echange_prefecture[] = array($file_to_send."/".$annexe['filename'],$annexe['posted_filename']);
 				$echange_prefecture_ar[] = array($tmp_folder."/empty",'empty');
-				
 			}
 		}
 		
@@ -193,7 +192,7 @@ class ActesArchiveControler {
 		
 		
 		$result = $pastell->sendSAE($id_d);
-		
+
 		if (! $result){
 			$this->lastError = $pastell->getLastError();
 			return false;
