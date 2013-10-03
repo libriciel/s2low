@@ -205,6 +205,7 @@ class ListeActesHTML {
 				<select name="status">
 					<option value="valid">Validé</option>
 					<option value="invalid">Refusé</option>
+					<option value="sae">Envoyé au SAE</option>
 				</select>
 				<input type="submit" class="submit_button" value="Exécuter"/>
 			</div>

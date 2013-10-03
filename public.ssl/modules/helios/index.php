@@ -377,9 +377,13 @@ if (count($envelopes) > 0) {
 
     $sortWay = (isset($_GET['sortway']) && ($_GET["sortway"] == "asc")) ? "desc" : "asc";
     
+    $html .= '<form id="div_chck" onsubmit="return afficheWarning()" action="'.WEBSITE_SSL.'/modules/helios/helios_transac_close.php" method="post">';
+    
+    
     $html .= "<table class=\"transactions_list\">\n";
   
     $html .= " <tr>\n";
+    $html .= "<th>Sél.</th>\n";
     $html .= "  <th>Nom de fichier</th>\n";
     $html .= "  <th>Date de postage</th>\n";
     $html .= "  <th>Etat actuel</th>\n";
@@ -391,16 +395,23 @@ if (count($envelopes) > 0) {
     
     $html .= " </tr>\n";
 
-
+$sel_ok = false;
  foreach ($envelopes as $envelope) {
   
       $transaction_id=$envelope["id"];
       $owner = new User($envelope["user_id"]);
       $owner->init();
       
-      $html .= "<tr>\n";
- 
- 
+      $html .= "<tr><td>\n";
+		if ($envelope['last_status_id'] == 8) {
+			$html .= '<input type="checkbox" name="liste_id[]" value="' .
+						htmlspecialchars($envelope['id']) .
+						'" id="checkbox'.$envelope['id'].'" />';
+			$sel_ok = true;
+		} else {
+			$html .="&nbsp;";
+		}
+ 		$html .="</td>";
       $html .= " <td>" . $envelope["filename"]. "</td>\n";
       $html .= " <td>" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
       $html .= " <td>" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";
@@ -417,6 +428,14 @@ if (count($envelopes) > 0) {
 
     $html .= "</table>\n";
   
+    if($sel_ok){
+    $html .=<<<TOTO
+    	<div class="action">
+			<input type="submit" class="submit_button" value="Envoyer la séléction au SAE"/>
+		</div>
+TOTO;
+    }
+    $html .= "</form>";
 } else {
   $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
 }

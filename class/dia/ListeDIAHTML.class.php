@@ -147,7 +147,6 @@ class ListeDiaHTML {
 	
 	public function displayList($envelopes){
 		?>
-		<form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_close.php" method="post">
 		
 			<table class="transactions_list">
 				<tr>
@@ -174,7 +173,6 @@ class ListeDiaHTML {
 			</table>
 			
 
-		</form>
 		<?php 
 	}
 

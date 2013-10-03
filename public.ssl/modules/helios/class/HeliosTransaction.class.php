@@ -293,7 +293,7 @@ class HeliosTransaction extends DataObject {
     */
   public function getDocumentList($cond = "") {
     $tmp = "";
-    if (!$this->pagerInit('DISTINCT helios_transactions.id, helios_transactions.user_id, helios_transactions.filename, authorities.name as authority_name', 
+    if (!$this->pagerInit('DISTINCT helios_transactions.id,  helios_transactions.last_status_id, helios_transactions.user_id, helios_transactions.filename, authorities.name as authority_name ', 
     			' helios_transactions LEFT JOIN users ON helios_transactions.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id ', 
     			$cond)) {
             return false;
