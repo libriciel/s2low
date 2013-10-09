@@ -81,10 +81,13 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : Utilitaires");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
-$html .= "<h1>Utilitaires</h1>\n";
+$html = "<h1>Utilitaires</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('global_message');\">Envoi de message électronique global</h2>\n";
 $html .= "<div id=\"global_message\" style=\"display: none;\">\n";
 $html .= "<p>Utilisez le formulaire ci-dessous pour envoyer un message a l'ensemble des utilisateurs d'un module.</p>";
@@ -137,10 +140,10 @@ if (count($caCerts) > 0) {
 }
 $html .= "</div>\n";
 
-$html .= "</div>\n";
-
-
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

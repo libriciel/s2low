@@ -78,72 +78,9 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : Journal d'évènements");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
-
-$html = "<div id=\"content\">\n";
-$html .= "<h1>Journal d'évènements";
-
-if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
-} elseif ($me->isGroupAdmin()) {
-  $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
-}
-
-$html .= "</h1>\n";
-$html .= "<div id=\"filtering_area\">\n";
-$html .= "<h2>Filtrage</h2>\n";
-$html .= "<form action=\"logs_view.php\" method=\"get\">\n";
-$html .= "<table>\n";
-$html .= "<tr>\n";
-$html .= "<td class=\"title\">Module&nbsp;:</td>\n";
-$html .= "<td class=\"value\">" . $doc->getHTMLSelect("module", Module::getActiveModulesNames(), $fmodule) . "</td>\n";
-$html .= "<td class=\"title\">Sévérité&nbsp;:</td>\n";
-$html .= "<td class=\"value\">" . $doc->getHTMLSelect("severity", $log->get("severities"), $fseverity) . "</td>\n";
-$html .= "</tr>\n";
-$html .= "<tr>\n";
-$html .= "<td class=\"title\">Message contient&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input type=\"text\" name=\"message\" size=\"20\" maxlength=\"25\"";
-
-if (strlen($fmessage) > 0) {
-  $html .= " value=\"" . htmlspecialchars($fmessage) . "\"";
-}
-
-$html .= " /></td>\n";
-
-if ($me->isAdmin()) {
-  $html .= "<td class=\"title\">Nom utilisateur contient&nbsp;:</td>\n";
-  $html .= "<td class=\"value\"><input type=\"text\" name=\"user\" size=\"20\" maxlength=\"25\"";
-
-  if (strlen($fuser) > 0) {
-	$html .= " value=\"" . htmlspecialchars($fuser) . "\"";
-  }
-
-  $html .= " /></td>\n";
-  $html .= "</tr>\n";
-  $html .= "<tr>\n";
-  $colspan = 4;
-
-  if ($me->isGroupAdminOrSuper()) {
-	if ($me->isGroupAdmin()) {
-	  $cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
-	} else {
-	  $cond = " ORDER BY authorities.name ASC";
-	}
-
-	$html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
-	$html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
-	$colspan = 2;
-  }
-
-  $html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-} else {
-  $html .= "<td><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-}
-$html .= "</tr>\n";
-$html .= "</table>\n";
-$html .= "</form>\n";
-$html .= "</div><br />\n";
 
 $filter = array();
 // Construction chaîne de filtrage
@@ -195,20 +132,87 @@ if (count($filter) > 0) {
 $logEntries = $log->getLogEntriesList($where);
 $severities = $log->get("severities");
 
+$doc->buildPager($log);
+$doc->closeSideBar();
+$doc->openContent();
+
+$html = "<h1>Journal d'évènements";
+
+if ($me->isAuthorityAdmin()) {
+  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+} elseif ($me->isGroupAdmin()) {
+  $myGroup = new Group($me->get("authority_group_id"));
+  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+}
+
+$html .= "</h1>\n";
+$html .= "<div id=\"filtering_area\">\n";
+$html .= "<h2>Filtrage</h2>\n";
+$html .= "<form class=\"form-horizontal\" action=\"logs_view.php\" method=\"get\" role=\"form\">\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label for=\"module\" class=\"col-md-3 control-label\">Module</label>\n";
+$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("module", Module::getActiveModulesNames(), $fmodule) . "</div>\n";
+$html .= "<label for=\"severity-choice\" class=\"col-md-3 control-label\">Sévérité</label>\n";
+$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("severity", $log->get("severities"), $fseverity) . "</div>\n";
+$html .= "</div>\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label for=\"msg-contain\" class=\"col-md-3 control-label\">Message contient</label>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"msg-contain\" class=\"form-control\" type=\"text\" name=\"message\" size=\"20\" maxlength=\"25\"";
+
+if (strlen($fmessage) > 0) {
+  $html .= " value=\"" . htmlspecialchars($fmessage) . "\"";
+}
+
+$html .= " /></div>\n";
+
+if ($me->isAdmin()) {
+  $html .= "<label for=\"username-contain\" class=\"col-md-3 control-label\">Nom utilisateur contient</label>\n";
+  $html .= "<div class=\"col-md-3\"><input id=\"username-contain\" class=\"form-control\" type=\"text\" name=\"user\" size=\"20\" maxlength=\"25\"";
+
+  if (strlen($fuser) > 0) {
+      $html .= " value=\"" . htmlspecialchars($fmessage) . "\"";
+  }
+
+  $html .= " /></div>\n</div>\n";
+
+  if ($me->isGroupAdminOrSuper()) {
+	if ($me->isGroupAdmin()) {
+	  $cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
+	} else {
+	  $cond = " ORDER BY authorities.name ASC";
+	}
+        $html .= "<div class=\"form-group\">\n";
+        $html .= "<label for=\"collectivity-choice\" class=\"col-md-3 control-label\">Collectivité</label>\n";
+        $html .= "<div class=\"col-md-3\">". $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</div>\n";
+        $html .= "</div>\n";
+  }
+} else {
+  $html .= "</div>\n";
+}
+$html .= "<div class=\"form-group\">";
+$html .= "<button type=\"submit\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Filtrer</button>\n";
+$html .= "</div>\n";
+$html .= "</form>\n";
+$html .= "</div>\n";
+
 
 $html .= "<h2>Entrées du journal</h2>\n";
-
+$html .= "<div id=\"journal_area\">\n";
 if (count($logEntries) > 0) {
-  $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"logs\">";
+  $html .= "<table class=\"logs data-table table table-striped\" summary=\"Ce tableau présente respectivement la date, l'auteur, la sévérité, le module, le message et un lien vers une archive de chaque événement du journal\">";
+  $html .= "<caption>Liste des événements du journal en fonction des choix de filtrage</ acption>";
+  $html .= "<thead>\n";
   $html .= "<tr>\n";
-  $html .= " <th class=\"data\">Date</th>\n";
-  $html .= " <th class=\"data\">Créé par</th>\n";
-  $html .= " <th class=\"data\">Sévérité</th>\n";
-  $html .= " <th class=\"data\">Module</th>\n";
-  $html .= " <th class=\"data\">Utilisateur</th>\n";
-  $html .= " <th class=\"data\">Message</th>\n";
-  $html .= " <th class=\"data\">Horodatage</th>\n";
+  $html .= " <th id=\"date\" class=\"data\">Date</th>\n";
+  $html .= " <th id=\"author\" class=\"data\">Créé par</th>\n";
+  $html .= " <th id=\"severity\" class=\"data\">Sévérité</th>\n";
+  $html .= " <th id=\"module\" class=\"data\">Module</th>\n";
+  $html .= " <th id=\"user\" class=\"data\">Utilisateur</th>\n";
+  $html .= " <th id=\"message\" class=\"data\">Message</th>\n";
+  $html .= " <th id=\"timestamp\" class=\"data\">Horodatage</th>\n";
   $html .= "</tr>\n";
+  $html .= "</thead>\n";
+  $html .= "<tbody>\n";
 
   $i = 0;
 
@@ -221,30 +225,30 @@ if (count($logEntries) > 0) {
 	  }
 	}
 
-	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td>" . Helpers::getDateFromBDDDate($logEntry["date"], true) . "</td>\n";
-	$html .= " <td>" . htmlspecialchars($logEntry["issuer"]) . "</td>\n";
-	$html .= " <td>" . htmlspecialchars($severities[$logEntry["severity"]]) . "</td>\n";
-	$html .= " <td>" . htmlspecialchars($logEntry["module"]) . "</td>\n";
-	$html .= " <td>" . (($owner) ? htmlspecialchars($owner->getPrettyName()) : "") . "</td>\n";
-	$html .= " <td class=\"long_field\">" . nl2br(htmlspecialchars($logEntry["message"])) . "</td>\n";
-	$html .= " <td><a href=\"" . WEBSITE_SSL . "/common/logs_get_timestamp.php?id=" . $logEntry["id"] . "\" title=\"Télécharger une archive contenant l'entrée de journal n°" .$logEntry["id"] . " et sa signature\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/timestamping_icon.png\" alt=\"timestamp\" /></a></td>\n";
+	$html .= "<tr>\n";
+	$html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($logEntry["date"], true) . "</td>\n";
+	$html .= " <td headers=\"author\">" . htmlspecialchars($logEntry["issuer"]) . "</td>\n";
+	$html .= " <td headers=\"severity\">" . htmlspecialchars($severities[$logEntry["severity"]]) . "</td>\n";
+	$html .= " <td headers=\"module\">" . htmlspecialchars($logEntry["module"]) . "</td>\n";
+	$html .= " <td headers=\"user\">" . (($owner) ? htmlspecialchars($owner->getPrettyName()) : "") . "</td>\n";
+	$html .= " <td class=\"long_field\" headers=\"message\">" . nl2br(htmlspecialchars($logEntry["message"])) . "</td>\n";
+	$html .= " <td headers=\"timestamp\"><a href=\"" . WEBSITE_SSL . "/common/logs_get_timestamp.php?id=" . $logEntry["id"] . "\" title=\"Télécharger une archive contenant l'entrée de journal n°" .$logEntry["id"] . " et sa signature\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/timestamping_icon.png\" alt=\"timestamp\" /></a></td>\n";
 	$html .= "</tr>\n";
-
-	$i = ($i + 1) % 2;
   }
 
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
   $html .= "Pas d'entrée de journal correspondant au filtrage spécifié.";
 }
 
 
-$html .= "</div>\n";
-
-$doc->buildPager($log);
 
 $doc->addBody($html);
+
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

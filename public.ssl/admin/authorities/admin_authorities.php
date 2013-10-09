@@ -60,10 +60,14 @@ if ($api){
 
 $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : gestion des collectivités");
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->buildPager($authority);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
-$html .= "<h1>Gestion des collectivités";
+$html = "<h1>Gestion des collectivités";
 
 if ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
@@ -71,51 +75,52 @@ if ($me->isGroupAdmin()) {
 }
 
 $html .= "</h1>\n";
-$html .= "<div id=\"filtering_area\">\n";
+$html .= "<div id=\"actions-area\">\n";
+$html .= "<h2>Actions</h2>";
+$html .= "<a class=\"btn btn-primary\" href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php\" class=\"bouton\">Ajouter une collectivité</a>\n";
+$html .= "</div>\n";
+$html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
-$html .= "<form action=\"admin_authorities.php\" method=\"get\">\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table>\n";
-$html .= "<tr>\n";
-$html .= "<td class=\"title\">Type&nbsp;:</td>\n";
-$html .= "<td class=\"value\">" . $doc->getHTMLSelect("type", Authority::getAuthorityTypesIdName(), $ftype) . "</td>\n";
-$html .= "<td class=\"title\">Le nom contient&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
+$html .= "<form class=\"form-horizontal\" action=\"admin_authorities.php\" method=\"get\" role=\"form\">\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label for=\"type\" class=\"col-md-3 control-label\">Type</label>\n";
+$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("type", Authority::getAuthorityTypesIdName(), $ftype) . "</div>\n";
+$html .= "<label for=\"name-contain\" class=\"col-md-3 control-label\">Le nom contient</label>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fname) > 0) {
   $html .= " value=\"" . htmlspecialchars($fname) . "\"";
 }
 
-$html .= " /></td>\n";
-$html .= "</tr>\n";
-$html .= "<tr>\n";
+$html .= " /></div>\n";
+$html .= "</div>\n";
 
-$colspan = 4;
 if ($me->isSuper()) {
-  $colspan = 2;
-  $html .= "<td class=\"title\">Groupe&nbsp;:</td>\n";
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) . "</td>\n";
+  $html .= "<div class=\"form-group\">\n";
+  $html .= "<label for=\"group\" class=\"col-md-3 control-label\">Groupe</label>\n";
+  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) . "</div>\n";
+  $html .= "</div>\n";
 }
-
-$html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-$html .= "</tr>\n";
-$html .= "</table>\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<button class=\"btn btn-default col-md-offset-3 col-md-3\" type=\"submit\">Filtrer</button>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";
 $html .= "</div><br />\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php\" class=\"bouton\">Ajouter une collectivité</a></center>\n";
 $html .= "<h2>Liste des collectivités</h2>\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+$html .= "<div id=\"authority-list\">\n";
+$html .= "<table class=\"data-table table table-striped\" summary=\"\">";
+$html .= "<thead>\n";
 $html .= "<tr>\n";
-$html .= " <th class=\"data\">Nom</th>\n";
-$html .= " <th class=\"data\">Groupe</th>\n";
-$html .= " <th class=\"data\">Type de collectivité</th>\n";
-$html .= " <th class=\"data\">Adresse</th>\n";
-$html .= " <th class=\"data\">Téléphone</th>\n";
-$html .= " <th class=\"data\">Fax</th>\n";
-$html .= " <th class=\"data\">Actions</th>\n";
+$html .= " <th id=\"name\">Nom</th>\n";
+$html .= " <th id=\"group-member\">Groupe</th>\n";
+$html .= " <th id=\"authority-type\">Type de collectivité</th>\n";
+$html .= " <th id=\"address\">Adresse</th>\n";
+$html .= " <th id=\"phone\">Téléphone</th>\n";
+$html .= " <th id=\"fax\">Fax</th>\n";
+$html .= " <th id=\"actions\">Actions</th>\n";
 $html .= "</tr>\n";
+$html .= "</thead>\n";
+$html .= "<tbody>\n";
 
 $i = 0;
 
@@ -128,26 +133,27 @@ foreach ($authorities as $ent) {
 	$groupName = "Aucun";
   }
 
-  $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-  $html .= " <td>" . $ent["name"] . "</td>\n";
-  $html .= " <td>" . $groupName . "</td>\n";
-  $html .= " <td>" . $ent["type_name"] . "</td>\n";
-  $html .= " <td class=\"long_field\">" . nl2br($ent["address"]) . "<br />" . $ent["postal_code"] . " " . $ent["city"] . "</td>\n";
-  $html .= " <td>" . $ent["telephone"] . "</td>\n";
-  $html .= " <td>" . $ent["fax"] . "</td>\n";
-  $html .= " <td><a href=\"admin_authority_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+  $html .= "<tr>\n";
+  $html .= " <td headers=\"name\">" . $ent["name"] . "</td>\n";
+  $html .= " <td headers=\"group-member\">" . $groupName . "</td>\n";
+  $html .= " <td headers=\"authority-type\">" . $ent["type_name"] . "</td>\n";
+  $html .= " <td headers=\"address\" class=\"long_field\">" . nl2br($ent["address"]) . "<br />" . $ent["postal_code"] . " " . $ent["city"] . "</td>\n";
+  $html .= " <td headers=\"phone\">" . $ent["telephone"] . "</td>\n";
+  $html .= " <td headers=\"fax\">" . $ent["fax"] . "</td>\n";
+  $html .= " <td headers=\"actions\"><a href=\"admin_authority_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
   $html .= "</tr>\n";
 
-  $i = ($i + 1) % 2;
 }
 
+$html .= "</tbody>\n";
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "</div>\n";
 
-$doc->buildPager($authority);
-
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

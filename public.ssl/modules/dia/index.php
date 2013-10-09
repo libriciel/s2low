@@ -62,22 +62,26 @@ $doc->setTitle("Liste des transactions - DIA - S²low");
 $doc->addCSS("/custom/styles/date-picker.css");
 $doc->addJavascript("/javascript/date-picker.js");
 $doc->addJavascript("/javascript/tedetis.js");
-
+$doc->openContainer();
 $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
+$doc->closeSideBar();
+$doc->openContent();
 
 ob_start();
 ?>
-<div id="content">
-	<h1>DIA - Déclaration d'intention d'aliéner</h1>
+    <h1>DIA - Déclaration d'intention d'aliéner</h1>
 <?php 
 $listeDIAHTML->display($envelopes);
 ?>	
-</div>
 <?php 			
 $html = ob_get_contents();
 ob_end_clean();
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
+
 $doc->buildFooter();
 $doc->display();

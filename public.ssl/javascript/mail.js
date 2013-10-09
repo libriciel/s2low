@@ -15,7 +15,7 @@ function checkFormCreateMail() {
 
 	var email=document.getElementById("mailcc");
 	var strcc=email.value;
-	var email=document.getElementById("mailbcc");
+	var email=document.getElementById("mailcci");
 	var strbcc=email.value;	
 	var subject=document.getElementById("objet");
 	var message=document.getElementById("message");
@@ -118,9 +118,15 @@ function checkFormCreateMail() {
   {  
    
     var divElement  = document.createElement("div"); 
-    divElement.innerHTML="<input type='button' value='Delete'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
-    divElement.innerHTML+="<input type='file'  name='uploadFile"+FileNumber+"' id='file"+FileNumber+"'>";
-    document.getElementById("file").appendChild(divElement);
+    divElement.className= "form-group";
+    divElement.innerHTML="<label class='form-label col-md-2' for='file"+FileNumber+"'>Fichier"+FileNumber+"</label>"; 
+    divElement.innerHTML+="<input type='file' class='col-md-4' name='uploadFile"+FileNumber+"' id='file"+FileNumber+"'>";
+    divElement.innerHTML+="<input class='btn btn-warning col-md-1 col-md-offset-1 btn-sm' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
+    var parentElement = document.getElementById("file").parentNode.parentNode;
+    console.log(parentElement);
+    console.log(parentElement.parentNode);
+    console.log(parentElement.nextSibling);
+    parentElement.parentNode.insertBefore(divElement, parentElement.nextSibling);
     FileNumber++;
   }
   
@@ -141,7 +147,7 @@ function checkFormCreateMail() {
   function DeleteFile(id)
   {
     var trnode=document.getElementById("file"+id);
-    trnode.parentNode.removeChild(trnode);    
-    trnode=document.getElementById("delete"+id);
-    trnode.parentNode.removeChild(trnode); 
+    trnode.parentNode.remove();    
+//    trnode=document.getElementById("delete"+id);
+//    trnode.parentNode.removeChild(trnode); 
   }

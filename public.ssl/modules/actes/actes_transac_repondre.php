@@ -158,22 +158,24 @@ $doc->addHeader($js);
 
 $doc->setTitle("Tedetis : Actes - Réponse à un document");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
-
 
 $html .= "<div id=\"info_area\">\n";
 
 $html .= "<h3>Note&nbsp;:</h3>\n";
 $html .= "<p>Pour générer les signatures numériques des fichiers joints, sélectionnez d'abord les fichiers dans le formulaire ci-contre puis utilisez le bouton ci-dessous. Une nouvelle fenêtre s'ouvrira permettant de signer les fichiers.</p>\n";
 $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/applet/index.php\" method=\"post\" id=\"sign_form\" onsubmit=\"javascript:return open_sign_window();\">\n";
-$html .= "<p><input class=\"submit_button\" id=\"sign_submit_button\" type=\"submit\" value=\"Générer les signatures\" />\n";
+$html .= "<p><input class=\"submit_button btn btn-default\" id=\"sign_submit_button\" type=\"submit\" value=\"Générer les signatures\" />\n";
 $html .= "</p></form>\n";
 $html .= "</div>\n";
+$doc->closeSideBar();
+$doc->openContent();
 
 // Zone contenu
-$html .= "<div id=\"content\">\n";
 $html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p style=\"text-align:center\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Réponse à un courrier</h2>\n";
 
 
@@ -222,12 +224,15 @@ if ($trans->get("type") == 3) {
 $html .= "</dl>\n";
 
 
-$html .= "<div id=\"form_progress\"><input class=\"submit_button\" type=\"submit\" value=\"Créer la réponse\" /></div>\n";
+$html .= "<div id=\"form_progress\"><input class=\"btn btn-default\" type=\"submit\" value=\"Créer la réponse\" /></div>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

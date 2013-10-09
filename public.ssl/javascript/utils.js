@@ -10,6 +10,16 @@ function toggle_visibility(id) {
   }
 }
 
+function expand_area(id) {
+    var elt = document.getElementById(id);
+    elt.style.display = "block";
+}
+
+function collapse_area(id) {
+    var elt = document.getElementById(id);
+    elt.style.display = "none";
+}
+
 function toggle_upload(id, image) {
   var elt = document.getElementById(id);
 

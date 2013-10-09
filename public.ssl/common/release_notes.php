@@ -70,10 +70,13 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Logiciel TéDéTIS : Notes de publication");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
-$html .= "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
+$html = "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
 $html .= "<h1>Logiciel TéDéTIS - notes de publication</h1>\n";
 
 
@@ -332,8 +335,11 @@ $html .= "<ul>\n";
 $html .= "<li>Publication initiale</li>";
 $html .= "<li>Support complet protocole Actes</li>";
 $html .= "</ul>\n";
-$html .= "</div>\n";
+
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

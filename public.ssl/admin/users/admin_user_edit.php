@@ -69,10 +69,12 @@ $doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" 
 
 $doc->setTitle("Tedetis : " . $modStr . " d'un utilisateur");
 
-
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des utilisateurs";
 
 if ($me->isAuthorityAdmin()) {
@@ -83,9 +85,9 @@ if ($me->isAuthorityAdmin()) {
 }
 
 $html .= "</h1>\n";
-$html .= "<center><a href=\"admin_users.php\" class=\"bouton\">Retour liste utilisateurs</a></center>\n";
+$html .= "<p id=\"back-user-btn\"><a class=\"btn btn-default\" href=\"admin_users.php\">Retour liste utilisateurs</a></p>\n";
 $html .= "<h2>" . $modStr . " d'un utilisateur</h2>\n";
-$html .= "<form action=\"admin_user_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
+$html .= "<form class=\"form form-horizontal\" action=\"admin_user_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
 
 if (! $mod) {
   $html .= ", 'certificate', 'Certificat utilisateur', 'RisString'";
@@ -105,69 +107,67 @@ if ($mod) {
   $html .= "<input type=\"hidden\" name=\"mode\" value=\"create\" />\n";
 }
 
+$html .= "<div class=\"alert alert-info\"><span class=\"mandatory\">*</span> uniquement nécessaire si deux utilisateurs ont le même certificat</div>";
 
-
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Nom&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"name\" value=\"";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Nom : </label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"name\" value=\"";
 $html .= ($val = Helpers::getFromSession("name")) ? htmlspecialchars($val) : htmlspecialchars($him->get("name"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Pr&eacute;nom&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"givenname\" value=\"";
+$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Pr&eacutenom : </label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"givenname\" value=\"";
 $html .= ($val = Helpers::getFromSession("givenname")) ? htmlspecialchars($val) : htmlspecialchars($him->get("givenname"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
+$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
 
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Login*&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"login\" value=\"";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Login <span class=\"mandatory\">*</span> :</label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"login\" value=\"";
 $html .= ($val = Helpers::getFromSession("login")) ? htmlspecialchars($val) : htmlspecialchars($him->get("login"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Mot de passe*&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Mot de passe (à nouveau)*&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"password\" name=\"password2\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= "<tr><td>*uniquement nécessaire si deux utilisateurs ont le même certificat</td></tr>";
+$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Mot de passe <span class=\"mandatory\">*</span> :</label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Mot de passe (à nouveau) <span class=\"mandatory\">*</span> :</label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"password\" name=\"password2\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
 
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Adresse électronique&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"email\" value=\"";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Adresse électronique :</label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"email\" value=\"";
 $html .= ($val = Helpers::getFromSession("email")) ? htmlspecialchars($val) : htmlspecialchars($him->get("email"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Téléphone&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"telephone\" value=\"";
+$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Téléphone :</label>\n";
+$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"telephone\" value=\"";
 $html .= ($val = Helpers::getFromSession("telephone")) ? htmlspecialchars($val) : htmlspecialchars($him->get("telephone"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Importer le certificat utilisateur (format PEM)&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"file\" name=\"certificate\" /><br/>". 
-htmlspecialchars($him->get('subject_dn')) . "<br/>\n";
+$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Importer le certificat utilisateur (format PEM) :</label>\n";
+$html .= "  <div class=\"col-md-6\">\n<input type=\"file\" name=\"certificate\" />\n</div>\n";
+$html .= "</div>\n";
+$html .= "  <div class=\"alert alert-info col-md-9 col-md-offset-1\">\n". 
+htmlspecialchars($him->get('subject_dn')) . "";
 if ($him->get('certificate')){
-$html .= "Expire le " .date("d/m/Y H:m:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
+    $html .= "</br>Expire le " .date("d/m/Y H:m:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
 }
-$html .= "</td>";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">État&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\">\n";
+$html .= "</div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">État :</label>\n";
+$html .= "  <div class=\"col-md-6 \">\n";
 $status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
 
 $html .= $doc->getHTMLSelect("status", $me->get("statusTypes"), $status);
 
-$html .= "  </td>\n";
-$html .= " </tr>\n";
+$html .= "  </div>\n";
+$html .= " </div>\n";
 
 if ($me->isGroupAdminOrSuper()) {
   if ($me->isGroupAdmin()) {
@@ -178,9 +178,9 @@ if ($me->isGroupAdminOrSuper()) {
 
   $authorities = Authority::getAuthoritiesIdName($cond);
 
-  $html .= " <tr>\n";
-  $html .= "  <td class=\"td-register\">Collectivité&nbsp;:</td>\n";
-  $html .= "  <td class=\"td-input\">\n";
+  $html .= " <div class=\"form-group\">\n";
+  $html .= "  <label class=\"control-label col-md-4\">Collectivité :</label>\n";
+  $html .= "  <div class=\"col-md-6 \">\n";
 
   if (! $mod || $new_id) {
 	$auth = ($val = Helpers::getFromSession("authority_id")) ? $val : $him->get("authority_id");
@@ -190,13 +190,13 @@ if ($me->isGroupAdminOrSuper()) {
 	$html .= $authorities[$him->get("authority_id")];
   }
 
-  $html .= "  </td>\n";
-  $html .= " </tr>\n";
+  $html .= "  </div>\n";
+  $html .= " </div>\n";
 }
 
-$html .= " <tr> \n";
-$html .= "  <td class=\"td-register\">Rôle&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\">\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">Rôle :</label>\n";
+$html .= "  <div class=\"col-md-6 \">\n";
 
 $roles = $me->get("roleTypes");
 
@@ -217,19 +217,19 @@ if (! $me->isSuper()) {
 
 $html .= $doc->getHTMLSelect("role", $roles, $hisRole);
 
-$html .= "  </td>\n";
-$html .= " </tr>\n";
+$html .= "  </div>\n";
+$html .= " </div>\n";
 
 if ($me->isSuper()) {
-  $html .= " <tr>\n";
-  $html .= "  <td class=\"td-register\">Groupe (pour un administrateur de groupe)&nbsp;:</td>\n";
-  $html .= "  <td class=\"td-input\">";
+  $html .= " <div class=\"form-group\">\n";
+  $html .= "  <label class=\"control-label col-md-4\">Groupe (pour un administrateur de groupe) :</label>\n";
+  $html .= "  <div class=\"col-md-6 \">";
 
   $groups = Group::getGroupsIdName();
 
   $html .= $doc->getHTMLSelect("authority_group_id", $groups, $him->get("authority_group_id"));
-  $html .= "</td>\n";
-  $html .= " </tr>\n";
+  $html .= "</div>\n";
+  $html .= " </div>\n";
 }
 
 // Récupération des modules actifs globalement
@@ -269,29 +269,19 @@ if (count($modules) > 0) {
 	  if ($me->isSuper() && ! isset($authModules[$module["id"]])) {
 		$class = " class=\"inactive\"";
 	  }
-
-	  $moduleHtml .= "    <dt" . $class . ">" . $module["description"] . "&nbsp;:</dt>";
-	  $moduleHtml .= "    <dd" . $class . ">" . $doc->getHTMLSelect("perm_" . $module["id"], $me->get("permsTypes"), $him->getPerm($module["name"])) . "</dd>\n";
+          $html .= " <div class=\"form-group\">\n";
+	  $html .= "    <label class=\"control-label col-md-4" . $class . "\">" . $module["description"] . " :</label>";
+	  $html .= "    <div class=\"col-md-6  " . $class . "\">\n" . $doc->getHTMLSelect("perm_" . $module["id"], $me->get("permsTypes"), $him->getPerm($module["name"])) . "</div>\n";
+          $html .= " </div>\n";
 	}
   }
 
-  if (! empty($moduleHtml)) {
-	$html .= " <tr>\n";
-	$html .= "  <td class=\"td-register\">Permissions modules&nbsp;:</td>\n";
-	$html .= "  <td class=\"td-input\">\n";
-	$html .= "   <dl>\n";
-	$html .= $moduleHtml;
-	$html .= "   </dl>\n";
-	$html .= "  </td>\n";
-	$html .= " </tr>\n";
-  }
 }
 
-$html .= "</table>\n";
-$html .= "</div>\n";
-$html .= "<center><input type=\"submit\" class=\"submit_button\" value=\"";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<button type=\"submit\" class=\"col-md-offset-4 col-md-6 btn btn-default\">\n";
 $html .= ($mod) ? "Valider les modifications" : "Ajouter l'utilisateur";
-$html .= "\" /></center>\n";
+$html .= "</button>\n</div>\n";
 $html .= "</form>\n";
 
 $ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
@@ -299,7 +289,7 @@ $ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn
 $html .= "<h2>Autre rôle de l'utilisateur</h2>";
 if (count($ids_cert) > 1){
 	$html .= "<div class=\"data_table\">\n";
-	$html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+	$html .= "<table class=\"data-table table table-striped\">";
 	$html .= "<tr>\n";
 	$html .= " <th class=\"data\">Login</th>\n";
 	$html .= " <th class=\"data\">Nom</th>\n";
@@ -367,16 +357,21 @@ if ($id && $services){
 	}
 	$html .="<br/><br/>";
 
-	$html .= "<form action='add-user-to-service.php' method='post'>";
-	$html .= "<input type='hidden' name='id_user' value='".$him->getId()."'>";
-	$html .= " Mettre dans le service : <select name='id_service'>";
+	$html .= "<form class=\"form form-horizontal\" action='add-user-to-service.php' method='post'>\n";
+	$html .= "<input type='hidden' name='id_user' value='".$him->getId()."'>\n";
+        $html .= "<div class=\"form-group\">\n";
+	$html .= "<label class=\"col-md-3 control-label\"> Mettre dans le service : </label>\n<div class=\"col-md-3\">\n<select class=\"form-control\" name='id_service'>";
 	foreach($services as $s){
 		$html .= "<option value='".$s['id']."'>" . $s['name'] . "</option>";	
 	}
-	$html .= "<input type='submit' value='ajouter'>";
-	$html .= "</form>";
+	$html .= "</select>\n</div>\n";
+	$html .= "<input class=\"btn btn-primary btn-sm col-md-2\" type='submit' value='Ajouter'>\n";
+	$html .= "</div>\n";
+	$html .= "</form>\n";
 }
 
+$html .= "</div>\n"; //Content...
+$html .= "</div>\n"; //Content...
 $html .= "</div>\n"; //Content...
 $doc->addBody($html);
 

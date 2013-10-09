@@ -41,11 +41,14 @@ $doc->addHeader("<script src=\"/" . WEBSITE_SSL . "/javascript/validateform.js\"
 
 $doc->setTitle("Modification d'un module");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des modules</h1>\n";
-$html .= "<center><a href=\"admin_modules.php\" class=\"bouton\">Retour liste modules</a></center>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"admin_modules.php\" class=\"bouton\">Retour liste modules</a></p>\n";
 $html .= "<h2>Modification d'un module</h2>\n";
 $html .= "<form action=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $zeModule->getValidationTrio('status') . ");\">\n";
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeModule->getId() . "\" />\n";
@@ -123,6 +126,9 @@ $html .= "</form>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

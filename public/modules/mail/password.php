@@ -11,7 +11,7 @@ $mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
 
 $doc->DisplayHead();
 ?>
-<div id="content">
+<div class="col-md-9">
   <h1>Mail : Espace de Mail sécurisé</h1>
 
 <p>Vous avez besoin d'un mot de passe pour voir le contenu du mail.</p>

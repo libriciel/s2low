@@ -112,7 +112,9 @@ class mailController {
   	 	$MailTransactions=MailPeer::mailSearch($MailTransaction,$cond);
   	 }
   	 
-   	 $doc->buildPager($MailTransaction,true);
+        $doc->buildPager($MailTransaction, true);
+        $doc->closeSideBar(true);
+        $doc->openContent(true);
 	include __DIR__."/../template/list.php";	
   }
 
@@ -134,13 +136,16 @@ class mailController {
   {  	
    //traitement des information
     global $me;
+    global $doc;
     global $module;
    	require_once (__DIR__."/../om/MailPeer.class.php");     
   	require_once (__DIR__."/../om/mail_annuaire.class.php");    
   
-   //fini de la tratement
-   //affichier la page
-   include (__DIR__."/../template/create.php");
+        //fini de la tratement
+        //affichier la page
+        $doc->closeSideBar(true);
+        $doc->openContent(true);
+        include (__DIR__."/../template/create.php");
   }
   
   /**
@@ -154,7 +159,7 @@ class mailController {
    require_once (__DIR__."/../om/mail_message_emis.class.php");
    require_once (__DIR__."/../om/mail_included_file.class.php");
    require_once (__DIR__."/../om/mail_errors.class.php");
-   
+   global $doc;
    $error=$this->SaveError();
    //traitement des information
    $trans_id=Helpers::getVarFromGet("trans_id");    
@@ -173,6 +178,8 @@ class mailController {
    $mailIncludeFileArray=MailPeer::GetIncludeFiles($trans_id);
   //fini de la tratement
    //affichier la page
+   $doc->closeSideBar(true);
+   $doc->openContent(true);
    include __DIR__."/../template/show.php";
   }
   
@@ -221,17 +228,21 @@ class mailController {
 	
 	
 	public function executeSendAndDisplayResult(){
-		
+		global $doc;
 		$result = $this->executeSend();
 		
 		if ( ! $result){
 			$returnMsg = $this->getLastError(); ;
+                        $doc->closeSideBar(true);
+                        $doc->openContent(true);
 			include __DIR__."/../template/sendfailed.php"; 
-		} 
-		
-		include __DIR__."/../template/send.php";	
+		} else {
+                    $doc->closeSideBar(true);
+                    $doc->openContent(true);
+                    include __DIR__."/../template/send.php";	
+                }
  		
-	}
+	}   
 	
 	public function logError($message){
 		global $me, $module;
@@ -438,6 +449,7 @@ class mailController {
  */
   protected function executeAnnuaire() {
   	global $me;
+        global $doc;
   	$email = Helpers :: getVarFromPost("email");
   
   	$description = Helpers :: getVarFromPost("description");
@@ -497,6 +509,8 @@ class mailController {
 			}
 		}
 	}
+                $doc->closeSideBar(true);
+                $doc->openContent(true);
 		include __DIR__."/../template/annuaire.php";	 
   }
   
@@ -574,6 +588,7 @@ class mailController {
   {
   	require_once ( __DIR__."/../om/mail_annuaire.class.php");
   	global $me;
+  	global $doc;
   	$emails = Helpers :: getVarFromPost("newMailAddress");
   	$descriptions = Helpers :: getVarFromPost("newMailDescription");
   	$maxLengh=count($emails);
@@ -586,6 +601,8 @@ class mailController {
   		$annuaire->set("description",$descriptions[$i]);
   		$annuaire->save(false);
   	}
+        $doc->closeSideBar(true);
+        $doc->openContent(true);
   	include __DIR__."/../template/newemail.php";	 
   }
 

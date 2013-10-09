@@ -89,9 +89,12 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Utilitaires module HELIOS");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
 $html .= "<h1>Utilitaires - HELIOS</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('export_area');\">Export liste transactions</h2>\n";
 $html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyées au ministère&nbsp;:<br />";
@@ -107,6 +110,9 @@ $html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/heli
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

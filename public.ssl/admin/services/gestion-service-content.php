@@ -19,14 +19,17 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des groupes utilisateur");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 ob_start();?>
 
-<div id="content">
 <h1>Gestion du service <?php echo $groupe['name'];?></h1>
 
-<a href='admin_services.php?authority_id=<?php echo $groupe['authority_id']?>'>« Revenir à l'affichage des service</a>
+<p id="back-admin-services-btn"><a class="btn btn-default" href='admin_services.php?authority_id=<?php echo $groupe['authority_id']?>'>Revenir à l'affichage des service</a></p>
 
 <h2>Liste des utilisateurs de <?php echo $groupe['name']?></h2>
 <div>
@@ -43,7 +46,7 @@ ob_start();?>
 		</li>
 	<?php endforeach;?>
 	</ul>
-	Pour la sélection : <input type='submit' value='enlever du service'/>
+	Pour la sélection : <input type='submit' class='btn btn-primary btn-sm' value='enlever du service'/>
 	</form>
 <br/>
 <?php else : ?>
@@ -61,17 +64,22 @@ Aucun utilisateur n'est dans le groupe <em><?php echo $groupe['name']?></em>.
 <?php endif;?>
 </div>
 <br/><br/>
-<form action='add-parent.php' method='post'>
+    <form class="form form-horizontal" action='add-parent.php' method='post'>
 	<input type='hidden' name='id' value='<?php echo $id?>'>
-	Mettre dans le groupe parent : <select name='service_id'>
-		<option value='0'>(aucun)</option>
-		<?php foreach($all_groupes as $grp) : ?>
-			<option value='<?php echo $grp['id'] ?>' <?php if ($grp['id'] == $groupe['parent_id']) echo "selected='selected'"?>>
-			<?php echo $grp['name']?></option>
-		<?php endforeach;?>
-	</select>
-	<input type='submit' value='Valider'/>
-</form>
+        <div class="form-group">
+            <label class="label-form col-md-4" for="service_id">Mettre dans le groupe parent :</label>
+            <div class="col-md-4">
+                <select id="service_id" name='service_id' class='form-control'>
+                    <option value='0'>(aucun)</option>
+                    <?php foreach($all_groupes as $grp) : ?>
+                            <option value='<?php echo $grp['id'] ?>' <?php if ($grp['id'] == $groupe['parent_id']) echo "selected='selected'"?>>
+                            <?php echo $grp['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+            <input class='btn btn-primary btn-sm' type='submit' value='Valider'/>
+        </div>
+    </form>
 
 
 <?php if ($serviceEnfant) : ?>
@@ -88,18 +96,21 @@ Aucun utilisateur n'est dans le groupe <em><?php echo $groupe['name']?></em>.
 
 <form action="supprimer-service.php" method="post"  onsubmit="return confirm('Voulez-vous vraiment supprimer ce service ?')">
 	<input type="hidden" name="id" value="<?php echo $id ?>" />
-	<input type="submit" value="Supprimer ce service" class="bouton-danger" />
+	<input type="submit" value="Supprimer ce service" class="btn btn-danger" />
 </form>
 <?php else : ?>
 Pour supprimer le service, il faut que celui-ci ne contienne plus d'utilisateur et ne soit pas parent d'un autre service.
 <?php endif;?>
 </p>
+
 <?php 
 $html = ob_get_contents();
 ob_end_clean();
 
-
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

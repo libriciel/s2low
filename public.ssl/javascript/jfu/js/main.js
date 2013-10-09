@@ -102,13 +102,13 @@ $(function () {
 
 			$('#resultUpload').remove();
 
-			msg += '<br /><br /><a class="bouton" href="/modules/actes/actes_batch_add.php">Cr&eacute;er un lot</a>&nbsp;';
+			msg += '<br /><br /><a class="btn btn-primary lot-action" href="/modules/actes/actes_batch_add.php">Cr&eacute;er un lot</a>';
 			if (id > 0){
-				msg += '<a class="bouton" href="/modules/actes/actes_batch_show.php?id=' + id + '">Traiter le lot</a>&nbsp;';
+				msg += '<a class="btn btn-primary lot-action" href="/modules/actes/actes_batch_show.php?id=' + id + '">Traiter le lot</a>';
 			}
-			msg += '<a class="bouton" href="/modules/actes/actes_batch_handle.php">Terminer</a>';
+			msg += '<a class="btn btn-primary lot-action" href="/modules/actes/actes_batch_handle.php">Terminer</a><br />';
 
-			var resultUpload = $('<div></div>').html(msg).attr('id', 'resultUpload').css('text-align', 'center');
+			var resultUpload = $('<div></div>').html(msg).attr('id', 'resultUpload').css('text-align', 'center').attr('class','alert alert-success');
 			$('#fileupload').before(resultUpload);
 
 			//on masque la liste des fichiers et on affiche une nouvelle liste (contournement du bug d affichage des fichiers envoyés si on en supprime un de la liste avant l envoi)

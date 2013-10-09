@@ -53,22 +53,34 @@ $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascr
 
 $doc->setTitle("Tedetis : Actes - Import d'une enveloppe");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 // Zone contenu
-$html .= "<div id=\"content\">\n";
 $html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p style='text-align:center'><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'une enveloppe</h2>\n";
-$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
-$html .= "<p>Indiquez le fichier archive de l'enveloppe à importer (taille maximum 20Mo)&nbsp;:<br />\n";
+$html .= "<form class=\"form-horizontal import-file-form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
+$html .= "<div class=\"form-group\">";
+$html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum 20Mo)</label>\n";
+$html .= "<div class=\"col-md-6\">";
 $html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"20971520\" />\n";
-$html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\" size=\"40\" maxlength=\"255\" /><br /></p>\n";
-$html .= "<div id=\"form_progress\"><input class=\"submit_button\" type=\"submit\" value=\"Importer l'enveloppe\" /></div>\n";
+$html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
+$html .= "</div>\n";
+$html .= "</div>\n";
+$html .= "<div id=\"form_progress\" class=\"form-group\"><div class=\"col-md-2\"><button class=\"btn btn-primary\" type=\"submit\" value=\"\" />Importer l'enveloppe</button></div></div>\n";
 $html .= "</form>\n";
+$html .= "</div>\n";
+$html .= "</div>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

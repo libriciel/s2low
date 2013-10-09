@@ -45,68 +45,71 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des groupes de collectivités");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->buildPager($group);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des groupes de collectivités</h1>\n";
-$html .= "<div id=\"filtering_area\">\n";
+$html .= "<h2>Actions</h2>\n";
+$html .= "<a href=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n";
+$html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
-$html .= "<form action=\"admin_groups.php\" method=\"get\">\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table>\n";
-$html .= "<tr>\n";
-$html .= "<td class=\"title\">Le nom contient&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
+$html .= "<form class=\"form form-horizontal\" action=\"admin_groups.php\" method=\"get\">\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom contient</label>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fname) > 0) {
   $html .= " value=\"" . htmlspecialchars($fname) . "\"";
 }
 
-$html .= " /></td>\n";
-$html .= "</tr>\n";
-$html .= "<tr>\n";
-$html .= "<td colspan=\"4\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-$html .= "</tr>\n";
-$html .= "</table>\n";
+$html .= " /></div>\n";
+$html .= "</div>\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<button class=\"btn btn-default col-md-offset-2 col-md-3\" type=\"submit\">Filtrer</button>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";
 $html .= "</div><br />\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit.php\" class=\"bouton\">Ajouter un groupe</a></center>\n";
 $html .= "<h2>Liste des groupes de collectivités</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 
-
 if (is_array($groups)) {
-  $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+  $html .= "<table class=\"data-table table table-striped \">";
+  $html .= "<thead>\n";
   $html .= "<tr>\n";
-  $html .= " <th class=\"data\">Nom</th>\n";
-  $html .= " <th class=\"data\">État</th>\n";
-  $html .= " <th class=\"data\">Actions</th>\n";
+  $html .= " <th id=\"name\">Nom</th>\n";
+  $html .= " <th id=\"status\">État</th>\n";
+  $html .= " <th id=\"action\">Actions</th>\n";
   $html .= "</tr>\n";
+  $html .= "</thead>\n";
+  $html .= "<tbody>\n";
 
   $i = 0;
 
   foreach ($groups as $ent) {
-	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td>" . $ent["name"] . "</td>\n";
-	$html .= " <td>" . $statusList[$ent["status"]] . "</td>\n";
-	$html .= " <td><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+	$html .= "<tr>\n";
+	$html .= " <td headers=\"name\">" . $ent["name"] . "</td>\n";
+	$html .= " <td headers=\"status\">" . $statusList[$ent["status"]] . "</td>\n";
+	$html .= " <td headers=\"actions\"><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
 	$html .= "</tr>\n";
-	
-	$i = ($i + 1) % 2;
   }
 
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
-  $html .= "Pas de groupe correspondant aux critères de filtrage";
+  $html .= "<p>Pas de groupe correspondant aux critères de filtrage</p>";
 }
 
 $html .= "</div>\n";
-$html .= "</div>\n";
 
-$doc->buildPager($group);
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

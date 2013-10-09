@@ -105,13 +105,16 @@ $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascr
 
 $doc->setTitle("Tedetis : etat_civil - Import d'une enveloppe");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 // Zone contenu 
 //TO DO : imposer une taille max. pour le fichier
-$html .= "<div id=\"content\">\n";
-$html .= "<h1>Dématérialisation de documents concernant l'état civil</h1>\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/\" class=\"bouton\">Retour liste transactions</a></center>\n";
+$html = "<h1>Dématérialisation de documents concernant l'état civil</h1>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'un fichier</h2>\n";
 $html .="<form method=\"POST\" enctype=\"multipart/form-data\" ";
 $html .=" action=\"" . WEBSITE_SSL . "/modules/etat_civil/etat_civil_script_reception.php\" > ";
@@ -136,7 +139,7 @@ $html .= "<h2>Teste (API) de récuperation du status du fichier à partir de la tr
 $html .="<form method=\"GET\"";
 $html .=" action=\"" . WEBSITE_SSL . "/modules/etat_civil/etat_civil_transac_get_status.php\" > ";
 $html .="<input type=\"text\" name=\"transaction\" value=\"0\"> <br>";
-$html .="<input class=\"submit_button\" type=\"submit\" value=\"Recuperer le status crt\" >";
+$html .="<input class=\"btn btn-primary\" type=\"submit\" value=\"Recuperer le status crt\" >";
 $html .="</form>";
 // sf teste
 
@@ -145,6 +148,8 @@ $html .="</form>";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContainer();
 
 $doc->buildFooter();
 

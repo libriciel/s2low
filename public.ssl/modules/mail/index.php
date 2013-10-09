@@ -8,7 +8,7 @@ require_once ("lib/MailLayout.class.php");
 $api=Helpers :: getVarFromPost("api");
 
 if ( ! $api ){
-$doc = new MailLayout();
+$doc = new MailLayout("xhtml_mail.tpl.php");
  
 //pour list.php
 $doc->addHeader("<script src=\"/javascript/mailList.js\" type=\"text/javascript\"></script>\n");
@@ -20,8 +20,10 @@ $doc->addHeader("<script src=\"/javascript/mail.js\" type=\"text/javascript\"></
 
 
 $doc->setTitle(WEBSITE_TITLE);
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
-$doc->addBody($html);
+
 $doc->DisplayHead();
 }
 //commencer de distribuer des information.
@@ -32,8 +34,7 @@ if (isset($_GET["command"])){
 }
 $MailCtl=new mailController();
 $MailCtl->run($command);
-
-
-
+$doc->closeContent(true);
+$doc->closeContainer(true);
 //affichier le pied.
 $doc->DisplayFoot();

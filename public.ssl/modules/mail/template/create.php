@@ -7,11 +7,10 @@
 <script src="<?php echo WEBSITE_SSL ?>/javascript/jquery.autocomplete.ie7-fix.js"></script>    
 <link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/custom/styles/jquery.autocomplete.css" type="text/css" />
 
-<div id="content">
  <h1> Mail - Système de mail sécurisé</h1>
   <h2>Actions</h2>
 	<div id="actions_area"> 
-	 	<a href="index.php?command=list" class="bouton">Messages envoyés</a>
+            <a class="btn btn-primary" href="index.php?command=list">Messages envoyés</a>
 	</div>
 
   <h2 id="in_list">Nouveau message</h2>
@@ -32,53 +31,59 @@
   </script>
   
 	
-<form action="index.php?command=send" method="post"  id="mailform" onSubmit="InsertFileNumber();return checkFormCreateMail();" enctype="multipart/form-data" autocomplete="off">
-	<table>
-		<tr>
-			<td class="td_mailAddress">À&nbsp;:</td>	
-			<td class="td_mailDescription"> <input name='mailto' id="mailto"  size="100" /></td>
-		</tr>
-		<tr>
-			<td class="td_mailAddress">CC&nbsp;:</td>
-			<td class="td_mailDescription"><input name='mailcc' id="mailcc"  size="100"/></td>
-		</tr>
-		<tr>
-			<td class="td_mailAddress">CCI&nbsp;:</td>	
-			<td class="td_mailDescription">
-				<input id="mailbcc" name='mailcci' size="100"/> 
-			</td> 
-		</tr>			
-		<tr>
-			<td class="td_mailAddress">Objet&nbsp;:	</td>
-			<td class="td_mailDescription"><input type="text" name="objet" id="objet" size="100"/></td>
-		</tr>
-		<tr>
-			<td class="td_mailAddress">Message&nbsp;:</td>
-			<td class="td_mailDescription"><textarea name="message" rows="8" cols="80" id="message"></textarea></td>
-		</tr>
-	</table>
-	<br />
-	<table>
-		<tbody>
-			<tr>
-			  <th class="data">Mot de passe</th>
-			  <th class="data">Confirmation du mot de passe</th>
-			</tr>
-			<tr class="">
-			  <td class="td-input"><center><input type="password" name="psw1" id="psw1"/></center></td>
-			  <td class="td-input"><center><input type="password" name="psw2" id="psw2"/></center></td>
-			</tr>
-			<tr>
-			<td colspan='2'>
-			<input type='checkbox' name='send_password' id='send_password' />Envoyer le mot de passe en clair
-			</td>
-			</tr>
-		</tbody>
-	</table>
-	<h3>Pièces jointes&nbsp;:</h3>
-	<div id="file">
-
-	<input class="submit_button" type="button" name="ajouter" value="Joindre un fichier" onclick="InsertNewFile();" />
-	</div>
-	<center><input class="submit_button" type="submit" value="Envoyer" /></center>
-</form> 
+        <form class="form-horizontal mail-form" action="index.php?command=send" method="post"  id="mailform" onSubmit="InsertFileNumber();return checkFormCreateMail();" enctype="multipart/form-data" autocomplete="off">
+            <div class="form-group">
+                <label class="col-md-2" for="mailto">À : </label>
+                <div class="col-md-10">
+                    <input name='mailto' id="mailto" class="form-control"/>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="mailcc">CC : </label>
+                <div class="col-md-10">
+                    <input name='mailcc' id="mailcc" class="form-control"/>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="mailcci">CCI : </label>
+                <div class="col-md-10">
+                    <input name='mailcci' id="mailcci" class="form-control"/>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="objet">Object : </label>
+                <div class="col-md-10">
+                    <input name='objet' id="objet" class="form-control"/>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="message">Message : </label>
+                <div class="col-md-10">
+                    <textarea name="message" rows="8" cols="80" id="message" class="form-control"></textarea>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="psw1">Mot de passe </label>
+                <div class="col-md-4">
+                    <input type="password" name="psw1" id="psw1" class="form-control"/>
+		</div>
+                <label class="col-md-2" for="psw2">Confirmation du mot de passe</label>
+                <div class="col-md-4">
+                    <input type="password" name="psw2" id="psw2" class="form-control"/>
+		</div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-5" for="send_password">
+                    <input type='checkbox' name='send_password' id='send_password'/>Envoyer le mot de passe en clair
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2" for="file">Pièces jointes</label>
+                <div class="col-md-4">
+                    <input id="file" class="btn btn-success btn-sm" type="button" name="ajouter" value="Joindre un fichier" onclick="InsertNewFile();" />
+		</div>
+            </div>
+            <div class="form-group">
+                <input id="sendemail" type="submit" value="Envoyer" class="col-md-offset-4 col-md-4 btn btn-primary"/>
+            </div>
+        </form> 

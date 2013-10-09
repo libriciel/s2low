@@ -47,7 +47,7 @@ class ListeDiaHTML {
 	
 	public function getHTMLSelect($name, $data, $selectedValue) {
 		?>
-		<select name="<?php echo $name ?>" >
+		<select class="form-control" name="<?php echo $name ?>" >
 			<option value="">Choisissez</option>	
 	    	<?php foreach ($data as $key => $val) : ?>
 				<option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
@@ -62,51 +62,42 @@ class ListeDiaHTML {
 		global $status,	$fstatus,$filename,$fmin_submission_date,$fmax_submission_date;		
 		?>
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering_area');">Filtrage</h2>
-<div id="filtering_area" style="display: block;">
-	<form action="<?php echo WEBSITE_SSL ?>/modules/dia/index.php" method="get">
-		<table>
-			<tr>
-				<td class="title">état&nbsp;:</td>
-				<td class="value"><?php echo $this->getHTMLSelect("status", $status, $fstatus) ?></td>
-				<td class="title">Le nom du fichier contient&nbsp;</td>
-				<td class="value">
-					<input type="text" name="num" size="20" maxlength="25" value="<?php echo $filename ?>" />
-				</td>
-			</tr>
-
-				
-			<tr>
-				<td class="title">Date de postage minimale&nbsp;:</td>
-				<td class="value">
-					<?php $this->datePicker($fmin_submission_date,'min_submission_date') ?>
-				</td>
-				<td class="title">Date de postage maximale&nbsp;:</td>
-				<td class="value">
-					<?php $this->datePicker($fmax_submission_date,'max_submission_date') ?>
-				</td>
-			</tr>
-			
-			<?php if ($this->allCollectivite) : ?>
-			<tr>
-				<td class="title">Collectivité&nbsp;:</td>
-				<td class="value">
-					<?php $this->getHTMLSelect("authority",$this->allCollectivite, $this->filtreAuthority) ?>
-				</td>
-				<td >&nbsp;</td>
-				<td >&nbsp;</td>
-			</tr>
-			<?php endif;?>
-			<tr>
-				<td colspan="2">
-					<input class="submit_button" type="submit" value="Filtrer" />
-				</td>
-				<td colspan="2">
-					<a href="<?php echo WEBSITE_SSL ?>/modules/dia/index.php" class="bouton">
-						Remise&nbsp;à &nbsp;zéro
-					</a>
-				</td>
-			</tr>
-		</table>
+<div id="filtering-area" style="display: block;">
+	<form class="form-horizontal" action="<?php echo WEBSITE_SSL ?>/modules/dia/index.php" method="get" role="form">
+            <div class="form-group">
+                <label for="statu" class="col-md-3 control-label">Etat</label>
+                <div class="col-md-3">
+                    <?php echo $this->getHTMLSelect("status", $status, $fstatus) ?>
+                </div>
+                <label for="filename-contain" class="col-md-3 control-label">Le nom du fichier contient</label>
+                <div class="col-md-3">
+                    <input id="filename-contain" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php echo $filename ?>" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="min_submission_date" class="col-md-3">Date de postage minimale</label>
+                <div class="col-md-3">
+                    <?php $this->datePicker($fmin_submission_date,'min_submission_date') ?>
+                </div>
+                <label for="max_submission_date" class="col-md-3">Date de postage maximale</label>
+                <div class="col-md-3">
+                    <?php $this->datePicker($fmax_submission_date,'max_submission_date') ?>
+                </div>
+            </div>
+            <?php if ($this->allCollectivite) : ?>
+            <div class="form-group">
+                <label for="authority" class="col-md-3">Collectivité</label>			
+		<div class="col-md-3">
+                    <?php $this->getHTMLSelect("authority",$this->allCollectivite, $this->filtreAuthority) ?>
+                </div>
+            </div>
+            <?php endif;?>
+            <div class="form-group">
+                <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
+                <a href="<?php echo WEBSITE_SSL ?>/modules/dia/index.php" class="col-md-offset-3 col-md-3 btn btn-default">
+                    Remise à zéro
+                </a>
+            </div>
 	</form>
 </div>		
 <?php if ($this->actionBox) : ?>
@@ -136,7 +127,7 @@ class ListeDiaHTML {
 		<?php if($date) : ?>
 			<?php echo $fancyDate->getDateFrancais($date); ?>
 		<?php else : ?>
-			[&nbsp;Choisir une date&nbsp;]
+			Choisir une date&nbsp;
 		<?php endif;?>
 		</a>
 		<div class="date_picker" style="display: none;" id="datepicker_<?php echo $name?>_calendar">
@@ -147,32 +138,32 @@ class ListeDiaHTML {
 	public function displayList($envelopes){
 		?>
 		<form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_close.php" method="post">
-		
-			<table class="transactions_list">
-				<tr>
-					<th>Identifiant</th>
-					<th>Nom du fichier</th>
-					<th>Date de réception</th>
-					<th>État</th>
-					
-					<th>Détail</th>
-				</tr>
-			<?php foreach($envelopes as $i => $envelope) : ?>
-				<tr>
-					<td><?php echo $envelope['transaction_id'] ?></td>
-					<td><?php echo $envelope['filename'] ?></td>
-					<td><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></td>
-					<td><?php echo TransactionDIA::getStatusName($envelope['last_status_id']) ?></td>
-					<td>	<a href="<?php echo WEBSITE_SSL ?>/modules/dia/dia_detail.php?id=<?php echo $envelope['transaction_id']?>" 
-									class="icon">
-								<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" 
-										alt="image_modif" title="Afficher le détail" /></a>
-						
-				</tr>
-			<?php endforeach;?>
-			</table>
-			
-
+                    <table id="transactions-list" class="data-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th id="transaction-id">Identifiant</th>
+                                <th id="filename">Nom du fichier</th>
+                                <th id="submission-date">Date de réception</th>
+                                <th id="last-status-id">État</th>
+                                <th id="detail">Détail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    <?php foreach($envelopes as $i => $envelope) : ?>
+                            <tr>
+                                <td headers="transaction-id"><?php echo $envelope['transaction_id'] ?></td>
+                                <td headers="filename"><?php echo $envelope['filename'] ?></td>
+                                <td headers="submission-date"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></td>
+                                <td headers="last-status-id"><?php echo TransactionDIA::getStatusName($envelope['last_status_id']) ?></td>
+                                <td headers="detail">	
+                                    <a href="<?php echo WEBSITE_SSL ?>/modules/dia/dia_detail.php?id=<?php echo $envelope['transaction_id']?>" class="icon">
+                                        <img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail" />
+                                    </a>
+                                </td>
+                            </tr>
+                    <?php endforeach;?>
+                        </tbody>
+                    </table>
 		</form>
 		<?php 
 	}

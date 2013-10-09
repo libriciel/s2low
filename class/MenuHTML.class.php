@@ -6,18 +6,17 @@ class MenuHTML  {
  	
  		ob_start();
  	?>
- 	<div id="menu-area">
- 		<div id="menu">
- 			<?php if ($userInfo): ?>
- 				<?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
- 			<?php else: ?>
- 				<div id="menu-header">
- 					<a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-      				(Certificat nécessaire)
- 				</div>
- 			<?php endif;?>
+            <div id="sidebar" class="col-md-3" role="navigation">
+                <div class="well sidebar-nav">
+                    <?php if ($userInfo): ?>
+                        <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
+                    <?php else: ?>
+                    <div id="menu-header">
+                            <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
+                    (Certificat nécessaire)
+                    </div>
+                    <?php endif;?>
  		</div>
- 	</div>
  	<?php  	
  		$result = ob_get_contents();
  		ob_end_clean();
@@ -42,14 +41,14 @@ class MenuHTML  {
 		 }
 		 
 		?>
-		<div id="menu-header">
-			Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
-			Rôle&nbsp;: <?php  echo $userInfo['role_str'] ?>
+                    <div id="menu-header">
+                        Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
+                        Rôle <?php  echo $userInfo['role_str'] ?>
 			<?php if ($_SESSION['nb_id'] > 1 ) : ?>
 			<br/><a href='<?php echo WEBSITE_SSL ?>/logout.php'>déconnexion</a>
 			<?php endif;?>
- 		</div>
- 		<ul class="text-menu">
+                    </div>
+                    <ul class="text-menu nav">
  			<?php if (in_array($userInfo['role'],array('SADM','GADM','ADM'))) : ?>
  			<li class="menu-list-title">Administration</li>
  			<?php endif;?>
