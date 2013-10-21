@@ -18,3 +18,5 @@ foreach($allEnvelopes as $envelopeInfo){
 	
 	echo $msg."\n";	
 }
+
+//$heliosTransactionsSQL = $heliosTransactionsSQL->

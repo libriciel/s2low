@@ -50,4 +50,13 @@ class HeliosTransactionsSQL {
     			" WHERE id=?";
 		$this->sqlQuery->query($sql,$archive_url,$transaction_id);
 	}
+	
+	public function getEnvelopeToDelete(){
+		/*$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .
+				" FROM actes_transactions " .
+				" JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
+				" WHERE last_status_id=13 OR last_status_id = 5";
+		return $this->sqlQuery->query($sql);*/
+	}
+	
 }
