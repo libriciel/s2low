@@ -139,7 +139,7 @@ if (count($workflow) > 0) {
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 
-if (in_array($currentStatusId,array(8)) && $authorityInfo->get('sae_wsdl')) {
+if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('sae_wsdl')) {
 	$html .= "<div class=\"action\">\n";
 	$html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_archiver.php\"  method=\"post\">\n";
 	$html .= "<p>Archivage SEDA&nbsp;:&nbsp;";

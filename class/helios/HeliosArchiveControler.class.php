@@ -23,8 +23,8 @@ class HeliosArchiveControler {
 		}
 		
 		$last_status_id = $heliosTransactionsSQL->getLatestStatusId($id);
-		if ($last_status_id != 8 ) {
-			$this->lastError = "Impossible d'archiver une transaction qui n'est pas en état « Information disponible ».";
+		if (! in_array($last_status_id,array(8,4,6)) ) {
+			$this->lastError = "Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé ».";
 			return false;
 		}
 		
