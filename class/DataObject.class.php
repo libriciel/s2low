@@ -466,7 +466,7 @@ class DataObject {
 	// Comptage du nombre total d'enregistrements
 	  $sql = "SELECT count(*) AS total_count FROM " . $this->from . " " . $this->cond;
 
-    $db =& DatabasePool::getInstance();
+    $db = DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -512,7 +512,7 @@ class DataObject {
 
 	//echo $sql;
 
-    $db =& DatabasePool::getInstance();
+    $db = DatabasePool::getInstance();
 
     $result = $db->select($sql);
 

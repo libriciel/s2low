@@ -317,7 +317,7 @@ class Group extends DataObject {
   public static function isEmpty($id) {
     $sql = "SELECT authorities.id FROM authorities WHERE authority_group_id=" . $id;
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -342,7 +342,7 @@ class Group extends DataObject {
   public static function getGroupsIdName() {
     $sql = "SELECT authority_groups.id, authority_groups.name FROM authority_groups ORDER BY authority_groups.name ASC";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -365,7 +365,7 @@ class Group extends DataObject {
   {
 	  $sql = "SELECT , authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . $dept . "'";
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 

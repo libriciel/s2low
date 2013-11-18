@@ -377,7 +377,7 @@ class Module extends DataObject {
     // TODO: utiliser le pager pour multipages
     $sql = "SELECT modules.id, modules.name, modules.description, modules.menu_entry, modules.status FROM modules " . $cond;
 
-    $db =& DatabasePool::getInstance();
+    $db = DatabasePool::getInstance();
 
     $result = $db->select($sql);
 

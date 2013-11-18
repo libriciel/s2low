@@ -245,7 +245,7 @@ class ActesEnvelope extends DataObject {
 		  $this->errorMsg = "Erreur système de fichiers.";
 		  return false;
 		} else {
-		  $cmd = '/bin/tar cf - ';
+		  $cmd = 'tar cf - ';
 		  
 		  if (empty($this->tmpDir)) {
 			foreach ($this->fileList as $file) {
@@ -256,7 +256,8 @@ class ActesEnvelope extends DataObject {
 			$cmd .= " * ";
 		  }
 		  
-		  $cmd .= ' |/bin/gzip -9 > ' . $this->rootDir . "/" . $this->file_path;
+		  $cmd .= ' |gzip -9 > ' . $this->rootDir . "/" . $this->file_path;
+		  
 		  
 		  $status = system($cmd, $ret);
 
@@ -978,7 +979,7 @@ class ActesEnvelope extends DataObject {
 	if (! empty($id)) {
 	  $sql = "SELECT actes_transactions.id FROM actes_transactions WHERE actes_transactions.envelope_id = " . $id;
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 	 
@@ -1021,7 +1022,7 @@ class ActesEnvelope extends DataObject {
 	  $sql .= " WHERE " . $cond;
 	}
 
-	$db =& DatabasePool::getInstance();
+	$db =DatabasePool::getInstance();
 
 	$result = $db->select($sql);
 	
@@ -1061,7 +1062,7 @@ class ActesEnvelope extends DataObject {
 
 	$sql .= " WHERE " . implode(" AND ", $filter);
 	
-	$db =& DatabasePool::getInstance();
+	$db =DatabasePool::getInstance();
 
 	$result = $db->select($sql);
 	
@@ -1081,7 +1082,7 @@ class ActesEnvelope extends DataObject {
   public static function getEnvelopesIncludedFiles($env_id) {
 	$sql = "SELECT filename FROM actes_included_files WHERE envelope_id=" . $env_id;
 
-	$db =& DatabasePool::getInstance();
+	$db =DatabasePool::getInstance();
 
 	$result = $db->select($sql);
 	
@@ -1113,7 +1114,7 @@ class ActesEnvelope extends DataObject {
 
 	$sql .= " ORDER BY atw.date DESC";
 
-	$db =& DatabasePool::getInstance();
+	$db =DatabasePool::getInstance();
 
 	$result = $db->select($sql);
 	

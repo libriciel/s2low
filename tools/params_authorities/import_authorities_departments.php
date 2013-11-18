@@ -47,7 +47,7 @@ $depFile = "./depts2006.txt";
 
 $fh = fopen($depFile, 'r') or die ("Impossible d'ouvrir le fichier des départements\n");
 
-$db =& DatabasePool::getInstance();
+$db =DatabasePool::getInstance();
 
 if (! $db->begin()) {
   echo "Erreur lors de l'initialisation de la transaction.\n";

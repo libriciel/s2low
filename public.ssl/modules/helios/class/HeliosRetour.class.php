@@ -76,7 +76,7 @@ class HeliosRetour extends DataObject {
   
   		$sql .= " ORDER BY hr.date DESC";
 	
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 	
 		$result = $db->select($sql);
 
@@ -94,7 +94,7 @@ class HeliosRetour extends DataObject {
   	$sql = "SELECT filename, date, id";
   	$sql .= " FROM helios_retour  ".$cond;
   	$sql .= " ORDER BY date DESC";
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 		$result = $db->select($sql);
 		$trans = array();
 		if (! $result->isError()) {

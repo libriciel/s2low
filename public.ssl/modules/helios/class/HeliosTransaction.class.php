@@ -270,7 +270,7 @@ class HeliosTransaction extends DataObject {
   public static function getStatusList() {
     $sql = "SELECT id, name FROM helios_status";
   
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
   
     $result = $db->select($sql);
   
@@ -520,7 +520,7 @@ class HeliosTransaction extends DataObject {
 		
 		$sql .= " ORDER BY atw.date DESC";
 	
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 	
 		$result = $db->select($sql);
 
@@ -566,7 +566,7 @@ class HeliosTransaction extends DataObject {
   		$sql.=" AND ht.submission_date >='".date('Y-01-01 00:00:00')."'";
   	}
   	
-  	$db =& DatabasePool::getInstance();
+  	$db =DatabasePool::getInstance();
 	
 		$result = $db->select($sql);
 
@@ -610,7 +610,7 @@ class HeliosTransaction extends DataObject {
   	{
   		$sql.=" AND ht.submission_date >='".date('Y-01-01 00:00:00')."'";
   	}
-  	$db =& DatabasePool::getInstance();
+  	$db =DatabasePool::getInstance();
 	
 		$result = $db->select($sql);
 	
@@ -626,7 +626,7 @@ class HeliosTransaction extends DataObject {
   public function CheckDuplicate() {
   		$sql = "select sha1 FROM helios_transactions WHERE sha1='".$this->sha1."'";
 	
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 	
 		$result = $db->select($sql);
 		if (! $result->isError() && $result->get_next_row()) 

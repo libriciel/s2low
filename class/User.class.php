@@ -796,7 +796,7 @@ class User extends DataObject {
   public static function dbHasUser() {
 	$sql = "SELECT id FROM users";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
 	$result = $db->select($sql);
 
@@ -815,7 +815,7 @@ class User extends DataObject {
   public function getUserSiren()
   {
   	$sql ="SELECT siren FROM users, authorities WHERE users.authority_id=authorities.id AND users.id=".$this->id;
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
   
     $result = $this->db->select($sql);

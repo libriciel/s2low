@@ -39,7 +39,7 @@ class GroupeMail extends DataObject {
 	
 	public function getGroupeIdFromName($name,$authority_id){
 		
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 		
 		$sql = "SELECT id FROM mail_groupe WHERE name=".$db->quote($name)." AND authority_id=$authority_id";
 		

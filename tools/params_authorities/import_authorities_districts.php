@@ -47,7 +47,7 @@ $disFile = "./arrond2006.txt";
 
 $fh = fopen($disFile, 'r') or die ("Impossible d'ouvrir le fichier des arrondissements\n");
 
-$db =& DatabasePool::getInstance();
+$db =DatabasePool::getInstance();
 
 /*if (! $db->begin()) {
   echo "Erreur lors de l'initialisation de la transaction.\n";

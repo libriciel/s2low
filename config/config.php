@@ -5,8 +5,8 @@ ini_set("error_reporting", E_ALL );
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
-define('WEBSITE', "http://127.0.0.3");
-define('WEBSITE_SSL', "https://127.0.0.3");
+define('WEBSITE', "http://localhost:8888/adullact/TedetisPHP/public/");
+define('WEBSITE_SSL', "https://localhost:4443/");
 
 define('WEBMASTER', "webmaster@invalid.fr");
 // Adresse du From des emails émis
@@ -50,7 +50,7 @@ define('AUTHORIZED_SIGN_CA_PATH', '/etc/tedetis/ssl/validca');
 
 
 // Constantes générales
-define('TRACE_FILE_PATH','/home/eric/log/tedetis-trace.log');
+define('TRACE_FILE_PATH','/dev/null');
 
 define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan');
 
@@ -79,7 +79,9 @@ define('ACTES_ARCHIVE_MAX_SIZE', 20 * 1024 * 1024);
 define('ACTES_MAX_BATCH_UPLOAD_SIZE', 20*1024*1024);
 
 // Commande d'invocation du scanner anti-virus
-define('ACTES_ANTIVIRUS_COMMAND', '/usr/bin/clamdscan --stdout ');
+//define('ACTES_ANTIVIRUS_COMMAND', '/usr/bin/clamdscan --stdout ');
+define('ACTES_ANTIVIRUS_COMMAND', 'ls');
+
 define('ANTIVIRUS_TMP_PATH',' /tmp/');
 
 
@@ -87,7 +89,7 @@ define('ANTIVIRUS_TMP_PATH',' /tmp/');
 define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8080/TedetisActes/ValideArchive');
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
-define('ACTES_TDT_MAIL_ADDRESS', 'eric@zeljko.com');
+define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
 define('ACTES_FILES_UPLOAD_ROOT', '/tdt-workspace/actes/uploads');

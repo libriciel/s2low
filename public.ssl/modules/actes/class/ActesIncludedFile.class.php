@@ -189,7 +189,7 @@ class ActesIncludedFile extends DataObject {
 	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
 	  
 	  
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 

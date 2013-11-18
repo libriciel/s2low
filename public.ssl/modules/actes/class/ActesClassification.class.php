@@ -150,7 +150,7 @@ class ActesClassification extends DataObject {
 		. " AND (SELECT status_id FROM actes_transactions_workflow atw2 WHERE date = ( SELECT MAX(date) FROM actes_transactions_workflow atw3 WHERE atw3.transaction_id = atw2.transaction_id) AND transaction_id = at.id ORDER BY atw2.id DESC LIMIT 1) IN (1,2,3)"
 		. " AND atw.date >= '" . $today . "' AND users.authority_id=" . $authority_id;
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 	  
@@ -176,7 +176,7 @@ class ActesClassification extends DataObject {
 		. " LEFT JOIN users ON actes_classification_requests.requested_by=users.id"
 		. " WHERE users.authority_id=" . $authority_id;
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 	  
@@ -203,7 +203,7 @@ class ActesClassification extends DataObject {
 	  $sql = "SELECT id, level, code, parent_id, description FROM actes_classification_codes"
 		. " WHERE authority_id=" . $authority_id . " ORDER BY level,code ASC";
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 

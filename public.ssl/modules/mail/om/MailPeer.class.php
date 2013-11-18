@@ -80,7 +80,7 @@ class MailPeer {
   		
 		assert('$trans_id');
 		
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 		
 		$MailEmisArray = array();
 
@@ -146,7 +146,7 @@ class MailPeer {
 		
 		$sql.= " ORDER BY COALESCE(description,mail_address) ;";
 		
-		$db =& DatabasePool::getInstance();
+		$db =DatabasePool::getInstance();
 		$result = $db->select($sql);		
 		return $result->get_all_rows();
 	}
@@ -166,7 +166,7 @@ class MailPeer {
 	  	{
 			$sql = "SELECT mail_message_emis.email, mail_errors.message_retour FROM mail_errors, mail_message_emis where";
 		    $sql.= " mail_errors.id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id=".$trans_id;
-			$db =& DatabasePool::getInstance();
+			$db =DatabasePool::getInstance();
 		    $result = $db->select($sql);
 			return $result->get_all_rows();
      	} 
@@ -184,7 +184,7 @@ class MailPeer {
   {
   	  if (!empty($mail))
   	  {
-  	  	$db =& DatabasePool::getInstance();
+  	  	$db =DatabasePool::getInstance();
   	  	
   	  	$sql="SELECT id FROM mail_annuaire WHERE ";
   	  	$sql.=" mail_address=".$db->quote($mail)." and authority_id=".$authority_id;
@@ -208,7 +208,7 @@ class MailPeer {
   public static function DeleteMailTransation($transId)
   {
   	$message=array();
-  	$db =& DatabasePool::getInstance();
+  	$db =DatabasePool::getInstance();
   	
   	$sql="DELETE FROM mail_errors WHERE id IN ";
   	$sql.="(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis WHERE mail_transaction_id=$transId)";		

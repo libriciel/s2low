@@ -232,7 +232,7 @@ class Authority extends DataObject {
   {
   	$sql = "SELECT id FROM modules WHERE name='".$module_name."'";
 
-    $db =& DatabasePool::getInstance();
+    $db = DatabasePool::getInstance();
 	
     $result = $db->select($sql);
     if (! $result->isError()) {
@@ -388,7 +388,7 @@ class Authority extends DataObject {
   public static function getAuthoritiesIdName($cond = "") {
     $sql = "SELECT authorities.id, authorities.name FROM authorities " . $cond;
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -409,7 +409,7 @@ class Authority extends DataObject {
   public static function getSirenFromId($id){
     $sql = "SELECT siren FROM authorities WHERE id = ".$id;
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -435,7 +435,7 @@ class Authority extends DataObject {
 	// Obtention des types parents
 	$sql = "SELECT id, parent_type_id, description FROM authority_types where parent_type_id is not null";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -462,7 +462,7 @@ class Authority extends DataObject {
 	// Obtention des types parents
 	$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id is null";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -496,7 +496,7 @@ class Authority extends DataObject {
   public static function getDepartmentsIdName() {
     $sql = "SELECT code, name FROM authority_departments";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -519,7 +519,7 @@ class Authority extends DataObject {
   public static function getDepartmentsList() {
     $sql = "SELECT id, code, name FROM authority_departments";
 
-    $db =& DatabasePool::getInstance();
+    $db =DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
@@ -546,7 +546,7 @@ class Authority extends DataObject {
 	if (isset($dept) && ! empty($dept)) {
 	  $sql = "SELECT authority_districts.code, authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . $dept . "'";
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 

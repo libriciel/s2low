@@ -249,7 +249,7 @@ class ActesBatchFile extends DataObject {
 	if (is_numeric($id)) {
 	  $sql = "SELECT id FROM actes_batch_files WHERE batch_id=" . $id . " ORDER BY id";
 
-	  $db =& DatabasePool::getInstance();
+	  $db =DatabasePool::getInstance();
 
 	  $result = $db->select($sql);
 
