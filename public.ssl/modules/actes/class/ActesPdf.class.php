@@ -116,6 +116,13 @@ class ActesPdf {
 		//traiter des requêtes
 		$transactionTypes = $trans->get("transactionTypes");
 		$transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
+		
+		if(isset($transNatures[$trans->get("nature_code")])){
+			$nature_description = $transNatures[$trans->get("nature_code")];
+		} else {
+			$nature_description = "n/a";
+		}
+		
 		$notification = $this->getNotifieA($trans);
 	
       		
@@ -133,7 +140,7 @@ class ActesPdf {
 		$this->pdf->SetMyBorder(array('0','BT','BT'));
 		$this->pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254)));
 		$this->pdf->myRow(array("","Type de transaction:",$transactionTypes[$trans->get("type")]));
-		$this->pdf->myRow(array("","Nature de l'acte:",$transNatures[$trans->get("nature_code")]));
+		$this->pdf->myRow(array("","Nature de l'acte:",$nature_description));
 		$this->pdf->myRow(array("","Numéro de l'acte:",$trans->get("number")));
 		$this->pdf->myRow(array("","Date de la décision:",$trans->get("decision_date")));
 		$this->pdf->myRow(array("","Objet:",$trans->get("subject")));

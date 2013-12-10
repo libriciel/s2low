@@ -290,7 +290,7 @@ if (count($workflow) > 0) {
 	//$id = Helpers :: getVarFromGet("id"); with this identifier, we can easily findout all the infomation in the acte.
 
 	
-   if ($stage["status_id"]==4 )
+   if (in_array($stage["status_id"],array(4,11) ))
     {
     	
     	$html .= "  <td>" . $status_list[$stage["status_id"]].$create_pdf_html."</td>\n";
