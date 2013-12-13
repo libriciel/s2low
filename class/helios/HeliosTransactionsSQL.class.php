@@ -21,7 +21,7 @@ class HeliosTransactionsSQL {
 	}
 	
 	//Attention, implémentation partiel du last_status_id uniquement pour l'envoi au SAE 
-	//Ce champ n'est pas maintenus nottamment dans la partie Java du TdT
+	//Ce champ est maintenu dans la partie Java, mais pas dans la partie PHP
 	public function updateStatus($transaction_id,$status_id,$message){
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
@@ -55,5 +55,22 @@ class HeliosTransactionsSQL {
 		$sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=11";
 		return $this->sqlQuery->query($sql);
 	}
+	
+	public function updateLastStatusId(){
+		$sql2 = "UPDATE helios_transactions SET last_status_id = ? WHERE id=?";
+		$sql = "SELECT id FROM helios_transactions WHERE last_status_id IS NULL";
+		
+		$this->sqlQuery->prepareAndExecute($sql);
+		while($this->sqlQuery->hasMoreResult()){
+			$result = $this->sqlQuery->fetch();
+			$id = $result['id'];
+			$last_status_id = $this->getLatestStatusId($id);
+			$this->sqlQuery->query($sql2,$last_status_id,$id);
+			echo "$id : $last_status_id\n";
+		}
+		
+	}
+	
+	
 	
 }
