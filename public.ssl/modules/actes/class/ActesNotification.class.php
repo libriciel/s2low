@@ -26,7 +26,7 @@ class ActesNotification {
 	
 	public function sendAutomaticNotification(){
 		$sql = "SELECT actes_transactions.id  FROM actes_transactions ".
-				" WHERE last_status_id = 4  AND auto_broadcasted=false ";
+				" WHERE last_status_id = 4  AND auto_broadcasted=false AND type='1'";
 		
 		$result = $this->db->select($sql);
 
@@ -49,10 +49,9 @@ class ActesNotification {
 		$defaultBroadcastEmail =explode(',',$transactionInfo['default_broadcast_email']);
 		$brodcastEmail =explode(',',$transactionInfo['broadcast_emails']);
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
-		
-                $idcol = $this->getAuthorityId($transactionInfo);
-                $newmail = $this->getNewMailNotif($idcol['authority_id']);
-                $this->newmail = $newmail['new_notification'];
+		$idcol = $this->getAuthorityId($transactionInfo);
+        $newmail = $this->getNewMailNotif($idcol['authority_id']);
+        $this->newmail = $newmail['new_notification'];
                 
 		if ($transactionInfo['auto_broadcasted'] == 'f'){
                     //envoie du mail au proprietaire de l'acte
@@ -300,7 +299,6 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
                 $sql = "SELECT actes_transactions.authority_id ".
                         "FROM actes_transactions ".
                         "WHERE actes_transactions.id = " .$transactionInfo['transaction_id'] ;
-
                 return $this->db->getOneLine($sql);
         }
 

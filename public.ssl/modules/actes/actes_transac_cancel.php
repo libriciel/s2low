@@ -105,6 +105,8 @@ $trans->set("related_transaction", $rel_trans);
 $trans->set("related_transaction_id", $related_id);
 $trans->set("number", $rel_trans->get("number"));
 $trans->set("unique_id", $rel_trans->get("unique_id"));
+//$trans->set("user_id",$me->getId());
+//$trans->set("authority_id",$me->get("authority_id"));
 
 // Destination de création des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
