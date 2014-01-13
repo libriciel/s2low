@@ -23,6 +23,7 @@ class Pastell {
 	
 	private function callAPI($url,array $postData = array(),$postFile = array()){
 		$curl_wrapper = new CurlWrapper();
+		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->login, $this->password);
 		
 		foreach($postData as $name => $value){

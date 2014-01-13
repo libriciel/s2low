@@ -35,6 +35,11 @@ class CurlWrapper {
 		curl_setopt($this->curlHandle, $properties, $values); 
 	}
 	
+	public function dontVerifySSLCACert(){
+		$this->setProperties( CURLOPT_SSL_VERIFYHOST , 0 );
+		$this->setProperties(CURLOPT_SSL_VERIFYPEER, 0);
+	}
+	
 	public function setServerCertificate($serverCertificate){
 		$this->setProperties( CURLOPT_CAINFO ,$serverCertificate ); 
 		$this->setProperties( CURLOPT_SSL_VERIFYHOST , 0 ); 
