@@ -31,7 +31,7 @@ class Pastell {
 		foreach($postFile as $field => $file_info){
 			$curl_wrapper->addPostFile($field, $file_info[0],$file_info[1]);
 		}
-		
+				
 		$data = $curl_wrapper->get($this->url."/".$url);
 		
 		if (!$data){
@@ -50,6 +50,10 @@ class Pastell {
 
 	public function testConnexion(){
 		$data = $this->callAPI("list-entite.php");
+		if (! $data){
+			$this->lastError = "Impossible de lire des données depuis Pastell.";
+			return false;
+		}
 		foreach($data as $entite){
 			if ($entite['id_e'] == $this->id_e){
 				return true;
