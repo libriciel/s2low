@@ -83,6 +83,21 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V1.4.01 du 14.01.2014</h2>";
+$html .= "<ul>";
+$html .= "<li>Module ACTES : corection bug : versement SEDA via Pastell en HHTPS;";
+$html .= "</ul>";
+
+$html .= "<h2>V1.4 du 09.11.2013</h2>";
+$html .= "<ul>";
+$html .= "<li>Module MAIL : correction bug : problème d'encodage des API ;";
+$html .= "<li>Administration : versement au SAE via Pastell;";
+$html .= "<li>Module ACTES : versement par lot au SAE ;";
+$html .= "<li>Module ACTES : ajout du nouvel état d'attente via les API pour que les actes puissent être validés par l'agent télétransmetteur ;";
+$html .= "<li>Module ACTES : ajout d'un statut permettant de temporiser l'envoie d'un acte aprrès sont dépôt sur le TdT;";
+$html .= "<li>Module HELIOS : versement au SAE ;";
+$html .= "<li>Module DIA : ajout du module ;";
+$html .= "</ul>";
 
 $html .= "<h2>V1.3.2 du 06.05.2013</h2>";
 $html .= "<ul>";
