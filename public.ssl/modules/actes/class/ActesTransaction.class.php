@@ -176,6 +176,7 @@ class ActesTransaction extends DataObject {
   );
 
 	protected $en_attente;
+	protected $is_en_attente_de_signature;
   
 	public static function getTypeReponse($transactionType,$reponseType){
 		
@@ -671,6 +672,8 @@ class ActesTransaction extends DataObject {
         	$this->errorMsg = "Erreur détermination taille fichier.";
         	return false;
       	}
+      	
+      	$sha1 = sha1_file($path);
     }
 
     $new_name = $dest_name;
@@ -684,7 +687,8 @@ class ActesTransaction extends DataObject {
         "name" => $new_name,
         "posted_filename" => $name,
         "mimetype" => $mimeType,
-        "size" => $size
+        "size" => $size,
+      	"sha1" => $sha1
       );
     } else {
       if (!$import) {
@@ -699,7 +703,8 @@ class ActesTransaction extends DataObject {
         "name" => $new_name,
         "posted_filename" => $name,
         "mimetype" => $mimeType,
-        "size" => $size
+        "size" => $size,
+      	"sha1" => $sha1
       );
     }
 
@@ -1331,6 +1336,8 @@ class ActesTransaction extends DataObject {
       // Ajout de l'état initial
       if ($this->en_attente){
       	$result_set_status = $this->setNewStatus(17, "Dépôt dans un état d'attente");
+      } elseif ($this->is_en_attente_de_signature){
+      	$result_set_status = $this->setNewStatus(18, "En attente d'être signé");      	
       } else {
       	$result_set_status = $this->setNewStatus(1, "Dépôt initial");
       }
@@ -1360,12 +1367,17 @@ class ActesTransaction extends DataObject {
       }
 
       foreach ($files as $file) {
-        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature) VALUES(" 
+      	
+      	if (empty($file['sha1'])){
+      		$file['sha1'] = "";
+      	}
+      	
+        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature,sha1) VALUES(" 
         		. $this->envelope_id . ", " .
         		 $this->id . ", '" . 
         		 basename($file["name"]) . "', '" .
         		 addslashes(isset($file["posted_filename"])?$file["posted_filename"]:"") .
-        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"])?$file["sign"]:"") . "')";
+        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"])?$file["sign"]:"") . "','{$file['sha1']}')";
 
         if (!$this->db->exec($sql)) {
           $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";
@@ -1697,6 +1709,10 @@ class ActesTransaction extends DataObject {
 	
 	public function setEnAttente($en_attente){
 		$this->en_attente = $en_attente;
+	}
+	
+	public function setEnAttenteDeSignature($is_en_attente_de_signature){
+		$this->is_en_attente_de_signature = $is_en_attente_de_signature;
 	}
 	
 }

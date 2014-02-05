@@ -67,6 +67,7 @@ if (isset($_FILES["acte_attachments_sign"])){
 	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 }
 
+$must_signed = Helpers::getVarFromPost("must_signed",true);
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
 $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
@@ -319,6 +320,9 @@ if (!$env->save()) {
 }
 
 $trans->set("envelope_id", $env->getId());
+if ($must_signed){
+	$trans->setEnAttenteDeSignature(true);
+}
 
 if (!$trans->save()) {
   $msg = "Erreur lors de l'enregistrement de la transaction :\n" . $trans->getErrorMsg();
@@ -353,7 +357,8 @@ if (!$trans->save()) {
 
 //On incrémente le suffixe
 $zeBatch->incNextSuffix();
-    // On marque le fichier du lot comme Traité
+
+// On marque le fichier du lot comme Traité
     $zeBatchFile->setProcessed();
     $zeBatchFile->set("transaction_id", $trans->getId());
     if (!$zeBatchFile->save()) {
@@ -364,12 +369,12 @@ $zeBatch->incNextSuffix();
         $msg .= "\nErreur lors de la suppression du fichier de lot.";
       }
     }
-  }
+}
 
-  if ($nextBatchFileId) {
+if ($nextBatchFileId) {
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $nextBatchFileId, $apiMsg);
-  } else {
+} else {
     Helpers :: purgeTempSession();
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
-  }
+}
 

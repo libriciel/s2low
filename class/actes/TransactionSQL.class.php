@@ -43,9 +43,10 @@ class TransactionSQL {
 		15 => 'Reçu par le SAE',
 		16 => 'Détruite',
 		17 => "En attente d'être postée",
+		18 => "En attente d'être signée"
 	); 
 	
-	private static $etat_en_cours = array(1,2,3,4,7,8,17);
+	private static $etat_en_cours = array(1,2,3,4,7,8,17,18);
 	
 	
 	private $sqlQuery;

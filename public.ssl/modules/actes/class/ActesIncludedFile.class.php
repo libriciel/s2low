@@ -64,6 +64,10 @@ class ActesIncludedFile extends DataObject {
   	$this->tampon = true;
   }
   
+  public function sendSignature(){
+  	
+  }
+  
   /**
    * \brief Méthode qui renvoie le fichier au navigateur
    */

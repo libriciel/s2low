@@ -85,13 +85,6 @@ function add_attachment_field() {
   html += '       <dd><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/dd>';
 EOJS;
 
-if (!$batchMode) {
-  $js .=<<<EOJS
-	html += '      <dt>Fichier signature numérique pièce jointe n°' + field_nb + ' (optionnel)&nbsp;:\\x3C/dt>';
-  	html += '       <dd><input type="file" id="acte_attachments_sign_' + field_nb + '" name="acte_attachments_sign[]" size="40" maxlength="255" />\\x3C/dd>';
-EOJS;
-}
-
 $js .=<<<EOJS
 html += '    \\x3C/dl>';
 
@@ -217,13 +210,6 @@ if ( ( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassificati
   $html .= "<br />\n";
 }
 
-if (!$batchMode) {
-  $html .= "<h3>Note&nbsp;:</h3>\n";
-  $html .= "<p>Pour générer les signatures numériques des fichiers joints, sélectionnez d'abord les fichiers dans le formulaire ci-contre puis utilisez le bouton ci-dessous. Une nouvelle fenêtre s'ouvrira permettant de signer les fichiers.</p>\n";
-  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/applet/index.php\" method=\"post\" id=\"sign_form\" onsubmit=\"javascript:return open_sign_window();\">\n";
-  $html .= "<p><input class=\"submit_button\" id=\"sign_submit_button\" type=\"submit\" value=\"Générer les signatures\" />\n";
-  $html .= "</p></form>\n";
-}
 
 $html .= "</div>\n";
 
@@ -320,13 +306,14 @@ if (!$batchMode) {
   $html .= "     <dl class=\"actes_files_form\">\n";
   $html .= "      <dt>Fichier PDF ou XML&nbsp;:</dt>\n";
   $html .= "       <dd><input type=\"file\" id=\"acte_pdf_file\" name=\"acte_pdf_file\" size=\"40\" maxlength=\"255\" /></dd>\n";
-  $html .= "      <dt>Fichier signature numérique (optionnel, voir ci-contre)&nbsp;:</dt>\n";
-  $html .= "       <dd><input type=\"file\" id=\"acte_pdf_file_sign\" name=\"acte_pdf_file_sign\" size=\"40\" maxlength=\"255\" /></dd>\n";
   $html .= "     </dl>\n";
   $html .= "   </dd>\n";
 }
 $html .= "  <dt>Pièces jointes supplémentaires&nbsp;:&nbsp;<a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">[&nbsp;Ajouter un champ&nbsp;]</a></dt>\n";
 $html .= "   <dd id=\"attachments_fields\"></dd>\n";
+
+
+$html .= "     <dt>Signer l'acte avant de le poster : <input type=\"checkbox\"  name=\"must_signed\" /></dt>\n";
 
 
 // adresses emails de diffusion
@@ -335,6 +322,7 @@ $defaultbroadcast_email = $org->get("default_broadcast_email");
 if ($defaultbroadcast_email != NULL)
   $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
   
+
 
 $broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
