@@ -268,5 +268,3 @@ if ($api) {
 	Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
 }
 
-
-?>

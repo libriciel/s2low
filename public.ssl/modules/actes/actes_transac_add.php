@@ -93,17 +93,6 @@ html += '    \\x3C/dl>';
   field_nb++;
 }
 
-function switch_sign_fields(checkbox) {
-  acte = document.getElementById("acte_pdf_file_sign");
-
-  acte.disabled = checkbox.checked;
-
-  for (i = 1; i < field_nb; i++) {
-	attachment = document.getElementById("acte_attachments_sign_" + i);
-	attachment.disabled = checkbox.checked;
-  }
-}
-
         function getFullPath(obj)
         {
             if(obj)
@@ -126,51 +115,7 @@ function switch_sign_fields(checkbox) {
                 return obj.value;
             }
         } 
-        
-function open_sign_window() {
-  var zeForm = document.getElementById("sign_form");
-  var signSubmitButton = document.getElementById("sign_submit_button");
-
-  var acteFile = document.getElementById("acte_pdf_file");
-
-  // Purge des éléments hidden qui existeraient déjà (évite les doublons en cas de clics multiples)
-  zeForm.innerHTML = '<input class="submit_button" id="sign_submit_button" type="submit" value="Générer les signatures" />';
-
-  // Le fichier de l'acte est obligatoire
-  if (acteFile) {
-	if (acteFile.value.length <= 0) {
-	  alert("Choisissez au moins un fichier pour l'acte.");
-	  return false;
-	} else {
-	  zeInput = document.createElement('input');
-	  zeInput.setAttribute("type", "hidden");
-	  zeInput.setAttribute("id", "form_sign_file_1");
-	  zeInput.setAttribute("name", "files[]");
-	  zeInput.setAttribute("value", getFullPath(acteFile));
-	  zeForm.appendChild(zeInput);
-	}
-  }
-
-  // Traitement des pièces jointes
-  for (i = 1; i < field_nb; i++) {
-	elt = document.getElementById("acte_attachments_" + i);
-
-	if (elt && elt.value.length > 0) {
-	  zeInput = document.createElement('input');
-	  zeInput.setAttribute("type", "hidden");
-	  zeInput.setAttribute("id", "form_sign_file_" + i);
-	  zeInput.setAttribute("name", "files[]");
-	  zeInput.setAttribute("value", elt.value);
-	  zeForm.appendChild(zeInput)
-	}
-  }
-
-  window.open('about:blank', 'sign_files', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=800,height=600');
-
-  zeForm.target = 'sign_files';
-
-  return true;
-}
+       
 
 // affichage/masquage d'un bloc
 function hide_bloc(bloc_id){
