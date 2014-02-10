@@ -17,5 +17,12 @@ class ActesIncludedFileSQL {
 		$this->sqlQuery->query($sql,$signature,$signature_id,$id);
 	}
 	
+	public function getXMLFilename($transaction_id){
+		$sql = "SELECT filename FROM actes_included_files WHERE transaction_id=? ORDER BY id ASC LIMIT 1";
+		return $this->sqlQuery->queryOne($sql,$transaction_id);
+		
+	}
+	
+	
 	
 }

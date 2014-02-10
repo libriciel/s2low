@@ -499,69 +499,42 @@ if ($transStatus == 18 && $permission->canWrite($me,$owner)){
 	$html .= "<h3>Signature de l'acte</h3>";
 	ob_start();
 	?><div class='action'>
-		<applet codebase = "<?php echo WEBSITE_SSL ?>libersign/"
+	<applet codebase = "<?php echo WEBSITE_SSL ?>libersign/"
 			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
 			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
 			name = "appletsignature"
 			width = "500"
 			height = "257" >
-			
 		<param name="hash_count" value="<?php echo count($tab_included_files)?>" />
 		<?php foreach($tab_included_files as $i => $included_file) : ?>
-		<param name="iddoc_<?php echo $i +1?>" value="<?php echo $included_file['id']?>" />
-		<param name="hash_<?php echo $i +1?>" value="<?php echo $included_file['sha1'] ?>" /> 
-		<param name="format_<?php echo $i +1?>" value="CMS" />
+			<param name="iddoc_<?php echo $i +1?>" value="<?php echo $included_file['id']?>" />
+			<param name="hash_<?php echo $i +1?>" value="<?php echo $included_file['sha1'] ?>" /> 
+			<param name="format_<?php echo $i +1?>" value="CMS" />
 		<?php endforeach;?> 
 		<param name="id_user" value="id=<?php echo $id?>" />
 		<param name="return_mode" value="form" />
 	 </applet>
 	 </div>
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
-	 
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
 <form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
-<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
-<input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
-<?php foreach($tab_included_files as $i => $included_file) : ?>
-<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $included_file['id']?>' />
-<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i +1?>' />
-<?php endforeach;?>
-
+	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
+	<input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
+	<?php foreach($tab_included_files as $i => $included_file) : ?>
+		<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $included_file['id']?>' />
+		<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i +1?>' value=''/>
+	<?php endforeach;?>
 </form>
 <script>
-function sendSignature(){
+function injectSignature() {
+    signature = null;
+    <?php foreach($tab_included_files as $i => $included_file) : ?> 
+    	signature = document.applets[0].returnSignature("<?php echo $included_file['id'] ?>");
+		$("#signature_<?php echo $i + 1?>").val(signature);
+	<?php endforeach;?>
 	$("#form_sign").submit();
 }
-	
-function injectSignature() {
-    document.location = "<?php echo WEBSITE_SSL ?>modules/actes/actes_transac_sign.php?id=<?php echo $id?>";
-    var signature = null;
-    try {
-    	<?php foreach($tab_included_files as $i => $included_file) : ?> 
-			$("#signature_<?php echo $i + 1?>").val(document.applets[0].returnSignature("hash_<?php echo $i +1?>"));
-		<?php endforeach;?>
-		sendSignature();
-	} catch (e) {
-		alert(e); 
-		return false;
-	}
-}
-
-$(document).ready(function(){
-	<?php foreach($tab_included_files as $i => $included_file) : ?> 
-	$("#signature_<?php echo $i + 1?>").val("FAKE SIGNATURE");
-	<?php endforeach;?>
-	
-	$("#testSignature").click(function(){
-		
-		sendSignature();
-		return false;
-	});
-	
-});
-
-	 </script>
+</script>
 	 
-<a href='#' id='testSignature'>Test signature</a>
 	<?php 	
 		$html.= ob_get_contents();
 		ob_end_clean();

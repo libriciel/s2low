@@ -59,17 +59,50 @@ if ($nb_signature == 0){
 
 $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 
+$signature = array();
 
 for($i=1; $i<=$nb_signature;$i++){
-	$signature = Helpers::getVarFromPost("signature_$i");
+	$signature[$i] = Helpers::getVarFromPost("signature_$i");
 	$signature_id = Helpers::getVarFromPost("signature_id_$i");
-	$actesIncludedFileSQL->setSignature($id,$signature_id,$signature);
-	
+	$actesIncludedFileSQL->setSignature($id,$signature_id,$signature[$i]);
 }
 
 
+$tmpFolder = new TmpFolder();
+$tmpDir = $tmpFolder->create();
+
+$envelope_id = $trans->get('envelope_id');
+$actesEnveloppeSQL = new ActesEnvelopeSQL($sqlQuery);
+$actes_envelope_info = $actesEnveloppeSQL->getInfo($envelope_id);
+$archivePath = ACTES_FILES_UPLOAD_ROOT.'/'.$actes_envelope_info['file_path'];
+
+$tgzExtractor = new TGZExtractor($tmpDir);
+$tgzExtractor->extract($archivePath, false);
+
+$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
+$xml_file = $actesIncludedFileSQL->getXMLFilename($id);
+
+$xml = simplexml_load_file($tmpDir."/".$xml_file);
+$namespaces = $xml->getDocNamespaces();
+
+$children = $xml->children($namespaces['actes']);
+$children->Document->addChild("Signature",$signature[1],$namespaces['actes']);
+
+foreach($children->Annexes->Annexe as $i => $annexe) {
+	$annexe->addChild("Signature",$signature[$i+2],$namespaces['actes']);
+}
+
+$xml->asXML($tmpDir."/".$xml_file);
+
+chdir($tmpDir);
+$cmd = "tar cf - * | gzip -9 > $archivePath ";
+
+$status = system($cmd, $ret);
+
+$tmpFolder->delete($tmpDir);
+
 header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$id");
 $trans->setNewStatus(1, "L'acte a été signé électroniquement");
- $_SESSION["error"] = "La signature a été enregistrée";
+$_SESSION["error"] = "La signature a été enregistrée";
 
 

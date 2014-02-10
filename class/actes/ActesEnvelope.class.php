@@ -9,7 +9,6 @@ class ActesEnvelope {
 	}
 	
 	public function deleteFiles($envelope_path){
-		
 		$dir_to_delete = dirname($this->root_workspace_path . "/"  . $envelope_path);
 		escapeshellarg($dir_to_delete);
 		if ( ! $dir_to_delete){
@@ -17,6 +16,8 @@ class ActesEnvelope {
 		}
 		`rm -rf $dir_to_delete`;
 	}
+	
+	
 	
 	
 }

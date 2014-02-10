@@ -292,80 +292,78 @@ class ActesEnvelope extends DataObject {
    * \param $path chaîne : Chemin vers le fichier dans le système de fichier local
    * \return Un tableau des noms des fichiers métiers XML contenus dans l'enveloppe, false sinon
    */
-  public function importArchiveFile($name, $path) {
-	if (isset($this->destDir)) {
-	  $dest = $this->rootDir . '/' . $this->destDir;
-
-	  $this->file_path = $this->destDir . "/" . $name;
-
-	  // Création du répertoire de stockage de l'archive
-	  if (! Helpers::createDirTree($dest)) {
-		$this->errorMsg = "Erreur système de fichiers.";
-		return false;
-	  }
-
-	  // Mise en place de l'archive à son emplacement définitif
-	  if (! move_uploaded_file($path, $this->rootDir . '/' . $this->file_path)) {
-		$this->errorMsg = "Erreur système. Abandon.";
-		return false;
-	  }
-
-	  // Vérification du format de l'archive
-	  if (! $this->checkArchiveType($this->rootDir . '/' . $this->file_path)) {
-		$this->errorMsg = "Mauvais format de l'archive (.tar.gz requis).";
-		return false;
-	  }
-
-	  // Extraction de la taille de l'archive
-	  if (! $this->file_size = filesize($this->rootDir . '/' . $this->file_path)) {
-		$this->errorMsg = "Erreur système.";
-		return false;
-	  }
-
-	  // Vérification taille et antivirus sur l'archive
-	  if (! $this->checkArchiveConformity($this->rootDir . '/' . $this->file_path)) {
-		return false;
-	  }
-
-	  $this->genTempDirectory();
-
-	  // Extraction de l'archive dans un répertoire temporaire
-	  if (! $this->extractArchive($this->rootDir . '/' . $this->destDir . "/" . $this->tmpDir)) {
-		$this->errorMsg = "Erreur désarchivage archive. Abandon.";
-		return false;
-	  }
-
-	  // Chargement du fichier XML enveloppe
-	  // Le nom du fichier xml enveloppe est le nom de l'archive moins le préfixe
-	  // et avec l'extension .xml à la place de .tar.gz
-	  $this->envXmlFile = preg_replace("/^[^\-]+-/", "", $name);
-	  $this->envXmlFile = $this->destDir . "/" . $this->tmpDir . "/" . preg_replace("/\.tar\.gz$/", ".xml", $this->envXmlFile);
-
-	  $xmlFile = $this->rootDir . "/" . $this->envXmlFile;
-
-	  if (! file_exists($xmlFile)) {
-		$this->errorMsg = "Impossible de trouver le fichier XML enveloppe correspondant à l'archive.";
-		return false;
-	  } else {
-		if (! $this->envXmlFileSize = filesize($xmlFile)) {
-		  $this->errorMsg = "Erreur système.";
-		  return false;
+	public function importArchiveFile($name, $path) {
+		if (! isset($this->destDir)) {
+			return false;
 		}
-	  }
+		$dest = $this->rootDir . '/' . $this->destDir;
 
-	  if (($xmlFiles = $this->processXMLEnvelope($xmlFile)) === false) {
-		return false;
-	  }
+		$this->file_path = $this->destDir . "/" . $name;
 
-	  // Écriture de l'enveloppe modifiée (ajout mail retour TdT)
-	  if (! $this->writeEnvFile($this->envXmlObj->AsXML())) {
-		return false;
-	  }
+		// Création du répertoire de stockage de l'archive
+  		if (! Helpers::createDirTree($dest)) {
+			$this->errorMsg = "Erreur système de fichiers.";
+			return false;
+  		}
+		//Mise en place de l'archive à son emplacement définitif
+		if (! move_uploaded_file($path, $this->rootDir . '/' . $this->file_path)) {
+			$this->errorMsg = "Erreur système. Abandon.";
+			return false;
+		}
+		
+		// Vérification du format de l'archive
+		if (! $this->checkArchiveType($this->rootDir . '/' . $this->file_path)) {
+			$this->errorMsg = "Mauvais format de l'archive (.tar.gz requis).";
+			return false;
+		}
 
-	  return $xmlFiles;
-	}
+		// Extraction de la taille de l'archive
+		if (! $this->file_size = filesize($this->rootDir . '/' . $this->file_path)) {
+			$this->errorMsg = "Erreur système.";
+			return false;
+		}
 
+		// Vérification taille et antivirus sur l'archive
+		if (! $this->checkArchiveConformity($this->rootDir . '/' . $this->file_path)) {
+			return false;
+		}
+		
+		$this->genTempDirectory();
+
+  // Extraction de l'archive dans un répertoire temporaire
+  if (! $this->extractArchive($this->rootDir . '/' . $this->destDir . "/" . $this->tmpDir)) {
+	$this->errorMsg = "Erreur désarchivage archive. Abandon.";
 	return false;
+  }
+
+  // Chargement du fichier XML enveloppe
+  // Le nom du fichier xml enveloppe est le nom de l'archive moins le préfixe
+  // et avec l'extension .xml à la place de .tar.gz
+  $this->envXmlFile = preg_replace("/^[^\-]+-/", "", $name);
+  $this->envXmlFile = $this->destDir . "/" . $this->tmpDir . "/" . preg_replace("/\.tar\.gz$/", ".xml", $this->envXmlFile);
+
+  $xmlFile = $this->rootDir . "/" . $this->envXmlFile;
+
+  if (! file_exists($xmlFile)) {
+	$this->errorMsg = "Impossible de trouver le fichier XML enveloppe correspondant à l'archive.";
+	return false;
+  } else {
+	if (! $this->envXmlFileSize = filesize($xmlFile)) {
+	  $this->errorMsg = "Erreur système.";
+	  return false;
+	}
+  }
+
+  if (($xmlFiles = $this->processXMLEnvelope($xmlFile)) === false) {
+	return false;
+  }
+
+  // Écriture de l'enveloppe modifiée (ajout mail retour TdT)
+  if (! $this->writeEnvFile($this->envXmlObj->AsXML())) {
+	return false;
+  }
+
+  return $xmlFiles;
   }
 
   /**
@@ -570,7 +568,6 @@ class ActesEnvelope extends DataObject {
 	  
 		$new_file = ANTIVIRUS_TMP_PATH . basename($path);
 		Trace::wrap_exec("cp $path $new_file",$output, $ret);
-		//$r = copy($path, $new_file);
 		
 		if ( $ret != 0 ){
 			$t = Trace::getInstance();

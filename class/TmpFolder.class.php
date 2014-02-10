@@ -3,7 +3,7 @@
 class TmpFolder {
 	
 	public function create(){
-	 	$folder_name = sys_get_temp_dir() . "/pastell_tmp_folder_" . mt_rand(0,mt_getrandmax());
+	 	$folder_name = sys_get_temp_dir() . "/tedetis_tmp_folder_" . mt_rand(0,mt_getrandmax());
     	if (file_exists($folder_name)) {
     		throw new Exception("Impossible de créer un répetoire temporaire : le répertoire existe"); 
     	}
