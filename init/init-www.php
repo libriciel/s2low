@@ -1,6 +1,9 @@
 <?php 
 
 require_once("init.php");
+if (empty($droit_specific)){
+	$droit_specific = array();
+}
 
 $connexion = new Connexion();
 if (!$connexion->isConnected()){
@@ -35,7 +38,8 @@ if ( ! empty($module_name)) {
 	$moduleInfo = $moduleSQL->getInfoByName($module_name,$userInfo['authority_id']);
 	$droitModuleInfo = $moduleSQL->getInfoModuleAuthority($moduleInfo['id'],$userInfo['authority_id']);
 	$permUser = $moduleSQL->getInfoPerms($moduleInfo['id'],$connexion->getId());
-	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser)){
+	
+	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific)){
 		sortir("Accès refusé");
 	}
 	

@@ -23,7 +23,7 @@ if (!$me->authenticate()) {
 	exit ();
 }
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+if (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
 	$_SESSION["error"] = "Accès refusé";
 	header("Location: " . WEBSITE_SSL);
 	exit ();

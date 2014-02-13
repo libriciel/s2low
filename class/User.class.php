@@ -153,25 +153,18 @@ class User extends DataObject {
 	parent::set($name, $val);
   }
 
-  /**
-   * \brief Méthode permettant de récupérer la valeur d'un attribut
-   * \param $name chaîne : Nom de l'attribut
-  */
-  public function get($name) {
-	switch ($name) {
-	case "permsTypes":
-	  if ($this->isSuper()) {
-		return array_merge($this->permsTypes, $this->superPermsTypes);
-	  } else {
-		return $this->permsTypes;
-	  }
-	  break;
-	default:
-	  return parent::get($name);
-	  break;
+	public function getPermTypes(array $module_specific_perms = array()){
+		$result = $this->permsTypes;
+		
+		if ($this->isSuper()){
+			$result = array_merge($result, $this->superPermsTypes);
+		}
+		
+		$result = array_merge($result,$module_specific_perms);
+		
+		return $result;
 	}
-  }
-
+ 
   /**
    * \brief Méthode d'authentification de l'utilisateur
    * \return true si succès, false sinon
@@ -459,7 +452,10 @@ class User extends DataObject {
    * \return La chaîne des permissions sur le module ou null si aucune permission trouvée
   */
   public function getPerm($module) {
-	return (isset($this->perms[$module])) ? $this->perms[$module]["perm"] : null;
+  	if (empty($this->perms[$module])){
+  		return null;
+  	}
+  	return $this->perms[$module]["perm"];
   }
 
   /**
@@ -467,66 +463,74 @@ class User extends DataObject {
    * \param $module chaîne : nom du module
    * \return True si l'utilisateur peut accéder ou false sinon
   */
-  public function canAccess($module) {
-  	if ($this->isGroupAdminOrSuper()) {
-  		return true;
-  	} 	
-	  // La collectivité a-t'elle accès au module
-	  $authority = new Authority($this->authority_id);
+	public function canAccess($module) {
+		if ($this->isGroupAdminOrSuper()) {
+  			return true;
+  		} 	
+	  	$authority = new Authority($this->authority_id);
 
-	  $mod = new Module();
-	  if (! $mod->initByName($module)) {
-		// Erreur
-		return false;
-	  }
+	  	$mod = new Module();
+	  	if (! $mod->initByName($module)) {
+			return false;
+	  	}
 
-	  if (! $authority->getModulePerm($mod->getId())) {
-		// Pas d'accès à ce module
-		return false;
-	  }
-// bug 185 le amdmin de la collectivité peut access au module même pas d'autority.	  
-//	  if ($this->getPerm($module) == "RO" || $this->getPerm($module) == "RW" || $this->isAdmin()) {
-	  if ($this->getPerm($module) == "RO" || $this->getPerm($module) == "RW" ) {
-	 	return true;
-	  }
-	
+	  	if (! $authority->getModulePerm($mod->getId())) {
+			return false;
+	  	}
+	  	 	
+	  	if ($this->getPerm($module) != "NONE" ) {
+	 		return true;
+	  	}
+	  	return false;
   }
 
+  public function checkDroit($module, $droit){
+  	if ($this->isGroupAdminOrSuper()) {
+  		return true;
+  	}
+  	$authority = new Authority($this->authority_id);
+  	
+  	$mod = new Module();
+  	if (! $mod->initByName($module)) {
+  		return false;
+  	}
+  	
+  	if (! $authority->getModulePerm($mod->getId())) {
+  		return false;
+  	}
+  	
+  	if ($this->getPerm($module) == "RW" ) {
+  		return true;
+  	}
+  	if ($this->getPerm($module) == $droit){
+  		return true;
+  	}
+  	return false;
+  }
+  
   /**
    * \brief Méthode déterminant si un utilisateur à accès en modification
    * \param $module chaîne : nom du module
    * \return True si l'utilisateur peut modifier ou false sinon
   */
-  public function canEdit($module) {
-	if (! $this->isGroupAdminOrSuper()) {
-	  // La collectivité a-t'elle accès au module
-	  $authority = new Authority($this->authority_id);
+	public function canEdit($module) {
+		if ($this->isGroupAdminOrSuper()) {
+			return true;
+		}
+		$authority = new Authority($this->authority_id);
 
-	  $mod = new Module();
-	  if (! $mod->initByName($module)) {
-		// Erreur
+		$mod = new Module();
+		if (! $mod->initByName($module)) {
+			return false;
+		}
+
+		if (! $authority->getModulePerm($mod->getId())) {
+			return false;
+		}
+		if ($this->getPerm($module) == "RW") {
+			return true;
+		}
 		return false;
-	  }
-
-	  if (! $authority->getModulePerm($mod->getId())) {
-		// Pas d'accès à ce module
-		return false;
-	  }
-//	  if ($this->getPerm($module) == "RW" || $this->isAdmin()) {  
-	  if ($this->getPerm($module) == "RW") {
-		return true;
-	  }
-	} else {
-	  return true;
-	}
-  }
-
-  /**
-   * \brief Méthode retournant les types de permissions
-   * \return Le tableau des types de permissions
-  */
-  public function getPermsTypes() {
-	return $this->permsTypes;
   }
 
   /**
@@ -535,19 +539,18 @@ class User extends DataObject {
    * \param $perm chaîne : permission sur le module
    * \return true si succès, false sinon
   */
-  public function setPerm($module_id, $perm) {
+  public function setPerm($module_id, $perm,array $specific_perms = array()) {
 	$module = new Module($module_id);
-
 	if (! $module->init()) {
 	  return false;
 	}
 
-	if (array_search($perm, array_keys(array_merge($this->superPermsTypes, $this->permsTypes))) === false) {
-	  $perm = "NONE";
+	$all_perms = $this->getPermTypes($specific_perms);
+	if ( empty($all_perms[$perm])){
+		$perm = "NONE";
 	}
 
 	$this->perms[$module->get("name")] = array("module_id" => $module->getId(), "perm" => $perm);
-
 	return true;
   }
 
@@ -620,9 +623,6 @@ class User extends DataObject {
     if (! ($sql = parent::save($validate, true))) {
 	  return false;
 	}
-
-    //echo $sql;
-    //exit();
 
 	if (! $this->db->begin()) {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";

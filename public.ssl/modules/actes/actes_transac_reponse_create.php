@@ -36,7 +36,7 @@ if (!$me->authenticate()) {
 	sortir( "Échec de l'authentification",$api);
 }
 
-if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canEdit($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
 	sortir( "Accès refusé",$api);
 }
 

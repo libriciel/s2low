@@ -69,7 +69,7 @@ if (! $me->authenticate()) {
   Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
 }
 
-if ($me->isGroupAdminOrSuper() || ! $module->isActive()|| ! $me->canEdit($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || ! $module->isActive()|| ! $me->checkDroit($module->get("name"),'CS')) {
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 

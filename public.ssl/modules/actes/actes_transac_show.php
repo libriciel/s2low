@@ -37,7 +37,6 @@ if (empty($id) ){
 	exit ();
 }
 
-
 $trans = new ActesTransaction();
 $trans->setId($id);
 if ( ! $trans->init()) {
@@ -342,7 +341,7 @@ if (count($courrier) != 0){
 }
 
 
-if (!$me->isSuper() && $me->canEdit($module->get("name")) &&  $permission->canWrite($me,$owner) ) {
+if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permission->canWrite($me,$owner) ) {
   $actionHtml = "";
 
   // Formulaire de notification a posteriori
@@ -432,7 +431,7 @@ if (!$trans->hasPendingCancelTrans()) {
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
-if ($trans->get("type") == 1 && $transStatus == 4) {
+if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "TT")) {
   $actionHtml .= "<div class=\"action\">\n";
   if (!$trans->hasPendingCancelTrans()) {
     if ($module->getParam("paper") == "on") {
@@ -452,7 +451,7 @@ if ($trans->get("type") == 1 && $transStatus == 4) {
 
 // Boutons de réponse à un courrier
 
-if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5) {
+if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
       $actionHtml .= "<p>Répondre &nbsp;:&nbsp;";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -460,7 +459,7 @@ if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5) {
       $actionHtml .= "</p></form>\n";
 }
 
-if ($transStatus == 17){
+if ($transStatus == 17 && $me->checkDroit("actes", "TT")){
 	  $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n";
       $actionHtml .= "<p>Valider &nbsp;:&nbsp;";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -484,14 +483,13 @@ if ($me->isSuper()) {
 }
 
 
-
-if (isset($actionHtml) && $permission->canWrite($me,$owner)) {
+if (isset($actionHtml)) {
   $html .= "<h3>Actions</h3>\n";
   $html .= $actionHtml;
 }
 
 
-if ($transStatus == 18 && $permission->canWrite($me,$owner)){
+if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	
 	$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 	$tab_included_files = $actesIncludedFileSQL->getSendFile($id);

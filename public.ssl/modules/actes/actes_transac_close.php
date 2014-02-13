@@ -19,7 +19,7 @@ if (!$me->authenticate()) {
   Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
 }
 
-if (!$module->isActive() || $me->isGroupAdminOrSuper() || !$me->canEdit($module->get("name"))) {
+if (!$module->isActive() || $me->isGroupAdminOrSuper() || !$me->checkDroit($module->get("name"),'CS')) {
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
@@ -65,7 +65,7 @@ foreach ($liste_id as $id) {
     $envelope->init();
 
     // Vérification des permissions
-    if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->canEdit($module->get("name")))) {
+    if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->checkDroit($module->get("name"),'CS'))) {
       Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
     }
     

@@ -1,6 +1,4 @@
 <?php 
-
-
 class ActesTransactionsSQL {
 	
 	public function __construct($sqlQuery){

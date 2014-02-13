@@ -374,17 +374,26 @@ class Module extends DataObject {
    * \return Un tableau contenant les données des modules
    */
   public static function getModulesList($cond = "") {
-    // TODO: utiliser le pager pour multipages
     $sql = "SELECT modules.id, modules.name, modules.description, modules.menu_entry, modules.status FROM modules " . $cond;
 
     $db = DatabasePool::getInstance();
 
     $result = $db->select($sql);
 
+    $r = array();
     if (! $result->isError()) {
-      return $result->get_all_rows();
+      $r = $result->get_all_rows();
     }
+    foreach($r as $i => $module){
+    	if ($module['name'] == 'actes'){
+    		$specific_perms = array("CS" => "Créer et signer","TT"=>"Télétransmettre"); 
+    	} else {
+    		$specific_perms = array();
+    	}
+    	$r[$i]['specific_perms'] = $specific_perms;
+    }
+    
 
-    return array();
+    return $r;
   }
 }

@@ -18,7 +18,7 @@ if (! $me->authenticate()) {
 }
 
 // Un super admin ne peut pas accéder à cette page
-if (! $module->isActive() || $me->isGroupAdminOrSuper() || ! $me->canEdit($module->get("name"))) {
+if (! $module->isActive() || $me->isGroupAdminOrSuper() || ! $me->checkDroit($module->get("name"),'TT')) {
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
@@ -58,7 +58,7 @@ $rel_envelope->init();
 
 // Vérification des permissions
 if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) 
-&& ! ($me->getId() == $rel_envelope->get("user_id") && $me->canEdit($module->get("name")))) {
+&& ! ($me->getId() == $rel_envelope->get("user_id") && $me->checkDroit($module->get("name"),'TT'))) {
   Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 

@@ -3,7 +3,7 @@
 
 class Droit {
 	
-	public function canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser){	
+	public function canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser, $droit_specific = array()){	
 		
 		if ( ! $moduleInfo ){
 			return false;
@@ -30,7 +30,9 @@ class Droit {
 			return false;
 		}
 		if (! in_array($permUser , array('RO','RW'))){
-			return false;
+			if (! in_array($permUser,$droit_specific)){
+				return false;
+			}
 		}
 		
 		return true;

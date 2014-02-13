@@ -40,14 +40,16 @@ if ($droit->isSuperAdmin($userInfo) ) {
 }elseif ($droit->isAdmin($userInfo)){
 	$transactionSQL->setAuthority($userInfo['authority_id']);
 } else {
-  $serviceUser = new ServiceUser(DatabasePool::getInstance());
+	
+ $serviceUser = new ServiceUser(DatabasePool::getInstance());
   $collegues = $serviceUser->getMesCollegues($connexion->getId());
   $collegue[] = $connexion->getId();
   foreach($collegues as $info){
   	$collegue[] =  $info['id_user'];
   }
-  $transactionSQL->setUserId($collegue);
+  $transactionSQL->setUserId($collegue);  
 }
+
 
 $transactionSQL->setNature($fnature);
 $transactionSQL->setType($ftype);
@@ -83,7 +85,7 @@ $listeActesHTML = new ListeActesHTML();
 
 if ($droit->isSuperAdmin($userInfo)){
 	$listeActesHTML->addCollectivite($authoritySQL->getAll(),$authority_filtre);
-} elseif($permUser == 'RW') {
+} elseif($permUser == 'RW' || $permUser == 'CS') {
  	$listeActesHTML->addActionBox();
 }
 

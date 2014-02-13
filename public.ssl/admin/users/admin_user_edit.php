@@ -257,13 +257,10 @@ if ($mod) {
 }
 
 
-if (count($modules) > 0) {
-  $moduleHtml = "";
+$moduleHtml = "";
 
-  $perms = $me->get("permsTypes");
 
-  reset($modules);
-  foreach ($modules as $module) {
+foreach ($modules as $module) {
 	if ($me->isSuper() || $authModules[$module["id"]]) {
 	  $class = "";
 	  if ($me->isSuper() && ! isset($authModules[$module["id"]])) {
@@ -271,11 +268,11 @@ if (count($modules) > 0) {
 	  }
 
 	  $moduleHtml .= "    <dt" . $class . ">" . $module["description"] . "&nbsp;:</dt>";
-	  $moduleHtml .= "    <dd" . $class . ">" . $doc->getHTMLSelect("perm_" . $module["id"], $me->get("permsTypes"), $him->getPerm($module["name"])) . "</dd>\n";
+	  $moduleHtml .= "    <dd" . $class . ">" . $doc->getHTMLSelect("perm_" . $module["id"], $me->getPermTypes($module['specific_perms']), $him->getPerm($module["name"])) . "</dd>\n";
 	}
-  }
+}
 
-  if (! empty($moduleHtml)) {
+if (! empty($moduleHtml)) {
 	$html .= " <tr>\n";
 	$html .= "  <td class=\"td-register\">Permissions modules&nbsp;:</td>\n";
 	$html .= "  <td class=\"td-input\">\n";
@@ -284,7 +281,6 @@ if (count($modules) > 0) {
 	$html .= "   </dl>\n";
 	$html .= "  </td>\n";
 	$html .= " </tr>\n";
-  }
 }
 
 $html .= "</table>\n";
