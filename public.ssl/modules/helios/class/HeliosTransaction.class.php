@@ -56,8 +56,6 @@
 //apelata metoda sa din index.php
 
 require_once (SITEROOT . "/class/DataObject.class.php");
-require_once (SITEROOT . "/class/Parapheur.class.php");
-//require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
 
 class HeliosTransaction extends DataObject {
   protected $objectName = "helios_transactions";
@@ -189,19 +187,6 @@ class HeliosTransaction extends DataObject {
     } else {
       return false;
     }
-    /*
-    	  if (! $result->isError()) {
-    		while ($row = $result->get_next_row()) {
-    		  if (! isset($classif[$row["id"]])) {
-    			$classif[$row["id"]] = array();
-    		  }
-    		}
-    	  }
-    	
-    	 $classif[$row["id"]]["id"] = $row["id"];
-    */
-
-    //->ex 	
   }
 
   //added
@@ -209,7 +194,6 @@ class HeliosTransaction extends DataObject {
    * \brief Méthode pour obtenir toutes les transactions pour un utilisateur (idUser) donné
    * 
    */
-  //tmp...
   public function getAllTransactionsForAUser_1($userID) {
     $t1 = "helios_transactions";
     $t2 = "helios_transactions_workflow";
@@ -224,19 +208,6 @@ class HeliosTransaction extends DataObject {
 
     if (!$result->isError() && $result->num_row() > 0) {
       $this->allStatus = $result->get_all_rows();
-
-      /*
-      
-           if (! $result->isError() && $result->num_row() > 0) {
-                 while ($row = $result->get_next_row()) {
-                   $hoursId[] = $row["transmission_window_id"];
-                 }
-           } else {
-                 return false;
-           }
-           daca nu fac aceste operatii in idnex.html (acces ptrintr-un obiect ht)
-           si ptr fiecare linie afisez...
-      */
     }
     return $allStatus;
   }
@@ -261,30 +232,6 @@ class HeliosTransaction extends DataObject {
 
     return false;
   }
-
-  /*
-   * \brief Méthhode d'obtention de la liste des statuts des transactions
-    * \return Tableau des statuts de transactions
-   */
-  /*
-  public static function getStatusList() {
-    $sql = "SELECT id, name FROM helios_status";
-  
-    $db =DatabasePool::getInstance();
-  
-    $result = $db->select($sql);
-  
-  $types = array();
-  
-    if (! $result->isError()) {
-    while ($row = $result->get_next_row()) {
-  	$types[$row["id"]] = $row["name"];
-    }
-    }
-  
-    return $types;
-  }
-  */
 
   /**
     * \brief Méthode d'obtention de la liste des enveloppes et tous leurs attributs

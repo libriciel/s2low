@@ -24,107 +24,109 @@ if (!$me->authenticate()) {
 $nomUSer = $me->get("name");
 $userId = $me->getId();
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+if (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
   $_SESSION["error"] = "Accès refusé";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
-//TODO cela dans la configuration!!!...    
 
 $ok = 0;
 $ko = 0;
 
 $uploaddir = HELIOS_FILES_UPLOAD_ROOT;
-
 $uploadFile_baseName = $_FILES['enveloppe']['name'];
-
 $uploadfile = $uploaddir . basename($uploadFile_baseName);
 
-if (move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
-
-if (!Antivirus::checkArchiveSanity($uploadfile))
-{
-	$_SESSION["error"] = Antivirus::$errorMsg;
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+if (! move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
+	Helpers :: returnAndExit(1, "Échec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
 }
-	//calculate the sha1 form the content of the file.
-	$SHA1=sha1_file($uploadfile);
 	
-  //move_uploaded_file($_FILES['signature']['tmp_name'], $signfile);
-  $ht = new HeliosTransaction();
-  $htw = new HeliosTransactionWorkflow();
-    //insertion (idUSer, filename, signed) dans la table helios_transactions  => un id de la transaction
-  // où filename = le nom du fichier inclut dans le fichier message 
-  //OBS : la valeur de l'id est automatiquement enregistrée par save() (voir DataObjet)
-	$file_size=$_FILES['enveloppe']['size'];
-	
-  if ($file_size>HELIOS_MAX_UPLOAD_SIZE)
-	{
-		$_SESSION["error"] = "Taille de fichier supérieur à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
-	  header("Location: " . WEBSITE_SSL);
-	  exit ();
-	}
-	
-  $submission_date=date("Y-m-d H:i:s");;
-  $ht->set("filename", $uploadFile_baseName);
-  $ht->set("user_id", $userId);
-  $ht->set("file_size",$file_size);
-  $ht->set("submission_date",$submission_date);
-  $ht->set("sha1",$SHA1);
-  $myAuthority = new Authority($me->get("authority_id"));
-  $siren=$myAuthority->get('siren');
-  
-  //ajouter le ext_siret(5 lettre) dans le nouveau siren.Il faut le renommer comme siret, mais ca va influence du côté java,
-  // car il récupère le numéro siren pour former le nom de fichier PES_Aller , donc je le garde mais le sens de SIREN est changé.
-  $ext_siret=$myAuthority->get('ext_siret');
-  $ht->set("siren",$siren.$ext_siret);
-  
- 	if ($ht->CheckDuplicate()== true)
- 	{
- 		unlink($uploadfile);
-  	Helpers :: returnAndExit(1, "doublon détecté. Ce fichier a déjà été posté.", WEBSITE_SSL . "/modules/helios/index.php");
- 	}
-  //change the upload file name to sha1 to allow duplicate name.
-  rename($uploadfile,$uploaddir.$SHA1);  
-	chmod($uploaddir.$SHA1, 0644);
-	
+if (!Antivirus::checkArchiveSanity($uploadfile)) {
+	$_SESSION["error"] = Antivirus::$errorMsg;
+	header("Location: " . WEBSITE_SSL);
+	exit;
+}
 
-  $R = $ht->save(true);
-  if (!$R) {
+$SHA1=sha1_file($uploadfile);
+	
+$ht = new HeliosTransaction();
+$htw = new HeliosTransactionWorkflow();
+$file_size=$_FILES['enveloppe']['size'];
+	
+if ($file_size>HELIOS_MAX_UPLOAD_SIZE) {
+	$_SESSION["error"] = "Taille de fichier supérieur à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
+	header("Location: " . WEBSITE_SSL);
+	exit ();
+}
+	
+$submission_date=date("Y-m-d H:i:s");;
+$ht->set("filename", $uploadFile_baseName);
+$ht->set("user_id", $userId);
+$ht->set("file_size",$file_size);
+$ht->set("submission_date",$submission_date);
+$ht->set("sha1",$SHA1);
+
+$myAuthority = new Authority($me->get("authority_id"));
+$siren=$myAuthority->get('siren');
+  
+//ajouter le ext_siret(5 lettre) dans le nouveau siren.Il faut le renommer comme siret, mais ca va influence du côté java,
+// car il récupère le numéro siren pour former le nom de fichier PES_Aller , donc je le garde mais le sens de SIREN est changé.
+$ext_siret=$myAuthority->get('ext_siret');
+$ht->set("siren",$siren.$ext_siret);
+  
+if ($ht->CheckDuplicate()== true) {
+	unlink($uploadfile);
+	Helpers :: returnAndExit(1, "doublon détecté. Ce fichier a déjà été posté.", WEBSITE_SSL . "/modules/helios/index.php");
+}
+
+//change the upload file name to sha1 to allow duplicate name.
+rename($uploadfile,$uploaddir.$SHA1);  
+chmod($uploaddir.$SHA1, 0644);
+
+$R = $ht->save(true);
+
+if (!$R) {
     $_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions.";
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
-      $_SESSION["error"] .= "\nErreur de journalisation.";
+		$_SESSION["error"] .= "\nErreur de journalisation.";
     }
     header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-    echo $_SESSION["error"];
     exit ();
-  }
-  //recuperation de l'id de la transaction
-  $id_transaction = $ht->getId();
+}
+  
+$must_signed = Helpers::getVarFromPost("must_signed",true);
 
-  $htw->set("transaction_id", $id_transaction);
-  $htw->set("status_id", 1);
-  $htw->set("date", date('Y-m-d H:i:s'));
-  $htw->set("message", "Fichier bien reçu par la plate-forme Helios");
-  if (!$htw->save(true)) {
-    $_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
+//recuperation de l'id de la transaction
+$id_transaction = $ht->getId();
+
+$htw->set("transaction_id", $id_transaction);
+if ($must_signed){
+	$htw->set("status_id", 12);
+	$htw->set("message", "Fichier en attente d'être signé");
+} elseif(! $me->checkDroit($module->get("name"),'TT')) {
+	$htw->set("status_id", 13);
+	$htw->set("message", "Fichier en attente d'être télétransmis");
+	
+} else {
+	$htw->set("status_id", 1);
+	$htw->set("message", "Fichier bien reçu par la plate-forme Helios");
+}
+$htw->set("date", date('Y-m-d H:i:s'));
+
+if (!$htw->save(true)) {
+	$_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
       $_SESSION["error"] .= "\nErreur de journalisation.";
     }
     header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
     echo $_SESSION["error"];
     exit ();
-  } else {
-    $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
-      $msg .= "\nErreur de journalisation.";
-    }
-  } 
-  Helpers :: returnAndExit(0,"Téléchargement du fichier réussi.", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
 }
-else
-{
-     Helpers :: returnAndExit(1, "Échec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
+
+$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
+if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+	$msg .= "\nErreur de journalisation.";
 }
+    
+Helpers :: returnAndExit(0,"Téléchargement du fichier réussi.", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);

@@ -150,6 +150,67 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('sae_wsdl')) 
 }
 
 
+if ($currentStatusId == 12 && $me->checkDroit($module->get("name"),'CS') ){
+//TODO : il faut prendre juste une partie du PES et calculer le sha1...	
+
+	$html .= "<h3>Signature du fichier PES</h3>";
+	ob_start();
+	?><div class='action'>
+	<applet codebase = "<?php echo WEBSITE_SSL ?>libersign/"
+			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
+			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
+			name = "appletsignature"
+			width = "500"
+			height = "257" >
+		<param name="hash_count" value="1" />
+			<param name="iddoc_1" value="<?php echo $id?>" />
+			<param name="hash_1" value="<?php echo $trans->get('sha1') ?>" /> 
+			<param name="format_1" value="CMS" />
+		<param name="id_user" value="id=<?php echo $id?>" />
+		<param name="return_mode" value="form" />
+	 </applet>
+	 </div>
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
+	<input type='hidden' name='nb_signature'  value='1'/>
+		<input type='hidden' name='signature_id_1' value='<?php echo $id?>' />
+		<input type='hidden' name='signature_1' id='signature_1' value=''/>
+
+</form>
+<script>
+function injectSignature() {
+	signature = document.applets[0].returnSignature("<?php echo $included_file['id'] ?>");
+	$("#signature_<?php echo $i + 1?>").val(signature);
+	$("#form_sign").submit();
+}
+</script>
+	 
+	<?php 	
+		$html.= ob_get_contents();
+		ob_end_clean();
+}
+
+
+if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'TT') ){
+
+ob_start(); ?>
+<h3>Télétransmission du fichier</h3>
+<p>
+<form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_submit.php' id='form_sign' method='post'>
+	<input type='hidden' name='id'  value='<?php echo $id?>'/>
+	<input class='submit_button' type='submit' value='Télétransmettre'/>
+
+</form>
+</p>
+<?php 	
+		$html.= ob_get_contents();
+		ob_end_clean();
+
+
+
+}
+
 $html .= "</div>\n";
 $doc->addBody($html);
 

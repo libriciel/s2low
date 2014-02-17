@@ -286,7 +286,7 @@ $html .= "</div>\n"; //filtrage aria
 
   $html .= "<div id=\"actions_area\">\n";
   $html .= "<h2>Actions</h2>\n";
-if (!$me->isSuper() && $me->canEdit($module->get('name'))) {
+if (!$me->isSuper() &&  $me->checkDroit($module->get("name"),'CS')) {
   if ($module->getParam("paper") == "on") {
     $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématèrialisé).</p>\n";
   } else {
@@ -328,7 +328,7 @@ if (isset ($fstatus) && is_numeric($fstatus)) {
   if ($fstatus == "10") {
     // Le statut 10 signifie les transactions en cours
     //-1 = il y a des problème, just pour test dans plateform de ovh.
-    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3)";
+    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3,12,13)";
   } else {
     $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) = " . addslashes($fstatus);
   }

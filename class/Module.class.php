@@ -385,7 +385,7 @@ class Module extends DataObject {
       $r = $result->get_all_rows();
     }
     foreach($r as $i => $module){
-    	if ($module['name'] == 'actes'){
+    	if (in_array($module['name'], array('actes','helios'))){
     		$specific_perms = array("CS" => "Créer et signer","TT"=>"Télétransmettre"); 
     	} else {
     		$specific_perms = array();

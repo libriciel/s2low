@@ -96,15 +96,9 @@ foreach ($converted as $kFile => $file){
     }
   }
 } else {
-$elvl = 1;
- $msg = "Aucun fichier soumis";
-  //Helpers::returnAndExit(1, "Aucun fichier soumis.", WEBSITE_SSL . "/modules/actes/actes_batch_add.php");
+	$elvl = 1;
+ 	$msg = "Aucun fichier soumis";
 }
 $alljson[] = array('msg' => $msg, 'elvl' => $elvl, 'id' => $id);
 
-//header('Content-Type: application/json');
-//header('Content-Type: text/html');
-//echo json_encode(array('msg' => $msg, 'errorlevel' => $elvl));
 echo json_encode($alljson);
-
-?>
