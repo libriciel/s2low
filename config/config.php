@@ -45,6 +45,17 @@ define('TIMESTAMPING_CERT', '/etc/tedetis/ssl/tedetis_timestamp_cert.pem');
 define('TIMESTAMPING_PRIV_KEY', '/etc/tedetis/ssl/tedetis_timestamp_priv_key.pem');
 define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/tedetis/ssl/tedetis_timestamp_priv_key.pass');
 
+//Constante pour l'horodatage
+//Chemin vers openssl version > 1.0.0a
+define("OPENSSL_PATH","/Users/eric/Logiciel/openssl-1.0.0l/apps/openssl");
+//WDSL du service d'horodatage
+define("OPENSIGN_WSDL","http://horodatage.services.adullact.org/opensign.wsdl");
+//Autorité de certification qui a signé le certificat de l'horodateur (obligatoire à cause d'une limitation d'openssl)
+define("OPENSIGN_CA",__DIR__."/../data-exemple/root_ca.crt");
+//Certificat de l'horodateur
+define("OPENSIGN_CRT",__DIR__."/../data-exemple/ts.crt");
+//Temps en seconde avant de considérer l'horodateur en timeout
+define("OPENSIGN_TIMEOUT",2);
 
 // Chemin vers les certificats des autorités autorisées pour la signature de documents
 define('AUTHORIZED_SIGN_CA_PATH', '/etc/tedetis/ssl/validca');

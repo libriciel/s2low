@@ -51,7 +51,6 @@
  */
 
 require_once (SITEROOT . "/class/DataObject.class.php");
-require_once (SITEROOT . "/class/Parapheur.class.php");
 require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesBatchFile.class.php");
 
 class ActesBatch extends DataObject {
@@ -454,30 +453,6 @@ class ActesBatch extends DataObject {
               $foundSig = false;
               $sign = "";
               reset($filesDup);
-              while ((list ($key2, $sigFile) = each($filesDup)) && !$foundSig) {
-                // on recherche un fichier de même nom que le fichier courant avec .sig à la fin
-                if (strcmp($sigFile["name"], $filename . ".sig") == 0) {
-                  $foundSig = true;
-
-                  if (is_uploaded_file($sigFile["tmp_name"])) {
-                    // Vérification de la signature
-                    $parapheur = new Parapheur(file_get_contents($file["tmp_name"]));
-                    $ret = $parapheur->verify(file_get_contents($sigFile["tmp_name"]));
-                    
-                    if (!$ret) {
-                      $this->errorMsg .= "La signature numérique du fichier " . $filename . " est incorrecte : " . $parapheur->getLastError() . "\n";
-                      $ret_value = false;
-                    }
-                    elseif (! $sign = file_get_contents($sigFile["tmp_name"])) {
-                      $this->errorMsg .= "Erreur de récupération de la signature du fichier " . $filename . "\n";
-                      $ret_value = false;
-                    }
-                  } else {
-                    $this->errorMsg .= "Envoi de fichier incorrect.";
-                    $ret_value = false;
-                  }
-                }
-              }
             }
 
             if ($ret_value) {

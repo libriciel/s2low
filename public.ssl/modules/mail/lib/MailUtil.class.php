@@ -162,48 +162,8 @@ class MailUtil {
 		return true;
  	}
 
-	/**
- 	 * \brief 	Signe le fichier $file et met le résultat dans $file_signature
- 	 * 			Cette fonction calcule la signature pkcs7 et la détache
- 	 * 			du message smime
- 	 * \param	$file le fichier à signer
- 	 * \param	$file_signature le fichier signature pkcs7
- 	 * \return	true si ok false sinon. $this->errorMsg contient le message d'erreur
- 	 */ 	 	
- 	public function sign($file, $file_signature){
- 		$parapheur = new Parapheur(file_get_contents($file));
- 		$parapheur->setSignerParameter(TEDETIS_CERT_PATH,TEDETIS_KEY_PATH,TEDETIS_KEY_PASS);
- 		$signature = $parapheur->getSignature();
-		if (! $signature ){
-			$this->errorMsg = $parapheur->getLastError();
-			return false;
-		}
-		file_put_contents($file_signature);
- 		return true;
- 	}
- 	
- 	/**
- 	 * \brief 	Signe un fichier $file en PKCS7
- 	 * \param	$file le fichier à signer
- 	 * \param	$file_signature le fichier résultat
- 	 * \param   $headers Les entetes supplémentaire
- 	 * \return	true si ok false sinon. $this->errorMsg contient le message d'erreur
- 	 */ 	 
- 	private function pkcs7_sign($file,$file_signature,$headers){
-		$result = openssl_pkcs7_sign($file, 
- 						$file_signature,
- 						"file://".TEDETIS_CERT_PATH,
- 						array("file://".TEDETIS_KEY_PATH, TEDETIS_KEY_PASS),
- 						$headers,
- 						PKCS7_DETACHED
- 					);
-    	if (! $result){
-    		$this->errorMsg = "Erreur openssl : ".openssl_error_string();
-    		$this->trace->log($this->errorMsg,Trace::$TRACE_ERROR);
-    		return false;
-    	}
-    	return true;
- 	}
+
+ 
  	
  	public function setSubjet($subject){
  		$this->subject = $subject; 		

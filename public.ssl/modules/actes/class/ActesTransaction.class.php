@@ -1,7 +1,6 @@
 <?php
 
 require_once (SITEROOT . "/class/DataObject.class.php");
-require_once (SITEROOT . "/class/Parapheur.class.php");
 
 require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
 
@@ -522,41 +521,6 @@ class ActesTransaction extends DataObject {
     }
 
     return true;
-  }
-
-  /**
-   * \brief Méthode de vérification des signatures des fichiers joints
-   * \return True en cas de succès, false sinon
-   */
-  public function checkSign() {
-    $ret_status = true;
-
-    $files = array ();
-    
-    if (isset($this->files["acte"])){
-    	$files[] = $this->files["acte"];
-    }
-    if (isset ($this->files["attachment"]) && is_array($this->files["attachment"])) {
-      foreach ($this->files["attachment"] as $file) {
-        $files[] = $file;
-      }
-    }
-
-    foreach ($files as $file) {
-    	if (isset ($file["sign"]) && !empty ($file["sign"])) {
-	        $content = file_get_contents($this->rootDir . "/" . $file["name"]);
-	        
-			$parapheur = new Parapheur($content);
-			$ret = $parapheur->verify($file["sign"]);
-	                    
-			if (!$ret) {
-				$ret_status = false;
-				$this->errorMsg .= "<br />Fichier " . basename($file["name"]) . " : " . $parapheur->getLastError();
-			}
-    	}
-	        
-      }
-    return $ret_status;
   }
 
   /**

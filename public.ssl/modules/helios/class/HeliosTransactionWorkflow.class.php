@@ -53,7 +53,6 @@
  */
 
 require_once (SITEROOT . "/class/DataObject.class.php");
-require_once (SITEROOT . "/class/Parapheur.class.php");
 
 class HeliosTransactionWorkflow extends DataObject {
   protected $objectName = "helios_transactions_workflow";

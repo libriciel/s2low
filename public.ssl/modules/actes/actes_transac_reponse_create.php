@@ -155,8 +155,6 @@ if (isset ($actePDFFile) ) {
 }
 
 
-// Fichiers des pièces jointes
-//if (! $batchMode) { // Pas de pièces jointes en mode lot
 if (isset ($acteAttachments)) {
   for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
     if (strlen($acteAttachments["tmp_name"][$i])) {
@@ -187,13 +185,8 @@ if (isset ($acteAttachments)) {
     }
   }
 }
-//}
 
-// Vérification des signatures éventuelles des fichiers
-if (!$trans->checkSign()) {
-  $errorMsg .= "Erreur de vérification des signatures des fichiers : " . $trans->getErrorMsg() . "\n";
-  $fileImportError = true;
-}
+
 
 if ($fileImportError) {
 	sortir($errorMsg,$api);

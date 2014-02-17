@@ -1,7 +1,6 @@
 <?php
 
 require_once (SITEROOT . "/class/DataObject.class.php");
-require_once (SITEROOT . "/class/Parapheur.class.php");
 
 class HeliosRetour extends DataObject {
   protected $objectName = "helios_retour";

@@ -266,11 +266,6 @@ if (isset ($acteAttachments)) {
     }
 }
 
-// Vérification des signatures éventuelles des fichiers
-if (!$trans->checkSign()) {
-  $errorMsg .= "Erreur de vérification des signatures des fichiers : " . $trans->getErrorMsg() . "\n";
-  $fileImportError = true;
-}
 
 if ($fileImportError) {
   Helpers :: returnAndExit(1, $errorMsg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);

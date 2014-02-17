@@ -2,7 +2,7 @@
 
 
 require_once(SITEROOT . "/class/DataObject.class.php");
-require_once(SITEROOT . "/class/Parapheur.class.php");
+require_once(SITEROOT . "/class/OpenSign.class.php");
 
 class Log extends DataObject {
   protected $objectName = "logs";
@@ -113,15 +113,15 @@ class Log extends DataObject {
 	  return false;
 	}
 
-	$parapheur = new Parapheur($data);
-	$signature = $parapheur->getSignature();
+
+	$opensslTSWrapper = new OpensslTSWrapper(OPENSSL_PATH);
+	$soapClientFactory = new SoapClientFactory();	
+	$openSign = new OpenSign($opensslTSWrapper, $soapClientFactory);	
+	$openSign->setConfig(OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT,OPENSIGN_TIMEOUT);
 	
-	if (! $signature){
-		$this->errorMsg = $parapheur->getLastError();
-		return false;
-	}
-	
-	return $signature;
+	$reply = base64_encode($openSign->getTimestampReply($data));
+		
+	return $reply;
   }
 
   /**

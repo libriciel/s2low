@@ -82,13 +82,6 @@ foreach ($xmlTransFiles as $xmlFile) {
 	  $env->deleteArchiveFile();
 	  Helpers::returnAndExit(1, "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 	}
-
-	// Vérification des signatures éventuelles des fichiers
-	if (! $trans->checkSign()) {
-	  $env->purgeFiles();
-	  $env->deleteArchiveFile();
-	  Helpers::returnAndExit(1, "Erreur de vérification des signatures des fichiers : " . $trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
-	}
   }
 
   // En cas de demande de classification, création de la requête dans la table idoine
