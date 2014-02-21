@@ -36,7 +36,7 @@ if (empty($id) ){
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if (! $currentStatusId != 14){
-	$_SESSION["error"] .= "\nLa transaction n'est pas dans le bon état";
+	$_SESSION["error"] = "\nLa transaction n'est pas dans le bon état";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
 }
 
@@ -57,7 +57,7 @@ if (!$htw->save(true)) {
 	exit ();
 }
 
-$msg = "Préparation de la télétransmission Transation n°" . $id . ". Résultat ok.";
+$msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
 	$msg .= "\nErreur de journalisation.";
 }
