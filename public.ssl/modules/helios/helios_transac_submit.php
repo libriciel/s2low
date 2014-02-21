@@ -19,7 +19,7 @@ if (! $me->authenticate()) {
 	exit();
 }
 
-if (! $module->isActive()|| ! $me->checkDroit("actes", "TT")) {
+if (! $module->isActive()|| ! $me->checkDroit("helios", "TT")) {
 	$_SESSION["error"] = "Accès refusé";
 	header("Location: " . WEBSITE_SSL);
 	exit();
@@ -33,6 +33,12 @@ if (empty($id) ){
 	exit ();
 }
 
+
+$currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
+if (! $currentStatusId != 14){
+	$_SESSION["error"] .= "\nLa transaction n'est pas dans le bon état";
+	header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
+}
 
 $htw = new HeliosTransactionWorkflow();
 
@@ -48,7 +54,6 @@ if (!$htw->save(true)) {
 		$_SESSION["error"] .= "\nErreur de journalisation.";
 	}
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-	echo $_SESSION["error"];
 	exit ();
 }
 

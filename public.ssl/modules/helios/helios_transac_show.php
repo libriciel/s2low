@@ -150,7 +150,7 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('sae_wsdl')) 
 }
 
 
-if ($currentStatusId == 12 && $me->checkDroit($module->get("name"),'CS') ){
+if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 //TODO : il faut prendre juste une partie du PES et calculer le sha1...	
 
 	$html .= "<h3>Signature du fichier PES</h3>";
@@ -192,7 +192,7 @@ function injectSignature() {
 }
 
 
-if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'TT') ){
+if ($currentStatusId == 14 && $me->checkDroit($module->get("name"),'TT') ){
 
 ob_start(); ?>
 <h3>Télétransmission du fichier</h3>

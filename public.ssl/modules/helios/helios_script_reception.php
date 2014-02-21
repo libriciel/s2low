@@ -102,10 +102,10 @@ $id_transaction = $ht->getId();
 
 $htw->set("transaction_id", $id_transaction);
 if ($must_signed){
-	$htw->set("status_id", 12);
+	$htw->set("status_id", 13);
 	$htw->set("message", "Fichier en attente d'être signé");
 } elseif(! $me->checkDroit($module->get("name"),'TT')) {
-	$htw->set("status_id", 13);
+	$htw->set("status_id", 14);
 	$htw->set("message", "Fichier en attente d'être télétransmis");
 	
 } else {
