@@ -7,7 +7,7 @@
   function InsertNewFile()  
   {    
     var divElement  = document.createElement("div"); 
-    divElement.innerHTML="<input type='button' value='Delete'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
+    divElement.innerHTML="<input type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
     divElement.innerHTML+="<input type='file'  name='files["+FileNumber+"]' id='file"+FileNumber+"'>";
     document.getElementById("file").appendChild(divElement);
     FileNumber++;

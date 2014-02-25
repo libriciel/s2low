@@ -124,7 +124,7 @@ function checkFormCreateMail() {
     divElement.innerHTML+="<input class='btn btn-warning col-md-1 col-md-offset-1 btn-sm' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
     var parentElement = document.getElementById("file").parentNode.parentNode;
     console.log(parentElement);
-    console.log(parentElement.parentNode);
+    console.log(parentElement.parentNode);  
     console.log(parentElement.nextSibling);
     parentElement.parentNode.insertBefore(divElement, parentElement.nextSibling);
     FileNumber++;

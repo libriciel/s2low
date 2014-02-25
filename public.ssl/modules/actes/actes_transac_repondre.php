@@ -69,20 +69,26 @@ progress_bar.src = "/custom/images/progress_bar.gif";
 function add_attachment_field() {
   field = document.getElementById("attachments_fields");
   newfield=document.createElement("div");
-  html = '     <dl class="actes_files_form">';
-  html += '      <dt>Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)&nbsp;:\\x3C/dt>';
-  html += '       <dd><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/dd>';
+  newfield.className="actes_files_form row";
+  html = '        <div class="form-group">';
+  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
+  html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
+  html += '       \\x3C/div>';
 EOJS;
 
 if (!$batchMode) {
   $js .=<<<EOJS
-	html += '      <dt>Fichier signature numérique pièce jointe n°' + field_nb + ' (optionnel)&nbsp;:\\x3C/dt>';
-  	html += '       <dd><input type="file" id="acte_attachments_sign_' + field_nb + '" name="acte_attachments_sign[]" size="40" maxlength="255" />\\x3C/dd>';
+        html += '     <div class="form-group">';
+	html += '       <label for="acte_attachments_sign' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Fichier signature numérique pièce jointe n°' + field_nb + ' (optionnel)&nbsp;:\\x3C/label>';
+  	html += '       <div class="col-md-3"><input type="file" id="acte_attachments_sign_' + field_nb + '" name="acte_attachments_sign[]" size="40" maxlength="255" />\\x3C/div>';
+        html += '       \\x3C/div>';        
 EOJS;
 }
 
 $js .=<<<EOJS
-html += '    \\x3C/dl>';
+html += '    \\x3C/div>';
+html += '    \\x3C/div>';
+html += '    \\x3C/div>';
 
   newfield.innerHTML = html;
   field.appendChild(newfield);
@@ -162,7 +168,7 @@ $doc->openContainer();
 $doc->openSideBar();
 $doc->buildMenu($me);
 
-$html .= "<div id=\"info_area\">\n";
+$html .= "<div  class=\"bs-callout bs-callout-info\">\n";
 
 $html .= "<h3>Note&nbsp;:</h3>\n";
 $html .= "<p>Pour générer les signatures numériques des fichiers joints, sélectionnez d'abord les fichiers dans le formulaire ci-contre puis utilisez le bouton ci-dessous. Une nouvelle fenêtre s'ouvrira permettant de signer les fichiers.</p>\n";
@@ -170,17 +176,18 @@ $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/applet/index.php\" me
 $html .= "<p><input class=\"submit_button btn btn-default\" id=\"sign_submit_button\" type=\"submit\" value=\"Générer les signatures\" />\n";
 $html .= "</p></form>\n";
 $html .= "</div>\n";
+$doc->addBody($html);
 $doc->closeSideBar();
 $doc->openContent();
 
 // Zone contenu
-$html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
+$html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Réponse à un courrier</h2>\n";
 
 
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
+$html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
 $html .= $doc->getHTMLArrayline("Acte ", 
 	"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId() . "\">"
@@ -189,43 +196,49 @@ $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
 
-$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'";
+$html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'";
 $html .= ", 'acte_pdf_file', 'Fichier PDF contenant la réponse', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 
 $html .= "<input type='hidden' name='id' value='".$related_id."'/>";
 
-$html .= "<div class=\"list_form\">\n";
-$html .= " <dl>\n";
-
 if ($trans->get("type") == 3 || $trans->get("type") == 4){
-$html .= "  <dt>Nature de l'envoi:</dt>\n";
-$html .= "   <dd>" . $doc->getHTMLSelect("type_envoie",$typeReponse[$trans->get("type")], 
-		Helpers :: getFromSession("type_envoie")) . "</dd>\n";
+    
+$html .= "  <div class=\"form-group\">\n";
+$html .= "  <label for=\"type_envoie\" class=\"control-label\"> Nature de l'envoi: </label>\n";
+$html .=  $doc->getHTMLSelect("type_envoie",$typeReponse[$trans->get("type")], 
+		Helpers :: getFromSession("type_envoie")) . "\n";
+$html .= " </div>";
 }
-
-
-$html .= "  <dt>Fichier PDF contenant la réponse &nbsp;:</dt>\n";
-$html .= "   <dd>\n";
-$html .= "     <dl class=\"actes_files_form\">\n";
-$html .= "      <dt>Fichier PDF&nbsp;:</dt>\n";
-$html .= "       <dd><input type=\"file\" id=\"acte_pdf_file\" name=\"acte_pdf_file\" size=\"40\" maxlength=\"255\" /></dd>\n";
-$html .= "      <dt>Fichier signature numérique (optionnel, voir ci-contre)&nbsp;:</dt>\n";
-$html .= "       <dd><input type=\"file\" id=\"acte_pdf_file_sign\" name=\"acte_pdf_file_sign\" size=\"40\" maxlength=\"255\" /></dd>\n";
-$html .= "     </dl>\n";
-$html .= "   </dd>\n";
+$html .= " <div class=\"form-group\">\n";    
+$html .= "   <fieldset>\n";
+$html .= "   <div class=\"row-legend\">\n";
+$html .= "   <legend>Fichier PDF contenant la réponse :</legend></div>\n";
+$html .= "     <div class=\"actes_files_form\">\n";
+$html .= "       <div class=\"form-group\">\n";  
+$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF : </label>\n";
+$html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
+$html .= "       </div>\n";
+$html .= "       <div class=\"form-group\">\n";  
+$html .= "         <label for=\"acte_pdf_file_sign\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier signature numérique (optionnel, voir ci-contre) :</label>\n";
+$html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file_sign\" class=\"control-form\" name=\"acte_pdf_file_sign\" /></div>\n";
+$html .= "       </div>\n";
+$html .= "     </div>\n";
+$html .= "   </fieldset>\n";
+$html .= " </div>\n";
 
 if ($trans->get("type") == 3) {  
-	$html .= "  <dt>Pièces jointes supplémentaires&nbsp;:&nbsp;<a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">[&nbsp;Ajouter un champ&nbsp;]</a></dt>\n";
-	$html .= "   <dd id=\"attachments_fields\"></dd>\n";  
+$html .= "<div class=\"form-group\">\n";    
+$html .= "  <fieldset>\n";
+$html .= "   <div class=\"row-legend\">\n";
+$html .= "  <legend>Pièces jointes supplémentaires : <a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
+$html .= "   <div id=\"attachments_fields\"></div>\n";
+$html .= " </fieldset>\n";  
+$html .= "</div>\n";
 }
 
 
-$html .= "</dl>\n";
-
-
-$html .= "<div id=\"form_progress\"><input class=\"btn btn-default\" type=\"submit\" value=\"Créer la réponse\" /></div>\n";
-$html .= "</div>\n";
+$html .= "<div id=\"form_progress\" class=\"form-group\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\">Créer la réponse</button></div>\n";
 $html .= "</form>\n";
 $html .= "</div>\n";
 

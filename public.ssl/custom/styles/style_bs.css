@@ -192,7 +192,7 @@ span.form-control {
 }
 
 /*
----------------------------------------------
+-----------------------------------------------
  Template : window add/edit 
 -----------------------------------------------
 */
@@ -201,15 +201,15 @@ span.form-control {
 }
 
 /*
----------------------------------------------
- Add transaction form page
------------------------------------------------
+------------------------------------------------
+ Add transaction and Reply transation form pages
+------------------------------------------------
 */
-#add-transac-content .row-legend {
+#add-transac-content .row-legend, #reply-transac-content .row-legend {
     background-color: #FFF;
 }
 
-#add-transac-content legend {
+#add-transac-content legend, #reply-transac-content legend {
     font-size: 14px;
     font-weight: bold;
     padding-top: 10px;
@@ -219,7 +219,7 @@ span.form-control {
     border: none;
 }
 
-#add-transac-content fieldset {
+#add-transac-content fieldset, #reply-transac-content fieldset {
     background-color: #FCFCDF;
 }
 
