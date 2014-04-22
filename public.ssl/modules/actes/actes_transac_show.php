@@ -74,16 +74,17 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : visualisation d'une transaction");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-
-$html .= "<div id=\"content\">\n";
-
-$html .= "<p style='text-align:center'><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html = "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 
 $html .= "<h2>Visualisation d'une transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
+$html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
 if ($trans->get("type_reponse")){
 	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
@@ -186,26 +187,30 @@ if ($trans->get("type") == 6 ||
 	$archiveDeleted = true;
 }
 // Fichiers contenus dans la transaction
-$html .= "<h3>Fichiers contenus dans l'archive transmise (";
+$html .= "<h2>Fichiers contenus dans l'archive transmise (";
 
 $archiveName = htmlspecialchars(basename($envelope->get("file_path")));
 $html .= ($archiveDeleted) ? $archiveName : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
 
-$html .= ")</h3>\n";
+$html .= ")</h2>\n";
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"file_list\">\n";
-$html .= " <tr>\n";
-$html .= "  <th>Fichier</th>\n";
-$html .= "  <th>Type de fichier</th>\n";
-$html .= "  <th>Taille du fichier</th>\n";
-$html .= " </tr>\n";
-
 $files = $trans->fetchFilesList();
 
 if (is_array($files)) {
+$html .= "<table class=\"table table-bordered table-striped\">\n";
+$html .= " <thead>\n";
+$html .= " <tr>\n";
+$html .= "  <th id=\"file\">Fichier</th>\n";
+$html .= "  <th id=\"type\">Type de fichier</th>\n";
+$html .= "  <th id=\"size\">Taille du fichier</th>\n";
+$html .= " </tr>\n";
+$html .= " </thead>\n";
+$html .= " <tbody>\n";
+
+
   foreach ($files as $file) {  	
     $html .= " <tr>\n";
-    $html .= "  <td class=\"long_field\">";
+    $html .= "  <td headers=\"file\" class=\"long_field\">";
 
     $html .= "<dl>\n";
 
@@ -254,30 +259,33 @@ if (is_array($files)) {
     
     
     $html .= "</td>\n";
-    $html .= "  <td>" . $file["mimetype"] . "</td>\n";
-    $html .= "  <td>" . $file["size"] . " octets</td>\n";
+    $html .= "  <td headers=\"type\" >" . $file["mimetype"] . "</td>\n";
+    $html .= "  <td headers=\"size\" >" . $file["size"] . " octets</td>\n";
     $html .= " </tr>\n";
+
   }
+      $html .= "</tbody>\n";
+      $html .= "</table>\n";
 } else {
-  $html .= " <tr>\n";
-  $html .= "  <td colspan=\"3\">Pas de fichier trouvé</td>";
-  $html .= " </tr>\n";
+  $html .= "  <p>Pas de fichier trouvé</p>";
 }
 
-$html .= "</table>\n";
 $html .= "</div>\n";
 // Affichage du Workflow
 
-$html .= "<h3>Cycle de vie de la transaction</h3>\n";
+$html .= "<h2>Cycle de vie de la transaction</h2>\n";
 
 if (count($workflow) > 0) {
   $html .= "<div class=\"data_table\">\n";
-  $html .= "<table class=\"workflow_list\">\n";
+  $html .= "<table class=\"table-striped table table-bordered\">\n";
+  $html .= " <thead>\n";
   $html .= " <tr>\n";
-  $html .= "  <th>État</th>\n";
-  $html .= "  <th>Date</th>\n";
-  $html .= "  <th>Message</th>\n";
+  $html .= "  <th id=\"status\">État</th>\n";
+  $html .= "  <th id=\"date\">Date</th>\n";
+  $html .= "  <th id=\"message\">Message</th>\n";
   $html .= " </tr>\n";
+  $html .= " </thead>\n";
+  $html .= " <tbody>\n";
 
      // modifié par TH 18-04-2008 ajouter un petit icon de pdf lien ver le ficher .pdf qund on est bien sur 
     // etat="aquitement reçu.
@@ -298,18 +306,18 @@ if (count($workflow) > 0) {
    if (in_array($stage["status_id"],array(4,11) ))
     {
     	
-    	$html .= "  <td>" . $status_list[$stage["status_id"]].$create_pdf_html."</td>\n";
+    	$html .= "  <td headers=\"status\">" . $status_list[$stage["status_id"]].$create_pdf_html."</td>\n";
     }
     else
-    	$html .= "  <td>" . $status_list[$stage["status_id"]] . "</td>\n";
+    	$html .= "  <td headers=\"status\">" . $status_list[$stage["status_id"]] . "</td>\n";
     	
 	//---------end
  
-    $html .= "  <td>" . Helpers :: getDateFromBDDDate($stage["date"], true) . "</td>\n";
-    $html .= "  <td class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
+    $html .= "  <td headers=\"date\">" . Helpers :: getDateFromBDDDate($stage["date"], true) . "</td>\n";
+    $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
     $html .= " </tr>\n";
   }
-
+  $html .= " </tbody>\n";
   $html .= "</table>\n";
   $html .= "</div>\n";
 } else {
@@ -318,23 +326,27 @@ if (count($workflow) > 0) {
 
 $courrier = $trans->getCourrierInfo();
 if (count($courrier) != 0){
-	$html .= "<h3>Document reçu relatif à l'acte</h3>\n";
+	$html .= "<h2>Document reçu relatif à l'acte</h2>\n";
 	 $html .= "<div class=\"data_table\">\n";
-  $html .= "<table class=\"workflow_list\">\n";
+  $html .= "<table class=\"table data-table table-striped table-bordered\">\n";
+  $html .= " <thead>\n";
   $html .= " <tr>\n";
-  $html .= "  <th>Type</th>\n";
-  $html .= "  <th>sens</th>\n";
-  $html .= "  <th>action</th>\n";
+  $html .= "  <th id=\"type\">Type</th>\n";
+  $html .= "  <th id=\"sens\">sens</th>\n";
+  $html .= "  <th id=\"actions\">action</th>\n";
   $html .= " </tr>\n";
+  $html .= " </thead>\n";
+  $html .= " <tbody>\n";
 	foreach ($courrier as $id=>$info) {
 		  $html .= " <tr>\n";
-  		$html .= "  <td>".$transactionTypes[$info["type"]]."</td>\n";
-  		$html .= "  <td>".$info["sens"]."</td>\n";
-  		$html .= "  <td>
+  		$html .= "  <td headers=\"type\">".$transactionTypes[$info["type"]]."</td>\n";
+  		$html .= "  <td headers=\"sens\">".$info["sens"]."</td>\n";
+  		$html .= "  <td headers=\"actions\">
   		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" .$id . "\"><img alt=\"pdf\" src=\"../../custom/images/erreur.png\"> </a></td>\n";
   		$html .= " </tr>\n";
 	}
 	
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
   $html .= "</div>\n";
 	
@@ -360,25 +372,25 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
     $broadcast_email = explode(",", $broadcast_email);
 
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_notify.php\" method=\"post\">\n";
-    $actionHtml .= "<p><input type=\"submit\" class=\"submit_button\" value=\"Notifier la transaction\" /><br/>\n";
-    $actionHtml .= "      <label>Emission des documents sources : <input type=\"checkbox\" class=\"checkbox\" name=\"send_sources\" checked='checked' /></label><br/>\n";
+    $actionHtml .= "<form class=\"form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_notify.php\" method=\"post\">\n";
+    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Notifier la transaction\" />\n";
+    $actionHtml .= "<div class=\"form-group\">\n<label class=\"control-label\">Emission des documents sources : </label><input type=\"checkbox\" class=\"inline-checkbox\" name=\"send_sources\" checked='checked' />\n</div>\n";
 
 	foreach ($defaultbroadcast_email as $email) {
     	$checked = 'checked="checked" disabled="disabled"';
     	if ($email != "" && $email != NULL)
-        	$actionHtml .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+        	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-offset-1 control-label\" for=\"$email\"><input id=\"$email\" type=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</label></div>\n";
 	}
 
     foreach ($broadcast_email as $email) {
         $checked = '';
       if ($email != "" && $email != NULL)
-        $actionHtml .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-offset-1 control-label\" for=\"$email\"><input type=\"checkbox\"  name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</label></div>\n";
     }
 
     
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-    $actionHtml .= "</p></form>\n";
+    $actionHtml .= "</form>\n";
     $actionHtml .= "</div>\n";
   }
 }
@@ -392,21 +404,21 @@ if (!$trans->hasPendingCancelTrans()) {
         if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
 		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
-		$actionHtml .= "<p>Acte validé par le ministère&nbsp;:&nbsp;";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
-		$actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Validée&nbsp;»\" />\n";
-		$actionHtml .= "</p></form>\n";
+		$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état « Validée »\" />\n";
+		$actionHtml .= "</div>\n</form>\n";
 		$actionHtml .= "</div>\n";
 	}//fin if verfiie canValidate
   
         $actionHtml .= "<div class=\"action\">\n";
         $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
-        $actionHtml .= "<p>Acte refusé par le ministère&nbsp;:&nbsp;";
+        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
-        $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
-        $actionHtml .= "</p></form>\n";
+        $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
+        $actionHtml .= "</div>\n</form>\n";
         $actionHtml .= "</div>\n";
     }//fin if qui verifie type == 1 et status == 4
 
@@ -418,10 +430,10 @@ if (!$trans->hasPendingCancelTrans()) {
     if ($trans->get("type") == 1 && in_array($transStatus,array(4,5,14)) && $trans->canValidate() ) {
 	  $actionHtml .= "<div class=\"action\">\n";
           $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
-          $actionHtml .= "<p>Archivage SEDA&nbsp;:&nbsp;";
+          $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
           $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-          $actionHtml .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
-          $actionHtml .= "</p></form>\n";
+          $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+          $actionHtml .= "</div>\n</form>\n";
   
          
           $actionHtml .= "</div>\n";
@@ -438,10 +450,10 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
       $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode «&nbsp;papier&nbsp;» actif. Pas d'annulation possible.</label>";
     } else {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n";
-      $actionHtml .= "<p>Annulation&nbsp;:&nbsp;";
+      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"bouton-danger\" />\n";
-      $actionHtml .= "</p></form>\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"btn btn-danger\" />\n";
+      $actionHtml .= "</div></form>\n";
     }
   } else {
     $actionHtml .= "Une demande d'annulation est en cours pour cet acte.";
@@ -453,10 +465,10 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
 
 if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
-      $actionHtml .= "<p>Répondre &nbsp;:&nbsp;";
+      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"submit_button\" />\n";
-      $actionHtml .= "</p></form>\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"btn btn-primary\" />\n";
+      $actionHtml .= "</div></form>\n";
 }
 
 if ($transStatus == 17 && $me->checkDroit("actes", "TT")){
@@ -470,21 +482,21 @@ if ($transStatus == 17 && $me->checkDroit("actes", "TT")){
 
 if ($transStatus > 3) {
   $actionHtml .= "<div class=\"action\">\n";
-  $actionHtml .= "Horodatage : <a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
-  $actionHtml .= "</div>\n";
+  $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=a&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
+  $actionHtml .= "</div>\n</div>\n";
 }
 
 if ($me->isSuper()) {
        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera héradiqué DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
-      $actionHtml .= "<p>Effacer de la base de donnée (TRES DANGEREUX)&nbsp;:&nbsp;";
+      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"bouton-danger\" />\n";
-      $actionHtml .= "</p></form>\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+      $actionHtml .= "</div></form>\n";
 }
 
 
 if (isset($actionHtml)) {
-  $html .= "<h3>Actions</h3>\n";
+  $html .= "<h2>Actions</h2>\n";
   $html .= $actionHtml;
 }
 
@@ -542,6 +554,8 @@ function injectSignature() {
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContainer();
 
 $doc->buildFooter();
 

@@ -58,9 +58,9 @@
   	 public function DisplayHead()
   	 {
 	    $this->includeErrors();
-	
 	    if ($this->template) {
 	      require_once(HTML_TEMPLATE_PATH .'/'. $this->template);
+
 	    } else {
 	      echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
 	      echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";
@@ -73,8 +73,12 @@
 	      echo $this->body . "\n";
 	     
 	    }
-    }
-
+        }
+        public function closeDiv() 
+        {
+            echo "</div>\n";
+        }
+                
   	 public function DisplayFoot()
   	 {
   	 	 $this->buildFooter(true);

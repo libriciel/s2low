@@ -12,7 +12,7 @@ $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 
 ob_start();
 ?>
-<div id="content">
+<div class="col-xs-12 col-sm-9">
 <h2>Outils de test</h2>
 <h3>Génération</h3>
 <a href='enveloppe_generate.php'>Générer une enveloppe de test</a>

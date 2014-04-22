@@ -12,8 +12,10 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Utilitaires module ACTES");
 
-
+$doc->openContainer();
 $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->closeSideBar();
+$doc->openContent();
 
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Utilitaires - ACTES</h1>\n";
@@ -35,6 +37,9 @@ ob_end_clean();
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 $doc->display();

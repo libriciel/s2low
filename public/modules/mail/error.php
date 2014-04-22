@@ -8,17 +8,19 @@ require_once (MAIL_SITEROOT."/lib/MailLayout.class.php");
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
-
-
-
 $doc->DisplayHead();
 ?>
 
-<div id="content">
-  <h1>Mail - Système de mail sécurisé</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Mail - Système de mail sécurisé</h1>
 
-<p>Problème d'affichage du mail.</p>
-<p>Message d'erreur:</p>
-<p><?php echo $_SESSION['last_error']?></p>
+            <div class="alert alert-danger">Problème d'affichage du mail.<br/>
+                <strong><?php echo $_SESSION['last_error']?></strong>
+            </div>
+        </div>
+    </div>
+</div>
 <?php 
 $doc->DisplayFoot();

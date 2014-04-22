@@ -27,32 +27,40 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
 }
 
 $doc = new HTMLLayout();
-
-$doc->setTitle("Gestion des fenêtres module ACTES");
-
-$doc->buildMenu($me);
-
-$html = "<div id=\"content\">\n";
-$html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php\" class=\"bouton\">Ajouter une fenêtre</a></center>\n";
-$html .= "<h2>Liste des fenêtres existantes</h2>\n";
-
 $win = new ActesTransmissionWindow();
 $windows = $win->getWindowsList();
 
+$doc->setTitle("Gestion des fenêtres module ACTES");
+
+$doc->openContainer();
+$doc->openSideBar();
+$doc->buildMenu($me);
+$doc->buildPager($win);
+$doc->closeSideBar();
+$doc->openContent();
+
+
+$html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
+$html .= "<h2>Actions</h2>\n";
+$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n";
+$html .= "<h2>Liste des fenêtres existantes</h2>\n";
+
 if (count($windows) > 0) {
-  $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+  $html .= "<table class=\"data-table table table-striped\" summary=\"\">";
+  $html .= "<thead>\n";
   $html .= "<tr>\n";
-  $html .= " <th class=\"data\">Numéro</th>\n";
-  $html .= " <th class=\"data\">Début</th>\n";
-  $html .= " <th class=\"data\">Fin</th>\n";
-  $html .= " <th class=\"data\">Débit horaire</th>\n";
+  $html .= " <th id=\"number\">Numéro</th>\n";
+  $html .= " <th id=\"start-date\">Début</th>\n";
+  $html .= " <th id=\"end-date\">Fin</th>\n";
+  $html .= " <th id=\"rate\">Débit horaire</th>\n";
   $html .= " <th class=\"data\">Actions</th>\n";
   $html .= "</tr>\n";
+  $html .= "</thead>\n";
+  $html .= "</tbody>\n";
   $i = 0;
 
   foreach ($windows as $window) {
-	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
+	$html .= "<tr>\n";
 	$html .= " <td>" . $window["id"] . "</td>\n";
 	$html .= " <td>" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
 	$html .= " <td>" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
@@ -62,20 +70,18 @@ if (count($windows) > 0) {
 
 	$i = ($i + 1) % 2;
   }
-
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
   $html .= "Pas de fenêtre de transmission définie.";
 }
 
-$html .= "</div>\n";
-
-$doc->buildPager($win);
 
 $doc->addBody($html);
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
-
 $doc->display();
 
 ?>

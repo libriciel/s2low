@@ -81,9 +81,13 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des utilisateurs");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->buildPager($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des utilisateurs";
 
 if ($me->isAuthorityAdmin()) {
@@ -94,26 +98,26 @@ if ($me->isAuthorityAdmin()) {
 }
 
 $html .= "</h1>\n";
-$html .= "<div id=\"filtering_area\">\n";
+$html .= "<div id=\"actions-area\">\n";
+$html .= "<h2>Actions</h2>";
+$html .= "<a href=\"admin_user_edit.php\" class=\"btn btn-primary\">Ajouter un utilisateur</a>\n";
+$html .= "</div>\n";
+$html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
-$html .= "<form action=\"admin_users.php\" method=\"get\">\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table>\n";
-$html .= "<tr>\n";
-$html .= "<td class=\"title\">Le rôle est&nbsp;:</td>\n";
-$html .= "<td class=\"value\">" . $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) . "</td>\n";
-$html .= "<td class=\"title\">Le nom contient&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
+$html .= "<form action=\"admin_users.php\" method=\"get\" class=\"form-horizontal\"> \n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label for=\"role\" class=\"col-md-3 control-label\">Le rôle est</label>\n";
+$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) . "</div>\n";
+$html .= "<label for=\"name\" class=\"col-md-3 control-label\">Le nom contient</label>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"name\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fname) > 0) {
   $html .= " value=\"" . htmlspecialchars($fname) . "\"";
 }
 
-$html .= " /></td>\n";
-$html .= "</tr>\n";
-$html .= "<tr>\n";
+$html .= " /></div>\n";
+$html .= "</div>\n";
 
-$colspan = 4;
 if ($me->isGroupAdminOrSuper()) {
   if ($me->isGroupAdmin()) {
 	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
@@ -121,55 +125,58 @@ if ($me->isGroupAdminOrSuper()) {
   } else {
 	$cond = " ORDER BY authorities.name ASC";
   }
-
-  $html .= "<td class=\"title\">Collectivité&nbsp;:</td>\n";
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</td>\n";
+  $html .= "<div class=\"form-group\">\n";
+  $html .= "<label for=\"authority\" class=\"col-md-3 control-label\">Collectivité</label>\n";
+  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</div>\n";
+  $html .= "</div>\n";
 }
 
 if ($me->isSuper()) {
-  $html .= "<td class=\"title\">Groupe&nbsp;:</td>\n";
-  $html .= "<td class=\"value\">" . $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) . "</td>\n";
-  $html .= "</tr>\n";
-  $html .= "<tr>\n";
+  $html .= "<div class=\"form-group\">\n";
+  $html .= "<label for=\"group\" class=\"col-md-3 control-label\">Groupe</label>\n";
+  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) . "</div>\n";
+  $html .= "</div>\n";
 }
-
-$html .= "<td colspan=\"" . $colspan . "\"><input class=\"submit_button\" type=\"submit\" value=\"Filtrer\" /></td>\n";
-$html .= "</tr>\n";
-$html .= "</table>\n";
+$html .= "<div class=\"form-group\">\n";
+$html .= "<button class=\"btn btn-default col-md-offset-3 col-md-3\" type=\"submit\">Filtrer</button>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";
-$html .= "</div><br />\n";
-$html .= "<center><a href=\"admin_user_edit.php\" class=\"bouton\">Ajouter un utilisateur</a></center>\n";
+$html .= "</div>\n";
 $html .= "<h2>Liste des utilisateurs</h2>\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+$html .= "<div id=\"user-list\">\n";
+$html .= "<table class=\"data-table table table-striped\" summary=\"\">";
+$html .= "<thead>\n";
 $html .= "<tr>\n";
-$html .= " <th class=\"data\">Nom</th>\n";
-$html .= " <th class=\"data\">Adresse électronique</th>\n";
-$html .= " <th class=\"data\">R&ocirc;le</th>\n";
-$html .= " <th class=\"data\">Etat</th>\n";
-$html .= " <th class=\"data\">Collectivit&eacute;</th>\n";
-$html .= " <th class=\"data\">Actions</th>\n";
+$html .= " <th id=\"name\">Nom</th>\n";
+$html .= " <th id=\"email\">Adresse électronique</th>\n";
+$html .= " <th id=\"role\">R&ocirc;le</th>\n";
+$html .= " <th id=\"status\">Etat</th>\n";
+$html .= " <th id=\"authority\">Collectivit&eacute;</th>\n";
+$html .= " <th id=\"actions\">Actions</th>\n";
 $html .= "</tr>\n";
+$html .= "</thead>\n";
+$html .= "<tbody>\n";
 
 foreach ($users as $i => $user) {
-  $html .= "<tr class=\"alternate" . ($i % 2 +1) . "\">\n";
-  $html .= " <td>" . $user["name"] . " " . $user["givenname"] . "</td>\n";
-  $html .= " <td><a href=\"mailto:" . $user["email"] . "\">" . $user["email"] . "</a></td>\n";
-  $html .= " <td>" . $rolesList[$user["role"]] . "</td>\n";
-  $html .= " <td>" . $statusList[$user["status"]] . "</td>\n";
-  $html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user["authority_id"] . "\">" . $user["authority_name"] . "</a></td>\n";
-  $html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $user["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+  $html .= "<tr>\n";
+  $html .= " <td headers=\"name\">" . $user["name"] . " " . $user["givenname"] . "</td>\n";
+  $html .= " <td headers=\"email\"><a href=\"mailto:" . $user["email"] . "\">" . $user["email"] . "</a></td>\n";
+  $html .= " <td headers=\"role\">" . $rolesList[$user["role"]] . "</td>\n";
+  $html .= " <td headers=\"status\">" . $statusList[$user["status"]] . "</td>\n";
+  $html .= " <td headers=\"authority\"><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user["authority_id"] . "\">" . $user["authority_name"] . "</a></td>\n";
+  $html .= " <td headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $user["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
   $html .= "</tr>\n";
 }
 
+$html .= "</tbody>\n";
 $html .= "</table>\n";
 $html .= "</div>\n";
-$html .= "</div>\n";
 
-$doc->buildPager($me);
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

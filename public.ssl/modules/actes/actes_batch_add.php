@@ -81,24 +81,28 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : Traitement par lots module actes");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 /*
  * Modifications : Stéphane Sampaio
  */
 //la derniere ligne permet d ajouter la feuille css du plugin d upload jquery
-$css = "
+/*$css = "
     <link rel=\"stylesheet\" href=\"/javascript/jfu/css/bootstrap.min.css\">\n
-    <link rel=\"stylesheet\" href=\"/javascript/jfu/css/style.css\">\n
     <link rel=\"stylesheet\" href=\"/javascript/jfu/css/bootstrap-responsive.min.css\">\n
     <!--[if lt IE 7]><link rel=\"stylesheet\" href=\"/javascript/jfu/css/bootstrap-ie6.min.css\"><![endif]-->\n
     <link rel=\"stylesheet\" href=\"/javascript/jfu/css/bootstrap-image-gallery.min.css\">\n
     <link rel=\"stylesheet\" href=\"/javascript/jfu/css/jquery.fileupload-ui.css\">\n
-";
+";*/
 
 
 
 
+$css = '';
 $js = '';
 
 /*
@@ -136,20 +140,14 @@ $js .= "
 
 ";
 
-
-
-
-
 $doc->addHeader($css . $js);
-
 
 /*
  * Modifications : Stéphane Sampaio
  */
 //Construction du formulaire du plugin d upload jquery
 
-$html = "<div id=\"content\">\n";
-$html .= "<h1>ACTES - Traitement par lots</h1>\n";
+$html = "<h1>ACTES - Traitement par lots</h1>\n";
 $html .= "<h2>Cr&eacute;ation d'un lot</h1>\n";
 
 $html .= " <div class='noMultipleSelect'>" . ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE . "</div>\n";
@@ -160,22 +158,28 @@ $html .= " <div class=\"jfu_controls\">\n";
  * Modifications : Stéphane Sampaio
  */
 
-$html .= "<form id=\"fileupload\" action=\"actes_batch_create.php\" method=\"POST\" enctype=\"multipart/form-data\">\n";
+$html .= "<form class=\"form form-horizontal\" id=\"fileupload\" action=\"actes_batch_create.php\" method=\"POST\" enctype=\"multipart/form-data\">\n";
 
 //ici on reprend les champs necessaires pour l identification du lot
 $html .= "<input id=\"jfu_user_id\" type=\"hidden\" name=\"user_id\" value=\"" . $me->getId() . "\"/>\n
-	<dl>\n
-		<dt>Intitul&eacute; du lot : </dt>\n
-		<dd><input id=\"jfu_intitule\" type=\"text\" name=\"intitule\" /></dd>\n
-		<dt>Pr&eacute;fixe des num&eacute;ros internes : </dt>\n
-		<dd><input id=\"jfu_num_prefix\" type=\"text\" name=\"prefixe\" maxlength=\"12\" /></dd>\n
-	</dl>\n
+	<div class=\"form-group\">\n
+            <label for=\"jfu_intitule\" class=\"col-md-4 label-form\">Intitul&eacute; du lot : </label>\n
+            <div class=\"col-md-4\">
+		<input id=\"jfu_intitule\" class=\"form-control\" type=\"text\" name=\"intitule\" />\n
+            </div>\n
+        </div>\n
+	<div class=\"form-group\">\n        
+            <label for=\"jfu_num_prefix\" class=\"col-md-4 label-form\">Pr&eacute;fixe des num&eacute;ros internes : </label>\n
+            <div class=\"col-md-4\">
+                <input id=\"jfu_num_prefix\" class=\"form-control\" type=\"text\" name=\"prefixe\" maxlength=\"12\" />\n
+            </div>\n
+        </div>\n
 ";
 
 //ceci est le formulaire de base du plugin
 $html .= "<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->\n
-        <div class=\"row fileupload-buttonbar\">\n
-          <div class=\"span7\">\n
+        <div class=\"form-group\">\n
+          <div class=\"fileupload-buttonbar\">\n
             <!-- The fileinput-button span is used to style the file input field as button -->\n
             <span class=\"btn btn-success fileinput-button\">\n
               <i class=\"icon-plus icon-white\"></i>\n
@@ -212,11 +216,9 @@ $html .= "</div>\n
         </div>\n
         <!-- The loading indicator is shown during file processing -->\n
         <div class=\"fileupload-loading\"></div>\n
-        <br>\n
         <!-- The table listing the files available for upload/download -->\n
         <table class=\"table table-striped\"><tbody class=\"files\" data-toggle=\"modal-gallery\" data-target=\"#modal-gallery\"></tbody></table>\n
       </form>\n
-\n
     </div>\n";
 
 //ici commence la liste des fichiers selectionnes
@@ -236,7 +238,7 @@ $html .= "<div class=\"jfu_fileList\">\n
             <i class=\"icon-play icon-white\"></i>\n
             <span>Slideshow</span>\n
           </a>\n
-          <a class=\"btn btn-info modal-prev\">\n
+          <a class=\"btn btn-primary modal-prev\">\n
             <i class=\"icon-arrow-left icon-white\"></i>\n
             <span>Previous</span>\n
           </a>\n
@@ -367,7 +369,7 @@ $html .= "var test = $(this).val().match(/[^A-Z0-9_]*/g);
 $html .="verifMultiUpload();\n";
 
 //ici on masque par defaut le bouton d envoi. Il sera afficher si aucun fichier invalide n est present dans la liste
-$html .="$('.fileupload-buttonbar .start').css('display', 'none');
+$html .="$('.start').css('display', 'none');
     </script>\n
   ";
 
@@ -411,6 +413,10 @@ $html .= "</div>";
 //$html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+
+$doc->closeContainer();
 
 $doc->buildFooter();
 

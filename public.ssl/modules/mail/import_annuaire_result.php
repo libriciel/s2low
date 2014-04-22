@@ -14,10 +14,15 @@ if (isset($_SESSION['last_annuaire'])) {
 }
 
 require_once ("lib/MailLayout.class.php");
-$doc = new MailLayout();
+$doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->disableError(); 
 $doc->setTitle("Gestion du carnet d'adresse");
+
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 $doc->DisplayHead();
 
@@ -43,31 +48,29 @@ function affiche20Premier($texte,$tab){
 }
 ?>
 
-<div id="content">
-<?php $doc->afficheErrors(); ?>
- <h1>Carnet d'adresse</h1>
-<?php if(! empty($annuaire)) : ?>
+        <?php $doc->afficheErrors(); ?>
+        <h1>Carnet d'adresse</h1>
+        <h2>Actions</h2>
+        <div id="actions_area"> 
+            <a href="index.php?command=annuaire" class="btn btn-primary">Liste des emails</a>
+	</div>
+        <?php if(! empty($annuaire)) : ?>
 	<h2>Résultat de l'import</h2>
 	<?php affiche20Premier("Nombre de nouvelle adresse email enregistré",$tabOK) ?>
  	<?php affiche20Premier("Nombre d'adresse email déjà dans la base",$tabAlreadyExists) ?>
 	<?php affiche20Premier("Nombre de ligne du fichier en erreur",$tabError) ?>		
-<?php endif;?>
+        <?php endif;?>
 
 	<h2>Importer un fichier</h2>
 	
 	<div class="data_table">
-	
-	
-		<form action="import_annuaire.php" method="post" enctype="multipart/form-data" >
-			<input type="file" name="carnet" />
-			<input type='submit' value="envoyer"/>
-		</form>
-		 
+            <form action="import_annuaire.php" method="post" enctype="multipart/form-data" >
+                <input type="file" name="carnet" />
+                <input type='submit' value="envoyer" class="btn btn-default"/>
+            </form>
 	</div>
-	<br/><br/><br/>
-	 <div id="actions_area"> 
-		<a href="index.php?command=annuaire" class="bouton">Liste des emails</a>
-	</div>
-</div>
 <?php 
+$doc->closeContent(true);	
+$doc->closeContainer(true);
+
 $doc->DisplayFoot();	

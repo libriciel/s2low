@@ -50,18 +50,38 @@ $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascr
 
 $doc->setTitle("Tedetis : Helios - Import d'une enveloppe");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html .= "<div id=\"content\">\n";
-$html .= "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></center>\n";
+$html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'un fichier</h2>\n";
-$html .= "<form method=\"POST\" enctype=\"multipart/form-data\" ";
+$html .= "<form class=\"form-horizontal import-file-form\" method=\"POST\" enctype=\"multipart/form-data\" ";
 $html .= " action=\"" . WEBSITE_SSL . "/modules/helios/helios_script_reception.php\" > ";
-$html .= "<table  style='text-align:right''>";
-$html .= "<tr><td>Fichier XML : </td><td><input type=\"FILE\" name=\"enveloppe\"/></td></tr>";
-$html .= "<tr><td>Signer le fichier PES avant de le télétransmettre : </td><td style='text-align:left'><input type=\"checkbox\"  name=\"must_signed\" /></td></tr>\n";
-$html .= "<tr><td colspan='2' style='text-align:center'><input class=\"submit_button\" type=\"submit\" value=\" Importer un fichier\" ></td></tr>";
+
+$html .= "<div class=\"form-group\">";
+$html .= "<label for=\"enveloppe\" class=\"col-md-2 control-label\">Fichier XML</label>\n";
+$html .= "<div class=\"col-md-6\">";
+$html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
+$html .= "</div>\n";
+$html .= "</div>\n";
+
+
+$html .= "<div class=\"form-group\">";
+$html .= "<label for=\"must_signed\" class=\"col-md-2 control-label\">Signer le fichier PES avant de le télétransmettre</label>\n";
+$html .= "<div class=\"col-md-6\">";
+$html .= "<input type=\"checkbox\"  name=\"must_signed\" />";
+$html .= "</div>\n";
+$html .= "</div>\n";
+
+
+
+$html .= "<div class=\"form-group\"><div class=\"col-md-2\"><button class=\"btn btn-primary\" type=\"submit\" value=\"\" />Importer le fichier</button></div></div>\n";
+$html .= "</form>\n";
+
 
 $html .= "</table>";
 $html .= "</form>";
@@ -69,6 +89,9 @@ $html .= "</form>";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+$doc->closeContent();
+$doc->closeContainer();
+
 $doc->buildFooter();
 $doc->display();
 

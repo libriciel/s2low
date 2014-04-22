@@ -76,6 +76,63 @@ class HTMLLayout extends Layout {
   public function disableError(){
   	$this->errorDisabled = true;
   }
+
+  public function openContainer($displayInline = false) {
+      $html = "        <div class=\"container\">\n";
+      $html .= "            <div class=\"row\">\n";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }
+    
+  public function closeContainer($displayInline = false) {
+      $html = "            </div><!-- <div class=\"row\" -->\n";
+      $html .= "        </div><!-- <div class=\"container\" -->\n";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }
+  
+  public function openSideBar($displayInline = false) {
+      $html = "                <div id=\"sidebar\" class=\"col-md-3\" role=\"navigation\">\n";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }
+
+  public function closeSideBar($displayInline = false) {
+      $html = "                </div><!-- <div id=\"sidebar\" -->\n";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }  
+  
+  public function openContent($displayInline = false) {
+      $html = "                <div id=\"content\" class=\"col-md-9\" role=\"main\">\n";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }
+
+  public function closeContent($displayInline = false) {
+      $html = "                </div><!-- <div class=\"content\" -->\n";
+      
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
+      }
+  }  
   
   /**
    * \brief Méthode permettant de construire un menu
@@ -83,102 +140,100 @@ class HTMLLayout extends Layout {
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
   public function buildMenu($user = false, $displayInline = false) {
-    $html = "<div id=\"menu-area\">\n";
-    $html .= "<div id=\"menu\">\n";
+    $html = "                    <div class=\"well sidebar-nav\">\n";
 
     if (! $user) { // Si pas d'utilisateur on se trouve dans la page d'accueil
-      $html .= "<div id=\"menu-header\">\n";
-      $html .= "<a href=\"" . WEBSITE_SSL . "\">Accéder au site</a><br />\n";
-      $html .= "(Certificat nécessaire)";
-      $html .= "</div>\n";
+      $html .= "                         <div id=\"menu-header\">\n";
+      $html .= "                             <a href=\"" . WEBSITE_SSL . "\">Accéder au site</a><br />\n";
+      $html .= "                             (Certificat nécessaire)";
+      $html .= "                         </div>\n";
     } else { // Personnalisation du menu en fonction du rôle de l'utilisateur
-      $html .= "<div id=\"menu-header\">\n";
-      $html .= "Bienvenue " . $user->getPrettyName() . "<br />\n";;
-      $html .= "Rôle&nbsp;: " . $user->getRoleDescr();
+      $html .= "                         <div id=\"menu-header\">\n";
+      $html .= "                             Bienvenue " . $user->getPrettyName() . "<br />\n";;
+      $html .= "                             Rôle " . $user->getRoleDescr();
       if ($user->isLogged() && 	$_SESSION['nb_id'] > 1 ) {
-      	$html .= "<br/><a href='".WEBSITE_SSL."/logout.php'>déconnexion</a>";
+      	$html .= "                   <br/><a href='".WEBSITE_SSL."/logout.php'>déconnexion</a>";
       }
-      $html .= "</div>\n";
-      $html .= "<ul class=\"text-menu\">\n";
+      $html .= "\n                        </div>\n";
+      $html .= "                         <ul class=\"text-menu nav\">\n";
 
 	  $modules = Module::getModulesForUser($user->getId());
 
-	  $modHTML = $modHTML = "<li class=\"menu-list-title\">Modules</li>\n";
+	  $modHTML = $modHTML = "                             <li class=\"menu-list-title\">Modules</li>\n";
 	  $adminModHTML = "";
 	  $statsModHTML = "";
 	  if (count($modules) > 0) {
 		foreach ($modules as $module) {
 		  if ($user->canAccess($module["name"])) {
-			$modHTML .= "<li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/\">" . $module["menu_entry"] . "</a></li>\n";
+			$modHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/\">" . $module["menu_entry"] . "</a></li>\n";
 			
 			if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php")) {
-			  $statsModHTML .= "<li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php\">Statistiques module " . $module["name"] . "</a></li>\n";
+			  $statsModHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php\">Statistiques module " . $module["name"] . "</a></li>\n";
 			}
 		  }
 		  if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/admin/index.php")) {
-			$adminModHTML .= "<li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/admin/index.php\">Utilitaires module " . $module["name"] . "</a></li>\n";
+			$adminModHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/admin/index.php\">Utilitaires module " . $module["name"] . "</a></li>\n";
 		  }
 		}
 	  } else {
-		$modHTML .= "<li>Aucun module accessible</li>";
+		$modHTML .= "                         <li>Aucun module accessible</li>";
 	  }
 
       switch ($user->get("role")) {
       case 'SADM': // Super Administrateur
-		$html .= "<li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_modules.php\">Gestion des modules</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_groups.php\">Gestion des groupes</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_modules.php\">Gestion des modules</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_groups.php\">Gestion des groupes</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
 		
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/utilities/index.php\">Utilitaires système</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/utilities/index.php\">Utilitaires système</a></li>\n";
 		$html .= $adminModHTML;
 		$html .= $modHTML;
-		$html .= "<li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
 		$html .= $statsModHTML;
 
         break;
 
       case 'GADM': // Administrateur de groupe
-		$html .= "<li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
 		$html .= $adminModHTML;
 		$html .= $modHTML;
-		$html .= "<li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
 		$html .= $statsModHTML;
         break;
 
       case 'ADM': // Administrateur collectivité
-		$html .= "<li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/modules/mail/index.php?command=annuaire\">Carnet d'adresses de la collectivité</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user->get("authority_id") . "\">Paramètres collectivité</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/modules/mail/index.php?command=annuaire\">Carnet d'adresses de la collectivité</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user->get("authority_id") . "\">Paramètres collectivité</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
 		$html .= $modHTML;
-		$html .= "<li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
 		$html .= $statsModHTML;
         break;
 
       case 'USER': // Utilisateur simple
 		$html .= $modHTML;
-		$html .= "<li class=\"menu-list-title\">Suivi</li>\n";
-		$html .= "<li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
+		$html .= "                             <li class=\"menu-list-title\">Suivi</li>\n";
+		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
 		$html .= $statsModHTML;
 
 		break;
       }
       
-      $html .= "</ul>\n";
+      $html .= "                         </ul>\n";
     }
 
-    $html .= "</div>\n";
-    $html .= "</div>\n";
+    $html .= "                    </div>\n";
     
     if ($displayInline) {
       echo $html;
@@ -194,27 +249,27 @@ class HTMLLayout extends Layout {
   */
   public function buildFooter($displayInline = false) {
   	
-    $html = "<div id=\"footer\">\n";
+    $html = "        <footer class=\"bs-footer\">\n            <div class=\"container\">\n";
 
 	if (defined("WEBMASTER")) {
-	  $html .= "<a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - ";
+	  $html .= "                <a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
 	}
 
 	if (defined("SUPPORT_URL")) {
-	  $html .= "<a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - ";
+	  $html .= "                <a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - \n";
 	}
 
 	$versionning = VersionningFactory::getInstance();
 	$versionningInfo = $versionning->getAllInfo();
 	
-	$html .= "Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">".
+	$html .= "                    Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">\n".
   	$versionningInfo['version-complete'] . "</a>\n";
 	global $debut;
   	if ($debut){
-  		$html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms";
+  		$html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms\n";
   	}
 	
-	$html .= "</div>\n";
+	$html .= "            </div>\n        </footer>\n";
 
     if ($displayInline) {
       echo $html;
@@ -229,72 +284,74 @@ class HTMLLayout extends Layout {
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
   public function buildPager($dataObj, $displayInline = false) {
-	$html = "<div id=\"pager\">\n";
-	$html .= "<h1>Pagination</h1>\n";
+        $nb_total_page = $dataObj->get("pageNbr");
+        $page_number = $dataObj->get("currentPage");
+        $page = array(1,2,3,$page_number  - 1 , $page_number , $page_number +1,$nb_total_page-2,$nb_total_page-1,$nb_total_page );
+        $page = array_unique($page);
+        sort($page);
+	foreach($page as $i => $nb_page){
+			if ($nb_page>$nb_total_page || $nb_page<=0){
+				unset($page[$i]);
+			}
+        }
+        $last_page = 0;	
+	$html = "            <div id=\"display-items\">\n";
 
 	// Nombre de résultats par page
-	$html .= "<h2>Afficher par page&nbsp;:</h2>\n";
-	$html .= "<div class=\"links_area\">\n";
-
+	$html .= "<h2>Afficher par page</h2>\n";
+	$html .= "<ul class=\"pagination pagination-sm\">\n";
 	foreach (array(10, 20, 50, 100) as $val) {
 	  if ($dataObj->get("displayItems") != $val) {
-		$html .= "<a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a>\n";
+		$html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
 	  } else {
-		$html .= "&nbsp;" . $val . "&nbsp;";
+                $html .= "<li class=\"disabled\"><a href=\"#\">" . $val . "</a></li>\n";
 	  }
 	}
 
-	$html .= "</div>\n";
+	$html .= "</ul>\n</div>\n";
 
 	// Liste des pages
+        $html .= "<div id=\"pages\">\n";
 	$html .= "<h2>Page&nbsp;:</h2>\n";
-
 	$args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	$args = preg_replace("/^&/", "", $args);
 	$args = preg_replace("/&/", "&amp;", $args);
 	$sep = (strlen($args) > 0) ? "&amp;" : "";
 
-	$html .= "<div class=\"links_area\">\n";
-	for ($i = 1; $i <= $dataObj->get("pageNbr"); $i++) {
-	  if ($dataObj->get("currentPage") == $i) {
-		$html .= "&nbsp;" . $i . "&nbsp;";
-	  } else {
-		$html .= "<a href=\"" . Helpers::getURLWithParam(array("page" => $i)) . "\" title=\"Afficher la page " . $i . "\">" . $i . "</a>\n";
-	  }
-	}
-
-	$html .= "</div>\n";
-
-	// Liens suivant/précédent
-	$html .= "<div class=\"links_area\">\n";
-
-	if ($dataObj->get("currentPage") > 1) {
+	$html .= "<ul class=\"pagination pagination-sm\">\n";
+        if ($page_number > 1) {
 	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	  $args = preg_replace("/^&/", "", $args);
 	  $args = preg_replace("/&/", "&amp;", $args);
 	  $sep = (strlen($args) > 0) ? "&amp;" : "";
 
-	  $html .= "<a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\"><<<</a>\n";
+	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
 	} else {
-	  $html .= "<<<";
+	  $html .= "<li class=\"disabled\"><a href=\"#\">&laquo;</a></li>\n";
 	}
-
-	$html .= "&nbsp;|&nbsp;";
-
-	if ($dataObj->get("currentPage") < $dataObj->get("pageNbr")) {
+        foreach ($page as $i) {
+            if ($last_page + 1 != $i) {
+              $html .= "<li class=\"disabled\"><a href=\"#\">...</a></li>\n";  
+            }
+            $last_page = $i;
+            if ($page_number == $i) {
+                $html .= "<li class=\"active\"><a href=\"#\">" . $i . "</a></li>\n";
+            } else {
+                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => $i)) . "\" title=\"Afficher la page " . $i . "\">" . $i . "</a></li>\n";
+            }
+        }
+        if ($page_number < $nb_total_page) {
 	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	  $args = preg_replace("/^&/", "", $args);
 	  $args = preg_replace("/&/", "&amp;", $args);
 	  $sep = (strlen($args) > 0) ? "&amp;" : "";
 
-	  $html .= "<a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">>>></a>\n";
+	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
 	} else {
-	  $html .= ">>>";
+	  $html .= "<li class=\"disabled\"><a href=\"#\">&raquo;</a></li>\n";
 	}
+	$html .= "</ul>\n</div>\n";
 
-
-	$html .= "</div>\n";
-    $html .= "</div>\n";
 
     if ($displayInline) {
       echo $html;
@@ -314,9 +371,9 @@ class HTMLLayout extends Layout {
   */
   public function getHTMLSelect($name, $data, $selectedValue, $extraAttributes = "",$onChange=null) {
   	if ($onChange==null)
-    	$html = "<select name=\"" . $name . "\"" . $extraAttributes . ">\n";
+    	$html = "<select class=\"form-control\" name=\"" . $name . "\"" . $extraAttributes . ">\n";
     else 
-    	$html = '<select id="'.$name.'" name="' . $name . "\"" . $extraAttributes . ' onchange="'.$onChange.'">\n';
+    	$html = '<select id="'.$name.'" class="form-control" name="' . $name . "\"" . $extraAttributes . ' onchange="'.$onChange.'">\n';
     $html .= " <option value=\"\">Choisissez</option>\n";
 
     foreach ($data as $key => $val) {
@@ -360,7 +417,7 @@ class HTMLLayout extends Layout {
   */
   public function getHTMLArrayline($name, $value) {
 	$html = " <tr>\n";
-	$html .= "  <td class=\"td-register\">" . $name . "&nbsp;:</td>\n";
+	$html .= "  <th class=\"td-register th-row\" scope=\"row\">" . $name . "&nbsp;:</th>\n";
 	$html .= "  <td class=\"td-input\">" . $value . "</td>\n";
 	$html .= " </tr>\n";
 
@@ -371,82 +428,82 @@ class HTMLLayout extends Layout {
   /**
    * \brief Méthode d'inclusion du message d'erreur stocké en session
   */
-	public function includeErrors() {		
-		if ($this->errorDisabled){
-			return;
-		}
-		
-		ob_start();
-		if (isset($_SESSION["error"])) { 
-			$this->afficheErrors($_SESSION["error"]);
-		}
-		$html = ob_get_contents();
-		ob_end_clean();
-	
-		//$this->addBody($html);
-		// Gros hack moisi à cause d'IE qui bug à l'affichage
-		// il faut "injecter" la zone d'erreur à l'intérieur de la zone "content"
-		//FIXME (EP), ce n'est pas un "bug" d'IE, la CSS ne défini la errorbox qu'a l'interieur du content
-		//FIXME c'est cette classe qui n'est pas très bien concu ...
-		$this->body = str_replace("<div id=\"content\">", "<div id=\"content\">\n" . $html, $this->body);		
-	}
-  
-	public function afficheErrors(){ 
-		if (! isset($_SESSION["error"]) || ! $_SESSION["error"] ) {
-			return;
-		}
-		?>
-		<div id="errorbox" style="display: block;">
-			<div id="close_button_area">
-				<a href="#close" onclick="javascript:toggle_visibility('errorbox');">
-					<img src="<?php  echo WEBSITE_SSL ?>/custom/images/close_button.png" title="Masquer les messages" alt="close_icon" />
-				</a>
-			</div>
-			<?php echo $_SESSION["error"]; ?>
-		</div>  	
-	<?php
-		unset($_SESSION["error"]); 
-	}
+    public function includeErrors() {
+        if ($this->errorDisabled){
+            return;
+        }
 
-  
-	public function displayTemplate($layout,$templateFile)
-	{
-		$this->includeErrors();
-		require_once(HTML_TEMPLATE_PATH . "/" . "new.generic.tpl.php");
-	}
-	
+        ob_start();
+        if (isset($_SESSION["error"])) { 
+            $this->afficheErrors($_SESSION["error"]);
+        }
+        $html = ob_get_contents();
+        ob_end_clean();
 
-  	public function addCSS($css){
-  	  	$this->addHeader("<link rel='stylesheet' type='text/css' href='$css' />");
-  	}
-	
-  	public function addJavascript($javascript){
-  		$this->addHeader("<script src='$javascript' type='text/javascript'></script>");
-  	}
+        //$this->addBody($html);
+        // Gros hack moisi à cause d'IE qui bug à l'affichage
+        // il faut "injecter" la zone d'erreur à l'intérieur de la zone "content"
+        //FIXME (EP), ce n'est pas un "bug" d'IE, la CSS ne défini la errorbox qu'a l'interieur du content
+        //FIXME c'est cette classe qui n'est pas très bien concu ...
+        $this->body = str_replace("role=\"main\">", "role=\"main\">\n" . $html, $this->body);		
+    }
+  
+    public function afficheErrors(){ 
+        if (! isset($_SESSION["error"]) || ! $_SESSION["error"] ) {
+                return;
+        }
+        ?>
+        <div class="alert alert-warning">
+            <strong><?php echo $_SESSION["error"]; ?></strong>
+        </div>
+
+        <?php
+            unset($_SESSION["error"]); 
+    }
+
+
+    public function displayTemplate($layout,$templateFile)
+    {
+            $this->includeErrors();
+            require_once(HTML_TEMPLATE_PATH . "/" . "new.generic.tpl.php");
+    }
+
+
+    public function addCSS($css){
+            $this->addHeader("<link rel='stylesheet' type='text/css' href='$css' />");
+    }
+
+    public function addJavascript($javascript){
+            $this->addHeader("<script src='$javascript' type='text/javascript'></script>");
+    }
   	
 	
   /**
    * \brief Méthode générant l'affichage du document
   */
  
-  public function display() {
-    $this->includeErrors();
+    public function display() {
+        $this->includeErrors();
 
-    if ($this->template) {
-      require_once(HTML_TEMPLATE_PATH . "/" . $this->template);
-    } else {
-      echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
-      echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";
-      echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\">\n";
-      echo "<head>\n";
-      echo "<title>" . $this->title . "</title>\n";
-      echo $this->header . "\n";
-      echo "</head>\n";
-      echo "<body>\n";
-      echo $this->body . "\n";
-      echo "</body>\n";
+        if ($this->template) {
+            require_once(HTML_TEMPLATE_PATH . "/" . $this->template);
+        } else {
+            echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
+            echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";
+            echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\">\n";
+            echo "    <head>\n";
+            echo "        <title>" . $this->title . "</title>\n";
+            echo $this->header . "\n";
+            echo "    </head>\n";
+            echo "    <body>\n";
+            echo "        <div class=\"container\">\n";
+            echo "            <div class=\"row\">\n";
+            echo $this->body . "\n";
+            echo "            </div>\n";
+            echo "        </div>\n";
+            echo "    </body>\n";
+        }
     }
-  }
 }
 
 /**

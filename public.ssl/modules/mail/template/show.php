@@ -1,114 +1,146 @@
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
-<div id="content">
  <h1> Mail - Système de mail sécurisé</h1>
+        <h2>Actions</h2>
  	<div id="actions_area"> 
-		<a href="index.php?command=create" class="bouton">Nouveau message</a>
-		<a href="index.php?command=list" class="bouton">Messages envoyés</a>
+            <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
+            <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
 	</div>
- <h2>Détail des messages</h2>
+        <h2>Détail du messages</h2>
 
-	<div id="list_area" style="display:;">
-	
-		<dt><a href="#tedetis" onclick="toggle_mail_content(1);" id="expander_1" class="expander">-</a>A&nbsp;:</dt>
-		<dd id="MailTrans_1" class="mail" style="display: block">
-			<table class="transactions_list">
-			<?php
-			foreach ($mailEmisArray as $mailEmis) 
-			{ 
-				if ($mailEmis->getTypeEnvoi()=="mailTo")
-				{
-					echo '<tr><td>'.htmlentities($mailEmis->getEmail()).'</td>';
+	<div id="list_area">
+            <table id="message-detail" class="data-table table table-bordered">
+            <?php 
+            $mailToSize = 0;
+            $mailCcSize = 0;
+            $mailBccSize = 0;
+            foreach ($mailEmisArray as $mailEmis) 
+            { 
+                if ($mailEmis->getTypeEnvoi()=="mailTo")
+                {
+                    $mailToSize++;
+                } 
+                else if ($mailEmis->getTypeEnvoi()=="mailCC") 
+                {
+                    $mailCcSize++;
+                } 
+                else if ($mailEmis->getTypeEnvoi()=="mailBCC") 
+                {
+                    $mailBccSize++;
+                }
+            }?>
+            <tr><th id="mailto" <?php if ($mailToSize > 1) echo 'rowspan="'.$mailToSize.'"'; ?>>A</th>
+            <?php
+            $isFirstTo = true;
+            foreach ($mailEmisArray as $mailEmis) 
+            { 
+                if ($mailEmis->getTypeEnvoi()=="mailTo")
+                {
+                    if ($isFirstTo) 
+                    {
+                        $isFirstTo=false;
+                    } else {
+                        echo '<tr>';
+                    }
+                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
 
- 				if ($mailEmis->getAck()=='t')
- 					echo '<td>Réception confirmée le '.$mailEmis->getAckDate().'</td></tr>';
- 				else
- 					echo '<td>Pas de confirmation </td></tr>'; 
- 				}
- 			}?>
- 			</table>
- 		</dd>
-	 	
-		<dt><a href="#tedetis" onclick="toggle_mail_content(2);" id="expander_2" class="expander">-</a>CC&nbsp;:</dt>
-		<dd id="MailTrans_2" class="mail" style="display: block">
-			<table class="transactions_list">
-			<?php
-			foreach ($mailEmisArray as $mailEmis) 
-			{ 
-				if ($mailEmis->getTypeEnvoi()=="mailCC")
-				{
-					echo '<tr><td>'.htmlentities($mailEmis->getEmail()).'</td>';
+                    if ($mailEmis->getAck()=='t')
+                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                    else
+                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>';
+                }
+            }?>
+            <tr><th id="mailcc" <?php if ($mailCcSize > 1) echo 'rowspan="'.$mailCcSize.'"'; ?>>CC</th>
+            <?php
+            $isFirstCc = true;
+            foreach ($mailEmisArray as $mailEmis) 
+            { 
+                if ($mailEmis->getTypeEnvoi()=="mailCC")
+                {
+                    if ($isFirstCc) 
+                    {
+                        $isFirstCc=false;
+                    } else {
+                        echo '<tr>';
+                    }
+                    
+                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
 
- 				if ($mailEmis->getAck()=='t')
- 					echo '<td>Réception confirmée le '.$mailEmis->getAckDate().'</td></tr>';
- 				else
- 					echo '<td>Pas de confirmation </td></tr>'; 
- 				}
- 			}?>
- 			</table>
- 		</dd>
- 		
-		<dt><a href="#tedetis" onclick="toggle_mail_content(3);" id="expander_3" class="expander">-</a>BCC&nbsp;:</dt>
-		<dd id="MailTrans_3" class="mail" style="display: block">
-			<table class="transactions_list">	 		
-		 			<?php
-		 			foreach ($mailEmisArray as $mailEmis) 
-		 			{ 
-		 				if ($mailEmis->getTypeEnvoi()=="mailBCC")
-		 				{
-		 			 		echo '<tr><td>'.htmlentities($mailEmis->getEmail()).'</td>';
-			 				if ($mailEmis->getAck()=='t')
-			 					echo '<td>Réception confirmée le '.$mailEmis->getAckDate().'</td></tr>';
-			 				else
-			 					echo '<td>Pas de confirmation </td></tr>'; 
-			 			}
-			 		}?>
-		 	</table>
-	 	</dd>
-		<table class="transactions_list">
-			<tr>
-				<td class="td_mailAddress">Sujet&nbsp;: </td>
-				<td><?php echo $mailTransaction->getObjet(); ?></td>
-			</tf>
-			<tr>
-		 		<td class="td_mailAddress"><dt>Date d'envoi&nbsp;:</dt></td>
-		 		<td><?php echo $mailTransaction->getDateEvnoi(); ?>
-			</tr>
-			<tr>
-				<td class="td_mailAddress">Message&nbsp;:</td>
-	 			<td><textarea name="message" rows="8" cols="80"><?php echo $mailTransaction->getMessage(); ?></textarea></td>
-			</tr>
-		</table>
-		<?php 
-		if ($mailIncludeFileArray)
-		{ ?>		
-			<h3>Pièces jointes&nbsp;:</h3>
-			<table class="transactions_list">
-			 	<tr>
-			 		<th>Nom du fichier</th>
-			 		<th>Taille</th>
-			  		<th>Type</th>
-			  		<th>Télécharger</th>
-			 	</tr>
-			<?php foreach ($mailIncludeFileArray as $mailIncludeFile)
-			 	 {?>
-			 	<tr>
-			 		<td><?php echo $mailIncludeFile->getFileName(); ?></td>
-			 		<td><?php echo $mailIncludeFile->getFileSize(); ?></td>
-			 		<td><?php echo $mailIncludeFile->getFileType(); ?></td>
-			 		<td><a href="template/download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
-			 	</tr>
-			 	<?php }?>
-			 	<tr>
-					 	<td>&lt;Télécharger tous les fichiers&gt;</td>
-					 	<td><?php echo filesize(MAIL_FILES_UPLOAD_ROOT.$fndownload.'/mail.zip'); ?></td>
-					 	<td>zip</td>
-						<td><a href="template/download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
-			 	</tr>
-			</table> 
+                    if ($mailEmis->getAck()=='t')
+                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                    else
+                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
+                }
+            }?>
+            <tr><th id="mailbcc" <?php if ($mailBccSize > 1) echo 'rowspan="'.$mailBccSize.'"'; ?>>BCC</th>
+            <?php
+            $isFirstBcc = true;
+            foreach ($mailEmisArray as $mailEmis) 
+            { 
+                if ($mailEmis->getTypeEnvoi()=="mailBCC")
+                {
+                    if ($isFirstBcc) 
+                    {
+                        $isFirstBcc=false;
+                    } else {
+                        echo '<tr>';
+                    }
+                    
+                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
+                    
+                    if ($mailEmis->getAck()=='t')
+                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                    else
+                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
+                }
+            }?>
+            <tr>
+                <th id="mail-subject">Sujet</th>
+                <td><?php echo $mailTransaction->getObjet(); ?></td>
+            </tr>
+            <tr>
+                <th id="mail-date"><dt>Date d'envoi</th>
+                <td><?php echo $mailTransaction->getDateEvnoi(); ?>
+            </tr>
+            <tr>
+                <th id="mail-message">Message</th>
+                <td><?php echo $mailTransaction->getMessage(); ?></td>
+            </tr>
+    </table>
+    <?php 
+    if ($mailIncludeFileArray)
+    { ?>		
+            <h2>Pièces jointes&nbsp;:</h2>
+            <table class="transactions_list table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th id="file">Nom du fichier</th>
+                        <th id="size">Taille</th>
+                        <th id="type">Type</th>
+                        <th id="download">Télécharger</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <?php foreach ($mailIncludeFileArray as $mailIncludeFile)
+                        {?>
+                    <tr>
+                        <td headers="file"><?php echo $mailIncludeFile->getFileName(); ?></td>
+                        <td headers="size"><?php echo $mailIncludeFile->getFileSize(); ?></td>
+                        <td headers="type"><?php echo $mailIncludeFile->getFileType(); ?></td>
+                        <td headers="download"><a href="template/download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                    </tr>
+            <?php }?>
+                    <tr>
+                        <td>&lt;Télécharger tous les fichiers&gt;</td>
+                        <td><?php echo filesize(MAIL_FILES_UPLOAD_ROOT.$fndownload.'/mail.zip'); ?></td>
+                        <td>zip</td>
+                        <td><a href="template/download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                    </tr>
+                </tbody> 
+            </table> 
 	<?php  	}
 		else 
 		{?>
-			<h3>Aucune pièce jointe</h3> 	
+            <h2>Aucune pièce jointe</h2>
 	<?php } ?>	
 	<?php if ($mailErrors !=false) 
 	{

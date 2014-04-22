@@ -114,13 +114,18 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : visualisation d'un lot");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 $html = "<div id=\"content\">\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php\" class=\"bouton\">Retour liste lots</a></center>\n";
-$html .= "<h2>Visualisation d'un lot</h2>\n";
+$html .= "<h1>Visualisation du lot ". $zeBatch->getId() . " </h1>";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php\" class=\"btn btn-default\">Retour liste lots</a></p>\n";
+$html .= "<h2>Détails du lot</h2>\n";
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
+$html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Numéro du lot", $zeBatch->getId());
 $html .= $doc->getHTMLArrayline("Description", htmlspecialchars($zeBatch->get("description")));
 $html .= $doc->getHTMLArrayline("Préfixe numéro interne", htmlspecialchars($zeBatch->get("num_prefix")));
@@ -135,48 +140,55 @@ $html .= "<br />\n";
 // Fichiers contenus dans le lot
 $html .= "<h3>Fichiers contenus dans le lot</h3>";
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"file_list\">\n";
-$html .= " <tr>\n";
-$html .= "  <th>Fichier</th>\n";
-$html .= "  <th>Taille</th>\n";
-$html .= "  <th>Signature numérique</th>\n";
-$html .= "  <th>Statut</th>\n";
-$html .= "  <th>Traiter</th>\n";
-$html .= " </tr>\n";
-
 $batchFiles = $zeBatch->getBatchFiles();
 
 if (is_array($batchFiles) && count($batchFiles) > 0) {
-  foreach ($batchFiles as $batchFile) {
-	$html .= " <tr>\n";
-	$html .= "  <td class=\"long_field\">";	
+  
+    $html .= "<table class=\"table data-table table-striped\">\n";
+    $html .= " <thead>\n";
+    $html .= " <tr>\n";
+    $html .= "  <th id=\"file\">Fichier</th>\n";
+    $html .= "  <th id=\"size\">Taille</th>\n";
+    $html .= "  <th id=\"signature\">Signature numérique</th>\n";
+    $html .= "  <th id=\"status\">Statut</th>\n";
+    $html .= "  <th id=\"actions\">Traiter</th>\n";
+    $html .= " </tr>\n";
+    $html .= " </thead>\n";
+    $html .= " <tbody>\n";
+    foreach ($batchFiles as $batchFile) {
+        $html .= " <tr>\n";
+	$html .= "  <td headers=\"file\" class=\"long_field\">";	
 	$html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"Télécharger le fichier\">" . htmlspecialchars($batchFile->getDisplayName()) . "</a>";
 	$html .= "</td>\n";
-	$html .= "  <td>" . $batchFile->get("filesize") . "</td>\n";
-	$html .= "  <td>";
+	$html .= "  <td headers=\"size\" >" . $batchFile->get("filesize") . "</td>\n";
+	$html .= "  <td headers=\"signature\" >";
 	$html .= (strlen($batchFile->get("signature")) > 0) ? "Présente" : "Non présente";
 	$html .= "</td>\n";
-	$html .= "  <td>";
+	$html .= "  <td headers=\"status\" >";
 	$html .= ($batchFile->isProcessed()) ? "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id") . "\" title=\"Voir la transaction issue de ce fichier\">Traité</a>" : "Non traité";
 	$html .= "</td>\n";
-	$html .= "  <td><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId() . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n";
+	$html .= "  <td headers=\"actions\" ><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId() . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n";
 	$html .= " </tr>\n";
+        
   }
+  $html .= "</tbody>\n";
+  $html .= "</table>\n";
 } else {
-  $html .= " <tr>\n";
-  $html .= "  <td colspan=\"3\">Pas de fichier trouvé</td>";
-  $html .= " </tr>\n";
+  $html .= "  <p>Pas de fichier trouvé</p>";
 }
 
-$html .= "</table>\n";
+
 $html .= "</div>\n";
 $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce lot ?')\" method=\"post\">\n";
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeBatch->getId(). "\" />\n";
-$html .= "<input type=\"submit\" value=\"Supprimer ce lot\" class=\"bouton-danger\" />\n";
+$html .= "<input type=\"submit\" value=\"Supprimer ce lot\" class=\"btn btn-warning\" />\n";
 $html .= "</form>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

@@ -78,44 +78,49 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
   header("Location: " . WEBSITE_SSL);
   exit();
 }
+$win = new HeliosTransmissionWindow();
+$windows = $win->getWindowsList();
 
 $doc = new HTMLLayout();
 
 $doc->setTitle("Gestion des fenêtres module HELIOS");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->buildPager($win);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">\n";
-$html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_edit.php\" class=\"bouton\">Ajouter une fenêtre</a></center>\n";
+$html = "<h1>Gestion des fenêtres de transmission</h1>\n";
+$html .= "<h2>Actions</h2>\n";
+$html .= "<p><a href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenêtre</a></p>\n";
 $html .= "<h2>Liste des fenêtres existantes</h2>\n";
 
-$win = new HeliosTransmissionWindow();
-$windows = $win->getWindowsList();
-
 if (count($windows) > 0) {
-  $html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+  $html .= "<table class=\"data-table table table-striped\" summary=\"\">";
+  $html .= "<thead>\n";
   $html .= "<tr>\n";
-  $html .= " <th class=\"data\">Numéro</th>\n";
-  $html .= " <th class=\"data\">Début</th>\n";
-  $html .= " <th class=\"data\">Fin</th>\n";
-  $html .= " <th class=\"data\">Débit horaire</th>\n";
-  $html .= " <th class=\"data\">Actions</th>\n";
+  $html .= " <th id=\"id\">Numéro</th>\n";
+  $html .= " <th id=\"start\">Début</th>\n";
+  $html .= " <th id=\"end\">Fin</th>\n";
+  $html .= " <th id=\"rate-limit\">Débit horaire</th>\n";
+  $html .= " <th id=\"actions\">Actions</th>\n";
   $html .= "</tr>\n";
-  $i = 0;
+  $html .= "</thead>\n";
+  $html .= "</tbody>\n";
 
   foreach ($windows as $window) {
-	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td>" . $window["id"] . "</td>\n";
-	$html .= " <td>" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
-	$html .= " <td>" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
-	$html .= " <td>" . $window["rate_limit"] . "</td>\n";
-	$html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+	$html .= "<tr>\n";
+	$html .= " <td headers=\"id\">" . $window["id"] . "</td>\n";
+	$html .= " <td headers=\"start\">" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
+	$html .= " <td headers=\"end\">" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
+	$html .= " <td headers=\"rate-limit\">" . $window["rate_limit"] . "</td>\n";
+	$html .= " <td headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
 	$html .= "</tr>\n";
-
-	$i = ($i + 1) % 2;
   }
 
+  $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
   $html .= "Pas de fenêtre de transmission définie.";
@@ -123,9 +128,10 @@ if (count($windows) > 0) {
 
 $html .= "</div>\n";
 
-$doc->buildPager($win);
 
 $doc->addBody($html);
+
+$doc->closeContainer();
 
 $doc->buildFooter();
 

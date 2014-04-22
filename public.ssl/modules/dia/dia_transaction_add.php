@@ -12,7 +12,7 @@ $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 
 ob_start();
 ?>
-<div id="content">
+<div class="col-md-9">
 	<h1>DIA - Déclaration d'intention d'aliéner</h1>
 	<h2>Importer d'un fichier (test)</h2>
 	<form method="POST" enctype="multipart/form-data" action="<?php echo WEBSITE_SSL ?>/modules/dia/dia_reception.php" >

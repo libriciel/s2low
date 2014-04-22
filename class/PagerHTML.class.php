@@ -18,50 +18,64 @@ class PagerHTML {
 		$last_page = 0;	
 		ob_start();
 		?>
-		<div id="pager">
-			<h1>Pagination</h1>
-			<h2>Afficher par page&nbsp;:</h2>
-			<div class="links_area">
-				<?php foreach (array(10, 20, 50, 100) as $val) : ?>
-					<?php if ($nb_element_par_page == $val) : ?>
-						&nbsp;<?php echo $val ?>&nbsp;
-					<?php else : ?>
-						<a href="<?php echo get_url(array("count" => $val)) ?>" 
-							title="Afficher <?php echo $val ?>  éléments par page">
-							<?php echo $val?>
-						</a>
-					<?php endif;?>
-				<?php endforeach;?>
-			</div>
-			<h2>Page&nbsp;:</h2>
-			<div class="links_area">
-				<?php foreach ($page as $i) : ?>
-					<?php if ($last_page + 1 != $i) :?>
-						&nbsp;...&nbsp;
-					<?php endif;?>
-					<?php $last_page = $i; ?>
-					<?php  if ($page_number == $i) : ?>
-						<?php echo $i ?>
-					<?php else: ?>
-					<a href="<?php echo get_url(array("page" => $i)) ?>"
-				 		title="Afficher la page <?php echo  $i ?>"> <?php echo $i ?></a>
-					<?php endif; ?>
-				<?php endforeach;?>
-			</div>
-			<div class="links_area">
-				<?php if ($page_number > 1) : ?>
-					<a href="<?php echo get_url(array("page" => ($page_number - 1))) ?>" title="Afficher la page précédente">&lt;&lt;&lt;</a>
-				<?php else : ?>
-	 				&lt;&lt;&lt;
-				<?php endif;?>
-				&nbsp;|&nbsp;
-				<?php  if ($page_number < $nb_total_page) : ?>
-					<a href="<?php echo get_url(array("page" => ($page_number + 1))) ?>" title="Afficher la page suivante">&gt;&gt;&gt;</a>
-				<?php  else : ?>
-					&gt;&gt;&gt;
-				<?php  endif;?>
-			</div>
-		</div>
+                    <div id="display-items">
+                        <h2>Afficher par page</h2>
+                        <ul class="pagination pagination-sm">
+                            <?php foreach (array(10, 20, 50, 100) as $val) : ?>
+                                <?php if ($nb_element_par_page == $val) : ?>
+                                    <li class="disabled"><a href="#"><?php echo $val ?></a></li>
+                                <?php else : ?>
+                                    <li>
+                                        <a href="<?php echo get_url(array("count" => $val)) ?>" 
+                                                title="Afficher <?php echo $val ?>  éléments par page">
+                                                <?php echo $val?>
+                                        </a>
+                                    </li>
+                                <?php endif;?>
+                            <?php endforeach;?>
+                        </ul>
+                    </div>
+                    <div id="pages">
+                        <h2>Page</h2>
+                        <ul class="pagination pagination-sm">
+                            <?php if ($page_number > 1) : ?>
+                            <li>
+                                <a href="<?php echo get_url(array("page" => ($page_number - 1))) ?>" title="Afficher la page précédente">&laquo;</a>
+                            </li>
+                            <?php else : ?>
+                                <li class="disabled"><a href="#">&laquo;</a></li>
+                            <?php endif;?>
+
+                            <?php foreach ($page as $i) : ?>
+
+                                    <?php if ($last_page + 1 != $i) :?>
+                                    <li class="disabled">
+                                        <a href="#">...</a>
+                                    </li>
+                                    <?php endif;?>
+                                    <?php $last_page = $i; ?>
+                                    <?php  if ($page_number == $i) : ?>
+                                    <li class="active">
+                                        <a href="#" title="page courante"><?php echo $i ?></a>
+                                    </li>
+                                    <?php else: ?>
+                                    <li>
+                                        <a href="<?php echo get_url(array("page" => $i)) ?>"
+                                            title="Afficher la page <?php echo  $i ?>"> 
+                                            <?php echo $i ?>
+                                        </a>
+                                    </li>    
+                                    <?php endif; ?>
+                            <?php endforeach;?>
+                            <?php  if ($page_number < $nb_total_page) : ?>
+                                <li>
+                                    <a href="<?php echo get_url(array("page" => ($page_number + 1))) ?>" title="Afficher la page suivante">&raquo;</a>
+                                </li>
+                            <?php  else : ?>
+                                <li class="disabled"><a href="#">&raquo;</a></li>
+                            <?php  endif;?>
+                        </ul>
+                    </div>
 		<?php 		
 		$html = ob_get_contents();
 		ob_end_clean();

@@ -22,14 +22,17 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des services");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 ob_start();?>
-<div id="content">
-<h1>Gestion des services</h1>
+    <h1>Gestion des services</h1>
 
 <?php if(count($authorities) > 1): ?>
-<h2>Choix de la collectivité</h2>
+    <h2>Choix de la collectivité</h2>
 	<?php if ( ! $authority_id): ?>
 	<ul>
 	<?php foreach($authorities as $id=>$name): ?>
@@ -46,11 +49,11 @@ ob_start();?>
 (<?php echo $authorities[$authority_id]?>)
 <?php endif;?></h2>
 
-<form action='add-service-user.php' method='post'>
+<form action='add-service-user.php' method='post' class="form-horizontal">
 <input type='hidden' name='authority_id' value='<?php echo $authority_id ?>'/>
 <label for='name'> Ajouter un service </label> 
 <input type='text' name='name' id='name'/>
-<input type='submit' value='ajouter'/>
+<input type='submit' class='btn btn-default' value='ajouter'/>
 </form>
 
 <ul>
@@ -65,6 +68,9 @@ ob_end_clean();
 
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

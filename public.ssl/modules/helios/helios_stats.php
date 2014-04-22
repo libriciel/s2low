@@ -69,10 +69,13 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : Hélios - Statistiques");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html .= "<div id=\"content\">\n";
-$html .= "<h1>HELIOS - Dématérialisation de documents financiers</h1>\n";
+$html = "<h1>HELIOS - Dématérialisation de documents financiers</h1>\n";
 $html .= "<h2>Statistiques des transactions Hélios";
 
 if ($me->isSuper()) 
@@ -124,6 +127,9 @@ $html .= "</div>\n";
 
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

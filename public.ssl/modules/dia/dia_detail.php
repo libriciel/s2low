@@ -21,7 +21,7 @@ $doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
 
 ob_start();
 ?>
-<div id="content">
+<div class="col-md-9">
 	<h1>DIA - Déclaration d'intention d'aliéner</h1>
 	
 	<center>
@@ -29,7 +29,8 @@ ob_start();
 			Retour liste transactions
 		</a>
 	</center>
-	
+</div>
+<div class="col-md-9">
 	<h2>Détail</h2>
 	<div class="data_table">
 	<table class="data">

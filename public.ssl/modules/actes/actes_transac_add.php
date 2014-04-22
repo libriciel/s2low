@@ -80,13 +80,16 @@ progress_bar.src = "/custom/images/progress_bar.gif";
 function add_attachment_field() {
   field = document.getElementById("attachments_fields");
   newfield=document.createElement("div");
-  html = '     <dl class="actes_files_form">';
-  html += '      <dt>Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)&nbsp;:\\x3C/dt>';
-  html += '       <dd><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/dd>';
+  newfield.className="actes_files_form row";
+  html = '        <div class="form-group">';
+  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
+  html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
+  html += '       \\x3C/div>';
 EOJS;
-
 $js .=<<<EOJS
-html += '    \\x3C/dl>';
+html += '    \\x3C/div>';
+html += '    \\x3C/div>';
+html += '    \\x3C/div>';
 
   newfield.innerHTML = html;
   field.appendChild(newfield);
@@ -130,46 +133,46 @@ $doc->addHeader($js);
 
 $doc->setTitle("Tedetis : Actes - Ajout d'une transaction");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
-
-$html = "<div id=\"info_area\">\n";
-
-
-
 if ( ( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassification :: hasTodayRequest($myAuthority->getId()))) {
 
 
   // Zone d'information
   // Affichage du lien pour demande de mise à jour classification matières sous-matières
+  $html .= "<div  class=\"bs-callout bs-callout-info\">\n";
   if ($dateClassif = ActesClassification :: getLastRevisionDate($myAuthority->getId(), false)) {
-    $html .= "La classification matières et sous-matières utilisée pour votre collectivité est la version du " . Helpers :: getDateFromBDDDate($dateClassif) . ".<br />\n";
-    $html .= "Pour forcer la mise à jour de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous&nbsp;:<br />\n";
+    $html .= "<p>La classification matières et sous-matières utilisée pour votre collectivité est la version du " . Helpers :: getDateFromBDDDate($dateClassif) . ".<br/>\n";
+    $html .= "Pour forcer la mise à jour de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
   } else {
-    $html .= "Il n'existe pas encore de classification matières et sous-matières associée à votre collectivité.<br />\n";
-    $html .= "Pour forcer la récupération de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous&nbsp;:<br />\n";
+    $html .= "<p>Il n'existe pas encore de classification matières et sous-matières associée à votre collectivité.</p>\n";
+    $html .= "<p>Pour forcer la récupération de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
   }
 
   $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n";
-  $html .= "<div class=\"button_area\"><input class=\"submit_button\" type=\"submit\" value=\"Mise à jour classification\" /></div>\n";
+  $html .= "<div class=\"button_area\"><input class=\"submit_button btn btn-default\" type=\"submit\" value=\"Mise à jour classification\" /></div>\n";
   $html .= "</form>\n";
-  $html .= "<br />\n";
 }
 
-
 $html .= "</div>\n";
+$doc->addBody($html);
+
+$doc->closeSideBar();
+$doc->openContent();
 
 // Zone contenu
-$html .= "<div id=\"content\">\n";
-$html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p style=\"text-align:center\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+
 $html .= "<h2>Création d'une transaction Actes</h2>\n";
 
 if ($batchMode) {
-  $html .= "Transmission d'acte depuis le lot «&nbsp;" . htmlspecialchars($zeBatch->get("description")) . "&nbsp;»<br />";
-  $html .= "Fichier courant&nbsp;: " . htmlspecialchars($zeBatchFile->getDisplayName()) . "<br />\n";
+  $html .= "<div class=\"alert alert-info\"> Transmission d'acte depuis le lot «&nbsp;" . htmlspecialchars($zeBatch->get("description")) . "&nbsp;»<br />";
+  $html .= "Fichier courant&nbsp;: " . htmlspecialchars($zeBatchFile->getDisplayName()) . "<br />\n</div>";
 }
 
-$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
+$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
 
 
 
@@ -185,14 +188,15 @@ if ($batchMode) {
 }
 
 $decision_date = Helpers :: getFromSession("decision_date");
-
-$html .= "<div class=\"list_form\">\n";
-$html .= " <dl>\n";
-$html .= "  <dt>Nature de l'acte&nbsp;:</dt>\n";
-$html .= "   <dd>" . $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code")) . "</dd>\n";
-$html .= "  <dt>Classification&nbsp;:</dt>\n";
-$html .= "   <dd>";
-$html .= "   <a href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=classification', 'Select_attribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">";
+//<div class="form-group">
+//                <label for="min_submission_date" class="col-md-6 control-label">Date de postage minimale</label>
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label for=\"nature_code\" class=\"control-label\"> Nature de l'acte : </label>\n";
+$html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code")) ;
+$html .= " </div>";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label for=\"classification_text\" class=\"control-label\">Classification : </label>\n";
+$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=classification', 'Select_attribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">";
 
 $classif1 = Helpers :: getFromSession("classif1", false);
 if (!empty ($classif1)) {
@@ -203,7 +207,7 @@ if (!empty ($classif1)) {
 
   $html .= implode(".", $classif);
 } else {
-  $html .= "[&nbsp;Choisir la classification&nbsp;]";
+  $html .= "Choisir la classification";
 }
 
 $html .= "</a>\n";
@@ -212,9 +216,10 @@ $html .= "   <input type=\"hidden\" id=\"classif2\" name=\"classif2\" value=\"" 
 $html .= "   <input type=\"hidden\" id=\"classif3\" name=\"classif3\" value=\"" . Helpers :: getFromSession("classif3") . "\" />\n";
 $html .= "   <input type=\"hidden\" id=\"classif4\" name=\"classif4\" value=\"" . Helpers :: getFromSession("classif4") . "\" />\n";
 $html .= "   <input type=\"hidden\" id=\"classif5\" name=\"classif5\" value=\"" . Helpers :: getFromSession("classif5") . "\" />\n";
-$html .= "   </dd>\n";
-$html .= "  <dt>Numéro de l'acte (15 caractères maxi, chiffres, lettres en majuscule ou _)&nbsp;:</dt>\n";
-$html .= "   <dd><input type=\"text\" name=\"number\" value=\"";
+$html .= "   </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "   <label for=\"act-number\" class=\"control-label\"> Numéro de l'acte (15 caractères maxi, chiffres, lettres en majuscule ou _)</label>\n";
+$html .= "   <input id=\"act-number\" class=\"form-control\" type=\"text\" name=\"number\" value=\"";
 
 $number = Helpers :: getFromSession("number");
 
@@ -222,40 +227,53 @@ if ($batchMode) {
   $number = $zeBatch->get("num_prefix") . "_" . $zeBatch->getNextSuffix();
 }
 
-$html .= htmlspecialchars($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractères maxi, chiffres, lettres en majuscule ou _\"/></dd>\n";
-$html .= "  <dt>Date de la décision&nbsp;:</dt>\n";
-$html .= "   <dd>\n";
-$html .= "    <input id=\"decision_date\" name=\"decision_date\" type=\"hidden\" value=\"" . $decision_date . "\"/>\n";
+$html .= htmlspecialchars($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractères maxi, chiffres, lettres en majuscule ou _\"/>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la décision : </label>\n";
+$html .= "    <input id=\"decision_date\" class=\"form-control\" name=\"decision_date\" type=\"hidden\" value=\"" . $decision_date . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_decision_date = new DatePicker('decision_date', 'fr');\n";
 $html .= "    //]]>\n";
 $html .= "    </script>\n";
 
-$html .= "    <a href=\"#datepicker\" id=\"datepicker_decision_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_decision_date.toggleDatePicker(); return false;\">";
+$html .= "    <a class=\"form-control\" href=\"#datepicker\" id=\"datepicker_decision_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_decision_date.toggleDatePicker(); return false;\">";
 
 if ($decision_date) {
   $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date)));
 } else {
-  $html .= "[&nbsp;Choisir une date&nbsp;]";
+  $html .= "Choisir une date";
 }
 $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_decision_date_calendar\"></div>\n";
-$html .= "   </dd>\n";
-$html .= "  <dt>Objet&nbsp;:</dt>\n";
-$html .= "   <dd><textarea cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></dd>\n";
+$html .= "   </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label for=\"subject\" class=\"control-label\">Objet : </label>\n";
+$html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></div>\n";
 
 if (!$batchMode) {
-  $html .= "  <dt>Fichier PDF ou XML contenant l'acte&nbsp;:</dt>\n";
-  $html .= "   <dd>\n";
-  $html .= "     <dl class=\"actes_files_form\">\n";
-  $html .= "      <dt>Fichier PDF ou XML&nbsp;:</dt>\n";
-  $html .= "       <dd><input type=\"file\" id=\"acte_pdf_file\" name=\"acte_pdf_file\" size=\"40\" maxlength=\"255\" /></dd>\n";
-  $html .= "     </dl>\n";
-  $html .= "   </dd>\n";
+
+  $html .= " <div class=\"form-group\">\n";    
+  $html .= "   <fieldset>\n";
+  $html .= "   <div class=\"row-legend\">\n";
+  $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
+  $html .= "     <div class=\"actes_files_form\">\n";
+  $html .= "       <div class=\"form-group\">\n";  
+  $html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF ou XML : </label>\n";
+  $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
+  $html .= "       </div>\n";
+  $html .= "     </div>\n";
+  $html .= "   </fieldset>\n";
+  $html .= " </div>\n";
 }
-$html .= "  <dt>Pièces jointes supplémentaires&nbsp;:&nbsp;<a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">[&nbsp;Ajouter un champ&nbsp;]</a></dt>\n";
-$html .= "   <dd id=\"attachments_fields\"></dd>\n";
+$html .= "<div class=\"form-group\">\n";    
+$html .= "  <fieldset>\n";
+$html .= "   <div class=\"row-legend\">\n";
+$html .= "  <legend>Pièces jointes supplémentaires : <a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
+$html .= "   <div id=\"attachments_fields\"></div>\n";
+$html .= " </fieldset>\n";  
+$html .= "</div>\n";
 
 
 $html .= "     <dt>Signer l'acte avant de le poster : <input type=\"checkbox\"  name=\"must_signed\" /></dt>\n";
@@ -272,35 +290,34 @@ if ($defaultbroadcast_email != NULL)
 $broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
 
-$html .= "     <dt>Diffusion automatique de la notification : <input type=\"checkbox\" checked=\"checked\" name=\"show_broadcast_email\" onclick=\"hide_bloc('broadcast_email');\"/></dt>\n";
-$html .= "     <dd><div id=\"broadcast_email\" style=\"visibility:visible\">\n";
-$html .= "     <label>Emission des documents sources : <input type=\"checkbox\" class=\"checkbox\" name=\"send_sources\" checked='checked' /></label><br/>\n";
+$html .= "     <div class=\"form-group\"><label for=\"show_broadcast_email\" class=\"control-label\">Diffusion automatique de la notification : </label><input id=\"show_broadcast_email\" type=\"checkbox\" checked=\"checked\" name=\"show_broadcast_email\" onclick=\"hide_bloc('broadcast_email');\"/></div>\n";
+$html .= "     <div id=\"broadcast_email\" style=\"visibility:visible\">\n";
+$html .= "     <div class=\"form-group\"><label for=\"send_sources\" class=\"control-label\">Emission des documents sources : </label><input id=\"send_sources\" type=\"checkbox\" name=\"send_sources\" checked='checked' /></div>\n";
 
 foreach ($defaultbroadcast_email as $email) {
     $checked = 'checked="checked" disabled="disabled"';
     if ($email != "" && $email != NULL)
-                $html .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+                $html .= "      <div class=\"form-group\"><label for=\"$email\" class=\"col-md-offset-1 control-label email-checkbox\"><input id=\"$email\" type=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</label></div>\n";
 }
 
 foreach ($broadcast_email as $email) {
     $checked = '';
     if ($email != "" && $email != NULL)
-  		$html .= "      &nbsp;&nbsp;&nbsp;&nbsp;<label><em><input type=\"checkbox\" class=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</em></label><br />\n";
+  		$html .= "      <div class=\"form-group\"><label for=\"$email\" class=\"col-md-offset-1 control-label email-checkbox\"><input id=\"$email\" type=\"checkbox\" name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</label></div>\n";
 }
-$html .= "     </div></dd>\n";
+$html .= "     </div>\n";
 
 if ($batchMode) {
-  $html .= "   <label><input type=\"checkbox\" class=\"checkbox\" name=\"process_next_batch_file\" checked=\"checked\" />&nbsp;Passer au fichier suivant dans le lot après création de cette transaction</label>\n";
+  $html .= "   <div class=\"form-group\"><label for=\"next\" class=\"control-label email-checkbox\">Passer au fichier suivant dans le lot après création de cette transaction : </label><input id=\"next\" type=\"checkbox\" name=\"process_next_batch_file\" checked=\"checked\" /></div>\n";
 }
 
-$html .= "</dl>\n";
-
-$html .= "<div id=\"form_progress\"><input class=\"submit_button\" type=\"submit\" value=\"Créer la transaction\" /></div>\n";
-$html .= "</div>\n";
+$html .= "<div id=\"form_progress\" class=\"form-group\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\">Créer la transaction</button></div>\n";
 $html .= "</form>\n";
-$html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

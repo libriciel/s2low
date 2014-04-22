@@ -124,16 +124,19 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("etat_civil : visualisation de transactions pour un fichier");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
+
 
 $transStatus = $trans->getCurrentStatus(); //CURRENT STATUS
 
 
-$html = "<div id=\"content\">\n";
-
 //$html .="id=".$id."<br>";
 
-$html .= "<center><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/\" class=\"bouton\">Retour liste transactions</a></center>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/etat_civil/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Visualisation de transactions d'un fichier</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data\">\n";
@@ -188,6 +191,8 @@ if (count($workflow) > 0) {
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContainer();
 
 $doc->buildFooter();
 

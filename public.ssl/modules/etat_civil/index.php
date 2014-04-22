@@ -193,7 +193,7 @@ $doc->setTitle("Tedetis : module etat_civil");
 $doc->buildMenu($me);
 
 //deja etat_civil!!!!
-$html = "<div id=\"content\">\n";
+$html = "<div id=\"content\" class=\"col-md-9\" role=\"main\">\n";
 $html .= "<h1>Dématérialisation de documents d'état civil</h1>\n";
 
 
@@ -831,10 +831,10 @@ if (count($transactions) > 0) {
 
 
 
-$doc->buildPager($ht);
+
 
 $doc->addBody($html);
-
+$doc->buildPager($ht);
 $doc->buildFooter();
 
 $doc->display();

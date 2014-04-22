@@ -32,38 +32,46 @@ $doc = new HTMLLayout();
 
 $doc->setTitle("Gestion des modules");
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Gestion des modules</h1>\n";
 $html .= "<h2>Liste des modules</h2>\n";
 $html .= "<div class=\"data_table\">\n";
-$html .= "<table cellpadding=\"3\" cellspacing=\"2\" class=\"data\">";
+$html .= "<table class=\"data-table table table-striped \">";
+$html .= "<thead>\n";
 $html .= "<tr>\n";
-$html .= " <th class=\"data\">Nom</th>\n";
-$html .= " <th class=\"data\">Description</th>\n";
-$html .= " <th class=\"data\">État</th>\n";
-$html .= " <th class=\"data\">Actions</th>\n";
+$html .= " <th id=\"name\">Nom</th>\n";
+$html .= " <th id=\"description\">Description</th>\n";
+$html .= " <th id=\"status\">État</th>\n";
+$html .= " <th id=\"actions\">Actions</th>\n";
 $html .= "</tr>\n";
+$html .= "</thead>\n";
+$html .= "<tbody>\n";
 
 $i = 0;
 
 foreach ($modules as $module) {
-  $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-  $html .= " <td>" . $module["name"] . "</td>\n";
-  $html .= " <td>" . $module["description"] . "</td>\n";
-  $html .= " <td>" . $statusList[$module["status"]] . "</td>\n";
-  $html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+  $html .= "<tr>\n";
+  $html .= " <td headers=\"name\">" . $module["name"] . "</td>\n";
+  $html .= " <td headers=\"description\">" . $module["description"] . "</td>\n";
+  $html .= " <td headers=\"status\">" . $statusList[$module["status"]] . "</td>\n";
+  $html .= " <td  headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
   $html .= "</tr>\n";
-
-  $i = ($i + 1) % 2;
 }
-
+$html .= "</tbody>\n";
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 

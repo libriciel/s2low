@@ -14,10 +14,14 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 $doc->setTitle(WEBSITE_TITLE);
 
+$doc->openContainer();
+$doc->openSideBar();
 $doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
 
-$html = "<div id=\"content\">";
-$html .= " <h1>Espace de télétransmission</h1>\n";
+
+$html = " <h1>Espace de télétransmission</h1>\n";
 $html .= "<p>Vous êtes connecté avec le rôle";
 
 if ($me->isSuper()) {
@@ -51,9 +55,11 @@ if (defined("SUPPORT_URL")) {
 $html .= ".<br />\n";
 
 $html .= "</p>\n";
-$html .= "</div>\n";
 
 $doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 
