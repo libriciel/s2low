@@ -76,7 +76,7 @@ class ActesArchiveControler {
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$transactionsInfo = $actesTransactionsSQL->getInfo($id);
 		if ( ! $transactionsInfo || $transactionsInfo['user_id'] != $user_id){
-			$this->lastError = "Accès refusé";
+			$this->lastError = "Accès refusé (seul le créateur de l'Acte peut l'archiver)";
 			return false;
 		}
 		
