@@ -25,7 +25,7 @@ $doc->setTitle(WEBSITE_TITLE);
 //$doc->buildMenu($me);
 
 $html = "<div id=\"content\" class=\"container\"><div class=\"row\">";
-$html .= " <div class=\"col-md-12\">\n";
+$html .= " <div class=\"col-md-12\" role=\"main\">\n";
 $html .= " <h1>Connexion</h1>\n";
 $html .= " </div>\n";
 
