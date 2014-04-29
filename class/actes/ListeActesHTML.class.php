@@ -40,7 +40,7 @@ class ListeActesHTML {
 		$this->fnature = $fnature;
 		$this->status  = $status;
 		$this->fstatus = $fstatus;
-		$this->num = $fnum;
+		$this->fnum = $fnum;
 		$this->objet = $objet;
 	}
 	
@@ -112,13 +112,13 @@ class ListeActesHTML {
                 </div>
                 <label for="number" class="col-md-3 control-label">Le numéro contient</label>
                 <div class="col-md-3">
-                    <input id="number" class="form-control" type="text" name="number" size="20" maxlength="25" value="<?php echo $fnum ?>" />
+                    <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php echo $fnum ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="object" class="col-md-offset-6 col-md-3 control-label">L'objet contient</label>
                 <div class="col-md-3">
-                    <input id="object" class="form-control" type="text" name="object" size="20" maxlength="25" value="<?php echo $object ?>" />
+                    <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php echo $objet ?>" />
                 </div>
             </div>
             <div class="form-group">
