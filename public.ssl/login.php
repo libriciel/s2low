@@ -24,33 +24,33 @@ $doc->setTitle(WEBSITE_TITLE);
 
 //$doc->buildMenu($me);
 
-$html = "<div id=\"content\">";
+$html = "<div id=\"content\" class=\"container\"><div class=\"row\">";
+$html .= " <div class=\"col-md-12\" role=\"main\">\n";
 $html .= " <h1>Connexion</h1>\n";
+$html .= " </div>\n";
 
-$html .= "<br />\n";
-
-
+$html .= " <div class=\"col-md-12\">\n";
 $html .= "<h2>Vous devez saisir votre identifiant et votre mot de passe</h2>";
+$html .= " </div>\n";
 
-$html .= "<form action=\"ident.php\" method=\"post\" name=\"form\"  >";
+$html .= " <div class=\"col-md-12\">\n";
+$html .= "<form action=\"ident.php\" method=\"post\" name=\"form\" class=\"form-horizontal\" >";
 
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Identifiant&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"login\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">Mot de passe&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\"><input type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></td>\n";
-$html .= " </tr>\n";
-$html .= " </table>";
+$html .= "<div class=\"form-group\">";
+$html .= "  <label for=\"login\" class=\"col-md-3 control-label\">Identifiant</label>";
+$html .= "  <div class=\"col-md-3\"><input id=\"login\" class=\"form-control\" type=\"text\" name=\"login\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= "<div class=\"form-group\">";
+$html .= "  <label for=\"password\" class=\"col-md-3 control-label\">Mot de passe</label>";
+$html .= "  <div class=\"col-md-3\"><input id=\"password\" class=\"form-control\" type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
 
-$html .= "<center><input type=\"submit\" class=\"submit_button\" value='Connexion' /></center></form>";
+$html .= "<div class=\"form-group\" style=\"margin-top:40px;\">";
+$html .= "<div class=\"col-md-3 col-md-offset-3\">";
+$html .= "<input type=\"submit\" class=\"submit_button btn btn-primary\" value='Connexion' style=\"width:100%;\"/>";
+$html .= " </div></div></form>\n";
+$html .= " </div>\n";
 
-$html .= "<br />\n";
-
-$html .= "</p>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);
