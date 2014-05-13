@@ -1,6 +1,5 @@
 <?php 
 
-
 class HeliosTransactionsSQL {
 	
 	public function __construct($sqlQuery){
@@ -20,8 +19,6 @@ class HeliosTransactionsSQL {
 		return $this->sqlQuery->queryOne($sql,$id);
 	}
 	
-	//Attention, implémentation partiel du last_status_id uniquement pour l'envoi au SAE 
-	//Ce champ est maintenu dans la partie Java, mais pas dans la partie PHP
 	public function updateStatus($transaction_id,$status_id,$message){
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
@@ -67,10 +64,13 @@ class HeliosTransactionsSQL {
 			$last_status_id = $this->getLatestStatusId($id);
 			$this->sqlQuery->query($sql2,$last_status_id,$id);
 			echo "$id : $last_status_id\n";
-		}
-		
+		}	
 	}
 	
-	
+	public function setLastStatusId($transaction_id){
+		$last_status_id = $this->getLatestStatusId($transaction_id);
+		$sql = "UPDATE helios_transactions SET last_status_id = ? WHERE id=?";
+		$this->sqlQuery->query($sql,$last_status_id,$transaction_id);
+	}
 	
 }

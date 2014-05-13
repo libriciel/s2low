@@ -1,10 +1,63 @@
 <?php
 
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
+require_once( __DIR__ . "/../../../init/init-www-helios.php");
 
+require_once (SITEROOT . '/class/helios/HeliosTransactionsListe.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
+
+$recuperateur = new Recuperateur($_GET);
+
+
+$sortWay =   $recuperateur->get("sortway","desc");
+$order = $recuperateur->get('order','id');
+$page_number = $recuperateur->getInt('page',1);
+$taille_page =  $recuperateur->getInt('count',10);
+
+
+$fmin_submission_date =  $recuperateur->get("min_submission_date");
+$fmax_submission_date =  $recuperateur->get("max_submission_date");
+$fmin_ack_date = $recuperateur->get("min_ack_date");
+$fmax_ack_date =  $recuperateur->get("max_ack_date");
+
+
+if (isset( $_GET['status']) && $_GET['status'] === '0'){
+	$fstatus = 0;
+} else {
+	$fstatus =  $recuperateur->get("status",HeliosTransactionsListe::EN_COURS);
+}
+
+$fauthority = $recuperateur->get("authority");
+$fnum =  $recuperateur->get("num");
+
+
+$heliosTransactionsListe = new HeliosTransactionsListe($sqlQuery);
+
+if ($droit->isSuperAdmin($userInfo) ) {
+	$heliosTransactionsListe->setAuthority($fauthority);
+}elseif ($droit->isAdmin($userInfo)){
+	$heliosTransactionsListe->setAuthority($userInfo['authority_id']);
+} else {
+	$serviceUser = new ServiceUser(DatabasePool::getInstance());
+	$collegues = $serviceUser->getMesCollegues($connexion->getId());
+	$collegue[] = $connexion->getId();
+	foreach($collegues as $info){
+		$collegue[] =  $info['id_user'];
+	}
+	$heliosTransactionsListe->setUserId($collegue);
+}
+$heliosTransactionsListe->setOrder($order,$sortWay);
+$heliosTransactionsListe->setPageNumber($page_number,$taille_page);
+$heliosTransactionsListe->setDateMinSubmission($fmin_submission_date);
+$heliosTransactionsListe->setDateMaxSubmission($fmax_submission_date);
+$heliosTransactionsListe->setDateMinAck($fmin_ack_date);
+$heliosTransactionsListe->setDateMaxAck($fmax_ack_date);
+$heliosTransactionsListe->setStatus($fstatus);
+$heliosTransactionsListe->setObjet($fnum);
+
+
+$nb_transactions = $heliosTransactionsListe->getNbTransaction();
+
 
 
 // Instanciation du module courant
@@ -30,96 +83,8 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 
-$serviceUser = new ServiceUser(DatabasePool::getInstance());
-$collegues = $serviceUser->getMesCollegues($me->getId());
-$collegue[] = $me->getId();
-foreach($collegues as $info){
-	$collegue[] =  $info['id_user'];
-}
+$envelopes = $heliosTransactionsListe->getAll();
 
-
-$fstatus = Helpers :: getVarFromGet("status");
-$fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
-$fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
-$fmin_ack_date = Helpers :: getVarFromGet("min_ack_date");
-$fmax_ack_date = Helpers :: getVarFromGet("max_ack_date");
-$fnum =Helpers :: getVarFromGet("num");
-$fauthority = Helpers :: getVarFromGet("authority");
-
-
-$doc = new HTMLLayout();
-$ht=new HeliosTransaction();
-
-// if not status selected, set "en cours" by default
-if ($fstatus != "10" && empty ($fstatus)) {
-  $fstatus = "10";
-}
-
-$filter = array ();
-// Construction chaine de filtrage
-//if ($me->isGroupAdminOrSuper()) { // Le super utilisateur voit toutes les collectivité
-if ($me->isSuper()){
-   if (isset ($fauthority) && strlen($fauthority) > 0) {
-    $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
-  }
-} elseif($me->isGroupAdmin()){
-	$all_authority_id = array_keys($me->getAllPossibleAuthority());	
-  	if (isset ($fauthority) && strlen($fauthority) > 0) {
-  		if (in_array($fauthority,$all_authority_id)){
-    		$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
-  		} else {
-  			$filter[] .=" 1 = 0 ";
-  		}
-  	} else {
-  		$filter[] .= "users.authority_id IN (" . implode(',',$all_authority_id) . ")";
-  	}
-} elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
-  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
-} else {
-  // Un utilisateur ne voit que ses propres transactions  
-  //$filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
-  $filter[] .= "helios_transactions.user_id IN (".implode(",",$collegue).")";
-}
-
-if (isset ($fstatus) && is_numeric($fstatus)) {
-  if ($fstatus == "10") {
-    // Le statut 10 signifie les transactions en cours
-    //-1 = il y a des problème, just pour test dans plateform de ovh.
-    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3)";
-  } else {
-    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) = " . addslashes($fstatus);
-  }
-}
-
-if (isset ($fnum) && !empty ($fnum)) {
-  $filter[] .= "helios_transactions.filename LIKE '%" . addslashes($fnum) . "%'";
-}
-
-
-// On ajoute les filtres relatifs aux dates
-if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) >= '" . addslashes($fmin_submission_date) . "'";
-}
-if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) <= '" . addslashes($fmax_submission_date) . "'";
-}
-if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) >= '" . addslashes($fmin_ack_date) . "'";
-}
-if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) <= '" . addslashes($fmax_ack_date) . "'";
-}
-
-$where = "";
-if (count($filter) > 0) {
-  $where = "WHERE " . implode($filter, " AND ");
-}
-
-
-//$envelopes : en fait, des docs financiers..
-
-$envelopes = $ht->getDocumentList($where);
-//JS
 
 $js =<<<EOJS
 <script type="text/javascript">
@@ -190,9 +155,12 @@ function afficheWarning(){
 //]]>
 </script>
 EOJS;
-//---->JS
 
-//!!!!ok am nevoie de JS
+
+$menuHTML = new MenuHTML();
+$pagerHTML  = new PagerHTML();
+
+$doc = new HTMLLayout();
 $doc->addHeader($js);
 
 $doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
@@ -201,10 +169,13 @@ $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/style
 $doc->setTitle("Tedetis : module helios");
 
 $doc->openContainer();
-$doc->openSideBar();
-$doc->buildMenu($me);
-$doc->buildPager($ht);
+
+$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
+
 $doc->closeSideBar();
+
+
 $doc->openContent();
 
 //deja HELIOS!!!!
@@ -225,22 +196,12 @@ $html.="<a class=\"btn btn-primary\" href=\"".WEBSITE_SSL. "/modules/helios/heli
   $html .= "</div>\n";
 
 $status = HeliosTransaction :: getStatusList();
-$status["10"] = "En cours";
+$status["999"] = "En cours";
 $status["all"] = "Tous les états";
 
-//filtrage aria
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering-area');\">Filtrage</h2>\n";
 $html .= "<div id=\"filtering-area\">\n";
 $html .= "<form  role=\"form\" class=\"form-horizontal\" action=\"" . WEBSITE_SSL . "/modules/helios/index.php\" method=\"get\">\n";
-
-//temp
-//$html .="<br> <hr> ".phpinfo();
-
-
-//fstatus: status selecté
-//if ($fstatus != "10" && empty ($fstatus)) {
-//  $fstatus = "10";
-//}
 
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-3 control-label\" for=\"status\">Etat</label>\n";
@@ -248,15 +209,12 @@ $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("status", $status, $fs
 $html .= "<label class=\"col-md-3 control-label\" for=\"filename-contain\">Le nom de fichier contient</label>";
 $html .= "<div class=\"col-md-3\"><input id=\"filename-contain\" class=\"form-control\" type=\"text\" name=\"num\" size=\"20\" maxlength=\"25\"";
 
-//$fnum: le nom du fichier contient...
 if (strlen($fnum) > 0) {
   $html .= " value=\"" . $fnum . "\"";
 }
 
 
 $html .= " /></div>\n</div>\n";
-
-//des autres options...
 
 //les dates
 //date minimale de postage
@@ -364,87 +322,6 @@ $html .= "</form>\n";
 $html .= "</div>\n"; //filtrage aria
 
 
-  $html .= "<div id=\"actions_area\">\n";
-  $html .= "<h2>Actions</h2>\n";
-if (!$me->isSuper() &&  $me->checkDroit($module->get("name"),'CS')) {
-  if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques (non dématèrialisé).</p>\n";
-  } else {
- $html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_fichier_import.php\" class=\"bouton\">Importer un fichier</a>\n";
-	
-  }
-
-}
-$html.="<a href=\"".WEBSITE_SSL. "/modules/helios/helios_retour.php\" class=\"bouton\" title=\"afficher la liste des réponses reçues\">Réponse d'Hélios</a>\n";
-  $html .= "</div>\n";
-
-$filter = array ();
-// Construction chaine de filtrage
-//if ($me->isGroupAdminOrSuper()) { // Le super utilisateur voit toutes les collectivité
-if ($me->isSuper()){
-   if (isset ($fauthority) && strlen($fauthority) > 0) {
-    $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
-  }
-} elseif($me->isGroupAdmin()){
-	$all_authority_id = array_keys($me->getAllPossibleAuthority());	
-  	if (isset ($fauthority) && strlen($fauthority) > 0) {
-  		if (in_array($fauthority,$all_authority_id)){
-    		$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
-  		} else {
-  			$filter[] .=" 1 = 0 ";
-  		}
-  	} else {
-  		$filter[] .= "users.authority_id IN (" . implode(',',$all_authority_id) . ")";
-  	}
-} elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transactions de sa collectivité 
-  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
-} else {
-  // Un utilisateur ne voit que ses propres transactions  
-  //$filter[] .= "helios_transactions.user_id='" . $me->getId() . "'";
-  $filter[] .= "helios_transactions.user_id IN (".implode(",",$collegue).")";
-}
-
-if (isset ($fstatus) && is_numeric($fstatus)) {
-  if ($fstatus == "10") {
-    // Le statut 10 signifie les transactions en cours
-    //-1 = il y a des problème, just pour test dans plateform de ovh.
-    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) IN (1, 2, 3,13,14)";
-  } else {
-    $filter[] .= "(SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow WHERE transaction_id = atw.transaction_id) AND atw.transaction_id=helios_transactions.id ORDER BY atw.id DESC LIMIT 1) = " . addslashes($fstatus);
-  }
-}
-
-if (isset ($fnum) && !empty ($fnum)) {
-  $filter[] .= "helios_transactions.filename LIKE '%" . addslashes($fnum) . "%'";
-}
-
-
-// On ajoute les filtres relatifs aux dates
-if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) >= '" . addslashes($fmin_submission_date) . "'";
-}
-if (isset ($fmax_submission_date) && !empty ($fmax_submission_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id = 1) <= '" . addslashes($fmax_submission_date) . "'";
-}
-if (isset ($fmin_ack_date) && !empty ($fmin_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) >= '" . addslashes($fmin_ack_date) . "'";
-}
-if (isset ($fmax_ack_date) && !empty ($fmax_ack_date)) {
-  $filter[] .= "(SELECT date FROM helios_transactions_workflow atw WHERE helios_transactions.id = atw.transaction_id AND atw.status_id IN (4,6) LIMIT 1) <= '" . addslashes($fmax_ack_date) . "'";
-}
-
-$where = "";
-if (count($filter) > 0) {
-  $where = "WHERE " . implode($filter, " AND ");
-}
-
-
-$ht=new HeliosTransaction();
-//$envelopes : en fait, des docs financiers..
-
- $envelopes = $ht->getDocumentList($where);
-
-
 $i = 0;
 
 $html .= "<h2>Liste des fichiers postés</h2>\n";
@@ -486,8 +363,6 @@ $sel_ok = false;
  foreach ($envelopes as $envelope) {
   
       $transaction_id=$envelope["id"];
-      $owner = new User($envelope["user_id"]);
-      $owner->init();
       
       $html .= "<tr><td>\n";
 		if ($envelope['last_status_id'] == 8) {
@@ -500,9 +375,9 @@ $sel_ok = false;
 		}
  		$html .="</td>";
       $html .= " <td headers=\"filename\">" . $envelope["filename"]. "</td>\n";
-      $html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate(HeliosTransactionWorkflow::getCurrentDate($transaction_id), true) ."</td>\n";
-      $html .= " <td headers=\"status\">" . HeliosTransactionWorkflow::getCurrentStatus($transaction_id) . "</td>\n";
-      $html .= " <td headers=\"authority-name\">" . $owner->getPrettyName() . "</td>\n";
+      $html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($envelope['submission_date'], true) ."</td>\n";
+      $html .= " <td headers=\"status\">" . $envelope['message'] . "</td>\n";
+      $html .= " <td headers=\"authority-name\">" . $envelope['givenname'] ." ". $envelope['name'] . "</td>\n";
  		if ($me->isGroupAdminOrSuper()) {
 			$html .= "  <td>". $envelope['authority_name'] ."</td>\n";
     	}
@@ -529,12 +404,7 @@ TOTO;
 }
 
 $doc->addBody($html);
-
 $doc->closeContent();
-
 $doc->closeContainer();
-
 $doc->buildFooter();
-
 $doc->display();
-?>

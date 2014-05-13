@@ -89,7 +89,6 @@ class TransactionSQL {
 	}
 	
 	public function setOrder($order,$sortway){
-		
 		$this->order = ($order=='id')?'actes_transactions.id':'submission_date';
 		$this->sortWay = ($sortway=='asc')?'ASC':'DESC';
 	}

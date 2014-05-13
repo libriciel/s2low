@@ -47,4 +47,4 @@ if (!$entity->sendAcquit(trim($filename))) {
   //header("Location: " . WEBSITE_SSL);
   exit ();
 }
-?>
+

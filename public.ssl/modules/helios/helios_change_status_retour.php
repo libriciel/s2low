@@ -39,6 +39,3 @@ if (isset($retour_id) && !empty($retour_id)){
 		Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", WEBSITE_SSL . "/modules/helios/helios_retour.php");
 	}else Helpers :: returnAndExit(1, "Erreur lors du changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php"); 
 }else Helpers :: returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php");
-
-
-?>

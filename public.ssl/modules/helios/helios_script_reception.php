@@ -1,5 +1,5 @@
 <?php
-require_once ("../../../config/config.php");
+require_once ("../../../init/init.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
@@ -63,6 +63,7 @@ if ($file_size>HELIOS_MAX_UPLOAD_SIZE) {
 $submission_date=date("Y-m-d H:i:s");;
 $ht->set("filename", $uploadFile_baseName);
 $ht->set("user_id", $userId);
+$ht->set("authority_id",$me->get("authority_id"));
 $ht->set("file_size",$file_size);
 $ht->set("submission_date",$submission_date);
 $ht->set("sha1",$SHA1);
@@ -123,6 +124,10 @@ if (!$htw->save(true)) {
     echo $_SESSION["error"];
     exit ();
 }
+
+
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+$heliosTransactionSQL->setLastStatusId($id_transaction);
 
 $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {

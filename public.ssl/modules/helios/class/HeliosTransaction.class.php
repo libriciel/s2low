@@ -88,6 +88,11 @@ class HeliosTransaction extends DataObject {
       "type" => "isString",
       "mandatory" => true
     ),
+  		"authority_id" => array (
+  				"descr" => "Identifiant de la collectivité",
+  				"type" => "isString",
+  				"mandatory" => true
+  		),
     "filename" => array (
       "descr" => "Nom du fichier posté",
       "type" => "isString",

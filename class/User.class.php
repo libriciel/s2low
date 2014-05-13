@@ -176,7 +176,9 @@ class User extends DataObject {
 	public function authenticate() {
 	  	
 		$this->retrieveInfoFromClientCertificate();
+		
 		$ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
+		
 		
 		if (! $ids) {
 			return false;
@@ -195,8 +197,10 @@ class User extends DataObject {
 	    	$_SESSION['id_login'] = $this->id;
 	    	$_SESSION['nb_id'] = 1;			
 		}
-		
-		return ($this->init() && $this->isActive());
+		$init = $this->init();
+		$is_active = $this->isActive();
+				
+		return $init && $is_active;
 	        
 	}
 
@@ -296,9 +300,9 @@ class User extends DataObject {
 	$issuer_dn = str_replace('\\', '\\\\', $issuer_dn);
 	$issuer_dn = str_replace('\'', '\\\'', $issuer_dn);
 
-    $sql = "SELECT id FROM users WHERE subject_dn='" . $subject_dn . "' AND issuer_dn='" . $issuer_dn . "'";
-
+    $sql = "SELECT id FROM users WHERE subject_dn='" . $subject_dn . "' AND issuer_dn='" . $issuer_dn . "'";    
     $result = $this->db->select($sql);
+    
 	if ($result->isError() || $result->num_row() == 0){
 		$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
 		return false;

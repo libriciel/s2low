@@ -1,5 +1,5 @@
 <?php
-require_once("../../../config/config.php");
+require_once ("../../../init/init.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
@@ -56,6 +56,9 @@ if (!$htw->save(true)) {
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit ();
 }
+
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+$heliosTransactionSQL->setLastStatusId($id);
 
 $msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {

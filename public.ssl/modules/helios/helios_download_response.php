@@ -29,9 +29,6 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 
 $retourId= Helpers :: getVarFromGet("id");
 
-//tmp
-//echo "Transaction:" . $transaction_id;
-
 $entity = new HeliosRetour($retourId);
 $entity->init();
 $filename=$entity->get("filename");
@@ -42,4 +39,3 @@ if (!$entity->sendfile($filename)) {
   //header("Location: " . WEBSITE_SSL);
   exit ();
 }
-?>
