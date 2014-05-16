@@ -14,7 +14,10 @@ require_once( SITEROOT . 'class/XMLHelper.php');
 require_once( SITEROOT . 'class/JSONoutput.class.php');
 require_once( SITEROOT . 'class/ModulePermission.class.php');
 
-session_start();
+
+if (php_sapi_name() != 'cli'){
+	session_start();
+}
 
 /*
  * Ce fichier à l'air d'être inclu dans tous les scripts S²low

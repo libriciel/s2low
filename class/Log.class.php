@@ -323,4 +323,4 @@ class Log extends DataObject {
 	return true;
   }
 }
-?>
+

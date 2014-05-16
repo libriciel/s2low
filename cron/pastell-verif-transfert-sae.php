@@ -14,7 +14,7 @@ foreach($allTransactions as $transactionInfo){
 
 
 $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
-$allTransactions = $heliosTransactionsSQL->getArchiveFromStatus(9);
+$allTransactions = $heliosTransactionsSQL->getArchiveFromStatusWithSAE(9);
 
 echo count($allTransactions). " transactions HELIOS trouvées dans l'état <envoyé au SAE>\n";
 

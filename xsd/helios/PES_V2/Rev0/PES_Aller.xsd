@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" xmlns:rola="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/aller" xmlns:reca="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:depa="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" xmlns:buda="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" xmlns:mara="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:acta="http://www.minefi.gouv.fr/cp/helios/pes_v2/etatactif/r0/aller" xmlns:empa="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" schemaLocation="../NS_Budget/r0/PES_BudgetAller.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" schemaLocation="../NS_Depense/r0/PES_DepenseAller.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" schemaLocation="../NS_Recette/r0/PES_RecetteAller.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/aller" schemaLocation="../NS_Role/r0/PES_RoleAller.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/etatactif/r0/aller" schemaLocation="../NS_EtatActif/r0/PES_EtatActif.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" schemaLocation="../NS_EtatPassif/r0/PES_EtatPassif.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" schemaLocation="../NS_Marche/r0/PES_Marche.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../Class_Signature.xsd"/>
+	<xs:import namespace="http://uri.etsi.org/01903/v1.1.1#" schemaLocation="../../xades/XAdES-core-schema.xsd"/>
+	<xs:include schemaLocation="../Class_PJ.xsd"/>
+	<xs:include schemaLocation="../Class_FacturePES.xsd"/>
+	<xs:include schemaLocation="../Class_FacturePESIndiv.xsd"/>
+	<xs:include schemaLocation="../Class_Tiers.xsd"/>
+	<xs:include schemaLocation="../Class_RepartitionBudget.xsd"/>
+	<xs:include schemaLocation="../Class_Nomenclature.xsd"/>
+	<xs:element name="PES_Aller">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Enveloppe" type="cm:TEnveloppe"/>
+				<xs:element name="EnTetePES" type="cm:TEnTetePES"/>
+				<xs:element name="PES_DepenseAller" type="depa:TPES_DepenseAller" minOccurs="0"/>
+				<xs:element name="PES_RecetteAller" type="reca:TPES_RecetteAller" minOccurs="0"/>
+				<xs:element name="PES_RoleAller" type="rola:TPES_RoleAller" minOccurs="0"/>
+				<xs:element name="PES_BudgetAller" type="buda:TPES_BudgetAller" minOccurs="0"/>
+				<xs:element name="PES_EtatActif" type="acta:TPES_EtatActif" minOccurs="0"/>
+				<xs:element name="PES_Marche" type="mara:TPES_Marche" minOccurs="0"/>
+				<xs:element name="PES_EtatPassif" type="empa:TPES_EtatPassif" minOccurs="0"/>
+				<xs:element name="PES_PJ" type="TPES_PJs" minOccurs="0"/>
+				<xs:group ref="ds:PESSignatureGroup" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="Id" type="xs:ID" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

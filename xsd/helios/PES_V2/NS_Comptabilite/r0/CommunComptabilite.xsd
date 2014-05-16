@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<!-- Regles de codifications communes au PES Comptabillite-->
+	<!-- 05/05/2006 EPA HLS00036235-->
+	<xs:complexType name="TNatInf">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0"/>
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TType">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TNatFonCpte">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TNatPceOrig">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+					<xs:enumeration value="03"/>
+					<xs:enumeration value="04"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TEtPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="00"/>
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+					<xs:enumeration value="03"/>
+					<xs:enumeration value="04"/>
+					<xs:enumeration value="05"/>
+					<xs:enumeration value="06"/>
+					<xs:enumeration value="07"/>
+					<xs:enumeration value="08"/>
+					<xs:enumeration value="09"/>
+					<xs:enumeration value="10"/>
+					<xs:enumeration value="11"/>
+					<xs:enumeration value="12"/>
+					<xs:enumeration value="13"/>
+					<xs:enumeration value="14"/>
+					<xs:enumeration value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TCodEcrit">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="00"/>
+					<xs:enumeration value="10"/>
+					<xs:enumeration value="11"/>
+					<xs:enumeration value="12"/>
+					<xs:enumeration value="13"/>
+					<xs:enumeration value="14"/>
+					<xs:enumeration value="16"/>
+					<xs:enumeration value="17"/>
+					<xs:enumeration value="18"/>
+					<xs:enumeration value="19"/>
+					<xs:enumeration value="20"/>
+					<xs:enumeration value="30"/>
+					<xs:enumeration value="40"/>
+					<xs:enumeration value="50"/>
+					<xs:enumeration value="51"/>
+					<xs:enumeration value="60"/>
+					<xs:enumeration value="70"/>
+					<xs:enumeration value="71"/>
+					<xs:enumeration value="72"/>
+					<xs:enumeration value="73"/>
+					<xs:enumeration value="74"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

@@ -5,6 +5,8 @@ ini_set("error_reporting", E_ALL & ~E_STRICT);
 
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
+define("EMAIL_ADMIN","eric@sigmalis.com");
+
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://localhost:8888/adullact/TedetisPHP/public/");
 define('WEBSITE_SSL', "https://localhost:4443/");
@@ -18,8 +20,8 @@ define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@invalid.fr>");
 define('DB_HOST', "localhost");
 define('DB_USER', "tedetis");
 define('DB_PASSWORD', "tedetis");
-//define('DB_DATABASE', "tedetis");
-define('DB_DATABASE', "tedetis3");
+define('DB_DATABASE', "tedetis");
+
 
 // Nombre d'élément affichés par défaut par page dans les listes
 define('DEFAULT_ITEMS_PER_PAGE', 10);
@@ -127,6 +129,16 @@ define('HELIOS_FILES_ROOT', '/tdt-workspace/helios/');
 define('HELIOS_FILES_UPLOAD_ROOT', '/tdt-workspace/helios/sending/');
 // Repertoire de stockage des reponses
 define('HELIOS_RESPONSES_ROOT', '/tdt-workspace/helios/response/');
+
+//Pour le script d'analyse des enveloppe Helios à envoyer
+define('HELIOS_VALIDATION_UPSTART_TOUCH_FILE','/tmp/helios-validation-upstart');
+
+define('HELIOS_COUNTER_FILE',"/tdt-workspace/helios/counter.txt");
+define("HELIOS_ZIP_BEFORE_SEND",false);
+//Mettre "" pour la production, mettre un répertoire de destination pour un serveur de test
+//Faire terminer la destination par un /
+define("HELIOS_SENDING_DESTINATION","");
+define("HELIOS_SENDING_MODE_DEMO",true);
 
 //Pour le script de récupération des enveloppe Helios
 define('HELIOS_FTP_SERVER','127.0.0.1');

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunEmprunts.xsd"/>
+	<xs:complexType name="TIdentificationEmprunt">
+		<xs:sequence>
+			<xs:element name="TypFlux" type="TTypFlux"/>
+			<xs:element name="TypMvt" type="TTypMvt"/>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="NumEmpOrdo" type="cm:Base_Texte24"/>
+			<xs:element name="ObjEmp" type="cm:Base_Texte250" minOccurs="0"/>
+			<xs:element name="MtEmp" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInformationEmprunt">
+		<xs:sequence>
+			<xs:element name="NumEmpPret" type="cm:Base_Texte24"/>
+			<xs:element name="TypEmp" type="TTypEmp"/>
+			<xs:element name="TypMon" type="TTypMon" minOccurs="0"/>
+			<xs:element name="PerRemb" type="TPerRemb"/>
+			<xs:element name="IntDiff" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="TypTx" type="TTypTx"/>
+			<xs:element name="Tx" type="cm:Base_Taux"/>
+			<xs:element name="FrsDossier" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="Duree" type="cm:Base_Num3"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLigneTableauAmt">
+		<xs:sequence>
+			<xs:element name="DtePai" type="cm:Base_Date"/>
+			<xs:element name="FraisEch" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="Capital" type="cm:Base_Montant"/>
+			<xs:element name="Interet" type="cm:Base_Montant"/>
+			<xs:element name="InteretDiffere" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtCrd" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
