@@ -151,4 +151,9 @@ class Pastell {
 		return $curl_wrapper->get($this->url."/".$url);
 	}
 	
+	public function delete($id_d){
+		$info = array('id_e'=>$this->id_e,'id_d'=>$id_d,'action'=>'supression');
+		return $this->callAPI("action.php",$info);
+	}
+	
 }

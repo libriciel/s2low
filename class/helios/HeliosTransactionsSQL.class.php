@@ -57,7 +57,7 @@ class HeliosTransactionsSQL {
 		$sql = "SELECT  *,helios_transactions.id as id FROM helios_transactions " .
 				" JOIN users ON helios_transactions.user_id = users.id " .
 				" JOIN authorities ON users.authority_id=authorities.id " .
-				" WHERE last_status_id=? AND authorities.sae_wsdl IS NOT NULL AND authorities.sae_wsdl != '' ";
+				" WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' ";
 		return $this->sqlQuery->query($sql,$status_id);	
 	}
 	

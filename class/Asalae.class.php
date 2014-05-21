@@ -1,5 +1,6 @@
 <?php
 
+//DEPRECATED
 class Asalae {
 	
 	private $lastError;

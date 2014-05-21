@@ -125,6 +125,10 @@ class HeliosArchiveControler {
 		}
 		
 		echo "$msg\n";
+		
+		$pastell->delete($transactionInfo['sae_transfer_identifier']);
+		echo "Document supprimé sur Pastell\n";
+		
 		return true;
 	}
 	

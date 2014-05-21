@@ -48,7 +48,7 @@ class ActesTransactionsSQL {
 	public function getArchiveFromStatus($status_id){
 		$sql = "SELECT  *,actes_transactions.id as id FROM actes_transactions " .
 				" JOIN authorities ON actes_transactions.authority_id=authorities.id " .
-				" WHERE last_status_id=? AND authorities.sae_wsdl IS NOT NULL AND authorities.sae_wsdl != '' ";
+				" WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' ";
 		return $this->sqlQuery->query($sql,$status_id);	
 	}
 	
