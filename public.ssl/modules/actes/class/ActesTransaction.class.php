@@ -1289,7 +1289,7 @@ class ActesTransaction extends DataObject {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
       return false;
     }
-    if ($new){
+    if ($new && $this->get('authority_id')){
     	$sql_verif = "SELECT actes_transactions.id FROM actes_transactions ". 
     			" WHERE actes_transactions.number='" . $this->get('number') . "' AND authority_id=" . $this->get('authority_id');    	
     	if ($this->db->getOneValue($sql_verif)){
