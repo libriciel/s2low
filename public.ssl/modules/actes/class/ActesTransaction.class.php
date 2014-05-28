@@ -1289,7 +1289,16 @@ class ActesTransaction extends DataObject {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
       return false;
     }
-
+    if ($new){
+    	$sql_verif = "SELECT actes_transactions.id FROM actes_transactions ". 
+    			" WHERE actes_transactions.number='" . $this->get('number') . "' AND authority_id=" . $this->get('authority_id');    	
+    	if ($this->db->getOneValue($sql_verif)){
+    		$this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
+    		$this->db->rollback();
+    		return false;
+    	}
+    }
+	
     if (!$this->db->exec($sql)) {
       $this->errorMsg = "Erreur lors de la sauvegarde de la transaction.";
       $this->db->rollback();
