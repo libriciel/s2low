@@ -86,6 +86,16 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+
+$html .= "<h2>V1.5 du 28.05.2014</h2>";
+$html .= "<ul>";
+$html .= "<li>Refonte globale de l'interface web pour être aux normes d'accessibilités ;";
+$html .= "<li>Passage sous Bootstrap v3 de l'interface web ;";
+$html .= "<li>Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;";
+$html .= "<li>Module HELIOS : optimisation du module ;";
+$html .= "<li>Module HELIOS : refonte du système d'envoie des flux PES pour passer de JAVA à PHP ;";
+$html .= "</ul>";
+
 $html .= "<h2>V1.4.01 du 14.01.2014</h2>";
 $html .= "<ul>";
 $html .= "<li>Module ACTES : corection bug : versement SEDA via Pastell en HHTPS;";
