@@ -88,9 +88,9 @@ $namespaces = $xml->getDocNamespaces();
 $children = $xml->children($namespaces['actes']);
 $children->Document->addChild("Signature",$signature[1],$namespaces['actes']);
 
-foreach($children->Annexes->Annexe as $i => $annexe) {
+/*foreach($children->Annexes->Annexe as $i => $annexe) {
 	$annexe->addChild("Signature",$signature[$i+2],$namespaces['actes']);
-}
+}*/
 
 $xml->asXML($tmpDir."/".$xml_file);
 

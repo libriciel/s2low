@@ -158,7 +158,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
 	?><div class='action'>
-	<applet codebase = "<?php echo WEBSITE_SSL ?>libersign/"
+	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
 			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
 			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
 			name = "appletsignature"

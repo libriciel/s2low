@@ -77,6 +77,11 @@ define('TEDETIS_TMP_PATH','/tmp/');
 
 define("VERIFICATION_SIREN",false);
 
+
+//Paramétre outils de signature LIBERSIGN
+
+define("LIBERSIGN_URL","https://signature.services.adullact.org/libersign");
+
 //////////////////////////////////
 ///// Paramètre module Actes /////
 //////////////////////////////////
@@ -189,6 +194,8 @@ define("DIA_DELIVERY_PATH","/tdt-workspace/dia/delivery");
 define("DIA_TO_PRESTO","/tdt-workspace/dia/to-presto");
 
 define("DIA_UPSTART_TOUCH_FILE",'/tmp/dia-upstart');
+
+
 
 require_once('config-static.php');
 

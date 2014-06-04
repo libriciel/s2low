@@ -505,11 +505,12 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	
 	$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 	$tab_included_files = $actesIncludedFileSQL->getSendFile($id);
+	$tab_included_files = array_slice($tab_included_files,0,1);
 	
 	$html .= "<h3>Signature de l'acte</h3>";
 	ob_start();
 	?><div class='action'>
-	<applet codebase = "<?php echo WEBSITE_SSL ?>libersign/"
+	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
 			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
 			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
 			name = "appletsignature"
