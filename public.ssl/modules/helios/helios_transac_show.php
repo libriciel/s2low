@@ -173,7 +173,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	 </applet>
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
-<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+<form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
 	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
 	<input type='hidden' name='nb_signature'  value='1'/>
 		<input type='hidden' name='signature_id_1' value='<?php echo $id?>' />
@@ -182,8 +182,8 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 </form>
 <script>
 function injectSignature() {
-	signature = document.applets[0].returnSignature("<?php echo $included_file['id'] ?>");
-	$("#signature_<?php echo $i + 1?>").val(signature);
+	signature = document.applets[0].returnSignature("<?php echo $id ?>");
+	$("#signature_1").val(signature);
 	$("#form_sign").submit();
 }
 </script>
