@@ -153,7 +153,15 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url'
 
 
 if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
-//TODO : il faut prendre juste une partie du PES et calculer le sha1...	
+	$xml = simplexml_load_file(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
+
+	//TODO : il faut prendre juste une partie du PES et calculer le sha1...	
+	$hash_1 = $trans->get('sha1');
+	
+	
+	$pesid_1 = strval($xml['Id']);
+	echo $pesid_1;
+	
 
 	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
@@ -164,12 +172,23 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 			name = "appletsignature"
 			width = "500"
 			height = "257" >
-		<param name="hash_count" value="1" />
+			<param name="hash_count" value="1" />
 			<param name="iddoc_1" value="<?php echo $id?>" />
-			<param name="hash_1" value="<?php echo $trans->get('sha1') ?>" /> 
-			<param name="format_1" value="CMS" />
-		<param name="id_user" value="id=<?php echo $id?>" />
-		<param name="return_mode" value="form" />
+			<param name="hash_1" value="<?php echo $hash_1 ?>" /> 
+			<param name="format_1" value="XADES-env" />
+			<param name="return_mode" value="form" />
+			
+			<!-- TODO -->
+			<param name="pesid_1" value="<?php echo $pesid_1?>">
+			<param name="pespolicyid_1" value="urn:oid:1.2.250.1.131.1.5.18.21.1.4">
+			<param name="pespolicydesc_1" value="Politique de signature Helios de la DGFiP">
+			<param name="pespolicyhash_1" value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=">
+			<param name="pesspuri_1" value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf">
+			<param name="pescity_1" value="Montpellier">
+			<param name="pespostalcode_1" value="34000">
+			<param name="pescountryname_1" value="France">
+			<param name="pesclaimedrole_1" value="Parapheur du Maire">
+	
 	 </applet>
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 

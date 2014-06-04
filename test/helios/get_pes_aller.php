@@ -2,10 +2,27 @@
 $nom_fic = md5(mt_rand());
 
 $date = date("Y-m-d");
+$id = md5(mt_rand());
 
 $content = <<< PES_ALLER
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" xmlns:acta="http://www.minefi.gouv.fr/cp/helios/pes_v2/etatactif/r0/aller" xmlns:buda="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:depa="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:empa="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" xmlns:mara="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:reca="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:rola="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/aller" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<n:PES_Aller 
+	xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" 
+	xmlns:acta="http://www.minefi.gouv.fr/cp/helios/pes_v2/etatactif/r0/aller" 
+	xmlns:buda="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" 
+	xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" 
+	xmlns:depa="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" 
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+	xmlns:empa="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" 
+	xmlns:mara="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" 
+	xmlns:reca="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" 
+	xmlns:rola="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/aller" 
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" 
+	xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	Id="$id"
+	
+	>
  <Enveloppe>
   <Parametres>
    <Version V="1"/>

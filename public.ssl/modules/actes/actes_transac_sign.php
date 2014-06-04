@@ -62,8 +62,9 @@ $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 $signature = array();
 
 for($i=1; $i<=$nb_signature;$i++){
-	$signature[$i] = Helpers::getVarFromPost("signature_$i");
+	$signature[$i] = base64_decode(Helpers::getVarFromPost("signature_$i"));
 	$signature_id = Helpers::getVarFromPost("signature_id_$i");
+	
 	$actesIncludedFileSQL->setSignature($id,$signature_id,$signature[$i]);
 }
 
