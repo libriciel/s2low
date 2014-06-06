@@ -58,24 +58,16 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 $uploaddir = HELIOS_FILES_UPLOAD_ROOT;
 
 $uploadFile_baseName = $_FILES['enveloppe']['name'];
-//$signFile_baseName = $_FILES['signature']['name'];
 
 $uploadfile = $uploaddir . basename($uploadFile_baseName);
-//$signfile = $uploaddir . basename($signFile_baseName);
 
 try{
 	if (move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
 	
-	
-		//calculate the sha1 form the content of the file.
 		$SHA1=sha1_file($uploadfile);
 		
-	  //move_uploaded_file($_FILES['signature']['tmp_name'], $signfile);
 	  $ht = new HeliosTransaction();
 	  $htw = new HeliosTransactionWorkflow();
-	    //insertion (idUSer, filename, signed) dans la table helios_transactions  => un id de la transaction
-	  // où filename = le nom du fichier inclut dans le fichier message 
-	  //OBS : la valeur de l'id est automatiquement enregistrée par save() (voir DataObjet)
 		$file_size=$_FILES['enveloppe']['size'];
 	  $submission_date=date("Y-m-d H:i:s");;
 	  $ht->set("filename", $uploadFile_baseName);
@@ -83,6 +75,8 @@ try{
 	  $ht->set("file_size",$file_size);
 	  $ht->set("submission_date",$submission_date);
 	  $ht->set("sha1",$SHA1);
+	  $ht->set("authority_id",$me->get("authority_id"));
+	  
 	  $myAuthority = new Authority($me->get("authority_id"));
 	  $siren=$myAuthority->get('siren');
 	  $ht->set("siren",$siren);
@@ -98,7 +92,7 @@ try{
 	
 	  $R = $ht->save(true);
 	  if (!$R) {
-	    $msg= "Erreur de l'initialisaton de l'accès à la table helios_transactions.";
+	    $msg= "Erreur de l'initialisaton de l'accès à la table helios_transactions : " . $ht->getErrorMsg();
 	    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
 	      $msg .= "\nErreur de journalisation.";
 	    }
