@@ -3,6 +3,7 @@ require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
+require_once(SITEROOT . '/class/helios/HeliosSignature.class.php');
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -153,15 +154,9 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url'
 
 
 if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
-	$xml = simplexml_load_file(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
-
-	//TODO : il faut prendre juste une partie du PES et calculer le sha1...	
-	$hash_1 = $trans->get('sha1');
 	
-	
-	$pesid_1 = strval($xml['Id']);
-	echo $pesid_1;
-	
+	$heliosSignature = new HeliosSignature();
+	$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
 
 	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
@@ -172,23 +167,30 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 			name = "appletsignature"
 			width = "500"
 			height = "257" >
-			<param name="hash_count" value="1" />
-			<param name="iddoc_1" value="<?php echo $id?>" />
-			<param name="hash_1" value="<?php echo $hash_1 ?>" /> 
-			<param name="format_1" value="XADES-env" />
-			<param name="return_mode" value="form" />
 			
-			<!-- TODO -->
-			<param name="pesid_1" value="<?php echo $pesid_1?>">
-			<param name="pespolicyid_1" value="urn:oid:1.2.250.1.131.1.5.18.21.1.4">
-			<param name="pespolicydesc_1" value="Politique de signature Helios de la DGFiP">
-			<param name="pespolicyhash_1" value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=">
-			<param name="pesspuri_1" value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf">
-			<param name="pescity_1" value="Montpellier">
-			<param name="pespostalcode_1" value="34000">
-			<param name="pescountryname_1" value="France">
-			<param name="pesclaimedrole_1" value="Parapheur du Maire">
-	
+			<param value="all-permissions" name="permissions"></param>
+    <param value="false" name="codebase_lookup"></param>
+    <param value="true" name="display_cancel"></param>
+    <param value="javascript" name="cancel_mode"></param>
+    <param value="1" name="hash_count"></param>
+    <param value="<?php echo $signatureInfo['bordereau_hash']?>" name="hash_1"></param>
+    <param value="<?php echo $signatureInfo['bordereau_id']?>" name="pesid_1"></param>
+    <param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_1"></param>
+    <param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_1"></param>
+    <param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_1"></param>
+    <param value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf" name="pesspuri_1"></param>
+    <param value="France" name="pescountryname_1"></param>
+    <param value="Ordonnateur" name="pesclaimedrole_1"></param>
+    <param value="null" name="p7s_1"></param>
+    <param value="iso-8859-1" name="pesencoding_1"></param>
+    <param value="XADES-env" name="format_1"></param>
+    <param value="form" name="return_mode"></param>
+			
+
+    <param value="<?php hecho($authorityInfo->get('city'))?>" name="pescity_1"></param>
+    <param value="<?php hecho($authorityInfo->get('postal_code'))?>" name="pespostalcode_1"></param>
+    
+		
 	 </applet>
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
