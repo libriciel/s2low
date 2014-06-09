@@ -157,7 +157,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	
 	$heliosSignature = new HeliosSignature();
 	$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
-	$id = $signatureInfo['bordereau_id'];
+	$id_pes = $signatureInfo['bordereau_id'];
 	
 	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
@@ -198,15 +198,14 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
 <form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
-	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
+	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id ?>'/>
 	<input type='hidden' name='nb_signature'  value='1'/>
-		<input type='hidden' name='signature_id_1' value='<?php echo $id?>' />
-		<input type='hidden' name='signature_1' id='signature_1' value=''/>
-
+	<input type='hidden' name='signature_id_1' value='<?php echo $id_pes?>' />
+	<input type='hidden' name='signature_1' id='signature_1' value=''/>
 </form>
 <script>
 function injectSignature() {
-	signature = document.applets[0].returnSignature("<?php echo $id ?>");
+	signature = document.applets[0].returnSignature("<?php echo $id_pes ?>");
 	$("#signature_1").val(signature);
 	$("#form_sign").submit();
 }
