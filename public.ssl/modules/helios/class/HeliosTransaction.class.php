@@ -89,7 +89,11 @@ class HeliosTransaction extends DataObject {
   		"type" => "isString",
   		"mandatory" =>false
   	),
-
+	"last_status_id" => array(
+			"descr" => "",
+			"type" => "isInt",
+			"mandatory" =>false
+  	),
   );
 
   /**

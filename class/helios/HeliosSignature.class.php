@@ -28,6 +28,24 @@ class HeliosSignature {
 		
 		return $info;
 	}
-	
+
+	public function injectSignature($original_file_path,$signature){
+		$signature_1 = base64_decode($signature);
+		$domDocument = new DOMDocument();
+		$domDocument->loadXML($signature_1);
+		$signature = $domDocument->firstChild->firstChild;
+		$cloned = $signature->cloneNode(TRUE);
+		
+		$domDocument = new DOMDocument();
+		$domDocument->load($original_file_path);
+		
+		//$fragment = $domDocument->createDocumentFragment();
+		//$fragment->appendXML($signature_1);
+		$domDocument->firstChild->appendChild($domDocument->importNode($cloned,true));
+		$domDocument->formatOutput = TRUE;
+		return $domDocument->saveXml();
+		
+		
+	}
 	
 }
