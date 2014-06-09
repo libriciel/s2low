@@ -1,4 +1,6 @@
 <?php 
+date_default_timezone_set("Europe/Paris");
+
 $nom_fic = md5(mt_rand());
 
 $date = date("Y-m-d");

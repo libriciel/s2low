@@ -157,7 +157,8 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	
 	$heliosSignature = new HeliosSignature();
 	$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
-
+	$id = $signatureInfo['bordereau_id'];
+	
 	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
 	?><div class='action'>
@@ -175,6 +176,8 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
     <param value="1" name="hash_count"></param>
     <param value="<?php echo $signatureInfo['bordereau_hash']?>" name="hash_1"></param>
     <param value="<?php echo $signatureInfo['bordereau_id']?>" name="pesid_1"></param>
+        <param value="<?php echo $signatureInfo['bordereau_id']?>" name="iddoc_1"></param>
+    
     <param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_1"></param>
     <param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_1"></param>
     <param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_1"></param>

@@ -2,6 +2,7 @@
 
 ini_set("error_reporting", E_ALL & ~E_STRICT);
 
+date_default_timezone_set("Europe/Paris");
 
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
