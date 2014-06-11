@@ -110,6 +110,7 @@ class HeliosEnvoiControler {
 			try {
 				$ftp = new FTPFileSender();
 				$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, $authorityInfo["helios_ftp_login"], $authorityInfo["helios_ftp_password"]);
+				$ftp->setPassiveMode(true);
 				$ftp->sendRawCommand("P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
 				$ftp->sendRawCommand("P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
 				$ftp->sendRawCommand("P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);

@@ -19,6 +19,10 @@ class FTPFileSender {
 		}
 	}
 	
+	public function setPassiveMode($is_pasv){
+		ftp_pasv ($this->ftp_handler,$is_pasv);
+	}
+	
 	public function sendRawCommand($command,$mode_demo=false){
 		$result = ftp_raw($this->ftp_handler, $command);
 		if ($mode_demo){
