@@ -15,9 +15,14 @@ class HeliosSignature {
 		$id = array();
 		$hash = array();
 		foreach($root->Bordereau as $bordereau){
-			//TODO doit-on injecter l'idenfiant du bordereau?
-			$id[]=strval($bordereau->BlocBordereau->IdBord['V']);
 			$dom = dom_import_simplexml($bordereau);
+			
+			//Si la balise Bordereau n'a pas d'attribut Id (qui est facultatif), on met l'id qu'on trouve à l'interieur du BlocBordereau
+			if (! $dom->hasAttribute('Id')){
+				$dom->setAttribute('Id', strval($bordereau->BlocBordereau->IdBord['V']));
+			}
+			
+			$id[]=$dom->getAttribute('Id');
 			$data_to_sign = $dom->C14N(true, false);
 			$hash[] = sha1($data_to_sign);
 		}
@@ -31,16 +36,22 @@ class HeliosSignature {
 
 	public function injectSignature($original_file_path,$signature){
 		$signature_1 = base64_decode($signature);
-		$domDocument = new DOMDocument();
-		$domDocument->loadXML($signature_1);
-		$signature = $domDocument->firstChild->firstChild;
+		$signatureDOM = new DOMDocument();
+		$signatureDOM->loadXML($signature_1);
+		$signature = $signatureDOM->firstChild->firstChild;
 		$cloned = $signature->cloneNode(TRUE);
 		
 		$domDocument = new DOMDocument();
 		$domDocument->load($original_file_path);
 		
-		//$fragment = $domDocument->createDocumentFragment();
-		//$fragment->appendXML($signature_1);
+		$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
+		
+		$bordereauNode = $all_bordereau[0];
+		if (! $bordereauNode->hasAttribute('Id')){
+			$bordereauSimpleXML = simplexml_import_dom($bordereauNode);
+			$dom->setAttribute('Id', strval($bordereauSimpleXML->BlocBordereau->IdBord['V']));
+		}
+		
 		$domDocument->firstChild->appendChild($domDocument->importNode($cloned,true));
 		$domDocument->formatOutput = TRUE;
 		return $domDocument->saveXml();
