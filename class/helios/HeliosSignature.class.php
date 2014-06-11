@@ -52,7 +52,7 @@ class HeliosSignature {
 			$bordereauNode->setAttribute('Id', strval($bordereauSimpleXML->BlocBordereau->IdBord['V']));
 		}
 		
-		$domDocument->firstChild->appendChild($domDocument->importNode($cloned,true));
+		$bordereauNode->appendChild($domDocument->importNode($cloned,true));
 		$domDocument->formatOutput = TRUE;
 		return $domDocument->saveXml();
 		
