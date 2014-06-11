@@ -176,7 +176,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
     <param value="1" name="hash_count"></param>
     <param value="<?php echo $signatureInfo['bordereau_hash']?>" name="hash_1"></param>
     <param value="<?php echo $signatureInfo['bordereau_id']?>" name="pesid_1"></param>
-        <param value="<?php echo $signatureInfo['bordereau_id']?>" name="iddoc_1"></param>
+    <param value="<?php echo $signatureInfo['bordereau_id']?>" name="iddoc_1"></param>
     
     <param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_1"></param>
     <param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_1"></param>
