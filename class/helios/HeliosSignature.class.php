@@ -35,24 +35,29 @@ class HeliosSignature {
 	}
 
 	public function injectSignature($original_file_path,$signature){
-		$signature_1 = base64_decode($signature);
-		$signatureDOM = new DOMDocument();
-		$signatureDOM->loadXML($signature_1);
-		$signature = $signatureDOM->firstChild->firstChild;
-		$cloned = $signature->cloneNode(TRUE);
+		
+		$all_signature = explode(",",$signature);
 		
 		$domDocument = new DOMDocument();
 		$domDocument->load($original_file_path);
 		
 		$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
 		
-		$bordereauNode = $all_bordereau->item(0);
-		if (! $bordereauNode->hasAttribute('Id')){
-			$bordereauSimpleXML = simplexml_import_dom($bordereauNode);
-			$bordereauNode->setAttribute('Id', strval($bordereauSimpleXML->BlocBordereau->IdBord['V']));
+		foreach($all_signature as $num_bordereau => $signature) {
+			$signature_1 = base64_decode($signature);
+			$signatureDOM = new DOMDocument();
+			$signatureDOM->loadXML($signature_1);
+			$signature = $signatureDOM->firstChild->firstChild;
+			$cloned = $signature->cloneNode(TRUE);
+			
+			$bordereauNode = $all_bordereau->item($num_bordereau);
+			if (! $bordereauNode->hasAttribute('Id')){
+				$bordereauSimpleXML = simplexml_import_dom($bordereauNode);
+				$bordereauNode->setAttribute('Id', strval($bordereauSimpleXML->BlocBordereau->IdBord['V']));
+			}
+			
+			$bordereauNode->appendChild($domDocument->importNode($cloned,true));
 		}
-		
-		$bordereauNode->appendChild($domDocument->importNode($cloned,true));
 		$domDocument->formatOutput = TRUE;
 		return $domDocument->saveXml();
 		

@@ -10,7 +10,7 @@ define("EMAIL_ADMIN","eric@sigmalis.com");
 
 define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 define('WEBSITE', "http://localhost:8888/adullact/TedetisPHP/public/");
-define('WEBSITE_SSL', "https://localhost:4443/");
+define('WEBSITE_SSL', "https://192.168.1.28:4443/");
 
 define('WEBMASTER', "webmaster@invalid.fr");
 // Adresse du From des emails émis
