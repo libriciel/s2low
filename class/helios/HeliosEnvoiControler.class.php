@@ -36,15 +36,22 @@ class HeliosEnvoiControler {
 				continue;
 			}
 		
-			$xsdValidation = new XSDValidation(__DIR__."/../../xsd/helios/PES_V2/Rev0/PES_Aller.xsd");
+			/*$xsdValidation = new XSDValidation(__DIR__."/../../xsd/helios/PES_V2/Rev0/PES_Aller.xsd");
 			if (! $xsdValidation->validate($pes_content)){
 				$this->displayXMLError();
 				$message = "Transaction $transaction_id : la transaction ne respecte pas le schéma PES_Aller";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
+			}*/
+			
+			$pes_xml = simplexml_load_string($pes_content);			
+			if (!$pes_xml){
+				$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
 			}
 			
-			$pes_xml = simplexml_load_string($pes_content);
+			
 			$nom_fic = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
 			if ($this->heliosTransactionsSQL->nomFicExists($nom_fic)){
 				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";

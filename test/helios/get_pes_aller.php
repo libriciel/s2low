@@ -23,7 +23,6 @@ $content = <<< PES_ALLER
 	xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	Id="$id"
-	
 	>
  <Enveloppe>
   <Parametres>
