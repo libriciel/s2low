@@ -53,6 +53,11 @@ class HeliosEnvoiControler {
 			
 			
 			$nom_fic = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
+			if (! $nom_fic){
+				$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}
 			if ($this->heliosTransactionsSQL->nomFicExists($nom_fic)){
 				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
@@ -117,8 +122,23 @@ class HeliosEnvoiControler {
 
 			$pes_xml = simplexml_load_file($file_path);
 			$cod_col = $pes_xml->EnTetePES->CodCol['V'];
+			if (! $cod_col){
+				$message = "Transaction $transaction_id : La balise EnTetePES/CodCol n'est pas présente ou est vide";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}			
 			$id_post = $pes_xml->EnTetePES->IdPost['V'];
+			if (! $id_post){
+				$message = "Transaction $transaction_id : La balise EnTetePES/IdPost n'est pas présente ou est vide";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}
 			$cod_bud = $pes_xml->EnTetePES->CodBud['V'];
+			if (! $cod_bud){
+				$message = "Transaction $transaction_id : La balise EnTetePES/CodBud n'est pas présente ou est vide";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}
 			$p_msg = "PES#" . $cod_col . "#" . $id_post . "#" . $cod_bud;
 			
 			try {
