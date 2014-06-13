@@ -14,8 +14,9 @@ class FichierCompteur {
 		$num = fread($fd,1024);
 		fseek($fd, 0);
 		ftruncate($fd,0);
-		intval($num);
+		$num = intval($num);
 		$num++;
+		$num = sprintf( "%03d",$num);
 		fwrite($fd, $num);
 		
 		flock($fd, LOCK_UN);

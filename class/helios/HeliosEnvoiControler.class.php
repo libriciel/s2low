@@ -92,20 +92,27 @@ class HeliosEnvoiControler {
 			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
 			$file_path_with_complete_name = HELIOS_FILES_UPLOAD_ROOT."/".$completeName; 
 			if (! copy($file_path, $file_path_with_complete_name)){
-				echo "échec de la copie...";
-				exit;
+				echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
+				continue;
 			}			
 			if (HELIOS_ZIP_BEFORE_SEND){
 				$file_to_send = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'].".zip";
 				$zipArchive = new ZipArchive();
 				if (! $zipArchive->open($file_to_send,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)){
-					echo "Impossible d'ouvrir $file_to_send";
-					exit;
+					echo "Transaction $transaction_id: Impossible d'ouvrir $file_to_send";
+					continue;
 				}
 				$zipArchive->addFile($file_path_with_complete_name,$completeName);
 				$zipArchive->close();
 			} else {
 				$file_to_send = $file_path_with_complete_name;
+			}
+			
+			
+			$sha1_file = sha1_file($file_path);
+			if ($sha1_file != $transactionInfo['sha1']){
+				echo "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme";
+				continue;
 			}
 
 			$pes_xml = simplexml_load_file($file_path);
@@ -124,7 +131,7 @@ class HeliosEnvoiControler {
 				$ftp->sendFile(HELIOS_SENDING_DESTINATION,$file_to_send);
 				$ftp->disconnect();
 			} catch (Exception $e){
-				echo "Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
+				echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
 				continue;
 			}
 			
