@@ -76,6 +76,7 @@ try{
 	  $ht->set("submission_date",$submission_date);
 	  $ht->set("sha1",$SHA1);
 	  $ht->set("authority_id",$me->get("authority_id"));
+	  $hy->set("last_status_id",1);
 	  
 	  $myAuthority = new Authority($me->get("authority_id"));
 	  $siren=$myAuthority->get('siren');
