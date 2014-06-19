@@ -359,17 +359,17 @@ if (count($envelopes) > 0) {
     $html .= " </thead>\n";
     $html .= " <tbody>\n";
 
-$sel_ok = false;
+$sel_ok = array();
  foreach ($envelopes as $envelope) {
   
       $transaction_id=$envelope["id"];
       
       $html .= "<tr><td>\n";
-		if ($envelope['last_status_id'] == 8) {
+		if (in_array($envelope['last_status_id'],array(8,13))) {
 			$html .= '<input type="checkbox" name="liste_id[]" value="' .
 						htmlspecialchars($envelope['id']) .
 						'" id="checkbox'.$envelope['id'].'" />';
-			$sel_ok = true;
+			$sel_ok[$envelope['last_status_id']] = true;
 		} else {
 			$html .="&nbsp;";
 		}
@@ -390,15 +390,42 @@ $sel_ok = false;
 
     $html .= "</tbody>\n";
     $html .= "</table>\n";
-    $html .= "</div>\n";
-    if($sel_ok){
-    $html .=<<<TOTO
-    	<div class="action">
-			<input type="submit" class="submit_button" value="Envoyer la séléction au SAE"/>
-		</div>
-TOTO;
+   
+    if (isset($sel_ok[8])){
+    	$html.= "<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>";
     }
-    $html .= "</form>";
+    
+    $html.="</form><br/><br/>";
+    
+    if (isset($sel_ok[13])){
+    ob_start();
+    ?>	 
+    		<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+    
+			       		<form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_batch_sign.php" method="post">
+                   			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
+                   		</form>
+                   		<script type='text/javascript'>
+                   		$(document).ready(function() {              
+                   			$("#signer_button").click(function(){
+								$("input:checkbox:checked").each(function() {
+									$("#form-sign").append("<input type='hidden' name='liste_id[]' value='" + $(this).val() + "' />");
+								});
+								$("#form-sign").submit();
+								return false;
+							})
+                   		});
+                   		</script>
+                   		
+                
+<?php 
+	$html .= ob_get_contents();
+	ob_end_clean();
+
+
+    }
+    $html .= "</div>\n";
+    
 } else {
   $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
 }

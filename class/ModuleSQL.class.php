@@ -21,6 +21,14 @@ class ModuleSQL {
 		return $this->sqlQuery->queryOne($sql,$module_id,$user_id);
 	}
 	
+	public function hasDroit($module_id,$user_id,$droit_to_checked){
+		$droit = $this->getInfoPerms($module_id, $user_id);
+		if ($droit == "RW" ) {
+			return true;
+		}
+		return $droit == $droit_to_checked;
+	}
+	
  	public function getModulesForUser($userInfo) {
  		
  		if ($userInfo['role'] == 'SADM'){

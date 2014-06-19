@@ -1,8 +1,5 @@
 <?php
 
-
-
-
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once( __DIR__ . "/../../../init/init-www-helios.php");

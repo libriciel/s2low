@@ -6,6 +6,8 @@ $nom_fic = md5(mt_rand());
 $date = date("Y-m-d");
 $id = md5(mt_rand());
 
+$bordereau_id = mt_rand();
+
 $content = <<< PES_ALLER
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <n:PES_Aller 
@@ -58,7 +60,7 @@ $content = <<< PES_ALLER
   <Bordereau>
    <BlocBordereau>
     <Exer V="2009"/>
-    <IdBord V="72"/>
+    <IdBord V="$bordereau_id"/>
     <DteBordEm V="2009-07-16"/>
     <TypBord V="01"/>
     <NbrPce V="1"/>
@@ -119,70 +121,7 @@ $content = <<< PES_ALLER
     </LigneDePiece>
    </Piece>
   </Bordereau>
-  	 <Bordereau>
-   <BlocBordereau>
-    <Exer V="2009"/>
-    <IdBord V="42"/>
-    <DteBordEm V="2009-07-16"/>
-    <TypBord V="01"/>
-    <NbrPce V="1"/>
-
-    <MtCumulAnnuel V="6312190.16"/>
-    <MtBordHT V="75724.75"/>
-   </BlocBordereau>
-   <Piece>
-    <BlocPiece>
-     <InfoPce>
-      <IdPce V="832"/>
-      <TypPce V="01"/>
-      <NatPce V="01"/>
-
-      <Obj V="TEST HOMOLOGATION"/>
-     </InfoPce>
-    </BlocPiece>
-    <LigneDePiece>
-     <BlocLignePiece>
-      <InfoLignePce>
-       <IdLigne V="1"/>
-       <Nature V="6553"/>
-       <Fonction V="113"/>
-
-       <LibVir1 V="ECHEANCIER"/>
-       <LibVir2 V="LE NUMERO N EST PAS PRECISE"/>
-       <ModRegl V="03"/>
-       <TVAIntraCom V="0"/>
-       <MtHT V="39724.75"/>
-      </InfoLignePce>
-     </BlocLignePiece>
-     <Tiers>
-      <InfoTiers>
-
-       <RefTiers V="811"/>
-       <CatTiers V="22"/>
-       <NatJur V="09"/>
-       <Nom V="PAIERIE DEPART. HERAULT"/>
-      </InfoTiers>
-      <Adresse>
-       <TypAdr V="1"/>
-       <Adr2 V="1000 RUE ALCO"/>
-       <CP V="34000"/>
-
-       <Ville V="MONTPELLIER"/>
-       <CodRes V="0"/>
-      </Adresse>
-      <CpteBancaire>
-       <CodeEtab V="30001"/>
-       <CodeGuic V="00866"/>
-       <IdCpte V="C7850000000"/>
-       <CleRib V="67"/>
-       <LibBanc V="LA BANQUE DU FUTUR"/>
-
-       <TitCpte V="PAIERIE DEPART. HERAULT"/>
-      </CpteBancaire>
-     </Tiers>
-    </LigneDePiece>
-   </Piece>
-  </Bordereau>
+  	
  </PES_DepenseAller>
  <PES_PJ>
   <EnTetePES_PJ>

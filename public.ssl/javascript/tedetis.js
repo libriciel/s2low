@@ -57,7 +57,7 @@ function afficheWarning(){
       if(liste[i].checked) n++;
     }
   }
-  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnées ?\\n";
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnées ?\n";
   msg += "Cette action est non réversible et est sous votre entière responsabilité.";
   return confirm(msg);
 }

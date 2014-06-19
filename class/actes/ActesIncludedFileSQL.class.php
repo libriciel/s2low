@@ -23,6 +23,11 @@ class ActesIncludedFileSQL {
 		
 	}
 	
+	public function getTransactionId($actes_included_file_id){
+		$sql = "SELECT transaction_id FROM actes_included_files WHERE id=?";
+		return $this->sqlQuery->queryOne($sql,$actes_included_file_id);
+	}
+	
 	
 	
 }
