@@ -145,11 +145,10 @@ $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url')) {
 	$html .= "<div class=\"action\">\n";
 	$html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_archiver.php\"  method=\"post\">\n";
-	$html .= "<p>Archivage SEDA&nbsp;:&nbsp;";
+	$html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
 	$html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-	$html .= "<input type=\"submit\" class=\"submit_button\" value=\"Versement manuel\" />\n";
-	$html .= "</p></form>\n";
-	$html .= "</div>\n";
+	$html .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+	$html .= "</div>\n</form>\n";
 }
 
 
