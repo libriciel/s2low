@@ -18,14 +18,19 @@ $transaction_list = array();
 $heliosSignature = new HeliosSignature();
 
 foreach ($liste_id as $transaction_id){
-	 $transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
-	 if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
-	 	Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
-	 }
-	 $signature = $heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1']);
-	 $transactionInfo['bordereau_hash'] = $signature['bordereau_hash'];
-	 $transactionInfo['bordereau_id'] = $signature['bordereau_id'];
-	 $transaction_list[] = $transactionInfo;
+	try{
+	 	$transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
+	 	if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
+	 		Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
+	 	}
+	 	$signature = $heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1']);
+	 	$transactionInfo['bordereau_hash'] = $signature['bordereau_hash'];
+	 	$transactionInfo['bordereau_id'] = $signature['bordereau_id'];
+	 	$transaction_list[] = $transactionInfo;
+	} catch (Exception $e){
+		Helpers::returnAndExit(1, "Impossible de signer la transaction $transaction_id : le fichier PES contient un bordereau qui n'a pas d'identifiant", WEBSITE_SSL . "/modules/helios/index.php");
+		
+	}
 }
 
 
@@ -96,20 +101,20 @@ ob_start();
    	 	<param value="<?php echo $transactionInfo['bordereau_hash']?>" name="hash_<?php echo $i+1?>"></param>
     	<param value="<?php echo $transactionInfo['bordereau_id']?>" name="pesid_<?php echo $i+1?>"></param>
     	<param value="<?php echo $transactionInfo['id']?>" name="iddoc_<?php echo $i+1?>"></param>
+    	<param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_<?php echo $i+1?>"></param>
+    	<param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_<?php echo $i+1?>"></param>
+    	<param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_<?php echo $i+1?>"></param>
+    	<param value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf" name="pesspuri_<?php echo $i+1?>"></param>
+    	<param value="France" name="pescountryname_<?php echo $i+1?>"></param>
+    	<param value="Ordonnateur" name="pesclaimedrole_<?php echo $i+1?>"></param>
+    	<param value="null" name="p7s_<?php echo $i+1?>"></param>
+    	<param value="iso-8859-1" name="pesencoding_<?php echo $i+1?>"></param>
+    	<param value="XADES-env" name="format_<?php echo $i+1?>"></param>
+		<param value="<?php hecho($authorityInfo['city'])?>" name="pescity_<?php echo $i+1?>"></param>
+    	<param value="<?php hecho($authorityInfo['postal_code'])?>" name="pespostalcode_<?php echo $i+1?>"></param>
     <?php endforeach;?>
-    
-    <param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_1"></param>
-    <param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_1"></param>
-    <param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_1"></param>
-    <param value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf" name="pesspuri_1"></param>
-    <param value="France" name="pescountryname_1"></param>
-    <param value="Ordonnateur" name="pesclaimedrole_1"></param>
-    <param value="null" name="p7s_1"></param>
-    <param value="iso-8859-1" name="pesencoding_1"></param>
-    <param value="XADES-env" name="format_1"></param>
     <param value="form" name="return_mode"></param>
-	<param value="<?php hecho($authorityInfo['city'])?>" name="pescity_1"></param>
-    <param value="<?php hecho($authorityInfo['postal_code'])?>" name="pespostalcode_1"></param>
+   
     </applet>
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 

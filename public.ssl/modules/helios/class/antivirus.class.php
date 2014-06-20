@@ -11,9 +11,12 @@ class Antivirus
 
  	public static function checkArchiveSanity($path) {
 
-		$new_file = ANTIVIRUS_TMP_PATH . basename($path);
+		$new_file = ANTIVIRUS_TMP_PATH . basename($path);		
+		
+		$new_file = escapeshellarg($new_file);
+		$path = escapeshellarg($path);
+		
 		Trace::wrap_exec("cp $path $new_file",$output, $ret);
-		//$r = copy($path, $new_file);
 		
 		if ( $ret != 0 ){
 			$t = Trace::getInstance();
@@ -24,7 +27,7 @@ class Antivirus
 
 		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
 	 	
-		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . $new_file, $output, $ret);
+		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " $new_file", $output, $ret);
 
 	  switch ($ret) {
 		  case 0:

@@ -103,7 +103,7 @@ define('ACTES_MAX_BATCH_UPLOAD_SIZE', 20*1024*1024);
 //define('ACTES_ANTIVIRUS_COMMAND', '/usr/bin/clamdscan --stdout ');
 define('ACTES_ANTIVIRUS_COMMAND', 'ls');
 
-define('ANTIVIRUS_TMP_PATH',' /tmp/');
+define('ANTIVIRUS_TMP_PATH','/tmp/');
 
 
 // Adresse de la servlet effectuant le controle des archives

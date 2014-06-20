@@ -154,12 +154,13 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url'
 
 
 if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
+	$html .= "<h3>Signature du fichier PES</h3>";
 	
 	$heliosSignature = new HeliosSignature();
-	$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
-	$id_pes = $signatureInfo['bordereau_id'];
+	try{
+		$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
+		$id_pes = $signatureInfo['bordereau_id'];
 	
-	$html .= "<h3>Signature du fichier PES</h3>";
 	ob_start();
 	?><div class='action'>
 	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
@@ -198,7 +199,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	 </div>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
 <form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
-	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id ?>'/>
+	<input type='hidden' name='id_1' id='form_sign_id' value='<?php echo $id ?>'/>
 	<input type='hidden' name='nb_signature'  value='1'/>
 	<input type='hidden' name='signature_id_1' value='<?php echo $id_pes?>' />
 	<input type='hidden' name='signature_1' id='signature_1' value=''/>
@@ -211,9 +212,13 @@ function injectSignature() {
 }
 </script>
 	 
-	<?php 	
+	<?php
 		$html.= ob_get_contents();
 		ob_end_clean();
+		
+	} catch (Exception $e){
+		$html.="<div class='alert alert-warning'><strong>Au moins un bordereau du fichier PES ne contient pas d'identifiant : la signature est impossible</strong></div>";
+	}
 }
 
 
