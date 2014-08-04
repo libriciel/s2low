@@ -30,7 +30,7 @@ class FTP {
 			throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
 		}
 		
-		$all_file = ftp_nlist($ftp,".");
+		$all_file = ftp_nlist($ftp,"./");
 		
 		if ($all_file === false){
 			throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");
