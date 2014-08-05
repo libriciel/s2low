@@ -94,6 +94,7 @@ $html .= "<li>Passage sous Bootstrap v3 de l'interface web ;";
 $html .= "<li>Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;";
 $html .= "<li>Module HELIOS : optimisation du module ;";
 $html .= "<li>Module HELIOS : refonte du système d'envoie des flux PES pour passer de JAVA à PHP ;";
+$html .= "<li>Module HELIOS : ajout de la signature électronique du flux PES_ALLER;";
 $html .= "</ul>";
 
 $html .= "<h2>V1.4.01 du 14.01.2014</h2>";
