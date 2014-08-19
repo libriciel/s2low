@@ -21,7 +21,7 @@
   });
 
   $(document).ready(function(){
-		$("#mailbcc").autocomplete("liste-mail.php",  {multiple: true, mustMatch: true, cacheLength:0, max: 20});
+		$("#mailcci").autocomplete("liste-mail.php",  {multiple: true, mustMatch: true, cacheLength:0, max: 20});
 });
   
   $(document).ready(function(){
