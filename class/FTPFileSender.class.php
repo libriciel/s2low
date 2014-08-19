@@ -28,7 +28,7 @@ class FTPFileSender {
 		if ($mode_demo){
 			return ;
 		}
-		if (!$result || ! preg_match("#^quote#",$result[0])){
+		if (!$result || ! preg_match("#^200#",$result[0])){
 			$message =  "[FAILED] Send FTP raw command\n$command\n********** RESULT *******\n";
 			$message .= implode("\n",$result)."\n";
 			$message .=  "******** END RESULT ************\n";
