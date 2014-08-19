@@ -87,11 +87,17 @@ $html .= "";
 // $html .= "<li>";
 // $html .= "</ul>";
 
-$html .= "<h2>V1.5 du 28.05.2014</h2>";
+/*$html .= "<h2>V1.5.01 du </h2>";
+$html .= "<ul>";
+$html .= "<li>";
+$html .= "</ul>";*/
+
+$html .= "<h2>V1.5 du 05.08.2014</h2>";
 $html .= "<ul>";
 $html .= "<li>Refonte globale de l'interface web pour être aux normes d'accessibilités ;";
 $html .= "<li>Passage sous Bootstrap v3 de l'interface web ;";
 $html .= "<li>Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;";
+$html .= "<li>Module ACTES : possibilité d'envoyer un PDF joins à un XML (acte budgétaire) ;";
 $html .= "<li>Module HELIOS : optimisation du module ;";
 $html .= "<li>Module HELIOS : refonte du système d'envoie des flux PES pour passer de JAVA à PHP ;";
 $html .= "<li>Module HELIOS : ajout de la signature électronique du flux PES_ALLER;";
