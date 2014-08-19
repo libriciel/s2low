@@ -120,7 +120,7 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			$pes_xml = simplexml_load_file($file_path);
+			$pes_xml = simplexml_load_file($file_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 			$cod_col = $pes_xml->EnTetePES->CodCol['V'];
 			if (! $cod_col){
 				$message = "Transaction $transaction_id : La balise EnTetePES/CodCol n'est pas présente ou est vide";
@@ -145,9 +145,9 @@ class HeliosEnvoiControler {
 				$ftp = new FTPFileSender();
 				$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, $authorityInfo["helios_ftp_login"], $authorityInfo["helios_ftp_password"]);
 				$ftp->setPassiveMode(true);
-				$ftp->sendRawCommand("P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
-				$ftp->sendRawCommand("P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
-				$ftp->sendRawCommand("P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
+				$ftp->sendRawCommand("site P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
+				$ftp->sendRawCommand("site P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
+				$ftp->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
 				$ftp->sendFile(HELIOS_SENDING_DESTINATION,$file_to_send);
 				$ftp->disconnect();
 			} catch (Exception $e){
