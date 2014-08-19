@@ -403,7 +403,7 @@ if (!$trans->hasPendingCancelTrans()) {
   
         if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
-		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
 		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
@@ -413,7 +413,7 @@ if (!$trans->hasPendingCancelTrans()) {
 	}//fin if verfiie canValidate
   
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ?\nCette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
+        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
