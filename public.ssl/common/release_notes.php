@@ -98,6 +98,7 @@ $html .= "<li>Refonte globale de l'interface web pour être aux normes d'accessib
 $html .= "<li>Passage sous Bootstrap v3 de l'interface web ;";
 $html .= "<li>Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;";
 $html .= "<li>Module ACTES : possibilité d'envoyer un PDF joins à un XML (acte budgétaire) ;";
+$html .= "<li>Module ACTES : lors d'une annuatiaon,l'acte principal passe à l'état annulé et la transaction d'annulation passe à l'état acquitement reçu ;";
 $html .= "<li>Module HELIOS : optimisation du module ;";
 $html .= "<li>Module HELIOS : refonte du système d'envoie des flux PES pour passer de JAVA à PHP ;";
 $html .= "<li>Module HELIOS : ajout de la signature électronique du flux PES_ALLER;";
