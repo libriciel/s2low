@@ -216,10 +216,15 @@ class mailController {
 				$un_mail = str_replace("[","<",$un_mail);
 				$un_mail = str_replace("]",">",$un_mail);
 				$result[] = $un_mail;
-			}
-			
+			}			
 		}	
-		return implode(",",$result);
+		$newresult=array();
+		foreach ($result as $chaine){
+			if (!in_array($chaine, $newresult)){
+				$newresult[]=$chaine;
+			}
+		}
+		return implode(",",$newresult);
 	}
   
 	public function getLastError(){
