@@ -25,7 +25,7 @@ $doc->DisplayHead();
 	<form action="index.php?command=annuaire" method="post" class="form-horizontal">
             <div class="form-group">
                 <label class="col-md-2 control-label" for="name">Nom</label>
-                <div class="col-md-4"> <input id="name" class="form-control" size="40" maxlength="128" name="name" type="text" /></div>
+                <div class="col-md-4"> <input id="name" class="form-control" size="40" maxlength="128" name="description" type="text" /></div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label" for="email">Adresse email</label>
