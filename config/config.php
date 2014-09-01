@@ -278,7 +278,7 @@ if(!defined('HELIOS_FTP_SERVER')){
 }
 
 if(!defined('HELIOS_FTP_PORT')){
-	efine('HELIOS_FTP_PORT','21');
+	define('HELIOS_FTP_PORT','21');
 }
 
 if(!defined('HELIOS_FTP_LOGIN')){
