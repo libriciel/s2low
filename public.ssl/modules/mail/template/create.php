@@ -51,7 +51,7 @@
 		</div>
             </div>
             <div class="form-group">
-                <label class="col-md-2" for="objet">Object : </label>
+                <label class="col-md-2" for="objet">Objet : </label>
                 <div class="col-md-10">
                     <input name='objet' id="objet" class="form-control"/>
 		</div>
