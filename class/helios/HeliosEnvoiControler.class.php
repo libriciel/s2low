@@ -44,7 +44,7 @@ class HeliosEnvoiControler {
 				continue;
 			}*/
 			
-			$pes_xml = simplexml_load_string($pes_content);			
+			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUG);			
 			if (!$pes_xml){
 				$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
