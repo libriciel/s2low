@@ -62,4 +62,11 @@ if (! $transaction['status'] ){
 }
 
 $transaction['resultat'] = "OK";
+$status_averifier = array("4","6","8");
+if(in_array($transaction['status'],$status_averifier)){
+	$filename = $zeTrans->getAcquitFilenameForId($transId);
+	if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null)
+		$transaction['status'] = '3';
+}
+
 $heliosAPIResponse->displayAndExit($transaction,"transaction");
