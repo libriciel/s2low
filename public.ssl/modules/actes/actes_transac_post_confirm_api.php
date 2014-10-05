@@ -8,42 +8,43 @@ require_once( __DIR__ . "/../../../init/init-www-actes.php");
 
 $actionHtml = "";
 
+
+function return_error_api($error_message){
+	$return_error = Helpers :: getVarFromGet("url_return");	
+	$return_error = str_replace("%%ERROR%%", 1, $return_error);
+	$return_error = str_replace("%%MESSAGE%%", $error_message, $return_error);
+	header("Location:  $return_error");
+	exit;
+}
+
+
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+	return_error_api("Erreur d'intialisation du module");
+	
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit ();
+	return_error_api("Échec de l'authentification");
 }
 
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+	return_error_api("Accès refusé");
 }
 
-$id = Helpers :: getVarFromPost("id");
+$id = Helpers :: getVarFromGet("id");
 if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+	return_error_api("Pas d'identifiant de transaction spécifié");
 }
 
 
 $trans = new ActesTransaction();
 $trans->setId($id);
 if ( ! $trans->init()) {
-    $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-    exit ();
+	return_error_api("Erreur d'initialisation de la transaction.");
 }
 
 $envelope = new ActesEnvelope($trans->get("envelope_id"));
@@ -56,21 +57,25 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+	return_error_api("Accès refusé");
 }
+
+
 
 $msg = "La transaction a été postée par l'agent télétransmetteur";
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
+
 $info = $actesTransactionsSQL->getInfo($id);
 if($info['last_status_id'] != 17){
-	$_SESSION["error"] ="La transaction n'est pas dans le statut « En attente d'être posté»";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+	return_error_api("La transaction n'est pas dans le statut « En attente d'être posté»");
 }
 
 $actesTransactionsSQL->updateStatus($id,1,$msg);
 
+$return_ok = Helpers :: getVarFromGet("url_return");
+$return_ok = str_replace("%%ERROR%%", 0, $return_ok);
+$return_ok = str_replace("%%MESSAGE%%", "", $return_ok);
 
-Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $id);
+header("Location:  $return_ok");
+exit;
+
