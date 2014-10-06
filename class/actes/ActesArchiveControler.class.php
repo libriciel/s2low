@@ -126,6 +126,17 @@ class ActesArchiveControler {
 		
 		$pastell->postActes($id_d,$tmp_folder."/".$actesFile[1]['filename'],$actesFile[1]['posted_filename']);
 		
+		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
+		$path_parts = pathinfo($pdftampone);
+		if ($path_parts['extension'] == 'pdf'){
+			$datetampon = $actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
+			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$datetampon);
+		}
+		$pastell->postFile($id_d,"actes_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
+
+		$datepostage = $actesTransactionsStatusInfo = $actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
+		$pastell->setDatePostage($id_d,date("d/m/Y",time($datepostage['date'])));
+			
 		array_shift($actesFile);
 		array_shift($actesFile);
 		
@@ -206,4 +217,34 @@ class ActesArchiveControler {
 		return true;
 	}
 	
+	public function tamponerActe($tmpfolder,$fileorig,$transactionInfo){
+		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
+		require_once(SITEROOT."/class/TamponPDF.class.php");
+		$pdftkise=$tmpfolder."/tampon_".$fileorig;
+		$pdftkise = $this->modificationPDF($tmpfolder."/".$fileorig, $pdftkise);
+		try{
+		        $pdf = Zend_Pdf::load($pdftkise);
+		        $tampon = new TamponPDF($pdf);
+		        $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
+				                            "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
+				                            "Affiché le " ));
+		        $tampon->setNameFile("tampon_".$fileorig);
+		        file_put_contents($pdftkise,$tampon->getFileAsString());
+		} catch (Exception $e){
+		}
+		return $pdftkise;
+	}
+				
+	public function modificationPDF($pathpdforig, $pathpdfout){
+		$cmdpdftk='timeout 10 pdftk '. $pathpdforig." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pathpdfout;
+		Trace::wrap_exec($cmdpdftk, $status, $ret);
+		if ($status === false || $ret != 0) {
+	        $cmdpdftk='timeout 10 pdfsam-console -f '. $pathpdforig ." -o ". $pathpdfout ." concat";
+	        Trace::wrap_exec($cmdpdftk, $status, $ret);
+	        if ($status === false || $ret != 0){
+				$pathpdfout=$pathpdforig;
+	        }
+       }//fin if
+       return $pathpdfout;
+	}
 }
