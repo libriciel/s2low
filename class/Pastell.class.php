@@ -102,6 +102,12 @@ class Pastell {
 		return $id_d;
 	}
 	
+	public function setDatePostage($id_d,$date){
+		return $this->callAPI("modif-document.php",
+				array('id_e'=>$this->id_e,'id_d'=>$id_d,
+					'date_tdt_postage' => $date));
+	}
+		
 	public function postFile($id_d,$field,$file_path,$file_orig_name = false){
 		return $this->callAPI("modif-document.php",
 					array('id_e'=>$this->id_e,'id_d'=>$id_d),
