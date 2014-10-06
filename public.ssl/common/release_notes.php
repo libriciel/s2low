@@ -86,11 +86,24 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+//TODO: mes couilles
 
-/*$html .= "<h2>V1.5.01 du </h2>";
+
+$html .= "<h2>V1.5.01 du </h2>";
 $html .= "<ul>";
-$html .= "<li>";
-$html .= "</ul>";*/
+$html .= "<li>Module MAILS : correction bug : si un destinataire est en double dans un même champ on obtient une page blanche ; ";
+$html .= "<li>Module MAILS : correction bug : lors de l'ajout d'un contact, le champ description n'était pas pris en compte ; ";
+$html .= "<li>Module MAILS : correction bug : le champ CCI n'était pas autocomplété ; ";
+$html .= "<li>Module HELIOS : correction bug : les commandes SITE n'étaient pas correctement envoyées ; ";
+$html .= "<li>Correction bug : suppression des \n dans les boites de dialogues ; ";
+$html .= "<li>Correction de fautes d'orthographe ;";
+$html .= "<li>Module ACTES : agrémentation des informations envoyées à Pastell dans le cadre du versement SEDA ;";
+$html .= "<li>Module HELIOS : sécurisation de l'API de mise à disposition des PES_ACQUIT/ACK/NACK ;";
+$html .= "<li>Module HELIOS : amélioration de la regexp d'analyse des retours des commandes FTP ;";
+$html .= "<li>Module ACTES : nouvelle API permettant la télétransmission en préfecture via redirection d'URL ;";
+$html .= "<li>Module MAILS : les commandes console sont commentées pour garder une compatibilité avec IE ;";
+$html .= "<li>Mise en place d'un fichier de configuration générique ;";
+$html .= "</ul>";
 
 $html .= "<h2>V1.5 du 05.08.2014</h2>";
 $html .= "<ul>";
@@ -98,7 +111,7 @@ $html .= "<li>Refonte globale de l'interface web pour être aux normes d'accessib
 $html .= "<li>Passage sous Bootstrap v3 de l'interface web ;";
 $html .= "<li>Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;";
 $html .= "<li>Module ACTES : possibilité d'envoyer un PDF joins à un XML (acte budgétaire) ;";
-$html .= "<li>Module ACTES : lors d'une annuatiaon,l'acte principal passe à l'état annulé et la transaction d'annulation passe à l'état acquitement reçu ;";
+$html .= "<li>Module ACTES : lors d'une annulation,l'acte principal passe à l'état annulé et la transaction d'annulation passe à l'état acquitement reçu ;";
 $html .= "<li>Module HELIOS : optimisation du module ;";
 $html .= "<li>Module HELIOS : refonte du système d'envoie des flux PES pour passer de JAVA à PHP ;";
 $html .= "<li>Module HELIOS : ajout de la signature électronique du flux PES_ALLER;";
