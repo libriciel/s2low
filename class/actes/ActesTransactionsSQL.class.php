@@ -96,5 +96,13 @@ class ActesTransactionsSQL {
 		$this->sqlQuery->query($sql,$transfer_identifier,$id);
 	}
 	
+	public function getDateTampon($id){
+		$sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date " .
+				"FROM actes_transactions, actes_envelopes, actes_transactions_workflow " .
+				"WHERE actes_transactions.envelope_id = actes_envelopes.id " .
+				"AND actes_transactions.id = " . $id .
+				" AND actes_transactions_workflow.transaction_id = " . $id;
+		return $this->sqlQuery->queryOne($sql);
+	}
 	
 }
