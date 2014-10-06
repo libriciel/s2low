@@ -181,7 +181,7 @@ if (!$batchMode) {
 }
 
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
-$html .='<input type="hidden" name="MAX_FILE_SIZE" value="22000000" /> ';
+$html .='<input type="hidden" name="MAX_FILE_SIZE" value="'.ACTES_ARCHIVE_MAX_SIZE.'" /> ';
 
 if ($batchMode) {
   $html .= "<input type=\"hidden\" name=\"batchfile\" value=\"" . $zeBatchFile->getId() . "\" />\n";
