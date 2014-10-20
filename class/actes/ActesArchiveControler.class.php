@@ -1,4 +1,6 @@
 <?php
+require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
+
 class ActesArchiveControler {
 	
 	private $sqlQuery;
@@ -128,7 +130,7 @@ class ActesArchiveControler {
 		
 		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
 		$path_parts = pathinfo($pdftampone);
-		if ($path_parts['extension'] == 'pdf'){
+		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
 			$datetampon = $actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
 			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$datetampon);
 		}
@@ -136,7 +138,27 @@ class ActesArchiveControler {
 
 		$datepostage = $actesTransactionsStatusInfo = $actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
 		$pastell->setDatePostage($id_d,date("d/m/Y",time($datepostage['date'])));
-			
+
+		$trans = new ActesTransaction();
+		$trans->setId($id);
+		if ( ! $trans->init()) {
+			$_SESSION["error"] = "Erreur d'initialisation de la transaction.";
+			header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+			exit ();
+		}
+		$owner = new User($transactionsInfo['user_id']);
+		$owner->init();
+		
+		//passer les paramètre
+		$pdf=new ActesPdf($trans,$owner);
+		
+		//construire le fichier pdf.
+		$pdf->create_pdf();
+		$pdf->output($tmp_folder."/bordereau_acquit","F");
+		$pastell->postFile($id_d,"bordereau",$tmp_folder."/bordereau_acquit.pdf","bordereau_acquittement.pdf");
+		
+		
+		
 		array_shift($actesFile);
 		array_shift($actesFile);
 		
