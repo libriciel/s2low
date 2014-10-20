@@ -482,7 +482,7 @@ class User extends DataObject {
 			return false;
 	  	}
 	  	 	
-	  	if ($this->getPerm($module) != "NONE" ) {
+	  	if ($this->getPerm($module) != "NONE" && $this->getPerm($module)!= null) {
 	 		return true;
 	  	}
 	  	return false;
