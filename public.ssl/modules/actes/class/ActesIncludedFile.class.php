@@ -124,7 +124,8 @@ class ActesIncludedFile extends DataObject {
                         $tampon = new TamponPDF($pdf);
                         $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
                                     "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-                                    "Affiché le " ));
+                                    "Affiché le " ,
+                        			"ID : ".$transactionInfo['unique_id']));
                         $tampon->setNameFile($this->filename);
                         $tampon->render();
                         
