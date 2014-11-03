@@ -65,9 +65,9 @@ $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" .
 $html .= "<h2>Import d'une enveloppe</h2>\n";
 $html .= "<form class=\"form-horizontal import-file-form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 $html .= "<div class=\"form-group\">";
-$html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum 20Mo)</label>\n";
+$html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum ".ACTES_ARCHIVE_MAX_SIZE." octets)</label>\n";
 $html .= "<div class=\"col-md-6\">";
-$html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"20971520\" />\n";
+$html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"".ACTES_ARCHIVE_MAX_SIZE."\" />\n";
 $html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
 $html .= "</div>\n";
 $html .= "</div>\n";
