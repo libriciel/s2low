@@ -230,7 +230,7 @@ $html .= " <tbody>\n";
             
             	if ($stage['status_id'] == 4){
             		
-            		if (preg_match("#\.pdf$#",$file["posted_filename"])||preg_match("#\.PDF$#",$file["posted_filename"])) {
+            		if (preg_match("/\.pdf$/i",$file["posted_filename"])) {
 	            		$html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
 						$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
             		}

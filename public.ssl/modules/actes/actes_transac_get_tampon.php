@@ -82,7 +82,7 @@ if(! $has_file){
 
 $files = $zeTrans->fetchFilesList();
 foreach ($files as $file) {
-	if (preg_match("#\.pdf$#",$file["posted_filename"])) {
+	if (preg_match("/pdf$/i",$file["posted_filename"])) {
 		header("Location:  actes_download_file.php?file={$file['id']}&tampon=true");
 		exit;
 	}
