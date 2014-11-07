@@ -166,7 +166,8 @@ class Database {
     if ($result == false) {
       $error=pg_last_error();
       $this->last_query_error=$error;
-      if ($this->display_warning) echo "<br />Query: $query<br />".$error."<br />";
+      if ($this->display_warning)
+      	 echo "<br />Query: $query<br />".$error."<br />";
 
 	  $trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
 

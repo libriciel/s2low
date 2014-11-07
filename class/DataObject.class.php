@@ -143,7 +143,7 @@ class DataObject {
   	
 	if (isset($this->id) && ! empty($this->id)) {
 	  $sql = "SELECT " . implode(array_keys($this->dbFields), ", ") . " FROM " . $this->objectName . " WHERE id='" . $this->id . "'";
-	
+		
 	  $result = $this->db->select($sql);
 	  
 	  if (! $result->isError() && $result->num_row() == 1) {

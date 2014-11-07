@@ -20,11 +20,11 @@ if(!defined("WEBSITE_TITLE")){
 }
 
 if(!defined('WEBSITE')){
-        define('WEBSITE', "http://localhost:8888/adullact/TedetisPHP/public/");
+        define('WEBSITE', "http://localhost/TedetisPHP/");
 }
 
 if(!defined('WEBSITE_SSL')){
-        define('WEBSITE_SSL', "https://192.168.1.28:4443/");
+        define('WEBSITE_SSL', "https://localhost/");
 }
 
 if(!defined('WEBMASTER')){
@@ -70,8 +70,8 @@ if(!defined('HOTLINE_NUM')){
 
 // Mode de l'application : dev ou prod (utilisé dans Database.class.php)
 if(!defined("MODE")){
-        define("MODE", "prod");
-        //define("MODE", "dev");
+        //define("MODE", "prod");
+        define("MODE", "dev");
 }
 
 
@@ -130,7 +130,7 @@ if(!defined('AUTHORIZED_SIGN_CA_PATH')){
 
 // Constantes générales
 if(!defined('TRACE_FILE_PATH')){
-        define('TRACE_FILE_PATH','/dev/null');
+        define('TRACE_FILE_PATH','/tmp/slow.log');
 }
 
 if(!defined('ANTIVIRUS_COMMAND')){
@@ -207,7 +207,7 @@ if(!defined('ACTES_CHECK_ARCHIVE_SERVLET')){
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
-        define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');
+        define('ACTES_TDT_MAIL_ADDRESS', 'eric@localhost');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
@@ -222,7 +222,7 @@ if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
 
 // Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){
-	define('ACTES_COMMON_BROADCAST_EMAILS', 'toto@truc.fr');
+	define('ACTES_COMMON_BROADCAST_EMAILS', 'eric@localhost');
 } 
 
 // Restreindre ou non plusieurs demandes de classification par jour par collectivité (1 par jour si restreint)

@@ -1,19 +1,10 @@
 <?php
-
-/**
-/*\file helios_importer_fichier.php
- * \brief Page permettannt l'import d'un fichier envoyé par POST HTTP et son "forward" vers le servlet
- *  renvois un fichier xml
- * \author HTAN
- * \date 16.12.2008
- */
-
-// Configuration
 require_once ("../../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
 require_once (SITEROOT . '/class/User.class.php');
+require_once (SITEROOT . '/public.ssl/modules/helios/class/antivirus.class.php');
 
 
 $module = new Module();
@@ -22,11 +13,7 @@ if (!$module->initByName("helios")) {
   exit ();
 }
 
-// Instanciation du module courant
 $me = new User();
-
-//l'utilisateur'
-
 if (! $me->authenticate()) {
   echo "KO\nÉchec de l'authentification";
   exit();
@@ -39,10 +26,11 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
   echo "KO\nAccès refusé";
   exit();
 }
-	$doc = new DOMDocument();
-  $doc->formatOutput = true;	
-  $doc->preserveWhiteSpace = false;
-  $root=$doc->createElement("import");
+
+$doc = new DOMDocument();
+$doc->formatOutput = true;	
+$doc->preserveWhiteSpace = false;
+$root=$doc->createElement("import");
 	$doc->appendChild($root);
 	$idElement=$doc->createElement("id");
 	$resultatElement=$doc->createElement("resultat");
@@ -63,12 +51,24 @@ $uploadfile = $uploaddir . basename($uploadFile_baseName);
 
 try{
 	if (move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
-	
+
+		if (!Antivirus::checkArchiveSanity($uploadfile)) {
+			$msg = Antivirus::$errorMsg;
+			throw new Exception('KO');			
+		}
+		
 		$SHA1=sha1_file($uploadfile);
 		
-	  $ht = new HeliosTransaction();
-	  $htw = new HeliosTransactionWorkflow();
-		$file_size=$_FILES['enveloppe']['size'];
+	 
+	$file_size=$_FILES['enveloppe']['size'];
+	
+	if ($file_size>HELIOS_MAX_UPLOAD_SIZE) {
+		$msg = "Taille de fichier supérieure à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
+		throw new Exception('KO');
+	}
+	
+	$ht = new HeliosTransaction();
+	$htw = new HeliosTransactionWorkflow();
 	  $submission_date=date("Y-m-d H:i:s");;
 	  $ht->set("filename", $uploadFile_baseName);
 	  $ht->set("user_id", $userId);
@@ -87,7 +87,6 @@ try{
 	  		$msg="doublon détecté. Ce fichier a déjà été posté";
 		  	throw new Exception('KO');
 	 	}
-	  //change the upload file name to sha1 to allow duplicate name.
 	  rename($uploadfile,$uploaddir.$SHA1);  
 		chmod($uploaddir.$SHA1, 0644);
 	
@@ -124,12 +123,13 @@ try{
 	    $msg="Echec lors du téléchargement du fichier";
 	    throw new Exception('KO'); 
 	}
+} catch (Exception $e) {
+	$resultatElement->appendChild( $doc->createTextNode( "KO" ) );
 }
-catch (Exception $e) {
-       $resultatElement->appendChild( $doc->createTextNode( "KO" ) );
-}
-  $messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));	
-  $doc->save($xmlFile); 
+
+$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));	
+$doc->save($xmlFile); 
+
 if (!Helpers::sendFileToBrowser($xmlFile, basename($xmlFile), "text/xml")) {
-	echo "error: impossible de envoyer ce xml "; 
+	echo "KO impossible d'envoyer le fichier XML"; 
 }
