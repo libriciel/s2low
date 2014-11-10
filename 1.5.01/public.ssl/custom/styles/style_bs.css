@@ -45,6 +45,21 @@ h2 > a {
 }
 
 /*
+Taille et couleur bleue des textes.
+Attention : 
+- les modifications de style de la version précédente ne sont plus portables, le 
+  nom des classes de style ayant changé
+- une solution "approchante" serait d'utiliser "container" ("content" précédemment),
+  mais risque de perte d'homogénéité sans une analyse d'impact approfondie
+- la couleur bleue est proche de celle utilisée pour d'autres éléments graphiques, 
+  donc risque de confusion pour l'utilisateur.
+
+.container {
+        color:#365FA6
+}
+*/
+
+/*
 ---------------------------------------------
  Template header
 -----------------------------------------------
@@ -54,8 +69,8 @@ h2 > a {
 }
 
 #home-banner {
-    width:1200px;
-    height:160px;
+    width:1000px;
+    height:120px;
 }
 
 #home-subbanner {
