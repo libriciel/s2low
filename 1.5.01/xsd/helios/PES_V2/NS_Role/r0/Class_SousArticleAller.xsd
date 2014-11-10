@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRole.xsd"/>
+	<xs:complexType name="TBlocSousArticle">
+		<xs:sequence>
+			<xs:element name="InfoSousArticle" type="TInfoSousArticle"/>
+			<xs:element name="InfoCollBen" type="TInfoCollBen" minOccurs="0"/>
+			<xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoSousArticle">
+		<xs:sequence>
+			<xs:element name="IdLigne" type="cm:Base_Num6"/>
+			<xs:element name="CodProcLoc" type="cm:Base_Alphanum4"/>
+			<xs:element name="ObjPce" type="cm:Base_Texte160" minOccurs="0"/>
+			<xs:element name="Majo" type="cm:Base_Booleen"/>
+			<xs:element name="DteMajo" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="TxMajo" type="cm:Base_Taux" minOccurs="0"/>
+			<xs:element name="MtHT" type="cm:Base_Montant"/>
+			<xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtNonMajo" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoCollBen">
+		<xs:sequence>
+			<xs:element name="IdCollBen" type="cm:Base_Num14"/>
+			<xs:element name="CodCollBen" type="cm:Base_Alphanum3"/>
+			<xs:element name="CodBudBen" type="cm:Base_Alphanum2" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TRattachPiece">
+		<xs:sequence>
+			<xs:element name="ExerRat" type="cm:Base_Annee"/>
+			<xs:element name="IdRolOrig" type="cm:Base_Num7"/>
+			<xs:element name="IdPceOrig" type="cm:Base_Num8"/>
+			<xs:element name="IdLigneOrig" type="cm:Base_Num6" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

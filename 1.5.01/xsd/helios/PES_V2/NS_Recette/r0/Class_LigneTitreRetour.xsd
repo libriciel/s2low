@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRecette.xsd"/>
+	<xs:complexType name="TBlocLignePiece">
+		<xs:sequence>
+			<xs:element name="InfoLignePiece" type="TInfoLignePiece">
+				<xs:annotation>
+					<xs:documentation>Informations Ligne de Piece</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoRecouvrement" type="TInfoRecouvrement" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations Recouvrement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoEcheancier" type="TInfoEcheancier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations Echéancier</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RattachPieceRec" type="TRattachPiece" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rattachement Piece</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LiensIdentRec" type="TLiensIdent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Liens identifiants</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoSuspPour" type="TInfoSuspPour" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations suspension et poursuite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoContentieux" type="TInfoContentieux" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations Contentieux</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoAmiableContentieux" type="TInfoAmiableContentieux" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Informations amiable et contentieux</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoPourExt" type="TInfoPourExt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations EPE</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoLignePiece">
+		<xs:sequence>
+			<xs:element name="IdLigne" type="cm:Base_Num6"/>
+			<xs:element name="ObjLignePce" type="cm:Base_Texte160" minOccurs="0"/>
+			<xs:element name="CodProdLoc" type="cm:Base_Alphanum4" minOccurs="0"/>
+			<xs:element name="FinGeo" type="cm:Base_Num9" minOccurs="0"/>
+			<xs:element name="CodEtGeo" type="cm:Base_Alphanum3" minOccurs="0"/>
+			<xs:element name="Nature" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="CptAna" type="cm:Base_Alphanum10" minOccurs="0"/>
+			<xs:element name="CpteTiers" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="CpteTva" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="MtHT" type="cm:Base_Montant"/>
+			<xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoRecouvrement">
+		<xs:sequence>
+			<xs:element name="NbrReco" type="cm:Base_Num4" minOccurs="0"/>
+			<xs:element name="MtRecoTot" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoEcheancier">
+		<xs:sequence>
+			<xs:element name="DteDerPai" type="cm:Base_Date"/>
+			<xs:element name="NbrPai" type="cm:Base_Num4"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TRattachPiece">
+		<xs:sequence>
+			<xs:element name="NatPceOrig" type="TNatPceOrig"/>
+			<xs:element name="ExerRat" type="cm:Base_Annee"/>
+			<xs:element name="IdPceOrig" type="cm:Base_Num13"/>
+			<xs:element name="IdLigneOrig" type="cm:Base_Num6" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLiensIdent">
+		<xs:sequence>
+			<xs:element name="IdEncaissement" type="cm:Base_Num12" minOccurs="0"/>
+			<xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="IdCaution" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0"/>
+			<xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoSuspPour">
+		<xs:sequence>
+			<xs:element name="CodSuspPour" type="TCodSuspPour"/>
+			<xs:element name="DteSuspPour" type="cm:Base_Date"/>
+			<xs:element name="DteRepPour" type="cm:Base_Date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoContentieux">
+		<xs:sequence>
+			<xs:element name="MtCtxTot" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtMajo" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisCmdt" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisSaisie" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisAutre" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="SldPrinc" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="SldFrais" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoAmiableContentieux">
+		<xs:sequence>
+			<xs:element name="EtPce" type="TEtPce"/>
+			<xs:element name="DteEtPce" type="cm:Base_Date"/>
+			<xs:element name="IdAct" type="cm:Base_Num14" minOccurs="0"/>
+			<xs:element name="CodActu" type="TCodActu" minOccurs="0"/>
+			<xs:element name="DteActu" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="MtMajo" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisCmdt" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisSaisie" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFraisAutre" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoPourExt">
+		<xs:sequence>
+			<xs:element name="DteEpe" type="cm:Base_Date"/>
+			<xs:element name="IdPostEpe" type="cm:Base_Texte7" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/comptabilite/r0/retour" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/comptabilite/r0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunComptabilite.xsd"/>
+	<xs:include schemaLocation="Class_Compte.xsd"/>
+	<xs:include schemaLocation="Class_Ecriture.xsd"/>
+	<xs:complexType name="TPES_Comptabilite">
+		<xs:sequence>
+			<xs:element name="EnTeteComptabilite">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="Exer" type="cm:Base_Annee"/>
+						<xs:element name="NatInf" type="TNatInf"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InformationCompte" type="TInformationCompte" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInformationCompte">
+		<xs:sequence>
+			<xs:element name="BlocCompte" type="TBlocCompte"/>
+			<xs:element name="InformationEcriture" type="TInformationEcriture" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

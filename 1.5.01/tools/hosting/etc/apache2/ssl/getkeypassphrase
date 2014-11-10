@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+if [ $# != 2 ]; then
+	echo "Bad parameters number";
+	exit 1;
+fi
+
+server=$1
+algo=$2
+
+servername=`echo $1 | cut -d: -f1`
+
+cat /etc/apache2/ssl/${servername}/apache2-${servername}-priv-key.pass
