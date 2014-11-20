@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunMarche.xsd"/>
+	<xs:complexType name="TBlocInformationMarche">
+		<xs:sequence>
+			<xs:element name="IdentificationMarche" type="TIdentificationMarche">
+				<xs:annotation>
+					<xs:documentation>Identification du marché</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FicheRecensementEco" type="TFicheRecensementEco" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Fiche de recensement économique</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FicheSuiviMarche" type="TFicheSuiviMarche" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Fiche de suivi du marché</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TIdentificationMarche">
+		<xs:sequence>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="IdMar" type="cm:Base_Texte30"/>
+			<xs:element name="IdDoc" type="cm:Base_Texte2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TFicheRecensementEco">
+		<xs:sequence>
+			<xs:element name="Ppu" type="cm:Base_Num17"/>
+			<xs:element name="Passation" type="TPassation"/>
+			<xs:element name="CatCom" type="TCatCom"/>
+			<xs:element name="TypDep" type="TTypDep" minOccurs="0"/>
+			<xs:element name="OpReseau" type="cm:Base_Booleen" minOccurs="0"/>
+			<xs:element name="CodCPV" type="cm:Base_Num9"/>
+			<xs:element name="NatOuvr" type="cm:Base_Num6"/>
+			<xs:element name="MtHT" type="cm:Base_Montant"/>
+			<xs:element name="DteNotif" type="cm:Base_Date"/>
+			<xs:element name="DureeMar" type="cm:Base_Num3"/>
+			<xs:element name="Section" type="cm:Base_Booleen"/>
+			<xs:element name="Alloti" type="cm:Base_Booleen"/>
+			<xs:element name="JOUE" type="cm:Base_Alphanum10" minOccurs="0"/>
+			<xs:element name="PME" type="cm:Base_Booleen" minOccurs="0"/>
+			<xs:element name="CodeAPE" type="cm:Base_Alphanum4" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TFicheSuiviMarche">
+		<xs:sequence>
+			<xs:element name="TypMar" type="TTypMar"/>
+			<xs:element name="TypDoc" type="TTypDoc" minOccurs="0"/>
+			<xs:element name="IdMarIni" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="IdDocIni" type="cm:Base_Texte2" minOccurs="0"/>
+			<xs:element name="ObjMar" type="cm:Base_Texte250" minOccurs="0"/>
+			<xs:element name="MultiBudg" type="cm:Base_Booleen"/>
+			<xs:element name="CarPx" type="TCarPx"/>
+			<xs:element name="Prest" type="TPrest"/>
+			<xs:element name="NatPrest" type="cm:Base_Texte50" minOccurs="0"/>
+			<xs:element name="GarApp" type="TGarApp" minOccurs="0"/>
+			<xs:element name="DelaiGar" type="cm:Base_Num2" minOccurs="0"/>
+			<xs:element name="MtGar" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="TxGar" type="cm:Base_Taux" minOccurs="0"/>
+			<xs:element name="TypGrp" type="TTypGrp" minOccurs="0"/>
+			<xs:element name="MtGlobSSTrait" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="DteExec" type="cm:Base_Date"/>
+			<xs:element name="DteOrdServ" type="cm:Base_Date"/>
+			<xs:element name="MarSimp" type="cm:Base_Booleen"/>
+			<xs:element name="Avance" type="TAvance" minOccurs="0"/>
+			<xs:element name="Penalite" type="cm:Base_Booleen"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

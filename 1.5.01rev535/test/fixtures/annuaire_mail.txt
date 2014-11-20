@@ -1,0 +1,3 @@
+Eric,epommate@gmail.com,contact
+Toot,toto@toto.com,contact
+titi,titi@titi.com,ami

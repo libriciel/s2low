@@ -1,0 +1,46 @@
+# m h dom mon dow user command
+# SHELL=/bin/sh
+# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+
+#####ACTES######
+#*/4 * * * * root /usr/bin/wget --no-proxy --spider -t 1 -q http://127.0.0.1:8080/TedetisActes/EnvoieArchive >/dev/null 2>&1
+#*/1 * * * * root /usr/bin/wget --no-proxy --spider -t 1 -q http://127.0.0.1:8080/TedetisActes/MailReception >/dev/null 2>&1
+
+
+####HELIOS######
+#Helios
+#*/59 * * * * root /usr/bin/wget --no-proxy --spider -t 1 -q http://127.0.0.1:8080/TedetisActes/EnvoieFichierHelios
+#*/59 * * * * root /usr/bin/wget --no-proxy --spider -t 1 -q http://127.0.0.1:8080/TedetisActes/ReceptionFichierHelios
+
+
+####SAE#####
+#*/1 * * * * www-data /usr/bin/php /var/www/tedetis/cron/archiveTransferAcknowledgement.php >/dev/null 2>&1
+#*/1 * * * * www-data /usr/bin/php /var/www/tedetis/cron/archiveTransferReply.php >/dev/null 2>&1
+#*/1 * * * * www-data /usr/bin/php /var/www/tedetis/cron/menage.php >/dev/null 2>&1
+#*/1 * * * * root /usr/local/bin/check_sae.sh
+
+
+####SYSTEME#####
+
+# Recuperation des listes de revocation des certificats
+0 0 * * * root /usr/local/lib/tedetis/update_ca_crl /etc/tedetis/ssl/validca && /etc/init.d/apache2 restart >/dev/null 2>&1
+
+# Nettoyage des messages recus ages de plus de 2 mois
+30 0 * * * root find /var/lib/amavis/virusmails/ -type f -mtime +10 -delete; 
+
+# Nettoie les traces de Tedetis
+0 0 * * * www-data test -f /tmp/tedetis-trace.log && echo 0 > /tmp/tedetis-trace.log
+
+#reinitialisation du compteur a 0 tous les jours
+0 0  * * * www-data echo '001' > /tdt-workspace/helios/counter
+
+# Nettoyage des messages temporaires ages de plus de 30 jours
+31 0 * * * root find /opt/tomcat/temp/ -type f -mtime +10 -exec rm {} \;
+
+#Mise a jour des classification
+MAILTO=''
+20 3 1 * * www-data /usr/bin/php /var/www/tedetis/cron/jour.php >/dev/null 2>&1
+
+#Envoi des notifications d'ack
+*/1 * * * * www-data /usr/bin/php /var/www/tedetis/cron/notification.php >> /tmp/log-notification.log 2>&1

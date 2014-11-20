@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunMarche.xsd"/>
+	<xs:include schemaLocation="Class_InformationMarche.xsd"/>
+	<xs:include schemaLocation="Class_TiersMarche.xsd"/>
+	<xs:complexType name="TPES_Marche">
+		<xs:sequence>
+			<xs:element name="EnTeteMarche">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="InfoDematerialisee" type="cm:Base_Booleen" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InformationMarche" type="TInformationMarche" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInformationMarche">
+		<xs:sequence>
+			<xs:element name="BlocInformationMarche" type="TBlocInformationMarche"/>
+			<xs:element name="TiersMarche" type="TTiers" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiersMarche"/>
+			<xs:element name="Montant" type="TMontant" minOccurs="0"/>
+			<xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+			<xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

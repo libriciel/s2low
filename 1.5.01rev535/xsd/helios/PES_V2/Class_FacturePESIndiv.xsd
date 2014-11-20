@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Class_RepartitionBudget.xsd"/>
+	<xs:include schemaLocation="Class_Tiers.xsd"/>
+	<xs:complexType name="TLigneFacture">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="Date" type="cm:Base_Date" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Dates de réalisation de la prestation</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="DateDebut" type="cm:Base_Date"/>
+					<xs:element name="DateFin" type="cm:Base_Date"/>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element name="CodeProduit" type="cm:Base_Texte24">
+				<xs:annotation>
+					<xs:documentation>Code du produit</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodeNature" type="cm:Base_Texte24" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code Nature</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Libelle" type="cm:Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Libellé détaillé du produit</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="Unite" type="cm:Base_Texte38" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Nature de l'unité d'oeuvre</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Quantite" type="cm:Base_Montant" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Quantité d'unité</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MtUnitaire" type="cm:Base_Montant" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Prix de chaque Unité</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="MtBase" type="cm:Base_Taux" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Base de calcul du prix</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element name="Taux" type="cm:Base_Taux3" minOccurs="0"/>
+			<xs:element name="MtRemise" type="cm:Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant de la Remise HT</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtHT" type="cm:Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant HT de la Ligne après remise</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TauxTVA" type="cm:Base_Taux">
+				<xs:annotation>
+					<xs:documentation>Taux de TVA appliqué à cette ligne</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtTVA" type="cm:Base_Montant"/>
+			<xs:element name="MtTTC" type="cm:Base_Montant"/>
+			<xs:element name="Ordre" type="cm:Base_Num3">
+				<xs:annotation>
+					<xs:documentation>Numéro d'ordre de la ligne de prestation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OrdreEdition" type="cm:Base_Num3" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro d'ordre dans l'affichage de la facture</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Commentaire" type="cm:Base_Texte100" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Commentaire dans l'ordre d'affichage de la prestation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TDetailTVA">
+		<xs:sequence>
+			<xs:element name="TauxTVA" type="cm:Base_Taux"/>
+			<xs:element name="MtBaseHT" type="cm:Base_Montant"/>
+			<xs:element name="MtTVA" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTotalAPayer">
+		<xs:sequence>
+			<xs:element name="MtTotalHT" type="cm:Base_Montant">
+				<xs:annotation>
+					<xs:documentation>après remise</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtTotalTVA" type="cm:Base_Montant"/>
+			<xs:element name="MtTotalTTC" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TFacturePESIndiv">
+		<xs:annotation>
+			<xs:documentation>Données individuelles de facturation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DateEmission" type="cm:Base_Date"/>
+			<xs:element name="DateReglement" type="cm:Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date limite de paiement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumeroFacture" type="cm:Base_Texte50">
+				<xs:annotation>
+					<xs:documentation>Identifiant de la Facture</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Debiteur" type="TTiers">
+				<xs:annotation>
+					<xs:documentation>Description du débiteur</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Objet" type="cm:Base_Texte160">
+				<xs:annotation>
+					<xs:documentation>Objet de la Facture</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LigneFacture" type="TLigneFacture" maxOccurs="unbounded"/>
+			<xs:element name="DetailTVA" type="TDetailTVA" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Optionnel - en l'absence du détail TVA par taux, celui-ci sera calculé par la feuille de style à partir de l'analyse des lignes</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TotalAPayer" type="TTotalAPayer"/>
+			<xs:element name="ModalitesReglement" type="cm:Base_Texte250"/>
+			<xs:element name="TexteGenerateur" type="cm:Base_Texte160" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Champ obligatoire en matière de facture de recette associé à un titre</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ConditionsGen" type="cm:Base_Texte250">
+				<xs:annotation>
+					<xs:documentation>Conditions Générales de Facturation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RepartitionBudget" type="TRepartitionBudget" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>nécessaire en cas de répartition entre plusieurs budgets sans rapport avec la nature de la prestation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

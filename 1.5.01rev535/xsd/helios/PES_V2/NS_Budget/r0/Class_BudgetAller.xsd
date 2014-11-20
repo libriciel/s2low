@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 05/05/2006 EPA HLS00036233 -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+	<xs:complexType name="TBlocDocBudget">
+		<xs:sequence>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="NatDec" type="TNatDec"/>
+			<xs:element name="RepCredit" type="TRepCredit"/>
+			<xs:element name="NumDec" type="cm:Base_Alphanum10" minOccurs="0"/>
+			<xs:element name="Exer" type="cm:Base_Annee"/>
+			<xs:element name="CodMvt" type="TCodMvt"/>
+			<xs:element name="DteDec" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DteDecExec" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

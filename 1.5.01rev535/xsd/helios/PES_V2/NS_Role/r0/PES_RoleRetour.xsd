@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> <!--EPA HLS00039776 20060626-->
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/retour" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/role/r0/retour" elementFormDefault="unqualified">
+	<!-- Directives d'inclusion -->
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRole.xsd"/>
+	<xs:include schemaLocation="Class_RoleRetour.xsd"/>
+	<xs:include schemaLocation="Class_ArticleRetour.xsd"/>
+	<xs:include schemaLocation="Class_SousArticleRetour.xsd"/>
+	<xs:include schemaLocation="Class_RecouvrementRole.xsd"/>
+	<xs:include schemaLocation="Class_TiersRole.xsd"/>
+	<!-- Fin des directives d'inclusios-->
+	<xs:complexType name="TPES_RoleRetour">
+		<xs:sequence>
+			<xs:element name="EnTeteRole">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="NatInf" type="TNatInf"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Role" type="TRole" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TRole">
+		<xs:sequence>
+			<xs:element name="BlocRole" type="TBlocRole"/>
+			<xs:element name="Article" type="TArticle" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TArticle">
+		<xs:sequence>
+			<xs:element name="BlocArticle" type="TBlocArticle"/>
+			<xs:element name="SousArticle" type="TSousArticle" minOccurs="0" maxOccurs="unbounded"/>  <!--EPA HLS00039776 20060626-->
+			<xs:element name="Tiers" type="TTiers" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TSousArticle">
+		<xs:sequence>
+			<xs:element name="BlocSousArticle" type="TBlocSousArticle"/>
+			<xs:element name="Recouvrement" type="TRecouvrement" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiersRole"/>
+			<xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+			<xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

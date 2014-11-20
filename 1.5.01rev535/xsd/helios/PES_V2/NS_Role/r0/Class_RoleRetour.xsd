@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRole.xsd"/>
+	<xs:complexType name="TBlocRole">
+		<xs:sequence>
+			<xs:element name="CodAct" type="TCodAct"/>
+			<xs:element name="Exer" type="cm:Base_Annee"/>
+			<xs:element name="IdRol" type="cm:Base_Num7"/>
+			<xs:element name="TypRol" type="TTypRol"/>
+			<xs:element name="DteRol" type="cm:Base_Date"/>
+			<xs:element name="MtRolHt" type="cm:Base_Montant"/>
+			<xs:element name="MtRolTVA" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="DteAsp" type="cm:Base_Date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

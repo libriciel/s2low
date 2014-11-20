@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 05/05/2006 EPA HLS00036229-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunDepense.xsd"/>
+	<xs:complexType name="TBlocBordereau">
+		<xs:sequence>
+			<xs:element name="Exer" type="cm:Base_Annee"/>
+			<xs:element name="IdBord" type="cm:Base_Num7"/>
+			<xs:element name="DteBordEm" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="TypBord" type="TTypBord"/>
+			<xs:element name="NbrPce" type="cm:Base_Num5"/>
+			<xs:element name="MtCumulAnnuel" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtBordHT" type="cm:Base_Montant"/>
+			<xs:element name="MtBordTVA" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
