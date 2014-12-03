@@ -60,7 +60,7 @@ class HeliosSignature {
 			
 			$bordereauNode->appendChild($domDocument->importNode($cloned,true));
 		}
-		$domDocument->formatOutput = TRUE;
+		//$domDocument->formatOutput = TRUE;
 		return $domDocument->saveXml();
 		
 		

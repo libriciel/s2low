@@ -1,6 +1,7 @@
 <?php
 
 require_once (SITEROOT . "/class/DataObject.class.php");
+require_once (SITEROOT . "/class/VerifyPKCS7Signature.class.php");
 
 require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
 
@@ -1002,10 +1003,13 @@ class ActesTransaction extends DataObject {
         }
 
         if (isset ($actesItems->Document->Signature)) {
-          if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
-            $this->errorMsg = "Erreur interne.";
-            return false;
-          }
+        	try {
+        		$verifyPKCS7Signature = new VerifyPKCS7SIgnature(AUTHORIZED_SIGN_CA_PATH);
+        		$verifyPKCS7Signature->verify($this->rootDir."/".$actePath, $actesItems->Document->Signature);
+        	} catch(Exception $e){
+        		$this->errorMsg = $e->getMessage();
+        		return false;
+        	}
         }
 
         // Fichiers pièces jointes
