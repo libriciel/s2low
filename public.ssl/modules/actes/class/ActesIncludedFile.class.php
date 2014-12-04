@@ -111,6 +111,8 @@ class ActesIncludedFile extends DataObject {
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
                     $pathpdforig = $tmpDir . '/' .$this->filename;
                     $pdftkise = $this->modificationPDF($pathpdforig, $pdftkise);
+                    if(!file_exists($pdftkise))
+                    	$pdftkise = $pathpdforig;
                     
                     $transactionId = $this->get("transaction_id");
                     $actesNotification = new ActesNotification($this->db);
