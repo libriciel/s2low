@@ -92,6 +92,8 @@ $html .= "<h2>V1.5.02 du </h2>";
 $html .= "<ul>";
 $html .= "<li>Module HELIOS : prise en charge des XML complexes pour la signature ; ";
 $html .= "<li>Module ACTES : correction bug : vérification que le fichier PDFTK existe ;";
+$html .= "<li>Module ACTES : correction  bug : amélioration vérification des signatures lors de l'import des enveloppes ;";
+$html .= "<li>Module ACTES : correction  bug : remise en place du versement par lot ;";
 $html .= "</ul>";
 
 $html .= "<h2>V1.5.01 du </h2>";
@@ -107,6 +109,7 @@ $html .= "<li>Module ACTES : agrémentation des informations envoyées à Pastell d
 $html .= "<li>Module ACTES : ajout de l'identifiant unique dans le tampon ;";
 $html .= "<li>Module HELIOS : sécurisation de l'API de mise à disposition des PES_ACQUIT/ACK/NACK ;";
 $html .= "<li>Module HELIOS : amélioration de la regexp d'analyse des retours des commandes FTP ;";
+$html .= "<li>Module HELIOS : ajout de la vérification de la taille du PES lors de l'import via API plus contrôle par l'antivirus avant d'accepter le dépot ;" ;
 $html .= "<li>Module ACTES : nouvelle API permettant la télétransmission en préfecture via redirection d'URL ;";
 $html .= "<li>Module MAILS : les commandes console sont commentées pour garder une compatibilité avec IE ;";
 $html .= "<li>Mise en place d'un fichier de configuration générique ;";
