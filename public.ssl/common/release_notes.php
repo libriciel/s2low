@@ -88,6 +88,11 @@ $html .= "";
 // $html .= "</ul>";
 //TODO: mes couilles
 
+$html .= "<h2>V1.5.02 du </h2>";
+$html .= "<ul>";
+$html .= "<li>Module HELIOS : prise en charge des XML complexes pour la signature ; ";
+$html .= "<li>Module ACTES : correction bug : vérification que le fichier PDFTK existe ;";
+$html .= "</ul>";
 
 $html .= "<h2>V1.5.01 du </h2>";
 $html .= "<ul>";
