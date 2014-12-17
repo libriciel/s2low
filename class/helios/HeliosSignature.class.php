@@ -2,7 +2,7 @@
 class HeliosSignature {
 	
 	public function getInfoForSignature($xml_file_path){
-		$xml = simplexml_load_file($xml_file_path);
+		$xml = simplexml_load_file($xml_file_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 
 		if ($xml->PES_DepenseAller){
 			$root = $xml->PES_DepenseAller;
@@ -41,7 +41,7 @@ class HeliosSignature {
 		$all_signature = explode(",",$signature);
 		
 		$domDocument = new DOMDocument();
-		$domDocument->load($original_file_path);
+		$domDocument->load($original_file_path, LIBXML_PARSEHUGE);
 		
 		$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
 		
