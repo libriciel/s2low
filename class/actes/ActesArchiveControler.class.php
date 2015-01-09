@@ -130,6 +130,13 @@ class ActesArchiveControler {
 		
 		$pastell->postActes($id_d,$tmp_folder."/".$actesFile[1]['filename'],$actesFile[1]['posted_filename']);
 		
+		if ($actesFile[1]['signature']){
+			$signature_file_path = $tmp_folder."/signature.pk7";
+			file_put_contents($signature_file_path, $actesFile[1]['signature']);
+			$pastell->postSignature($id_d, $signature_file_path);
+		}
+		
+		
 		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
 		$path_parts = pathinfo($pdftampone);
 		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
@@ -158,8 +165,6 @@ class ActesArchiveControler {
 		$pdf->create_pdf();
 		$pdf->output($tmp_folder."/bordereau_acquit","F");
 		$pastell->postFile($id_d,"bordereau",$tmp_folder."/bordereau_acquit.pdf","bordereau_acquittement.pdf");
-		
-		
 		
 		array_shift($actesFile);
 		array_shift($actesFile);

@@ -20,11 +20,11 @@ if(!defined("WEBSITE_TITLE")){
 }
 
 if(!defined('WEBSITE')){
-        define('WEBSITE', "http://localhost/TedetisPHP/");
+        define('WEBSITE', "http://192.168.1.28:4443/");
 }
 
 if(!defined('WEBSITE_SSL')){
-        define('WEBSITE_SSL', "https://localhost/");
+        define('WEBSITE_SSL', "https://192.168.1.28:4443/");
 }
 
 if(!defined('WEBMASTER')){

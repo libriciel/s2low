@@ -39,6 +39,7 @@ class Pastell {
 			$this->lastError = $curl_wrapper->getLastError();
 			return false;
 		}
+		
 		$data = json_decode($data,true);
 		
 		if (isset($data['status']) && $data['status']=='error' ){
@@ -108,6 +109,10 @@ class Pastell {
 					'date_tdt_postage' => $date));
 	}
 		
+	public function postSignature($id_d,$signature_file_path){
+		$this->postFile($id_d, 'signature', $signature_file_path);
+	}
+	
 	public function postFile($id_d,$field,$file_path,$file_orig_name = false){
 		return $this->callAPI("modif-document.php",
 					array('id_e'=>$this->id_e,'id_d'=>$id_d),
