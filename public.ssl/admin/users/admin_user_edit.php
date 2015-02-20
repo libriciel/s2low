@@ -112,20 +112,20 @@ $html .= "<div class=\"alert alert-info\"><span class=\"mandatory\">*</span> uni
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Nom : </label>\n";
 $html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"name\" value=\"";
-$html .= ($val = Helpers::getFromSession("name")) ? htmlspecialchars($val) : htmlspecialchars($him->get("name"));
+$html .= ($val = Helpers::getFromSession("name")) ? get_hecho($val) : get_hecho($him->get("name"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Pr&eacutenom : </label>\n";
 $html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"givenname\" value=\"";
-$html .= ($val = Helpers::getFromSession("givenname")) ? htmlspecialchars($val) : htmlspecialchars($him->get("givenname"));
+$html .= ($val = Helpers::getFromSession("givenname")) ? get_hecho($val) : get_hecho($him->get("givenname"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Login <span class=\"mandatory\">*</span> :</label>\n";
 $html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"login\" value=\"";
-$html .= ($val = Helpers::getFromSession("login")) ? htmlspecialchars($val) : htmlspecialchars($him->get("login"));
+$html .= ($val = Helpers::getFromSession("login")) ? get_hecho($val) : get_hecho($him->get("login"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -140,13 +140,13 @@ $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique :</label>\n";
 $html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"email\" value=\"";
-$html .= ($val = Helpers::getFromSession("email")) ? htmlspecialchars($val) : htmlspecialchars($him->get("email"));
+$html .= ($val = Helpers::getFromSession("email")) ? get_hecho($val) : get_hecho($him->get("email"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Téléphone :</label>\n";
 $html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"telephone\" value=\"";
-$html .= ($val = Helpers::getFromSession("telephone")) ? htmlspecialchars($val) : htmlspecialchars($him->get("telephone"));
+$html .= ($val = Helpers::getFromSession("telephone")) ? get_hecho($val) : get_hecho($him->get("telephone"));
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -154,7 +154,7 @@ $html .= "  <label class=\"control-label col-md-4\">Importer le certificat utili
 $html .= "  <div class=\"col-md-6\">\n<input type=\"file\" name=\"certificate\" />\n</div>\n";
 $html .= "</div>\n";
 $html .= "  <div class=\"alert alert-info col-md-9 col-md-offset-1\">\n". 
-htmlspecialchars($him->get('subject_dn')) . "";
+get_hecho($him->get('subject_dn')) . "";
 if ($him->get('certificate')){
     $html .= "</br>Expire le " .date("d/m/Y H:m:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
 }
@@ -323,7 +323,7 @@ if (count($ids_cert) > 1){
 if ($him->get('login')) {
 	$html .="<a href='admin_user_edit.php?new_id=".($id?$id:$new_id)."'>Créer un nouveau rôle avec le même certificat </a>";
 	if ($him->get('subject_dn')){
-		$html .= "(".htmlspecialchars($him->get('subject_dn')) .")";	
+		$html .= "(".get_hecho($him->get('subject_dn')) .")";	
 	}
 } else {
 	$html .= "Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login";

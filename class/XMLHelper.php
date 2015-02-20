@@ -3,12 +3,12 @@
 
 	
 function XML_escaping($text){
-	$result = htmlspecialchars($text,ENT_NOQUOTES);
+	$result = htmlspecialchars($text,ENT_NOQUOTES,"iso-8859-1");
 	return $result;
 }
 	
 function XML_escaping_attribute($text){
-	return htmlspecialchars($text,ENT_COMPAT);
+	return htmlspecialchars($text,ENT_COMPAT,"iso-8859-1");
 }
 	
 function cp1252_to_iso88591($text) {

@@ -61,7 +61,7 @@ $doc->DisplayHead();
                     <h2>Message reçu</h2>
                     <div class="col_gauche">Envoyé à :</div>
                     <div class="col_droite">
-                        <?php echo htmlentities($mailTo);?>
+                        <?php echo get_hecho($mailTo);?>
                     </div>
 
                     <div class="col_gauche_info">Envoyé le :</div>
@@ -73,13 +73,13 @@ $doc->DisplayHead();
 
                     <div class="col_gauche_info">CC :</div>
                     <div class="col_droite_info">
-                        <?php echo htmlentities($mailCC); ?>
+                        <?php echo get_hecho($mailCC); ?>
                     </div>
                     <?php endif;?>
 
                     <div class="col_gauche">Objet :</div>
                     <div class="col_droite">
-                        <span class="objet"><?php echo htmlentities($mailTransaction->getObjet()); ?></span>
+                        <span class="objet"><?php echo get_hecho($mailTransaction->getObjet()); ?></span>
                     </div>
 
                     <div class="col_gauche">Message :</div>

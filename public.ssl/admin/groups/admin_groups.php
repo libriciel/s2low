@@ -63,7 +63,7 @@ $html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom co
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fname) > 0) {
-  $html .= " value=\"" . htmlspecialchars($fname) . "\"";
+  $html .= " value=\"" . get_hecho($fname) . "\"";
 }
 
 $html .= " /></div>\n";

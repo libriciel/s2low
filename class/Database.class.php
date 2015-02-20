@@ -357,14 +357,14 @@ class QueryResult {
 function debugdbok() {
   if (MODE == "dev") {
     global $DB;
-    echo "<br />".htmlentities($DB->LastRequest())."<br />";
+    echo "<br />".get_hecho($DB->LastRequest())."<br />";
   }
 }
 
 function debugdbko() {
   if (MODE == "dev") {
     global $DB;
-    echo "<br />".htmlentities($DB->LastRequest())."<br />".htmlentities($DB->LastRequestError())."<br />";;
+    echo "<br />".get_hecho($DB->LastRequest())."<br />".get_hecho($DB->LastRequestError())."<br />";;
   }
 }
 

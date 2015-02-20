@@ -138,7 +138,7 @@ class Annuaire {
 				
 				$row['description'] = strtr($row['description'],",",";");
 				
-				$tabMail[] = '"'. htmlspecialchars($row['description'],ENT_QUOTES)  .'" ['.$row['mail_address'].']';
+				$tabMail[] = '"'. get_hecho($row['description'],ENT_QUOTES)  .'" ['.$row['mail_address'].']';
 			} else {
 				$tabMail[] = $row['mail_address'];
 			}			  	

@@ -37,7 +37,7 @@ ob_start();
                         <div class="form-group">
                             <label class="col-md-4 label-form"><?php echo $sae_label ?>&nbsp;: </label>
                             <div class="col-md-8">
-                                    <input class="form-control"  type="text" size="30" name="<?php echo $sae_name ?>" value="<?php echo htmlspecialchars($authorityInfo[$sae_name]) ?>" />
+                                    <input class="form-control"  type="text" size="30" name="<?php echo $sae_name ?>" value="<?php echo get_hecho($authorityInfo[$sae_name]) ?>" />
                             </div>
                         </div>
                 <?php endforeach; ?>

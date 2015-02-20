@@ -170,7 +170,7 @@ class ListeActesHTML {
 		<input id="<?php echo $name ?>" 
 				name="<?php echo $name ?>" 
 				type="hidden" 
-				value="<?php echo htmlspecialchars($date) ?>"/>
+				value="<?php hecho($date) ?>"/>
 		<script type="text/javascript">
 		obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
 		</script>
@@ -254,7 +254,7 @@ class ListeActesHTML {
 				déposée le <a href="<?php echo get_url(array("order" => "submission_date","sortway" => $sortWay=='asc'?'desc':'asc')) ?>" 
 								title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
 				<?php if ($this->allCollectivite) : ?>
-      				de la collectivité <?php echo htmlspecialchars($envelope['authority_name']) ?>
+      				de la collectivité <?php hecho($envelope['authority_name']) ?>
 				<?php endif;?>
 			</dt>
 			<dd id="envelope_content_<?php echo $i ?>" class="envelope_content" style="display: block">
@@ -280,16 +280,16 @@ class ListeActesHTML {
                                                 <?php if ($envelope['type'] == 1 && ($envelope['current_status'] == 4 || $envelope['current_status'] == 18)): ?>
                                                     <input type="checkbox" 
                                                                     name="liste_id[]" 
-                                                                    value="<?php echo  htmlspecialchars($envelope['transaction_id']) ;?>" 
-                                                                    id="checkbox<?php echo  htmlspecialchars($envelope['transaction_id']) ;?>" />
+                                                                    value="<?php hecho($envelope['transaction_id']) ;?>" 
+                                                                    id="checkbox<?php hecho($envelope['transaction_id']) ;?>" />
                                                 <?php else: ?>
                                                     &nbsp;
                                                 <?php endif; ?>
                                             </td>
                                             <td headers="transaction-type"><?php echo $envelope['type_str'] ?></td>
                                             <td headers="act-number"><?php echo $envelope['transaction_id'] ?></td>
-                                            <td headers="act-internal-number"><?php echo  htmlspecialchars($envelope['number']) ?></td>
-                                            <td headers="object" class="long_field"><?php echo nl2br(htmlspecialchars(Helpers :: truncateString($envelope['subject']))) ?></td>
+                                            <td headers="act-internal-number"><?php hecho($envelope['number']) ?></td>
+                                            <td headers="object" class="long_field"><?php echo nl2br(get_hecho(Helpers :: truncateString($envelope['subject']))) ?></td>
                                             <td headers="nature"><?php echo $envelope["nature_descr"] ?></td>
                                             <td headers="status"><?php echo $envelope['current_status_name'] ?></td>
                                             <td headers="mail">

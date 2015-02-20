@@ -127,8 +127,8 @@ $html .= "<h2>Détails du lot</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Numéro du lot", $zeBatch->getId());
-$html .= $doc->getHTMLArrayline("Description", htmlspecialchars($zeBatch->get("description")));
-$html .= $doc->getHTMLArrayline("Préfixe numéro interne", htmlspecialchars($zeBatch->get("num_prefix")));
+$html .= $doc->getHTMLArrayline("Description", get_hecho($zeBatch->get("description")));
+$html .= $doc->getHTMLArrayline("Préfixe numéro interne", get_hecho($zeBatch->get("num_prefix")));
 $html .= $doc->getHTMLArrayline("Date de création", Helpers::getDateFromBDDDate($zeBatch->get("submission_date"), true));
 $html .= $doc->getHTMLArrayline("Nombre total de fichiers", $zeBatch->getAllFilesCount());
 $html .= $doc->getHTMLArrayline("Nombre de fichiers traités", ($zeBatch->getAllFilesCount() - $zeBatch->getUnprocessedFilesCount()));
@@ -158,7 +158,7 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
     foreach ($batchFiles as $batchFile) {
         $html .= " <tr>\n";
 	$html .= "  <td headers=\"file\" class=\"long_field\">";	
-	$html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"Télécharger le fichier\">" . htmlspecialchars($batchFile->getDisplayName()) . "</a>";
+	$html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"Télécharger le fichier\">" . get_hecho($batchFile->getDisplayName()) . "</a>";
 	$html .= "</td>\n";
 	$html .= "  <td headers=\"size\" >" . $batchFile->get("filesize") . "</td>\n";
 	$html .= "  <td headers=\"signature\" >";

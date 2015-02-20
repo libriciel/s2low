@@ -41,7 +41,7 @@
                     } else {
                         echo '<tr>';
                     }
-                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
+                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
 
                     if ($mailEmis->getAck()=='t')
                         echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
@@ -63,7 +63,7 @@
                         echo '<tr>';
                     }
                     
-                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
+                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
 
                     if ($mailEmis->getAck()=='t')
                         echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
@@ -85,7 +85,7 @@
                         echo '<tr>';
                     }
                     
-                    echo '<td>'.htmlentities($mailEmis->getEmail()).'';
+                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
                     
                     if ($mailEmis->getAck()=='t')
                         echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';

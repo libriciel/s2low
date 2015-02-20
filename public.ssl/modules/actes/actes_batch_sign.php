@@ -60,7 +60,7 @@ foreach ($transaction_list as $transactionInfo) {
 	
 	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
 	$html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser l'actes\">" . $transactionInfo['id'] . "</a></td>\n";
-	$html .= " <td headers=\"numero_interne_acte\">" . htmlspecialchars($transactionInfo['number']) . "</td>\n";
+	$html .= " <td headers=\"numero_interne_acte\">" . get_hecho($transactionInfo['number']) . "</td>\n";
 	$html .= " <td headers=\"objet_actes\">" . $transactionInfo['subject']. "</td>\n";
 	$html .= " <td headers=\"fichier_actes\">"; 
 	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['file']['posted_filename']. "</a>";				

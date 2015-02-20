@@ -177,7 +177,7 @@ if (count($workflow) > 0) {
 	$html .= " <tr>\n";
 	$html .= "  <td>" . $status[$stage["status_id"]] . "</td>\n";
 	$html .= "  <td>" . Helpers::getDateFromBDDDate($stage["date"], true) . "</td>\n";
-	$html .= "  <td class=\"long_field\">" . nl2br(htmlspecialchars($stage["message"])) . "</td>\n";
+	$html .= "  <td class=\"long_field\">" . nl2br(get_hecho($stage["message"])) . "</td>\n";
 	$html .= " </tr>\n";
   }
   

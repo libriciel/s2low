@@ -168,8 +168,8 @@ $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/a
 $html .= "<h2>Création d'une transaction Actes</h2>\n";
 
 if ($batchMode) {
-  $html .= "<div class=\"alert alert-info\"> Transmission d'acte depuis le lot «&nbsp;" . htmlspecialchars($zeBatch->get("description")) . "&nbsp;»<br />";
-  $html .= "Fichier courant&nbsp;: " . htmlspecialchars($zeBatchFile->getDisplayName()) . "<br />\n</div>";
+  $html .= "<div class=\"alert alert-info\"> Transmission d'acte depuis le lot «&nbsp;" . get_hecho($zeBatch->get("description")) . "&nbsp;»<br />";
+  $html .= "Fichier courant&nbsp;: " . get_hecho($zeBatchFile->getDisplayName()) . "<br />\n</div>";
 }
 
 $html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
@@ -227,7 +227,7 @@ if ($batchMode) {
   $number = $zeBatch->get("num_prefix") . "_" . $zeBatch->getNextSuffix();
 }
 
-$html .= htmlspecialchars($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractères maxi, chiffres, lettres en majuscule ou _\"/>\n";
+$html .= get_hecho($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractères maxi, chiffres, lettres en majuscule ou _\"/>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la décision : </label>\n";

@@ -84,8 +84,8 @@ if (is_array($batchesList) && count($batchesList) > 0) {
 	$batch->init();
 
 	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td headers=\"lot\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les détails du lot n°" . $batch->getId() . "\">" . htmlspecialchars($batch->getId()) . "</a></td>\n";
-	$html .= " <td headers=\"description\">" . htmlspecialchars($batch->get("description")) . "</td>\n";
+	$html .= " <td headers=\"lot\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les détails du lot n°" . $batch->getId() . "\">" . get_hecho($batch->getId()) . "</a></td>\n";
+	$html .= " <td headers=\"description\">" . get_hecho($batch->get("description")) . "</td>\n";
 	$html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($batch->get("submission_date"), true) . "</td>\n";
 	$html .= " <td headers=\"file-remaining\">" . $batch->getUnprocessedFilesCount() . "</td>\n";
 	$html .= " <td  headers=\"treatment\" class=\"long_field\">";

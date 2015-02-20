@@ -65,7 +65,7 @@ $html .= "<h1>Gestion collectivités";
 
 if ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe " . htmlspecialchars($myGroup->get("name"));
+  $html .= " du groupe " . get_hecho($myGroup->get("name"));
 }
 
 $html .= "</h1>\n";
@@ -88,9 +88,9 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Nom</label>\n";
 $html .="   <div class=\"col-md-6\">\n";
 if ($me->isGroupAdminOrSuper()) {
-  $html .= "<input type=\"text\" class=\"form-control\" name=\"name\" value=\"" . htmlspecialchars($authority->get("name")) . "\" />\n";
+  $html .= "<input type=\"text\" class=\"form-control\" name=\"name\" value=\"" . get_hecho($authority->get("name")) . "\" />\n";
 } else {
-  $html .= "<input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . htmlspecialchars($authority->get("name")) . "\" />\n";
+  $html .= "<input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . get_hecho($authority->get("name")) . "\" />\n";
 }
  
 $html .= " </div>\n";
@@ -109,22 +109,22 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 {
 	$html .=" <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp login</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\" type=\"text\" name=\"helios_ftp_login\" value=\"" . htmlspecialchars($authority->get("helios_ftp_login")) . "\"  /></div>\n";
+	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\" type=\"text\" name=\"helios_ftp_login\" value=\"" . get_hecho($authority->get("helios_ftp_login")) . "\"  /></div>\n";
 	$html .=" </div>\n";
 	
 	$html .=" <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp mot de passe</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_password\" value=\"" . htmlspecialchars($authority->get("helios_ftp_password")) . "\"  /></div>\n";
+	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_password\" value=\"" . get_hecho($authority->get("helios_ftp_password")) . "\"  /></div>\n";
 	$html .=" </div>\n";
 	
 	$html .=" <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp Dest</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . htmlspecialchars($authority->get("helios_ftp_dest")) . "\" /></div>\n";
+	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";
 	$html .=" </div>\n";
 	
 	$html .=" <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">Numéro de EXT SIRET</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"ext_siret\" value=\"" . htmlspecialchars($authority->get("ext_siret")) . "\" /></div>\n";
+	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"ext_siret\" value=\"" . get_hecho($authority->get("ext_siret")) . "\" /></div>\n";
 	$html .=" </div>\n";
 }
 //********************************
@@ -209,7 +209,7 @@ if ($me->isGroupAdminOrSuper())
   }
   $html.=" </select></div>\n";
 } else {
-  $html .= "<div class=\"col-md-6\"><input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . htmlspecialchars($authority->get("siren")) . "\" />\n</div>\n";
+  $html .= "<div class=\"col-md-6\"><input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . get_hecho($authority->get("siren")) . "\" />\n</div>\n";
 }
 
 $html .= " </div>\n";
@@ -251,29 +251,29 @@ if ($me->isGroupAdminOrSuper()) {
 
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique «&nbsp;métier&nbsp;»</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email\" value=\"" . htmlspecialchars($authority->get("email")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email\" value=\"" . get_hecho($authority->get("email")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique de diffusion par défaut</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"default_broadcast_email\" value=\"" . htmlspecialchars($authority->get("default_broadcast_email")) . "\" size=\"30\" maxlength=\"600\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"default_broadcast_email\" value=\"" . get_hecho($authority->get("default_broadcast_email")) . "\" size=\"30\" maxlength=\"600\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique de diffusion d'informations</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"broadcast_email\" value=\"" . htmlspecialchars($authority->get("broadcast_email")) . "\" size=\"30\" maxlength=\"2000\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"broadcast_email\" value=\"" . get_hecho($authority->get("broadcast_email")) . "\" size=\"30\" maxlength=\"2000\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse</label>\n";
 $html .= "  <div class=\"col-md-6\">\n";
-$html .= "   <textarea  class=\"form-control\" name=\"address\">" . htmlspecialchars($authority->get("address")) . "</textarea>\n";
+$html .= "   <textarea  class=\"form-control\" name=\"address\">" . get_hecho($authority->get("address")) . "</textarea>\n";
 $html .= "  </div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Code postal</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"postal_code\" value=\"" . htmlspecialchars($authority->get("postal_code")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"postal_code\" value=\"" . get_hecho($authority->get("postal_code")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Ville</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"city\" value=\"" . htmlspecialchars($authority->get("city")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"city\" value=\"" . get_hecho($authority->get("city")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Département&nbsp;/&nbsp;Arrondissement</label>\n";
@@ -298,15 +298,15 @@ $html .= "  </div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Téléphone</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"telephone\" value=\"" . htmlspecialchars($authority->get("telephone")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"telephone\" value=\"" . get_hecho($authority->get("telephone")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Fax</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"fax\" value=\"" . htmlspecialchars($authority->get("fax")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"fax\" value=\"" . get_hecho($authority->get("fax")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
-$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . htmlspecialchars($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 
 
@@ -344,7 +344,7 @@ if ($authority->getModulePermByName("dia") && $me->isAdmin())
 	$html .= " <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">Numéro SIRET pour la réception des DIA</label>\n";
 	$html .= "  <div class=\"col-md-6\">";
-	$html .= "  <input type=\"text\" name=\"dia_siret\" value=\"" . htmlspecialchars($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" />";
+	$html .= "  <input type=\"text\" name=\"dia_siret\" value=\"" . get_hecho($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" />";
 	$html .= " </div>\n";
 	
 }

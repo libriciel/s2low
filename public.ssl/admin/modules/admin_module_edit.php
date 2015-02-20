@@ -56,11 +56,11 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data\">\n";
 $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Nom&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\">" . htmlspecialchars($zeModule->get("name")) . "</td>\n";
+$html .= "  <td class=\"td-input\">" . get_hecho($zeModule->get("name")) . "</td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">Description&nbsp;:</td>\n";
-$html .= "  <td class=\"td-input\">" . htmlspecialchars($zeModule->get("description")) . "</td>\n";
+$html .= "  <td class=\"td-input\">" . get_hecho($zeModule->get("description")) . "</td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
 $html .= "  <td class=\"td-register\">État&nbsp;:</td>\n";
@@ -93,9 +93,9 @@ if (count($module_params)>0) {
   foreach ($module_params as $param) {
 	$html .= "<tr class=\"" . $tr_style . "\">\n";
 	$html .= "  <td class=\"td-input\"><input type=\"hidden\" name=\"param_id[]\" value=\"" . $param["id"] . "\"/><input type=\"checkbox\" name=\"param_to_suppr[]\" value=\"".$param["id"]."\" /></td>";
-	$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"param_name[]\" value=\"" . htmlspecialchars($param["name"]) . "\" /></td>\n";
-	$html .= "  <td class=\"td-input\"><input type=\"text\" size=\"15\" maxlength=\"70\" name=\"param_value[]\" value=\"" . htmlspecialchars($param["value"]) . "\" /></td>\n";
-	$html .= "  <td class=\"td-input\"><input type=\"text\" size=\"40\" maxlength=\"70\" name=\"param_description[]\" value=\"" . htmlspecialchars($param["description"]) . "\" /></td>\n";
+	$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"param_name[]\" value=\"" . get_hecho($param["name"]) . "\" /></td>\n";
+	$html .= "  <td class=\"td-input\"><input type=\"text\" size=\"15\" maxlength=\"70\" name=\"param_value[]\" value=\"" . get_hecho($param["value"]) . "\" /></td>\n";
+	$html .= "  <td class=\"td-input\"><input type=\"text\" size=\"40\" maxlength=\"70\" name=\"param_description[]\" value=\"" . get_hecho($param["description"]) . "\" /></td>\n";
 	$html .= "</tr>\n";
 	$tr_style = ($tr_style == "alternate1") ? "alternate2" : "alternate1";
   }

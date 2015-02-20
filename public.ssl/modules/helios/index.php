@@ -220,7 +220,7 @@ $html .= " /></div>\n</div>\n";
 //date minimale de postage
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-3\" for=\"min_submission_date\">Date de postage minimale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_submission_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmin_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');\n";
@@ -240,7 +240,7 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicke
 
 //la date minimale d'aquittement
 $html .= "<label class=\"col-md-3\" for=\"min_ack_date\">Date d'acquittement minimale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"min_ack_date\" name=\"min_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_ack_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"min_ack_date\" name=\"min_ack_date\" type=\"hidden\" value=\"" . get_hecho($fmin_ack_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_min_ack_date = new DatePicker('min_ack_date', 'fr');\n";
@@ -264,7 +264,7 @@ $html .= "</div>\n";
 //begin date maximale
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-3\" for=\"max_submission_date\">Date de postage maximale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_submission_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmax_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');\n";
@@ -283,7 +283,7 @@ $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_max_submission_date_calendar\"></div></div>\n";
 
 $html .= "<label class=\"col-md-3\" for=\"max_ack_date\">Date d'acquittement maximale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"max_ack_date\" name=\"max_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_ack_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"max_ack_date\" name=\"max_ack_date\" type=\"hidden\" value=\"" . get_hecho($fmax_ack_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_max_ack_date = new DatePicker('max_ack_date', 'fr');\n";
@@ -367,7 +367,7 @@ $sel_ok = array();
       $html .= "<tr><td>\n";
 		if (in_array($envelope['last_status_id'],array(8,13))) {
 			$html .= '<input type="checkbox" name="liste_id[]" value="' .
-						htmlspecialchars($envelope['id']) .
+						get_hecho($envelope['id']) .
 						'" id="checkbox'.$envelope['id'].'" />';
 			$sel_ok[$envelope['last_status_id']] = true;
 		} else {

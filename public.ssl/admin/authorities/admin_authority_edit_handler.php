@@ -8,6 +8,7 @@ $me = new User();
 
 $api = Helpers::getVarFromPost("api");
 
+
 function exitOrDisplayError($api,$erreur_msg,$location){
 	if ($api){
 		$jsonOutput = new JSONoutput();
@@ -110,7 +111,7 @@ if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || s
  	} else {
 		$location = WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
  	}  	
- 	exitOrDisplayError($api,"L'email " . htmlentities($email_mail_securise) . " n'est pas valide.",$location);
+ 	exitOrDisplayError($api,"L'email " . get_hecho($email_mail_securise) . " n'est pas valide.",$location);
 }
 
 

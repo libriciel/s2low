@@ -24,7 +24,7 @@ class HeliosAPIResponse {
 			if (is_array($value)){
 				$this->afficheArray($value,$cle);
 			} else {
-				echo htmlspecialchars($value);
+				echo get_hecho($value);
 			}
 			if (is_int($cle)) {
 				echo "</$tag>";

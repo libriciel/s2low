@@ -160,7 +160,7 @@ $html .= "<label for=\"msg-contain\" class=\"col-md-3 control-label\">Message co
 $html .= "<div class=\"col-md-3\"><input id=\"msg-contain\" class=\"form-control\" type=\"text\" name=\"message\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fmessage) > 0) {
-  $html .= " value=\"" . htmlspecialchars($fmessage) . "\"";
+  $html .= " value=\"" . get_hecho($fmessage) . "\"";
 }
 
 $html .= " /></div>\n";
@@ -170,7 +170,7 @@ if ($me->isAdmin()) {
   $html .= "<div class=\"col-md-3\"><input id=\"username-contain\" class=\"form-control\" type=\"text\" name=\"user\" size=\"20\" maxlength=\"25\"";
 
   if (strlen($fuser) > 0) {
-      $html .= " value=\"" . htmlspecialchars($fmessage) . "\"";
+      $html .= " value=\"" . get_hecho($fmessage) . "\"";
   }
 
   $html .= " /></div>\n</div>\n";
@@ -227,11 +227,11 @@ if (count($logEntries) > 0) {
 
 	$html .= "<tr>\n";
 	$html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($logEntry["date"], true) . "</td>\n";
-	$html .= " <td headers=\"author\">" . htmlspecialchars($logEntry["issuer"]) . "</td>\n";
-	$html .= " <td headers=\"severity\">" . htmlspecialchars($severities[$logEntry["severity"]]) . "</td>\n";
-	$html .= " <td headers=\"module\">" . htmlspecialchars($logEntry["module"]) . "</td>\n";
-	$html .= " <td headers=\"user\">" . (($owner) ? htmlspecialchars($owner->getPrettyName()) : "") . "</td>\n";
-	$html .= " <td class=\"long_field\" headers=\"message\">" . nl2br(htmlspecialchars($logEntry["message"])) . "</td>\n";
+	$html .= " <td headers=\"author\">" . get_hecho($logEntry["issuer"]) . "</td>\n";
+	$html .= " <td headers=\"severity\">" . get_hecho($severities[$logEntry["severity"]]) . "</td>\n";
+	$html .= " <td headers=\"module\">" . get_hecho($logEntry["module"]) . "</td>\n";
+	$html .= " <td headers=\"user\">" . (($owner) ? get_hecho($owner->getPrettyName()) : "") . "</td>\n";
+	$html .= " <td class=\"long_field\" headers=\"message\">" . nl2br(get_hecho($logEntry["message"])) . "</td>\n";
 	$html .= " <td headers=\"timestamp\"><a href=\"" . WEBSITE_SSL . "/common/logs_get_timestamp.php?id=" . $logEntry["id"] . "\" title=\"Télécharger une archive contenant l'entrée de journal n°" .$logEntry["id"] . " et sa signature\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/timestamping_icon.png\" alt=\"timestamp\" /></a></td>\n";
 	$html .= "</tr>\n";
   }

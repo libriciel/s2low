@@ -117,7 +117,7 @@ $html .= " /></div>\n</div>\n";
 //date minimale de postage
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-3\" for=\"min_submission_date\">Date de réception minimale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_submission_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmin_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');\n";
@@ -136,7 +136,7 @@ $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_min_submission_date_calendar\"></div></div>\n";
 
 $html .= "<label class=\"col-md-3\" for=\"max_submission_date\">Date de réception maximale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_submission_date) . "\"/>\n";
+$html .= "<div class=\"col-md-3\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmax_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');\n";

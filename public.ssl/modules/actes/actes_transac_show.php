@@ -90,28 +90,28 @@ if ($trans->get("type_reponse")){
 	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
 }
 
-$html .= $doc->getHTMLArrayline("Dossier suivie par", htmlspecialchars($owner->get("givenname") . " " . $owner->get("name")));
+$html .= $doc->getHTMLArrayline("Dossier suivie par", get_hecho($owner->get("givenname") . " " . $owner->get("name")));
 
 // Contenu différent en fonction du type de transaction
 switch ($trans->get("type")) {
   case 1 :
     $html .= $doc->getHTMLArrayline("Nature de l'acte", $transNatures[$trans->get("nature_code")]);
-    $html .= $doc->getHTMLArrayline("Numéro de l'acte", htmlspecialchars($trans->get("number")));
+    $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
     $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
-    $html .= $doc->getHTMLArrayline("Objet", nl2br(htmlspecialchars($trans->get("subject"))));
-    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières", htmlspecialchars($trans->get("classification")));
-    $html .= $doc->getHTMLArrayline("Identifiant unique", htmlspecialchars($trans->get("unique_id")));
+    $html .= $doc->getHTMLArrayline("Objet", nl2br(get_hecho($trans->get("subject"))));
+    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières", get_hecho($trans->get("classification")));
+    $html .= $doc->getHTMLArrayline("Identifiant unique", get_hecho($trans->get("unique_id")));
 
     $arch_url = $trans->get("archive_url");
 
     if (!empty ($arch_url)) {
-      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . htmlspecialchars($trans->get("archive_url")) . "</a>";
+      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . get_hecho($trans->get("archive_url")) . "</a>";
     } else {
       $url = "Non définie";
     }
     $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
     if ($trans->get("sae_transfer_identifier")) {
-		$html .= $doc->getHTMLArrayline("Identifiant de transfert d'archivage", htmlspecialchars($trans->get("sae_transfer_identifier")));
+		$html .= $doc->getHTMLArrayline("Identifiant de transfert d'archivage", get_hecho($trans->get("sae_transfer_identifier")));
     }
     
 
@@ -189,7 +189,7 @@ if ($trans->get("type") == 6 ||
 // Fichiers contenus dans la transaction
 $html .= "<h2>Fichiers contenus dans l'archive transmise (";
 
-$archiveName = htmlspecialchars(basename($envelope->get("file_path")));
+$archiveName = get_hecho(basename($envelope->get("file_path")));
 $html .= ($archiveDeleted) ? $archiveName : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
 
 $html .= ")</h2>\n";

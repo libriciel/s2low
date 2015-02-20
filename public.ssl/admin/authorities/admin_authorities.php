@@ -71,7 +71,7 @@ $html = "<h1>Gestion des collectivités";
 
 if ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe " . htmlspecialchars($myGroup->get("name"));
+  $html .= " du groupe " . get_hecho($myGroup->get("name"));
 }
 
 $html .= "</h1>\n";
@@ -89,7 +89,7 @@ $html .= "<label for=\"name-contain\" class=\"col-md-3 control-label\">Le nom co
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (strlen($fname) > 0) {
-  $html .= " value=\"" . htmlspecialchars($fname) . "\"";
+  $html .= " value=\"" . get_hecho($fname) . "\"";
 }
 
 $html .= " /></div>\n";

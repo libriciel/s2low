@@ -68,7 +68,7 @@ if ($mod) {
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label for=\"name\" class=\"col-md-3 control-label\">Nom</label>\n";
 $html .= "  <div class=\"col-md-4\"><input id=\"name\" class=\"form-control\" type=\"text\" name=\"name\" value=\"";
-$html .= ($mod) ? htmlspecialchars($group->get("name")) : Helpers::getFromSession("name");
+$html .= ($mod) ? get_hecho($group->get("name")) : Helpers::getFromSession("name");
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= "<div class=\"form-group\">\n";

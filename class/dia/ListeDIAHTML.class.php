@@ -117,7 +117,7 @@ class ListeDiaHTML {
 		<input id="<?php echo $name ?>" 
 				name="<?php echo $name ?>" 
 				type="hidden" 
-				value="<?php echo htmlspecialchars($date) ?>"/>
+				value="<?php hecho($date) ?>"/>
 		<script type="text/javascript">
 		obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
 		</script>

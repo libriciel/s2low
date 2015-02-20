@@ -270,7 +270,7 @@ $html .= " /></td>\n";
 $html .= "<tr>\n";
 //data minimala de postaj
 $html .= "<td class=\"title\">Date de postage minimale&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_submission_date) . "\"/>\n";
+$html .= "<td class=\"value\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmin_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');\n";
@@ -290,7 +290,7 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicke
 
 //alt tip de data minimala: de aquittement
 $html .= "<td class=\"title\">Date d'acquittement minimale&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input id=\"min_ack_date\" name=\"min_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmin_ack_date) . "\"/>\n";
+$html .= "<td class=\"value\"><input id=\"min_ack_date\" name=\"min_ack_date\" type=\"hidden\" value=\"" . get_hecho($fmin_ack_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_min_ack_date = new DatePicker('min_ack_date', 'fr');\n";
@@ -314,7 +314,7 @@ $html .= "</tr>\n";
 //begin date maximale
 $html .= "<tr>\n";
 $html .= "<td class=\"title\">Date de postage maximale&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_submission_date) . "\"/>\n";
+$html .= "<td class=\"value\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmax_submission_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');\n";
@@ -333,7 +333,7 @@ $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_max_submission_date_calendar\"></div></td>\n";
 
 $html .= "<td class=\"title\">Date d'acquittement maximale&nbsp;:</td>\n";
-$html .= "<td class=\"value\"><input id=\"max_ack_date\" name=\"max_ack_date\" type=\"hidden\" value=\"" . htmlspecialchars($fmax_ack_date) . "\"/>\n";
+$html .= "<td class=\"value\"><input id=\"max_ack_date\" name=\"max_ack_date\" type=\"hidden\" value=\"" . get_hecho($fmax_ack_date) . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
 $html .= "    obj_max_ack_date = new DatePicker('max_ack_date', 'fr');\n";
@@ -525,7 +525,7 @@ if (count($envelopes) > 0) {
 
     if ($me->isSuper()) {
       $zeAuthority = new Authority($owner->get("authority_id"));
-      $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
+      $html .= " de la collectivité" . get_hecho($zeAuthority->get("name"));
     }
 
     //$html .= "</dt>\n";
@@ -562,8 +562,8 @@ $transaction_id=$envelope["id"];
       $html .= "</tr>\n";
     
       //$html .= " <td>" . $transactionTypes[$transaction->get("type")] . "</td>\n";
-      //$html .= " <td>" . htmlspecialchars($transaction->get("number")) . "</td>\n";
-      //$html .= " <td class=\"long_field\">" . nl2br(htmlspecialchars(Helpers :: truncateString($transaction->get("subject")))) . "</td>\n";
+      //$html .= " <td>" . get_hecho($transaction->get("number")) . "</td>\n";
+      //$html .= " <td class=\"long_field\">" . nl2br(get_hecho(Helpers :: truncateString($transaction->get("subject")))) . "</td>\n";
       //$html .= " <td>" . $transaction->get("nature_descr") . "</td>\n";
       
       //?! status 
@@ -754,7 +754,7 @@ if (count($transactions) > 0) {
 /*
     if ($me->isSuper()) {
       $zeAuthority = new Authority($owner->get("authority_id"));
-      $html .= " de la collectivité" . htmlspecialchars($zeAuthority->get("name"));
+      $html .= " de la collectivité" . get_hecho($zeAuthority->get("name"));
     }
 
     $html .= "</dt>\n";
@@ -778,15 +778,15 @@ if (count($transactions) > 0) {
       $html .= " <td>";
       if ($transaction->get("type") == 1 && $transaction->getCurrentStatus() == 4) {
         $html .= "<input type=\"checkbox\" name=\"liste_id[]\" value=\"";
-        $html .= htmlspecialchars($transaction->getId()) . "\" id=\"checkbox";
-        $html .= htmlspecialchars($transaction->getId()) . "\" />";
+        $html .= get_hecho($transaction->getId()) . "\" id=\"checkbox";
+        $html .= get_hecho($transaction->getId()) . "\" />";
       } else {
         $html .= "&nbsp;";
       }
       $html .= "</td>\n";
       $html .= " <td>" . $transactionTypes[$transaction->get("type")] . "</td>\n";
-      $html .= " <td>" . htmlspecialchars($transaction->get("number")) . "</td>\n";
-      $html .= " <td class=\"long_field\">" . nl2br(htmlspecialchars(Helpers :: truncateString($transaction->get("subject")))) . "</td>\n";
+      $html .= " <td>" . get_hecho($transaction->get("number")) . "</td>\n";
+      $html .= " <td class=\"long_field\">" . nl2br(get_hecho(Helpers :: truncateString($transaction->get("subject")))) . "</td>\n";
       $html .= " <td>" . $transaction->get("nature_descr") . "</td>\n";
       $html .= " <td>" . $status[$transaction->getCurrentStatus()] . "</td>\n";
       //$html .= " <td>" . $transaction->get("unique_id") . "</td>\n";

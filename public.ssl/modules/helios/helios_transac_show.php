@@ -95,7 +95,7 @@ $html .= $doc->getHTMLArrayline("Collectivité" ,$authorityInfo->get("name"));
 $arch_url = $trans->get("archive_url");
 
 if (!empty ($arch_url)) {
-      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . htmlspecialchars($trans->get("archive_url")) . "</a>";
+      $url = "<a href=\"" . $trans->get("archive_url") . "\">" . get_hecho($trans->get("archive_url")) . "</a>";
     } else {
       $url = "Non définie";
     }
