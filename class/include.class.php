@@ -24,11 +24,11 @@ if (php_sapi_name() != 'cli'){
  * 
  */
 function hecho($message,$quot_style=ENT_QUOTES){
-	echo get_hecho($message,$quot_style);
+	echo get_hecho($message,$quot_style,"iso-8859-15");
 }
 
 function get_hecho($message,$quot_style=ENT_QUOTES){
-	return htmlspecialchars($message,$quot_style);
+	return htmlspecialchars($message,$quot_style,"iso-8859-15");
 }
 
 //Cette variable est utilisée partout sans être initialisé...
