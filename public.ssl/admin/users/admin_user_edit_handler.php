@@ -48,6 +48,12 @@ $new_id = Helpers::getVarFromPost("new_id", true);
 $him = new User();
 $mod = false;
 
+
+if (! $authority_id){
+	exitOrDisplayError($api,"authority_id est obligatoire",WEBSITE_SSL . "/admin/users/admin_users.php");
+	
+}
+
 if (isset($id) && ! empty($id)) {
   $him->setId($id);
   if (! $him->init()) {
