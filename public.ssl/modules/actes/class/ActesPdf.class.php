@@ -43,7 +43,7 @@ class ActesPdf {
 		$this->pdf->Cell(40,10,"Collectivité :",0,0,'R');
 		$this->pdf->Cell(40,10,$author->get("name"),0,1,'L');
 		$this->pdf->Cell(40,10,"Utilisateur :",0,0,'R');
-		$this->pdf->Cell(40,10,$this->user->get("name"),0,1,'L');
+		$this->pdf->Cell(40,10,$this->user->get("name")." ".$this->user->get("givenname"),0,1,'L');
 	
 		// imprimé la table de  transaction
 		$this->pdf->SetTextColor(40,36,94);
