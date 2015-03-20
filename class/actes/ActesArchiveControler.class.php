@@ -143,7 +143,7 @@ class ActesArchiveControler {
 			$datetampon = $actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
 			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$datetampon);
 		}
-		$pastell->postFile($id_d,"actes_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
+		$pastell->postFile($id_d,"acte_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
 
 		$datepostage = $actesTransactionsStatusInfo = $actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
 		$pastell->setDatePostage($id_d,date("d/m/Y",time($datepostage['date'])));
@@ -256,7 +256,8 @@ class ActesArchiveControler {
 		        $tampon = new TamponPDF($pdf);
 		        $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
 				                            "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-				                            "Affiché le " ));
+				                            "Affiché le " ,
+		        							"ID : ".$transactionInfo['unique_id']));
 		        $tampon->setNameFile("tampon_".$fileorig);
 		        file_put_contents($pdftkise,$tampon->getFileAsString());
 		} catch (Exception $e){
