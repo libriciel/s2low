@@ -24,6 +24,7 @@ $name = Helpers::getVarFromPost("name", true);
 $status = Helpers::getVarFromPost("status", true);
 $siren_file = $_FILES["siren_file"];
 
+$name = str_replace('\'','_',$name);
 $group = new Group();
 $mod = false;
 
