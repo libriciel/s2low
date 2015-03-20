@@ -6,7 +6,7 @@ $id = $recuperateur->getInt('id');
 
 $authorityInfo = $authoritySQL->getInfo($id);
 
-if (! $authorityInfo  || ! $droit->hasDroit($userInfo,$authorityInfo)){
+if (! $authorityInfo  || ! $droit->isSuperAdmin($userInfo)){
 	sortir("Accès refusé");
 }
 
