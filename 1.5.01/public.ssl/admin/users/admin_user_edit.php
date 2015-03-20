@@ -1,5 +1,6 @@
 <?php
 
+require_once( __DIR__ . "/../../../init/init.php");
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/class/X509Certificate.class.php');
@@ -278,10 +279,16 @@ $html .= ($mod) ? "Valider les modifications" : "Ajouter l'utilisateur";
 $html .= "</button>\n</div>\n";
 $html .= "</form>\n";
 
-$ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
+// Note : UserSQL::getInfoFromCertificateInfo ne renvoie pas authority_name
+$sql = "SELECT users.id, users.login, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name";
+$sql .= " FROM users LEFT OUTER JOIN authorities ON users.authority_id = authorities.id";
+$sql .= " WHERE users.subject_dn = '" . $him->get("subject_dn") . "'";
+$sql .= " AND issuer_dn = '" . $him->get("issuer_dn") . "'";
+$sql .= " ORDER BY users.name";
+$users_cert = $sqlQuery->query($sql);
 
 $html .= "<h2>Autre rôle de l'utilisateur</h2>";
-if (count($ids_cert) > 1){
+if (count($users_cert) > 1){
 	$html .= "<div class=\"data_table\">\n";
 	$html .= "<table class=\"data-table table table-striped\">";
 	$html .= "<tr>\n";
@@ -299,21 +306,19 @@ if (count($ids_cert) > 1){
 	
 	$i = 0;
 	
-	foreach($ids_cert as $id_other){
+	foreach($users_cert as $user_cert){
+        $id_other = $user_cert['id'];
 		if ($id_other == $him->getId()){
 			continue;
 		}
-		$he = new User($id_other);
-		$he->init();
-		$he_authority = new Authority($he->get("authority_id"));
  		$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
- 		$html .= " <td>" . $he->get("login") . "</td>\n"; 		
-  		$html .= " <td>" . $he->get("givenname") . " " . $he->get("name") . "</td>\n";
-  		$html .= " <td><a href=\"mailto:" .$he->get("email"). "\">" . $he->get("email") . "</a></td>\n";
-  		$html .= " <td>" . $rolesList[$he->get("role")] . "</td>\n";
-  		$html .= " <td>" . $statusList[$he->get("status")] . "</td>\n";
-  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id"). "\">" . $he_authority->get("name")  . "</a></td>\n";
-  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+ 		$html .= " <td>" . $user_cert["login"] . "</td>\n"; 		
+  		$html .= " <td>" . $user_cert["givenname"] . " " . $user_cert["name"] . "</td>\n";
+  		$html .= " <td><a href=\"mailto:" .$user_cert["email"]. "\">" . $user_cert["email"] . "</a></td>\n";
+  		$html .= " <td>" . $rolesList[$user_cert["role"]] . "</td>\n";
+  		$html .= " <td>" . $statusList[$user_cert["status"]] . "</td>\n";
+  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user_cert["authority_id"]. "\">" . $user_cert["authority_name"]  . "</a></td>\n";
+  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/users/" . basename(__FILE__) . "?id=" .  $user_cert["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
   		$html .= "</tr>\n";
   		 $i = ($i + 1) % 2;
 	}
