@@ -282,10 +282,14 @@ $html .= "</form>\n";
 // Note : UserSQL::getInfoFromCertificateInfo ne renvoie pas authority_name
 $sql = "SELECT users.id, users.login, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name";
 $sql .= " FROM users LEFT OUTER JOIN authorities ON users.authority_id = authorities.id";
-$sql .= " WHERE users.subject_dn = '" . $him->get("subject_dn") . "'";
-$sql .= " AND issuer_dn = '" . $him->get("issuer_dn") . "'";
+$sql .= " WHERE users.subject_dn = :subject_dn";
+$sql .= " AND issuer_dn = :issuer_dn";
 $sql .= " ORDER BY users.name";
-$users_cert = $sqlQuery->query($sql);
+$sql_params = array(
+    'subject_dn' => $him->get("subject_dn"),
+    'issuer_dn' => $him->get("issuer_dn")
+);
+$users_cert = $sqlQuery->query($sql, $sql_params);
 
 $html .= "<h2>Autre rôle de l'utilisateur</h2>";
 if (count($users_cert) > 1){
