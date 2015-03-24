@@ -49,4 +49,12 @@ class AuthoritySQL {
   								$id);
   	}
 	
+  	public function verifDepartmentAndDistrict($department_code,$district_code){
+  		$sql = "SELECT * FROM authority_departments " .
+    			" JOIN authority_districts ON authority_department_id=authority_departments.id ". 
+  				" WHERE authority_departments.code=?  AND authority_districts.code=?";
+  		$result = $this->sqlQuery->query($sql,$department_code,$district_code);
+  		return count($result);
+  	}
+  	
 }

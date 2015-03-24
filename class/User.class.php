@@ -455,7 +455,7 @@ class User extends DataObject {
    * \param $module chaîne : nom du module pour lequel récupérer les permissions
    * \return La chaîne des permissions sur le module ou null si aucune permission trouvée
   */
-  public function getPerm($module) {
+  public function getPerm($module) {  	
   	if (empty($this->perms[$module])){
   		return null;
   	}

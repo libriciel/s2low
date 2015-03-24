@@ -49,7 +49,7 @@ $him = new User();
 $mod = false;
 
 
-if (! $authority_id){
+if ($api && ! $authority_id){
 	exitOrDisplayError($api,"authority_id est obligatoire",WEBSITE_SSL . "/admin/users/admin_users.php");
 	
 }

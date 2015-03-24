@@ -3,6 +3,8 @@
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once( SITEROOT . '/class/Mailer.class.php');
+require_once( SITEROOT . '/class/SQLQuery.class.php');
+require_once( SITEROOT . '/class/AuthoritySQL.class.php');
 
 $me = new User();
 
@@ -58,10 +60,24 @@ if($newmailnotif == 'on')
 else
     $newmailnotif='false';
 
-$authority = new Authority();
-$mod = false;
+
 
 $form_location = "Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php";
+
+
+$sqlQuery = new SQLQuery(DB_DATABASE);
+$sqlQuery->setDatabaseHost(DB_HOST);
+$sqlQuery->setCredential(DB_USER,DB_PASSWORD);
+$authoritySQL = new AuthoritySQL($sqlQuery);
+
+if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)){
+	exitOrDisplayError($api,"Le code département ou le code arrondissement sont incorrects",$form_location);
+	
+}
+
+
+$authority = new Authority();
+$mod = false;
 
 
 
