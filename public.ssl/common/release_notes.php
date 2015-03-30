@@ -88,12 +88,21 @@ $html .= "";
 // $html .= "</ul>";
 //TODO: mes couilles
 
-$html .= "<h2>V1.5.02 du </h2>";
+$html .= "<h2>V2.0 du </h2>";
 $html .= "<ul>";
 $html .= "<li>Module HELIOS : prise en charge des XML complexes pour la signature ; ";
 $html .= "<li>Module ACTES : correction bug : vérification que le fichier PDFTK existe ;";
 $html .= "<li>Module ACTES : correction  bug : amélioration vérification des signatures lors de l'import des enveloppes ;";
 $html .= "<li>Module ACTES : correction  bug : remise en place du versement par lot ;";
+$html .= "<li>Module ACTES : correction  bug : vérification du département et de l'arrodissement via les API ;";
+$html .= "<li>Module ACTES : correction  bug : seul le superadmin peut modifier le paramétrage SAE ;";
+$html .= "<li>Module ACTES : traitement par lot changement du bouton Envoyer par Créer le lot ;";
+$html .= "<li>Module ACTES : ajout de l'identifiant unique dans le tampon ajouté par S²LOW ;";
+$html .= "<li>Module ACTES : transmission de la signature électronique de l'acte lors du versement au SAE ;";
+$html .= "<li>Module ACTES : permettre à un administrateur decollectivité de verser au SAE ;";
+$html .= "<li>Passage sous Postgres 9.4 ;";
+$html .= "<li>Passage sous Openssl 1.0.x ;";
+$html .= "<li>Passage sous PHP5.5 ;";
 $html .= "</ul>";
 
 $html .= "<h2>V1.5.01 du </h2>";
