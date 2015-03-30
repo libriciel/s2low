@@ -188,7 +188,7 @@ $html .= "<!-- The fileupload-buttonbar contains buttons to add/delete files and
             </span>\n
             <button type=\"submit\" class=\"btn btn-primary start\">\n
               <i class=\"icon-upload icon-white\"></i>\n
-              <span>Envoyer</span>\n
+              <span>Creer le lot</span>\n
             </button>\n";
 
 //on commente les boutons de remise a zero et de suppression ainsi que la case a cocher dans le haut du formulaire (ceux qui permettent les actions pour toute la liste de fichiers)
