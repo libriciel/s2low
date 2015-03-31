@@ -101,7 +101,7 @@ $html .= "<li>Module ACTES : ajout de l'identifiant unique dans le tampon ajouté
 $html .= "<li>Module ACTES : transmission de la signature électronique de l'acte lors du versement au SAE ;";
 $html .= "<li>Module ACTES : permettre à un administrateur decollectivité de verser au SAE ;";
 $html .= "<li>Passage sous Postgres 9.4 ;";
-$html .= "<li>Passage sous Openssl 1.0.x ;";
+$html .= "<li>Passage sous Openssl 1.0 ;";
 $html .= "<li>Passage sous PHP5.5 ;";
 $html .= "</ul>";
 
