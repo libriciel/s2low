@@ -36,7 +36,7 @@ class Authority extends DataObject {
 
   protected $dbFields = array( "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true),
 						 "siren" => array( "descr" => "Numéro de SIREN", "type" => "isString", "mandatory" => true, "unique" => true),
-						 "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => false),
+						 "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => true),
 						 "agreement" => array( "descr" => "Référence convention", "type" => "isString", "mandatory" => false),
 						 "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => false),
 						 "broadcast_email" => array( "descr" => "Adresse électronique de diffusion", "type" => "isString", "mandatory" => false),
