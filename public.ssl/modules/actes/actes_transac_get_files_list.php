@@ -1,14 +1,5 @@
 <?php
 
-/**
- * @deprecated
- * 
- * Cette fonction est deprecated, on doit utiliser : 
- * - actes_transac_get_files_list.php pour récupérer la liste des fichiers attachés à un acte.
- * - actes_download_file.php?file=id&tampon=true pour récupérer le fichier ou le fichier tamponné
- * 
- */
-
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
@@ -90,9 +81,5 @@ if(! $has_file){
 
 
 $files = $zeTrans->fetchFilesList();
-foreach ($files as $file) {
-	if (preg_match("/pdf$/i",$file["posted_filename"])) {
-		header("Location:  actes_download_file.php?file={$file['id']}&tampon=true");
-		exit;
-	}
-}
+
+echo json_encode($files);
