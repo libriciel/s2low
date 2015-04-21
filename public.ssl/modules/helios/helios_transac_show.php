@@ -142,13 +142,32 @@ if (count($workflow) > 0) {
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 
+$actionHtml = "";
 if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url')) {
-	$html .= "<div class=\"action\">\n";
-	$html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_archiver.php\"  method=\"post\">\n";
-	$html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
-	$html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-	$html .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
-	$html .= "</div>\n</form>\n";
+	$actionHtml .= "<div class=\"action\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_archiver.php\"  method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+	$actionHtml .= "</div>\n</form>\n";
+}
+
+
+
+if ($me->isSuper()) {
+
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id. "\" />\n";
+	$actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />";
+	$actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
+	$actionHtml .= "</div></form>\n";
+}
+
+
+if (isset($actionHtml)) {
+	$html .= "<h2>Actions</h2>\n";
+	$html .= $actionHtml;
 }
 
 

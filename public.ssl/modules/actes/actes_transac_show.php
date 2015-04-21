@@ -496,7 +496,7 @@ if ($me->isSuper()) {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Passé la transaction en erreur\" class=\"btn btn-warning\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />\n";
       $actionHtml .= "</div></form>\n";
       
 }
