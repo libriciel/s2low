@@ -77,6 +77,7 @@ class Pastell {
 						'date_de_lacte' => $transactionInfo['decision_date'],
 						'classification' => $transactionInfo['classification'],
 						'envoi_sae' => 1,
+					    'has_bordereau' => 1
 		);
 		
 		$result = $this->callAPI("modif-document.php",$info);
