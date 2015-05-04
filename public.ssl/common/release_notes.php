@@ -100,12 +100,14 @@ $html .= "<li>Module ACTES : traitement par lot changement du bouton Envoyer par
 $html .= "<li>Module ACTES : ajout de l'identifiant unique dans le tampon ajouté par S²LOW ;";
 $html .= "<li>Module ACTES : transmission de la signature électronique de l'acte lors du versement au SAE ;";
 $html .= "<li>Module ACTES : permettre à un administrateur decollectivité de verser au SAE ;";
+$html .= "<li>Module ACTES : transmission de l'acte tamponne lors du versement au SAE ;";
+$html .= "<li>Module ACTES : nouvelle API permettant de récupérer la liste des documents d'une transaction ;";
 $html .= "<li>Passage sous Postgres 9.4 ;";
 $html .= "<li>Passage sous Openssl 1.0 ;";
 $html .= "<li>Passage sous PHP5.5 ;";
 $html .= "</ul>";
 
-$html .= "<h2>V1.5.01 du </h2>";
+$html .= "<h2>V1.5.01 du 17.12.2014</h2>";
 $html .= "<ul>";
 $html .= "<li>Module MAILS : correction bug : si un destinataire est en double dans un même champ on obtient une page blanche ; ";
 $html .= "<li>Module MAILS : correction bug : lors de l'ajout d'un contact, le champ description n'était pas pris en compte ; ";
