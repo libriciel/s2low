@@ -111,7 +111,7 @@ if ($must_signed){
 	
 } else {
 	$htw->set("status_id", 1);
-	$htw->set("message", "Fichier bien reçu par la plate-forme Helios");
+	$htw->set("message", "Fichier bien reçu par la plate-forme S2low");
 }
 $htw->set("date", date('Y-m-d H:i:s'));
 

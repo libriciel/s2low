@@ -104,7 +104,7 @@ try{
 	  $htw->set("transaction_id", $id_transaction);
 	  $htw->set("status_id", 1);
 	  $htw->set("date", date('Y-m-d H:i:s'));
-	  $htw->set("message", "Fichier bien reçu par la plate-forme Helios");
+	  $htw->set("message", "Fichier bien reçu par la plate-forme S2low");
 	  if (!$htw->save(true)) {
 	    $msg = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
 	    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
