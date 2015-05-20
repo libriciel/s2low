@@ -36,7 +36,10 @@ $ko = 0;
 
 $uploaddir = HELIOS_FILES_UPLOAD_ROOT;
 $uploadFile_baseName = $_FILES['enveloppe']['name'];
-$uploadfile = $uploaddir . basename($uploadFile_baseName);
+
+$temporary_name = time().mt_rand(0, mt_getrandmax());
+$uploadfile = $uploaddir . $temporary_name;
+
 
 if (! move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
 	Helpers :: returnAndExit(1, "Échec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");

@@ -156,12 +156,21 @@ if (in_array($currentStatusId,array(8,4,6)) && $authorityInfo->get('pastell_url'
 
 if ($me->isSuper()) {
 
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera héradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
+	$actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+	$actionHtml .= "</div></form>\n";
+	
 	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id. "\" />\n";
 	$actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />";
 	$actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
 	$actionHtml .= "</div></form>\n";
+
+
+
 }
 
 

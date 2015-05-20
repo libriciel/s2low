@@ -129,4 +129,12 @@ class HeliosTransactionsSQL {
 		$this->sqlQuery->query($sql,$transaction_id);
 	}
 	
+	public function delete($id){
+		$sql  = "DELETE FROM helios_transactions_workflow WHERE transaction_id=?";
+		$this->sqlQuery->query($sql,$id);
+		$sql = "DELETE FROM helios_transactions WHERE id=?";
+		$this->sqlQuery->query($sql,$id);
+	}
+	
+	
 }
