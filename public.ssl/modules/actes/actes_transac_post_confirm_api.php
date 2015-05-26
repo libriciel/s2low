@@ -60,9 +60,7 @@ if ( ! $permission->canView($me,$owner)){
 	return_error_api("Accès refusé");
 }
 
-
-
-$msg = "La transaction a été postée par l'agent télétransmetteur";
+$msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $info = $actesTransactionsSQL->getInfo($id);
@@ -71,6 +69,8 @@ if($info['last_status_id'] != 17){
 }
 
 $actesTransactionsSQL->updateStatus($id,1,$msg);
+
+Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId());	
 
 $return_ok = Helpers :: getVarFromGet("url_return");
 $return_ok = str_replace("%%ERROR%%", 0, $return_ok);

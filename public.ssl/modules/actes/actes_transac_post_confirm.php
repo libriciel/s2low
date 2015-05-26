@@ -24,6 +24,7 @@ if (!$me->authenticate()) {
   exit ();
 }
 
+
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
   $_SESSION["error"] = "Accès refusé";
   header("Location: " . WEBSITE_SSL);
@@ -61,7 +62,7 @@ if ( ! $permission->canView($me,$owner)){
 	exit ();
 }
 
-$msg = "La transaction a été postée par l'agent télétransmetteur";
+$msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $info = $actesTransactionsSQL->getInfo($id);
 if($info['last_status_id'] != 17){
@@ -72,5 +73,7 @@ if($info['last_status_id'] != 17){
 
 $actesTransactionsSQL->updateStatus($id,1,$msg);
 
-
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId())) {
+	$msg .= "\nErreur de journalisation.\n";
+}
 Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $id);
