@@ -531,11 +531,13 @@ class ActesEnvelope extends DataObject {
 
   /**
    * \brief Méthode de vérification de l'archive (taille et anti-virus)
+   * 		La vérification par l'anti-virus se fait après le postage de la transaction
    * \param $path chaîne (optionnel) : chemin vers l'archive à controler (file_path par défaut)
    * \return True en cas de succès, false si l'archive n'est pas valide
    */
   public function checkArchiveConformity($path = false) {
-	return ($this->checkArchiveSize($path) && $this->checkArchiveSanity($path));
+	return $this->checkArchiveSize($path);
+	//&& $this->checkArchiveSanity($path)
   }
 
   /**

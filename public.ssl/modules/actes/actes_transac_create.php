@@ -297,8 +297,10 @@ if (!$env->generateArchiveFile()) {
 
 if (!$env->checkArchiveSize())
 	Helpers :: returnAndExit(1, "la taille d'archive générée n'est pas conforme. filename=".$env->get("file_path")."\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-if (!$env->checkArchiveSanity())
+
+/*if (!$env->checkArchiveSanity()) {
 	Helpers :: returnAndExit(1, "L'archive générée porte des virus \n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+}*/
 
 	
 // Purge des fichiers intermédiaires

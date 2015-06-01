@@ -105,4 +105,15 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->queryOne($sql);
 	}
 	
+	public function getTransactionForAntiVirus(){
+		$sql = "SELECT DISTINCT id FROM actes_transactions WHERE last_status_id=? AND antivirus_check=?";
+		return $this->sqlQuery->queryOneCol($sql,1,0);
+	}
+	
+	public function setAntivirusCheck($transaction_id){
+		$sql = "UPDATE actes_transactions SET antivirus_check=? WHERE id=?";
+		$this->sqlQuery->query($sql,1,$transaction_id);
+	}
+	
+	
 }
