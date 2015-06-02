@@ -233,7 +233,6 @@ class TransactionSQL {
 		}
 		$sql = "SELECT count(id)   " .
 				" FROM actes_transactions  " .
-				// " JOIN  actes_envelopes ON actes_envelopes.id=actes_transactions.envelope_id ".
 				$this->getWhere() ;
 		return $this->sqlQuery->queryOne($sql,$this->value);
 	}
