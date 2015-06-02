@@ -114,8 +114,15 @@ if (count($caCerts) > 0) {
 	} else {
 	  $name = $cert["name"];
 	}
+	
+	foreach(array("CN","OU","O","L","ST","C") as $key){
+		if (! isset($cert['issuer'][$key])){
+			$cert['issuer'][$key] = "";
+		}
+	}
+	
 
-	$html .= " <li class=\"toggle_title\" title=\"" . get_hecho($cert["name"]) . "\" onclick=\"javascript:toggle_visibility('ca_cert_" . $i . "');\">" . get_hecho($name) . "\n";
+	$html .= " <li class=\"toggle_title\" title=\"" . get_hecho($cert["name"]) . "\" onclick=\"javascript:toggle_visibility('ca_cert_" . $i . "');\">" . get_hecho(utf8_decode($name)) . "\n";
 	$html .= "<dl id=\"ca_cert_" . $i . "\" style=\"display: none;\">\n";
 	$html .= " <dt>Nom&nbsp;:</dt>\n";
 	$html .= "  <dd>" . $cert["name"] . "</dd>\n";

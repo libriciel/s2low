@@ -104,7 +104,7 @@ class mailController {
   	 	if ($etat_string)
   	 		$cond.=" and status='".$etat_string."'";
   	 	if ($sujet)
-  	 		$cond.=" and objet ILIKE '%".$sujet."%'";
+  	 		$cond.=" and objet ILIKE '%".mysql_real_escape_string($sujet)."%'";
   	 	if ($SendDateFrom)
   	 		$cond.=" and date_envoi >='".addslashes($SendDateFrom)."'";
   	 	if ($SendDateTo)
