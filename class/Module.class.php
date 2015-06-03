@@ -386,7 +386,9 @@ class Module extends DataObject {
     }
     foreach($r as $i => $module){
     	if (in_array($module['name'], array('actes','helios'))){
-    		$specific_perms = array("CS" => "Créer et signer","TT"=>"Télétransmettre"); 
+    		//TODO : revoir les profils avec PK, PEV et EP
+    		//$specific_perms = array("CS" => "Créer et signer","TT"=>"Télétransmettre");
+    		$specific_perms = array();
     	} else {
     		$specific_perms = array();
     	}
