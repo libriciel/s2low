@@ -89,12 +89,12 @@ $html .= "";
 
 $html .= "<h2>V2.1 du 08.06.2015</h2>";
 $html .= "<ul>";
-$html .= "<li>Optimisation de la base de données ;";
-$html .= "<li>Module HELIOS : changement du message pour l'état Posté ;";
 $html .= "<li>Module HELIOS : correction bug : erreur d'import des fichiers dont les noms comportaient des caractères spéciaux ;";
 $html .= "<li>Module ACTES : correction bug : horodatage du nom de la personne déclenchant la télétransmission ;";
-$html .= "<li>Module ACTES : correctio bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;";
+$html .= "<li>Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;";
+$html .= "<li>Module HELIOS : changement du message pour l'état Posté ;";
 $html .= "<li>Module ACTES : optimisation du mécanisme de vérification des fichiers par l'antivirus ;";
+$html .= "<li>Optimisation de la base de données ;";
 $html .= "</ul>";
 
 $html .= "<h2>V2.0 du 05.05.2015</h2>";
