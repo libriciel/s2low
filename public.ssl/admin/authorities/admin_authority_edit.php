@@ -1,6 +1,9 @@
 <?php
+
+
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
+
 
 $me = new User();
 
@@ -278,10 +281,10 @@ $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Département&nbsp;/&nbsp;Arrondissement</label>\n";
 $html .= "  <div class=\"col-md-6 link-input\">";
+$html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\"" . $authority->get("department") . "\" />\n";
+$html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
 
 if ($me->isGroupAdminOrSuper()) {
-  $html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\"" . $authority->get("department") . "\" />\n";
-  $html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
   $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=department', 'Select_attribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">";
 
   if ($authority->getDeptDistrString()) {

@@ -17,7 +17,7 @@ function exitOrDisplayError($api,$erreur_msg,$location){
 		$jsonOutput->displayErrorAndExit($erreur_msg);
 	} else {
 		$_SESSION["error"] = $erreur_msg;
-		header("Location: $location " );
+		header("Location: $location" );
 		exit;
 	}
 }
@@ -62,7 +62,7 @@ else
 
 
 
-$form_location = "Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php";
+$form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
 
 
 $sqlQuery = new SQLQuery(DB_DATABASE);
@@ -87,7 +87,7 @@ if (isset($id) && ! empty($id)) {
   if (! $authority->init()) {
 	exitOrDisplayError($api,"Erreur lors de la modification de la collectivité",$form_location);
   }
-  $form_location = "Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
+  $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
 }
 
 
@@ -97,7 +97,7 @@ if (isset($id) && ! empty($id)) {
 // et modif de sa collectivité uniquement
 if (! $me->isGroupAdminOrSuper()) {
   if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
-  	exitOrDisplayError($api,"Accès refusé.",$form_location);
+  	exitOrDisplayError($api,"Accès refusé",$form_location);
   }
 } elseif ($me->isGroupAdmin()) {
   // Si mode modif on vérifie que la collectivité appartient bien au groupe dont l'utilisateur est admin
