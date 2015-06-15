@@ -156,7 +156,7 @@ $html .= "</div>\n";
 $html .= "  <div class=\"alert alert-info col-md-9 col-md-offset-1\">\n". 
 get_hecho($him->get('subject_dn')) . "";
 if ($him->get('certificate')){
-    $html .= "</br>Expire le " .date("d/m/Y H:m:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
+    $html .= "</br>Expire le " .date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
 }
 $html .= "</div>\n";
 $html .= " <div class=\"form-group\">\n";
