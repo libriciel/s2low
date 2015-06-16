@@ -19,6 +19,10 @@ class FTPFileSender {
 		}
 	}
 	
+	/**
+	 * Permet de switcher en mode passif 
+	 * @param boolean $is_pasv
+	 */
 	public function setPassiveMode($is_pasv){
 		ftp_pasv ($this->ftp_handler,$is_pasv);
 	}
