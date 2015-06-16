@@ -230,6 +230,8 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	<input type='hidden' name='nb_signature'  value='1'/>
 	<input type='hidden' name='signature_id_1' value='<?php echo $id_pes?>' />
 	<input type='hidden' name='signature_1' id='signature_1' value=''/>
+	<input type='hidden' name='is_bordereau_1' id='is_bordereau_1' value='<?php echo $signatureInfo['isbordereau'] ?>'/>
+	
 </form>
 <script>
 function injectSignature() {

@@ -40,7 +40,8 @@ for($i=1;$i<=$nb_signature;$i++) {
 	$id = Helpers :: getVarFromPost("id_$i");
 	$signature_id_1 = Helpers :: getVarFromPost("signature_id_$i");
 	$signature_1 = Helpers :: getVarFromPost("signature_$i");
-	
+	$is_bordereau_1 = Helpers :: getVarFromPost("is_bordereau_$i");
+		
 	if (empty($id) ){
 		$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
 		header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
@@ -68,7 +69,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	
 	$heliosSignature = new HeliosSignature();
 	
-	$new_pes_content = $heliosSignature->injectSignature($file_path, $signature_1);
+	$new_pes_content = $heliosSignature->injectSignature($file_path, $signature_1,$is_bordereau_1);
 	
 	$new_sha1 = sha1($new_pes_content);
 	$new_filesize = strlen($new_pes_content);

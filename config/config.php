@@ -2,6 +2,7 @@
 if (file_exists( __DIR__ . "/LocalSettings.php")){
 	//Il est possible d'écraser les valeurs par défaut en
 	//créant un fichier LocalSettings.php
+	
 	require_once( __DIR__ . "/LocalSettings.php");
 }
 
@@ -168,6 +169,12 @@ if(!defined("VERIFICATION_SIREN")){
 if(!defined("LIBERSIGN_URL")){
         define("LIBERSIGN_URL","https://signature.services.adullact.org/libersign");
 }
+
+//Paramètre outils pour donner la forme canonique d'un document XML (C14N)
+if (!defined("XML_STARLET_PATH")){
+	define("XML_STARLET_PATH","/usr/bin/xmlstarlet");
+}
+
 
 
 //////////////////////////////////

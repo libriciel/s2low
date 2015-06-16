@@ -26,6 +26,7 @@ foreach ($liste_id as $transaction_id){
 	 	$signature = $heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1']);
 	 	$transactionInfo['bordereau_hash'] = $signature['bordereau_hash'];
 	 	$transactionInfo['bordereau_id'] = $signature['bordereau_id'];
+	 	$transactionInfo['isbordereau'] = $signature['isbordereau'];
 	 	$transaction_list[] = $transactionInfo;
 	} catch (Exception $e){
 		Helpers::returnAndExit(1, "Impossible de signer la transaction $transaction_id : le fichier PES contient un bordereau qui n'a pas d'identifiant", WEBSITE_SSL . "/modules/helios/index.php");
@@ -126,6 +127,8 @@ ob_start();
 	<input type='hidden' name='id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['id'] ?>'/>
 	<input type='hidden' name='signature_id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['bordereau_id'] ?>' />
 	<input type='hidden' name='signature_<?php echo $i+1 ?>' id='signature_<?php echo $i+1?>' value=''/>
+	<input type='hidden' name='is_bordereau_<?php echo $i+1 ?>' id='is_bordereau_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['isbordereau'] ?>'/>
+	
 	<?php endforeach;?>
 </form>
 <script>

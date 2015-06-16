@@ -1,69 +1,135 @@
 <?php
 class HeliosSignature {
 	
+	private $xml_starlet_path;
+	
+	public function __construct($xml_starlet_path = false){
+		$this->xml_starlet_path = $xml_starlet_path?:XML_STARLET_PATH;
+	}
+	
+	private function checkRecetteOrDepense($xml){
+		if ($xml->PES_DepenseAller){
+			return;
+		}
+		if($xml->PES_RecetteAller) {
+			return;
+		}
+		throw new Exception("Le bordereau ne contient ni Depense ni Recette");
+	}
+	
+	private function hasIdOnAllBordereau($xml){
+		foreach(array('PES_DepenseAller','PES_RecetteAller') as $tag){
+			if (! $xml->$tag){
+				continue;
+			}
+			foreach($xml->$tag->Bordereau as $bordereau){
+				if (empty($bordereau['Id'])){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public function getSha1($xml_content){
+		$tmp_file = tempnam("/tmp/", "s2low_xml_");
+		file_put_contents($tmp_file, $xml_content);
+	
+		if (! is_executable($this->xml_starlet_path)){
+			throw new Exception("Impossible d'executer le programme xmlstarlet ({$this->xml_starlet_path})");
+		}
+	
+		$c14n_file = tempnam("/tmp/", "s2low_xml_c14n_");
+	
+		$command = "{$this->xml_starlet_path} c14n --without-comments {$tmp_file} > {$c14n_file}";
+		`$command`;
+	
+		if (! file_exists($c14n_file)){
+			throw new Exception("Impossible de créer le fichier XML canonique $c14n_file");
+		}
+	
+		$result = sha1_file($c14n_file);
+	
+		return $result;
+	}
+	
+	//OOps : ne donne pas le même sha1 au niveau PES_Aller !
+	private function getSha1_old($xml_string){
+		$dom = new DOMDocument();
+		$dom->loadXML($xml_string);
+		$data_to_sign = $dom->C14N(true, false);
+		return sha1($data_to_sign);
+	}
+	
 	public function getInfoForSignature($xml_file_path){
 		$xml = simplexml_load_file($xml_file_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 
-		if ($xml->PES_DepenseAller){
-			$root = $xml->PES_DepenseAller;
-		} else if($xml->PES_RecetteAller) {
-			$root = $xml->PES_RecetteAller;
-		} else {
-			throw new Exception("Le bordereau ne contient ni Depense ni Recette");			
-		}
-		
+		$this->checkRecetteOrDepense($xml);
+
 		$id = array();
-		$hash = array();
-		foreach($root->Bordereau as $bordereau){
-			$dom = dom_import_simplexml($bordereau);
-			
-			//Si la balise Bordereau n'a pas d'attribut Id (qui est facultatif), on met l'id qu'on trouve à l'interieur du BlocBordereau
-			if (! $dom->hasAttribute('Id')){
-				if (empty($bordereau->BlocBordereau->IdBord['V'])){
-					throw new Exception("Au moins un bordereau du fichier PES ne contient pas d'identifiant valide : signature impossible");
+		$hash = array();        
+        
+		if( $this->hasIdOnAllBordereau($xml) ){
+			foreach(array('PES_DepenseAller','PES_RecetteAller') as $tag){
+				if (! $xml->$tag){
+					continue;
 				}
-				$dom->setAttribute('Id', strval($bordereau->BlocBordereau->IdBord['V']));
+	            foreach($xml->$tag->Bordereau as $bordereau){
+	            	$isBordereau = true;
+	            	$id[]= strval($bordereau['Id']);
+	            	$hash[] = $this->getSha1($bordereau->asXML());
+	            }
 			}
-			$id[]=$dom->getAttribute('Id');
-			$data_to_sign = $dom->C14N(true, false);
-			$hash[] = sha1($data_to_sign);
+			$isBordereau = true;
+        } else if( isset( $xml['Id'] ) && !empty($xml['Id'] ) ) {
+        		$id[]  = strval($xml['Id']);
+        		$hash[] = $this->getSha1($xml->asXML());
+        		$isBordereau = false;
+        } else {
+			throw new Exception("Le bordereau du fichier PES ne contient pas d'identifiant valide, ni la balise PESAller : signature impossible");
 		}
-		
+        		
 		$info = array();
 		$info['bordereau_hash'] = implode(",",$hash);
 		$info['bordereau_id'] = implode(",",$id);
+		$info['isbordereau'] = $isBordereau;
 		
 		return $info;
 	}
 
-	public function injectSignature($original_file_path,$signature){
+	public function injectSignature($original_file_path,$signature, $isBordereau){
 		
 		$all_signature = explode(",",$signature);
-		
+
 		$domDocument = new DOMDocument();
-		$domDocument->load($original_file_path, LIBXML_PARSEHUGE);
-		
-		$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
-		
-		foreach($all_signature as $num_bordereau => $signature) {
+		$domDocument->load($original_file_path);
+	
+		if( $isBordereau ) {
+			$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
+
+			foreach($all_signature as $num_bordereau => $signature) {
+				$signature_1 = base64_decode($signature);
+				$signatureDOM = new DOMDocument();
+				$signatureDOM->loadXML($signature_1);
+				$signature = $signatureDOM->firstChild->firstChild;
+				$cloned = $signature->cloneNode(TRUE);
+				
+				$bordereauNode = $all_bordereau->item($num_bordereau);
+
+				$bordereauNode->appendChild($domDocument->importNode($cloned,true));
+			}
+		}
+		else {
 			$signature_1 = base64_decode($signature);
 			$signatureDOM = new DOMDocument();
 			$signatureDOM->loadXML($signature_1);
-			$signature = $signatureDOM->firstChild->firstChild;
-			$cloned = $signature->cloneNode(TRUE);
+            $signature = $signatureDOM->firstChild->firstChild;
 			
-			$bordereauNode = $all_bordereau->item($num_bordereau);
-			if (! $bordereauNode->hasAttribute('Id')){
-				$bordereauSimpleXML = simplexml_import_dom($bordereauNode);
-				$bordereauNode->setAttribute('Id', strval($bordereauSimpleXML->BlocBordereau->IdBord['V']));
-			}
-			
-			$bordereauNode->appendChild($domDocument->importNode($cloned,true));
+            $rootNode = $domDocument->documentElement;
+            $rootNode->appendChild($domDocument->importNode($signature,true));
 		}
-		//$domDocument->formatOutput = TRUE;
-		return $domDocument->saveXml();
-		
-		
+
+		return $domDocument->saveXml();		
 	}
 	
 }
