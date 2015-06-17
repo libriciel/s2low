@@ -1010,6 +1010,10 @@ class ActesTransaction extends DataObject {
         		$this->errorMsg = $e->getMessage();
         		return false;
         	}
+        	if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
+        		$this->errorMsg = "Erreur interne.";
+        		return false;
+        	}
         }
 
         // Fichiers pièces jointes
