@@ -1,5 +1,5 @@
 <?php 
-
+exit;
 //Correction du bug survenu le 29/06/2009 
 //La plateforme n'a pas convenablement horodaté l'ensemble des changement d'état
 //08h32min22s à 18h16min27s

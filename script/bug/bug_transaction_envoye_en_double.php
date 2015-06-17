@@ -1,4 +1,5 @@
 <?php
+exit;
 /**
  * Si la servlet est executé deux fois en parallèle, alors, il est possible que des transactions Actes soit envoyé deux fois à la préfecture.
  * 

@@ -1,4 +1,5 @@
 <?php
+exit;
 /*
  * L'application a générerer des fichiers XML sans objets...
  * 
