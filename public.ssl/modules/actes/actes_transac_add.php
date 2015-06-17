@@ -196,7 +196,7 @@ $html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromS
 $html .= " </div>";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"classification_text\" class=\"control-label\">Classification : </label>\n";
-$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=classification', 'Select_attribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">";
+$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=classification', 'Selectattribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">";
 
 $classif1 = Helpers :: getFromSession("classif1", false);
 if (!empty ($classif1)) {

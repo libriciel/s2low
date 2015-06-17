@@ -199,7 +199,7 @@ class User extends DataObject {
 		}
 		$init = $this->init();
 		$is_active = $this->isActive();
-				
+		
 		return $init && $is_active;
 	        
 	}
