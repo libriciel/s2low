@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="Class_SchemasCommuns.xsd"/>
+	<xs:complexType name="TInfoTiersFact">
+		<xs:complexContent>
+			<xs:extension base="cm:TInfoTiers"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiersFact"/>
+			<xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+			<xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/>
+			<xs:element name="NumTVA" type="cm:Base_Texte24" minOccurs="0"/>
+			<xs:element name="Service" type="cm:Base_Texte24" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

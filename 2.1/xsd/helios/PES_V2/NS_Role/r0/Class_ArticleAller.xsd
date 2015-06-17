@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRole.xsd"/>
+	<xs:complexType name="TBlocArticle">
+		<xs:sequence>
+			<xs:element name="InfoArticle" type="TInfoArticle"/>
+			<xs:element name="InfoPrelevement" type="TInfoPrelevement" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoArticle">
+		<xs:sequence>
+			<xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="IdPce" type="cm:Base_Num8"/>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="NumDette" type="cm:Base_Num15" minOccurs="0"/>
+			<xs:element name="Per" type="cm:Base_Num1" minOccurs="0"/>
+			<xs:element name="Cle1" type="cm:Base_Num1" minOccurs="0"/>
+			<xs:element name="Cle2" type="cm:Base_Alphanum1" minOccurs="0"/>
+			<xs:element name="CpteTiers" type="cm:Base_Num12" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoPrelevement">
+		<xs:sequence>
+			<xs:element name="NatPrel" type="TNatPrel"/>
+			<xs:element name="PerPrel" type="TPerPrel"/>
+			<xs:element name="DtePrel" type="cm:Base_Date"/>
+			<xs:element name="MtPrel" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

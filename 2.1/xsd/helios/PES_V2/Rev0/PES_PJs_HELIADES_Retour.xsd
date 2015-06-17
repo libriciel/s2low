@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/heliades_v1/Rev0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/heliades_v1/Rev0/retour" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:element name="PES_PJs_HELIADES_Retour" type="TPES_PJs_HELIADES_Retour"/>
+	<xs:complexType name="TPES_PJ_HELIADES_Retour">
+		<xs:sequence>
+		       <xs:element name="EnTetePES_PJ">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="IdVer" type="cm:Base_Num2"/>
+						</xs:sequence>
+					</xs:complexType>
+			</xs:element>
+			<xs:element name="IdPost" type="cm:Base_Texte7"/>
+			<xs:element name="IdColl" type="cm:Base_Num20"/>
+			<xs:element name="IdUnique" type="cm:Base_Alphanum50"/>
+			<xs:element name="NomPJ" type="cm:Base_Texte100"/>
+			<xs:element name="EtatGeide" type="cm:Base_Num2"/>
+			<xs:element name="LibelleErreur" type="cm:Base_Texte50" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPES_PJs_HELIADES_Retour">
+		<xs:sequence>
+			<xs:element name="PJ_HELIADES_Retour" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="TPES_PJ_HELIADES_Retour"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunComptabilite.xsd"/>
+	<xs:complexType name="TBlocCompte">
+		<xs:sequence>
+			<xs:element name="IdentifiantCompte" type="TIdentifiantCompte">
+				<xs:annotation>
+					<xs:documentation>Identifiant compte - Bloc obligatoire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BalanceComptable" type="TBalanceComptable" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Balance comptable - Bloc Facultatif</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TIdentifiantCompte">
+		<xs:sequence>
+			<xs:element name="NumCpte" type="cm:Base_Texte12"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TBalanceComptable">
+		<xs:sequence>
+			<xs:element name="SldDef" type="cm:Base_Booleen" minOccurs="0"/>
+			<xs:element name="MtBeDeb" type="cm:Base_Montant"/>
+			<xs:element name="MtBeCred" type="cm:Base_Montant"/>
+			<xs:element name="MtOpDeb" type="cm:Base_Montant"/>
+			<xs:element name="MtOpCred" type="cm:Base_Montant"/>
+			<xs:element name="MtAnnTitre" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtAnnMdt" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtBudgPrim" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtBudgSupp" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtDecMod" type="cm:Base_Montant" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

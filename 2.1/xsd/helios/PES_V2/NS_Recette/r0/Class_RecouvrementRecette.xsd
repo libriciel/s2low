@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRecette.xsd"/>
+	<xs:complexType name="TRecouvrement">
+		<xs:sequence>
+			<xs:element name="TypFlux" type="TTypFlux"/>
+			<xs:element name="ModRegl" type="TModRegl"/>
+			<xs:element name="DteReco" type="cm:Base_Date"/>
+			<xs:element name="IdEncaissement" type="cm:Base_Num12"/>
+			<xs:element name="MtReco" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:PES_Retour xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour /opt/tx/users/edihls10/messages/XML/PES_V2/Externe/Schemas_PES/PES_V2/Rev0/PES_V2_RecetteRetour_Autonome.xsd">
+    <Enveloppe>
+        <Parametres>
+            <Version V="2"></Version>
+            <TypFic V="PESRETOUR_REC"></TypFic>
+            <NomFic V="PES_V2_RETOUR_RECETTE_Exemple_20090813.xml"></NomFic>
+        </Parametres>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2009-08-13"></DteStr>
+        <IdPost V="034000"></IdPost>
+        <LibellePoste V="ADULLACT"></LibellePoste>
+        <IdColl V="123456725"></IdColl>
+        <CodCol V="315"></CodCol>
+        <CodBud V="00"></CodBud>
+        <LibelleColBud V="CAP OMEGA "></LibelleColBud>
+    </EnTetePES>
+    <PES_RecetteRetour>
+        <EnTeteRecette>
+            <IdVer V="2"></IdVer>
+            <NatInf V="2"></NatInf>
+        </EnTeteRecette>
+        <Bordereau>
+            <BlocBordereau>
+                <Exer V="2005"></Exer>
+                <IdBord V="44"></IdBord>
+                <DteBordEm V="2006-01-13"></DteBordEm>
+                <TypBord V="01"></TypBord>
+                <NbrPce V="2"></NbrPce>
+                <MtBordHt V="11119.07"></MtBordHt>
+                <DteBordArr V="2006-01-13"></DteBordArr>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <IdPce V="1449"></IdPce>
+                    <TypPce V="01"></TypPce>
+                    <NatPce V="01"></NatPce>
+                    <DteAsp V="2006-01-17"></DteAsp>
+                    <ObjPce V="LOUIS XVI du 03/01/2005 au 28/02/2005"></ObjPce>
+                    <EtatPce V="02"></EtatPce>
+                    <DtePceInt V="2006-01-13"></DtePceInt>
+                    <DtePcePec V="2006-01-16"></DtePcePec>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePiece>
+                            <IdLigne V="1"></IdLigne>
+                            <CodProdLoc V="300"></CodProdLoc>
+                            <Nature V="7067"></Nature>
+                            <CpteTiers V="4111"></CpteTiers>
+                            <MtHT V="274.05"></MtHT>
+                            <MtTVA V="0"></MtTVA>
+                        </InfoLignePiece>
+                        <InfoRecouvrement>
+                            <NbrReco V="2"></NbrReco>
+                            <MtRecoTot V="151.56"></MtRecoTot>
+                        </InfoRecouvrement>
+                        <InfoContentieux>
+                            <MtCtxTot V="274.05"></MtCtxTot>
+                            <SldPrinc V="122.49"></SldPrinc>
+                        </InfoContentieux>
+                        <InfoAmiableContentieux>
+                            <EtPce V="02"></EtPce>
+                            <DteEtPce V="2006-04-13"></DteEtPce>
+                            <IdAct V="82291011"></IdAct>
+                            <CodActu V="07"></CodActu>
+                            <DteActu V="2006-04-13"></DteActu>
+                        </InfoAmiableContentieux>
+                        <InfoAmiableContentieux>
+                            <EtPce V="05"></EtPce>
+                            <DteEtPce V="2006-04-25"></DteEtPce>
+                            <IdAct V="83870111"></IdAct>
+                            <CodActu V="01"></CodActu>
+                            <DteActu V="2006-04-25"></DteActu>
+                        </InfoAmiableContentieux>
+                        <InfoAmiableContentieux>
+                            <EtPce V="01"></EtPce>
+                            <DteEtPce V="2006-04-06"></DteEtPce>
+                            <IdAct V="80651011"></IdAct>
+                            <CodActu V="07"></CodActu>
+                            <DteActu V="2006-04-08"></DteActu>
+                        </InfoAmiableContentieux>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <CatTiers V="01"></CatTiers>
+                            <NatJur V="00"></NatJur>
+                            <TypTiers V="01"></TypTiers>
+                            <Civilite V="MR"></Civilite>
+                            <Nom V="LES ROIS DE FRANCE et DE NAVARRE"></Nom>
+                            <Prenom V="NC"></Prenom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="9 AVENUE DU CHATEAU"></Adr2>
+                            <CP V="78000"></CP>
+                            <Ville V="VERSAILLES"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                    </Tiers>
+                    <Recouvrement>
+                        <TypFlux V="01"></TypFlux>
+                        <ModRegl V="07"></ModRegl>
+                        <DteReco V="2008-01-10"></DteReco>
+                        <IdEncaissement V="1077988511"></IdEncaissement>
+                        <MtReco V="1.56"></MtReco>
+                    </Recouvrement>
+                    <Recouvrement>
+                        <TypFlux V="01"></TypFlux>
+                        <ModRegl V="03"></ModRegl>
+                        <DteReco V="2008-01-15"></DteReco>
+                        <IdEncaissement V="1085134311"></IdEncaissement>
+                        <MtReco V="150"></MtReco>
+                    </Recouvrement>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <IdPce V="1456"></IdPce>
+                    <TypPce V="01"></TypPce>
+                    <NatPce V="01"></NatPce>
+                    <DteAsp V="2006-01-17"></DteAsp>
+                    <ObjPce V="BOND James du 03/01/2005 au 28/02/2005"></ObjPce>
+                    <EtatPce V="05"></EtatPce>
+                    <DtePceInt V="2006-01-13"></DtePceInt>
+                    <DtePcePec V="2006-01-16"></DtePcePec>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePiece>
+                            <IdLigne V="1"></IdLigne>
+                            <CodProdLoc V="300"></CodProdLoc>
+                            <Nature V="7067"></Nature>
+                            <CpteTiers V="4111"></CpteTiers>
+                            <MtHT V="430.51"></MtHT>
+                            <MtTVA V="0"></MtTVA>
+                        </InfoLignePiece>
+                        <InfoRecouvrement>
+                            <NbrReco V="2"></NbrReco>
+                            <MtRecoTot V="430.51"></MtRecoTot>
+                        </InfoRecouvrement>
+                        <InfoSuspPour>
+                            <CodSuspPour V="01"></CodSuspPour>
+                            <DteSuspPour V="2006-04-10"></DteSuspPour>
+                        </InfoSuspPour>
+                        <InfoAmiableContentieux>
+                            <EtPce V="01"></EtPce>
+                            <DteEtPce V="2006-04-06"></DteEtPce>
+                            <IdAct V="80650511"></IdAct>
+                            <CodActu V="11"></CodActu>
+                            <DteActu V="2006-04-08"></DteActu>
+                        </InfoAmiableContentieux>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <CatTiers V="01"></CatTiers>
+                            <NatJur V="00"></NatJur>
+                            <TypTiers V="01"></TypTiers>
+                            <Civilite V="MR"></Civilite>
+                            <Nom V="BOND James"></Nom>
+                            <Prenom V="NC"></Prenom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="CHEZ M"></Adr2>
+                            <CP V="34980"></CP>
+                            <Ville V="QUELQUE PART"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                    </Tiers>
+                    <Recouvrement>
+                        <TypFlux V="01"></TypFlux>
+                        <ModRegl V="03"></ModRegl>
+                        <DteReco V="2007-11-29"></DteReco>
+                        <IdEncaissement V="1014035611"></IdEncaissement>
+                        <MtReco V="200.21"></MtReco>
+                    </Recouvrement>
+                    <Recouvrement>
+                        <TypFlux V="01"></TypFlux>
+                        <ModRegl V="03"></ModRegl>
+                        <DteReco V="2008-01-30"></DteReco>
+                        <IdEncaissement V="1107199111"></IdEncaissement>
+                        <MtReco V="230.3"></MtReco>
+                    </Recouvrement>
+                </LigneDePiece>
+            </Piece>
+        </Bordereau>
+    </PES_RecetteRetour>
+</n:PES_Retour>

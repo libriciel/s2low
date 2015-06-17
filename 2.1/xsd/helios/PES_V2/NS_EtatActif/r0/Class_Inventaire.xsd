@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunInventaire.xsd"/>
+	<xs:complexType name="TEtatActif">
+		<xs:sequence>
+			<xs:element name="TypeMessage" type="TTypeMessage">
+				<xs:annotation>
+					<xs:documentation>Type de message</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdentificationPiece" type="TIdentPiece">
+				<xs:annotation>
+					<xs:documentation>Identification de la pièce</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdentificationBien" type="TIdentificationBien" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Identification du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InformationBien" type="TInformationBien" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations sur le bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SortieDuBien" type="TSortieDuBien" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Sortie du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTypeMessage">
+		<xs:sequence>
+			<xs:element name="TypEnreg" type="TTypEnreg"/>
+			<xs:element name="TypAct" type="TTypAct"/>
+			<xs:element name="Mt" type="cm:Base_Montant"/>
+			<xs:element name="Exer" type="cm:Base_Annee"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TIdentPiece">
+		<xs:sequence>
+			<xs:element name="IdPce" type="cm:Base_Num8"/>
+			<xs:element name="IdLigne" type="cm:Base_Num6"/>
+			<xs:element name="Nature" type="cm:Base_Texte12"/>
+			<xs:element name="Fonction" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="Operation" type="cm:Base_Num10" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TIdentificationBien">
+		<xs:sequence>
+			<xs:element name="NumInvent" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInformationBien">
+		<xs:sequence>
+			<xs:element name="CatImmo" type="cm:Base_Texte6"/>
+			<xs:element name="DurAmt" type="cm:Base_Num3" minOccurs="0"/>
+			<xs:element name="DteAcqui" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DteSer" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DesBien" type="cm:Base_Texte250" minOccurs="0"/>
+			<xs:element name="DesCompl" type="cm:Base_Texte100" minOccurs="0"/>
+			<xs:element name="IdColl" type="cm:Base_Num14" minOccurs="0"/>
+			<xs:element name="CodColl" type="cm:Base_Alphanum3" minOccurs="0"/>
+			<xs:element name="CodBud" type="cm:Base_Alphanum2" minOccurs="0"/>
+			<xs:element name="DteInteg" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="ImpDefNat" type="cm:Base_Texte12" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TSortieDuBien">
+		<xs:sequence>
+			<xs:element name="ModSort" type="TModSort"/>
+			<xs:element name="DteSort" type="cm:Base_Date"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

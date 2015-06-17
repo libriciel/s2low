@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour"   xmlns:depr="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour"  xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified">
+<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour" schemaLocation="../NS_Depense/r0/PES_DepenseRetour.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+ 	<xs:element name="PES_Retour">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Enveloppe" type="cm:TEnveloppe"/>
+				<xs:element name="EnTetePES" type="cm:TEnTetePES"/>
+				<xs:element name="PES_DepenseRetour" type="depr:TPES_DepenseRetour" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

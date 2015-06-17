@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="Class_Signature.xsd"/>
+	<xs:import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="Class_Chiffrement.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Class_FacturePES.xsd"/>
+	<xs:complexType name="TPES_PJ_HELIADES">
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation>--- Signature Optionnelle de chaque PJ par l'ordonnateur</xs:documentation>
+			</xs:annotation>
+			<xs:element name="Contenu" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Stockage du fichier PJ</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="Fichier">
+								<xs:annotation>
+									<xs:documentation>Fichier d'origine (binaire ou XML) compressé avec GZip puis converti en Base 64</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:base64Binary">
+											<xs:attribute name="MIMEType" type="xs:token" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:group ref="xenc:PESEncryptedDataGroup"/>
+							<xs:element name="PESFacture" type="TPESFacture" minOccurs="0"/>
+						</xs:choice>
+						<xs:choice minOccurs="0">
+							<xs:element name="SignatureXML" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Fichier signature associé au fichier d'origine (XML-DSIG ou XAdES)</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Signature" type="ds:SignatureType"/>
+									</xs:sequence>
+									<xs:attribute name="MIMEType" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:enumeration value="text/xml"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SignatureBinaire" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Fichier signature PKCS#7 associé au fichier d'origine converti en Base 64</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:base64Binary">
+											<xs:attribute name="MIMEType" use="required">
+												<xs:simpleType>
+													<xs:restriction base="xs:token"/>
+												</xs:simpleType>
+											</xs:attribute>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="IdUnique" type="cm:Base_Alphanum50">
+				<xs:annotation>
+					<xs:documentation>Identifiant unique du document pour la collectivite</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomPJ" type="cm:Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Nom du fichier </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPES_PJs_HELIADES">
+		<xs:sequence>
+			<xs:element name="PJ" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="TPES_PJ_HELIADES"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
