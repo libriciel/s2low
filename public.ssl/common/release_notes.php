@@ -86,6 +86,16 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.1.01 du 23.06.2015</h2>";
+$html .= "<ul>";
+$html .= "<li>Module HELIOS : correction bug : la signature HELIOS introduisait un ID dans les bordereaux ;";
+$html .= "<li>Module ACTES : correction bug : les signatures des transactions n'était plus incluses dans le cadre de la soumission d'une enveloppe complète ;";
+$html .= "<li>Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;";
+$html .= "<li>Administration : correction bug : affichage de la date expiration du certificat ;";
+$html .= "<li>Module HELIOS : ajout de la macro HELIOS_FTP_PASSIVE_MODE ;";
+$html .= "<li>Module HELIOS : pour la signature en locale, les PES sont signés au niveau bordereaux si ils ont des ID ;";
+$html .= "</ul>";
+
 
 $html .= "<h2>V2.1 du 08.06.2015</h2>";
 $html .= "<ul>";
