@@ -198,9 +198,7 @@ class TransactionSQL {
 	}
 	
 	public function getAll(){
-	
-		
-		$sql = "SELECT " .
+		$sql = 	"SELECT ".
 				" envelope_id,  " .
 				" submission_date, "  .
 				" users.name,".
@@ -212,10 +210,12 @@ class TransactionSQL {
 				" JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
 				" JOIN users ON actes_envelopes.user_id=users.id " .
 				" JOIN authorities ON users.authority_id=authorities.id " .
-				$this->getWhere() .		
-				" ORDER BY $this->order $this->sortWay " .
-				" LIMIT $this->limit OFFSET $this->offset";
-	
+				" WHERE actes_transactions.id IN ( ".
+					"SELECT id " .
+					" FROM actes_transactions " .
+					$this->getWhere() .		
+					" ORDER BY $this->order $this->sortWay " .
+					" LIMIT $this->limit OFFSET $this->offset ) ORDER BY $this->order $this->sortWay";
 		$result = $this->sqlQuery->query($sql,$this->value);
 		foreach($result as $i => $line){
 			$result[$i]['type_str'] = self::$transactionTypes[$line['type']];
