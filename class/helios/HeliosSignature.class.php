@@ -102,7 +102,7 @@ class HeliosSignature {
 		$all_signature = explode(",",$signature);
 
 		$domDocument = new DOMDocument();
-		$domDocument->load($original_file_path);
+		$domDocument->load($original_file_path,LIBXML_PARSEHUGE);
 	
 		if( $isBordereau ) {
 			$all_bordereau = $domDocument->getElementsByTagName('Bordereau');
