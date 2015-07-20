@@ -282,6 +282,10 @@ if(!defined('HELIOS_FTP_SERVER')){
 	define('HELIOS_FTP_SERVER','127.0.0.1');
 }
 
+if (!defined('HELIOS_FTP_PASSIVE_MODE')){
+	define('HELIOS_FTP_PASSIVE_MODE',true);
+}
+
 if(!defined('HELIOS_FTP_PORT')){
 	define('HELIOS_FTP_PORT','21');
 }
