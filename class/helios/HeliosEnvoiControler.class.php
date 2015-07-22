@@ -72,6 +72,9 @@ class HeliosEnvoiControler {
 	}
 	
 	public function sendAllTransactions(){
+		
+		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
+		
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
 		foreach($transaction_id_list as $transaction_id){
 			echo "Préparation de l'envoi de la transaction $transaction_id\n";
@@ -95,13 +98,16 @@ class HeliosEnvoiControler {
 			$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
 			echo "Nom du fichier à envoyer : $completeName\n";
 			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
-			$file_path_with_complete_name = HELIOS_FILES_UPLOAD_ROOT."/".$completeName; 
+			
+			
+			
+			$file_path_with_complete_name = $file_sending_repository."/".$completeName; 
 			if (! copy($file_path, $file_path_with_complete_name)){
 				echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
 				continue;
 			}			
 			if (HELIOS_ZIP_BEFORE_SEND){
-				$file_to_send = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'].".zip";
+				$file_to_send = $file_sending_repository."/".$transactionInfo['sha1'].".zip";
 				$zipArchive = new ZipArchive();
 				if (! $zipArchive->open($file_to_send,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)){
 					echo "Transaction $transaction_id: Impossible d'ouvrir $file_to_send";

@@ -262,6 +262,13 @@ if(!defined('HELIOS_RESPONSES_ROOT')){
 	define('HELIOS_RESPONSES_ROOT', '/tdt-workspace/helios/response/');
 }
 
+// Repertoire de stockage des fichiers temporaires à envoyer au FTP
+if(!defined('HELIOS_FILES_UPLOAD_TMP')){
+	define('HELIOS_FILES_UPLOAD_TMP', '/tdt-workspace/helios/sending-tmp/');
+}
+
+
+
 //Pour le script d'analyse des enveloppe Helios à envoyer
 if(!defined('HELIOS_VALIDATION_UPSTART_TOUCH_FILE')){
 	define('HELIOS_VALIDATION_UPSTART_TOUCH_FILE','/tmp/helios-validation-upstart');
