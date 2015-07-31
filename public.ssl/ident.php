@@ -3,7 +3,6 @@
 require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-
 $login = Helpers::getVarFromPost("login");
 $password = Helpers::getVarFromPost("password");
 

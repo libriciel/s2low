@@ -22,7 +22,6 @@ function return_error_api($error_message){
 $module = new Module();
 if (!$module->initByName("actes")) {
 	return_error_api("Erreur d'intialisation du module");
-	
 }
 
 $me = new User();
