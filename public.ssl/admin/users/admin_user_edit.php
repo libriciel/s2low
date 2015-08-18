@@ -7,7 +7,6 @@ require_once(SITEROOT . '/class/X509Certificate.class.php');
 
 $x509Certificate = new X509Certificate();
 
-
 $me = new User();
 
 if (! $me->authenticate()) {
@@ -63,6 +62,7 @@ if (! $me->isSuper() && $mod) {
   }
 }
 
+
 $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
@@ -75,162 +75,52 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion des utilisateurs";
 
+$title = "Gestion des utilisateurs";
 if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+	$title .= " de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
 } elseif ($me->isGroupAdmin()) {
-  $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+	$myGroup = new Group($me->get("authority_group_id"));
+	$title .= " du groupe «&nbsp;" . get_headers($myGroup->get("name")) . "&nbsp;»";
 }
 
-$html .= "</h1>\n";
-$html .= "<p id=\"back-user-btn\"><a class=\"btn btn-default\" href=\"admin_users.php\">Retour liste utilisateurs</a></p>\n";
-$html .= "<h2>" . $modStr . " d'un utilisateur</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"admin_user_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
-
+//WTF !
+$validate_form = $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
 if (! $mod) {
-  $html .= ", 'certificate', 'Certificat utilisateur', 'RisString'";
+	$validate_form .= ", 'certificate', 'Certificat utilisateur', 'RisString'";
 }
 
-$html .= ");\">\n";
-
-if ($mod) {
-	if ($new_id){
-		$html .= "<input type=\"hidden\" name=\"new_id\" value=\"$new_id\" />\n";
-		$html .= "<input type=\"hidden\" name=\"mode\" value=\"new_id\" />\n";
-	} else {
-  		$html .= "<input type=\"hidden\" name=\"id\" value=\"" . $him->getId() . "\" />\n";
-  		$html .= "<input type=\"hidden\" name=\"mode\" value=\"modify\" />\n";
-	}
-} else {
-  $html .= "<input type=\"hidden\" name=\"mode\" value=\"create\" />\n";
-}
-
-$html .= "<div class=\"alert alert-info\"><span class=\"mandatory\">*</span> uniquement nécessaire si deux utilisateurs ont le même certificat</div>";
-
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Nom : </label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"name\" value=\"";
-$html .= ($val = Helpers::getFromSession("name")) ? get_hecho($val) : get_hecho($him->get("name"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Pr&eacutenom : </label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"givenname\" value=\"";
-$html .= ($val = Helpers::getFromSession("givenname")) ? get_hecho($val) : get_hecho($him->get("givenname"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Login <span class=\"mandatory\">*</span> :</label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"login\" value=\"";
-$html .= ($val = Helpers::getFromSession("login")) ? get_hecho($val) : get_hecho($him->get("login"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Mot de passe <span class=\"mandatory\">*</span> :</label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"password\" name=\"password\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Mot de passe (à nouveau) <span class=\"mandatory\">*</span> :</label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"password\" name=\"password2\" value=\"\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Adresse électronique :</label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"email\" value=\"";
-$html .= ($val = Helpers::getFromSession("email")) ? get_hecho($val) : get_hecho($him->get("email"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Téléphone :</label>\n";
-$html .= "  <div class=\"col-md-6 \"><input class=\"form-control\" type=\"text\" name=\"telephone\" value=\"";
-$html .= ($val = Helpers::getFromSession("telephone")) ? get_hecho($val) : get_hecho($him->get("telephone"));
-$html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
-$html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Importer le certificat utilisateur (format PEM) :</label>\n";
-$html .= "  <div class=\"col-md-6\">\n<input type=\"file\" name=\"certificate\" />\n</div>\n";
-$html .= "</div>\n";
-$html .= "  <div class=\"alert alert-info col-md-9 col-md-offset-1\">\n". 
-get_hecho($him->get('subject_dn')) . "";
-if ($him->get('certificate')){
-    $html .= "</br>Expire le " .date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate'))));
-}
-$html .= "</div>\n";
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">État :</label>\n";
-$html .= "  <div class=\"col-md-6 \">\n";
-$status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
-
-$html .= $doc->getHTMLSelect("status", $me->get("statusTypes"), $status);
-
-$html .= "  </div>\n";
-$html .= " </div>\n";
+$him_status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
 
 if ($me->isGroupAdminOrSuper()) {
-  if ($me->isGroupAdmin()) {
-	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
-  } else {
-	$cond = " ORDER BY authorities.name ASC";
-  }
-
-  $authorities = Authority::getAuthoritiesIdName($cond);
-
-  $html .= " <div class=\"form-group\">\n";
-  $html .= "  <label class=\"control-label col-md-4\">Collectivité :</label>\n";
-  $html .= "  <div class=\"col-md-6 \">\n";
-
-  if (! $mod || $new_id) {
-	$auth = ($val = Helpers::getFromSession("authority_id")) ? $val : $him->get("authority_id");
-
-	$html .= $doc->getHTMLSelect("authority_id", $authorities, $auth);
-  } else {
-	$html .= $authorities[$him->get("authority_id")];
-  }
-
-  $html .= "  </div>\n";
-  $html .= " </div>\n";
-}
-
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Rôle :</label>\n";
-$html .= "  <div class=\"col-md-6 \">\n";
-
-$roles = $me->get("roleTypes");
-
-$hisRole = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
-
-if (! $me->isSuper()) {
-  // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
-  $tmp = array();
-
-  foreach ($roles as $role => $descr) {
-	if ($role != 'SADM' && $role != 'GADM') {
-	  $tmp[$role] = $descr;
+	if ($me->isGroupAdmin()) {
+		//WTF !!
+		$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
+	} else {
+		$cond = " ORDER BY authorities.name ASC";
 	}
-  }
-
-  $roles = $tmp;
+	$authorities_list = Authority::getAuthoritiesIdName($cond);
+	
+	$him_authorities = ($val = Helpers::getFromSession("authority_id")) ? $val : $him->get("authority_id");
 }
 
-$html .= $doc->getHTMLSelect("role", $roles, $hisRole);
+$him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
 
-$html .= "  </div>\n";
-$html .= " </div>\n";
+$roles_list = $me->get("roleTypes");
+if (! $me->isSuper()) {
+	// Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
+	$tmp = array();
 
-if ($me->isSuper()) {
-  $html .= " <div class=\"form-group\">\n";
-  $html .= "  <label class=\"control-label col-md-4\">Groupe (pour un administrateur de groupe) :</label>\n";
-  $html .= "  <div class=\"col-md-6 \">";
-
-  $groups = Group::getGroupsIdName();
-
-  $html .= $doc->getHTMLSelect("authority_group_id", $groups, $him->get("authority_group_id"));
-  $html .= "</div>\n";
-  $html .= " </div>\n";
+	foreach ($roles_list as $role => $descr) {
+		if ($role != 'SADM' && $role != 'GADM') {
+			$tmp[$role] = $descr;
+		}
+	}
+	$roles_list = $tmp;
 }
+
+$groups_list = Group::getGroupsIdName();
+
 
 // Récupération des modules actifs globalement
 $modules = Module::getActiveModulesList();
@@ -238,45 +128,164 @@ $modules = Module::getActiveModulesList();
 // Récupération des modules authorisés pour la collectivité
 $authModules = array();
 if ($mod) {
-  $authModules = Module::getModulesForAuthority($him->get("authority_id"));
+	$authModules = Module::getModulesForAuthority($him->get("authority_id"));
 } else {
-  if ($me->isGroupAdminOrSuper()) {
-	// On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
-	foreach ($modules as $module) {
+	if ($me->isGroupAdminOrSuper()) {
+		// On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
+		foreach ($modules as $module) {
 	  if ($me->isGroupAdmin()) {
-		if ($me->canGrantModule($module["name"])) {
-		  $authModules[$module["id"]] = true;
-		}
+	  	if ($me->canGrantModule($module["name"])) {
+	  		$authModules[$module["id"]] = true;
+	  	}
 	  } else {
-		$authModules[$module["id"]] = true;
+	  	$authModules[$module["id"]] = true;
 	  }
-	}
-  } else {
-	$authModules = $myAuthority->getAuthorizedModules();
-  }
-}
-
-foreach ($modules as $module) {
-	if ($me->isSuper() || $authModules[$module["id"]]) {
-	  $class = "";
-	  if ($me->isSuper() && ! isset($authModules[$module["id"]])) {
-		$class = " class=\"inactive\"";
-	  }
-
-		$html .= " <div class=\"form-group\">\n";
-	  $html .= "    <label class=\"control-label col-md-4" . $class . "\">" . $module["description"] . " :</label>";
-	  $html .= "    <div class=\"col-md-6  " . $class . "\">\n" . $doc->getHTMLSelect("perm_" . $module["id"], $me->getPermTypes($module['specific_perms']), $him->getPerm($module["name"])) . "</div>\n";
-          $html .= " </div>\n";
+		}
+	} else {
+		$authModules = $myAuthority->getAuthorizedModules();
 	}
 }
 
+ob_start();
+?>
+<h1><?php echo($title)?></h1>
+<p id="back-user-btn"><a class="btn btn-default" href="admin_users.php">Retour liste utilisateurs</a></p>
+
+<h2><?php echo $modStr ?> d'un utilisateur</h2>
+<form class="form form-horizontal" 
+		action="admin_user_edit_handler.php" 
+		method="post" name="form" 
+		enctype="multipart/form-data"  
+		onsubmit="javascript:return validateForm(<?php echo  $validate_form ?>)"
+		>
+		
+<?php if ($mod)  : ?>
+	<?php if ($new_id) : ?>
+		<input type="hidden" name="new_id" value="<?php echo $new_id ?>" />
+		<input type="hidden" name="mode" value="new_id" />
+	<?php else: ?>
+  		<input type="hidden" name="id" value="<?php echo $him->getId() ?>" />
+  		<input type="hidden" name="mode" value="modify" />
+	<?php  endif; ?>
+<?php else:?>
+  <input type="hidden" name="mode" value="create" />
+<?php endif;?>
+		
+<div class="alert alert-info"><span class="mandatory">*</span> uniquement nécessaire si deux utilisateurs ont le même certificat</div>		
+		
+<?php foreach(array('name'=>'Nom', 'givenname'=>"Prénom",'email'=>"Adresse électronique","telephone"=>"Téléphone") as $input_id => $input_label): ?>
+<div class="form-group">
+	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
+	<div class="col-md-6">
+		<input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+	</div>
+</div>	
+<?php endforeach;?>
+
+<?php $input_label = "Login"; $input_id="login"?>
+<div class="form-group">
+	<label class="control-label col-md-4"><?php echo $input_label?> <span class="mandatory">*</span> : </label>
+	<div class="col-md-6">
+		<input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+	</div>
+</div>	
+	
+<?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (à nouveau)") as $input_id => $input_label): ?>
+<div class="form-group">
+	<label class="control-label col-md-4"><?php echo $input_label?> <span class="mandatory">*</span>: </label>
+	<div class="col-md-6">
+		<input class="form-control" type="password" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+	</div>
+</div>	
+<?php endforeach;?>
+
+<div class="form-group">
+	<label class="control-label col-md-4">Importer le certificat utilisateur (format PEM) :</label>
+	<div class="col-md-6">
+		<input type="file" name="certificate" />
+	</div>
+</div>
+<?php if ($him->get('certificate')) : ?>
+	<div class="alert alert-info col-md-9 col-md-offset-1"> 
+		<?php hecho($him->get('subject_dn')) ?>
+		<br/>
+		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
+	</div>
+<?php endif;?>
+
+<div class="form-group">
+	<label class="control-label col-md-4">État :</label>
+	<div class="col-md-6 ">
+	<?php echo $doc->getHTMLSelect("status", $me->get("statusTypes"), $him_status); ?>
+	</div>
+</div>
+
+<?php if ($me->isGroupAdminOrSuper()) :?>
+	<div class="form-group">
+  		<label class="control-label col-md-4">Collectivité :</label>
+  		<div class="col-md-6">
+  			<?php if (! $mod || $new_id) : ?>
+  				<?php echo $doc->getHTMLSelect("authority_id", $authorities_list, $him_authorities); ?>
+  			<?php else: ?>
+				<?php hecho($authorities_list[$him->get("authority_id")]); ?>
+			<?php endif;?>
+		</div>
+	</div>
+<?php endif;?>
+
+<div class="form-group">
+	<label class="control-label col-md-4">Rôle :</label>
+	<div class="col-md-6">
+		<?php echo $doc->getHTMLSelect("role", $roles_list, $him_role); ?>
+	</div>
+</div>
+
+<?php if ($me->isSuper()) : ?>
+ 	<div class="form-group">
+  		<label class="control-label col-md-4">Groupe (pour un administrateur de groupe) :</label>
+  		<div class="col-md-6">
+		  	<?php echo $doc->getHTMLSelect("authority_group_id", $groups_list, $him->get("authority_group_id")); ?>
+  		</div>
+	</div>
+<?php endif;?>
 
 
-$html .= "<div class=\"form-group\">\n";
-$html .= "<button type=\"submit\" class=\"col-md-offset-4 col-md-6 btn btn-default\">\n";
-$html .= ($mod) ? "Valider les modifications" : "Ajouter l'utilisateur";
-$html .= "</button>\n</div>\n";
-$html .= "</form>\n";
+
+<?php foreach ($modules as $module): ?>
+	<?php if ($me->isSuper() || $authModules[$module["id"]]) : ?>
+		<?php 
+		$class = "";
+		if ($me->isSuper() && ! isset($authModules[$module["id"]])) {
+			$class = " class=\"inactive\"";
+		}
+		?>
+		<div class="form-group">
+			<label class="control-label col-md-4 <?php echo $class ?>"><?php echo $module["description"] ?> :</label>
+			<div class="col-md-6  <?php echo $class ?>">
+				 <?php echo $doc->getHTMLSelect("perm_" . $module["id"], $me->getPermTypes($module['specific_perms']), $him->getPerm($module["name"])) ?>
+			</div>
+		</div>
+	<?php endif;?>
+<?php endforeach;?>
+
+
+
+<div class="form-group">
+	<button type="submit" class="col-md-offset-4 col-md-6 btn btn-default">
+		<?php echo ($mod) ? "Valider les modifications" : "Ajouter l'utilisateur"; ?>
+	</button>
+</div>
+	
+</form>
+
+<?php 			
+$html = ob_get_contents();
+ob_end_clean();
+
+
+
+
+
 
 $ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
 
