@@ -23,3 +23,6 @@ define('MAIL_SITEROOT', SITEROOT . '/public.ssl/modules/mail');
 //define('MAIL_PULIC',SITEROOT.'public/modules/mail');
 define('MAIL_HTML', MAIL_SITEROOT . '/html');
 
+
+//Emplacement du schéma des PES V2
+define("HELIOS_XSD_PATH",__DIR__."/../xsd/Schemas_PES_v471_072015/");
