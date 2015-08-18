@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Simple_Type.xsd"></xs:include>
+	<xs:complexType name="TNatDec">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01">
+						<xs:annotation>
+							<xs:documentation>Budget primitif</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="02">
+						<xs:annotation>
+							<xs:documentation>Décision modificative</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="03">
+						<xs:annotation>
+							<xs:documentation>Budget supplémentaire</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="09">
+						<xs:annotation>
+							<xs:documentation>Compte administratif</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TTypOpBudg">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Opération à l'intérieur d'une section</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>Opération de section à section</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TNomenclature">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="M14_SIMPLIFIE">
+					<xs:annotation>
+						<xs:documentation>M14 Plan de compte simplifié</xs:documentation>
+					</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="M14_DEVELOPPE">
+						<xs:annotation>
+							<xs:documentation>M14 Plan de compte développé</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="M14_CCAS">
+						<xs:annotation>
+							<xs:documentation>M14 Plan de compte spécifique CCAS et CIAS</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="M14_CE">
+						<xs:annotation>
+							<xs:documentation>M14 Plan de compte spécifique Caisse des écoles</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="M52"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TNatVote">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="FcIc">
+						<xs:annotation>
+							<xs:documentation>Pour la section de fonctionnement le vote est au niveau du chapitre. Pour la section d'investissement le vote est au niveau du chapitre.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="FaIc">
+						<xs:annotation>
+							<xs:documentation>Pour la section de fonctionnement le vote est au niveau de l'article. Pour la section d'investissement le vote est au niveau du chapitre.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="FcIa">
+						<xs:annotation>
+							<xs:documentation>Pour la section de fonctionnement le vote est au niveau du chapitre. Pour la section d'investissement le vote est au niveau de l'article.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="FaIa">
+						<xs:annotation>
+							<xs:documentation>Pour la section de fonctionnement le vote est au niveau de l'article. Pour la section d'investissement le vote est au niveau de l'article.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TTypProv">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Semi budgétaire</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>Budgétaire</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TBudgPrec">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Primitif</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>Cumulé</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TReprRes">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>sans reprise des résultats de l’exercice N-1</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>avec reprise anticipée des résultats de l’exercice N-1</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="3">
+						<xs:annotation>
+							<xs:documentation>avec reprise des résultats de l’exercice N-1 après le vote du compte administratif N-1</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TNatFonc">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Le budget est voté par nature.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>Le budget est voté par fonction.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="3">
+						<xs:annotation>
+							<xs:documentation>Le vote du budget est mixte.</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TTypOpe">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Pour une opération, son type est "Pour Vote"</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>Pour une opération, son type est "Pour Information"</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- remplace par une CaracSup -->
+	<!--xs:complexType name="TAECP">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>(M52) Type de dépense au chapitre : avec AP/CP</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="2">
+						<xs:annotation>
+							<xs:documentation>(M52) Type de dépense au chapitre : hors AP/CP</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType -->
+	<xs:complexType name="TCodRD">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="R">
+						<xs:annotation>
+							<xs:documentation>Recette</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="D">
+						<xs:annotation>
+							<xs:documentation>Dépense</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TOpBudg">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0">
+						<xs:annotation>
+							<xs:documentation>Opération réelle ou mixte</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Opération d'ordre</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="T">
+						<xs:annotation>
+							<xs:documentation>Total</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TMontantCalculated">
+		<xs:attribute name="V" type="V_Montant" use="required"/>
+		<xs:attribute name="calculated" fixed="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Permet d'indiquer qu'un tel montant a été calculé</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TMontant_Sup">
+		<xs:attribute name="Code" type="V_Texte30" use="required"/>
+		<xs:attribute name="V" type="V_Montant"/>
+	</xs:complexType>
+	<xs:complexType name="TCarac_Sup">
+		<xs:attribute name="Code" type="V_Texte30" use="required"/>
+		<xs:attribute name="V" type="V_Texte100"/>
+	</xs:complexType>
+	<xs:complexType name="TInformationGenerale">
+		<xs:attribute name="Code" type="V_Texte30" use="required"/>
+		<xs:attribute name="V" type="V_Texte100"/>
+	</xs:complexType>
+</xs:schema>

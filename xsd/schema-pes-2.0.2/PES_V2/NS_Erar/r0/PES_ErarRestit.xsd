@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun"
+    xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit"
+    targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit"
+    xmlns:restit="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit#cm"
+    >
+    <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+    <!--xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit#cm" schemaLocation="CommunErar.xsd"/-->
+    <xs:include schemaLocation="CommunErar.xsd"/>
+    <!--xs:include schemaLocation="../../Class_Tiers.xsd"/-->
+
+    <xs:complexType name="TPES_ErarRestit">
+        <xs:sequence>
+            <xs:element name="Exer" type="cm:Base_Annee"/>
+            <xs:element name="LigneERAR" type="TLigneERAR" minOccurs="1" maxOccurs="unbounded"/>
+            <xs:element name="Nomenclature" type="TNomenclatures" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="TLigneERAR">
+        <xs:sequence>
+            <xs:element name="ServiceOrdonnateur" type="cm:Base_Alphanum10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code service ordonnateur</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Collectivite">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="IdColl" type="cm:Base_Num14" minOccurs="0"/>
+                        <xs:element name="FinJur" type="cm:Base_Num20" minOccurs="0"/>
+                        <xs:element name="CodCol" type="cm:Base_Alphanum3"/>
+                        <xs:element name="CodBud" type="cm:Base_Alphanum2" minOccurs="0"/>
+                        <xs:element name="LibelleColBud" type="cm:Base_Texte38" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RefCompta" type="TRefCompta">
+                <xs:annotation>
+                    <xs:documentation>Référence au document comptable (Bordereau ou rôle)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Debiteur" type="Class_Debiteur">
+                <xs:annotation>
+                    <xs:documentation>Le débiteur</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Assure" type="cm:TInfoTiers" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>L'éventuel assuré</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Malade" type="Class_Malade" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>L'éventuel malade</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MtPrinc" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant initial de la pièce de recouvrement</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MtFrais" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant des frais cumulés</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RarPrinc" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant restant à recouvrer sur le principal</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RarFrais" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant restant à recouvrer sur les frais</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Empechement" type="TEmpechement" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Les éventuels empêchements à poursuites.<!-- peut-il y en avoir plusieurs ? --></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DatePrescription" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de prescription</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateAdmisionNV" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date d'admission en non valeur</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MtNV" type="cm:Base_Montant" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Montant admis en non valeur</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateMajoration" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date majoration</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CodProdLocal" type="cm:Base_Alphanum4">
+                <xs:annotation>
+                    <xs:documentation>Code produit local</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EtabGeo" type="cm:Base_Alphanum10">
+                <!-- il n'existe pas de Base_Alphanum9, qui peut le plus peut le moins -->
+                <xs:annotation>
+                    <xs:documentation>Etablissement géographique</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateDebFact" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de début de la prestation à recouvrer (dans les cas des hopitaux, date de début des soins)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateFinFact" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de fin de la prestation à recouvrer (dans les cas des hopitaux, date de fin des soins)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Etape" type="TEtape" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Eventuelles étapes du recouvrement. Elles peuvent ne pas toutes figurer.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TRefCompta">
+        <xs:sequence>
+            <xs:element name="TypeRef" type="TTypeRef">
+                <xs:annotation>
+                    <xs:documentation>Permet de différencier si on référence un bordereau ou un rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IdBord" type="cm:Base_Num12">
+                <xs:annotation>
+                    <xs:documentation>Identifiant métier du bordereau de titre ou du numéro de rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IdPiece" type="cm:Base_Num13">
+                <xs:annotation>
+                    <xs:documentation>Identifiant métier du titre ou de l'article de rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ExerRattach" type="cm:Base_Num4">
+                <xs:annotation>
+                    <xs:documentation>Exercice de rattachement du bordereau ou du rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IdLigne" type="cm:Base_Num6" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Numéro de ligne de pièce</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumFact" type="cm:Base_Texte15" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Numéro de facture de l'article de rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CodePeriode" type="cm:Base_Texte5" minOccurs="0"/>
+            <xs:element name="CodProd" type="cm:Base_Alphanum4" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Code produit</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LibProd" type="cm:Base_Texte30" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Libellé produit <!-- est-ce que ca ne devrait pas aller dans TRefCompta ? --></xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateEmissionPiece" type="cm:Base_Date">
+                <xs:annotation>
+                    <xs:documentation>Date d'émission du titre ou de l'article de rôle</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TTypeRef">
+        <xs:attribute name="V">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="00">
+                        <xs:annotation><xs:documentation>Bordereau</xs:documentation></xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="01">
+                        <xs:annotation><xs:documentation>Rôle</xs:documentation></xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TEmpechement">
+        <xs:sequence>
+            <xs:element name="CodEmp" type="cm:Base_Alphanum15">
+                <xs:annotation>
+                    <xs:documentation>Code empêchement à poursuites</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LibEmp" type="cm:Base_Texte30">
+                <xs:annotation>
+                    <xs:documentation>Libellé du code empêchement</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateDebutEmp" type="cm:Base_Date">
+                <xs:annotation>
+                    <xs:documentation>Date de début de l'empêcheemnt à poursuites</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateFinEmp" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de fin de l'empêcheemnt à poursuites</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TEtape">
+        <xs:sequence>
+            <xs:element name="CodeEtape" type="V_NatureEtape">
+                <xs:annotation>
+                    <!-- je n'ai pas l'impression qu'il y ait un code pour les étapes, seulement une nature ? -->
+                    <xs:documentation>Code de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NatEtape" type="V_NatureEtape">
+                <xs:annotation>
+                    <xs:documentation>Nature de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LibEtape" type="cm:Base_Texte30">
+                <xs:annotation>
+                    <xs:documentation>Libellé du code de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateEtape" type="cm:Base_Date">
+                <xs:annotation>
+                    <xs:documentation>Date de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateAnnulation" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date d'annulation de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CodeActu" type="V_Actu" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Actualité courante de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LibActu" type="cm:Base_Texte30" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Libellé de l'actualité courante</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateActu" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de passage à l'actualité courante</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RefActe" type="cm:Base_Alphanum14" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Identifiant acte poursuite (si acte il y a)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateDemandeActe" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de demande de l'acte (si acte il y a)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateEnvoiActe" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date d'envoi de l'acte (si acte il y a)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateAutomate" type="cm:Base_Date" minOccurs="0">
+                <!-- Est-ce bien utile dans le cadre d'une consultation dans Xemelios ? -->
+                <xs:annotation>
+                    <xs:documentation>Date de passage de l'automate</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateRemiseActe" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date de remise de l'acte (si acte il y a, et si il a été remis)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EtatValidation" type="cm:Base_Num2">
+                <!-- pas d'informations sur le type de la donnée, si elle est obligatoire ou non, etc... -->
+                <xs:annotation>
+                    <xs:documentation>Etat validation de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EtatEtape" type="cm:Base_Num2">
+                <!-- pas d'informations sur le type de la donnée, si elle est obligatoire ou non, etc... N'est-ce pas la même chose que NatEtape-->
+                <xs:annotation>
+                    <xs:documentation>Etat de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PlanRecouvrement" type="cm:Base_Texte10" minOccurs="0"/>
+            <xs:element name="NumActePoursuite" type="cm:Base_Alphanum14" minOccurs="0">
+                <xs:annotation>
+                    <!-- Y a-t-il toujours un acte de poursuite ? -->
+                    <xs:documentation>Numéro de l'acte de poursuite, si acte il y  a</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MtActePoursuite" type="cm:Base_Montant" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Montant de l'acte de poursuite, si acte il y a</xs:documentation>
+                </xs:annotation>
+            </xs:element> 
+            <xs:element name="MtEtape" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant de l'étape de poursuites</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MtFraisEtape" type="cm:Base_Montant">
+                <xs:annotation>
+                    <xs:documentation>Montant des frais de pousuite</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OrigineEtape" type="cm:Base_Num2">
+                <xs:annotation>
+                    <!-- quel est le type de cette donnée, y a-t-il une codification particulière ? -->
+                    <xs:documentation>Origine de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OrdrePres" type="cm:Base_Num3" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Eventuel ordre de présentation de l'étape</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="V_NatureEtape">
+        <xs:attribute name="V" type="TNatureEtape" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="TNatureEtape">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="00"><xs:annotation><xs:documentation>Avis somme à payer</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="01"><xs:annotation><xs:documentation>Lettre de rappel</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="02"><xs:annotation><xs:documentation>Commandement</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="03"><xs:annotation><xs:documentation>Mise en demeurre</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="04"><xs:annotation><xs:documentation>Saisie attribution</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="05"><xs:annotation><xs:documentation>Saisie attribution CAF</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="06"><xs:annotation><xs:documentation>Saisie vente</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="07"><xs:annotation><xs:documentation>Saisie rémunération</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="08"><xs:annotation><xs:documentation>Vente</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="09"><xs:annotation><xs:documentation>Poursuites extérieures</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="10"><xs:annotation><xs:documentation>Saisie des coffres-forts</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="11"><xs:annotation><xs:documentation>Saisie des véhicules à moteur</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="12"><xs:annotation><xs:documentation>Saisie des valeurs mobilières de placement et autres biens d'associés</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="13"><xs:annotation><xs:documentation>Autorisation commandement</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="14"><xs:annotation><xs:documentation>Autorisation saisie</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="15"><xs:annotation><xs:documentation>Avis avant état de poursuites extérieures</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="16"><xs:annotation><xs:documentation>Phase comminatoire</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="17"><xs:annotation><xs:documentation>OTD</xs:documentation></xs:annotation></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="V_Actu">
+        <xs:attribute name="V" type="TActu" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="TActu">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="01"><xs:annotation><xs:documentation>acte édité</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="02"><xs:annotation><xs:documentation>acte notifié</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="03"><xs:annotation><xs:documentation>acte signifié par huissier, agent de poursuites</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="04"><xs:annotation><xs:documentation>acte retourné</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="05"><xs:annotation><xs:documentation>acte interrompu</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="06"><xs:annotation><xs:documentation>acte exécuté</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="07"><xs:annotation><xs:documentation>acte transmis pour autorisation de poursuites</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="08"><xs:annotation><xs:documentation>autorisation de poursuites accordées</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="09"><xs:annotation><xs:documentation>autorisation de poursuites refusées</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="10"><xs:annotation><xs:documentation>acte soumis au visa ordonnateur</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="11"><xs:annotation><xs:documentation>acte soldé </xs:documentation></xs:annotation></xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="TNomenclatures">
+        <xs:sequence>
+            <xs:element name="NomenclaturePlanPoursuite" type="TNomenclature" minOccurs="0"/>
+            <xs:element name="NomenclatureProduitLocal" type="TNomenclature" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="TNomenclature">
+        <xs:sequence>
+            <xs:element name="Description" type="cm:Base_Texte100">
+                <xs:annotation>
+                    <xs:documentation>Une description de la nomenclature</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Correspondance" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Code" type="cm:Base_Texte10"/>
+                        <xs:element name="Libelle" type="cm:Base_Texte100"/>
+        </xs:sequence>
+    </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

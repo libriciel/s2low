@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by G. MARTIN (Perso) -->
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRecette.xsd"/>
+	<xs:complexType name="TBlocLignePiece">
+		<xs:sequence>
+			<xs:element name="InfoLignePiece" type="TInfoLignePiece">
+				<xs:annotation>
+					<xs:documentation>Informations Ligne de Piece</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoPrelevement" type="TInfoPrelevement" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations Prélèvement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoAssure" type="TInfoAssure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Informations Assuré</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rattachement Pièce</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Liens identifiants</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoLignePiece">
+		<xs:sequence>
+			<xs:element name="IdLigne" type="cm:Base_Num6"/>
+			<xs:element name="ObjLignePce" type="cm:Base_Texte160" minOccurs="0"/>
+			<xs:element name="CodProdLoc" type="cm:Base_Alphanum4" minOccurs="0"/>
+			<xs:element name="FinGeo" type="cm:Base_Num9" minOccurs="0"/>
+			<xs:element name="CodEtGeo" type="cm:Base_Alphanum3" minOccurs="0"/>
+			<xs:element name="Nature" type="cm:Base_Texte12"/>
+			<xs:element name="Fonction" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="Operation" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="CptAna" type="cm:Base_Alphanum10" minOccurs="0"/>
+			<xs:element name="TxTva" type="cm:Base_Taux" minOccurs="0"/>
+			<xs:element name="Majo" type="cm:Base_Booleen"/>
+			<xs:element name="DteMajo" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="TxMajo" type="cm:Base_Taux" minOccurs="0"/>
+			<xs:element name="CpteTiers" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="TvaIntraCom" type="cm:Base_Booleen"/>
+			<xs:element name="MtHT" type="cm:Base_Montant"/>
+			<xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtNonMajo" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoPrelevement">
+		<xs:sequence>
+			<xs:element name="NatPrel" type="TNatPrel"/>
+			<xs:element name="PerPrel" type="TPerPrel"/>
+			<xs:element name="DtePrel" type="cm:Base_Date"/>
+			<xs:element name="MtPrel" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoAssure">
+		<xs:sequence>
+			<xs:element name="CodAssDeb" type="TCodAssDeb"/>
+			<xs:element name="CodAyantDroit" type="TCodAyantDroit" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TRattachPiece">
+		<xs:sequence>
+			<xs:element name="NatPceOrig" type="TNatPceOrig"/>
+			<xs:element name="ExerRat" type="cm:Base_Annee"/>
+			<xs:element name="IdPceOrig" type="cm:Base_Num13"/>
+			<xs:element name="IdLigneOrig" type="cm:Base_Num6" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLiensIdent">
+		<xs:sequence>
+			<xs:element name="IdEncaissement" type="cm:Base_Num12" minOccurs="0"/>
+			<xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="IdCaution" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0"/>
+			<xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

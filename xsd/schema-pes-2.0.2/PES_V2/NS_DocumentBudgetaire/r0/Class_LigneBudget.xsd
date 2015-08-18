@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Class_PJReference.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+	
+	<xs:complexType name="TLigneBudget">
+		<xs:sequence>
+			<xs:element name="Nature" type="Base_Texte30" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Compte par nature</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="LibCpte" type="Base_Texte100" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Dans le cadre d'une opération sur compte de tiers ou une opération d'équipement, indication du libellé de cette opération.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="Fonction" type="Base_Num10" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Compte par fonction.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="Operation" type="Base_Num10" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Compte opération</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en CaracSup -->
+			<!--xs:element name="ProgAutoNum" type="Base_Num4" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) dans le cadre d'un programme d'équipement, numéro de l'autorisation de programme y afférant.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="ProgAutoLib" type="Base_Texte100" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) dans le cadre d'un programme d'équipement, libellé de l'autorisation de programme y afférant.</xs:documentation></xs:annotation>
+			</xs:element-->
+			<!--xs:element name="TypOpe" type="TTypOpe" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Type de l'opération</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="ContNat" type="Base_Texte12" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(PES) Contrôle compte budgétaire. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="ArtSpe" type="Base_Booleen" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Code article spécialisé. Zone permettant d'identifier les articles spécialisés.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="ContFon" type="Base_Num10" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Contrôle fonction. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="ContOp" type="Base_Num10" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Contrôle opération. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="CodRD" type="TCodRD" form="qualified">
+				<xs:annotation><xs:documentation>Code recette / dépense. Cette zone permet de déterminer le sens (recette - dépense) du crédit concerné. Valeurs: 0=recette, 1=dépense.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtBudgPrec" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant budget précédent</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtRARPrec" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant reste à réaliser N-1</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtPropNouv" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant "Propositions nouvelles"</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en MtSup -->
+			<!--xs:element name="MtPropHorsSubv" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Propositions hors subventions</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="MtPrev" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant budget voté</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en MtSup -->
+			<!--xs:element name="MtPrevHorsSubv" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) montant voté hors subventions</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtOpeCumul" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Pour les opérations d'équipement, indication du "Réalisations cumulées au 1/1/N" (cas d'une opération présentée pour Vote)</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtOpeInfo" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Pour les opérations d'équipement, indication du "Montant pour information" (cas d'une opération présentée pour information)</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtAPVote" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Programmes d'équipement : "AP votée y compris ajustement"</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="CredOuv" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Crédits ouverts à l'article (pour le Compte Administratif)</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtReal" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant signé des réalisations budgétaires. (uniquement pour le compte Administratif)</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtRAR3112" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>RAR au 31/12
+					Dans le cadre du Compte Administratif : Investissement : dépenses engagées non mandatées/recettes restant à émettre sur titre justificatif
+					Fonctionnement : Dépenses ayant donné lieu à service fait mais dont les PJ n'ont pas été émises ou reçues à la fin de la journée complémentaire / recettes afhérentes à l'exercice pour lesquelles le titre n'a pas été émis
+				</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en MtSup -->
+			<!--xs:element name="ProdChaRat" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Produits et charges rattachés ( fonctionnement)</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="TxMtBrut" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Chapitre 941 autres impôts et taxes : Taxe montant brut</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="TxMtComp" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Chapitre 941 autres impôts et taxes : Taxe écrètement</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="TxMtNet" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Chapitre 941 autres impôts et taxes : Montant net</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="OpBudg" type="TOpBudg" form="qualified">
+				<xs:annotation><xs:documentation>Cette zone permet d'isoler les opérations d'ordre budgétaire. Valeurs: 0=opération réelle ou mixte 1=opération d'ordre. Par défaut valeur 0. La valeur "T" est utilisée pour les totaux.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="TypOpBudg" type="TTypOpBudg" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Cette zone permet de déterminer si une opération d'ordre est effectuée à l'intérieur d'une même section ou bien de section à section.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="OpeCpteTiers" type="Base_Num10" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Compte sur lequel est effectuée une opération sur compte de tiers</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en MtSup -->
+			<!--xs:element name="MtReaOpeCpteTiers" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Montant opération pour compte de tiers - réalisations cumulées de l'opération avant l'étape budgétaire</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtICNE" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant des ICNE de l’exercice N dans le cadre d'une opération sur le compte "66112 Intérêts – Rattachement des ICNE"</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtICNEPrec" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Montant de l’exercice N-1 (dans le cadre d'une opération sur le compte "66112 Intérêts – Rattachement des ICNE")</xs:documentation></xs:annotation>
+				</xs:element-->
+			<!-- transforme en CaracSup -->
+			<!--xs:element name="AECP" type="TAECP" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) Type de dépense au chapitre (avec AP/CP ou hors AP/CP)</xs:documentation></xs:annotation>
+				</xs:element-->
+			<!-- deplace en MtSup -->
+			<!--xs:element name="MtReaN2" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M21) Réalisation N-2</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtCpteAnticip" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M21) Compte anticipé N-1</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtExeRecon" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M21) Exercice N / Reconduction</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtExeMesNouv" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M21) Exercice N / Mesures nouvelles</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="MtExeN" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M21) Exercice N</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="MtCumul" type="TMontantCalculated" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Utilisé pour indiquer des cumuls. Cf. documentation. 
+				Exemples : M14 Nature : Présentation générale du budget / Total (=RAR + voté)</xs:documentation></xs:annotation>
+			</xs:element>
+			<!-- deplace en MtSup -->
+			<!--xs:element name="MtBS" type="Base_Montant" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>(M52) dans le cadre de BS ou DM : "Pour information total des crédits propres au BS ou DM"</xs:documentation></xs:annotation>
+			</xs:element-->
+			<xs:element name="MtSup" type="TMontant_Sup" minOccurs="0" maxOccurs="unbounded" form="qualified">
+				<xs:annotation><xs:documentation>Voir description nomenclature pour connaître les codes des différents montants supplémentaires en fonction du document budgétaire</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="CaracSup" type="TCarac_Sup" minOccurs="0" maxOccurs="unbounded" form="qualified">
+				<xs:annotation><xs:documentation>Voir description nomenclature (DescNomenclature.xml) pour connaître les codes des différentes caractéristiques en fonction du document budgétaire</xs:documentation></xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="calculated" fixed="true" use="optional">
+			<xs:annotation>
+				<xs:documentation>Permet d'indiquer si une ligne est une ligne calculée ou non. Toutes les lignes de totalisation doivent porter cet attribut.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="generator" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Permet d'indiquer quel composant a généré cette ligne. A n'utiliser qu'a des fins de debug</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="id" type="xs:ID" use="optional">
+			<xs:annotation>
+				<xs:documentation>Permet de spécifier un ID pour la ligne. A n'utiliser qu'a des fins de debug</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

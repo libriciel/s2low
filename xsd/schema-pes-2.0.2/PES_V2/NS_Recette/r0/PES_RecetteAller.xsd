@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified">
+	<!-- Directives d'inclusion -->
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../../Class_Signature.xsd"/>
+	<xs:include schemaLocation="CommunRecette.xsd"/>
+	<xs:include schemaLocation="Class_BordereauRecetteAller.xsd"/>
+	<xs:include schemaLocation="Class_TitreAller.xsd"/>
+	<xs:include schemaLocation="Class_LigneTitreAller.xsd"/>
+	<xs:include schemaLocation="Class_RecouvrementRecette.xsd"/>
+	<xs:include schemaLocation="Class_TiersRecette.xsd"/>
+	<xs:complexType name="TPES_RecetteAller">
+		<xs:sequence>
+			<xs:element name="EnTeteRecette">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="InfoDematerialisee" type="cm:Base_Booleen" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Bordereau" type="TBordereau" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TBordereau">
+		<xs:sequence>
+			<xs:element name="BlocBordereau" type="TBlocBordereau"/>
+			<xs:element name="Piece" type="TPiece" maxOccurs="unbounded"/>
+			<xs:group ref="ds:PESSignatureGroup" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TPiece">
+		<xs:sequence>
+			<xs:element name="BlocPiece" type="TBlocPiece"/>
+			<xs:element name="LigneDePiece" type="TLigneDePiece" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLigneDePiece">
+		<xs:sequence>
+			<xs:element name="BlocLignePiece" type="TBlocLignePiece"/>
+			<xs:element name="Tiers" type="TTiers" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Recouvrement" type="TRecouvrement" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiersRecette"/>
+			<xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+			<xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

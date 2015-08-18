@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DIRECTION GLE DE LA COMPTABILITE PUBLIQUE (DIRECTION GLE DE LA COMPTABILITE PUBLIQUE) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/TIPIRECETTE/r0/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/TIPIRECETTE/r0/retour" elementFormDefault="unqualified">
+	<!-- Directives d'inclusion -->
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Commun_Recette_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_Bordereau_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_Titre_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_LigneTitre_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_Tiers_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_InfoTiers_TIPI.xsd"/>
+	<xs:include schemaLocation="Class_Adresse_TIPI.xsd"/>
+	<xs:complexType name="TPES_Recette_TIPI">
+		<xs:sequence>
+			<xs:element name="Bordereau" type="TBordereau_TIPI" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TBordereau_TIPI">
+		<xs:sequence>
+			<xs:element name="BlocBordereau" type="TBlocBordereau_TIPI"/>
+			<xs:element name="Piece" type="TPiece_TIPI" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPiece_TIPI">
+		<xs:sequence>
+			<xs:element name="BlocPiece" type="TBlocPiece_TIPI"/>
+			<xs:element name="LigneDePiece" type="TLigneDePiece_TIPI" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLigneDePiece_TIPI">
+		<xs:sequence>
+			<xs:element name="BlocLignePiece" type="TBlocLignePiece_TIPI"/>
+			<xs:element name="Tiers" type="TTiers_TIPI" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers_TIPI">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiers_TIPI"/>
+			<xs:element name="Adresse" type="TAdresse_TIPI" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Commun_Role_TIPI.xsd"/>
+	<xs:complexType name="TAdresse_TIPI">
+		<xs:sequence>
+			<xs:element name="Adr1" type="cm:Base_Texte38" minOccurs="0"/>
+			<xs:element name="Adr2" type="cm:Base_Texte38" minOccurs="0"/>
+			<xs:element name="Adr3" type="cm:Base_Texte38" minOccurs="0"/>
+			<xs:element name="CP" type="cm:Base_Texte5"/>
+			<xs:element name="Ville" type="cm:Base_Texte38"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/restit" xmlns:erar="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit"  xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/restit" xmlns:xs="http://www.w3.org/2001/XMLSchema"  elementFormDefault="unqualified">
+    <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+    <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/erar/r0/restit" schemaLocation="../NS_Erar/r0/PES_ErarRestit.xsd"/>
+    <xs:element name="PES_Restit">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Enveloppe" type="cm:TEnveloppe" minOccurs="0"/>
+                <xs:element name="EnTetePES" type="cm:TEnTetePES"/>
+                <xs:element name="PES_ERAR" type="erar:TPES_ErarRestit" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

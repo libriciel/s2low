@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Commun_Recette_TIPI.xsd"/>
+	<xs:complexType name="TInfoTiers">
+		<xs:sequence>
+			<xs:element name="DteMalade" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="CatTiers" type="cm:TCatTiers"/>
+			<xs:element name="TypTiers" type="cm:TTypTiers"/>
+			<xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="Nom" type="cm:Base_Texte38"/>
+			<xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0"/>
+			<xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

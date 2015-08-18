@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="Class_Signature.xsd"/>
+	<xs:include schemaLocation="Class_Budget.xsd"/>
+	<xs:include schemaLocation="Class_LigneBudget.xsd"/>
+	<xs:include schemaLocation="Class_PJReference.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+	<xs:include schemaLocation="Simple_Type.xsd"/>
+
+	<xs:complexType name="TDocumentBudgetaire">
+		<xs:sequence>
+		    <xs:element name="VersionSchema" type="Base_Version" minOccurs="1" maxOccurs="1" form="qualified"><xs:annotation><xs:documentation>Version du schéma à laquelle le document se conforme. Les schémas sont publiés sur http://www.xemelios.org/doc-budg</xs:documentation></xs:annotation></xs:element>
+			<xs:element name="EnTeteDocBudgetaire" type="TEnTeteDocBudgetaire" form="qualified">
+				<xs:annotation>
+					<xs:documentation>Entête du document décrivant le poste comptable et la collectivité</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Budget" type="TBudget" maxOccurs="unbounded" form="qualified"/>
+			<xs:group ref="ds:PESSignatureGroup" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="TEnTeteDocBudgetaire">
+		<xs:sequence>
+			<xs:element name="DteStr" type="Base_Date" form="qualified">
+				<xs:annotation><xs:documentation>Date d'émission de la structure</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="LibellePoste" type="Base_Texte100" form="qualified">
+				<xs:annotation><xs:documentation>Libellé du poste comptable</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="IdPost" type="Base_Texte7" form="qualified">
+				<xs:annotation><xs:documentation>Identification permanente du poste comptable (numéro codique).</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="LibelleColl" type="Base_Texte100" form="qualified">
+				<xs:annotation><xs:documentation>Libellé de la collectivité</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="IdColl" type="Base_Num14" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Identification numérique permanente du budget collectivité / Identifiant national Siret.</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="FinJur" type="Base_Num20" minOccurs="0" form="qualified">
+				<xs:annotation><xs:documentation>Finess juridique</xs:documentation></xs:annotation>
+			</xs:element>
+			<xs:element name="NatCEPL" type="Base_Texte100" form="qualified">
+				<xs:annotation><xs:documentation>Nature juridique de la CEPL</xs:documentation></xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+</xs:schema>

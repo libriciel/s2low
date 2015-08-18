@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 (http://www.xmlspy.com) by Michael Conroy (SEMA) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="../../Simple_Type_1.1.xsd"/>
+	<xs:complexType name="TEnveloppe">
+		<xs:sequence>
+			<xs:element name="Parametres" type="TParametres"/>
+			<xs:element name="Emetteur" type="TCarteVisite" minOccurs="0"/>
+			<xs:element name="Recepteur" type="TCarteVisite" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TParametres">
+		<xs:sequence>
+			<xs:element name="Version" type="Base_Num2"/>
+			<xs:element name="TypFic" type="Base_Texte32"/>
+			<xs:element name="NomFic" type="Base_Texte100"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TCarteVisite">
+		<xs:sequence>
+			<xs:element name="Sigle" type="Base_Texte32" minOccurs="0"/>
+			<xs:element name="Adresse" type="Base_Texte38" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

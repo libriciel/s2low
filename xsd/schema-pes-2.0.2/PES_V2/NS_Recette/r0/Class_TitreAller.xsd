@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunRecette.xsd"/>
+	<xs:complexType name="TBlocPiece">
+		<xs:sequence>
+			<xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="IdPce" type="cm:Base_Num13"/>
+			<xs:element name="TypPce" type="TTypPce"/>
+			<xs:element name="NatPce" type="TNatPce"/>
+			<xs:element name="IdRol" type="cm:Base_Num7" minOccurs="0"/>
+			<xs:element name="DteAsp" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="ObjPce" type="cm:Base_Texte160" minOccurs="0"/>
+			<xs:element name="DebFact" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="FinFact" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

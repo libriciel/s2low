@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by G. MARTIN (Perso) -->
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunDepense.xsd"/>
+	<xs:complexType name="TBlocLignePiece">
+		<xs:sequence>
+			<xs:element name="InfoLignePce" type="TInfoLignePce">
+				<xs:annotation>
+					<xs:documentation>Information ligne de pièce</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="InfoTVAHLM" type="TInfoTVAHLM" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Information TVA HLM</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OpSpec" type="TOpSpec" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opération spécifique</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Rattachement de pièce</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Liens identifiants</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoLignePce">
+		<xs:sequence>
+			<xs:element name="IdLigne" type="cm:Base_Num6"/>
+			<xs:element name="Nature" type="cm:Base_Texte12"/>
+			<xs:element name="Fonction" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="Operation" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="CptAna" type="cm:Base_Alphanum10" minOccurs="0"/>
+			<xs:element name="Facture" type="cm:Base_Texte20" minOccurs="0"/>
+			<xs:element name="LibVir1" type="cm:Base_Texte70" minOccurs="0"/>
+			<xs:element name="LibVir2" type="cm:Base_Texte70" minOccurs="0"/>
+			<xs:element name="ModRegl" type="TCodePaiement" minOccurs="0"/>
+			<xs:element name="TVAIntraCom" type="cm:Base_Booleen"/>
+			<xs:element name="CpteTiers" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="MtHT" type="cm:Base_Montant"/>
+			<xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="MtFactHT" type="cm:Base_Montant" minOccurs="0"/>
+			<xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoTVAHLM">
+		<xs:sequence>
+			<xs:element name="RecTVA" type="cm:Base_Booleen"/>
+			<xs:element name="MtHtRes" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TOpSpec">
+		<xs:sequence>
+			<xs:element name="CodOpSpec" type="TCodOpSpec"/>
+			<xs:element name="IdOpSpec" type="cm:Base_Alphanum15"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TRattachPiece">
+		<xs:sequence>
+			<xs:element name="NatPceOrig" type="TNatPceOrig"/>
+			<xs:element name="ExerRat" type="cm:Base_Annee"/>
+			<xs:element name="IdPceOrig" type="cm:Base_Num13"/>
+			<xs:element name="IdLigneOrig" type="cm:Base_Num6" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLiensIdent">
+		<xs:sequence>
+			<xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0"/>
+			<xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0"/>
+			<xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

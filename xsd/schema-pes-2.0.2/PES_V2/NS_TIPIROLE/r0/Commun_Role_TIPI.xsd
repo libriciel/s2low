@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<!--xs:complexType name="TCodAct"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TNatInf"-->
+	<!--Codification supprimée-->
+	<xs:complexType name="TTypRol">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TEtatPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="02"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!--xs:complexType name="TCatTiers" LIMITATION à 01 - SUPPRIMER - Utilisation du schema COMMUN -->
+	<!--xs:complexType name="TCodInst-Rej"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TNatPrel"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TPerPrel"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TEtRec"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TCodActu"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TCodSuspPour"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TTypFlux"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TModRegl"-->
+	<!--Codification supprimée-->
+	<!--xs:complexType name="TTypTiers"-->
+	<!--Codification supprimée-->
+</xs:schema>

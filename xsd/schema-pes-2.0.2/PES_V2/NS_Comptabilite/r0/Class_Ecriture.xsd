@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunComptabilite.xsd"/>
+	<xs:complexType name="TInformationEcriture">
+		<xs:sequence>
+			<xs:element name="DteEcrit" type="cm:Base_Date"/>
+			<xs:element name="NumEcrit" type="cm:Base_Alphanum6"/>
+			<xs:element name="LibEcrit" type="cm:Base_Texte100" minOccurs="0"/>
+			<xs:element name="CodEcrit" type="TCodEcrit"/>
+			<xs:element name="Sens" type="cm:Base_Booleen"/>
+			<xs:element name="Montant" type="cm:Base_Montant"/>
+			<xs:element name="Imputation" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0"/>
+			<xs:element name="Nom" type="cm:Base_Texte38" minOccurs="0"/>
+			<xs:element name="EtPce" type="TEtPce" minOccurs="0"/>
+			<xs:element name="DteEtPce" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="CodAct" type="cm:Base_Num3" minOccurs="0"/>
+			<xs:element name="ExerPce" type="cm:Base_Annee" minOccurs="0"/>
+			<xs:element name="IdPce" type="cm:Base_Num13" minOccurs="0"/>
+			<xs:element name="IdLignePce" type="cm:Base_Num6" minOccurs="0"/>
+			<xs:element name="CpteTiers" type="cm:Base_Num12" minOccurs="0"/>
+			<xs:element name="CodCollP503" type="cm:Base_Alphanum3" minOccurs="0"/>
+			<xs:element name="BudCollP503" type="cm:Base_Alphanum2" minOccurs="0"/>
+			<xs:element name="Type" type="TType" minOccurs="0"/>
+			<xs:element name="NatPceOrig" type="TNatPceOrig" minOccurs="0"/>
+			<xs:element name="ExerPceOrig" type="cm:Base_Annee" minOccurs="0"/>
+			<xs:element name="IdPceOrig" type="cm:Base_Num13" minOccurs="0"/>
+			<xs:element name="IdLignePceOrig" type="cm:Base_Num6" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

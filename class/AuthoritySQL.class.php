@@ -10,6 +10,11 @@ class AuthoritySQL {
 		return $this->sqlQuery->queryOne($sql,$id);
 	}
 	
+	public function getIdBySIREN($siren){
+		$sql = "SELECT id FROM authorities where siren=?";
+		return $this->sqlQuery->queryOne($sql,$siren);
+	}
+	
 	public function getBySIRET($siret){
 		$sql = "SELECT id FROM authorities where dia_siret=?";
 		return $this->sqlQuery->queryOne($sql,$siret);
@@ -56,5 +61,7 @@ class AuthoritySQL {
   		$result = $this->sqlQuery->query($sql,$department_code,$district_code);
   		return count($result);
   	}
+  	
+  	
   	
 }

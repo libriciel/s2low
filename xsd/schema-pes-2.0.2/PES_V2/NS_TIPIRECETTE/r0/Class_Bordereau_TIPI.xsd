@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DIRECTION GLE DE LA COMPTABILITE PUBLIQUE (DIRECTION GLE DE LA COMPTABILITE PUBLIQUE) EXTERNE -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="Commun_Recette_TIPI.xsd"/>
+	<xs:complexType name="TBlocBordereau_TIPI">
+		<xs:sequence>
+			<xs:element name="Exer" type="cm:Base_Annee"/>
+			<xs:element name="IdBord" type="cm:Base_Num7"/>
+			<xs:element name="TypBord" type="TTypBord"/>
+			<xs:element name="NbrePce" type="cm:Base_Num5"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

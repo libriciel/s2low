@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunDepense.xsd"/>
+	<xs:complexType name="TBlocPiece">
+		<xs:sequence>
+			<xs:element name="InfoPce" type="TInfoPce">
+				<xs:annotation>
+					<xs:documentation>information ligne de pièce</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DGP" type="TDGP" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>délai global de paiement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TInfoPce">
+		<xs:sequence>
+			<xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="IdPce" type="cm:Base_Num13"/>
+			<xs:element name="TypPce" type="TTypPce"/>
+			<xs:element name="NatPce" type="TNatPce"/>
+			<xs:element name="DtePceInt" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DtePcePec" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="EtatPce" type="TEtatPce"/>
+			<xs:element name="ObsEtat" type="cm:Base_Texte100" minOccurs="0"/>
+			<xs:element name="DtePceRej" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DtePceInst" type="cm:Base_Date" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TDGP">
+		<xs:sequence>
+			<xs:element name="DteDebSusp" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="DteFinSusp" type="cm:Base_Date" minOccurs="0"/>
+			<xs:element name="NatSusp" type="TNatSusp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

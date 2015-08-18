@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:tipir="http://www.minefi.gouv.fr/cp/helios/pes_v2/TIPIRECETTE/r0/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/TIPIRECETTE/r0/retour" schemaLocation="../NS_TIPIRECETTE/r0/PES_RECETTE_TIPI.xsd"/>
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:element name="PES_Retour">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Enveloppe" type="cm:TEnveloppe"/>
+				<xs:element name="EnTetePES" type="cm:TEnTetePES"/>
+				<xs:element name="PES_TIPI_Recette" type="tipir:TPES_Recette_TIPI" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

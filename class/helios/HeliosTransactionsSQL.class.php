@@ -98,6 +98,11 @@ class HeliosTransactionsSQL {
 		return $this->sqlQuery->queryOneCol($sql,$status_id);
 	}
 	
+	public function getIdByNomFic($nomFic)  {
+		$sql = "SELECT id FROM helios_transactions WHERE xml_nomfic = ?";
+		return $this->sqlQuery->queryOne($sql,$nomFic);
+	}
+	
 	public function nomFicExists($nom_fic){
 		$sql = "SELECT count(*) FROM helios_transactions WHERE xml_nomfic= ?";
 		return $this->sqlQuery->queryOne($sql,$nom_fic);
@@ -136,5 +141,9 @@ class HeliosTransactionsSQL {
 		$this->sqlQuery->query($sql,$id);
 	}
 	
+	public function setAcquitFilename($id,$acquit_filename) {
+		$sql = "UPDATE helios_transactions SET acquit_filename =  ? WHERE id = ?";
+		$this->sqlQuery->query($sql,$acquit_filename,$id);
+	}
 	
 }

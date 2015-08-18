@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun"
+    xmlns:st="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun#st">
+    <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+    <!--xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun#st"  schemaLocation="../../Simple_Type.xsd"/-->
+    
+    <xs:complexType name="Class_Debiteur">
+        <xs:sequence>
+            <xs:element name="InfoTiers" type="cm:TInfoTiers"/>
+            <xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+            <xs:element name="NPAI" type="cm:Base_Booleen" minOccurs="0"/>
+            <xs:element name="RefAllocataire" type="cm:Base_Texte20"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Class_Malade">
+        <xs:sequence>
+            <xs:element name="InfoTiers" type="cm:TInfoTiers"/>
+            <xs:element name="DateEntree" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Dans le cas des hopitaux, date d'entrée à l'hopital</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DateSortie" type="cm:Base_Date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Dans le cas des hopitaux, date de sortie de l'hopital</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumEntree" type="cm:Base_Alphanum14" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Dans le cas des hopitaux, numéro d'entrée</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

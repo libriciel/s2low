@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/budget/r0/aller" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+	<xs:include schemaLocation="Class_BudgetAller.xsd"/>
+	<xs:include schemaLocation="Class_LigneBudgetAller.xsd"/>
+	<xs:complexType name="TPES_BudgetAller">
+		<xs:sequence>
+			<xs:element name="EnTeteBudget">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="InfoDematerialisee" type="cm:Base_Booleen" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DocumentBudgetaire" type="TDocumentBudgetaire" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TDocumentBudgetaire">
+		<xs:sequence>
+			<xs:element name="BlocDocBudget" type="TBlocDocBudget"/>
+			<xs:element name="LigneBudget" type="TLigneBudget" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

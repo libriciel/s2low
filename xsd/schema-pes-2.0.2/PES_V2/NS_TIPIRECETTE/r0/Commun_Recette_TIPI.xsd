@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DIRECTION GLE DE LA COMPTABILITE PUBLIQUE (DIRECTION GLE DE LA COMPTABILITE PUBLIQUE) -->
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Regles de codifications communes au PES Recette-->
+	<!-- 05/05/2006 EPA HLS000224-->
+	<xs:complexType name="TNatInf">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="0"/>
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Limitation de TTypBord pour TIPI a 01-->
+	<xs:complexType name="TTypBord">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Limitation de TTypPiece pour TIPI a 01-->
+	<xs:complexType name="TTypPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Limitation de TNatPce pour TIPI a 01-->
+	<xs:complexType name="TNatPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+					<xs:enumeration value="03"/>
+					<xs:enumeration value="04"/>
+					<xs:enumeration value="07"/>
+					<xs:enumeration value="08"/>
+					<xs:enumeration value="11"/>
+					<xs:enumeration value="12"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Limitation de TEtatPce pour TIPI a 02-->
+	<xs:complexType name="TEtatPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="02"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Suppression de TCodInst-Rej pour TIPI-->
+	<!-- Suppression de TNatPrel pour TIPI-->
+	<!-- Suppression de TPerPrel pour TIPI-->
+	<!-- Suppression de TCodAssDeb pour TIPI-->
+	<!-- Suppression de TCodAyantDroit pour TIPI-->
+	<!-- Suppression de TNatPceOrig pour TIPI-->
+	<!-- Limitation de TEtPce pour TIPI à 02-->
+	<xs:complexType name="TEtPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="02"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Suppression de TCodActu pour TIPI-->
+	<!-- Suppression de TCodSuspPour pour TIPI-->
+	<!-- Suppression de TTypFlux pour TIPI-->
+	<!-- Suppression de TModRegl pour TIPI-->
+	<xs:complexType name="TTypTiers">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="01"/>
+					<xs:enumeration value="02"/>
+					<xs:enumeration value="03"/>
+					<xs:enumeration value="04"/>
+					<xs:enumeration value="05"/>
+					<xs:enumeration value="06"/>
+					<xs:enumeration value="07"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Ajout de TCatTiers pour TIPI limité à 01 A SUPPRIMER - Utilisation du schema commun-->
+	<!-- Ajout de TCatPce pour TIPI-->
+	<xs:complexType name="TCatPce">
+		<xs:attribute name="V" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1"/>
+					<xs:enumeration value="2"/>
+					<xs:enumeration value="3"/>
+					<xs:enumeration value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

@@ -41,16 +41,7 @@ if ( ! empty($module_name)) {
 	
 	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific)){
 		sortir("Accès refusé");
-	}
-	
+	}	
 }
-
-
-$exit_if_not_group_or_super_admin = function() use ($droit,$userInfo){
-	if (! $droit->isGroupOrSuperAdmin($userInfo)){
-		sortir("Accès refusé");
-	}
-};
-
 
 $modulesInfo = $moduleSQL->getModulesForUser($userInfo);

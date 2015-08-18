@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:element name="NonAcquit" type="TNonAcquit"/>
+	<xs:complexType name="TNonAcquit">
+		<xs:sequence>
+			<xs:element name="NomFic" type="cm:Base_Texte100"/>
+			<xs:element name="Motif" type="cm:Base_Texte100"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
