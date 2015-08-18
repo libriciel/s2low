@@ -51,7 +51,6 @@ class HeliosEnvoiControler {
 				continue;
 			}
 			
-			
 			$nom_fic = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
 			if (! $nom_fic){
 				$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
@@ -122,7 +121,8 @@ class HeliosEnvoiControler {
 			
 			$sha1_file = sha1_file($file_path);
 			if ($sha1_file != $transactionInfo['sha1']){
-				echo "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme";
+				$message = "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme\n";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
 
