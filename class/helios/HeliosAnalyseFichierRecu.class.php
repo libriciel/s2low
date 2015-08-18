@@ -20,7 +20,7 @@ class HeliosAnalyseFichierRecu {
 		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
 	}
 	
-	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root){
+	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path){
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
 		
 		$this->log("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
@@ -40,14 +40,34 @@ class HeliosAnalyseFichierRecu {
 		}
 		$this->log("Traitement de ".count($file_list)." fichiers trouvés");
 		
-		
+		$erreur_list = array();
 		foreach($file_list as $file){
 			try {
 				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root);
 			} catch (Exception $e){
 				$this->log("[ERREUR] ". $e->getMessage());
+				$erreur_list[$file] = $e->getMessage();
 			}
 		}
+		
+		if ($erreur_list){
+			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de récupération des fichier PES_Acquit/PES_Retour";
+			$msg = "";
+			foreach($erreur_list as $file => $message){
+				$msg.= "Fichier : $file => $message\n";
+			}
+			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
+			mail(EMAIL_ADMIN,$subject,$msg);
+		}
+		
+		foreach($erreur_list as $file => $message){
+			if (file_exists($helios_responses_error_path."/".$file)){
+				mail(EMAIL_ADMIN,"[S2low][Helios] Impossible de déplacer un fichier dans le répertoire des fichiers en erreur","Le fichier $file existe déjà");
+				continue;
+			}
+			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
+		}
+		
 	}
 	
 	private function analyseOneFile($file_path,$helios_response_root){

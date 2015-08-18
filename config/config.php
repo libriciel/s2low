@@ -262,6 +262,12 @@ if(!defined('HELIOS_RESPONSES_ROOT')){
 	define('HELIOS_RESPONSES_ROOT', '/tdt-workspace/helios/response/');
 }
 
+// Repertoire de stockage des reponses en erreur 
+if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
+	define('HELIOS_RESPONSES_ERROR_PATH', '/tdt-workspace/helios/response_error/');
+}
+
+
 // Repertoire de stockage des fichiers temporaires à envoyer au FTP
 if(!defined('HELIOS_FILES_UPLOAD_TMP')){
 	define('HELIOS_FILES_UPLOAD_TMP', '/tdt-workspace/helios/sending-tmp/');
