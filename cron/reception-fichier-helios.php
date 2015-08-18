@@ -10,7 +10,9 @@ require_once (__DIR__."/../class/FTP.class.php");
 
 $ftp = new FTP();
 $ftp->setConnexionInfo(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN, HELIOS_FTP_PASSWORD);
-
+if (HELIOS_SENDING_MODE_DEMO){
+	$ftp->setDeleteFileAfterDownload();
+}
 try {
 	$ftp->recupAll(HELIOS_FTP_RESPONSE_SERVER_PATH, HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
 	echo "Récupération terminée";

@@ -5,12 +5,17 @@ class FTP {
 	private $port;
 	private $login;
 	private $password;
+	private $delete;
 	
 	public function setConnexionInfo($host,$port,$login,$password){
 		$this->host = $host;
 		$this->port = $port;
 		$this->login = $login;
 		$this->password = $password;
+	}
+	
+	public function setDeleteFileAfterDownload(){
+		$this->delete = true;
 	}
 	
 	public function recupAll($remote_path,$local_path){
@@ -39,6 +44,9 @@ class FTP {
 		foreach($all_file as $file){
 			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
 			echo $file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
+			if ($this->delete){
+				ftp_delete($ftp, $file);
+			}
 		}
 		
 		ftp_close($ftp);
