@@ -1,3 +1,3 @@
 <?php
 
-require_once(__DIR__."/../../../Pastell/ext/composer/vendor/autoload.php");
+require_once("init.php");

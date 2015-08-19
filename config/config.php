@@ -55,6 +55,24 @@ if(!defined('DB_DATABASE')){
         define('DB_DATABASE', "tedetis");
 }
 
+
+//Définition de la connexion à la base de données pour les tests unitaires et les tests de validation
+if(!defined('DB_HOST_TEST')){
+	define('DB_HOST_TEST', "localhost");
+}
+
+if(!defined('DB_USER_TEST')){
+	define('DB_USER_TEST', "tedetis");
+}
+
+if(!defined('DB_PASSWORD_TEST')){
+	define('DB_PASSWORD_TEST', "tedetis");
+}
+
+if(!defined('DB_DATABASE_TEST')){
+	define('DB_DATABASE_TEST', "tedetis_test");
+}
+
 // Nombre d'élément affichés par défaut par page dans les listes
 if(!defined('DEFAULT_ITEMS_PER_PAGE')){
         define('DEFAULT_ITEMS_PER_PAGE', 10);

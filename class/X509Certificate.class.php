@@ -38,7 +38,18 @@ class X509Certificate {
 		preg_match_all("#(\d\d)#",$info['validTo'],$matches);
 		$m = $matches[0];
 		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
-		
 	}
+	
+	public function getInfo($pem_certificate_content){
+		if (! $pem_certificate_content){
+			return;
+		}
+		$info =  openssl_x509_parse(openssl_x509_read($pem_certificate_content));
+		preg_match_all("#(\d\d)#",$info['validTo'],$matches);
+		$m = $matches[0];
+		$info['expiration_date'] = "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+		return $info;
+	}
+	
 	
 }

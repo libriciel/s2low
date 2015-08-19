@@ -100,6 +100,7 @@ class User extends DataObject {
 						 "cert_serial" => array( "descr" => "Numéro de série du certificat", "type" => "isDate", "mandatory" => true),
   							"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),	
   							"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
+  							"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
   
 						 );
 
@@ -184,6 +185,7 @@ class User extends DataObject {
 			return false;
 		}
 		
+	
 		if (count($ids) > 1 && ! $this->isLogged()){
 			header("Location: " . WEBSITE_SSL."/login.php");
   			exit();
@@ -209,6 +211,11 @@ class User extends DataObject {
 		if (isset($_SESSION['id_login']) && $_SESSION['id_login']){
 			return true;
 		}
+		/* 
+		 * TODO : Vérifier si on a un certificat RGS** passé dans les paramètres POST
+		 * Si oui, ce logué via cette méthode
+		 */
+		
 		if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])){
 			return $this->login($_SERVER['PHP_AUTH_USER'],md5($_SERVER['PHP_AUTH_PW']));
 		}
@@ -218,6 +225,8 @@ class User extends DataObject {
 	
 	
 	public function login($login,$password){
+		//TODO : Ne pas se connecter par cette méthode s'il y a un RGS** sur la ligne de l'user
+		
 		$this->retrieveInfoFromClientCertificate();
 		$sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
                         " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";

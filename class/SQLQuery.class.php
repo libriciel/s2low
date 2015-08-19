@@ -24,7 +24,7 @@ class SQLQuery {
 		$this->password = $password;
 	}
 	
-	private function getPdo(){
+	public function getPdo(){
 		static $pdo;
 		
 		if ( ! $pdo){

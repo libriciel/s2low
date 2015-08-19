@@ -8,13 +8,20 @@ set_include_path( 	get_include_path() . PATH_SEPARATOR .
 					__DIR__ . "/../class/dia"
 					);
 					
-
-function __autoload($class_name) {
-    require_once($class_name . '.class.php');
+if ( ! function_exists('s2low_autoload')) {
+	function s2low_autoload($class_name) {
+		@ $result = include($class_name . '.class.php');
+		if ( ! $result ){
+			return false;
+		}
+		return true;
+	}
 }
 
+spl_autoload_register('s2low_autoload');
 
-require_once(dirname(__FILE__)."/../config/config.php");
+
+require_once(__DIR__."/../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
 require_once("util.php");

@@ -1,8 +1,6 @@
 <?php
 
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/class/X509Certificate.class.php');
+require_once(__DIR__."/../../../init/init.php");
 
 
 $x509Certificate = new X509Certificate();
@@ -67,13 +65,6 @@ if ($mod){
 } else {
 	$title = "Ajout d'un nouvel utilisateur";
 }
-/*$title = "Gestion des utilisateurs";
-if ($me->isAuthorityAdmin()) {
-	$title .= " de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
-} elseif ($me->isGroupAdmin()) {
-	$myGroup = new Group($me->get("authority_group_id"));
-	$title .= " du groupe «&nbsp;" . get_headers($myGroup->get("name")) . "&nbsp;»";
-}*/
 
 //WTF !
 $validate_form = $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
@@ -146,7 +137,15 @@ $roles_type_list = $me->get("roleTypes");
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $services_list = $serviceUser->getServiceUser($him->get('authority_id'));
-$userService_list = $serviceUser->getServiceFromUser($him->getId());
+if ($him->getId()){
+	$userService_list = $serviceUser->getServiceFromUser($him->getId());
+}
+
+$userSQL = new UserSQL($sqlQuery);
+$ident_method_id = $userSQL->getIdentificationMethod($him->getId());
+$ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
+
+$certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($him->get('certificate_rgs_2_etoiles'));
 
 
 $doc = new HTMLLayout();
@@ -173,7 +172,6 @@ ob_start();
 		enctype="multipart/form-data"  
 		onsubmit="javascript:return validateForm(<?php echo  $validate_form ?>)"
 		>
-		
 <?php if ($mod)  : ?>
 	<?php if ($new_id) : ?>
 		<input type="hidden" name="new_id" value="<?php echo $new_id ?>" />
@@ -186,7 +184,6 @@ ob_start();
   <input type="hidden" name="mode" value="create" />
 <?php endif;?>
 		
-<div class="alert alert-info"><span class="mandatory">*</span> uniquement nécessaire si deux utilisateurs ont le même certificat</div>		
 		
 <?php foreach(array('name'=>'Nom', 'givenname'=>"Prénom",'email'=>"Adresse électronique","telephone"=>"Téléphone") as $input_id => $input_label): ?>
 <div class="form-group">
@@ -197,22 +194,7 @@ ob_start();
 </div>	
 <?php endforeach;?>
 
-<?php $input_label = "Login"; $input_id="login"?>
-<div class="form-group">
-	<label class="control-label col-md-4"><?php echo $input_label?> <span class="mandatory">*</span> : </label>
-	<div class="col-md-6">
-		<input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
-	</div>
-</div>	
-	
-<?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (à nouveau)") as $input_id => $input_label): ?>
-<div class="form-group">
-	<label class="control-label col-md-4"><?php echo $input_label?> <span class="mandatory">*</span>: </label>
-	<div class="col-md-6">
-		<input class="form-control" type="password" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
-	</div>
-</div>	
-<?php endforeach;?>
+<h2>Certification de connexion</h2>
 
 <div class="form-group">
 	<label class="control-label col-md-4">Importer le certificat utilisateur (format PEM) :</label>
@@ -227,6 +209,52 @@ ob_start();
 		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
 	</div>
 <?php endif;?>
+
+<div style='clear:both'></div>
+<h2>Méthode d'identification</h2>
+
+<div class="form-group">
+	<label class="control-label col-md-4">Méthode actuelle : </label>
+	<div class="col-md-6">
+		<?php hecho($ident_method_libelle)?>
+	</div>
+</div>	
+
+
+<?php $input_label = "Login"; $input_id="login"?>
+<div class="form-group">
+	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
+	<div class="col-md-6">
+		<input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+	</div>
+</div>	
+	
+<?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (à nouveau)") as $input_id => $input_label): ?>
+<div class="form-group">
+	<label class="control-label col-md-4"><?php echo $input_label?>: </label>
+	<div class="col-md-6">
+		<input class="form-control" type="password" name="<?php echo $input_id ?>" value="" size="30" maxlength="60" />
+	</div>
+</div>	
+<?php endforeach;?>
+
+<div class="form-group">
+	<label class="control-label col-md-4">Certificat RGS** (format PEM) :</label>
+	<div class="col-md-6">
+		<?php if ($certificat_rgs_2_etoiles_info): ?>
+			<?php hecho($certificat_rgs_2_etoiles_info['name']) ?><br/>
+			Expire le : <?php echo $certificat_rgs_2_etoiles_info['expiration_date'] ?> - 
+			<a href='admin_user_delete_certificat_rgs_2_etoiles.php?id=<?php echo $him->getId()?>'>Supprimer</a>
+			
+			<br/><br/>
+		<?php endif;?>
+		
+		<input type="file" name="certificate_rgs_2_etoiles" />
+	</div>
+</div>
+
+
+<h2>Droits</h2>
 
 <div class="form-group">
 	<label class="control-label col-md-4">État :</label>
@@ -293,7 +321,7 @@ ob_start();
 	
 </form>
 
-<h2>Autre rôle de l'utilisateur</h2>
+<h2>Autre utilisateur partageant le même certificat</h2>
 <?php if (count($certitificate_id_list) > 1) : ?>
 	<div class="data_table">
 		<table class="data-table table table-striped">
@@ -331,7 +359,7 @@ ob_start();
 	</div>
 		
 	<?php if ($him->get('login')) : ?>
-		<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouveau rôle avec le même certificat </a>
+		<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouvel utilisateur avec le même certificat </a>
 		<?php if ($him->get('subject_dn')) : ?>
 			<?php echo $him->get('subject_dn') ?>	
 		<?php endif; ?>

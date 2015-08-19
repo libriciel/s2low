@@ -1,6 +1,6 @@
 <?php
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+
+require_once(__DIR__."/../../../init/init.php");
 
 $me = new User();
 
@@ -39,9 +39,12 @@ $role = Helpers::getVarFromPost("role", true);
 $authority_group_id = Helpers::getVarFromPost("authority_group_id", true);
 $certificate = $_FILES["certificate"];
 
+
 $login = Helpers::getVarFromPost("login", true);
 $password = Helpers::getVarFromPost("password", true);
 $password2 = Helpers::getVarFromPost("password2", true);
+
+$certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'];
 
 $new_id = Helpers::getVarFromPost("new_id", true);
 
@@ -86,6 +89,7 @@ $him->set("login",$login);
 if ($password){
 	$him->set("password",md5($password));
 }
+
 
 // Le groupe d'appartenance pour un administrateur de groupe
 if ($me->isSuper()) {
@@ -183,6 +187,12 @@ if (! $him->save()) {
   exitOrDisplayError($api, nl2br($msg), $location);
   
 } 
+
+
+if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {
+	$userSQL = new UserSQL($sqlQuery);	
+	$userSQL->saveCertificateRGS2Etoiles($him->getId(),file_get_contents($certificate_rgs_2_etoiles["tmp_name"]));
+}
 
 $msg = ($mod) ? "Modification" : "Création";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
