@@ -29,11 +29,9 @@ $myAuthority = new Authority($me->get("authority_id"));
 $mod = false;
 $him = new User();
 
-$modStr = "Ajout";
 if (isset($id) && ! empty($id)) {
   $him->setId($id);
-  if ($him->init()) {
-    $modStr = "Modification";
+  if ($him->init()) {    
     $mod = true;
   } else {
     $him = new User();
@@ -63,26 +61,19 @@ if (! $me->isSuper() && $mod) {
 }
 
 
-$doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
-
-$doc->setTitle("Tedetis : " . $modStr . " d'un utilisateur");
-
-$doc->openContainer();
-$doc->openSideBar();
-$doc->buildMenu($me);
-$doc->closeSideBar();
-$doc->openContent();
-
-
-$title = "Gestion des utilisateurs";
+if ($mod){
+	$title = "Modification de l'utilisateur « {$him->get('givenname')} {$him->get('name')} »";
+} else {
+	$title = "Ajout d'un nouvel utilisateur";
+}
+/*$title = "Gestion des utilisateurs";
 if ($me->isAuthorityAdmin()) {
 	$title .= " de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
 } elseif ($me->isGroupAdmin()) {
 	$myGroup = new Group($me->get("authority_group_id"));
 	$title .= " du groupe «&nbsp;" . get_headers($myGroup->get("name")) . "&nbsp;»";
-}
+}*/
 
 //WTF !
 $validate_form = $him->getValidationTrio('name', 'givenname', 'email', 'authority_id', 'role', 'status');
@@ -105,6 +96,8 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
+
+
 
 $roles_list = $me->get("roleTypes");
 if (! $me->isSuper()) {
@@ -146,12 +139,34 @@ if ($mod) {
 	}
 }
 
+$certitificate_id_list = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
+
+$status_type_list = $me->get("statusTypes");
+$roles_type_list = $me->get("roleTypes");
+
+$serviceUser = new ServiceUser(DatabasePool::getInstance());
+$services_list = $serviceUser->getServiceUser($him->get('authority_id'));
+$userService_list = $serviceUser->getServiceFromUser($him->getId());
+
+
+$doc = new HTMLLayout();
+
+$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+
+$doc->setTitle("$title | Tedetis");
+
+$doc->openContainer();
+$doc->openSideBar();
+$doc->buildMenu($me);
+$doc->closeSideBar();
+$doc->openContent();
+
 ob_start();
 ?>
 <h1><?php echo($title)?></h1>
 <p id="back-user-btn"><a class="btn btn-default" href="admin_users.php">Retour liste utilisateurs</a></p>
 
-<h2><?php echo $modStr ?> d'un utilisateur</h2>
+<h2>Informations générales</h2>
 <form class="form form-horizontal" 
 		action="admin_user_edit_handler.php" 
 		method="post" name="form" 
@@ -216,7 +231,7 @@ ob_start();
 <div class="form-group">
 	<label class="control-label col-md-4">État :</label>
 	<div class="col-md-6 ">
-	<?php echo $doc->getHTMLSelect("status", $me->get("statusTypes"), $him_status); ?>
+	<?php echo $doc->getHTMLSelect("status", $status_type_list, $him_status); ?>
 	</div>
 </div>
 
@@ -278,105 +293,96 @@ ob_start();
 	
 </form>
 
+<h2>Autre rôle de l'utilisateur</h2>
+<?php if (count($certitificate_id_list) > 1) : ?>
+	<div class="data_table">
+		<table class="data-table table table-striped">
+			<tr>
+				<th class="data">Login</th>
+				<th class="data">Nom</th>
+				<th class="data">Adresse électronique</th>
+				<th class="data">R&ocirc;le</th>
+				<th class="data">État</th>
+				<th class="data">Collectivit&eacute;</th>
+				<th class="data">Actions</th>
+			</tr>
+			<?php foreach($certitificate_id_list as $i => $id_other):
+					if ($id_other == $him->getId()){
+						continue;
+					}
+					$he = new User($id_other);
+					$he->init();
+					$he_authority = new Authority($he->get("authority_id"));  ?>
+	 				<tr class="alternate<?php echo (($i%2) + 1) ?>">
+						<td><?php echo $he->get("login") ?></td> 		
+						<td><?php echo $he->get("givenname") . " " . $he->get("name") ?></td>
+						<td><a href="mailto: <?php echo $he->get("email") ?>"><?php echo $he->get("email") ?></a></td>
+						<td><?php echo $roles_type_list[$he->get("role")] ?></td>
+						<td><?php echo $status_type_list[$he->get("status")] ?></td>
+						<td><a href="<?php echo WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id") ?>"><?php echo $he_authority->get("name")  ?></a></td>
+						<td>
+							<a href="<?php echo WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") ?>" class="icon">
+								<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
+							</a>
+						</td>
+					</tr>
+			<?php endforeach;?>
+		</table>
+	</div>
+		
+	<?php if ($him->get('login')) : ?>
+		<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouveau rôle avec le même certificat </a>
+		<?php if ($him->get('subject_dn')) : ?>
+			<?php echo $him->get('subject_dn') ?>	
+		<?php endif; ?>
+	<?php else: ?>
+		Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login
+	<?php endif;?>
+<?php endif;?>
+
+<?php if ($id && $services_list) : ?>
+	<h2>Services</h2>
+	<?php if ($userService_list) : ?>
+		Cet utilisateur fait partie des services 
+		<?php foreach($userService_list as $i => $s): ?>
+			<?php if ($i != 0): ?>
+				, 
+			<?php endif; ?>
+			<a href='../services/gestion-service-content.php?id=<?php echo $s['id'] ?>'><?php hecho($s['name']) ?></a>
+		<?php endforeach;?>
+		
+	<?php else:  ?>
+		Cet utilisateur ne fait partie d'aucun service
+	<?php endif ?>
+	<br/><br/>
+	
+	<form class="form form-horizontal" action='add-user-to-service.php' method='post'>
+		<input type='hidden' name='id_user' value='<?php echo $him->getId() ?>' />
+		<div class="form-group">
+			<label class="col-md-3 control-label"> 
+				Mettre dans le service : 
+			</label>
+			<div class="col-md-3">
+				<select class="form-control" name='id_service'>
+					<?php foreach($services_list as $s) : ?>
+						<option value='<?php echo $s['id'] ?>'><?php hecho($s['name']) ?></option>	
+					<?php endforeach; ?>
+				</select>
+			</div>\
+			<input class="btn btn-primary btn-sm col-md-2" type='submit' value='Ajouter'>
+			</div>
+	</form>
+	
+<?php endif;?>
+
+
 <?php 			
 $html = ob_get_contents();
 ob_end_clean();
 
-
-
-
-
-
-$ids_cert = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
-
-$html .= "<h2>Autre rôle de l'utilisateur</h2>";
-if (count($ids_cert) > 1){
-	$html .= "<div class=\"data_table\">\n";
-	$html .= "<table class=\"data-table table table-striped\">";
-	$html .= "<tr>\n";
-	$html .= " <th class=\"data\">Login</th>\n";
-	$html .= " <th class=\"data\">Nom</th>\n";
-	$html .= " <th class=\"data\">Adresse électronique</th>\n";
-	$html .= " <th class=\"data\">R&ocirc;le</th>\n";
-	$html .= " <th class=\"data\">État</th>\n";
-	$html .= " <th class=\"data\">Collectivit&eacute;</th>\n";
-	$html .= " <th class=\"data\">Actions</th>\n";
-	$html .= "</tr>\n";
-	
-	$statusList = $me->get("statusTypes");
-	$rolesList = $me->get("roleTypes");
-	
-	$i = 0;
-	
-	foreach($ids_cert as $id_other){
-		if ($id_other == $him->getId()){
-			continue;
-		}
-		$he = new User($id_other);
-		$he->init();
-		$he_authority = new Authority($he->get("authority_id"));
- 		$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
- 		$html .= " <td>" . $he->get("login") . "</td>\n"; 		
-  		$html .= " <td>" . $he->get("givenname") . " " . $he->get("name") . "</td>\n";
-  		$html .= " <td><a href=\"mailto:" .$he->get("email"). "\">" . $he->get("email") . "</a></td>\n";
-  		$html .= " <td>" . $rolesList[$he->get("role")] . "</td>\n";
-  		$html .= " <td>" . $statusList[$he->get("status")] . "</td>\n";
-  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id"). "\">" . $he_authority->get("name")  . "</a></td>\n";
-  		$html .= " <td><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
-  		$html .= "</tr>\n";
-  		 $i = ($i + 1) % 2;
-	}
-	$html .= '</table>';
-}
-
-if ($him->get('login')) {
-	$html .="<a href='admin_user_edit.php?new_id=".($id?$id:$new_id)."'>Créer un nouveau rôle avec le même certificat </a>";
-	if ($him->get('subject_dn')){
-		$html .= "(".get_hecho($him->get('subject_dn')) .")";	
-	}
-} else {
-	$html .= "Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login";
-}
-
-$serviceUser = new ServiceUser(DatabasePool::getInstance());
-$services = $serviceUser->getServiceUser($him->get('authority_id'));
-
-if ($id && $services){
-	$html .= "<h2>Services</h2>";
-	
-	$userService = $serviceUser->getServiceFromUser($him->getId());
-	
-	if ($userService) {
-		$html .= "Cet utilisateur fait partie des services : ";
-		foreach($userService as $i => $s){
-			if ($i != 0){
-				$html .= ", ";
-			}
-			$html .= "<a href='../services/gestion-service-content.php?id=".$s['id']."'>".$s['name']."</a>";
-		}
-		
-	} else {
-		$html .= "Cet utilisateur ne fait partie d'aucun service";
-	}
-	$html .="<br/><br/>";
-
-	$html .= "<form class=\"form form-horizontal\" action='add-user-to-service.php' method='post'>\n";
-	$html .= "<input type='hidden' name='id_user' value='".$him->getId()."'>\n";
-        $html .= "<div class=\"form-group\">\n";
-	$html .= "<label class=\"col-md-3 control-label\"> Mettre dans le service : </label>\n<div class=\"col-md-3\">\n<select class=\"form-control\" name='id_service'>";
-	foreach($services as $s){
-		$html .= "<option value='".$s['id']."'>" . $s['name'] . "</option>";	
-	}
-	$html .= "</select>\n</div>\n";
-	$html .= "<input class=\"btn btn-primary btn-sm col-md-2\" type='submit' value='Ajouter'>\n";
-	$html .= "</div>\n";
-	$html .= "</form>\n";
-}
-
-$html .= "</div>\n"; //Content...
-$html .= "</div>\n"; //Content...
-$html .= "</div>\n"; //Content...
 $doc->addBody($html);
+$doc->closeContent();
+$doc->closeContainer();
 
 $doc->buildFooter();
 
