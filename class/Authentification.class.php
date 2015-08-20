@@ -38,7 +38,7 @@ class Authentification {
 											$connexion_info['issuer_dn'],
 											$connexion_info['certificate_rgs_2_etoiles'], $connexion_info['login'], $connexion_info['password']);
 
-		if (count($id_list) > 1){
+		if (count($id_list) != 1){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
 		}
 		

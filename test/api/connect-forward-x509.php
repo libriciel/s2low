@@ -4,26 +4,25 @@ $url = "https://192.168.1.28:4443/modules/actes/actes_transac_get_status.php?api
 
 $custom_header_name = "org.s2low.forward-x509-identification";
 
+$certificat_authentification = "user1.pem";
+$private_key_authentification = "user1-key.pem";
 
 
-$cert = file_get_contents(__DIR__."/Eric_Pommateau_RGS_2_etoiles.pem");
-$der = pem2der($cert);
-
-$x509_forward = base64_encode($der);
+$certicat_identification_pem = file_get_contents("Eric_Pommateau_RGS_2_etoiles.pem");
+$certicat_identification_der = pem2der($certicat_identification_pem);
+$certicat_identification= base64_encode($certicat_identification_der);
 
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($ch, CURLOPT_SSLCERT,"user1.pem");
-curl_setopt($ch, CURLOPT_SSLKEY, "user1-key.pem");
-
+curl_setopt($ch, CURLOPT_SSLCERT, $certificat_authentification);
+curl_setopt($ch, CURLOPT_SSLKEY, $private_key_authentification);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 curl_setopt($ch, CURLOPT_VERBOSE, 1);
 curl_setopt($ch, CURLOPT_HEADER, 1);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array("$custom_header_name: ".$x509_forward));
-
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("$custom_header_name: $certicat_identification"));
 
 
 $data = curl_exec($ch);
