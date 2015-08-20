@@ -14,15 +14,25 @@ class UserSQL {
 	public function getInfo($id){
 		$sql = "SELECT * FROM users WHERE id=?";
 		$result = $this->sqlQuery->queryOne($sql,$id);
-		
+		if (! $result){
+			return array();
+		}
 		$result['pretty_name'] = $result['name']?"{$result['givenname']} {$result['name']}":$result['login'];
 		$result['role_str'] = $this->getRoleStr($result['role']);
+		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['subject_dn'], $result['issuer_dn']); 
 		return $result;
 	}
 	
+	public function getNbUserWithMyCertificate($subject_dn,$issuer_dn){
+		$sql = "SELECT count(*) as nb FROM users " .
+				" WHERE subject_dn= ? ".
+				" AND issuer_dn= ?";
+		return $this->sqlQuery->queryOne($sql,$subject_dn,$issuer_dn);
+	}	
+	
 	public function getInfoFromCertificateInfo(array $certificateInfo){
 		$sql = "SELECT * FROM users WHERE subject_dn=? AND issuer_dn=?";
-		return $this->sqlQuery->query($sql,$subject,$issuer);
+		return $this->sqlQuery->query($sql,$certificateInfo['subject'],$certificateInfo['issuer']);
 	}
 
 	public function getIdListFromCertificateInfo($subject,$issuer){
@@ -80,8 +90,32 @@ class UserSQL {
 		$this->sqlQuery->query($sql,$pem_certificate_content,$user_id);
 	}
 	
+
 	public function deleteCertificateRGS2Etoiles($user_id){
 		$this->saveCertificateRGS2Etoiles($user_id, "");
 	}
+	
+	public function getIdFromConnexionInfo($subject_dn,$issuer_dn,$certificate_rgs_2_etoile,$login,$password){
+		$sql = "SELECT id FROM users " .
+				" WHERE subject_dn=? AND issuer_dn=? " .
+				" AND certificate_rgs_2_etoiles = ? ";
+		
+		$data = array($subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
+		if ($login){
+			$sql .= " AND login=? AND password=?";
+			$data[] = $login;
+			$data[] = md5($password);
+		}
+		return $this->sqlQuery->queryOneCol($sql,$data);
+	}
+	
+	public function getListIdFromConnexion($subject_dn,$issuer_dn,$certificate_rgs_2_etoile){
+			$sql = "SELECT id FROM users " .
+				" WHERE subject_dn=? AND issuer_dn=? " .
+				" AND certificate_rgs_2_etoiles = ? ";
+			return $this->sqlQuery->queryOneCol($sql,$subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
+				
+	}
+	
 	
 }

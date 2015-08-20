@@ -6,4 +6,4 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 $me->logout();
 
-header("Location: " . WEBSITE_SSL);
+header("Location: " . WEBSITE_SSL."/login.php");

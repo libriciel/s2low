@@ -1,57 +1,6 @@
 <?php
-/*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à   la
- * dématérialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
- *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à   l'utilisation,  à   la modification et/ou au
- * développement et à   la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à   
- * manipuler et qui le réserve donc à   des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à   charger  et  tester  l'adéquation  du
- * logiciel à   leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à  l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
-/**
- * \class User User.class.php
- * \brief Classe pour la gestion des utilisateurs
- * \author Jérôme Schell <j.schell@alternancesoft.com>
- * \date 15.02.2006
- * 
- *
- * Cette classe fournit des méthodes de gestion des utilisateurs
- * enregistrement, suppression, génération des certificats
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *  JS   17.07.2006  Adaptation pour Tedetis
- */
 
+use Knp\Menu\Twig\Helper;
 require_once("DataObject.class.php");
 require_once("Authority.class.php");
 
@@ -121,6 +70,9 @@ class User extends DataObject {
 									 "GRANT" => "Concession"
 									 );
 
+  
+  private $is_loggued;
+  
   /**
    * \brief Constructeur d'un utilisateur
    * \param $id integer (optionnel) : numéro d'identifiant de l'utilisateur
@@ -165,6 +117,16 @@ class User extends DataObject {
 		
 		return $result;
 	}
+	
+	public function getNbUserWithMyCertificate(){
+		$sql = "SELECT count(*) as nb FROM users " . " WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "'".
+				" AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'";
+		$result = $this->db->select($sql);
+		
+		$row = $result->get_next_row();
+		return  $row['nb'];
+		
+	}
  
   /**
    * \brief Méthode d'authentification de l'utilisateur
@@ -175,59 +137,24 @@ class User extends DataObject {
    * et initialiser les données de l'utilisateur.
   */
 	public function authenticate() {
-	  	
-		$this->retrieveInfoFromClientCertificate();
-		
-		$ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
-		
-		
-		if (! $ids) {
-			return false;
-		}
-		
-	
-		if (count($ids) > 1 && ! $this->isLogged()){
-			header("Location: " . WEBSITE_SSL."/login.php");
-  			exit();
-		}
-		
-		if (count($ids) > 1){
-			$this->id = $_SESSION['id_login'];
-			$_SESSION['nb_id'] = count($ids);			
-		} else {		
-	    	$this->id = $ids[0];
-	    	$_SESSION['id_login'] = $this->id;
-	    	$_SESSION['nb_id'] = 1;			
-		}
-		$init = $this->init();
-		$is_active = $this->isActive();
-		
-		return $init && $is_active;
-	        
+		$authenfication = Authentification::getInstance();
+		$this->id = $authenfication->authenticate();
+	  	$this->is_loggued = true;
+	  	$init = $this->init();
+	  	$is_active = $this->isActive();
+	  	return $init && $is_active;
 	}
+	
 
 	public function isLogged(){
-		
-		if (isset($_SESSION['id_login']) && $_SESSION['id_login']){
-			return true;
-		}
-		/* 
-		 * TODO : Vérifier si on a un certificat RGS** passé dans les paramètres POST
-		 * Si oui, ce logué via cette méthode
-		 */
-		
-		if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])){
-			return $this->login($_SERVER['PHP_AUTH_USER'],md5($_SERVER['PHP_AUTH_PW']));
-		}
-		return false;
-		
+		return $this->is_loggued;
 	}
 	
 	
 	public function login($login,$password){
-		//TODO : Ne pas se connecter par cette méthode s'il y a un RGS** sur la ligne de l'user
 		
 		$this->retrieveInfoFromClientCertificate();
+		
 		$sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
                         " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";
 	 	$result = $this->db->select($sql);
@@ -310,6 +237,7 @@ class User extends DataObject {
 	$issuer_dn = str_replace('\'', '\\\'', $issuer_dn);
 
     $sql = "SELECT id FROM users WHERE subject_dn='" . $subject_dn . "' AND issuer_dn='" . $issuer_dn . "'";    
+    
     $result = $this->db->select($sql);
     
 	if ($result->isError() || $result->num_row() == 0){

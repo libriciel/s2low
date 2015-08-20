@@ -44,7 +44,7 @@ class MenuHTML  {
                     <div id="menu-header">
                         Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
                         Rôle <?php  echo $userInfo['role_str'] ?>
-			<?php if ($_SESSION['nb_id'] > 1 ) : ?>
+			<?php if ($userInfo['nb_user_with_my_certificate'] > 1 ) : ?>
 			<br/><a href='<?php echo WEBSITE_SSL ?>/logout.php'>déconnexion</a>
 			<?php endif;?>
                     </div>

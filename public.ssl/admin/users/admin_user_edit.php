@@ -145,7 +145,19 @@ $userSQL = new UserSQL($sqlQuery);
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId());
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
 
-$certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($him->get('certificate_rgs_2_etoiles'));
+
+$certificate_rgs_2_etoiles = $him->get('certificate_rgs_2_etoiles');
+
+/*$certificate_rgs_2_etoiles = der2pem(base64_decode($him->get('certificate_rgs_2_etoiles')));
+
+
+function der2pem($der_data) {
+	$pem = chunk_split(base64_encode($der_data), 64, "\n");
+	$pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
+	return $pem;
+}*/
+
+$certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_etoiles);
 
 
 $doc = new HTMLLayout();

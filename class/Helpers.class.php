@@ -135,12 +135,18 @@ class Helpers {
 	} else {
 	  if ($redirect) {
 		$_SESSION["error"] = nl2br($msg);
+		if (defined("TESTING_ENVIRONNEMENT")){
+			throw new Exception("Message : $msg");
+		}
 		header("Location: " . $redirect);
 	  } else {
 		echo $msg . "\n";
 	  }
 	}
-
+	if (defined("TESTING_ENVIRONNEMENT")){
+		throw new Exception($msg);
+	}
+	
 	exit();
   }
 

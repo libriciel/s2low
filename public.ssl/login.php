@@ -12,18 +12,9 @@ if (! $allUser) {
 	sortir("Certificat invalide");
 }
 
-if (count($allUser) == 1){
-	$connexion = new Connexion();
-	$connexion->connect($allUser[0]['id']);
-	header("Location: index.php");
-	exit;
-}
-
 $doc = new HTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);
-
-//$doc->buildMenu($me);
 
 $html = "<div id=\"content\" class=\"container\"><div class=\"row\">";
 $html .= " <div class=\"col-md-12\" role=\"main\">\n";
@@ -59,5 +50,3 @@ $doc->addBody($html);
 $doc->buildFooter();
 
 $doc->display();
-//test
-?>

@@ -16,6 +16,17 @@ class DatabasePool {
    *
    */
   public static function getInstance($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
+  	
+  	//Putain de singleton utilisé n'importe où...
+  	//On est donc contraint de regarder si on est en test pour ce brancher sur la base de test
+  	if (defined("TESTING_ENVIRONNEMENT")){
+  		$host = DB_HOST_TEST;
+  		$user = DB_USER_TEST;
+  		$password = DB_PASSWORD_TEST;
+  		$base = DB_DATABASE_TEST;
+  	}
+  	
+  	
     static $pool = array();
 
     // On cherche si l'on a une instance correspondant aux paramètres spécifiés

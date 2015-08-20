@@ -54,7 +54,6 @@ $mod = false;
 
 if ($api && ! $authority_id){
 	exitOrDisplayError($api,"authority_id est obligatoire",WEBSITE_SSL . "/admin/users/admin_users.php");
-	
 }
 
 if (isset($id) && ! empty($id)) {
@@ -192,7 +191,7 @@ if (! $him->save()) {
 if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {
 	$userSQL = new UserSQL($sqlQuery);	
 	$userSQL->saveCertificateRGS2Etoiles($him->getId(),file_get_contents($certificate_rgs_2_etoiles["tmp_name"]));
-}
+} 
 
 $msg = ($mod) ? "Modification" : "Création";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
