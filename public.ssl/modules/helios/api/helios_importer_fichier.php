@@ -39,7 +39,6 @@ $root=$doc->createElement("import");
 	$root->appendChild($idElement);
 	$root->appendChild($resultatElement);
 	$root->appendChild($messageElement);
-	$xmlFile=HELIOS_FILES_ROOT."/temp/import.xml";
 	$ok = 0;
 	$ko = 0;
 
@@ -129,8 +128,12 @@ try{
 }
 
 $messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));	
+
+$xmlFile=HELIOS_FILES_ROOT."/temp/import-".uniqid().".xml";
 $doc->save($xmlFile); 
 
-if (!Helpers::sendFileToBrowser($xmlFile, basename($xmlFile), "text/xml")) {
+if (!Helpers::sendFileToBrowser($xmlFile, "import.xml", "text/xml")) {
 	echo "KO impossible d'envoyer le fichier XML"; 
 }
+unlink($xmlFile);
+
