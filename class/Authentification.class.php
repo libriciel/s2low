@@ -25,9 +25,10 @@ class Authentification {
 			$this->verifConnexion($this->session['id_login']);
 			return $this->session['id_login'];
 		} else {
-			$this->session['id_login'] =$this->detectConnexionID();
-			 
+			$this->session['id_login'] = $this->detectConnexionID();
+			$_SESSION['id_login'] = $this->session['id_login'];
 		}
+		
 		return $this->session['id_login'];
 	}
 	
@@ -47,7 +48,11 @@ class Authentification {
 	
 	private function verifConnexion($user_id){
 		$connexion_info = $this->getAllConnexionInfo();
+		if (! $connexion_info){
+			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
+		}
 		$list_id = $this->userSQL->getListIdFromConnexion($connexion_info['subject_dn'],$connexion_info['issuer_dn'],$connexion_info['certificate_rgs_2_etoiles']);
+		
 		if (! in_array($user_id,$list_id)){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
 		}
