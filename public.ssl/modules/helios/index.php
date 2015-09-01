@@ -178,8 +178,18 @@ $doc->closeSideBar();
 
 $doc->openContent();
 
+
+ob_start();
+?>
+	<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+	<script type="text/javascript" src="/javascript/zselect.js"></script>   
+	<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
+<?php 
+$html = ob_get_contents();
+ob_end_clean();
+
 //deja HELIOS!!!!
-$html = "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
+$html .= "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
 
   $html .= "<div id=\"actions_area\">\n";
   $html .= "<h2>Actions</h2>\n";
@@ -310,7 +320,26 @@ if ($me->isGroupAdminOrSuper()) {
   $html .= "<div class=\"form-group\"><label for=\"authority\" class=\"col-md-3 control-label\">Collectivité</label>\n";
   $cond = " ORDER BY authorities.name ASC";
   
-  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", $me->getAllPossibleAuthority(), $fauthority) . "</div>\n</div>\n";
+  $html .= "<div class=\"col-md-3\">" ; 
+  
+
+  ob_start(); ?>
+	<select class="form-control zselect_authorities" name="authority">
+		<option value="">Toutes</option>
+		<?php foreach ( $me->getAllPossibleAuthority() as $key => $val) : ?>
+			<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
+				<?php hecho($val)?> 
+			</option>
+		<?php endforeach; ?>
+	</select>
+  <?php 
+  $html .= ob_get_contents();
+  ob_end_clean();
+  
+  
+  
+  
+  $html.="</div>\n</div>\n";
 
 }
 $html .= "<div class=\"form-group\">";
@@ -400,7 +429,7 @@ $sel_ok = array();
     if (isset($sel_ok[13])){
     ob_start();
     ?>	 
-    		<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+    		
     
 			       		<form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_batch_sign.php" method="post">
                    			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">

@@ -368,12 +368,14 @@ class HTMLLayout extends Layout {
    * \param $selectedValue mixed : valeur actuelle du champ pour préselection
    * \param $extraAttributes chaîne : chaîne de caractères contenant des attribut HTML à ajouter au select
    * \return Le code HTML du champ select
+   * @deprecated 
   */
   public function getHTMLSelect($name, $data, $selectedValue, $extraAttributes = "",$onChange=null) {
-  	if ($onChange==null)
+  	if ($onChange==null) {
     	$html = "<select class=\"form-control\" name=\"" . $name . "\"" . $extraAttributes . ">\n";
-    else 
+  	} else { 
     	$html = '<select id="'.$name.'" class="form-control" name="' . $name . "\"" . $extraAttributes . ' onchange="'.$onChange.'">\n';
+  	}
     $html .= " <option value=\"\">Choisissez</option>\n";
 
     foreach ($data as $key => $val) {

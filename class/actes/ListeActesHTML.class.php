@@ -48,6 +48,8 @@ class ListeActesHTML {
 		$this->displayForm();
 		?>
 		<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+		<script type="text/javascript" src="/javascript/zselect.js"></script>   
+		<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
 		
 		<h2>
                     Liste des enveloppes de transactions
@@ -65,9 +67,9 @@ class ListeActesHTML {
 		}
 	}
 	
-	public function getHTMLSelect($name, $data, $selectedValue) {
+	public function getHTMLSelect($name, $data, $selectedValue,$css_class='') {
 		?>
-		<select name="<?php echo $name ?>" id="<?php echo $name ?>" class="form-control">
+		<select name="<?php echo $name ?>" id="<?php echo $name ?>" class="form-control <?php echo $css_class?>">
 			<option value="">Choisissez</option>	
 	    	<?php foreach ($data as $key => $val) : ?>
 				<option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
@@ -147,7 +149,7 @@ class ListeActesHTML {
             <div class="form-group">
                 <label for="authority" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
-                    <?php $this->getHTMLSelect("authority",$this->allCollectivite, $this->filtreAuthority) ?>
+                    <?php $this->getHTMLSelect("authority",$this->allCollectivite, $this->filtreAuthority,"zselect_authorities") ?>
                 </div>
             </div>
             <?php endif;?>

@@ -1,7 +1,5 @@
 <?php
-
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once(__DIR__."/../../../init/init.php");
 
 $me = new User();
 
@@ -29,33 +27,33 @@ $myAuthority = new Authority($me->get("authority_id"));
 $filter = array();
 // Construction chaîne de filtrage
 if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et tous les groupes
-  if (isset($fauthority) && is_numeric($fauthority)) {
-	$filter[] .= "users.authority_id=" . addslashes($fauthority);
-  }
+	if (isset($fauthority) && is_numeric($fauthority)) {
+		$filter[] .= "users.authority_id=" . addslashes($fauthority);
+	}
 
-  if (isset($fgroup) && is_numeric($fgroup)) {
-	$filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
-  }
+	if (isset($fgroup) && is_numeric($fgroup)) {
+		$filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
+	}
 } elseif ($me->isGroupAdmin()) {
   // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
   if (isset($fauthority) && strlen($fauthority) > 0) {
-	$auth = new Authority($fauthority);
-	if ($auth->isInGroup($me->get("authority_group_id"))) {
-	  $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
+		$auth = new Authority($fauthority);
+		if ($auth->isInGroup($me->get("authority_group_id"))) {
+			$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
+		}
 	}
-  }
-  $filter[] .= "authorities.authority_group_id='" . $me->get("authority_group_id") . "'";
+	$filter[] .= "authorities.authority_group_id='" . $me->get("authority_group_id") . "'";
 } elseif ($me->isAuthorityAdmin()) {
-  // Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
-  $filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
+  	//Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
+	$filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 }
 
 if (isset($frole) && strlen($frole) > 0) {
-  $filter[] .= "users.role='" . addslashes($frole) . "'";
+	$filter[] .= "users.role='" . addslashes($frole) . "'";
 }
 
 if (isset($fname) && strlen($fname) > 0) {
-  $filter[] .= "users.name ILIKE '%" . addslashes($fname) . "%'";
+	$filter[] .= "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
 $where = "";
@@ -75,6 +73,27 @@ if ($api){
 	$jsonOutput->retrictAndDisplay($users,array('id','name','givenname','email','role','status','authority_id','authority_name'));
 	exit;
 }
+
+if ($me->isAuthorityAdmin()) {
+	$title = "Gestion des utilisateurs de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+} elseif ($me->isGroupAdmin()) {
+	$myGroup = new Group($me->get("authority_group_id"));
+	$title .= "Gestion des utilisateurs du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+} else {
+	$title = "Gestion des utilisateurs";
+}
+
+
+if ($me->isGroupAdminOrSuper()) {
+	if ($me->isGroupAdmin()) {
+		$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
+	} else {
+		$cond = " ORDER BY authorities.name ASC";
+	}
+
+ 	$authority_id_list = Authority::getAuthoritiesIdName($cond) ;
+}
+
 /*****************/
 
 $doc = new HTMLLayout();
@@ -88,90 +107,98 @@ $doc->buildPager($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion des utilisateurs";
+ob_start();?>
 
-if ($me->isAuthorityAdmin()) {
-  $html .= " de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
-} elseif ($me->isGroupAdmin()) {
-  $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
-}
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+<script type="text/javascript" src="/javascript/zselect.js"></script>   
+<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
 
-$html .= "</h1>\n";
-$html .= "<div id=\"actions-area\">\n";
-$html .= "<h2>Actions</h2>";
-$html .= "<a href=\"admin_user_edit.php\" class=\"btn btn-primary\">Ajouter un utilisateur</a>\n";
-$html .= "</div>\n";
-$html .= "<div id=\"filtering-area\">\n";
-$html .= "<h2>Filtrage</h2>\n";
-$html .= "<form action=\"admin_users.php\" method=\"get\" class=\"form-horizontal\"> \n";
-$html .= "<div class=\"form-group\">\n";
-$html .= "<label for=\"role\" class=\"col-md-3 control-label\">Le rôle est</label>\n";
-$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) . "</div>\n";
-$html .= "<label for=\"name\" class=\"col-md-3 control-label\">Le nom contient</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"name\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
-if (strlen($fname) > 0) {
-  $html .= " value=\"" . get_hecho($fname) . "\"";
-}
+<h1><?php hecho($title);?></h1>
+<div id="actions-area">
+	<h2>Actions</h2>
+	<a href="admin_user_edit.php" class="btn btn-primary">Ajouter un utilisateur</a>
+</div>
+<div id="filtering-area">
+	<h2>Filtrage</h2>
+		<form action="admin_users.php" method="get" class="form-horizontal">
+		<div class="form-group">
+			<label for="role" class="col-md-3 control-label">Le rôle est</label>
+			<div class="col-md-3"><?php echo $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) ?></div>
+			<label for="name" class="col-md-3 control-label">Le nom contient</label>
+			<div class="col-md-3">
+				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (strlen($fname) > 0)?get_hecho($fname):"" ?>' />
+			</div>
+		</div>
+		
+		<?php if ($me->isGroupAdminOrSuper()) : ?>
+			<div class="form-group">
+				<label for="authority" class="col-md-3 control-label">Collectivité</label>
+				<div class="col-md-3">
+					<select class="form-control zselect_authorities" name="authority">
+    					<option value="">Toutes</option>
+						<?php foreach ($authority_id_list as $key => $val) : ?>
+      						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
+      							<?php hecho($val)?> 
+      						</option>
+    					<?php endforeach; ?>
+    				</select>
+				</div>
+			</div>
+		<?php endif;?>
+	
+		<?php if ($me->isSuper()): ?>
+			<div class="form-group">
+				<label for="group" class="col-md-3 control-label">Groupe</label>
+				<div class="col-md-3"><?php echo $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) ?></div>
+			</div>
+		<?php endif; ?>
+		
+		<div class="form-group">
+			<button class="btn btn-default col-md-offset-3 col-md-3" type="submit">Filtrer</button>
+		</div>
+	</form>
+</div>
 
-$html .= " /></div>\n";
-$html .= "</div>\n";
-
-if ($me->isGroupAdminOrSuper()) {
-  if ($me->isGroupAdmin()) {
-	$cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id")." ORDER BY authorities.name ASC";
-	$colspan = 2;
-  } else {
-	$cond = " ORDER BY authorities.name ASC";
-  }
-  $html .= "<div class=\"form-group\">\n";
-  $html .= "<label for=\"authority\" class=\"col-md-3 control-label\">Collectivité</label>\n";
-  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", Authority::getAuthoritiesIdName($cond), $fauthority) . "</div>\n";
-  $html .= "</div>\n";
-}
-
-if ($me->isSuper()) {
-  $html .= "<div class=\"form-group\">\n";
-  $html .= "<label for=\"group\" class=\"col-md-3 control-label\">Groupe</label>\n";
-  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("group", Group::getGroupsIdName(), $fgroup) . "</div>\n";
-  $html .= "</div>\n";
-}
-$html .= "<div class=\"form-group\">\n";
-$html .= "<button class=\"btn btn-default col-md-offset-3 col-md-3\" type=\"submit\">Filtrer</button>\n";
-$html .= "</div>\n";
-$html .= "</form>\n";
-$html .= "</div>\n";
-$html .= "<h2>Liste des utilisateurs</h2>\n";
-$html .= "<div id=\"user-list\">\n";
-$html .= "<table class=\"data-table table table-striped\" summary=\"\">";
-$html .= "<thead>\n";
-$html .= "<tr>\n";
-$html .= " <th id=\"name\">Nom</th>\n";
-$html .= " <th id=\"email\">Adresse électronique</th>\n";
-$html .= " <th id=\"role\">R&ocirc;le</th>\n";
-$html .= " <th id=\"status\">Etat</th>\n";
-$html .= " <th id=\"authority\">Collectivit&eacute;</th>\n";
-$html .= " <th id=\"actions\">Actions</th>\n";
-$html .= "</tr>\n";
-$html .= "</thead>\n";
-$html .= "<tbody>\n";
-
-foreach ($users as $i => $user) {
-  $html .= "<tr>\n";
-  $html .= " <td headers=\"name\">" . $user["name"] . " " . $user["givenname"] . "</td>\n";
-  $html .= " <td headers=\"email\"><a href=\"mailto:" . $user["email"] . "\">" . $user["email"] . "</a></td>\n";
-  $html .= " <td headers=\"role\">" . $rolesList[$user["role"]] . "</td>\n";
-  $html .= " <td headers=\"status\">" . $statusList[$user["status"]] . "</td>\n";
-  $html .= " <td headers=\"authority\"><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user["authority_id"] . "\">" . $user["authority_name"] . "</a></td>\n";
-  $html .= " <td headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $user["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
-  $html .= "</tr>\n";
-}
-
-$html .= "</tbody>\n";
-$html .= "</table>\n";
-$html .= "</div>\n";
-
+<h2>Liste des utilisateurs</h2>
+<div id="user-list">
+	<table class="data-table table table-striped" summary="">
+	<thead>
+	<tr>
+		<th id="name">Nom</th>
+		<th id="email">Adresse électronique</th>
+		<th id="role">R&ocirc;le</th>
+		<th id="status">Etat</th>
+		<th id="authority">Collectivit&eacute;</th>
+		<th id="actions">Actions</th>
+	</tr>
+	</thead>
+	<tbody>
+	
+	<?php foreach ($users as $i => $user) : ?>
+	<tr>
+		<td headers="name"><?php hecho($user["name"]) ?> <?php hecho($user["givenname"]) ?></td>
+		<td headers="email">
+			<a href="mailto:<?php hecho($user["email"]) ?>"><?php hecho($user["email"]) ?></a>
+		</td>
+  		<td headers="role"><?php echo $rolesList[$user["role"]]  ?></td>
+  		<td headers="status"><?php echo $statusList[$user["status"]] ?></td>
+  		<td headers="authority">
+  			<a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_edit.php?id=<?php echo $user["authority_id"]  ?>"><?php hecho($user["authority_name"])?></a>
+  		</td>
+  		<td headers="actions">
+  			<a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_edit.php?id=<?php echo $user["id"] ?>" class="icon"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" /></a>
+  		</td>
+  	</tr>
+	<?php endforeach; ?>
+	</tbody>
+	</table>
+</div>
+	
+	
+<?php 
+$html = ob_get_contents();
+ob_end_clean();
 
 $doc->addBody($html);
 
