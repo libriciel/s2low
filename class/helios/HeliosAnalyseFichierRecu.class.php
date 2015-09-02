@@ -104,11 +104,7 @@ class HeliosAnalyseFichierRecu {
 		if (! rename($file_path,$helios_response_root."/".$basename)){
 			throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
 		}
-		
-		
 	}
-	
-	
 	
 	private function retrieveTransaction(SimpleXMLElement $xml) {
 		$nom_fic = strval($xml->Enveloppe->Parametres->NomFic['V']);
@@ -128,7 +124,7 @@ class HeliosAnalyseFichierRecu {
 		
 		echo $this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 		
-		if (count($xml->ACQUIT)){
+		if (count($xml->ACQUIT) == 0){
 			$message = "Transaction $helios_transaction_id acceptee";
 			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
 		} else {
