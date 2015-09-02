@@ -3,7 +3,7 @@
 
 $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
-$min_exec_time = 60;
+$min_exec_time = 10;
 
 require_once (__DIR__."/../config/config.php");
 require_once (__DIR__."/../class/FTP.class.php");
