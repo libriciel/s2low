@@ -187,11 +187,13 @@ if (! $him->save()) {
   
 } 
 
+$userSQL = new UserSQL($sqlQuery);
 
-if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {
-	$userSQL = new UserSQL($sqlQuery);	
+if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {		
 	$userSQL->saveCertificateRGS2Etoiles($him->getId(),file_get_contents($certificate_rgs_2_etoiles["tmp_name"]));
-} 
+} else {
+	$userSQL->updateCertificatRGS2EtoilesIfNull($him->getId());
+}
 
 $msg = ($mod) ? "Modification" : "Création";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
