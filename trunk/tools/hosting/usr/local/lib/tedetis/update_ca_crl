@@ -1,0 +1,56 @@
+#!/bin/bash
+
+PATH=/bin:/usr/bin:/usr/local/bin
+
+TMP="/tmp"
+
+if [ -z $1 ]; then
+	echo "Usage: $0 rep_crls"
+	exit 1
+fi
+
+crldir=$1
+
+if [ ! -d $crldir ]; then
+	echo "Répertoire indiqué incorrect"
+	exit 2
+fi
+
+crlurlsdir=$crldir/crl_urls
+
+for file in $crlurlsdir/*; do
+	NAME=""
+	URL=""
+	if [ -f $file ]; then
+		source $file
+	
+		if [ -z $NAME -o -z $URL ]; then
+			echo $file " : fichier incorrect"
+		else
+			tmpdest=$TMP"/"$NAME
+			dest=$crldir"/"$NAME".crl"
+			/usr/bin/wget -q -O "$tmpdest" $URL
+	
+			if [ $? -eq 0 ]; then
+				if (/usr/bin/file "$tmpdest" | grep 'data' >/dev/null 2>&1); then
+					inform="DER"
+				else
+					inform="PEM"
+				fi
+	
+				# Suppression fichier déjà existant
+				rm -f $dest
+				# Mise en place du fichier au format PEM
+				/usr/bin/openssl crl -inform $inform -in "$tmpdest" -outform PEM -out "$dest"
+	
+				# Création du lien hashé
+				cd $crldir
+				hash=`/usr/bin/openssl crl -hash -noout -in "$dest"`.r0
+				rm -f $crldir"/"$hash
+				ln -s "$NAME.crl" $hash
+			else
+				echo $NAME " : échec de la récupération de la CRL"
+			fi
+		fi
+	fi
+done

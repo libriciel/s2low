@@ -1,0 +1,89 @@
+function: 
+	version: 
+		description: Version de la plateforme
+		comment: Permet d'obtenir la version de la plateforme. 
+		soap: true
+		output:
+			version:	
+				comment: Numéro de version commerciale
+			revision: 
+				comment: Numéro de révision du dépôt de source officiel de S²low (https://adullact.net/scm/viewvc.php/?root=s2low)
+			version_complete:
+				comment: Version affiché sur la l'interface web de la plateforme 
+	
+	list-dia: 
+		description: Listes des DIA
+		soap: true		
+		input:
+			status:
+				comment: "status de la DIA 1 = Recu 2 = Recupere 3 = AE Recu 4 = AE Envoyé"
+				type: "xsd:int"
+				
+		output:
+			id:
+				type: "xsd:int"
+				minOccurs: 0
+				maxOccurs: unbounded
+				comment: Identifiant unique de la DIA sur S²low
+		
+	get-dia:
+		description: Réception d'une DIA
+		soap: true
+		input:
+			id:
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
+				
+		output:
+			date_reception: 
+				comment: Date de réception de la DIA sur S²low
+			status:
+				comment: status de la transaction
+				type: "xsd:int"
+			status_txt:
+				comment: libelé du status
+			filename:
+				comment: le nom du fichier
+			filesize:
+				comment: Taille du fichier contenant la DIA en octet
+				type: "xsd:int"
+			file_content:
+				comment: le contenu du fichier
+				type: "xsd:anyType"
+	
+
+	
+	setAccuseNonPreemption: 
+		description: Envoie de l'accusé de non préemption
+		soap: true
+		input:
+			id: 
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
+			file_name:
+				comment: le nom du fichier
+			file_content:
+				comment: le contenu du fichier
+				 type: "xsd:anyType"
+		output:
+			message: 
+				comment: "Message complémentaire"
+	
+	set-erreur:
+		description: Envoie d'une erreur sur une DIA
+		soap: true
+		input:
+			id: 
+				required: true
+				comment: Identifiant unique de la DIA sur S²low
+				type: "xsd:int"
+			message:
+				comment: Message complémentaire
+		output:
+			message: 
+				comment: "Message complémentaire"
+	
+	
+	

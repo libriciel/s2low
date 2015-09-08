@@ -1,0 +1,1 @@
+ALTER TABLE users ALTER COLUMN cert_serial TYPE text;

@@ -1,0 +1,23 @@
+<?php 
+
+function get_url(array $params) {		
+	$args = $_GET;
+	foreach ($params as $param => $value) {
+		$args[$param] = $value;
+	}
+	$url = $_SERVER["PHP_SELF"] . "?" . http_build_query($args);
+	return $url;
+}
+	
+
+
+function utf8_encode_array($array){
+	if (! is_array($array)){
+		return utf8_encode($array);
+	}
+	$result = array();
+	foreach ($array as $cle => $value) {
+		$result[utf8_encode($cle)] = utf8_encode_array($value);
+	}
+	return $result;
+}
