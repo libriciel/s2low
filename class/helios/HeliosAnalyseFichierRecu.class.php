@@ -165,7 +165,7 @@ class HeliosAnalyseFichierRecu {
 		
 		$authority_id = $this->authoritySQL->getIdBySIREN($siren);
 		if (! $authority_id){
-			throw new Exception("La collectivité "+siren+ " n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
+			throw new Exception("La collectivité $siren n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
 		}
 		
 		$this->heliosRetourSQL->create($siren, $basename);
