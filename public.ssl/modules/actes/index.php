@@ -65,8 +65,11 @@ $transactionSQL->setPageNumber($page_number,$taille_page);
 
 $envelopes = $transactionSQL->getAll();
 
-
-$nb_transactions = $transactionSQL->getNbTransaction();
+if ($droit->isSuperAdmin($userInfo)){
+	$nb_transactions = ($page_number+10)*$taille_page;
+} else {
+	$nb_transactions = $transactionSQL->getNbTransaction();
+}
 
 $transTypes = $transactionSQL->getTypes();
 $transTypes["all"] = "Tous les types";
