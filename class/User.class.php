@@ -47,9 +47,9 @@ class User extends DataObject {
 						 "cert_not_before" => array( "descr" => "Date d'émission du certificat", "type" => "isDate", "mandatory" => true),
 						 "cert_not_after" => array( "descr" => "Date d'expiration du certificat", "type" => "isDate", "mandatory" => true),
 						 "cert_serial" => array( "descr" => "Numéro de série du certificat", "type" => "isDate", "mandatory" => true),
-  							"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),	
-  							"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
-  							"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
+  						"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),	
+  						"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
+  						"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
   
 						 );
 

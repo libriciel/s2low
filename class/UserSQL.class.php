@@ -95,6 +95,14 @@ class UserSQL {
 		$this->saveCertificateRGS2Etoiles($user_id, "");
 	}
 	
+	//Hack affreux pour prévenir les NULL introduit par le DataObject !
+	public function updateCertificatRGS2EtoilesIfNull($user_id){
+		$sql = "SELECT * FROM users WHERE id=? AND certificate_rgs_2_etoiles IS NULL";
+		if ($this->sqlQuery->queryOne($sql,$user_id)){
+			$this->saveCertificateRGS2Etoiles($user_id, '');
+		}
+	}
+	
 	public function getIdFromConnexionInfo($subject_dn,$issuer_dn,$certificate_rgs_2_etoile,$login,$password){
 		$sql = "SELECT id FROM users " .
 				" WHERE subject_dn=? AND issuer_dn=? " .

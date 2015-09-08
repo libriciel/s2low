@@ -206,7 +206,7 @@ ob_start();
 </div>	
 <?php endforeach;?>
 
-<h2>Certification de connexion</h2>
+<h2>Certificat de connexion</h2>
 
 <div class="form-group">
 	<label class="control-label col-md-4">Importer le certificat utilisateur (format PEM) :</label>
@@ -224,6 +224,8 @@ ob_start();
 
 <div style='clear:both'></div>
 <h2>Méthode d'identification</h2>
+<em>Uniquement en cas de partage du certificat de connexion (remplir login/mot de passe <strong>ou</strong> certificat RGS**)</em>
+<br/><br/>
 
 <div class="form-group">
 	<label class="control-label col-md-4">Méthode actuelle : </label>
@@ -231,7 +233,6 @@ ob_start();
 		<?php hecho($ident_method_libelle)?>
 	</div>
 </div>	
-
 
 <?php $input_label = "Login"; $input_id="login"?>
 <div class="form-group">
@@ -249,6 +250,7 @@ ob_start();
 	</div>
 </div>	
 <?php endforeach;?>
+
 
 <div class="form-group">
 	<label class="control-label col-md-4">Certificat RGS** (format PEM) :</label>
