@@ -22,6 +22,10 @@ spl_autoload_register('s2low_autoload');
 
 
 require_once(__DIR__."/../config/config.php");
+
+//A cause du chargement d'objet à partir de la session ... BEURK !
+require_once(SITEROOT."/public.ssl/modules/mail/lib/Annuaire.class.php");
+
 require_once(SITEROOT . '/class/include.class.php');
 
 require_once("util.php");
