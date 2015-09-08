@@ -74,6 +74,18 @@ class HeliosAnalyseFichierRecu {
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
 		
+		$xml = simplexml_load_file($file_path);
+		if (! $xml){
+			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
+		}
+		$root_name = strtolower($xml->getName());
+		
+		if ($root_name == 'pes_retour'){
+			$schema_location = $this->schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd"; 
+		} else {
+			$schema_location = $this->schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome.xsd";
+		}
+		
 		libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
 		$dom->load($file_path);
@@ -84,20 +96,19 @@ class HeliosAnalyseFichierRecu {
 		if ($errors){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
 		}
-		$dom->schemaValidate($this->schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome.xsd");
+		$dom->schemaValidate($schema_location);
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
 		
 		if ($errors){
+			print_r($errors);
 			throw new Exception("Le fichier $basename n'est pas valide (fichier ignoré)");
 		}
 		
-		$xml = simplexml_load_file($file_path);
-		$root_name = strtolower($xml->getName());
 		switch($root_name){
 			case 'pes_acquit': $this->traitementAck($basename,$xml); break;
 			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
-			case 'pes_retour' : $this->traitementRetour($basename,$xml); break;
+			case 'pes_retour' : $this->traitementPESRetour($basename,$xml); break;
 			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
 		}
 		
@@ -149,6 +160,7 @@ class HeliosAnalyseFichierRecu {
 	}
 	
 	private function traitementPESRetour($basename,SimpleXMLElement $xml){
+		
 		$siren = strval($xml->EnTetePES->IdColl['V']);
 		
 		$authority_id = $this->authoritySQL->getIdBySIREN($siren);
