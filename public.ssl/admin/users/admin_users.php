@@ -75,10 +75,10 @@ if ($api){
 }
 
 if ($me->isAuthorityAdmin()) {
-	$title = "Gestion des utilisateurs de la collectivité «&nbsp;" . $myAuthority->get("name") . "&nbsp;»";
+	$title = "Gestion des utilisateurs de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
 } elseif ($me->isGroupAdmin()) {
 	$myGroup = new Group($me->get("authority_group_id"));
-	$title .= "Gestion des utilisateurs du groupe «&nbsp;" . $myGroup->get("name") . "&nbsp;»";
+	$title .= "Gestion des utilisateurs du groupe «&nbsp;" . get_hecho($myGroup->get("name")) . "&nbsp;»";
 } else {
 	$title = "Gestion des utilisateurs";
 }
@@ -114,7 +114,7 @@ ob_start();?>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
 
 
-<h1><?php hecho($title);?></h1>
+<h1><?php echo $title; ?></h1>
 <div id="actions-area">
 	<h2>Actions</h2>
 	<a href="admin_user_edit.php" class="btn btn-primary">Ajouter un utilisateur</a>
