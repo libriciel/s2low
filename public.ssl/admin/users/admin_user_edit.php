@@ -36,6 +36,8 @@ if (isset($id) && ! empty($id)) {
   }
 }
 
+
+
 $new_id = Helpers::getVarFromGet('new_id'); 
 if ($new_id){
 	$him->setId($new_id);
@@ -371,16 +373,17 @@ ob_start();
 			<?php endforeach;?>
 		</table>
 	</div>
-		
-	<?php if ($him->get('login')) : ?>
-		<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouvel utilisateur avec le même certificat </a>
-		<?php if ($him->get('subject_dn')) : ?>
-			<?php echo $him->get('subject_dn') ?>	
-		<?php endif; ?>
-	<?php else: ?>
-		Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login
-	<?php endif;?>
 <?php endif;?>
+		
+<?php if ($him->get('login')) : ?>
+	<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouvel utilisateur avec le même certificat </a>
+	<?php if ($him->get('subject_dn')) : ?>
+		<?php echo $him->get('subject_dn') ?>	
+	<?php endif; ?>
+<?php else: ?>
+	Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login
+<?php endif;?>
+
 
 <?php if ($id && $services_list) : ?>
 	<h2>Services</h2>
