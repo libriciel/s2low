@@ -581,7 +581,7 @@ class ActesEnvelope extends DataObject {
 		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
 	 	
 		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . $new_file, $output, $ret);
-		Trace::wrap_exec("rm $new_file",$output, $ret2);
+		Trace::wrap_exec("rm $new_file",$output2, $ret2);
 		
 
 	  switch ($ret) {
