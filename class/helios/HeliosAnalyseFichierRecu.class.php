@@ -8,12 +8,14 @@ class HeliosAnalyseFichierRecu {
 	private $authoritySQL;
 	private $heliosRetourSQL;
 	private $schema_pes_path;
+	private $email_admin;
 	
-	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, AuthoritySQL $authoritySQL, HeliosRetourSQL $heliosRetourSQL, $schema_pes_path){
+	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, AuthoritySQL $authoritySQL, HeliosRetourSQL $heliosRetourSQL, $schema_pes_path, $email_admin){
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 		$this->authoritySQL = $authoritySQL;
 		$this->heliosRetourSQL = $heliosRetourSQL;
 		$this->schema_pes_path = $schema_pes_path;
+		$this->email_admin = $email_admin;
 	}
 	
 	private function log($message){
@@ -57,17 +59,21 @@ class HeliosAnalyseFichierRecu {
 				$msg.= "Fichier : $file => $message\n";
 			}
 			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
-			mail(EMAIL_ADMIN,$subject,$msg);
+			$this->sendMailToAdmin($subject, $msg);
 		}
 		
 		foreach($erreur_list as $file => $message){
 			if (file_exists($helios_responses_error_path."/".$file)){
-				mail(EMAIL_ADMIN,"[S2low][Helios] Impossible de déplacer un fichier dans le répertoire des fichiers en erreur","Le fichier $file existe déjà");
+				$this->log("[ERREUR] Impossible de déplacer le fichier $file dans le répertoire des fichiers en erreur : le fichier existe déjà");
+				$this->sendMailToAdmin("[S2low][Helios] Impossible de déplacer un fichier dans le répertoire des fichiers en erreur","Le fichier $file existe déjà");
 				continue;
 			}
 			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
 		}
-		
+	}
+	
+	private function sendMailToAdmin($subject,$msg){
+		mail($this->email_admin,$subject,$msg);
 	}
 	
 	private function analyseOneFile($file_path,$helios_response_root){
@@ -161,16 +167,16 @@ class HeliosAnalyseFichierRecu {
 	
 	private function traitementPESRetour($basename,SimpleXMLElement $xml){
 		
-		$siren = strval($xml->EnTetePES->IdColl['V']);
+		$siret = strval($xml->EnTetePES->IdColl['V']);
 		
-		$siren = substr($siren, 0,9);
+		$siren = substr($siret, 0,9);
 		
 		$authority_id = $this->authoritySQL->getIdBySIREN($siren);
 		if (! $authority_id){
-			throw new Exception("La collectivité $siren n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
+			throw new Exception("La collectivité $siret n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
 		}
 		
-		$this->heliosRetourSQL->create($siren, $basename);
+		$this->heliosRetourSQL->add($authority_id, $siret, $basename);		
 	}
 	
 	

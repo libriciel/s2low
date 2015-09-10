@@ -1,9 +1,21 @@
+authority_groups:
+ -
+  id: 1
+  status: 1
+  name: Groupe de test
 
 authorities:
  - 
   id: 1
   status: 1
-  
+  siren: 123456789
+  name: Bourg-en-Bresse
+ -
+  id: 2
+  status: 1
+  siren: 999999999
+  authority_group_id: 1
+   
 users:
  -
   id: 1
@@ -83,5 +95,41 @@ users:
    eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
    YNN6Z4fNWGHPgI7R6w==
    -----END CERTIFICATE-----
-   
+
+ -
+  id: 5
+  email: eric+5@sigmalis.com
+  name: Durand
+  givenname: Daniel
+  role: USER
+  authority_id: 1
+  subject_dn: adullact_user
+  issuer_dn: adullact_user
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 6
+  email: eric+6@sigmalis.com
+  name: Eon
+  givenname: Eric
+  role: ADM
+  authority_id: 2
+  subject_dn: admin_col2
+  issuer_dn: admin_col2
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 7
+  email: eric+7@sigmalis.com
+  name: François
+  givenname: Frédéric
+  role: GADM
+  subject_dn: admin_groupe
+  issuer_dn: admin_groupe
+  certificate_rgs_2_etoiles: ''
+  authority_id: 2
+  authority_group_id: 1
+  
 logs:
+helios_retour:
+authority_siret:

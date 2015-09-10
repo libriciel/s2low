@@ -62,6 +62,8 @@ class AuthoritySQL {
   		return count($result);
   	}
   	
-  	
+  	public function isInGroup($authority_group_id){
+  		
+  	}
   	
 }

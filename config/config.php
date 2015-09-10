@@ -178,7 +178,7 @@ if(!defined('TEDETIS_TMP_PATH')){
 }
 
 if(!defined("VERIFICATION_SIREN")){
-        define("VERIFICATION_SIREN",false);
+	define("VERIFICATION_SIREN",false);
 }
 
 

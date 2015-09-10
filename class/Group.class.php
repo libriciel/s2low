@@ -54,7 +54,6 @@
 
 require_once("DataObject.class.php");
 require_once("Module.class.php");
-require_once("Siren.class.php");
 
 class Group extends DataObject {
   protected $objectName = "authority_groups";

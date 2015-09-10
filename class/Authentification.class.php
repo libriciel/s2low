@@ -76,7 +76,6 @@ class Authentification {
 				}
 		}
 	
-	
 		if (! $result['ssl_client_verify']){
 			return false;
 		}
@@ -97,11 +96,9 @@ class Authentification {
 		return $result;
 	}
 	
-
 	private function der2pem($der_data) {
 		$pem = chunk_split(base64_encode($der_data), 64, "\n");
 		$pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
 		return $pem;
 	}
-	
 }

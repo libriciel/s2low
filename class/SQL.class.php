@@ -31,8 +31,9 @@ abstract class SQL {
 		return $this->sqlQuery->queryOneCol($query,$param);
 	}
  
-    public function lastInsertId($name = null) {
-        return $this->sqlQuery->getPdo()->lastInsertId($name);
-    }
+	public function getLastInsertId(){
+		return $this->queryOne("SELECT lastval();");
+	}
+    
 
 }

@@ -43,10 +43,10 @@ if (isset ($fstatus) && is_numeric($fstatus) && $fstatus != 2) {//si = 2 : tous 
 //collectivité (si sadmin)
 if (!$me->isSuper()) { // Le super utilisateur voit les reponses de toutes les collectivité
    // Un utilisateur ne voit que les reponses de sa collectivité
-  $filter[] .= "helios_retour.siren='" . $me->getUserSiren(). "'";
+  $filter[] .= "helios_retour.authority_id='" . $me->get('authority_id'). "'";
 }else {
   if (isset($fauthority) && !empty($fauthority) )
-  	$filter[] .= "helios_retour.siren='" . Authority::getSirenFromId($fauthority) . "'";
+  	$filter[] .= "helios_retour.authority_id='" . $fauthority . "'";
 }
 // On ajoute les filtres relatifs aux dates
 if (isset ($fmin_submission_date) && !empty ($fmin_submission_date)) {

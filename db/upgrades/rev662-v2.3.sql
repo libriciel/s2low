@@ -1,0 +1,24 @@
+ALTER TABLE helios_retour ADD COLUMN authority_id INT;
+
+UPDATE helios_retour SET authority_id=authorities.id FROM authorities WHERE authorities.siren=helios_retour.siren;
+
+ALTER TABLE helios_retour ADD CONSTRAINT 
+helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities(id);
+
+
+ALTER TABLE helios_retour ADD COLUMN siret CHAR(14);
+
+-- La requête de création des helios_retour n'utilisait pas la bonne séquence !
+SELECT setval('helios_retour_id_seq', (SELECT max(id) from helios_retour));
+
+
+
+CREATE SEQUENCE authority_siret_id_seq;
+CREATE TABLE authority_siret (
+	id integer PRIMARY KEY DEFAULT nextval('authority_siret_id_seq'),
+	authority_id integer,
+	siret CHAR(14),
+	date timestamp with time zone
+);
+ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities(id);
+	

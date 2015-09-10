@@ -1,9 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 require_once( __DIR__ . "/../../../init/init.php");
 
 $me = new User();
@@ -44,5 +39,3 @@ $authorityGroupSirenSQL->add($authority_group_id,$siren);
 $result['status'] = 'ok';
 $result['message'] = 'ajout reussi';
 $jsonOutput->display($result);
-
-?>

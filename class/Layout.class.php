@@ -488,7 +488,9 @@ class HTMLLayout extends Layout {
         $this->includeErrors();
 
         if ($this->template) {
-            require_once(HTML_TEMPLATE_PATH . "/" . $this->template);
+			//Note EP 09/09/2015 : avant il y avait require_once, ce qui pour un template est ... spécial.
+			//Du coup, ca passe pas les tests unitaire... je mets include, mais je sais pas ce que ca va donner...
+            include(HTML_TEMPLATE_PATH . "/" . $this->template);
         } else {
             echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
             echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n";

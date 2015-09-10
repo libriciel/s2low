@@ -6,6 +6,6 @@ $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $authoritySQL = new AuthoritySQL($sqlQuery);
 $heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
 
-$heliosAnalyseFichierRecu = new HeliosAnalyseFichierRecu($heliosTransactionSQL,$authoritySQL,$heliosRetourSQL,HELIOS_XSD_PATH);
+$heliosAnalyseFichierRecu = new HeliosAnalyseFichierRecu($heliosTransactionSQL,$authoritySQL,$heliosRetourSQL,HELIOS_XSD_PATH,EMAIL_ADMIN);
 
 $heliosAnalyseFichierRecu->analyse(HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH, HELIOS_RESPONSES_ROOT,HELIOS_RESPONSES_ERROR_PATH);

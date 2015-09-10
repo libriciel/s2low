@@ -285,6 +285,8 @@ class Module extends DataObject {
 	$zeUser = new User($user);
 	$zeUser->init();
 
+	$perms = array();
+	
 	if ( $zeUser->isSuper()) {
 		$modules = Module::getActiveModulesList();
 
