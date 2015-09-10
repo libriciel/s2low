@@ -51,5 +51,15 @@ class X509Certificate {
 		return $info;
 	}
 	
+	public function pemClean($not_clean_pem){
+
+		@ $ressource = openssl_x509_read($not_clean_pem);
+		if (! $ressource){
+			throw new Exception("Impossible de lire le certificat");
+		} 
+		openssl_x509_export($ressource, $output);
+		return $output;
+	}
+	
 	
 }

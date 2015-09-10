@@ -187,16 +187,29 @@ if (! $him->save()) {
   
 } 
 
+$msg = ($mod) ? "Modification" : "Création";
+$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
+
 $userSQL = new UserSQL($sqlQuery);
 
-if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {		
-	$userSQL->saveCertificateRGS2Etoiles($him->getId(),file_get_contents($certificate_rgs_2_etoiles["tmp_name"]));
+if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {
+
+	$certificate_rgs_2_etoiles_content = file_get_contents($certificate_rgs_2_etoiles["tmp_name"]);
+	
+	$x509Certificate = new X509Certificate();
+	try {
+		$certificate_rgs_2_etoiles_content = $x509Certificate->pemClean($certificate_rgs_2_etoiles_content);
+		$userSQL->saveCertificateRGS2Etoiles($him->getId(),$certificate_rgs_2_etoiles_content);
+	} catch(Exception $e){
+		$msg .= "\nLe certificat rgs_2_etoile n'est pas au bon format\n";
+	}
+	
 } else {
 	$userSQL->updateCertificatRGS2EtoilesIfNull($him->getId());
 }
 
-$msg = ($mod) ? "Modification" : "Création";
-$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
+
+
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
 	$msg .= "\nErreur de journalisation.";
 }
