@@ -2,7 +2,7 @@
 
 $errorMsg = "";
 
-function sortir($message,$api){
+function sortir_atrc($message,$api){
 	global $related_id;
 	if ($api){
     	echo "KO : " . $message;
@@ -27,21 +27,21 @@ if ($api){
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-	 sortir("Erreur d'initialisation du module",$api);
+	 sortir_atrc("Erreur d'initialisation du module",$api);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-	sortir( "Échec de l'authentification",$api);
+	sortir_atrc( "Échec de l'authentification",$api);
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-	sortir( "Accès refusé",$api);
+	sortir_atrc( "Accès refusé",$api);
 }
 
 if ($module->getParam("paper") == "on") {
-	sortir(  "Mode « papier » actif. Accès interdit.",$api);
+	sortir_atrc(  "Mode « papier » actif. Accès interdit.",$api);
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -129,7 +129,7 @@ if (isset ($actePDFFile) ) {
       $acteFilePath = $actePDFFile["tmp_name"];
       $acteFileName = $actePDFFile["name"];
     } else {
- 		 sortir( "Envoi de fichier illégal.",$api);    	
+ 		 sortir_atrc( "Envoi de fichier illégal.",$api);    	
     }
 
   $dest_name = $trans->getStdFileName($env);
@@ -180,7 +180,7 @@ if (isset ($acteAttachments)) {
           }
         }
       } else {
-      	sortir(  "Envoi de fichier illégal.",$api);
+      	sortir_atrc(  "Envoi de fichier illégal.",$api);
       }
     }
   }
@@ -189,13 +189,13 @@ if (isset ($acteAttachments)) {
 
 
 if ($fileImportError) {
-	sortir($errorMsg,$api);
+	sortir_atrc($errorMsg,$api);
 }
 
 // Génération du fichier XML de l'acte
 $xml_name = $trans->getStdFileName($env, false);
 if (!$trans->generateMessageXMLFile($xml_name)) {
-	sortir("Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(),$api);
+	sortir_atrc("Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(),$api);
 }
 
 $env->addTransaction($trans);
@@ -209,17 +209,17 @@ $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 // Génération du fichier XML de l'enveloppe
 if (!$env->generateEnvelopeXMLFile($serialNumber)) {
-	sortir("Erreur lors de la génération de l'enveloppe.",$api);
+	sortir_atrc("Erreur lors de la génération de l'enveloppe.",$api);
 }
 
 // Création de l'archive .tar.gz
 if (!$env->generateArchiveFile()) {
-	sortir("Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(),$api);
+	sortir_atrc("Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(),$api);
 }
 
 // Contrôle de l'archive (anti-virus et taille)
 if (!$env->checkArchiveConformity()) {
-	sortir("L'archive générée n'est pas conforme :\n" . $env->getErrorMsg(),$api);
+	sortir_atrc("L'archive générée n'est pas conforme :\n" . $env->getErrorMsg(),$api);
 }
 
 // Purge des fichiers intermédiaires
@@ -230,7 +230,7 @@ if (!$env->save()) {
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
   }
-	sortir($msg,$api);
+	sortir_atrc($msg,$api);
 }
 
 $trans->set("envelope_id", $env->getId());
@@ -243,7 +243,7 @@ if (!$trans->save()) {
 
   $env->deleteArchiveFile();
   $env->delete();
-  sortir($msg,$api);
+  sortir_atrc($msg,$api);
 } else {
   $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
