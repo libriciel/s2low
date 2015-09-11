@@ -73,6 +73,10 @@ if(!defined('DB_DATABASE_TEST')){
 	define('DB_DATABASE_TEST', "tedetis_test");
 }
 
+if (! defined('PHP_UNIT_AUTOLOADER')) {
+	define("PHP_UNIT_AUTOLOADER", "/Users/eric/workspace-adullact/pastell/ext/composer/vendor/autoload.php");
+}
+
 // Nombre d'élément affichés par défaut par page dans les listes
 if(!defined('DEFAULT_ITEMS_PER_PAGE')){
         define('DEFAULT_ITEMS_PER_PAGE', 10);

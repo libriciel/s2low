@@ -3,8 +3,11 @@ require_once __DIR__.'/../init.php';
 
 class SirenTest extends PHPUnit_Framework_TestCase {
 
+	/**
+	 * @var Siren
+	 */
 	private $siren;
-	
+
 	public function setUp(){
 		$this->siren = new Siren(new LuhnKey());	
 	}
@@ -20,7 +23,7 @@ class SirenTest extends PHPUnit_Framework_TestCase {
 	public function testBad(){
 		$this->assertFalse($this->siren->isValid("493587274"));		
 	}
-	
+
 	public function testGenerate(){
 		$this->assertTrue($this->siren->isValid($this->siren->generate()));
 	}
