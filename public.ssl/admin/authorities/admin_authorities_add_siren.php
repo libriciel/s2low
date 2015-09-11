@@ -11,6 +11,8 @@ if (! $me->isGroupAdminOrSuper()) {
         $jsonOutput->displayErrorAndExit("Acces refuse");
 }
 
+$authority_group_id = false;
+
 if($me->isSuper()){
         $gid=Helpers::getVarFromGet("authority_group_id");
         if(!is_numeric($gid)){
@@ -24,7 +26,7 @@ if($me->isSuper()){
 }
 
 $siren = Helpers::getVarFromGet("siren");
-$theSiren  = new Siren();
+$theSiren  = new Siren(new LuhnKey());
 if(VERIFICATION_SIREN){
         if (! $theSiren->isValid($siren)) {
                 $jsonOutput->displayErrorAndExit("siren non valide");

@@ -13,7 +13,7 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->get("id");
 $siren = $recuperateur->get("siren");
 
-$theSiren  = new Siren();
+$theSiren  = new Siren(new LuhnKey());
 
 if(VERIFICATION_SIREN){
 	if (! $theSiren->isValid($siren)) {

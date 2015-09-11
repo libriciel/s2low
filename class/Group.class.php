@@ -123,7 +123,7 @@ class Group extends DataObject {
 	  return false;
 	}
 
-        $theSiren  = new Siren();
+        $theSiren  = new Siren(new LuhnKey());
 	while ($content = fgets($handle)) {
 	  $content = trim($content);
 
@@ -356,23 +356,6 @@ class Group extends DataObject {
 	}
    return $tabGroups;
   }
-  /**
-   * @brief obtenir la list de group
-   * @return String array liste du group
-   */
-  public static function getGroupList()
-  {
-	  $sql = "SELECT , authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . $dept . "'";
 
-	  $db =DatabasePool::getInstance();
-
-	  $result = $db->select($sql);
-
-	  if (! $result->isError()) {
-		while ($row = $result->get_next_row()) {
-		  $districts[$row["code"]] = $row["name"];
-		}
-	  }
-  }
 }
 ?>
