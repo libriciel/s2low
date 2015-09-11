@@ -133,3 +133,14 @@ users:
 logs:
 helios_retour:
 authority_siret:
+actes_classification_requests:
+actes_envelopes:
+actes_included_files:
+actes_transactions:
+actes_transactions_workflow:
+actes_classification_codes:
+actes_envelope_serials:
+modules_authorities:
+authority_group_siren:
+users_perms:
+helios_transactions:
