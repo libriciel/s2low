@@ -12,6 +12,7 @@ date_default_timezone_set("Europe/Paris");
 
 setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
+
 if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","eric@sigmalis.com");
 }

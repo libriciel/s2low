@@ -15,7 +15,23 @@ authorities:
   status: 1
   siren: 999999999
   authority_group_id: 1
-   
+
+
+modules:
+ -
+  id: 1
+  name: actes
+  description: Module Actes
+  menu_entry: Transactions Actes
+  status: 1
+
+modules_authorities:
+ -
+  id: 1
+  module_id: 1
+  authority_id: 1
+
+
 users:
  -
   id: 1
@@ -129,7 +145,14 @@ users:
   certificate_rgs_2_etoiles: ''
   authority_id: 2
   authority_group_id: 1
-  
+
+users_perms:
+ -
+  id: 1
+  module_id: 1
+  user_id: 1
+  perm: RW
+
 logs:
 helios_retour:
 authority_siret:
@@ -140,7 +163,7 @@ actes_transactions:
 actes_transactions_workflow:
 actes_classification_codes:
 actes_envelope_serials:
-modules_authorities:
 authority_group_siren:
-users_perms:
 helios_transactions:
+
+

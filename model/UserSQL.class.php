@@ -1,25 +1,22 @@
 <?php 
 
-class UserSQL {
+class UserSQL extends SQL {
 	
 	const IDENT_METHOD_NONE = 0;
 	const IDENT_METHOD_CERT_ONLY = 1;
 	const IDENT_METHOD_LOGIN = 2 ;
 	const IDENT_METHOD_RGS_2_ETOILES = 3;
-	
-	public function __construct(SQLQuery $sqlQuery){
-		$this->sqlQuery = $sqlQuery;
-	}
-	
+
 	public function getInfo($id){
 		$sql = "SELECT * FROM users WHERE id=?";
-		$result = $this->sqlQuery->queryOne($sql,$id);
+		$result = $this->queryOne($sql,$id);
 		if (! $result){
 			return array();
 		}
 		$result['pretty_name'] = $result['name']?"{$result['givenname']} {$result['name']}":$result['login'];
 		$result['role_str'] = $this->getRoleStr($result['role']);
-		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['subject_dn'], $result['issuer_dn']); 
+		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['subject_dn'],
+																					$result['issuer_dn']);
 		return $result;
 	}
 	
@@ -27,17 +24,19 @@ class UserSQL {
 		$sql = "SELECT count(*) as nb FROM users " .
 				" WHERE subject_dn= ? ".
 				" AND issuer_dn= ?";
-		return $this->sqlQuery->queryOne($sql,$subject_dn,$issuer_dn);
+		return $this->queryOne($sql,$subject_dn,$issuer_dn);
 	}	
 	
 	public function getInfoFromCertificateInfo(array $certificateInfo){
-		$sql = "SELECT * FROM users WHERE subject_dn=? AND issuer_dn=?";
-		return $this->sqlQuery->query($sql,$certificateInfo['subject'],$certificateInfo['issuer']);
+		$sql = "SELECT * FROM users " .
+				" WHERE subject_dn=? AND issuer_dn=?" .
+				" ORDER BY id ";
+		return $this->query($sql,$certificateInfo['subject'],$certificateInfo['issuer']);
 	}
 
 	public function getIdListFromCertificateInfo($subject,$issuer){
 		$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=?";
-		return $this->sqlQuery->queryOneCol($sql,$subject,$issuer);
+		return $this->queryOneCol($sql,$subject,$issuer);
 	}
 	
 	public function  getRoleStr($role) {		
@@ -54,7 +53,7 @@ class UserSQL {
 				" JOIN users_perms ON users.id = users_perms.user_id " .
 				" JOIN modules ON users_perms.module_id = modules.id " .
 				" WHERE authority_id=? AND users_perms.perm='RW' AND modules.name='dia'";
-		return $this->sqlQuery->query($sql,$authority_id);
+		return $this->query($sql,$authority_id);
 	}
 
 	public function getIdentificationMethod($user_id){
@@ -67,9 +66,6 @@ class UserSQL {
 		}
 		
 		$user_id_list = $this->getIdListFromCertificateInfo($info['subject_dn'],$info['issuer_dn']);
-		if (! $user_id_list){
-			return self::IDENT_METHOD_NONE;
-		}
 		if (count($user_id_list) == 1 ){
 			return self::IDENT_METHOD_CERT_ONLY;
 		} 
@@ -87,7 +83,7 @@ class UserSQL {
 	
 	public function saveCertificateRGS2Etoiles($user_id,$pem_certificate_content){
 		$sql = "UPDATE users SET certificate_rgs_2_etoiles=? WHERE id=?";
-		$this->sqlQuery->query($sql,$pem_certificate_content,$user_id);
+		$this->query($sql,$pem_certificate_content,$user_id);
 	}
 	
 
@@ -98,7 +94,7 @@ class UserSQL {
 	//Hack affreux pour prévenir les NULL introduit par le DataObject !
 	public function updateCertificatRGS2EtoilesIfNull($user_id){
 		$sql = "SELECT * FROM users WHERE id=? AND certificate_rgs_2_etoiles IS NULL";
-		if ($this->sqlQuery->queryOne($sql,$user_id)){
+		if ($this->queryOne($sql,$user_id)){
 			$this->saveCertificateRGS2Etoiles($user_id, '');
 		}
 	}
@@ -114,16 +110,15 @@ class UserSQL {
 			$data[] = $login;
 			$data[] = md5($password);
 		}
-		return $this->sqlQuery->queryOneCol($sql,$data);
+		$sql .= " ORDER BY id ";
+		return $this->queryOneCol($sql,$data);
 	}
 	
 	public function getListIdFromConnexion($subject_dn,$issuer_dn,$certificate_rgs_2_etoile){
-			$sql = "SELECT id FROM users " .
-				" WHERE subject_dn=? AND issuer_dn=? " .
-				" AND certificate_rgs_2_etoiles = ? ";
-			return $this->sqlQuery->queryOneCol($sql,$subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
-				
+		$sql = "SELECT id FROM users " .
+			" WHERE subject_dn=? AND issuer_dn=? " .
+			" AND certificate_rgs_2_etoiles = ? " .
+			" ORDER BY id ";
+		return $this->queryOneCol($sql,$subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
 	}
-	
-	
 }

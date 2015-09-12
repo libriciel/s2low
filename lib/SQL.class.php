@@ -31,16 +31,4 @@ abstract class SQL {
 		return $this->sqlQuery->queryOneCol($query,$param);
 	}
 
-	/**
-	 * @deprecated
-	 * @return array|bool|mixed
-	 * @throws Exception
-	 */
-	public function getLastInsertId(){
-		throw new Exception("Use returning id instead;");
-		/*$lastval =  $this->sqlQuery->queryOne("SELECT lastval();");
-		return $lastval;*/
-	}
-    
-
 }

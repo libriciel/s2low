@@ -3,7 +3,11 @@
 
 abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	
-	private $objectInstancier;	
+	private $objectInstancier;
+
+	/**
+	 * @var SQLQuery
+	 */
 	private $sqlQuery;
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
