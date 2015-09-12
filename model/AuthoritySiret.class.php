@@ -13,9 +13,8 @@ class AuthoritySiret extends SQL {
 		if ($id){
 			return $id;
 		}
-		$sql = "INSERT INTO authority_siret(authority_id,siret,date) VALUES (?,?,now())";
-		$this->query($sql,$authority_id,$siret);
-		return $this->getLastInsertId();
+		$sql = "INSERT INTO authority_siret(authority_id,siret,date) VALUES (?,?,now()) RETURNING id";
+		return $this->queryOne($sql,$authority_id,$siret);
 	}
 	
 	public function del($id){

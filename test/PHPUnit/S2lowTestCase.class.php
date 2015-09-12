@@ -5,23 +5,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	
 	private $objectInstancier;	
 	private $sqlQuery;
-		
-	public function __construct($name = NULL, array $data = array(), $dataName = ''){
-		parent::__construct($name,$data,$dataName);
-		$sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-		$sqlQuery->setCredential(DB_USER_TEST,DB_PASSWORD_TEST);
-		$sqlQuery->setDatabaseHost(DB_HOST_TEST);
-		
-		$this->databaseConnection = $this->createDefaultDBConnection($sqlQuery->getPdo(), DB_DATABASE_TEST);
-		$this->sqlQuery = $sqlQuery;
-		$this->objectInstancier = new ObjectInstancier();
-		$this->objectInstancier->SQLQuery = $sqlQuery;
-		
-		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
-		global $sqlQuery;
-		$sqlQuery = $this->getSQLQuery();
-	}
-	
+
+	protected $backupGlobalsBlacklist = array('sqlQuery');
+
 	protected function setUp(){
 		parent::setUp();
 		$_GET = array();
@@ -36,7 +22,19 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
 	 */
 	public function getConnection() {
-		return $this->databaseConnection;
+		$sqlQuery = new SQLQuery(DB_DATABASE_TEST);
+		$sqlQuery->setCredential(DB_USER_TEST,DB_PASSWORD_TEST);
+		$sqlQuery->setDatabaseHost(DB_HOST_TEST);
+
+		$this->sqlQuery = $sqlQuery;
+		$this->objectInstancier = new ObjectInstancier();
+		$this->objectInstancier->SQLQuery = $sqlQuery;
+
+		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
+		global $sqlQuery;
+		$sqlQuery = $this->getSQLQuery();
+
+		return $this->createDefaultDBConnection($this->sqlQuery->getPdo(), DB_DATABASE_TEST);
 	}
 	
 	/**

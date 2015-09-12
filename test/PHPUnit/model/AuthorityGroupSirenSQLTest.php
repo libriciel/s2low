@@ -10,6 +10,7 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
 	private $authorityGroupSirenSQL;
 
 	protected function setUp(){
+		parent::setUp();
 		$this->authorityGroupSirenSQL = new AuthorityGroupSirenSQL($this->getSQLQuery());
 	}
 

@@ -3,7 +3,10 @@
 require_once(__DIR__."/../init.php");
 
 class ControllerTest extends S2lowTestCase {
-	
+
+	/**
+	 * @var Controller
+	 */
 	private $controller;
 	
 	protected function setUp(){

@@ -8,11 +8,11 @@ class DatabasePool {
    * retourne une référence vers un objet de type Database correspondant
    * aux paramètres de connexion spécifiés lors de l'appel
    *
-   * @param $host string le nom du serveur de base de données
-   * @param $user string nom d'utilisateur pour la connexion à la base
-   * @param $password mot de passe pour la connexion à la base
-   * @param $base nom de la base de données à laquelle se connecter
-   * @return une référence vers un objet de type Database permettant de faire des requêtes sur la base choisie
+   * @param string $host string le nom du serveur de base de données
+   * @param string $user string nom d'utilisateur pour la connexion à la base
+   * @param string $password mot de passe pour la connexion à la base
+   * @param string $base nom de la base de données à laquelle se connecter
+   * @return string Database une référence vers un objet de type Database permettant de faire des requêtes sur la base choisie
    *
    */
   public static function getInstance($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
@@ -378,5 +378,3 @@ function debugdbko() {
     echo "<br />".get_hecho($DB->LastRequest())."<br />".get_hecho($DB->LastRequestError())."<br />";;
   }
 }
-
-?>

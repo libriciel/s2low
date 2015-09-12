@@ -5,9 +5,8 @@ class HeliosRetourSQL extends SQL {
 	public function add($authority_id,$siret,$filename){
 		$siren = substr($siret, 0,9);
 		$sql = "INSERT INTO helios_retour(authority_id, siren, filename, status, date,siret) " .
-				" VALUES ( ?,?,?,0,now(),?) ";
-		$this->query($sql,$authority_id,$siren,$filename,$siret);
-		return $this->getLastInsertId();
+				" VALUES ( ?,?,?,0,now(),?) returning id";
+		return $this->queryOne($sql,$authority_id,$siren,$filename,$siret);
 	}
 	
 	public function getInfo($helios_retour_id){

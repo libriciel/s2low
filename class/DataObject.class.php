@@ -57,6 +57,10 @@ require_once("Helpers.class.php");
 class DataObject {
   protected $id;
   protected $errorMsg = null;
+
+	/**
+	 * @var Database
+	 */
   protected $db;
 
   protected $statusTypes = array( 0 => "Désactivé",
