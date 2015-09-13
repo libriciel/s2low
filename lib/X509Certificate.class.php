@@ -30,34 +30,42 @@ class X509Certificate {
 		return $result;		
 	}
 	
-	public function getExpirationDate($certificateContentPEM){
-		if (! $certificateContentPEM){
-			return;
+	public function getExpirationDate($pem_certificate_content){
+		$info = $this->getInfo($pem_certificate_content);
+		if ( ! $info){
+			return false;
 		}
-		$info = openssl_x509_parse(openssl_x509_read($certificateContentPEM));
-		preg_match_all("#(\d\d)#",$info['validTo'],$matches);
-		$m = $matches[0];
-		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+		return $info['expiration_date'];
 	}
 	
 	public function getInfo($pem_certificate_content){
 		if (! $pem_certificate_content){
-			return;
+			return false;
 		}
-		$info =  openssl_x509_parse(openssl_x509_read($pem_certificate_content));
-		preg_match_all("#(\d\d)#",$info['validTo'],$matches);
-		$m = $matches[0];
-		$info['expiration_date'] = "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+		$resource = $this->readCertContent($pem_certificate_content);
+		$info =  openssl_x509_parse($resource);
+		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo']);
 		return $info;
+	}
+
+
+	private function readCertContent($cert_content){
+		@ $resource = openssl_x509_read($cert_content);
+		if (! $resource){
+			throw new Exception("Impossible de lire le certificat");
+		}
+		return $resource;
+	}
+
+	private function certTime2IsoDate($validTo){
+		preg_match_all("#(\d\d)#",$validTo,$matches);
+		$m = $matches[0];
+		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
 	}
 	
 	public function pemClean($not_clean_pem){
-
-		@ $ressource = openssl_x509_read($not_clean_pem);
-		if (! $ressource){
-			throw new Exception("Impossible de lire le certificat");
-		} 
-		openssl_x509_export($ressource, $output);
+		$resource = $this->readCertContent($not_clean_pem);
+		openssl_x509_export($resource, $output);
 		return $output;
 	}
 	

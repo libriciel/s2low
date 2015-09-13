@@ -150,15 +150,6 @@ $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_
 
 $certificate_rgs_2_etoiles = $him->get('certificate_rgs_2_etoiles');
 
-/*$certificate_rgs_2_etoiles = der2pem(base64_decode($him->get('certificate_rgs_2_etoiles')));
-
-
-function der2pem($der_data) {
-	$pem = chunk_split(base64_encode($der_data), 64, "\n");
-	$pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
-	return $pem;
-}*/
-
 $certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_etoiles);
 
 

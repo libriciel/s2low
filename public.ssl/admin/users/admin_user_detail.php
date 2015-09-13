@@ -2,7 +2,6 @@
 
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/class/X509Certificate.class.php');
 
 $x509Certificate = new X509Certificate();
 
@@ -39,4 +38,4 @@ foreach ($modules as $module) {
 $result['other_id'] = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
 
 
-echo $jsonOutput->display($result);
+$jsonOutput->display($result);

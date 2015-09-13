@@ -9,13 +9,8 @@ class SQLQuery {
 	private $host;
 	private $login;
 	private $password;
-
 	private $slow_query_in_ms;
-
-
 	private $pdo;
-
-
 
 	public function __construct($databaseName){
 		$this->databaseName = $databaseName;
