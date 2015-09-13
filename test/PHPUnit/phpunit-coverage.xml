@@ -1,4 +1,4 @@
-<phpunit backupGlobals="false">
+<phpunit backupGlobals="false" bootstrap="bootstrap.php">
     <testsuites>
         <testsuite name="S2low">
             <directory>.</directory>

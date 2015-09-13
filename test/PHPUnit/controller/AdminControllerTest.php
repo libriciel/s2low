@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__."/../init.php");
-
 class AdminControllerTest extends S2lowTestCase {
 	
 	public function testActionBefore(){

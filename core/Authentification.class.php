@@ -41,7 +41,7 @@ class Authentification {
 
 		if (count($id_list) != 1){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
-		}
+		} // @codeCoverageIgnore
 		
 		return $id_list[0];
 	}
@@ -50,12 +50,12 @@ class Authentification {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
-		}
+		} // @codeCoverageIgnore
 		$list_id = $this->userSQL->getListIdFromConnexion($connexion_info['subject_dn'],$connexion_info['issuer_dn'],$connexion_info['certificate_rgs_2_etoiles']);
 		
 		if (! in_array($user_id,$list_id)){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
-		}
+		} // @codeCoverageIgnore
 	}
 	
 	

@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__."/../init.php");
-
 class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
 	private $helios_ftp_response_tmp_local_path;

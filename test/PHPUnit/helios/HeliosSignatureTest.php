@@ -1,9 +1,5 @@
 <?php 
 
-require_once(__DIR__."/../../../config/config.php");
-require_once(__DIR__."/../../../class/helios/HeliosSignature.class.php");
-
-
 class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 	
 	public function testGetInfoForSignature(){

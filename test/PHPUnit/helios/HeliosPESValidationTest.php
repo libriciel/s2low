@@ -1,8 +1,5 @@
 <?php
 
-require_once(__DIR__."/../init.php");
-require_once(__DIR__."/../../../class/helios/HeliosPESValidation.class.php");
-
 class HeliosPESValidationTest extends PHPUnit_Framework_TestCase {
 	
 	public function testValidPesAller(){

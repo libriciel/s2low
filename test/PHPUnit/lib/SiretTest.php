@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__.'/../init.php';
 
 class SiretTest extends PHPUnit_Framework_TestCase {
 

@@ -1,33 +1,30 @@
 <?php
 
+require_once __DIR__."/../ext/FPDF.class.php";
+class ExtendPdf extends FPDF {
 
-@ require_once ("FPDF.class.php");
-
-class ExtendPdf extends FPDF
-{
-	var $widths;
-	var $aligns;
-	var $fillcolor;
-	var $border;
+	public $widths;
+	public $aligns;
+	public $fillcolor;
+	public $border;
 	
   /**
   * \brief Initialiser l'entête du fichier pdf.
   * \param pas de paramètre.
   * 
   */
-	function Header()
-	{
-    //Select Arial bold 15
-    $this->SetFont('Arial','',6);
-    //Move to the right
-    $this->SetXY(2, 3);
-    $this->Cell(120);
-   
-    //Framed title
-    $this->Cell(30,6,'Alternancesoft');
-    //Line break
-    $this->Ln(6);
-	  $this->Line(10, 6, 120, 6);
+	public function Header() {
+		//Select Arial bold 15
+		$this->SetFont('Arial','',6);
+		//Move to the right
+		$this->SetXY(2, 3);
+		$this->Cell(120);
+
+		//Framed title
+		$this->Cell(30,6,'Alternancesoft');
+		//Line break
+		$this->Ln(6);
+		  $this->Line(10, 6, 120, 6);
 	}
 	
   /**
@@ -35,8 +32,7 @@ class ExtendPdf extends FPDF
   * \param pas de paramètre.
   * 
   */
-	function Footer()
-	{
+	public function Footer() {
 	    //Go to 1.5 cm from bottom
 	    $this->SetY(-15);
 	    //Select Arial italic 8
@@ -46,56 +42,50 @@ class ExtendPdf extends FPDF
 	}
 
 	/**
-  * \brief Initialiser largeur du collone.
-  * \param $w =un array => largeur de chaque collone si on as plusieurs.
+  * @brief Initialiser largeur du collone.
+  * @param array $w  => largeur de chaque collone si on as plusieurs.
   * 
   */
-	function SetMyWidths($w)
-	{
+	public function SetMyWidths($w) {
 	    //Set the array of column widths
 	    $this->widths=$w;
 	}
 
 	/**
-  * \brief Initialiser alligne du chaque collone.
-  * \param $a =array =>la façcon d'alligne de chaque multicell.
+  * @brief Initialiser alligne du chaque collone.
+  * @param $a =array =>la façcon d'alligne de chaque multicell.
   * 
   */
-	function SetMyAligns($a)
-	{
+	public function SetMyAligns($a) {
 	    //Set the array of column alignments
 	    $this->aligns=$a;
 	}
 	
 	/**
-  * \brief Initialiser border du chaque multicell.
-  * \param $border =array =>la border de chaque multicell.
+  * @brief Initialiser border du chaque multicell.
+  * @param $border =array =>la border de chaque multicell.
   *      par défault, $border=0 =>pas de border.
   *      $border peut prend ses valeur de 'T','B','R','L' ou le metter ensemble.
   *      T=top, B=Bottom, R=right, L=left.
   */
-	public function setMyBorder($border=0)
-	{
+	public function setMyBorder($border=0) {
 		$this->border=$border;
 	}
 	
 	 /**
-  * \brief Initialiser coleur de celle.
-  * \param $fillcolor =array =>la colleur remplie dans un multi cell.
+  * @brief Initialiser coleur de celle.
+  * @param $fillcolor =array =>la colleur remplie dans un multi cell.
   * 
   */
-	public function setMyFillcolor($fillcolor)
-	{
+	public function setMyFillcolor($fillcolor) {
 		$this->fillcolor=$fillcolor;
 	}
 
 	/**
-  * \brief contruir le table ligne par ligne 
-  * \param $data =array =>l'info qui va remplir dans les multicell.
-  * 
-  */
-	function myRow($data)
-	{
+	* @brief contruir le table ligne par ligne
+	* @param $data =array =>l'info qui va remplir dans les multicell.
+	*/
+	public function myRow($data) {
 	    //Calculate the height of the row
 	    $nb=0;
 	    for($i=0;$i<count($data);$i++)
@@ -135,26 +125,25 @@ class ExtendPdf extends FPDF
 	}
 
 	/**
-  * \brief véréfier le table est deborder une page ou non.
-  * \param $h =float =>la position de ligne
+  * @brief véréfier le table est deborder une page ou non.
+  * @param $h =float =>la position de ligne
   *     si il a déborder, créer une nouvelle page.
   * 
   */
-	function CheckPageBreak($h)
-	{
+	public function CheckPageBreak($h) {
 	    //If the height h would cause an overflow, add a new page immediately
 	    if($this->GetY()+$h>$this->PageBreakTrigger)
 	        $this->AddPage($this->CurOrientation);
 	}
 	
   /**
-  * \brief  calculer on doit sauter des ligne ou pas si le text est déborder un multicell
-  * \param  $w =float =>large de multicell
-  *         $txt=string => le contenu de ce multicell
+  * @brief  calculer on doit sauter des ligne ou pas si le text est déborder un multicell
+  * @param  $w =float =>large de multicell
+  * @param  $txt=string => le contenu de ce multicell
+   * @return int
   * 
   */
-	function NbLines($w,$txt)
-	{
+	public function NbLines($w,$txt) {
 	    //Computes the number of lines a MultiCell of width w will take
 	    $cw=&$this->CurrentFont['cw'];
 	    if($w==0)
@@ -205,14 +194,16 @@ class ExtendPdf extends FPDF
 	}
 
 	/**
-  * \brief affichier un effet de rectangle avec le coin rond
-  * \param $x, y =float =>la position de cette rectangle (le point de gauche en haut.)
-  *         $w, h =float => le large et le hauteur de rectangle.
-  *         $style
-  *         $angle= 1, 2 ,3, 4, ou mélanger les pour définir le quelle angle est rond.
+  * @brief affichier un effet de rectangle avec le coin rond
+  * @param $x,
+	 * @param $y =float =>la position de cette rectangle (le point de gauche en haut.)
+  * @param $w,
+	 * @param $h =float => le large et le hauteur de rectangle.
+	 * @param $r
+  * @param $style
+  * @param $angle= 1, 2 ,3, 4, ou mélanger les pour définir le quelle angle est rond.
   */
-	function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234')
-    {
+	function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234') {
         $k = $this->k;
         $hp = $this->h;
         if($style=='F')
@@ -261,16 +252,10 @@ class ExtendPdf extends FPDF
         $this->_out($op);
     }
     
-  /**
-  * \brief trace le rond coin 
-  * \param appele que par RoundedRect
-  * 
-  */
-    function _Arc($x1, $y1, $x2, $y2, $x3, $y3)
-    {
+    public function _Arc($x1, $y1, $x2, $y2, $x3, $y3) {
         $h = $this->h;
         $this->_out(sprintf('%.2f %.2f %.2f %.2f %.2f %.2f c ', $x1*$this->k, ($h-$y1)*$this->k,
             $x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
     }
 }
-?>
+

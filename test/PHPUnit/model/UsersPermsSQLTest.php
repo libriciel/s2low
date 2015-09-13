@@ -1,6 +1,5 @@
 <?php
 
-
 class UsersPermsSQLTest extends S2lowTestCase {
 
 	/**

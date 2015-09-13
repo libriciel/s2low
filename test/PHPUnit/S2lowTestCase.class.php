@@ -2,13 +2,10 @@
 
 
 abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
-	
-	private $objectInstancier;
 
-	/**
-	 * @var SQLQuery
-	 */
-	private $sqlQuery;
+	private static $sqlQueryStatic;
+
+	private $objectInstancier;
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
 
@@ -20,27 +17,29 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_VERIFY'] = "";
 		$_SERVER['SSL_CLIENT_S_DN'] = "";
 		$_SERVER['SSL_CLIENT_I_DN'] = "";
+		$_SERVER['SSL_CLIENT_CERT'] = "";
 	}
-	
+
 	/**
 	 * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
 	 */
 	public function getConnection() {
-		$sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-		$sqlQuery->setCredential(DB_USER_TEST,DB_PASSWORD_TEST);
-		$sqlQuery->setDatabaseHost(DB_HOST_TEST);
+		if (! self::$sqlQueryStatic) {
+			self::$sqlQueryStatic = new SQLQuery(DB_DATABASE_TEST);
+			self::$sqlQueryStatic->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
+			self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
 
-		$this->sqlQuery = $sqlQuery;
+		}
 		$this->objectInstancier = new ObjectInstancier();
-		$this->objectInstancier->SQLQuery = $sqlQuery;
+		$this->objectInstancier->__set('SQLQuery',self::$sqlQueryStatic);
 
 		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
 		global $sqlQuery;
 		$sqlQuery = $this->getSQLQuery();
 
-		return $this->createDefaultDBConnection($this->sqlQuery->getPdo(), DB_DATABASE_TEST);
+		return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
-	
+
 	/**
 	 * @return PHPUnit_Extensions_Database_DataSet_IDataSet
 	 */
@@ -60,7 +59,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     }
     
     public function getSQLQuery(){
-    	return $this->sqlQuery;
+    	return self::$sqlQueryStatic;
     }
     
     public function setSuperAdminAuthentication(){

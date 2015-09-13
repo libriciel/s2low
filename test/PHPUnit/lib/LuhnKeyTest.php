@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__.'/../init.php';
-
 //http://www.webozor.com/php/clef-de-luhn-ou-formule-de-luhn
 class LuhnKeyTest extends PHPUnit_Framework_TestCase {
 	

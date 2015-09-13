@@ -1,7 +1,5 @@
 <?php
 
-require_once(__DIR__."/../init.php");
-
 class AuthentificationTest  extends S2lowTestCase {
 	
 	private function authenticateWith($expected,$server = array(),$session = array()){
@@ -9,12 +7,9 @@ class AuthentificationTest  extends S2lowTestCase {
 		$authentification = new Authentification($server,$session,$userSQL);
 		$this->assertEquals($expected,$authentification->authenticate());
 	}
-	
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage La connexion n'a pas pu être établie
-	 */
+
 	public function testAuthenticate(){
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
 		$this->authenticateWith(false);
 	}
 	
@@ -24,15 +19,12 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_I_DN'] = "test_issuer";
 		$this->authenticateWith(1, $server);
 	}
-	
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage La connexion n'a pas pu être établie
-	 */
+
 	public function testManyCertWithLogin(){
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$server['SSL_CLIENT_S_DN'] = "adullact";
 		$server['SSL_CLIENT_I_DN'] = "adullact";
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
 		$this->authenticateWith(false, $server);
 	}
 	
@@ -52,28 +44,22 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['PHP_AUTH_PW'] = "alice";
 		$this->authenticateWith(2, $server);
 	}
-	
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage La connexion n'a pas pu être établie
-	 */
+
 	public function testBadLogin(){
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$server['SSL_CLIENT_S_DN'] = "adullact";
 		$server['SSL_CLIENT_I_DN'] = "adullact";
 		$server['PHP_AUTH_USER'] = "alice";
 		$server['PHP_AUTH_PW'] = "bad password";
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
 		$this->authenticateWith(false, $server);
 	}
-	
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage La connexion n'a pas pu être établie
-	 */
+
 	public function testNotLoginWithForwardCertificate(){
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
 		$this->authenticateWith(false, $server);
 	}
 	
@@ -85,8 +71,42 @@ class AuthentificationTest  extends S2lowTestCase {
 		$this->authenticateWith(4, $server);
 	}
 	
+	public function testGetInstance(){
+		$authentification = Authentification::getInstance();
+		$this->assertInstanceOf("Authentification",$authentification);
+	}
 
 
-	
+	public function testAuthenticateWithCert(){
+		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
+		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
+		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
+		$server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__."/fixtures/clean_pem.pem");
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->authenticateWith(4,$server);
+	}
+
+	public function testAuthenticateWithBadCert(){
+		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
+		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
+		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
+		$server['SSL_CLIENT_CERT'] = "foo";
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->authenticateWith(4,$server);
+	}
+
+	public function testAuthentificationFailed(){
+		$server['SSL_CLIENT_VERIFY'] = "FAILED";
+		$session['id_login'] = 2;
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->authenticateWith(2,$server,$session);
+	}
+
+	public function testAuthentificationFailed2(){
+		$server['SSL_CLIENT_VERIFY'] = "";
+		$session['id_login'] = 2;
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->authenticateWith(2,$server,$session);
+	}
 	
 }

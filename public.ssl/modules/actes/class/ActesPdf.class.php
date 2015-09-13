@@ -3,7 +3,10 @@
 require_once (SITEROOT . '/class/ExtendPdf.class.php');
 
 class ActesPdf {
-	
+
+	/**
+	 * @var ExtendPDF
+	 */
 	private $pdf;
 	private $actesTransaction;
 	private $user;
