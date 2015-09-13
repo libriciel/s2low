@@ -5,7 +5,10 @@ class JSONoutput {
 		$result['status'] = 'error';
 		$result['error-message'] = $Errormessage;;
 		$this->display($result);
-		exit;
+		if (TESTING_ENVIRONNEMENT){
+			throw new Exception("Exit !");
+		}
+		exit;  // @codeCoverageIgnore
 	}
 	
 	
