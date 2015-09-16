@@ -62,11 +62,13 @@ class Helpers {
    * \return La chaîne sans échappement
   */
   public static function stripSlashes($str) {
-    if (get_magic_quotes_gpc() == 1) {
+	  //Suite à la deprecation de get_magic_quotes_gpc()
+    /*if (get_magic_quotes_gpc() == 1) {
 	  return stripslashes($str);
 	} else {
 	  return $str;
-	}
+	}*/
+	  return $str;
   }
 
   /**
@@ -106,7 +108,8 @@ class Helpers {
 
   /**
    * \brief Méthode de redirection et renvoi de status prenant en compte le type de client (API ou formulaire Web)
-   * \param $status entier : statut global du retour (0 : succès, 1 : erreur) //FIXME : n'importe quoi, c'est une inversion de true=1 et false=0!!!! 
+   * \param $status entier : statut global du retour (0 : succès, 1 : erreur)
+  		//FIXME : n'importe quoi, c'est une inversion de true=1 et false=0!!!!
    * \param $msg chaîne : message à renvoyer
    * \param $redirect (optionnel) : URL vers laquelle rediriger
    * \param $apiMsg (optionnel) : message renvoyé dans le cas d'un appel par API (sinon $msg)
@@ -138,8 +141,8 @@ class Helpers {
 		if (defined("TESTING_ENVIRONNEMENT")){
 			throw new Exception("Message : $msg");
 		}
-		header("Location: " . $redirect);
-	  } else {
+		header("Location: " . $redirect);  // @codeCoverageIgnore
+	  } else { // @codeCoverageIgnore
 		echo $msg . "\n";
 	  }
 	}
@@ -147,7 +150,7 @@ class Helpers {
 		throw new Exception($msg);
 	}
 	
-	exit();
+	exit();  // @codeCoverageIgnore
   }
 
   /**
@@ -177,11 +180,12 @@ class Helpers {
    * \return La valeur de la variable après traitement
   */
   public static function getFromBDD($var) {
-    if (get_magic_quotes_runtime()) {
+	  return $var;
+    /*if (get_magic_quotes_runtime()) {
       return stripslashes($var);
     } else {
       return $var;
-    }
+    }*/
   }
 
   /**
@@ -331,14 +335,14 @@ class Helpers {
 	  $relPath = preg_replace('/^' . $escBase . '\\/*/', "", $path);
 	} else {
 		$t = Trace::getInstance();
-		$t->log("Impossible de créer le répertoire : $path ",Trace::$TRACE_ERROR);
+		$t->log("Impossible de créer le répertoire (unknow reason): $path ",Trace::$TRACE_ERROR);
 	  return false;
 	}
 
 	if (! file_exists($path)) {
 	  if (! mkdir($path, GENERATED_DIRS_PERMS, true)) {
 	  	$t = Trace::getInstance();
-	  	$t->log("Impossible de créer le répertoire : $path ",Trace::$TRACE_ERROR);
+	  	$t->log("Impossible de créer le répertoire (mkdir failed): $path ",Trace::$TRACE_ERROR);
 		return false;
 	  }
 
@@ -349,7 +353,7 @@ class Helpers {
 	  }
 	} elseif (! is_dir($path)) {
 		$t = Trace::getInstance();
-		$t->log("Impossible de créer le répertoire : $path ",Trace::$TRACE_ERROR);
+		$t->log("Impossible de créer le répertoire (file exists): $path ",Trace::$TRACE_ERROR);
 	  return false;
 	} else {
 	  return true;

@@ -2,7 +2,10 @@
 
 //http://www.webozor.com/php/clef-de-luhn-ou-formule-de-luhn
 class LuhnKeyTest extends PHPUnit_Framework_TestCase {
-	
+
+	/**
+	 * @var LuhnKey
+	 */
 	private $luhnKey;
 	
 	public function setUp(){

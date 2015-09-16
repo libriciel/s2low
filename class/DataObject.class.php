@@ -186,6 +186,7 @@ class DataObject {
     $sql = "DELETE FROM " . $this->objectName . " WHERE id='" . $id . "'";
 
     if (! $this->db->exec($sql)) {
+		//Never reached...
 	  $this->errorMsg = "Erreur lors de la suppression de l'entité d'identifiant " . $id;
 	  return false;
     }
