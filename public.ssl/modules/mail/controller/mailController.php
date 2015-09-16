@@ -96,7 +96,7 @@ class mailController {
   	 	$tabStatus = mail_transaction::getTabStatus();
   	 	$etat_string = $tabStatus[$etat];
   	 	
-  	 	$sujet=Helpers :: getVarFromPost("sujet");
+  	 	$sujet = utf8_decode(Helpers :: getVarFromPost("sujet"));
   	 	$SendDateFrom=Helpers :: getVarFromPost("SendDateFrom");
   	 	$SendDateTo=Helpers :: getVarFromPost("SendDateTo");
   	 	$cond=" user_id=".$me->getId();
@@ -104,7 +104,7 @@ class mailController {
   	 	if ($etat_string)
   	 		$cond.=" and status='".$etat_string."'";
   	 	if ($sujet)
-  	 		$cond.=" and objet ILIKE '%".mysql_real_escape_string($sujet)."%'";
+  	 		$cond.=" and objet ILIKE '%".addslashes($sujet)."%'";
   	 	if ($SendDateFrom)
   	 		$cond.=" and date_envoi >='".addslashes($SendDateFrom)."'";
   	 	if ($SendDateTo)
