@@ -34,7 +34,7 @@ class Authentification {
 	
 	private function detectConnexionID(){
 		$connexion_info = $this->getAllConnexionInfo();
-		
+
 		$id_list = $this->userSQL->getIdFromConnexionInfo($connexion_info['subject_dn'],
 											$connexion_info['issuer_dn'],
 											$connexion_info['certificate_rgs_2_etoiles'], $connexion_info['login'], $connexion_info['password']);

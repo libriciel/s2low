@@ -1,35 +1,29 @@
 <?php
-require_once ("../../../init/init.php");
+require_once (__DIR__."/../../../init/init.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
 require_once (SITEROOT . '/class/User.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/antivirus.class.php');
 
+
 $module = new Module();
 if (!$module->initByName("helios")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+	Helpers::returnAndExit(1,"Erreur d'initialisation du module",WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit ();
+	Helpers::returnAndExit(1,"Échec de l'authentification",WEBSITE);
 }
 
 $nomUSer = $me->get("name");
 $userId = $me->getId();
 
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+	Helpers::returnAndExit(1,"Accès refusé",WEBSITE_SSL);
 }
-
 
 $ok = 0;
 $ko = 0;
@@ -40,8 +34,7 @@ $uploadFile_baseName = $_FILES['enveloppe']['name'];
 $temporary_name = time().mt_rand(0, mt_getrandmax());
 $uploadfile = $uploaddir . $temporary_name;
 
-
-if (! move_uploaded_file($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
+if (! move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
 	Helpers :: returnAndExit(1, "Échec lors du téléchargement du fichier", WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
 }
 	
@@ -58,9 +51,8 @@ $htw = new HeliosTransactionWorkflow();
 $file_size=$_FILES['enveloppe']['size'];
 	
 if ($file_size>HELIOS_MAX_UPLOAD_SIZE) {
-	$_SESSION["error"] = "Taille de fichier supérieur à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
-	header("Location: " . WEBSITE_SSL);
-	exit ();
+	$message = "Taille de fichier supérieur à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
+	Helpers::returnAndExit(1,$message,WEBSITE_SSL);
 }
 	
 $submission_date=date("Y-m-d H:i:s");;
@@ -91,17 +83,15 @@ chmod($uploaddir.$SHA1, 0644);
 $R = $ht->save(true);
 
 if (!$R) {
-    $_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions.";
+    $message = "Erreur de l'initialisaton de l'accès à la table helios_transactions.";
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
-		$_SESSION["error"] .= "\nErreur de journalisation.";
+		$message .= "\nErreur de journalisation.";
     }
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-    exit ();
+	Helpers :: returnAndExit(1,$message,WEBSITE_SSL . "/modules/helios/index.php");
 }
   
 $must_signed = Helpers::getVarFromPost("must_signed",true);
 
-//recuperation de l'id de la transaction
 $id_transaction = $ht->getId();
 
 $htw->set("transaction_id", $id_transaction);
@@ -119,13 +109,11 @@ if ($must_signed){
 $htw->set("date", date('Y-m-d H:i:s'));
 
 if (!$htw->save(true)) {
-	$_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
+	$message = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
-      $_SESSION["error"] .= "\nErreur de journalisation.";
+      $message .= "\nErreur de journalisation.";
     }
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-    echo $_SESSION["error"];
-    exit ();
+	Helpers :: returnAndExit(1,$message,WEBSITE_SSL . "/modules/helios/index.php");
 }
 
 

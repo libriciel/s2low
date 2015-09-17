@@ -79,5 +79,12 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     	$_SERVER['SSL_CLIENT_S_DN'] = "admin_col2";
     	$_SERVER['SSL_CLIENT_I_DN'] = "admin_col2";
     }
+
+	public function setUserAuthentification(){
+		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
+		$_SERVER['SSL_CLIENT_S_DN'] = "user_col1";
+		$_SERVER['SSL_CLIENT_I_DN'] = "user_col1";
+	}
+
 	
 }

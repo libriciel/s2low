@@ -108,5 +108,11 @@ class AuthentificationTest  extends S2lowTestCase {
 		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
 		$this->authenticateWith(2,$server,$session);
 	}
+
+	public function testAuthenticateUser(){
+		$this->setUserAuthentification();
+		$this->authenticateWith(8,$_SERVER,$_SESSION);
+	}
+
 	
 }

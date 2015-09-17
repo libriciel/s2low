@@ -21,3 +21,11 @@ function utf8_encode_array($array){
 	}
 	return $result;
 }
+
+
+function move_uploaded_file_wrapper($filename, $destination){
+	if (TESTING_ENVIRONNEMENT){
+		return rename($filename,$destination);
+	}
+	return move_uploaded_file($filename ,$destination );
+}

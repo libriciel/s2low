@@ -9,9 +9,10 @@ class XSDValidation {
 	}
 
 	public function validate($xml_content){
-		$dom = new DomDocument();		
+		$dom = new DomDocument();
 		$dom->loadXML($xml_content);
 		return $dom->schemaValidate($this->xsdPath) ;
 	}
-	
+
+
 }
