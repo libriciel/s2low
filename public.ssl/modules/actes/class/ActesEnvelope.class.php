@@ -601,8 +601,9 @@ class ActesEnvelope extends DataObject {
 		break;
 		
 	  default:
-	  	mail(EMAIL_ADMIN, "Erreur lors du scan antivirus des actes","Message de l'antivirus : $output");
-	  	throw new Exception("Clamdscan unexpected error : " . $output);
+		  $result = implode("\n",$output);
+	  	mail(EMAIL_ADMIN, "Erreur lors du scan antivirus des actes","Message de l'antivirus : $result");
+	  	throw new Exception("Clamdscan unexpected error : " . $result);
 	  }
 	}
 	$this->errorMsg="Error: path=".$path." and this->file_path=".$this->file_path; 
