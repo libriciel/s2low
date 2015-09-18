@@ -138,7 +138,7 @@ class Helpers {
 	} else {
 	  if ($redirect) {
 		$_SESSION["error"] = nl2br($msg);
-		if (defined("TESTING_ENVIRONNEMENT")){
+		if (TESTING_ENVIRONNEMENT){
 			throw new Exception("Message : $msg");
 		}
 		header("Location: " . $redirect);  // @codeCoverageIgnore
@@ -146,7 +146,7 @@ class Helpers {
 		echo $msg . "\n";
 	  }
 	}
-	if (defined("TESTING_ENVIRONNEMENT")){
+	if (TESTING_ENVIRONNEMENT){
 		throw new Exception($msg);
 	}
 	

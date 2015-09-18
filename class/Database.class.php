@@ -19,7 +19,7 @@ class DatabasePool {
   	
   	//Putain de singleton utilisé n'importe où...
   	//On est donc contraint de regarder si on est en test pour ce brancher sur la base de test
-  	if (defined("TESTING_ENVIRONNEMENT")){
+  	if (TESTING_ENVIRONNEMENT){
   		$host = DB_HOST_TEST;
   		$user = DB_USER_TEST;
   		$password = DB_PASSWORD_TEST;

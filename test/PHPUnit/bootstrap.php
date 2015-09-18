@@ -1,6 +1,6 @@
 <?php
 
-
+define("TESTING_ENVIRONNEMENT",true);
 
 define('HELIOS_FILES_UPLOAD_ROOT', "vfs://test/helios/");
 
@@ -11,5 +11,4 @@ require_once(PHP_UNIT_AUTOLOADER);
 
 require_once(__DIR__."/S2lowTestCase.class.php");
 
-define("TESTING_ENVIRONNEMENT",true);
 

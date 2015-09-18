@@ -103,6 +103,10 @@ class Log extends DataObject {
    * \return La chaîne correspondant à l'horodatage de l'entrée, false sinon
    */
   public function genTimestamp() {
+	  if (TESTING_ENVIRONNEMENT){
+		  //FIXME
+		return "TESTING";
+	  }
 	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
 	$logFile = tempnam('/tmp', 'tedetis_web_');
 	$timeFile = $logFile . ".sig";

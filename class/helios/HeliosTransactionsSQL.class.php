@@ -145,5 +145,9 @@ class HeliosTransactionsSQL {
 		$sql = "UPDATE helios_transactions SET acquit_filename =  ? WHERE id = ?";
 		$this->sqlQuery->query($sql,$acquit_filename,$id);
 	}
-	
+
+	public function getAll(){
+		$sql = "SELECT * FROM helios_transactions ORDER BY id";
+		return $this->sqlQuery->query($sql);
+	}
 }

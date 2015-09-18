@@ -2,14 +2,13 @@
 class Antivirus
 {
 	public static $errorMsg;
-	/**
-	 *  @name checkArchiveSanity
-	 *  @param $path :  need full path and file name.
-	 *  @return true or false
-	 *  check a sigle file. If virus detected; return false and log it. 
-	 */
 
  	public static function checkArchiveSanity($path) {
+
+		//FIXME
+		if(TESTING_ENVIRONNEMENT){
+			return true;
+		}
 
 		$new_file = ANTIVIRUS_TMP_PATH . basename($path);		
 		

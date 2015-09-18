@@ -437,5 +437,8 @@ require_once('config-static.php');
 //on fait en sorte que config.php charge init.php et réciproquement
 require_once(__DIR__."/../init/init.php");
 
+if (! defined("TESTING_ENVIRONNEMENT")) {
+	define("TESTING_ENVIRONNEMENT", false);
+}
 
 
