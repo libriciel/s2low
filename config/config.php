@@ -53,8 +53,13 @@ if(!defined('DB_PASSWORD')){
 }
 
 if(!defined('DB_DATABASE')){
-        define('DB_DATABASE', "tedetis");
+	define('DB_DATABASE', "tedetis");
 }
+
+if(!defined('DB_CLIENT_ENCODING')){
+	define('DB_CLIENT_ENCODING', "LATIN9");
+}
+
 
 
 //Définition de la connexion à la base de données pour les tests unitaires et les tests de validation

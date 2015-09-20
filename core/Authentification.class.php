@@ -21,6 +21,7 @@ class Authentification {
 	}
 	
 	public function authenticate(){
+
 		if (! empty($this->session['id_login'])){
 			$this->verifConnexion($this->session['id_login']);
 			return $this->session['id_login'];

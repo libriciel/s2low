@@ -430,7 +430,7 @@ class User extends DataObject {
   		return true;
   	}
   	$authority = new Authority($this->authority_id);
-  	
+
   	$mod = new Module();
   	if (! $mod->initByName($module)) {
   		return false;
@@ -439,10 +439,11 @@ class User extends DataObject {
   	if (! $authority->getModulePerm($mod->getId())) {
   		return false;
   	}
-  	
+
   	if ($this->getPerm($module) == "RW" ) {
   		return true;
   	}
+
   	if ($this->getPerm($module) == $droit){
   		return true;
   	}

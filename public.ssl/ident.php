@@ -9,6 +9,7 @@ $password = Helpers::getVarFromPost("password");
 unset($_SESSION['error']);
 
 $me = new User();
+
 if (! $me->login($login,md5($password))) {
 	$_SESSION["error"] = "Échec de l'authentification";
 	header("Location: " . WEBSITE_SSL);

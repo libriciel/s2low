@@ -5,6 +5,8 @@ class SQLQuery {
 	const DEFAULT_HOST = "localhost";
 	const SLOW_QUERY_IN_MS = 2000;
 
+	const CLIENT_ENCODING_DEFAULT = "LATIN9";
+
 	private $databaseName;
 	private $host;
 	private $login;
@@ -12,10 +14,13 @@ class SQLQuery {
 	private $slow_query_in_ms;
 	private $pdo;
 
+	private $client_encoding;
+
 	public function __construct($databaseName){
 		$this->databaseName = $databaseName;
 		$this->setDatabaseHost(self::DEFAULT_HOST);
 		$this->setSlowQuery(self::SLOW_QUERY_IN_MS);
+		$this->setClientEncoding(self::CLIENT_ENCODING_DEFAULT);
 	}
 
 	public function disconnect(){
@@ -40,6 +45,10 @@ class SQLQuery {
 		$this->slow_query_in_ms  = $millisecond;
 	}
 
+	public function setClientEncoding($client_encoding){
+		$this->client_encoding = $client_encoding;
+	}
+
 	public function getPdo(){
 		if ( ! $this->pdo){
 			$dsn = self::DATABASE_TYPE . ":host=".$this->host;
@@ -48,6 +57,7 @@ class SQLQuery {
 			}
 			$this->pdo = new PDO($dsn,$this->login,$this->password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+			$this->query("SET CLIENT_ENCODING TO '{$this->client_encoding}';");
 		}
 		return $this->pdo;
 	}

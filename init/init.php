@@ -37,6 +37,7 @@ require_once("util.php");
 $sqlQuery = new SQLQuery(DB_DATABASE);
 $sqlQuery->setDatabaseHost(DB_HOST);
 $sqlQuery->setCredential(DB_USER,DB_PASSWORD);
+$sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 function sortir($message) {
 	$_SESSION["error"] = $message;

@@ -84,7 +84,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 	public function testSlowQuery(){
 		$this->sqlQuery->setSlowQuery(0);
 		$sql = "SELECT id FROM users ORDER BY id ";
-		$this->setExpectedException("PHPUnit_Framework_Error_Warning","Requete lente");
+		$this->setExpectedException("Exception","Requete lente");
 		$this->sqlQuery->queryOne($sql);
 	}
 
