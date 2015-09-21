@@ -18,81 +18,31 @@ class HeliosController extends Controller {
 		$this->helios_max_upload_size = $helios_max_upload_size;
 	}
 
-	public function import($userId, User $me){
-		$file_size = $_FILES['enveloppe']['size'];
-		if ($file_size > $this->helios_max_upload_size) {
-			$message = "Taille de fichier supérieur à la limite autorisée (".
-				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
-			throw new Exception($message);
-		}
+	public function importFile($user_id,$filepath,$original_filename){
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+
+		$userSQL = new UserSQL($this->getSQLQuery());
+		$user_info = $userSQL->getInfo($user_id);
+
+		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
+		$authority_info = $authoritySQL->getInfo($user_info['authority_id']);
+
+		$moduleSQL = new ModuleSQL($this->getSQLQuery());
+		$module_info = $moduleSQL->getInfoByName(self::MODULE_NAME);
 
 		$must_signed = Helpers::getVarFromPost("must_signed",true);
 
-		$uploaddir = HELIOS_FILES_UPLOAD_ROOT;
+		$siren = $authority_info['siren'];
+		$ext_siret = $authority_info['ext_siret'];
 
-		try {
-			$uploadFile_baseName = $_FILES['enveloppe']['name'];
-
-			$temporary_name = time().mt_rand(0, mt_getrandmax());
-			$uploadfile = $uploaddir . $temporary_name;
-
-			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploadfile)) {
-				throw new Exception("Échec lors du téléchargement du fichier");
-			}
-		} catch (Exception $e){
-			throw new Exception("Échec lors du téléchargement du fichier");
-		}
-
-		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$SHA1 = sha1_file($uploadfile);
-
-		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
-			unlink($uploadfile);
-			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
-		}
-
-		if (!Antivirus::checkArchiveSanity($uploadfile)) {
-			throw new Exception(Antivirus::$errorMsg);
-		}
-
-
-		$myAuthority = new Authority($me->get("authority_id"));
-		$siren=$myAuthority->get('siren');
-		$submission_date=date("Y-m-d H:i:s");;
-
-		$ext_siret=$myAuthority->get('ext_siret');
-
-		$ht = new HeliosTransaction();
-		$ht->set("filename", $uploadFile_baseName);
-		$ht->set("user_id", $userId);
-		$ht->set("authority_id",$me->get("authority_id"));
-		$ht->set("file_size",$file_size);
-		$ht->set("submission_date",$submission_date);
-		$ht->set("sha1",$SHA1);
-		$ht->set("siren",$siren.$ext_siret);
-
-
-
-		rename($uploadfile,$uploaddir.$SHA1);
-		chmod($uploaddir.$SHA1, 0644);
-
-		$R = $ht->save(true);
-
-		if (!$R) {
-			$message = "Erreur de l'initialisaton de l'accès à la table helios_transactions.";
-			if (!Log :: newEntry(LOG_ISSUER_NAME, $message, 3, false, 'USER', self::MODULE_NAME, $me)) {
-				$message .= "\nErreur de journalisation.";
-			}
-			throw new Exception($message);
-		}
-
-
-		$id_transaction = $ht->getId();
+		$filesize = filesize($filepath);
+		$sha1 = sha1_file($filepath);
+		$id_transaction = $heliosTransactionSQL->create($original_filename,$sha1,$user_id,$user_info['authority_id'],$filesize,$siren.$ext_siret);
 
 		if ($must_signed){
 			$state = HeliosTransactionsSQL::ATTENTE_SIGNEE;
 			$message = "Fichier en attente d'être signé";
-		} elseif(! $me->checkDroit(self::MODULE_NAME,'TT')) {
+		} elseif(! $moduleSQL->hasDroit($module_info['id'],$user_id,'TT')) {
 			$state = HeliosTransactionsSQL::ATTENTE_POSTEE;
 			$message = "Fichier en attente d'être télétransmis";
 		} else {
@@ -102,11 +52,37 @@ class HeliosController extends Controller {
 		$heliosTransactionSQL->updateStatus($id_transaction,$state,$message);
 
 		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-		if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, $me)) {
-			//FIXME
+		Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false,$user_id);
+		return $id_transaction;
+	}
+
+	public function import($user_id){
+		$file_size = $_FILES['enveloppe']['size'];
+		if ($file_size > $this->helios_max_upload_size) {
+			$message = "Taille de fichier supérieur à la limite autorisée (".
+				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
+			throw new Exception($message);
 		}
 
-		return $id_transaction;
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+
+		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
+			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
+		}
+
+		$uploaddir = HELIOS_FILES_UPLOAD_ROOT;
+
+		try {
+			$pes_aller_original_name = $_FILES['enveloppe']['name'];
+			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploaddir.$SHA1)) {
+				throw new Exception("Échec lors du téléchargement du fichier");
+			}
+			chmod($uploaddir.$SHA1, 0644);
+		} catch (Exception $e){
+			throw new Exception("Échec lors du téléchargement du fichier");
+		}
+		return $this->importFile($user_id,$uploaddir.$SHA1,$pes_aller_original_name);
 	}
 
 	public function importAction(){
@@ -129,7 +105,7 @@ class HeliosController extends Controller {
 		$id_transaction = false;
 
 		try {
-			$id_transaction = $this->import($userId, $me);
+			$id_transaction = $this->import($userId);
 		} catch (Exception $e){
 			Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
 		}
@@ -172,7 +148,7 @@ class HeliosController extends Controller {
 		$root->appendChild($messageElement);
 
 		try{
-			$id_transaction = $this->import($userId, $me);
+			$id_transaction = $this->import($userId);
 			$msg = "Téléchargement du fichier réussi.";
 			$idElement->appendChild( $doc->createTextNode($id_transaction));
 			$resultatElement->appendChild( $doc->createTextNode("OK"));
@@ -182,7 +158,6 @@ class HeliosController extends Controller {
 			$messageElement->appendChild( $doc->createTextNode( utf8_encode($e->getMessage())));
 		}
 
-
 		$xmlFile=HELIOS_FILES_ROOT."/temp/import-".uniqid().".xml";
 		$doc->save($xmlFile);
 
@@ -190,7 +165,30 @@ class HeliosController extends Controller {
 			echo "KO\nimpossible d'envoyer le fichier XML";
 		}
 		unlink($xmlFile);
-
 	}
+
+	public function updateSiretFromPESAller(){
+		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$id_list = $heliosTransactionSQL->getAllId();
+		foreach($id_list as $transaction_id){
+			$info = $heliosTransactionSQL->getInfo($transaction_id);
+			$pes_aller_path = HELIOS_FILES_UPLOAD_ROOT . "/" . $info['filename'];
+			if (! file_exists($pes_aller_path)){
+				echo "Transaction $transaction_id : le fichier PES ALLER n'est pas disponible\n";
+				continue;
+			}
+
+			$xml = simplexml_load_file($pes_aller_path,"SimpleXMLElement",LIBXML_PARSEHUGE);
+			$siret = strval($xml->EnTetePES->IdColl['V']);
+			if (! $siret){
+				echo "Transaction $transaction_id : le fichier PES ALLER ne contient pas de SIRET !\n";
+				continue;
+			}
+			$authoritySiretSQL->add($info['authority_id'],$siret);
+			echo "Transaction $transaction_id : siret $siret ajouté à la collectivite {$info['authority_id']}\n";
+		}
+	}
+
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-class AuthoritySiret extends SQL {
+class AuthoritySiretSQL extends SQL {
 	
 	public function siretList($authority_id){
 		$sql = "SELECT * FROM authority_siret WHERE authority_id=? ORDER BY siret";

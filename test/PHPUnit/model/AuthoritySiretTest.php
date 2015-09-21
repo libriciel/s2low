@@ -5,13 +5,13 @@ class AuthoritySiretTest extends S2lowTestCase {
 	const SIRET_EXEMPLE = 49358727300035;
 
 	/**
-	 * @var AuthoritySiret
+	 * @var AuthoritySiretSQL
 	 */
 	private $authoritySiret;
 	
 	protected function setUp(){
 		parent::setUp();
-		$this->authoritySiret = new AuthoritySiret($this->getSQLQuery());
+		$this->authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 	}
 	
 	public function testSiretListEmpty(){	

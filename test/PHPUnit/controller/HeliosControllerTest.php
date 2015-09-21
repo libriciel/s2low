@@ -23,7 +23,6 @@ class HeliosControllerTest extends S2lowTestCase {
 		$_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
 		$this->setUserAuthentification();
 		$this->heliosController = new HeliosController($this->getObjectInstancier());
-
 	}
 
 	private function expectedError($message){
@@ -138,5 +137,39 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->expectedError("Taille de fichier supérieur à la limite autorisée");
 		$this->heliosController->importAPIAction();
 	}
+
+	public function testUpdateSiretFromPESAllerNoFile(){
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$heliosTransactionSQL->create("pes1.xml","42",8,1,42,12);
+
+		$heliosController = new HeliosController($this->getObjectInstancier());
+		$this->expectOutputRegex("#le fichier PES ALLER n'est pas disponible#");
+		$heliosController->updateSiretFromPESAller();
+	}
+
+	public function testUpdateSiretFromPESAllerNotXML(){
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+
+		$heliosTransactionSQL->create("pes1.xml","42",8,1,42,12);
+		file_put_contents($this->testStreamUrl."/helios/pes1.xml","<test/>");
+		$heliosController = new HeliosController($this->getObjectInstancier());
+		$this->expectOutputRegex("#le fichier PES ALLER ne contient pas de SIRET#");
+		$heliosController->updateSiretFromPESAller();
+	}
+
+	public function testUpdateSiretFromPESAllerOK(){
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+
+		$heliosTransactionSQL->create("pes1.xml","42",8,1,42,12);
+		file_put_contents($this->testStreamUrl."/helios/pes1.xml",file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
+		$heliosController = new HeliosController($this->getObjectInstancier());
+		$this->expectOutputRegex("#siret 12345678912345 ajouté à la collectivite 1#");
+		$heliosController->updateSiretFromPESAller();
+		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
+		$list = $authoritySiretSQL->siretList(1);
+		$this->assertEquals("12345678912345",$list[0]['siret']);
+
+	}
+
 
 }

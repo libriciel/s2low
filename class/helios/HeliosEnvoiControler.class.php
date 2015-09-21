@@ -35,7 +35,13 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
-		
+
+			if (!Antivirus::checkArchiveSanity($file_path)) {
+				$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}
+
 			$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 			if (! $heliosPESValidation->validate($pes_content)){
 				print_r($heliosPESValidation->getLastError());
@@ -63,7 +69,11 @@ class HeliosEnvoiControler {
 				continue;
 			}
 			$this->heliosTransactionsSQL->setNomFic($transaction_id,$nom_fic);
-			
+
+			$siret = $pes_xml->EnTetePES->IdColl['V'];
+			$authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
+			$authoritySiret->add($transactionInfo['authority_id'],$siret);
+
 			$message = "Transaction $transaction_id dans la file d'attente";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
 		}

@@ -8,7 +8,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	
 	public function setUp(){
 		parent::setUp();
-		$testStream = org\bovigo\vfs\vfsStream::setup('test');
+		org\bovigo\vfs\vfsStream::setup('test');
 		$testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
 		$this->helios_ftp_response_tmp_local_path = $testStreamUrl."/helios_ftp_response_tmp_local_path/";
 		$this->helios_response_root = $testStreamUrl."/helios_response_root/";
@@ -22,8 +22,9 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$schema_pes_path = __DIR__."/../../../xsd/Schemas_PES_v471_072015/";
-		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $schema_pes_path,"noreply@sigmalis.com");
+		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $authoritySiretSQL, $schema_pes_path,"noreply@sigmalis.com");
 	}
 	
 	private function analyse(){
@@ -42,6 +43,8 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	}
 	
 	public function testAnalysePesRetour(){
+		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
+		$authoritySireSQL->add(1,"12345678900035");
 		$this->expectOutputRegex('#Traitement de vfs://test/helios_ftp_response_tmp_local_path/pes_retour.xml#');
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
 		$this->assertTrue(file_exists($this->helios_response_root."/pes_retour.xml"));
@@ -62,6 +65,16 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
 	}
-	
-	
+
+	public function testAnalysePesRetourDoubleSire(){
+		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
+		$authoritySireSQL->add(1,"12345678900035");
+		$authoritySireSQL->add(2,"12345678900035");
+		$this->expectOutputRegex('#Le SIRET 12345678900035 est associé à plusieurs collectivités#');
+		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
+		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
+
+
+	}
+
 }

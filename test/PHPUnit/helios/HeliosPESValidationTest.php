@@ -23,7 +23,7 @@ class HeliosPESValidationTest extends PHPUnit_Framework_TestCase {
 	public function testPESallerSigner(){
 		$heliosPESValidation  = new HeliosPESValidation(HELIOS_XSD_PATH);
 		$this->assertTrue($heliosPESValidation->validate(file_get_contents(__DIR__."/fixtures/pes_signe.xml")));
-
 	}
+
 	
 }

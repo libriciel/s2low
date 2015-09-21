@@ -7,15 +7,17 @@ class HeliosAnalyseFichierRecu {
 	private $heliosTransactionsSQL;
 	private $authoritySQL;
 	private $heliosRetourSQL;
+	private $authoritySiretSQL;
 	private $schema_pes_path;
 	private $email_admin;
 	
-	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, AuthoritySQL $authoritySQL, HeliosRetourSQL $heliosRetourSQL, $schema_pes_path, $email_admin){
+	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, AuthoritySQL $authoritySQL, HeliosRetourSQL $heliosRetourSQL, AuthoritySiretSQL $authoritySiretSQL,$schema_pes_path, $email_admin){
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 		$this->authoritySQL = $authoritySQL;
 		$this->heliosRetourSQL = $heliosRetourSQL;
 		$this->schema_pes_path = $schema_pes_path;
 		$this->email_admin = $email_admin;
+		$this->authoritySiretSQL = $authoritySiretSQL;
 	}
 	
 	private function log($message){
@@ -139,7 +141,7 @@ class HeliosAnalyseFichierRecu {
 	private function traitementAck($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 		
-		echo $this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
+		$this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 		
 		if (count($xml->ACQUIT) == 0){
 			$message = "Transaction $helios_transaction_id acceptee";
@@ -148,7 +150,7 @@ class HeliosAnalyseFichierRecu {
 			$message = "Transaction $helios_transaction_id : information disponible";
 			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
 		}
-		echo $this->log($message);
+		$this->log($message);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 	
 	}
@@ -156,26 +158,28 @@ class HeliosAnalyseFichierRecu {
 	private function traitementNack($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 	
-		echo $this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
+		$this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 	
 		$message = "Transaction $helios_transaction_id refusée";
 		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message);
 		
-		echo $this->log($message);
+		$this->log($message);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 	}
 	
 	private function traitementPESRetour($basename,SimpleXMLElement $xml){
-		
 		$siret = strval($xml->EnTetePES->IdColl['V']);
-		
-		$siren = substr($siret, 0,9);
-		
-		$authority_id = $this->authoritySQL->getIdBySIREN($siren);
-		if (! $authority_id){
+
+		$authority_list = $this->authoritySiretSQL->authorityList($siret);
+		if (! $authority_list){
 			throw new Exception("La collectivité $siret n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
 		}
-		
+
+		if (count($authority_list) > 1){
+			throw new Exception("Le SIRET $siret est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué");
+		}
+		$authority_id = $authority_list[0]['authority_id'];
+
 		$this->heliosRetourSQL->add($authority_id, $siret, $basename);		
 	}
 	
