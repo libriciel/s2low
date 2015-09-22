@@ -142,6 +142,9 @@ class ActesEnvelope extends DataObject {
 	  foreach ($emails as $email) {
 		$xml .= "  <actes:Email>" . $email . "</actes:Email>\n";
 	  }
+	  if(define("ACTES_MAIL_BACKUP")){
+	  	$xml .= "  <actes:Email>" . ACTES_MAIL_BACKUP . "</actes:Email>\n";
+	  }
 	  $xml .= " </actes:AdressesRetour>\n";
 	} else {
 	  $this->errorMsg = "Informations manquantes pour générer l'enveloppe (pas de mail retour)";
