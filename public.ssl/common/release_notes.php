@@ -86,6 +86,20 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.2 du 25.09.2015</h2>";
+$html .= "<ul>";
+$html .= "<li>API : une nouvelle API permet de tester la connexion à la plate-forme S²LOW ;";
+$html .= "<li>Administration : l'authentification par certificat RGS* peut être couplée avec un RGS** ;";
+$html .= "<li>Administration : il ne peut plus y avoir d'espace dans l'adresse mail d'un utilisateur ;";
+$html .= "<li>Module HELIOS : le système d'analyse et de télétransmission des flux PES a été syndé en deux parties ;";
+$html .= "<li>Module HELIOS : les schémas PESv2 ont été mis à jour et récupéré sur Xemelios ;";
+$html .= "<li>Modules ACTES et HELIOS : le menu de sélection de la collectivité a été remplacé pour etre plus intuitif ;";
+$html .= "<li>Module HELIOS : les PES récupérés erronés sont déplacés dans un dossier spécifique ;";
+$html .= "<li>Module ACTES : mise en place de la macro ACTES_MAIL_BACKUP ;";
+$html .= "<li>Module ACTES : correction bug : si l'antivirus n'était pas lancé, les flux ne pouvaient pas être analysés et ils passaient en erreur ;";
+$html .= "</ul>";
+
+
 $html .= "<h2>V2.1.01 du 23.06.2015</h2>";
 $html .= "<ul>";
 $html .= "<li>Module HELIOS : correction bug : la signature HELIOS introduisait un ID dans les bordereaux ;";
