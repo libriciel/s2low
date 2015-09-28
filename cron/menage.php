@@ -4,7 +4,7 @@ $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $allEnvelopes = $actesTransactionsSQL->getEnvelopeToDelete();
 
-$actesEnvelope = new ActesEnvelope(ACTES_FILES_UPLOAD_ROOT);
+$actesEnvelope = new ActesFiles(ACTES_FILES_UPLOAD_ROOT);
 
 echo count($allEnvelopes). " transactions trouvées dans l'état <archivé par le SAE>\n";
 

@@ -71,6 +71,7 @@ class ControllerTest extends S2lowTestCase {
 	public function testRenderDefault(){
 		$this->controller->title = "Titre mock";
 		$this->controller->template_milieu = __DIR__."/../lib/fixtures/MockMockTemplate.php";
+		$this->controller->side_bar = false;
 		$this->expectOutputRegex("#<h1>Mock Mock Template</h1>#");
 		$this->controller->renderDefault();
 	}
@@ -88,6 +89,7 @@ class ControllerTest extends S2lowTestCase {
 	public function testActionAfter(){
 		$this->controller->title = "Titre mock";
 		$this->controller->template_milieu = __DIR__."/../lib/fixtures/MockMockTemplate.php";
+		$this->controller->side_bar = false;
 		$this->expectOutputRegex("#<h1>Mock Mock Template</h1>#");
 		$this->controller->_actionAfter();
 	}
