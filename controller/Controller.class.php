@@ -122,6 +122,9 @@ class Controller {
 		$doc->openContainer();
 		$doc->openSideBar();
 		$doc->buildMenu($this->me);
+
+		$doc->addBody($this->side_bar);
+
 		$doc->closeSideBar();
 		$doc->openContent();
 
@@ -149,6 +152,7 @@ class Controller {
 	public function _actionBefore($controller,$action){
 		$this->title = "S2low";
 		$this->template_milieu = __DIR__."/../template/".ucfirst($controller).ucfirst($action).".php";
+		$this->side_bar = false;
 	}
 	
 	public function _actionAfter(){

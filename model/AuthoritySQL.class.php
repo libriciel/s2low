@@ -58,4 +58,73 @@ class AuthoritySQL extends SQL {
   		$result = $this->query($sql,$department_code,$district_code);
   		return count($result);
   	}
+
+	public function getList($authority_group_id,$authority_type_id,$name,$siren, $siret, $offset,$limit){
+		$sql = "SELECT authorities.*, authority_types.description as type_name, authority_groups.name as group_name
+					FROM authorities
+					LEFT JOIN authority_groups ON authorities.authority_group_id=authority_groups.id
+					LEFT JOIN authority_types ON authorities.authority_type_id = authority_types.id ";
+		$data = array();
+		if ($siret){
+			$sql .= " JOIN authority_siret ON authorities.id=authority_siret.authority_id";
+		}
+		$sql .= " WHERE 1=1 ";
+		if ($siret){
+			$sql .= " AND authority_siret.siret LIKE ? ";
+			$data[] = "%$siret%";
+		}
+		if ($authority_group_id){
+			$sql.= " AND authority_group_id = ? ";
+			$data[] = $authority_group_id;
+		}
+		if ($authority_type_id){
+			$sql .= " AND authority_type_id = ?";
+			$data[] = $authority_type_id;
+		}
+		if ($name){
+			$sql .=  " AND name LIKE ? ";
+			$data[] .= "%$name%";
+		}
+		if ($siren){
+			$sql .=  " AND siren LIKE ? ";
+			$data[] .= "%$siren%";
+		}
+		$offset = intval($offset);
+		$limit = intval($limit);
+		$sql .= " ORDER BY name LIMIT $limit OFFSET $offset";
+		return $this->query($sql,$data);
+	}
+
+	public function getNb($authority_group_id,$authority_type_id,$name,$siren,$siret){
+		$sql = "SELECT count(*) FROM authorities ";
+		$data = array();
+		if ($siret){
+			$sql .= " JOIN authority_siret ON authorities.id=authority_siret.authority_id";
+		}
+		$sql .= " WHERE 1=1 ";
+		if ($siret){
+			$sql .= " AND authority_siret.siret LIKE ? ";
+			$data[] = "%$siret%";
+		}
+		if ($authority_group_id){
+			$sql.= " AND authority_group_id = ? ";
+			$data[] = $authority_group_id;
+		}
+		if ($authority_type_id){
+			$sql .= " AND authority_type_id = ?";
+			$data[] = $authority_type_id;
+		}
+		if ($name){
+			$sql .=  " AND name LIKE ? ";
+			$data[] .= "%$name%";
+		}
+		if ($siren){
+			$sql .=  " AND siren LIKE ? ";
+			$data[] .= "%$siren%";
+		}
+		return $this->queryOne($sql,$data);
+	}
+
+
+
 }

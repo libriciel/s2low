@@ -109,7 +109,7 @@ class Database {
       header("Location: /maintenance.php");
       exit(false);
     }
-     pg_set_client_encoding  ( "LATIN9" );
+     pg_set_client_encoding  ( DB_CLIENT_ENCODING );
     
     return true;
   }

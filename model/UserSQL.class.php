@@ -121,4 +121,9 @@ class UserSQL extends SQL {
 			" ORDER BY id ";
 		return $this->queryOneCol($sql,$subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
 	}
+
+	public function getGroupeName($user_id){
+		$sql = "SELECT name FROM users JOIN authority_groups ON users.authority_group_id= authority_group_id.id WHERE users.id=?";
+		return $this->query($sql,$user_id);
+	}
 }

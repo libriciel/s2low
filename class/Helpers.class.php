@@ -514,4 +514,12 @@ class Helpers {
 	}
   }
 
+	public function chunkString($string,$length){
+		$result = substr($string, 0, $length);
+		if (strlen($string) > 40) {
+			$result .= "...";
+		}
+		return $result;
+	}
+
 }

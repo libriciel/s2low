@@ -1,7 +1,9 @@
 <?php
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
 
+require_once( __DIR__ . "/../../../init/init.php");
+
+$frontController->go("Admin","authorities");
+/*
 $me = new User();
 
 if (! $me->authenticate()) {
@@ -21,36 +23,17 @@ $fname = Helpers::getVarFromGet("name");
 $fgroup = Helpers::getVarFromGet("group");
 $api = Helpers::getVarFromGet("api");
 $fsiren = Helpers::getVarFromGet("siren");
+$count = Helpers::getVarFromGet("count")?:10;
 
-$authority = new Authority();
+$recuperateur = new Recuperateur($_GET);
 
-$filter = array();
-if ($me->isGroupAdmin()) {
-  $filter[] .= "authorities.authority_group_id=" . addslashes($me->get("authority_group_id"));
-}
+$page_number = $recuperateur->getInt('page',1);
+$taille_page =  $recuperateur->getInt('count',10);
 
-if (isset($ftype) && strlen($ftype) > 0) {
-  $filter[] .= "authorities.authority_type_id='" . addslashes($ftype) . "'";
-}
+$authoritySQL = new AuthoritySQL($sqlQuery);
+$authorities = $authoritySQL->getList($fgroup, $ftype,$fname,$fsiren,($page_number - 1) * $taille_page,$taille_page);
 
-if (isset($fname) && strlen($fname) > 0) {
-  $filter[] .= "authorities.name ILIKE '%" . addslashes($fname) . "%'";
-}
-
-if (isset($fgroup) && is_numeric($fgroup)) {
-  $filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
-}
-
-if (isset($fsiren) && is_numeric($fsiren)) {
-  $filter[] .= "authorities.siren ILIKE '%" . addslashes($fsiren) ."%'";
-}
-
-$where = "";
-if (count($filter) > 0) {
-  $where = "WHERE " . implode($filter, " AND ");
-}
-
-$authorities = $authority->getAuthoritiesList($where);
+$nb_authorities = $authoritySQL->getNb($fgroup, $ftype,$fname,$fsiren);
 
 if ($api){
 	$jsonOutput->retrictAndDisplay($authorities,array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
@@ -63,7 +46,10 @@ $doc->setTitle("Tedetis : gestion des collectivités");
 $doc->openContainer();
 $doc->openSideBar();
 $doc->buildMenu($me);
-$doc->buildPager($authority);
+
+$pagerHTML  = new PagerHTML();
+
+$doc->addBody($pagerHTML->getHTML($page_number,$nb_authorities,$taille_page));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -158,3 +144,4 @@ $doc->closeContainer();
 $doc->buildFooter();
 
 $doc->display();
+*/

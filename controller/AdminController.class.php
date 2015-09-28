@@ -70,6 +70,51 @@ class AdminController extends Controller {
 		return $this->getObjectInstancier()->Siret;
 	}
 	
-	
+	public function authoritiesAction(){
+		$this->verifAdmin();
+		$pagerHTML  = new PagerHTML();
+		$recuperateur = $this->getRecuperateurGet();
+
+		$this->ftype =  $recuperateur->get("type");
+		$this->fname = $recuperateur->get("name");
+		$this->fgroup = $recuperateur->get("group");
+		$this->api = $recuperateur->get("api");
+		$this->fsiren = $recuperateur->get("siren");
+		$this->fsiret = $recuperateur->get("siret");
+		$this->count = $recuperateur->get("count")?:10;
+		$this->page_number = $recuperateur->getInt('page',1);
+		$this->taille_page =  $recuperateur->getInt('count',10);
+
+
+		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
+		$this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype,$this->fname,$this->fsiren,$this->fsiret,($this->page_number - 1) * $this->taille_page,$this->taille_page);
+
+		$nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype,$this->fname,$this->fsiren,$this->fsiret);
+
+		if ($this->api){
+			$jsonOutput = new JSONoutput();
+			$jsonOutput->retrictAndDisplay($this->authorities,array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
+			exit;
+		}
+
+		$authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
+		$this->authority_types = $authorityTypes->getChildList();
+
+		$this->side_bar = $pagerHTML->getHTML($this->page_number,$nb_authorities,$this->taille_page);;
+
+		if ($this->me->isGroupAdmin()){
+			$userSQL = new UserSQL();
+			$group_name = $userSQL->getGroupeName($this->me->getId());
+			$this->titre = "Gestion des collectivités du groupe $group_name";
+			$this->groupe_list = false;
+		} else {
+			$this->titre = "Gestion des collectivités";
+			$groupeSQL = new GroupSQL($this->getSQLQuery());
+			$this->groupe_list = $groupeSQL->getAll();
+		}
+
+	}
+
+
 	
 }

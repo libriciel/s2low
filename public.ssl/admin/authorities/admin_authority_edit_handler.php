@@ -62,10 +62,6 @@ else
 
 $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
 
-
-$sqlQuery = new SQLQuery(DB_DATABASE);
-$sqlQuery->setDatabaseHost(DB_HOST);
-$sqlQuery->setCredential(DB_USER,DB_PASSWORD);
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
 if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)){
