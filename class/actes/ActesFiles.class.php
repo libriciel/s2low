@@ -1,6 +1,6 @@
 <?php 
 
-class ActesEnvelope {
+class ActesFiles {
 	
 	private $root_workspace_path;
 	

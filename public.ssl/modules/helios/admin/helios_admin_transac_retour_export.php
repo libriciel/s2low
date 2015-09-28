@@ -102,7 +102,7 @@ if (count($history) > 0) {
 	// SIREN de la collectivité
 	$entry[] = $env["siren"];
 	
-	$entry [] =$env["sha1"];
+	//$entry [] =$env["sha1"];
 	$doc->addLine($entry);
   }
 }
