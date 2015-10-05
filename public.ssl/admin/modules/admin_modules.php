@@ -14,7 +14,7 @@ if (! $me->authenticate()) {
 
 
 $zeMod = new Module();
-$modules = $zeMod->getModulesList();
+$modules = $zeMod->getModulesList("ORDER BY id ASC");
 $statusList = $zeMod->get("statusTypes");
 
 if($me->isGroupAdminOrSuper() && $api){
