@@ -85,6 +85,9 @@ class HeliosEnvoiControler {
 		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 		
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
+
+		$nb_file_send = 0;
+
 		foreach($transaction_id_list as $transaction_id){
 			echo "Préparation de l'envoi de la transaction $transaction_id\n";
 			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
@@ -180,7 +183,15 @@ class HeliosEnvoiControler {
 				unlink($file_to_send);
 			}
 			unlink($file_path_with_complete_name);
+			$nb_file_send++;
 		}
+
+		if ($nb_file_send == 0 && count($transaction_id_list)){
+			$message = "Le script helios-envoi-fichier.php n'a pas envoyé de transactions sur les ".count($transaction_id_list)." à poster !\n";
+			echo $message;
+			mail(EMAIL_ADMIN,"[ALERTE CRITIQUE] L'envoi des PES à la DGFiP ne fonctionne plus",$message);
+		}
+
 	}
 	
 	//nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
