@@ -85,7 +85,10 @@ $html = "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/he
 $html .= "<h2>Visualisation de transactions d'un fichier</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
-$html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id)); 
+$html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id));
+if ($trans->get('xml_nomfic')){
+	$html .= $doc->getHTMLArrayline("Balise NomFic", $trans->get('xml_nomfic'));
+}
 $html .= $doc->getHTMLArrayline("Date de postage" ,Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
 $html .= $doc->getHTMLArrayline("État actuel" ,$currentStatus);
 $html .= $doc->getHTMLArrayline("Taille (octets)" ,$trans->get("file_size"));

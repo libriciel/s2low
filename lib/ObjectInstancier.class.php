@@ -9,13 +9,21 @@ class ObjectInstancier {
 	}
 	
 	public function __get($name){
-		if (! isset($this->objects[$name])){
-			$this->objects[$name] =  $this->newInstance($name);	
-		}
-		return $this->objects[$name];
+		return $this->get($name);
 	}
 	
 	public function __set($name,$value){
+		$this->set($name,$value);
+	}
+
+	public function get($name){
+		if (! isset($this->objects[$name])){
+			$this->objects[$name] =  $this->newInstance($name);
+		}
+		return $this->objects[$name];
+	}
+
+	public function set($name,$value){
 		$this->objects[$name] = $value;
 	}
 
@@ -29,10 +37,11 @@ class ObjectInstancier {
         $param = $this->bindParameters($className,$allParameters);        
         return $reflexionClass->newInstanceArgs($param);
 	}
-	
+
 	private function bindParameters($className,array $allParameters){
 		$param = array();
-		foreach($allParameters as $parameters){  
+		foreach($allParameters as $parameters){
+			/* @var $parameters ReflectionParameter */
         	$param_name = $parameters->getClass() ? $parameters->getClass()->name : $parameters->name;
         	
         	try {

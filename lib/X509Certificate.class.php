@@ -22,11 +22,17 @@ class X509Certificate {
 		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
        		return false;
         }
- 
-        $result['issuer'] = "";
+
+		$result['issuer'] = "";
         foreach ($tab['issuer'] as $key => $val) {
  	       $result['issuer'] .= "/" . $key . "=" . utf8_decode($val);
         }
+
+		$result['subject'] = "";
+		foreach ($tab['subject'] as $key => $val) {
+			$result['subject'] .= "/" . $key . "=" . utf8_decode($val);
+		}
+
 		return $result;		
 	}
 	

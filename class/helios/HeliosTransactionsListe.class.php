@@ -108,7 +108,16 @@ class HeliosTransactionsListe {
 		$this->filter[] = "helios_transactions.filename ILIKE ?";
 		$this->value[] = "%$objet%";
 	}
-	
+
+	public function setNomFic($fnomFic){
+		if (! $fnomFic){
+			return;
+		}
+		$this->filter[] = "helios_transactions.xml_nomfic ILIKE ?";
+		$this->value[] = "%$fnomFic%";
+	}
+
+
 	private function getWhere(){
 		if (! $this->filter){
 			return "";
@@ -128,7 +137,7 @@ class HeliosTransactionsListe {
 	}
 	
 	public function getAll(){
-		$sql = "SELECT helios_transactions.id,  helios_transactions.last_status_id, helios_transactions.user_id, helios_transactions.filename, submission_date,". 
+		$sql = "SELECT helios_transactions.id,  helios_transactions.last_status_id, helios_transactions.user_id, helios_transactions.xml_nomfic, helios_transactions.filename, submission_date,".
 				" authorities.name as authority_name, " .
 				" users.name,".
 				" users.givenname " .

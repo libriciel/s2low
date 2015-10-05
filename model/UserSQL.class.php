@@ -123,7 +123,7 @@ class UserSQL extends SQL {
 	}
 
 	public function getGroupeName($user_id){
-		$sql = "SELECT name FROM users JOIN authority_groups ON users.authority_group_id= authority_group_id.id WHERE users.id=?";
-		return $this->query($sql,$user_id);
+		$sql = "SELECT authority_groups.name FROM users JOIN authority_groups ON users.authority_group_id= authority_groups.id WHERE users.id=?";
+		return $this->queryOne($sql,$user_id);
 	}
 }

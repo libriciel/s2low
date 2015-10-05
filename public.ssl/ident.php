@@ -1,4 +1,4 @@
-<?php 
+<?php
 // Configuration
 require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
@@ -20,5 +20,6 @@ if (! $me->authenticate()) {
   $_SESSION["error"] = "Échec de l'authentification";
   
 }
+
 
 header("Location: " . WEBSITE_SSL);

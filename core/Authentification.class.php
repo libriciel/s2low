@@ -89,11 +89,15 @@ class Authentification {
 			foreach ($tab['issuer'] as $key => $val) {
 				$result['issuer_dn'] .= "/" . $key . "=" . utf8_decode($val);
 			}
+			$result['subject_dn'] = "";
+			foreach ($tab['subject'] as $key => $val) {
+				$result['subject_dn'] .= "/" . $key . "=" . utf8_decode($val);
+			}
 		}
 		if ($result['certificate_rgs_2_etoiles']){
 			$result['certificate_rgs_2_etoiles'] = $this->der2pem(base64_decode($result['certificate_rgs_2_etoiles']));
 		}
-			
+
 		return $result;
 	}
 	

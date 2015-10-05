@@ -10,8 +10,19 @@ class JSONoutput {
 		}
 		exit;  // @codeCoverageIgnore
 	}
-	
-	
+
+	public function displayAndExit($message){
+		$result['status'] = 'ok';
+		$result['message'] = $message;;
+		$this->display($result);
+		if (TESTING_ENVIRONNEMENT){
+			throw new Exception("Exit !");
+		}
+		exit;  // @codeCoverageIgnore
+	}
+
+
+
 	private function normalize($array){
 		if (! is_array($array)){
 			return utf8_encode($array);

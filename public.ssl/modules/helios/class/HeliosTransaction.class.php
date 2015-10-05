@@ -94,6 +94,11 @@ class HeliosTransaction extends DataObject {
 			"type" => "isInt",
 			"mandatory" =>false
   	),
+      "xml_nomfic"=> array(
+        "descr"=>"",
+          "type"=>"isString",
+          "mandatory"=>false,
+      )
   );
 
   /**

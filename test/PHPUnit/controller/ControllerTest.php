@@ -33,7 +33,7 @@ class ControllerTest extends S2lowTestCase {
 	
 	public function testGetAllViewParameter(){
 		$this->controller->foo = 42;
-		$this->assertEquals(array('foo'=>42),$this->controller->getViewParameter());
+		$this->assertEquals(array('foo'=>42),$this->controller->getAllViewParameter());
 	}
 	
 	/**
@@ -64,7 +64,7 @@ class ControllerTest extends S2lowTestCase {
 		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$_SERVER['SSL_CLIENT_S_DN'] = "adullact_user";
 		$_SERVER['SSL_CLIENT_I_DN'] = "adullact_user";
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin();
 	}
 	
@@ -150,7 +150,7 @@ class ControllerTest extends S2lowTestCase {
 	 */
 	public function testVerifSuperAdminFailed(){
 		$this->setAdminGroupAuthentication();
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifSuperAdmin();
 	}
 	
@@ -165,7 +165,7 @@ class ControllerTest extends S2lowTestCase {
 	 */
 	public function testVerifAdminAdminGroupFailed(){
 		$this->setAdminGroupAuthentication();
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin(1);
 	}
 	
@@ -180,15 +180,31 @@ class ControllerTest extends S2lowTestCase {
 	 */
 	public function testVerifAdminFail(){
 		$this->setAdminCol2Authentication();
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin(1);
 	}
 	
 	public function testGetObjectInstancier(){
 		$this->assertInstanceOf("ObjectInstancier",$this->controller->getObjectInstancier());
 	}
-	
 
-	
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testDisplayErrorAndExitAPI(){
+		$this->setAdminGroupAuthentication();
+		$_POST['api'] = 1;
+		$this->setExpectedException("Exception","Exit");
+		$this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
+		$this->controller->verifAdmin(1);
+	}
+
+	public function testIsApiCall(){
+		$_GET['api'] = 1;
+		$this->assertTrue($this->controller->isApiCall());
+	}
+
+
 	
 }

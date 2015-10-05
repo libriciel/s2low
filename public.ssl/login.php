@@ -5,6 +5,7 @@ require_once( __DIR__ . "/../init/init.php");
 $x509Certificate = new X509Certificate();
 $certificateInfo = $x509Certificate->retrieveClientInfo();
 
+
 $userSQL = new UserSQL($sqlQuery);
 $allUser = $userSQL->getInfoFromCertificateInfo($certificateInfo);
 

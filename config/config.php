@@ -159,7 +159,7 @@ if(!defined('AUTHORIZED_SIGN_CA_PATH')){
 
 // Constantes générales
 if(!defined('TRACE_FILE_PATH')){
-        define('TRACE_FILE_PATH','/tmp/slow.log');
+	define('TRACE_FILE_PATH','/tmp/slow.log');
 }
 
 if(!defined('ANTIVIRUS_COMMAND')){

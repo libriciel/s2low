@@ -5,7 +5,7 @@ class AdminController extends Controller {
 	public function _actionBefore($controller,$action){
 		parent::_actionBefore($controller,$action);
 	}
-		
+
 	public function authoritySiretAction(){
 		$recuperateur = $this->getRecuperateurGet();
 		$id = $recuperateur->getInt('id');
@@ -14,8 +14,7 @@ class AdminController extends Controller {
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$this->authority_info = $authoritySQL->getInfo($id);
 		if (! $this->authority_info){
-			$this->setErrorMessage("Aucune collectivité trouvée");
-			$this->redirectSSL("/admin/authorities/admin_authorities.php");
+			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
 		} // @codeCoverageIgnore
 		
 		$this->verifAdmin($id);
@@ -23,12 +22,21 @@ class AdminController extends Controller {
 		$this->authority_id = $id;
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$this->siret_list = $authoritySiret->siretList($id);
-		
+		if ($this->isApiCall()){
+			$result = array();
+			foreach($this->siret_list as $siret_info){
+				$result[]  = $siret_info['siret'];
+			}
+			$json = new JSONoutput();
+			$json->display($result);
+
+			$this->controller_exit();
+		} //@codeCoverageIgnore
+
 		$this->siret_exemple = $this->getSiret()->generate();
-		
 		$this->title = "Numéros SIRET - {$this->authority_info['name']}";
 	}
-	
+
 	public function authoritySiretAddAction(){
 		$this->verifSuperAdmin();
 		$recuperateur = $this->getRecuperateurPost();
@@ -38,19 +46,17 @@ class AdminController extends Controller {
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$this->authority_info = $authoritySQL->getInfo($authority_id);
 		if (! $this->authority_info){
-			$this->setErrorMessage("Aucune collectivité trouvée");
-			$this->redirectSSL("/admin/authorities/admin_authorities.php");
+			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
 		} // @codeCoverageIgnore
 		
 		
 		if (! $this->getSiret()->isValid($siret)){
-			$this->setErrorMessage("Le numéro SIRET n'est pas valide");
-			$this->redirectSSL("/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
+			$this->displayErrorAndExit("Le numéro SIRET n'est pas valide","/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
 		} // @codeCoverageIgnore
 		
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
-		$authoritySiret->add($authority_id, $siret);		
-		$this->redirectSSL("/admin/authorities/admin_authority_siret.php?id=$authority_id");
+		$authoritySiret->add($authority_id, $siret);
+		$this->displayAndExit("Numéro SIRET ajouté","/admin/authorities/admin_authority_siret.php?id=$authority_id");
 	} // @codeCoverageIgnore
 	
 	public function authoritySiretDelAction(){
@@ -60,7 +66,7 @@ class AdminController extends Controller {
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$info = $authoritySiret->getInfo($authority_siret_id);
 		$authoritySiret->del($authority_siret_id);
-		$this->redirectSSL("/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
+		$this->displayAndExit("Numéro SIRET retiré","/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
 	} // @codeCoverageIgnore
 	
 	/**
@@ -94,7 +100,7 @@ class AdminController extends Controller {
 		if ($this->api){
 			$jsonOutput = new JSONoutput();
 			$jsonOutput->retrictAndDisplay($this->authorities,array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
-			exit;
+			$this->controller_exit();
 		}
 
 		$authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
@@ -103,7 +109,7 @@ class AdminController extends Controller {
 		$this->side_bar = $pagerHTML->getHTML($this->page_number,$nb_authorities,$this->taille_page);;
 
 		if ($this->me->isGroupAdmin()){
-			$userSQL = new UserSQL();
+			$userSQL = new UserSQL($this->getSQLQuery());
 			$group_name = $userSQL->getGroupeName($this->me->getId());
 			$this->titre = "Gestion des collectivités du groupe $group_name";
 			$this->groupe_list = false;
@@ -114,7 +120,5 @@ class AdminController extends Controller {
 		}
 
 	}
-
-
 	
 }

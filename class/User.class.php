@@ -200,7 +200,13 @@ class User extends DataObject {
 	    $this->issuer_dn = "";
         foreach ($tab['issuer'] as $key => $val) {
         	$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
-		}	
+		}
+
+		// Si l'utilisateur est authentifié par certificat
+		$this->subject_dn = "";
+		foreach ($tab['subject'] as $key => $val) {
+			$this->subject_dn .= "/" . $key . "=" . utf8_decode($val);
+		}
 	}
 	
   /**

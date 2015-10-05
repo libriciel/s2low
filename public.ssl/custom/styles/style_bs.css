@@ -348,7 +348,7 @@ span.form-control {
 .zelect {
       display: inline-block;
       background-color: white;
-      min-width: 220px;
+      min-width: 200px;
       cursor: pointer;
       line-height: 30px;
       border: 1px solid #CCC;

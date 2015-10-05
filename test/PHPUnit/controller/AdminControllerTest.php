@@ -45,7 +45,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setAdminCol2Authentication();
 		$adminController = new AdminController($this->getObjectInstancier());
 		$_GET['id'] = 1;
-		$this->setExpectedException("RedirectException","Accès refusé");
+		$this->setExpectedException("RedirectException","Redirect to");
 		$adminController->authoritySiretAction();
 	}
 	
@@ -97,8 +97,70 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?");
 		$adminController->authoritySiretDelAction();
 	}
-	
-	
-	
-	
+
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testAddSiretAPI(){
+		$this->setSuperAdminAuthentication();
+		$adminController = new AdminController($this->getObjectInstancier());
+		$_POST['authority_id'] = 1;
+		$_POST['siret'] = "06552185881996";
+		$_POST['api'] = 1;
+		$this->setExpectedException("Exception","Exit");
+		$this->expectOutputRegex("#Num\\\u00e9ro SIRET ajout\\\u00e9#");
+		$adminController->authoritySiretAddAction();
+	}
+
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testListSiretApi(){
+
+		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
+		$authoritySiret->add(1, "12345678900014");
+
+		$this->setSuperAdminAuthentication();
+		$adminController = new AdminController($this->getObjectInstancier());
+		$_GET['api'] = 1;
+		$_GET['id'] = 1;
+		$this->expectOutputRegex("#\[\"12345678900014\"\]#");
+		$this->setExpectedException("Exception","Exit");
+		$adminController->authoritySiretAction();
+	}
+
+	public function testAuthoritiesAction(){
+		$this->setSuperAdminAuthentication();
+		$adminController = new AdminController($this->getObjectInstancier());
+		$adminController->authoritiesAction();
+		$this->assertEquals("Gestion des collectivités",$adminController->getViewParameter('titre'));
+	}
+
+	public function testAuthoritiesActionGroupAdmin(){
+		$this->setAdminGroupAuthentication();
+		$adminController = new AdminController($this->getObjectInstancier());
+		$adminController->authoritiesAction();
+		$this->assertEquals("Gestion des collectivités du groupe Groupe de test",$adminController->getViewParameter('titre'));
+	}
+
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testAuthoritiesActionAPI(){
+		$_GET['api'] = 1;
+		$this->setAdminGroupAuthentication();
+		$adminController = new AdminController($this->getObjectInstancier());
+		$this->setExpectedException("Exception","Exit");
+		$this->expectOutputRegex("##");
+		$adminController->authoritiesAction();
+		$out = $this->getActualOutput();
+		$result = json_decode($out,true);
+		$this->assertEquals(1,$result[1]['id']);
+
+	}
+
+
 }

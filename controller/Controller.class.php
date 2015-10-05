@@ -1,9 +1,16 @@
 <?php
 class Controller {
-	
+
+	/**
+	 * @var User
+	 */
 	protected $me;
+
 	private $viewParameter;
-	
+
+	/**
+	 * @var ObjectInstancier
+	 */
 	private $objectInstancier;
 	
 	public function __construct(ObjectInstancier $objectInstancier){
@@ -12,10 +19,7 @@ class Controller {
 	}
 	
 	public function __get($key){
-		if (isset($this->viewParameter[$key])){
-			return $this->viewParameter[$key];
-		}
-		throw new Exception("parameter $key not found");
+		return $this->getViewParameter($key);
 	}
 	
 	public function __set($key,$value){
@@ -29,8 +33,15 @@ class Controller {
 	public function setViewParameter($key,$value){
 		$this->viewParameter[$key] = $value;
 	}
-	
-	public function getViewParameter(){
+
+	public function getViewParameter($key){
+		if (isset($this->viewParameter[$key])){
+			return $this->viewParameter[$key];
+		}
+		throw new Exception("parameter $key not found");
+	}
+
+	public function getAllViewParameter(){
 		return $this->viewParameter;
 	}
 	
@@ -42,8 +53,7 @@ class Controller {
 		//En attendant mieux...
 		$_SESSION["error"] = $message ;
 	}
-	
-	
+
 	public function redirectSSL($url_path = "",$url_arg = ""){
 		$url = trim(WEBSITE_SSL,"/") ."/". trim($url_path,"/");
 		if ($url_arg){
@@ -60,13 +70,32 @@ class Controller {
 		header("Location: $url");
 		throw new RedirectException("Redirect to $url with message : $error_message");
 	}
-	
+
+	protected function displayErrorAndExit($error_message,$url_redirect){
+		if ($this->isApiCall()){
+			$json = new JSONoutput();
+			$json->displayErrorAndExit($error_message);
+		}
+		$this->setErrorMessage($error_message);
+		$this->redirectSSL($url_redirect);
+	} //@codeCoverageIgnore
+
+	protected function displayAndExit($message,$url_redirect){
+		if ($this->isApiCall()){
+			$json = new JSONoutput();
+			$json->displayAndExit($message);
+		} //@codeCoverageIgnore
+		$this->setErrorMessage($message);
+		$this->redirectSSL($url_redirect);
+	} //@codeCoverageIgnore
+
+
 	public function verifAdmin($authority_id = false){
 		$this->me = new User();
 		$this->me->authenticate();
 		
 		if (! $this->me->isAdmin()) {
-			$this->redirect(WEBSITE_SSL,"Accès refusé");
+			$this->displayErrorAndExit("Accès refusé","");
 		} // @codeCoverageIgnore
 		if ($this->me->isSuper()){
 			return;
@@ -79,13 +108,13 @@ class Controller {
 				if ($info['authority_group_id'] == $this->me->get("authority_group_id")){
 					return;
 				}
-				$this->redirect(WEBSITE_SSL,"Accès refusé");
+				$this->displayErrorAndExit("Accès refusé","");
 			} // @codeCoverageIgnore
 			
 			if ($info['id'] == $this->me->get('authority_id')){
 				return ;
 			}
-			$this->redirect(WEBSITE_SSL,"Accès refusé");
+			$this->displayErrorAndExit("Accès refusé","");
 		} // @codeCoverageIgnore
 	}
 	
@@ -117,19 +146,19 @@ class Controller {
 	
 	public function renderDefault(){
 		$doc = new HTMLLayout();
-		$doc->setTitle($this->title);
+		$doc->setTitle($this->getViewParameter('title'));
 		
 		$doc->openContainer();
 		$doc->openSideBar();
 		$doc->buildMenu($this->me);
 
-		$doc->addBody($this->side_bar);
+		$doc->addBody($this->getViewParameter('side_bar'));
 
 		$doc->closeSideBar();
 		$doc->openContent();
 
 		ob_start();
-		$this->render($this->template_milieu);
+		$this->render($this->getViewParameter('template_milieu'));
 		$html = ob_get_contents();
 		ob_end_clean();
 				
@@ -150,9 +179,9 @@ class Controller {
 	}
 	
 	public function _actionBefore($controller,$action){
-		$this->title = "S2low";
-		$this->template_milieu = __DIR__."/../template/".ucfirst($controller).ucfirst($action).".php";
-		$this->side_bar = false;
+		$this->setViewParameter('title',"S2low");
+		$this->setViewParameter('template_milieu',__DIR__."/../template/".ucfirst($controller).ucfirst($action).".php");
+		$this->setViewParameter('side_bar',false);
 	}
 	
 	public function _actionAfter(){
@@ -166,16 +195,33 @@ class Controller {
 	public function getRecuperateurPost(){
 		return new Recuperateur($_POST);
 	}
-	
+
+	public function isApiCall(){
+		$recuperateur = $this->getRecuperateurGet();
+		$api = $recuperateur->get('api');
+		if ($api){
+			return true;
+		}
+		$recuperateur = $this->getRecuperateurPost();
+		return $recuperateur->get('api');
+	}
+
 	/**
 	 * @return SQLQuery
 	 */
 	public function getSQLQuery(){
-		return $this->objectInstancier->SQLQuery;
+		return $this->objectInstancier->get('SQLQuery');
 	}
 	
 	public function getObjectInstancier(){
 		return $this->objectInstancier;
 	}
-	
+
+	public function controller_exit(){
+		if (TESTING_ENVIRONNEMENT){
+			throw new Exception("Exit !");
+		}
+		exit;  // @codeCoverageIgnore
+	}
+
 }
