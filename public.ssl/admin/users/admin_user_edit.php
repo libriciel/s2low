@@ -226,7 +226,7 @@ ob_start();
 
 <div style='clear:both'></div>
 <h2>Méthode d'identification</h2>
-<em>Uniquement en cas de partage du certificat de connexion (remplir login/mot de passe <strong>ou</strong> certificat RGS**)</em>
+<em>Uniquement en cas de partage du certificat de connexion (remplir login/mot de passe <strong>ou</strong> certificat RGS** pour identification via un logiciel métier)</em>
 <br/><br/>
 
 <div class="form-group">
