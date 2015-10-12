@@ -53,14 +53,6 @@ class HeliosSignature {
 		return $result;
 	}
 	
-	//OOps : ne donne pas le même sha1 au niveau PES_Aller !
-	private function getSha1_old($xml_string){
-		$dom = new DOMDocument();
-		$dom->loadXML($xml_string);
-		$data_to_sign = $dom->C14N(true, false);
-		return sha1($data_to_sign);
-	}
-	
 	public function getInfoForSignature($xml_file_path){
 		$xml = simplexml_load_file($xml_file_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 
@@ -75,7 +67,6 @@ class HeliosSignature {
 					continue;
 				}
 	            foreach($xml->$tag->Bordereau as $bordereau){
-	            	$isBordereau = true;
 	            	$id[]= strval($bordereau['Id']);
 	            	$hash[] = $this->getSha1($bordereau->asXML());
 	            }
