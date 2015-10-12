@@ -141,7 +141,7 @@ class CurlWrapper {
 				$post[$name] = "@$filePath;filename=$fileName";
 			}
 		}
-		curl_setopt($this->curlHandle, CURLOPT_POSTFIELDS, $post);
+		@ curl_setopt($this->curlHandle, CURLOPT_POSTFIELDS, $post);
 	}
 	
 	private function curlSetPostDataWithSimilarFilename( ) {

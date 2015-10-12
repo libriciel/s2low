@@ -97,7 +97,7 @@ class ActesTransactionsSQL {
 	}
 	
 	public function getDateTampon($id){
-		$sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date " .
+		$sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date, actes_transactions.unique_id " .
 				"FROM actes_transactions, actes_envelopes, actes_transactions_workflow " .
 				"WHERE actes_transactions.envelope_id = actes_envelopes.id " .
 				"AND actes_transactions.id = " . $id .

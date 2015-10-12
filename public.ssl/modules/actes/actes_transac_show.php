@@ -428,15 +428,34 @@ if (!$trans->hasPendingCancelTrans()) {
     $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
     if ($trans->get("type") == 1 && in_array($transStatus,array(4,5,14)) && $trans->canValidate() ) {
-	  $actionHtml .= "<div class=\"action\">\n";
-          $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\">\n";
+	     $actionHtml .= "<div class=\"action\">\n";
+          $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n";
           $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
           $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-          $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+          $actionHtml .= "<input type=\"submit\" id='button_send_sae' class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
           $actionHtml .= "</div>\n</form>\n";
-  
-         
           $actionHtml .= "</div>\n";
+        ob_start();
+        ?>
+        <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+
+        <script>
+
+    $(document).ready(function(){
+        $("#form_send_sae").submit(function(){
+            $("#button_send_sae").val("Versement en cours");
+            $("#button_send_sae").attr('disabled','disabled');
+        });
+    });
+
+</script>
+
+
+        <?php
+        $actionHtml .= ob_get_contents();
+        ob_end_clean();
+
+
      }//fin if type == 1 , status = 4 ou 14, transaction canvalidate et configuration pour le sae
 }//fin if qui verifie qu'il n'y a pas d'annulation en cours
 

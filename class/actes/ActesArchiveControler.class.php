@@ -78,7 +78,6 @@ class ActesArchiveControler {
 	}
 	
 	public function sendArchive($user_id,$id){
-		
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$transactionsInfo = $actesTransactionsSQL->getInfo($id);
 		$user = new User($user_id);
@@ -236,7 +235,6 @@ class ActesArchiveControler {
 		
 		
 		$result = $pastell->sendSAE($id_d);
-
 		if (! $result){
 			$this->lastError = $pastell->getLastError();
 			return false;
