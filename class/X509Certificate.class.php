@@ -27,6 +27,11 @@ class X509Certificate {
         foreach ($tab['issuer'] as $key => $val) {
  	       $result['issuer'] .= "/" . $key . "=" . utf8_decode($val);
         }
+		$result['subject'] = "";
+		foreach ($tab['subject'] as $key => $val) {
+			$result['subject'] .= "/" . $key . "=" . utf8_decode($val);
+		}
+
 		return $result;		
 	}
 	

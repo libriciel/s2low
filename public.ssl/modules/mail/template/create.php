@@ -4,7 +4,7 @@
 //http://old.nabble.com/-autocomplete--Incorrect-selection-on-mouse-click-in-IE7%2B-td25819409s27240.html 
 
 ?>
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery.autocomplete.ie7-fix.js"></script>    
+<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery.autocomplete.ie7-fix.js"></script>
 <link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/custom/styles/jquery.autocomplete.css" type="text/css" />
 
  <h1> Mail - Système de mail sécurisé</h1>
