@@ -60,6 +60,13 @@ class Authentification {
 	
 	
 	private function getAllConnexionInfo(){
+
+		//http://stackoverflow.com/a/18205049
+		$h = apache_request_headers();
+		if (isset($h['org.s2low.forward-x509-identification'])) {
+			$this->server['HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'] = $h['org.s2low.forward-x509-identification'];
+		}
+
 		$result = array();
 		foreach(array('SSL_CLIENT_VERIFY' => 'ssl_client_verify',
 				'SSL_CLIENT_S_DN' => 'subject_dn',
