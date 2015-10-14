@@ -1,10 +1,18 @@
-<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="ID42_SIG">
     <ds:SignedInfo>
-        <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+        <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
         <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-        <ds:Reference >
+        <ds:Reference URI="#ID42">
             <ds:Transforms>
                 <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+            <ds:DigestValue></ds:DigestValue>
+        </ds:Reference>
+        <ds:Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties" URI="#ID42_SIG_SP">
+            <ds:Transforms>
+                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
             </ds:Transforms>
             <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
             <ds:DigestValue></ds:DigestValue>
@@ -13,26 +21,24 @@
     <ds:SignatureValue />
     <ds:KeyInfo>
         <ds:X509Data >
-            <ds:X509SubjectName/>
-            <ds:X509IssuerSerial/>
             <ds:X509Certificate/>
         </ds:X509Data>
         <ds:KeyValue />
     </ds:KeyInfo>
     <ds:Object>
-        <xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" Target=" **** TODO **** ">
-            <xad:SignedProperties Id="**** TODO ****">
+        <xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" Target="#ID42_SIG">
+            <xad:SignedProperties Id="ID42_SIG_SP">
                 <xad:SignedSignatureProperties>
-                    <xad:SigningTime>**** TODO **** 2015-10-12T16:59:42Z</xad:SigningTime>
+                    <xad:SigningTime/>
                     <xad:SigningCertificate>
                         <xad:Cert>
                             <xad:CertDigest>
-                                <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></xad:DigestMethod>
-                                <xad:DigestValue>**** TODO **** gexruR5uPSrmK5LFi/3M3dSYquE=</xad:DigestValue>
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+                                <ds:DigestValue/>
                             </xad:CertDigest>
                             <xad:IssuerSerial>
-                                <ds:X509IssuerName>**** TODO **** CN=Certinomis - AA et Agents,OU=0002 433998903,O=Certinomis,C=FR</ds:X509IssuerName>
-                                <ds:X509SerialNumber>**** TODO **** 543198611128908532608635720775128208973036014679</ds:X509SerialNumber>
+                                <ds:X509IssuerName/>
+                                <ds:X509SerialNumber/>
                             </xad:IssuerSerial>
                         </xad:Cert>
                     </xad:SigningCertificate>
@@ -54,13 +60,13 @@
                         </xad:SignaturePolicyId>
                     </xad:SignaturePolicyIdentifier>
                     <xad:SignatureProductionPlace>
-                        <xad:City>**** TODO **** Saint-Fargeau-Ponthierry</xad:City>
-                        <xad:PostalCode>**** TODO **** 77310</xad:PostalCode>
-                        <xad:CountryName>**** TODO **** France</xad:CountryName>
+                        <xad:City/>
+                        <xad:PostalCode/>
+                        <xad:CountryName/>
                     </xad:SignatureProductionPlace>
                     <xad:SignerRole>
                         <xad:ClaimedRoles>
-                            <xad:ClaimedRole>**** TODO **** ELUE AUX FINANCES</xad:ClaimedRole>
+                            <xad:ClaimedRole/>
                         </xad:ClaimedRoles>
                     </xad:SignerRole>
                 </xad:SignedSignatureProperties>
