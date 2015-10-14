@@ -1,0 +1,70 @@
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+        <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+        <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+        <ds:Reference >
+            <ds:Transforms>
+                <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+            </ds:Transforms>
+            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+            <ds:DigestValue></ds:DigestValue>
+        </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue />
+    <ds:KeyInfo>
+        <ds:X509Data >
+            <ds:X509SubjectName/>
+            <ds:X509IssuerSerial/>
+            <ds:X509Certificate/>
+        </ds:X509Data>
+        <ds:KeyValue />
+    </ds:KeyInfo>
+    <ds:Object>
+        <xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" Target=" **** TODO **** ">
+            <xad:SignedProperties Id="**** TODO ****">
+                <xad:SignedSignatureProperties>
+                    <xad:SigningTime>**** TODO **** 2015-10-12T16:59:42Z</xad:SigningTime>
+                    <xad:SigningCertificate>
+                        <xad:Cert>
+                            <xad:CertDigest>
+                                <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></xad:DigestMethod>
+                                <xad:DigestValue>**** TODO **** gexruR5uPSrmK5LFi/3M3dSYquE=</xad:DigestValue>
+                            </xad:CertDigest>
+                            <xad:IssuerSerial>
+                                <ds:X509IssuerName>**** TODO **** CN=Certinomis - AA et Agents,OU=0002 433998903,O=Certinomis,C=FR</ds:X509IssuerName>
+                                <ds:X509SerialNumber>**** TODO **** 543198611128908532608635720775128208973036014679</ds:X509SerialNumber>
+                            </xad:IssuerSerial>
+                        </xad:Cert>
+                    </xad:SigningCertificate>
+                    <xad:SignaturePolicyIdentifier>
+                        <xad:SignaturePolicyId>
+                            <xad:SigPolicyId>
+                                <xad:Identifier>urn:oid:1.2.250.1.131.1.5.18.21.1.4</xad:Identifier>
+                                <xad:Description>Politique de signature Helios de la DGFiP</xad:Description>
+                            </xad:SigPolicyId>
+                            <xad:SigPolicyHash>
+                                <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></xad:DigestMethod>
+                                <xad:DigestValue>Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=</xad:DigestValue>
+                            </xad:SigPolicyHash>
+                            <xad:SigPolicyQualifiers>
+                                <xad:SigPolicyQualifier>
+                                    <xad:SPURI>https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf</xad:SPURI>
+                                </xad:SigPolicyQualifier>
+                            </xad:SigPolicyQualifiers>
+                        </xad:SignaturePolicyId>
+                    </xad:SignaturePolicyIdentifier>
+                    <xad:SignatureProductionPlace>
+                        <xad:City>**** TODO **** Saint-Fargeau-Ponthierry</xad:City>
+                        <xad:PostalCode>**** TODO **** 77310</xad:PostalCode>
+                        <xad:CountryName>**** TODO **** France</xad:CountryName>
+                    </xad:SignatureProductionPlace>
+                    <xad:SignerRole>
+                        <xad:ClaimedRoles>
+                            <xad:ClaimedRole>**** TODO **** ELUE AUX FINANCES</xad:ClaimedRole>
+                        </xad:ClaimedRoles>
+                    </xad:SignerRole>
+                </xad:SignedSignatureProperties>
+            </xad:SignedProperties>
+        </xad:QualifyingProperties>
+    </ds:Object>
+</ds:Signature>
