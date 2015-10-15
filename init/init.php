@@ -32,6 +32,7 @@ require_once(SITEROOT."/public.ssl/modules/mail/lib/Annuaire.class.php");
 
 require_once(SITEROOT . '/class/include.class.php');
 
+
 require_once("util.php");
 
 $sqlQuery = new SQLQuery(DB_DATABASE);

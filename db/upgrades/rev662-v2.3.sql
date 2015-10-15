@@ -21,4 +21,5 @@ CREATE TABLE authority_siret (
 	date timestamp with time zone
 );
 ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities(id);
-	
+
+ALTER TABLE helios_transactions ADD COLUMN signature_technique boolean default false NOT NULL;

@@ -63,6 +63,16 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
+
+			$heliosSignatureTechnique = new HeliosSignatureTechnique($this->heliosTransactionsSQL,HELIOS_FILES_UPLOAD_ROOT,new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate()));
+			$xadesSignatureProperties = new XadesSignatureProperties();
+			$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
+			$xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
+			$xadesSignatureProperties->postalCode = HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE;
+			$xadesSignatureProperties->city = HELIOS_SIGNATURE_PLATEFORME_CITY;
+
+			$heliosSignatureTechnique->sign($transaction_id,HELIOS_PLATEFORME_CERTIFICATE_P12,HELIOS_PLATEFORME_CERTIFICATE_PASSWORD,$xadesSignatureProperties);
+
 			if ($this->heliosTransactionsSQL->nomFicExists($nom_fic)){
 				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
@@ -110,9 +120,7 @@ class HeliosEnvoiControler {
 			$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
 			echo "Nom du fichier à envoyer : $completeName\n";
 			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
-			
-			
-			
+
 			$file_path_with_complete_name = $file_sending_repository."/".$completeName; 
 			if (! copy($file_path, $file_path_with_complete_name)){
 				echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
@@ -130,8 +138,7 @@ class HeliosEnvoiControler {
 			} else {
 				$file_to_send = $file_path_with_complete_name;
 			}
-			
-			
+
 			$sha1_file = sha1_file($file_path);
 			if ($sha1_file != $transactionInfo['sha1']){
 				$message = "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme\n";

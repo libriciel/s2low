@@ -8,14 +8,20 @@ class HeliosController extends Controller {
 	const MODULE_NAME = 'helios';
 
 	private $helios_max_upload_size;
+	private $helios_files_upload_root;
 
 	public function __construct(ObjectInstancier $objectInstancier){
 		parent::__construct($objectInstancier);
 		$this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
+		$this->setHeliosFilesUploadRoot(HELIOS_FILES_UPLOAD_ROOT);
 	}
 
 	public function setHeliosMaxUploadSize($helios_max_upload_size){
 		$this->helios_max_upload_size = $helios_max_upload_size;
+	}
+
+	public function setHeliosFilesUploadRoot($helios_files_upload_root){
+		$this->helios_files_upload_root = $helios_files_upload_root;
 	}
 
 	public function importFile($user_id,$filepath,$original_filename){
@@ -71,7 +77,7 @@ class HeliosController extends Controller {
 			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
 		}
 
-		$uploaddir = HELIOS_FILES_UPLOAD_ROOT;
+		$uploaddir = $this->helios_files_upload_root;
 
 		try {
 			$pes_aller_original_name = $_FILES['enveloppe']['name'];
@@ -173,7 +179,7 @@ class HeliosController extends Controller {
 		$id_list = $heliosTransactionSQL->getAllId();
 		foreach($id_list as $transaction_id){
 			$info = $heliosTransactionSQL->getInfo($transaction_id);
-			$pes_aller_path = HELIOS_FILES_UPLOAD_ROOT . "/" . $info['filename'];
+			$pes_aller_path = $this->helios_files_upload_root . "/" . $info['filename'];
 			if (! file_exists($pes_aller_path)){
 				echo "Transaction $transaction_id : le fichier PES ALLER n'est pas disponible\n";
 				continue;

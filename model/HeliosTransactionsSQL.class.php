@@ -162,5 +162,10 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOneCol($sql);
 	}
 
+	public function setSignatureTechnique($transaction_id,$new_sha1,$new_file){
+		$sql = "UPDATE helios_transactions SET sha1=?, file_size=?,signature_technique=? WHERE id=?";
+		$this->query($sql,$new_sha1,$new_file,true,$transaction_id);
+	}
+
 
 }

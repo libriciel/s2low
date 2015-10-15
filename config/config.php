@@ -203,6 +203,10 @@ if (!defined("XML_STARLET_PATH")){
 	define("XML_STARLET_PATH","/usr/bin/xmlstarlet");
 }
 
+//Paramètre outils de signature XML
+if (!defined("XMLSEC1_PATH")){
+	define("XMLSEC1_PATH","/usr/bin/xmlsec1");
+}
 
 
 //////////////////////////////////
@@ -359,8 +363,6 @@ if(!defined('HELIOS_UPSTART_TOUCH_FILE')){
 	define('HELIOS_UPSTART_TOUCH_FILE','/tmp/helios-upstart');
 }
 
-
-
 if(!defined('HELIOS_MAX_UPLOAD_SIZE')){
 	define('HELIOS_MAX_UPLOAD_SIZE',100*1024*1024);
 }
@@ -368,6 +370,31 @@ if(!defined('HELIOS_MAX_UPLOAD_SIZE')){
 if(!defined('HELIOS_GENERATED_FILE_PERMISSION')){
 	define('HELIOS_GENERATED_FILE_PERMISSION','0644');
 }
+
+if (!defined('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE')){
+	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rôle invalide à configurer');
+}
+
+if (! defined('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME')){
+	define('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME','France');
+}
+
+if (! defined('HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE')){
+	define('HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE','34000');
+}
+
+if (! defined('HELIOS_SIGNATURE_PLATEFORME_CITY')){
+	define('HELIOS_SIGNATURE_PLATEFORME_CITY','Montpellier');
+}
+
+if (!defined('HELIOS_PLATEFORME_CERTIFICATE_P12')){
+	define('HELIOS_PLATEFORME_CERTIFICATE_P12',__DIR__."/../data-exemple/plateforme-cert.p12");
+}
+
+if (! defined('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD')){
+	define('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD','robert_petitpoids');
+}
+
 
 //////////////////////////////////
 ///// Paramètre module Etat Civil /////
