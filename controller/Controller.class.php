@@ -90,10 +90,14 @@ class Controller {
 	} //@codeCoverageIgnore
 
 
-	public function verifAdmin($authority_id = false){
+	public function verifUser(){
 		$this->me = new User();
 		$this->me->authenticate();
-		
+	}
+
+	public function verifAdmin($authority_id = false){
+		$this->verifUser();
+
 		if (! $this->me->isAdmin()) {
 			$this->displayErrorAndExit("Accès refusé","");
 		} // @codeCoverageIgnore

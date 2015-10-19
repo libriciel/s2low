@@ -15,6 +15,7 @@ authorities:
   status: 1
   siren: 999999999
   authority_group_id: 1
+  name: Saint-Andre de Corcy
 
 
 modules:

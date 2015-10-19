@@ -21,6 +21,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_S_DN'] = "";
 		$_SERVER['SSL_CLIENT_I_DN'] = "";
 		$_SERVER['SSL_CLIENT_CERT'] = "";
+		$_SERVER["QUERY_STRING"] = "";
+
 	}
 
 	/**

@@ -1,5 +1,5 @@
 <?php
-require_once("xhtml_default.tpl.php");
+include("xhtml_default.tpl.php");
 ?>
 <?php echo $this->body ?>
 </body>

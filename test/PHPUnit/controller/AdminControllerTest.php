@@ -4,16 +4,16 @@ class AdminControllerTest extends S2lowTestCase {
 	
 	public function testActionBefore(){
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());		
+		$adminController = new AdminController($this->getObjectInstancier());
 		$adminController->_actionBefore("Mock", "mock");
 	}
-	
+
 	public function testAuthoritySiretAction(){
 		$this->setSuperAdminAuthentication();
 		$adminController = new AdminController($this->getObjectInstancier());
 		$_GET['id'] = 1;
 		$adminController->authoritySiretAction();
-		$this->assertEquals(1, $adminController->authority_info['id']);	
+		$this->assertEquals(1, $adminController->authority_info['id']);
 	}
 
 	public function testAuthoritySiretTemplate(){
@@ -25,7 +25,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController->authoritySiretAction();
 		$adminController->_actionAfter();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -36,7 +36,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","admin_authorities.php");
 		$adminController->authoritySiretAction();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -48,7 +48,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","Redirect to");
 		$adminController->authoritySiretAction();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -59,7 +59,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","admin_authorities.php");
 		$adminController->authoritySiretAddAction();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -72,7 +72,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?id=1&siret=badsiret");
 		$adminController->authoritySiretAddAction();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -85,7 +85,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?id=1");
 		$adminController->authoritySiretAddAction();
 	}
-	
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -159,8 +159,6 @@ class AdminControllerTest extends S2lowTestCase {
 		$out = $this->getActualOutput();
 		$result = json_decode($out,true);
 		$this->assertEquals(1,$result[1]['id']);
-
 	}
-
 
 }
