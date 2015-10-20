@@ -53,6 +53,5 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->setExpectedException("Exception","Le fichier a été modifé depuis son postage sur la plateforme");
 		$this->sign();
 	}
-
-
+	
 }

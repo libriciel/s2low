@@ -55,5 +55,6 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 		$xml  = simplexml_load_string($new_pes);
 		$this->assertEquals("value", strval($xml->test));
 	}
-	
+
+
 }

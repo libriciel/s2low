@@ -71,4 +71,15 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->setExpectedException("Exception","Erreur (1) lors de la signature technique");
 		$xadesSignature->sign(__DIR__."/fixtures/test.xml",__DIR__."/fixtures/robert_petitpoids.p12","robert_petitpoids",$testStreamUrl."/signed.xml",$this->getXadesSignatureProperties());
 	}
+
+	public function testVerifyNOCA(){
+		$xadesSignature = $this->getXadesSignature();
+		$this->assertTrue($xadesSignature->verifyNoCA(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml"));
+	}
+
+	public function testHasSignature(){
+		$this->setExpectedException("XadesSignatureHasSignatureException");
+		$this->sign(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
+	}
+
 }

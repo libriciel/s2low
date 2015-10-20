@@ -22,6 +22,11 @@ class XadesSignature {
 		$domDocument = $this->loadDomDocument($xml_file_to_sign);
 		$document_id = $this->getDocumentId($domDocument);
 
+		if ($this->hasSignature($domDocument)){
+			//Limitation de cette classe : on ne fait pas de signature multiple enveloppé...
+			throw new XadesSignatureHasSignatureException("Le fichier à signer a déjà une signature");
+		}
+
 		$signatureTemplate = $this->getXMLSignatureTemplate($document_id,$certificate_info,$xadesSignatureProperties);
 
 		$signatureTemplateDOM = dom_import_simplexml($signatureTemplate);
@@ -41,11 +46,23 @@ class XadesSignature {
 	}
 
 	public function verify($xml_file_signed,$trusted_pem_path){
-		$domDocument = $this->loadDomDocument($xml_file_signed);
-		$rootNodeName = $this->getLocalName($domDocument);
-		$command = "{$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName --trusted-pem $trusted_pem_path $xml_file_signed 2>&1";
+		return $this->verifyIntern($xml_file_signed,"--trusted-pem $trusted_pem_path");
+	}
+
+	public function verifyNoCA($xml_file_signed){
+		return $this->verifyIntern($xml_file_signed,"");
+	}
+
+	private function verifyIntern($xml_file_signed,$sup_command){
+		$rootNodeName = $this->getRootNodeName($xml_file_signed);
+		$command = "{$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName $sup_command $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		return $return_var == 0;
+	}
+
+	private function getRootNodeName($xml_file_signed){
+		$domDocument = $this->loadDomDocument($xml_file_signed);
+		return $this->getLocalName($domDocument);
 	}
 
 	private function loadDomDocument($xml_file_path){
@@ -69,6 +86,21 @@ class XadesSignature {
 			throw new Exception("Le document XML ne contient pas d'Id");
 		}
 		return $domDocument->documentElement->attributes->getNamedItem('Id')->nodeValue;
+	}
+
+	private function hasSignature(DomDocument $domDocument){
+		$nodes = $domDocument->documentElement->childNodes;
+		foreach($nodes as $node){
+			/** @var $node DomNode */
+			if ($node->nodeType != XML_ELEMENT_NODE){
+				continue;
+			}
+			/** @var $node DomElement */
+			if (strtolower($node->localName) == 'signature' && $node->namespaceURI == self::NS_DS_URI){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private function getCertificateInfo($p12_certificate_path,$p12_password){
@@ -113,3 +145,5 @@ class XadesSignature {
 	}
 
 }
+
+class XadesSignatureHasSignatureException extends Exception{}
