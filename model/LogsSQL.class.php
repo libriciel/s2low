@@ -15,7 +15,7 @@ class LogsSQL extends SQL {
 
 	public function getList($authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$offset,$limit){
 		$data_to_retrieve = " logs.id,logs.date,logs.severity,logs.module,logs.issuer,logs.user_id,logs.visibility,logs.message, " .
-							" users.authority_id, users.name, users.givenname ";
+							" logs.authority_id, users.name, users.givenname, users.login ";
 
 		$offset = intval($offset);
 		$limit = intval($limit);
@@ -31,11 +31,10 @@ class LogsSQL extends SQL {
 	}
 
 	private function getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility){
-
 		$sql = "SELECT $data_to_retrieve ".
 			" FROM logs" .
 			" JOIN users ON users.id=logs.user_id " .
-			" JOIN authorities ON authorities.id=users.authority_id ";
+			" JOIN authorities ON authorities.id=logs.authority_id ";
 
 		$where = array("1=1");
 		$data = array();
@@ -47,7 +46,7 @@ class LogsSQL extends SQL {
 		}
 
 		if ($authority_id){
-			$where[] = " users.authority_id = ? ";
+			$where[] = " logs.authority_id = ? ";
 			$data[] = $authority_id;
 		}
 

@@ -23,3 +23,11 @@ CREATE TABLE authority_siret (
 ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities(id);
 
 ALTER TABLE helios_transactions ADD COLUMN signature_technique boolean default false NOT NULL;
+
+ALTER TABLE logs ADD COLUMN authority_id INTEGER;
+
+UPDATE logs SET authority_id = users.authority_id FROM users WHERE logs.user_id=users.id;
+
+ALTER TABLE logs ADD CONSTRAINT logs_authority_id FOREIGN KEY (authority_id) REFERENCES authorities(id);
+
+CREATE INDEX authority_index ON logs USING btree (authority_id);

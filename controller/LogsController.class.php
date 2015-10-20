@@ -61,6 +61,8 @@ class LogsController extends Controller {
 		$logsSQL = new LogsSQL($this->getSQLQuery());
 		$this->loglevel_list = $logsSQL->getLogLevelList();
 
+		$this->userSQL = new UserSQL($this->getSQLQuery());
+
 
 		$logsSQL = new LogsSQL($this->getSQLQuery());
 		$offset = ($this->page_number - 1) * $this->taille_page;

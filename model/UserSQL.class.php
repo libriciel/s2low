@@ -7,13 +7,18 @@ class UserSQL extends SQL {
 	const IDENT_METHOD_LOGIN = 2 ;
 	const IDENT_METHOD_RGS_2_ETOILES = 3;
 
+
+	public function getPrettyName($name,$givenname,$login){
+		return $name?"$givenname $name":$login;
+	}
+
 	public function getInfo($id){
 		$sql = "SELECT * FROM users WHERE id=?";
 		$result = $this->queryOne($sql,$id);
 		if (! $result){
 			return array();
 		}
-		$result['pretty_name'] = $result['name']?"{$result['givenname']} {$result['name']}":$result['login'];
+		$result['pretty_name'] = $this->getPrettyName($result['name'],$result['givenname'],$result['login']);
 		$result['role_str'] = $this->getRoleStr($result['role']);
 		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['subject_dn'],
 																					$result['issuer_dn']);

@@ -24,7 +24,8 @@ class Log extends DataObject {
 						 "user_id" => array( "descr" => "Identifiant de l'utilisateur", "type" => "isInt", "mandatory" => false),
 						 "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
 						 "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
-						 "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false)
+						 "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
+	  						"authority_id" => array("descr"=>"Authority","type"=>"isInt","mandatory"=>false)
 						 );
 
   protected $severities = array( 0 => "DEBUG",
@@ -298,16 +299,29 @@ class Log extends DataObject {
 	  $logEntry->set("module", $module);
 	}
 
+
 	if ($user) {
-	  $logEntry->set("user_id", $user->getId());
+		$userid = $user->getId();
 	}
-	else if ($userid)
-	{
+
+	if ($userid) {
 		$logEntry->set("user_id",$userid);
 	}
 	if ($visibility) {
 	  $logEntry->set("visibility", $visibility);
 	}
+
+	  global $sqlQuery;
+	  $authority_id = false;
+	  if ($userid) {
+		  $userSQL = new UserSQL($sqlQuery);
+		  $info = $userSQL->getInfo($userid);
+		  if ($info) {
+			  $authority_id = $info['authority_id'];
+		  }
+	  }
+
+	$logEntry->set("authority_id",$authority_id);
 
 	// Enregistrement de l'entrée pour déterminer son id
 	if (! $logEntry->save()) {

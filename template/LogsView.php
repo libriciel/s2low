@@ -75,16 +75,6 @@
 			<tbody>
 
 			<?php foreach ($logs_list as $logEntry)  : ?>
-
-			<?php $user_info = null;
-			if (isset($logEntry["user_id"])) {
-				$user_info = new User($logEntry["user_id"]);
-				if (! $user_info->init()) {
-					$user_info = null;
-				}
-			}
-		 	?>
-
 				<tr>
 					<td headers="date">
 						<?php echo Helpers::getDateFromBDDDate($logEntry["date"], true) ?>
@@ -99,7 +89,7 @@
 						<?php hecho($logEntry["module"]) ?>
 					</td>
 					<td headers="user">
-						<?php (($user_info) ? hecho($user_info->getPrettyName()) : "") ?>
+						<?php hecho($userSQL->getPrettyName($logEntry['name'],$logEntry['givenname'],$logEntry['login'])) ?>
 					</td>
 
 					<td class="long_field" headers="message">
