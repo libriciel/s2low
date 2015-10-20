@@ -2,6 +2,7 @@
 
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
+require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');
 
 class HeliosController extends Controller {
 
@@ -194,6 +195,67 @@ class HeliosController extends Controller {
 			$authoritySiretSQL->add($info['authority_id'],$siret);
 			echo "Transaction $transaction_id : siret $siret ajouté à la collectivite {$info['authority_id']}\n";
 		}
+	}
+
+	public function getPESRetourListAction(){
+		try{
+			$module = new Module();
+			if (!$module->initByName("helios")) {
+				$msg= "Erreur d'initialisation du module";
+				throw new Exception('KO');
+
+			}
+			$me = new User();
+
+			if (! $me->authenticate()) {
+				$msg= "Échec de l'authentification";
+				throw new Exception('KO');
+			}
+
+			if ($me->isAdmin() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
+				$msg= "Accès refusé";
+				throw new Exception('KO');
+			}
+
+			$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+			$envelops = $heliosRetourSQL->getList($me->get("authority_id"));
+
+			$doc = new DOMDocument();
+			$doc->formatOutput = true;
+			$doc->preserveWhiteSpace = false;
+			$root=$doc->createElement("liste");
+			$doc->appendChild($root);
+
+			$idCollElement=$doc->createElement("idColl",$me->get('authority_id'));
+			$resultatElement=$doc->createElement("resultat");
+			$messageElement=$doc->createElement("message");
+			$dateDemandeElement=$doc->createElement("dateDemande", date("Y-m-d h:i:s"));
+			$root->appendChild($idCollElement);
+			$root->appendChild($resultatElement);
+			$root->appendChild($messageElement);
+			$root->appendChild($dateDemandeElement);
+
+
+			foreach ($envelops as $envelope) {
+				$pes_retourElement=$doc->createElement("pes_retour");
+				$pes_retourElement->appendChild($doc->createElement("id",$envelope['id']));
+				$pes_retourElement->appendChild($doc->createElement("nom",$envelope["filename"]));
+				$pes_retourElement->appendChild($doc->createElement("date",$envelope["date"]));
+				$root->appendChild($pes_retourElement);
+			}
+			$msg="liste réussi";
+		}
+		catch (Exception $e) {
+			echo $msg;
+			$resultatElement->appendChild( $doc->createTextNode( "KO" ));
+		}
+
+		$messageElement->appendChild( $doc->createTextNode( $msg ));
+
+		header("Content-type: text/xml");
+		echo $doc->saveXML();
+
+		$this->controller_exit();
 	}
 
 

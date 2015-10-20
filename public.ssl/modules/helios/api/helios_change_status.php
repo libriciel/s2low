@@ -1,19 +1,5 @@
 <?php
-/**
- * \file actes_transac_get_status.php
- * \brief Page de demande de statut d'une transaction
- * \author HTan
- * \date 16.12.2008
- * 
- *
- * Cette page renvoie le statut d'une transaction
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
 
-// Configuration
 require_once("../../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');

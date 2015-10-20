@@ -168,7 +168,31 @@ class HeliosControllerTest extends S2lowTestCase {
 		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$list = $authoritySiretSQL->siretList(1);
 		$this->assertEquals("12345678912345",$list[0]['siret']);
+	}
 
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testGetPESRetourEmptyListAction(){
+		$heliosController = new HeliosController($this->getObjectInstancier());
+		$this->expectOutputRegex("#<idColl>1</idColl>#");
+		$this->setExpectedException("Exception","Exit !");
+		$heliosController->getPESRetourListAction();
+	}
+
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testGetPESRetourListAction(){
+		$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+		$heliosRetourSQL->add(1,"123456789","toto.xml");
+
+		$heliosController = new HeliosController($this->getObjectInstancier());
+		$this->expectOutputRegex("#<nom>toto.xml</nom>#");
+		$this->setExpectedException("Exception","Exit !");
+		$heliosController->getPESRetourListAction();
 	}
 
 

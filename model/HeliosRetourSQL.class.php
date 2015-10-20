@@ -1,6 +1,9 @@
 <?php
 
 class HeliosRetourSQL extends SQL {
+
+	const STATUS_NON_LU = 0;
+	const STATUS_LU = 1;
 	
 	public function add($authority_id,$siret,$filename){
 		$siren = substr($siret, 0,9);
@@ -19,5 +22,10 @@ class HeliosRetourSQL extends SQL {
 				" WHERE authority_id = ? AND filename = ?";
 		return $this->queryOne($sql,$authority_id,$filename);
 	}
-	
+
+	public function getList($authority_id){
+		$sql = "SELECT * FROM helios_retour WHERE status = ? AND authority_id = ? ";
+		return $this->query($sql,self::STATUS_NON_LU,$authority_id);
+	}
+
 }
