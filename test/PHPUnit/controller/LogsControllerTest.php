@@ -27,4 +27,14 @@ class LogsControllerTest extends S2lowTestCase {
 		$h1_title_expected = "Journal d'évènements de la collectivité «&nbsp;Saint-Andre de Corcy&nbsp;»";
 		$this->assertEquals($h1_title_expected,$logsController->getViewParameter('h1_title'));
 	}
+
+	public function testUser(){
+		$this->setUserAuthentification();
+		$logsController = new LogsController($this->getObjectInstancier());
+		$logsController->viewAction();
+		$h1_title_expected = "Journal d'évènements";
+		$this->assertEquals($h1_title_expected,$logsController->getViewParameter('h1_title'));
+	}
+
+
 }

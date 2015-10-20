@@ -75,7 +75,7 @@ class Controller {
 		if ($this->isApiCall()){
 			$json = new JSONoutput();
 			$json->displayErrorAndExit($error_message);
-		}
+		} //@codeCoverageIgnore
 		$this->setErrorMessage($error_message);
 		$this->redirectSSL($url_redirect);
 	} //@codeCoverageIgnore

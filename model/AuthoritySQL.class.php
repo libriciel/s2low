@@ -25,6 +25,15 @@ class AuthoritySQL extends SQL {
     	}
 		return $result;
   	}
+
+	public function getAllGroup($authority_group_id){
+		$result = array();
+		$sql = "SELECT authorities.id, authorities.name FROM authorities WHERE authority_group_id=? ORDER BY authorities.name ASC";
+		foreach($this->query($sql, $authority_group_id) as $line){
+			$result[$line['id']] = $line['name'];
+		}
+		return $result;
+	}
   	
   	public static function getSAEProperties(){
   		return  array(

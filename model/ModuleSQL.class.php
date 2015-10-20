@@ -50,8 +50,11 @@ class ModuleSQL extends SQL {
  				" AND modules.status=1";
 
  		return  $this->query($sql,$userInfo['authority_id'],$userInfo['id']);
-
 	}
-	
+
+	public function getActiveModuleList(){
+		$sql = "SELECT * FROM modules WHERE status=1 ORDER BY id ASC";
+		return $this->query($sql);
+	}
 	
 }
