@@ -33,15 +33,14 @@ class LogsSQL extends SQL {
 	private function getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility){
 		$sql = "SELECT $data_to_retrieve ".
 			" FROM logs" .
-			" JOIN users ON users.id=logs.user_id " .
-			" JOIN authorities ON authorities.id=logs.authority_id ";
+			" JOIN users ON users.id=logs.user_id " ;
 
 		$where = array("1=1");
 		$data = array();
 
 
 		if ($authority_group_id){
-			$where[] = " authorities.authority_group_id = ? ";
+			$where[] = " logs.authority_group_id = ? ";
 			$data[] = $authority_group_id;
 		}
 

@@ -142,6 +142,7 @@ users:
   givenname: Eric
   role: ADM
   authority_id: 2
+  authority_group_id: 1
   subject_dn: admin_col2
   issuer_dn: admin_col2
   status: 1

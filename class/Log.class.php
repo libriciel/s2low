@@ -25,7 +25,8 @@ class Log extends DataObject {
 						 "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
 						 "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
 						 "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
-	  						"authority_id" => array("descr"=>"Authority","type"=>"isInt","mandatory"=>false)
+	  						"authority_id" => array("descr"=>"Authority","type"=>"isInt","mandatory"=>false),
+	  "authority_group_id" => array("descr"=>"Authority group","type"=>"isInt","mandatory"=>false),
 						 );
 
   protected $severities = array( 0 => "DEBUG",
@@ -318,10 +319,13 @@ class Log extends DataObject {
 		  $info = $userSQL->getInfo($userid);
 		  if ($info) {
 			  $authority_id = $info['authority_id'];
+			  $authority_group_id = $info['authority_group_id'];
 		  }
 	  }
 
-	$logEntry->set("authority_id",$authority_id);
+	  $logEntry->set("authority_id",$authority_id);
+	  $logEntry->set("authority_group_id",$authority_group_id);
+
 
 	// Enregistrement de l'entrée pour déterminer son id
 	if (! $logEntry->save()) {

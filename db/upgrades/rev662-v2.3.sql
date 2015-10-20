@@ -25,9 +25,12 @@ ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREI
 ALTER TABLE helios_transactions ADD COLUMN signature_technique boolean default false NOT NULL;
 
 ALTER TABLE logs ADD COLUMN authority_id INTEGER;
-
 UPDATE logs SET authority_id = users.authority_id FROM users WHERE logs.user_id=users.id;
-
 ALTER TABLE logs ADD CONSTRAINT logs_authority_id FOREIGN KEY (authority_id) REFERENCES authorities(id);
+CREATE INDEX authority_index ON logs USING btree (authority_id,id);
 
-CREATE INDEX authority_index ON logs USING btree (authority_id);
+
+ALTER TABLE logs ADD COLUMN authority_group_id INTEGER;
+UPDATE logs SET authority_group_id = authorities.authority_group_id FROM authorities WHERE logs.authority_id=authorities.id;
+ALTER TABLE logs ADD CONSTRAINT logs_authority_group_id FOREIGN KEY (authority_group_id) REFERENCES authority_groups(id);
+CREATE INDEX authority_group_index ON logs USING btree (authority_group_id,id);
