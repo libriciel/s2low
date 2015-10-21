@@ -22,7 +22,15 @@ class HeliosSignatureTechnique {
 			throw new Exception("Le fichier a été modifé depuis son postage sur la plateforme");
 		}
 		$file_signed = sys_get_temp_dir().uniqid("pes_aller_signed");
-		$this->xadesSignature->sign($orig_pes_aller_path,$p12_certificate_path,$p12_password,$file_signed,$xadesSignatureProperties);
+		try {
+			$this->xadesSignature->sign($orig_pes_aller_path, $p12_certificate_path, $p12_password, $file_signed, $xadesSignatureProperties);
+		} catch (XadesSignatureHasSignatureException $exception){
+			if (! $this->xadesSignature->verifyNoCA($orig_pes_aller_path)){
+				throw new Exception("Le fichier est déjà signé, mais la signature est invalide");
+			}
+			$this->heliosTransactionSQL->setSignatureTechnique($transaction_id,$info['sha1'],$info['file_size']);
+			return;
+		}
 
 		$new_sha1 = sha1_file($file_signed);
 		$new_file = filesize($file_signed);
