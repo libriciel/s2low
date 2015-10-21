@@ -1,11 +1,6 @@
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery-1.6.4.min.js"></script>
-<?php 
-//Ne pas utiliser le plugin autocomplete de base : il y a un bug avec ie7. Voir :  
-//http://old.nabble.com/-autocomplete--Incorrect-selection-on-mouse-click-in-IE7%2B-td25819409s27240.html 
-
-?>
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery.autocomplete.ie7-fix.js"></script>    
-<link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/custom/styles/jquery.autocomplete.css" type="text/css" />
+<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery-1.11.3.min.js"></script>
+<script src="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.css" type="text/css" />
 
  <h1> Mail - Système de mail sécurisé</h1>
   <h2>Actions</h2>
@@ -17,17 +12,57 @@
 	
   <script>
   $(document).ready(function(){
-		$("#mailto").autocomplete("liste-mail.php",  {multiple: true, mustMatch: true, cacheLength:0, max: 20});
-  });
 
-  $(document).ready(function(){
-		$("#mailcci").autocomplete("liste-mail.php",  {multiple: true, mustMatch: true, cacheLength:0, max: 20});
-});
-  
-  $(document).ready(function(){
-		$("#mailcc").autocomplete("liste-mail.php",  {multiple: true, mustMatch: true, cacheLength:0, max: 20});
-});
-  
+	  function split( val ) {
+		  return val.split( /,\s*/ );
+	  }
+	  function extractLast( term ) {
+		  return split( term ).pop();
+	  }
+
+	  $( ".annuaire-autocomplete" )
+		  // don't navigate away from the field on tab when selecting an item
+		  .bind( "keydown", function( event ) {
+			  if ( event.keyCode === $.ui.keyCode.TAB &&
+				  $( this ).autocomplete( "instance" ).menu.active ) {
+				  event.preventDefault();
+			  }
+		  })
+		  .autocomplete({
+			  source: function( request, response ) {
+				  $.getJSON( "<?php echo WEBSITE_SSL ?>/modules/mail/liste-mail.php?", {
+					  term: extractLast( request.term )
+				  }, response );
+
+			  },
+			  response: function( event, ui ) {
+					if (ui.content.length == 0) {
+						if (this.value.lastIndexOf(",") == -1) {
+							this.value = '';
+						} else {
+
+						this.value = this.value.substr(0, this.value.lastIndexOf(',') + 2);
+						}
+					}
+			  },
+
+			  focus: function() {
+				  // prevent value inserted on focus
+				  return false;
+			  },
+			  select: function( event, ui ) {
+				  var terms = split( this.value );
+				  // remove the current input
+				  terms.pop();
+				  // add the selected item
+				  terms.push( ui.item.value );
+				  // add placeholder to get the comma-and-space at the end
+				  terms.push( "" );
+				  this.value = terms.join( ", " );
+				  return false;
+			  }
+		  });
+  });
   </script>
   
 	
@@ -35,19 +70,19 @@
             <div class="form-group">
                 <label class="col-md-2" for="mailto">À : </label>
                 <div class="col-md-10">
-                    <input name='mailto' id="mailto" class="form-control"/>
+                    <input name='mailto' id="mailto" class="form-control annuaire-autocomplete"/>
 		</div>
             </div>
             <div class="form-group">
                 <label class="col-md-2" for="mailcc">CC : </label>
                 <div class="col-md-10">
-                    <input name='mailcc' id="mailcc" class="form-control"/>
+                    <input name='mailcc' id="mailcc" class="form-control annuaire-autocomplete"/>
 		</div>
             </div>
             <div class="form-group">
                 <label class="col-md-2" for="mailcci">CCI : </label>
                 <div class="col-md-10">
-                    <input name='mailcci' id="mailcci" class="form-control"/>
+                    <input name='mailcci' id="mailcci" class="form-control annuaire-autocomplete"/>
 		</div>
             </div>
             <div class="form-group">

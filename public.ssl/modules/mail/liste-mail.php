@@ -1,18 +1,17 @@
 <?php
-if (empty($_GET['q'])){
+if (empty($_GET['term'])){
 	return; 
 }
 
-
 require_once("include/init.php");
-$debut = utf8_decode($_GET['q']);
-
-header("Content-type: text/plain; charset=ISO-8859-1");
+$debut = urldecode($_GET['term']);
 
 $bd = DatabasePool::getInstance();
 
 $annuaire = new Annuaire($bd,$me->get('authority_id'));
 
-foreach ($annuaire->getListeMailAndGroupe($debut) as $item){
-	echo $item."\n";
+$result = array();
+foreach($annuaire->getListeMailAndGroupe($debut) as $line){
+	$result[] = utf8_encode($line);
 }
+echo json_encode($result);

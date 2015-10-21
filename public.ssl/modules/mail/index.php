@@ -9,7 +9,7 @@ require_once ("lib/MailLayout.class.php");
 $api=Helpers :: getVarFromPost("api");
 
 if ( ! $api ){
-$doc = new MailLayout("xhtml_mail.tpl.php");
+$doc = new MailLayout("xhtml_mail_ssl.tpl.php");
  
 //pour list.php
 $doc->addHeader("<script src=\"/javascript/mailList.js\" type=\"text/javascript\"></script>\n");
