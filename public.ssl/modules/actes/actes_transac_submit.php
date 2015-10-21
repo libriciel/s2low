@@ -37,6 +37,12 @@ if (! is_uploaded_file($enveloppe["tmp_name"])) {
   Helpers::returnAndExit(1, "Envoi de fichier incorrect.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 }
 
+$rgsConnexion = new RgsConnexion();
+if ( ! $rgsConnexion->isRgsConnexion()){
+  Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
+}
+
+
 $env = new ActesEnvelope();
 
 // Initialisation de l'enveloppe

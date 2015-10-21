@@ -31,6 +31,12 @@ if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
 	return_error_api("Accès refusé");
 }
 
+
+$rgsConnexion = new RgsConnexion();
+if ( ! $rgsConnexion->isRgsConnexion()){
+	return_error_api("La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}");
+}
+
 if (empty($_GET['id'])){
 	return_error_api("Pas d'identifiant de transaction spécifié");
 }

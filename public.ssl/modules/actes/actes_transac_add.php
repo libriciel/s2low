@@ -34,6 +34,8 @@ if ($module->getParam("paper") == "on") {
   exit ();
 }
 
+
+
 // Collectivité de l'utilisateur courant
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -164,6 +166,13 @@ $doc->openContent();
 // Zone contenu
 $html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+
+$rgsConnexion = new RgsConnexion();
+if (! $rgsConnexion->isRgsConnexion()){
+    $html.="<div class='alert alert-warning'>Votre certificat n'est pas conforme au RGS, vous ne pourrez pas télétransmettre !</div>";
+}
+
+
 
 $html .= "<h2>Création d'une transaction Actes</h2>\n";
 

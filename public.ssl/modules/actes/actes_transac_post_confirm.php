@@ -31,6 +31,13 @@ if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
   exit ();
 }
 
+$rgsConnexion = new RgsConnexion();
+if ( ! $rgsConnexion->isRgsConnexion()){
+    $_SESSION["error"] = "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit ();
+}
+
 $id = Helpers :: getVarFromPost("id");
 if (empty($id) ){
 	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";

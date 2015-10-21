@@ -191,7 +191,6 @@ if(!defined("VERIFICATION_SIREN")){
 	define("VERIFICATION_SIREN",false);
 }
 
-
 //Paramétre outils de signature LIBERSIGN
 
 if(!defined("LIBERSIGN_URL")){
@@ -208,6 +207,11 @@ if (!defined("XMLSEC1_PATH")){
 	define("XMLSEC1_PATH","/usr/bin/xmlsec1");
 }
 
+//Emplacement d'un répertoire contenant le "hasher" des autorités de certification RGS
+//voir "man c_rehash" pour le "hasher"
+if (! defined("RGS_VALIDCA_PATH")){
+	define("RGS_VALIDCA_PATH","/etc/tedetis/ssl/validca/");
+}
 
 //////////////////////////////////
 ///// Paramètre module Actes /////

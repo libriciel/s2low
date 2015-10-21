@@ -35,6 +35,14 @@ if ($module->getParam("paper") == "on") {
   Helpers :: returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
 }
 
+$must_signed = Helpers::getVarFromPost("must_signed",true);
+
+$rgsConnexion = new RgsConnexion();
+if ( ! $must_signed && ! $rgsConnexion->isRgsConnexion()){
+	Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
+}
+
+
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
@@ -68,7 +76,6 @@ if (isset($_FILES["acte_attachments_sign"])){
 	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 }
 
-$must_signed = Helpers::getVarFromPost("must_signed",true);
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
 $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);

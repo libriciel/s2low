@@ -1,6 +1,8 @@
 <?php
+
 require_once( __DIR__ . "/../../../init/init-www-actes.php");
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
+
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -94,7 +96,6 @@ if ($droit->isSuperAdmin($userInfo)){
 
 $listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, $fstatus,$fnum,$objet);
 $listeActesHTML->setDate($fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date);
-
 
 $doc = new HTMLLayout();
 $doc->setTitle("Liste des transactions - ACTES - S²low");
