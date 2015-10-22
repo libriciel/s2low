@@ -51,6 +51,15 @@ class X509Certificate {
 		$resource = $this->readCertContent($pem_certificate_content);
 		$info =  openssl_x509_parse($resource);
 		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo']);
+		$info['issuer_name'] = "";
+		foreach ($info['issuer'] as $key => $val) {
+			$info['issuer_name'] .= "/" . $key . "=" . utf8_decode($val);
+		}
+
+		$info['subject_name'] = "";
+		foreach ($info['subject'] as $key => $val) {
+			$info['subject_name'] .= "/" . $key . "=" . utf8_decode($val);
+		}
 		return $info;
 	}
 

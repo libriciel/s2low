@@ -57,6 +57,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->setDataOk();
 		$_POST['api'] = 1;
 		$this->expectOutputRegex("#Cr\\\u00e9ation de l'utilisateur Eric Pommateau#");
+		$this->setExpectedException("Exception","Exit !");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -77,7 +78,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testDoEditModifNoRight(){
 		$this->setUserAuthentification();
 		$this->setOnlyDataOk();
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","Redirect");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -154,13 +155,16 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['login'] = 'alice';
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
-		$this->setExpectedException("Exception","Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier");
+		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testModifGroupAdmin(){
 		$this->setOnlyDataOk();
 		$this->setAdminGroupAuthentication();
+		$_POST['login'] = 'bob';
+		$_POST['password'] = 'eey3fo4A';
+		$_POST['password2'] = 'eey3fo4A';
 		$_POST['id'] = 6;
 		$this->adminUserController->doEditAction();
 	}
@@ -178,7 +182,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
 		$this->adminUserController->doEditAction();
-		$this->setExpectedException("Exception","Un utilisateur avec le même login existe déjà.");
+		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -202,7 +206,9 @@ class AdminUserControllerTest extends S2lowTestCase {
 
 	public function testNotGoodRGSEtoile(){
 		$this->setDataOk();
-		$_FILES['certificate_rgs_2_etoiles']['tmp_name'] = 'bad certificate';
+		file_put_contents($this->testStreamUrl."/rogue.pem","bad certificate");
+		$_FILES['certificate_rgs_2_etoiles']['tmp_name'] = $this->testStreamUrl."/rogue.pem";
+		$this->setExpectedException("Exception"," Impossible de lire le certificat");
 		$this->adminUserController->doEditAction();
 	}
 

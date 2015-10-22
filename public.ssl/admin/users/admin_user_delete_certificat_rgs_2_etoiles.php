@@ -38,6 +38,13 @@ if (! $him->init()) {
 }
 
 $userSQL = new UserSQL($sqlQuery);
+
+$user_info = $userSQL->getInfo($him->getId());
+$x509Certificate = new X509Certificate();
+$certificat_connexion_info = $x509Certificate->getInfo($user_info['certificate']);
+if ($userSQL->hasDoublon($him->getId(),$certificat_connexion_info,$user_info['login'],false)){
+	exitOrDisplayError($api,"Impossible de supprimer le certificat car l'opération entrainerait des doublons", WEBSITE_SSL . "/admin/users/admin_user_edit.php?id={$him->getId()}");
+}
 $userSQL->deleteCertificateRGS2Etoiles($him->getId());
 
 

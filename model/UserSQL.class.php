@@ -134,4 +134,28 @@ class UserSQL extends SQL {
 		$sql = "SELECT authority_groups.name FROM users JOIN authority_groups ON users.authority_group_id= authority_groups.id WHERE users.id=?";
 		return $this->queryOne($sql,$user_id);
 	}
+
+	public function hasDoublon($user_id,$certificat_connexion_info,$login,$certificate_rgs_2_etoiles_clean_content){
+
+		if ($certificate_rgs_2_etoiles_clean_content) {
+			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=? AND certificate_rgs_2_etoiles=?";
+			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name'],$certificate_rgs_2_etoiles_clean_content);
+		} elseif($login) {
+			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=? AND login=?";
+			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name'],$login);
+		} else {
+			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=?";
+			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name']);
+		}
+
+		if (! $result){
+			return false;
+		}
+		if (count($result)>1){
+			return true;
+		}
+		return ($result[0] != $user_id);
+	}
+
+
 }
