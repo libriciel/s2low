@@ -71,7 +71,7 @@ class Controller {
 		throw new RedirectException("Redirect to $url with message : $error_message");
 	}
 
-	protected function displayErrorAndExit($error_message,$url_redirect){
+	public function displayErrorAndExit($error_message,$url_redirect){
 		if ($this->isApiCall()){
 			$json = new JSONoutput();
 			$json->displayErrorAndExit($error_message);
@@ -80,7 +80,7 @@ class Controller {
 		$this->redirectSSL($url_redirect);
 	} //@codeCoverageIgnore
 
-	protected function displayAndExit($message,$url_redirect){
+	public function displayAndExit($message,$url_redirect){
 		if ($this->isApiCall()){
 			$json = new JSONoutput();
 			$json->displayAndExit($message);

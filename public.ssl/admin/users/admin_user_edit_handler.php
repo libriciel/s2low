@@ -6,14 +6,21 @@ $me = new User();
 
 $api = Helpers::getVarFromPost("api");
 
-function exitOrDisplayError($api,$erreur_msg,$location){
-	if ($api){
-		$jsonOutput = new JSONoutput();
-		$jsonOutput->displayErrorAndExit($erreur_msg);
-	} else {
-		$_SESSION["error"] = $erreur_msg;
-		header("Location: $location " );
-		exit;
+if (! function_exists("exitOrDisplayError")) {
+	function exitOrDisplayError($api, $erreur_msg, $location)
+	{
+		if ($api) {
+			$jsonOutput = new JSONoutput();
+			$jsonOutput->displayErrorAndExit($erreur_msg);
+		} else {
+			$_SESSION["error"] = $erreur_msg;
+			if (TESTING_ENVIRONNEMENT) {
+				throw new Exception("Redirect to $location with message $erreur_msg");
+			} else {
+				header("Location: $location ");
+				exit;
+			}
+		}
 	}
 }
 
@@ -37,6 +44,8 @@ $status = Helpers::getVarFromPost("status", true);
 $authority_id = Helpers::getVarFromPost("authority_id", true);
 $role = Helpers::getVarFromPost("role", true);
 $authority_group_id = Helpers::getVarFromPost("authority_group_id", true);
+
+
 $certificate = $_FILES["certificate"];
 
 
@@ -51,8 +60,8 @@ $new_id = Helpers::getVarFromPost("new_id", true);
 $him = new User();
 $mod = false;
 
-
 if ($api && ! $authority_id){
+	//Il faut pense au cas où on on est en modification et ou on passe pas l'authority_id... c'est  nul...
 	exitOrDisplayError($api,"authority_id est obligatoire",WEBSITE_SSL . "/admin/users/admin_users.php");
 }
 
@@ -74,9 +83,7 @@ if ($role == 'GADM' && ! $authority_group_id){
 }
 
 if (! $api && $password != $password2){
-	  $_SESSION["error"] = "Les mots de passe ne correspondent pas";
-	  header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php". "?id=" . $him->getId() ."&new_id=$new_id");
-	  exit();
+	exitOrDisplayError($api,"Les mots de passe ne correspondent pas",WEBSITE_SSL . "/admin/users/admin_user_edit.php". "?id=" . $him->getId() ."&new_id=$new_id");
 }
 
 $him->set("name", $name);
@@ -96,7 +103,7 @@ if ($me->isSuper()) {
 }
 
 // Traitement du certificat
-if (is_array($certificate) && count($certificate) > 0 && is_uploaded_file($certificate["tmp_name"])) {
+if (is_array($certificate) && count($certificate) > 0 && is_uploaded_file_wrapper($certificate["tmp_name"])) {
   $him->set("certFilePath", $certificate["tmp_name"]);
 } else {
   if (! $mod && ! $new_id) {
@@ -114,9 +121,9 @@ if ($new_id){
 	$him->cloneCertificat($new_id);
 } else {
 	if ($login){
-		
+
 		$the_id = $him->getIdFromLogin($login);
-		
+
 		if ($the_id && $id != $the_id){
 			exitOrDisplayError($api, "Ce login est déja utilisé", WEBSITE_SSL ."/admin/users/admin_users.php");
 		}
@@ -155,6 +162,11 @@ if (! $me->isSuper()) {
 
 $him->set("role", $role);
 
+if (! $him->get('authority_id')){
+	exitOrDisplayError($api,"authority_id est obligatoire",WEBSITE_SSL . "/admin/users/admin_users.php");
+}
+
+
 // Permissions sur les modules
 // Récupération des modules actifs globalement
 $modules = Module::getActiveModulesList();
@@ -190,9 +202,10 @@ if (! $him->save()) {
 $msg = ($mod) ? "Modification" : "Création";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
 
+global $sqlQuery;
 $userSQL = new UserSQL($sqlQuery);
 
-if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file($certificate_rgs_2_etoiles["tmp_name"])) {
+if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file_wrapper($certificate_rgs_2_etoiles["tmp_name"])) {
 
 	$certificate_rgs_2_etoiles_content = file_get_contents($certificate_rgs_2_etoiles["tmp_name"]);
 	
@@ -221,6 +234,10 @@ if ($api){
 } else {
 	$_SESSION["error"] = nl2br($msg);
 	Helpers::purgeTempSession();
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId() );
+	if (TESTING_ENVIRONNEMENT){
+		return $him->getId();
+	} else {
+		header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId());
+	}
 }
 

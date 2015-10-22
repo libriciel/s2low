@@ -14,6 +14,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	protected function setUp(){
 		parent::setUp();
+
+		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
 		$_GET = array();
 		$_POST = array();
 		$_SESSION = array();

@@ -139,6 +139,7 @@ class User extends DataObject {
 	public function authenticate() {
 		$authenfication = Authentification::getInstance();
 		$this->id = $authenfication->authenticate();
+
 	  	$this->is_loggued = true;
 	  	$init = $this->init();
 	  	$is_active = $this->isActive();
@@ -658,6 +659,12 @@ class User extends DataObject {
 	return true;
   }
 
+	private function certTime2IsoDate($validTo){
+		preg_match_all("#(\d\d)#",$validTo,$matches);
+		$m = $matches[0];
+		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+	}
+
   /**
    * \brief Méthode d'import des informations contenus dans le certificat utilisateur
    * \return true si succès, false sinon
@@ -683,8 +690,12 @@ class User extends DataObject {
 	  }
 
       $this->subject_dn = $tab["name"];
-      $this->cert_not_before = ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validFrom']);
-      $this->cert_not_after = ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validTo']);
+
+      $this->cert_not_before = $this->certTime2IsoDate($tab['validFrom']);
+
+		 // ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validFrom']);
+      $this->cert_not_after = $this->certTime2IsoDate($tab['validTo']);
+		  //ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validTo']);
 
       $this->cert_serial = $tab["serialNumber"];
 
@@ -779,6 +790,7 @@ class User extends DataObject {
 
 	public function getIdFromLogin($login){
 		$sql = "SELECT id FROM users WHERE users.login='".pg_escape_string($login)."' AND subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'";
+
 		$result = $this->db->select($sql);
 		if ($result->num_row() == 0 ){
 			return false;

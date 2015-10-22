@@ -8,6 +8,9 @@ class UserSQL extends SQL {
 	const IDENT_METHOD_RGS_2_ETOILES = 3;
 
 
+	const STATUS_DESACTIVE = 0;
+	const STATUS_ACTIVE = 1;
+
 	public function getPrettyName($name,$givenname,$login){
 		return $name?"$givenname $name":$login;
 	}

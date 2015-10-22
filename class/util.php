@@ -29,3 +29,10 @@ function move_uploaded_file_wrapper($filename, $destination){
 	}
 	return move_uploaded_file($filename ,$destination );
 }
+
+function is_uploaded_file_wrapper($filename){
+	if (TESTING_ENVIRONNEMENT){
+		return file_exists($filename);
+	}
+	return is_uploaded_file($filename);
+}

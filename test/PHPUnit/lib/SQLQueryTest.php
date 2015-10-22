@@ -30,9 +30,11 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testVeryBadQuery(){
-		$this->sqlQuery->setCredential(DB_USER_TEST,"badpassword");
+		$this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
+		$this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+		//$this->sqlQuery->setCredential(DB_USER_TEST,"badpasswordaaa");
 		$sql = "SELECT 42 as response";
-		$this->setExpectedException("Exception","password authentication failed for user");
+		$this->setExpectedException("Exception","FATAL");
 		$this->sqlQuery->query($sql);
 	}
 

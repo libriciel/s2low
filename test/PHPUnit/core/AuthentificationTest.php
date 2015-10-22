@@ -9,7 +9,7 @@ class AuthentificationTest  extends S2lowTestCase {
 	}
 
 	public function testAuthenticate(){
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(false);
 	}
 	
@@ -24,7 +24,7 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$server['SSL_CLIENT_S_DN'] = "adullact";
 		$server['SSL_CLIENT_I_DN'] = "adullact";
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : La connexion n'a pas pu être établie");
 		$this->authenticateWith(false, $server);
 	}
 	
@@ -51,7 +51,7 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_I_DN'] = "adullact";
 		$server['PHP_AUTH_USER'] = "alice";
 		$server['PHP_AUTH_PW'] = "bad password";
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(false, $server);
 	}
 
@@ -59,7 +59,7 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(false, $server);
 	}
 	
@@ -82,7 +82,7 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__."/fixtures/clean_pem.pem");
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(4,$server);
 	}
 
@@ -91,21 +91,21 @@ class AuthentificationTest  extends S2lowTestCase {
 		$server['SSL_CLIENT_S_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_I_DN'] = "adullact_identification";
 		$server['SSL_CLIENT_CERT'] = "foo";
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(4,$server);
 	}
 
 	public function testAuthentificationFailed(){
 		$server['SSL_CLIENT_VERIFY'] = "FAILED";
 		$session['id_login'] = 2;
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : La connexion n'a pas pu être établie");
 		$this->authenticateWith(2,$server,$session);
 	}
 
 	public function testAuthentificationFailed2(){
 		$server['SSL_CLIENT_VERIFY'] = "";
 		$session['id_login'] = 2;
-		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$this->setExpectedException("Exception","Message : La connexion n'a pas pu être établie");
 		$this->authenticateWith(2,$server,$session);
 	}
 
