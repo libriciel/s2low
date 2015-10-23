@@ -212,4 +212,11 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->adminUserController->doEditAction();
 	}
 
+	public function testSameInfo(){
+		$this->setDataOk();
+		$this->adminUserController->doEditAction();
+		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
+		$this->adminUserController->doEditAction();
+	}
+
 }
