@@ -80,7 +80,7 @@ if(!defined('DB_DATABASE_TEST')){
 }
 
 if (! defined('PHP_UNIT_AUTOLOADER')) {
-	define("PHP_UNIT_AUTOLOADER", "/Users/eric/workspace-adullact/pastell/ext/composer/vendor/autoload.php");
+	define("PHP_UNIT_AUTOLOADER", "../pastell/ext/composer/vendor/autoload.php");
 }
 
 // Nombre d'élément affichés par défaut par page dans les listes
