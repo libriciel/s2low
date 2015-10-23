@@ -21,7 +21,7 @@ class HeliosSignatureTechnique {
 		if (sha1_file($orig_pes_aller_path) != $info['sha1']){
 			throw new Exception("Le fichier a été modifé depuis son postage sur la plateforme");
 		}
-		$file_signed = sys_get_temp_dir().uniqid("pes_aller_signed");
+		$file_signed = sys_get_temp_dir()."/".uniqid("pes_aller_signed");
 		try {
 			$this->xadesSignature->sign($orig_pes_aller_path, $p12_certificate_path, $p12_password, $file_signed, $xadesSignatureProperties);
 		} catch (XadesSignatureHasSignatureException $exception){
