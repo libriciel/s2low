@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunDepense.xsd"/>
+	<xs:complexType name="TInfoTiersRecette">
+		<xs:complexContent>
+			<xs:extension base="cm:TInfoTiers">
+				<xs:sequence>
+					<xs:element name="DteMalade" type="cm:Base_Date"/>
+					<xs:element name="TypTiers" type="cm:Base_Alphanum2"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

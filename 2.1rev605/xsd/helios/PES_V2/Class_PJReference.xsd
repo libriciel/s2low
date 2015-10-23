@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="Simple_Type.xsd"/>
+	<xs:complexType name="TPJReference">
+		<xs:sequence>
+			<xs:element name="Support">
+				<xs:complexType>
+					<xs:attribute name="V" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="01"/>
+								<xs:enumeration value="02"/>
+								<xs:enumeration value="03"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="IdUnique" type="Base_Alphanum50"/>
+			<xs:element name="NomPJ" type="Base_Texte100" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

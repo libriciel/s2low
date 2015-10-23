@@ -1,0 +1,128 @@
+<?php
+require_once( __DIR__ . "/../../../init/init-www-actes.php");
+
+if (! $moduleSQL->hasDroit($moduleInfo['id'],$connexion->getId(),'CS')){
+	Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", WEBSITE_SSL . "/modules/actes/index.php");
+}
+
+$liste_id = Helpers::getVarFromPost("liste_id");
+
+if (!$liste_id){
+	Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/actes/index.php");
+}
+
+$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
+$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
+$transaction_list = array();
+
+foreach ($liste_id as $transaction_id){
+	 $transactionInfo = $actesTransactionSQL->getInfo($transaction_id);
+	 if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
+	 	Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/actes/index.php");
+	 }
+	 
+	 $tab_included_files = $actesIncludedFileSQL->getSendFile($transaction_id);
+	 $transactionInfo['file']= $tab_included_files[0];
+	 $transaction_list[] = $transactionInfo;
+}
+
+$menuHTML = new MenuHTML();
+
+$doc = new HTMLLayout();
+$doc->setTitle("Tedetis : Signature de plusieurs Actes");
+$doc->openContainer();
+$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->closeSideBar();
+$doc->openContent();
+
+
+$html .= "<h1>ACTES - Signature de plusieurs Actes</h1>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+
+$html .= "<h2>Liste des fichiers à signer</h2>\n";
+
+$html .= "<div id=\"lot-area\">\n";
+$html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau présente respectivement un lien vers le détail, une description, la date, le nombre de fichiers non traités et un lien vers les actions disponibles de chaque lot\">";
+$html .= "<caption>Liste des lots de transactions<caption>\n";
+$html .= "<thead>\n";
+$html .= "<tr>\n";
+$html .= " <th id=\"numero_acte\" class=\"data\">Numéro de l'acte</th>\n";
+$html .= " <th id=\"numero_interne_acte\" class=\"data\">Numéro interne de l'acte</th>\n";
+$html .= " <th id=\"objet_actes\" class=\"data\">Objet</th>\n";
+$html .= " <th id=\"fichier_actes\" class=\"data\">Fichier</th>\n";
+$html .= "</tr>\n";
+$html .= "</thead>\n";
+$html .= "<tbody>\n";
+
+$i = 0;
+
+foreach ($transaction_list as $transactionInfo) {
+	
+	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
+	$html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser l'actes\">" . $transactionInfo['id'] . "</a></td>\n";
+	$html .= " <td headers=\"numero_interne_acte\">" . get_hecho($transactionInfo['number']) . "</td>\n";
+	$html .= " <td headers=\"objet_actes\">" . $transactionInfo['subject']. "</td>\n";
+	$html .= " <td headers=\"fichier_actes\">"; 
+	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['file']['posted_filename']. "</a>";				
+	$html .= "</td>\n";
+	$html .= "</tr>\n";
+
+	$i = 1 - $i;
+}
+$html .= "</tbody>\n";
+$html .= "</table>\n";
+$html .= "</div>\n";
+
+
+
+$html .= "<h3>Signature de l'acte</h3>";
+
+$id = 999;
+ob_start();
+?><div class='action'>
+	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
+			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
+			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
+			name = "appletsignature"
+			width = "500"
+			height = "257" >
+		<param name="hash_count" value="<?php echo count($transaction_list)?>" />
+		<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+			<param name="iddoc_<?php echo $i +1?>" value="<?php echo $transactionInfo['file']['id']?>" />
+			<param name="hash_<?php echo $i +1?>" value="<?php echo $transactionInfo['file']['sha1'] ?>" /> 
+			<param name="format_<?php echo $i +1?>" value="CMS" />
+		<?php endforeach;?> 
+		<param name="id_user" value="id=<?php echo $id?>" /> 
+		<param name="return_mode" value="form" />
+	 </applet>
+	 </div>
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+	<input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
+	<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+		<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $transactionInfo['file']['id']?>' />
+		<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i + 1 ?>' value=''/>
+	<?php endforeach;?>
+</form>
+<script>
+function injectSignature() {
+    signature = null;
+    <?php foreach($transaction_list as $i => $transactionInfo) : ?> 
+    	signature = document.applets[0].returnSignature("<?php echo $transactionInfo['file']['id'] ?>");
+		$("#signature_<?php echo $i + 1?>").val(signature);
+	<?php endforeach;?>
+	$("#form_sign").submit();
+}
+</script>
+	<?php 	
+		$html.= ob_get_contents();
+		ob_end_clean();
+
+
+$doc->addBody($html);
+
+$doc->closeContent();
+$doc->closeContainer();
+
+$doc->buildFooter();
+$doc->display();

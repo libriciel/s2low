@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 (http://www.xmlspy.com) by Michael Conroy (SEMA) -->
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/heliades_v1/Rev0/aller" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/heliades_v1/Rev0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../Class_Signature.xsd"/>
+	<xs:import namespace="http://uri.etsi.org/01903/v1.1.1#" schemaLocation="../../xades/XAdES-core-schema.xsd"/>
+	<xs:include schemaLocation="../Class_PESPJs_HELIADES.xsd"/>
+	<xs:include schemaLocation="../Class_FacturePES.xsd"/>
+	<xs:include schemaLocation="../Class_FacturePESIndiv.xsd"/>
+	<xs:include schemaLocation="../Class_Tiers.xsd"/>
+	<xs:include schemaLocation="../Class_RepartitionBudget.xsd"/>
+	<xs:include schemaLocation="../Class_Nomenclature.xsd"/>
+	<xs:element name="PES_PJs_HELIADES_Aller">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EnTetePES_PJ">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="IdVer" type="cm:Base_Num2"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="IdPost" type="cm:Base_Texte7"/>
+				<xs:element name="IdColl" type="cm:Base_Num20"/>
+				<xs:element name="PES_PJs_HELIADES" type="TPES_PJs_HELIADES" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/emprunt/r0/aller" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunEmprunts.xsd"/>
+	<xs:include schemaLocation="Class_Emprunt.xsd"/>
+	<xs:include schemaLocation="Class_TiersEmprunt.xsd"/>
+	<xs:complexType name="TPES_EtatPassif">
+		<xs:sequence>
+			<xs:element name="EnTeteEtatPassif">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2"/>
+						<xs:element name="Exer" type="cm:Base_Annee"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="EtatPassif" type="TEtatPassif" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TEtatPassif">
+		<xs:sequence>
+			<xs:element name="IdentificationEmprunt" type="TIdentificationEmprunt"/>
+			<xs:element name="InformationEmprunt" type="TInformationEmprunt" minOccurs="0"/>
+			<xs:element name="Tiers" type="TTiers"/>
+			<xs:element name="LigneTableauAmt" type="TLigneTableauAmt" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="InfoTiers" type="TInfoTiers"/>
+			<xs:element name="Adresse" type="cm:TAdresse" minOccurs="0"/>
+			<xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

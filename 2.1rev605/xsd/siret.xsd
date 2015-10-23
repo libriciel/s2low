@@ -1,0 +1,30 @@
+<xsd:schema targetNamespace="http://xml.insee.fr/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ie="http://xml.insee.fr/schema" elementFormDefault="qualified" attributeFormDefault="qualified" version="1.0">
+	<xsd:include schemaLocation="insee-commun.xsd"/>
+	<xsd:simpleType name="SIREN_stype">
+		<xsd:restriction base="ie:Chaine_Numerique_stype">
+			<xsd:length value="9"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="SIREN" type="ie:SIREN_stype"/>
+	<xsd:attribute name="SIREN" type="ie:SIREN_stype"/>
+	<xsd:simpleType name="NIC_stype">
+		<xsd:restriction base="ie:Chaine_Numerique_stype">
+			<xsd:length value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="NIC" type="ie:NIC_stype"/>
+	<xsd:attribute name="NIC" type="ie:NIC_stype"/>
+	<xsd:complexType name="SIRET_ctype">
+		<xsd:sequence>
+			<xsd:element ref="ie:SIREN"/>
+			<xsd:element ref="ie:NIC"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="SIRET" type="ie:SIRET_ctype"/>
+	<xsd:simpleType name="SIRET_stype">
+		<xsd:restriction base="ie:Chaine_Numerique_stype">
+			<xsd:length value="14"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:attribute name="SIRET" type="ie:SIRET_stype"/>
+</xsd:schema>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+	<xs:complexType name="TLigneBudget">
+		<xs:sequence>
+			<xs:element name="Nature" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="Fonction" type="cm:Base_Texte10" minOccurs="0"/>
+			<xs:element name="Operation" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="ContNat" type="cm:Base_Texte12" minOccurs="0"/>
+			<xs:element name="ArtSpe" type="cm:Base_Booleen" minOccurs="0"/>
+			<xs:element name="ContFon" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="ContOp" type="cm:Base_Num10" minOccurs="0"/>
+			<xs:element name="CodRD" type="cm:Base_Booleen"/>
+			<xs:element name="MtPrev" type="cm:Base_Montant"/>
+			<xs:element name="MtReal" type="cm:Base_Montant"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
