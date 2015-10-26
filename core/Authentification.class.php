@@ -40,6 +40,7 @@ class Authentification {
 											$connexion_info['issuer_dn'],
 											$connexion_info['certificate_rgs_2_etoiles'], $connexion_info['login'], $connexion_info['password']);
 
+
 		if (count($id_list) == 0){
 			Helpers::returnAndExit(1, "Le certificat n'est pas valide",  WEBSITE);
 		}
@@ -72,6 +73,7 @@ class Authentification {
 				$this->server['HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'] = $h['org.s2low.forward-x509-identification'];
 			}
 		}
+
 		$result = array();
 		foreach(array('SSL_CLIENT_VERIFY' => 'ssl_client_verify',
 				'SSL_CLIENT_S_DN' => 'subject_dn',
@@ -91,7 +93,8 @@ class Authentification {
 		if (! $result['ssl_client_verify']){
 			return false;
 		}
-	
+
+
 		if ($result['ssl_client_cert']){
 			if (($tab = openssl_x509_parse($result['ssl_client_cert'])) === false) {
 				return false;

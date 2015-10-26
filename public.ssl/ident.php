@@ -16,6 +16,7 @@ if (! $me->login($login,md5($password))) {
 	exit;
 }
 
+
 if (! $me->authenticate()) {
   $_SESSION["error"] = "Échec de l'authentification";
   

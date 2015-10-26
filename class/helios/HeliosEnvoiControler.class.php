@@ -146,27 +146,19 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			$pes_xml = simplexml_load_file($file_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
-			$cod_col = $pes_xml->EnTetePES->CodCol['V'];
-			if (! $cod_col){
-				$message = "Transaction $transaction_id : La balise EnTetePES/CodCol n'est pas présente ou est vide";
+			$pesAller = new PesAller();
+			try {
+				$p_msg = $pesAller->getP_MSG($file_path);
+			} catch (Exception $e){
+				$message = "Transaction $transaction_id : ".$e->getMessage();
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}			
-			$id_post = $pes_xml->EnTetePES->IdPost['V'];
-			if (! $id_post){
-				$message = "Transaction $transaction_id : La balise EnTetePES/IdPost n'est pas présente ou est vide";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-			$cod_bud = $pes_xml->EnTetePES->CodBud['V'];
-			if (! $cod_bud){
-				$message = "Transaction $transaction_id : La balise EnTetePES/CodBud n'est pas présente ou est vide";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				if (HELIOS_ZIP_BEFORE_SEND){
+					unlink($file_to_send);
+				}
+				unlink($file_path_with_complete_name);
 				continue;
 			}
-			$p_msg = "PES#" . $cod_col . "#" . $id_post . "#" . $cod_bud;
-			
+
 			try {
 				$ftp = new FTPFileSender();
 				$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, $authorityInfo["helios_ftp_login"], $authorityInfo["helios_ftp_password"]);
