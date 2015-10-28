@@ -79,13 +79,17 @@ class UserSQL extends SQL {
 		} 
 		return self::IDENT_METHOD_LOGIN;
 	}
-	
-	public function getIdentificationMethodeLibelle($ident_method_id){
-		$libelle = array(self::IDENT_METHOD_NONE=>'aucune',
-						self::IDENT_METHOD_CERT_ONLY=>'certificat de connexion uniquement',
-						self::IDENT_METHOD_LOGIN => 'login/mot de passe',
-						self::IDENT_METHOD_RGS_2_ETOILES => "certificat RGS** (uniquement par API)"
+
+	public function getIdentificatonMethodeList(){
+		return array(
+			self::IDENT_METHOD_CERT_ONLY=>'Certificat à usage individuel',
+			self::IDENT_METHOD_LOGIN => 'Certificat partagé et login/mot de passe',
+			self::IDENT_METHOD_RGS_2_ETOILES => "Certificat partagé et certificat  complémentaire (API uniquement)"
 		);
+	}
+
+	public function getIdentificationMethodeLibelle($ident_method_id){
+		$libelle = $this->getIdentificatonMethodeList();
 		return $libelle[$ident_method_id];
 	}
 	

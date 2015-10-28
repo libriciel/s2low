@@ -199,7 +199,44 @@ ob_start();
 </div>	
 <?php endforeach;?>
 
-<h2>Certificat de connexion</h2>
+<h2>Authentification</h2>
+<div class="form-group">
+	<label class="control-label col-md-4">Méthode : </label>
+	<div class="col-md-6">
+		<select id="auth_method" name="auth_method">
+			<?php foreach($userSQL->getIdentificatonMethodeList() as $ident_id => $ident_libelle): ?>
+				<option value="<?php echo $ident_id ?>" <?php echo $ident_method_id==$ident_id?'selected="selected"':'' ?>">
+					<?php echo $ident_libelle ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+</div>
+<br/><br/>
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+<script>
+
+	function setFormAuth(){
+		$("#login-form").hide();
+		$("#rgs2-form").hide();
+		if($("#auth_method").val()==2){
+			$("#login-form").show();
+		}
+		if($("#auth_method").val()==3){
+			$("#rgs2-form").show();
+		}
+	}
+
+	$( document ).ready(function() {
+		setFormAuth();
+
+		$("#auth_method").change(function(){
+			setFormAuth();
+
+		});
+	});
+
+</script>
 
 <div class="form-group">
 	<label class="control-label col-md-4">Importer le certificat utilisateur (format PEM) :</label>
@@ -208,25 +245,15 @@ ob_start();
 	</div>
 </div>
 <?php if ($him->get('certificate')) : ?>
-	<div class="alert alert-info col-md-9 col-md-offset-1"> 
+	<div class="alert alert-info col-md-9 col-md-offset-1">
 		<?php hecho($him->get('subject_dn')) ?>
 		<br/>
 		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
 	</div>
 <?php endif;?>
+	<div style='clear:both'></div>
 
-<div style='clear:both'></div>
-<h2>Méthode d'identification</h2>
-<em>Uniquement en cas de partage du certificat de connexion (remplir login/mot de passe <strong>ou</strong> certificat RGS** pour identification via un logiciel métier)</em>
-<br/><br/>
-
-<div class="form-group">
-	<label class="control-label col-md-4">Méthode actuelle : </label>
-	<div class="col-md-6">
-		<?php hecho($ident_method_libelle)?>
-	</div>
-</div>	
-
+<div id="login-form">
 <?php $input_label = "Login"; $input_id="login"?>
 <div class="form-group">
 	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
@@ -243,10 +270,10 @@ ob_start();
 	</div>
 </div>	
 <?php endforeach;?>
+</div>
 
-
-<div class="form-group">
-	<label class="control-label col-md-4">Certificat RGS** (format PEM) :</label>
+<div class="form-group" id='rgs2-form'>
+	<label class="control-label col-md-4">Certificat complémentaire (format PEM) :</label>
 	<div class="col-md-6">
 		<?php if ($certificat_rgs_2_etoiles_info): ?>
 			<?php hecho($certificat_rgs_2_etoiles_info['name']) ?><br/>
@@ -259,6 +286,10 @@ ob_start();
 		<input type="file" name="certificate_rgs_2_etoiles" />
 	</div>
 </div>
+
+
+
+
 
 
 <h2>Droits</h2>
