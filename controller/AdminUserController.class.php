@@ -119,13 +119,14 @@ class AdminUserController extends Controller {
 		$password2 = Helpers::getVarFromPost("password2", true);
 		$new_id = Helpers::getVarFromPost("new_id", true);
 
-		$auth_method = Helpers::getVarFromPost("",true);
+		$auth_method = Helpers::getVarFromPost("auth_method",true);
+
+
+
 
 
 		$certificate = $_FILES["certificate"];
 		$certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'];
-
-
 
 		$me = new User();
 

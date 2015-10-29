@@ -205,7 +205,7 @@ ob_start();
 	<div class="col-md-6">
 		<select id="auth_method" name="auth_method">
 			<?php foreach($userSQL->getIdentificatonMethodeList() as $ident_id => $ident_libelle): ?>
-				<option value="<?php echo $ident_id ?>" <?php echo $ident_method_id==$ident_id?'selected="selected"':'' ?>">
+				<option value="<?php echo $ident_id ?>" <?php echo $ident_method_id==$ident_id?'selected="selected"':'' ?>>
 					<?php echo $ident_libelle ?>
 				</option>
 			<?php endforeach; ?>
@@ -216,14 +216,30 @@ ob_start();
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
 <script>
 
+	function resetFormElement(e) {
+		e.wrap('<form>').closest('form').get(0).reset();
+		e.unwrap();
+
+	}
+
 	function setFormAuth(){
 		$("#login-form").hide();
 		$("#rgs2-form").hide();
+		if($("#auth_method").val()==1){
+			$("#password").val("");
+			$("#login").val("");
+			$("#password2").val("");
+			resetFormElement($("#certificate_rgs_2_etoiles"));
+		}
 		if($("#auth_method").val()==2){
 			$("#login-form").show();
+			resetFormElement($("#certificate_rgs_2_etoiles"));
 		}
 		if($("#auth_method").val()==3){
 			$("#rgs2-form").show();
+			$("#password").val("");
+			$("#login").val("");
+			$("#password2").val("");
 		}
 	}
 
@@ -258,7 +274,7 @@ ob_start();
 <div class="form-group">
 	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
 	<div class="col-md-6">
-		<input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+		<input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
 	</div>
 </div>	
 	
@@ -266,7 +282,7 @@ ob_start();
 <div class="form-group">
 	<label class="control-label col-md-4"><?php echo $input_label?>: </label>
 	<div class="col-md-6">
-		<input class="form-control" type="password" name="<?php echo $input_id ?>" value="" size="30" maxlength="60" />
+		<input class="form-control" id='<?php echo $input_id ?>' type="password" name="<?php echo $input_id ?>" value="" size="30" maxlength="60" autocomplete="off" />
 	</div>
 </div>	
 <?php endforeach;?>
@@ -283,7 +299,7 @@ ob_start();
 			<br/><br/>
 		<?php endif;?>
 		
-		<input type="file" name="certificate_rgs_2_etoiles" />
+		<input type="file" name="certificate_rgs_2_etoiles" id="certificate_rgs_2_etoiles" />
 	</div>
 </div>
 
