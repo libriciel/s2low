@@ -56,7 +56,7 @@ class UserSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetIdentificationMethodeLibelle(){
-		$this->assertEquals("aucune",$this->userSQL->getIdentificationMethodeLibelle(UserSQL::IDENT_METHOD_NONE));
+		$this->assertEquals("Certificat partagé et login/mot de passe",$this->userSQL->getIdentificationMethodeLibelle(UserSQL::IDENT_METHOD_LOGIN));
 	}
 
 	public function testSaveCertificateRGS2Etoile(){
