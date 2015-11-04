@@ -74,7 +74,7 @@ class UserSQL extends SQL {
 		}
 		
 		$user_id_list = $this->getIdListFromCertificateInfo($info['subject_dn'],$info['issuer_dn']);
-		if (count($user_id_list) == 1 ){
+		if (count($user_id_list) == 1 && ! $info['login'] ){
 			return self::IDENT_METHOD_CERT_ONLY;
 		} 
 		return self::IDENT_METHOD_LOGIN;
