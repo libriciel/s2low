@@ -79,6 +79,7 @@ class AdminController extends Controller {
 	public function authoritiesAction(){
 		$this->verifAdmin();
 		$pagerHTML  = new PagerHTML();
+		$this->title = "Gestion des collectivités | S²low";
 		$recuperateur = $this->getRecuperateurGet();
 
 		$this->ftype =  $recuperateur->get("type");
