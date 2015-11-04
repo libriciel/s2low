@@ -54,4 +54,17 @@ class AuthoritySQLTest extends S2lowTestCase {
 		$this->assertEquals(0,$this->authoritySQL->verifDepartmentAndDistrict(999,001));
 	}
 
+	public function testGetList(){
+		$this->assertEmpty($this->authoritySQL->getList(1,1,'toto','123','1234',0,10));
+	}
+
+	public function testGetNb(){
+		$this->assertEquals(0,$this->authoritySQL->getNb(1,1,'toto','123',"1234"));
+	}
+
+	public function testGetAllGroup(){
+		$result = $this->authoritySQL->getAllGroup(1);
+		$this->assertEquals('Saint-Andre de Corcy',$result[2]);
+	}
+
 }
