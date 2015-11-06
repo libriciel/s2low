@@ -92,7 +92,6 @@ class ActesArchiveControler {
 			return false;
 		}
 		
-		
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 		
