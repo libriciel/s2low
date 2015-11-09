@@ -1,3 +1,5 @@
+SET CLIENT_ENCODING TO 'LATIN9';
+
 ALTER TABLE helios_transactions ADD COLUMN sae_transfer_identifier varchar(256) ;
 INSERT INTO helios_status (id,name) VALUES(9,'Envoyé au SAE'); 
 INSERT INTO helios_status (id,name) VALUES(10,'Accepter par le SAE');

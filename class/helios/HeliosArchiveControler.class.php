@@ -13,11 +13,33 @@ class HeliosArchiveControler {
 		return $this->lastError;
 	}
 	
-	
+
+	private function isAllowToSendArchive($user_id,$transactionsInfo){
+		if (! $transactionsInfo){
+			return false;
+		}
+		if ($transactionsInfo['user_id'] == $user_id){
+			return true;
+		}
+		$transactionsInfo['authority_id'];
+		$userSQL = new UserSQL($this->sqlQuery);
+		$user_info = $userSQL->getInfo($user_id);
+		if ($user_info['role'] != 'ADM'){
+			return false;
+		}
+
+		if ($user_info['authority_id'] == $transactionsInfo['authority_id']){
+			return true;
+		}
+
+		return false;
+	}
+
 	public function sendArchive($user_id,$id){
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
-		$transactionsInfo = $heliosTransactionsSQL->getInfo($id);		
-		if ( ! $transactionsInfo || $transactionsInfo['user_id'] != $user_id){
+		$transactionsInfo = $heliosTransactionsSQL->getInfo($id);
+
+		if (! $this->isAllowToSendArchive($user_id,$transactionsInfo)){
 			$this->lastError = "Accès refusé";
 			return false;
 		}
