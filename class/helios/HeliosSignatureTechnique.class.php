@@ -19,14 +19,14 @@ class HeliosSignatureTechnique {
 		}
 		$orig_pes_aller_path = $this->helios_files_upload_root."/".$info['sha1'];
 		if (sha1_file($orig_pes_aller_path) != $info['sha1']){
-			throw new Exception("Le fichier a été modifé depuis son postage sur la plateforme");
+			throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier a été modifé depuis son postage sur la plateforme");
 		}
 		$file_signed = sys_get_temp_dir()."/".uniqid("pes_aller_signed");
 		try {
 			$this->xadesSignature->sign($orig_pes_aller_path, $p12_certificate_path, $p12_password, $file_signed, $xadesSignatureProperties);
 		} catch (XadesSignatureHasSignatureException $exception){
 			if (! $this->xadesSignature->verifyNoCA($orig_pes_aller_path)){
-				throw new Exception("Le fichier est déjà signé, mais la signature est invalide");
+				throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier est déjà signé, mais la signature est invalide");
 			}
 			$this->heliosTransactionSQL->setSignatureTechnique($transaction_id,$info['sha1'],$info['file_size']);
 			return;
@@ -36,7 +36,7 @@ class HeliosSignatureTechnique {
 		$new_file = filesize($file_signed);
 
 		if (! copy($file_signed,$this->helios_files_upload_root."/".$new_sha1)){
-			throw new Exception("Impossible de copier avec signature technique sur {$this->helios_files_upload_root}");
+			throw new RecoverableHeliosSignatureTechniqueException("Impossible de copier avec signature technique sur {$this->helios_files_upload_root}");
 		}
 
 		$this->heliosTransactionSQL->setSignatureTechnique($transaction_id,$new_sha1,$new_file);
@@ -46,3 +46,7 @@ class HeliosSignatureTechnique {
 	}
 
 }
+
+class UnrecoverableHeliosSignatureTechniqueException extends Exception{}
+
+class RecoverableHeliosSignatureTechniqueException extends Exception {}

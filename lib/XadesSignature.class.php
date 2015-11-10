@@ -56,6 +56,7 @@ class XadesSignature {
 	private function verifyIntern($xml_file_signed,$sup_command){
 		$rootNodeName = $this->getRootNodeName($xml_file_signed);
 		$command = "{$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName $sup_command $xml_file_signed 2>&1";
+		echo $command;
 		exec($command,$output,$return_var);
 		return $return_var == 0;
 	}

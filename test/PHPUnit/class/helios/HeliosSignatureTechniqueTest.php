@@ -60,7 +60,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	public function testSignModif(){
 		$file = $this->getFilePathInHeliosUplload();
 		file_put_contents($file,"toto");
-		$this->setExpectedException("Exception","Le fichier a été modifé depuis son postage sur la plateforme");
+		$this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException","Le fichier a été modifé depuis son postage sur la plateforme");
 		$this->sign();
 	}
 
@@ -80,7 +80,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 	public function testDejaSigneBadSignature(){
 		$transaction_id = $this->importFile(__DIR__."/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml");
-		$this->setExpectedException("Exception","Le fichier est déjà signé, mais la signature est invalide");
+		$this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException","Le fichier est déjà signé, mais la signature est invalide");
 		$this->getHeliosSignatureTechnique()->sign(
 			$transaction_id,
 			__DIR__."/../../lib/fixtures/robert_petitpoids.p12",

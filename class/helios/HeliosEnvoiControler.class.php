@@ -18,6 +18,14 @@ class HeliosEnvoiControler {
 	}
 	
 	public function validateAllTransactions(){
+
+		try {
+			Antivirus::isAlive();
+		} catch (Exception $e){
+			echo $e->getMessage()."\n";
+			return;
+		}
+
 		libxml_use_internal_errors(true);
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
 		
@@ -71,7 +79,15 @@ class HeliosEnvoiControler {
 			$xadesSignatureProperties->postalCode = HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE;
 			$xadesSignatureProperties->city = HELIOS_SIGNATURE_PLATEFORME_CITY;
 
-			$heliosSignatureTechnique->sign($transaction_id,HELIOS_PLATEFORME_CERTIFICATE_P12,HELIOS_PLATEFORME_CERTIFICATE_PASSWORD,$xadesSignatureProperties);
+			try {
+				$heliosSignatureTechnique->sign($transaction_id, HELIOS_PLATEFORME_CERTIFICATE_P12, HELIOS_PLATEFORME_CERTIFICATE_PASSWORD, $xadesSignatureProperties);
+			} catch (UnrecoverableHeliosSignatureTechniqueException $exception){
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$exception->getMessage(),$transactionInfo['user_id']);
+				continue;
+			} catch (RecoverableHeliosSignatureTechniqueException $exception){
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::POSTE,$exception->getMessage(),$transactionInfo['user_id']);
+				continue;
+			}
 
 			if ($this->heliosTransactionsSQL->nomFicExists($nom_fic)){
 				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
