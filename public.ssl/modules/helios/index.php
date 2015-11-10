@@ -335,7 +335,7 @@ ob_start();
 	Pas de transaction trouvée correspondant aux critères de filtrage.
 <?php else: ?>
 
-	<form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_close.php" method="post">
+	<form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_close.php" method="post">
 		<table class="transactions_list">
 			<table id="transaction-list" class="data-table table table-striped" summary="Ce tableau présente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios posté">
 				<caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
@@ -391,14 +391,15 @@ ob_start();
 				</tbody>
 			</table>
 			</div>
-		</form>
 		<br/><br/>
+		<?php if (isset($sel_ok[4]) || isset($sel_ok[8])) : ?>
+			<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>
+		<?php endif; ?>
+	</form>
 
 <?php endif; ?>
 
-	<?php if (isset($sel_ok[4]) || isset($sel_ok[8])) : ?>
-		<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>
-	<?php endif; ?>
+
 
 	<?php   if (isset($sel_ok[13])) : ?>
 		<form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_batch_sign.php" method="post">
