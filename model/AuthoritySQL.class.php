@@ -91,7 +91,7 @@ class AuthoritySQL extends SQL {
 			$data[] = $authority_type_id;
 		}
 		if ($name){
-			$sql .=  " AND authorities.name LIKE ? ";
+			$sql .=  " AND authorities.name ILIKE ? ";
 			$data[] .= "%$name%";
 		}
 		if ($siren){
