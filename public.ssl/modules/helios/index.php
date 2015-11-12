@@ -269,7 +269,7 @@ ob_start();
 			<label class="col-md-3" for="max_submission_date">Date de postage maximale</label>
 			<div class="col-md-3">
 				<input id="max_submission_date" name="max_submission_date" type="hidden" value="<?php hecho($fmax_submission_date) ?>"/>
-				<script type=\"text/javascript\">
+				<script type="text/javascript">
 					obj_max_submission_date = new DatePicker('max_submission_date', 'fr');
 				</script>
 				<a href="#datepicker" id="datepicker_max_submission_date_link" class="datepicker_link" onclick="javascript:obj_max_submission_date.toggleDatePicker(); return false;">
