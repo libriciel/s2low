@@ -155,7 +155,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['login'] = 'alice';
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
-		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
+		$this->setExpectedException("Exception", "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier");
 		$this->adminUserController->doEditAction();
 	}
 

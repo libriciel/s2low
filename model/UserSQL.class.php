@@ -89,6 +89,9 @@ class UserSQL extends SQL {
 	}
 
 	public function getIdentificationMethodeLibelle($ident_method_id){
+		if (!$ident_method_id) {
+			$ident_method_id = 1;
+		}
 		$libelle = $this->getIdentificatonMethodeList();
 		return $libelle[$ident_method_id];
 	}

@@ -35,6 +35,9 @@ class AdminUserController extends Controller {
 		$password = $recuperateur->get('password');
 		$password2 = $recuperateur->get('password2');
 
+		$auth_method = $recuperateur->get("auth_method");
+
+
 		if ($api && ! $authority_id){
 			//Il faut penser au cas où on on est en modification et ou on passe pas l'authority_id... c'est  nul...
 			throw new Exception("authority_id est obligatoire");
@@ -91,6 +94,10 @@ class AdminUserController extends Controller {
 		$certificate_rgs_2_etoiles = $this->getFromFile('certificate_rgs_2_etoiles');
 		if ($certificate_rgs_2_etoiles){
 			$certificate_rgs_2_etoiles_clean_content = $x509Certificate->pemClean($certificate_rgs_2_etoiles);
+		}
+
+		if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
+			$certificate_rgs_2_etoiles_clean_content = false;
 		}
 
 		if ($this->userSQL->hasDoublon($user_id,$certificat_connexion_info,$login,$certificate_rgs_2_etoiles_clean_content)){
@@ -270,10 +277,15 @@ class AdminUserController extends Controller {
 
 		}
 
+
 		$msg = ($mod) ? "Modification" : "Création";
 		$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
 
 		$userSQL = new UserSQL($this->getSQLQuery());
+
+		if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
+			$userSQL->deleteCertificateRGS2Etoiles($him->getId());
+		}
 
 		if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file_wrapper($certificate_rgs_2_etoiles["tmp_name"])) {
 
