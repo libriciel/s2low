@@ -65,10 +65,17 @@ $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
 
 $batchFileId = Helpers :: getVarFromPost("batchfile");
-$actePDFFile = $_FILES["acte_pdf_file"];
+
+if (isset($_FILES['acte_pdf_file'])) {
+  $actePDFFile = $_FILES["acte_pdf_file"];
+} else {
+  $actePDFFile = false;
+}
+
 if (isset($_FILES["acte_pdf_file_sign"])){
 	$actePDFFileSign = $_FILES["acte_pdf_file_sign"];
 }
+
 if (isset($_FILES["acte_attachments"])) {
 $acteAttachments = $_FILES["acte_attachments"];
 }
@@ -195,6 +202,9 @@ $fileImportError = false;
 
 $uploader = new FileUploader();
 
+if (!$batchMode && empty($actePDFFile)) {
+  Helpers:: returnAndExit(1, "Aucun fichier acte n'a été posté ", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+}
 
 // Validation du type des fichiers uploadés
 // Fichier de l'acte
