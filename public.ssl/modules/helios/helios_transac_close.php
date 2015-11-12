@@ -9,7 +9,7 @@ $msg = "";
     
 foreach ($liste_id as $id) {
 	$id_d = $heliosArchiveControler->sendArchive($connexion->getId(),$id);
-	if (! $id_d){
+	if ($id_d) {
 		$msg .= "Envoie de la transaction $id à Pastell\n";
 	} else {
 		$msg .= "Erreur lors de l'envoi de la transaction $id à Pastell: " . $heliosArchiveControler->getLastError() ."\n";
