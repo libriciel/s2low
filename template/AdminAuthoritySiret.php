@@ -1,7 +1,9 @@
 <h1><?php hecho($title)?></h1>
-<p id="">
-	<a class="" href="admin_authority_edit.php?id=<?php hecho($authority_id)?>">« revenir au formulaire standard</a><br>
+<p id="back-transaction-btn">
+	<a class="btn btn-default" href="admin_authority_edit.php?id=<?php hecho($authority_id) ?>">Retour formulaire
+		principal</a><br>
 </p>
+<h2>Gestion des numéro SIRET</h2>
 
 <ul class="list-group col-xs-6">
 <?php if (! $siret_list): ?>
