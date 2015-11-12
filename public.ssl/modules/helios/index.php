@@ -392,10 +392,18 @@ ob_start();
 			</table>
 			</div>
 		<br/><br/>
+		<div id="selection-actions">
+			<a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
+			<a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout désélectionner" class="btn btn-default">Tout desélectionner</a>
+			<a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sélection" class="btn btn-default">Inverser la sélection</a>
+		</div>
+		<br/>
+
 		<?php if (isset($sel_ok[4]) || isset($sel_ok[8])) : ?>
 			<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>
 		<?php endif; ?>
 	</form>
+
 
 <?php endif; ?>
 
