@@ -111,7 +111,7 @@ switch ($trans->get("type")) {
     }
     $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
     if ($trans->get("sae_transfer_identifier")) {
-		$html .= $doc->getHTMLArrayline("Identifiant de transfert d'archivage", get_hecho($trans->get("sae_transfer_identifier")));
+        $html .= $doc->getHTMLArrayline("Identifiant Pastell (archivage)", get_hecho($trans->get("sae_transfer_identifier")));
     }
     
 
