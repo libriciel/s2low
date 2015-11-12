@@ -267,10 +267,10 @@ class AdminUserController extends Controller {
 
 
 			if ($him->isNew()) {
-				$location =  WEBSITE_SSL . "/admin/users/admin_user_edit.php?new_id=$new_id";
+				$location = "/admin/users/admin_user_edit.php?new_id=$new_id";
 			} else {
 				Helpers::purgeTempSession();
-				$location = WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId()."&new_id=$new_id";
+				$location = "/admin/users/admin_user_edit.php?id=" . $him->getId() . "&new_id=$new_id";
 			}
 
 			$this->displayErrorAndExit(nl2br($msg), $location);
