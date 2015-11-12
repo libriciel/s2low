@@ -31,13 +31,14 @@ class ModuleSQL extends SQL {
  	public function getModulesForUser($userInfo) {
  		
  		if ($userInfo['role'] == 'SADM'){
- 			$sql = "SELECT * FROM modules WHERE status=1";
+			$sql = "SELECT * FROM modules WHERE status=1" . " ORDER BY modules.name ";
  			return $this->query($sql);
  		}
  		if ($userInfo['role'] == 'GADM'){
  			$sql = "SELECT modules.* FROM modules " .
  				" JOIN modules_authorities ON modules_authorities.module_id=modules.id " .
- 				" WHERE modules_authorities.authority_id=?  AND modules.status=1";
+				" WHERE modules_authorities.authority_id=?  AND modules.status=1" .
+				" ORDER BY modules.name ";
  			return $this->query($sql,$userInfo['authority_id']);
  		}
  		
@@ -47,7 +48,8 @@ class ModuleSQL extends SQL {
  				" WHERE modules_authorities.authority_id=? " .
  		 		" AND users_perms.user_id= ? ". 
  		 		" AND perm != 'NONE' ".
- 				" AND modules.status=1";
+			 " AND modules.status=1" .
+			 " ORDER BY modules.name ";
 
  		return  $this->query($sql,$userInfo['authority_id'],$userInfo['id']);
 	}

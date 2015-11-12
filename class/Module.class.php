@@ -367,7 +367,7 @@ class Module extends DataObject {
    * \return Un tableau contenant les données des modules actifs
    */
   public static function getActiveModulesList() {
-	return Module::getModulesList(" WHERE status=1 ORDER BY id ASC");
+    return Module::getModulesList(" WHERE status=1 ORDER BY name ASC");
   }
 
   /** 
