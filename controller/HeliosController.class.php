@@ -180,7 +180,7 @@ class HeliosController extends Controller {
 		$id_list = $heliosTransactionSQL->getAllId();
 		foreach($id_list as $transaction_id){
 			$info = $heliosTransactionSQL->getInfo($transaction_id);
-			$pes_aller_path = $this->helios_files_upload_root . "/" . $info['filename'];
+			$pes_aller_path = $this->helios_files_upload_root . "/" . $info['sha1'];
 			if (! file_exists($pes_aller_path)){
 				echo "Transaction $transaction_id : le fichier PES ALLER n'est pas disponible\n";
 				continue;

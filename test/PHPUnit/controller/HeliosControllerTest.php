@@ -150,8 +150,8 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testUpdateSiretFromPESAllerNotXML(){
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
-		$heliosTransactionSQL->create("pes1.xml","42",8,1,42,12);
-		file_put_contents($this->testStreamUrl."/helios/pes1.xml","<test/>");
+		$heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
+		file_put_contents($this->testStreamUrl . "/helios/d8d1a344f31de311d32134064695df85f3801897", "<test/>");
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#le fichier PES ALLER ne contient pas de SIRET#");
 		$heliosController->updateSiretFromPESAller();
@@ -160,8 +160,8 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testUpdateSiretFromPESAllerOK(){
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
-		$heliosTransactionSQL->create("pes1.xml","42",8,1,42,12);
-		file_put_contents($this->testStreamUrl."/helios/pes1.xml",file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
+		$heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
+		file_put_contents($this->testStreamUrl . "/helios/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#siret 12345678912345 ajouté à la collectivite 1#");
 		$heliosController->updateSiretFromPESAller();
