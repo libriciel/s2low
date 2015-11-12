@@ -65,6 +65,7 @@ if (count($filter) > 0) {
   $where = " WHERE " . implode($filter, " AND ");
 }
 
+
 $etat = array(
 		0 => "non lu",
 		1 => "lu"
@@ -75,6 +76,12 @@ $envelops=$HR->getDocumentList($where);
 $doc = new HTMLLayout();
 $doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
+
+$doc->addHeader('<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="/javascript/zselect.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
+
+
 $doc->setTitle("Module helios : message retour ");
 
 $doc->openContainer();
@@ -157,10 +164,34 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicke
 
 //colectivitïvité  pour superuser
 if ($me->isSuper()) {
-  $html .= "<div class=\"form-group\">\n";  
-  $html .= "<label class=\"col-md-3 control-label\" for=\"authority\">Collectivité</label>\n";
-  $cond = " ORDER BY authorities.name ASC";
-  $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName($cond), $fauthority) . "</div>\n</div>\n";
+
+    ob_start();
+    ?>
+    <div class="form-group">
+
+        <label for="authority" class="col-md-3 control-label">Collectivité</label>
+
+        <div class="col-md-3">
+            <select class="form-control zselect_authorities" name="authority">
+                <option value="">Toutes</option>
+                <?php foreach ($me->getAllPossibleAuthority() as $key => $val) : ?>
+                    <option
+                        value="<?php hecho($key) ?>" <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
+                        <?php hecho($val) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <?php
+    $html .= ob_get_contents();
+    ob_end_clean();
+
+    /*$html .= "<div class=\"form-group\">\n";
+	$html .= "<label class=\"col-md-3 control-label\" for=\"authority\">Collectivité</label>\n";
+	$cond = " ORDER BY authorities.name ASC";
+	$html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName( " ORDER BY authorities.name ASC"), $fauthority) . "</div>\n</div>\n";*/
+
 
 }
 $html .= "<div class=\"form-group\">";
