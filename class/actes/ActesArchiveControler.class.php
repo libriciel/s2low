@@ -88,8 +88,8 @@ class ActesArchiveControler {
 			$this->lastError = "Accès refusé (seul le créateur de l'Acte peut l'archiver)";
 			return false;
 		}
-		
-		if (! in_array($transactionsInfo['last_status_id'],array(4,5))  && $transactionsInfo['type'] != 1) {
+
+		if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14)) && $transactionsInfo['type'] != 1) {
 			$this->lastError = "Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».";
 			return false;
 		}

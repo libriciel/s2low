@@ -279,7 +279,7 @@ class ListeActesHTML {
                                     <tbody>
 					<tr>
                                             <td headers="selection">
-                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'],array(4,18,5)))): ?>
+                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'],array(4,18,5,14)))): ?>
                                                     <input type="checkbox" 
                                                                     name="liste_id[]" 
                                                                     value="<?php hecho($envelope['transaction_id']) ;?>" 

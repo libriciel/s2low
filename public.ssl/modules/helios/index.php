@@ -356,7 +356,7 @@ ob_start();
 					<?php  foreach ($envelopes as $envelope) : ?>
 						<tr>
 							<td>
-							<?php if (in_array($envelope['last_status_id'],array(4,8,13))) : ?>
+							<?php if (in_array($envelope['last_status_id'],array(4,8,13,11))) : ?>
 								<input type="checkbox" name="liste_id[]" value="<?php hecho($envelope['id']) ?>" id="checkbox<?php echo $envelope['id'] ?>" />
 								<?php $sel_ok[$envelope['last_status_id']] = true ?>
 							<?php else : ?>
@@ -399,7 +399,7 @@ ob_start();
 		</div>
 		<br/>
 
-		<?php if (isset($sel_ok[4]) || isset($sel_ok[8])) : ?>
+		<?php if (in_array($sel_ok,array(4,8,11))) : ?>
 			<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>
 		<?php endif; ?>
 	</form>
