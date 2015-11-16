@@ -107,7 +107,7 @@ class XadesSignature {
 		$x509_pem_content = $this->pkcs12->getX509CertificateContent($p12_certificate_path,$p12_password);
 		$certInfo['serialNumber'] = $this->x509Certificate->getInfo($x509_pem_content)['serialNumber'];
 		$certInfo['issuerName'] = $this->x509Certificate->getIssuerDN($x509_pem_content);
-		$certInfo['certDigest'] = $this->x509Certificate->getBase64Hash($x509_pem_content);
+		$certInfo['certDigest'] = $this->x509Certificate->getBase64Hash($x509_pem_content, 'sha256');
 		return $certInfo;
 	}
 

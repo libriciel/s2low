@@ -73,11 +73,12 @@ class X509Certificate {
 		return implode(", ",$issuerName);
 	}
 
-	public function getBase64Hash($cert_content){
+	public function getBase64Hash($cert_content, $hash_alg = 'sha1')
+	{
 		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem");
 		file_put_contents($tmp_file,$cert_content);
 
-		$command = "openssl x509 -in $tmp_file -outform der | openssl sha1 -binary | openssl base64";
+		$command = "openssl x509 -in $tmp_file -outform der | openssl $hash_alg -binary | openssl base64";
 		exec($command,$output,$return_var);
 		$certDigest = $output[0];
 		unlink($tmp_file);
