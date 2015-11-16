@@ -1,6 +1,8 @@
 <?php
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
 
+/* Archive au sens SEDA et pas au sens Actes ... */
+
 class ActesArchiveControler {
 	
 	private $sqlQuery;

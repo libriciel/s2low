@@ -227,6 +227,11 @@ if(!defined('ACTES_APPLI_TRIGRAMME')){
         define('ACTES_APPLI_TRIGRAMME', 'abc');
 }
 
+if(!defined('ACTES_APPLI_QUADRIGRAMME')){
+	define('ACTES_APPLI_QUADRIGRAMME', 'TACT');
+}
+
+
 // Taille maximum autorisée des archives (en octets)
 if(!defined('ACTES_ARCHIVE_MAX_SIZE')){
         define('ACTES_ARCHIVE_MAX_SIZE', 20 * 1024 * 1024);
