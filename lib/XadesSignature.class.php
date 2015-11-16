@@ -9,11 +9,14 @@ class XadesSignature {
 	private $xmlsec1_path;
 	private $pkcs12;
 	private $x509Certificate;
+	private $validca_path;
 
-	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate){
+	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path)
+	{
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
+		$this->validca_path = $validca_path;
 	}
 
 	public function sign($xml_file_to_sign,$p12_certificate_path,$p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
@@ -45,17 +48,18 @@ class XadesSignature {
 		}
 	}
 
-	public function verify($xml_file_signed,$trusted_pem_path){
+	/*public function verify($xml_file_signed,$trusted_pem_path){
 		return $this->verifyIntern($xml_file_signed,"--trusted-pem $trusted_pem_path");
-	}
+	}*/
 
-	public function verifyNoCA($xml_file_signed){
+	/*public function verifyNoCA($xml_file_signed){
 		return $this->verifyIntern($xml_file_signed,"");
-	}
+	}*/
 
-	private function verifyIntern($xml_file_signed,$sup_command){
+	public function verify($xml_file_signed)
+	{
 		$rootNodeName = $this->getRootNodeName($xml_file_signed);
-		$command = "{$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName $sup_command $xml_file_signed 2>&1";
+		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		return $return_var == 0;
 	}

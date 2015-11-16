@@ -25,7 +25,7 @@ class HeliosSignatureTechnique {
 		try {
 			$this->xadesSignature->sign($orig_pes_aller_path, $p12_certificate_path, $p12_password, $file_signed, $xadesSignatureProperties);
 		} catch (XadesSignatureHasSignatureException $exception){
-			if (! $this->xadesSignature->verifyNoCA($orig_pes_aller_path)){
+			if (!$this->xadesSignature->verify($orig_pes_aller_path)) {
 				throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier est déjà signé, mais la signature est invalide");
 			}
 			$this->heliosTransactionSQL->setSignatureTechnique($transaction_id,$info['sha1'],$info['file_size']);

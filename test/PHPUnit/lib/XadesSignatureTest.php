@@ -3,7 +3,7 @@
 class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	private function getXadesSignature(){
-		$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate());
+		$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/fixtures/validca/");
 		return $xadesSignature;
 	}
 
@@ -74,7 +74,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	public function testVerifyNOCA(){
 		$xadesSignature = $this->getXadesSignature();
-		$this->assertTrue($xadesSignature->verifyNoCA(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml"));
+		$this->assertTrue($xadesSignature->verify(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml"));
 	}
 
 	public function testHasSignature(){

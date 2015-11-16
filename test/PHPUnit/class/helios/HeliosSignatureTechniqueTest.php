@@ -17,7 +17,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	}
 
 	private function getXadesSignature(){
-		return new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate());
+		return new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/../../lib/fixtures/validca/");
 	}
 
 	private function getHeliosSignatureTechnique(){
