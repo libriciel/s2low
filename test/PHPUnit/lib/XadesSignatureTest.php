@@ -54,8 +54,6 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	public function testSignPES_Aller(){
 		$signed_file = $this->sign(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml");
-
-		file_put_contents("/Users/eric/Desktop/toto.xml", file_get_contents($signed_file));
 		$this->verify($signed_file);
 	}
 
