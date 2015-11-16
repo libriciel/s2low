@@ -47,7 +47,7 @@ $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME,ACTES_APPLI_QUADR
 try {
   $actesNameArchive->verifNameOK($enveloppe['name']);
 } catch (Exception $e){
-  Helpers :: returnAndExit(1, "L'archive n'a pas un nom valide : {$e->getMessage()}", WEBSITE_SSL . "/modules/actes/");
+  Helpers:: returnAndExit(1, "L'archive n'a pas un nom valide : {$e->getMessage()}", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 
 }
 
