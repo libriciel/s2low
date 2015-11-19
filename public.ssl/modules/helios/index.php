@@ -399,8 +399,8 @@ ob_start();
 		</div>
 		<br/>
 
-		<?php if (in_array($sel_ok,array(4,8,11))) : ?>
-			<input type='submit' class='btn btn-default' value='Envoyer la séléction au SAE'/>
+		<?php if (isset($sel_ok[4]) || isset($sel_ok[8]) ||  isset($sel_ok[11])) : ?>
+			<input type='submit' class='btn btn-default' value='Envoyer la sélection au SAE'/>
 		<?php endif; ?>
 	</form>
 
