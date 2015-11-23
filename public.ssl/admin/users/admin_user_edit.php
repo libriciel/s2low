@@ -119,18 +119,19 @@ if ($mod) {
 	if ($me->isGroupAdminOrSuper()) {
 		// On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
 		foreach ($modules as $module) {
-	  if ($me->isGroupAdmin()) {
-	  	if ($me->canGrantModule($module["name"])) {
-	  		$authModules[$module["id"]] = true;
-	  	}
-	  } else {
-	  	$authModules[$module["id"]] = true;
-	  }
+			if ($me->isGroupAdmin()) {
+				if ($me->canGrantModule($module["name"])) {
+					$authModules[$module["id"]] = true;
+				}
+			} else {
+				$authModules[$module["id"]] = true;
+			}
 		}
 	} else {
 		$authModules = $myAuthority->getAuthorizedModules();
 	}
 }
+
 
 $certitificate_id_list = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
 
@@ -349,7 +350,7 @@ ob_start();
 
 
 <?php foreach ($modules as $module): ?>
-	<?php if ($me->isSuper() || $authModules[$module["id"]]) : ?>
+	<?php if ($me->isSuper() || !empty($authModules[$module["id"]])) : ?>
 		<?php 
 		$class = "";
 		if ($me->isSuper() && ! isset($authModules[$module["id"]])) {

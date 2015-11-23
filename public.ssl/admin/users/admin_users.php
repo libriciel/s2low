@@ -78,7 +78,7 @@ if ($me->isAuthorityAdmin()) {
 	$title = "Gestion des utilisateurs de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
 } elseif ($me->isGroupAdmin()) {
 	$myGroup = new Group($me->get("authority_group_id"));
-	$title .= "Gestion des utilisateurs du groupe «&nbsp;" . get_hecho($myGroup->get("name")) . "&nbsp;»";
+	$title = "Gestion des utilisateurs du groupe «&nbsp;" . get_hecho($myGroup->get("name")) . "&nbsp;»";
 } else {
 	$title = "Gestion des utilisateurs";
 }
