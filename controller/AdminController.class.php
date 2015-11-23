@@ -93,6 +93,11 @@ class AdminController extends Controller {
 		$this->taille_page =  $recuperateur->getInt('count',10);
 
 
+		$user_authority_group_id = $this->me->get('authority_group_id');
+		if ($this->me->isGroupAdmin()) {
+			$this->fgroup = $user_authority_group_id;
+		}
+
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype,$this->fname,$this->fsiren,$this->fsiret,($this->page_number - 1) * $this->taille_page,$this->taille_page);
 

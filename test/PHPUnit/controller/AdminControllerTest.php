@@ -143,6 +143,13 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController = new AdminController($this->getObjectInstancier());
 		$adminController->authoritiesAction();
 		$this->assertEquals("Gestion des collectivités du groupe Groupe de test",$adminController->getViewParameter('titre'));
+
+		$authorities = $adminController->getViewParameter('authorities');
+		foreach ($authorities as $authority) {
+			$this->assertEquals(1, $authority['authority_group_id']);
+		}
+
+
 	}
 
 	/**
