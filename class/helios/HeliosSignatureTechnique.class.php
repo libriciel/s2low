@@ -30,6 +30,8 @@ class HeliosSignatureTechnique {
 			}
 			$this->heliosTransactionSQL->setSignatureTechnique($transaction_id,$info['sha1'],$info['file_size']);
 			return;
+		} catch (Exception $e) {
+			throw new UnrecoverableHeliosSignatureTechniqueException($e->getMessage());
 		}
 
 		$new_sha1 = sha1_file($file_signed);
