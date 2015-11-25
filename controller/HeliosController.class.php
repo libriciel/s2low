@@ -172,6 +172,7 @@ class HeliosController extends Controller {
 			echo "KO\nimpossible d'envoyer le fichier XML";
 		}
 		unlink($xmlFile);
+		$this->controller_exit();
 	}
 
 	public function updateSiretFromPESAller(){

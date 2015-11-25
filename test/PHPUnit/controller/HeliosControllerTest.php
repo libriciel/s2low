@@ -39,17 +39,28 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->heliosController->importAction();
 	}
 
+	private function importAPI()
+	{
+		try {
+			$this->heliosController->importAPIAction();
+		} catch (Exception $e) {
+		}
+	}
+
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
 	 */
 	public function testImportAPIAction(){
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
+		echo $output;
 		$xml = simplexml_load_string($output);
 		$transaction_id = $xml->id;
+
 		$info = $heliosTransactionsSQL->getInfo($transaction_id);
 		$this->assertEquals(HeliosTransactionsSQL::POSTE,$info['last_status_id']);
 		$info_wf = $heliosTransactionsSQL->getWorkflow($transaction_id);
@@ -63,7 +74,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testImportMustSign(){
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
 		$_POST['must_signed'] = true;
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
 		$xml = simplexml_load_string($output);
@@ -82,7 +93,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$userPermsSQL = new UsersPermsSQL($this->getSQLQuery());
 		$userPermsSQL->setPerms(2,8,'CS');
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
 		$xml = simplexml_load_string($output);
@@ -100,7 +111,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testImportApiError(){
 		unset($_FILES);
 		$this->expectedError("Échec lors du téléchargement du fichier");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 	}
 
 	/**
@@ -111,7 +122,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$tmp_file = $this->testStreamUrl."/pes_aller_not_exist.xml";
 		$_FILES['enveloppe']['tmp_name'] = $tmp_file;
 		$this->expectedError("Échec lors du téléchargement du fichier");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 	}
 
 	/**
@@ -121,11 +132,11 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testDuplicate(){
 		$tmp_file = $this->testStreamUrl."/pes_aller.xml";
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
 		$message = htmlspecialchars("doublon détecté. Ce fichier a déjà été posté.");
 		$this->expectOutputRegex("#$message>#");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 	}
 
 	/**
@@ -135,7 +146,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testMaxSize(){
 		$this->heliosController->setHeliosMaxUploadSize(0);
 		$this->expectedError("Taille de fichier supérieur à la limite autorisée");
-		$this->heliosController->importAPIAction();
+		$this->importAPI();
 	}
 
 	public function testUpdateSiretFromPESAllerNoFile(){
