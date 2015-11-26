@@ -20,5 +20,5 @@ foreach ($liste_id as $id) {
 }
 
 
-$_SESSION['error'] = $msg;
+$_SESSION['error'] = nl2br($msg);
 header("Location: index.php");	
