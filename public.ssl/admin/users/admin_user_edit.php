@@ -158,6 +158,11 @@ $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
+$doc->addHeader('<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="/javascript/zselect.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
+
+
 $doc->setTitle("$title | Tedetis");
 
 $doc->openContainer();
@@ -214,8 +219,7 @@ ob_start();
 	</div>
 </div>
 <br/><br/>
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
-<script>
+	<script>
 
 	function resetFormElement(e) {
 		e.wrap('<form>').closest('form').get(0).reset();
@@ -307,8 +311,6 @@ ob_start();
 
 
 
-
-
 <h2>Droits</h2>
 
 <div class="form-group">
@@ -323,7 +325,15 @@ ob_start();
   		<label class="control-label col-md-4">Collectivité :</label>
   		<div class="col-md-6">
   			<?php if (! $mod || $new_id) : ?>
-  				<?php echo $doc->getHTMLSelect("authority_id", $authorities_list, $him_authorities); ?>
+				<select class="form-control zselect_authorities" name="authority_id">
+					<option value="">Toutes</option>
+					<?php foreach ($authorities_list as $key => $val) : ?>
+						<option
+							value="<?php hecho($key) ?>" <?php echo (strcmp($key, $him_authorities) == 0) ? " selected='selected'" : ""; ?>>
+							<?php hecho($val) ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
   			<?php else: ?>
 				<?php hecho($authorities_list[$him->get("authority_id")]); ?>
 			<?php endif;?>
