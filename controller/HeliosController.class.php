@@ -130,6 +130,7 @@ class HeliosController extends Controller {
 
 		$me = new User();
 		if (! $me->authenticate()) {
+
 			echo "KO\nÉchec de l'authentification";
 			exit();
 		}
@@ -140,6 +141,7 @@ class HeliosController extends Controller {
 			echo "KO\nAccès refusé";
 			exit();
 		}
+
 
 		$doc = new DOMDocument();
 		$doc->formatOutput = true;

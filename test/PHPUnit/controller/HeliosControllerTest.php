@@ -44,6 +44,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		try {
 			$this->heliosController->importAPIAction();
 		} catch (Exception $e) {
+
 		}
 	}
 

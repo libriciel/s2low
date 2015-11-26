@@ -11,6 +11,8 @@ class UserSQL extends SQL {
 	const STATUS_DESACTIVE = 0;
 	const STATUS_ACTIVE = 1;
 
+	const CERTIFICATE_FINGERPRINT_HASH_ALG = 'sha1';
+
 	public function getPrettyName($name,$givenname,$login){
 		return $name?"$givenname $name":$login;
 	}
@@ -23,28 +25,28 @@ class UserSQL extends SQL {
 		}
 		$result['pretty_name'] = $this->getPrettyName($result['name'],$result['givenname'],$result['login']);
 		$result['role_str'] = $this->getRoleStr($result['role']);
-		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['subject_dn'],
-																					$result['issuer_dn']);
+		$result['nb_user_with_my_certificate'] = $this->getNbUserWithMyCertificate($result['certificate_hash']);
 		return $result;
 	}
-	
-	public function getNbUserWithMyCertificate($subject_dn,$issuer_dn){
+
+	public function getNbUserWithMyCertificate($certificate_hash)
+	{
 		$sql = "SELECT count(*) as nb FROM users " .
-				" WHERE subject_dn= ? ".
-				" AND issuer_dn= ?";
-		return $this->queryOne($sql,$subject_dn,$issuer_dn);
+			" WHERE certificate_hash = ? ";
+		return $this->queryOne($sql, $certificate_hash);
 	}	
 	
 	public function getInfoFromCertificateInfo(array $certificateInfo){
 		$sql = "SELECT * FROM users " .
-				" WHERE subject_dn=? AND issuer_dn=?" .
+			" WHERE certificate_hash=? " .
 				" ORDER BY id ";
-		return $this->query($sql,$certificateInfo['subject'],$certificateInfo['issuer']);
+		return $this->query($sql, $certificateInfo['certificate_hash']);
 	}
 
-	public function getIdListFromCertificateInfo($subject,$issuer){
-		$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=?";
-		return $this->queryOneCol($sql,$subject,$issuer);
+	public function getIdListFromCertificateInfo($certificate_hash)
+	{
+		$sql = "SELECT id FROM users WHERE certificate_hash=? ";
+		return $this->queryOneCol($sql, $certificate_hash);
 	}
 	
 	public function  getRoleStr($role) {		
@@ -72,8 +74,8 @@ class UserSQL extends SQL {
 		if ($info['certificate_rgs_2_etoiles']){
 			return self::IDENT_METHOD_RGS_2_ETOILES;
 		}
-		
-		$user_id_list = $this->getIdListFromCertificateInfo($info['subject_dn'],$info['issuer_dn']);
+
+		$user_id_list = $this->getIdListFromCertificateInfo($info['certificate_hash']);
 		if (count($user_id_list) == 1 && ! $info['login'] ){
 			return self::IDENT_METHOD_CERT_ONLY;
 		} 
@@ -113,13 +115,14 @@ class UserSQL extends SQL {
 			$this->saveCertificateRGS2Etoiles($user_id, '');
 		}
 	}
-	
-	public function getIdFromConnexionInfo($subject_dn,$issuer_dn,$certificate_rgs_2_etoile,$login,$password){
+
+	public function getIdFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login, $password)
+	{
 		$sql = "SELECT id FROM users " .
-				" WHERE subject_dn=? AND issuer_dn=? " .
+			" WHERE certificate_hash=? " .
 				" AND certificate_rgs_2_etoiles = ? ";
-		
-		$data = array($subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
+
+		$data = array($certificate_hash, $certificate_rgs_2_etoile);
 		if ($login){
 			$sql .= " AND login=? AND password=?";
 			$data[] = $login;
@@ -128,13 +131,14 @@ class UserSQL extends SQL {
 		$sql .= " ORDER BY id ";
 		return $this->queryOneCol($sql,$data);
 	}
-	
-	public function getListIdFromConnexion($subject_dn,$issuer_dn,$certificate_rgs_2_etoile){
+
+	public function getListIdFromConnexion($certificate_hash, $certificate_rgs_2_etoile)
+	{
 		$sql = "SELECT id FROM users " .
-			" WHERE subject_dn=? AND issuer_dn=? " .
+			" WHERE certificate_hash = ? " .
 			" AND certificate_rgs_2_etoiles = ? " .
 			" ORDER BY id ";
-		return $this->queryOneCol($sql,$subject_dn,$issuer_dn,$certificate_rgs_2_etoile);
+		return $this->queryOneCol($sql, $certificate_hash, $certificate_rgs_2_etoile);
 	}
 
 	public function getGroupeName($user_id){
@@ -145,14 +149,14 @@ class UserSQL extends SQL {
 	public function hasDoublon($user_id,$certificat_connexion_info,$login,$certificate_rgs_2_etoiles_clean_content){
 
 		if ($certificate_rgs_2_etoiles_clean_content) {
-			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=? AND certificate_rgs_2_etoiles=?";
-			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name'],$certificate_rgs_2_etoiles_clean_content);
+			$sql = "SELECT id FROM users WHERE certificate_hash=? AND certificate_rgs_2_etoiles=?";
+			$result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash'], $certificate_rgs_2_etoiles_clean_content);
 		} elseif($login) {
-			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=? AND login=?";
-			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name'],$login);
+			$sql = "SELECT id FROM users WHERE certificate_hash=? AND login=?";
+			$result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash'], $login);
 		} else {
-			$sql = "SELECT id FROM users WHERE subject_dn=? AND issuer_dn=?";
-			$result = $this->queryOneCol($sql,$certificat_connexion_info['subject_name'],$certificat_connexion_info['issuer_name']);
+			$sql = "SELECT id FROM users WHERE certificate_hash=? ";
+			$result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash']);
 		}
 
 		if (! $result){
@@ -162,6 +166,18 @@ class UserSQL extends SQL {
 			return true;
 		}
 		return ($result[0] != $user_id);
+	}
+
+	public function fixCerticateFingerprint(X509Certificate $x509Certificate)
+	{
+		$result = $this->query("SELECT id,certificate FROM users ");
+		$query = "UPDATE users SET certificate_hash = ? WHERE id=?";
+		foreach ($result as $line) {
+			if ($line['certificate']) {
+				$hash = $x509Certificate->getBase64Hash($line['certificate'], self::CERTIFICATE_FINGERPRINT_HASH_ALG);
+				$this->query($query, $hash, $line['id']);
+			}
+		}
 	}
 
 

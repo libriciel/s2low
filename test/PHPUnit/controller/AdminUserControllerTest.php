@@ -3,13 +3,11 @@
 
 class AdminUserControllerTest extends S2lowTestCase {
 
-
 	/**
 	 * @var AdminUserController
 	 */
 	private $adminUserController;
 	private $testStreamUrl;
-
 
 	protected function setUp(){
 		parent::setUp();

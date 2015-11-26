@@ -64,6 +64,8 @@ class ControllerTest extends S2lowTestCase {
 		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$_SERVER['SSL_CLIENT_S_DN'] = "adullact_user";
 		$_SERVER['SSL_CLIENT_I_DN'] = "adullact_user";
+		$_SERVER['SSL_CLIENT_I_DN'] = "adullact_user";
+		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_adullact_user";
 		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin();
 	}

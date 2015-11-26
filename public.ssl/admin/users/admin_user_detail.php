@@ -35,7 +35,7 @@ $modules = Module::getActiveModulesList();
 foreach ($modules as $module) {
 	$result['module'][$module['id']] = $him->getPerm($module["name"]);
 }
-$result['other_id'] = $him->getIdFromCertData($him->get("subject_dn"),$him->get("issuer_dn"));
+$result['other_id'] = $him->getIdFromCertData($him->get("certificate_hash"));
 
 
 $jsonOutput->display($result);

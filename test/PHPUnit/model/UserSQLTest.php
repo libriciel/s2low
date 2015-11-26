@@ -22,11 +22,11 @@ class UserSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetNbUserWithMyCertificate(){
-		$this->assertEquals(2,$this->userSQL->getNbUserWithMyCertificate('adullact','adullact'));
+		$this->assertEquals(2, $this->userSQL->getNbUserWithMyCertificate('hash_adullact'));
 	}
 
 	public function testGetInfoFromCertificateInfo(){
-		$certificateInfo = array('subject'=>'adullact','issuer'=>'adullact');
+		$certificateInfo = array('certificate_hash' => 'hash_adullact');
 		$info = $this->userSQL->getInfoFromCertificateInfo($certificateInfo);
 		$this->assertEquals("Alice",$info[0]['givenname']);
 	}
@@ -63,6 +63,7 @@ class UserSQLTest extends S2lowTestCase {
 		$this->userSQL->saveCertificateRGS2Etoiles(1,"pem_content");
 		$info = $this->userSQL->getInfo(1);
 		$this->assertEquals("pem_content",$info['certificate_rgs_2_etoiles']);
+		$this->assertEquals(1, $info['nb_user_with_my_certificate']);
 	}
 
 	public function testDeleteCertificateRGS2Etoile(){
@@ -80,11 +81,19 @@ class UserSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetIdFromConnexionInfo(){
-		$this->assertEquals(array(2),$this->userSQL->getIdFromConnexionInfo('adullact','adullact','','alice','alice'));
+		$this->assertEquals(array(2), $this->userSQL->getIdFromConnexionInfo('hash_adullact', '', 'alice', 'alice'));
 	}
 
 	public function testGetListIdFromConnexion(){
-		$this->assertEquals(array(2,3),$this->userSQL->getListIdFromConnexion('adullact','adullact',''));
+		$this->assertEquals(array(2, 3), $this->userSQL->getListIdFromConnexion('hash_adullact', ''));
 	}
+
+	public function testFixFingerPrint()
+	{
+		$this->getSQLQuery()->query("UPDATE users SET certificate_hash=?", "");
+		$this->userSQL->fixCerticateFingerprint(new X509Certificate());
+		$this->assertEquals("ieQoLUcitdU9iZIJLPoIdp8TcUY=", $this->getSQLQuery()->queryOne("SELECT certificate_hash FROM users WHERE id=?", 1));
+	}
+
 }
 

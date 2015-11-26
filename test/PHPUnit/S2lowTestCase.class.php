@@ -76,24 +76,28 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
     	$_SERVER['SSL_CLIENT_S_DN'] = "test_subject";
     	$_SERVER['SSL_CLIENT_I_DN'] = "test_issuer";
+		$_SERVER['TESTING_CERTIFICATE_HASH'] = "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=";
     }
     
     public function setAdminGroupAuthentication(){
     	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
     	$_SERVER['SSL_CLIENT_S_DN'] = "admin_groupe";
     	$_SERVER['SSL_CLIENT_I_DN'] = "admin_groupe";
-    }
+		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_groupe";
+	}
     
     public function setAdminCol2Authentication(){
     	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
     	$_SERVER['SSL_CLIENT_S_DN'] = "admin_col2";
     	$_SERVER['SSL_CLIENT_I_DN'] = "admin_col2";
+		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_col2";
     }
 
 	public function setUserAuthentification(){
 		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$_SERVER['SSL_CLIENT_S_DN'] = "user_col1";
 		$_SERVER['SSL_CLIENT_I_DN'] = "user_col1";
+		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_user_col1";
 	}
 
 	

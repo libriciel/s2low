@@ -1,6 +1,5 @@
 <?php
 
-use Knp\Menu\Twig\Helper;
 require_once("DataObject.class.php");
 require_once("Authority.class.php");
 
@@ -27,6 +26,7 @@ class User extends DataObject {
   protected $cert_not_before;
   protected $cert_not_after;
   protected $cert_serial;
+	protected $certificate_hash;
 
   private $perms;
 
@@ -50,6 +50,7 @@ class User extends DataObject {
   						"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),	
   						"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
   						"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
+	  "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
   
 						 );
 
@@ -119,13 +120,13 @@ class User extends DataObject {
 	}
 	
 	public function getNbUserWithMyCertificate(){
-		$sql = "SELECT count(*) as nb FROM users " . " WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "'".
-				" AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'";
+		$sql = "SELECT count(*) AS nb FROM users WHERE certificate_hash='" .
+			pg_escape_string($this->certificate_hash) .
+			"'";
+
 		$result = $this->db->select($sql);
-		
 		$row = $result->get_next_row();
 		return  $row['nb'];
-		
 	}
  
   /**
@@ -153,11 +154,11 @@ class User extends DataObject {
 	
 	
 	public function login($login,$password){
-		
 		$this->retrieveInfoFromClientCertificate();
-		
-		$sql = "SELECT id FROM users WHERE subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'" .
+
+		$sql = "SELECT id FROM users WHERE certificate_hash='" . pg_escape_string($this->certificate_hash) . "'" .
                         " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";
+
 	 	$result = $this->db->select($sql);
 		if ($result->isError() || $result->num_row() != 1){
 			$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
@@ -184,19 +185,15 @@ class User extends DataObject {
 		if ( ! isset($_SERVER['SSL_CLIENT_VERIFY']) || $_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
 		}
-		$this->subject_dn = $_SERVER['SSL_CLIENT_S_DN'];
-		
 		
 		if (empty($_SERVER['SSL_CLIENT_CERT'])){
-		    $this->issuer_dn = $_SERVER['SSL_CLIENT_I_DN'];		
-			return ;
+			return false;
 		}
 		
 		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
 	       	return false;
 		}
-		
-        
+
 		// Si l'utilisateur est authentifié par certificat
 	    $this->issuer_dn = "";
         foreach ($tab['issuer'] as $key => $val) {
@@ -208,6 +205,10 @@ class User extends DataObject {
 		foreach ($tab['subject'] as $key => $val) {
 			$this->subject_dn .= "/" . $key . "=" . utf8_decode($val);
 		}
+
+		$x509Certificate = new X509Certificate();
+		$this->certificate_hash = $x509Certificate->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
+
 	}
 	
   /**
@@ -229,21 +230,10 @@ class User extends DataObject {
     session_destroy();
   }
 
-  /**
-   * \brief Méthode de récupération de l'identifiant d'un utilisateur d'après les données de son certificat
-   * \param $subject_dn chaîne : DN du sujet du certificat
-   * \param $issuer_dn chaîne : DN de l'emetteur du certificat
-   * \return L'identifiant si succès, false sinon
-  */
-  public function getIdFromCertData($subject_dn, $issuer_dn) {
-  	$resultat = array();
-  	
-	$subject_dn = str_replace('\\', '\\\\', $subject_dn);
-	$subject_dn = str_replace('\'', '\\\'', $subject_dn);
-	$issuer_dn = str_replace('\\', '\\\\', $issuer_dn);
-	$issuer_dn = str_replace('\'', '\\\'', $issuer_dn);
-
-    $sql = "SELECT id FROM users WHERE subject_dn='" . $subject_dn . "' AND issuer_dn='" . $issuer_dn . "'";    
+	public function getIdFromCertData($certificate_hash)
+	{
+		$resultat = array();
+		$sql = "SELECT id FROM users WHERE certificate_hash='" . pg_escape_string($certificate_hash) . "'";
     
     $result = $this->db->select($sql);
     
@@ -699,10 +689,15 @@ class User extends DataObject {
 
       $this->cert_serial = $tab["serialNumber"];
 
+
+		$x509 = new X509Certificate();
+		$this->certificate_hash = $x509->getBase64Hash($this->certificate, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
+
+
 	  // Controle de l'existence d'un utilisateur avec les mêmes données de certificat.
 	  // Si un utilisateur a les mêmes données mais qu'il s'agit de l'utilisateur courant
 	  // on accepte => permet de modifier le certificat
-	  $ids = $this->getIdFromCertData($this->subject_dn, $this->issuer_dn);
+		$ids = $this->getIdFromCertData($this->certificate_hash);
 
 	  if ((! empty($ids) && $this->isNew()) || (! empty($ids) && ! $this->isNew() && $ids[0] != $this->id)) {
 	  	
@@ -789,7 +784,7 @@ class User extends DataObject {
 	}
 
 	public function getIdFromLogin($login){
-		$sql = "SELECT id FROM users WHERE users.login='".pg_escape_string($login)."' AND subject_dn='" . pg_escape_string($this->subject_dn) . "' AND issuer_dn='" . pg_escape_string($this->issuer_dn) . "'";
+		$sql = "SELECT id FROM users WHERE users.login='" . pg_escape_string($login) . "' AND certificate_hash='" . pg_escape_string($this->certificate) . "'";
 
 		$result = $this->db->select($sql);
 		if ($result->num_row() == 0 ){
@@ -802,7 +797,7 @@ class User extends DataObject {
 	public function cloneCertificat($new_id){
 		$clone = new User($new_id);
 		$clone->init();
-		foreach (array('subject_dn','issuer_dn','certificate','cert_not_before','cert_not_after','cert_serial') as $info){
+		foreach (array('subject_dn', 'issuer_dn', 'certificate', 'cert_not_before', 'cert_not_after', 'cert_serial', 'certificate_hash') as $info) {
 			$this->set($info,$clone->get($info));
 		}				
 	}

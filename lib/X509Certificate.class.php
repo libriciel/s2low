@@ -11,12 +11,9 @@ class X509Certificate {
 		if ($_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
 		}
-		
-		$result['subject'] = $_SERVER['SSL_CLIENT_S_DN'];
-		
+
 		if (empty($_SERVER['SSL_CLIENT_CERT'])){
-			$result['issuer'] = $_SERVER['SSL_CLIENT_I_DN'];
-			return $result;
+			return false;
 		}
 		
 		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
@@ -32,6 +29,8 @@ class X509Certificate {
 		foreach ($tab['subject'] as $key => $val) {
 			$result['subject'] .= "/" . $key . "=" . utf8_decode($val);
 		}
+
+		$result['certificate_hash'] = $this->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
 
 		return $result;		
 	}
@@ -60,6 +59,7 @@ class X509Certificate {
 		foreach ($info['subject'] as $key => $val) {
 			$info['subject_name'] .= "/" . $key . "=" . utf8_decode($val);
 		}
+		$info['certificate_hash'] = $this->getBase64Hash($pem_certificate_content, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
 		return $info;
 	}
 
@@ -104,6 +104,6 @@ class X509Certificate {
 		openssl_x509_export($resource, $output);
 		return $output;
 	}
-	
-	
+
+
 }
