@@ -109,11 +109,11 @@ class User extends DataObject {
 
 	public function getPermTypes(array $module_specific_perms = array()){
 		$result = $this->permsTypes;
-		
-		if ($this->isSuper()){
+
+		if ($this->isSuper()) {
 			$result = array_merge($result, $this->superPermsTypes);
 		}
-		
+
 		$result = array_merge($result,$module_specific_perms);
 		
 		return $result;
@@ -485,7 +485,8 @@ class User extends DataObject {
 	}
 
 	$all_perms = $this->getPermTypes($specific_perms);
-	if ( empty($all_perms[$perm])){
+
+	  if ( empty($all_perms[$perm])){
 		$perm = "NONE";
 	}
 

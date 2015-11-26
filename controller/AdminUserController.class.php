@@ -255,6 +255,9 @@ class AdminUserController extends Controller {
 
 		foreach ($modules as $module) {
 			if (isset($authModules[$module["id"]]) && ($authModules[$module["id"]] || $him->isGroupAdmin())) {
+				if ($me->isSuper()) {
+					$module['specific_perms']['GRANT'] = 'Concession';
+				}
 				$him->setPerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]),$module['specific_perms']);
 			}
 		}
