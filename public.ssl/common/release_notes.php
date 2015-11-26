@@ -86,6 +86,10 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.3 du xx.xx.2015</h2>";
+$html .= "<ul>";
+$html .= "</ul>";
+
 $html .= "<h2>V2.2 du 25.09.2015</h2>";
 $html .= "<ul>";
 $html .= "<li>API : une nouvelle API permet de tester la connexion à la plate-forme S²LOW ;";
