@@ -233,7 +233,10 @@ class User extends DataObject {
 	public function getIdFromCertData($certificate_hash)
 	{
 		$resultat = array();
-		$sql = "SELECT id FROM users WHERE certificate_hash='" . pg_escape_string($certificate_hash) . "'";
+		$sql = "SELECT id FROM users WHERE certificate_hash='" .
+			pg_escape_string($certificate_hash) .
+			"'" .
+			" ORDER BY name,givenname,login";
     
     $result = $this->db->select($sql);
     
