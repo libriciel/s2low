@@ -32,7 +32,9 @@ class XadesSignature {
 
 		$signatureTemplate = $this->getXMLSignatureTemplate($document_id,$certificate_info,$xadesSignatureProperties);
 
+
 		$signatureTemplateDOM = dom_import_simplexml($signatureTemplate);
+
 		$node = $domDocument->importNode($signatureTemplateDOM, true);
 		$domDocument->documentElement->appendChild($node);
 
@@ -40,7 +42,12 @@ class XadesSignature {
 		$domDocument->save($tmp_file);
 
 		$rootNodeName = $this->getLocalName($domDocument);
-		$command = "{$this->xmlsec1_path} --sign --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
+
+		$signature_node_id = $this->getSignatureNodeId($document_id);
+
+		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
+
+		$command = "{$this->xmlsec1_path} --sign --node-xpath \"$xpath\" --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
 		exec($command,$output,$return_var);
 		unlink($tmp_file);
 		if ($return_var != 0){
@@ -48,21 +55,77 @@ class XadesSignature {
 		}
 	}
 
-	/*public function verify($xml_file_signed,$trusted_pem_path){
-		return $this->verifyIntern($xml_file_signed,"--trusted-pem $trusted_pem_path");
-	}*/
+	public function verify_old($xml_file_signed)
+	{
+		$rootNodeName = $this->getRootNodeName($xml_file_signed);
 
-	/*public function verifyNoCA($xml_file_signed){
-		return $this->verifyIntern($xml_file_signed,"");
-	}*/
+		$signature_node_id = $this->getSignatureNodeIdFromFile($xml_file_signed);
+		if (!$signature_node_id) {
+			return false;
+		}
+
+		return $this->verifyIntern($xml_file_signed, $rootNodeName, $signature_node_id);
+	}
 
 	public function verify($xml_file_signed)
 	{
-		$rootNodeName = $this->getRootNodeName($xml_file_signed);
-		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --id-attr:Id $rootNodeName $xml_file_signed 2>&1";
+		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
+
+		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature']";
+
+		$signatureNodeList = $xml->xpath($xpath);
+		if (!$signatureNodeList) {
+			return false;
+		}
+
+		foreach ($signatureNodeList as $signatureNode) {
+			$id = $signatureNode->attributes()->Id;
+			if (!$id) {
+				return false;
+			}
+			$node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
+			$node_id = ltrim($node_id, "#");
+			if (!$node_id) {
+				return false;
+			}
+			$xpath = "//*[@Id='$node_id']";
+			$element = $xml->xpath($xpath);
+			if (count($element) != 1) {
+				return false;
+			}
+			$element = $element[0];
+			$name = $element->getName();
+			if (!$this->verifyIntern($xml_file_signed, $name, $id)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id)
+	{
+		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
+		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		return $return_var == 0;
 	}
+
+
+	private function getSignatureNodeIdFromFile($xml_file_signed)
+	{
+		try {
+			$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
+			$all = $xml->children(self::NS_DS_URI);
+			$id = strval($all->Signature->attributes()->Id);
+		} catch (Exception $e) {
+			return false;
+		}
+		return $id;
+	}
+
+
 
 	private function getRootNodeName($xml_file_signed){
 		$domDocument = $this->loadDomDocument($xml_file_signed);
@@ -115,9 +178,14 @@ class XadesSignature {
 		return $certInfo;
 	}
 
+	private function getSignatureNodeId($document_id)
+	{
+		return "{$document_id}_SIG";
+	}
+
 	private function getXMLSignatureTemplate($document_id,$certificate_info, XadesSignatureProperties $xadesSignatureProperties){
 		$signatureTemplate =  simplexml_load_file(__DIR__."/xades-template.xml");
-		$signature_id = "{$document_id}_SIG";
+		$signature_id = $this->getSignatureNodeId($document_id);
 		$signed_properties_id = "{$signature_id}_SP";
 
 		$signatureTemplate->attributes()->Id = $signature_id;

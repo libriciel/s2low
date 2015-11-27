@@ -25,9 +25,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	private function verify($file_to_verify){
 		$xadesSignature = $this->getXadesSignature();
-		$this->assertTrue($xadesSignature->verify($file_to_verify,__DIR__."/fixtures/autorite_a_effacer-cert.pem"));
+		$this->assertTrue($xadesSignature->verify($file_to_verify));
 	}
-
 
 	public function testSignFileNotExists(){
 		$tmp_file = sys_get_temp_dir()."/".uniqid("phpunit");
@@ -79,7 +78,24 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	public function testHasSignature(){
 		$this->setExpectedException("XadesSignatureHasSignatureException");
-		$this->sign(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
+		$signed_file = $this->sign(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
+		$this->verify($signed_file);
 	}
 
+	public function testVerifyManySignature()
+	{
+		$this->verify(__DIR__ . "/fixtures/plusieurs_signatures.xml");
+	}
+
+	public function testVerifSignatureNotGlobale()
+	{
+		$this->verify(__DIR__ . "/fixtures/signature_bordereau.xml");
+	}
+
+	public function testVerifSignatureNotGlobaleBad()
+	{
+		$xadesSignature = $this->getXadesSignature();
+		$this->assertFalse($xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml"));
+
+	}
 }

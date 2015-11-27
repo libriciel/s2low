@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller"
+             xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="PESALR121190800075020150506191259421">
+    <Enveloppe>
+        <Parametres>
+            <Version V="2"/>
+            <TypFic V="PESALR1"/>
+            <NomFic V="PESALR121190800075020150506191259422"/>
+        </Parametres>
+        <Emetteur>
+            <Sigle V="CORIPES v1.0.3"/>
+            <Adresse V="CORIPES_V1.0.3_SCHEMAS PES_V2 P431"/>
+        </Emetteur>
+        <Recepteur>
+            <Sigle V="TGAA"/>
+            <Adresse V="AMIENS"/>
+        </Recepteur>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2015-05-06"/>
+        <IdPost V="080007"/>
+        <IdColl V="24800053100058"/>
+        <CodCol V="119"/>
+        <CodBud V="50"/>
+        <LibelleColBud V="TOURISME"/>
+    </EnTetePES>
+    <PES_DepenseAller>
+        <EnTeteDepense>
+            <IdVer V="2"/>
+            <InfoDematerialisee V="1"/>
+        </EnTeteDepense>
+        <Bordereau Id="ID20157020150506D0150">
+            <BlocBordereau>
+                <Exer V="2015"/>
+                <IdBord V="50"/>
+                <DteBordEm V="2015-05-06"/>
+                <TypBord V="01"/>
+                <NbrPce V="5"/>
+                <MtCumulAnnuel V="73420.13"/>
+                <MtBordHT V="694.13"/>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="153"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 201150046 DU 14 04 15 FORFAIT GROUPES LES AMIS DU MUSEE DOUAI RIB SUR FAC"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-14"/>
+                        <DteFinDgp V="2015-05-14"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="604"/>
+                            <LibVir1 V="F 201150046 DU 14 04 15"/>
+                            <LibVir2 V="FORFAIT GROUPES LES AMIS DU MUSEE DO"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="66.13"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="18800850200018"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000000814"/>
+                            <CatTiers V="20"/>
+                            <NatJur V="07"/>
+                            <Nom V="CCI REGION PICARDIE"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="36 RUE DES OTAGES"/>
+                            <CP V="80000"/>
+                            <Ville V="AMIENS"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CEPAFRPP802"/>
+                            <IBAN V="FR7618025002000810341132292"/>
+                            <LibBanc V="CEPICARDIE"/>
+                            <TitCpte V="CCI REGION PICARDIE"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="154"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 150320 DU 28 03 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M SOULAS WILLIAM"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-14"/>
+                        <DteFinDgp V="2015-05-14"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="604"/>
+                            <LibVir1 V="F 150320 DU 28 03 15"/>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="50"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000016641"/>
+                            <CatTiers V="50"/>
+                            <NatJur V="03"/>
+                            <Nom V="CONJUGAISON LE QUAI"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="13 15 QUAI BELU"/>
+                            <CP V="80000"/>
+                            <Ville V="AMIENS"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"/>
+                            <IBAN V="FR7630027172610007544910185"/>
+                            <LibBanc V="BQ CIC NO"/>
+                            <TitCpte V="CONJUGAISON LE QUAI"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="155"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 150405 DU 04 04 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M VERHENNEMAN GEORGE"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-14"/>
+                        <DteFinDgp V="2015-05-14"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="604"/>
+                            <LibVir1 V="F 150405 DU 04 04 15"/>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="50"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000016641"/>
+                            <CatTiers V="50"/>
+                            <NatJur V="03"/>
+                            <Nom V="CONJUGAISON LE QUAI"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="13 15 QUAI BELU"/>
+                            <CP V="80000"/>
+                            <Ville V="AMIENS"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"/>
+                            <IBAN V="FR7630027172610007544910185"/>
+                            <LibBanc V="BQ CIC NO"/>
+                            <TitCpte V="CONJUGAISON LE QUAI"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="156"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 150404 DU 04 04 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M BEX MARLEEN"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-14"/>
+                        <DteFinDgp V="2015-05-14"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="604"/>
+                            <LibVir1 V="F 150404 DU 04 04 15"/>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="50"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000016641"/>
+                            <CatTiers V="50"/>
+                            <NatJur V="03"/>
+                            <Nom V="CONJUGAISON LE QUAI"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="13 15 QUAI BELU"/>
+                            <CP V="80000"/>
+                            <Ville V="AMIENS"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"/>
+                            <IBAN V="FR7630027172610007544910185"/>
+                            <LibBanc V="BQ CIC NO"/>
+                            <TitCpte V="CONJUGAISON LE QUAI"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="157"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 4 DU 14 04 15 SEJOUR INDIVIDUEL ZEN POUR M MME MEDDAH MICHAUX GUIBERT TERNOIR E"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-16"/>
+                        <DteFinDgp V="2015-05-16"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="604"/>
+                            <LibVir1 V="F 4 DU 14 04 15"/>
+                            <LibVir2 V="SEJOUR INDIVIDUEL ZEN POUR M MME MED"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="478"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="51850908800028"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000027697"/>
+                            <CatTiers V="50"/>
+                            <NatJur V="03"/>
+                            <Nom V="WASSANA ZEN"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="22 RUE CRETON"/>
+                            <CP V="80000"/>
+                            <Ville V="AMIENS"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="NORDFRPP"/>
+                            <IBAN V="FR7630076025604521520020001"/>
+                            <LibBanc V="CDN"/>
+                            <TitCpte V="WASSANA ZEN"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="ID20157020150506D0150_SIG_1">
+                <ds:SignedInfo>
+                    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                    <ds:Reference URI="#ID20157020150506D0150">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>lnxK4pAbqRd13UfZ/QoeZ13rOq0=</ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties"
+                                  URI="#ID20157020150506D0150_SIG_1_SP">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>O4TNE/WnbJ5P88eQTRP1XwsijTM=</ds:DigestValue>
+                    </ds:Reference>
+                </ds:SignedInfo>
+                <ds:SignatureValue Id="ID20157020150506D0150_SIG_1_SV">
+                    MQzbmwayn1AZl06IkgZpECsDoZAXolqBxTUgsaxHmhwYz4i3wp8e4grMY6OMA8BBA+eH4wfQJgJW
+                    hJdN0CRvPaOj1IqM9kbLmBWDrsA1G2/JJP4vewScEjDYEK59abVhCb3BTI3cX2YG1YxuUaAv7LQQ
+                    3cAXORYPgsvB+HXAosUbgEGtyWw/4ChFmIyfWCrvJiYFLc+nYetc5Tc2pLsXRIiKXvC6u4NfM+y6
+                    V1xLeBdX/rX+FJu6mLEgC1FDD2r9hUHrVqGTNnkXUPdvf679yUs9zblbcx1X2+jZeBr1FrxxL25b
+                    64CXw2JqssU5eA4H7MeIr+cwkpE5CJ4YtpqUqg==
+                </ds:SignatureValue>
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>MIIEhjCCA26gAwIBAgIJAMXb2wwwEfItMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYDVQQGEwJGUjEQ
+                            MA4GA1UECBMHSGVyYXVsdDEYMBYGA1UEChMPQURVTExBQ1QtUHJvamV0MRgwFgYDVQQLEw9BRFVM
+                            TEFDVC1Qcm9qZXQxHjAcBgNVBAMTFUFDIEFEVUxMQUNUIFByb2pldCBnMjEjMCEGCSqGSIb3DQEJ
+                            ARYUc3lzdGVtZUBhZHVsbGFjdC5vcmcwHhcNMTExMTAzMTMwMTM1WhcNMTYxMTAxMTMwMTM1WjCB
+                            mTELMAkGA1UEBhMCRlIxEDAOBgNVBAgTB0hlcmF1bHQxFDASBgNVBAcTC01vbnRwZWxsaWVyMREw
+                            DwYDVQQKEwhBRFVMTEFDVDEZMBcGA1UECxMQUzJMT1ctUHJvZHVjdGlvbjEPMA0GA1UEAxMGZGVt
+                            by11MSMwIQYJKoZIhvcNAQkBFhRkZW1tby11QGFkdWxsYWN0Lm9yZzCCASIwDQYJKoZIhvcNAQEB
+                            BQADggEPADCCAQoCggEBAMnl7kW3XcJVmatbunj91ryQns/EoGvcmh0dpMJo7CbIPO4wxoSda/LU
+                            VvT29GXYKcBxqmbvpZIwW5EcEyPcsM+8ZWvo9yyxllvND9LjCJXCniIqXTe6AnmsuAj1y/E/LWZA
+                            DDMkxgFhysjQ9jqe1wjlhZAwoV8++6GoqXUc1ADm/BPnyt/Zz2N2t6CSMm4VdUsd1WjAZxIypfGg
+                            j00oeibR2DkNsfnEG1yZ1ebeTi/ORTYT7iQQ33LXvx58GIsEa62xwzGmNjrHPYhNG1ZYPsu78Ltx
+                            p3+4PyHe3VVNzMhgI9q/QJDAPnHPAJCs8rRBA6jcQuJ3Bsj2TlhMVVwAyKcCAwEAAaOBzzCBzDAJ
+                            BgNVHRMEAjAAMBEGCWCGSAGG+EIBAQQEAwIE8DALBgNVHQ8EBAMCBPAwLAYJYIZIAYb4QgENBB8W
+                            HU9wZW5TU0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1UdDgQWBBRkmqI2olc+z0Tspvz+vCJH
+                            zWl+ZzAfBgNVHSMEGDAWgBTMw0TiHX0eWOdzkNHBq8KnjELPGTAxBglghkgBhvhCAQQEJBYiaHR0
+                            cDovL2NybC5hZHVsbGFjdC5vcmcvQ1JMX2cyLnBlbTANBgkqhkiG9w0BAQUFAAOCAQEAJFfvtKtx
+                            U2ugt77qVMk6hLXYGU54CbWS7PTh0whpjRgNuLdzQVvaXCYIjAX2fHeJ66apffqev7eXfsYwyAaC
+                            dsp3tBy+tyUKQgyVf0/PUWk8iN+40GGEpCNpcgRm4B+MzImfvmlaAdwgniFuAqhv3qlw7dHSZDkH
+                            DsJENh/Ipmv8fqMMpr+aoc86jVqiuJgt/HDP6IpvrgicmIw6wu8Eq1GluzBodc1F9hUmRrm9Ad4L
+                            msrK21uSSLFSB4Il3xVDadPUooO8Ky2G3JUNZe0b/bEnxz+u6GDpCtvgDPEWPooj5n+AEgIzl6Z2
+                            MB4QIo8IVKYa1dIASmGc8RdjBMt62w==
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+                <ds:Object>
+                    <xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#"
+                                              Target="#ID20157020150506D0150_SIG_1">
+                        <xad:SignedProperties Id="ID20157020150506D0150_SIG_1_SP">
+                            <xad:SignedSignatureProperties>
+                                <xad:SigningTime>2015-11-25T16:15:19Z</xad:SigningTime>
+                                <xad:SigningCertificate>
+                                    <xad:Cert>
+                                        <xad:CertDigest>
+                                            <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                            <xad:DigestValue>Szt6ben5dLhpuRFbrXoWKkNHxps=</xad:DigestValue>
+                                        </xad:CertDigest>
+                                        <xad:IssuerSerial>
+                                            <ds:X509IssuerName>
+                                                1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC
+                                                ADULLACT Projet g2,OU=ADULLACT-Projet,O=ADULLACT-Projet,ST=Herault,C=FR
+                                            </ds:X509IssuerName>
+                                            <ds:X509SerialNumber>14257229890764010029</ds:X509SerialNumber>
+                                        </xad:IssuerSerial>
+                                    </xad:Cert>
+                                </xad:SigningCertificate>
+                                <xad:SignaturePolicyIdentifier>
+                                    <xad:SignaturePolicyId>
+                                        <xad:SigPolicyId>
+                                            <xad:Identifier>urn:oid:1.2.250.1.131.1.5.18.21.1.4</xad:Identifier>
+                                            <xad:Description>Politique de signature Helios de la DGFiP</xad:Description>
+                                        </xad:SigPolicyId>
+                                        <xad:SigPolicyHash>
+                                            <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                            <xad:DigestValue>Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=</xad:DigestValue>
+                                        </xad:SigPolicyHash>
+                                        <xad:SigPolicyQualifiers>
+                                            <xad:SigPolicyQualifier>
+                                                <xad:SPURI>
+                                                    https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf
+                                                </xad:SPURI>
+                                            </xad:SigPolicyQualifier>
+                                        </xad:SigPolicyQualifiers>
+                                    </xad:SignaturePolicyId>
+                                </xad:SignaturePolicyIdentifier>
+                                <xad:SignatureProductionPlace>
+                                    <xad:City>Montpellier</xad:City>
+                                    <xad:PostalCode>34000</xad:PostalCode>
+                                    <xad:CountryName>France</xad:CountryName>
+                                </xad:SignatureProductionPlace>
+                                <xad:SignerRole>
+                                    <xad:ClaimedRoles>
+                                        <xad:ClaimedRole>Parapheur du Maire</xad:ClaimedRole>
+                                    </xad:ClaimedRoles>
+                                </xad:SignerRole>
+                            </xad:SignedSignatureProperties>
+                        </xad:SignedProperties>
+                    </xad:QualifyingProperties>
+                </ds:Object>
+            </ds:Signature>
+        </Bordereau>
+        <Bordereau Id="ID20157020150506D01100003">
+            <BlocBordereau>
+                <Exer V="2015"/>
+                <IdBord V="100003"/>
+                <DteBordEm V="2015-05-06"/>
+                <TypBord V="01"/>
+                <NbrPce V="1"/>
+                <MtCumulAnnuel V="688.83"/>
+                <MtBordHT V="108.5"/>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <CodServ V="TOURISME"/>
+                        <IdPce V="100003"/>
+                        <TypPce V="01"/>
+                        <NatPce V="01"/>
+                        <Obj V="F 15 04 15 DU 20 04 15 VENTE COMPTOIR TOPO GUIDE RIB CI JT"/>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"/>
+                        <DteDebDgp V="2015-04-20"/>
+                        <DteFinDgp V="2015-05-20"/>
+                        <DureeDgp V="30"/>
+                        <CodIntMor V="02"/>
+                        <TxIntMor V="0.05"/>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"/>
+                            <Nature V="607"/>
+                            <LibVir1 V="F 15 04 15 DU 20 04 15"/>
+                            <LibVir2 V="VENTE COMPTOIR TOPO GUIDE RIB CI JT"/>
+                            <ModRegl V="03"/>
+                            <TVAIntraCom V="0"/>
+                            <MtHT V="108.5"/>
+                            <MtTVA V="0"/>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="44067392900012"/>
+                            <NatIdTiers V="01"/>
+                            <RefTiers V="000000000011528"/>
+                            <CatTiers V="50"/>
+                            <NatJur V="06"/>
+                            <Nom V="COMITE REGIONALE RANDONNEE PEDESTRE"/>
+                            <ComplNom V="PICARDIE"/>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"/>
+                            <Adr2 V="111 B RUE SADI CARNOT"/>
+                            <CP V="80250"/>
+                            <Ville V="AILLY SUR NOYE"/>
+                            <CodRes V="0"/>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="AGRIFRPP887"/>
+                            <IBAN V="FR7618706000007215806529178"/>
+                            <LibBanc V="CRCABRIPIC"/>
+                            <TitCpte V="COMITE REGIONALE RANDONNEE PEDES"/>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="ID20157020150506D01100003_SIG_1">
+                <ds:SignedInfo>
+                    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                    <ds:Reference URI="#ID20157020150506D01100003">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>9A4kMOpTxDvE7qditR0k3WGtvQA=</ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties"
+                                  URI="#ID20157020150506D01100003_SIG_1_SP">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>EPzl4Fl/GZ0nCZI70BGOTEORw3c=</ds:DigestValue>
+                    </ds:Reference>
+                </ds:SignedInfo>
+                <ds:SignatureValue Id="ID20157020150506D01100003_SIG_1_SV">
+                    KbMX3vyuhj7g1aUfP/SMNdBIpToqwvZw5D5tHAMT0NgLi17ROcSoziAYVQn2YpqReacOUQSoPXZ7
+                    LuCreKO6H3M361XcNchZZWpPxJ5q6rfy/eCYaT6IOrBeA7F/brKYpf/OQAmsPcWV8LTNr6H5H+hu
+                    EI3PEN7b38WQM1opAFcPNjumtvYgk3oY3y4D99VqDlpnvIvMS2DVx4o7G811eYAu/RO3H0SY4iKK
+                    BB5J7RAI0X80ky20+n+XFdWQeVA/4q6rAUD2XvU3dCuFZ0Wd891uXQzaXiXHA65yTQO2y2gcqmHf
+                    1b4LmqX8RKrRDE2ltiNI6MVmgwVfoN11jI2JVA==
+                </ds:SignatureValue>
+                <ds:KeyInfo>
+                    <ds:X509Data>
+                        <ds:X509Certificate>MIIEhjCCA26gAwIBAgIJAMXb2wwwEfItMA0GCSqGSIb3DQEBBQUAMIGYMQswCQYDVQQGEwJGUjEQ
+                            MA4GA1UECBMHSGVyYXVsdDEYMBYGA1UEChMPQURVTExBQ1QtUHJvamV0MRgwFgYDVQQLEw9BRFVM
+                            TEFDVC1Qcm9qZXQxHjAcBgNVBAMTFUFDIEFEVUxMQUNUIFByb2pldCBnMjEjMCEGCSqGSIb3DQEJ
+                            ARYUc3lzdGVtZUBhZHVsbGFjdC5vcmcwHhcNMTExMTAzMTMwMTM1WhcNMTYxMTAxMTMwMTM1WjCB
+                            mTELMAkGA1UEBhMCRlIxEDAOBgNVBAgTB0hlcmF1bHQxFDASBgNVBAcTC01vbnRwZWxsaWVyMREw
+                            DwYDVQQKEwhBRFVMTEFDVDEZMBcGA1UECxMQUzJMT1ctUHJvZHVjdGlvbjEPMA0GA1UEAxMGZGVt
+                            by11MSMwIQYJKoZIhvcNAQkBFhRkZW1tby11QGFkdWxsYWN0Lm9yZzCCASIwDQYJKoZIhvcNAQEB
+                            BQADggEPADCCAQoCggEBAMnl7kW3XcJVmatbunj91ryQns/EoGvcmh0dpMJo7CbIPO4wxoSda/LU
+                            VvT29GXYKcBxqmbvpZIwW5EcEyPcsM+8ZWvo9yyxllvND9LjCJXCniIqXTe6AnmsuAj1y/E/LWZA
+                            DDMkxgFhysjQ9jqe1wjlhZAwoV8++6GoqXUc1ADm/BPnyt/Zz2N2t6CSMm4VdUsd1WjAZxIypfGg
+                            j00oeibR2DkNsfnEG1yZ1ebeTi/ORTYT7iQQ33LXvx58GIsEa62xwzGmNjrHPYhNG1ZYPsu78Ltx
+                            p3+4PyHe3VVNzMhgI9q/QJDAPnHPAJCs8rRBA6jcQuJ3Bsj2TlhMVVwAyKcCAwEAAaOBzzCBzDAJ
+                            BgNVHRMEAjAAMBEGCWCGSAGG+EIBAQQEAwIE8DALBgNVHQ8EBAMCBPAwLAYJYIZIAYb4QgENBB8W
+                            HU9wZW5TU0wgR2VuZXJhdGVkIENlcnRpZmljYXRlMB0GA1UdDgQWBBRkmqI2olc+z0Tspvz+vCJH
+                            zWl+ZzAfBgNVHSMEGDAWgBTMw0TiHX0eWOdzkNHBq8KnjELPGTAxBglghkgBhvhCAQQEJBYiaHR0
+                            cDovL2NybC5hZHVsbGFjdC5vcmcvQ1JMX2cyLnBlbTANBgkqhkiG9w0BAQUFAAOCAQEAJFfvtKtx
+                            U2ugt77qVMk6hLXYGU54CbWS7PTh0whpjRgNuLdzQVvaXCYIjAX2fHeJ66apffqev7eXfsYwyAaC
+                            dsp3tBy+tyUKQgyVf0/PUWk8iN+40GGEpCNpcgRm4B+MzImfvmlaAdwgniFuAqhv3qlw7dHSZDkH
+                            DsJENh/Ipmv8fqMMpr+aoc86jVqiuJgt/HDP6IpvrgicmIw6wu8Eq1GluzBodc1F9hUmRrm9Ad4L
+                            msrK21uSSLFSB4Il3xVDadPUooO8Ky2G3JUNZe0b/bEnxz+u6GDpCtvgDPEWPooj5n+AEgIzl6Z2
+                            MB4QIo8IVKYa1dIASmGc8RdjBMt62w==
+                        </ds:X509Certificate>
+                    </ds:X509Data>
+                </ds:KeyInfo>
+                <ds:Object>
+                    <xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#"
+                                              Target="#ID20157020150506D01100003_SIG_1">
+                        <xad:SignedProperties Id="ID20157020150506D01100003_SIG_1_SP">
+                            <xad:SignedSignatureProperties>
+                                <xad:SigningTime>2015-11-25T16:15:19Z</xad:SigningTime>
+                                <xad:SigningCertificate>
+                                    <xad:Cert>
+                                        <xad:CertDigest>
+                                            <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                            <xad:DigestValue>Szt6ben5dLhpuRFbrXoWKkNHxps=</xad:DigestValue>
+                                        </xad:CertDigest>
+                                        <xad:IssuerSerial>
+                                            <ds:X509IssuerName>
+                                                1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC
+                                                ADULLACT Projet g2,OU=ADULLACT-Projet,O=ADULLACT-Projet,ST=Herault,C=FR
+                                            </ds:X509IssuerName>
+                                            <ds:X509SerialNumber>14257229890764010029</ds:X509SerialNumber>
+                                        </xad:IssuerSerial>
+                                    </xad:Cert>
+                                </xad:SigningCertificate>
+                                <xad:SignaturePolicyIdentifier>
+                                    <xad:SignaturePolicyId>
+                                        <xad:SigPolicyId>
+                                            <xad:Identifier>urn:oid:1.2.250.1.131.1.5.18.21.1.4</xad:Identifier>
+                                            <xad:Description>Politique de signature Helios de la DGFiP</xad:Description>
+                                        </xad:SigPolicyId>
+                                        <xad:SigPolicyHash>
+                                            <xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                            <xad:DigestValue>Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=</xad:DigestValue>
+                                        </xad:SigPolicyHash>
+                                        <xad:SigPolicyQualifiers>
+                                            <xad:SigPolicyQualifier>
+                                                <xad:SPURI>
+                                                    https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf
+                                                </xad:SPURI>
+                                            </xad:SigPolicyQualifier>
+                                        </xad:SigPolicyQualifiers>
+                                    </xad:SignaturePolicyId>
+                                </xad:SignaturePolicyIdentifier>
+                                <xad:SignatureProductionPlace>
+                                    <xad:City>Montpellier</xad:City>
+                                    <xad:PostalCode>34000</xad:PostalCode>
+                                    <xad:CountryName>France</xad:CountryName>
+                                </xad:SignatureProductionPlace>
+                                <xad:SignerRole>
+                                    <xad:ClaimedRoles>
+                                        <xad:ClaimedRole>Parapheur du Maire</xad:ClaimedRole>
+                                    </xad:ClaimedRoles>
+                                </xad:SignerRole>
+                            </xad:SignedSignatureProperties>
+                        </xad:SignedProperties>
+                    </xad:QualifyingProperties>
+                </ds:Object>
+            </ds:Signature>
+        </Bordereau>
+    </PES_DepenseAller>
+</n:PES_Aller>
