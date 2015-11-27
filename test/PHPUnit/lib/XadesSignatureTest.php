@@ -82,20 +82,16 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->verify($signed_file);
 	}
 
-	public function testVerifyManySignature()
-	{
+	public function testVerifyManySignature() {
 		$this->verify(__DIR__ . "/fixtures/plusieurs_signatures.xml");
 	}
 
-	public function testVerifSignatureNotGlobale()
-	{
+	public function testVerifSignatureNotGlobale() {
 		$this->verify(__DIR__ . "/fixtures/signature_bordereau.xml");
 	}
 
-	public function testVerifSignatureNotGlobaleBad()
-	{
+	public function testVerifSignatureNotGlobaleBad() {
 		$xadesSignature = $this->getXadesSignature();
 		$this->assertFalse($xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml"));
-
 	}
 }

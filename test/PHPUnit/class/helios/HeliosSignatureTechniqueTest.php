@@ -54,7 +54,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertTrue($info['signature_technique']);
 		$this->assertEquals($info['sha1'],sha1_file("/tmp/{$info['sha1']}"));
 		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}",  __DIR__."/../../lib/fixtures/autorite_a_effacer-cert.pem"));
+		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
 	}
 
 	public function testSignModif(){
@@ -75,7 +75,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 		$info = $heliosTransactionSQL->getInfo($transaction_id);
 		$this->assertTrue($info['signature_technique']);
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}",  __DIR__."/../../lib/fixtures/autorite_a_effacer-cert.pem"));
+		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
 	}
 
 	public function testDejaSigneBadSignature(){
@@ -92,9 +92,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		);
 	}
 
-	public function testDejaSigneBordereau()
-	{
-		$transaction_id = $this->importFile(__DIR__ . "/../fixtures/pes_signe_bordereau.xml");
+	public function testDejaSigneBordereau() {
+		$transaction_id = $this->importFile(__DIR__ . "/../../lib/fixtures/signature_bordereau.xml");
 		$this->getHeliosSignatureTechnique()->sign(
 			$transaction_id,
 			__DIR__ . "/../../lib/fixtures/robert_petitpoids.p12",

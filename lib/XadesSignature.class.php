@@ -55,20 +55,7 @@ class XadesSignature {
 		}
 	}
 
-	public function verify_old($xml_file_signed)
-	{
-		$rootNodeName = $this->getRootNodeName($xml_file_signed);
-
-		$signature_node_id = $this->getSignatureNodeIdFromFile($xml_file_signed);
-		if (!$signature_node_id) {
-			return false;
-		}
-
-		return $this->verifyIntern($xml_file_signed, $rootNodeName, $signature_node_id);
-	}
-
-	public function verify($xml_file_signed)
-	{
+	public function verify($xml_file_signed) {
 		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature']";
@@ -104,32 +91,11 @@ class XadesSignature {
 	}
 
 
-	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id)
-	{
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id) {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		return $return_var == 0;
-	}
-
-
-	private function getSignatureNodeIdFromFile($xml_file_signed)
-	{
-		try {
-			$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
-			$all = $xml->children(self::NS_DS_URI);
-			$id = strval($all->Signature->attributes()->Id);
-		} catch (Exception $e) {
-			return false;
-		}
-		return $id;
-	}
-
-
-
-	private function getRootNodeName($xml_file_signed){
-		$domDocument = $this->loadDomDocument($xml_file_signed);
-		return $this->getLocalName($domDocument);
 	}
 
 	private function loadDomDocument($xml_file_path){
