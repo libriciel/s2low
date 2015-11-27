@@ -196,6 +196,10 @@ $sel_ok = array();
 
 ob_start();
 ?>
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+<script type="text/javascript" src="/javascript/zselect.js"></script>
+<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
+
 <h1>Helios - Dématérialisation de documents financiers</h1>
 
 <div id="actions_area">
