@@ -58,14 +58,14 @@ class HeliosEnvoiControler {
 				continue;
 			}
 			
-			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);			
+			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 			if (!$pes_xml){
 				$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
 			
-			$nom_fic = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
+			$nom_fic = utf8_decode(strval($pes_xml->Enveloppe->Parametres->NomFic['V']));
 			if (! $nom_fic){
 				$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
