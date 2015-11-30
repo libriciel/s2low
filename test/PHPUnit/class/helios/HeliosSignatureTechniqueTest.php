@@ -105,4 +105,15 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
 	}
 
+	public function testSigneNoID(){
+		$transaction_id = $this->importFile(__DIR__ . "/../fixtures/pes_no_id.xml");
+		$this->getHeliosSignatureTechnique()->sign(
+			$transaction_id,
+			__DIR__ . "/../../lib/fixtures/robert_petitpoids.p12",
+			"robert_petitpoids",
+			$this->getXadesSignatureProperties()
+		);
+	}
+
+
 }

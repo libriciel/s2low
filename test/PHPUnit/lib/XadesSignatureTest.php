@@ -40,7 +40,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testSignWithoutDocumentElementId(){
-		$this->setExpectedException("Exception","Le document XML ne contient pas d'Id");
+		$this->setExpectedException("XadesSignatureNoIDException","Le document XML ne contient pas d'Id");
 		$this->sign(__DIR__."/fixtures/test-no-id.xml");
 	}
 

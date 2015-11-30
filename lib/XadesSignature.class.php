@@ -116,7 +116,7 @@ class XadesSignature {
 
 	private function getDocumentId(DOMDocument $domDocument){
 		if (! $domDocument->documentElement->attributes->getNamedItem('Id')){
-			throw new Exception("Le document XML ne contient pas d'Id");
+			throw new XadesSignatureNoIDException("Le document XML ne contient pas d'Id");
 		}
 		return $domDocument->documentElement->attributes->getNamedItem('Id')->nodeValue;
 	}
@@ -185,3 +185,5 @@ class XadesSignature {
 }
 
 class XadesSignatureHasSignatureException extends Exception{}
+
+class XadesSignatureNoIDException extends Exception{}
