@@ -177,7 +177,7 @@ class User extends DataObject {
 	
 	public function getCertificateInfo(){
 		$this->retrieveInfoFromClientCertificate();
-		return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn);
+		return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn,'certificate_hash' => $this->certificate_hash);
 	}
 	
 	private function retrieveInfoFromClientCertificate(){

@@ -8,11 +8,19 @@ class UserTest  extends S2lowTestCase {
 		$this->assertEquals(1,$ids[0]);
 	}
 
-	public function testgetNbUserWithMyCertificate()
-	{
+	public function testgetNbUserWithMyCertificate() {
 		$user = new User();
 		$user->setId(2);
 		$user->init();
 		$this->assertEquals(2, $user->getNbUserWithMyCertificate());
 	}
+
+	public function testGetCertificateInfo(){
+		$user = new User();
+		$user->setId(2);
+		$user->init();
+		$info = $user->getCertificateInfo();
+		$this->assertEquals('hash_adullact',$info['certificate_hash']);
+	}
+
 }
