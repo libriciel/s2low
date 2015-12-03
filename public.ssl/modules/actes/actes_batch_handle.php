@@ -19,7 +19,7 @@ if (!$me->authenticate()) {
   exit ();
 }
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
   $_SESSION["error"] = "Accès refusé";
   header("Location: " . WEBSITE_SSL);
   exit ();

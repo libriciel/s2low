@@ -16,7 +16,7 @@ if (!$me->authenticate()) {
   Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
 }
 
-if (!$module->isActive() || ! $me->canAccess($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($module->get("name"))) {
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 

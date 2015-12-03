@@ -90,8 +90,10 @@ $listeActesHTML = new ListeActesHTML();
 
 if ($droit->isSuperAdmin($userInfo)){
 	$listeActesHTML->addCollectivite($authoritySQL->getAll(),$authority_filtre);
-} elseif($permUser == 'RW' || $permUser == 'CS') {
- 	$listeActesHTML->addActionBox();
+} else {
+    if(! $droit->isGroupAdmin($userInfo) && ($permUser == 'RW' || $permUser == 'CS')) {
+        $listeActesHTML->addActionBox();
+    }
 }
 
 $listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, $fstatus,$fnum,$objet);
