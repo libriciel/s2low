@@ -123,6 +123,7 @@ class UserSQL extends SQL {
 				" AND certificate_rgs_2_etoiles = ? ";
 
 		$data = array($certificate_hash, $certificate_rgs_2_etoile);
+
 		if ($login){
 			$sql .= " AND login=? AND password=?";
 			$data[] = $login;

@@ -11,12 +11,17 @@ class XadesSignature {
 	private $x509Certificate;
 	private $validca_path;
 
-	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path)
-	{
+	private $last_output;
+
+	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
 		$this->validca_path = $validca_path;
+	}
+
+	public function getLastOutput(){
+		return $this->last_output;
 	}
 
 	public function sign($xml_file_to_sign,$p12_certificate_path,$p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
@@ -68,6 +73,7 @@ class XadesSignature {
 		foreach ($signatureNodeList as $signatureNode) {
 			$id = $signatureNode->attributes()->Id;
 			if (!$id) {
+
 				return false;
 			}
 			$node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
@@ -95,6 +101,7 @@ class XadesSignature {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
+		$this->last_output = implode("\n",$output);
 		return $return_var == 0;
 	}
 

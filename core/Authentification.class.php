@@ -44,7 +44,7 @@ class Authentification {
 		);
 
 		if (count($id_list) == 0){
-			Helpers::returnAndExit(1, "Le certificat n'est pas valide",  WEBSITE);
+			Helpers::returnAndExit(1, "Le certificat n'est pas valide : aucun compte trouvé",  WEBSITE);
 		}
 
 		if (count($id_list) != 1){
