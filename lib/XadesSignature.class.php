@@ -202,6 +202,15 @@ class XadesSignature {
 		return $return_var == 0;
 	}
 
+	public function deleteSignature($xml_file_signed,$xml_file_result){
+		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
+		$tab = $xml->children(self::NS_DS_URI);
+		if ($tab){
+			unset($tab[0]);
+		}
+		$xml->asXML($xml_file_result);
+	}
+
 }
 
 class XadesSignatureHasSignatureException extends Exception{}

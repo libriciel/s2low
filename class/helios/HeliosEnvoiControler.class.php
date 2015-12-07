@@ -225,5 +225,10 @@ class HeliosEnvoiControler {
 		$date = date("ymd");
 		return "PESALR2_{$siren}_{$date}_{$numero}.xml";
 	}
+
+
+	public function rollback($transaction_id){
+
+	}
 	
 }
