@@ -5,11 +5,13 @@ class HeliosSignatureTechnique {
 	private $heliosTransactionSQL;
 	private $helios_files_upload_root;
 	private $xadesSignature;
+	private $enableSignatureTechnique;
 
-	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, $helios_files_upload_root, XadesSignature $xadesSignature){
+	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, $helios_files_upload_root, XadesSignature $xadesSignature, $enableSignatureTechnique = true){
 		$this->heliosTransactionSQL = $heliosTransactionsSQL;
 		$this->helios_files_upload_root = $helios_files_upload_root;
 		$this->xadesSignature = $xadesSignature;
+		$this->enableSignatureTechnique = $enableSignatureTechnique;
 	}
 
 	public function sign($transaction_id, $p12_certificate_path,$p12_password,XadesSignatureProperties $xadesSignatureProperties){
@@ -22,12 +24,20 @@ class HeliosSignatureTechnique {
 			throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier a été modifé depuis son postage sur la plateforme");
 		}
 		$file_signed = sys_get_temp_dir()."/".uniqid("pes_aller_signed");
+
+		if ($this->xadesSignature->isSigned($orig_pes_aller_path)){
+			if (! $this->xadesSignature->verify($orig_pes_aller_path)){
+				throw new UnrecoverableHeliosSignatureTechniqueException("La signature du fichier est invalide");
+			}
+		}
+
+		if (! $this->enableSignatureTechnique){
+			return true;
+		}
+
 		try {
 			$this->xadesSignature->sign($orig_pes_aller_path, $p12_certificate_path, $p12_password, $file_signed, $xadesSignatureProperties);
 		} catch (XadesSignatureHasSignatureException $exception) {
-			if (!$this->xadesSignature->verify($orig_pes_aller_path)) {
-				throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier est déjà signé, mais la signature est invalide");
-			}
 			$this->heliosTransactionSQL->setSignatureTechnique($transaction_id, $info['sha1'], $info['file_size']);
 			return true;
 		} catch (XadesSignatureNoIDException $e){

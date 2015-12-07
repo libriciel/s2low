@@ -404,6 +404,10 @@ if (! defined('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD')){
 	define('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD','robert_petitpoids');
 }
 
+if (!defined("HELIOS_ENABLE_SIGNATURE_TECHNIQUE")){
+	define("HELIOS_ENABLE_SIGNATURE_TECHNIQUE",false);
+}
+
 
 //////////////////////////////////
 ///// Paramètre module Etat Civil /////
@@ -412,7 +416,6 @@ if (! defined('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD')){
 if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
 	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', '/home/tedetis/dev/tdt-workspace/uploads/etat_civil');
 }
-
 
 //////////////////////////////
 ///// Paramètre module Mail  /////

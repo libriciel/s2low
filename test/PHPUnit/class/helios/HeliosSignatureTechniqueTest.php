@@ -16,8 +16,22 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		return $heliosControler->importFile(8,$pes_aller,"pes_aller.xml");
 	}
 
-	private function getXadesSignature(){
-		return new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/../../lib/fixtures/validca/");
+	public function testSign(){
+		$this->sign();
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$info = $heliosTransactionSQL->getInfo($this->transaction_id);
+		$this->assertTrue($info['signature_technique']);
+		$this->assertEquals($info['sha1'],sha1_file("/tmp/{$info['sha1']}"));
+		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
+		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
+	}
+
+	private function sign(){
+		$this->getHeliosSignatureTechnique()->sign(
+			$this->transaction_id,
+			__DIR__."/../../lib/fixtures/robert_petitpoids.p12",
+			"robert_petitpoids",
+			$this->getXadesSignatureProperties());
 	}
 
 	private function getHeliosSignatureTechnique(){
@@ -25,9 +39,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		return new HeliosSignatureTechnique($heliosTransactionSQL, "/tmp/",$this->getXadesSignature());
 	}
 
-	private function getFilePathInHeliosUplload(){
-		$pes_aller = __DIR__."/../../helios/fixtures/pes_aller_ok.xml";
-		return "/tmp/".sha1_file($pes_aller);
+	private function getXadesSignature(){
+		return new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/../../lib/fixtures/validca/");
 	}
 
 	private function getXadesSignatureProperties(){
@@ -39,29 +52,16 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		return $xadesSignatureProperties;
 	}
 
-	private function sign(){
-		$this->getHeliosSignatureTechnique()->sign(
-			$this->transaction_id,
-			__DIR__."/../../lib/fixtures/robert_petitpoids.p12",
-			"robert_petitpoids",
-			$this->getXadesSignatureProperties());
-	}
-
-	public function testSign(){
-		$this->sign();
-		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$info = $heliosTransactionSQL->getInfo($this->transaction_id);
-		$this->assertTrue($info['signature_technique']);
-		$this->assertEquals($info['sha1'],sha1_file("/tmp/{$info['sha1']}"));
-		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
-	}
-
 	public function testSignModif(){
 		$file = $this->getFilePathInHeliosUplload();
 		file_put_contents($file,"toto");
 		$this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException","Le fichier a été modifé depuis son postage sur la plateforme");
 		$this->sign();
+	}
+
+	private function getFilePathInHeliosUplload(){
+		$pes_aller = __DIR__."/../../helios/fixtures/pes_aller_ok.xml";
+		return "/tmp/".sha1_file($pes_aller);
 	}
 
 	public function testDejaSigne(){
@@ -82,7 +82,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$transaction_id = $this->importFile(__DIR__."/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml");
 		$this->setExpectedException(
 			"UnrecoverableHeliosSignatureTechniqueException",
-			"Le fichier est déjà signé, mais la signature est invalide"
+			"La signature du fichier est invalide"
 		);
 		$this->getHeliosSignatureTechnique()->sign(
 			$transaction_id,
