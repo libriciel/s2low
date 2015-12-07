@@ -6,6 +6,9 @@ class XadesSignature {
 	const NS_DS_URI = "http://www.w3.org/2000/09/xmldsig#";
 	const NS_XAD_URI = "http://uri.etsi.org/01903/v1.1.1#";
 
+	//const HASH_ALG = "sha256";
+	const HASH_ALG = "sha1";
+
 	private $xmlsec1_path;
 	private $pkcs12;
 	private $x509Certificate;
@@ -64,7 +67,7 @@ class XadesSignature {
 		$x509_pem_content = $this->pkcs12->getX509CertificateContent($p12_certificate_path,$p12_password);
 		$certInfo['serialNumber'] = $this->x509Certificate->getInfo($x509_pem_content)['serialNumber'];
 		$certInfo['issuerName'] = $this->x509Certificate->getIssuerDN($x509_pem_content,true);
-		$certInfo['certDigest'] = $this->x509Certificate->getBase64Hash($x509_pem_content, 'sha256');
+		$certInfo['certDigest'] = $this->x509Certificate->getBase64Hash($x509_pem_content, self::HASH_ALG);
 		return $certInfo;
 	}
 
@@ -103,7 +106,13 @@ class XadesSignature {
 	}
 
 	private function getXMLSignatureTemplate($document_id,$certificate_info, XadesSignatureProperties $xadesSignatureProperties){
-		$signatureTemplate =  simplexml_load_file(__DIR__."/xades-template.xml");
+		if (self::HASH_ALG == 'sha1'){
+			$template_file = __DIR__."/xades-template-sha1.xml";
+		} else {
+			$template_file = __DIR__."/xades-template.xml";
+		}
+
+		$signatureTemplate =  simplexml_load_file($template_file);
 		$signature_id = $this->getSignatureNodeId($document_id);
 		$signed_properties_id = "{$signature_id}_SP";
 
