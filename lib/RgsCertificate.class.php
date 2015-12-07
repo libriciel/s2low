@@ -20,9 +20,13 @@ class RgsCertificate {
 	}
 
 	public function isRgsCertificate($x509_pem_certificate){
+		$tmp_file = "/tmp/s2low-lib-rgscertificate-".mt_rand(0,mt_getrandmax()).".pem";
+		file_put_contents($tmp_file,$x509_pem_certificate);
+
 		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
-		$command = "echo '$x509_pem_certificate' | {$this->openssl_path} verify -verbose -CApath {$this->validca_path} 2>&1";
+		$command = "cat $tmp_file | {$this->openssl_path} verify -verbose -CApath {$this->validca_path} 2>&1";
 		exec($command,$output,$return_var);
+		unlink($tmp_file);
 
 		$output = implode("\n",$output);
 
