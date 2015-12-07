@@ -172,10 +172,14 @@ if ($me->isSuper()) {
 	$actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
 	$actionHtml .= "</div></form>\n";
 
-	if( in_array($currentStatusId, array(2,3))){
+	if( in_array($currentStatusId, array(2,3,-1))){
 		ob_start();?>
 
-	<form action="<?php WEBSITE_SSL ?>/modules/helios/helios_transac_rollback.php" method="post">
+	<form
+		action="<?php WEBSITE_SSL ?>/modules/helios/helios_transac_rollback.php"
+		method="post"
+		onsubmit="return confirm('Êtes-vous certain de vouloir faire cela ?')"
+		>
 		<div class="form-group">
 			<label class="col-md-4 control-label">Repasser la transaction en « posté » (et supprimer la signature technique)</label>
 			<input type="hidden" name="id" value="<?php hecho($id) ?>"/>

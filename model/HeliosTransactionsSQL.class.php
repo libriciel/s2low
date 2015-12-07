@@ -30,14 +30,6 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOne($sql,$id);
 	}
 	
-	public function getLatestStatusId($id){
-		$sql = "SELECT status_id " .
-				" FROM helios_transactions_workflow " .
-				" WHERE transaction_id=? " .
-				" ORDER BY date DESC LIMIT 1";
-		return $this->queryOne($sql,$id);
-	}
-	
 	public function updateStatus($transaction_id,$status_id,$message){
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
@@ -71,7 +63,7 @@ class HeliosTransactionsSQL extends SQL {
 		$sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=11";
 		return $this->query($sql);
 	}
-
+	
 	public function updateLastStatusId(){
 		$sql2 = "UPDATE helios_transactions SET last_status_id = ? WHERE id=?";
 		$sql = "SELECT id FROM helios_transactions WHERE last_status_id IS NULL";
@@ -82,6 +74,14 @@ class HeliosTransactionsSQL extends SQL {
 			$this->query($sql2, $last_status_id, $transaction_id);
 			echo "$transaction_id : $last_status_id\n";
 		}
+	}
+
+	public function getLatestStatusId($id){
+		$sql = "SELECT status_id " .
+				" FROM helios_transactions_workflow " .
+				" WHERE transaction_id=? " .
+				" ORDER BY date DESC LIMIT 1";
+		return $this->queryOne($sql,$id);
 	}
 
 	public function setLastStatusId($transaction_id){
@@ -162,9 +162,9 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOneCol($sql);
 	}
 
-	public function setSignatureTechnique($transaction_id,$new_sha1,$new_file){
+	public function setSignatureTechnique($transaction_id,$new_sha1,$new_file, $signature_technique=true){
 		$sql = "UPDATE helios_transactions SET sha1=?, file_size=?,signature_technique=? WHERE id=?";
-		$this->query($sql,$new_sha1,$new_file,true,$transaction_id);
+		$this->query($sql,$new_sha1,$new_file,$signature_technique,$transaction_id);
 	}
 
 
