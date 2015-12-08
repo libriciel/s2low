@@ -408,6 +408,9 @@ if (!defined("HELIOS_ENABLE_SIGNATURE_TECHNIQUE")){
 	define("HELIOS_ENABLE_SIGNATURE_TECHNIQUE",false);
 }
 
+if (empty($helios_authorized_rollback_ids)){
+	$helios_authorized_rollback_ids = array();
+}
 
 //////////////////////////////////
 ///// Paramètre module Etat Civil /////
