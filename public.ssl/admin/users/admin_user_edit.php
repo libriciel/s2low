@@ -270,7 +270,22 @@ ob_start();
 		<?php hecho($him->get('subject_dn')) ?>
 		<br/>
 		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
+		<?php if($me->isSuper()) : ?>
+			<br/>
+			<a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_download_cert.php?id=<?php echo $him->getId()?>">Télécharger</a>
+		<?php endif ?>
 	</div>
+
+	<?php
+		$rgsCertificate = new RgsCertificate(OPENSSL_PATH,RGS_VALIDCA_PATH);
+		$is_rgs = $rgsCertificate->isRgsCertificate($him->get("certificate"));
+	?>
+	<?php if (! $is_rgs): ?>
+		<div class="alert alert-warning col-md-9 col-md-offset-1">
+			Ce certificat n'est pas RGS et ne peut pas servir à télétransmettre.
+		</div>
+	<?php endif; ?>
+
 <?php endif;?>
 	<div style='clear:both'></div>
 
