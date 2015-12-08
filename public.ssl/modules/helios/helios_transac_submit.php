@@ -14,7 +14,7 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Éhec de l'authentification";
+	$_SESSION["error"] = "Échec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit();
 }
