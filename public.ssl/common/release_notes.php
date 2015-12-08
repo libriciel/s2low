@@ -92,6 +92,7 @@ $html .= "<li>Ensemble des pages : les champs recherche sur les collectivités on
 $html .= "<li>Optimisation du journal des événements ;";
 $html .= "<li>Administration : les personnes partageant un certificat sont affichées par ordre alphabétique ;";
 $html .= "<li>Administration : amélioration du filtre de recherche sur la collectivité ;";
+$html .= "<li>Administration : dans la fiche utilisateur on informe si la partie publique du certificat est issue d'une AC accréditée ;";
 $html .= "<li>La liste des modules est fixe dans les menus ;";
 $html .= "<li>Nouveau mécanisme de contrôle des certificats basé sur l'empreinte SHA1 ;";
 $html .= "<li>Module ACTES/HELIOS : on ne peut plus télétransmettre si le certificat n'est pas un RGS ;";
