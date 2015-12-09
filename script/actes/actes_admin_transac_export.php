@@ -5,22 +5,33 @@
 require_once( __DIR__."/../../init/init.php");
 
 
-$sql = "SELECT DISTINCT ae.id, ae.file_path, atw.date, auth.siren, auth.department, auth.district";
-$sql .= " FROM actes_envelopes ae";
-$sql .= " LEFT JOIN users ON ae.user_id=users.id";
-$sql .= " LEFT JOIN authorities auth ON users.authority_id=auth.id";
-$sql .= " LEFT JOIN actes_transactions at ON at.envelope_id=ae.id";
-$sql .= " LEFT JOIN actes_transactions_workflow atw ON atw.transaction_id=at.id";
-// On veut récupérer la date où la transaction a été transmise => statut 3
-$sql .= " WHERE atw.status_id=3";
-$sql .= " ORDER BY atw.date DESC";
+
+$general_query = "select DISTINCT actes_envelopes.id, actes_envelopes.file_path, actes_transactions_workflow.date, authorities.siren, authorities.department, authorities.district FROM actes_transactions " .
+	" JOIN actes_transactions_workflow ON actes_transactions.id=actes_transactions_workflow.transaction_id " .
+	" JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id".
+	" JOIN authorities ON actes_transactions.authority_id = authorities.id ".
+	" WHERE actes_transactions_workflow.date > ? " .
+	" AND actes_transactions_workflow.date < ? " .
+	" AND actes_transactions_workflow.status_id = 3".
+	" ORDER BY date ";
+
+$filename_query = "SELECT filename FROM actes_included_files WHERE envelope_id=?";
 
 
+$sql = "SELECT min(date) FROM actes_transactions_workflow";
+$min_date = $sqlQuery->queryOne($sql);
 
-$pdo = $sqlQuery->getPdo();
+$sql = "SELECT max(date) FROM actes_transactions_workflow";
+$max_date = $sqlQuery->queryOne($sql);
 
-$pdoStatement = $sqlQuery->getPdo()->prepare($sql);
-$pdoStatement->execute();
+$start = new DateTime($min_date);
+$end = new DateTime($max_date);
+$end->modify("next day");
+$interval = DateInterval::createFromDateString('1 day');
+$datePeriod =  new DatePeriod($start, $interval, $end);
+
+
+$output_handle = fopen("php://output", "w");
 
 $head = array(
 	"Date de transmission",
@@ -32,26 +43,27 @@ $head = array(
 	"Arrondissement de la collectivité"
 );
 
-$sql ="SELECT filename FROM actes_included_files WHERE envelope_id=?";
-
-$output_handle = fopen("php://output","w");
-fputcsv($output_handle,$head);
+fputcsv($output_handle, $head);
 
 
+foreach($datePeriod as $dt) {
+	/**@var $dt DateTime */
+	$date1 = $dt->format("Y-m-d");
+	$dt->modify("next day");
+	$date2 = $dt->format("Y-m-d");
 
-while ($row = $pdoStatement->fetch(PDO::FETCH_ASSOC) ){
-	$date = $row['date'];
-
-	$all_files = $sqlQuery->queryOneCol($sql,$row['id']);
-
-	$result = array();
-	$result[] = date("Y-m-d",strtotime($date));
-	$result[] = date("H:i:s",strtotime($date));
-	$result[] = basename($row['file_path']);
-	$result[] = implode("|",$all_files);
-	$result[] = $row['siren'];
-	$result[] = $row['department'];
-	$result[] = $row['district'];
-	fputcsv($output_handle,$result);
+	foreach($sqlQuery->query($general_query,$date1,$date2) as $row) {
+			$date = $row['date'];
+			$all_files = $sqlQuery->queryOneCol($filename_query, $row['id']);
+			$result = array();
+			$result[] = date("Y-m-d", strtotime($date));
+			$result[] = date("H:i:s", strtotime($date));
+			$result[] = basename($row['file_path']);
+			$result[] = implode("|", $all_files);
+			$result[] = $row['siren'];
+			$result[] = $row['department'];
+			$result[] = $row['district'];
+			fputcsv($output_handle, $result);
+	}
 }
 fclose($output_handle);
