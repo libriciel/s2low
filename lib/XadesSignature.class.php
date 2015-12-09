@@ -57,6 +57,7 @@ class XadesSignature {
 
 		$command = "{$this->xmlsec1_path} --sign --node-xpath \"$xpath\" --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
 		exec($command,$output,$return_var);
+
 		unlink($tmp_file);
 		if ($return_var != 0){
 			throw new Exception("Erreur ($return_var) lors de la signature technique : ".implode("\n",$output));
