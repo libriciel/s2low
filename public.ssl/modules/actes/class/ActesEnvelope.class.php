@@ -19,22 +19,10 @@ class ActesEnvelope extends DataObject {
   protected $file_path;
   protected $file_size;
   protected $return_mail;
-
-  private $envelope_id;
-  
-  
   protected $transactions = array();
-  
   protected $rootDir;
   protected $destDir;
   protected $tmpDir;
-
-  private $envXmlFile;
-  private $envXmlFileSize;
-  private $envXmlObj;
-
-  private $fileList;
-
   protected $dbFields = array( "user_id" => array( "descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
 						 "siren" => array( "descr" => "Code SIREN de la collectivité", "type" => "isString", "mandatory" => true),
 						 "submission_date" => array( "descr" => "Date de dépôt de l'enveloppe", "type" => "isDate", "mandatory" => false),
@@ -48,6 +36,11 @@ class ActesEnvelope extends DataObject {
  						 "file_path" => array( "descr" => "Chemin vers l'archive .tar.gz", "type" => "isString", "mandatory" => false),
  						 "file_size" => array( "descr" => "Taille de l'archive .tar.gz", "type" => "isInt", "mandatory" => false),
 						 );
+  private $envelope_id;
+  private $envXmlFile;
+  private $envXmlFileSize;
+  private $envXmlObj;
+  private $fileList;
 
   /**
    * \brief Constructeur d'une enveloppe
@@ -55,6 +48,139 @@ class ActesEnvelope extends DataObject {
    */
   public function __construct($id = false) {
 	parent::__construct($id);
+  }
+
+  /**
+   * \brief Méthode d'obtention de la liste des identifiants des enveloppes
+   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+   * \param $transmitted_only booléen (optionnel) : Ne considère que les enveloppes réellement transmises si true (false par défaut)
+   * \return Tableau des identifiants des enveloppes
+  */
+  public static function getEnvelopesId($cond = false, $transmitted_only = false) {
+	$sql = "SELECT DISTINCT actes_envelopes.id FROM actes_envelopes"
+	  . " LEFT JOIN users ON actes_envelopes.user_id=users.id"
+	  . " LEFT JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
+	  . " LEFT JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id";
+
+	if ($transmitted_only) {
+	  if ($cond) {
+		$cond .= " AND ";
+	  } else {
+		$cond = "";
+	  }
+
+	  $cond .= " actes_transactions_workflow.status_id=3";
+	}
+
+	if ($cond) {
+	  $sql .= " WHERE " . $cond;
+	}
+
+	$db =DatabasePool::getInstance();
+
+	$result = $db->select($sql);
+
+	if (! $result->isError()) {
+	  return $result->get_all_rows();
+	}
+
+	return false;
+  }
+
+  /**
+   * \brief Méthode d'obtention du volume transmis depuis une période donnée ou depuis toujours
+   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+   * \param $transmitted_only booléen (optionnel) : Ne considère que les enveloppes réellement transmises si true (false par défaut)
+   * \return Volume en octet correspondant à la demande
+  */
+  public static function getEnvelopesVolume($cond = false, $transmitted_only = false) {
+	$sql = "SELECT SUM(actes_envelopes.file_size) AS sum FROM actes_envelopes actes_envelopes"
+	  . " LEFT JOIN users ON actes_envelopes.user_id=users.id"
+	  . " LEFT JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
+	  . " LEFT JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id";
+
+	$filter = array();
+
+	if ($cond) {
+	  $filter[] = $cond;
+	}
+
+	if ($transmitted_only) {
+	  $filter[] = "actes_transactions_workflow.status_id=3";
+	} else {
+	  $filter[] = "actes_transactions_workflow.status_id=1";
+	}
+
+	// Pour éviter les doublons
+	$filter[] = "actes_transactions.id=(SELECT MIN(actes_transactions.id) FROM actes_transactions WHERE actes_transactions.envelope_id=actes_envelopes.id)";
+
+	$sql .= " WHERE " . implode(" AND ", $filter);
+
+	$db =DatabasePool::getInstance();
+
+	$result = $db->select($sql);
+
+	if (! $result->isError()) {
+	  $row = $result->get_next_row();
+	  return $row["sum"];
+	}
+
+	return false;
+  }
+
+  /**
+   * \brief Méthode d'obtention de la liste des fichiers inclus dans une enveloppe
+   * \param $env_id integer : Identifiant de l'enveloppe concernée
+   * \return Tableau de noms de fichier
+  */
+  public static function getEnvelopesIncludedFiles($env_id) {
+	$sql = "SELECT filename FROM actes_included_files WHERE envelope_id=" . $env_id;
+
+	$db =DatabasePool::getInstance();
+
+	$result = $db->select($sql);
+
+	if (! $result->isError()) {
+	  return $result->get_all_rows();
+	}
+
+	return false;
+  }
+
+  /**
+   * \brief Méthode d'obtention d'un historique d'envoi des enveloppes au serveur du ministère
+   * \param $authority_id integer (optionnel) : Identifiant de la collectivité expéditrice des enveloppes
+   * \return Tableau des données des enveloppes
+  */
+  public static function getEnvelopesHistory($authority_id = false) {
+	$sql = "SELECT DISTINCT ae.id, ae.file_path, atw.date, auth.siren, auth.department, auth.district";
+	$sql .= " FROM actes_envelopes ae";
+	$sql .= " LEFT JOIN users ON ae.user_id=users.id";
+	$sql .= " LEFT JOIN authorities auth ON users.authority_id=auth.id";
+	$sql .= " LEFT JOIN actes_transactions at ON at.envelope_id=ae.id";
+	$sql .= " LEFT JOIN actes_transactions_workflow atw ON atw.transaction_id=at.id";
+	// On veut récupérer la date où la transaction a été transmise => statut 3
+	$sql .= " WHERE atw.status_id=3";
+
+	if ($authority_id) {
+	  $sql .= " AND auth.id=" . $authority_id;
+	}
+
+	$sql .= " ORDER BY atw.date DESC";
+
+	$db =DatabasePool::getInstance();
+
+	$result = $db->select($sql);
+
+	$env = array();
+
+	if (! $result->isError()) {
+	  while ($row = $result->get_next_row()) {
+		$env[] = $row;
+	  }
+	}
+
+	return $env;
   }
 
   /**
@@ -87,6 +213,43 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
+   * \brief Méthode de récupération des transactions de l'enveloppe courante dans la variable membre $transactions
+   */
+  public function initTransactions() {
+	if (isset($this->id)) {
+	  $this->transactions = ActesEnvelope::getTransactionsForEnvelope($this->envelope_id);
+	}
+  }
+
+  /**
+   * \brief Méthode d'obtention de la liste des transactions pour une enveloppe
+   * \param $id integer : Identifiant de l'enveloppe pour laquelle récupérer les transactions
+   * \return Tableau d'objet ActesTransaction correspondant à l'enveloppe spécifiée
+  */
+  public static function getTransactionsForEnvelope($id) {
+	$transac = array();
+
+	if (! empty($id)) {
+	  $sql = "SELECT actes_transactions.id FROM actes_transactions WHERE actes_transactions.envelope_id = " . $id;
+
+	  $db =DatabasePool::getInstance();
+
+	  $result = $db->select($sql);
+
+	  if (! $result->isError()) {
+		while ($row = $result->get_next_row()) {
+		  $obj = new ActesTransaction($row["id"]);
+		  if ($obj->init()) {
+			$transac[] = $obj;
+		  }
+		}
+	  }
+	}
+
+	return $transac;
+  }
+
+  /**
    * \brief Méthode de remise à zéro de la liste des transactions pour l'enveloppe courante
    */
   public function resetTransactions() {
@@ -98,25 +261,16 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération des transactions de l'enveloppe courante dans la variable membre $transactions
-   */
-  public function initTransactions() {
-	if (isset($this->id)) {
-	  $this->transactions = ActesEnvelope::getTransactionsForEnvelope($this->envelope_id);
-	}
-  }
-
-  /**
    * \brief Méthode de création du fichier XML de l'enveloppe
    * \return True en cas de succès, false sinon
    */
   public function generateEnvelopeXMLFile($serial) {
-  
+
   	if (count($this->transactions) <= 0) {
 		$this->errorMsg = "Informations manquantes pour générer l'enveloppe (pas de transaction)";
 		return false;
   	}
-  	
+
 	$this->envXmlFile = $this->destDir . "/" . ACTES_APPLI_NAME . "--" . $this->siren . '--' . date('Ymd') . '-' . $serial . '.xml';
 
 
@@ -153,13 +307,13 @@ class ActesEnvelope extends DataObject {
 
     $xml .= " <actes:FormulairesEnvoyes>\n";
 
-	
+
 	foreach ($this->transactions as $transac) {
 		$xml .= "  <actes:Formulaire>\n";
 		$xml .= "   <actes:NomFichier>" . Helpers::escapeForXML(basename($transac->get("xmlFileName"))) . "</actes:NomFichier>\n";
 		$xml .= "  </actes:Formulaire>\n";
 	}
-	
+
 
     $xml .= " </actes:FormulairesEnvoyes>\n";
     $xml .= "</actes:EnveloppeCLMISILL>\n";
@@ -170,7 +324,7 @@ class ActesEnvelope extends DataObject {
   /**
    * \brief Méthode d'écriture du fichier enveloppe
    * \param $xml chaîne : contenu du fichier à écrire
-   * \return 
+   * \return
    */
   public function writeEnvFile($xml) {
 	if (! Helpers::createDirTree(dirname($this->rootDir . '/' . $this->envXmlFile))) {
@@ -193,33 +347,6 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief Méthode de construction de la liste des fichiers contenu dans l'enveloppe
-   */
-  public function buildFileList() {
-	// Fichier XML de l'enveloppe
-	$this->fileList[] = array( "name" => basename($this->envXmlFile), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" .$this->envXmlFile));
-
-	if (count($this->transactions) > 0) {
-	  foreach ($this->transactions as $transac) {
-		// Fichier XML de l'acte
-		$this->fileList[] = array( "name" => basename($transac->get("xmlFileName")), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" . $transac->get("xmlFileName")));
-		
-		// Fichier de l'acte (optionnel)
-		if (isset($transac->files["acte"])) {
-		  $this->fileList[] = array( "name" => basename($transac->files["acte"]["name"]), "type" => $transac->files["acte"]["mimetype"], "size" => $transac->files["acte"]["size"]);
-		}
-
-		// Pièces jointes (optionnelles)
-		if (isset($transac->files["attachment"])) {
-		  foreach ($transac->files["attachment"] as $attachment) {
-			$this->fileList[] = array( "name" => basename($attachment["name"]), "type" => $attachment["mimetype"], "size" => $attachment["size"]);
-		  }
-		}
-	  }
-	}
-  }
-
-  /**
    * \brief Méthode de génération de l'archive finale .tar.gz
    * \return True en cas de succès, false sinon
    */
@@ -239,9 +366,9 @@ class ActesEnvelope extends DataObject {
 		}
 
 		$filesDir = $this->rootDir . "/" . $this->destDir;
-		
-		
-		
+
+
+
 		$filesDir .= (empty($this->tmpDir)) ? "" : "/" . $this->tmpDir;
 
 		if (! chdir($filesDir)) {
@@ -249,7 +376,7 @@ class ActesEnvelope extends DataObject {
 		  return false;
 		} else {
 		  $cmd = 'tar cf - ';
-		  
+
 		  if (empty($this->tmpDir)) {
 			foreach ($this->fileList as $file) {
 			  $cmd .= " " . $file["name"];
@@ -258,10 +385,10 @@ class ActesEnvelope extends DataObject {
 			// Mode import, on prend tous les fichiers du répertoire
 			$cmd .= " * ";
 		  }
-		  
+
 		  $cmd .= ' |gzip -9 > ' . $this->rootDir . "/" . $this->file_path;
-		  
-		  
+
+
 		  $status = system($cmd, $ret);
 
 		  if ($status === false || $ret != 0) {
@@ -290,6 +417,33 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
+   * \brief Méthode de construction de la liste des fichiers contenu dans l'enveloppe
+   */
+  public function buildFileList() {
+	// Fichier XML de l'enveloppe
+	$this->fileList[] = array( "name" => basename($this->envXmlFile), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" .$this->envXmlFile));
+
+	if (count($this->transactions) > 0) {
+	  foreach ($this->transactions as $transac) {
+		// Fichier XML de l'acte
+		$this->fileList[] = array( "name" => basename($transac->get("xmlFileName")), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" . $transac->get("xmlFileName")));
+
+		// Fichier de l'acte (optionnel)
+		if (isset($transac->files["acte"])) {
+		  $this->fileList[] = array( "name" => basename($transac->files["acte"]["name"]), "type" => $transac->files["acte"]["mimetype"], "size" => $transac->files["acte"]["size"]);
+		}
+
+		// Pièces jointes (optionnelles)
+		if (isset($transac->files["attachment"])) {
+		  foreach ($transac->files["attachment"] as $attachment) {
+			$this->fileList[] = array( "name" => basename($attachment["name"]), "type" => $attachment["mimetype"], "size" => $attachment["size"]);
+		  }
+		}
+	  }
+	}
+  }
+
+  /**
    * \brief Méthode d'importation d'une enveloppe .tar.gz déjà constituée
    * \param $name chaîne : Nom du fichier original de l'archive
    * \param $path chaîne : Chemin vers le fichier dans le système de fichier local
@@ -313,7 +467,7 @@ class ActesEnvelope extends DataObject {
 			$this->errorMsg = "Erreur système. Abandon.";
 			return false;
 		}
-		
+
 		// Vérification du format de l'archive
 		if (! $this->checkArchiveType($this->rootDir . '/' . $this->file_path)) {
 			$this->errorMsg = "Mauvais format de l'archive (.tar.gz requis).";
@@ -330,7 +484,7 @@ class ActesEnvelope extends DataObject {
 		if (! $this->checkArchiveConformity($this->rootDir . '/' . $this->file_path)) {
 			return false;
 		}
-		
+
 		$this->genTempDirectory();
 
   // Extraction de l'archive dans un répertoire temporaire
@@ -367,136 +521,6 @@ class ActesEnvelope extends DataObject {
   }
 
   return $xmlFiles;
-  }
-
-  /**
-   * \brief Méthode d'importation de l'enveloppe XML existante
-   * \return Tableau de nom de fichier XML des actes en cas de succès, false sinon
-   *
-   */
-  public function processXMLEnvelope($xmlFile) {
-	if (($this->envXmlObj = @simplexml_load_file($xmlFile)) === false) {
-	  $this->errorMsg = "Erreur lors de l'importation du fichier XML de l'enveloppe.";
-	  return false;
-	}
-
-	// Extraction des informations du XML pour initialiser l'enveloppe
-	$namespaces = $this->envXmlObj->getDocNamespaces();
-	// Récupération des éléments dans le namespace "actes"
-	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
-	$this->name = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Nom);
-	$this->telephone = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Telephone);
-	$this->email = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Email);
-
-	// Vérification SIREN enveloppe <=> posteur
-	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["insee"]);
-	if (strcmp($this->siren, utf8_decode($authority_attr['SIREN'])) != 0) {
-	  $this->errorMsg = "Le numéro de SIREN contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
-	  return false;
-	}
-	
-	// Vérification type de collectivité enveloppe <=> posteur
-	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["actes"]);
-	if ($this->authority_type_code != utf8_decode($authority_attr['Nature'])) {
-	  $this->errorMsg = "Le type de collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
-	  return false;
-	}
-	
-	// Vérification département enveloppe <=> posteur
-	$department = Helpers::getFromXMLElt($authority_attr['Departement']);
-	if (strcmp($this->department, $department) != 0) {
-	  $this->errorMsg = "Le département de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
-	  return false;
-	}
-	
-	// Vérification arrondissement enveloppe <=> posteur
-	$district = Helpers::getFromXMLElt($authority_attr['Arrondissement']);
-	if (strcmp($this->district, $district) != 0) {
-	  $this->errorMsg = "L'arrondissement de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
-	  return false;
-	}
-	
-	// Ajout adresse de retour du TdT
-	if (($this->envXmlObj = $this->xmlAddTDTReturnMail()) === false) {
-	  return false;
-	}
-	
-	// Rafraichissement des éléments Actes
-	$namespaces = $this->envXmlObj->getDocNamespaces();
-	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
-	
-	// Récupération adresses de retour
-	$return_mails = $actesItems->AdressesRetour;
-	
-	$mails = array();
-	foreach ($return_mails->Email as $mail) {
-	  $mails[] = sprintf("%s", $mail);
-	}
-	
-	$this->return_mail = implode('|', $mails);
-	
-	// Extraction des noms des fichiers XML décrivant les messages contenus dans l'enveloppe
-	$xmlFiles = array();
-	$messages = $actesItems->FormulairesEnvoyes;
-
-	foreach ($messages->Formulaire as $message) {
-	  $xmlFiles[] = $this->destDir . "/" . $this->tmpDir . "/" . sprintf("%s", $message->NomFichier);
-	}
-
-	return $xmlFiles;
-  }
-
-  /**
-   * \brief Méthode d'ajout de l'adresse mail de retour du TdT dans le fichier XML enveloppe
-   * \return Un objet SimpleXMLElement en cas de succès, false sinon
-   *
-   */
-  public function xmlAddTDTReturnMail() {
-	// La version PHP 5.1.2 ne contient pas la méthode addChild sur un SimpleXMLElement
-	// (apparition en 5.1.4).
-	// Il faut donc passer par DOM pour modifier le fichier XML
-	if (($domElt = @dom_import_simplexml($this->envXmlObj)) === false) {
-	  $this->errorMsg = "Erreur XML.";
-	  return false;
-	}
-
-	$dom = new DOMDocument('1.0', 'iso-8859-1');
-	$domElt = $dom->importNode($domElt, true);
-	$domElt = $dom->appendChild($domElt);
-
-	// TODO : voir comment récupérer l'URI du namespace depuis le fichier
-	$newMail = new DOMElement("actes:Email", ACTES_TDT_MAIL_ADDRESS, "http://www.interieur.gouv.fr/ACTES#v1.1-20040216");
-
-	$mailList = $dom->getElementsByTagName("AdressesRetour");
-	$mailList->item(0)->appendChild($newMail);
-
-	return simplexml_import_dom($dom);
-  }
-
-  /**
-   * \brief Méthode d'extraction d'une enveloppe archive .tar.gz
-   * \param $dest chaîne : répertoire de destination de l'extraction
-   * \return True en cas de succès, false sinon
-   *
-   * L'extraction est faite dans le répertoire tmpDir
-   * en dessous du répertoire de l'archive.
-   *
-   */
-  public function extractArchive($dest) {
-	if (! Helpers::createDirTree($dest)) {
-	  $this->errorMsg = "Erreur système de fichiers.";
-	  return false;
-	}
-
-	$cmd = "gzip -d -c " . $this->rootDir . '/' . $this->file_path . " | tar xf - --directory " . $dest . " >/dev/null 2>&1";
-
-	exec($cmd, $output, $ret);
-
-	if ($ret != 0) {
-	  return false;
-	} else {
-	  return true;
-	}
   }
 
   /**
@@ -559,6 +583,146 @@ class ActesEnvelope extends DataObject {
 		$this->errorMsg =$this->file_path." n'existe pas ou il est vide.";
 	return false;
   }
+  
+  /**
+   * \brief Méthode de génération d'un répertoire temporaire avec un nom aléatoire
+  */
+  private function genTempDirectory() {
+	$this->tmpDir = Helpers::genTempName();
+  }
+
+  /**
+   * \brief Méthode d'extraction d'une enveloppe archive .tar.gz
+   * \param $dest chaîne : répertoire de destination de l'extraction
+   * \return True en cas de succès, false sinon
+   *
+   * L'extraction est faite dans le répertoire tmpDir
+   * en dessous du répertoire de l'archive.
+   *
+   */
+  public function extractArchive($dest) {
+	if (! Helpers::createDirTree($dest)) {
+	  $this->errorMsg = "Erreur système de fichiers.";
+	  return false;
+	}
+
+	$cmd = "gzip -d -c " . $this->rootDir . '/' . $this->file_path . " | tar xf - --directory " . $dest . " >/dev/null 2>&1";
+
+	exec($cmd, $output, $ret);
+
+	if ($ret != 0) {
+	  return false;
+	} else {
+	  return true;
+	}
+  }
+
+  /**
+   * \brief Méthode d'importation de l'enveloppe XML existante
+   * \return Tableau de nom de fichier XML des actes en cas de succès, false sinon
+   *
+   */
+  public function processXMLEnvelope($xmlFile) {
+	if (($this->envXmlObj = @simplexml_load_file($xmlFile)) === false) {
+	  $this->errorMsg = "Erreur lors de l'importation du fichier XML de l'enveloppe.";
+	  return false;
+	}
+
+	// Extraction des informations du XML pour initialiser l'enveloppe
+	$namespaces = $this->envXmlObj->getDocNamespaces();
+	// Récupération des éléments dans le namespace "actes"
+	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
+	$this->name = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Nom);
+	$this->telephone = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Telephone);
+	$this->email = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Email);
+
+	// Vérification SIREN enveloppe <=> posteur
+	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["insee"]);
+	if (strcmp($this->siren, utf8_decode($authority_attr['SIREN'])) != 0) {
+	  $this->errorMsg = "Le numéro de SIREN contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
+	  return false;
+	}
+
+	// Vérification type de collectivité enveloppe <=> posteur
+	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["actes"]);
+	if ($this->authority_type_code != utf8_decode($authority_attr['Nature'])) {
+	  $this->errorMsg = "Le type de collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
+	  return false;
+	}
+
+	// Vérification département enveloppe <=> posteur
+	$department = Helpers::getFromXMLElt($authority_attr['Departement']);
+	if (strcmp($this->department, $department) != 0) {
+	  $this->errorMsg = "Le département de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
+	  return false;
+	}
+
+	// Vérification arrondissement enveloppe <=> posteur
+	$district = Helpers::getFromXMLElt($authority_attr['Arrondissement']);
+	if (strcmp($this->district, $district) != 0) {
+	  $this->errorMsg = "L'arrondissement de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
+	  return false;
+	}
+
+	// Ajout adresse de retour du TdT
+	if (($this->envXmlObj = $this->xmlAddTDTReturnMail()) === false) {
+	  return false;
+	}
+
+	// Rafraichissement des éléments Actes
+	$namespaces = $this->envXmlObj->getDocNamespaces();
+	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
+
+	// Récupération adresses de retour
+	$return_mails = $actesItems->AdressesRetour;
+
+	$mails = array();
+	foreach ($return_mails->Email as $mail) {
+	  $mails[] = sprintf("%s", $mail);
+	}
+
+	$this->return_mail = implode('|', $mails);
+
+	// Extraction des noms des fichiers XML décrivant les messages contenus dans l'enveloppe
+	$xmlFiles = array();
+	$messages = $actesItems->FormulairesEnvoyes;
+
+	foreach ($messages->Formulaire as $message) {
+	  $xmlFiles[] = $this->destDir . "/" . $this->tmpDir . "/" . sprintf("%s", $message->NomFichier);
+	}
+
+	return $xmlFiles;
+  }
+
+  /**
+   * \brief Méthode d'ajout de l'adresse mail de retour du TdT dans le fichier XML enveloppe
+   * \return Un objet SimpleXMLElement en cas de succès, false sinon
+   *
+   */
+  public function xmlAddTDTReturnMail() {
+	// La version PHP 5.1.2 ne contient pas la méthode addChild sur un SimpleXMLElement
+	// (apparition en 5.1.4).
+	// Il faut donc passer par DOM pour modifier le fichier XML
+	if (($domElt = @dom_import_simplexml($this->envXmlObj)) === false) {
+	  $this->errorMsg = "Erreur XML.";
+	  return false;
+	}
+
+	$dom = new DOMDocument('1.0', 'iso-8859-1');
+	$domElt = $dom->importNode($domElt, true);
+	$dom->appendChild($domElt);
+
+	// TODO : voir comment récupérer l'URI du namespace depuis le fichier
+	$newMail = new DOMElement("actes:Email", ACTES_TDT_MAIL_ADDRESS, "http://www.interieur.gouv.fr/ACTES#v1.1-20040216");
+
+	$mailList = $dom->getElementsByTagName("AdressesRetour");
+	  if ($mailList->length <= 0) {
+		  $this->errorMsg = "L'enveloppe ne contient pas la balise AdressesRetour";
+		return false;
+	  }
+	  $mailList->item(0)->appendChild($newMail);
+	return simplexml_import_dom($dom);
+  }
 
   /**
    * \brief Méthode de vérification antivirus de l'archive
@@ -570,10 +734,10 @@ class ActesEnvelope extends DataObject {
 	  if (! $path) {
 		$path = $this->rootDir . '/' . $this->file_path;
 	  }
-	  
+
 		$new_file = ANTIVIRUS_TMP_PATH . basename($path);
 		Trace::wrap_exec("cp $path $new_file",$output, $ret);
-		
+
 		if ( $ret != 0 ){
 			$t = Trace::getInstance();
 			$this->errorMsg="Impossible de copier $path vers $new_file";
@@ -582,10 +746,10 @@ class ActesEnvelope extends DataObject {
 		}
 
 		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
-	 	
+
 		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . $new_file, $output, $ret);
 		Trace::wrap_exec("rm $new_file",$output2, $ret2);
-		
+
 
 	  switch ($ret) {
 	  case 0:
@@ -602,14 +766,14 @@ class ActesEnvelope extends DataObject {
 		}
 		return false;
 		break;
-		
+
 	  default:
 		  $result = implode("\n",$output);
 	  	mail(EMAIL_ADMIN, "Erreur lors du scan antivirus des actes","Message de l'antivirus : $result");
 	  	throw new Exception("Clamdscan unexpected error : " . $result);
 	  }
 	}
-	$this->errorMsg="Error: path=".$path." and this->file_path=".$this->file_path; 
+	$this->errorMsg="Error: path=".$path." and this->file_path=".$this->file_path;
 	return false;
   }
 
@@ -618,21 +782,21 @@ class ActesEnvelope extends DataObject {
    * \return True en cas de succès, false si l'archive n'est pas conforme
    */
   public function externalArchiveCheck() {
-  	
-  	
+
+
 	if (isset($this->file_path) && ! empty($this->file_path)) {
 		return $this->externalArchiveCheckFromFile($this->file_path);
-	
+
 	}
   }
-  
+
   public function externalArchiveCheckFromFile($file_path){
-    
+
   	$trace = Trace::getInstance();
   	$trace->log("Check du fichier $file_path");
-  	
+
   	$cHandle = curl_init(ACTES_CHECK_ARCHIVE_SERVLET . "?file=" . $file_path);
-	
+
 	  curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
 	  curl_setopt($cHandle, CURLOPT_HEADER, false);
 	  if (($ret = curl_exec($cHandle)) === false) {
@@ -643,7 +807,7 @@ class ActesEnvelope extends DataObject {
 
 	  curl_close($cHandle);
 	  $res = explode("\n", $ret);
-	  
+
 	  if (strcmp(trim($res[0]), "OK") == 0) {
 		return true;
 	  } else {
@@ -652,7 +816,6 @@ class ActesEnvelope extends DataObject {
 		return false;
 	  }
   }
-
 
   /**
    * \brief Méthode de suppression des fichiers intermédiaires ayant servi à la contruction de l'archive
@@ -690,25 +853,6 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief Méthode de suppression du fichier archive .tar.gz
-   * \return True en cas de succès, false sinon
-  */
-  public function deleteArchiveFile() {
-	if (isset($this->file_path)) {
-	  if (! @unlink(ACTES_FILES_UPLOAD_ROOT . "/" . $this->file_path)) {
-		$this->errorMsg .= "Erreur lors de la tentative de suppression du fichier archive.";
-		return false;
-	  } else {
-		// Tentative de suppression du répertoire contenant
-		@rmdir(ACTES_FILES_UPLOAD_ROOT . "/" . dirname($this->file_path));
-		return true;
-	  }
-	}
-
-	return false;
-  }
-
-  /**
    * \brief Méthode de contrôle de la cloture de toutes les transactions d'une enveloppe puis suppression de l'archive
    * \return True en cas de suppression, false sinon
   */
@@ -738,6 +882,31 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
+   * \brief Méthode de suppression du fichier archive .tar.gz
+   * \return True en cas de succès, false sinon
+  */
+  public function deleteArchiveFile() {
+	if (isset($this->file_path)) {
+	  if (! @unlink(ACTES_FILES_UPLOAD_ROOT . "/" . $this->file_path)) {
+		$this->errorMsg .= "Erreur lors de la tentative de suppression du fichier archive.";
+		return false;
+	  } else {
+		// Tentative de suppression du répertoire contenant
+		@rmdir(ACTES_FILES_UPLOAD_ROOT . "/" . dirname($this->file_path));
+		return true;
+	  }
+	}
+
+	return false;
+  }
+
+
+
+  /**********************/
+  /* Méthodes statiques */
+  /**********************/
+
+  /**
    * \brief Méthode qui renvoie le fichier archive .tar.gz au navigateur
    */
   public function sendFile() {
@@ -759,14 +928,6 @@ class ActesEnvelope extends DataObject {
 	return $ret_value;
   }
 
-
-  /**
-   * \brief Méthode de génération d'un répertoire temporaire avec un nom aléatoire
-  */
-  private function genTempDirectory() {
-	$this->tmpDir = Helpers::genTempName();
-  }
-
   /**
    * \brief Méthode d'obtention du numéro de série suivant pour la génération du nom du fichier XML enveloppe
    * \param $authority Authority (optionnel) : objet représentant la collectivité demandeuse du numéro
@@ -781,8 +942,8 @@ class ActesEnvelope extends DataObject {
 			$user->init();
 			$authority_id =  $user->get("authority_id");
 	  	}
-		
-	  	
+
+
 	  if (! $this->db->begin()) {
 		$this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
 		return false;
@@ -826,7 +987,7 @@ class ActesEnvelope extends DataObject {
 			}
 		  } else {
 			// Mise à jour aujourd'hui => on incrémente le numéro de série
-			
+
 		  // pour le bug 240, modifié par HTan, 15-12-2008
 			if ($row['serial']>=10000 || $row['serial']<=0)
 			{
@@ -834,7 +995,7 @@ class ActesEnvelope extends DataObject {
 				return false;
 			}
 			//-----
-			
+
 			$sql = "UPDATE actes_envelope_serials SET serial=serial+1 WHERE authority_id=$authority_id";
 
 			if (! $this->db->exec($sql)) {
@@ -851,7 +1012,7 @@ class ActesEnvelope extends DataObject {
 		$this->errorMsg = "Erreur d'accès base de données.";
 		return false;
 	  }
-	
+
   }
 
   /**
@@ -898,7 +1059,7 @@ class ActesEnvelope extends DataObject {
 	  $this->db->rollback();
       return false;
 	}
-	
+
     return true;
   }
 
@@ -964,172 +1125,5 @@ class ActesEnvelope extends DataObject {
 	}
 
     return $this->data;
-  }
-
-
-
-  /**********************/
-  /* Méthodes statiques */
-  /**********************/
-
-  /**
-   * \brief Méthode d'obtention de la liste des transactions pour une enveloppe
-   * \param $id integer : Identifiant de l'enveloppe pour laquelle récupérer les transactions
-   * \return Tableau d'objet ActesTransaction correspondant à l'enveloppe spécifiée
-  */
-  public static function getTransactionsForEnvelope($id) {
-	$transac = array();
-
-	if (! empty($id)) {
-	  $sql = "SELECT actes_transactions.id FROM actes_transactions WHERE actes_transactions.envelope_id = " . $id;
-
-	  $db =DatabasePool::getInstance();
-
-	  $result = $db->select($sql);
-	 
-	  if (! $result->isError()) {
-		while ($row = $result->get_next_row()) {
-		  $obj = new ActesTransaction($row["id"]);
-		  if ($obj->init()) {
-			$transac[] = $obj;
-		  }
-		}
-	  }
-	}
-
-	return $transac;
-  }
-
-  /**
-   * \brief Méthode d'obtention de la liste des identifiants des enveloppes
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \param $transmitted_only booléen (optionnel) : Ne considère que les enveloppes réellement transmises si true (false par défaut)
-   * \return Tableau des identifiants des enveloppes
-  */
-  public static function getEnvelopesId($cond = false, $transmitted_only = false) {
-	$sql = "SELECT DISTINCT actes_envelopes.id FROM actes_envelopes"
-	  . " LEFT JOIN users ON actes_envelopes.user_id=users.id"
-	  . " LEFT JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
-	  . " LEFT JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id";
-
-	if ($transmitted_only) {
-	  if ($cond) {
-		$cond .= " AND ";
-	  } else {
-		$cond = "";
-	  }
-
-	  $cond .= " actes_transactions_workflow.status_id=3";
-	}
-
-	if ($cond) {
-	  $sql .= " WHERE " . $cond;
-	}
-
-	$db =DatabasePool::getInstance();
-
-	$result = $db->select($sql);
-	
-	if (! $result->isError()) {
-	  return $result->get_all_rows();
-	}
-  
-	return false;
-  }
-
-  /**
-   * \brief Méthode d'obtention du volume transmis depuis une période donnée ou depuis toujours
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \param $transmitted_only booléen (optionnel) : Ne considère que les enveloppes réellement transmises si true (false par défaut)
-   * \return Volume en octet correspondant à la demande
-  */
-  public static function getEnvelopesVolume($cond = false, $transmitted_only = false) {
-	$sql = "SELECT SUM(actes_envelopes.file_size) AS sum FROM actes_envelopes actes_envelopes"
-	  . " LEFT JOIN users ON actes_envelopes.user_id=users.id"
-	  . " LEFT JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
-	  . " LEFT JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id";
-
-	$filter = array();
-
-	if ($cond) {
-	  $filter[] = $cond;
-	}
-
-	if ($transmitted_only) {
-	  $filter[] = "actes_transactions_workflow.status_id=3";
-	} else {
-	  $filter[] = "actes_transactions_workflow.status_id=1";
-	}
-
-	// Pour éviter les doublons
-	$filter[] = "actes_transactions.id=(SELECT MIN(actes_transactions.id) FROM actes_transactions WHERE actes_transactions.envelope_id=actes_envelopes.id)";
-
-	$sql .= " WHERE " . implode(" AND ", $filter);
-	
-	$db =DatabasePool::getInstance();
-
-	$result = $db->select($sql);
-	
-	if (! $result->isError()) {
-	  $row = $result->get_next_row();
-	  return $row["sum"];
-	}
-  
-	return false;
-  }
-
-  /**
-   * \brief Méthode d'obtention de la liste des fichiers inclus dans une enveloppe
-   * \param $env_id integer : Identifiant de l'enveloppe concernée
-   * \return Tableau de noms de fichier
-  */
-  public static function getEnvelopesIncludedFiles($env_id) {
-	$sql = "SELECT filename FROM actes_included_files WHERE envelope_id=" . $env_id;
-
-	$db =DatabasePool::getInstance();
-
-	$result = $db->select($sql);
-	
-	if (! $result->isError()) {
-	  return $result->get_all_rows();
-	}
-  
-	return false;
-  }
-
-  /**
-   * \brief Méthode d'obtention d'un historique d'envoi des enveloppes au serveur du ministère
-   * \param $authority_id integer (optionnel) : Identifiant de la collectivité expéditrice des enveloppes
-   * \return Tableau des données des enveloppes
-  */
-  public static function getEnvelopesHistory($authority_id = false) {
-	$sql = "SELECT DISTINCT ae.id, ae.file_path, atw.date, auth.siren, auth.department, auth.district";
-	$sql .= " FROM actes_envelopes ae";
-	$sql .= " LEFT JOIN users ON ae.user_id=users.id";
-	$sql .= " LEFT JOIN authorities auth ON users.authority_id=auth.id";
-	$sql .= " LEFT JOIN actes_transactions at ON at.envelope_id=ae.id";
-	$sql .= " LEFT JOIN actes_transactions_workflow atw ON atw.transaction_id=at.id";
-	// On veut récupérer la date où la transaction a été transmise => statut 3
-	$sql .= " WHERE atw.status_id=3";
-
-	if ($authority_id) {
-	  $sql .= " AND auth.id=" . $authority_id;
-	}
-
-	$sql .= " ORDER BY atw.date DESC";
-
-	$db =DatabasePool::getInstance();
-
-	$result = $db->select($sql);
-	
-	$env = array();
- 
-	if (! $result->isError()) {
-	  while ($row = $result->get_next_row()) {
-		$env[] = $row;
-	  }
-	}
-  
-	return $env;
   }
 }
