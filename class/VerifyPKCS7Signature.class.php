@@ -55,6 +55,19 @@ class VerifyPKCS7SIgnature {
 		}
 	}
 
+	public function verifyCertificate($signature_content){
+		$signature_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
+		file_put_contents($signature_path,$signature_content);
+		$certificate = $this->getCertificate($signature_path);
+		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
+		file_put_contents($certificate_path, $certificate);
+		try {
+			$this->checkCertificate($certificate_path);
+		} finally {
+			unlink($signature_path);
+			unlink($certificate_path);
+		}
+	}
 
 	private function getCertificate($signatureFileName){
 		$extractCmd = "openssl pkcs7 -in " . $signatureFileName . " -print_certs | openssl x509";

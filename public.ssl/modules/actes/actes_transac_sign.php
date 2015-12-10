@@ -42,6 +42,12 @@ try{
 		$signature = base64_decode(Helpers::getVarFromPost("signature_$i"));
 		$signature_id = Helpers::getVarFromPost("signature_id_$i");
 		$all_transaction_id[] = $actesSignature->setSignature($signature_id, $signature);
+
+		/** Vérifier la signature ici */
+		$verifyPKCS7Signature = new VerifyPKCS7SIgnature(AUTHORIZED_SIGN_CA_PATH);
+		$verifyPKCS7Signature->verifyCertificate($signature);
+
+
 	} 
 } catch (Exception $e){
 	$_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
