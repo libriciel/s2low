@@ -56,6 +56,7 @@ class XadesSignature {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 
 		$command = "{$this->xmlsec1_path} --sign --node-xpath \"$xpath\" --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
+
 		exec($command,$output,$return_var);
 
 		unlink($tmp_file);
