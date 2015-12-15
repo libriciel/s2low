@@ -208,6 +208,8 @@ class XadesSignature {
 	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id) {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+echo $command;
+		exit;
 		exec($command,$output,$return_var);
 		$this->last_output = implode("\n",$output);
 		return $return_var == 0;

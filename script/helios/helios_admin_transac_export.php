@@ -6,9 +6,10 @@ require_once( __DIR__."/../../init/init.php");
 
 
 
-$general_query = "select DISTINCT helios_transactions.id, filename, sha1, file_size, date, authorities.siren, authorities.department, authorities.district FROM helios_transactions " .
+$general_query = "select DISTINCT helios_transactions.id, filename, sha1, file_size, date, authorities.siren, authorities.department, authorities.district, authority_types.description as type_authority FROM helios_transactions " .
 	" JOIN helios_transactions_workflow ON helios_transactions.id=helios_transactions_workflow.transaction_id " .
 	" JOIN authorities ON helios_transactions.authority_id = authorities.id ".
+	" JOIN authority_types ON authorities.authority_type_id = authority_types.id" .
 	" WHERE helios_transactions_workflow.date > ? " .
 	" AND helios_transactions_workflow.date < ? " .
 	" AND helios_transactions_workflow.status_id = 3".
@@ -38,7 +39,8 @@ $head = array(
 	"Taille du fichier (octets)",
 	"SIREN de la collectivité émettrice",
 	"Département de la collectivité",
-	"Arrondissement de la collectivité"
+	"Arrondissement de la collectivité",
+	"Type de la collectivité"
 );
 
 fputcsv($output_handle, $head);
@@ -61,6 +63,7 @@ foreach($datePeriod as $dt) {
 			$result[] = $row['siren'];
 			$result[] = $row['department'];
 			$result[] = $row['district'];
+			$result[] = $row['type_authority'];
 			fputcsv($output_handle, $result);
 	}
 }
