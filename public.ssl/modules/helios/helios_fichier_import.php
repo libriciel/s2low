@@ -29,6 +29,15 @@ if ($module->getParam("paper") == "on") {
   exit ();
 }
 
+
+$rgsConnexion = new RgsConnexion();
+if (! $rgsConnexion->isRgsConnexion()){
+  $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
+  header("Location: " . WEBSITE_SSL . "/modules/helios/");
+  exit ();
+}
+
+
 $myAuthority = new Authority($me->get("authority_id"));
 
 $doc = new HTMLLayout();

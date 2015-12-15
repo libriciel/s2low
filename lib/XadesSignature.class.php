@@ -200,6 +200,26 @@ class XadesSignature {
 			if (!$this->verifyIntern($xml_file_signed, $name, $id)) {
 				return false;
 			}
+
+			continue;
+
+			$certif = strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate);
+
+			$content = "-----BEGIN CERTIFICATE-----\n".$certif."\n-----END CERTIFICATE-----\n";
+			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());
+			file_put_contents($file,$content);
+
+
+			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
+			exec($command,$output,$return_var);
+
+			$this->last_output = implode("\n",$output);
+
+			unlink($file);
+
+			if ($return_var != 0){
+				return false;
+			}
 		}
 
 		return true;

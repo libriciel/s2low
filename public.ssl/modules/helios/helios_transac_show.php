@@ -172,7 +172,7 @@ if ($me->isSuper()) {
 	$actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
 	$actionHtml .= "</div></form>\n";
 
-	if( in_array($currentStatusId, array(2,3,-1)) && in_array($me->getId(),$helios_authorized_rollback_ids)){
+	if( in_array($currentStatusId, array(2,3,-1))){
 		ob_start();?>
 
 	<form
@@ -181,7 +181,7 @@ if ($me->isSuper()) {
 		onsubmit="return confirm('Êtes-vous certain de vouloir faire cela ?')"
 		>
 		<div class="form-group">
-			<label class="col-md-4 control-label">Repasser la transaction en « posté » (et supprimer la signature technique)</label>
+			<label class="col-md-4 control-label">Repasser la transaction en « posté »</label>
 			<input type="hidden" name="id" value="<?php hecho($id) ?>"/>
 			<input type="submit" value="Revenir en arrière" class="btn btn-danger" />
 		</div>
