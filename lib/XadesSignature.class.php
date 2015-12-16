@@ -207,8 +207,9 @@ class XadesSignature {
 			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());
 			file_put_contents($file,$content);
 
-			$command = OPENSSL_PATH . " x509 -hash -noout -in " . $file;
+			$command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
 			exec($command,$output,$return_var);
+
 
 			$file = $this->validca_path."/{$output[0]}.r0";
 
