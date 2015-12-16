@@ -211,9 +211,10 @@ class XadesSignature {
 			exec($command,$output,$return_var);
 
 
-			$file = $this->validca_path."/{$output[0]}.r0";
+			$file_r0 = $this->validca_path."/{$output[0]}.r0";
 
-			if (! file_exists($file)){
+
+			if (! file_exists($file_r0)){
 				continue;
 			}
 
