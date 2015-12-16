@@ -1,6 +1,6 @@
 <?php
 
-require_once("../../class/helios/HeliosPESValidation.class.php");
+require_once(__DIR__."/../../class/helios/HeliosPESValidation.class.php");
 
 $heliosPESValidation = new HeliosPESValidation(__DIR__."/../../xsd/Schemas_PES_v471_072015/");
 

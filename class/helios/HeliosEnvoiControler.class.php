@@ -72,7 +72,7 @@ class HeliosEnvoiControler {
 				continue;
 			}
 			$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), RGS_VALIDCA_PATH);
-			$heliosSignatureTechnique = new HeliosSignatureTechnique($this->heliosTransactionsSQL, HELIOS_FILES_UPLOAD_ROOT, $xadesSignature);
+			$heliosSignatureTechnique = new HeliosSignatureTechnique($this->heliosTransactionsSQL, HELIOS_FILES_UPLOAD_ROOT, $xadesSignature, HELIOS_ENABLE_SIGNATURE_TECHNIQUE);
 			$xadesSignatureProperties = new XadesSignatureProperties();
 			$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
 			$xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
@@ -106,10 +106,21 @@ class HeliosEnvoiControler {
 		libxml_use_internal_errors(false);
 	}
 	
+	private function updateStatus($transaction_id,$status_id,$message,$user_id){
+		echo $message."\n";
+		$this->heliosTransactionsSQL->updateStatus($transaction_id,$status_id,$message);
+		Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $user_id);
+	}
+	
+	//nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
+	//idColl : numéro siret de la collectivité,
+	//date : date d'envoi à Helios sous la forme AAMMJJ,
+	//numOrdr : numéro d'ordre d'envoi sur 3 chiffres.
+
 	public function sendAllTransactions(){
-		
+
 		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
-		
+
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
 
 		$nb_file_send = 0;
@@ -117,11 +128,11 @@ class HeliosEnvoiControler {
 		foreach($transaction_id_list as $transaction_id){
 			echo "Préparation de l'envoi de la transaction $transaction_id\n";
 			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
-			
+
 			if (! $this->heliosTransmissionWindowsSQL->canSend($transactionInfo['file_size'])){
 				echo "La fenêtre d'envoie est pleine \n";
 				if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)){
-					$message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";					
+					$message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
 					Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $transactionInfo['user_id']);
 					echo $message."\n";
 					mail(EMAIL_ADMIN,"Transaction Helios bloqué",$message);
@@ -129,19 +140,19 @@ class HeliosEnvoiControler {
 				}
 				continue;
 			}
-			
+
 			$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
-			
+
 			$completeName = $this->createCompleteName($transactionInfo['siren']);
 			$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
 			echo "Nom du fichier à envoyer : $completeName\n";
 			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
 
-			$file_path_with_complete_name = $file_sending_repository."/".$completeName; 
+			$file_path_with_complete_name = $file_sending_repository."/".$completeName;
 			if (! copy($file_path, $file_path_with_complete_name)){
 				echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
 				continue;
-			}			
+			}
 			if (HELIOS_ZIP_BEFORE_SEND){
 				$file_to_send = $file_sending_repository."/".$transactionInfo['sha1'].".zip";
 				$zipArchive = new ZipArchive();
@@ -188,12 +199,12 @@ class HeliosEnvoiControler {
 				echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
 				continue;
 			}
-			
+
 			$message = "Transaction $transaction_id transmise au serveur.";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::TRANSMIS,$message,$transactionInfo['user_id']);
-			
+
 			$this->heliosTransmissionWindowsSQL->addFile($transactionInfo['file_size']);
-			
+
 			if (HELIOS_ZIP_BEFORE_SEND){
 				unlink($file_to_send);
 			}
@@ -209,20 +220,15 @@ class HeliosEnvoiControler {
 
 	}
 	
-	//nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
-	//idColl : numéro siret de la collectivité,
-	//date : date d'envoi à Helios sous la forme AAMMJJ,
-	//numOrdr : numéro d'ordre d'envoi sur 3 chiffres.
 	private function createCompleteName($siren) {
 		$numero = $this->fichierCompteur->getNumero();
 		$date = date("ymd");
-		return "PESALR2_{$siren}_{$date}_{$numero}.xml";			
+		return "PESALR2_{$siren}_{$date}_{$numero}.xml";
 	}
-	
-	private function updateStatus($transaction_id,$status_id,$message,$user_id){
-		echo $message."\n";
-		$this->heliosTransactionsSQL->updateStatus($transaction_id,$status_id,$message);
-		Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $user_id);
+
+
+	public function rollback($transaction_id){
+
 	}
 	
 }

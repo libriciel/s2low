@@ -13,7 +13,9 @@ $root_name = strtolower($xml->getName());
 if ($root_name == 'pes_retour'){
 	$schema_location = $schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd";
 } else {
-	$schema_location = $schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome.xsd";
+	//$schema_location = $schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome.xsd";
+	$schema_location = $schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome_V2.xsd";
+
 }
 
 libxml_use_internal_errors(true);

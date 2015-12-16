@@ -20,30 +20,26 @@ class HeliosAnalyseFichierRecu {
 		$this->authoritySiretSQL = $authoritySiretSQL;
 	}
 	
-	private function log($message){
-		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
-	}
-	
 	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path){
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
-		
+
 		$this->log("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
-		
+
 		$file_list = scandir($helios_ftp_response_tmp_local_path);
-		
+
 		if ($file_list === false){
 			$this->log("[ECHEC] Erreur lors de la lecture du répertoire  $helios_ftp_response_tmp_local_path");
 			return;
 		}
 		;
 		$file_list = array_diff($file_list, array('..', '.'));
-		
+
 		if (!$file_list){
 			$this->log("Aucun fichier à analyser");
 			return;
 		}
 		$this->log("Traitement de ".count($file_list)." fichiers trouvés");
-		
+
 		$erreur_list = array();
 		foreach($file_list as $file){
 			try {
@@ -53,7 +49,7 @@ class HeliosAnalyseFichierRecu {
 				$erreur_list[$file] = $e->getMessage();
 			}
 		}
-		
+
 		if ($erreur_list){
 			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de récupération des fichier PES_Acquit/PES_Retour";
 			$msg = "";
@@ -63,7 +59,7 @@ class HeliosAnalyseFichierRecu {
 			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
 			$this->sendMailToAdmin($subject, $msg);
 		}
-		
+
 		foreach($erreur_list as $file => $message){
 			if (file_exists($helios_responses_error_path."/".$file)){
 				$this->log("[ERREUR] Impossible de déplacer le fichier $file dans le répertoire des fichiers en erreur : le fichier existe déjà");
@@ -74,55 +70,72 @@ class HeliosAnalyseFichierRecu {
 		}
 	}
 	
-	private function sendMailToAdmin($subject,$msg){
-		mail($this->email_admin,$subject,$msg);
+	private function log($message){
+		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
 	}
 	
 	private function analyseOneFile($file_path,$helios_response_root){
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
-		
+
 		$xml = simplexml_load_file($file_path);
 		if (! $xml){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
 		}
 		$root_name = strtolower($xml->getName());
-		
+
 		if ($root_name == 'pes_retour'){
-			$schema_location = $this->schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd"; 
+			$schema_location = $this->schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd";
 		} else {
-			$schema_location = $this->schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome.xsd";
+			$schema_location = $this->schema_pes_path."/PES_V2/Rev0/PES_V2_Acquit_Autonome_V2.xsd";
 		}
-		
+
 		libxml_use_internal_errors(true);
 		$dom = new DOMDocument();
 		$dom->load($file_path);
-		
+
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
-		
+
 		if ($errors){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
 		}
 		$dom->schemaValidate($schema_location);
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
-		
+
 		if ($errors){
 			print_r($errors);
 			throw new Exception("Le fichier $basename n'est pas valide (fichier ignoré)");
 		}
-		
+
 		switch($root_name){
 			case 'pes_acquit': $this->traitementAck($basename,$xml); break;
 			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
 			case 'pes_retour' : $this->traitementPESRetour($basename,$xml); break;
 			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
 		}
-		
+
 		if (! rename($file_path,$helios_response_root."/".$basename)){
 			throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
 		}
+	}
+	
+	private function traitementAck($basename,SimpleXMLElement $xml){
+		$helios_transaction_id = $this->retrieveTransaction($xml);
+
+		$this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
+
+		if (count($xml->ACQUIT) == 0){
+			$message = "Transaction $helios_transaction_id acceptee";
+			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
+		} else {
+			$message = "Transaction $helios_transaction_id : information disponible";
+			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
+		}
+		$this->log($message);
+		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
+
 	}
 	
 	private function retrieveTransaction(SimpleXMLElement $xml) {
@@ -138,31 +151,14 @@ class HeliosAnalyseFichierRecu {
 		return $helios_transaction_id;		
 	}
 	
-	private function traitementAck($basename,SimpleXMLElement $xml){
-		$helios_transaction_id = $this->retrieveTransaction($xml);
-		
-		$this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
-		
-		if (count($xml->ACQUIT) == 0){
-			$message = "Transaction $helios_transaction_id acceptee";
-			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
-		} else {
-			$message = "Transaction $helios_transaction_id : information disponible";
-			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
-		}
-		$this->log($message);
-		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
-	
-	}
-	
 	private function traitementNack($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
-	
+
 		$this->log("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
-	
+
 		$message = "Transaction $helios_transaction_id refusée";
 		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message);
-		
+
 		$this->log($message);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 	}
@@ -180,7 +176,11 @@ class HeliosAnalyseFichierRecu {
 		}
 		$authority_id = $authority_list[0]['authority_id'];
 
-		$this->heliosRetourSQL->add($authority_id, $siret, $basename);		
+		$this->heliosRetourSQL->add($authority_id, $siret, $basename);
+	}
+	
+	private function sendMailToAdmin($subject,$msg){
+		mail($this->email_admin,$subject,$msg);
 	}
 	
 	

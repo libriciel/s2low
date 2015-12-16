@@ -29,6 +29,12 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 
 $transaction_id = Helpers :: getVarFromGet("id");
 
+if (! $transaction_id){
+  $_SESSION["error"] = "Id non trouvé";
+  header("Location: " . WEBSITE_SSL);
+  exit ();
+}
+
 //tmp
 //echo "Transaction:" . $transaction_id;
 

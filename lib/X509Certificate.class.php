@@ -35,6 +35,17 @@ class X509Certificate {
 		return $result;		
 	}
 	
+	public function getBase64Hash($cert_content, $hash_alg = 'sha1') {
+		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem");
+		file_put_contents($tmp_file,$cert_content);
+
+		$command = "openssl x509 -in $tmp_file -outform der | openssl $hash_alg -binary | openssl base64";
+		exec($command,$output,$return_var);
+		$certDigest = $output[0];
+		unlink($tmp_file);
+		return $certDigest;
+	}
+	
 	public function getExpirationDate($pem_certificate_content){
 		$info = $this->getInfo($pem_certificate_content);
 		if ( ! $info){
@@ -42,7 +53,7 @@ class X509Certificate {
 		}
 		return $info['expiration_date'];
 	}
-	
+
 	public function getInfo($pem_certificate_content){
 		if (! $pem_certificate_content){
 			return false;
@@ -63,28 +74,6 @@ class X509Certificate {
 		return $info;
 	}
 
-	public function getIssuerDN($pem_certificate_content){
-		$info = $this->getInfo($pem_certificate_content);
-
-		$issuerName = "";
-		foreach(array_reverse($info['issuer']) as $document_id => $value){
-			$issuerName[] = "$document_id=$value";
-		}
-		return implode(", ",$issuerName);
-	}
-
-	public function getBase64Hash($cert_content, $hash_alg = 'sha1')
-	{
-		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem");
-		file_put_contents($tmp_file,$cert_content);
-
-		$command = "openssl x509 -in $tmp_file -outform der | openssl $hash_alg -binary | openssl base64";
-		exec($command,$output,$return_var);
-		$certDigest = $output[0];
-		unlink($tmp_file);
-		return $certDigest;
-	}
-
 	private function readCertContent($cert_content){
 		@ $resource = openssl_x509_read($cert_content);
 		if (! $resource){
@@ -97,6 +86,20 @@ class X509Certificate {
 		preg_match_all("#(\d\d)#",$validTo,$matches);
 		$m = $matches[0];
 		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+	}
+
+	public function getIssuerDN($pem_certificate_content,$strtoupper = false){
+		$info = $this->getInfo($pem_certificate_content);
+
+		$issuerName = "";
+		foreach(array_reverse($info['issuer']) as $document_id => $value){
+			if ($strtoupper) {
+				$issuerName[] = strtoupper($document_id) . "=$value";
+			} else {
+				$issuerName[] = "$document_id=$value";
+			}
+		}
+		return implode(", ",$issuerName);
 	}
 	
 	public function pemClean($not_clean_pem){

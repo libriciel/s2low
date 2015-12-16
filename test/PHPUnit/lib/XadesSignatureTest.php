@@ -2,6 +2,19 @@
 
 class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
+	public function testSignFileNotExists(){
+		$tmp_file = sys_get_temp_dir()."/".uniqid("phpunit");
+		$this->setExpectedException("Exception","failed to load external entity");
+		$this->sign($tmp_file);
+	}
+
+	private function sign($file_to_sign){
+		$signed_file = sys_get_temp_dir()."/".uniqid("phpunit");
+		$xadesSignature = $this->getXadesSignature();
+		$xadesSignature->sign($file_to_sign,__DIR__."/fixtures/robert_petitpoids.p12","robert_petitpoids",$signed_file,$this->getXadesSignatureProperties());
+		return $signed_file;
+	}
+
 	private function getXadesSignature(){
 		$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/fixtures/validca/");
 		return $xadesSignature;
@@ -16,27 +29,14 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		return $xadesSignatureProperties;
 	}
 
-	private function sign($file_to_sign){
-		$signed_file = sys_get_temp_dir()."/".uniqid("phpunit");
-		$xadesSignature = $this->getXadesSignature();
-		$xadesSignature->sign($file_to_sign,__DIR__."/fixtures/robert_petitpoids.p12","robert_petitpoids",$signed_file,$this->getXadesSignatureProperties());
-		return $signed_file;
+	public function testSign(){
+		$signed_file = $this->sign(__DIR__."/fixtures/test.xml");
+		$this->verify($signed_file);
 	}
 
 	private function verify($file_to_verify){
 		$xadesSignature = $this->getXadesSignature();
 		$this->assertTrue($xadesSignature->verify($file_to_verify));
-	}
-
-	public function testSignFileNotExists(){
-		$tmp_file = sys_get_temp_dir()."/".uniqid("phpunit");
-		$this->setExpectedException("Exception","failed to load external entity");
-		$this->sign($tmp_file);
-	}
-
-	public function testSign(){
-		$signed_file = $this->sign(__DIR__."/fixtures/test.xml");
-		$this->verify($signed_file);
 	}
 
 	public function testSignWithoutDocumentElementId(){
@@ -94,4 +94,16 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$xadesSignature = $this->getXadesSignature();
 		$this->assertFalse($xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml"));
 	}
+
+	public function testDeleteSignature(){
+		$file = __DIR__."/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml";
+
+		$result =  "/tmp/result.xml";
+		$xadesSignature = $this->getXadesSignature();
+		$this->assertTrue($xadesSignature->isSigned($file));
+		$xadesSignature->deleteSignature($file,$result);
+		$this->assertFalse($xadesSignature->isSigned($result));
+		//unset($result);
+	}
+
 }
