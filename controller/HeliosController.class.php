@@ -177,10 +177,10 @@ class HeliosController extends Controller {
 		$this->controller_exit();
 	}
 
-	public function updateSiretFromPESAller(){
+	public function updateSiretFromPESAller($min_id = 0){
 		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$id_list = $heliosTransactionSQL->getAllId();
+		$id_list = $heliosTransactionSQL->getAllId($min_id);
 		foreach($id_list as $transaction_id){
 			$info = $heliosTransactionSQL->getInfo($transaction_id);
 			$pes_aller_path = $this->helios_files_upload_root . "/" . $info['sha1'];

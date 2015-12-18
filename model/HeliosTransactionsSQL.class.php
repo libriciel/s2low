@@ -157,9 +157,9 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOne($sql,$sha1);
 	}
 
-	public function getAllId(){
-		$sql = "SELECT id FROM helios_transactions ORDER BY id";
-		return $this->queryOneCol($sql);
+	public function getAllId($min_id = 0){
+		$sql = "SELECT id FROM helios_transactions WHERE id > ? ORDER BY id";
+		return $this->queryOneCol($sql,$min_id);
 	}
 
 	public function setSignatureTechnique($transaction_id,$new_sha1,$new_file, $signature_technique=true){
