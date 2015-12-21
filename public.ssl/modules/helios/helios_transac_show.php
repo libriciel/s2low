@@ -110,6 +110,12 @@ $html .= "</div>\n";
 $html .= "<h2>Récuperation du fichier posté ";
 $html .= "<a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_file.php?id=" .$id. "\" title=\"Télécharger le fichier\">".$trans->getFilenameForID($id)."</a> </h2>";
 
+
+if ($me->isSuper()) {
+	$link = WEBSITE_SSL ."/modules/helios/helios_transac_validate_pes_aller.php?id=$id";
+	$html .= "<a href='$link'>Validation XML du fichier</a>";
+}
+
 // Affichage du Workflow
 
 $workflow = $trans->fetchWorkflow();
