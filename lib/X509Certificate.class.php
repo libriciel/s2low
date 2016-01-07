@@ -36,7 +36,7 @@ class X509Certificate {
 	}
 	
 	public function getBase64Hash($cert_content, $hash_alg = 'sha1') {
-		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem");
+		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem").mt_rand(0,mt_getrandmax());
 		file_put_contents($tmp_file,$cert_content);
 
 		$command = "openssl x509 -in $tmp_file -outform der | openssl $hash_alg -binary | openssl base64";
