@@ -1,0 +1,11 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\NS_Recette\r0
+2
+7
+19:Class_LigneTitreAller.xsd|1|14e63c7fe0e|650f|f901676d|a96daabadd0611e489c800163e0c063f|0
+16:Class_TiersRecette.xsd|1|14e63c801d6|17e4|55894074|a2b92fd2c54911e3a44a0002c681e04c|0
+1d:Class_RecouvrementRecette.xsd|1|14e63c801d6|808|4ceb51a|2b9d75929b0211e388140002c681e04c|0
+11:CommunRecette.xsd|1|14e63c801d6|4dc4|b347cac1|a9fdaacadd0611e489c800163e0c063f|0
+14:PES_RecetteAller.xsd|1|14e63c801d6|167f|759d58f5|a5293002c54911e3a44a0002c681e04c|0
+14:Class_TitreAller.xsd|1|14e63c801d6|1d13|4450038b|a99daac2dd0611e489c800163e0c063f|0
+1f:Class_BordereauRecetteAller.xsd|1|14e63c7fe0e|14c2|3c052fcf|a1892fbac54911e3a44a0002c681e04c|0
