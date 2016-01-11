@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * * @api {get} /modules/helios/api/helios_get_retour.php Récupération du contenu d'un PES_RETOUR
+ * @apiDescription Récupération du fichier xml correspondant au pes_retour demandé.
+ * @apiName helios_get_retour.php
+ * @apiGroup Helios
+ * @apiVersion 1.1.0
+ *
+ * @apiParam {Number} id  Identifiant des pes_retour concerné.
+ * @apiSuccess String le fichier xml du pes_retour
+ *
+ */
+
 require_once ("../../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');

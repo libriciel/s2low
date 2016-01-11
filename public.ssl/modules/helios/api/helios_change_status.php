@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * * @api {get} /modules/helios/api/helios_change_status.php Changement d'état d'un PES_RETOUR
+ * @apiDescription Changement d'état de PES_RETOUR : passage de l'état non lu à l'état lu
+ * @apiName helios_change_status.php
+ * @apiGroup Helios
+ * @apiVersion 1.1.0
+ *
+ * @apiParam {Number} id  Identifiant des pes_retour concerné.
+ * @apiSuccess String un fichier XML
+ * @apiSuccessExample {xml} Success-Reponse:
+ *	<change>
+ * 		<id> numéro de la transaction </id>
+ *		<resultat> OK ou KO </resultat>
+ *		<message> message complémentaire </message>
+ *	</change>
+ */
+
 require_once("../../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');

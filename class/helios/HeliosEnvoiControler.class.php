@@ -50,13 +50,14 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
+			//Pas de validation des fichier PES_Aller
+			/*$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 			if (! $heliosPESValidation->validate($pes_content)){
 				print_r($heliosPESValidation->getLastError());
 				$message = "Transaction $transaction_id : la transaction ne respecte pas le schéma PES_Aller";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
-			}
+			}*/
 			
 			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 			if (!$pes_xml){
