@@ -91,7 +91,7 @@ $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
 if ($broadcast_string){
 	$broadcast_emails = implode($broadcast_string,",");
 } else {
-	$broadcast_emails = array();
+	$broadcast_emails = false;
 }
 
 $processNextBatch = Helpers :: getVarFromPost("process_next_batch_file", true);
