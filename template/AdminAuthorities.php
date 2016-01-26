@@ -30,8 +30,8 @@
 				<label for="group" class="col-md-3 control-label">Groupe</label>
 				<div class="col-md-3">
 					<select name="group" class="form-control">
+						<option value="">Choisissez</option>
 						<?php foreach($groupe_list as $groupe_info) : ?>
-							<option value="">Choisissez</option>
 							<option <?php echo $fgroup==$groupe_info['id']?"selected='selected'":"" ?> value="<?php hecho($groupe_info['id']) ?>">
 								<?php hecho($groupe_info['name']) ?>
 							</option>
