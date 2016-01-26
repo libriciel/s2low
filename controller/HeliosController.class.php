@@ -25,6 +25,71 @@ class HeliosController extends Controller {
 		$this->helios_files_upload_root = $helios_files_upload_root;
 	}
 
+	public function importAction(){
+		$module = new Module();
+		if (!$module->initByName(self::MODULE_NAME)) {
+			$this->redirectSSL(WEBSITE_SSL,"Erreur d'initialisation du module");
+		}
+
+		$me = new User();
+		if (!$me->authenticate()) {
+			$this->redirectSSL(WEBSITE,"Échec de l'authentification");
+		}
+
+		$userId = $me->getId();
+
+		if (!$module->isActive() || !$me->checkDroit(self::MODULE_NAME,'CS')) {
+			$this->redirectSSL(WEBSITE_SSL,"Accès refusé");
+		}
+
+		$id_transaction = false;
+
+		try {
+			$id_transaction = $this->import($userId);
+		} catch (Exception $e){
+			Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
+		}
+
+		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
+		Helpers :: returnAndExit(0,$msg, WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
+	}
+
+	public function import($user_id){
+
+		/** @var RgsConnexion $rgsConnexion */
+		$rgsConnexion = $this->getObjectInstancier()->{'RgsConnexion'};
+		if (! $rgsConnexion->isRgsConnexion()){
+			throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
+		}
+
+		$file_size = $_FILES['enveloppe']['size'];
+		if ($file_size > $this->helios_max_upload_size) {
+			$message = "Taille de fichier supérieur à la limite autorisée (".
+				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
+			throw new Exception($message);
+		}
+
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+
+		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
+			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
+		}
+
+		$uploaddir = $this->helios_files_upload_root;
+
+		try {
+			$pes_aller_original_name = $_FILES['enveloppe']['name'];
+			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploaddir.$SHA1)) {
+				throw new Exception("Échec lors du téléchargement du fichier");
+			}
+			chmod($uploaddir.$SHA1, 0644);
+		} catch (Exception $e){
+			throw new Exception("Échec lors du téléchargement du fichier");
+		}
+		return $this->importFile($user_id,$uploaddir.$SHA1,$pes_aller_original_name);
+	}
+
 	public function importFile($user_id,$filepath,$original_filename){
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
@@ -61,64 +126,6 @@ class HeliosController extends Controller {
 		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
 		Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false,$user_id);
 		return $id_transaction;
-	}
-
-	public function import($user_id){
-		$file_size = $_FILES['enveloppe']['size'];
-		if ($file_size > $this->helios_max_upload_size) {
-			$message = "Taille de fichier supérieur à la limite autorisée (".
-				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
-			throw new Exception($message);
-		}
-
-		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
-
-		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
-			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
-		}
-
-		$uploaddir = $this->helios_files_upload_root;
-
-		try {
-			$pes_aller_original_name = $_FILES['enveloppe']['name'];
-			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploaddir.$SHA1)) {
-				throw new Exception("Échec lors du téléchargement du fichier");
-			}
-			chmod($uploaddir.$SHA1, 0644);
-		} catch (Exception $e){
-			throw new Exception("Échec lors du téléchargement du fichier");
-		}
-		return $this->importFile($user_id,$uploaddir.$SHA1,$pes_aller_original_name);
-	}
-
-	public function importAction(){
-		$module = new Module();
-		if (!$module->initByName(self::MODULE_NAME)) {
-			$this->redirectSSL(WEBSITE_SSL,"Erreur d'initialisation du module");
-		}
-
-		$me = new User();
-		if (!$me->authenticate()) {
-			$this->redirectSSL(WEBSITE,"Échec de l'authentification");
-		}
-
-		$userId = $me->getId();
-
-		if (!$module->isActive() || !$me->checkDroit(self::MODULE_NAME,'CS')) {
-			$this->redirectSSL(WEBSITE_SSL,"Accès refusé");
-		}
-
-		$id_transaction = false;
-
-		try {
-			$id_transaction = $this->import($userId);
-		} catch (Exception $e){
-			Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
-		}
-
-		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-		Helpers :: returnAndExit(0,$msg, WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
 	}
 
 	public function importAPIAction(){

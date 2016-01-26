@@ -9,27 +9,6 @@ class HeliosControllerTest extends S2lowTestCase {
 
 	private $testStreamUrl;
 
-	protected function setUp(){
-		parent::setUp();
-
-		org\bovigo\vfs\vfsStream::setup("test");
-		$this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
-
-		mkdir($this->testStreamUrl."/helios");
-
-		$tmp_file = $this->testStreamUrl."/pes_aller.xml";
-		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
-
-		$_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
-		$this->setUserAuthentification();
-		$this->heliosController = new HeliosController($this->getObjectInstancier());
-	}
-
-	private function expectedError($message){
-		$message = htmlspecialchars($message);
-		$this->expectOutputRegex("#$message#");
-	}
-
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -38,16 +17,6 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->setExpectedException("Exception");
 		$this->heliosController->importAction();
 	}
-
-	private function importAPI()
-	{
-		try {
-			$this->heliosController->importAPIAction();
-		} catch (Exception $e) {
-
-		}
-	}
-
 
 	/**
 	 * @preserveGlobalState disabled
@@ -66,6 +35,15 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->assertEquals(HeliosTransactionsSQL::POSTE,$info['last_status_id']);
 		$info_wf = $heliosTransactionsSQL->getWorkflow($transaction_id);
 		$this->assertEquals(1,$info_wf[0]['status_id']);
+	}
+
+	private function importAPI()
+	{
+		try {
+			$this->heliosController->importAPIAction();
+		} catch (Exception $e) {
+
+		}
 	}
 
 	/**
@@ -113,6 +91,11 @@ class HeliosControllerTest extends S2lowTestCase {
 		unset($_FILES);
 		$this->expectedError("Échec lors du téléchargement du fichier");
 		$this->importAPI();
+	}
+
+	private function expectedError($message){
+		$message = htmlspecialchars($message);
+		$this->expectOutputRegex("#$message#");
 	}
 
 	/**
@@ -205,6 +188,42 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->expectOutputRegex("#<nom>toto.xml</nom>#");
 		$this->setExpectedException("Exception","Exit !");
 		$heliosController->getPESRetourListAction();
+	}
+
+	/**
+	 * @preserveGlobalState disabled
+	 * @runInSeparateProcess
+	 */
+	public function testGetPostPESRetourWithoutRGS(){
+		$rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
+		$rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(false);
+
+		$this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
+		$this->expectOutputRegex("#<message>Votre certificat n'est pas RGS et ne vous permet donc pas de#");
+		$this->setExpectedException("Exception","Exit !");
+		$this->heliosController->importAPIAction();
+	}
+
+	protected function setUp(){
+		parent::setUp();
+
+		org\bovigo\vfs\vfsStream::setup("test");
+		$this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+
+		mkdir($this->testStreamUrl."/helios");
+
+		$tmp_file = $this->testStreamUrl."/pes_aller.xml";
+		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
+
+		$_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
+
+		$rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
+		$rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(true);
+
+		$this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
+
+		$this->setUserAuthentification();
+		$this->heliosController = new HeliosController($this->getObjectInstancier());
 	}
 
 
