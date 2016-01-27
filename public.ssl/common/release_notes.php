@@ -86,6 +86,16 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.3.1 du 27.01.2016</h2>";
+$html .= "<ul>";
+$html .= "<li>HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ;";
+$html .= "<li>HELIOS : on ne vérifie plus les schémas XSD ;";
+$html .= "<li>ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ;";
+$html .= "<li>HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER ;";
+$html .= "<li>;";
+$html .= "</ul>";
+
+
 $html .= "<h2>V2.3 du 05.12.2015</h2>";
 $html .= "<ul>";
 $html .= "<li>Ensemble des pages : les champs recherche sur les collectivités ont été changés en select2 ;";
