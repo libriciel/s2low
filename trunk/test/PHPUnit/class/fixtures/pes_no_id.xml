@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller"
+             xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <Enveloppe>
+        <Parametres>
+            <Version V="2"></Version>
+            <TypFic V="PESALR1"></TypFic>
+            <NomFic V="PESALR121190800075020150506191259422"></NomFic>
+        </Parametres>
+        <Emetteur>
+            <Sigle V="CORIPES v1.0.3"></Sigle>
+            <Adresse V="CORIPES_V1.0.3_SCHEMAS PES_V2 P431"></Adresse>
+        </Emetteur>
+        <Recepteur>
+            <Sigle V="TGAA"></Sigle>
+            <Adresse V="AMIENS"></Adresse>
+        </Recepteur>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2015-05-06"></DteStr>
+        <IdPost V="080007"></IdPost>
+        <IdColl V="24800053100058"></IdColl>
+        <CodCol V="119"></CodCol>
+        <CodBud V="50"></CodBud>
+        <LibelleColBud V="TOURISME"></LibelleColBud>
+    </EnTetePES>
+    <PES_DepenseAller>
+        <EnTeteDepense>
+            <IdVer V="2"></IdVer>
+            <InfoDematerialisee V="1"></InfoDematerialisee>
+        </EnTeteDepense>
+        <Bordereau Id="ID20157020150506D0150">
+            <BlocBordereau>
+                <Exer V="2015"></Exer>
+                <IdBord V="50"></IdBord>
+                <DteBordEm V="2015-05-06"></DteBordEm>
+                <TypBord V="01"></TypBord>
+                <NbrPce V="5"></NbrPce>
+                <MtCumulAnnuel V="73420.13"></MtCumulAnnuel>
+                <MtBordHT V="694.13"></MtBordHT>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="153"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 201150046 DU 14 04 15 FORFAIT GROUPES LES AMIS DU MUSEE DOUAI RIB SUR FAC"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-14"></DteDebDgp>
+                        <DteFinDgp V="2015-05-14"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="604"></Nature>
+                            <LibVir1 V="F 201150046 DU 14 04 15"></LibVir1>
+                            <LibVir2 V="FORFAIT GROUPES LES AMIS DU MUSEE DO"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="66.13"></MtHT>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="18800850200018"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000000814"></RefTiers>
+                            <CatTiers V="20"></CatTiers>
+                            <NatJur V="07"></NatJur>
+                            <Nom V="CCI REGION PICARDIE"></Nom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="36 RUE DES OTAGES"></Adr2>
+                            <CP V="80000"></CP>
+                            <Ville V="AMIENS"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CEPAFRPP802"></BIC>
+                            <IBAN V="FR7618025002000810341132292"></IBAN>
+                            <LibBanc V="CEPICARDIE"></LibBanc>
+                            <TitCpte V="CCI REGION PICARDIE"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="154"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 150320 DU 28 03 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M SOULAS WILLIAM"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-14"></DteDebDgp>
+                        <DteFinDgp V="2015-05-14"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="604"></Nature>
+                            <LibVir1 V="F 150320 DU 28 03 15"></LibVir1>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="50"></MtHT>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000016641"></RefTiers>
+                            <CatTiers V="50"></CatTiers>
+                            <NatJur V="03"></NatJur>
+                            <Nom V="CONJUGAISON LE QUAI"></Nom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="13 15 QUAI BELU"></Adr2>
+                            <CP V="80000"></CP>
+                            <Ville V="AMIENS"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"></BIC>
+                            <IBAN V="FR7630027172610007544910185"></IBAN>
+                            <LibBanc V="BQ CIC NO"></LibBanc>
+                            <TitCpte V="CONJUGAISON LE QUAI"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="155"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 150405 DU 04 04 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M VERHENNEMAN GEORGE"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-14"></DteDebDgp>
+                        <DteFinDgp V="2015-05-14"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="604"></Nature>
+                            <LibVir1 V="F 150405 DU 04 04 15"></LibVir1>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="50"></MtHT>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000016641"></RefTiers>
+                            <CatTiers V="50"></CatTiers>
+                            <NatJur V="03"></NatJur>
+                            <Nom V="CONJUGAISON LE QUAI"></Nom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="13 15 QUAI BELU"></Adr2>
+                            <CP V="80000"></CP>
+                            <Ville V="AMIENS"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"></BIC>
+                            <IBAN V="FR7630027172610007544910185"></IBAN>
+                            <LibBanc V="BQ CIC NO"></LibBanc>
+                            <TitCpte V="CONJUGAISON LE QUAI"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="156"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 150404 DU 04 04 15 SEJOUR INDIVIDUEL TERROIR ET GASTRONOMIE POUR M BEX MARLEEN"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-14"></DteDebDgp>
+                        <DteFinDgp V="2015-05-14"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="604"></Nature>
+                            <LibVir1 V="F 150404 DU 04 04 15"></LibVir1>
+                            <LibVir2 V="SEJOUR INDIVIDUEL TERROIR ET GASTRON"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="50"></MtHT>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="48850589200015"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000016641"></RefTiers>
+                            <CatTiers V="50"></CatTiers>
+                            <NatJur V="03"></NatJur>
+                            <Nom V="CONJUGAISON LE QUAI"></Nom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="13 15 QUAI BELU"></Adr2>
+                            <CP V="80000"></CP>
+                            <Ville V="AMIENS"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="CMCIFRPP"></BIC>
+                            <IBAN V="FR7630027172610007544910185"></IBAN>
+                            <LibBanc V="BQ CIC NO"></LibBanc>
+                            <TitCpte V="CONJUGAISON LE QUAI"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <IdPce V="157"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 4 DU 14 04 15 SEJOUR INDIVIDUEL ZEN POUR M MME MEDDAH MICHAUX GUIBERT TERNOIR E"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-16"></DteDebDgp>
+                        <DteFinDgp V="2015-05-16"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="604"></Nature>
+                            <LibVir1 V="F 4 DU 14 04 15"></LibVir1>
+                            <LibVir2 V="SEJOUR INDIVIDUEL ZEN POUR M MME MED"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="478"></MtHT>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="51850908800028"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000027697"></RefTiers>
+                            <CatTiers V="50"></CatTiers>
+                            <NatJur V="03"></NatJur>
+                            <Nom V="WASSANA ZEN"></Nom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="22 RUE CRETON"></Adr2>
+                            <CP V="80000"></CP>
+                            <Ville V="AMIENS"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="NORDFRPP"></BIC>
+                            <IBAN V="FR7630076025604521520020001"></IBAN>
+                            <LibBanc V="CDN"></LibBanc>
+                            <TitCpte V="WASSANA ZEN"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+        </Bordereau>
+        <Bordereau Id="ID20157020150506D01100003">
+            <BlocBordereau>
+                <Exer V="2015"></Exer>
+                <IdBord V="100003"></IdBord>
+                <DteBordEm V="2015-05-06"></DteBordEm>
+                <TypBord V="01"></TypBord>
+                <NbrPce V="1"></NbrPce>
+                <MtCumulAnnuel V="688.83"></MtCumulAnnuel>
+                <MtBordHT V="108.5"></MtBordHT>
+            </BlocBordereau>
+            <Piece>
+                <BlocPiece>
+                    <InfoPce>
+                        <CodServ V="TOURISME"></CodServ>
+                        <IdPce V="100003"></IdPce>
+                        <TypPce V="01"></TypPce>
+                        <NatPce V="01"></NatPce>
+                        <Obj V="F 15 04 15 DU 20 04 15 VENTE COMPTOIR TOPO GUIDE RIB CI JT"></Obj>
+                    </InfoPce>
+                    <DGP>
+                        <Dgp V="0"></Dgp>
+                        <DteDebDgp V="2015-04-20"></DteDebDgp>
+                        <DteFinDgp V="2015-05-20"></DteFinDgp>
+                        <DureeDgp V="30"></DureeDgp>
+                        <CodIntMor V="02"></CodIntMor>
+                        <TxIntMor V="0.05"></TxIntMor>
+                    </DGP>
+                </BlocPiece>
+                <LigneDePiece>
+                    <BlocLignePiece>
+                        <InfoLignePce>
+                            <IdLigne V="1"></IdLigne>
+                            <Nature V="607"></Nature>
+                            <LibVir1 V="F 15 04 15 DU 20 04 15"></LibVir1>
+                            <LibVir2 V="VENTE COMPTOIR TOPO GUIDE RIB CI JT"></LibVir2>
+                            <ModRegl V="03"></ModRegl>
+                            <TVAIntraCom V="0"></TVAIntraCom>
+                            <MtHT V="108.5"></MtHT>
+                            <MtTVA V="0"></MtTVA>
+                        </InfoLignePce>
+                    </BlocLignePiece>
+                    <Tiers>
+                        <InfoTiers>
+                            <IdTiers V="44067392900012"></IdTiers>
+                            <NatIdTiers V="01"></NatIdTiers>
+                            <RefTiers V="000000000011528"></RefTiers>
+                            <CatTiers V="50"></CatTiers>
+                            <NatJur V="06"></NatJur>
+                            <Nom V="COMITE REGIONALE RANDONNEE PEDESTRE"></Nom>
+                            <ComplNom V="PICARDIE"></ComplNom>
+                        </InfoTiers>
+                        <Adresse>
+                            <TypAdr V="1"></TypAdr>
+                            <Adr2 V="111 B RUE SADI CARNOT"></Adr2>
+                            <CP V="80250"></CP>
+                            <Ville V="AILLY SUR NOYE"></Ville>
+                            <CodRes V="0"></CodRes>
+                        </Adresse>
+                        <CpteBancaire>
+                            <BIC V="AGRIFRPP887"></BIC>
+                            <IBAN V="FR7618706000007215806529178"></IBAN>
+                            <LibBanc V="CRCABRIPIC"></LibBanc>
+                            <TitCpte V="COMITE REGIONALE RANDONNEE PEDES"></TitCpte>
+                        </CpteBancaire>
+                    </Tiers>
+                </LigneDePiece>
+            </Piece>
+        </Bordereau>
+    </PES_DepenseAller>
+</n:PES_Aller>
