@@ -1,1 +1,0 @@
-ALTER TABLE actes_transactions ADD COLUMN sae_transfer_identifier varchar(256) ; 

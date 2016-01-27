@@ -1,1 +1,0 @@
-ALTER TABLE authorities ADD COLUMN new_notification BOOLEAN DEFAULT false;
