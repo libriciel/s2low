@@ -33,11 +33,17 @@ class HeliosTransactionsSQL extends SQL {
 	public function updateStatus($transaction_id,$status_id,$message){
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
-	    		" VALUES( ? , ? , ? , ? )";
-  		$this->query($sql,$transaction_id,$status_id,$date,$message);
+	    		" VALUES( ? , ? , ? , ? ) RETURNING ID ";
+  		$id = $this->queryOne($sql,$transaction_id,$status_id,$date,$message);
   		$sql = "UPDATE helios_transactions SET last_status_id=? " .
     			" WHERE id=?";
     	$this->query($sql,$status_id,$transaction_id);
+		return $id;
+	}
+
+	public function getLastStatusInfo($id){
+		$sql = "SELECT * FROM helios_transactions_workflow WHERE transaction_id=? ORDER BY date DESC LIMIT 1";
+		return $this->queryOne($sql,$id);
 	}
 	
 	public function setSAETransferIdentifier($id,$transfer_identifier){

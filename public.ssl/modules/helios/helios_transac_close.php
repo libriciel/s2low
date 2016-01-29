@@ -8,9 +8,9 @@ $heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
 $msg = "";
     
 foreach ($liste_id as $id) {
-	$id_d = $heliosArchiveControler->sendArchive($connexion->getId(),$id);
+	$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 	if ($id_d) {
-		$msg .= "Envoie de la transaction $id à Pastell\n";
+		$msg = "Programmation de l'envoie de la transaction $id à Pastell";
 	} else {
 		$msg .= "Erreur lors de l'envoi de la transaction $id à Pastell: " . $heliosArchiveControler->getLastError() ."\n";
 	}

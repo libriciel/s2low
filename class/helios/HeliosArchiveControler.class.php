@@ -1,22 +1,54 @@
 <?php
 class HeliosArchiveControler {
-	
+
+	const PASSER_EN_ERREUR_APRES_NB_SECOND = 86400;
+
 	private $sqlQuery;
 	private $lastError;
-	
-	
+
+	/** @var HeliosTransactionsSQL  */
+	private $heliosTransactionsSQL;
+
+	/** @var  PastellFactory */
+	private $pastellFactory;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
+		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
+		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
+		$this->setPastellFactory(new PastellFactory());
 	}
 	
+	public function setPastellFactory(PastellFactory $pastellFactory){
+		$this->pastellFactory = $pastellFactory;
+	}
+
 	public function getLastError(){
 		return $this->lastError;
 	}
 	
+	public function setArchiveEnAttenteEnvoiSEA($user_id,$id){
+		try {
+			$transactionsInfo = $this->heliosTransactionsSQL->getInfo($id);
+			$user = new User($user_id);
+			$user->init();
+			$this->isAllowToSendArchive($user_id,$transactionsInfo);
+
+			if (!in_array($transactionsInfo['last_status_id'], array(8,4, 6, 11,20))) {
+				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé ».");
+			}
+			$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
+		} catch (Exception $e){
+			$this->lastError = $e->getMessage();
+			return false;
+		}
+		$id = $this->heliosTransactionsSQL->updateStatus($id,HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
+		return $id;
+	}
 
 	private function isAllowToSendArchive($user_id,$transactionsInfo){
 		if (! $transactionsInfo){
-			return false;
+			throw new Exception("Impossible de d'envoyer la transaction");
 		}
 		if ($transactionsInfo['user_id'] == $user_id){
 			return true;
@@ -25,52 +57,69 @@ class HeliosArchiveControler {
 		$userSQL = new UserSQL($this->sqlQuery);
 		$user_info = $userSQL->getInfo($user_id);
 		if ($user_info['role'] != 'ADM'){
-			return false;
+			throw new Exception("Accès interdit");
 		}
 
 		if ($user_info['authority_id'] == $transactionsInfo['authority_id']){
 			return true;
 		}
 
-		return false;
+		throw new Exception("Accès interdit");
 	}
 
-	public function sendArchive($user_id,$id){
+	public function sendAllArchive(){
+		echo "Début de l'envoie:\n";
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->sqlQuery);
+		$info_list = $heliosTransactionSQL->getIdsByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+		echo count($info_list)." transactions à envoyer...\n";
+		foreach($info_list as $transaction_id){
+			echo "Envoi de la transaction $transaction_id.\n";
+			$this->sendArchive($transaction_id);
+		}
+		echo "Fin de l'envoie\n";
+	}
+
+	public function sendArchive($id){
+		try {
+			$this->sendArchiveThrow($id);
+		} catch (Exception $e){
+			echo "Impossible d'envoyer la transaction $id : " . $e->getMessage()."\n";
+			$status_info = $this->heliosTransactionsSQL->getLastStatusInfo($id);
+			$first_try = strtotime($status_info['date']);
+			if (time() - $first_try > self::PASSER_EN_ERREUR_APRES_NB_SECOND){
+				$this->heliosTransactionsSQL->updateStatus($id,
+					HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+					"Le document n'a pas pu être envoyé au SAE");
+				echo "Passage de la transaction en erreur !\n";
+			}
+		}
+	}
+
+	private function sendArchiveThrow($id){
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$transactionsInfo = $heliosTransactionsSQL->getInfo($id);
 
-		if (! $this->isAllowToSendArchive($user_id,$transactionsInfo)){
-			$this->lastError = "Accès refusé";
-			return false;
-		}
-		
-		$last_status_id = $heliosTransactionsSQL->getLatestStatusId($id);
-		if (!in_array($last_status_id, array(8, 4, 6, 11))) {
-			$this->lastError = "Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé ».";
-			return false;
-		}
-		
-		$userSQL = new UserSQL($this->sqlQuery);
-		$userInfo = $userSQL->getInfo($user_id);
-		
+		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
+
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$authorityInfo = $authoritySQL->getInfo($userInfo['authority_id']);
+		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 		
 		if (! $authorityInfo['pastell_url'] ){
-			$this->lastError = "La collectivité n'a pas de Pastell configuré";
-			return false;
+			throw new Exception("La collectivité n'a pas de Pastell configuré");
 		}
-		
-		$pastell = new Pastell($authorityInfo['pastell_url'],
-						$authorityInfo['pastell_id_e'],
-						$authorityInfo['pastell_login'],
-						$authorityInfo['pastell_password']);
+
+		$pastell = $this->pastellFactory->getNewInstance(
+			$authorityInfo['pastell_url'],
+			$authorityInfo['pastell_id_e'],
+			$authorityInfo['pastell_login'],
+			$authorityInfo['pastell_password']
+		);
+
 
 		$id_d = $pastell->createHelios($transactionsInfo);
 		
 		if (! $id_d){
-			$this->lastError = $pastell->getLastError();
-			return false;
+			throw new Exception($pastell->getLastError());
 		}
 		
 		$file_path = HELIOS_FILES_UPLOAD_ROOT . "/". $transactionsInfo['sha1'];
@@ -83,8 +132,7 @@ class HeliosArchiveControler {
 		$result = $pastell->sendSAE($id_d);
 
 		if (! $result){
-			$this->lastError = $pastell->getLastError();
-			return false;
+			throw new Exception($pastell->getLastError());
 		}
 		$heliosTransactionsSQL->updateStatus($id,9,"Envoie de la transaction $id à Pastell");
 		$heliosTransactionsSQL->setSAETransferIdentifier($id,$id_d);
@@ -92,7 +140,6 @@ class HeliosArchiveControler {
 	}
 	
 	public function verifArchive($transactionInfo){
-		
 		echo "Transaction {$transactionInfo['id']} : ";
 		
 		$userSQL = new UserSQL($this->sqlQuery);
@@ -131,19 +178,20 @@ class HeliosArchiveControler {
 		
 		
 		$nodeName = strval($xml->getName());
-		$xml_message = utf8_decode(strval($xml->ReplyCode) . " - " . strval($xml->Comment));
-		
+		$xml_message = utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
+
+		/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		
 		
 		if ($nodeName == 'ArchiveTransferAcceptance'){
 			$url = $info['data']['url_archive'];
 			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
-			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],10,$msg,$reply_sae);
+			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],10,$msg);
 			$heliosTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);			
 		} else {
 			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";			
-			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],11,$msg,$reply_sae);
+			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],11,$msg);
 		}
 		
 		echo "$msg\n";

@@ -1,11 +1,18 @@
 <?php 
 class AuthoritySQL extends SQL {
 
-
-	public function getInfo($id){
-		$sql = "SELECT * FROM authorities WHERE id=?";
-		return $this->queryOne($sql,$id);
-	}
+  	public static function getSAEProperties(){
+  		return  array(
+			'pastell_url' => "URL Pastell",
+			'pastell_login' => "Login Pastell",
+			'pastell_password' => "Mot de passe Pastell",
+			'pastell_id_e' => "Identifiant collectivité sur pastell (id_e)"
+		);
+  	}
+	
+  	public static function getSAEPropertiesType($properties){
+  		return ($properties=='pastell_password')?"password":"text";
+  	}
 	
 	public function getIdBySIREN($siren){
 		$sql = "SELECT id FROM authorities where siren=?";
@@ -16,7 +23,7 @@ class AuthoritySQL extends SQL {
 		$sql = "SELECT id FROM authorities where dia_siret=?";
 		return $this->queryOne($sql,$siret);
 	}
-	
+
 	public function getAll() {
 		$result = array();
 		$sql = "SELECT authorities.id, authorities.name FROM authorities ORDER BY authorities.name ASC";
@@ -25,7 +32,7 @@ class AuthoritySQL extends SQL {
     	}
 		return $result;
   	}
-
+  	
 	public function getAllGroup($authority_group_id){
 		$result = array();
 		$sql = "SELECT authorities.id, authorities.name FROM authorities WHERE authority_group_id=? ORDER BY authorities.name ASC";
@@ -35,23 +42,10 @@ class AuthoritySQL extends SQL {
 		return $result;
 	}
   	
-  	public static function getSAEProperties(){
-  		return  array(
-			'pastell_url' => "URL Pastell",
-			'pastell_login' => "Login Pastell",
-			'pastell_password' => "Mot de passe Pastell", 
-			'pastell_id_e' => "Identifiant collectivité sur pastell (id_e)"
-		);
-  	}
-  	
-  	public static function getSAEPropertiesType($properties){
-  		return ($properties=='pastell_password')?"password":"text";
-  	} 
-  	
   	public function updateSAE($id,array $info){
   		$sql = "UPDATE authorities SET pastell_url=?,pastell_login=?,pastell_password=?,pastell_id_e=? WHERE id = ?";
     	$data['id'] = $id;
-  		
+
   		$this->query($sql,
   								$info['pastell_url'],
   								$info['pastell_login'],
@@ -59,15 +53,15 @@ class AuthoritySQL extends SQL {
   								$info['pastell_id_e'],
   								$id);
   	}
-	
+  	
   	public function verifDepartmentAndDistrict($department_code,$district_code){
   		$sql = "SELECT * FROM authority_departments " .
-    			" JOIN authority_districts ON authority_department_id=authority_departments.id ". 
+    			" JOIN authority_districts ON authority_department_id=authority_departments.id ".
   				" WHERE authority_departments.code=?  AND authority_districts.code=?";
   		$result = $this->query($sql,$department_code,$district_code);
   		return count($result);
   	}
-
+	
 	public function getList($authority_group_id,$authority_type_id,$name,$siren, $siret, $offset,$limit){
 		$sql = "SELECT authorities.*, authority_types.description as type_name, authority_groups.name as group_name
 					FROM authorities
@@ -134,6 +128,17 @@ class AuthoritySQL extends SQL {
 		return $this->queryOne($sql,$data);
 	}
 
+	public function verifHasPastell($authority_id){
+		$authorityInfo = $this->getInfo($authority_id);
+		if (! $authorityInfo['pastell_url'] ){
+			throw new Exception("La collectivité n'a pas de Pastell configuré");
+		}
+	}
+
+	public function getInfo($id){
+		$sql = "SELECT * FROM authorities WHERE id=?";
+		return $this->queryOne($sql,$id);
+	}
 
 
 }

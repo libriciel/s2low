@@ -6,7 +6,7 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
 $heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
-$id_d = $heliosArchiveControler->sendArchive($connexion->getId(),$id);
+$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $id_d){
 	$_SESSION['error'] = "Erreur: " . $heliosArchiveControler->getLastError();
@@ -14,9 +14,9 @@ if (! $id_d){
 	exit;
 }
 
-$msg = "Envoie de la transaction $id à Pastell";
+$msg = "Programmation de l'envoie de la transaction $id à Pastell";
 
-$_SESSION['error'] = "L'archive a été déposée";
+$_SESSION['error'] = $msg;
 	
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "helios", false,$connexion->getId())) {
 	$_SESSION['error'] .= "\nErreur de journalisation.\n";

@@ -16,7 +16,7 @@ class ActesTransactionsSQL {
 	}
 
 	public function getLastStatusInfo($id){
-		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date LIMIT 1";
+		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date DESC LIMIT 1";
 		return $this->sqlQuery->queryOne($sql,$id);
 	}
 

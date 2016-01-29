@@ -17,10 +17,14 @@ class ActesArchiveControler {
 	/** @var  ActesTransactionsSQL */
 	private $actesTransactionsSQL;
 
+	/** @var AuthoritySQL  */
+	private $authoritySQL;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 		$this->setPastellFactory(new PastellFactory());
 		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
 	}
 
 	public function setPastellFactory(PastellFactory $pastellFactory){
@@ -42,23 +46,13 @@ class ActesArchiveControler {
 			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14,20)) && $transactionsInfo['type'] != 1) {
 				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».");
 			}
-
-			$this->verifHasPastell($transactionsInfo);
+			$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
 		} catch (Exception $e){
 			$this->lastError = $e->getMessage();
 			return false;
 		}
 		$id = $this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
 		return $id;
-	}
-
-	private function verifHasPastell(array $transactionsInfo){
-		$authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
-
-		if (! $authorityInfo['pastell_url'] ){
-			throw new Exception("La collectivité n'a pas de Pastell configuré");
-		}
 	}
 
 	public function sendAllArchive(){
@@ -90,7 +84,7 @@ class ActesArchiveControler {
 
 	private function sendArchiveThrow($id){
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
-		$this->verifHasPastell($transactionsInfo);
+		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
 
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
