@@ -412,6 +412,37 @@ if (empty($helios_authorized_rollback_ids)){
 	$helios_authorized_rollback_ids = array();
 }
 
+if (!defined("HELIOS_OCRE_FILE_PATH")){
+	define("HELIOS_OCRE_FILE_PATH","/tdt-workspace/helios/ocre/");
+}
+
+if (!defined("OCRE_SERVER_DESTINATION")){
+	define("OCRE_SERVER_DESTINATION","localhost");
+}
+
+if (!defined("OCRE_SERVER_FINGERRINT")){
+	define("OCRE_SERVER_FINGERRINT","9EF945FCDCC02E0BAC527BCDA7A523A4");
+}
+
+if (!defined("OCRE_SERVER_PORT")){
+	define("OCRE_SERVER_PORT",22);
+}
+
+if (!defined("OCRE_SERVER_DESTINATION_PATH")){
+	define("OCRE_SERVER_DESTINATION_PATH","/tmp/");
+}
+
+if (! defined("OCRE_SERVER_LOGIN")){
+	define("OCRE_SERVER_LOGIN","toto");
+}
+
+if (! defined("OCRE_SERVER_PASSWORD")){
+	define("OCRE_SERVER_PASSWORD","toto");
+}
+
+
+
+
 //////////////////////////////////
 ///// Paramètre module Etat Civil /////
 /////////////////////////////////

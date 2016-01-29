@@ -20,7 +20,7 @@ class HeliosAnalyseFichierRecu {
 		$this->authoritySiretSQL = $authoritySiretSQL;
 	}
 	
-	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path){
+	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path,$ocre_file_path){
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
 
 		$this->log("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
@@ -43,7 +43,7 @@ class HeliosAnalyseFichierRecu {
 		$erreur_list = array();
 		foreach($file_list as $file){
 			try {
-				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root);
+				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root,$ocre_file_path);
 			} catch (Exception $e){
 				$this->log("[ERREUR] ". $e->getMessage());
 				$erreur_list[$file] = $e->getMessage();
@@ -74,9 +74,17 @@ class HeliosAnalyseFichierRecu {
 		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
 	}
 	
-	private function analyseOneFile($file_path,$helios_response_root){
+	private function analyseOneFile($file_path,$helios_response_root,$ocre_file_path){
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
+
+		if (preg_match("#.ocre$#",strtolower($basename))){
+			if (! rename($file_path,$ocre_file_path."/".$basename)){
+				throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
+			}
+			return;
+		}
+
 
 		$xml = simplexml_load_file($file_path);
 		if (! $xml){
