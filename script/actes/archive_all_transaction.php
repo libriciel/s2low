@@ -34,7 +34,7 @@ foreach($transaction_id_list as $transaction_id){
 	$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 	echo "Traitement de $transaction_id - {$transaction_info['unique_id']}: ";
 
-	$r = $actesArchiveControler->sendArchive($transaction_info['user_id'],$transaction_id);
+	$r = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id);
 	if ($r){
 		echo "OK";
 	} else {

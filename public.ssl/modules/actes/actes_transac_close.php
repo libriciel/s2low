@@ -40,7 +40,7 @@ if ($status == "valid") {
 } elseif ($status == "invalid") {
 	$new_status_id = 6;
 } elseif ($status == "sae"){
-	$new_status_id = 12;
+	$new_status_id = 19;
 	$actesArchiveControler = new ActesArchiveControler($sqlQuery);
 	
 } else {
@@ -69,10 +69,10 @@ foreach ($liste_id as $id) {
       Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
     }
     
-    if ($new_status_id == 12) {
-    	$id_d = $actesArchiveControler->sendArchive($me->getId(),$id);
-		if ($id_d){
-			$msg = "Envoie de la transaction $id à Pastell\n";
+    if ($new_status_id == 19) {
+    	$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($me->getId(),$id);
+		if ($result){
+			$msg = "Programmation de l'envoie de la transaction $id à Pastell\n";
 	    	$severity = 1;
 	      	$status = 0;	
 		} else {

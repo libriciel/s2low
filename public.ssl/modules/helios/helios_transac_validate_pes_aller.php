@@ -31,6 +31,12 @@ $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 $r = $heliosPESValidation->validate($pes_content);
 
 
+$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate(),RGS_VALIDCA_PATH);
+$verify_sign =  $xadesSignature->verify($filename);
+$xades_output = $xadesSignature->getLastOutput();
+
+
+
 
 $doc = new HTMLLayout();
 
@@ -86,6 +92,23 @@ ob_start();
 <div class="alert alert-warning">
 	<strong>Attention</strong>, les erreurs de niveau 1 ne provoque pas l'invalidation du fichier PES_Aller !
 </div>
+
+
+<h2>Validation de la signature du PES</h2>
+
+<?php if($verify_sign): ?>
+	<div class="alert alert-success">La signature du fichier est valide !</div>
+<?php else : ?>
+	<div class="alert alert-danger">La signature du fichier n'est pas valide !</div>
+<?php endif;?>
+
+<div>
+	<p>
+		<?php echo $xades_output ?>
+	</p>
+
+</div>
+
 
 <?php
 

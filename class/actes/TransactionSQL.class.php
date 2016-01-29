@@ -43,12 +43,13 @@ class TransactionSQL {
 		15 => 'Reçu par le SAE',
 		16 => 'Détruite',
 		17 => "En attente d'être postée",
-		18 => "En attente d'être signée"
+		18 => "En attente d'être signée",
+		19 => "En attente de transmission au SAE",
+		20 => "Erreur lors de l'envoi au SAE",
 	); 
 	
 	private static $etat_en_cours = array(1,2,3,4,7,8,17,18);
-	
-	
+
 	private $sqlQuery;
 	private $filter;
 	private $value;
@@ -190,13 +191,6 @@ class TransactionSQL {
 		$this->value[] = $date;
 	}
 	
-	private function getWhere(){
-		if (! $this->filter){
-			return "";
-		}
-		return "WHERE " . implode($this->filter, " AND ");
-	}
-	
 	public function getAll(){
 		$sql = 	"SELECT ".
 				" envelope_id,  " .
@@ -213,7 +207,7 @@ class TransactionSQL {
 				" WHERE actes_transactions.id IN ( ".
 					"SELECT id " .
 					" FROM actes_transactions " .
-					$this->getWhere() .		
+					$this->getWhere() .
 					" ORDER BY $this->order $this->sortWay " .
 					" LIMIT $this->limit OFFSET $this->offset ) ORDER BY $this->order $this->sortWay";
 		$result = $this->sqlQuery->query($sql,$this->value);
@@ -225,30 +219,26 @@ class TransactionSQL {
 		}
 		return $result;
 	}
-
-	public function getNbTransaction(){
-		$where = "";
-		if ($this->filter) {
-		  $where = "WHERE " . implode($this->filter, " AND ");
-		}
-		$sql = "SELECT count(id)   " .
-				" FROM actes_transactions  " .
-				$this->getWhere() ;
-		return $this->sqlQuery->queryOne($sql,$this->value);
-	}
 	
+	private function getWhere(){
+		if (! $this->filter){
+			return "";
+		}
+		return "WHERE " . implode($this->filter, " AND ");
+	}
+
 	public function getCourrierInfo($transaction_id){
 	  	$result = array();
 	  	$sql = " SELECT at1.id as id, at2.id as related_transaction_id,at1.type as type ".
 	  			" FROM actes_transactions at1 " .
-	  			" LEFT JOIN actes_transactions at2 ON at1.id=at2.related_transaction_id  ". 
+	  			" LEFT JOIN actes_transactions at2 ON at1.id=at2.related_transaction_id  ".
 	  			" WHERE at1.related_transaction_id=? AND (at2.type != '6' OR at2.type IS NULL) ";
-	  	
+
 	  	foreach($this->sqlQuery->query($sql,$transaction_id) as $line) {
-	  		
+
 	  		$rline = array("type" => $line["type"],"type_str" => self::$transactionTypes[$line['type']]);
-	  		
-			if (! $line["related_transaction_id"]) {  		
+
+			if (! $line["related_transaction_id"]) {
 				$id = 	$line["id"];
 				$rline['sens'] = "reçu";
 			} else {
@@ -258,6 +248,17 @@ class TransactionSQL {
 			$result[$id] = $rline;
 	  	}
 		return $result;
+	}
+	
+	public function getNbTransaction(){
+		$where = "";
+		if ($this->filter) {
+		  $where = "WHERE " . implode($this->filter, " AND ");
+		}
+		$sql = "SELECT count(id)   " .
+				" FROM actes_transactions  " .
+				$this->getWhere() ;
+		return $this->sqlQuery->queryOne($sql,$this->value);
 	}
 	
 	public function delete($id){

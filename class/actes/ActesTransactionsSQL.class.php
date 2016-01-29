@@ -1,7 +1,7 @@
 <?php 
 class ActesTransactionsSQL {
 	
-	public function __construct($sqlQuery){
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
 	
@@ -14,6 +14,12 @@ class ActesTransactionsSQL {
 		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? AND status_id=?";
 		return $this->sqlQuery->queryOne($sql,$id,$status);
 	}
+
+	public function getLastStatusInfo($id){
+		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date LIMIT 1";
+		return $this->sqlQuery->queryOne($sql,$id);
+	}
+
 	
 	public function getAllFile($id){
 		$sql = "SELECT * FROM actes_included_files WHERE transaction_id=? ORDER BY id";
@@ -30,13 +36,14 @@ class ActesTransactionsSQL {
   	
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message,flux_retour) " .
-	    		" VALUES( ? , ? , ? , ? ,?)";
+	    		" VALUES( ? , ? , ? , ? ,?) RETURNING ID";
 
-  		$this->sqlQuery->query($sql,$transaction_id,$status_id,$date,$message,$flux_retour);
+  		$id = $this->sqlQuery->queryOne($sql,$transaction_id,$status_id,$date,$message,$flux_retour);
   
     	$sql = "UPDATE actes_transactions SET last_status_id=? " .
     			" WHERE id=?";
     	$this->sqlQuery->query($sql,$status_id,$transaction_id);
+		return $id;
 	}
 	
 	public function getArchiveFStatus($status_id){
@@ -66,18 +73,6 @@ class ActesTransactionsSQL {
 		return $this->sqlQuery->queryOne($sql,12);
 	}
 	
-	public function getRelatedTransaction($id){
-		$result = array();
-		$sql = "SELECT * ".
-  				" FROM actes_transactions ". 
-  				" WHERE related_transaction_id=?";
-		foreach($this->sqlQuery->query($sql,$id) as $line){
-			$result[] = $line;
-			$result = array_merge($result,$this->getRelatedTransaction($line['id']));
-		}
-		return $result;
-	}
-	
 	public function getLatestDate($id){
 		$all_id = array($id);
 		$relatedTransaction = $this->getRelatedTransaction($id);
@@ -89,6 +84,18 @@ class ActesTransactionsSQL {
 				" WHERE status_id IN (4,11,7) " .
 				" AND transaction_id IN (".implode(",",$all_id).")";
 		return $this->sqlQuery->queryOne($sql);
+	}
+	
+	public function getRelatedTransaction($id){
+		$result = array();
+		$sql = "SELECT * ".
+  				" FROM actes_transactions ".
+  				" WHERE related_transaction_id=?";
+		foreach($this->sqlQuery->query($sql,$id) as $line){
+			$result[] = $line;
+			$result = array_merge($result,$this->getRelatedTransaction($line['id']));
+		}
+		return $result;
 	}
 	
 	public function setSAETransferIdentifier($id,$transfer_identifier){

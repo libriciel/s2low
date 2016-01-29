@@ -6,17 +6,17 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
 $actesArchiveControler = new ActesArchiveControler($sqlQuery);
-$id_d = $actesArchiveControler->sendArchive($connexion->getId(),$id);
+$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
-if (! $id_d){
+if (! $result){
 	$_SESSION['error'] = "Erreur: " . $actesArchiveControler->getLastError();
 	header("Location: actes_transac_show.php?id=$id");
 	exit;
 }
 
-$msg = "Envoie de la transaction $id à Pastell";
+$msg = "Programmation de l'envoie de la transaction $id à Pastell";
 
-$_SESSION['error'] = "L'archive a été déposée";
+$_SESSION['error'] = $msg;
 	
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId())) {
 	$_SESSION['error'] .= "\nErreur de journalisation.\n";

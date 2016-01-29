@@ -67,22 +67,9 @@ class ListeActesHTML {
 		}
 	}
 	
-	public function getHTMLSelect($name, $data, $selectedValue,$css_class='') {
-		?>
-		<select name="<?php echo $name ?>" id="<?php echo $name ?>" class="form-control <?php echo $css_class?>">
-			<option value="">Choisissez</option>	
-	    	<?php foreach ($data as $key => $val) : ?>
-				<option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
-					<?php echo $val?>
-	      		</option>
-	  		<?php endforeach;?>
-		</select>	
-	    <?php 
-	}
-	
 	public function displayForm(){
-		global $transTypes, $ftype,$transNatures, $fnature,$status, 
-			$fstatus,$fnum,$fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date,$objet;		
+		global $transTypes, $ftype,$transNatures, $fnature,$status,
+			$fstatus,$fnum,$fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date,$objet;
 		?>
     <?php if ($this->actionBox) : ?>
         <div id="actions_area">
@@ -91,12 +78,12 @@ class ListeActesHTML {
             <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_transac_import.php" class="btn btn-primary">Importer une enveloppe</a>
             <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_batch_handle.php" class="btn btn-primary">Traitement par lots</a>
         </div>
-    <?php endif;?>                                
+    <?php endif;?>
     <h2>
         <span>Filtrage</span>
         <button id="expand-all" onclick="javascript:expand_area('filtering-area');" class="toggle-action">Tout déplier<span class="hidden-info">le formulaire de filtrage</span></button>
         <button id="collapse-all" onclick="javascript:collapse_area('filtering-area');" class="toggle-action">Tout replier<span class="hidden-info">le formulaire de filtrage</span></button>
-    </h2>                                    
+    </h2>
     <div id="filtering-area" >
 	<form action="<?php echo WEBSITE_SSL ?>/modules/actes/index.php" method="get" role="form" class="form-horizontal">
             <div class="form-group">
@@ -160,10 +147,23 @@ class ListeActesHTML {
                 </a>
             </div>
 	</form>
-</div>		
+</div>
 
 
-		<?php 
+		<?php
+	}
+	
+	public function getHTMLSelect($name, $data, $selectedValue,$css_class='') {
+		?>
+		<select name="<?php echo $name ?>" id="<?php echo $name ?>" class="form-control <?php echo $css_class?>">
+			<option value="">Choisissez</option>
+	    	<?php foreach ($data as $key => $val) : ?>
+				<option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
+					<?php echo $val?>
+	      		</option>
+	  		<?php endforeach;?>
+		</select>
+	    <?php
 	}
 	
 	private function datePicker($date,$name){
@@ -279,7 +279,7 @@ class ListeActesHTML {
                                     <tbody>
 					<tr>
                                             <td headers="selection">
-                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'],array(4,18,5,14)))): ?>
+                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'],array(4,18,5,14,20)))): ?>
                                                     <input type="checkbox" 
                                                                     name="liste_id[]" 
                                                                     value="<?php hecho($envelope['transaction_id']) ;?>" 

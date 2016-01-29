@@ -4,117 +4,112 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class
 /* Archive au sens SEDA et pas au sens Actes ... */
 
 class ActesArchiveControler {
-	
+
+	/* Nombre de seconde avant de considérer l'envoi comme une erreur */
+	const PASSER_EN_ERREUR_APRES_NB_SECOND = 86400;
+
 	private $sqlQuery;
 	private $lastError;
-	
-	
+
+	/** @var  PastellFactory */
+	private $pastellFactory;
+
+	/** @var  ActesTransactionsSQL */
+	private $actesTransactionsSQL;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
+		$this->setPastellFactory(new PastellFactory());
+		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 	}
-	
+
+	public function setPastellFactory(PastellFactory $pastellFactory){
+		$this->pastellFactory = $pastellFactory;
+	}
+
 	public function getLastError(){
 		return $this->lastError;
 	}
-	
-	
-	public function verifArchive($transactionInfo){
-		
-		
-		echo "Transaction {$transactionInfo['unique_id']} : ";
-		
-		$authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$authorityInfo = $authoritySQL->getInfo($transactionInfo['authority_id']);
-		
-		if (! $authorityInfo['pastell_url'] ){
-			echo  "La collectivité n'a pas de Pastell configuré\n";
-			return false;
-		}
-		
-		$pastell = new Pastell($authorityInfo['pastell_url'],
-						$authorityInfo['pastell_id_e'],
-						$authorityInfo['pastell_login'],
-						$authorityInfo['pastell_password']);
 
-		$info = $pastell->getInfo($transactionInfo['sae_transfer_identifier']);
-		if(!$info){
-			echo $pastell->getLastError()."\n";
+	public function setArchiveEnAttenteEnvoiSEA($user_id,$id){
+		try {
+			$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+			$user = new User($user_id);
+			$user->init();
+			if ( ! $transactionsInfo || ($transactionsInfo['user_id'] != $user_id && !$user->isAdmin())){
+				throw new Exception("Accès refusé (seul le créateur de l'Acte peut l'archiver)");
+			}
+			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14,20)) && $transactionsInfo['type'] != 1) {
+				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».");
+			}
+
+			$this->verifHasPastell($transactionsInfo);
+		} catch (Exception $e){
+			$this->lastError = $e->getMessage();
 			return false;
 		}
-		$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'],'reply_sae');
-		if (! $reply_sae){
-			echo "Pas encore de réponse (".$pastell->getLastError().") \n";
-			return false;
-		}
-		
-		@ $xml = simplexml_load_string($reply_sae);
-		
-		if (! $xml){
-			echo "Impossible de lire le fichier reply.xml : $reply_sae\n";
-			return false;
-		}
-		
-		
-		$nodeName = strval($xml->getName());
-		$xml_message = utf8_decode(strval($xml->ReplyCode) . " - " . strval($xml->Comment));
-		
-		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-		
-		
-		if ($nodeName == 'ArchiveTransferAcceptance'){
-			$url = $info['data']['url_archive'];
-			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
-			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$reply_sae);
-			$actesTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);			
-		} else {
-			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";			
-			$actesTransactionsSQL->updateStatus($transactionInfo['id'],14,$msg,$reply_sae);
-		}
-		
-		echo "$msg\n";
-		
-		$pastell->delete($transactionInfo['sae_transfer_identifier']);
-		echo "Document supprimé sur Pastell\n";
-		
-		return true;
+		$id = $this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
+		return $id;
 	}
-	
-	public function sendArchive($user_id,$id){
-		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-		$transactionsInfo = $actesTransactionsSQL->getInfo($id);
-		$user = new User($user_id);
-		$user->init();
-		if ( ! $transactionsInfo || ($transactionsInfo['user_id'] != $user_id && !$user->isAdmin())){
-			$this->lastError = "Accès refusé (seul le créateur de l'Acte peut l'archiver)";
-			return false;
-		}
 
-		if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14)) && $transactionsInfo['type'] != 1) {
-			$this->lastError = "Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».";
-			return false;
-		}
-		
+	private function verifHasPastell(array $transactionsInfo){
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
-		
+
 		if (! $authorityInfo['pastell_url'] ){
-			$this->lastError = "La collectivité n'a pas de Pastell configuré";
-			return false;
+			throw new Exception("La collectivité n'a pas de Pastell configuré");
 		}
-		
-		$pastell = new Pastell($authorityInfo['pastell_url'],
-						$authorityInfo['pastell_id_e'],
-						$authorityInfo['pastell_login'],
-						$authorityInfo['pastell_password']);
+	}
+
+	public function sendAllArchive(){
+		echo "Début de l'envoie:\n";
+		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+		$info_list = $actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+		echo count($info_list)." transactions à envoyer...\n";
+		foreach($info_list as $info){
+			$transaction_id = $info['id'];
+			echo "Envoi de la transaction $transaction_id : \n";
+			$this->sendArchive($transaction_id);
+		}
+		echo "Fin de l'envoie\n";
+	}
+
+	public function sendArchive($id){
+		try {
+			$this->sendArchiveThrow($id);
+		} catch (Exception $e){
+			echo "Impossible d'envoyer la transaction $id : " . $e->getMessage()."\n";
+			$status_info = $this->actesTransactionsSQL->getLastStatusInfo($id);
+			$first_try = strtotime($status_info['date']);
+			if (time() - $first_try > self::PASSER_EN_ERREUR_APRES_NB_SECOND){
+				$this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,"Le document n'a pas pu être envoyé au SAE");
+				echo "Passage de la transaction en erreur !\n";
+			}
+		}
+	}
+
+	private function sendArchiveThrow($id){
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+		$this->verifHasPastell($transactionsInfo);
+
+		$authoritySQL = new AuthoritySQL($this->sqlQuery);
+		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
+
+
+		$pastell = $this->pastellFactory->getNewInstance(
+			$authorityInfo['pastell_url'],
+			$authorityInfo['pastell_id_e'],
+			$authorityInfo['pastell_login'],
+			$authorityInfo['pastell_password']
+		);
 
 		$id_d = $pastell->createActes($transactionsInfo);
-		
+
 		if (! $id_d){
-			$this->lastError = $pastell->getLastError();
-			return false;
+			throw new Exception($pastell->getLastError());
 		}
 		
-		$actesFile = $actesTransactionsSQL->getAllFile($id);
+		$actesFile = $this->actesTransactionsSQL->getAllFile($id);
 		
 		$actesEnvelopeSQL = new ActesEnvelopeSQL($this->sqlQuery);
 		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
@@ -140,20 +135,18 @@ class ActesArchiveControler {
 		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
 		$path_parts = pathinfo($pdftampone);
 		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
-			$datetampon = $actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
+			$datetampon = $this->actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
 			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$datetampon);
 		}
 		$pastell->postFile($id_d,"acte_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
 
-		$datepostage = $actesTransactionsStatusInfo = $actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
-		$pastell->setDatePostage($id_d,date("d/m/Y",time($datepostage['date'])));
+		$datepostage = $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
+		$pastell->setDatePostage($id_d,date("d/m/Y",strtotime($datepostage['date'])));
 
 		$trans = new ActesTransaction();
 		$trans->setId($id);
 		if ( ! $trans->init()) {
-			$_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-			header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-			exit ();
+			throw new Exception("Impossible de récupérer la transaction...");
 		}
 		$owner = new User($transactionsInfo['user_id']);
 		$owner->init();
@@ -174,7 +167,7 @@ class ActesArchiveControler {
 			$pastell->postAnnexe($id_d, $tmp_folder.'/'.$file['filename'], $file['posted_filename']);
 		}
 		
-		$actesTransactionsStatusInfo = $actesTransactionsSQL->getStatusInfo($id,4);
+		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($id,4);
 		
 		
 		file_put_contents($tmp_folder."/AR-{$acte_filename}", $actesTransactionsStatusInfo['flux_retour']);
@@ -185,14 +178,14 @@ class ActesArchiveControler {
 		
 		file_put_contents($tmp_folder."/empty", "");
 	
-		$relatedTransaction = $actesTransactionsSQL->getRelatedTransaction($id);
+		$relatedTransaction = $this->actesTransactionsSQL->getRelatedTransaction($id);
 		$echange_prefecture_type = array();
 		$echange_prefecture = array();
 		$echange_prefecture_ar = array();
 		foreach($relatedTransaction as $transaction){
 			
 			$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transaction['envelope_id']);
-			$actesFile = $actesTransactionsSQL->getAllFile($transaction['id']);
+			$actesFile = $this->actesTransactionsSQL->getAllFile($transaction['id']);
 			$file_to_send =  ACTES_FILES_UPLOAD_ROOT . "/" .  $actesEnvelopeInfo['file_path'];
 			
 			if ($transaction['related_transaction_id'] == $orig_acte_transaction_id){
@@ -201,7 +194,7 @@ class ActesArchiveControler {
 				$filename = $actesFile[0]['filename'];
 				$posted_filename = $actesFile[0]['posted_filename'];
 				array_shift ($actesFile);
-				$status_info =  $actesTransactionsSQL->getStatusInfo($transaction['id'],8);
+				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],8);
 			} else {
 				//Transaction retour
 				$echange_prefecture_type[] = $transaction['type'].'R';
@@ -210,7 +203,7 @@ class ActesArchiveControler {
 				$posted_filename = $actesFile[1]['posted_filename'];
 				array_shift ($actesFile);
 				array_shift ($actesFile);
-				$status_info =  $actesTransactionsSQL->getStatusInfo($transaction['id'],11);	
+				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],11);
 			}
 			$tgzExtractor->extract($file_to_send,$filename);
 			$echange_prefecture[] = array($tmp_folder."/".$filename,$posted_filename);
@@ -237,13 +230,13 @@ class ActesArchiveControler {
 		
 		$result = $pastell->sendSAE($id_d);
 		if (! $result){
-			$this->lastError = $pastell->getLastError();
-			return false;
+			throw new Exception($pastell->getLastError());
 		}
-		$actesTransactionsSQL->updateStatus($id,12,"Envoie de la transaction $id à Pastell");
-		$actesTransactionsSQL->setSAETransferIdentifier($id,$id_d);
-		return true;
+		$this->actesTransactionsSQL->updateStatus($id,12,"Envoie de la transaction $id à Pastell");
+		$this->actesTransactionsSQL->setSAETransferIdentifier($id,$id_d);
 	}
+
+
 	
 	public function tamponerActe($tmpfolder,$fileorig,$transactionInfo){
 		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
@@ -276,4 +269,70 @@ class ActesArchiveControler {
        }//fin if
        return $pathpdfout;
 	}
+
+
+
+
+	public function verifArchive($transactionInfo){
+		echo "Transaction {$transactionInfo['unique_id']} : ";
+
+		$authoritySQL = new AuthoritySQL($this->sqlQuery);
+		$authorityInfo = $authoritySQL->getInfo($transactionInfo['authority_id']);
+
+		if (! $authorityInfo['pastell_url'] ){
+			echo  "La collectivité n'a pas de Pastell configuré\n";
+			return false;
+		}
+
+		$pastell = $this->pastellFactory->getNewInstance(
+			$authorityInfo['pastell_url'],
+			$authorityInfo['pastell_id_e'],
+			$authorityInfo['pastell_login'],
+			$authorityInfo['pastell_password']
+		);
+
+		$info = $pastell->getInfo($transactionInfo['sae_transfer_identifier']);
+		if(!$info){
+			echo $pastell->getLastError()."\n";
+			return false;
+		}
+		$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'],'reply_sae');
+		if (! $reply_sae){
+			echo "Pas encore de réponse (".$pastell->getLastError().") \n";
+			return false;
+		}
+
+		@ $xml = simplexml_load_string($reply_sae);
+
+		if (! $xml){
+			echo "Impossible de lire le fichier reply.xml : $reply_sae\n";
+			return false;
+		}
+
+
+		$nodeName = strval($xml->getName());
+		$xml_message = utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
+
+		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+
+
+		if ($nodeName == 'ArchiveTransferAcceptance'){
+			$url = $info['data']['url_archive'];
+			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
+			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$reply_sae);
+			$actesTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);
+		} else {
+			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";
+			$actesTransactionsSQL->updateStatus($transactionInfo['id'],14,$msg,$reply_sae);
+		}
+
+		echo "$msg\n";
+
+		$pastell->delete($transactionInfo['sae_transfer_identifier']);
+		echo "Document supprimé sur Pastell\n";
+
+		return true;
+	}
+
+
 }

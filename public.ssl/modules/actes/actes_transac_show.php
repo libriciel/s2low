@@ -427,7 +427,7 @@ if (!$trans->hasPendingCancelTrans()) {
     $authoritySQL = new AuthoritySQL($sqlQuery);
     $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
-    if ($trans->get("type") == 1 && in_array($transStatus,array(4,5,14)) && $trans->canValidate() ) {
+    if ($trans->get("type") == 1 && in_array($transStatus,array(4,5,14,20)) && $trans->canValidate() ) {
 	     $actionHtml .= "<div class=\"action\">\n";
           $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n";
           $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
