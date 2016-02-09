@@ -133,7 +133,14 @@ if ($mod) {
 }
 
 
-$certitificate_id_list = $him->getIdFromCertData($him->get("certificate_hash"));
+$sql = "SELECT users.id, users.login, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name";
+$sql .= " FROM users LEFT OUTER JOIN authorities ON users.authority_id = authorities.id";
+$sql .= " WHERE users.certificate_hash = :certificate_hash";
+$sql .= " ORDER BY users.name";
+$sql_params = array(
+    'certificate_hash' => $him->get("certificate_hash")
+);
+$users_cert = $sqlQuery->query($sql, $sql_params);
 
 $status_type_list = $me->get("statusTypes");
 $roles_type_list = $me->get("roleTypes");
@@ -402,7 +409,7 @@ ob_start();
 </form>
 
 <h2>Autre utilisateur partageant le même certificat</h2>
-<?php if (count($certitificate_id_list) > 1) : ?>
+<?php if (count($users_cert) > 1) : ?>
 	<div class="data_table">
 		<table class="data-table table table-striped">
 			<tr>
@@ -414,22 +421,21 @@ ob_start();
 				<th class="data">Collectivit&eacute;</th>
 				<th class="data">Actions</th>
 			</tr>
-			<?php foreach($certitificate_id_list as $i => $id_other):
+			<?php foreach($users_cert as $i => $user_cert):
+                    $id_other = $user_cert['id'];
 					if ($id_other == $him->getId()){
 						continue;
 					}
-					$he = new User($id_other);
-					$he->init();
-					$he_authority = new Authority($he->get("authority_id"));  ?>
+                    ?>
 	 				<tr class="alternate<?php echo (($i%2) + 1) ?>">
-						<td><?php echo $he->get("login") ?></td> 		
-						<td><?php echo $he->get("givenname") . " " . $he->get("name") ?></td>
-						<td><a href="mailto: <?php echo $he->get("email") ?>"><?php echo $he->get("email") ?></a></td>
-						<td><?php echo $roles_type_list[$he->get("role")] ?></td>
-						<td><?php echo $status_type_list[$he->get("status")] ?></td>
-						<td><a href="<?php echo WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id") ?>"><?php echo $he_authority->get("name")  ?></a></td>
+						<td><?php echo $user_cert["login"] ?></td> 		
+						<td><?php echo $user_cert["givenname"] . " " . $user_cert["name"] ?></td>
+						<td><a href="mailto: <?php echo $user_cert["email"] ?>"><?php echo $user_cert["email"] ?></a></td>
+						<td><?php echo $roles_type_list[$user_cert["role"]] ?></td>
+						<td><?php echo $status_type_list[$user_cert["status"]] ?></td>
+						<td><a href="<?php echo WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user_cert["authority_id"] ?>"><?php echo $user_cert["authority_name"]  ?></a></td>
 						<td>
-							<a href="<?php echo WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") ?>" class="icon">
+							<a href="<?php echo WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $user_cert["id"] ?>" class="icon">
 								<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
 							</a>
 						</td>
