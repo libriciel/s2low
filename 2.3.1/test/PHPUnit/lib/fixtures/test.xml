@@ -1,0 +1,3 @@
+<a:toto xmlns:a="http://test.fr/test" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="TOTO_42">
+    <a:titi>test</a:titi>
+</a:toto>

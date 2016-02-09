@@ -1,0 +1,9 @@
+DROP INDEX IF EXISTS helios_transactions_workflow_transaction_id_idx;
+CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow (transaction_id);
+DROP INDEX IF EXISTS helios_transactions_workflow_status_id_idx;
+CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow (status_id);
+DROP INDEX IF EXISTS helios_transactions_workflow_date_idx;
+CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow (date);
+
+VACUUM FULL helios_transactions_workflow;
+REINDEX TABLE helios_transactions_workflow;

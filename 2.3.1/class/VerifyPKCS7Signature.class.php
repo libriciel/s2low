@@ -1,0 +1,109 @@
+<?php
+class VerifyPKCS7SIgnature {
+
+	private $authorized_ca_path;
+
+	public function __construct($authorized_ca_path){
+		$this->authorized_ca_path = $authorized_ca_path;
+	}
+
+	public function verify($file_path,$signature){
+		try {
+			$signature_file = sys_get_temp_dir() . "/slow_signature_".mt_rand(0,mt_getrandmax());
+			$certificate_file = sys_get_temp_dir() . "/slow_certificate_".mt_rand(0,mt_getrandmax());
+
+			$this->verifyThrow($file_path,$signature,$signature_file,$certificate_file);
+				
+		} catch(Exception $e){
+			throw $e;
+				
+			if (file_exists($certificate_file)) {
+				unlink($certificate_file);
+			}
+			if (file_exists($signature_file)){
+				unlink($signature_file);
+			}
+			throw $e;
+		}
+
+		unlink($certificate_file);
+		unlink($signature_file);
+		return true;
+	}
+
+	private function verifyThrow($file_path,$signature,$signature_file,$certificate_file){
+		$result = file_put_contents($signature_file, $signature);
+		if ($result === false){
+			throw new Exception("Impossible d'écrire la signature dans $signature_file");
+		}
+
+		$certificate = $this->getCertificate($signature_file);
+
+
+		$result = file_put_contents($certificate_file, $certificate);
+		if ($result === false){
+			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
+		}
+
+		$this->checkCertificate($certificate_file);
+
+		$command ="openssl smime -in $signature_file -inform PEM -verify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
+		exec($command, $output, $return);
+		$output = implode("\n",$output);
+		if ($return != 0 ){
+			throw new Exception("La vérification de la signature a échoué (code $return):  (command : $command) (retour : $output)");
+		}
+	}
+
+	public function verifyCertificate($signature_content){
+		$signature_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
+		file_put_contents($signature_path,$signature_content);
+		$certificate = $this->getCertificate($signature_path);
+		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
+		file_put_contents($certificate_path, $certificate);
+		try {
+			$this->checkCertificate($certificate_path);
+		} finally {
+			unlink($signature_path);
+			unlink($certificate_path);
+		}
+	}
+
+	private function getCertificate($signatureFileName){
+		$extractCmd = "openssl pkcs7 -in " . $signatureFileName . " -print_certs | openssl x509";
+
+		exec($extractCmd, $output, $ret);
+
+		if ( $ret ) {
+			throw new Exception("Erreur d'extraction du certificat : echec de la commande $extractCmd");
+		}
+
+		$cert = implode("\n",$output);
+		$cert.="\n";
+
+		return $cert;
+	}
+
+
+	private function checkCertificate($certificate_path) {
+		$verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path";
+		exec($verifyCmd, $out, $ret);
+
+		$revoked = false;
+
+		$result = implode("\n",$out);
+
+		if ($ret != 0) {
+			throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+		}
+
+		foreach ($out as $line) {
+			if (stripos($line, 'certificate revoked') !== false) {
+				throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+			}
+		}
+
+		return true;
+	}
+
+}

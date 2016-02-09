@@ -1,0 +1,17 @@
+<xsd:schema xmlns:ie="http://xml.insee.fr/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xml.insee.fr/schema" elementFormDefault="qualified" attributeFormDefault="qualified" version="1.0">
+	<xsd:simpleType name="Chaine_Numerique_stype">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="[0-9]*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Chaine_ASCII_Majuscule_stype">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="[A-Z]*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="Chaine_Numerique_et_ASCII_Majuscule_stype">
+		<xsd:restriction base="xsd:token">
+			<xsd:pattern value="[0-9A-Z]*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
