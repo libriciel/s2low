@@ -1,5 +1,5 @@
 <?php
-
+require_once (SITEROOT . "/class/VerifyPKCS7Signature.class.php");
 require_once (SITEROOT . "/public.ssl/modules/actes/class/ActesIncludedFile.class.php");
 
 class ActesTransaction extends DataObject {
