@@ -61,7 +61,7 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetExpirationDate(){
 		$info = $this->x509Certificate->getExpirationDate(file_get_contents(__DIR__."/fixtures/clean_pem.pem"));
-		$this->assertEquals("2025-08-16 08:33:59",$info);
+		$this->assertEquals("2025-08-16 10:33:59",$info);
 	}
 
 	public function testGetExpirationDateFailed(){
@@ -70,7 +70,7 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetInfo(){
 		$info = $this->x509Certificate->getInfo(file_get_contents(__DIR__."/fixtures/clean_pem.pem"));
-		$this->assertEquals("2025-08-16 08:33:59",$info['expiration_date']);
+		$this->assertEquals("2025-08-16 10:33:59",$info['expiration_date']);
 	}
 
 	public function testGetInfoFailed(){

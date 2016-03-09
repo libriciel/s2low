@@ -27,12 +27,8 @@ class User extends DataObject {
   protected $cert_not_after;
   protected $cert_serial;
 	protected $certificate_hash;
-
-  private $perms;
-
   protected $certFilePath;
   protected $certPassphrase;
-
   protected $dbFields = array( "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => true),
 						 "subject_dn" => array( "descr" => "Dn du certificat", "type" => "isString", "mandatory" => true),
 						 "issuer_dn" => array( "descr" => "DN du fournisseur du certificat", "type" => "isString", "mandatory" => true),
@@ -47,31 +43,27 @@ class User extends DataObject {
 						 "cert_not_before" => array( "descr" => "Date d'émission du certificat", "type" => "isDate", "mandatory" => true),
 						 "cert_not_after" => array( "descr" => "Date d'expiration du certificat", "type" => "isDate", "mandatory" => true),
 						 "cert_serial" => array( "descr" => "Numéro de série du certificat", "type" => "isDate", "mandatory" => true),
-  						"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),	
+  						"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),
   						"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
   						"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
 	  "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
-  
-						 );
 
+						 );
   protected $roleTypes = array(
 							   "SADM" => "Super administrateur",
 							   "GADM" => "Administrateur de groupe",
 							   "ADM" => "Administrateur collectivité",
 							   "USER" => "Utilisateur"
 							   );
-
   protected $permsTypes = array(
 								"NONE" => "Aucune",
 								"RO" => "Visualisation",
 								"RW" => "Modification",
 								);
-
   protected $superPermsTypes = array(
 									 "GRANT" => "Concession"
 									 );
-
-  
+  private $perms;
   private $is_loggued;
   
   /**
@@ -83,42 +75,28 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode d'initialisation d'un utilisateur depuis la base de données
-   * \return true si succès, false sinon
+   * \brief Méthode de vérification de la présence d'utilisateur dans la base
+   * \return True si la base contient au moins un utilisateur, false sinon
   */
-  public function init() {
-	return (parent::init() && $this->initPerms());
-  }
+  public static function dbHasUser() {
+	$sql = "SELECT id FROM users";
 
-  /**
-   * \brief Méthode permettant de fixer la valeur d'un attribut
-   * \param $name chaîne : Nom de l'attribut
-   * \param $val : valeur de l'attribut
-  */
-  public function set($name, $val) {
-	switch ($name) {
-	case "role":
-	  if (array_search($val, array_keys($this->roleTypes)) === false) {
-		$val = 'USER';
-	  }
-	  break;
-	}
+    $db =DatabasePool::getInstance();
 
-	parent::set($name, $val);
-  }
+	$result = $db->select($sql);
 
-	public function getPermTypes(array $module_specific_perms = array()){
-		$result = $this->permsTypes;
-
-		if ($this->isSuper()) {
-			$result = array_merge($result, $this->superPermsTypes);
+    if (! $result->isError()) {
+		  if ($result->num_row() > 0) {
+			return true;
+		  } else {
+			return false;
+		  }
+    } else {
+		  echo $result->error;
+		  return false;
 		}
+  }
 
-		$result = array_merge($result,$module_specific_perms);
-		
-		return $result;
-	}
-	
 	public function getNbUserWithMyCertificate(){
 		$sql = "SELECT count(*) AS nb FROM users WHERE certificate_hash='" .
 			pg_escape_string($this->certificate_hash) .
@@ -128,7 +106,7 @@ class User extends DataObject {
 		$row = $result->get_next_row();
 		return  $row['nb'];
 	}
- 
+
   /**
    * \brief Méthode d'authentification de l'utilisateur
    * \return true si succès, false sinon
@@ -147,12 +125,109 @@ class User extends DataObject {
 	  	return $init && $is_active;
 	}
 	
+  /**
+   * \brief Méthode d'initialisation d'un utilisateur depuis la base de données
+   * \return true si succès, false sinon
+  */
+  public function init() {
+	return (parent::init() && $this->initPerms());
+  }
+ 
+  /**
+   * \brief Méthode d'initialisation des permissions d'un utilisateur depuis la base de données
+   * \return true si succès, false sinon
+  */
+  public function initPerms() {
+	if (isset($this->id)) {
+	  $this->resetPerms();
 
+	  $authModules = Module::getModulesForAuthority($this->authority_id);
+
+	  $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name " .
+	  		" FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id " .
+	  		" WHERE users_perms.user_id='" . $this->id . "' AND modules.status=1";
+
+	  $result = $this->db->select($sql);
+
+	  if (! $result->isError()) {
+		while ($row = $result->get_next_row()) {
+		  // Ajout de la permission uniquement si la collectivité est autorisée sur ce module
+		  if ($this->isGroupAdminOrSuper() || ! empty($authModules[$row["module_id"]])) {
+			$this->perms[$row["name"]] = array("module_id" => $row["module_id"], "perm" => $row["perm"], "id" => $row["id"]);
+		  }
+		}
+	  } else {
+		$this->errorMsg = "User::initPerms - erreur de récupération des permissions de l'utilisateur";
+		return false;
+	  }
+
+	}
+
+	return true;
+  }
+	
+  /**
+   * \brief Méthode de remise à zéro des permission de l'objet utilisateur courant
+  */
+  public function resetPerms() {
+	$this->perms = array();
+  }
+	
+  /**
+   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe ou un super administrateur
+   * \return true si l'utilisateur est administrateur de groupe ou super administrateur, false sinon
+  */
+  public function isGroupAdminOrSuper() {
+	return ($this->isGroupAdmin() || $this->isSuper());
+  }
+  
+  /**
+   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe
+   * \return true si l'utilisateur est administrateur de groupe, false sinon
+  */
+  public function isGroupAdmin() {
+	if (isset($this->role) && ($this->role == "GADM") && is_numeric($this->authority_group_id)) {
+	  return true;
+	} else {
+	  return false;
+	}
+  }
+	
+  /**
+   * \brief Méthode qui détermine si l'utilisateur est un super administrateur
+   * \return true si l'utilisateur est super administrateur, false sinon
+  */
+  public function isSuper() {
+    if ( isset($this->role) && $this->role == 'SADM') {
+	  return true;
+	} else {
+	  return false;
+	}
+  }
+	
+  /**
+   * \brief Méthode qui détermine si l'utilisateur est activé ou non
+   * \return true si l'utilisateur est activé, false s'il est désactivé
+  */
+  public function isActive() {
+	$authority = new Authority($this->authority_id);
+
+	// Prise en compte du groupe
+	if (is_numeric($authority->get("authority_group_id"))) {
+	  $group = new Group($authority->get("authority_group_id"));
+	  $groupIsActive = $group->isActive();
+	} else {
+	  // La collectivité n'appartient à aucun groupe
+	  $groupIsActive = true;
+	}
+
+    return ($this->status == 1 && $authority->isActive() && $groupIsActive);
+  }
+	
 	public function isLogged(){
 		return $this->is_loggued;
 	}
-	
-	
+
 	public function login($login,$password){
 		$this->retrieveInfoFromClientCertificate();
 
@@ -164,32 +239,23 @@ class User extends DataObject {
 			$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
 			return false;
 		}
-		
+
    		$row = $result->get_next_row();
 		$this->id = $row['id'];
 		$_SESSION['id_login'] = $this->id;
 		return true;
 	}
-  
-	public function logout(){
-		unset($_SESSION['id_login']);
-	}
-	
-	public function getCertificateInfo(){
-		$this->retrieveInfoFromClientCertificate();
-		return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn,'certificate_hash' => $this->certificate_hash);
-	}
-	
+
 	private function retrieveInfoFromClientCertificate(){
 		 // Ne marche pas avec apache-ssl
 		if ( ! isset($_SERVER['SSL_CLIENT_VERIFY']) || $_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
 		}
-		
+
 		if (empty($_SERVER['SSL_CLIENT_CERT'])){
 			return false;
 		}
-		
+
 		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
 	       	return false;
 		}
@@ -210,7 +276,16 @@ class User extends DataObject {
 		$this->certificate_hash = $x509Certificate->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
 
 	}
-	
+
+	public function logout(){
+		unset($_SESSION['id_login']);
+	}
+
+	public function getCertificateInfo(){
+		$this->retrieveInfoFromClientCertificate();
+		return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn,'certificate_hash' => $this->certificate_hash);
+	}
+
   /**
    * \brief Méthode de réinitialisation de la session d'un utilisateur
   */
@@ -218,7 +293,7 @@ class User extends DataObject {
     $_SESSION = array();
 
     $sessionCookie = session_get_cookie_params();
-    
+
     if ( (empty($sessionCookie['domain'])) && (empty($sessionCookie['secure'])) ) {
       setcookie(session_name(), '', time()-3600, $sessionCookie['path']);
     } elseif (empty($sessionCookie['secure'])) {
@@ -228,28 +303,6 @@ class User extends DataObject {
     }
 
     session_destroy();
-  }
-
-	public function getIdFromCertData($certificate_hash)
-	{
-		$resultat = array();
-		$sql = "SELECT id FROM users WHERE certificate_hash='" .
-			pg_escape_string($certificate_hash) .
-			"'" .
-			" ORDER BY name,givenname,login";
-    
-    $result = $this->db->select($sql);
-    
-	if ($result->isError() || $result->num_row() == 0){
-		$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
-		return false;
-	}
-	
-   	while ($row = $result->get_next_row()){
-		$resultat[] = $row['id'];      	
-	}
-	return $resultat;
- 
   }
 
   /**
@@ -274,57 +327,6 @@ class User extends DataObject {
 	} else {
 	  return false;
 	}
-  }
-
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe
-   * \return true si l'utilisateur est administrateur de groupe, false sinon
-  */
-  public function isGroupAdmin() {
-	if (isset($this->role) && ($this->role == "GADM") && is_numeric($this->authority_group_id)) {
-	  return true;
-	} else {
-	  return false;
-	}
-  }
-
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un super administrateur
-   * \return true si l'utilisateur est super administrateur, false sinon
-  */
-  public function isSuper() {
-    if ( isset($this->role) && $this->role == 'SADM') {
-	  return true;
-	} else {
-	  return false;
-	}
-  }
-
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe ou un super administrateur
-   * \return true si l'utilisateur est administrateur de groupe ou super administrateur, false sinon
-  */
-  public function isGroupAdminOrSuper() {
-	return ($this->isGroupAdmin() || $this->isSuper());
-  }
-
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est activé ou non
-   * \return true si l'utilisateur est activé, false s'il est désactivé
-  */
-  public function isActive() {
-	$authority = new Authority($this->authority_id);
-
-	// Prise en compte du groupe
-	if (is_numeric($authority->get("authority_group_id"))) {
-	  $group = new Group($authority->get("authority_group_id"));
-	  $groupIsActive = $group->isActive();
-	} else {
-	  // La collectivité n'appartient à aucun groupe
-	  $groupIsActive = true;
-	}
-
-    return ($this->status == 1 && $authority->isActive() && $groupIsActive);
   }
 
   /**
@@ -372,6 +374,18 @@ class User extends DataObject {
   }
 
   /**
+   * \brief Méthode retournant les permissions de l'utilisateur sur un module particulier
+   * \param $module chaîne : nom du module pour lequel récupérer les permissions
+   * \return La chaîne des permissions sur le module ou null si aucune permission trouvée
+  */
+  public function getPerm($module) {
+  	if (empty($this->perms[$module])){
+  		return null;
+  	}
+  	return $this->perms[$module]["perm"];
+  }
+
+  /**
    * \brief Méthode retournant la description du rôle de l'utilisateur en cours
    * \return La description ou une chaîne vide si la decsription n'est pas trouvée
   */
@@ -385,18 +399,6 @@ class User extends DataObject {
   */
   public function getPerms() {
     return (isset($this->perms)) ? $this->perms : null;
-  }
-
-  /**
-   * \brief Méthode retournant les permissions de l'utilisateur sur un module particulier
-   * \param $module chaîne : nom du module pour lequel récupérer les permissions
-   * \return La chaîne des permissions sur le module ou null si aucune permission trouvée
-  */
-  public function getPerm($module) {  	
-  	if (empty($this->perms[$module])){
-  		return null;
-  	}
-  	return $this->perms[$module]["perm"];
   }
 
   /**
@@ -497,45 +499,17 @@ class User extends DataObject {
 	return true;
   }
 
-  /**
-   * \brief Méthode de remise à zéro des permission de l'objet utilisateur courant
-  */
-  public function resetPerms() {
-	$this->perms = array();
-  }
+	public function getPermTypes(array $module_specific_perms = array()){
+		$result = $this->permsTypes;
 
-  /**
-   * \brief Méthode d'initialisation des permissions d'un utilisateur depuis la base de données
-   * \return true si succès, false sinon
-  */
-  public function initPerms() {
-	if (isset($this->id)) {
-	  $this->resetPerms();
-
-	  $authModules = Module::getModulesForAuthority($this->authority_id);
-
-	  $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name " .
-	  		" FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id " .
-	  		" WHERE users_perms.user_id='" . $this->id . "' AND modules.status=1";
-
-	  $result = $this->db->select($sql);
-
-	  if (! $result->isError()) {
-		while ($row = $result->get_next_row()) {
-		  // Ajout de la permission uniquement si la collectivité est autorisée sur ce module
-		  if ($this->isGroupAdminOrSuper() || ! empty($authModules[$row["module_id"]])) {
-			$this->perms[$row["name"]] = array("module_id" => $row["module_id"], "perm" => $row["perm"], "id" => $row["id"]);
-		  }
+		if ($this->isSuper()) {
+			$result = array_merge($result, $this->superPermsTypes);
 		}
-	  } else {
-		$this->errorMsg = "User::initPerms - erreur de récupération des permissions de l'utilisateur";
-		return false;
-	  }
 
+		$result = array_merge($result,$module_specific_perms);
+
+		return $result;
 	}
-
-	return true;
-  }
 
   /**
    * \brief Méthode renvoyant le nom d'un utilisateur formatté "Prénom Nom"
@@ -561,8 +535,8 @@ class User extends DataObject {
 	  if (! $this->importCert()) {
 		return false;
 	  }
-	}	
-	
+	}
+
     if (! ($sql = parent::save($validate, true))) {
 	  return false;
 	}
@@ -591,7 +565,7 @@ class User extends DataObject {
 	  reset($this->perms);
 	  foreach ($this->perms as $perm) {
 		$sql = "INSERT INTO users_perms (module_id, user_id, perm) VALUES(" . addslashes($perm["module_id"]) . ", " . $this->id . ", '" . addslashes($perm["perm"]) . "')";
-		
+
 		if (! $this->db->exec($sql)) {
 		  $this->errorMsg = "Erreur lors de la sauvegarde des permissions de l'utilisateur.";
 		  $this->db->rollback();
@@ -609,6 +583,113 @@ class User extends DataObject {
     return true;
   }
 
+  /**
+   * \brief Méthode d'import des informations contenus dans le certificat utilisateur
+   * \return true si succès, false sinon
+  */
+  private function importCert() {
+	if (isset($this->certFilePath)) {
+      if (! $this->certificate = file_get_contents($this->certFilePath)) {
+		$this->errorMsg = "Erreur de traitement du certificat.";
+		return false;
+	  }
+
+      if (($tab = openssl_x509_parse($this->certificate)) === false) {
+		$this->errorMsg = "Erreur d'analyse du certificat.";
+		return false;
+	  }
+
+	  $this->issuer_dn = "";
+	  foreach ($tab['issuer'] as $key => $val) {
+		$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
+	  }
+
+      $this->subject_dn = $tab["name"];
+
+		/*
+			Il semble qu'il y a un bug avec l'utilisation des validFrom et validTo qui retourne
+		une date au format GeneralizedTime ou UTCTime. Les champs validFrom_time_t et
+		validTo_time_t semble plus *stable*.
+		*/
+      $this->cert_not_before = date("Y-m-d H:i:s",$tab['validFrom_time_t']);
+      $this->cert_not_after = date("Y-m-d H:i:s",$tab['validTo_time_t']);
+
+
+      $this->cert_serial = $tab["serialNumber"];
+
+
+		$x509 = new X509Certificate();
+		$this->certificate_hash = $x509->getBase64Hash($this->certificate, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
+
+
+	  // Controle de l'existence d'un utilisateur avec les mêmes données de certificat.
+	  // Si un utilisateur a les mêmes données mais qu'il s'agit de l'utilisateur courant
+	  // on accepte => permet de modifier le certificat
+		$ids = $this->getIdFromCertData($this->certificate_hash);
+
+	  if ((! empty($ids) && $this->isNew()) || (! empty($ids) && ! $this->isNew() && $ids[0] != $this->id)) {
+
+	  	if ($ids[0]){
+	  		$autre = new User($ids[0]);
+	  		$autre->init();
+	  		if (! $autre->get('login')){
+	  			$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
+  				return false;
+	  		}
+	  	}
+
+	  	if ($this->login) {
+	  		$id = $this->getIdFromLogin($this->login);
+  			if ($id){
+  				$this->errorMsg = "Un utilisateur avec le même login existe déjà.";
+  				return false;
+  			}
+
+	  		return true;
+	  	}
+		$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
+		return false;
+	  }
+
+	  return true;
+	}
+
+	$this->errorMsg = "Pas de certificat fournit.";
+	return false;
+  }
+
+	public function getIdFromCertData($certificate_hash)
+	{
+		$resultat = array();
+		$sql = "SELECT id FROM users WHERE certificate_hash='" .
+			pg_escape_string($certificate_hash) .
+			"'" .
+			" ORDER BY name,givenname,login";
+
+    $result = $this->db->select($sql);
+
+	if ($result->isError() || $result->num_row() == 0){
+		$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
+		return false;
+	}
+
+   	while ($row = $result->get_next_row()){
+		$resultat[] = $row['id'];
+	}
+	return $resultat;
+
+  }
+
+	public function getIdFromLogin($login){
+		$sql = "SELECT id FROM users WHERE users.login='" . pg_escape_string($login) . "' AND certificate_hash='" . pg_escape_string($this->certificate) . "'";
+
+		$result = $this->db->select($sql);
+		if ($result->num_row() == 0 ){
+			return false;
+		}
+		$row = $result->get_next_row();
+		return $row['id'];
+	}
 
   /**
    * \brief Méthode de suppression d'un utilisateur de la base de données
@@ -653,87 +734,6 @@ class User extends DataObject {
 	return true;
   }
 
-	private function certTime2IsoDate($validTo){
-		preg_match_all("#(\d\d)#",$validTo,$matches);
-		$m = $matches[0];
-		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
-	}
-
-  /**
-   * \brief Méthode d'import des informations contenus dans le certificat utilisateur
-   * \return true si succès, false sinon
-  */
-  private function importCert() {
-	if (isset($this->certFilePath)) {
-      if (! $this->certificate = file_get_contents($this->certFilePath)) {
-		$this->errorMsg = "Erreur de traitement du certificat.";
-		return false;
-	  }
-
-      if (($tab = openssl_x509_parse($this->certificate)) === false) {
-		$this->errorMsg = "Erreur d'analyse du certificat.";
-		return false;
-	  }
-
-      //print_r($tab);
-      //exit();
-
-	  $this->issuer_dn = "";
-	  foreach ($tab['issuer'] as $key => $val) {
-		$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
-	  }
-
-      $this->subject_dn = $tab["name"];
-
-      $this->cert_not_before = $this->certTime2IsoDate($tab['validFrom']);
-
-		 // ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validFrom']);
-      $this->cert_not_after = $this->certTime2IsoDate($tab['validTo']);
-		  //ereg_replace('^(..)(..)(..)(..)(..)(..)(.)','20\1-\2-\3 \4:\5:\6 GMT', $tab['validTo']);
-
-      $this->cert_serial = $tab["serialNumber"];
-
-
-		$x509 = new X509Certificate();
-		$this->certificate_hash = $x509->getBase64Hash($this->certificate, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-
-
-	  // Controle de l'existence d'un utilisateur avec les mêmes données de certificat.
-	  // Si un utilisateur a les mêmes données mais qu'il s'agit de l'utilisateur courant
-	  // on accepte => permet de modifier le certificat
-		$ids = $this->getIdFromCertData($this->certificate_hash);
-
-	  if ((! empty($ids) && $this->isNew()) || (! empty($ids) && ! $this->isNew() && $ids[0] != $this->id)) {
-	  	
-	  	if ($ids[0]){
-	  		$autre = new User($ids[0]);
-	  		$autre->init();
-	  		if (! $autre->get('login')){
-	  			$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
-  				return false;
-	  		}
-	  	}
-	  	
-	  	if ($this->login) {	  		
-	  		$id = $this->getIdFromLogin($this->login);
-  			if ($id){
-  				$this->errorMsg = "Un utilisateur avec le même login existe déjà.";
-  				return false;
-  			}
-	  		
-	  		return true;
-	  	}
-		$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
-		return false;
-	  }
-
-	  return true;
-	}
-
-	$this->errorMsg = "Pas de certificat fournit.";
-	return false;
-  }
-
   /**
    * \brief Méthode de récupération de la liste des utilisateurs
    * \param $cond chaîne (optionnel) : condition à appliquer sur la requête SQL
@@ -745,29 +745,6 @@ class User extends DataObject {
 	}
 
     return $this->data;
-  }
-
-  /**
-   * \brief Méthode de vérification de la présence d'utilisateur dans la base
-   * \return True si la base contient au moins un utilisateur, false sinon
-  */
-  public static function dbHasUser() {
-	$sql = "SELECT id FROM users";
-
-    $db =DatabasePool::getInstance();
-
-	$result = $db->select($sql);
-
-    if (! $result->isError()) {
-		  if ($result->num_row() > 0) {
-			return true;
-		  } else {
-			return false;
-		  }
-    } else {
-		  echo $result->error;
-		  return false;
-		}
   }
   
   public function getUserSiren()
@@ -787,24 +764,30 @@ class User extends DataObject {
     }
 	}
 
-	public function getIdFromLogin($login){
-		$sql = "SELECT id FROM users WHERE users.login='" . pg_escape_string($login) . "' AND certificate_hash='" . pg_escape_string($this->certificate) . "'";
-
-		$result = $this->db->select($sql);
-		if ($result->num_row() == 0 ){
-			return false;
-		}
-		$row = $result->get_next_row();
-		return $row['id'];
-	}
-
 	public function cloneCertificat($new_id){
 		$clone = new User($new_id);
 		$clone->init();
 		foreach (array('subject_dn', 'issuer_dn', 'certificate', 'cert_not_before', 'cert_not_after', 'cert_serial', 'certificate_hash') as $info) {
 			$this->set($info,$clone->get($info));
-		}				
+		}
 	}
+
+  /**
+   * \brief Méthode permettant de fixer la valeur d'un attribut
+   * \param $name chaîne : Nom de l'attribut
+   * \param $val : valeur de l'attribut
+  */
+  public function set($name, $val) {
+	switch ($name) {
+	case "role":
+	  if (array_search($val, array_keys($this->roleTypes)) === false) {
+		$val = 'USER';
+	  }
+	  break;
+	}
+
+	parent::set($name, $val);
+  }
 	
 	public function getAllPossibleAuthority(){
 		assert('$this->id');

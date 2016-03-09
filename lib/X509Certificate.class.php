@@ -60,7 +60,7 @@ class X509Certificate {
 		}
 		$resource = $this->readCertContent($pem_certificate_content);
 		$info =  openssl_x509_parse($resource);
-		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo']);
+		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo_time_t']);
 		$info['issuer_name'] = "";
 		foreach ($info['issuer'] as $key => $val) {
 			$info['issuer_name'] .= "/" . $key . "=" . utf8_decode($val);
@@ -83,9 +83,7 @@ class X509Certificate {
 	}
 
 	private function certTime2IsoDate($validTo){
-		preg_match_all("#(\d\d)#",$validTo,$matches);
-		$m = $matches[0];
-		return "20{$m[0]}-{$m[1]}-{$m[2]} {$m[3]}:{$m[4]}:{$m[5]}";
+		return date("Y-m-d H:i:s",$validTo);
 	}
 
 	public function getIssuerDN($pem_certificate_content,$strtoupper = false){

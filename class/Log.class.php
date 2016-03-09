@@ -48,6 +48,115 @@ class Log extends DataObject {
   }
 
   /**
+   * \brief Constructeur d'une entrée de log à partir d'infos fournies en paramètres
+   * \param $issuer chaîne : Créateur de l'entrée de journal
+   * \param $message chaîne : Message de l'entrée de journal
+   * \param $severity chaîne : Sévérité du message
+   * \param $date chaîne (optionnel) : Date de l'entrée de journal (date courante par défaut)
+   * \param $visibility chaîne (optionnel) : Visibilité de l'entrée de log ('USER', 'ADM' ou 'SADM') (vide par défaut)
+   * \param $module chaîne (optionnel) : Module concerné par le message (vide par défaut)
+   * \param $user objet User (optionnel) : Utilisateur concerné par l'entrée de journal (vide par défaut)
+   * \return True en cas de succès, false sinon
+   */
+  public static function newEntry($issuer, $message, $severity, $date = false, $visibility = false, $module = false, $user = false ,$userid=false) {
+	$logEntry = new Log();
+	$logEntry->set("issuer", $issuer);
+	$logEntry->set("message", $message);
+	$logEntry->set("severity", $severity);
+	if (! $date) {
+	  $date = date('Y-m-d H:i:s');
+	}
+
+	$logEntry->set("date", $date);
+
+	if ($module) {
+	  $logEntry->set("module", $module);
+	}
+
+
+	if ($user) {
+		$userid = $user->getId();
+	}
+
+	if ($userid) {
+		$logEntry->set("user_id",$userid);
+	}
+	if ($visibility) {
+	  $logEntry->set("visibility", $visibility);
+	}
+
+	  global $sqlQuery;
+	  $authority_id = false;
+	  $authority_group_id = false;
+	  if ($userid) {
+		  $userSQL = new UserSQL($sqlQuery);
+		  $info = $userSQL->getInfo($userid);
+		  if ($info) {
+			  $authority_id = $info['authority_id'];
+
+		  }
+	  }
+	  if ($authority_id){
+		$authoritySQL = new AuthoritySQL($sqlQuery);
+		$info = $authoritySQL->getInfo($authority_id);
+		  if ($info){
+			  $authority_group_id = $info['authority_group_id'];
+		  }
+	  }
+
+	  $logEntry->set("authority_id",$authority_id);
+	  $logEntry->set("authority_group_id",$authority_group_id);
+
+
+	// Enregistrement de l'entrée pour déterminer son id
+	if (! $logEntry->save()) {
+	  return false;
+	}
+
+	if (! $timestamp = $logEntry->genTimestamp()) {
+	  return false;
+	}
+
+	$logEntry->set("timestamp", $timestamp);
+
+	if (! $logEntry->save()) {
+	  return false;
+	}
+
+	return true;
+  }
+
+  /**
+   * \brief Méthode de détermination de l'horodatage d'une ligne de journal
+   * \return La chaîne correspondant à l'horodatage de l'entrée, false sinon
+   */
+  public function genTimestamp() {
+	  if (TESTING_ENVIRONNEMENT){
+		  //FIXME
+		return "TESTING";
+	  }
+	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
+	$logFile = tempnam('/tmp', 'tedetis_web_');
+	$timeFile = $logFile . ".sig";
+
+	$data = $this->getConcatLog();
+
+	if (! $this->writeLogEntryToFile($logFile, $data)) {
+	  return false;
+	}
+
+	$parapheur = new Parapheur($data);
+	$signature = $parapheur->getSignature();
+	
+	if (! $signature){
+		$this->errorMsg = $parapheur->getLastError();
+		return false;
+	}
+	
+	return $signature;
+  } 
+
+  /**
    * \brief Méthode qui détermine si un utilisateur a la permission de visualiser l'entrée de journal courante
    * \param $user User : Objet utilisateur concerné
    */
@@ -95,86 +204,6 @@ class Log extends DataObject {
 	  if (! $user->isAdmin() && $this->visibility == 'USER') {
 		return true;
 	  }
-	}
-
-	return false;
-  }
-
-  /**
-   * \brief Méthode de détermination de l'horodatage d'une ligne de journal
-   * \return La chaîne correspondant à l'horodatage de l'entrée, false sinon
-   */
-  public function genTimestamp() {
-	  if (TESTING_ENVIRONNEMENT){
-		  //FIXME
-		return "TESTING";
-	  }
-	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
-	$logFile = tempnam('/tmp', 'tedetis_web_');
-	$timeFile = $logFile . ".sig";
-
-	$data = $this->getConcatLog();
-
-	if (! $this->writeLogEntryToFile($logFile, $data)) {
-	  return false;
-	}
-
-	$parapheur = new Parapheur($data);
-	$signature = $parapheur->getSignature();
-	
-	if (! $signature){
-		$this->errorMsg = $parapheur->getLastError();
-		return false;
-	}
-	
-	return $signature;
-  } 
-
-  /**
-   * \brief Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-   * \return La chaîne de tous les champs séparés par '**||**'
-   */
-  public function getConcatLog() {
-	$data[] = $this->id;
-	$data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
-	$data[] = $this->module;
-	$data[] = $this->severity;
-	$data[] = $this->issuer;
-	$data[] = $this->user_id;
-	$data[] = $this->visibility;
-	$data[] = $this->message;
-
-	
-	$log = implode($data, "**||**");
-
-	return $log;
-  }
-
-  /**
-   * \brief Méthode d'écriture de l'entrée de journal dans un fichier
-   * \return True en cas de succès, false sinon
-   */
-  public function writeLogEntryToFile($logFile, $data) {
-	if (! file_put_contents($logFile, $data)) {
-	  $this->errorMsg = "Erreur système de fichiers.";
-	  return false;
-	}
-
-	return true;
-  }
-
-  /**
-   * \brief Méthode d'écriture de l'horodatage dans un fichier
-   * \return True en cas de succès, false sinon
-   */
-  function writeTimestampToFile($timestampFile) {
-	if (isset($this->timestamp) && ! empty($this->timestamp)) {
-	  if (! file_put_contents($timestampFile, $this->timestamp)) {
-		$this->errorMsg = "Erreur système de fichiers.";
-		return false;
-	  }
-
-	  return true;
 	}
 
 	return false;
@@ -256,6 +285,59 @@ class Log extends DataObject {
 	return false;
   }
 
+  /**
+   * \brief Méthode d'écriture de l'entrée de journal dans un fichier
+   * \return True en cas de succès, false sinon
+   */
+  public function writeLogEntryToFile($logFile, $data) {
+	if (! file_put_contents($logFile, $data)) {
+	  $this->errorMsg = "Erreur système de fichiers.";
+	  return false;
+	}
+
+	return true;
+  }
+
+  /**
+   * \brief Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
+   * \return La chaîne de tous les champs séparés par '**||**'
+   */
+  public function getConcatLog() {
+	$data[] = $this->id;
+	$data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
+	$data[] = $this->module;
+	$data[] = $this->severity;
+	$data[] = $this->issuer;
+	$data[] = $this->user_id;
+	$data[] = $this->visibility;
+	$data[] = $this->message;
+
+
+	$log = implode($data, "**||**");
+
+	return $log;
+  }
+
+  /**
+   * \brief Méthode d'écriture de l'horodatage dans un fichier
+   * \return True en cas de succès, false sinon
+   */
+  function writeTimestampToFile($timestampFile) {
+	if (isset($this->timestamp) && ! empty($this->timestamp)) {
+	  if (! file_put_contents($timestampFile, $this->timestamp)) {
+		$this->errorMsg = "Erreur système de fichiers.";
+		return false;
+	  }
+
+	  return true;
+	}
+
+	return false;
+  }
+
+  /**********************/
+  /* Méthodes statiques */
+  /**********************/
 
   /**
    * \brief Méthode d'obtention d'une liste d'entrées de journal
@@ -268,81 +350,6 @@ class Log extends DataObject {
 	}
 
     return $this->data;
-  }
-
-  /**********************/
-  /* Méthodes statiques */
-  /**********************/
-
-  /**
-   * \brief Constructeur d'une entrée de log à partir d'infos fournies en paramètres
-   * \param $issuer chaîne : Créateur de l'entrée de journal
-   * \param $message chaîne : Message de l'entrée de journal
-   * \param $severity chaîne : Sévérité du message
-   * \param $date chaîne (optionnel) : Date de l'entrée de journal (date courante par défaut)
-   * \param $visibility chaîne (optionnel) : Visibilité de l'entrée de log ('USER', 'ADM' ou 'SADM') (vide par défaut)
-   * \param $module chaîne (optionnel) : Module concerné par le message (vide par défaut)
-   * \param $user objet User (optionnel) : Utilisateur concerné par l'entrée de journal (vide par défaut)
-   * \return True en cas de succès, false sinon
-   */
-  public static function newEntry($issuer, $message, $severity, $date = false, $visibility = false, $module = false, $user = false ,$userid=false) {
-	$logEntry = new Log();
-	$logEntry->set("issuer", $issuer);
-	$logEntry->set("message", $message);
-	$logEntry->set("severity", $severity);
-	if (! $date) {
-	  $date = date('Y-m-d H:i:s');
-	}
-
-	$logEntry->set("date", $date);
-
-	if ($module) {
-	  $logEntry->set("module", $module);
-	}
-
-
-	if ($user) {
-		$userid = $user->getId();
-	}
-
-	if ($userid) {
-		$logEntry->set("user_id",$userid);
-	}
-	if ($visibility) {
-	  $logEntry->set("visibility", $visibility);
-	}
-
-	  global $sqlQuery;
-	  $authority_id = false;
-	  if ($userid) {
-		  $userSQL = new UserSQL($sqlQuery);
-		  $info = $userSQL->getInfo($userid);
-		  if ($info) {
-			  $authority_id = $info['authority_id'];
-			  $authority_group_id = $info['authority_group_id'];
-		  }
-	  }
-
-	  $logEntry->set("authority_id",$authority_id);
-	  $logEntry->set("authority_group_id",$authority_group_id);
-
-
-	// Enregistrement de l'entrée pour déterminer son id
-	if (! $logEntry->save()) {
-	  return false;
-	}
-	
-	if (! $timestamp = $logEntry->genTimestamp()) {
-	  return false;
-	}
-
-	$logEntry->set("timestamp", $timestamp);
-
-	if (! $logEntry->save()) {
-	  return false;
-	}
-
-	return true;
   }
 }
 
