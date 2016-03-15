@@ -122,5 +122,24 @@ class ActesTransactionsSQL {
 		$this->sqlQuery->query($sql,1,$transaction_id);
 	}
 	
+	public function updateLastStatusId(){
+		$sql = "SELECT id FROM actes_transactions";
+	
+		$id_list = $this->sqlQuery->queryOneCol($sql);
+		foreach($id_list as $transaction_id) {
+			//echo "$transaction_id : ";
+			$status=$this->getlaststatusforid($transaction_id);
+			//echo "$status\n";
+			$sqlupdate = "update actes_transactions set last_status_id = ? where  id = ?";
+			$this->sqlQuery->query($sql,$status,$transaction_id);
+        }
+    }
+	
+	public function getlaststatusforid($idtrans){
+		$sql = " select status_id from actes_transactions_workflow where transaction_id = ? ORDER BY id DESC limit 1";
+		$status = $this->sqlQuery->queryOneCol($sql,$idtrans);
+        return $status[0];
+    }
+	
 	
 }
