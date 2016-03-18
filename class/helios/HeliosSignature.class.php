@@ -41,7 +41,7 @@ class HeliosSignature {
 	
 		$c14n_file = tempnam("/tmp/", "s2low_xml_c14n_");
 	
-		$command = "{$this->xml_starlet_path} c14n --without-comments {$tmp_file} > {$c14n_file}";
+		$command = "{$this->xml_starlet_path} c14n --exc-without-comments {$tmp_file} > {$c14n_file}";
 		`$command`;
 	
 		if (! file_exists($c14n_file)){

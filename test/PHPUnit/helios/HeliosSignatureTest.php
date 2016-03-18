@@ -18,7 +18,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("c78a9729c1eb89ff9b47401bd7cd9d7e", $info['bordereau_id']);
 		//b154007082d85457480a716b350b9452df35ac7b avec xmlstarlet
 		//af7231795b1c9c3b050895e3e0444d2f9ec7cac6 avec PHP DOM C14N 
-		$this->assertEquals("b154007082d85457480a716b350b9452df35ac7b", $info['bordereau_hash']);
+		$this->assertEquals("af7231795b1c9c3b050895e3e0444d2f9ec7cac6", $info['bordereau_hash']);
 		$this->assertFalse($info['isbordereau']);
 	}
 	
