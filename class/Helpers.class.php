@@ -115,6 +115,12 @@ class Helpers {
    * \param $apiMsg (optionnel) : message renvoyé dans le cas d'un appel par API (sinon $msg)
   */
   public static function returnAndExit($status, $msg, $redirect = null, $apiMsg = null) {
+
+	  //Permet de logguer le résultat dans un fichier, nottamment utile pour Qualigraf
+	  /*$message = "[{$_SERVER['REMOTE_ADDR']}]".date("Y-m-d H:i:s")." status=$status msg=$msg apiMsg=$apiMsg\n";
+	  file_put_contents("/tmp/s2low-return-and-exit.log",$message,FILE_APPEND);*/
+
+
 	// Détection si appel par API C ou formulaire Web (d'abord en POST puis en GET)
 	$api = Helpers::getVarFromPost("api");
 
