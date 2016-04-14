@@ -1,5 +1,6 @@
 <?php
-class Antivirus {
+class Antivirus
+{
 	public static $errorMsg;
 
  	public static function checkArchiveSanity($path) {
@@ -50,16 +51,4 @@ class Antivirus {
 	  Trace::wrap_exec("rm $new_file",$output, $ret);
 	  return $returnValue;
  	}
-
-	public static function isAlive(){
-		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . __FILE__ ." 2>&1", $output, $ret);
-
-		if ($ret == 0){
-			return true;
-		}
-
-		throw new Exception("Problème avec l'antivirus : " . implode("\n",$output));
-	}
-
-
 }
