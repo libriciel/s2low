@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TPrets">
+		<xs:sequence>
+			<xs:element name="PRET" type="TPret" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPret">
+		<xs:sequence>
+			<xs:element name="CodTypPret" type="ATCodTypPret">
+				<xs:annotation>
+					<xs:documentation>Type prêt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomBenefPret" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Nom du bénéficiaire du prêt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelib" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de Délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalRestDu_01_01" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capital restant dû au 01/01 ou début exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalRestDu_31_12" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capital restant dû au 31/12 ou fin exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant capital à rembourser dans l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtIntExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant intérêt à verser dans l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtICNE" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>ICNE exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

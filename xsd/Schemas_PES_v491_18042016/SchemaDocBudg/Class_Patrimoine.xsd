@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TPatrimoines">
+		<xs:sequence>
+			<xs:element name="PATRIMOINE" type="TPatrimoine" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPatrimoine">
+		<xs:sequence>
+			<xs:element name="CodVariPatrim" type="ATCodVariPatrim">
+				<xs:annotation>
+					<xs:documentation>Code type variation du patrimoine</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodEntreeSorti" type="ATCodEntreeSorti" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicateur Entrée / Sortie du patrimoine</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodModalAcqui" type="ATCodModalAcqui" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code modalité d'acquisition du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodModalSorti" type="ATCodModalSorti" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code modalité de sortie du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypImmo" type="ATCodTypImmo" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code type immobilisation
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibBien" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Désignation du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtValAcquiBien" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Valeur d'acquisition du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCumulAmortBien" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cumul des amortissements</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAmortExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant des amortissements de l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeAmortBien" type="Base_Num4" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Durée de l'amortissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumInventaire" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro d'inventaire du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtAcquiBien" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date d'acquisition du bien</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtVNCBien0101" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valeur Nette Comptable au 01/01</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtVNCBien3112" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valeur Nette Comptable au 31/12</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtVNCBienSorti" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Valeur Nette Comptable au moment de la sortie</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtPrixCessBienSorti" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Prix de cession du bien sorti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtCessBienSorti" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de cession du bien sorti</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypTitre" type="ATCodTypTitre" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code type de titre</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibOrgPrisePartic" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Organisme dans laquelle la participation a été prise</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelib" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibObserv" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Observation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

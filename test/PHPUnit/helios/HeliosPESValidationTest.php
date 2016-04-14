@@ -22,7 +22,11 @@ class HeliosPESValidationTest extends PHPUnit_Framework_TestCase {
 	//http://stackoverflow.com/questions/29953032/large-number-failing-validation-as-type-xsinteger
 	public function testPESallerSigner(){
 		$heliosPESValidation  = new HeliosPESValidation(HELIOS_XSD_PATH);
-		$this->assertTrue($heliosPESValidation->validate(file_get_contents(__DIR__."/fixtures/pes_signe.xml")));
+		$result = $heliosPESValidation->validate(file_get_contents(__DIR__."/fixtures/pes_signe.xml"));
+		if (! $result){
+			print_r($heliosPESValidation->getLastError());
+		}
+		$this->assertTrue($result);
 	}
 
 	
