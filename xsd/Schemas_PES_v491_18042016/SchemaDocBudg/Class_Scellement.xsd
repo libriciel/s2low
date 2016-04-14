@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TScellement">
+    <xs:annotation>
+      <xs:documentation>Le scellement est une action qui permet  à un ordonnateur d'indiquer qu'il ne fera plus de modification du flux avant son transfert en préfécture ou à la DGFiP.
+                Le scellement n'est pas une signature éléctronique, et n'a pas valeur probante. C'est une empreinte qui permet simplement de savoir si le flux a été altéré
+                pendant son transfert.
+                Avant le calcul de l'empreinte, si le bloc Scellement existe dans le flux il est supprimé. Le flux est ensuite canonisé par canonisation non exclusive sans commentaires.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="date" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation>La date/heure à laquelle le flux a été scellé</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="md5" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>L'empreinte MD5 du flux. cf la documentation de TScellement pour la description de l'algorithme de calcul de l'empreinte</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="sha1" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:documentation>L'empreinte SHA1 du flux. cf la documentation de TScellement pour la description de l'algorithme de calcul de l'empreinte</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

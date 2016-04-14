@@ -86,13 +86,19 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+
+$html .= "<h2>V2.3.2 du 18.04.2016</h2>";
+$html .= "<ul>";
+$html .= "<li>HELIOS : Modification du schéma XSD : passage à la version 491</li>";
+$html .= "</ul>";
+
+
 $html .= "<h2>V2.3.1 du 27.01.2016</h2>";
 $html .= "<ul>";
 $html .= "<li>HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ;";
 $html .= "<li>HELIOS : on ne vérifie plus les schémas XSD ;";
 $html .= "<li>ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ;";
 $html .= "<li>HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER ;";
-$html .= "<li>;";
 $html .= "</ul>";
 
 
@@ -127,7 +133,6 @@ $html .= "<li>Module ACTES : correction bug : il n'est plus possible de créer un
 $html .= "<li>Module ACTES : correction bug : création d'une transaction sans indiquer la nature ;";
 $html .= "<li>Module HELIOS : correction bug : analyse des PES_ALLER lorsque la balise NomFic contient des accents ;";
 $html .= "<li>Module Mails : correction bug ; sous IE, il n'était pas possible de saisir deux emails dans le même champs;";
-$html .= "<li>;";
 $html .= "</ul>";
 
 $html .= "<h2>V2.2 du 25.09.2015</h2>";

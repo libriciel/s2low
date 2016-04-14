@@ -25,7 +25,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
 		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
 
-		$heliosPESValidation = new HeliosPESValidation(__DIR__."/../../../../xsd/Schemas_PES_v471_072015/");
+		$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 		$this->assertTrue($heliosPESValidation->validate(file_get_contents("/tmp/{$info['sha1']}")));
 	}
 

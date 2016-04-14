@@ -1,7 +1,8 @@
 <?php
 
+require_once (__DIR__."/../../init/init.php");
 $file_path = $argv[1];
-$schema_pes_path = __DIR__."/../../xsd/Schemas_PES_v471_072015/";
+$schema_pes_path = HELIOS_XSD_PATH;
 
 
 $xml = simplexml_load_file($file_path);
