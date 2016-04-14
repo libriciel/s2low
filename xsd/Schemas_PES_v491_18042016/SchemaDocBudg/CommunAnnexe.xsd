@@ -1,0 +1,2488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:z="odm:enrichissement">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="ATCodNatOrgGroup">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>EPCI</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Syndicats mixtes (article 5721-2 du CGCT)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Syndicats mixtes (article L5721-1 du CGCT)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodInvFonc">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Investissement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Fonctionnement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypAgent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Titulaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="N">
+            <xs:annotation>
+              <xs:documentation>Non titulaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodCatAgent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="A" />
+          <xs:enumeration value="B" />
+          <xs:enumeration value="C" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATNatureContrat">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CDD">
+            <xs:annotation>
+              <xs:documentation>Contrat à durée déterminée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CDI">
+            <xs:annotation>
+              <xs:documentation>Contrat à durée indéterminée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSectAgentTitulaire">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <!-- xs:enumeration value="DIR"><xs:annotation><xs:documentation>Directeurs et collaborateurs de cabinets</xs:documentation></xs:annotation></xs:enumeration -->
+          <xs:enumeration value="ADM">
+            <xs:annotation>
+              <xs:documentation>Filière administrative</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="TECH">
+            <xs:annotation>
+              <xs:documentation>Technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Sociale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MS">
+            <xs:annotation>
+              <xs:documentation>Médico-sociale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MT">
+            <xs:annotation>
+              <xs:documentation>Médico-technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="SP">
+            <xs:annotation>
+              <xs:documentation>Sportive</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CULT">
+            <xs:annotation>
+              <xs:documentation>Culturelle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ANIM">
+            <xs:annotation>
+              <xs:documentation>Animation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="POL">
+            <xs:annotation>
+              <xs:documentation>Police</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>Emplois non cités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DIR1">
+            <xs:annotation>
+              <xs:documentation>Directeur général des services</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DIR2">
+            <xs:annotation>
+              <xs:documentation>Directeur général adjoint des services</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DIR3">
+            <xs:annotation>
+              <xs:documentation>Collaborateur de cabinet</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DIR4">
+            <xs:annotation>
+              <xs:documentation>Directeur général des services techniques</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DIR5">
+            <xs:annotation>
+              <xs:documentation>Emplois créés au titre de l'article 6-1 de la loi n°84-53</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="URB">
+            <xs:annotation>
+              <xs:documentation>Urbanisme</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSectAgentNonTitulaire">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ADM">
+            <xs:annotation>
+              <xs:documentation>Administratif (dont emplois de l'article 47 de la loi du 26/07/1984)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="FIN">
+            <xs:annotation>
+              <xs:documentation>Financier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="TECH">
+            <xs:annotation>
+              <xs:documentation>Technique et informatique (dont emplois de l'article 47 de la loi du 26/07/1984)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="URB">
+            <xs:annotation>
+              <xs:documentation>Urbanisme (dont aménagement urbain)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ENV">
+            <xs:annotation>
+              <xs:documentation>Environnement (dont espaces verts et aménagement rural)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="COM">
+            <xs:annotation>
+              <xs:documentation>Communication</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Social (dont aide sociale)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MS">
+            <xs:annotation>
+              <xs:documentation>Médico-Social</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MT">
+            <xs:annotation>
+              <xs:documentation>Médico-Technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="SP">
+            <xs:annotation>
+              <xs:documentation>Sportif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CULT">
+            <xs:annotation>
+              <xs:documentation>Culturel (dont enseignement)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ANIM">
+            <xs:annotation>
+              <xs:documentation>Animation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="RS">
+            <xs:annotation>
+              <xs:documentation>Restauration scolaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="ENT">
+            <xs:annotation>
+              <xs:documentation>Entretien</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CAB">
+            <xs:annotation>
+              <xs:documentation>Collaborateurs de cabinet (article 110 de la loi du 26/01/1984)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>Non cités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--xs:enumeration value="DIR1"><xs:annotation><xs:documentation>Directeur général des services</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="DIR2"><xs:annotation><xs:documentation>Directeur général adjoint des services</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="DIR3"><xs:annotation><xs:documentation>Collaborateur de cabinet</xs:documentation></xs:annotation></xs:enumeration-->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSousSectAgent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Services généraux</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Services de santé et de secours médical</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Sans</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodMotifContrAgent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="3-a°">
+            <xs:annotation>
+              <xs:documentation>
+                <z:libelle>Article 3, 1er alinéa</z:libelle>
+                <z:description>accroissement temporaire d'activité</z:description>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-b">
+            <xs:annotation>
+              <xs:documentation>
+                <z:libelle>Article 3, 2ème alinéa</z:libelle>
+                <z:description>accroissement saisonnier d'activité</z:description>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-1">
+            <xs:annotation>
+              <xs:documentation>Remplacement d'un fonctionnaire autorisé à servir à temps partiel ou indisponible (maladie, maternité...)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-2">
+            <xs:annotation>
+              <xs:documentation>Vacance temporaire d'un emploi</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-3-1°">
+            <xs:annotation>
+              <xs:documentation>Absence de cadre d'emplois de fonctionnaires susceptibles d'assurer les fonctions correspondantes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-3-2°">
+            <xs:annotation>
+              <xs:documentation>Emplois du niveau de la catégorie A lorsque les besoins des services ou la nature des fonctions le justifient</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-3-3°">
+            <xs:annotation>
+              <xs:documentation>Emplois de secrétaire de mairie des communes de moins 1000 habitants et de secrétaire des groupements composés de communes dont la population moyenne est inférieur à ce seuil</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-3-4°">
+            <xs:annotation>
+              <xs:documentation>Emplois à temps non complet des communes de moins de 1000 habitants et des groupements composés de communes dont la population moyenne est inférieur à ce seuil, lorsque la quantité de temps de travail est inférieur à 50 %</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-3-5°">
+            <xs:annotation>
+              <xs:documentation>Emplois des communes de moins de 2000 habitants dont la création ou la suppression dépend de la décision d'une autorité qui s'impose à la collectivité ou à l'établissement en matière de création, de changement de périmètre ou de suppression d'un service public</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3-4">
+            <xs:annotation>
+              <xs:documentation>
+                <z:libelle>Article 21 de la loi n°2012-347</z:libelle>
+                <z:description>contrat à durée indéterminée obligatoirement proposée à un agent contractuel</z:description>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="38">
+            <xs:annotation>
+              <xs:documentation>Article 38 travailleurs handicapés catégorie C</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="47">
+            <xs:annotation>
+              <xs:documentation>Article 47 recrutements directs sur emplois fonctionnels</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="110">
+            <xs:annotation>
+              <xs:documentation>Article 110 collaborateurs de groupes de cabinets</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="110-1">
+            <xs:annotation>
+              <xs:documentation>Collaborateurs de groupes d'élus</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypBud">
+    <xs:annotation>
+      <xs:documentation>Cette balise indique le type de budget, P pour principal, A pour Annexe.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Principal.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Annexe.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATTypOpBudg">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Opération à l'intérieur d'une section</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Opération de section à section</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypBudAgreg">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Budget principal</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Budgets annexes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--xs:enumeration value="03"><xs:annotation><xs:documentation>Budget primitif et budgets annexes</xs:documentation></xs:annotation></xs:enumeration-->
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Flux réciproques entre le budget principal et les budgets annexes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--xs:enumeration value="05"><xs:annotation><xs:documentation>Présentations consolidées du budget primitif et des budgets annexes</xs:documentation></xs:annotation></xs:enumeration-->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypAutori">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Autorisation de programme</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Autorisation d'engagement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSTypAutori">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Situation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Ratio</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATTypContrCredBail">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Immobilier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="M">
+            <xs:annotation>
+              <xs:documentation>Mobilier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodArticleTresorerie">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="5191">
+            <xs:annotation>
+              <xs:documentation>Avances du Trésor</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5192">
+            <xs:annotation>
+              <xs:documentation>Avances de trésorerie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="51921">
+            <xs:annotation>
+              <xs:documentation>Avances de la collectivité de rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="51928">
+            <xs:annotation>
+              <xs:documentation>Autre avances de trésorerie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!-- xs:enumeration value="5193"/ -->
+          <xs:enumeration value="51931">
+            <xs:annotation>
+              <xs:documentation>Lignes de crédits de trésorerie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="51932">
+            <xs:annotation>
+              <xs:documentation>Lignes de trésorerie liées à un emprunt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5194">
+            <xs:annotation>
+              <xs:documentation>Billets de trésorerie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5198">
+            <xs:annotation>
+              <xs:documentation>Autres crédits de trésorerie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodVariPatrim">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>CGCT</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Code de l'urbanisme</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Bâtiments scolaires et administratifs</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Construction, installation et agencements (hors bâtiments scolaires)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Instalaltions techniques, matériels et outillage en cours d'amortissement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Autres immobilisations corporelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Immobilisations incorporelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Participations et créances rattachées à des participations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Autres immobilisations financières</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodEntreeSorti">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Entrée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Sortie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypImmo">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Incorporelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Corporelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypTitre">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="261">
+            <xs:annotation>
+              <xs:documentation>Titres de participation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="266">
+            <xs:annotation>
+              <xs:documentation>Autres formes de participations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="271">
+            <xs:annotation>
+              <xs:documentation>Titres immobilisés (dt. propr.)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="272">
+            <xs:annotation>
+              <xs:documentation>Titres immobilisés (dont créances)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="276">
+            <xs:annotation>
+              <xs:documentation>Autres créances immobilisées</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodModalAcqui">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Acquisition à titre onéreux</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Acquisition à titre gratuit</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Affectation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Mise à disposition</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Mise en concession ou affermage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Divers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodModalSorti">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Cession à titre onéreux</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Cession à titre gratuit</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Affectation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Mise à disposition</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Mise en concession ou affermage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Mise à la réforme</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Divers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodArticleAutresEng">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="8017" />
+          <xs:enumeration value="8018" />
+          <xs:enumeration value="8026" />
+          <xs:enumeration value="8027" />
+          <xs:enumeration value="8028" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypPersoMorale">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="U">
+            <xs:annotation>
+              <xs:documentation>Public</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Privé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Entreprise</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>à l'exception des entreprises</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypVentil">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Répartition de la TEOM</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Assainissement collectif/non collectif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Eau et assainissement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="V">
+            <xs:annotation>
+              <xs:documentation>Services assujettis à la TVA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="G">
+            <xs:annotation>
+              <xs:documentation>Travaux en régie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRegroup">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Recettes issues de la TEOM</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Dotations et participations reçues</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Autres recettes de fonctionnement éventuelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Remboursement d'emprunts et dettes assimilées</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Acquisitions d'immobilisations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Autres dépenses éventuelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Souscription d'emprunts et dettes assimilées</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Dotations et subventions reçues</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Autres recettes éventuelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="20">
+            <xs:annotation>
+              <xs:documentation>Opérations d'équipements</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="21">
+            <xs:annotation>
+              <xs:documentation>Opérations pour comptes de tiers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypDette">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Dettes pour subventions d'équipement, à verser en annuités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Dettes pour travaux devant être réglés en plusieurs exercices</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Dettes pour souscritpion au capital d'une SEM</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Dettes pour locations-ventes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Dettes pour locations-acquisitions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Autres dettes à moyen ou long terme (sans réception de fonds)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypTabProv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Etat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="L">
+            <xs:annotation>
+              <xs:documentation>Etalement ou provisions nouvelles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypPret">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Assortit d'intérêt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="N">
+            <xs:annotation>
+              <xs:documentation>Non assortit d'intérêt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypProv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="B">
+            <xs:annotation>
+              <xs:documentation>Provisions budgétaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Provisions semi-budgétaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSTypProv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Risques et charges</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Dépréciations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="G">
+            <xs:annotation>
+              <xs:documentation>Provisions réglementées et amortissements dérogatoires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypEmprunt">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Normal</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Emprunt pour autres organismes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Emprunt normal de refinancement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Emprunt normal refinancé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Emprunt d'un autre organisme de refinancement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Emprunt d'un autre organisme refinancé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Emprunt garanti</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Eléments pour ratio</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!-- xs:enumeration value="11"><xs:annotation><xs:documentation>Emprunt obligataire</xs:documentation></xs:annotation></xs:enumeration -->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypEmprGaranti">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>contractés par des collectivités ou des EP (hors logements sociaux)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>autres que ceux contractés par des collectivités ou des EP (hors logements sociaux)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>contractés pour des opérations de logements aidés par l'état</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Autres emprunts garantis</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Autres emprunts</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypRisqFinanc">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Relatifs aux taux d'intérêts</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Relatifs aux taux de change</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodNatJurBenef">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P1">
+            <xs:annotation>
+              <xs:documentation>Associations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P2">
+            <xs:annotation>
+              <xs:documentation>Entreprises</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P3">
+            <xs:annotation>
+              <xs:documentation>Personnes physiques</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P4">
+            <xs:annotation>
+              <xs:documentation>Autres personnes de droit privé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U1">
+            <xs:annotation>
+              <xs:documentation>Régions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U2">
+            <xs:annotation>
+              <xs:documentation>Départements</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U3">
+            <xs:annotation>
+              <xs:documentation>Communes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U4">
+            <xs:annotation>
+              <xs:documentation>Etablissements de droit public (EPCI, EPA, EPIC, ...)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U5">
+            <xs:annotation>
+              <xs:documentation>Etat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="U6">
+            <xs:annotation>
+              <xs:documentation>Autres personnes de droit public</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodSousTypContrib">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Taxe d'habitation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>TFPB</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>TFPNB</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Taxe professionnelle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Taxe intérieure sur les produits pétroliers (part régionale définie à l'art. 265 du code des douanes)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Taxe sur les permis de conduire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Taxe sur les certificats d'immatriculation des véhicules</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Contribution foncière des entreprises</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Taxe spéciale de consommation de produits pétroliers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Taxe sur le transport public aérien et maritime</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Taxe relative à l'octroi de mer</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Droits assimilés au droit d'octroi de mer auxquels sont soumis les rhums et spiritueux</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Droit de francisation et de navigation corse</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Droit de passeport en Corse</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Droit de consommation sur les tabacs en Corse</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="16">
+            <xs:annotation>
+              <xs:documentation>Taxe spéciale d'équipement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="17">
+            <xs:annotation>
+              <xs:documentation>Autres taxes pour lesquelles l'établissement a un pouvoir de modulation du taux</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="18">
+            <xs:annotation>
+              <xs:documentation>Taxe destinée au financement des dépenses des conseils d'architecture, d'urbanisme et d'environnement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="19">
+            <xs:annotation>
+              <xs:documentation>Taxe départementale des espaces naturels sensibles</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="20">
+            <xs:annotation>
+              <xs:documentation>Taxe départementale de publicité foncière et droit départemental d'enregistrement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="21">
+            <xs:annotation>
+              <xs:documentation>Taxe locale d'électricité</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="22">
+            <xs:annotation>
+              <xs:documentation>Taxe sur les remontées mécaniques</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="23">
+            <xs:annotation>
+              <xs:documentation>Taxe d'aménagement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="24">
+            <xs:annotation>
+              <xs:documentation>Taxe intérieure sur les produits pétroliers (majoration définie à l'art. 265 A bis du code des douanes)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Total</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypContrib">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Directe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Indirecte</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--xs:enumeration value="O"><xs:annotation><xs:documentation>Total</xs:documentation></xs:annotation></xs:enumeration-->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATModStockVentil">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1" />
+          <xs:enumeration value="A" />
+          <xs:enumeration value="B" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodNatEngOrganismeEng">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Délégation de service public</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Détention d'une part de capital</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Garantie ou cautionnement d'un emprunt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Subventions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypAutEng">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Donnés</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Reçus</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodPeriod">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="M">
+            <xs:annotation>
+              <xs:documentation>Mensuel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Trimestriel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Semestriel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Annuel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>Autre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="B">
+            <xs:annotation>
+              <xs:documentation>Bimestrielle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATTypProv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Semi budgétaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Budgétaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodProfilAmort">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Amortissement constant</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Amortissement progressif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>In fine</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Semestriel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="M">
+            <xs:annotation>
+              <xs:documentation>Mensuel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>Autre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTyptxContratCouvRef">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Fixe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="V">
+            <xs:annotation>
+              <xs:documentation>Variable simple</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Révisable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Complexe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTyptx">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Fixe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="V">
+            <xs:annotation>
+              <xs:documentation>Variable simple</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Préfixé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Complexe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="H">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="X">
+            <xs:annotation>
+              <xs:documentation>Obsolète</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodNatEmpr">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Taux fixe sur toute la durée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Taux indexé sur toute la durée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Avec tranches</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Avec options</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypTxCouv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Fixe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="V">
+            <xs:annotation>
+              <xs:documentation>Variable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Complexe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypPres">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Présentation croisée simple</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Présentation croisée détaillée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATIndicON">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Oui</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="N">
+            <xs:annotation>
+              <xs:documentation>Non</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodNatEtab">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Etablissement public créé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Service individualisé dans un budget annexe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Service assujeti à la TVA et non érigé en budget annexe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypPreteur">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Organismes de droit privé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Organismes de droit public</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Emissions obligataires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATBudgPrec">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Primitif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Cumulé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATReprRes">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>sans reprise des résultats de l'exercice N-1</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>avec reprise anticipée des résultats de l'exercice N-1</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3">
+            <xs:annotation>
+              <xs:documentation>avec reprise des résultats de l'exercice N-1 après le vote du compte administratif N-1</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATNatFonc">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Le budget est voté par nature.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Le budget est voté par fonction.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3">
+            <xs:annotation>
+              <xs:documentation>Le vote du budget est mixte.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATTypOpe">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Pour une opération, son type est "Pour Vote"</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Pour une opération, son type est "Pour Information"</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRD">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Recette</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Dépense</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATTypOpBudgAnnexe">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Ordre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Réel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATMontant_Sup">
+    <xs:attribute name="Code" type="V_Texte30" use="required" />
+    <xs:attribute name="V" type="V_Montant" />
+  </xs:complexType>
+  <xs:complexType name="ATCarac_Sup">
+    <xs:attribute name="Code" type="V_Texte30" use="required" />
+    <xs:attribute name="V" type="V_Texte100" />
+  </xs:complexType>
+  <xs:complexType name="ATInformationGenerale">
+    <xs:attribute name="Code" type="V_Texte30" use="required" />
+    <xs:attribute name="V" type="V_Texte100" />
+  </xs:complexType>
+  <xs:complexType name="ATCodOperR">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Financement par le mandant</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Financement par le mandataire (ou le département ou la région)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Financement par emprunt à la charge du tiers (contrepartie D2763)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Financement par d'autres tiers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodEffortPropreReg">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Oui</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="N">
+            <xs:annotation>
+              <xs:documentation>Non</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRegroupBudFerrov">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Contribution régionale d'équilibre d'exploitation TTC</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Compensation fiancière versée par l'Etat au titre de l'exploitation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Compensation financière au titre des tarifs sociaux fixés par l'Etat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Matériel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodCptTER">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Produits du trafic</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Produits annexes au trafic</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Compensations des réductions tarifaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Travaux pour Tiers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Produits hors trafic</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Versements des collectivités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Production immobilisée et stockée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Personnel masse salariale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Consommations intermédiaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Péage RFF</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Impôts, taxes et versements assimilés</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Achats stockés</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Impôts et taxes hors FAP</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Maintenance matériel roulant</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Traction trains, conduite et logistique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="16">
+            <xs:annotation>
+              <xs:documentation>Echange de locomotives entre activités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="17">
+            <xs:annotation>
+              <xs:documentation>Energie de traction électrique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="18">
+            <xs:annotation>
+              <xs:documentation>Energie de traction diesel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="19">
+            <xs:annotation>
+              <xs:documentation>Entretien maintenance des installations fixes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="20">
+            <xs:annotation>
+              <xs:documentation>Prestations télécoms</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="21">
+            <xs:annotation>
+              <xs:documentation>Echange de matériel roulant entre activités</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="22">
+            <xs:annotation>
+              <xs:documentation>Prestations trains</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="23">
+            <xs:annotation>
+              <xs:documentation>Contribution de service Activité Gare</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="24">
+            <xs:annotation>
+              <xs:documentation>Transport en service</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="25">
+            <xs:annotation>
+              <xs:documentation>Etablissements autres que EEX</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="26">
+            <xs:annotation>
+              <xs:documentation>Etablissements EEX</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="27">
+            <xs:annotation>
+              <xs:documentation>Autres facturations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="28">
+            <xs:annotation>
+              <xs:documentation>Contributions aux ECE</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="29">
+            <xs:annotation>
+              <xs:documentation>Dotations aux amortissements</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="30">
+            <xs:annotation>
+              <xs:documentation>Reprise de subvention et écart de réévaluation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="31">
+            <xs:annotation>
+              <xs:documentation>Variation des provisions / transfert de charge</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="32">
+            <xs:annotation>
+              <xs:documentation>Autres produits et charges de gestion courante</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="33">
+            <xs:annotation>
+              <xs:documentation>Résultat financier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="34">
+            <xs:annotation>
+              <xs:documentation>Résultat exceptionnel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodDestFond">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Au titre des mesures gérées sous forme de subvention globales</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Au titre de l'assistance technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRDDJust">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Recette</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Dépense</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DJ">
+            <xs:annotation>
+              <xs:documentation>Dépense justifiée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodDestFonds">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Au titre des mesures gérées sous forme de subvention globales</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Au titre de l'assistance technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRDTot">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Recette</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Dépense</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="T">
+            <xs:annotation>
+              <xs:documentation>Total</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodRessExt">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Oui</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="N">
+            <xs:annotation>
+              <xs:documentation>Non</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodApprent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Apprentissage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Enseignement professionnel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Formations continues</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Première section FNDMA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Seconde section FNDMA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Dotation décentralisation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Dotation indemnité compensatoire forfaitaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Contribution additionnelle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>FSE</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>FEDER</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>FEOGA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Reversement excédent de ressources CFA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Autres ressources</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Effort propre de la région</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--xs:enumeration value="15"><xs:annotation><xs:documentation>Investissement dont première section FNDMA</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="16"><xs:annotation><xs:documentation>Fonctionnement dont première section FNDMA</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="17"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 1</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="18"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 2</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="19"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 3</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="20"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 4</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="21"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 5</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="22"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 6</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="23"><xs:annotation><xs:documentation>Contrats d'objectifs et de moyens axe 7</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="24"><xs:annotation><xs:documentation>Indemnité compensatrice forfaitaire</xs:documentation></xs:annotation></xs:enumeration>
+					<xs:enumeration value="25"><xs:annotation><xs:documentation>Autres dépenses</xs:documentation></xs:annotation></xs:enumeration-->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypOpDep">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="R">
+            <xs:annotation>
+              <xs:documentation>Opération réelle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="OES">
+            <xs:annotation>
+              <xs:documentation>Opération d'ordre entre sections</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="OIS">
+            <xs:annotation>
+              <xs:documentation>Opération d'ordre à l'intérieur de la section</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TProcAmort">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="L">
+            <xs:annotation>
+              <xs:documentation>Linéaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Dégressif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="V">
+            <xs:annotation>
+              <xs:documentation>Variable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNatProv">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="L">
+            <xs:annotation>
+              <xs:documentation>Provisions pour litiges</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="P">
+            <xs:annotation>
+              <xs:documentation>Provisions pour pertes de changes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="G">
+            <xs:annotation>
+              <xs:documentation>Provisions pour garanties d'emprunts</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Provisions pour gros entretiens ou grandes révisions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Autres provisions pour risques</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="I">
+            <xs:annotation>
+              <xs:documentation>Provisions pour dépreciations des immobilisations</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Provisions pour dépréciations des stocks et encours</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Provisions pour dépréciations des comptes de tiers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Provisions pour dépréciations des comptes financiers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATIndSousJacent">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Indices en euro</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Indices inflation française ou zone euro</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3">
+            <xs:annotation>
+              <xs:documentation>Ecarts d’indice zone euro</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="4">
+            <xs:annotation>
+              <xs:documentation>Indices hors zone euro</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5">
+            <xs:annotation>
+              <xs:documentation>Ecarts d’indice hors zone euro</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="6">
+            <xs:annotation>
+              <xs:documentation>Autres indices</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATStructEmprunt">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="A">
+            <xs:annotation>
+              <xs:documentation>Taux fixe ou taux variable simple</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="B">
+            <xs:annotation>
+              <xs:documentation>Barrière simple</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="C">
+            <xs:annotation>
+              <xs:documentation>Option d'échange (swap)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="D">
+            <xs:annotation>
+              <xs:documentation>Multiplicateur jusqu’à 3 ou 5 capé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Multiplicateur jusqu’à 5</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="F">
+            <xs:annotation>
+              <xs:documentation>Autre type de structure</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ATCodTypFlux">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Flux réciproques entre le groupement à fiscalité propre et les communes</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Présentation consolidée du groupement à fiscalité propre et des communes (après ma neutralisation des flux)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

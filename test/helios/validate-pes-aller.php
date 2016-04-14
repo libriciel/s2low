@@ -1,8 +1,8 @@
 <?php
 
-require_once(__DIR__."/../../class/helios/HeliosPESValidation.class.php");
+require_once (__DIR__."/../../init/init.php");
 
-$heliosPESValidation = new HeliosPESValidation(__DIR__."/../../xsd/Schemas_PES_v471_072015/");
+$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 
 $pes_content = file_get_contents($argv[1]);
 

@@ -40,7 +40,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
 		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
-		$schema_pes_path = __DIR__."/../../../xsd/Schemas_PES_v471_072015/";
+		$schema_pes_path = HELIOS_XSD_PATH;
 		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $authoritySiretSQL, $schema_pes_path,"noreply@sigmalis.com");
 	}
 	

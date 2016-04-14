@@ -195,8 +195,10 @@
 
 <complexType name="X509IssuerSerialType"> 
   <sequence> 
-    <element name="X509IssuerName" type="string"/> 
-    <element name="X509SerialNumber" type="integer"/> 
+    <element name="X509IssuerName" type="string"/>
+      <!-- MODIFICATION DU SCHEMA -->
+      <!-- http://stackoverflow.com/questions/29953032/large-number-failing-validation-as-type-xsinteger -->
+      <element name="X509SerialNumber" type="string"/>
   </sequence>
 </complexType>
 
