@@ -42,6 +42,10 @@ class FTP {
 		}
 		
 		foreach($all_file as $file){
+			if(preg_match("#^PESALR2_#",$file)){
+				echo "$file : PES ALLER ignoré\n";
+				continue;
+			}
 			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
 			echo $file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
 			if ($this->delete){
