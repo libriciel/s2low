@@ -27,7 +27,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	}
 
 	public function testBugNumber(){
-		$this->numberTest("_123_AXY",true);
+		$this->numberTest("_123_AXY",false);
 	}
 
 }
