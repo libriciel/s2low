@@ -42,7 +42,7 @@ class FTP {
 		}
 		
 		foreach($all_file as $file){
-			if(preg_match("#^PESALR2_#",$file)){
+			if(preg_match("#^PESALR2_#",basename($file))){
 				echo "$file : PES ALLER ignoré\n";
 				continue;
 			}
