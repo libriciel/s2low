@@ -75,7 +75,7 @@ protected $type_reponse;
       "type" => "isString",
       "maxlength" => 15,
       "mandatory" => true,
-      "regexp" => '/^[0-9A-Z_]*$/',
+		"regexp" => '/^[0-9A-Z][0-9A-Z_]*[0-9A-Z]$/',
       "regexp_txt" => "ne peut contenir que des chiffres, des lettres en majuscules et _"
     ),
     "classification" => array (
