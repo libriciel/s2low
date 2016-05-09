@@ -36,19 +36,21 @@ class FTP {
 		}
 		
 		$all_file = ftp_nlist($ftp,"./");
+
+		echo "Il y a ".count($all_file)." fichiers en attente...\n";
 		
 		if ($all_file === false){
 			throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");
 		}
 		
-		foreach($all_file as $file){
+		foreach($all_file as $i => $file){
 			if(preg_match("#^PESALR2_#",basename($file))){
-				echo "$file : PES ALLER ignoré\n";
+				echo "$i : $file : PES ALLER ignoré\n";
 				continue;
 			}
 			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
-			echo $file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
-			if ($this->delete){
+			echo $i." : ".$file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
+			if ($err && $this->delete){
 				ftp_delete($ftp, $file);
 			}
 		}
