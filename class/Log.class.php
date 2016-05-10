@@ -137,7 +137,6 @@ class Log extends DataObject {
 	  }
 	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
 	$logFile = tempnam('/tmp', 'tedetis_web_');
-	$timeFile = $logFile . ".sig";
 
 	$data = $this->getConcatLog();
 
@@ -152,6 +151,8 @@ class Log extends DataObject {
 		$this->errorMsg = $parapheur->getLastError();
 		return false;
 	}
+
+	  unlink($logFile);
 	
 	return $signature;
   } 

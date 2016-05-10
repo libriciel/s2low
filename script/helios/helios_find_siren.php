@@ -13,7 +13,6 @@ if (count($argv)<2){
 
 $min_id = $argv[1];
 
-
 $sql = "SELECT authority_id,sha1,id FROM helios_transactions WHERE id>? ORDER BY id";
 $transactions_list = $sqlQuery->query($sql,$min_id);
 
