@@ -86,10 +86,23 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.4.0 du 16.05.2016</h2>";
+$html .= "<ul>";
+$html .= "<li>Module ACTES/HELIOS : système de versement global des transactions sur une période données par collectivité ;</li>";
+$html .= "<li>Module ACTES : partie JAVA - interdiction des numéros de moins de deux caractères ;</li>";
+$html .= "<li>Module ACTES: correction de l'expression régulière chargée de vérifier les numéros d actes ;</li>";
+$html .= "<li>Module ACTES : interdiction de finir un numéro d actes autrement que par 0-9A-Z ;</li>";
+$html .= "<li>Module HELIOS : amélioration du système de canonisation des fichiers XML ;</li>";
+$html .= "<li>Module ACTES/HELIOS : système de versement passé en mode asynchrone ;</li>";
+$html .= "<li>Administration : ajout de l'API permettant de tester si le certificat d'authentifiation est de niveau RGS ;</li>";
+$html .= "<li>Récupération de fichier OCRE (orchestrateur uniquement) ;</li>";
+$html .= "<li>Optimisation de la consultation du journal des événements.</li>";
+$html .= "</ul>";
+
 
 $html .= "<h2>V2.3.2 du 18.04.2016</h2>";
 $html .= "<ul>";
-$html .= "<li>HELIOS : Modification du schéma XSD : passage à la version 491</li>";
+$html .= "<li>HELIOS : Modification du schéma XSD : passage à la version 491.</li>";
 $html .= "</ul>";
 
 
@@ -98,7 +111,7 @@ $html .= "<ul>";
 $html .= "<li>HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ;";
 $html .= "<li>HELIOS : on ne vérifie plus les schémas XSD ;";
 $html .= "<li>ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ;";
-$html .= "<li>HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER ;";
+$html .= "<li>HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER.";
 $html .= "</ul>";
 
 
