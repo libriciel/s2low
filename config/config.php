@@ -88,15 +88,6 @@ if(!defined('DEFAULT_ITEMS_PER_PAGE')){
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
 
-if(!defined('SUPPORT_URL')){
-        define('SUPPORT_URL', "http://support.invalid.fr/");
-}
-
-if(!defined('HOTLINE_NUM')){
-        define('HOTLINE_NUM', "xx.xx.xx.xx.xx");
-}
-
-
 // Mode de l'application : dev ou prod (utilisé dans Database.class.php)
 if(!defined("MODE")){
         //define("MODE", "prod");

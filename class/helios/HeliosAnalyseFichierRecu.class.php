@@ -74,7 +74,7 @@ class HeliosAnalyseFichierRecu {
 		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
 	}
 	
-	private function analyseOneFile($file_path,$helios_response_root,$ocre_file_path){
+	public function analyseOneFile($file_path,$helios_response_root,$ocre_file_path,$validate_xsd = true){
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
 
@@ -112,7 +112,7 @@ class HeliosAnalyseFichierRecu {
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
 
-		if ($errors){
+		if ($errors && $validate_xsd){
 			print_r($errors);
 			throw new Exception("Le fichier $basename n'est pas valide (fichier ignoré)");
 		}
@@ -147,7 +147,7 @@ class HeliosAnalyseFichierRecu {
 	}
 	
 	private function retrieveTransaction(SimpleXMLElement $xml) {
-		$nom_fic = strval($xml->Enveloppe->Parametres->NomFic['V']);
+		$nom_fic = utf8_decode(strval($xml->Enveloppe->Parametres->NomFic['V']));
 		if (!$nom_fic){
 			throw new Exception("Impossible de trouver l'attribut NomFic dans le PESAcquit");
 		}

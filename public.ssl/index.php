@@ -46,8 +46,12 @@ if (defined("HOTLINE_NUM")) {
 
 $html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
 
+
+
 if (defined("SUPPORT_URL")) {
-  $html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
+	$html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
+} elseif(defined("PHRASE_SUPPORT")){
+	$html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
 } else {
   $html .= " au <a href=\"mailto:" . WEBMASTER . "\">webmaster</a>";
 }
