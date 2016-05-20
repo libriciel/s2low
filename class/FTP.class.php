@@ -34,7 +34,8 @@ class FTP {
 		if ( ! ftp_chdir($ftp,$remote_path)){
 			throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
 		}
-		
+
+		//FIXME On dirait que c'est ./ sur la DGFIp, mais . sur un serveur FTP "normal"
 		$all_file = ftp_nlist($ftp,"./");
 
 		echo "Il y a ".count($all_file)." fichiers en attente...\n";
