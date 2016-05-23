@@ -85,7 +85,7 @@ class HeliosAnalyseFichierRecu {
 			return;
 		}
 
-
+		libxml_clear_errors();
 		$xml = simplexml_load_file($file_path);
 		if (! $xml){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
