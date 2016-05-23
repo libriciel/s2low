@@ -19,6 +19,7 @@ class HeliosPESValidation {
 	public function validate($pes_content){
 		$old_libxml_user_internal_errors = libxml_use_internal_errors(true);
 		$dom = new DomDocument();
+		libxml_clear_errors();
 		$dom->loadXML($pes_content,LIBXML_PARSEHUGE);
 		$result = $dom->schemaValidate($this->helios_xsd_path.self::RELATIVE_PATH_TO_PES_ALLER_XSD) ;
 		if (! $result){

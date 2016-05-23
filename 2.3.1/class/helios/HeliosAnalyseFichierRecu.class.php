@@ -78,6 +78,7 @@ class HeliosAnalyseFichierRecu {
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
 
+        libxml_clear_errors();
 		$xml = simplexml_load_file($file_path);
 		if (! $xml){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
@@ -91,6 +92,7 @@ class HeliosAnalyseFichierRecu {
 		}
 
 		libxml_use_internal_errors(true);
+		libxml_clear_errors();
 		$dom = new DOMDocument();
 		$dom->load($file_path);
 
@@ -100,6 +102,7 @@ class HeliosAnalyseFichierRecu {
 		if ($errors){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
 		}
+        libxml_clear_errors();
 		$dom->schemaValidate($schema_location);
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
