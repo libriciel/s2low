@@ -173,5 +173,25 @@ class HeliosTransactionsSQL extends SQL {
 		$this->query($sql,$new_sha1,$new_file,$signature_technique,$transaction_id);
 	}
 
+	public function getNbByStatus($status_id){
+		$sql = "SELECT count(*) FROM helios_transactions WHERE last_status_id=?";
+		return $this->queryOne($sql,$status_id);
+	}
 
+	public function getNbByStatusAndDate($status_id,$submission_date_max){
+		$sql = "SELECT count(*) FROM helios_transactions WHERE last_status_id=? AND submission_date<?";
+		return $this->queryOne($sql,$status_id,$submission_date_max);
+	}
+
+	public function getNonAcquitte(){
+		$sql = "SELECT helios_transactions.id, helios_transactions.filename, xml_nomfic,helios_transactions.submission_date,helios_ftp_dest FROM helios_transactions " .
+			" JOIN authorities ON authorities.id=helios_transactions.authority_id " .
+			" WHERE last_status_id=3 AND helios_transactions.submission_date < ? " .
+			" ORDER BY submission_date DESC ";
+
+		$today = date("Y-m-d");
+		return $this->query($sql,$today);
+	}
+	
+	
 }

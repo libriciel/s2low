@@ -60,6 +60,15 @@ $html .= ".<br />\n";
 
 $html .= "</p>\n";
 
+if ($me->isSuper()){
+
+	$html.="<h2>Fonctions super administrateur</h2>";
+	$html.="<a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>";
+
+}
+
+
+
 $doc->addBody($html);
 
 $doc->closeContent();

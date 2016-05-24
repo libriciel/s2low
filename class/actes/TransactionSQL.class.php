@@ -50,6 +50,7 @@ class TransactionSQL {
 	
 	private static $etat_en_cours = array(1,2,3,4,7,8,17,18);
 
+	/** @var  SQLQuery */
 	private $sqlQuery;
 	private $filter;
 	private $value;
