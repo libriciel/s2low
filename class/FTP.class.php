@@ -35,8 +35,12 @@ class FTP {
 			throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
 		}
 
-		//FIXME On dirait que c'est ./ sur la DGFIp, mais . sur un serveur FTP "normal"
-		$all_file = ftp_nlist($ftp,"./");
+		//Attention, sur un serveur normal, c'est . par contre sur le site de la DGFip , c'est ./
+		if (HELIOS_SENDING_MODE_DEMO) {
+			$all_file = ftp_nlist($ftp, ".");
+		} else {
+			$all_file = ftp_nlist($ftp, "./");
+		}
 
 		echo "Il y a ".count($all_file)." fichiers en attente...\n";
 		
