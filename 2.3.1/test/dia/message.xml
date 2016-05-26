@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pec:Message xmlns:pec="http://finances.gouv.fr/dgme/pec/message/v1">
+    <pec:Header>
+        <pec:Routing>
+            <pec:MessageId>13002_91551743-fd2c-4d23-8909-816236abf422</pec:MessageId>
+            <pec:FlowType>DIA</pec:FlowType>
+            <pec:Sender>
+                <pec:Country>FR</pec:Country>
+                <pec:Location xmlns:ns2="http://www.w3.org/2001/XMLSchema-instance" ns2:type="pec:Location_FR">
+                    <pec:Siret>50924309300010</pec:Siret>
+                    <pec:Service>13412</pec:Service>
+                    <pec:Guichet>DIA-QUAL1</pec:Guichet>
+                </pec:Location>
+                <pec:Attention>013002</pec:Attention>
+            </pec:Sender>
+            <pec:Recipients>
+                <pec:Recipient>
+                    <pec:Country>FR</pec:Country>
+                    <pec:Location xmlns:ns2="http://www.w3.org/2001/XMLSchema-instance" ns2:type="pec:Location_FR">
+                        <pec:Siret>21340003900011</pec:Siret>
+                        <pec:Service>URBANISME</pec:Service>
+                        <pec:Guichet>DIA</pec:Guichet>
+                    </pec:Location>
+                </pec:Recipient>
+            </pec:Recipients>
+            <pec:ConversationId>7409a3a7cb88481791e534a15acffe64</pec:ConversationId>
+            <pec:WriteMode>1</pec:WriteMode>
+            <pec:AckRequired>true</pec:AckRequired>
+            <pec:AckType>AND</pec:AckType>
+            <pec:AckType>ANL</pec:AckType>
+            <pec:AckType>AVL</pec:AckType>
+        </pec:Routing>
+        <pec:Security/>
+        <pec:Extras/>
+    </pec:Header>
+    <pec:Body>
+        <pec:Content xmlns:ns2="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="http://www.w3.org/2001/XMLSchema" ns2:type="ns3:string">&lt;!-- Contenu métier opaque pour la plateforme --&gt;</pec:Content>
+    </pec:Body>
+</pec:Message>

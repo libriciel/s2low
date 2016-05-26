@@ -1,0 +1,1 @@
+INSERT INTO actes_status (id,name) VALUES(17,'En attente d\'être postée');

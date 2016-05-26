@@ -1,0 +1,238 @@
+authority_groups:
+ -
+  id: 1
+  status: 1
+  name: Groupe de test
+
+authorities:
+ - 
+  id: 1
+  status: 1
+  siren: 123456789
+  name: Bourg-en-Bresse
+
+ -
+  id: 2
+  status: 1
+  siren: 999999999
+  authority_group_id: 1
+  name: Saint-Andre de Corcy
+
+
+modules:
+ -
+  id: 1
+  name: actes
+  description: Module Actes
+  menu_entry: Transactions Actes
+  status: 1
+ -
+  id: 2
+  name: helios
+  description: Module Helios
+  menu_entry: Transactions Helios
+  status: 1
+
+modules_authorities:
+ -
+  id: 1
+  module_id: 1
+  authority_id: 1
+
+ -
+  id: 2
+  module_id: 2
+  authority_id: 1
+
+users:
+ -
+  id: 1
+  email: eric@sigmalis.com
+  name: Pommateau
+  givenname: Eric
+  role: SADM
+  authority_id: 1
+  subject_dn: test_subject
+  issuer_dn: test_issuer
+  certificate_hash: q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=
+  certificate: |
+     -----BEGIN CERTIFICATE-----
+     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
+     YNN6Z4fNWGHPgI7R6w==
+     -----END CERTIFICATE-----
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 2
+  email: eric+2@sigmalis.com
+  name: Dupont
+  givenname: Alice
+  role: ADM
+  authority_id: 1
+  subject_dn: adullact
+  issuer_dn: adullact
+  certificate_hash: hash_adullact
+  status: 1
+  login: alice
+  password: 6384e2b2184bcbf58eccf10ca7a6563c
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 3
+  email: eric+3@sigmalis.com
+  name: Durand
+  givenname: Bob
+  role: ADM
+  authority_id: 1
+  subject_dn: adullact
+  issuer_dn: adullact
+  certificate_hash: hash_adullact
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 4
+  email: eric+4@sigmalis.com
+  name: Dupont
+  givenname: Charlie
+  role: ADM
+  authority_id: 1
+  subject_dn: adullact_identification
+  issuer_dn: adullact_identification
+  certificate_hash: hash_adullact_identification
+  status: 1
+  certificate_rgs_2_etoiles: |
+   -----BEGIN CERTIFICATE-----
+   MIIFeTCCA2ECAQgwDQYJKoZIhvcNAQEFBQAwgYoxCzAJBgNVBAYTAkZSMQ8wDQYD
+   VQQIDAZGcmFuY2UxDTALBgNVBAcMBEx5b24xETAPBgNVBAoMCFNpZ21hbGlzMSYw
+   JAYDVQQDDB1TaWdtYWxpcyBDZXJ0aWZpY2F0ZSBBdXRvcml0eTEgMB4GCSqGSIb3
+   DQEJARYRZXJpY0BzaWdtYWxpcy5jb20wHhcNMTUwODE5MDgzMzU5WhcNMjUwODE2
+   MDgzMzU5WjB6MQswCQYDVQQGEwJGUjEPMA0GA1UECAwGRnJhbmNlMQ0wCwYDVQQH
+   DARMeW9uMREwDwYDVQQKDAhTaWdtYWxpczERMA8GA1UECwwIc2lnbWFsaXMxJTAj
+   BgNVBAMMHEVyaWNfUG9tbWF0ZWF1X1JHU18yX2V0b2lsZXMwggIiMA0GCSqGSIb3
+   DQEBAQUAA4ICDwAwggIKAoICAQDYdUMag6AQO7uepqYJm1Uyi/U/zpgIm+8LpWIZ
+   JsFQj++dXcDHa+fV8TGun8H8tqVMfDwNd+VREgDiatU8v/PZDJw2ZjTETGC1qeN2
+   eM3ZrOXvur8y8m5j1KPtT9y2M8k204NW0mf/weoYVSulEQbsyoQJfIMu7ALi/XvF
+   XkGjvpG/BRr8MfSh7GtUtaGJhpGVTwv0gHXXGorixgGPhDNVE8Wr2mn/icfb/hpf
+   QamO62W/fP4p1thGo5CMhqjyl6PLseU76nD9lUzWZtLSE1/1885zWsHGqD63Vhc/
+   8Dr89GqCqKdBM4egwlQvT8diTZpeYSRCxHAybiPSAu5WUd0UMARabiQGbXrR+Rqs
+   +C2W5WkUrwU8bwvpZlPF/BiGWAMayqA3xos7uqHFQjlNtg7wRir4dYxNH/whbl0G
+   u5dOMbFcFU/mqWpvEPIpIG5Ym7shoUYUH2x8T5TGvIn3a5BUCGmH9n/DH8ybNqD6
+   3hlsdQ2Bnt4n/nZfS1a326j3EA4eALeQ0vbLxWqoy7hASzkfFO7YDEi2U4rucfAX
+   JWDq4O3HzPl+aQseken7DBLGfNobl77JKYIadJqbvDXNueTm6+l7r/okg76xCUIQ
+   r5Sp+x4YpVolt/FG6KY0LNfTnByniWwQoOXh4Az4qGuiGgV+l9gOuZRTr/KrZ6tX
+   Z9T3iQIDAQABMA0GCSqGSIb3DQEBBQUAA4ICAQCTL+p4cZLzQJ2boA43xX/YdJRT
+   PNKaka0BywJ5HIkFEm5YNVgxrqfoQZC+DxCqAGJwQm7+HkDZpWr2RkmloVHFranc
+   pkcWU1Vca5jN9oPg6rMlQLiLz4hnO8XAjcYBR4neAIDd8DP5kwH/Kj36vPqu0ki5
+   osd70G4ZpsBoW4BXVEPhwLKTBzQvZREsC+654k/JAbAYj/FQba9jaudfbO5xVLbN
+   lhYKv+Iz+pUGJIP+Sr5wykDuWuyLwnnyvg0WQ0CeUWgG0x4D7Ef828i92ZC/Cump
+   jaRYKMPYEzitndNW36K1CldGfCuNUqAQmqXIPZqyaqQ0H7N8BnISwdBCojZEljwf
+   NOxHLrT1MQDDacl5gLEEYKj8JW86UiMAo3ONIi1HYT+eo4Sx/BzH9GhUwT8IUuiH
+   nl721SzNuIRzB++VurtvQVc5cDumko6Qy+VgRnxPbzk32ortsBYUAFZUpoGA1f1B
+   W4wgpYN8mfzmXBL88ugP7bWYQLV6wxoBW44IbLnIPJoWP8c13YWC2pC8DIOXzXON
+   yPThsQ7QoSMwU27XzH1zb+NiD8sHNPgHacK6gSg/ZBj53IMGtElUAw3RRgXbuYnK
+   eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
+   YNN6Z4fNWGHPgI7R6w==
+   -----END CERTIFICATE-----
+
+ -
+  id: 5
+  email: eric+5@sigmalis.com
+  name: Durand
+  givenname: Daniel
+  role: USER
+  authority_id: 1
+  subject_dn: adullact_user
+  issuer_dn: adullact_user
+  certificate_hash: hash_adullact_user
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 6
+  email: eric+6@sigmalis.com
+  name: Eon
+  givenname: Eric
+  role: ADM
+  authority_id: 2
+  authority_group_id: 1
+  subject_dn: admin_col2
+  issuer_dn: admin_col2
+  certificate_hash: hash_admin_col2
+  status: 1
+  certificate_rgs_2_etoiles: ''
+ -
+  id: 7
+  email: eric+7@sigmalis.com
+  name: François
+  givenname: Frédéric
+  role: GADM
+  subject_dn: admin_groupe
+  issuer_dn: admin_groupe
+  certificate_hash: hash_admin_groupe
+  certificate_rgs_2_etoiles: ''
+  authority_id: 2
+  authority_group_id: 1
+  status: 1
+ -
+  id: 8
+  email: eric+8@sigmalis.com
+  name: Georges
+  givenname: Gérard
+  role: USER
+  subject_dn: user_col1
+  issuer_dn: user_col1
+  certificate_hash: hash_user_col1
+  certificate_rgs_2_etoiles: ''
+  authority_id: 1
+  status: 1
+
+users_perms:
+ -
+  module_id: 1
+  user_id: 1
+  perm: RW
+ -
+  module_id: 2
+  user_id: 8
+  perm: RW
+
+logs:
+helios_retour:
+authority_siret:
+actes_classification_requests:
+actes_envelopes:
+actes_included_files:
+actes_transactions:
+actes_transactions_workflow:
+actes_classification_codes:
+actes_envelope_serials:
+authority_group_siren:
+helios_transactions:
+helios_transactions_workflow:
+

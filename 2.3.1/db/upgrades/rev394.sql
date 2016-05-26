@@ -1,0 +1,1 @@
+ALTER TABLE dia_transactions ADD COLUMN accuse_non_preemption varchar(1024) ; 
