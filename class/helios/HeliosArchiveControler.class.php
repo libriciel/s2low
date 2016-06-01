@@ -56,6 +56,11 @@ class HeliosArchiveControler {
 		$transactionsInfo['authority_id'];
 		$userSQL = new UserSQL($this->sqlQuery);
 		$user_info = $userSQL->getInfo($user_id);
+
+		if ($user_info['role'] == 'SADM'){
+			return true;
+		}
+
 		if ($user_info['role'] != 'ADM'){
 			throw new Exception("Accès interdit");
 		}
