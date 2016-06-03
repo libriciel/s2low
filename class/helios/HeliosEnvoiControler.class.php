@@ -187,6 +187,13 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
+			if (! $authorityInfo["helios_ftp_dest"] || ! $authorityInfo["helios_ftp_login"] || ! $authorityInfo["helios_ftp_password"]){
+				$message = "Transaction $transaction_id : les propriétés Helios FTP ne sont pas configurées correctement";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				unlink($file_path_with_complete_name);
+				continue;
+			}
+			
 			try {
 				$ftp = new FTPFileSender();
 				$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, $authorityInfo["helios_ftp_login"], $authorityInfo["helios_ftp_password"]);

@@ -85,6 +85,9 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 
+$helios_configured = $authorityInfo["helios_ftp_dest"] && $authorityInfo["helios_ftp_login"] && $authorityInfo["helios_ftp_password"];
+
+
 $envelopes = $heliosTransactionsListe->getAll();
 
 
@@ -202,8 +205,13 @@ ob_start();
 
 <h1>Helios - Dématérialisation de documents financiers</h1>
 
+
 <div id="actions_area">
 	<h2>Actions</h2>
+
+	<?php if(! $helios_configured) : ?>
+		<div class='alert alert-danger'>Attention les paramètres du module Helios sont incomplets et ne permettront pas la télétransmission.</div>
+	<?php endif; ?>
 
 	<?php if (!$me->isSuper() && $me->canEdit($module->get('name'))) : ?>
 		<?php if ($module->getParam("paper") == "on") : ?>
