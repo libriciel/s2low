@@ -221,7 +221,7 @@ $html .= " <tbody>\n";
       if ($archiveDeleted){
 		$html .=  $file["posted_filename"];
       } else {
-            $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>" ; 
+            $html .= $file["posted_filename"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>" ;
             $html .= "&nbsp;&nbsp;";
             
             
@@ -231,8 +231,8 @@ $html .= " <tbody>\n";
             	if ($stage['status_id'] == 4){
             		
             		if (preg_match("/\.pdf$/i",$file["posted_filename"])) {
-	            		$html.= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
-						$html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
+	            		$html.= "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
+						$html.= "[Télécharger le fichier tamponné]</a>";
             		}
             	}
             }
@@ -245,7 +245,7 @@ $html .= " <tbody>\n";
     $html .= "<dd>";
 
     if (strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
-      $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["name"] . "</a>";
+      $html .= $file["name"]."<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>";
     } else {
       $html .= $file["name"];
     }
@@ -286,22 +286,18 @@ if (count($workflow) > 0) {
   $html .= " </tr>\n";
   $html .= " </thead>\n";
   $html .= " <tbody>\n";
+  	$create_pdf_html ="&nbsp;<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
+	$create_pdf_html.="<br/>[Télécharger]</a>";
 
-     // modifié par TH 18-04-2008 ajouter un petit icon de pdf lien ver le ficher .pdf qund on est bien sur 
-    // etat="aquitement reçu.
-  	$create_pdf_html ="<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
-	$create_pdf_html.="<img alt=\"pdf\" src=\"../../custom/images/pdf.gif\"></a>";
-	
+	if ($me->isSuper()){
+		$create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
+	}
+
+
 	//---fin de modification
 	
   foreach ($workflow as $stage) {
     $html .= "<tr>\n";
-
-    //modified by TH 18-04-2008
-	//---------begin
-
-	//$id = Helpers :: getVarFromGet("id"); with this identifier, we can easily findout all the infomation in the acte.
-
 	
    if (in_array($stage["status_id"],array(4,11) ))
     {
