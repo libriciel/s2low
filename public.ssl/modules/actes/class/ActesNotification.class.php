@@ -125,7 +125,7 @@ class ActesNotification {
 		$pdf=new ActesPdf($trans,$owner);	
 		$pdf->addEmailNotificationField();
 		$pdf->create_pdf();
-		$monpdf = $pdf->output("bordereau_acquittement.pdf","S");
+		$monpdf = $pdf->output("bordereau_acquittement","S");
 		$mailer->addStringAsFile("bordereau_acquittement.pdf",$monpdf);
 		
 		$mailer->sendMail("[{$transactionInfo['name']}] Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] , $mailContent);

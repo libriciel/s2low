@@ -68,4 +68,4 @@ $pdf=new ActesPdf($trans,$owner);
 //construire le fichier pdf. 
 $pdf->create_pdf();
 
-$pdf->output("acquittement.pdf");
+$pdf->output("acquittement");

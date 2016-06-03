@@ -32,7 +32,7 @@ class ActesPdf {
 		
 		//fini de la traitment de les requêtes.
 		//créer un objet pdf.
-		$this->pdf=new ExtendPDF();
+		$this->pdf=new ExtendPdf();
 		
 		//ajouter une page de pdf
 		$this->pdf->AddPage();
@@ -64,14 +64,13 @@ class ActesPdf {
 		// imprimé la notification de la transaction:
 		$this->pdf->SetFont('Arial','',12);
 		$this->pdf->Cell(40,10,"",0,1);
-
-		//affichier le pdf sur  IE. la dernier parametre de output() 
-		// "I"=ouvrir par IE, "D"=télécharger
-		if (isset($this->user_id)){
-			$this->output($owner->get("name").".pdf");
-		}
 	}
 
+	/**
+	 * @param string $title le nom du fichier SANS l'extension PDF
+	 * @param string $out - voir la fonction FPDF Output
+	 * @return string
+	 */
 	public function output($title,$out = "I"){
 		return $this->pdf->Output($title.".pdf",$out);
 	}

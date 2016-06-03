@@ -21,7 +21,7 @@ class ExtendPdf extends FPDF {
 		$this->Cell(120);
 
 		//Framed title
-		$this->Cell(30,6,'Alternancesoft');
+		$this->Cell(30,6,'Adullact Projet');
 		//Line break
 		$this->Ln(6);
 		  $this->Line(10, 6, 120, 6);
