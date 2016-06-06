@@ -131,9 +131,6 @@ class UserSQL extends SQL {
 		}
 		$sql .= " ORDER BY id ";
 
-		echo $sql;
-		print_r($data);
-
 		return $this->queryOneCol($sql,$data);
 	}
 
