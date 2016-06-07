@@ -50,7 +50,7 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			//Pas de validation des fichier PES_Aller
+			//Pas de validation des fichier PES_Aller - Il ne s'agit pas d'une exigence.
 			/*$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 			if (! $heliosPESValidation->validate($pes_content)){
 				print_r($heliosPESValidation->getLastError());
