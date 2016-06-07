@@ -143,11 +143,6 @@ if(!defined("OPENSIGN_TIMEOUT")){
         define("OPENSIGN_TIMEOUT",2);
 }
 
-// Chemin vers les certificats des autorités autorisées pour la signature de documents
-if(!defined('AUTHORIZED_SIGN_CA_PATH')){
-        define('AUTHORIZED_SIGN_CA_PATH', '/etc/tedetis/ssl/validca');
-}
-
 // Constantes générales
 if(!defined('TRACE_FILE_PATH')){
 	define('TRACE_FILE_PATH','/tmp/slow.log');
@@ -200,9 +195,17 @@ if (!defined("XMLSEC1_PATH")){
 
 //Emplacement d'un répertoire contenant le "hasher" des autorités de certification RGS
 //voir "man c_rehash" pour le "hasher"
+//Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
 if (! defined("RGS_VALIDCA_PATH")){
 	define("RGS_VALIDCA_PATH","/etc/tedetis/ssl/validca/");
 }
+
+//Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
+//des flux PES
+if (! defined("EXTENDED_VALIDCA_PATH")){
+	define("EXTENDED_VALIDCA_PATH","/etc/tedetis/ssl/validca/");
+}
+
 
 //////////////////////////////////
 ///// Paramètre module Actes /////

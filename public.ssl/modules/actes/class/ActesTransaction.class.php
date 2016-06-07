@@ -889,7 +889,7 @@ protected $type_reponse;
 
         if (isset ($actesItems->Document->Signature)) {
         	try {
-        		$verifyPKCS7Signature = new VerifyPKCS7SIgnature(AUTHORIZED_SIGN_CA_PATH);
+        		$verifyPKCS7Signature = new VerifyPKCS7SIgnature(RGS_VALIDCA_PATH);
         		$verifyPKCS7Signature->verify($this->rootDir."/".$actePath, $actesItems->Document->Signature);
         	} catch(Exception $e){
         		$this->errorMsg = $e->getMessage();

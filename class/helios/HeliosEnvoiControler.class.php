@@ -72,7 +72,7 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
-			$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), RGS_VALIDCA_PATH);
+			$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), EXTENDED_VALIDCA_PATH);
 			$heliosSignatureTechnique = new HeliosSignatureTechnique($this->heliosTransactionsSQL, HELIOS_FILES_UPLOAD_ROOT, $xadesSignature, HELIOS_ENABLE_SIGNATURE_TECHNIQUE);
 			$xadesSignatureProperties = new XadesSignatureProperties();
 			$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;

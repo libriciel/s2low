@@ -421,10 +421,10 @@ class Helpers {
 
   /**
    * \brief Méthode de récupération des informations des certificats reconnues par le système
-   * \param $path chaîne (optionnel) : chemin vers le répertoire contenant les certificats (defaut AUTHORIZED_SIGN_CA_PATH)
+   * \param $path chaîne (optionnel) : chemin vers le répertoire contenant les certificats (defaut EXTENDED_VALIDCA_PATH)
    * \return Un tableau des données des certificats
    */
-  public static function getAuthorizedCACerts($path = AUTHORIZED_SIGN_CA_PATH) {
+  public static function getAuthorizedCACerts($path = EXTENDED_VALIDCA_PATH) {
 	$certs = array();
 
 	if (is_dir($path)) {

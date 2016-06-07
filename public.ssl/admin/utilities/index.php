@@ -75,7 +75,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 
 
-$caCerts = Helpers::getAuthorizedCACerts();
+$caCerts = Helpers::getAuthorizedCACerts(EXTENDED_VALIDCA_PATH);
 
 $doc = new HTMLLayout();
 

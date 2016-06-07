@@ -108,7 +108,7 @@ class Parapheur {
 			return false;
 		}
 		
-		$cert = AUTHORIZED_SIGN_CA_PATH;
+		$cert = EXTENDED_VALIDCA_PATH;
 		$cmd ="openssl smime -in $signFileName -inform PEM -verify -content $dataFile -CApath $cert >/dev/null 2>&1";
 		Trace::wrap_exec($cmd,$out,$return);
 				
@@ -158,7 +158,7 @@ class Parapheur {
 	  return -1;
 	}
 
-	$verifyCmd = "openssl verify -CApath " . AUTHORIZED_SIGN_CA_PATH . " -crl_check " . $certFile;
+	$verifyCmd = "openssl verify -CApath " . EXTENDED_VALIDCA_PATH . " -crl_check " . $certFile;
 
 	Trace::wrap_exec($verifyCmd, $out, $ret);
 
