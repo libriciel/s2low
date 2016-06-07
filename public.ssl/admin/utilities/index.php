@@ -87,9 +87,25 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html = "<h1>Utilitaires</h1>\n";
-$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('global_message');\">Envoi de message électronique global</h2>\n";
-$html .= "<div id=\"global_message\" style=\"display: none;\">\n";
+
+
+$html .= "<h1>Utilitaires</h1>\n";
+
+
+ob_start()
+?>
+<div id="actions_area">
+	<h2>Action</h2>
+	<a class="btn btn-primary" href='/admin/utilities/certificate_list.php'>Liste des certificats</a>
+</div>
+
+
+<?php
+$html .= ob_get_contents();
+ob_end_clean();
+
+$html .= "<h2 >Envoi de message électronique global</h2>\n";
+$html .= "<div id=\"global_message\">\n";
 $html .= "<p>Utilisez le formulaire ci-dessous pour envoyer un message a l'ensemble des utilisateurs d'un module.</p>";
 $html .= "<form action=\"" . WEBSITE_SSL . "/admin/utilities/admin_send_global_message.php\" method=\"post\" name=\"form\" onsubmit=\"return confirm('Voulez-vous vraiment envoyer le message à tous les utilisateurs de ce module');\">\n";
 $html .= "Module concerné&nbsp;: " . $doc->getHTMLSelect("module", Module::getActiveModulesIdName(), null) . "<br /><br />\n";
@@ -98,53 +114,6 @@ $html .= "Message (texte brut uniquement)&nbsp;:<br />\n";
 $html .= "<textarea name=\"body\" cols=\"70\" rows=\"16\"></textarea><br /><br />\n";
 $html .= "<input type=\"submit\" class=\"submit_button\" value=\"Envoyer le message\" />\n";
 $html .= "</form>\n";
-$html .= "</div>\n";
-$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('ca_list');\">Autorités de certification reconnues</h2>\n";
-$html .= "<div id=\"ca_list\" style=\"display: none;\">\n";
-$html .=  Helpers::$last_error;
-$html .= "<p>Le TdT reconnaît les autorités de certification ci-dessous pour l'authentification des collectivités et la signature des fichiers&nbsp;:</p>\n";
-
-if (count($caCerts) > 0) {
-  $html .= "<ul>\n";
-  $i = 0;
-
-  foreach ($caCerts as $cert) {
-	if (! empty($cert["subject"]["CN"])) {
-	  $name = $cert["subject"]["CN"];
-	} else {
-	  $name = $cert["name"];
-	}
-	
-	foreach(array("CN","OU","O","L","ST","C") as $key){
-		if (! isset($cert['issuer'][$key])){
-			$cert['issuer'][$key] = "";
-		}
-	}
-	
-
-	$html .= " <li class=\"toggle_title\" title=\"" . get_hecho($cert["name"]) . "\" onclick=\"javascript:toggle_visibility('ca_cert_" . $i . "');\">" . get_hecho(utf8_decode($name)) . "\n";
-	$html .= "<dl id=\"ca_cert_" . $i . "\" style=\"display: none;\">\n";
-	$html .= " <dt>Nom&nbsp;:</dt>\n";
-	$html .= "  <dd>" . $cert["name"] . "</dd>\n";
-	$html .= " <dt>Émetteur&nbsp;:</dt>\n";
-	$html .= "  <dd>cn=" . $cert["issuer"]["CN"] . ",ou=" . $cert["issuer"]["OU"] . ",o=" . $cert["issuer"]["O"] . ",l=" . $cert["issuer"]["L"] . ",st=" . $cert["issuer"]["ST"] . ",c=" . $cert["issuer"]["C"] . "</dd>\n";
-	$html .= " <dt>Haché&nbsp;:</dt>\n";
-	$html .= "  <dd>" . $cert["hash"] . "</dd>\n";
-	$html .= " <dt>Valide depuis&nbsp;:</dt>\n";
-	$html .= "  <dd>" . date('d-m-Y H:i:s', $cert["validFrom_time_t"]) . "</dd>\n";
-	$html .= " <dt>Valide jusqu'à&nbsp;:</dt>\n";
-	$html .= "  <dd>" . date('d-m-Y H:i:s', $cert["validTo_time_t"]) . "</dd>\n";
-	$html .= " <dt>Numéro de série&nbsp;:</dt>\n";
-	$html .= "  <dd>" . $cert["serialNumber"] . "</dd>\n";
-	$html .= "</dl>\n";
-	$html .= "</li>\n";
-	$i++;
-  }
-
-  $html .= "</ul>\n";
-} else {
-  $html .= "Pas de certificat d'autorité de certification trouvé.";
-}
 $html .= "</div>\n";
 
 $doc->addBody($html);
