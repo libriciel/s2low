@@ -1655,7 +1655,7 @@ protected $type_reponse;
    } 
    
 	public function canValidate(){
-		if (MODE == "dev"){
+		if (ACTES_ALWAYS_CAN_VALIDATE){
 			return true;
 		}
 		assert('$this->id');

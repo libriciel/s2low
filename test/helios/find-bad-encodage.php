@@ -15,34 +15,22 @@ $nb_transaction = count($transactions_list);
 
 echo "Analyse de $nb_transaction fichiers\n";
 
-$error_list = array();
 
 foreach($transactions_list as $num_transaction => $transaction_helios){
 	echo "Transaction {$transaction_helios['id']} ($num_transaction/$nb_transaction)\n";
 	$pes_aller = HELIOS_FILES_UPLOAD_ROOT."/{$transaction_helios['sha1']}";
 	echo "Analyse du fichier : $pes_aller\n";
 
-	$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate(),EXTENDED_VALIDCA_PATH);
+	$f = @fopen($pes_aller, "r");
 
-	if (! $xadesSignature->isSigned($pes_aller)){
-		echo "Le fichier n'est pas signé\n";
-		continue;
+	if (! $f){
+		echo "Impossible de lire le fichier\n";
 	}
 
-	$verify =  $xadesSignature->verify($pes_aller);
+	echo fgets($f,90);
 
-	echo "Vérification : ".($verify?"OK":"FAIL")."\n";
-
-	if (! $verify){
-		$error_list[] = $transaction_helios['id'];
-		echo $xadesSignature->getLastOutput()."\n";
-	}
 }
 
 
-echo count($error_list)." transactions en erreur\n";
-
-
-print_r($error_list);
 
 

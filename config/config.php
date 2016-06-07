@@ -281,6 +281,14 @@ if(!defined('ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY')){
 if(!defined('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE')){
 	define('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE', "La version de votre navigateur ne permet pas d'utiliser les fonctionnalités de sélection multiple de fichiers de manière optimum.<br />Vous devez choisir vos fichiers un par un.");
 }
+
+
+//Permet sur un site de formation ou de démonstration de ne pas attendre la durée légale de deux mois avant de valider une transaction ACTE.
+if (!defined('ACTES_ALWAYS_CAN_VALIDATE')){
+	define('ACTES_ALWAYS_CAN_VALIDATE',false);
+}
+
+
 //////////////////////////////////
 ///// Paramètre module Helios /////
 /////////////////////////////////
