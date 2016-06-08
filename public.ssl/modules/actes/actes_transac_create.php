@@ -1,12 +1,12 @@
 <?php
 
 
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
-require_once (SITEROOT . '/class/FileUploader.class.php');
+require_once (__DIR__."/../../../config/config.php");
+require_once (__DIR__ . '/../../../class/include.class.php');
+require_once (__DIR__ . '/class/ActesEnvelope.class.php');
+require_once (__DIR__ . '/class/ActesClassification.class.php');
+require_once (__DIR__ . '/class/ActesBatch.class.php');
+require_once (__DIR__ . '/../../../class/FileUploader.class.php');
 
 
 $errorMsg = "";
@@ -110,7 +110,7 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
       $owner->init();
 
       // Vérification des permissions sur le lot
-      if (($me->isAuthorityAdmin && $me->get("authority_id") == $owner->get("authority_id")) || 
+      if (($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) ||
       		($me->getId() == $owner->getId())) {
         $batchMode = true;
         $extraRedirect = "?batchfile=" . $zeBatchFile->getId();
@@ -154,7 +154,7 @@ $env->set("department", $myAuthority->get("department"));
 $env->set("district", $myAuthority->get("district"));
 $env->set("authority_type_code", $myAuthority->get("authority_type_id"));
 $env->set("return_mail", implode($retMail, '|'));
-$env->set("name", $me->getprettyName());
+$env->set("name", $me->getPrettyName());
 $env->set("telephone", $telephone);
 $env->set("email", $me->get("email"));
 $env->set("file_path", "");
@@ -169,11 +169,19 @@ $trans->set("user_id",$me->getId());
 $trans->set("authority_id",$me->get("authority_id"));
 $trans->setEnAttente($en_attente);
 
+$classification = array();
 for ($i = 1; $i <= 5; $i++) {
   $trans->set("classif" . $i, ${ "classif" . $i });
+	$classification[] = ${ "classif" . $i };
 }
 
+$actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
+$classification_description = $actesClassificationCodesSQL->getDescription($myAuthority->getId(),$classification);
+$trans->set("classification_string",$classification_description);
+
 $trans->set("classification_date", ActesClassification :: getLastRevisionDate($myAuthority->getId()));
+
+
 $trans->set("decision_date", $decision_date);
 
 if ($auto_broadcast_email == 'on') {
@@ -296,7 +304,7 @@ if (!$trans->generateMessageXMLFile($xml_name)) {
 }
 
 $env->addTransaction($trans);
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
+require_once(__DIR__. '/class/ActesEnvelopeSerialSQL.class.php');
 
 $authority_id = $me->get("authority_id");
 

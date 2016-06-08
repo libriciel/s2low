@@ -38,6 +38,10 @@ protected $type_reponse;
   protected $xmlObj;
   protected $rootDir;
   protected $destDir;
+
+	protected $classification_string;
+	protected $date_affichage;
+
   protected $dbFields = array (
     "envelope_id" => array (
       "descr" => "Identifiant enveloppe",
@@ -148,6 +152,17 @@ protected $type_reponse;
 		"maxlength" => 256,
       "mandatory" => false
     ),
+	  "classification_string" => array(
+		  "descr" => "",
+		  "type" => "isString",
+		  "maxlength" => 256,
+		  "mandatory" => false
+	  ),
+	  "date_affichage" => array(
+		  "descr" => "",
+		  "type" => "isDate",
+		  "mandatory" => false
+	  )
   );
   protected $transactionTypes = array (
     "1" => "Transmission d'actes",

@@ -99,7 +99,13 @@ switch ($trans->get("type")) {
     $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
     $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
     $html .= $doc->getHTMLArrayline("Objet", nl2br(get_hecho($trans->get("subject"))));
-    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières", get_hecho($trans->get("classification")));
+
+	$classification = get_hecho($trans->get("classification"));
+	if(  $trans->get("classification_string")){
+		$classification .= " - " .$trans->get("classification_string");
+	}
+
+    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières",$classification);
     $html .= $doc->getHTMLArrayline("Identifiant unique", get_hecho($trans->get("unique_id")));
 
     $arch_url = $trans->get("archive_url");
