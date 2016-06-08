@@ -43,6 +43,7 @@ class ActesNotification {
 		}
 		$this->sendNotification($transactionInfo);
 		$this->deletedirectoryunzip($transactionInfo);
+		return true;
 	}
 	
 	private function sendNotification(array $transactionInfo){
@@ -212,56 +213,19 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 		foreach($files as $file){
 			$path_parts = pathinfo($file);
 			if ($path_parts['extension'] == 'pdf'){
-				$fileString = $this->tamponnerPDF($file,$transactionInfo);
+
+				global $sqlQuery;
+
+				$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($sqlQuery));
+				$fileString = $acteTamponne->tamponnerPDF($file,$transactionInfo['transaction_id']);
 				file_put_contents($file,$fileString);
 			}
 			$result[] = $file;
 		}
-		
-		/*$cmd = "tar czf ".$filePath_tampon." * ";
-		Trace::wrap_exec($cmd, $status, $ret);
-		*/
 		return $result;
 	}
 	
-	
-	private function tamponnerPDF($file,$transactionInfo){
-		
-		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-		require_once(SITEROOT."/class/TamponPDF.class.php");
-	
-                $pdftkise='/tmp/' .$file;
-                $cmdpdftk='timeout 10 pdftk '.$file." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
-                $status='';
-                $ret='';
-                Trace::wrap_exec($cmdpdftk, $status, $ret);
-                if ($status === false || $ret != 0) {
-                    $cmdpdftk='timeout 10 pdfsam-console -f '.$file." -o ".$pdftkise ." concat";
-                    Trace::wrap_exec($cmdpdftk, $status, $ret);
-                    if ($status === false || $ret != 0) {
-                        $pdftkise=$file;
-                    }
-                }
-   
-		try {	
-			$pdf = Zend_Pdf::load($pdftkise);
-		} catch (Exception $e){
-			return file_get_contents($pdftkise);
-		}
-		$tampon = new TamponPDF($pdf);
-		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-		"Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-		"Affiché le " ,
-		"ID : ".$transactionInfo['unique_id']));
-		try {
-			$txt =  $tampon->getFileAsString();
-		} catch (Exception $e){
-			
-			return file_get_contents($pdftkise);
-		}
-		return $txt; 
-	}
-	
+
 	private function setBroadcasted($transactionId) {
 		$sql = "UPDATE actes_transactions SET broadcasted = TRUE " .
 					" WHERE actes_transactions.id = " . $transactionId;
@@ -277,7 +241,8 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 	/**
 	 * La fonction tamponnerTGZ extrait l'enveloppe tgz envoyée au MIOCT
 	 * pour récupérer les pdf et les tamponner. Cette extraction n'est plus utile par 
-	 * la suite. Il faut donc supprimer le dossier. 
+	 * la suite. Il faut donc supprimer le dossier.
+	 * @param $transactionInfo array
 	 */
 	private function deletedirectoryunzip($transactionInfo){
 		chdir(TEDETIS_TMP_PATH);
@@ -285,7 +250,6 @@ Archive disponible sur :<?php echo $transactionInfo['archive_url']?>
 			"FROM actes_transactions LEFT JOIN actes_envelopes " . 
 			"ON actes_transactions.envelope_id=actes_envelopes.id " .
 			"WHERE actes_transactions.id = " .$transactionInfo['transaction_id'] ;
-		$listefichiers=array();
 		$listefichiers = $this->db->fetchAll($sql);
 		foreach($listefichiers as $f){
 			$directory_unzip = $this->filePath . "/" . $f['file_path']."_unzip";

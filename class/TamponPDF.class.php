@@ -3,14 +3,13 @@
 require_once("Zend/Pdf.php");
 
 
-
 class TamponPDF {
 	
 	const DEFAULT_FONT_SIZE = 7;
 	const DEFAULT_ALPHA_TRANSPARENCY = 0.5;
 	
 	private $docOrigine;
-	private $setText;
+	private $textLine;
 	private $font;
 	private $fontSize;
 	private $alphaTransparency;
@@ -40,7 +39,11 @@ class TamponPDF {
 	public function setAlphaTransparency($alpha){
 		$this->alphaTransparency = $alpha;
 	}
-	
+
+	public function setNameFile($name){
+		$this->namefile = $name;
+	}
+
 	public function getFileAsString(){
 		foreach ($this->docOrigine->pages as $page){
 			$this->drawTampon($page);
@@ -49,20 +52,19 @@ class TamponPDF {
 	}
 	
 	public function render(){
-		foreach ($this->docOrigine->pages as $page){
-			$this->drawTampon($page);
-		}
-		$this->sendDocumentToBrowser();
+		header('Content-type: application/pdf');
+		header("Content-Disposition: attachment; filename=$this->namefile");
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+		header("Pragma: public");
+		
+		echo $this->getFileAsString();
 	}
 	
-	public function setNameFile($name){
-        $this->namefile = $name;
-    }
-	
+
 	private function drawTampon(Zend_Pdf_Page $page){
 		$width  = round($page->getWidth());
         $height = round($page->getHeight());
-        //echo "[".$width ." ----  ".$height."]";
 
         $page->setFont($this->font, $this->fontSize);
 		$page->setAlpha($this->alphaTransparency);
@@ -76,7 +78,7 @@ class TamponPDF {
 			}
 			$page -> rotate(825,150,-3.14);
 			$page->drawImage($image, 773, 130, 700, 123);
-		}else{
+		} else {
 			$page -> drawRectangle($width - 200, $height - 10,$width - 10,$height - 65,
 								Zend_Pdf_Page::SHAPE_DRAW_STROKE);
 
@@ -87,16 +89,8 @@ class TamponPDF {
 			foreach($this->textLine as $i => $t){
 				$page->drawText($t, $width - 195, $height - 22 - $i*13 ,'iso-8859-1');
 			}
-		}//fin else
+		}
 
 	}
-	
-	private function sendDocumentToBrowser(){
-		header('Content-type: application/pdf');
-		header("Content-Disposition: attachment; filename=$this->namefile");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-		header("Pragma: public");
-		echo $this->docOrigine->render();
-	}
+
 }

@@ -104,12 +104,12 @@ class ActesTransactionsSQL {
 	}
 	
 	public function getDateTampon($id){
-		$sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date, actes_transactions.unique_id " .
-				"FROM actes_transactions, actes_envelopes, actes_transactions_workflow " .
-				"WHERE actes_transactions.envelope_id = actes_envelopes.id " .
-				"AND actes_transactions.id = " . $id .
-				" AND actes_transactions_workflow.transaction_id = " . $id;
-		return $this->sqlQuery->queryOne($sql);
+		$sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date, actes_transactions.unique_id FROM actes_transactions, actes_envelopes, actes_transactions_workflow " .
+				" WHERE actes_transactions.envelope_id = actes_envelopes.id " .
+				" AND actes_transactions.id = ? ".
+				" AND actes_transactions_workflow.transaction_id = actes_transactions.id " .
+				" AND actes_transactions_workflow.status_id=?";
+		return $this->sqlQuery->queryOne($sql,$id,4);
 	}
 	
 	public function getTransactionForAntiVirus(){

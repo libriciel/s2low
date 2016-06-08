@@ -89,7 +89,6 @@ class ActesIncludedFile extends DataObject {
 
 	  $cmd = 'tar xzf ' . ACTES_FILES_UPLOAD_ROOT . '/' . $this->envelope->get("file_path") . " -C " . $tmpDir . " " . $this->filename;
 	  
-	  //$status = system($cmd, $ret);
 	  Trace::wrap_exec($cmd, $status, $ret);
 
 	  $ret_value = true;
@@ -104,55 +103,29 @@ class ActesIncludedFile extends DataObject {
 		  $browserName = $this->filename;
 		}
 
-                $pdftkise='/tmp/' .$this->filename;
 		$path_parts = pathinfo($this->filename);
-		
+
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
-                    $pathpdforig = $tmpDir . '/' .$this->filename;
-                    $pdftkise = $this->modificationPDF($pathpdforig, $pdftkise);
-                    if(!file_exists($pdftkise))
-                    	$pdftkise = $pathpdforig;
-                    
-                    $transactionId = $this->get("transaction_id");
-                    $actesNotification = new ActesNotification($this->db);
-                    $transactionInfo = $actesNotification->getTransactionInfo($transactionId);
-                    set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-                    
-                    require_once(SITEROOT."/class/TamponPDF.class.php");
-                    
-                    try {
-                        $pdf = Zend_Pdf::load($pdftkise);
-                        $tampon = new TamponPDF($pdf);
-                        $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-                                    "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-                                    "Affiché le " ,
-                        			"ID : ".$transactionInfo['unique_id']));
-                        $tampon->setNameFile($this->filename);
-                        $tampon->render();
-                        
-                    } catch (Exception $e){
-                        Helpers::sendFileToBrowser($pdftkise, $browserName, $this->filetype);
-                    }
+			
+			global $sqlQuery;
+			$pathpdforig = $tmpDir . '/' .$this->filename;
+
+			$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($sqlQuery));
+			$acteTamponne->render($pathpdforig,$this->get("transaction_id"));
+			
+			
 		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
 		  $this->errorMsg .= "Erreur envoi fichier";
 		  $ret_value = false;
 		}
-
-		// Suppression du fichier
-                if (file_exists($tmpDir . "/" . $this->filename)){
-                    if (! unlink($tmpDir . "/" . $this->filename)) {
+ 		  if (file_exists($tmpDir . "/" . $this->filename)){
+				if (! unlink($tmpDir . "/" . $this->filename)) {
                         $this->errorMsg .= "Erreur suppression fichier";
                         $ret_value = false;
                     }
-                }//fin if test fichier $tmpDir . "/" . $this->filename existe
-                
-                if (file_exists($pdftkise)){
-                    if (! unlink($pdftkise)) {
-                        $this->errorMsg .= "Erreur suppression du fichier modifie par pdftk";
-                        $ret_value = false;
-                    }
-                }//fin if test fichier $pdftkise existe
+			}
+
 	  }
 
 	  // Suppression du répertoire temporaire

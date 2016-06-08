@@ -3,3 +3,8 @@ Attention, ZendFramework > v1.9 ne fonctionne pas avec Ubuntu 8.04 LTS...
 Ici la dernière version de ZF qui fonctionne
 
 ZF n'est utilisé que pour la lecture des fichiers PDF (ajout du tampon)
+
+
+08/06/2016 => Test de Zend2 : aucun changement (toujours des bugs sur les cross-reference et toujours le bug sur le
+mauvais positionnement du tampon...)
+=> On garde la version ante-diluvienne qui fonctionne

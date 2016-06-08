@@ -129,8 +129,7 @@ class ActesArchiveControler {
 		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
 		$path_parts = pathinfo($pdftampone);
 		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
-			$datetampon = $this->actesTransactionsSQL->getDateTampon($transactionsInfo['id']);
-			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$datetampon);
+			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$transactionsInfo['id']);
 		}
 		$pastell->postFile($id_d,"acte_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
 
@@ -232,40 +231,15 @@ class ActesArchiveControler {
 
 
 	
-	public function tamponerActe($tmpfolder,$fileorig,$transactionInfo){
-		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-		require_once(SITEROOT."/class/TamponPDF.class.php");
+	public function tamponerActe($tmpfolder,$fileorig,$transactionId){
 		$pdftkise=$tmpfolder."/tampon_".$fileorig;
-		$pdftkise = $this->modificationPDF($tmpfolder."/".$fileorig, $pdftkise);
-		try{
-		        $pdf = Zend_Pdf::load($pdftkise);
-		        $tampon = new TamponPDF($pdf);
-		        $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-				                            "Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-				                            "Affiché le " ,
-		        							"ID : ".$transactionInfo['unique_id']));
-		        $tampon->setNameFile("tampon_".$fileorig);
-		        file_put_contents($pdftkise,$tampon->getFileAsString());
-		} catch (Exception $e){
-		}
+
+		$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($this->sqlQuery));
+		$tampon_content = $acteTamponne->tamponnerPDF($fileorig,$transactionId);
+
+		file_put_contents($pdftkise,$tampon_content);
 		return $pdftkise;
 	}
-				
-	public function modificationPDF($pathpdforig, $pathpdfout){
-		$cmdpdftk='timeout 10 pdftk '. $pathpdforig." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pathpdfout;
-		Trace::wrap_exec($cmdpdftk, $status, $ret);
-		if ($status === false || $ret != 0) {
-	        $cmdpdftk='timeout 10 pdfsam-console -f '. $pathpdforig ." -o ". $pathpdfout ." concat";
-	        Trace::wrap_exec($cmdpdftk, $status, $ret);
-	        if ($status === false || $ret != 0){
-				$pathpdfout=$pathpdforig;
-	        }
-       }//fin if
-       return $pathpdfout;
-	}
-
-
-
 
 	public function verifArchive($transactionInfo){
 		echo "Transaction {$transactionInfo['unique_id']} : ";
