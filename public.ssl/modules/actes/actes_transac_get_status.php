@@ -70,6 +70,9 @@ $status = $zeTrans->getCurrentStatus();
 if ($status !== false) {
   echo "OK\n" . $status . "\n";
   echo $zeTrans->getFluxRetour($status);
+	if ($status == -1){
+		echo $zeTrans->getCurrentMesssage();
+	}
 } else {
   echo "KO\nErreur consultation statut.";
 }

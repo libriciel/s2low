@@ -369,8 +369,6 @@ class ActesTransaction extends DataObject {
     if (isset ($this->id) && !empty ($this->id)) {
       $sql = "SELECT status_id FROM actes_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM actes_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $this->id . " ORDER BY atw.id DESC LIMIT 1";
 
-      //$sql = "SELECT atw.status_id FROM actes_transactions at LEFT JOIN actes_transactions_workflow atw ON at.id=atw.transaction_id WHERE at.id=" . $this->id . " ORDER BY atw.date DESC LIMIT 1";
-
       $result = $this->db->select($sql);
 
       if (!$result->isError()) {
@@ -380,7 +378,22 @@ class ActesTransaction extends DataObject {
 
       return false;
     }
+	  return false;
   }
+
+
+	public function getCurrentMesssage(){
+		if (! $this->id){
+			return false;
+		}
+		$sql = "SELECT message FROM actes_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM actes_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $this->id . " ORDER BY atw.id DESC LIMIT 1";
+		$result = $this->db->select($sql);
+		if ($result->isError()) {
+			return false;
+		}
+		$row = $result->get_next_row();
+		return $row["message"];
+	}
 
   /**
    * \brief Méthode pour déterminer si la transaction est déjà passée par un état donné
