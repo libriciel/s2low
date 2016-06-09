@@ -18,16 +18,16 @@ class LogsSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetNbLog(){
-		$this->assertEquals(1,$this->logsSQL->getNbLog(false,false,false,false,false,-1,false,false));
+		$this->assertEquals(1,$this->logsSQL->getNbLog(false,false,false,false,false,-1,false,false,false,false));
 	}
 
 	public function testGetList(){
-		$result = $this->logsSQL->getList(false,false,false,false,false,-1,false,false,0,10);
+		$result = $this->logsSQL->getList(false,false,false,false,false,-1,false,false,0,10,false,false);
 		$this->assertEquals("message de test",$result[0]['message']);
 	}
 
 	public function testGetListAllFiltre(){
-		$this->assertEquals(1,$this->logsSQL->getNbLog(1,2,6,"Eric","actes",LogsSQL::LEVEL_INFO,"message de test",array("USER"),0,10));
+		$this->assertEquals(1,$this->logsSQL->getNbLog(1,2,6,"Eric","actes",LogsSQL::LEVEL_INFO,"message de test",array("USER"),'1970-01-01','2032-12-31'));
 	}
 
 }

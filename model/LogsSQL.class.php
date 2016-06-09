@@ -13,7 +13,7 @@ class LogsSQL extends SQL {
 		return array(0=>"Debug","Information","Warning","Error","Critical");
 	}
 
-	public function getList($authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$offset,$limit){
+	public function getList($authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$offset,$limit,$date_debut,$date_fin){
 		$data_to_retrieve = " logs.id,logs.date,logs.severity,logs.module,logs.issuer,logs.user_id,logs.visibility,logs.message, " .
 							" logs.authority_id, users.name, users.givenname, users.login ";
 
@@ -21,16 +21,16 @@ class LogsSQL extends SQL {
 		$limit = intval($limit);
 		$end_query = " ORDER BY id DESC LIMIT $limit OFFSET $offset";
 
-		return $this->getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility);
+		return $this->getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$date_debut,$date_fin);
 	}
 
 
-	public function getNbLog($authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility){
-		$data =  $this->getListQuery("count(*)",false,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility);
+	public function getNbLog($authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$date_debut,$date_fin){
+		$data =  $this->getListQuery("count(*)",false,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$date_debut,$date_fin);
 		return $data[0]['count'];
 	}
 
-	private function getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility){
+	private function getListQuery($data_to_retrieve,$end_query,$authority_group_id,$authority_id,$user_id,$user_name,$module,$severity,$message,$visibility,$date_debut,$date_fin){
 		$sql = "SELECT $data_to_retrieve ".
 			" FROM logs" .
 			" JOIN users ON users.id=logs.user_id " ;
@@ -77,6 +77,14 @@ class LogsSQL extends SQL {
 		if ($visibility){
 			$visibility_str = "'".implode("','",$visibility)."'";
 			$where[] = "visibility IN ($visibility_str)";
+		}
+		if($date_debut){
+			$where[] = "date > ?";
+			$data[] = "$date_debut 00:00:00";
+		}
+		if($date_fin){
+			$where[] = "date < ?";
+			$data[] = "$date_fin 23:59:59";
 		}
 
 		$sql .= " WHERE ". implode(" AND ",$where);

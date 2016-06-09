@@ -9,6 +9,8 @@ class LogsController extends Controller {
 		$this->fmodule = $recuperateur->get("module");
 		$this->fuser = $recuperateur->get("user");
 		$this->fmessage = $recuperateur->get("message");
+		$this->date_debut = $recuperateur->get("date_debut");
+		$this->date_fin = $recuperateur->get("date_fin");
 
 		$fseverity = Helpers::getVarFromGet("severity");
 		if (! isset($fseverity)){
@@ -66,9 +68,9 @@ class LogsController extends Controller {
 
 		$logsSQL = new LogsSQL($this->getSQLQuery());
 		$offset = ($this->page_number - 1) * $this->taille_page;
-		$this->logs_list = $logsSQL->getList($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility,$offset,$this->taille_page);
+		$this->logs_list = $logsSQL->getList($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility,$offset,$this->taille_page,$this->date_debut,$this->date_fin);
 
-		$nb_logs = $logsSQL->getNbLog($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility);
+		$nb_logs = $logsSQL->getNbLog($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility,$this->date_debut,$this->date_fin);
 
 		$pagerHTML  = new PagerHTML();
 		$this->side_bar = $pagerHTML->getHTML($this->page_number,$nb_logs,$this->taille_page);;

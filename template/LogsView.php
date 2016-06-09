@@ -1,3 +1,10 @@
+<script src="/javascript/date-picker.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/custom/styles/date-picker.css" />
+<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+
+
+
+
 <h1><?php echo $h1_title ?></h1>
 <div id="filtering_area">
 	<h2>Filtrage</h2>
@@ -20,6 +27,41 @@
 						<option value="<?php echo $loglevel_id?>" <?php  echo $fseverity==$loglevel_id?'selected="selected"':''?>><?php echo $loglevel_libelle ?></option>
 					<?php endforeach; ?>
 				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="date_debut" class="col-md-3 control-label">Date de début</label>
+			<div class="col-md-3">
+				<input id="date_debut" name="date_debut" type="hidden" value="<?php hecho($date_debut) ?>"/>
+				<script type="text/javascript">
+					obj_date_debut = new DatePicker('date_debut', 'fr');
+				</script>
+				<a href="#datepicker" id="datepicker_date_debut_link" class="datepicker_link" onclick="javascript:obj_date_debut.toggleDatePicker(); return false;">
+					<?php if ($date_debut) :?>
+						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_debut))); ?>
+					<?php else: ?>
+						Choisir une date
+					<?php endif; ?>
+				</a>
+				<div class="date_picker" style="display: none;" id="datepicker_date_debut_calendar">
+				</div>
+
+			</div>
+			<label for="date-fin" class="col-md-3 control-label">Date de fin</label>
+			<div class="col-md-3">
+				<input id="date_fin" name="date_fin" type="hidden" value="<?php hecho($date_fin) ?>"/>
+				<script type="text/javascript">
+					obj_date_fin = new DatePicker('date_fin', 'fr');
+				</script>
+				<a href="#datepicker" id="datepicker_date_fin_link" class="datepicker_link" onclick="javascript:obj_date_fin.toggleDatePicker(); return false;">
+					<?php if ($date_fin) :?>
+						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_fin))); ?>
+					<?php else: ?>
+						Choisir une date
+					<?php endif; ?>
+				</a>
+				<div class="date_picker" style="display: none;" id="datepicker_date_fin_calendar">
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
