@@ -24,7 +24,7 @@ $fmax_ack_date =  $recuperateur->get("max_ack_date");
 if (isset( $_GET['status']) && $_GET['status'] === '0'){
 	$fstatus = 0;
 } else {
-	$fstatus =  $recuperateur->get("status",HeliosTransactionsListe::EN_COURS);
+	$fstatus =  $recuperateur->get("status",'all');
 }
 
 $fauthority = $recuperateur->get("authority");
