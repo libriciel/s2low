@@ -53,6 +53,10 @@ class FTP {
 				echo "$i : $file : PES ALLER ignoré\n";
 				continue;
 			}
+			if (disk_free_space($local_path) < 1000000){
+				throw new Exception("Il ne reste pas assez d'espace sur le disque !");
+			}
+
 			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
 			echo $i." : ".$file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
 			if ($err && $this->delete){
