@@ -50,7 +50,10 @@ $helios_ftp_login=Helpers::getVarFromPost("helios_ftp_login");
 $helios_ftp_password=Helpers::getVarFromPost("helios_ftp_password");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
-$newmailnotif = Helpers::getVarFromPost("newnotif");
+//$newmailnotif = Helpers::getVarFromPost("newnotif");
+$newmailnotif = "on";
+
+
 $dia_siret = Helpers::getVarFromPost("dia_siret");
 
 if($newmailnotif == 'on')

@@ -332,7 +332,7 @@ if ($me->isGroupAdminOrSuper()) {
   $html .= " </div>\n";
 }
 
-$html .= " <div class=\"form-group\">\n";
+/*$html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Nouveau système de notification</label>\n";
 $html .= "  <input type=\"checkbox\" name=\"newnotif\" value=\"on\" ";
 if ($authority->get("new_notification") != 'f')
@@ -340,7 +340,7 @@ if ($authority->get("new_notification") != 'f')
 
 $html .= "/>";
 $html .= " </div>\n";
-
+*/
 		
 if ($authority->getModulePermByName("dia") && $me->isAdmin())
 {
