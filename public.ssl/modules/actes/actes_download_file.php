@@ -32,6 +32,7 @@ $envId = Helpers::getVarFromGet("env");
 $fileId = Helpers::getVarFromGet("file");
 $type = Helpers::getVarFromGet("type");
 $tampon = Helpers::getVarFromGet("tampon");
+$date_affichage = Helpers::getVarFromGet("date_affichage");
 
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -48,7 +49,7 @@ if (isset($fileId) && is_numeric($fileId)) {
 	$env = $zeFile->get("envelope");
 	
 	if ($tampon){
-		$zeFile->setTampon();
+		$zeFile->setTampon($date_affichage);
 	}
 	
   }

@@ -72,6 +72,13 @@ $transStatus = $trans->getCurrentStatus();
 
 $doc = new HTMLLayout();
 
+
+$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"".WEBSITE_SSL."/custom/styles/date-picker.css\" />");
+$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
+$doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
+
+
+
 $doc->setTitle("Tedetis : visualisation d'une transaction");
 
 $doc->openContainer();
@@ -99,6 +106,8 @@ switch ($trans->get("type")) {
     $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
     $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
     $html .= $doc->getHTMLArrayline("Objet", nl2br(get_hecho($trans->get("subject"))));
+	  
+   
 
 	$classification = get_hecho($trans->get("classification"));
 	if(  $trans->get("classification_string")){
@@ -237,8 +246,45 @@ $html .= " <tbody>\n";
             	if ($stage['status_id'] == 4){
             		
             		if (preg_match("/\.pdf$/i",$file["posted_filename"])) {
-	            		$html.= "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?tampon=true&file=" . $file["id"] . "\" title=\"Télécharger le fichier avec tampon\">";
-						$html.= "[Télécharger le fichier tamponné]</a>";
+
+						$name="tampon_date";
+						$date = date("Y-m-d");
+
+						ob_start();
+						?>
+						<br/>
+
+						<a id='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
+						[Télécharger le fichier tamponné]</a>
+						<input id="<?php echo $name ?>" type="hidden">
+
+						<script type="text/javascript">
+							obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
+						</script>
+						<a href="#datepicker"
+						   id="datepicker_<?php echo $name?>_link"
+						   class="datepicker_link"
+						   onclick="javascript:obj_<?php echo $name?>.toggleDatePicker(); return false;">
+								(date d'affichage)
+						</a>
+						<div class="date_picker" style="display: none;" id="datepicker_<?php echo $name?>_calendar">
+						</div>
+
+
+						<script type="text/javascript">
+							$(document).ready(function () {
+								$("#telecharger_tampon").click(function () {
+									var href = $(this).attr('href')  + "&date_affichage=" + $("#tampon_date").val();
+									$(this).attr('href',href);
+								});
+							})
+						</script>
+
+
+						<?php
+						$html .= ob_get_contents();
+						ob_end_clean();
+
             		}
             	}
             }

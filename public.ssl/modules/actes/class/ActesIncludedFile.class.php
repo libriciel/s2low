@@ -22,6 +22,7 @@ class ActesIncludedFile extends DataObject {
   protected $envelope;
 
   private $tampon;
+	private $date_affichage;
   
   
   protected $dbFields = array( "envelope_id" => array( "descr" => "Identifiant enveloppe", "type" => "isInt", "mandatory" => true),
@@ -60,8 +61,9 @@ class ActesIncludedFile extends DataObject {
   }
 
   
-  public function setTampon(){
+  public function setTampon($date_affichage = false){
   	$this->tampon = true;
+	  $this->date_affichage = $date_affichage;
   }
   
   public function sendSignature(){
@@ -112,7 +114,7 @@ class ActesIncludedFile extends DataObject {
 			$pathpdforig = $tmpDir . '/' .$this->filename;
 
 			$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($sqlQuery));
-			$acteTamponne->render($pathpdforig,$this->get("transaction_id"));
+			$acteTamponne->render($pathpdforig,$this->get("transaction_id"), $this->date_affichage);
 			
 			
 		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {

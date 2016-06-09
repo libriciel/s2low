@@ -40,7 +40,6 @@ class ActesTransaction extends DataObject {
   protected $destDir;
 
 	protected $classification_string;
-	protected $date_affichage;
 
   protected $dbFields = array (
     "envelope_id" => array (
@@ -158,11 +157,6 @@ class ActesTransaction extends DataObject {
 		  "maxlength" => 256,
 		  "mandatory" => false
 	  ),
-	  "date_affichage" => array(
-		  "descr" => "",
-		  "type" => "isDate",
-		  "mandatory" => false
-	  )
   );
   protected $transactionTypes = array (
     "1" => "Transmission d'actes",

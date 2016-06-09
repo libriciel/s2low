@@ -10,7 +10,7 @@ class ActeTamponne {
 	}
 
 
-	public function tamponnerPDF($file_path,$transaction_id){
+	public function tamponnerPDF($file_path,$transaction_id,$date_affichage = false){
 
 		$transactionInfo = $this->actesTransactionsSQL->getDateTampon($transaction_id);
 
@@ -36,9 +36,12 @@ class ActeTamponne {
 			return file_get_contents($pdftkise);
 		}
 		$tampon = new TamponPDF($pdf);
+		if ($date_affichage) {
+			$date_affichage = date("d/m/Y", strtotime($date_affichage));
+		}
 		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
 			"Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-			"Affiché le " ,
+			"Affiché le ".$date_affichage ,
 			"ID : ".$transactionInfo['unique_id']));
 		try {
 			$txt =  $tampon->getFileAsString();
@@ -48,8 +51,8 @@ class ActeTamponne {
 		return $txt;
 	}
 
-	public function render($file_path,$transaction_id){
-		$content = $this->tamponnerPDF($file_path,$transaction_id);
+	public function render($file_path,$transaction_id, $date_affichage = false){
+		$content = $this->tamponnerPDF($file_path,$transaction_id,$date_affichage);
 		$filename = basename($file_path);
 		header('Content-type: application/pdf');
 		header("Content-Disposition: attachment; filename=$filename");
