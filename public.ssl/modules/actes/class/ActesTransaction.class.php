@@ -30,7 +30,7 @@ class ActesTransaction extends DataObject {
   protected $broadcast_send_sources;
   protected $broadcast_emails;
   protected $last_status_id; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
-protected $type_reponse;
+ protected $type_reponse;
   protected $related_transaction;
   protected $last_classification_date;
   protected $xmlFileName;
@@ -870,17 +870,15 @@ protected $type_reponse;
         $descrs = ActesTransaction :: getTransactionNatureDescr($this->nature_code);
         $this->nature_descr = $descrs["descr"];
 
+		$classification = array();
+
         // Classification matière
         for ($i = 1; $i <= 5; $i++) {
-          if (isset ($actesItems-> {
-            "CodeMatiere" . $i })) {
-            $classif_attr = $actesItems-> {
-              "CodeMatiere" . $i }
-            ->attributes($namespaces["actes"]);
+          if (isset ($actesItems-> {"CodeMatiere" . $i })) {
+            $classif_attr = $actesItems-> { "CodeMatiere" . $i } ->attributes($namespaces["actes"]);
             if (isset ($classif_attr["CodeMatiere"])) {
-              $this-> {
-                "classif" . $i }
-              = Helpers :: getFromXMLElt($classif_attr["CodeMatiere"]);
+              $this-> {"classif" . $i } = Helpers :: getFromXMLElt($classif_attr["CodeMatiere"]);
+				$classification[$i - 1] = $this->{"classif".$i};
             }
           }
         }
@@ -890,7 +888,13 @@ protected $type_reponse;
 
         $this->classification_date = Helpers :: getFromXMLElt($actesItems->ClassificationDateVersion);
 
-        // Fichier de l'acte
+		global $sqlQuery;
+		$actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
+		$classification_description = $actesClassificationCodesSQL->getDescription($this->get("authority_id"),$classification);
+		$this->set("classification_string",$classification_description);
+
+
+			// Fichier de l'acte
         $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
         
         if (count($actesItems->Document->NomFichier) != 1 ){

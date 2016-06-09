@@ -81,7 +81,11 @@ foreach ($xmlTransFiles as $xmlFile) {
   $trans->set("destDir", $dest);
   $trans->set("envelope_id", $env->getId());
 
-  if (! $trans->createFromXML($xmlFile)) {
+	//Pour enregister la classifcation... quel merde...
+	$trans->set("authority_id",$me->get("authority_id"));
+
+
+	if (! $trans->createFromXML($xmlFile)) {
 	$env->purgeFiles();
 	$env->deleteArchiveFile();
 	Helpers::returnAndExit(1, "Erreur d'importation transaction : " . $trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
