@@ -107,4 +107,9 @@ class LogsSQL extends SQL {
 		$this->query($sql,$date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp,$authority_id,$authority_group_id);
 	}
 
+	public function getMinDate(){
+		$sql = "SELECT MIN(date) FROM logs";
+		return $this->queryOne($sql);
+	}
+
 }

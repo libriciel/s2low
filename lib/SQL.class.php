@@ -31,4 +31,8 @@ abstract class SQL {
 		return $this->sqlQuery->queryOneCol($query,$param);
 	}
 
+	protected function getSQLQuery(){
+		return $this->sqlQuery;
+	}
+
 }

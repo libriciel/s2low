@@ -224,6 +224,7 @@ users_perms:
 
 logs:
 logs_historique:
+logs_request:
 helios_retour:
 authority_siret:
 actes_classification_requests:

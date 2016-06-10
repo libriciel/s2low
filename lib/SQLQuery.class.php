@@ -127,4 +127,36 @@ class SQLQuery {
 		}
 		return $r;
 	}
+
+	/** @var  PDOStatement */
+	private $lastPdoStatement;
+	private $nextResult;
+	private $hasMoreResult;
+
+	public function prepareAndExecute($query,$param = false){
+		if ( ! is_array($param)){
+			$param = func_get_args();
+			array_shift($param);
+		}
+		$this->lastPdoStatement = $this->getPdo()->prepare($query);
+		$this->lastPdoStatement->execute($param);
+		$this->hasMoreResult = true;
+		$this->fetch();
+	}
+
+	public function hasMoreResult(){
+		return $this->hasMoreResult;
+	}
+
+	public function fetch(){
+		$result = $this->nextResult;
+		$this->nextResult = $this->lastPdoStatement->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_NEXT);
+
+		if (! $this->nextResult){
+			$this->hasMoreResult = false;
+		}
+		return $result;
+	}
+
+
 }

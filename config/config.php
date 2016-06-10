@@ -213,7 +213,9 @@ if (! defined("KEEP_NB_MONTHS_IN_LOGS")){
 	define("KEEP_NB_MONTHS_IN_LOGS",6);
 }
 
-
+if (!defined("EXPORT_LOGS_DIRECTORY")){
+	define("EXPORT_LOGS_DIRECTORY","/tdt-workspace/logs-export/");
+}
 
 
 //////////////////////////////////

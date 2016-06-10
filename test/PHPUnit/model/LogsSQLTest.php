@@ -30,4 +30,13 @@ class LogsSQLTest extends S2lowTestCase {
 		$this->assertEquals(1,$this->logsSQL->getNbLog(1,2,6,"Eric","actes",LogsSQL::LEVEL_INFO,"message de test",array("USER"),'1970-01-01','2032-12-31'));
 	}
 
+	public function testGetMinDate(){
+		$today = date("Y-m-d H:i:s");
+		$logsSQL = new LogsSQL($this->getSQLQuery());
+		$logsSQL->addLog($today,1,"actes","TdT",1,'SADM','message test 1',false);
+
+		$min_date = $this->logsSQL->getMinDate();
+		$this->assertRegExp("#^$today#",$min_date);
+	}
+
 }
