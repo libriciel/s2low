@@ -93,4 +93,18 @@ class LogsSQL extends SQL {
 		return $this->query($sql,$data);
 	}
 
+	public function addLog($date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp){
+		$sql = "SELECT authority_id,authority_group_id FROM users WHERE id=?";
+		$line = $this->queryOne($sql,$user_id);
+		if ($line){
+			$authority_id = $line['authority_id'];
+			$authority_group_id = $line['authority_group_id'];
+		} else {
+			$authority_id = false;
+			$authority_group_id = false;
+		}
+		$sql = "INSERT INTO logs(date,severity,module,issuer,user_id,visibility,message,timestamp,authority_id,authority_group_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
+		$this->query($sql,$date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp,$authority_id,$authority_group_id);
+	}
+
 }

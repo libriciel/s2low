@@ -223,6 +223,7 @@ users_perms:
   perm: RW
 
 logs:
+logs_historique:
 helios_retour:
 authority_siret:
 actes_classification_requests:

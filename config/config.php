@@ -207,6 +207,15 @@ if (! defined("EXTENDED_VALIDCA_PATH")){
 }
 
 
+//Permet de définir le nombre de mois pendant lequelle un enregistrement est gardé dans la table logs avant
+//d'être déposé dans la table logs_historique
+if (! defined("KEEP_NB_MONTHS_IN_LOGS")){
+	define("KEEP_NB_MONTHS_IN_LOGS",6);
+}
+
+
+
+
 //////////////////////////////////
 ///// Paramètre module Actes /////
 //////////////////////////////////

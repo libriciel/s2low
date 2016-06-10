@@ -77,4 +77,10 @@ class LogsController extends Controller {
 	}
 
 
+	public function vidange($nb_month_to_keep){
+		/** @var LogsHistoriqueSQL $logsHistoriqueSQL */
+		$logsHistoriqueSQL = $this->getObjectInstancier()->get('LogsHistoriqueSQL');
+		$logsHistoriqueSQL->vidange($nb_month_to_keep);
+	}
+	
 }
