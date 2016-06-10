@@ -70,7 +70,7 @@ function DatePicker(pId, pLang) {
 
 
   var en_months = 'January,February,March,April,May,June,July,August,September,October,November,December'.split(',');
-  var fr_months = 'Janvier,Février,Mars,Avril,Mai,Juin,Juillet,Août,Septembre,Octobre,Novembre,Décembre'.split(',');
+  var fr_months = 'janvier,février,mars,avril,mai,juin,juillet,août,septembre,octobre,novembre,décembre'.split(',');
 
   var en_days = 'Sun,Mon,Tue,Wed,Thu,Fri,Sat'.split(',');
   var fr_days = 'Dim,Lun,Mar,Mer,Jeu,Ven,Sam'.split(',');
