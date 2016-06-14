@@ -81,4 +81,3 @@ function checkAllEmail($emailtext)
     }
     return true;
 }
-?>

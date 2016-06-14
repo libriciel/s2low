@@ -458,19 +458,24 @@ class mailController {
   	global $me;
         global $doc;
   	$email = Helpers :: getVarFromPost("email");
-  
+
+
+
   	$description = Helpers :: getVarFromPost("description");
   	
   	$id = Helpers :: getVarFromPost("id");
   	
-  	if ($email != null)
-  	{
-  		$annuaire=new mail_annuaire();
-  		$annuaire->set("mail_address",$email);
-  		$annuaire->set("description",$description);
-  		$annuaire->set("authority_id",$me->get('authority_id'));
-  		$annuaire->set("id",$id);
-  		$annuaire->save(false);
+  	if ($email != null )  {
+		if (! is_valid_email($email)){
+			$_SESSION['last_message'] = "L'email n'est pas valide";
+		} else {
+			$annuaire = new mail_annuaire();
+			$annuaire->set("mail_address", $email);
+			$annuaire->set("description", $description);
+			$annuaire->set("authority_id", $me->get('authority_id'));
+			$annuaire->set("id", $id);
+			$annuaire->save(false);
+		}
   	}
   	$idArray= Helpers :: getVarFromPost("checkbox_id");
   	

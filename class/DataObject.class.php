@@ -221,9 +221,9 @@ class DataObject {
 			  }
 			  break;
 			case "isEmail":
-			  if (! preg_match ("/^[^@]+@[^@]+\.[a-zA-Z]{2,4}$/", $this->$name)) {
-				$this->errorMsg .= $attr["descr"] . " doit être une adresse électronique valide.\n";
-			  }
+				if (! is_valid_email($this->$name)) {
+					$this->errorMsg .= $attr["descr"] . " doit être une adresse électronique valide.\n";
+			  	}
 			  break;
 			}
 			
