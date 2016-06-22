@@ -109,6 +109,9 @@ class ActesIncludedFile extends DataObject {
 		
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
+//<m56665>
+                    $memory_limit = ini_set('memory_limit', -1);
+//</m56665>
                     $pathpdforig = $tmpDir . '/' .$this->filename;
                     $pdftkise = $this->modificationPDF($pathpdforig, $pdftkise);
                     if(!file_exists($pdftkise))
@@ -133,6 +136,10 @@ class ActesIncludedFile extends DataObject {
                         
                     } catch (Exception $e){
                         Helpers::sendFileToBrowser($pdftkise, $browserName, $this->filetype);
+//<m56665>                       
+                    } finally {
+                        ini_set('memory_limit', $memory_limit);
+//</m56665>                       
                     }
 		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
 		  $this->errorMsg .= "Erreur envoi fichier";
