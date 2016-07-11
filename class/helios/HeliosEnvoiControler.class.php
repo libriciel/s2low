@@ -205,6 +205,7 @@ class HeliosEnvoiControler {
 				$ftp->disconnect();
 			} catch (Exception $e){
 				echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
+				unlink($file_path_with_complete_name);
 				continue;
 			}
 
