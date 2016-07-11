@@ -1,46 +1,47 @@
 <?php
 
-require_once( __DIR__ . "/../init/init.php");
+/* Fichier a mettre sur S2low afin d'envoyer le fichier ocre */
 
-echo "Début du script\n";
+define("FILES_TO_SEND_DIRECTORY","/Users/eric/ocre/send/");
+define("RECEIVE_SCRIPT_URL",'http://localhost/phpstorm/pastell-ocre/script/receive-ocre.php');
+define("PASSPHRASE","change_me");
 
-$ocre_list = glob(HELIOS_OCRE_FILE_PATH."/*.ocre");
-
-echo count($ocre_list)." fichiers à envoyer.\n";
-
-if (count($ocre_list) < 1){
-	exit;
-}
-
-$ssh2 = new SSH2();
-$ssh2->setServerName(OCRE_SERVER_DESTINATION,OCRE_SERVER_FINGERRINT,OCRE_SERVER_PORT);
-$ssh2->setPasswordAuthentication(OCRE_SERVER_LOGIN,OCRE_SERVER_PASSWORD);
-echo "Connexion au serveur SSH\n";
+$dir_handle = opendir(FILES_TO_SEND_DIRECTORY);
 
 
-$lock_file = HELIOS_OCRE_FILE_PATH."/.lock";
-$distant_lock_file = OCRE_SERVER_DESTINATION_PATH."/.lock";
+echo "Envoi des fichier du répertoire : ".FILES_TO_SEND_DIRECTORY."\n";
 
-file_put_contents($lock_file,"");
-if (! $ssh2->sendFile($lock_file,$distant_lock_file)){
-	echo $ssh2->getLastError()."\n";
-	exit;
-}
-echo "Répertoire distant : pose d'un fichier .lock\n";
-
+while (false !== ($file = readdir($dir_handle)) ) {
+	$file_path = FILES_TO_SEND_DIRECTORY . "/".$file;
+	if (! is_file($file_path)){
+		continue;
+	}
+	echo "Envoi du fichier $file\n";
 
 
-foreach($ocre_list as $file_to_send){
-	echo "Sending : $file_to_send\n";
-	if (! $ssh2->sendFile($file_to_send,OCRE_SERVER_DESTINATION_PATH."/".basename($file_to_send))){
-		echo "Impossible d'envoyer le fichier !\n";
-	} else {
-		unlink($file_to_send);
-		echo "Supression du fichier\n";
+	$request = curl_init(RECEIVE_SCRIPT_URL);
+	curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
+	curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($request, CURLOPT_POST, true);
+	curl_setopt(
+		$request,
+		CURLOPT_POSTFIELDS,
+		array(
+			'passphrase' => PASSPHRASE,
+			'ocre' => new CURLFile($file_path)
+		));
+
+	curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+	$result = curl_exec($request);
+	curl_close($request);
+	echo "Result : $result\n";
+	$decode = json_decode($result,true);
+	if (! $decode || empty($decode['result']) || $decode['result'] != 'OK'){
+		echo "ECHEC de l'envoi\n";
+		continue;
 	}
 
+	echo "Envoi OK\n";
+	echo "Suppression de $file_path\n";
+	unlink($file_path);
 }
-
-$ssh2->deleteFile($distant_lock_file);
-unlink($lock_file);
-echo "Répertoire distant : suppression du fichier .lock\n";
