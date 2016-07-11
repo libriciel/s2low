@@ -2,24 +2,22 @@
 
 /* Fichier a mettre sur S2low afin d'envoyer le fichier ocre */
 
-define("FILES_TO_SEND_DIRECTORY","/Users/eric/ocre/send/");
-define("RECEIVE_SCRIPT_URL",'http://localhost/phpstorm/pastell-ocre/script/receive-ocre.php');
-define("PASSPHRASE","change_me");
+define("HELIOS_OCRE_PASSWORD","change_me");
 
-$dir_handle = opendir(FILES_TO_SEND_DIRECTORY);
+$dir_handle = opendir(HELIOS_OCRE_FILE_PATH);
 
 
-echo "Envoi des fichier du répertoire : ".FILES_TO_SEND_DIRECTORY."\n";
+echo "Envoi des fichier du répertoire : ".HELIOS_OCRE_FILE_PATH."\n";
 
 while (false !== ($file = readdir($dir_handle)) ) {
-	$file_path = FILES_TO_SEND_DIRECTORY . "/".$file;
+	$file_path = HELIOS_OCRE_FILE_PATH . "/".$file;
 	if (! is_file($file_path)){
 		continue;
 	}
 	echo "Envoi du fichier $file\n";
 
 
-	$request = curl_init(RECEIVE_SCRIPT_URL);
+	$request = curl_init(HELIOS_OCRE_EXPORT_URL);
 	curl_setopt($request, CURLOPT_SSL_VERIFYHOST, false);
 	curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
 	curl_setopt($request, CURLOPT_POST, true);
@@ -27,7 +25,7 @@ while (false !== ($file = readdir($dir_handle)) ) {
 		$request,
 		CURLOPT_POSTFIELDS,
 		array(
-			'passphrase' => PASSPHRASE,
+			'passphrase' => HELIOS_OCRE_PASSWORD,
 			'ocre' => new CURLFile($file_path)
 		));
 
