@@ -1,8 +1,8 @@
 <?php
 
 /* Fichier a mettre sur S2low afin d'envoyer le fichier ocre */
+require_once( __DIR__ . "/../init/init.php");
 
-define("HELIOS_OCRE_PASSWORD","change_me");
 
 $dir_handle = opendir(HELIOS_OCRE_FILE_PATH);
 
