@@ -10,14 +10,23 @@ class HeliosAnalyseFichierRecu {
 	private $authoritySiretSQL;
 	private $schema_pes_path;
 	private $email_admin;
-	
-	public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL, AuthoritySQL $authoritySQL, HeliosRetourSQL $heliosRetourSQL, AuthoritySiretSQL $authoritySiretSQL,$schema_pes_path, $email_admin){
+	private $email_from;
+
+	public function __construct(
+		HeliosTransactionsSQL $heliosTransactionsSQL,
+		AuthoritySQL $authoritySQL,
+		HeliosRetourSQL $heliosRetourSQL,
+		AuthoritySiretSQL $authoritySiretSQL,$schema_pes_path,
+		$email_admin,
+		$email_from
+	){
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 		$this->authoritySQL = $authoritySQL;
 		$this->heliosRetourSQL = $heliosRetourSQL;
 		$this->schema_pes_path = $schema_pes_path;
 		$this->email_admin = $email_admin;
 		$this->authoritySiretSQL = $authoritySiretSQL;
+		$this->email_from = $email_from;
 	}
 	
 	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path,$ocre_file_path){
@@ -188,7 +197,7 @@ class HeliosAnalyseFichierRecu {
 	}
 	
 	private function sendMailToAdmin($subject,$msg){
-		mail($this->email_admin,$subject,$msg);
+		mail($this->email_admin,$subject,$msg,"from: {$this->email_from}");
 	}
 	
 	
