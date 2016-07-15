@@ -21,6 +21,7 @@ class LogsController extends Controller {
 		$this->fmessage = $recuperateur->get("message");
 		$logs_date_min  = $this->getObjectInstancier()->get('LogsSQL')->getMinDate();
 		$logs_history_date_max  = $this->getObjectInstancier()->get('LogsHistoriqueSQL')->getMaxDate();
+		$logs_history_date_max =  date("Y-m-d",$logs_history_date_max);
 
 		$date_debut_default = date("Y-m-d",strtotime($logs_date_min));
 

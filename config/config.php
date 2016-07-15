@@ -265,7 +265,7 @@ if(!defined('ACTES_CHECK_ARCHIVE_SERVLET')){
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
-        define('ACTES_TDT_MAIL_ADDRESS', 'eric@localhost');
+        define('ACTES_TDT_MAIL_ADDRESS', 'eric@sigmalis.com');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
@@ -280,7 +280,7 @@ if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
 
 // Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){
-	define('ACTES_COMMON_BROADCAST_EMAILS', 'eric@localhost');
+	define('ACTES_COMMON_BROADCAST_EMAILS', 'eric@sigmalis.com');
 } 
 
 // Restreindre ou non plusieurs demandes de classification par jour par collectivité (1 par jour si restreint)

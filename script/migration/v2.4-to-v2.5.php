@@ -4,7 +4,7 @@
 /*
  * Faire passer le script rev919.sql
  * Faire passer le script v2.4-to-v2.5.php (ce script)
- * Faire passer le script rev929.sql
+ * Faire passer le script rev928.sql
  * mettre le script cron/journal-vidange.php dans le cron
  *
  */
