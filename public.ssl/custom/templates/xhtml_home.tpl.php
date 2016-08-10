@@ -47,11 +47,8 @@
                             <h2 class="home">Partenaires</h2>
                             <p class="home">
                                 <a class="icon" href="http://www.adullact.org/">
-                                    <img src="<?php echo WEBSITE ?>/custom/images/logo_adullact_projet.jpg" alt="Logo ADULLACT" />
+                                    <img src="<?php echo WEBSITE ?>/custom/images/logo_adullact_projet.jpg" alt="Logo Adullact Projet" />
                                 </a>&nbsp;
-                                <a class="icon" href="http://www.alternancesoft.com/">
-                                    <img src="<?php echo WEBSITE ?>/custom/images/logo_alternance.jpg" alt="Logo Alternance Soft" />
-                                </a>
                             </p>
                         </div>
                     </div>
