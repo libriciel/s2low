@@ -260,7 +260,12 @@ class Module extends DataObject {
    * \return Un tableau ayant pour clefs les identifiants des modules autorisés
    */
   public static function getModulesForAuthority($authority) {
-    $sql = "SELECT modules_authorities.id, modules_authorities.module_id FROM modules_authorities LEFT JOIN modules ON modules_authorities.module_id=modules.id WHERE modules_authorities.authority_id=" . $authority . " AND modules.status=1";
+    $sql = "SELECT modules_authorities.id, modules_authorities.module_id " .
+		" FROM modules_authorities " .
+		" LEFT JOIN modules ON modules_authorities.module_id=modules.id " .
+		" WHERE modules_authorities.authority_id=" . $authority . " AND modules.status=1 " .
+		" ORDER BY modules.name";
+
     $db = DatabasePool::getInstance();
 
     $result = $db->select($sql);
