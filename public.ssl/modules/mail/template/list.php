@@ -40,7 +40,6 @@
                         <a href="#datepicker" id="datepicker_send_date_from_link" class="datepicker_link" onclick="javascript:obj_send_date_from.toggleDatePicker(); return false;">
                                 <?php 
                                 if ($SendDateFrom) {
-                                    //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
                                     echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($SendDateFrom)));
                                 } else {
                                     echo "Choisir une date";

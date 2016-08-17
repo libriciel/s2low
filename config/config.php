@@ -10,8 +10,9 @@ ini_set("error_reporting", E_ALL & ~E_STRICT);
 
 date_default_timezone_set("Europe/Paris");
 
-setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-
+//Attention, changement de la locale LC_TIME : ne pas la redéfinir dans le fichier LocalSettings !!!
+//Cette locale est cohérente avec le code de S2low
+setlocale(LC_TIME, "fr_FR.UTF-8");
 
 if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","eric@sigmalis.com");

@@ -134,8 +134,7 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_min_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_submission_date.toggleDatePicker(); return false;\">";
 
 if ($fmin_submission_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date));
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date)));
 } else {
   $html .= "Choisir une date";
 }
@@ -153,8 +152,7 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_max_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_submission_date.toggleDatePicker(); return false;\">";
 
 if ($fmax_submission_date) {
-  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date));
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date)));
 } else {
   $html .= "Choisir une date";
 }

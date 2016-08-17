@@ -272,12 +272,11 @@ class Helpers {
   */
   public static function getDateFromBDDDate($date, $with_hours = false) {
 	if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
-	  setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
 
 	  $str = utf8_decode( strftime("%e %B %Y", $timestamp) );
 
 	  if ($with_hours) {
-		$str .= strftime(' à %Hh%Mmin%Ss', $timestamp);
+		$str .= ' à ' . utf8_decode(strftime('%Hh%Mmin%Ss', $timestamp));
 	  }
 
 	  return $str;

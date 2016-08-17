@@ -44,7 +44,7 @@
 				</script>
 				<a href="#datepicker" id="datepicker_date_debut_link" class="datepicker_link" onclick="javascript:obj_date_debut.toggleDatePicker(); return false;">
 					<?php if ($date_debut) :?>
-						<?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_debut)); ?>
+						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_debut))); ?>
 					<?php else: ?>
 						Choisir une date
 					<?php endif; ?>
@@ -61,7 +61,7 @@
 				</script>
 				<a href="#datepicker" id="datepicker_date_fin_link" class="datepicker_link" onclick="javascript:obj_date_fin.toggleDatePicker(); return false;">
 					<?php if ($date_fin) :?>
-						<?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_fin)); ?>
+						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($date_fin))); ?>
 					<?php else: ?>
 						Choisir une date
 					<?php endif; ?>
