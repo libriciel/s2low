@@ -11,10 +11,20 @@
         <?php echo $this->header ?>
     </head>
     <body>
-        <div id="header" class="navbar">
-            <div id="home-header" class="container">
-                <img id="home-banner" src="/custom/images/pages_header_banner.jpg" alt="" usemap="#map" />
-                <map id="map" name="map"><area shape="rect" alt="Bandeau" coords="0,95,900,120" href="<?php echo WEBSITE_SSL ?>"/></map>
-            </div>
-        </div>
+	<?php if (defined("NEW_BANNER")) : ?>
+
+	<div id="bandeau_s2low" class="container">
+		<a href='<?php echo WEBSITE_SSL ?>'>
+			<img src="/custom/images/bandeau_s2low.jpg"  />
+		</a>
+	</div>
+
+	<?php else : ?>
+		<div id="header" class="navbar">
+			<div id="home-header" class="container">
+				<img id="home-banner" src="/custom/images/pages_header_banner.jpg" alt="" usemap="#map" />
+				<map id="map" name="map"><area shape="rect" alt="Bandeau" coords="0,95,900,120" href="<?php echo WEBSITE_SSL ?>"/></map>
+			</div>
+		</div>
+	<?php endif;
 

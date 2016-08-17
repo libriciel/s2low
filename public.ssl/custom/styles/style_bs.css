@@ -80,6 +80,17 @@ h2 > a {
     margin-top: 10px;
 }
 
+#bandeau_s2low {
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+}
+
+#bandeau_s2low img {
+    border-radius: 4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+}
+
 /*
 ---------------------------------------------
  Template : nav bar

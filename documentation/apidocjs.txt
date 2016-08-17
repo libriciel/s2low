@@ -1,4 +1,4 @@
-Attention, apidojs ne prends que des fichiers en UTF-8.
+Attention, apidocjs ne prends que des fichiers en UTF-8.
 
 Afin de générer la documentation de l'API, il convient d'apporter la modification suivante  apidoc :
 

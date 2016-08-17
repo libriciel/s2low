@@ -4,12 +4,21 @@
     <head>
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap-theme.min.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/style_bs.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
         <?php echo $this->header ?>
     </head>
-    <body> 
+    <body>
+	<?php if (defined("NEW_BANNER")) : ?>
+
+			<div id="bandeau_s2low" class="container">
+				<a href='<?php echo WEBSITE ?>'>
+					<img src="<?php echo WEBSITE ?>/custom/images/bandeau_s2low.jpg"  />
+				</a>
+			</div>
+
+	<?php else : ?>
         <div id="header" class="navbar">
             <div id="home-header" class="container">
                 <img id="home-banner" src="<?php echo WEBSITE ?>/custom/images/home_banner.jpg" alt="" usemap="#map" />
@@ -17,6 +26,7 @@
                 <img id="home-subbanner" src="<?php echo WEBSITE ?>/custom/images/home_subbanner.jpg" alt="" />
             </div>
         </div>
+	<?php endif; ?>
         <div class="container">
             <div class="row">
                 <div id="menu-area" class="col-md-3">
