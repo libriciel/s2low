@@ -4,18 +4,26 @@
     <head>
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap-theme.min.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/style_bs.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/style_mail.css" />
-        <script src="<?php echo WEBSITE_SSL ?>/javascript/utils.js" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
+        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_mail.css" />
+        <script src="<?php echo WEBSITE ?>/javascript/utils.js" type="text/javascript"></script>
         <?php echo $this->header ?>
     </head>
     <body>
+	<?php if (defined("NEW_BANNER")) : ?>
+		<div id="bandeau_s2low" class="container">
+			<a href='<?php echo WEBSITE_SSL ?>'>
+				<img src="<?php echo WEBSITE_SSL ?>/custom/images/bandeau_s2low.jpg"  />
+			</a>
+		</div>
+	<?php else: ?>
         <div id="header" class="navbar">
             <div id="home-header" class="container">
                 <img id="home-banner" src="<?php echo WEBSITE ?>/custom/images/home_banner.jpg" alt="" usemap="#map" />
                 <map id="map" name="map"><area shape="rect" alt="Bandeau" coords="0,120,900,180" href="<?php echo WEBSITE ?>"/></map>
             </div>
         </div>
+	<?php endif; ?>
         <?php echo $this->body ?>
