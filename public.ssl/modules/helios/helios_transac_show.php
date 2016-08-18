@@ -178,7 +178,7 @@ if ($me->isSuper()) {
 	$actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
 	$actionHtml .= "</div></form>\n";
 
-	if( in_array($currentStatusId, array(2,3,-1))){
+	if( in_array($currentStatusId, array(2,3,-1,7))){
 		ob_start();?>
 
 	<form
