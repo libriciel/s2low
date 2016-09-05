@@ -10,7 +10,10 @@ if ($userInfo['role'] != 'SADM'){
 
 
 $info = array(
-	1=>"Posté",2=>"En attente de transmission",3=>"Transmis"
+	1=>"Posté",
+	7 => "En traitement",
+	2=>"En attente de transmission",
+	3=>"Transmis"
 );
 
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
