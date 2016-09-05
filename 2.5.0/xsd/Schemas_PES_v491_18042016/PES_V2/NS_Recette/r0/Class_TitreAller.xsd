@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunRecette.xsd" />
+  <xs:complexType name="TBlocPiece">
+    <xs:annotation>
+      <xs:documentation>Informations pièce.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d’identification  du service de l'ordonnateur émettant le bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Critère d'affectation : Zone libre permettant  à l’ordonnateur de déterminer l’affectation du dossier dans les services du comptable.
+Les critères d'affectation résultent d’une convention entre l'ordonnateur et le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num8">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce : Numéro du titre de recette.
+Cette valeur doit être strictement supérieure à 0, à défaut, rejet du flux.
+Pour un  TypPce Titre ORMC (15), IdPce correspond au numéro de l’article de rôle. Le titre ORMC doit être mono-débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Informations destinées à déterminer le type de pièce transmis par l'ordonnateur. Le type de pièce doit être compatible avec le type de bordereau (cf annexe 2).
+Le type de pièce : « Demande d’émission de titre » n’est utilisé qu’en retour d’information (du comptable vers l’ordonnateur). Il est utilisé pour transmettre des demandes d’émission de titres lors d’un encaissement avant émission de titre.
+Le TyPce 08 et le TypPce 13 ne sont pas possibles. Ces valeurs aboutissent au rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatPce" type="TNatPce">
+        <xs:annotation>
+          <xs:documentation>Nature du titre.
+La NatPce est possible et définie en association avec TypBord, TypPce et doit être conforme à la grille triplet de recette. Toute autre combinaison aboutit à un rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRol" type="cm:Base_Num7" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant du rôle. Cette zone concerne uniquement la nature de titre " titre récapitulatif ". Elle permet le rapprochement d’un rôle et d’un titre récapitulatif.
+Le numéro de rôle n’est possible qu’avec le triplet de recette 01 06 01. Toute présence de cette balise avec un autre triplet aboutit au rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteAsp" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'envoi de l'avis des sommes à payer.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Edition" type="TTypEdition" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Balise nécessaire pour permettre l’édition centralisée par les services de la DGFIP.
+Sans valorisation de cette balise, le PESPJ référencé pourra être accessible mais ne pourra être l’objet d’une édition centralisée par les services de la DGFIP.
+Si valorisée à 01(Edition ASAP), le titre doit être mono débiteur, doit respecter les types et natures de pièces autorisés (cf annexe 2) et une référence de PJ doit être présente pour ce titre.
+Si ces règles ne sont pas respectées, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjPce" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet de la pièce. Zone libre.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DebFact" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de début de la période de facturation. Cette zone concerne uniquement les hôpitaux.
+La valorisation de cette balise en dehors d’une nomenclature M21 ou M22 aboutira à un rejet du bordereau. Elle reste facultative pour les M21 et M22.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinFact" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de fin de la période de facturation. Cette zone concerne uniquement les hôpitaux.
+La valorisation de cette balise en dehors d’une nomenclature M21 ou M22 aboutira à un rejet du bordereau. Elle est facultative même pour les M21 M22.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumDette" type="cm:Base_Num15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de dette attribué au débiteur par l’ordonnateur, ce numéro correspond au NumeroFacture de l’article de rôle dans Hélios.
+Balise exploitée uniquement pour les  titres de type ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Per" type="cm:Base_Num1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Période : complément au n° de dette attribué au débiteur par l’ordonnateur. Correspond à la Période de l’article de rôle dans Hélios. 
+Balise exploitée uniquement pour les  titres de type ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle1" type="cm:Base_Num1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l’article de  rôle. Cette clé d'identification est calculée selon le modulo 11 ( sur le code collectivité + le code nature  + 2 dernier chiffres de l'exercice + la période + le numéro de dette).
+Balise exploitée uniquement pour les titres de type ORMC.
+Pour le mode de calcul se référer à l'ANNEXE_TECHNIQUE_PES_SEPA_ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle2" type="cm:Base_Alphanum1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l’article de rôle. Clé calculée selon le modulo 23 ( sur les deux derniers chiffres de l'exercice + la période + 00 + le numéro de dette).
+Balise exploitée uniquement pour les titres de type ORMC.
+Pour le mode de calcul se référer à l'ANNEXE_TECHNIQUE_PES_SEPA_ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée à l'objet, référence unique de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
