@@ -39,26 +39,26 @@
                 </div>
                 <div class="col-md-9">
                     <h1>Bienvenue sur la plate-forme S²LOW&nbsp;-&nbsp;ADULLACT</h1>
-                    <h2 class="home">Offre <img src="<?php echo WEBSITE ?>/custom/images/logo_s2low.jpg" title="SLOW" alt="Logo Slow" /></h2>
+                    <h2 class="home">Offre S²LOW</h2>
                     <p class="home">
-                    Cette plate-forme permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales et s'inscrit dans le cadre du projet national de eGouvernement.<br />
-                    Elle permet dès maintenant la transmission des actes aux préfectures via le protocole ACTES mis en place par le MIOCT.<br />
-                    Les transmissions d'information vers le Trésor Public (états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics), HELIOS, sont réalisables via notre plate-forme.<br />
-
-                    L'accès aux services est réservé aux personnes autorisées disposant d'un certificat électronique à cet effet.<br /><br />
-
-                    Note : L'offre S²LOW (Service Sécurisé Libre inter-Opérable pour la Vérification et la Validation) est développée sur la base d'un co-financement entre la SCIC SA ADULLACT Projet et la société Alternance Soft.</p>
+						La plate-forme S²LOW permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales :
+						elle permet ainsi la transmission des actes aux préfectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministère de l'Intérieur,
+						ainsi que les transmissions d'information vers le Trésor Public
+						(états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
+						via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
+					<p class="home">
+						L'accès aux services est réservé aux personnes autorisées disposant d'un certificat électronique à cet effet.
+					</p>
                     <div id="mention">
                         <div id="mention_hebergement">
-                            <h2 class="home">Hébergement</h2>
-                            <p class="home">ADULLACT Association.</p>
+                            <h2 class="home">Opérateur</h2>
+                            <p class="home"><a href="http://adullact.org/">Association ADULLACT</a>, tiers opérateur homologué</p>
+
                         </div>
                         <div id="mention_partenaires">
                             <h2 class="home">Partenaires</h2>
                             <p class="home">
-                                <a class="icon" href="http://www.adullact.org/">
-                                    <img src="<?php echo WEBSITE ?>/custom/images/logo_adullact_projet.jpg" alt="Logo Adullact Projet" />
-                                </a>&nbsp;
+								<a href="http://adullact-projet.coop/">SCOP SA ADULLACT PROJET</a>, financeur et mainteneur de la solution
                             </p>
                         </div>
                     </div>

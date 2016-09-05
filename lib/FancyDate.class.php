@@ -16,5 +16,9 @@ class FancyDate {
 		}
 		return utf8_decode(strftime("%e %B %Y %H:%M:%S", strtotime($date)));
 	}
+
+	public function getMois($date){
+		return utf8_decode(strftime("%B %Y", strtotime($date)));
+	}
 	
 }
