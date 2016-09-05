@@ -193,5 +193,13 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->query($sql,$today);
 	}
 	
-	
+	public function getNbTransactionByMonth(){
+		$sql = "SELECT count(*) as nb,date_trunc('month', submission_date) as month  FROM helios_transactions " .
+			" WHERE submission_date >= '2015-01-01'".
+			" GROUP BY month" .
+			" ORDER BY month DESC";
+		return $this->query($sql);
+	}
+
+
 }

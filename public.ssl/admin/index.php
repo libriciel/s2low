@@ -99,6 +99,10 @@ ob_start();
 		</table>
 	</div>
 
+<h2>Autres</h2>
+<div class="alert alert-warning">
+	Attention, page non optimisée qui ralentit le logiciel : <a href="stats.php">Statistiques</a>
+</div>
 <?php
 $html = ob_get_contents();
 ob_end_clean();

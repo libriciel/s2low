@@ -145,11 +145,9 @@ class ActesTransactionsSQL {
     public function getNbTransactionByMonth(){
     	$sql = "SELECT count(*) as nb,date_trunc('month', submission_date) as month  FROM actes_transactions " .
 			" JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id" .
-			" WHERE actes_transactions.type = '1'" .
+			" WHERE actes_transactions.type = '1' AND submission_date>'2015-01-01'" .
 			" GROUP BY month" .
 			" ORDER BY month DESC";
-
-		//echo $sql;
 		return $this->sqlQuery->query($sql);
 	}
 	
