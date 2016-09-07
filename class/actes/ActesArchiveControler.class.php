@@ -161,7 +161,10 @@ class ActesArchiveControler {
 		}
 		
 		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($id,4);
-		
+
+		if (! $actesTransactionsStatusInfo['flux_retour']){
+			throw new Exception("L'AR acte n'est pas disponible");
+		}
 		
 		file_put_contents($tmp_folder."/AR-{$acte_filename}", $actesTransactionsStatusInfo['flux_retour']);
 		$pastell->postARActes($id_d,$tmp_folder."/AR-{$acte_filename}");
