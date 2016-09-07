@@ -16,7 +16,11 @@ class ActesPdf {
 	private $addEmailNotificationField;
 	
 	public function __construct(ActesTransaction $actesTransaction,User $user) {
-		$this->img = SITEROOT . "public.ssl/custom/images/home_banner.jpg"; 
+		if (defined("NEW_BANNER")) {
+			$this->img = SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg";
+		} else {
+			$this->img = SITEROOT . "public.ssl/custom/images/home_banner.jpg";
+		}
   		$this->actesTransaction=$actesTransaction;
   		$this->user = $user;
   	}
@@ -83,7 +87,11 @@ class ActesPdf {
 	protected function set_head()
 	{
 		$title="BORDEREAU D'ACQUITTEMENT DE TRANSACTION";
-		$this->pdf->Image($this->img, 10,10,190,30);
+		if (defined("NEW_BANNER")) {
+			$this->pdf->Image($this->img, 10, 10, 190, 26);
+		} else {
+			$this->pdf->Image($this->img, 10, 10, 190, 30);
+		}
 		$this->pdf->Ln(40);
 		$this->pdf->SetFont('Arial','B',16);
 		$this->pdf->Cell(20);
