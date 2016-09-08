@@ -81,8 +81,7 @@ class ActesNotification {
 		if (! $emails){
 			return;
 		}
-                
-                echo "Notification a $emails\n";
+
                 
 		$mailer = new Mailer();
                 if(($this->agent && $this->newmail == 'f') || !$this->agent){

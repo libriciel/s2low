@@ -93,5 +93,5 @@ if (count($liste_id) == 1) {
 } else {
   $retour = WEBSITE_SSL . "/modules/actes/index.php";
 }
-
+$status = 0;
 Helpers :: returnAndExit($status, $sortie, $retour);
