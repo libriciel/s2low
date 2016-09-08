@@ -223,7 +223,7 @@ $html .= " </thead>\n";
 $html .= " <tbody>\n";
 
 
-  foreach ($files as $file) {  	
+  foreach ($files as $file_num => $file) {
     $html .= " <tr>\n";
     $html .= "  <td headers=\"file\" class=\"long_field\">";
 
@@ -241,7 +241,7 @@ $html .= " <tbody>\n";
             
             
             //TODO Horrible hack....
-            foreach ($workflow as $stage) {
+            foreach ($workflow as  $stage) {
             
             	if ($stage['status_id'] == 4){
             		
@@ -254,9 +254,11 @@ $html .= " <tbody>\n";
 						?>
 						<br/>
 
-						<a id='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
+						<a class='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
 						[Télécharger le fichier tamponné]</a>
 						<input id="<?php echo $name ?>" type="hidden">
+
+						<?php if($file_num == 1) : ?>
 
 						<script type="text/javascript">
 							obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
@@ -273,14 +275,14 @@ $html .= " <tbody>\n";
 
 						<script type="text/javascript">
 							$(document).ready(function () {
-								$("#telecharger_tampon").click(function () {
+								$(".telecharger_tampon").click(function () {
 									var href = $(this).attr('href')  + "&date_affichage=" + $("#tampon_date").val();
 									$(this).attr('href',href);
 								});
 							})
 						</script>
 
-
+						<?php endif; ?>
 						<?php
 						$html .= ob_get_contents();
 						ob_end_clean();
