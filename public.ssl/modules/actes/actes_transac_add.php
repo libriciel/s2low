@@ -84,7 +84,7 @@ function add_attachment_field() {
   newfield=document.createElement("div");
   newfield.className="actes_files_form row";
   html = '        <div class="form-group">';
-  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
+  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .xml, .png ou .jpg)\\x3C/label>';
   html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
   html += '       \\x3C/div>';
 EOJS;

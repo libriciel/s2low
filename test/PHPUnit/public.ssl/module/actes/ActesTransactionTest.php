@@ -1,19 +1,31 @@
 <?php
 
-require_once(SITEROOT."/public.ssl/modules/actes/class/ActesTransaction.class.php");
+require_once(__DIR__."/../../../../../public.ssl/modules/actes/class/ActesTransaction.class.php");
 
 
 class ActesTransactionTest extends S2lowTestCase {
 
-	public function testSetNumber(){
-		$this->numberTest("AXY_123",true);
+	/** @var  ActesTransaction */
+	private $actesTransaction;
+
+	private $pdf_filepath;
+	private $xml_filepath;
+	private $txt_filepath;
+
+	protected function setUp() {
+		parent::setUp();
+		$this->actesTransaction = new ActesTransaction();
+		$this->actesTransaction->set("destDir","");
+
+		$this->pdf_filepath = __DIR__."/../../../fixtures/vide.pdf";
+		$this->xml_filepath = __DIR__."/../../../fixtures/toto.xml";
+		$this->txt_filepath = __DIR__."/../../../fixtures/toto.txt";
 	}
 
 	private function numberTest($number,$valide){
-		$actesTransaction = new ActesTransaction();
-		$actesTransaction->set('number',$number);
-		$actesTransaction->validate();
-		$error_msg = $actesTransaction->getErrorMsg();
+		$this->actesTransaction->set('number',$number);
+		$this->actesTransaction->validate();
+		$error_msg = $this->actesTransaction->getErrorMsg();
 		$number_error = "Le champ Numéro de l'acte ne peut contenir que des chiffres, des lettres en majuscules et _";
 		if ($valide){
 			$this->assertNotContains($number_error, $error_msg);
@@ -22,12 +34,114 @@ class ActesTransactionTest extends S2lowTestCase {
 		}
 	}
 
+	public function testSetNumber(){
+		$this->numberTest("AXY_123",true);
+	}
+
 	public function testSetNumberIncorrect(){
 		$this->numberTest("foo",false);
 	}
 
 	public function testBugNumber(){
 		$this->numberTest("_123_AXY",false);
+	}
+
+	private function validateAndRemoveFile($filename){
+		$actes_destination = ACTES_FILES_UPLOAD_ROOT."/$filename";
+		$this->assertTrue(file_exists($actes_destination));
+		$this->assertTrue(unlink($actes_destination));
+	}
+
+	private function addActePDF(){
+		$dest_filename = mt_rand(0,mt_getrandmax());
+		$this->assertTrue($this->actesTransaction->addActeFile("vide.pdf","$dest_filename",$this->pdf_filepath));
+		$this->validateAndRemoveFile("{$dest_filename}.pdf");
+	}
+
+	public function addActeXML(){
+		$dest_filename = mt_rand(0,mt_getrandmax());
+		$this->assertTrue($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
+		$this->validateAndRemoveFile("{$dest_filename}.xml");
+	}
+
+	private function addAnnexePDF(){
+		$dest_filename2 = mt_rand(0,mt_getrandmax());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.pdf",$dest_filename2,$this->pdf_filepath));
+		$this->validateAndRemoveFile("{$dest_filename2}.pdf");
+	}
+
+	public function testAddFileActePDF(){
+		$this->addActePDF();
+	}
+
+	public function testAddAnnexe(){
+		$this->addActePDF();
+		$this->addAnnexePDF();
+		$this->addAnnexePDF();
+		$file_list = $this->actesTransaction->fetchFilesList();
+		$this->assertEquals(2,count($file_list['attachment']));
+	}
+
+	public function testAddActeTxt(){
+		$this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
+		$this->assertEquals(
+			"Le fichier de l'acte «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF ou XML requis.",
+			$this->actesTransaction->getErrorMsg()
+		);
+	}
+
+	private function setActesBudgetaire(){
+		$this->actesTransaction->set('nature_code',5);
+		$this->actesTransaction->set('classif1',7);
+		$this->actesTransaction->set('classif2',1);
+	}
+
+	public function testAddActesXML(){
+		$this->setActesBudgetaire();
+		$this->addActeXML();
+	}
+
+	public function testAddActesXMLBadNature(){
+		$dest_filename = mt_rand(0,mt_getrandmax());
+		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
+		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+	}
+
+	public function testAddActesXMLBadClassif(){
+		$this->actesTransaction->set('nature_code',5);
+		$dest_filename = mt_rand(0,mt_getrandmax());
+		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
+		$this->assertEquals("Seul la classification 7.1 est autorisé pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
+	}
+
+	public function testBadAttachment(){
+		$this->assertFalse($this->actesTransaction->addAttachmentFile("toto.txt","toto",$this->txt_filepath));
+		$this->assertEquals(
+			"Le fichier attaché «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+			$this->actesTransaction->getErrorMsg()
+		);
+	}
+
+	public function testAttachmentXML(){
+		$this->setActesBudgetaire();
+		$this->addActePDF();
+		$dest_filename2 = mt_rand(0,mt_getrandmax());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
+		$this->validateAndRemoveFile("{$dest_filename2}.xml");
+	}
+
+	public function testAttachmentXMLNoBudgetaire(){
+		$this->addActePDF();
+		$dest_filename2 = mt_rand(0,mt_getrandmax());
+		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
+		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+	}
+
+	public function testAddManyXMLAttachment(){
+		$this->testAttachmentXML();
+		$dest_filename2 = mt_rand(0,mt_getrandmax());
+		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
+		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
 	}
 
 }

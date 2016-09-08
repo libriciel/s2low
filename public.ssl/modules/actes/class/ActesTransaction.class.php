@@ -1079,8 +1079,8 @@ class ActesTransaction extends DataObject {
       	}
 
  	  } elseif($type == "attachment") {
- 	  	if (! in_array($ext,array('pdf','jpg','png'))){
-			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, PNG ou JPEG requis.";
+ 	  	if (! in_array($ext,array('pdf','jpg','png','xml'))){
+			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
 			return false;
  	  	}
 
@@ -1088,6 +1088,27 @@ class ActesTransaction extends DataObject {
  	  		$this->errorMsg = "Les pièces jointes doivent être au format PDF avec un acte au format XML";
  	  		return false;
  	  	}
+		  if ($ext == "xml"){
+			  if ($this->nature_code != 5){
+				  $this->errorMsg = "Seul les documents budgétaires et financiers peuvent être au format XML.";
+				  return false;
+			  }
+			  if ($this->classif1 != 7 || $this->classif2 != 1){
+				  $this->errorMsg = "Seul la classification 7.1 est autorisé pour la transmission au format XML";
+				  return false;
+			  }
+
+				if (isset($this->files['attachment'])){
+					foreach ($this->files['attachment'] as $attachment){
+						if ($attachment['mimetype'] == 'application/xml'){
+							$this->errorMsg = "Un seul attachement XML est autorisé pour les actes budgétaires";
+							return false;
+						}
+					}
+				}
+		  }
+
+
 
       } else {
       	//Ben, dans le code initiale, on fait rien ....
