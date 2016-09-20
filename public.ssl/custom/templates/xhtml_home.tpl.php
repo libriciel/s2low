@@ -47,7 +47,7 @@
 						(états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
 						via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
 					<p class="home">
-						L'accès aux services est réservé aux personnes autorisées disposant d'un certificat électronique à cet effet.
+						L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
 					</p>
                     <div id="mention">
                         <div id="mention_hebergement">
