@@ -87,7 +87,7 @@ class HeliosAnalyseFichierRecu {
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
 
-		if (preg_match("#.ocre$#",strtolower($basename))){
+		if (preg_match("#.ocre?$#",strtolower($basename))){
 			if (! rename($file_path,$ocre_file_path."/".$basename)){
 				throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
 			}
