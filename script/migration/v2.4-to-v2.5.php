@@ -27,10 +27,10 @@ require_once( __DIR__."/../../init/init.php");
 migration_log("Migration S2low 2.4 vers 2.5");
 
 //1. Passage au nouveau système de notification forcé pour tout le monde.
-migration_log("Passage au nouveau système de notification");
-$sql = "UPDATE authorities SET new_notification=true";
-$sqlQuery->query($sql);
-migration_log("[DONE]");
+migration_log("Passage au nouveau système de notification : déporter à une date ultérieur");
+//$sql = "UPDATE authorities SET new_notification=true";
+//$sqlQuery->query($sql);
+migration_log("[PASS]");
 
 
 migration_log("Copie de la table logs vers logs_historique");
