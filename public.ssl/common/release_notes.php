@@ -88,12 +88,12 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
-$html .= "<h2>V2.5.0 du 01.09.2016</h2>";
+$html .= "<h2>V2.5.0 du 01.10.2016</h2>";
 $html .= "<ul>";
 $html .= "<li>Modules ACTES : prise en compte des nouveaux mails d'acquittement du MI ;</li>";
 $html .= "<li>Modules ACTES : possibilité d'ajouter le date d'affichage dans le tampon apposé par S²LOW ;</li>";
 $html .= "<li>Modules ACTES : le système de notification par défaut, introduit en version 1.3.2, est désormais le seul utilisable ;</li>";
-$html .= "<li>Modules ACTES : enregistrement de l'intitulé de la classification ;</li>";
+$html .= "<li>Modules ACTES : enregistrement de l'intitulé de la classification au moment de la création de la transaction ;</li>";
 $html .= "<li>Modules ACTES : API : en cas d'erreur  le retour -1 est complété par la raison de l'erreur ;</li>";
 $html .= "<li>Modules HELIOS : contrôle du bon paramétrage du module pour autoriser à télétransmettre ;</li>";
 $html .= "<li>Administration : optimisation de l'accès au journal des événements ;</li>";
@@ -258,7 +258,7 @@ $html .= "</ul>";
 
 $html .= "<h2>V1.4.01 du 14.01.2014</h2>";
 $html .= "<ul>";
-$html .= "<li>Module ACTES : corection bug : versement SEDA via Pastell en HHTPS;";
+$html .= "<li>Module ACTES : correction bug : versement SEDA via Pastell en HTTPS;";
 $html .= "</ul>";
 
 $html .= "<h2>V1.4 du 09.11.2013</h2>";
