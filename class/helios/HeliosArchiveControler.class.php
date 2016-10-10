@@ -189,13 +189,14 @@ class HeliosArchiveControler {
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		
 		
-		if ($nodeName == 'ArchiveTransferAcceptance'){
+		//if ($nodeName == 'ArchiveTransferAcceptance'){
+		if ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->ReplyCode) == '000'))){
 			$url = $info['data']['url_archive'];
 			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
 			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],10,$msg);
-			$heliosTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);			
+			$heliosTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);
 		} else {
-			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";			
+			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";
 			$heliosTransactionsSQL->updateStatus($transactionInfo['id'],11,$msg);
 		}
 		
