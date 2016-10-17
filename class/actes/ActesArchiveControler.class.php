@@ -238,7 +238,7 @@ class ActesArchiveControler {
 		$pdftkise=$tmpfolder."/tampon_".$fileorig;
 
 		$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($this->sqlQuery));
-		$tampon_content = $acteTamponne->tamponnerPDF($fileorig,$transactionId);
+		$tampon_content = $acteTamponne->tamponnerPDF($tmpfolder."/".$fileorig,$transactionId);
 
 		file_put_contents($pdftkise,$tampon_content);
 		return $pdftkise;
