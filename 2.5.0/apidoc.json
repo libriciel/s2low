@@ -1,0 +1,18 @@
+{
+  "name": "API S2LOW",
+  "version": "2.3.0",
+  "description": "Documentation de l'API S2LOW",
+
+  "header": {
+    "title": "API S2LOW",
+    "filename": "header.md"
+  },
+  "footer": {
+    "title": "API S2LOW",
+    "filename": "footer.md"
+  },
+  "order":[
+    "helios_importer_fichier.php",
+    "helios_get_list.php"
+  ]
+}

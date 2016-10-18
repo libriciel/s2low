@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# tomcat      
+  
+export JAVA_HOME="/usr/lib/jvm/java-1.5.0-sun"
+export TOMCAT_HOME="/opt/tomcat"
+export CATALINA_HOME=$TOMCAT_HOME
+export JAVA_OPTS="-Djavax.xml.transform.TransformerFactory=com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"
+
+case "$1" in
+ start)
+       echo $"Starting Tomcat"
+       cd $CATALINA_HOME
+       /bin/su -p -s /bin/sh tomcat $CATALINA_HOME/bin/startup.sh
+       ;;
+ stop)
+       echo $"Stopping Tomcat"
+       cd $CATALINA_HOME
+       /bin/su -p -s /bin/sh tomcat $CATALINA_HOME/bin/shutdown.sh
+       ;;
+ restart)
+       cd $CATALINA_HOME
+       /bin/su -p -s /bin/sh tomcat $CATALINA_HOME/bin/shutdown.sh
+       sleep 10
+       /bin/su -p -s /bin/sh tomcat $CATALINA_HOME/bin/startup.sh
+        ;;
+ *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+

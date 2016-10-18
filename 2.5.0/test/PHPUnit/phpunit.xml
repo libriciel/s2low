@@ -1,0 +1,18 @@
+<phpunit backupGlobals="false" bootstrap="bootstrap.php">
+    <testsuites>
+        <testsuite name="S2low">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+</logging>
+<filter>
+<whitelist processUncoveredFilesFromWhitelist="false">
+    <directory suffix=".php">../../</directory>
+    <exclude>
+		<directory suffix=".php">..</directory>
+		<directory>../../ext</directory>
+    </exclude>
+</whitelist>
+</filter>
+</phpunit>
