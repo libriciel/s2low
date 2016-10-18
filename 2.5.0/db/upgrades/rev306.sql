@@ -1,1 +1,0 @@
-ALTER TABLE mail_annuaire ALTER COLUMN mail_address TYPE CHARACTER VARYING(100);
