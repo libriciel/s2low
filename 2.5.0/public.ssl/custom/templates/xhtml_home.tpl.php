@@ -23,7 +23,7 @@
             <div id="home-header" class="container">
                 <img id="home-banner" src="<?php echo WEBSITE ?>/custom/images/home_banner.jpg" alt="" usemap="#map" />
                 <map id="map" name="map"><area shape="rect" alt="Bandeau" coords="0,120,900,180" href="<?php echo WEBSITE ?>"/></map>
-                <img id="home-subbanner" src="<?php echo WEBSITE ?>/custom/images/home_subbanner.jpg" alt="" />
+                <!--<img id="home-subbanner" src="<?php echo WEBSITE ?>/custom/images/home_subbanner.jpg" alt="" />-->
             </div>
         </div>
 	<?php endif; ?>
@@ -38,30 +38,26 @@
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <h1>Bienvenue sur la plate-forme S²LOW&nbsp;-&nbsp;ADULLACT</h1>
-                    <h2 class="home">Offre S²LOW</h2>
-                    <p class="home">
-						La plate-forme S²LOW permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales :
-						elle permet ainsi la transmission des actes aux préfectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministère de l'Intérieur,
-						ainsi que les transmissions d'information vers le Trésor Public
-						(états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
-						via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
-					<p class="home">
-						L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
-					</p>
-                    <div id="mention">
-                        <div id="mention_hebergement">
-                            <h2 class="home">Opérateur</h2>
-                            <p class="home"><a href="http://adullact.org/">Association ADULLACT</a>, tiers opérateur homologué</p>
-
-                        </div>
-                        <div id="mention_partenaires">
-                            <h2 class="home">Partenaires</h2>
-                            <p class="home">
-								<a href="http://adullact-projet.coop/">SCOP SA ADULLACT PROJET</a>, financeur et mainteneur de la solution
-                            </p>
-                        </div>
-                    </div>
+                    <p>Conçue  pour répondre aux enjeux de la dématérialisation des procédures et des  démarches administratives, la plateforme <strong>bl-echanges-securises.fr </strong>vous  permet dès à présent&nbsp;de&nbsp;:</p>
+                    <ul>
+                        <li>certifier, à l'aide de votre signature électronique, toutes vos  informations numériques&nbsp;: données de gestion, mails et plus largement tout  formulaire ou document bureautique,</li>
+                    </ul>
+                    <ul>
+                        <li>transmettre, en toute sécurité, ces informations sous forme  électronique à vos partenaires et fournisseurs&nbsp;:</li>
+                        <ul>
+                            <li>soit en respectant les protocoles définis au plan national :</li>
+                            <ul>
+                                <li>ACTES, pour la transmission au contrôle de légalité de vos  délibérations, décisions et arrêtés,</li>
+                                <li>PES V2, pour la transmission des informations comptables et budgétaires au logiciel HELIOS,</li>
+                            </ul>
+                            <li>soit en utilisant notre service de mail sécurisé,</li>
+                        </ul>
+                    </ul>
+                    <ul>
+                        <li>suivre tous vos envois grâce aux accusés de réception délivrés par <strong>bl-echanges-securises.fr</strong>.</li>
+                    </ul>
+                    <p>Progressivement,  si vous êtes utilisateur de progiciels édités par Berger-Levrault, l'accès à  cette plateforme et son utilisation seront réalisés directement depuis nos  solutions.</p>
+                    <p>Pour  accéder à ces services d'échanges et de transmissions sécurisés, vous devez  disposer d'un certificat électronique.</p>
                 </div>
             </div>
         </div>
