@@ -99,7 +99,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	
 	
 	$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
-	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signée");
+	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
 	
 }
 	
