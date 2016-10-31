@@ -66,7 +66,7 @@ class HeliosTransactionsSQL extends SQL {
 	}
 	
 	public function getTransactionToDelete(){
-		$sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=11";
+		$sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=6";
 		return $this->query($sql);
 	}
 	
