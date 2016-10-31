@@ -63,7 +63,7 @@ class ActesTransactionsSQL {
 		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .
 				" FROM actes_transactions " .
 				" JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
-				" WHERE last_status_id=13 OR last_status_id = 5";
+				" WHERE last_status_id=13 OR last_status_id = 6";
 		return $this->sqlQuery->query($sql);	
 	}
 	
