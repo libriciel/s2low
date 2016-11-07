@@ -83,7 +83,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testVerifyManySignature() {
-		$this->verify(__DIR__ . "/fixtures/plusieurs_signatures.xml");
+		$this->verify(__DIR__ . "/fixtures/signature_bordereau_double.xml");
 	}
 
 	public function testVerifSignatureNotGlobale() {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" Id="ID1621526490">
+<n:PES_Aller xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" Id="ID1621526490" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
  <Enveloppe>
   <Parametres>
    <Version V="1"></Version>
@@ -138,4 +138,39 @@ G/ZtRDA3tWqNaQ1PwxqiKrpfsn8kh5FpB5j0xQJx0FfoFJ6Y46ieQEnHJ9T0</ds:X509Certificate
    <IdVer V="1"></IdVer>
   </EnTetePES_PJ>
  </PES_PJ>
-</n:PES_Aller>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="ID1621526490_SIG_1"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"></ds:CanonicalizationMethod><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"></ds:SignatureMethod><ds:Reference URI="#ID1621526490"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"></ds:Transform></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>/IKyv6LYZ1dqI7dAsv898QbP+SQ=</ds:DigestValue></ds:Reference><ds:Reference Type="http://uri.etsi.org/01903/v1.1.1#SignedProperties" URI="#ID1621526490_SIG_1_SP"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"></ds:Transform></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue>anEcrRQ7B/knZ6QTHbcbR1cRQ0E=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue Id="ID1621526490_SIG_1_SV">j9BiP9o/k6fjUntqfXFv9bgY8tFwMSfQHVY0d2N06QfXNkixntM5OomNkSj8B7jZv0ZZGxbP6h3S
+K7BN+q+2THhIZwbFYoFbeWn+bkgoWFyiRzmxhg0AzazbImujIJReVlxxNpHBluAzdW3XmAkkkBUE
+FRRB3NcgdnYIexmMfjTqSW2Lyh69fIpY4PPCSXozUEdEGqz3lpxAumDBTm00EH7MMuqhBLcCHO0/
+huDp7HM+HE028s63Xje4db9CC2itH5mxv2oMVSY06aNkw+Uzv+G7JF7hgatzW23GZXDMpbOfkJRs
+pVaBPkHcBTIZd9zv6MOdxilG+E6UZPcsPEQ4LA==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIHEDCCBPigAwIBAgIUStb/+TKiIUj2TDZgq+uVGtUbP3YwDQYJKoZIhvcNAQEFBQAwga8xCzAJ
+BgNVBAYTAkZSMRAwDgYDVQQIDAdIZXJhdWx0MR0wGwYDVQQKDBRBc3NvY2lhdGlvbiBBRFVMTEFD
+VDEkMCIGA1UECwwbQUNfQURVTExBQ1RfVXRpbGlzYXRldXJzX0czMSQwIgYDVQQDDBtBQ19BRFVM
+TEFDVF9VdGlsaXNhdGV1cnNfRzMxIzAhBgkqhkiG9w0BCQEWFHN5c3RlbWVAYWR1bGxhY3Qub3Jn
+MB4XDTE2MTAyNTE0NDc0N1oXDTE4MTAyNTE0NDc0N1owgakxCzAJBgNVBAYTAkZSMRAwDgYDVQQI
+DAdIRVJBVUxUMRQwEgYDVQQHDAtNT05UUEVMTElFUjEUMBIGA1UECgwLQVNTT0NJQVRJT04xEzAR
+BgNVBAsMClByb2R1Y3Rpb24xIjAgBgNVBAMMGURFTU9OU1RSQVRJT05fVVRJTElTQVRFVVIxIzAh
+BgkqhkiG9w0BCQEWFHN5c3RlbWVAYWR1bGxhY3Qub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEArapNJ7vfj6ew4rULIxPxclAnDFn5h7QcbCta2VWvpFeMWE/hOqDFOAZP+WK/sjj0
+qI5jgE6GVReKlQkDILNJrdDq8KxaRT4wKFk/iTNhFuOeNjVGeroIxJJRQq0+OCuu+Bl3RyqlwobF
+H9m9KDtIZXmTf6maWuUSoNqKnSpc7+Zepf4aYMCxKsavxdUIitrObtrxAACxZ8hboDwmAHBbSQwo
+uhuH2vqwwzUoW2SpcMLoRp0b8hXkni2M1pQBcH6ndgKzRtWtXHjqYPrieksHXK9XFf7GeLsvGGNg
+ZNlTR/VGx6lvXY27cKiBp7LTSKiR0A+K9uSFbGUqgAnchpuuDwIDAQABo4ICJjCCAiIwCQYDVR0T
+BAIwADBCBglghkgBhvhCAQ0ENRYzQ2VydGlmaWNhdCBnZW5lcmUgcGFyIGwnQUNfQURVTExBQ1Rf
+VVRJTElTQVRFVVJTX0czMB0GA1UdDgQWBBRTyZRU7D4ow/4aUc8v/78J7EciyDCB9QYDVR0jBIHt
+MIHqgBSZu38CAphFlASsYCQT0yr72qNfQKGBu6SBuDCBtTELMAkGA1UEBhMCRlIxEDAOBgNVBAgM
+B0hlcmF1bHQxFDASBgNVBAcMC01vbnRwZWxsaWVyMR0wGwYDVQQKDBRBc3NvY2lhdGlvbiBBRFVM
+TEFDVDEcMBoGA1UECwwTQUNfQURVTExBQ1RfUk9PVF9HMzEcMBoGA1UEAwwTQUNfQURVTExBQ1Rf
+Uk9PVF9HMzEjMCEGCSqGSIb3DQEJARYUc3lzdGVtZUBhZHVsbGFjdC5vcmeCFG8peAc3wPg1sDDy
+RxYJHV8SO1BqMB8GA1UdEQQYMBaBFHN5c3RlbWVAYWR1bGxhY3Qub3JnMB8GA1UdEgQYMBaBFHN5
+c3RlbWVAYWR1bGxhY3Qub3JnMDoGCWCGSAGG+EIBBAQtFitodHRwOi8vY3JsLmFkdWxsYWN0Lm9y
+Zy9DQV9VU0VSU19DUkxfZzMucGVtMDwGA1UdHwQ1MDMwMaAvoC2GK2h0dHA6Ly9jcmwuYWR1bGxh
+Y3Qub3JnL0FDX1VTRVJTX0NSTF9nMy5wZW0wDQYJKoZIhvcNAQEFBQADggIBAGmURV7ZFOLQLziq
+DdrdhRvsP0qHqbZ2eBIAqhmNCPUPzs2dVeW2dByEVcF7NC9F1a38Ecd58PjtYwoD4yPiqC/TJzB3
+7FOxX0+YUie3Dtzh49ZlDZ1+ZJcyc7U/ctJwAdxlDaS6z9vS0ToV+TKUGJLicn0nh9BehO+6YvdV
+x+IVphcltDd3CEhgDmqvEN2h/XZe49HuyxvFgg+ZxfGziU4caYDkVIFc8uizqzJqZb22r7sZ2wGq
+81M+XIVwhvio6TayjodfyN7vH55nhsIziDnLAXRowEM03+2dPM/RA1q8s9H+Oz/l8nM9gs0NERuG
+Ei61Bf6uV0+36d/P6t9IdvhdlO6v1uWjmefaeycRMR+md1fkgc+sw5YUATLt2zyp51dJXm2oweTl
+B1+680DLw/e8aJdm5JPWCwR7kTq7uRLvMMito33f4r9PUL2uiuXaPq3YOtuugit6yHuIr4+iD6cG
+DcP666vEsobdA431CmNnF/h+yInLNOmSseIe/eItLk6VjvtJcmFHfesxncU1WLQsnWEyToVKjz9B
+dnavVQdPijJxZm1H5VkKHORe48fFFaSiaXiQ+XMDGq+6O0NzS3R6Llg927Llr0I58VF95e+HoXCc
+G/ZtRDA3tWqNaQ1PwxqiKrpfsn8kh5FpB5j0xQJx0FfoFJ6Y46ieQEnHJ9T0</ds:X509Certificate></ds:X509Data></ds:KeyInfo><ds:Object><xad:QualifyingProperties xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" Target="#ID1621526490_SIG_1"><xad:SignedProperties Id="ID1621526490_SIG_1_SP"><xad:SignedSignatureProperties><xad:SigningTime>2016-11-07T12:48:59Z</xad:SigningTime><xad:SigningCertificate><xad:Cert><xad:CertDigest><xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></xad:DigestMethod><xad:DigestValue>V3yG0CJE67U44H7l8IXkMqvQETA=</xad:DigestValue></xad:CertDigest><xad:IssuerSerial><ds:X509IssuerName>1.2.840.113549.1.9.1=#161473797374656d65406164756c6c6163742e6f7267,CN=AC_ADULLACT_Utilisateurs_G3,OU=AC_ADULLACT_Utilisateurs_G3,O=Association ADULLACT,ST=Herault,C=FR</ds:X509IssuerName><ds:X509SerialNumber>427259974943974867302612086964623560387531063158</ds:X509SerialNumber></xad:IssuerSerial></xad:Cert></xad:SigningCertificate><xad:SignaturePolicyIdentifier><xad:SignaturePolicyId><xad:SigPolicyId><xad:Identifier>urn:oid:1.2.250.1.131.1.5.18.21.1.4</xad:Identifier><xad:Description>Politique de signature Helios de la DGFiP</xad:Description></xad:SigPolicyId><xad:SigPolicyHash><xad:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></xad:DigestMethod><xad:DigestValue>Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=</xad:DigestValue></xad:SigPolicyHash><xad:SigPolicyQualifiers><xad:SigPolicyQualifier><xad:SPURI>https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf</xad:SPURI></xad:SigPolicyQualifier></xad:SigPolicyQualifiers></xad:SignaturePolicyId></xad:SignaturePolicyIdentifier><xad:SignatureProductionPlace><xad:City>Céret</xad:City><xad:PostalCode>66400</xad:PostalCode><xad:CountryName>France</xad:CountryName></xad:SignatureProductionPlace><xad:SignerRole><xad:ClaimedRoles><xad:ClaimedRole>Parapheur du Maire</xad:ClaimedRole></xad:ClaimedRoles></xad:SignerRole></xad:SignedSignatureProperties></xad:SignedProperties></xad:QualifyingProperties></ds:Object></ds:Signature></n:PES_Aller>
