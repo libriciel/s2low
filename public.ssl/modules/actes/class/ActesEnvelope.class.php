@@ -1045,7 +1045,7 @@ class ActesEnvelope extends DataObject {
 
 	if ($new) {
 	  // Ajout du fichier enveloppe dans la liste des fichiers inclus
-	  $sql = "INSERT INTO actes_included_files (envelope_id, filename, filetype, filesize) VALUES(" . $this->id . ", '" . basename($this->envXmlFile) . "', 'text/xml', " . $this->envXmlFileSize . ")";
+	  $sql = "INSERT INTO actes_included_files (envelope_id, filename, filetype, filesize) VALUES(" . $this->id . ", '" . pg_escape_string(basename($this->envXmlFile)) . "', 'text/xml', " . $this->envXmlFileSize . ")";
 
 	  if (! $this->db->exec($sql)) {
 		$this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";

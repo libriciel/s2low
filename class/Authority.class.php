@@ -90,7 +90,7 @@ class Authority extends DataObject {
   public function getAuthorityTypeName($only_descr = false) {
 	if (! $this->authorityTypeCode ||!$this->authorityTypeDescr) {
 	  if (isset($this->authority_type_id)) {
-		$sql = "SELECT id, description FROM authority_types WHERE id=" . $this->authority_type_id;
+		$sql = "SELECT id, description FROM authority_types WHERE id=" . pg_escape_string($this->authority_type_id);
 
 		$result = $this->db->select($sql);
 
@@ -120,7 +120,7 @@ class Authority extends DataObject {
 	if (! empty($this->department) && ! empty($this->district)) {
 	  $str = "";
 
-	  $sql = "SELECT id, name FROM authority_departments WHERE code='" . $this->department . "'";
+	  $sql = "SELECT id, name FROM authority_departments WHERE code='" . pg_escape_string($this->department) . "'";
 
 	  $result = $this->db->select($sql);
 	  
@@ -135,7 +135,7 @@ class Authority extends DataObject {
 
 	  $str .= "&nbsp;/&nbsp;";
 
-	  $sql = "SELECT name FROM authority_districts WHERE code='" . $this->district . "'";
+	  $sql = "SELECT name FROM authority_districts WHERE code='" . pg_escape_string($this->district) . "'";
 
 	  if ($deptId) {
 		$sql .= " AND authority_department_id=" . $deptId;
@@ -231,7 +231,7 @@ class Authority extends DataObject {
   
   public function getModulePermByName($module_name)
   {
-  	$sql = "SELECT id FROM modules WHERE name='".$module_name."'";
+  	$sql = "SELECT id FROM modules WHERE name='".pg_escape_string($module_name)."'";
 
     $db = DatabasePool::getInstance();
 	
@@ -279,7 +279,7 @@ class Authority extends DataObject {
 
 	if ($module_perms) {
 	  // Traitement permissions sur les modules
-	  $sql = "DELETE FROM modules_authorities WHERE authority_id=" . $this->id;
+	  $sql = "DELETE FROM modules_authorities WHERE authority_id=" . pg_escape_string($this->id);
 
 	  if (! $this->db->exec($sql)) {
 		$this->errorMsg = "Erreur lors de la réinitialisation des permissions de la collectivité.";
@@ -290,7 +290,7 @@ class Authority extends DataObject {
 	  if (count($this->modulesPerms) > 0) {
 		reset($this->modulesPerms);
 		foreach ($this->modulesPerms as $module_id => $val) {
-		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(" . $module_id . ", " . $this->id . ")";
+		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(" . pg_escape_string($module_id) . ", " . pg_escape_string($this->id) . ")";
 		  
 		  if (! $this->db->exec($sql)) {
 			$this->errorMsg = "Erreur lors de la sauvegarde des permissions de la collectivité.";
@@ -331,7 +331,7 @@ class Authority extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM modules_authorities WHERE authority_id=" . $id;
+	$sql = "DELETE FROM modules_authorities WHERE authority_id=" . pg_escape_string($id);
 
     if (! $this->db->exec($sql)) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
@@ -408,7 +408,7 @@ class Authority extends DataObject {
   }
   
   public static function getSirenFromId($id){
-    $sql = "SELECT siren FROM authorities WHERE id = ".$id;
+    $sql = "SELECT siren FROM authorities WHERE id = ". pg_escape_string($id);
 
     $db =DatabasePool::getInstance();
 
@@ -473,7 +473,7 @@ class Authority extends DataObject {
 	  while ($row = $result->get_next_row()) {
 		$types[] = array("code" => $row["id"], "description" => $row["description"], "type" => "parent");
 
-		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=" . $row["id"];
+		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=" . pg_escape_string($row["id"]);
 
 		$result2 = $db->select($sql);
 		if (! $result2->isError()) {
@@ -545,7 +545,7 @@ class Authority extends DataObject {
 	$districts = array();
 
 	if (isset($dept) && ! empty($dept)) {
-	  $sql = "SELECT authority_districts.code, authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . $dept . "'";
+	  $sql = "SELECT authority_districts.code, authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . pg_escape_string($dept) . "'";
 
 	  $db =DatabasePool::getInstance();
 

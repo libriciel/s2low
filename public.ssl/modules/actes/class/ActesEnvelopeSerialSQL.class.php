@@ -52,7 +52,7 @@ class ActesEnvelopeSerialSQL {
 
 		  if (strcmp($today, $date) != 0) {
 			// La dernière remise à zéro n'est pas d'aujourd'hui => on remet à zéro le compteur
-			$sql = "UPDATE actes_envelope_serials SET reset_date='" . $today . "', serial=2 WHERE authority_id=$authority_id" ;
+			$sql = "UPDATE actes_envelope_serials SET reset_date='" . pg_escape_string($today) . "', serial=2 WHERE authority_id=$authority_id" ;
 
 			if (! $this->db->exec($sql)) {
 			  $this->errorMsg = "Erreur d'accès base de données.";

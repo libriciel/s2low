@@ -108,7 +108,7 @@ class Group extends DataObject {
   public function initSiren() {
 	if (isset($this->id)) {
 	  $sql = "SELECT siren FROM authority_group_siren " .
-	  			" WHERE authority_group_id={$this->id}" .
+	  			" WHERE authority_group_id=" .  pg_escape_string($this->id) .
 	  			" ORDER BY siren";
 
 	  $result = $this->db->select($sql);
@@ -217,7 +217,7 @@ class Group extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM authority_group_siren WHERE authority_group_id=" . $id;
+	$sql = "DELETE FROM authority_group_siren WHERE authority_group_id=" .  pg_escape_string($id);
 
     if (! $this->db->exec($sql)) {
 	  $this->errorMsg = "Erreur lors de la suppression des siren autorisés pour le groupe.";
@@ -265,7 +265,7 @@ class Group extends DataObject {
    *
   */
   public static function isEmpty($id) {
-    $sql = "SELECT authorities.id FROM authorities WHERE authority_group_id=" . $id;
+    $sql = "SELECT authorities.id FROM authorities WHERE authority_group_id=" .  pg_escape_string($id);
 
     $db = DatabasePool::getInstance();
 
