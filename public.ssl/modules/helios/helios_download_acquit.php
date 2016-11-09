@@ -35,8 +35,36 @@ if (! $transaction_id){
   exit ();
 }
 
-//tmp
-//echo "Transaction:" . $transaction_id;
+
+$trans = new HeliosTransaction();
+
+if (isset($transaction_id) && ! empty($transaction_id)) {
+	$trans->setId($transaction_id);
+	if ($trans->init()) {//obtine inregistrarea ce corespunde
+		$owner = new User($trans->get("user_id")); //!!!!! din HeliosTransaction
+		$owner->init();
+	} else {
+		$_SESSION["error"] = "Erreur d'initialisation de la transaction.";
+		header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+		exit();
+	}
+} else {
+	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+	exit();
+}
+
+$serviceUser = new ServiceUser(DatabasePool::getInstance());
+$permission = new ModulePermission($serviceUser,"helios");
+
+if ( ! $permission->canView($me,$owner)){
+	$_SESSION["error"] = "Accès refusé";
+	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+	exit ();
+}
+
+
+
 
 $myAuthority = new Authority($me->get("authority_id"));
 

@@ -29,8 +29,27 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 
 $retourId= Helpers :: getVarFromGet("id");
 
+// Vérification des permissions
+$heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
+$info = $heliosRetourSQL->getInfo($retourId);
+
+$authoritySQL = new AuthoritySQL($sqlQuery);
+$authtority_info = $authoritySQL->getInfo($info['authority_id']);
+
+if (! $me->isSuper()) {
+	if ($me->get("authority_id") != $info['authority_id']) {
+		if (! ($me->isGroupAdmin() && $me->get("authority_group_id") == $authtority_info['authority_group_id'])){
+			echo "KO\nAccès refusé";
+			exit();
+		}
+	}
+}
+
+
 $entity = new HeliosRetour($retourId);
 $entity->init();
+
+
 $filename=$entity->get("filename");
 
 
