@@ -4,12 +4,23 @@ authority_groups:
   status: 1
   name: Groupe de test
 
+authority_types:
+ -
+  id: 1
+  parent_type_id: null
+  description: Région
+ -
+  id: 11
+  parent_type_id: 1
+  description: Conseil régional
+
 authorities:
  - 
   id: 1
   status: 1
   siren: 123456789
   name: Bourg-en-Bresse
+  authority_type_id: 11
 
  -
   id: 2

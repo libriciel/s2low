@@ -1,9 +1,6 @@
 <?php
 
-
 require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-
 
 $me = new User();
 
@@ -48,6 +45,15 @@ if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_
   header("Location: " . WEBSITE_SSL);
   exit();
 }
+
+/** @var ObjectInstancier $objectInstancier */
+/** @var AuthorityTypesSQL $authorityTypesSQL */
+$authorityTypesSQL = $objectInstancier->{'AuthorityTypesSQL'};
+
+$authority_types_info = $authorityTypesSQL->getInfo($authority->get("authority_type_id"));
+$authority_type_name = $authority_types_info['id']. "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
+
+
 
 
 /****************/
@@ -133,32 +139,32 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 //********************************
 
 	if ($me->isSuper()) {
-  $groups = Group::getGroupsIdName();
+		$groups = Group::getGroupsIdName();
+		$groupIds = array();
+		$sirenList = array();
 
-  foreach($groups as $key =>$value)
-  {
-  	$group = new Group($key);
-	$sirenList[] = $group->getAuthorizedSiren();
-  	$groupIds[]=$key;
-  }
-  
-    $valueString   =  "";  
-    $indexString = "";
-    $indexString='"'.join('","',$groupIds).'"';
- 	foreach($sirenList   as  $value)   {  
-      if(is_array($value))  
-          $valueString   .=   (!empty($valueString)?",":"").'new   Array("'.join('","',$value).'")';  
-      else  
-          $valueString   .=   '"'.$value.'"';  
-  }   
+	  foreach($groups as $key =>$value) {
+		$group = new Group($key);
+		$sirenList[] = $group->getAuthorizedSiren();
+		$groupIds[]=$key;
+	  }
+
+		$valueString   =  "";
+		$indexString = "";
+		$indexString='"'.join('","',$groupIds).'"';
+		foreach($sirenList   as  $value)   {
+		  if(is_array($value))
+			  $valueString   .=   (!empty($valueString)?",":"").'new   Array("'.join('","',$value).'")';
+		  else
+			  $valueString   .=   '"'.$value.'"';
+	}
 	?>
 	<script	language="JavaScript">
 	
 
-	function groupchange()
-	{
-		var   sirenArray   =   new   Array(<?php   echo   $valueString;   ?> );  
-		var   groupIdArray = new Array(<?php echo $indexString ;?> );
+	function groupchange()  {
+		var   sirenArray   =   [<?php   echo   $valueString;   ?> ];
+		var   groupIdArray = [<?php echo $indexString ;?>];
 		var groupId=document.getElementById("authority_group_id");
 		var sienSelect=document.getElementById("sirenId");
 		for (var i=0;i< groupIdArray.length;i++)
@@ -229,13 +235,13 @@ if ($me->isGroupAdminOrSuper()) {
   $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">";
 
   if ($authority->get("authority_type_id")) {
-	$html .= $authority->getAuthorityTypeName();
+	$html .= $authority_type_name;
   } else {
 	$html .= "[&nbsp;Choisir un type&nbsp;]";
   }
   $html .= "</a>\n";
 } else {
-  $html .= "<input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . $authority->getAuthorityTypeName() . "\" />\n";
+  $html .= "<input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . $authority_type_name . "\" />\n";
 }
 
 $html .= " </div>\n";

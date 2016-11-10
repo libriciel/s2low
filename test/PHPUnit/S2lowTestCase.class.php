@@ -14,7 +14,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	protected function setUp(){
 		parent::setUp();
-
+		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
+		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
 		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
 		$_GET = array();
 		$_POST = array();
@@ -24,7 +25,6 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_I_DN'] = "";
 		$_SERVER['SSL_CLIENT_CERT'] = "";
 		$_SERVER["QUERY_STRING"] = "";
-
 	}
 
 	/**
@@ -43,7 +43,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
 		global $sqlQuery;
 		$sqlQuery = $this->getSQLQuery();
-
+		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8...
+		$sqlQuery->query("SET CLIENT_ENCODING TO 'UTF-8';");
 		return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
 

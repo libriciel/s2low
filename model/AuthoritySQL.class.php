@@ -140,5 +140,4 @@ class AuthoritySQL extends SQL {
 		return $this->queryOne($sql,$id);
 	}
 
-
 }

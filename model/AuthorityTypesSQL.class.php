@@ -11,4 +11,9 @@ class AuthorityTypesSQL extends SQL {
 		return $this->query($sql);
 	}
 
+	public function getInfo($authority_type_id) {
+		$sql = "SELECT * FROM authority_types WHERE id=?";
+		return $this->queryOne($sql,$authority_type_id);
+	}
+
 }

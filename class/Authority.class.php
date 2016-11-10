@@ -31,9 +31,6 @@ class Authority extends DataObject {
 
   private $modulesPerms = null;
 
-  private $authorityTypeCode = null;
-  private $authorityTypeDescr = null;
-
   protected $dbFields = array( "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true),
 						 "siren" => array( "descr" => "Numéro de SIREN", "type" => "isString", "mandatory" => true, "unique" => true),
 						 "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => true),
@@ -80,36 +77,6 @@ class Authority extends DataObject {
   */
   public function init() {
 	return (parent::init() && $this->initModulesPerms());
-  }
-
-  /**
-   * \brief Méthode d'obtention du type de collectivité sous forme de chaîne
-   * \param $only_descr booléen (optionnel) : ne renvoie que la description si positionné à true (false par défaut)
-   * \return Une chaîne indiquant le type de la collectivité
-   */
-  public function getAuthorityTypeName($only_descr = false) {
-	if (! $this->authorityTypeCode ||!$this->authorityTypeDescr) {
-	  if (isset($this->authority_type_id)) {
-		$sql = "SELECT id, description FROM authority_types WHERE id=" . pg_escape_string($this->authority_type_id);
-
-		$result = $this->db->select($sql);
-
-		if ($result->isError()) {
-		  $this->errorMsg = "Erreur lors de la récupération du type de collectivité.";
-		  return null;
-		} else {
-		  $row = $result->get_next_row();
-		  $this->authorityTypeCode = $row["id"];
-		  $this->authorityTypeDescr = $row["description"];
-		}
-	  }
-	}
-
-	if ($only_descr) {
-	  return $this->authorityTypeDescr;
-	} else {
-	  return $this->authorityTypeCode . "&nbsp;-&nbsp;" . $this->authorityTypeDescr;
-	}
   }
 
   /**
@@ -393,6 +360,7 @@ class Authority extends DataObject {
 
     $result = $db->select($sql);
 
+	  $authorities = false;
     if (! $result->isError()) {
       $authorities = $result->get_all_rows();
     }
@@ -524,7 +492,6 @@ class Authority extends DataObject {
 
     $result = $db->select($sql);
 
-	$departments = array();
 
     if (! $result->isError()) {
       return $result->get_all_rows();
