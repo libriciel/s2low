@@ -11,7 +11,6 @@ class Group extends DataObject {
   protected $name;
   protected $status;
 
-  private $recordSiren = false;
   private $sirenList = array();
 
   protected $dbFields = array(
@@ -41,65 +40,10 @@ class Group extends DataObject {
   }
 
 	/**
-	 * Méthode permettant de déterminer si un numéro de SIREN est autorisé pour le groupe
-	 * @param integer $num Numéro de SIREN à tester
-	 * @return bool True si le SIREN est autorisé, False sinon
-	 */
-	public function isAuthorizedSiren($num) {
-		if (array_search($num, $this->sirenList) === false) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	/**
    * \brief Méthode qui renvoie la liste des numéros de SIREN autorisés pour ce groupe
    */
   public function getAuthorizedSiren() {
 	return $this->sirenList;
-  }
-
-  /**
-   * Méthode d'importation du fichier contenant la liste des SIREN autorisés pour le groupe
-   * @param $file string chemin du fichier à importer
-   * @return bool True si succés, False sinon
-   */
-  public function importSiren($file) {
-	$this->resetSirenList();
-
-	if (! $handle = fopen($file, "r")) {
-	  $this->errorMsg = "Erreur lors de l'ouverture du fichier.";
-	  return false;
-	}
-
-        $theSiren  = new Siren(new LuhnKey());
-	while ($content = fgets($handle)) {
-	  $content = trim($content);
-
-	  if (VERIFICATION_SIREN)
-	  {		
-              if (! $theSiren->isValid($content)) {
-                  $this->errorMsg="erreur lors de l'analyse du numéro SIREN ($content).";
-                  return false;
-              }  
-	  }
-	  if (! empty($content) && strlen($content) <= 9) {
-		$this->sirenList[] = $content;
-	  }
-	}
-
-	$this->recordSiren = true;
-
-	return true;
-  }
-
-
-  /**
-   * Méthode de remise à zéro des permissions sur les modules
-  */
-  public function resetSirenList() {
-	$this->sirenList = array();
   }
 
   /**
@@ -135,61 +79,6 @@ class Group extends DataObject {
     return ($this->status == 1);
   }
 
-  /**
-   * Méthode d'enregistrement d'un groupe dans la base de données
-   * @param $validate bool (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
-   * @param $bouchon_4_strict_standard bool permet d'éviter un warning sur les standard stricts, mais ne sert à rien
-   * @return bool true si succés, false sinon
-   */
-  public function save($validate = true,$bouchon_4_strict_standard = true) {
-    if (! ($sql = parent::save($validate, true))) {
-	  return false;
-	}
-  	 
-  	//echo $sql;
-    //exit();
-    if (! $this->db->begin()) {
-      $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
-      return false;
-	}
-
-    if (! $this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la sauvegarde du groupe.";
-	  $this->db->rollback();
-      return false;
-    }
-
-	if ($this->recordSiren) {    
-	  //! Traitement des siren associés au groupe
-	  $sql = "DELETE FROM authority_group_siren WHERE authority_group_id=" . $this->id;
-    
-	  if (! $this->db->exec($sql)) {
-		$this->errorMsg = "Erreur lors de la réinitialisation des siren associés au module.";
-		$this->db->rollback();
-		return false;
-	  }
-
-	  if (count($this->sirenList) > 0) {
-		reset($this->sirenList);
-		foreach ($this->sirenList as $siren) {
-		  $sql = "INSERT INTO authority_group_siren (authority_group_id, siren) VALUES(" . $this->id . ", '" . addslashes($siren) . "')";
-		  if (! $this->db->exec($sql)) {
-			$this->errorMsg = "Erreur lors de la sauvegarde des siren du groupe.";
-			$this->db->rollback();
-			return false;
-		  }
-		}
-	  }
-	}
-
-    if (! $this->db->commit()) {
-      $this->errorMsg = "Erreur lors de la validation de la transaction.";
-	  $this->db->rollback();
-      return false;
-	}
-
-    return true;
-  }
 
 	/**
 	 * Méthode permettant de supprimer un groupe de la base de données
