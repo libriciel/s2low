@@ -251,9 +251,9 @@ class ListeActesHTML {
 		?>
 			<dt>
 				<a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander btn btn-default btn-xs">-</a>
-				1 transaction de l'enveloppe n°<a href="<?php echo get_url(array("order" => "id","sortway" => $sortWay=='asc'?'desc':'asc')) ?>" 
+				1 transaction de l'enveloppe n°<a href="<?php echo get_url_same_page(array("order" => "id","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
 								title="Trier par identifiant"><?php echo $envelope["envelope_id"] ?></a> 
-				déposée le <a href="<?php echo get_url(array("order" => "submission_date","sortway" => $sortWay=='asc'?'desc':'asc')) ?>" 
+				déposée le <a href="<?php echo get_url_same_page(array("order" => "submission_date","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
 								title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
 				<?php if ($this->allCollectivite) : ?>
       				de la collectivité <?php hecho($envelope['authority_name']) ?>

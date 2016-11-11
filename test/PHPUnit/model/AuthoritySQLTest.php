@@ -67,13 +67,11 @@ class AuthoritySQLTest extends S2lowTestCase {
 		$this->assertEquals('Saint-Andre de Corcy',$result[2]);
 	}
 
-	public function testGetListInsensitive()
-	{
+	public function testGetListInsensitive() {
 		$this->assertEquals(1, count($this->authoritySQL->getList(false, false, "BOURG", false, false, 0, 10)));
 	}
 
-	public function testGetNbInsensitive()
-	{
-		$this->assertEquals(1, $this->authoritySQL->getNb(false, false, "BOURG", false, false, 0, 10));
+	public function testGetNbInsensitive() {
+		$this->assertEquals(1, $this->authoritySQL->getNb(false, false, "BOURG", false, false));
 	}
 }

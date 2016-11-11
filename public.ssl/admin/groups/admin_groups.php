@@ -1,6 +1,5 @@
 <?php
 require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
 
 $me = new User();
 
@@ -91,9 +90,9 @@ if (is_array($groups)) {
 
   foreach ($groups as $ent) {
 	$html .= "<tr>\n";
-	$html .= " <td headers=\"name\">" . $ent["name"] . "</td>\n";
+	$html .= " <td headers=\"name\">" . get_hecho($ent["name"]) . "</td>\n";
 	$html .= " <td headers=\"status\">" . $statusList[$ent["status"]] . "</td>\n";
-	$html .= " <td headers=\"actions\"><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+	$html .= " <td headers=\"actions\"><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . get_url("/custom/images/erreur.png") . "\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
 	$html .= "</tr>\n";
   }
 
@@ -114,5 +113,3 @@ $doc->closeContainer();
 $doc->buildFooter();
 
 $doc->display();
-
-?>

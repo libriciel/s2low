@@ -11,6 +11,9 @@ class AuthorityGroupSirenSQL {
 	}
 	
 	public function add($id,$siren){
+		if ($this->exist($id,$siren)){
+			return;
+		}
 		$sql = "INSERT INTO authority_group_siren(authority_group_id,siren) VALUES (?,?)";
 		$this->sqlQuery->query($sql,$id,$siren);
 	}

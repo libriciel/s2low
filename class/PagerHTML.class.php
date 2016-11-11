@@ -26,7 +26,7 @@ class PagerHTML {
                                     <li class="disabled"><a href="#"><?php echo $val ?></a></li>
                                 <?php else : ?>
                                     <li>
-                                        <a href="<?php echo get_url(array("count" => $val)) ?>" 
+                                        <a href="<?php echo get_url_same_page(array("count" => $val)) ?>"
                                                 title="Afficher <?php echo $val ?>  éléments par page">
                                                 <?php echo $val?>
                                         </a>
@@ -40,7 +40,7 @@ class PagerHTML {
                         <ul class="pagination pagination-sm">
                             <?php if ($page_number > 1) : ?>
                             <li>
-                                <a href="<?php echo get_url(array("page" => ($page_number - 1))) ?>" title="Afficher la page précédente">&laquo;</a>
+                                <a href="<?php echo get_url_same_page(array("page" => ($page_number - 1))) ?>" title="Afficher la page précédente">&laquo;</a>
                             </li>
                             <?php else : ?>
                                 <li class="disabled"><a href="#">&laquo;</a></li>
@@ -60,7 +60,7 @@ class PagerHTML {
                                     </li>
                                     <?php else: ?>
                                     <li>
-                                        <a href="<?php echo get_url(array("page" => $i)) ?>"
+                                        <a href="<?php echo get_url_same_page(array("page" => $i)) ?>"
                                             title="Afficher la page <?php echo  $i ?>"> 
                                             <?php echo $i ?>
                                         </a>
@@ -69,7 +69,7 @@ class PagerHTML {
                             <?php endforeach;?>
                             <?php  if ($page_number < $nb_total_page) : ?>
                                 <li>
-                                    <a href="<?php echo get_url(array("page" => ($page_number + 1))) ?>" title="Afficher la page suivante">&raquo;</a>
+                                    <a href="<?php echo get_url_same_page(array("page" => ($page_number + 1))) ?>" title="Afficher la page suivante">&raquo;</a>
                                 </li>
                             <?php  else : ?>
                                 <li class="disabled"><a href="#">&raquo;</a></li>

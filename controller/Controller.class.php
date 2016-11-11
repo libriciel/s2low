@@ -69,7 +69,9 @@ class Controller {
 		if ($error_message){
 			$this->setErrorMessage($error_message);
 		}
-		header("Location: $url");
+		if (! TESTING_ENVIRONNEMENT) {
+			header("Location: $url");
+		}
 		throw new RedirectException("Redirect to $url with message : $error_message");
 	}
 
@@ -205,6 +207,10 @@ class Controller {
 		return new Recuperateur($_POST);
 	}
 
+	public function getFiles(){
+		return $_FILES;
+	}
+
 	public function isApiCall(){
 		$recuperateur = $this->getRecuperateurGet();
 		$api = $recuperateur->get('api');
@@ -231,6 +237,10 @@ class Controller {
 			throw new Exception("Exit !");
 		}
 		exit;  // @codeCoverageIgnore
+	}
+
+	public function log($message){
+		Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get("role"), false, $this->me);
 	}
 
 }

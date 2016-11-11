@@ -1,6 +1,6 @@
 <?php 
 
-function get_url(array $params) {		
+function get_url_same_page(array $params) {
 	$args = $_GET;
 	foreach ($params as $param => $value) {
 		$args[$param] = $value;
@@ -42,4 +42,8 @@ function is_valid_email($email){
 	//Ne supporte pas les adresses email en UTF8 
 	//http://stackoverflow.com/questions/19522092/should-i-use-filter-var-to-validate-email
 	return !!filter_var($email ,FILTER_VALIDATE_EMAIL);
+}
+
+function get_url($url_path){
+	return trim("/",WEBSITE_SSL).$url_path;
 }
