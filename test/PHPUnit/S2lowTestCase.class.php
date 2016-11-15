@@ -61,7 +61,10 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
             \PHPUnit_Extensions_Database_Operation_Factory::INSERT()
         ));
     }
-    
+
+	/**
+	 * @return ObjectInstancier
+	 */
     public function getObjectInstancier(){
     	return $this->objectInstancier;
     }

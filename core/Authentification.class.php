@@ -5,19 +5,31 @@ class Authentification {
 	public static function getInstance(){
 		global $sqlQuery;
 		$userSQL = new UserSQL($sqlQuery);
-		$authentification = new Authentification($_SERVER,$_SESSION, $userSQL);
+		$nounceSQL = new NounceSQL($sqlQuery,new PasswordGenerator());
+		$authentification = new Authentification($_SERVER,$_SESSION, $userSQL,$_GET,$nounceSQL);
 		return $authentification;
 	}
 	
 	private $session;
 	private $server;
 	private $userSQL;
+	private $get;
+
+	/** @var NounceSQL */
+	private $nounceSQL;
 	
-	
-	public function __construct(array $server,array $session,UserSQL $userSQL){
+	public function __construct(
+		array $server,
+		array $session,
+		UserSQL $userSQL,
+		array $get=array(),
+		NounceSQL $nounceSQL=null
+	){
 		$this->session = $session;
 		$this->server = $server;
 		$this->userSQL = $userSQL;
+		$this->get = $get;
+		$this->nounceSQL = $nounceSQL;
 	}
 	
 	public function authenticate(){
@@ -32,9 +44,15 @@ class Authentification {
 		return $this->session['id_login'];
 	}
 
-	public function detectConnexionID()
-	{
+	public function detectConnexionID() {
+
 		$connexion_info = $this->getAllConnexionInfo();
+		$id = $this->getConnexionIdFromNounce($connexion_info);
+		if ($id){
+			return $id;
+		}
+
+
 
 		$id_list = $this->userSQL->getIdFromConnexionInfo(
 			$connexion_info['certificate_hash'],
@@ -79,12 +97,14 @@ class Authentification {
 		}
 
 		$result = array();
-		foreach(array('SSL_CLIENT_VERIFY' => 'ssl_client_verify',
-				'SSL_CLIENT_S_DN' => 'subject_dn',
-				'SSL_CLIENT_I_DN'=>'issuer_dn',
-				'SSL_CLIENT_CERT'=>'ssl_client_cert',
-				'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'=>'certificate_rgs_2_etoiles',
-				'PHP_AUTH_USER'=>'login',
+		foreach(
+				array(
+					'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
+					'SSL_CLIENT_S_DN' => 'subject_dn',
+					'SSL_CLIENT_I_DN'=>'issuer_dn',
+					'SSL_CLIENT_CERT'=>'ssl_client_cert',
+					'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'=>'certificate_rgs_2_etoiles',
+					'PHP_AUTH_USER'=>'login',
 					'PHP_AUTH_PW' => 'password',
 					'TESTING_CERTIFICATE_HASH' => 'certificate_hash',
 				) as $server_key => $result_key) {
@@ -130,4 +150,19 @@ class Authentification {
 		$pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
 		return $pem;
 	}
+
+	private function getConnexionIdFromNounce($connexion_info){
+		if (empty($this->get['nounce'])){
+			return false;
+		}
+		if(! $this->nounceSQL->verify(
+			$this->get['login'],
+			$this->get['nounce'],
+			$this->get['hash']
+		)){
+			return false;
+		}
+		return $this->userSQL->getIdFromLoginCert($this->get['login'],$connexion_info['certificate_hash']);
+	}
+
 }

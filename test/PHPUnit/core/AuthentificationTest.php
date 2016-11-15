@@ -121,5 +121,43 @@ class AuthentificationTest  extends S2lowTestCase {
 		$this->authenticateWith(8,$_SERVER,$_SESSION);
 	}
 
+	public function testAuthenticationWithNounce(){
+		/** @var NounceSQL $nounceSQL */
+		$nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
+		$nounce = $nounceSQL->create("alice","alice");
+
+		$userSQL = new UserSQL($this->getSQLQuery());
+		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
+		$server['SSL_CLIENT_S_DN'] = "adullact";
+		$server['SSL_CLIENT_I_DN'] = "adullact";
+		$server['TESTING_CERTIFICATE_HASH'] = "hash_adullact";
+
+		$get['nounce'] = $nounce;
+		$get['login'] = "alice";
+		$get['hash'] = hash("sha256","alice:$nounce");
+
+		$authentification = new Authentification($server,array(),$userSQL,$get,$nounceSQL);
+		$this->assertEquals(2,$authentification->authenticate());
+	}
+
+	public function testAuthenticationWithNounceFailed(){
+		/** @var NounceSQL $nounceSQL */
+		$nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
+		$nounce = $nounceSQL->create("alice","alice");
+
+		$userSQL = new UserSQL($this->getSQLQuery());
+		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
+		$server['SSL_CLIENT_S_DN'] = "adullact";
+		$server['SSL_CLIENT_I_DN'] = "adullact";
+		$server['TESTING_CERTIFICATE_HASH'] = "hash_adullact";
+
+		$get['nounce'] = $nounce;
+		$get['login'] = "alice";
+		$get['hash'] = hash("sha256","alice:$nounce:toto");
+
+		$authentification = new Authentification($server,array(),$userSQL,$get,$nounceSQL);
+		$this->setExpectedException("Exception","La connexion n'a pas pu être établie");
+		$authentification->authenticate();
+	}
 	
 }

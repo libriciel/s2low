@@ -116,8 +116,7 @@ class UserSQL extends SQL {
 		}
 	}
 
-	public function getIdFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login, $password)
-	{
+	public function getIdFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login, $password) {
 		$sql = "SELECT id FROM users " .
 			" WHERE certificate_hash=? " .
 				" AND certificate_rgs_2_etoiles = ? ";
@@ -182,5 +181,12 @@ class UserSQL extends SQL {
 		}
 	}
 
+	public function getIdFromLoginCert($login,$certificate_hash){
+		$sql = "SELECT id FROM users " .
+			" WHERE certificate_hash = ? " .
+			" AND login = ? " .
+			" ORDER BY id ";
+		return $this->queryOne($sql,  $certificate_hash,$login);
+	}
 
 }
