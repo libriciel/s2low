@@ -183,16 +183,8 @@ class ActesClassificationCreation {
 	}
 	
 	private function initTransaction(){
-		// Initialisation de la transaction
-		
-		$last_classification = ActesClassification::getLastRevisionDate($this->authority->getId());
-		if ($last_classification) {
-		  	$last_classification_date =  date("Y-m-d",Helpers::getTimestampFromBDDDate($last_classification));
-		}  else {
-			$last_classification_date = date("Y-m-d",0);
-		}
-	
-		$trans = new ActesTransaction();
+		$last_classification_date = ActesClassification::getLastRevisionDate($this->authority->getId());
+        $trans = new ActesTransaction();
 		$trans->set("type", "7");
 		$trans->set("last_classification_date",$last_classification_date);
 		$trans->set("destDir", $this->authority->get("siren") . "/" );

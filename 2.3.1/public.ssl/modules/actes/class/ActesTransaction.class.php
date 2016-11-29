@@ -786,23 +786,16 @@ protected $type_reponse;
     $xml_name .= "_0.xml";
 
     $this->xmlFileName = $xml_name;
-
-    $xml = null;
-
-    if (!empty ($this->last_classification_date)) {
-      $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
-      $xml .= "<actes:DemandeClassification \n";
-      $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
-      $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
-      $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
-      $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\">\n";
-      $xml .= " <actes:DateClassification>" . $this->last_classification_date . "</actes:DateClassification>\n";
-      $xml .= "</actes:DemandeClassification>\n";
-    } else {
-
-      $this->errorMsg = "Info manquante pour générer le XML.";
+    $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+    $xml .= "<actes:DemandeClassification \n";
+    $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
+    $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
+    $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+    $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\">\n";
+    if ($this->last_classification_date) {
+        $xml .= " <actes:DateClassification>" . $this->last_classification_date . "</actes:DateClassification>\n";
     }
-
+    $xml .= "</actes:DemandeClassification>\n";
     return $xml;
   }
   
