@@ -1,0 +1,26 @@
+<?php
+
+require_once( __DIR__ . "/../../../init/init-www-actes.php");
+
+$recuperateur = new Recuperateur($_POST);
+$id = $recuperateur->getInt('id');
+
+$actesArchiveControler = new ActesArchiveControler($sqlQuery);
+$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
+
+if (! $result){
+	$_SESSION['error'] = "Erreur: " . $actesArchiveControler->getLastError();
+	header("Location: actes_transac_show.php?id=$id");
+	exit;
+}
+
+$msg = "Programmation de l'envoie de la transaction $id à Pastell";
+
+$_SESSION['error'] = $msg;
+	
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId())) {
+	$_SESSION['error'] .= "\nErreur de journalisation.\n";
+}
+
+header("Location: actes_transac_show.php?id=$id");
+

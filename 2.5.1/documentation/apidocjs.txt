@@ -1,0 +1,28 @@
+Attention, apidocjs ne prends que des fichiers en UTF-8.
+
+Afin de générer la documentation de l'API, il convient d'apporter la modification suivante  apidoc :
+
+1) Installer iconv-lite pour node.js :
+
+sudo npm install iconv-lite
+
+
+2) Modifier parser.js pour convertir le fichier avant utilisation :
+
+eric@iMac-de-Eric:/usr/local/lib/node_modules/apidoc/node_modules/apidoc-core/lib$ diff parser.js parser.js.orig
+
+
+2d1
+< var iconvlite = require('iconv-lite');
+14,19d12
+< function readFileSync_encoding(filename, encoding) {
+<     var content = fs.readFileSync(filename);
+<     return iconvlite.decode(content, encoding);
+< }
+<
+<
+111,112c104
+<     //self.src = fs.readFileSync(filename, 'utf-8').toString();
+<     self.src = readFileSync_encoding(filename, 'iso-8859-1').toString();
+---
+>     self.src = fs.readFileSync(filename, 'utf-8').toString();
