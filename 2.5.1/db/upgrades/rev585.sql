@@ -13,5 +13,6 @@ CREATE INDEX mt_ui ON mail_transaction(user_id);
  
 CREATE INDEX aif_ei ON actes_included_files(envelope_id);
  
-ALTER TABLE logs ADD PRIMARY KEY (id);
+-- BLESDEV : PK existe déjà (logs_pkey)
+--ALTER TABLE logs ADD PRIMARY KEY (id);
  
