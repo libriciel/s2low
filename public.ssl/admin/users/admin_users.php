@@ -180,7 +180,9 @@ ob_start();?>
 	<tr>
 		<td headers="name">
 			<?php hecho($user["name"]) ?> <?php hecho($user["givenname"]) ?>
-
+			<?php if($user['login']) :  ?>
+			(<?php hecho($user["login"]) ?>)
+			<?php endif;?>
 		</td>
 		<td headers="email">
 			<a href="mailto:<?php hecho($user["email"]) ?>"><?php hecho($user["email"]) ?></a>
