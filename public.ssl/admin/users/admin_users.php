@@ -83,6 +83,7 @@ if ($me->isAuthorityAdmin()) {
 	$title = "Gestion des utilisateurs";
 }
 
+$authority_id_list = array();
 
 if ($me->isGroupAdminOrSuper()) {
 	if ($me->isGroupAdmin()) {
@@ -135,7 +136,7 @@ ob_start();?>
 			<div class="form-group">
 				<label for="authority" class="col-md-3 control-label">Collectivité</label>
 				<div class="col-md-3">
-					<select class="form-control zselect_authorities" name="authority">
+					<select class="form-control zselect_authorities" name="authority" id="authority">
     					<option value="">Toutes</option>
 						<?php foreach ($authority_id_list as $key => $val) : ?>
       						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
@@ -177,7 +178,10 @@ ob_start();?>
 	
 	<?php foreach ($users as $i => $user) : ?>
 	<tr>
-		<td headers="name"><?php hecho($user["name"]) ?> <?php hecho($user["givenname"]) ?></td>
+		<td headers="name">
+			<?php hecho($user["name"]) ?> <?php hecho($user["givenname"]) ?>
+
+		</td>
 		<td headers="email">
 			<a href="mailto:<?php hecho($user["email"]) ?>"><?php hecho($user["email"]) ?></a>
 		</td>
