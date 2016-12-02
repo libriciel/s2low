@@ -19,7 +19,8 @@ class AuthenticationNounceController extends Controller {
 		$authority_id = $this->me->get('authority_id');
 		$nounce = $nounceSQL->create($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW'],$authority_id);
 
-		echo $nounce;
+		echo json_encode(array('nounce'=>$nounce));
+
 		return true;
 	}
 
