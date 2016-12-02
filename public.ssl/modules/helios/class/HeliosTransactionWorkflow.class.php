@@ -1,19 +1,5 @@
 <?php
-/**
- * \class HeliosTransactionWorkflow HeliosTransactionWorkflow.class.php
- * \brief Cette classe permet de gérer le workflow des transactions Helios
- * \author Cristina Pop <cpop@alternancesoft.com> et Jérôme Schell <j.schell@alternancesoft.com>
- * \date 20.02.2007
- * 
- *
- * Cette classe fournit des méthodes de gestion des transactions Helios.
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
-
-require_once (SITEROOT . "/class/DataObject.class.php");
+require_once (__DIR__."/../../../../class/DataObject.class.php");
 
 class HeliosTransactionWorkflow extends DataObject {
   protected $objectName = "helios_transactions_workflow";
@@ -36,8 +22,6 @@ class HeliosTransactionWorkflow extends DataObject {
   protected $xmlFileName;
   protected $xmlFilesize;
   protected $xmlObj;
-
-  private $workflow = array ();
 
   protected $rootDir;
   protected $destDir;
@@ -120,8 +104,6 @@ class HeliosTransactionWorkflow extends DataObject {
    */
   public static function getDatePoste($transaction_id) {
     $sql = "SELECT date from helios_transactions_workflow where status_id=1 AND transaction_id=" . $transaction_id;
-    //SELECT id FROM actes_transactions WHERE unique_id='" . addslashes($unique_id) . "' AND type=1";
-
     $db = & DatabasePool :: getInstance();
     $result = $db->select($sql);
 

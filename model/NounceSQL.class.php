@@ -9,13 +9,13 @@ class NounceSQL extends SQL {
 		$this->passwordGenerator = $passwordGenerator;
 	}
 
-	public function create($login,$password){
+	public function create($login,$password,$authority_id){
 		$this->menage();
 		$nounce = $this->passwordGenerator->getPassword();
 		$hash = hash("sha256","$password:$nounce");
 
-		$sql = "INSERT INTO nounce(nounce,login,hash,creation) VALUES (?,?,?,now())";
-		$this->query($sql,$nounce,$login,$hash);
+		$sql = "INSERT INTO nounce(nounce,login,hash,creation,authority_id) VALUES (?,?,?,now(),?)";
+		$this->query($sql,$nounce,$login,$hash,$authority_id);
 		return $nounce;
 	}
 
@@ -27,12 +27,12 @@ class NounceSQL extends SQL {
 
 	public function verify($login,$nounce,$hash){
 		$this->menage();
-		$sql = "SELECT id FROM nounce WHERE login=? AND nounce=? AND hash=?";
-		$id = $this->queryOne($sql,$login,$nounce,$hash);
-		if (! $id){
+		$sql = "SELECT authority_id FROM nounce WHERE login=? AND nounce=? AND hash=?";
+		$authority_id = $this->queryOne($sql,$login,$nounce,$hash);
+		if (! $authority_id){
 			return false;
 		}
-		return true;
+		return $authority_id;
 	}
 
 }

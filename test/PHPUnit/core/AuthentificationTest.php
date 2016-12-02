@@ -124,7 +124,7 @@ class AuthentificationTest  extends S2lowTestCase {
 	public function testAuthenticationWithNounce(){
 		/** @var NounceSQL $nounceSQL */
 		$nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
-		$nounce = $nounceSQL->create("alice","alice");
+		$nounce = $nounceSQL->create("alice","alice",1);
 
 		$userSQL = new UserSQL($this->getSQLQuery());
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
@@ -143,7 +143,7 @@ class AuthentificationTest  extends S2lowTestCase {
 	public function testAuthenticationWithNounceFailed(){
 		/** @var NounceSQL $nounceSQL */
 		$nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
-		$nounce = $nounceSQL->create("alice","alice");
+		$nounce = $nounceSQL->create("alice","alice",1);
 
 		$userSQL = new UserSQL($this->getSQLQuery());
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";

@@ -181,12 +181,12 @@ class UserSQL extends SQL {
 		}
 	}
 
-	public function getIdFromLoginCert($login,$certificate_hash){
+	public function getIdFromCertificateAndAuthority($certificate_hash,$authority_id){
 		$sql = "SELECT id FROM users " .
 			" WHERE certificate_hash = ? " .
-			" AND login = ? " .
-			" ORDER BY id ";
-		return $this->queryOne($sql,  $certificate_hash,$login);
+			" AND authority_id = ? " .
+			" ORDER BY id LIMIT 1";
+		return $this->queryOne($sql,$certificate_hash,$authority_id);
 	}
 
 }

@@ -1,62 +1,5 @@
 <?php
 
-
-/*
- * Tedetis - Copyright 2006 Alternance-Soft
- * Module Etat Civil
- * Contributeur : Cristina Pop, Mars 2007 
- *
- * contact@alternancesoft.com
- *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
- *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
- * respectant les principes de diffusion des logiciels libres. Vous pouvez
- * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
- * sur le site "http://www.cecill.info".
- *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
- *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
- *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
- * termes.
-*/
-?>
-<?php
-
-
-/**
- * \file public.ssl/modules/etat_civil/index.php
- * \brief Page d'accueil du module ACTES
- * \author Cristina.Pop <cpop@alternancesoft.com>
- * \date 19.03.2007
- * 
- *
- * Cette page affiche la liste des transactions du module
- *Etat Civil et permet de les modifier ou d'en creér de nouvelles
- *
- * Modifications :
- * Auteur   Date       Commentaire
- *
- */
-
 // Configuration
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
@@ -340,7 +283,7 @@ $html .= "    </script>\n";
 $html .= "    <a href=\"#datepicker\" id=\"datepicker_max_ack_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_ack_date.toggleDatePicker(); return false;\">";
 
 if ($fmax_ack_date) {
-  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date));
+  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date)));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
@@ -406,15 +349,6 @@ elseif ($me->isAdmin()) { // Un admin d'une collectivité ne voit que les transac
   $filter[] .= "etat_civil_transactions.user_id='" . $me->getId() . "'";
 }
 
-//NU
-//if (isset ($fnature) && is_numeric($fnature)) {
-//  $filter[] .= "actes_transactions.nature_code='" . addslashes($fnature) . "'";
-//}
-
-//NU
-//if (isset ($ftype) && is_numeric($ftype) && $ftype > 0) {
-//  $filter[] .= "actes_transactions.type='" . addslashes($ftype) . "'";
-//}
 
 //OK
 if (isset ($fstatus) && is_numeric($fstatus)) {

@@ -10,7 +10,7 @@ class NounceSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetNounce(){
-		$nounce = $this->nounceSQL->create("toto","MonMotDePasse");
+		$nounce = $this->nounceSQL->create("toto","MonMotDePasse",1);
 		$this->assertNotEmpty($nounce);
 	}
 
@@ -24,13 +24,13 @@ class NounceSQLTest extends S2lowTestCase {
 	}
 
 	public function testVerify(){
-		$nounce = $this->nounceSQL->create("toto","MonMotDePasse");
+		$nounce = $this->nounceSQL->create("toto","MonMotDePasse",1);
 		$hash = hash("sha256","MonMotDePasse:$nounce");
-		$this->assertTrue($this->nounceSQL->verify("toto",$nounce,$hash));
+		$this->assertEquals(1,$this->nounceSQL->verify("toto",$nounce,$hash));
 	}
 
 	public function testVerifyFalse(){
-		$nounce = $this->nounceSQL->create("toto","MonMotDePasse");
+		$nounce = $this->nounceSQL->create("toto","MonMotDePasse",1);
 		$hash = "badhash";
 		$this->assertFalse($this->nounceSQL->verify("toto",$nounce,$hash));
 	}

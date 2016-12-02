@@ -52,8 +52,6 @@ class Authentification {
 			return $id;
 		}
 
-
-
 		$id_list = $this->userSQL->getIdFromConnexionInfo(
 			$connexion_info['certificate_hash'],
 			$connexion_info['certificate_rgs_2_etoiles'],
@@ -72,8 +70,7 @@ class Authentification {
 		return $id_list[0];
 	}
 
-	public function verifConnexion($user_id)
-	{
+	public function verifConnexion($user_id) {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
@@ -85,9 +82,7 @@ class Authentification {
 		} // @codeCoverageIgnore
 	}
 
-
-	public function getAllConnexionInfo()
-	{
+	public function getAllConnexionInfo() {
 		//http://stackoverflow.com/a/18205049
 		if (function_exists('apache_request_headers')) {
 			$h = apache_request_headers();
@@ -155,14 +150,20 @@ class Authentification {
 		if (empty($this->get['nounce'])){
 			return false;
 		}
-		if(! $this->nounceSQL->verify(
+		$authority_id = $this->nounceSQL->verify(
 			$this->get['login'],
 			$this->get['nounce'],
 			$this->get['hash']
-		)){
+		);
+
+		if(! $authority_id){
 			return false;
 		}
-		return $this->userSQL->getIdFromLoginCert($this->get['login'],$connexion_info['certificate_hash']);
+
+		return $this->userSQL->getIdFromCertificateAndAuthority(
+			$connexion_info['certificate_hash'],
+			$authority_id
+		);
 	}
 
 }

@@ -14,8 +14,10 @@ class AuthenticationNounceController extends Controller {
 			echo "La fonction n'est utilisable qu'avec un login+mot de passe HTTP";
 			return false;
 		}
+		/** @var NounceSQL $nounceSQL */
 		$nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
-		$nounce = $nounceSQL->create($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW']);
+		$authority_id = $this->me->get('authority_id');
+		$nounce = $nounceSQL->create($_SERVER['PHP_AUTH_USER'],$_SERVER['PHP_AUTH_PW'],$authority_id);
 
 		echo $nounce;
 		return true;
