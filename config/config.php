@@ -266,7 +266,7 @@ if(!defined('ACTES_CHECK_ARCHIVE_SERVLET')){
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
-        define('ACTES_TDT_MAIL_ADDRESS', 'eric@sigmalis.com');
+        define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
