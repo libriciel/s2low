@@ -178,10 +178,18 @@ if(!defined("VERIFICATION_SIREN")){
 	define("VERIFICATION_SIREN",false);
 }
 
-//Paramétre outils de signature LIBERSIGN
+//Paramètre pour l'outil de signature Libersign
 
 if(!defined("LIBERSIGN_URL")){
         define("LIBERSIGN_URL","https://signature.services.adullact.org/libersign");
+}
+
+if(!defined("LIBERSIGN_HELP_URL")){
+	define("LIBERSIGN_HELP_URL","https://www.libriciel.fr");
+}
+
+if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")){
+	define("LIBERSIGN_EXTENSION_UPDATE_URL",false);
 }
 
 //Paramètre outils pour donner la forme canonique d'un document XML (C14N)

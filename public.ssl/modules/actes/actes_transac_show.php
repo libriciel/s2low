@@ -595,46 +595,59 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 	$tab_included_files = $actesIncludedFileSQL->getSendFile($id);
 	$tab_included_files = array_slice($tab_included_files,0,1);
-	
+
+	$libersignController = new LibersignController($objectInstancier);
+
+
+
 	$html .= "<h3>Signature de l'acte</h3>";
 	ob_start();
-	?><div class='action'>
-	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
-			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
-			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
-			name = "appletsignature"
-			width = "500"
-			height = "257" >
-		<param name="hash_count" value="<?php echo count($tab_included_files)?>" />
+
+	$libersignController->displayLibersignJS();
+
+	?>
+
+	<script>
+		$(document).ready(function () {
+
+			$("#box_result").hide();
+
+			var siginfos = [];
+
+			<?php foreach($tab_included_files as $i => $included_file) : ?>
+			siginfos.push({
+				hash:"<?php echo $included_file['sha1'] ?>",
+				format:"CMS"
+			});
+			<?php endforeach;?>
+
+			$(".libersign").libersign({
+				iconType: "glyphicon",
+				signatureInformations: siginfos
+			}).on('libersign.sign', function(event, signatures) {
+				<?php foreach($tab_included_files as $i => $included_file) : ?>
+				$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+				<?php endforeach;?>
+				$("#form_sign").submit();
+			});
+
+		});
+	</script>
+
+	<div id='box_signature' class='box' style="width:920px" >
+		<h2>Signature</h2>
+		<div class="libersign"></div>
+	</div>
+
+	<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+		<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
+		<input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
 		<?php foreach($tab_included_files as $i => $included_file) : ?>
-			<param name="iddoc_<?php echo $i +1?>" value="<?php echo $included_file['id']?>" />
-			<param name="hash_<?php echo $i +1?>" value="<?php echo $included_file['sha1'] ?>" /> 
-			<param name="format_<?php echo $i +1?>" value="CMS" />
-		<?php endforeach;?> 
-		<param name="id_user" value="id=<?php echo $id?>" />
-		<param name="return_mode" value="form" />
-	 </applet>
-	 </div>
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
-<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
-	<input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
-	<input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
-	<?php foreach($tab_included_files as $i => $included_file) : ?>
-		<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $included_file['id']?>' />
-		<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i +1?>' value=''/>
-	<?php endforeach;?>
-</form>
-<script>
-function injectSignature() {
-    signature = null;
-    <?php foreach($tab_included_files as $i => $included_file) : ?> 
-    	signature = document.applets[0].returnSignature("<?php echo $included_file['id'] ?>");
-		$("#signature_<?php echo $i + 1?>").val(signature);
-	<?php endforeach;?>
-	$("#form_sign").submit();
-}
-</script>
-	 
+			<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $included_file['id']?>' />
+			<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i +1?>' value=''/>
+		<?php endforeach;?>
+	</form>
+
 	<?php 	
 		$html.= ob_get_contents();
 		ob_end_clean();
