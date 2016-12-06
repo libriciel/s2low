@@ -217,9 +217,9 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	try{
 		$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
 		$id_pes = $signatureInfo['bordereau_id'];
-		$libersignController = new LibersignController($objectInstancier);
 
 		ob_start();
+		$libersignController = new LibersignController($objectInstancier);
 		$libersignController->displayLibersignJS();
 
 		?>

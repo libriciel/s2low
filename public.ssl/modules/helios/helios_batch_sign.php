@@ -85,62 +85,65 @@ $html .= "<h3>Signature des fichiers PES</h3>";
 
 
 ob_start();
+$libersignController = new LibersignController($objectInstancier);
+$libersignController->displayLibersignJS();
+
 ?><div class='action'>
-	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
-			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
-			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
-			name = "appletsignature"
-			width = "500"
-			height = "257" >
-			
-			<param value="all-permissions" name="permissions"></param>
-    <param value="false" name="codebase_lookup"></param>
-    <param value="true" name="display_cancel"></param>
-    <param value="javascript" name="cancel_mode"></param>
-    <param value="<?php echo count($transaction_list)?>" name="hash_count"></param>
-    <?php foreach($transaction_list as $i => $transactionInfo) : ?>
-   	 	<param value="<?php echo $transactionInfo['bordereau_hash']?>" name="hash_<?php echo $i+1?>"></param>
-    	<param value="<?php echo $transactionInfo['bordereau_id']?>" name="pesid_<?php echo $i+1?>"></param>
-    	<param value="<?php echo $transactionInfo['id']?>" name="iddoc_<?php echo $i+1?>"></param>
-    	<param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_<?php echo $i+1?>"></param>
-    	<param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_<?php echo $i+1?>"></param>
-    	<param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_<?php echo $i+1?>"></param>
-    	<param value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf" name="pesspuri_<?php echo $i+1?>"></param>
-    	<param value="France" name="pescountryname_<?php echo $i+1?>"></param>
-    	<param value="Ordonnateur" name="pesclaimedrole_<?php echo $i+1?>"></param>
-    	<param value="null" name="p7s_<?php echo $i+1?>"></param>
-    	<param value="iso-8859-1" name="pesencoding_<?php echo $i+1?>"></param>
-    	<param value="XADES-env" name="format_<?php echo $i+1?>"></param>
-		<param value="<?php hecho($authorityInfo['city'])?>" name="pescity_<?php echo $i+1?>"></param>
-    	<param value="<?php hecho($authorityInfo['postal_code'])?>" name="pespostalcode_<?php echo $i+1?>"></param>
-    <?php endforeach;?>
-    <param value="form" name="return_mode"></param>
-   
-    </applet>
-	 </div>
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
-<form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
-	<input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
-	<input type='hidden' name='id' id='form_sign_id' value='<?php echo 999 ?>'/>
-	
-	<?php foreach($transaction_list as $i=>$transactionInfo) :?>
-	<input type='hidden' name='id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['id'] ?>'/>
-	<input type='hidden' name='signature_id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['bordereau_id'] ?>' />
-	<input type='hidden' name='signature_<?php echo $i+1 ?>' id='signature_<?php echo $i+1?>' value=''/>
-	<input type='hidden' name='is_bordereau_<?php echo $i+1 ?>' id='is_bordereau_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['isbordereau'] ?>'/>
-	
-	<?php endforeach;?>
-</form>
-<script>
-function injectSignature() {
-    <?php foreach($transaction_list as $i => $transactionInfo) : ?> 
-	signature = document.applets[0].returnSignature("<?php echo $transactionInfo['id'] ?>");
-	$("#signature_<?php echo $i+1 ?>").val(signature);
-	<?php endforeach;?>
-	$("#form_sign").submit();
-}
-</script>
-	 
+
+	<script>
+		$(document).ready(function () {
+
+			$("#box_result").hide();
+
+			var siginfos = [];
+			<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+				siginfos.push({
+					hash: "<?php echo $transactionInfo['bordereau_hash']?>",
+					pesid: "<?php echo $transactionInfo['bordereau_id']?>",
+					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
+					pespolicydesc: "Politique de signature Helios de la DGFiP",
+					pespolicyhash : "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
+					pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
+					pescity : "<?php hecho($authorityInfo['city'])?>",
+					pespostalcode : "<?php hecho($authorityInfo['postal_code'])?>",
+					pescountryname : "France",
+					pesclaimedrole : "Ordonnateur",
+					pesencoding : "iso-8859-1",
+					format: "XADES-env"
+				});
+			<?php endforeach;?>
+
+			$(".libersign").libersign({
+				iconType: "glyphicon",
+				signatureInformations: siginfos
+			}).on('libersign.sign', function(event, signatures) {
+				console.log(signatures);
+				<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+					$("#signature_<?php echo $i+1 ?>").val(signatures[<?php echo $i?>]);
+				<?php endforeach;?>
+				$("#form_sign").submit();
+			});
+		});
+	</script>
+
+	<div id='box_signature' class='box' style="width:920px" >
+		<h2>Signature</h2>
+		<div class="libersign"></div>
+	</div>
+
+	<form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
+		<input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
+		<input type='hidden' name='id' id='form_sign_id' value='<?php echo 999 ?>'/>
+
+		<?php foreach($transaction_list as $i=>$transactionInfo) :?>
+			<input type='hidden' name='id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['id'] ?>'/>
+			<input type='hidden' name='signature_id_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['bordereau_id'] ?>' />
+			<input type='hidden' name='signature_<?php echo $i+1 ?>' id='signature_<?php echo $i+1?>' value=''/>
+			<input type='hidden' name='is_bordereau_<?php echo $i+1 ?>' id='is_bordereau_<?php echo $i+1 ?>' value='<?php echo $transactionInfo['isbordereau'] ?>'/>
+
+		<?php endforeach;?>
+	</form>
+
 	<?php 	
 		$html .= ob_get_contents();
 		ob_end_clean();
