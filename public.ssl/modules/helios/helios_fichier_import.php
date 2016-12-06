@@ -68,27 +68,24 @@ $doc->openContent();
 $html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'un fichier</h2>\n";
-$html .= "<form class=\"form-horizontal import-file-form\" method=\"POST\" enctype=\"multipart/form-data\" ";
+$html .= "<form class=\"form-horizontal import-file-form form col-md-offset-1\" method=\"POST\" enctype=\"multipart/form-data\" ";
 $html .= " action=\"" . WEBSITE_SSL . "/modules/helios/helios_script_reception.php\" > ";
 
 $html .= "<div class=\"form-group\">";
-$html .= "<label for=\"enveloppe\" class=\"col-md-2 control-label\">Fichier XML</label>\n";
-$html .= "<div class=\"col-md-6\">";
-$html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
-$html .= "</div>\n";
+$html .= "<label for=\"enveloppe\" class=\"control-label\">Fichier XML :</label>\n";
+$html .= "<input class=\"\" type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
 $html .= "</div>\n";
 
 
 $html .= "<div class=\"form-group\">";
-$html .= "<label for=\"must_signed\" class=\"col-md-2 control-label\">Signer le fichier PES avant de le télétransmettre</label>\n";
-$html .= "<div class=\"col-md-6\">";
 $html .= "<input type=\"checkbox\"  name=\"must_signed\" />";
+$html .= "<label for=\"must_signed\" class=\"control-label\">Signer le fichier PES avant de le télétransmettre.</label>\n";
+
 $html .= "</div>\n";
-$html .= "</div>\n";
 
 
 
-$html .= "<div class=\"form-group\"><div class=\"col-md-2\"><button class=\"btn btn-primary\" type=\"submit\" value=\"\" />Importer le fichier</button></div></div>\n";
+$html .= "<div class=\"form-group\"><div class=\"col-md-2\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\" value=\"\" />Importer le fichier</button></div></div>\n";
 $html .= "</form>\n";
 
 

@@ -217,44 +217,51 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	try{
 		$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
 		$id_pes = $signatureInfo['bordereau_id'];
-	
-	ob_start();
-	?><div class='action'>
-	<applet codebase = "<?php echo LIBERSIGN_URL ?>"
-			code = "org/adullact/parapheur/applets/splittedsign/Main.class" 
-			archive = "SplittedSignatureApplet.jar, lib/bcmail-jdk16-138.jar, lib/bcprov-jdk16-138.jar, lib/xom-1.1.jar" 
-			name = "appletsignature"
-			width = "500"
-			height = "257" >
-			
-			<param value="all-permissions" name="permissions"></param>
-    <param value="false" name="codebase_lookup"></param>
-    <param value="true" name="display_cancel"></param>
-    <param value="javascript" name="cancel_mode"></param>
-    <param value="1" name="hash_count"></param>
-    <param value="<?php echo $signatureInfo['bordereau_hash']?>" name="hash_1"></param>
-    <param value="<?php echo $signatureInfo['bordereau_id']?>" name="pesid_1"></param>
-    <param value="<?php echo $signatureInfo['bordereau_id']?>" name="iddoc_1"></param>
-    
-    <param value="urn:oid:1.2.250.1.131.1.5.18.21.1.4" name="pespolicyid_1"></param>
-    <param value="Politique de signature Helios de la DGFiP" name="pespolicydesc_1"></param>
-    <param value="Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=" name="pespolicyhash_1"></param>
-    <param value="https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf" name="pesspuri_1"></param>
-    <param value="France" name="pescountryname_1"></param>
-    <param value="Ordonnateur" name="pesclaimedrole_1"></param>
-    <param value="null" name="p7s_1"></param>
-    <param value="iso-8859-1" name="pesencoding_1"></param>
-    <param value="XADES-env" name="format_1"></param>
-    <param value="form" name="return_mode"></param>
-			
+		$libersignController = new LibersignController($objectInstancier);
 
-    <param value="<?php hecho($authorityInfo->get('city'))?>" name="pescity_1"></param>
-    <param value="<?php hecho($authorityInfo->get('postal_code'))?>" name="pespostalcode_1"></param>
-    
-		
-	 </applet>
-	 </div>
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
+		ob_start();
+		$libersignController->displayLibersignJS();
+
+		?>
+
+		<script>
+			$(document).ready(function () {
+
+				$("#box_result").hide();
+
+				var siginfos = [];
+
+				siginfos.push({
+					hash: "<?php echo $signatureInfo['bordereau_hash']?>",
+					pesid: "<?php echo $signatureInfo['bordereau_id']?>",
+					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
+					pespolicydesc: "Politique de signature Helios de la DGFiP",
+					pespolicyhash : "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
+					pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
+					pescity : "<?php hecho($authorityInfo->get('city'))?>",
+					pespostalcode : "<?php hecho($authorityInfo->get('postal_code'))?>",
+					pescountryname : "France",
+					pesclaimedrole : "Ordonnateur",
+					pesencoding : "iso-8859-1",
+					format: "XADES-env"
+				});
+
+				$(".libersign").libersign({
+					iconType: "glyphicon",
+					signatureInformations: siginfos
+				}).on('libersign.sign', function(event, signatures) {
+					//console.log(signatures);
+					$("#signature_1").val(signatures[0]);
+					$("#form_sign").submit();
+				});
+			});
+		</script>
+
+		<div id='box_signature' class='box' style="width:920px" >
+			<h2>Signature</h2>
+			<div class="libersign"></div>
+		</div>
+
 <form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
 	<input type='hidden' name='id_1' id='form_sign_id' value='<?php echo $id ?>'/>
 	<input type='hidden' name='nb_signature'  value='1'/>
@@ -263,14 +270,6 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	<input type='hidden' name='is_bordereau_1' id='is_bordereau_1' value='<?php echo $signatureInfo['isbordereau'] ?>'/>
 	
 </form>
-<script>
-function injectSignature() {
-	signature = document.applets[0].returnSignature("<?php echo $id_pes ?>");
-	$("#signature_1").val(signature);
-	$("#form_sign").submit();
-}
-</script>
-	 
 	<?php
 		$html.= ob_get_contents();
 		ob_end_clean();
