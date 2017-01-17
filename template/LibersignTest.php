@@ -8,30 +8,33 @@
 
 
 <script>
-	$(document).ready(function () {
+	$(window).load(function() {
 
-		$("#box_result").hide();
+		$(document).ready(function () {
 
-		var siginfos = [];
+			$("#box_result").hide();
 
-		siginfos.push({
-			hash:"cc78058a4d1967d4d0d26f5dcc4c8cd89defbb4e",
-			format:"CMS"
+			var siginfos = [];
+
+			siginfos.push({
+				hash: "cc78058a4d1967d4d0d26f5dcc4c8cd89defbb4e",
+				format: "CMS"
+			});
+
+			$(".libersign").libersign({
+				iconType: "glyphicon",
+				signatureInformations: siginfos
+			}).on('libersign.sign', function (event, signatures) {
+
+				// Les signatures sont là
+				console.log(signatures);
+				$("#libersign_result").html("Signature : " + JSON.stringify(signatures));
+				$("#box_signature").hide();
+				$("#box_result").show();
+
+			});
+
 		});
-
-		$(".libersign").libersign({
-			iconType: "glyphicon",
-			signatureInformations: siginfos
-		}).on('libersign.sign', function(event, signatures) {
-
-			// Les signatures sont là
-			console.log(signatures);
-			$("#libersign_result").html("Signature : " + JSON.stringify(signatures));
-			$("#box_signature").hide();
-			$("#box_result").show();
-
-		});
-
 	});
 </script>
 

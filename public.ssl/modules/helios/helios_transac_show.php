@@ -225,34 +225,37 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 		?>
 
 		<script>
-			$(document).ready(function () {
+			$(window).load(function() {
 
-				$("#box_result").hide();
+				$(document).ready(function () {
 
-				var siginfos = [];
+					$("#box_result").hide();
 
-				siginfos.push({
-					hash: "<?php echo $signatureInfo['bordereau_hash']?>",
-					pesid: "<?php echo $signatureInfo['bordereau_id']?>",
-					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
-					pespolicydesc: "Politique de signature Helios de la DGFiP",
-					pespolicyhash : "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
-					pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
-					pescity : "<?php hecho($authorityInfo->get('city'))?>",
-					pespostalcode : "<?php hecho($authorityInfo->get('postal_code'))?>",
-					pescountryname : "France",
-					pesclaimedrole : "Ordonnateur",
-					pesencoding : "iso-8859-1",
-					format: "XADES-env"
-				});
+					var siginfos = [];
 
-				$(".libersign").libersign({
-					iconType: "glyphicon",
-					signatureInformations: siginfos
-				}).on('libersign.sign', function(event, signatures) {
-					//console.log(signatures);
-					$("#signature_1").val(signatures[0]);
-					$("#form_sign").submit();
+					siginfos.push({
+						hash: "<?php echo $signatureInfo['bordereau_hash']?>",
+						pesid: "<?php echo $signatureInfo['bordereau_id']?>",
+						pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
+						pespolicydesc: "Politique de signature Helios de la DGFiP",
+						pespolicyhash: "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
+						pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
+						pescity: "<?php hecho($authorityInfo->get('city'))?>",
+						pespostalcode: "<?php hecho($authorityInfo->get('postal_code'))?>",
+						pescountryname: "France",
+						pesclaimedrole: "Ordonnateur",
+						pesencoding: "iso-8859-1",
+						format: "XADES-env"
+					});
+
+					$(".libersign").libersign({
+						iconType: "glyphicon",
+						signatureInformations: siginfos
+					}).on('libersign.sign', function (event, signatures) {
+						//console.log(signatures);
+						$("#signature_1").val(signatures[0]);
+						$("#form_sign").submit();
+					});
 				});
 			});
 		</script>

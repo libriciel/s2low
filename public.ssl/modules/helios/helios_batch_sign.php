@@ -91,37 +91,40 @@ $libersignController->displayLibersignJS();
 ?><div class='action'>
 
 	<script>
-		$(document).ready(function () {
+		$(window).load(function() {
 
-			$("#box_result").hide();
+			$(document).ready(function () {
 
-			var siginfos = [];
-			<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+				$("#box_result").hide();
+
+				var siginfos = [];
+				<?php foreach($transaction_list as $i => $transactionInfo) : ?>
 				siginfos.push({
 					hash: "<?php echo $transactionInfo['bordereau_hash']?>",
 					pesid: "<?php echo $transactionInfo['bordereau_id']?>",
 					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
 					pespolicydesc: "Politique de signature Helios de la DGFiP",
-					pespolicyhash : "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
+					pespolicyhash: "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
 					pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
-					pescity : "<?php hecho($authorityInfo['city'])?>",
-					pespostalcode : "<?php hecho($authorityInfo['postal_code'])?>",
-					pescountryname : "France",
-					pesclaimedrole : "Ordonnateur",
-					pesencoding : "iso-8859-1",
+					pescity: "<?php hecho($authorityInfo['city'])?>",
+					pespostalcode: "<?php hecho($authorityInfo['postal_code'])?>",
+					pescountryname: "France",
+					pesclaimedrole: "Ordonnateur",
+					pesencoding: "iso-8859-1",
 					format: "XADES-env"
 				});
-			<?php endforeach;?>
-
-			$(".libersign").libersign({
-				iconType: "glyphicon",
-				signatureInformations: siginfos
-			}).on('libersign.sign', function(event, signatures) {
-				console.log(signatures);
-				<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-					$("#signature_<?php echo $i+1 ?>").val(signatures[<?php echo $i?>]);
 				<?php endforeach;?>
-				$("#form_sign").submit();
+
+				$(".libersign").libersign({
+					iconType: "glyphicon",
+					signatureInformations: siginfos
+				}).on('libersign.sign', function (event, signatures) {
+					console.log(signatures);
+					<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+					$("#signature_<?php echo $i + 1 ?>").val(signatures[<?php echo $i?>]);
+					<?php endforeach;?>
+					$("#form_sign").submit();
+				});
 			});
 		});
 	</script>

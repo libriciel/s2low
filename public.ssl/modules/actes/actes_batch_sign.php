@@ -85,29 +85,31 @@ $libersignController->displayLibersignJS();
 ?>
 
 	<script>
-		$(document).ready(function () {
+		$(window).load(function() {
+			$(document).ready(function () {
 
-			$("#box_result").hide();
+				$("#box_result").hide();
 
-			var siginfos = [];
+				var siginfos = [];
 
-			<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-			siginfos.push({
-				hash:"<?php echo $transactionInfo['file']['sha1'] ?>",
-				format:"CMS"
-			});
-			<?php endforeach;?>
-
-			$(".libersign").libersign({
-				iconType: "glyphicon",
-				signatureInformations: siginfos
-			}).on('libersign.sign', function(event, signatures) {
 				<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-					$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+				siginfos.push({
+					hash: "<?php echo $transactionInfo['file']['sha1'] ?>",
+					format: "CMS"
+				});
 				<?php endforeach;?>
-				$("#form_sign").submit();
-			});
 
+				$(".libersign").libersign({
+					iconType: "glyphicon",
+					signatureInformations: siginfos
+				}).on('libersign.sign', function (event, signatures) {
+					<?php foreach($transaction_list as $i => $transactionInfo) : ?>
+					$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+					<?php endforeach;?>
+					$("#form_sign").submit();
+				});
+
+			});
 		});
 	</script>
 

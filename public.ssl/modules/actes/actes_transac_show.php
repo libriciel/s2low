@@ -608,29 +608,32 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	?>
 
 	<script>
-		$(document).ready(function () {
+		$(window).load(function() {
 
-			$("#box_result").hide();
+			$(document).ready(function () {
 
-			var siginfos = [];
+				$("#box_result").hide();
 
-			<?php foreach($tab_included_files as $i => $included_file) : ?>
-			siginfos.push({
-				hash:"<?php echo $included_file['sha1'] ?>",
-				format:"CMS"
-			});
-			<?php endforeach;?>
+				var siginfos = [];
 
-			$(".libersign").libersign({
-				iconType: "glyphicon",
-				signatureInformations: siginfos
-			}).on('libersign.sign', function(event, signatures) {
 				<?php foreach($tab_included_files as $i => $included_file) : ?>
-				$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+				siginfos.push({
+					hash: "<?php echo $included_file['sha1'] ?>",
+					format: "CMS"
+				});
 				<?php endforeach;?>
-				$("#form_sign").submit();
-			});
 
+				$(".libersign").libersign({
+					iconType: "glyphicon",
+					signatureInformations: siginfos
+				}).on('libersign.sign', function (event, signatures) {
+					<?php foreach($tab_included_files as $i => $included_file) : ?>
+					$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+					<?php endforeach;?>
+					$("#form_sign").submit();
+				});
+
+			});
 		});
 	</script>
 
