@@ -74,7 +74,7 @@ class Pastell {
 						'acte_nature' => $transactionInfo['nature_code'],
 						'numero_de_lacte' => $transactionInfo['number'],
 						'objet'=>$transactionInfo['subject'],
-						'date_de_lacte' => $transactionInfo['decision_date'],
+						'date_de_lacte' => date("Y-m-d",strtotime($transactionInfo['decision_date'])),
 						'classification' => $transactionInfo['classification'],
 						'envoi_sae' => 1,
 					    'has_bordereau' => 1
