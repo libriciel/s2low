@@ -19,7 +19,7 @@ $doc->DisplayHead();
 <form name="mailpsw" action="index.php?mail_emis_id=<?php echo $mail_emis_id;?>" method="POST">
 
   <div>
-  Mot de passe: <input type='password' name='mdp' /> <p></p>
+  Mot de passe: <input name='mdp' /> <p></p>
           		<input type="submit" name='submit' onclick="checkDownloadPW();"/>
   </div>
 </form>
