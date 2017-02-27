@@ -23,6 +23,16 @@ class GroupSQL extends SQL {
 		return $id;
 	}
 
+	public function groupNameAlreadyExists($id, $name){
+		$sql = "SELECT id FROM authority_groups WHERE name= ? ";
+		$id_from_database = $this->queryOne($sql,$name);
+
+		if ($id){
+			return ($id != $id_from_database);
+		} else {
+			return $id_from_database != 0;
+		}
+	}
 
 
 }

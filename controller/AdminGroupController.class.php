@@ -13,6 +13,12 @@ class AdminGroupController extends Controller {
 
 		/** @var GroupSQL $groupeSQL */
 		$groupSQL = $this->getObjectInstancier()->get('GroupSQL');
+
+		if ($groupSQL->groupNameAlreadyExists($id,$name)){
+			$this->setMessage("Le nom de ce groupe est déjà utilisé");
+			$this->redirect("/admin/groups/admin_group_edit.php?id=$id");
+		}
+
 		$id = $groupSQL->edit($id,$name,$status);
 
 		/** @var AuthorityGroupSirenSQL $authorityGroupSirenSQL */

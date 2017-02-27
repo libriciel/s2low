@@ -36,4 +36,18 @@ class GroupSQLTest extends S2lowTestCase {
 		$info = $this->groupeSQL->getAll();
 		$this->assertEquals(self::GROUPE_1_NAME,$info[0]['name']);
 	}
+
+	public function testGroupNameAlreadyExistsNewGroup(){
+		$this->assertTrue($this->groupeSQL->groupNameAlreadyExists(0,self::GROUPE_1_NAME));
+	}
+
+	public function testGroupNameAlreadyExistsSameId(){
+		$this->assertFalse($this->groupeSQL->groupNameAlreadyExists(1,self::GROUPE_1_NAME));
+	}
+
+	public function testGroupNameAlreadyExistsChangeGroupeName(){
+		$this->assertTrue($this->groupeSQL->groupNameAlreadyExists(2,self::GROUPE_1_NAME));
+	}
+
+
 }
