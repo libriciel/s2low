@@ -104,5 +104,4 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_user_col1";
 	}
 
-	
 }

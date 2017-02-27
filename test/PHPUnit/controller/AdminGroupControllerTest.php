@@ -10,9 +10,22 @@ class AdminGroupControllerTest extends S2lowTestCase {
 		$this->adminGroupController = new AdminGroupController($this->getObjectInstancier());
 	}
 
+	public function testDoEditActionQuote(){
+		$this->setSuperAdminAuthentication();
+		$_POST['id'] = 1;
+		$_POST['name'] = "apo'strophe";
+
+		try {
+			$this->adminGroupController->doEditAction();
+		} catch (Exception $e){}
+
+		$groupeSQL = new GroupSQL($this->getSQLQuery());
+		$info = $groupeSQL->getInfo(1);
+		$this->assertEquals("apo_strophe",$info['name']);
+	}
+
 	public function testDoEditAction(){
 		$this->setSuperAdminAuthentication();
-
 		org\bovigo\vfs\vfsStream::setup('test');
 		$testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
 		$tmp_file = $testStreamUrl."/test.text";
@@ -35,11 +48,8 @@ class AdminGroupControllerTest extends S2lowTestCase {
 	}
 
 	public function testDoEditActionAdminGroupe(){
-		$this->setAdminGroupAuthentication();
-		$this->setExpectedExceptionRegExp("Exception","#^Redirect to .* with message : Accès refusé$#");
+		$this->setExpectedExceptionRegExp("Exception","#^Message : Le certificat n'est pas valide : aucun compte trouvé$#");
 		$this->adminGroupController->doEditAction();
 	}
-
-
 
 }

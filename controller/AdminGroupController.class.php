@@ -9,6 +9,8 @@ class AdminGroupController extends Controller {
 		$name = $this->getRecuperateurPost()->get("name");
 		$status = $this->getRecuperateurPost()->getInt("status",0);
 
+		$name = str_replace('\'','_',$name);
+
 		/** @var GroupSQL $groupeSQL */
 		$groupSQL = $this->getObjectInstancier()->get('GroupSQL');
 		$id = $groupSQL->edit($id,$name,$status);

@@ -148,8 +148,6 @@ class AdminControllerTest extends S2lowTestCase {
 		foreach ($authorities as $authority) {
 			$this->assertEquals(1, $authority['authority_group_id']);
 		}
-
-
 	}
 
 	/**
