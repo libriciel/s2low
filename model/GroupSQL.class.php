@@ -27,11 +27,15 @@ class GroupSQL extends SQL {
 		$sql = "SELECT id FROM authority_groups WHERE name= ? ";
 		$id_from_database = $this->queryOne($sql,$name);
 
+		if (! $id_from_database){
+			return false;
+		}
+
 		if ($id){
 			return ($id != $id_from_database);
-		} else {
-			return $id_from_database != 0;
 		}
+
+		return true;
 	}
 
 

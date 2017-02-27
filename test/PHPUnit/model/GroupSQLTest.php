@@ -49,5 +49,8 @@ class GroupSQLTest extends S2lowTestCase {
 		$this->assertTrue($this->groupeSQL->groupNameAlreadyExists(2,self::GROUPE_1_NAME));
 	}
 
+	public function testGroupNameAlreadyExistsChangeOK(){
+		$this->assertFalse($this->groupeSQL->groupNameAlreadyExists(1,"autre nom"));
+	}
 
 }

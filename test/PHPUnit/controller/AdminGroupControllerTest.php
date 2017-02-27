@@ -17,7 +17,9 @@ class AdminGroupControllerTest extends S2lowTestCase {
 
 		try {
 			$this->adminGroupController->doEditAction();
-		} catch (Exception $e){}
+		} catch (Exception $e){
+
+		}
 
 		$groupeSQL = new GroupSQL($this->getSQLQuery());
 		$info = $groupeSQL->getInfo(1);
