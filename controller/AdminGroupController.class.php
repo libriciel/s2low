@@ -38,7 +38,7 @@ class AdminGroupController extends Controller {
 			}
 		}
 
-		$message = "Le groupe « ".get_hecho($name)." » (id=$id) a été éditée";
+		$message = "Le groupe « ".get_hecho($name)." » (id=$id) a été édité";
 		$this->setMessage($message);
 		$this->log($message);
 
