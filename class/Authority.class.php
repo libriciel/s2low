@@ -55,7 +55,7 @@ class Authority extends DataObject {
 						"new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" =>false),
   						"dia_siret" => array( "descr" => "Numéro de SIRET de réception des DIA", "type" => "isString", "mandatory" => false, "unique" => true),
   						"sae_wsdl" => array("descr"=>'','type'=>'isString','mandatory'=>false,'unique'=>false),
-
+						"helios_do_not_verify_nom_fic_unicity" => array("descr"=>'','type'=>'isBool','mandatory'=>false,'unique'=>false),
 						 );
 
 

@@ -140,4 +140,9 @@ class AuthoritySQL extends SQL {
 		return $this->queryOne($sql,$id);
 	}
 
+	public function updateDoNotVerifyNomFicUnicity($authority_id, $helios_do_not_verify_nom_fic_unicity){
+		$sql = "UPDATE authorities SET helios_do_not_verify_nom_fic_unicity=? WHERE id=?";
+		$this->query($sql,$helios_do_not_verify_nom_fic_unicity?1:0,$authority_id);
+	}
+
 }

@@ -50,6 +50,8 @@ $helios_ftp_login=Helpers::getVarFromPost("helios_ftp_login");
 $helios_ftp_password=Helpers::getVarFromPost("helios_ftp_password");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
+$helios_do_not_verify_nom_fic_unicity =
+	Helpers::getVarFromPost("helios_do_not_verify_nom_fic_unicity")==='t'?true:false;
 //$newmailnotif = Helpers::getVarFromPost("newnotif");
 $newmailnotif = "on";
 
@@ -181,6 +183,10 @@ if (! $authority->save($savePerms)) {
   
   exitOrDisplayError($api, nl2br($msg),$location);
 
+}
+
+if ($me->isSuper()) {
+	$authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(),$helios_do_not_verify_nom_fic_unicity);
 }
 
 $msg = ($mod) ? "Modification" : "Création";

@@ -74,4 +74,16 @@ class AuthoritySQLTest extends S2lowTestCase {
 	public function testGetNbInsensitive() {
 		$this->assertEquals(1, $this->authoritySQL->getNb(false, false, "BOURG", false, false));
 	}
+
+	public function testUpdateVerifNomFic(){
+		$this->authoritySQL->updateDoNotVerifyNomFicUnicity(1,true);
+		$info = $this->authoritySQL->getInfo(1);
+		$this->assertTrue($info['helios_do_not_verify_nom_fic_unicity']);
+	}
+
+	public function testUpdateVerifNomFicFalse(){
+		$this->authoritySQL->updateDoNotVerifyNomFicUnicity(1,false);
+		$info = $this->authoritySQL->getInfo(1);
+		$this->assertFalse($info['helios_do_not_verify_nom_fic_unicity']);
+	}
 }

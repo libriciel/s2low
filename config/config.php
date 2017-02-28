@@ -446,10 +446,10 @@ if (!defined("HELIOS_OCRE_PASSWORD")){
 	define("HELIOS_OCRE_PASSWORD","changme");
 }
 
-if ( ! defined("HELIOS_NOMFIC_UNICITY_VERIFICATION")){
+if ( ! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")){
 	//Permet de faire sauter la vérication de l'unicité du NomFic dans les PES_Aller
 	//Il faut mettre cette constante à faux et explicitement coché une case sur l'autorité sur la console
-	define("HELIOS_NOMFIC_UNICITY_VERIFICATION", true);
+	define("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY", false);
 }
 
 

@@ -319,6 +319,24 @@ $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\"
 $html .= " </div>\n";
 
 
+
+
+if (HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY && $me->isSuper()){
+	$html .= " <div class=\"form-group\">\n";
+	$html .= "  <label class=\"control-label col-md-4\">Unicité la balise NomFic (PES)</label>\n";
+	$html .= "  <div class=\"col-md-6\">";
+	$html .= $doc->getHTMLSelect("helios_do_not_verify_nom_fic_unicity",
+            array(
+				'f' =>"Vérification de l'unicité de la balise NomFic",
+                't'=>"Pas de vérification de l'unicité de la balise NomFic - DÉCONSEILLÉ"),
+            $authority->get('helios_do_not_verify_nom_fic_unicity')?:'f'
+    );
+	$html .= "</div>";
+	$html .= " </div>\n";
+}
+
+echo $authority->get('helios_do_not_verify_nom_fic_unicity');
+
 if ($me->isGroupAdminOrSuper()) {
 	$modules = Module::getActiveModulesList();
 
@@ -357,6 +375,9 @@ if ($authority->getModulePermByName("dia") && $me->isAdmin())
 	$html .= " </div>\n";
 	
 }
+
+
+
 
 
 $html .= "</div>\n";

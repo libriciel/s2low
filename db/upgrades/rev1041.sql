@@ -7,5 +7,5 @@ DROP INDEX xml_nomfic_index_unique;
 CREATE INDEX xml_nomfic_index ON helios_transactions(xml_nomfic);
 CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions(xml_nomfic,xml_cod_col);
 
-ALTER TABLE authorities ADD COLUMN helios_nomfic_unicity_verification BOOL DEFAULT TRUE ;
+ALTER TABLE authorities ADD COLUMN helios_do_not_verify_nom_fic_unicity BOOL DEFAULT FALSE ;
 
