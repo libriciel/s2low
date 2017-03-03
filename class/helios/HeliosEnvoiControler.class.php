@@ -8,6 +8,8 @@ class HeliosEnvoiControler {
 	private $authoritySQL;
 	private $fichierCompteur;
 	private $heliosTransmissionWindowsSQL;
+
+	private $do_not_verify_nom_fic_unicity;
 	
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
@@ -16,7 +18,11 @@ class HeliosEnvoiControler {
 		$this->fichierCompteur = new FichierCompteur(HELIOS_COUNTER_FILE);
 		$this->heliosTransmissionWindowsSQL = new HeliosTransmissionWindowsSQL($sqlQuery);
 	}
-	
+
+	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
+		$this->do_not_verify_nom_fic_unicity = $do_not_verify_nom_fic_unicity;
+	}
+
 	public function validateAllTransactions(){
 
 		try {
@@ -91,8 +97,9 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::POSTE,$exception->getMessage(),$transactionInfo['user_id']);
 				continue;
 			}
+			$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 
-			if ($this->heliosTransactionsSQL->nomFicExists($nom_fic)){
+			if (! $this->verifNomFicUnicity($authorityInfo,$info_from_pes_aller)){
 				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
@@ -108,6 +115,19 @@ class HeliosEnvoiControler {
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
 		}
 		libxml_use_internal_errors(false);
+	}
+
+	private function verifNomFicUnicity($authorityInfo,$info_from_pes_aller){
+		if ($this->do_not_verify_nom_fic_unicity) { //ARE YOU SURE ?
+			if ($authorityInfo['helios_do_not_verify_nom_fic_unicity']){ //VERY SURE ?
+				//OK, SO LET'S GO...
+				return true;
+			}
+		}
+		return ! $this->heliosTransactionsSQL->nomFicExists(
+			$info_from_pes_aller['nom_fic'],
+			$info_from_pes_aller['cod_col']
+		);
 	}
 	
 	private function updateStatus($transaction_id,$status_id,$message,$user_id){

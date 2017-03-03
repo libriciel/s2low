@@ -5,12 +5,19 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 
 	private $testStreamUrl;
 
+	/** @var  HeliosController */
+	private $heliosController;
+
+	/** @var  HeliosEnvoiControler */
+	private $heliosEnvoiControler;
 
 	protected function setUp(){
 		parent::setUp();
 		org\bovigo\vfs\vfsStream::setup("test");
 		$this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
 		mkdir($this->testStreamUrl."/helios");
+		$this->heliosController = new HeliosController($this->getObjectInstancier());
+		$this->heliosEnvoiControler = new HeliosEnvoiControler($this->getSQLQuery());
 	}
 
 	public function testValidateAllTransactions(){
@@ -23,11 +30,9 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 	private function validatePesAller($filename){
 		$pes_aller = __DIR__."/../../helios/fixtures/{$filename}";
 		copy($pes_aller,$this->testStreamUrl."/helios/".sha1_file($pes_aller));
-		$heliosControler = new HeliosController($this->getObjectInstancier());
-		$id_t = $heliosControler->importFile(8,$pes_aller,"pes_aller.xml");
-		$heliosEnvoiControler = new HeliosEnvoiControler($this->getSQLQuery());
+		$id_t = $this->heliosController->importFile(8,$pes_aller,"pes_aller.xml");
 		ob_start();
-		$heliosEnvoiControler->validateAllTransactions();
+		$this->heliosEnvoiControler->validateAllTransactions();
 		ob_end_clean();
 		return $id_t;
 	}
@@ -55,5 +60,43 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$this->assertEquals("12",$info['xml_cod_bud']);
 		$this->assertEquals("034000",$info['xml_id_post']);
 	}
+
+	public function testSendSamePESAller(){
+		$this->sendSamePESAllerFailed();
+	}
+
+	private function sendSamePESAllerFailed(){
+		$this->validatePesAller("pes_aller_ok.xml");
+		$id_t = $this->validatePesAller("pes_aller_ok.xml");
+		$heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+
+		$info = $heliosTransaction->getLastStatusInfo($id_t);
+		$this->assertEquals(-1,$info['status_id']);
+		$this->assertRegExp("#ce fichier existe déjà sur la plateforme#",$info['message']);
+	}
+
+
+	public function testSendSamePESAllerDoNotVerify(){
+		$this->heliosEnvoiControler->setDoNotVerifyNomFicUnicity(true);
+		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
+		$authoritySQL->updateDoNotVerifyNomFicUnicity(1,true);
+		$this->validatePesAller("pes_aller_ok.xml");
+		$id_t = $this->validatePesAller("pes_aller_ok.xml");
+		$heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+		$info = $heliosTransaction->getLastStatusInfo($id_t);
+		$this->assertEquals(2,$info['status_id']);
+	}
+
+	public function testSendSamePESAllerDoNotVerifyOnlyConst(){
+		$this->heliosEnvoiControler->setDoNotVerifyNomFicUnicity(true);
+		$this->sendSamePESAllerFailed();
+	}
+
+	public function testSendSamePESAllerDoNotVerifyOnlyAuthority(){
+		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
+		$authoritySQL->updateDoNotVerifyNomFicUnicity(1,true);
+		$this->sendSamePESAllerFailed();
+	}
+
 
 }

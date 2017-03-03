@@ -8,6 +8,7 @@ $min_exec_time = 10;
 require_once( __DIR__ . "/../init/init.php");
 
 $heliosEnvoiControler = new HeliosEnvoiControler($sqlQuery);
+$heliosEnvoiControler->setDoNotVerifyNomFicUnicity(HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY);
 $heliosEnvoiControler->validateAllTransactions();
 
 touch(HELIOS_VALIDATION_UPSTART_TOUCH_FILE);

@@ -42,7 +42,7 @@ class HeliosTransactionsSQL extends SQL {
 	}
 
 	public function getLastStatusInfo($id){
-		$sql = "SELECT * FROM helios_transactions_workflow WHERE transaction_id=? ORDER BY date DESC LIMIT 1";
+		$sql = "SELECT * FROM helios_transactions_workflow WHERE transaction_id=? ORDER BY date DESC,id DESC LIMIT 1";
 		return $this->queryOne($sql,$id);
 	}
 	
@@ -107,9 +107,9 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOne($sql,$nomFic);
 	}
 	
-	public function nomFicExists($nom_fic){
-		$sql = "SELECT count(*) FROM helios_transactions WHERE xml_nomfic= ?";
-		return $this->queryOne($sql,$nom_fic);
+	public function nomFicExists($nom_fic,$cod_col){
+		$sql = "SELECT count(*) FROM helios_transactions WHERE xml_nomfic= ? AND xml_cod_col=?";
+		return $this->queryOne($sql, $nom_fic,$cod_col);
 	}
 	
 	public function setNomFic($transaction_id,$nom_fic){
