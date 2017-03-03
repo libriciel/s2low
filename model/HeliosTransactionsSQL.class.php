@@ -116,6 +116,11 @@ class HeliosTransactionsSQL extends SQL {
 		$sql = "UPDATE helios_transactions SET xml_nomfic=? WHERE id=?";
 		$this->query($sql,$nom_fic,$transaction_id);
 	}
+
+	public function setInfoFromPESAller($transaction_id, array $info){
+		$sql = "UPDATE helios_transactions SET xml_nomfic=?, xml_cod_col=?, xml_cod_bud=?, xml_id_post=? WHERE id=?";
+		$this->query($sql,$info['nom_fic'],$info['cod_col'],$info['cod_bud'],$info['id_post'],$transaction_id);
+	}
 	
 	public function setCompleteName($transaction_id,$completeName){
 		$sql = "UPDATE helios_transactions SET complete_name = ? WHERE id= ?";

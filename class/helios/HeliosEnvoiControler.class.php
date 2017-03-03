@@ -65,8 +65,10 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
-			
-			$nom_fic = utf8_decode(strval($pes_xml->Enveloppe->Parametres->NomFic['V']));
+
+			$info_from_pes_aller = $this->extratInfoFromPESAller($pes_xml);
+
+			$nom_fic = $info_from_pes_aller['nom_fic'];
 			if (! $nom_fic){
 				$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
@@ -95,7 +97,8 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
-			$this->heliosTransactionsSQL->setNomFic($transaction_id,$nom_fic);
+			$this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id,$info_from_pes_aller);
+
 
 			$siret = $pes_xml->EnTetePES->IdColl['V'];
 			$authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
@@ -238,6 +241,14 @@ class HeliosEnvoiControler {
 
 	public function rollback($transaction_id){
 
+	}
+
+	public function extratInfoFromPESAller(SimpleXMLElement $pes_xml){
+		$info['nom_fic'] = utf8_decode(strval($pes_xml->Enveloppe->Parametres->NomFic['V']));
+		$info['cod_col'] = $pes_xml->EnTetePES->CodCol['V'];
+		$info['cod_bud'] = $pes_xml->EnTetePES->CodBud['V'];
+		$info['id_post'] = $pes_xml->EnTetePES->IdPost['V'];
+		return $info;
 	}
 	
 }
