@@ -98,7 +98,22 @@ class HeliosTransaction extends DataObject {
         "descr"=>"",
           "type"=>"isString",
           "mandatory"=>false,
-      )
+      ),
+	  "xml_cod_col"=> array(
+        "descr"=>"",
+          "type"=>"isString",
+          "mandatory"=>false,
+      ),
+	  "xml_cod_bud"=> array(
+		  "descr"=>"",
+		  "type"=>"isString",
+		  "mandatory"=>false,
+	  ),
+	  "xml_id_post"=> array(
+		  "descr"=>"",
+		  "type"=>"isString",
+		  "mandatory"=>false,
+	  )
   );
 
   /**

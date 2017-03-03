@@ -144,7 +144,21 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
 	public function testPesAcquitDeuxPES(){
 		$transaction_id_1 = $this->createPESAller();
-		$this->createPESAller();
+		$transaction_id_2 = $this->createPESAller();
+
+		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE transaction_id=?";
+		$this->getSQLQuery()->query($sql,"1970-01-01",$transaction_id_1);
+
+		$this->recupPESAcquit("#Transaction {$transaction_id_2} : information disponible#");
+	}
+
+	public function testPesAcquitDeuxPESBefore(){
+		$transaction_id_1 = $this->createPESAller();
+		$transaction_id_2 = $this->createPESAller();
+
+		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE transaction_id=?";
+		$this->getSQLQuery()->query($sql,"1970-01-01",$transaction_id_2);
+
 		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
 	}
 

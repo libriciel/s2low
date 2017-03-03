@@ -87,7 +87,10 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id));
 if ($trans->get('xml_nomfic')){
-	$html .= $doc->getHTMLArrayline("Balise NomFic", $trans->get('xml_nomfic'));
+	$html .= $doc->getHTMLArrayline("Nom du fichier posté (balise NomFic)", $trans->get('xml_nomfic'));
+	$html .= $doc->getHTMLArrayline("Code collectivité (codcol)", $trans->get('xml_cod_col'));
+	$html .= $doc->getHTMLArrayline("Code budget (codbud)", $trans->get('xml_cod_bud'));
+	$html .= $doc->getHTMLArrayline("Identifiant du poste comptable (idPost)", $trans->get('xml_id_post'));
 }
 $html .= $doc->getHTMLArrayline("Date de postage" ,Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
 $html .= $doc->getHTMLArrayline("État actuel" ,$currentStatus);
