@@ -7,6 +7,9 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	private $helios_responses_error_path;
 	private $helios_ocre;
 
+	/** @var  HeliosTransactionsSQL */
+	private $heliosTransactionSQL;
+
 	public function setUp(){
 		parent::setUp();
 		org\bovigo\vfs\vfsStream::setup('test');
@@ -19,6 +22,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		mkdir($this->helios_response_root);
 		mkdir($this->helios_responses_error_path);
 		mkdir($this->helios_ocre);
+		$this->heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 	}
 	
 	public function testAnalyseVide(){
@@ -91,5 +95,70 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->assertTrue(file_exists($this->helios_ocre."/".$filename));
 	}
 
+	public function testPesAcquitNotFound(){
+		$filename = "pes_acquit.xml";
+		file_put_contents(
+			$this->helios_ftp_response_tmp_local_path."/$filename",
+			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
+			);
+		$this->expectOutputRegex("#L'identificant NomFic .* n'est associ#");
+		$this->analyse();
+	}
 
+	public function testPesAcquit(){
+		$this->createPESAller();
+		$filename = "pes_acquit.xml";
+		file_put_contents(
+			$this->helios_ftp_response_tmp_local_path."/$filename",
+			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
+		);
+		$this->expectOutputRegex("#information disponible#");
+		$this->analyse();
+	}
+
+	private function createPESAller(){
+		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+		$transaction_id = $heliosTransactionSQL->create("toto","xxx",8,1,42,"123");
+
+		$info  = array(
+			'nom_fic' => "pescg291201703030412001",
+			'cod_col' => 400,
+			'cod_bud' => 01,
+			'id_post' => "086016",
+		);
+
+		$heliosTransactionSQL->setInfoFromPESAller($transaction_id,$info);
+		$heliosTransactionSQL->updateStatus($transaction_id,HeliosTransactionsSQL::TRANSMIS,"test");
+		return $transaction_id;
+	}
+
+	private function recupPESAcquit($expectOutputRegex){
+		$filename = "pes_acquit.xml";
+		file_put_contents(
+			$this->helios_ftp_response_tmp_local_path."/$filename",
+			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
+		);
+		$this->expectOutputRegex($expectOutputRegex);
+		$this->analyse();
+	}
+
+	public function testPesAcquitDeuxPES(){
+		$transaction_id_1 = $this->createPESAller();
+		$this->createPESAller();
+		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
+	}
+
+	public function testPesAcquitDeuxPESUnTransmis(){
+		$transaction_id_1 = $this->createPESAller();
+		$transaction_id_2 = $this->createPESAller();
+		$this->heliosTransactionSQL->updateStatus($transaction_id_1,HeliosTransactionsSQL::ACQUITTER,"test");
+		$this->recupPESAcquit("#Transaction {$transaction_id_2} : information disponible#");
+	}
+
+	public function testPesAcquitDeuxPESUnTransmisDeux(){
+		$transaction_id_1 = $this->createPESAller();
+		$transaction_id_2 = $this->createPESAller();
+		$this->heliosTransactionSQL->updateStatus($transaction_id_2,HeliosTransactionsSQL::ACQUITTER,"test");
+		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
+	}
 }

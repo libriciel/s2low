@@ -77,9 +77,18 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetIdByNomFic(){
-		$this->heliosTransactionSQL->setNomFic($this->transaction_id,"toto");
-		$id_list = $this->heliosTransactionSQL->getIdByNomFic("toto");
-		$this->assertEquals($this->transaction_id,$id_list);
+
+		$info  = array(
+			'nom_fic' => "pescg291201703030412001",
+			'cod_col' => 400,
+			'cod_bud' => 01,
+			'id_post' => "086016",
+		);
+
+		$this->heliosTransactionSQL->setInfoFromPESAller($this->transaction_id,$info);
+
+		$id_list = $this->heliosTransactionSQL->getIdByNomFicAndCodCol("pescg291201703030412001",400);
+		$this->assertEquals(array($this->transaction_id),$id_list);
 	}
 
 	public function testNomFicExists(){

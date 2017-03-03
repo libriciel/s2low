@@ -102,9 +102,9 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOneCol($sql,$status_id);
 	}
 	
-	public function getIdByNomFic($nomFic)  {
-		$sql = "SELECT id FROM helios_transactions WHERE xml_nomfic = ?";
-		return $this->queryOne($sql,$nomFic);
+	public function getIdByNomFicAndCodCol($nomFic, $cod_col)  {
+		$sql = "SELECT id FROM helios_transactions WHERE xml_nomfic = ? AND xml_cod_col=?";
+		return $this->queryOneCol($sql,$nomFic,$cod_col);
 	}
 	
 	public function nomFicExists($nom_fic,$cod_col){

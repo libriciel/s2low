@@ -265,9 +265,9 @@ class HeliosEnvoiControler {
 
 	public function extratInfoFromPESAller(SimpleXMLElement $pes_xml){
 		$info['nom_fic'] = utf8_decode(strval($pes_xml->Enveloppe->Parametres->NomFic['V']));
-		$info['cod_col'] = $pes_xml->EnTetePES->CodCol['V'];
-		$info['cod_bud'] = $pes_xml->EnTetePES->CodBud['V'];
-		$info['id_post'] = $pes_xml->EnTetePES->IdPost['V'];
+		$info['cod_col'] = strval($pes_xml->EnTetePES->CodCol['V']);
+		$info['cod_bud'] = strval($pes_xml->EnTetePES->CodBud['V']);
+		$info['id_post'] = strval($pes_xml->EnTetePES->IdPost['V']);
 		return $info;
 	}
 	

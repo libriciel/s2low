@@ -157,15 +157,46 @@ class HeliosAnalyseFichierRecu {
 	
 	private function retrieveTransaction(SimpleXMLElement $xml) {
 		$nom_fic = utf8_decode(strval($xml->Enveloppe->Parametres->NomFic['V']));
+		$cod_col = strval($xml->EnTetePES->CodCol['V']);
 		if (!$nom_fic){
 			throw new Exception("Impossible de trouver l'attribut NomFic dans le PESAcquit");
 		}
-		$helios_transaction_id = $this->heliosTransactionsSQL->getIdByNomFic($nom_fic);
+		if (!$cod_col){
+			throw new Exception("Impossible de trouver l'attribut CodCol dans le PESAcquit");
+		}
+
+		$helios_transaction_list = $this->heliosTransactionsSQL->getIdByNomFicAndCodCol($nom_fic,$cod_col);
 		
-		if (!$helios_transaction_id){
+		if (!$helios_transaction_list){
 			throw new Exception("L'identificant NomFic $nom_fic n'est associé à aucune transaction dans la base de données");	
 		}
-		return $helios_transaction_id;		
+
+		if (count($helios_transaction_list) == 1){
+			return $helios_transaction_list[0];
+		}
+
+		foreach($helios_transaction_list as $transaction_id){
+			$workflow_info = $this->heliosTransactionsSQL->getLastStatusInfo($transaction_id);
+			$transaction_list[] = array(
+				'transaction_id' => $transaction_id,
+				'status_id' => $workflow_info['status_id'],
+				'date' => $workflow_info['date']
+			);
+		}
+		usort($transaction_list,function ($a,$b){
+			if (
+				$a['status_id'] == HeliosTransactionsSQL::TRANSMIS &&
+				$b['status_id'] != HeliosTransactionsSQL::TRANSMIS
+			){
+				return -1;
+			}
+			if ($a['date'] > $b['date']){
+				return -1;
+			} else {
+				return 1;
+			}
+		});
+		return $transaction_list[0]['transaction_id'];
 	}
 	
 	private function traitementNack($basename,SimpleXMLElement $xml){
