@@ -17,7 +17,11 @@ $transactionInfo = $transactionSQL->getInfo($id);
 $message = "La transaction $id est de nouveau à l'état posté.";
 
 $transactionSQL->updateStatus($id,HeliosTransactionsSQL::POSTE,$message);
-$transactionSQL->setNomFic($id,NULL);
-
+$transactionSQL->setInfoFromPESAller($id,array(
+	'nom_fic' => NULL,
+	'cod_col' => NULL,
+	'cod_bud' => NULL,
+	'id_post' => NULL
+));
 $_SESSION['error'] = $message;
 header("Location: helios_transac_show.php?id=$id");

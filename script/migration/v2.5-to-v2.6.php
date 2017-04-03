@@ -8,7 +8,7 @@ libxml_use_internal_errors(true);
 
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
-$sql = "SELECT authority_id,sha1,id FROM helios_transactions WHERE helios_transactions.xml_cod_col IS NULL";
+$sql = "SELECT authority_id,sha1,id,last_status_id FROM helios_transactions WHERE helios_transactions.xml_cod_col IS NULL";
 $transactions_list = $sqlQuery->query($sql);
 
 echo count($transactions_list)." transactions trouvées\n";
@@ -17,6 +17,11 @@ foreach($transactions_list as $transaction_info) {
 	try {
 		echo "Transaction numéro {$transaction_info['id']} : ";
 		$filename = HELIOS_FILES_UPLOAD_ROOT . "/" . $transaction_info['sha1'];
+
+		if (in_array($transaction_info['last_status_id'],array(HeliosTransactionsSQL::POSTE))){
+			echo "transaction posté : PASS\n";
+			continue;
+		}
 		if (!file_exists($filename)){
 			throw new Exception("file not found");
 		}
