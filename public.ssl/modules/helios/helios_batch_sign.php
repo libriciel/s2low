@@ -105,7 +105,7 @@ $libersignController->displayLibersignJS();
 					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
 					pespolicydesc: "Politique de signature Helios de la DGFiP",
 					pespolicyhash: "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
-					pespuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
+					pesspuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
 					pescity: "<?php hecho($authorityInfo['city'])?>",
 					pespostalcode: "<?php hecho($authorityInfo['postal_code'])?>",
 					pescountryname: "France",
