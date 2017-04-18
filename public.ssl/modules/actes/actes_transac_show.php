@@ -570,7 +570,7 @@ if ($me->isSuper()) {
 
 
 
-	if ($transStatus == 3 && $trans->get("type") == 1) {
+	if (in_array($transStatus,array(3,-1))  && $trans->get("type") == 1) {
 		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
 		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Revenir à l'état En attente de transmission </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
