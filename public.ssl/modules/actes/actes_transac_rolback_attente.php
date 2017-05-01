@@ -9,7 +9,7 @@ if (! $droit->isSuperAdmin($userInfo)){
 }
 $recuperateur = new Recuperateur($_POST);
 
-$id = $recuperateur->get('id');
+$id = (int) $recuperateur->get('id');
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 $actesTransactionSQL->updateStatus($id,2,"Transaction repassee manuellement en attente de transmission");

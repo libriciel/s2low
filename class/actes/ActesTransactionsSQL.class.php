@@ -39,9 +39,11 @@ class ActesTransactionsSQL {
 	    		" VALUES( ? , ? , ? , ? ,?) RETURNING ID";
 
   		$id = $this->sqlQuery->queryOne($sql,$transaction_id,$status_id,$date,$message,$flux_retour);
-  
+
+
     	$sql = "UPDATE actes_transactions SET last_status_id=? " .
     			" WHERE id=?";
+
     	$this->sqlQuery->query($sql,$status_id,$transaction_id);
 		return $id;
 	}
