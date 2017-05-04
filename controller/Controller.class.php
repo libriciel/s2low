@@ -243,4 +243,12 @@ class Controller {
 		Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get("role"), false, $this->me);
 	}
 
+	/**
+	 * @return MessageAdminSQL
+	 */
+	protected function getMessageAdminSQL(){
+		return $this->getObjectInstancier()->get("messageAdminSQL");
+	}
+
+
 }

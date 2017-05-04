@@ -202,7 +202,10 @@ class XadesSignature {
 			}
 
 			$certif = strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate);
-            $certif = rtrim(chunk_split($certif,64,"\n"));
+
+			if (strlen(explode("\n",$certif)[0]) < 64) {
+				$certif = rtrim(chunk_split($certif, 64, "\n"));
+			}
 
 			$content = "-----BEGIN CERTIFICATE-----\n".$certif."\n-----END CERTIFICATE-----\n";
 			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());

@@ -54,7 +54,11 @@ ob_start();
 ?>
 	<div id="content">
 		<h1>Console d'administration</h1>
-		
+
+        <h2>Message d'urgence</h2>
+
+        <a href="/admin/message/index.php">Publier un message d'urgence</a>
+
 
 		<h2>Helios : Nombre de transactions en cours</h2>
 		<table  class="data-table table table-striped ">

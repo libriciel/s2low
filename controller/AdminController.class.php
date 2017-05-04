@@ -124,7 +124,60 @@ class AdminController extends Controller {
 			$groupeSQL = new GroupSQL($this->getSQLQuery());
 			$this->groupe_list = $groupeSQL->getAll();
 		}
-
 	}
-	
+
+
+	public function messageAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurGet();
+		$this->{'offset'} = $recuperateur->getInt('offset',0);
+		$this->{'message_list'} = $this->getMessageAdminSQL()->getAll($this->{'offset'},100);
+		$this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+	}
+
+	public function messageEditAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurGet();
+		$message_id = $recuperateur->getInt('message_id');
+		$this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
+	}
+
+	public function doMessageEditAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurPost();
+		$message_id = $recuperateur->getInt('message_id');
+		$titre = $recuperateur->get('titre');
+		$message = $recuperateur->get('message');
+		$niveau = $recuperateur->get('niveau');
+		$user_id = $this->me->getId();
+		$message_id = $this->getMessageAdminSQL()->edit($message_id, $titre,$message,$user_id,$niveau);
+		$this->redirect("/admin/message/detail.php?message_id=$message_id");
+	}
+
+	public function messagePublierAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurGet();
+		$message_id = $recuperateur->getInt('message_id');
+		$user_id = $this->me->getId();
+		$this->getMessageAdminSQL()->publier($message_id,$user_id);
+		$this->redirect("/admin/message/detail.php?message_id=$message_id");
+	}
+
+	public function messageRetirerAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurGet();
+		$message_id = $recuperateur->getInt('message_id');
+		$user_id = $this->me->getId();
+		$this->getMessageAdminSQL()->retirer($message_id,$user_id);
+		$this->redirect("/admin/message/detail.php?message_id=$message_id");
+	}
+
+	public function messageDetailAction(){
+		$this->verifSuperAdmin();
+		$recuperateur = $this->getRecuperateurGet();
+		$message_id = $recuperateur->getInt('message_id');
+		$this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
+		$this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+	}
+
 }

@@ -49,6 +49,17 @@
 					<p class="home">
 						L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
 					</p>
+                    <?php
+
+                    global $objectInstancier;
+					/** @var MessageAdminSQL $messageAdminSQL */
+					$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+					$messageAdmin = $messageAdminSQL->getPublishedMessage();
+					$messageAdmin->displayMessage();
+
+                    ?>
+
+
                     <div id="mention">
                         <div id="mention_hebergement">
                             <h2 class="home">Opérateur</h2>

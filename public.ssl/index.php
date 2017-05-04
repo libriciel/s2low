@@ -8,6 +8,10 @@ if (! $me->authenticate()) {
   exit();
 }
 
+/** @var MessageAdminSQL $messageAdminSQL */
+$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+$messageAdmin = $messageAdminSQL->getPublishedMessage();
+
 $doc = new HTMLLayout();
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -59,6 +63,13 @@ if (defined("SUPPORT_URL")) {
 $html .= ".<br />\n";
 
 $html .= "</p>\n";
+
+if ($messageAdmin->message_id){
+	ob_start();
+	$messageAdmin->displayMessage();
+	$html .= ob_get_clean();
+}
+
 
 if ($me->isSuper()){
 

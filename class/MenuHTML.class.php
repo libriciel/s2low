@@ -43,6 +43,14 @@ class MenuHTML  {
 		?>
                     <div id="menu-header">
                         Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
+                        <?php
+                    global $objectInstancier;
+                    /** @var MessageAdminSQL $messageAdminSQL */
+                    $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
+                    $messageAdmin->displayTitre();
+
+                        ?>
                         Rôle <?php  echo $userInfo['role_str'] ?>
 			<?php if ($userInfo['nb_user_with_my_certificate'] > 1 ) : ?>
 			<br/><a href='<?php echo WEBSITE_SSL ?>/logout.php'>déconnexion</a>

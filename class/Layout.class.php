@@ -150,6 +150,18 @@ class HTMLLayout extends Layout {
     } else { // Personnalisation du menu en fonction du rôle de l'utilisateur
       $html .= "                         <div id=\"menu-header\">\n";
       $html .= "                             Bienvenue " . $user->getPrettyName() . "<br />\n";;
+
+
+                    global $objectInstancier;
+                    /** @var MessageAdminSQL $messageAdminSQL */
+                    $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
+                    ob_start();
+                    $messageAdmin->displayTitre();
+                    $html .= ob_get_clean();
+
+
+
       $html .= "                             Rôle " . $user->getRoleDescr();
       if ($user->isLogged() && 	$user->getNbUserWithMyCertificate() > 1 ) {
       	$html .= "                   <br/><a href='".WEBSITE_SSL."/logout.php'>déconnexion</a>";
