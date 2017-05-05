@@ -7,6 +7,8 @@
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
+        <script src="<?php echo WEBSITE ?>/javascript/utils.js" type="text/javascript"></script>
+
         <?php echo $this->header ?>
     </head>
     <body>

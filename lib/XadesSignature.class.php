@@ -203,7 +203,8 @@ class XadesSignature {
 
 			$certif = strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate);
 
-			if (strlen(explode("\n",$certif)[0]) < 64) {
+			if (strlen(explode("\n",$certif)[0]) >= 64) {
+				$certif = preg_replace('/\s+/', ' ', trim($certif));
 				$certif = rtrim(chunk_split($certif, 64, "\n"));
 			}
 
