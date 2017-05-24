@@ -57,7 +57,9 @@
 					/** @var MessageAdminSQL $messageAdminSQL */
 					$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
 					$messageAdmin = $messageAdminSQL->getPublishedMessage();
-					$messageAdmin->displayMessage();
+                    if ($messageAdmin->message_id) {
+                        $messageAdmin->displayMessage();
+                    }
 
                     ?>
 
