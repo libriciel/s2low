@@ -88,6 +88,24 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.6.1 du 23.05.2017</h2>";
+$html .= "<ul>";
+$html .= "<li>Administration : permettre l'ajout d'un message d'information pour les utilisateurs ;</li>";
+$html .= "</ul>";
+
+$html .= "<h2>V2.6.0 du 27.10.2016</h2>";
+$html .= "<ul>";
+$html .= "<li>Module ACTES : ajout d'une API pour déclencher la télétransmission d'un acte via RGS** partagé avec un couple identifiant/mot de passe ;</li>";
+$html .= "<li>Module ACTES : une date doit toujours être indiquée dans le demande de classification ;</li>";
+$html .= "<li>Administration : affichage de l'identifiant de l'utilisateur dans la partie \"Gestion des utilisateurs\" ;</li>";
+$html .= "</ul>";
+
+
+$html .= "<h2>V2.5.1 du 27.10.2016</h2>";
+$html .= "<ul>";
+$html .= "<li>Administration : ajout du département de la Mayotte";
+$html .= "</ul>";
+
 $html .= "<h2>V2.5.0 du 01.10.2016</h2>";
 $html .= "<ul>";
 $html .= "<li>Modules ACTES : prise en compte des nouveaux mails d'acquittement du MI ;</li>";
