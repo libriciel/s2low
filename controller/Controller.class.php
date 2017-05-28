@@ -247,7 +247,7 @@ class Controller {
 	 * @return MessageAdminSQL
 	 */
 	protected function getMessageAdminSQL(){
-		return $this->getObjectInstancier()->get("messageAdminSQL");
+		return $this->getObjectInstancier()->get("MessageAdminSQL");
 	}
 
 
