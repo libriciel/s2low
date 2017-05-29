@@ -1,0 +1,49 @@
+#! /bin/bash
+set -e
+
+# Activation ou non de XDEBUG
+if [ -z ${XDEBUG_ON} ]
+then
+    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]
+    then
+        rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    fi
+else
+    docker-php-ext-enable xdebug
+fi
+
+/bin/bash /var/www/s2low/docker-resources/generate-config.sh > /etc/s2low/DockerSettings.php
+
+# Création de l'arborescence du workspace
+mkdir /data/tdt-workspace/actes && \
+    mkdir /data/tdt-workspace/helios && \
+    mkdir /data/tdt-workspace/mail && \
+    mkdir /data/tdt-workspace/uploads && \
+    mkdir /data/tdt-workspace/dia && \
+    mkdir /data/tdt-workspace/actes/uploads && \
+    mkdir /data/tdt-workspace/actes/batchs && \
+    mkdir /data/tdt-workspace/helios/sending-tmp && \
+    mkdir /data/tdt-workspace/helios/sending && \
+    mkdir /data/tdt-workspace/helios/response && \
+    mkdir /data/tdt-workspace/helios/response_tmp && \
+    mkdir /data/tdt-workspace/helios/response_backup && \
+    mkdir /data/tdt-workspace/helios/response_error && \
+    mkdir /data/tdt-workspace/helios/temp && \
+    mkdir /data/tdt-workspace/logs-export && \
+    mkdir -p /data/tdt-workspace/uploads/etat_civil
+
+# Pour HTMLPurifier qui marche pas sans son repertoire vide (et qui du coup est supprimé par git)
+mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
+
+
+#A mettre dans le dockerfile ?
+usermod -s /bin/bash www-data
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- apache2-foreground "$@"
+fi
+
+php /var/www/s2low/docker-resources/init-docker.php
+
+exec "$@"

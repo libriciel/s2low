@@ -1,0 +1,26 @@
+version: '2.0'
+
+services:
+    web:
+        links:
+            - db
+        environment:
+            S2LOW_WEBSITE: ${S2LOW_WEBSITE}
+            S2LOW_WEBSITE_SSL: ${S2LOW_WEBSITE_SSL}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_HOST: db
+
+        volumes:
+            - ${WORKSPACE_VOLUME}:/data/tdt-workspace
+            - ${PHP_SESSION}:/var/lib/php/session
+            - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
+    db:
+        image: postgres
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+        volumes:
+            - ${POSTGRESQL_DATADIR}:/var/lib/postgresql/data

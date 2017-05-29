@@ -1,0 +1,21 @@
+version: '2.0'
+
+services:
+    web:
+        build: .
+        ports:
+            - "${WEB_HTTP_PORT}:80"
+            - "${WEB_HTTPS_PORT}:443"
+        volumes:
+            - .:/var/www/s2low
+
+    phppgadmin:
+        image: keepitcool/phppgadmin
+        environment:
+            - DB_HOST=db
+            - DB_PORT=5432
+
+        links:
+            - db:db
+        ports:
+            - "${PHPPGADMIN_HTTP_PORT}:80"

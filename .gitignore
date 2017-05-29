@@ -4,3 +4,4 @@ config/LocalSettings.php
 **/.idea/*.iml
 **/.idea/dataSources.local.xml
 vendor/
+.env
