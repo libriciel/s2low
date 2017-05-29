@@ -5,3 +5,4 @@ config/LocalSettings.php
 **/.idea/dataSources.local.xml
 vendor/
 .env
+.DS_STORE
