@@ -1,11 +1,11 @@
 #! /usr/bin/php
 <?php
+require_once (__DIR__."/../config/config.php");
 
 $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-require_once (__DIR__."/../config/config.php");
 require_once (__DIR__."/../class/FTP.class.php");
 
 $ftp = new FTP();
@@ -15,7 +15,7 @@ if (HELIOS_SENDING_MODE_DEMO){
 }
 try {
 	$ftp->recupAll(HELIOS_FTP_RESPONSE_SERVER_PATH, HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
-	echo "Récupération terminée";
+	echo "Récupération terminée\n";
 } catch (Exception $e){
 	echo "Problème lors de la récupération des enveloppes : " . $e->getMessage() ." \n";
 	exit;

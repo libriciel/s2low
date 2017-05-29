@@ -20,7 +20,8 @@ define('HELIOS_RESPONSES_ROOT', '/data/tdt-workspace/helios/response/');
 define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
 define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
 define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");
-
+define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/data/tdt-workspace/helios/response_tmp/');
+define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
 
 
 define('TIMESTAMPING_CERT', '/etc/apache2/ssl/s2low_timestamp_cert.pem');
@@ -30,6 +31,15 @@ define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/apache2/ssl/tedetis_timestamp_key.pas
 define("RGS_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 define("EXTENDED_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 define("OPENSSL_PATH","/usr/bin/openssl");
+
+
+define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER}");
+define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT}");
+define("HELIOS_FTP_PASSIVE_MODE", ${HELIOS_FTP_PASSIVE_MODE});
+define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION}");
+define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH}");
+define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN}");
+define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
 
 EOF
 
