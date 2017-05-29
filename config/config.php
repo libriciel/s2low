@@ -6,6 +6,11 @@ if (file_exists( __DIR__ . "/LocalSettings.php")){
 	require_once( __DIR__ . "/LocalSettings.php");
 }
 
+foreach(glob("/etc/s2low/*.php") as $file_name){
+	include_once($file_name);
+}
+
+
 ini_set("error_reporting", E_ALL & ~E_STRICT);
 
 date_default_timezone_set("Europe/Paris");
@@ -527,6 +532,10 @@ require_once(__DIR__."/../init/init.php");
 
 if (! defined("TESTING_ENVIRONNEMENT")) {
 	define("TESTING_ENVIRONNEMENT", false);
+}
+
+if (! defined("NEW_BANNER")) {
+	define("NEW_BANNER", true);
 }
 
 
