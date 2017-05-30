@@ -43,6 +43,7 @@ define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
 
 define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads/');
 define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
+define('ACTES_TDT_MAIL_ADDRESS', 'mail@tedetis.org');
 
 
 EOF

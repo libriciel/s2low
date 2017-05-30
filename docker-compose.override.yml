@@ -51,18 +51,19 @@ services:
         image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
         links:
             - db:db
+            - mail:mail
         environment:
             POSTGRES_HOST: db
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            MAIL_HOST: ${MAIL_HOST}
-            MAIL_PORT: ${MAIL_PORT}
-            MAIL_FROM: ${MAIL_FROM}
-            IMAP_HOST: ${IMAP_HOST}
-            IMAP_PORT: ${IMAP_PORT}
-            IMAP_LOGIN: ${IMAP_LOGIN}
-            IMAP_PASSWORD: ${IMAP_PASSWORD}
+            MAIL_HOST: mail
+            MAIL_PORT: 25
+            MAIL_FROM: mail@tedetis.org
+            IMAP_HOST: mail
+            IMAP_PORT: 143
+            IMAP_LOGIN: mail@tedetis.org
+            IMAP_PASSWORD: password
             TIMESTAMP_CERTIFICAT_PASSWORD: ${TIMESTAMP_CERTIFICAT_PASSWORD}
         volumes:
             - ${ACTES_FILES_UPLOAD_ROOT}:/data/tdt-workspace/actes/uploads/
@@ -70,3 +71,14 @@ services:
 
         ports:
             - ${TOMCAT_PORT}:8080
+
+    mail:
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-mail
+        ports:
+            - "10143:143"
+        environment:
+            - MAILNAME=tedetis.org
+            - MAIL_ADDRESS=mail@tedetis.org
+            - MAIL_PASS=password

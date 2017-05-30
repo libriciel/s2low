@@ -24,7 +24,9 @@ services:
             - ${PHP_SESSION}:/var/lib/php/session
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
     db:
-        image: postgres
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-postgres
         environment:
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
