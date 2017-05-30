@@ -41,5 +41,9 @@ define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH}");
 define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN}");
 define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
 
+define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads/');
+define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
+
+
 EOF
 

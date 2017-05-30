@@ -56,4 +56,11 @@ rm ${V3_EXT_PATH}
 
 chmod 400 ${PRIVKEY_PATH}
 
+
+openssl pkcs12 \
+    -export \
+    -in ${CERTIFICATE_PATH} \
+    -inkey ${PRIVKEY_PATH} \
+    -passout 'pass:' > ${CERTIFICATE_PATH}.p12
+
 echo "Génération de la clé et du certificat terminé"
