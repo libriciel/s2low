@@ -32,6 +32,7 @@ unit_test:
         POSTGRES_PASSWORD_TEST: tedetis
         POSTGRES_DB_TEST: tedetis
         POSTGRES_HOST_TEST: postgres
+        POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "http://localhost/"
         S2LOW_WEBSITE_SSL: "https://localhost/"
     script:
