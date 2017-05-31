@@ -69,9 +69,6 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
-# Libersign
-# TODO attente du script make.sh sur une ressource externe afin d'installer automatiquement Libersign
-
 
 # Ports
 EXPOSE 443 80
@@ -92,6 +89,11 @@ COPY ./docker-resources/s2low-supervisord.conf /etc/supervisor/conf.d/
 
 
 COPY ./ /var/www/s2low/
+
+# Pour libersign
+RUN mkdir -p /var/www/parapheur/libersign
+RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
+
 
 ENTRYPOINT ["docker-s2low-entrypoint"]
 CMD ["/usr/bin/supervisord"]

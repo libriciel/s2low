@@ -45,6 +45,11 @@ define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads/');
 define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
 define('ACTES_TDT_MAIL_ADDRESS', 'mail@tedetis.org');
 
+define('LIBERSIGN_INSTALLER',"${LIBERSIGN_INSTALLER}");
+define("LIBERSIGN_URL","${S2LOW_WEBSITE}/libersign/");
+define("LIBERSIGN_EXTENSION_UPDATE_URL","${S2LOW_WEBSITE}/libersign/");
+
+
 
 EOF
 

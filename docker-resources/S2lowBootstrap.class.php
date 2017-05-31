@@ -11,6 +11,7 @@ class S2lowBootstrap {
 			$this->dbUpdate($sqlQuery);
 			$this->insertDemou($sqlQuery);
 			$this->populateDatabase($sqlQuery);
+			$this->installLibersign();
 		} catch (Exception $e){
 			$this->log("Erreur : " . $e->getMessage());
 		}
@@ -151,6 +152,17 @@ class S2lowBootstrap {
 		file_put_contents(TIMESTAMPING_PRIV_KEY_PASS,"");
 
 		$this->log("Certificat d'horodatage créé");
+	}
+
+	public function installLibersign(){
+		if (file_exists(__DIR__."/../public.ssl/libersign/update.json")){
+			$this->log("Libersign est déjà installé");
+			return true;
+		}
+		$this->log("Installation de Libersign");
+		$make = file_get_contents(LIBERSIGN_INSTALLER);
+		file_put_contents("/tmp/libersign_make.sh",$make);
+		exec("/bin/bash /tmp/libersign_make.sh PROD",$output,$result);
 	}
 
 	private function log($message){
