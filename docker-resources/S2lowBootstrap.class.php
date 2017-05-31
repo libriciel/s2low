@@ -6,6 +6,7 @@ class S2lowBootstrap {
 	public function bootstrap($sqlQuery){
 		$this->log("Initialisation de S2low");
 		try {
+
 			$this->installCertificate();
 			$this->installHorodateur();
 			$this->dbUpdate($sqlQuery);
@@ -16,7 +17,6 @@ class S2lowBootstrap {
 			$this->log("Erreur : " . $e->getMessage());
 		}
 	}
-
 
 	private function installCertificate(){
 		if (file_exists("/etc/apache2/ssl/privkey.pem")){
