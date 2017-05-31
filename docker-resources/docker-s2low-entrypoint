@@ -14,9 +14,6 @@ fi
 
 /bin/bash /var/www/s2low/docker-resources/generate-config.sh > /etc/s2low/DockerSettings.php
 
-#TODO supprimer ca
-/bin/bash /var/www/s2low/docker-resources/generate-config.sh
-
 
 # Création de l'arborescence du workspace
 mkdir /data/tdt-workspace/actes && \

@@ -7,4 +7,4 @@ vendor/
 .env
 .DS_STORE
 temp/
-
+public.ssl/libersign
