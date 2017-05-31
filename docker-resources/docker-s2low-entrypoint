@@ -43,10 +43,6 @@ mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 #A mettre dans le dockerfile ?
 usermod -s /bin/bash www-data
 
-# first arg is `-f` or `--some-option`
-if [ "${1#-}" != "$1" ]; then
-	set -- apache2-foreground "$@"
-fi
 
 php /var/www/s2low/docker-resources/init-docker.php
 

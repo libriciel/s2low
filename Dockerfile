@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     locales \
     ssmtp \
     sudo \
+    supervisor \
     wget \
     zip \
     && rm -r /var/lib/apt/lists/*
@@ -85,7 +86,10 @@ COPY ./docker-resources/docker-s2low-entrypoint /usr/local/bin/
 RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
 
 
+COPY ./docker-resources/s2low-supervisord.conf /etc/supervisor/conf.d/
+
+
 COPY ./ /var/www/s2low/
 
 ENTRYPOINT ["docker-s2low-entrypoint"]
-CMD ["apache2-foreground"]
+CMD ["/usr/bin/supervisord"]
