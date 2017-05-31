@@ -1,8 +1,18 @@
 stages:
     - build
+    - test
+    - staging
+
 
 variables:
     CONTAINER_IMAGE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
+    POSTGRES_DB: tedetis
+    POSTGRES_USER: tedetis
+    POSTGRES_PASSWORD: tedetis
+
+services:
+    - postgres:latest
+
 
 build:
   stage: build
@@ -13,3 +23,34 @@ build:
     - docker build --pull -t ${CONTAINER_IMAGE} .
     - docker push ${CONTAINER_IMAGE}
 
+
+unit_test:
+    stage: test
+    image : "$CONTAINER_IMAGE"
+    variables:
+        XDEBUG_ON: "true"
+        POSTGRES_USER=tedetis
+        POSTGRES_PASSWORD=tedetis
+        POSTGRES_DB=tedetis
+        S2LOW_WEBSITE=http://localhost/
+        S2LOW_WEBSITE_SSL=https://localhost/
+    services:
+        - postgres
+    script:
+        - /usr/local/lib/composer/vendor/bin/phpunit --coverage-text --colors=never -c /var/www/s2low/test/PHPUnit/phpunit.xml
+
+deploy_app:
+    stage: staging
+    only:
+        - master
+    image: kroniak/ssh-client
+    script:
+        - eval $(ssh-agent -s)
+        - ssh-add <(echo "$SSH_PRIVATE_KEY")
+        - mkdir -p ~/.ssh
+        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        - scp ./docker-compose.yml gitlab@s2low.test.libriciel.fr:/data/docker-file
+        - scp ./docker-compose.staging.yml gitlab@s2low.test.libriciel.fr:/data/docker-file/docker-compose.override.yml
+        - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
+        - scp /tmp/.env gitlab@s2low.test.libriciel.fr:/data/docker-file/
+        - ssh -tt gitlab@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/docker-file/  && docker-compose pull && docker-compose up -d"

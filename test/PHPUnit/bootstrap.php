@@ -10,7 +10,7 @@ set_include_path(__DIR__."/../../ext/" . PATH_SEPARATOR .   get_include_path());
 
 require_once(__DIR__."/../../init/init.php");
 
-require_once(PHP_UNIT_AUTOLOADER);
+//require_once(PHP_UNIT_AUTOLOADER);
 
 require_once(__DIR__."/S2lowTestCase.class.php");
 

@@ -335,7 +335,8 @@ class Helpers {
    * \return True en cas de succès, false sinon
    */
   public static function createDirTree($path, $base = ACTES_FILES_UPLOAD_ROOT) {
-  	$escBase = str_replace("/", '\/', $base);
+
+	  $escBase = str_replace("/", '\/', $base);
 	if (preg_match('/^' . $escBase . '\/*/', $path)) {
 	  $relPath = preg_replace('/^' . $escBase . '\\/*/', "", $path);
 	} else {

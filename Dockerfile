@@ -1,11 +1,17 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    libjpeg-dev \
+    libpng-dev \
     libpq-dev \
     locales \
+    pdfsam \
+    pdftk \
     ssmtp \
     sudo \
     supervisor \
+    xmlsec1 \
+    xmlstarlet \
     wget \
     zip \
     && rm -r /var/lib/apt/lists/*
@@ -20,6 +26,11 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 	dpkg-reconfigure -f noninteractive tzdata
 
 
+# Installation de xdebug
+RUN pecl install xdebug-2.5.3 && \
+    docker-php-ext-enable xdebug
+
+
 COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
 
 RUN a2enmod \
@@ -28,9 +39,12 @@ RUN a2enmod \
     proxy_http \
     ssl
 
-
 # Extensions PHP
+RUN docker-php-ext-configure \
+    gd --with-jpeg-dir=/usr/include/
+
 RUN docker-php-ext-install \
+    gd \
     pdo \
     pdo_pgsql \
     pgsql
@@ -69,6 +83,18 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
+
+
+# Installation de composer
+RUN cd /tmp/ && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin && \
+    mv /usr/local/bin/composer.phar /usr/local/bin/composer
+
+# Installation des dépendances composer
+COPY ./composer.* /usr/local/lib/composer/
+RUN cd /usr/local/lib/composer && \
+    composer install --dev
 
 # Ports
 EXPOSE 443 80
