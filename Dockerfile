@@ -69,6 +69,8 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
+# Libersign
+# TODO attente du script make.sh sur une ressource externe afin d'installer automatiquement Libersign
 
 
 # Ports

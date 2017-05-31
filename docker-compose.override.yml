@@ -49,6 +49,7 @@ services:
 
     tomcat:
         image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
+        #image: tedetisjava_tomcat
         links:
             - db:db
             - mail:mail
