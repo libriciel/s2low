@@ -159,6 +159,10 @@ class S2lowBootstrap {
 			$this->log("Libersign est déjà installé");
 			return true;
 		}
+		if (empty(LIBERSIGN_INSTALLER)){
+			$this->log("Lien vers l'installeur de Libersign non trouvée");
+			return true;
+		}
 		$this->log("Installation de Libersign");
 		$make = file_get_contents(LIBERSIGN_INSTALLER);
 		file_put_contents("/tmp/libersign_make.sh",$make);
