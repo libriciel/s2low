@@ -11,7 +11,7 @@ define("WEBSITE_SSL","${S2LOW_WEBSITE_SSL:-https://localhost}");
 define('DB_HOST', "${POSTGRES_HOST:-localhost}");
 define('DB_USER', "${POSTGRES_USER:-tedetis}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD}");
-define('DB_DATABASE', "${POSTGRES_DB}:-tedetis");
+define('DB_DATABASE', "${POSTGRES_DB:-tedetis}");
 
 define('TRACE_FILE_PATH','/tmp/slow.log');
 define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
@@ -32,8 +32,8 @@ define("EXTENDED_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 define("OPENSSL_PATH","/usr/bin/openssl");
 
 
-define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER}:-localhost");
-define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT}:-21");
+define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-localhost}");
+define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT:-21}");
 define("HELIOS_FTP_PASSIVE_MODE", ${HELIOS_FTP_PASSIVE_MODE:-false});
 define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION:-/entree}");
 define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/sortie}");
