@@ -29,11 +29,11 @@ unit_test:
     image : "$CONTAINER_IMAGE"
     variables:
         XDEBUG_ON: "true"
-        POSTGRES_USER=tedetis
-        POSTGRES_PASSWORD=tedetis
-        POSTGRES_DB=tedetis
-        S2LOW_WEBSITE=http://localhost/
-        S2LOW_WEBSITE_SSL=https://localhost/
+        POSTGRES_USER: tedetis
+        POSTGRES_PASSWORD: tedetis
+        POSTGRES_DB: tedetis
+        S2LOW_WEBSITE: "http://localhost/"
+        S2LOW_WEBSITE_SSL: "https://localhost/"
     services:
         - postgres
     script:
