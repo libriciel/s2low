@@ -6,3 +6,4 @@ config/LocalSettings.php
 vendor/
 .env
 .DS_STORE
+temp/

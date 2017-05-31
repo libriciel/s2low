@@ -33,7 +33,11 @@ mkdir /data/tdt-workspace/actes && \
     mkdir -p /data/tdt-workspace/uploads/etat_civil
 
 # Pour HTMLPurifier qui marche pas sans son repertoire vide (et qui du coup est supprimé par git)
+# TODO dans le dockerfile ?
 mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
+
+# Génération fichier ssmtp.conf
+/bin/bash /var/www/s2low/docker-resources/generate-ssmtp.conf.sh > /etc/ssmtp/ssmtp.conf
 
 
 #A mettre dans le dockerfile ?

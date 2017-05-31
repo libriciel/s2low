@@ -3,6 +3,7 @@ FROM php:5.5-apache
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     locales \
+    ssmtp \
     sudo \
     wget \
     zip \
@@ -17,6 +18,8 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
     echo "Europe/Paris" > /etc/timezone &&\
 	dpkg-reconfigure -f noninteractive tzdata
 
+
+COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
 
 RUN a2enmod \
     headers \

@@ -18,6 +18,8 @@ services:
             HELIOS_FTP_RESPONSE_SERVER_PATH: ${HELIOS_FTP_RESPONSE_SERVER_PATH}
             HELIOS_FTP_LOGIN: ${HELIOS_FTP_LOGIN}
             HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD}
+            SMTP_SERVER: ${SMTP_SERVER}
+            SMTP_PORT: ${SMTP_PORT}
 
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
