@@ -110,7 +110,9 @@ class Database {
       exit(false);
     }
      pg_set_client_encoding  ( DB_CLIENT_ENCODING );
-    
+
+    pg_query("SET standard_conforming_strings = off;");
+
     return true;
   }
   

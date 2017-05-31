@@ -1,0 +1,5 @@
+FROM antespi/docker-imap-devel:latest
+
+RUN sed -i -e"s/ssl = required/# ssl = required/" /etc/dovecot/conf.d/10-ssl.conf
+RUN sed -i -e"s/#disable_plaintext_auth = yes/disable_plaintext_auth = no/" /etc/dovecot/conf.d/10-auth.conf
+

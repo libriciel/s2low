@@ -1,0 +1,43 @@
+<?php
+
+define("XML_STARLET_PATH","/opt/local/bin/xmlstarlet");
+
+define("HELIOS_SENDING_DESTINATION","/Users/eric/phpstorm/SimulateurHelios/workspace/entree/");
+
+
+define('HELIOS_FTP_LOGIN','eric');
+define('HELIOS_FTP_PASSWORD','***REMOVED***');
+define('HELIOS_FTP_RESPONSE_SERVER_PATH','/Users/eric/phpstorm/SimulateurHelios/workspace/sortie/');
+
+
+define("EMAIL_ADMIN","eric.pommateau@adullact-projet.coop");
+
+define("VERIFICATION_SIREN",true);
+
+define("PHP_UNIT_AUTOLOADER","/Users/eric/workspace-adullact/pastell/ext/composer/vendor/autoload.php");
+
+define("WEBSITE_SSL","https://192.168.1.10/");
+define("WEBSITE","http://192.168.1.10/phpstorm/s2low/public/");
+
+
+define("ACTES_ANTIVIRUS_COMMAND","ls");
+
+if (! defined("TRACE_FILE_PATH")) {
+	define("TRACE_FILE_PATH", "/dev/null");
+}
+
+define("XMLSEC1_PATH","/opt/local/bin/xmlsec1");
+
+
+/*define('HELIOS_PLATEFORME_CERTIFICATE_P12',"/Users/eric/Desktop/s2low_signature_technique_pes.p12");
+define('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD','1953wySgYg');*/
+
+
+define("HELIOS_ENABLE_SIGNATURE_TECHNIQUE",true);
+
+$helios_authorized_rollback_ids = array(3);
+
+
+
+define("LIBERSIGN_URL","https://192.168.1.10/libersign/applet/");
+define("LIBERSIGN_EXTENSION_UPDATE_URL","https://192.168.1.10/libersign/");

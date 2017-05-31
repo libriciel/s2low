@@ -1,0 +1,3042 @@
+{
+    "authority_types": [
+        {
+            "id": "1",
+            "parent_type_id": "",
+            "description": "R\u00e9gion"
+        },
+        {
+            "id": "11",
+            "parent_type_id": "1",
+            "description": "Conseil r\u00e9gional"
+        },
+        {
+            "id": "12",
+            "parent_type_id": "1",
+            "description": "\u00c9tablissements publics locaux d'enseignement"
+        },
+        {
+            "id": "14",
+            "parent_type_id": "1",
+            "description": "Soci\u00e9t\u00e9s d'\u00e9conomie mixte locales"
+        },
+        {
+            "id": "2",
+            "parent_type_id": "",
+            "description": "D\u00e9partement"
+        },
+        {
+            "id": "21",
+            "parent_type_id": "2",
+            "description": "Conseil g\u00e9n\u00e9ral"
+        },
+        {
+            "id": "22",
+            "parent_type_id": "2",
+            "description": "\u00c9tablissements publics de sant\u00e9"
+        },
+        {
+            "id": "23",
+            "parent_type_id": "2",
+            "description": "\u00c9tablissements publics locaux d'enseignement"
+        },
+        {
+            "id": "24",
+            "parent_type_id": "2",
+            "description": "Autres \u00e9tablissements publics"
+        },
+        {
+            "id": "25",
+            "parent_type_id": "2",
+            "description": "Soci\u00e9t\u00e9s d'\u00e9conomie mixte locales"
+        },
+        {
+            "id": "3",
+            "parent_type_id": "",
+            "description": "Commune"
+        },
+        {
+            "id": "31",
+            "parent_type_id": "3",
+            "description": "Commune"
+        },
+        {
+            "id": "32",
+            "parent_type_id": "3",
+            "description": "\u00c9tablissements publics de sant\u00e9"
+        },
+        {
+            "id": "33",
+            "parent_type_id": "3",
+            "description": "Autres \u00e9tablissements publics"
+        },
+        {
+            "id": "34",
+            "parent_type_id": "3",
+            "description": "Soci\u00e9t\u00e9s d'\u00e9conomie mixte locales"
+        },
+        {
+            "id": "4",
+            "parent_type_id": "",
+            "description": "\u00c9tablissements publics de coop\u00e9ration intercommunale et syndicats"
+        },
+        {
+            "id": "41",
+            "parent_type_id": "4",
+            "description": "Syndicats de communes et syndicats mixtes \u00ab ferm\u00e9s \u00bb associant exclusivement des communes, et des EPCI"
+        },
+        {
+            "id": "42",
+            "parent_type_id": "4",
+            "description": "Syndicats mixtes \u00ab ouverts \u00bb associant des collectivit\u00e9s territoriales, des groupements de collectivit\u00e9s territoriales et d'autres personnes morales de droit public"
+        },
+        {
+            "id": "43",
+            "parent_type_id": "4",
+            "description": "Syndicats d'agglom\u00e9ration nouvelle"
+        },
+        {
+            "id": "44",
+            "parent_type_id": "4",
+            "description": "Communaut\u00e9s de communes"
+        },
+        {
+            "id": "45",
+            "parent_type_id": "4",
+            "description": "Communaut\u00e9s urbaines"
+        },
+        {
+            "id": "46",
+            "parent_type_id": "4",
+            "description": "Communaut\u00e9s d'agglom\u00e9ration"
+        },
+        {
+            "id": "47",
+            "parent_type_id": "4",
+            "description": "Soci\u00e9t\u00e9s d'\u00e9conomie mixte locales"
+        },
+        {
+            "id": "5",
+            "parent_type_id": "",
+            "description": "Autres"
+        },
+        {
+            "id": "51",
+            "parent_type_id": "5",
+            "description": "Service d\u00e9partemental d'incendie et de secours"
+        },
+        {
+            "id": "52",
+            "parent_type_id": "5",
+            "description": "Entente interd\u00e9partementale"
+        },
+        {
+            "id": "53",
+            "parent_type_id": "5",
+            "description": "Entente interr\u00e9gionale"
+        },
+        {
+            "id": "54",
+            "parent_type_id": "5",
+            "description": "Autres soci\u00e9t\u00e9s d'\u00e9conomie mixte locales"
+        },
+        {
+            "id": "55",
+            "parent_type_id": "5",
+            "description": "Autres"
+        }
+    ],
+    "modules": [
+        {
+            "id": "4",
+            "name": "mail",
+            "description": "Module Mail",
+            "menu_entry": "Transactions Mail",
+            "status": "1"
+        },
+        {
+            "id": "2",
+            "name": "helios",
+            "description": "Module Helios",
+            "menu_entry": "Transactions Helios",
+            "status": "1"
+        },
+        {
+            "id": "1",
+            "name": "actes",
+            "description": "Module Actes",
+            "menu_entry": "Transactions Actes",
+            "status": "1"
+        },
+        {
+            "id": "3",
+            "name": "dia",
+            "description": "Module DIA",
+            "menu_entry": "Transactions DIA",
+            "status": "0"
+        }
+    ],
+    "actes_natures": [
+        {
+            "id": "1",
+            "short_descr": "DE",
+            "descr": "Deliberations"
+        },
+        {
+            "id": "2",
+            "short_descr": "AR",
+            "descr": "Arretes reglementaires"
+        },
+        {
+            "id": "3",
+            "short_descr": "AI",
+            "descr": "Arretes individuels"
+        },
+        {
+            "id": "4",
+            "short_descr": "CC",
+            "descr": "Contrats et conventions"
+        },
+        {
+            "id": "5",
+            "short_descr": "BF",
+            "descr": "Documents budgetaires et financiers"
+        },
+        {
+            "id": "6",
+            "short_descr": "AU",
+            "descr": "Autres"
+        }
+    ],
+    "actes_status": [
+        {
+            "id": "-1",
+            "name": "Erreur"
+        },
+        {
+            "id": "0",
+            "name": "Annul\u00e9"
+        },
+        {
+            "id": "1",
+            "name": "Post\u00e9"
+        },
+        {
+            "id": "2",
+            "name": "En attente de transmission"
+        },
+        {
+            "id": "3",
+            "name": "Transmis"
+        },
+        {
+            "id": "4",
+            "name": "Acquittement re\u00e7u"
+        },
+        {
+            "id": "5",
+            "name": "Valid\u00e9"
+        },
+        {
+            "id": "6",
+            "name": "Refus\u00e9"
+        },
+        {
+            "id": "7",
+            "name": "Document re\u00e7u"
+        },
+        {
+            "id": "8",
+            "name": "Acquittement envoy\u00e9"
+        },
+        {
+            "id": "9",
+            "name": "Document envoy\u00e9"
+        },
+        {
+            "id": "10",
+            "name": "Refus d'envoie"
+        },
+        {
+            "id": "11",
+            "name": "Aquittement de document re\u00e7u"
+        },
+        {
+            "id": "12",
+            "name": "Envoy\u00e9 au SAE"
+        },
+        {
+            "id": "13",
+            "name": "Archiv\u00e9 par le SAE"
+        },
+        {
+            "id": "14",
+            "name": "Erreur lors de l'archivage"
+        },
+        {
+            "id": "15",
+            "name": "Re\u00e7u par le SAE"
+        },
+        {
+            "id": "16",
+            "name": "D\u00e9truite"
+        },
+        {
+            "id": "17",
+            "name": "En attente d'\u00eatre post\u00e9e"
+        },
+        {
+            "id": "18",
+            "name": "En attente d'\u00eatre sign\u00e9"
+        },
+        {
+            "id": "19",
+            "name": "En attente de transmission au SAE"
+        },
+        {
+            "id": "20",
+            "name": "Erreur lors de l'envoi au SAE"
+        },
+        {
+            "id": "21",
+            "name": "Document re\u00e7u (pas d'AR)"
+        }
+    ],
+    "authority_departments": [
+        {
+            "id": "101",
+            "code": "001",
+            "name": "Ain"
+        },
+        {
+            "id": "102",
+            "code": "002",
+            "name": "Aisne"
+        },
+        {
+            "id": "103",
+            "code": "003",
+            "name": "Allier"
+        },
+        {
+            "id": "104",
+            "code": "004",
+            "name": "Alpes-de-Haute-Provence"
+        },
+        {
+            "id": "105",
+            "code": "005",
+            "name": "Hautes-Alpes"
+        },
+        {
+            "id": "106",
+            "code": "006",
+            "name": "Alpes-Maritimes"
+        },
+        {
+            "id": "107",
+            "code": "007",
+            "name": "Ard\u00e8che"
+        },
+        {
+            "id": "108",
+            "code": "008",
+            "name": "Ardennes"
+        },
+        {
+            "id": "109",
+            "code": "009",
+            "name": "Ari\u00e8ge"
+        },
+        {
+            "id": "110",
+            "code": "010",
+            "name": "Aube"
+        },
+        {
+            "id": "111",
+            "code": "011",
+            "name": "Aude"
+        },
+        {
+            "id": "112",
+            "code": "012",
+            "name": "Aveyron"
+        },
+        {
+            "id": "113",
+            "code": "013",
+            "name": "Bouches-du-Rh\u00f4ne"
+        },
+        {
+            "id": "114",
+            "code": "014",
+            "name": "Calvados"
+        },
+        {
+            "id": "115",
+            "code": "015",
+            "name": "Cantal"
+        },
+        {
+            "id": "116",
+            "code": "016",
+            "name": "Charente"
+        },
+        {
+            "id": "117",
+            "code": "017",
+            "name": "Charente-Maritime"
+        },
+        {
+            "id": "118",
+            "code": "018",
+            "name": "Cher"
+        },
+        {
+            "id": "119",
+            "code": "019",
+            "name": "Corr\u00e8ze"
+        },
+        {
+            "id": "120",
+            "code": "02A",
+            "name": "Corse-du-Sud"
+        },
+        {
+            "id": "121",
+            "code": "02B",
+            "name": "Haute-Corse"
+        },
+        {
+            "id": "122",
+            "code": "021",
+            "name": "C\u00f4te-d'Or"
+        },
+        {
+            "id": "123",
+            "code": "022",
+            "name": "C\u00f4tes-d'Armor"
+        },
+        {
+            "id": "124",
+            "code": "023",
+            "name": "Creuse"
+        },
+        {
+            "id": "125",
+            "code": "024",
+            "name": "Dordogne"
+        },
+        {
+            "id": "126",
+            "code": "025",
+            "name": "Doubs"
+        },
+        {
+            "id": "127",
+            "code": "026",
+            "name": "Dr\u00f4me"
+        },
+        {
+            "id": "128",
+            "code": "027",
+            "name": "Eure"
+        },
+        {
+            "id": "129",
+            "code": "028",
+            "name": "Eure-et-Loir"
+        },
+        {
+            "id": "130",
+            "code": "029",
+            "name": "Finist\u00e8re"
+        },
+        {
+            "id": "131",
+            "code": "030",
+            "name": "Gard"
+        },
+        {
+            "id": "132",
+            "code": "031",
+            "name": "Haute-Garonne"
+        },
+        {
+            "id": "133",
+            "code": "032",
+            "name": "Gers"
+        },
+        {
+            "id": "134",
+            "code": "033",
+            "name": "Gironde"
+        },
+        {
+            "id": "135",
+            "code": "034",
+            "name": "H\u00e9rault"
+        },
+        {
+            "id": "136",
+            "code": "035",
+            "name": "Ille-et-Vilaine"
+        },
+        {
+            "id": "137",
+            "code": "036",
+            "name": "Indre"
+        },
+        {
+            "id": "138",
+            "code": "037",
+            "name": "Indre-et-Loire"
+        },
+        {
+            "id": "139",
+            "code": "038",
+            "name": "Is\u00e8re"
+        },
+        {
+            "id": "140",
+            "code": "039",
+            "name": "Jura"
+        },
+        {
+            "id": "141",
+            "code": "040",
+            "name": "Landes"
+        },
+        {
+            "id": "142",
+            "code": "041",
+            "name": "Loir-et-Cher"
+        },
+        {
+            "id": "143",
+            "code": "042",
+            "name": "Loire"
+        },
+        {
+            "id": "144",
+            "code": "043",
+            "name": "Haute-Loire"
+        },
+        {
+            "id": "145",
+            "code": "044",
+            "name": "Loire-Atlantique"
+        },
+        {
+            "id": "146",
+            "code": "045",
+            "name": "Loiret"
+        },
+        {
+            "id": "147",
+            "code": "046",
+            "name": "Lot"
+        },
+        {
+            "id": "148",
+            "code": "047",
+            "name": "Lot-et-Garonne"
+        },
+        {
+            "id": "149",
+            "code": "048",
+            "name": "Loz\u00e8re"
+        },
+        {
+            "id": "150",
+            "code": "049",
+            "name": "Maine-et-Loire"
+        },
+        {
+            "id": "151",
+            "code": "050",
+            "name": "Manche"
+        },
+        {
+            "id": "152",
+            "code": "051",
+            "name": "Marne"
+        },
+        {
+            "id": "153",
+            "code": "052",
+            "name": "Haute-Marne"
+        },
+        {
+            "id": "154",
+            "code": "053",
+            "name": "Mayenne"
+        },
+        {
+            "id": "155",
+            "code": "054",
+            "name": "Meurthe-et-Moselle"
+        },
+        {
+            "id": "156",
+            "code": "055",
+            "name": "Meuse"
+        },
+        {
+            "id": "157",
+            "code": "056",
+            "name": "Morbihan"
+        },
+        {
+            "id": "158",
+            "code": "057",
+            "name": "Moselle"
+        },
+        {
+            "id": "159",
+            "code": "058",
+            "name": "Ni\u00e8vre"
+        },
+        {
+            "id": "160",
+            "code": "059",
+            "name": "Nord"
+        },
+        {
+            "id": "161",
+            "code": "060",
+            "name": "Oise"
+        },
+        {
+            "id": "162",
+            "code": "061",
+            "name": "Orne"
+        },
+        {
+            "id": "163",
+            "code": "062",
+            "name": "Pas-de-Calais"
+        },
+        {
+            "id": "164",
+            "code": "063",
+            "name": "Puy-de-D\u00f4me"
+        },
+        {
+            "id": "165",
+            "code": "064",
+            "name": "Pyr\u00e9n\u00e9es-Atlantiques"
+        },
+        {
+            "id": "166",
+            "code": "065",
+            "name": "Hautes-Pyr\u00e9n\u00e9es"
+        },
+        {
+            "id": "167",
+            "code": "066",
+            "name": "Pyr\u00e9n\u00e9es-Orientales"
+        },
+        {
+            "id": "168",
+            "code": "067",
+            "name": "Bas-Rhin"
+        },
+        {
+            "id": "169",
+            "code": "068",
+            "name": "Haut-Rhin"
+        },
+        {
+            "id": "170",
+            "code": "069",
+            "name": "Rh\u00f4ne"
+        },
+        {
+            "id": "171",
+            "code": "070",
+            "name": "Haute-Sa\u00f4ne"
+        },
+        {
+            "id": "172",
+            "code": "071",
+            "name": "Sa\u00f4ne-et-Loire"
+        },
+        {
+            "id": "173",
+            "code": "072",
+            "name": "Sarthe"
+        },
+        {
+            "id": "174",
+            "code": "073",
+            "name": "Savoie"
+        },
+        {
+            "id": "175",
+            "code": "074",
+            "name": "Haute-Savoie"
+        },
+        {
+            "id": "176",
+            "code": "075",
+            "name": "Paris"
+        },
+        {
+            "id": "177",
+            "code": "076",
+            "name": "Seine-Maritime"
+        },
+        {
+            "id": "178",
+            "code": "077",
+            "name": "Seine-et-Marne"
+        },
+        {
+            "id": "179",
+            "code": "078",
+            "name": "Yvelines"
+        },
+        {
+            "id": "180",
+            "code": "079",
+            "name": "Deux-S\u00e8vres"
+        },
+        {
+            "id": "181",
+            "code": "080",
+            "name": "Somme"
+        },
+        {
+            "id": "182",
+            "code": "081",
+            "name": "Tarn"
+        },
+        {
+            "id": "183",
+            "code": "082",
+            "name": "Tarn-et-Garonne"
+        },
+        {
+            "id": "184",
+            "code": "083",
+            "name": "Var"
+        },
+        {
+            "id": "185",
+            "code": "084",
+            "name": "Vaucluse"
+        },
+        {
+            "id": "186",
+            "code": "085",
+            "name": "Vend\u00e9e"
+        },
+        {
+            "id": "187",
+            "code": "086",
+            "name": "Vienne"
+        },
+        {
+            "id": "188",
+            "code": "087",
+            "name": "Haute-Vienne"
+        },
+        {
+            "id": "189",
+            "code": "088",
+            "name": "Vosges"
+        },
+        {
+            "id": "190",
+            "code": "089",
+            "name": "Yonne"
+        },
+        {
+            "id": "191",
+            "code": "090",
+            "name": "Territoire de Belfort"
+        },
+        {
+            "id": "192",
+            "code": "091",
+            "name": "Essonne"
+        },
+        {
+            "id": "193",
+            "code": "092",
+            "name": "Hauts-de-Seine"
+        },
+        {
+            "id": "194",
+            "code": "093",
+            "name": "Seine-Saint-Denis"
+        },
+        {
+            "id": "195",
+            "code": "094",
+            "name": "Val-de-Marne"
+        },
+        {
+            "id": "196",
+            "code": "095",
+            "name": "Val-d'Oise"
+        },
+        {
+            "id": "197",
+            "code": "971",
+            "name": "Guadeloupe"
+        },
+        {
+            "id": "198",
+            "code": "972",
+            "name": "Martinique"
+        },
+        {
+            "id": "199",
+            "code": "973",
+            "name": "Guyane"
+        },
+        {
+            "id": "200",
+            "code": "974",
+            "name": "La R\u00e9union"
+        },
+        {
+            "id": "201",
+            "code": "987",
+            "name": "Polyn\u00e9sie fran\u00e7aise"
+        }
+    ],
+    "authority_districts": [
+        {
+            "id": "685",
+            "authority_department_id": "101",
+            "code": "1",
+            "name": "Belley"
+        },
+        {
+            "id": "686",
+            "authority_department_id": "101",
+            "code": "2",
+            "name": "Bourg-en-Bresse"
+        },
+        {
+            "id": "687",
+            "authority_department_id": "101",
+            "code": "3",
+            "name": "Gex"
+        },
+        {
+            "id": "688",
+            "authority_department_id": "101",
+            "code": "4",
+            "name": "Nantua"
+        },
+        {
+            "id": "689",
+            "authority_department_id": "102",
+            "code": "1",
+            "name": "Ch\u00e2teau-Thierry"
+        },
+        {
+            "id": "690",
+            "authority_department_id": "102",
+            "code": "2",
+            "name": "Laon"
+        },
+        {
+            "id": "691",
+            "authority_department_id": "102",
+            "code": "3",
+            "name": "Saint-Quentin"
+        },
+        {
+            "id": "692",
+            "authority_department_id": "102",
+            "code": "4",
+            "name": "Soissons"
+        },
+        {
+            "id": "693",
+            "authority_department_id": "102",
+            "code": "5",
+            "name": "Vervins"
+        },
+        {
+            "id": "694",
+            "authority_department_id": "103",
+            "code": "1",
+            "name": "Montlu\u00e7on"
+        },
+        {
+            "id": "695",
+            "authority_department_id": "103",
+            "code": "2",
+            "name": "Moulins"
+        },
+        {
+            "id": "696",
+            "authority_department_id": "103",
+            "code": "3",
+            "name": "Vichy"
+        },
+        {
+            "id": "697",
+            "authority_department_id": "104",
+            "code": "1",
+            "name": "Barcelonnette"
+        },
+        {
+            "id": "698",
+            "authority_department_id": "104",
+            "code": "2",
+            "name": "Castellane"
+        },
+        {
+            "id": "699",
+            "authority_department_id": "104",
+            "code": "3",
+            "name": "Digne-les-Bains"
+        },
+        {
+            "id": "700",
+            "authority_department_id": "104",
+            "code": "4",
+            "name": "Forcalquier"
+        },
+        {
+            "id": "701",
+            "authority_department_id": "105",
+            "code": "1",
+            "name": "Brian\u00e7on"
+        },
+        {
+            "id": "702",
+            "authority_department_id": "105",
+            "code": "2",
+            "name": "Gap"
+        },
+        {
+            "id": "703",
+            "authority_department_id": "106",
+            "code": "1",
+            "name": "Grasse"
+        },
+        {
+            "id": "704",
+            "authority_department_id": "106",
+            "code": "2",
+            "name": "Nice"
+        },
+        {
+            "id": "705",
+            "authority_department_id": "107",
+            "code": "1",
+            "name": "Largenti\u00e8re"
+        },
+        {
+            "id": "706",
+            "authority_department_id": "107",
+            "code": "2",
+            "name": "Privas"
+        },
+        {
+            "id": "707",
+            "authority_department_id": "107",
+            "code": "3",
+            "name": "Tournon-sur-Rh\u00f4ne"
+        },
+        {
+            "id": "708",
+            "authority_department_id": "108",
+            "code": "1",
+            "name": "Charleville-M\u00e9zi\u00e8res"
+        },
+        {
+            "id": "709",
+            "authority_department_id": "108",
+            "code": "2",
+            "name": "Rethel"
+        },
+        {
+            "id": "710",
+            "authority_department_id": "108",
+            "code": "3",
+            "name": "Sedan"
+        },
+        {
+            "id": "711",
+            "authority_department_id": "108",
+            "code": "4",
+            "name": "Vouziers"
+        },
+        {
+            "id": "712",
+            "authority_department_id": "109",
+            "code": "1",
+            "name": "Foix"
+        },
+        {
+            "id": "713",
+            "authority_department_id": "109",
+            "code": "2",
+            "name": "Pamiers"
+        },
+        {
+            "id": "714",
+            "authority_department_id": "109",
+            "code": "3",
+            "name": "Saint-Girons"
+        },
+        {
+            "id": "715",
+            "authority_department_id": "110",
+            "code": "1",
+            "name": "Bar-sur-Aube"
+        },
+        {
+            "id": "716",
+            "authority_department_id": "110",
+            "code": "2",
+            "name": "Nogent-sur-Seine"
+        },
+        {
+            "id": "717",
+            "authority_department_id": "110",
+            "code": "3",
+            "name": "Troyes"
+        },
+        {
+            "id": "718",
+            "authority_department_id": "111",
+            "code": "1",
+            "name": "Carcassonne"
+        },
+        {
+            "id": "719",
+            "authority_department_id": "111",
+            "code": "2",
+            "name": "Limoux"
+        },
+        {
+            "id": "720",
+            "authority_department_id": "111",
+            "code": "3",
+            "name": "Narbonne"
+        },
+        {
+            "id": "721",
+            "authority_department_id": "112",
+            "code": "1",
+            "name": "Millau"
+        },
+        {
+            "id": "722",
+            "authority_department_id": "112",
+            "code": "2",
+            "name": "Rodez"
+        },
+        {
+            "id": "723",
+            "authority_department_id": "112",
+            "code": "3",
+            "name": "Villefranche-de-Rouergue"
+        },
+        {
+            "id": "724",
+            "authority_department_id": "113",
+            "code": "1",
+            "name": "Aix-en-Provence"
+        },
+        {
+            "id": "725",
+            "authority_department_id": "113",
+            "code": "2",
+            "name": "Arles"
+        },
+        {
+            "id": "726",
+            "authority_department_id": "113",
+            "code": "3",
+            "name": "Marseille"
+        },
+        {
+            "id": "727",
+            "authority_department_id": "113",
+            "code": "4",
+            "name": "Istres"
+        },
+        {
+            "id": "728",
+            "authority_department_id": "114",
+            "code": "1",
+            "name": "Bayeux"
+        },
+        {
+            "id": "729",
+            "authority_department_id": "114",
+            "code": "2",
+            "name": "Caen"
+        },
+        {
+            "id": "730",
+            "authority_department_id": "114",
+            "code": "3",
+            "name": "Lisieux"
+        },
+        {
+            "id": "731",
+            "authority_department_id": "114",
+            "code": "4",
+            "name": "Vire"
+        },
+        {
+            "id": "732",
+            "authority_department_id": "115",
+            "code": "1",
+            "name": "Aurillac"
+        },
+        {
+            "id": "733",
+            "authority_department_id": "115",
+            "code": "2",
+            "name": "Mauriac"
+        },
+        {
+            "id": "734",
+            "authority_department_id": "115",
+            "code": "3",
+            "name": "Saint-Flour"
+        },
+        {
+            "id": "735",
+            "authority_department_id": "116",
+            "code": "1",
+            "name": "Angoul\u00eame"
+        },
+        {
+            "id": "736",
+            "authority_department_id": "116",
+            "code": "2",
+            "name": "Cognac"
+        },
+        {
+            "id": "737",
+            "authority_department_id": "116",
+            "code": "3",
+            "name": "Confolens"
+        },
+        {
+            "id": "738",
+            "authority_department_id": "117",
+            "code": "1",
+            "name": "Jonzac"
+        },
+        {
+            "id": "739",
+            "authority_department_id": "117",
+            "code": "2",
+            "name": "Rochefort"
+        },
+        {
+            "id": "740",
+            "authority_department_id": "117",
+            "code": "3",
+            "name": "(La)\tRochelle"
+        },
+        {
+            "id": "741",
+            "authority_department_id": "117",
+            "code": "4",
+            "name": "Saintes"
+        },
+        {
+            "id": "742",
+            "authority_department_id": "117",
+            "code": "5",
+            "name": "Saint-Jean-d'Ang\u00e9ly"
+        },
+        {
+            "id": "743",
+            "authority_department_id": "118",
+            "code": "1",
+            "name": "Bourges"
+        },
+        {
+            "id": "744",
+            "authority_department_id": "118",
+            "code": "2",
+            "name": "Saint-Amand-Montrond"
+        },
+        {
+            "id": "745",
+            "authority_department_id": "118",
+            "code": "3",
+            "name": "Vierzon"
+        },
+        {
+            "id": "746",
+            "authority_department_id": "119",
+            "code": "1",
+            "name": "Brive-la-Gaillarde"
+        },
+        {
+            "id": "747",
+            "authority_department_id": "119",
+            "code": "2",
+            "name": "Tulle"
+        },
+        {
+            "id": "748",
+            "authority_department_id": "119",
+            "code": "3",
+            "name": "Ussel"
+        },
+        {
+            "id": "749",
+            "authority_department_id": "120",
+            "code": "1",
+            "name": "Ajaccio"
+        },
+        {
+            "id": "750",
+            "authority_department_id": "120",
+            "code": "4",
+            "name": "Sart\u00e8ne"
+        },
+        {
+            "id": "751",
+            "authority_department_id": "121",
+            "code": "2",
+            "name": "Bastia"
+        },
+        {
+            "id": "752",
+            "authority_department_id": "121",
+            "code": "3",
+            "name": "Corte"
+        },
+        {
+            "id": "753",
+            "authority_department_id": "121",
+            "code": "5",
+            "name": "Calvi"
+        },
+        {
+            "id": "754",
+            "authority_department_id": "122",
+            "code": "1",
+            "name": "Beaune"
+        },
+        {
+            "id": "755",
+            "authority_department_id": "122",
+            "code": "2",
+            "name": "Dijon"
+        },
+        {
+            "id": "756",
+            "authority_department_id": "122",
+            "code": "3",
+            "name": "Montbard"
+        },
+        {
+            "id": "757",
+            "authority_department_id": "123",
+            "code": "1",
+            "name": "Dinan"
+        },
+        {
+            "id": "758",
+            "authority_department_id": "123",
+            "code": "2",
+            "name": "Guingamp"
+        },
+        {
+            "id": "759",
+            "authority_department_id": "123",
+            "code": "3",
+            "name": "Lannion"
+        },
+        {
+            "id": "760",
+            "authority_department_id": "123",
+            "code": "4",
+            "name": "Saint-Brieuc"
+        },
+        {
+            "id": "761",
+            "authority_department_id": "124",
+            "code": "1",
+            "name": "Aubusson"
+        },
+        {
+            "id": "762",
+            "authority_department_id": "124",
+            "code": "2",
+            "name": "Gu\u00e9ret"
+        },
+        {
+            "id": "763",
+            "authority_department_id": "125",
+            "code": "1",
+            "name": "Bergerac"
+        },
+        {
+            "id": "764",
+            "authority_department_id": "125",
+            "code": "2",
+            "name": "Nontron"
+        },
+        {
+            "id": "765",
+            "authority_department_id": "125",
+            "code": "3",
+            "name": "P\u00e9rigueux"
+        },
+        {
+            "id": "766",
+            "authority_department_id": "125",
+            "code": "4",
+            "name": "Sarlat-la-Can\u00e9da"
+        },
+        {
+            "id": "767",
+            "authority_department_id": "126",
+            "code": "1",
+            "name": "Besan\u00e7on"
+        },
+        {
+            "id": "768",
+            "authority_department_id": "126",
+            "code": "2",
+            "name": "Montb\u00e9liard"
+        },
+        {
+            "id": "769",
+            "authority_department_id": "126",
+            "code": "3",
+            "name": "Pontarlier"
+        },
+        {
+            "id": "770",
+            "authority_department_id": "127",
+            "code": "1",
+            "name": "Die"
+        },
+        {
+            "id": "771",
+            "authority_department_id": "127",
+            "code": "2",
+            "name": "Nyons"
+        },
+        {
+            "id": "772",
+            "authority_department_id": "127",
+            "code": "3",
+            "name": "Valence"
+        },
+        {
+            "id": "773",
+            "authority_department_id": "128",
+            "code": "1",
+            "name": "(Les)\tAndelys"
+        },
+        {
+            "id": "774",
+            "authority_department_id": "128",
+            "code": "2",
+            "name": "Bernay"
+        },
+        {
+            "id": "775",
+            "authority_department_id": "128",
+            "code": "3",
+            "name": "\u00c9vreux"
+        },
+        {
+            "id": "776",
+            "authority_department_id": "129",
+            "code": "1",
+            "name": "Chartres"
+        },
+        {
+            "id": "777",
+            "authority_department_id": "129",
+            "code": "2",
+            "name": "Ch\u00e2teaudun"
+        },
+        {
+            "id": "778",
+            "authority_department_id": "129",
+            "code": "3",
+            "name": "Dreux"
+        },
+        {
+            "id": "779",
+            "authority_department_id": "129",
+            "code": "4",
+            "name": "Nogent-le-Rotrou"
+        },
+        {
+            "id": "780",
+            "authority_department_id": "130",
+            "code": "1",
+            "name": "Brest"
+        },
+        {
+            "id": "781",
+            "authority_department_id": "130",
+            "code": "2",
+            "name": "Ch\u00e2teaulin"
+        },
+        {
+            "id": "782",
+            "authority_department_id": "130",
+            "code": "3",
+            "name": "Morlaix"
+        },
+        {
+            "id": "783",
+            "authority_department_id": "130",
+            "code": "4",
+            "name": "Quimper"
+        },
+        {
+            "id": "784",
+            "authority_department_id": "131",
+            "code": "1",
+            "name": "Al\u00e8s"
+        },
+        {
+            "id": "785",
+            "authority_department_id": "131",
+            "code": "2",
+            "name": "N\u00eemes"
+        },
+        {
+            "id": "786",
+            "authority_department_id": "131",
+            "code": "3",
+            "name": "(Le)\tVigan"
+        },
+        {
+            "id": "787",
+            "authority_department_id": "132",
+            "code": "1",
+            "name": "Muret"
+        },
+        {
+            "id": "788",
+            "authority_department_id": "132",
+            "code": "2",
+            "name": "Saint-Gaudens"
+        },
+        {
+            "id": "789",
+            "authority_department_id": "132",
+            "code": "3",
+            "name": "Toulouse"
+        },
+        {
+            "id": "790",
+            "authority_department_id": "133",
+            "code": "1",
+            "name": "Auch"
+        },
+        {
+            "id": "791",
+            "authority_department_id": "133",
+            "code": "2",
+            "name": "Condom"
+        },
+        {
+            "id": "792",
+            "authority_department_id": "133",
+            "code": "3",
+            "name": "Mirande"
+        },
+        {
+            "id": "793",
+            "authority_department_id": "134",
+            "code": "1",
+            "name": "Blaye"
+        },
+        {
+            "id": "794",
+            "authority_department_id": "134",
+            "code": "2",
+            "name": "Bordeaux"
+        },
+        {
+            "id": "795",
+            "authority_department_id": "134",
+            "code": "3",
+            "name": "Langon"
+        },
+        {
+            "id": "796",
+            "authority_department_id": "134",
+            "code": "4",
+            "name": "Lesparre-M\u00e9doc"
+        },
+        {
+            "id": "797",
+            "authority_department_id": "134",
+            "code": "5",
+            "name": "Libourne"
+        },
+        {
+            "id": "798",
+            "authority_department_id": "135",
+            "code": "1",
+            "name": "B\u00e9ziers"
+        },
+        {
+            "id": "799",
+            "authority_department_id": "135",
+            "code": "2",
+            "name": "Lod\u00e8ve"
+        },
+        {
+            "id": "800",
+            "authority_department_id": "135",
+            "code": "3",
+            "name": "Montpellier"
+        },
+        {
+            "id": "801",
+            "authority_department_id": "136",
+            "code": "1",
+            "name": "Foug\u00e8res"
+        },
+        {
+            "id": "802",
+            "authority_department_id": "136",
+            "code": "2",
+            "name": "Redon"
+        },
+        {
+            "id": "803",
+            "authority_department_id": "136",
+            "code": "3",
+            "name": "Rennes"
+        },
+        {
+            "id": "804",
+            "authority_department_id": "136",
+            "code": "4",
+            "name": "Saint-Malo"
+        },
+        {
+            "id": "805",
+            "authority_department_id": "137",
+            "code": "1",
+            "name": "(Le)\tBlanc"
+        },
+        {
+            "id": "806",
+            "authority_department_id": "137",
+            "code": "2",
+            "name": "Ch\u00e2teauroux"
+        },
+        {
+            "id": "807",
+            "authority_department_id": "137",
+            "code": "3",
+            "name": "(La)\tCh\u00e2tre"
+        },
+        {
+            "id": "808",
+            "authority_department_id": "137",
+            "code": "4",
+            "name": "Issoudun"
+        },
+        {
+            "id": "809",
+            "authority_department_id": "138",
+            "code": "1",
+            "name": "Chinon"
+        },
+        {
+            "id": "810",
+            "authority_department_id": "138",
+            "code": "2",
+            "name": "Tours"
+        },
+        {
+            "id": "811",
+            "authority_department_id": "138",
+            "code": "3",
+            "name": "Loches"
+        },
+        {
+            "id": "812",
+            "authority_department_id": "139",
+            "code": "1",
+            "name": "Grenoble"
+        },
+        {
+            "id": "813",
+            "authority_department_id": "139",
+            "code": "2",
+            "name": "(La)\tTour-du-Pin"
+        },
+        {
+            "id": "814",
+            "authority_department_id": "139",
+            "code": "3",
+            "name": "Vienne"
+        },
+        {
+            "id": "815",
+            "authority_department_id": "140",
+            "code": "1",
+            "name": "Dole"
+        },
+        {
+            "id": "816",
+            "authority_department_id": "140",
+            "code": "2",
+            "name": "Lons-le-Saunier"
+        },
+        {
+            "id": "817",
+            "authority_department_id": "140",
+            "code": "3",
+            "name": "Saint-Claude"
+        },
+        {
+            "id": "818",
+            "authority_department_id": "141",
+            "code": "1",
+            "name": "Dax"
+        },
+        {
+            "id": "819",
+            "authority_department_id": "141",
+            "code": "2",
+            "name": "Mont-de-Marsan"
+        },
+        {
+            "id": "820",
+            "authority_department_id": "142",
+            "code": "1",
+            "name": "Blois"
+        },
+        {
+            "id": "821",
+            "authority_department_id": "142",
+            "code": "2",
+            "name": "Vend\u00f4me"
+        },
+        {
+            "id": "822",
+            "authority_department_id": "142",
+            "code": "3",
+            "name": "Romorantin-Lanthenay"
+        },
+        {
+            "id": "823",
+            "authority_department_id": "143",
+            "code": "1",
+            "name": "Montbrison"
+        },
+        {
+            "id": "824",
+            "authority_department_id": "143",
+            "code": "2",
+            "name": "Roanne"
+        },
+        {
+            "id": "825",
+            "authority_department_id": "143",
+            "code": "3",
+            "name": "Saint-\u00c9tienne"
+        },
+        {
+            "id": "826",
+            "authority_department_id": "144",
+            "code": "1",
+            "name": "Brioude"
+        },
+        {
+            "id": "827",
+            "authority_department_id": "144",
+            "code": "2",
+            "name": "(Le)\tPuy-en-Velay"
+        },
+        {
+            "id": "828",
+            "authority_department_id": "144",
+            "code": "3",
+            "name": "Yssingeaux"
+        },
+        {
+            "id": "829",
+            "authority_department_id": "145",
+            "code": "1",
+            "name": "Ch\u00e2teaubriant"
+        },
+        {
+            "id": "830",
+            "authority_department_id": "145",
+            "code": "2",
+            "name": "Nantes"
+        },
+        {
+            "id": "831",
+            "authority_department_id": "145",
+            "code": "3",
+            "name": "Saint-Nazaire"
+        },
+        {
+            "id": "832",
+            "authority_department_id": "145",
+            "code": "4",
+            "name": "Ancenis"
+        },
+        {
+            "id": "833",
+            "authority_department_id": "146",
+            "code": "1",
+            "name": "Montargis"
+        },
+        {
+            "id": "834",
+            "authority_department_id": "146",
+            "code": "2",
+            "name": "Orl\u00e9ans"
+        },
+        {
+            "id": "835",
+            "authority_department_id": "146",
+            "code": "3",
+            "name": "Pithiviers"
+        },
+        {
+            "id": "836",
+            "authority_department_id": "147",
+            "code": "1",
+            "name": "Cahors"
+        },
+        {
+            "id": "837",
+            "authority_department_id": "147",
+            "code": "2",
+            "name": "Figeac"
+        },
+        {
+            "id": "838",
+            "authority_department_id": "147",
+            "code": "3",
+            "name": "Gourdon"
+        },
+        {
+            "id": "839",
+            "authority_department_id": "148",
+            "code": "1",
+            "name": "Agen"
+        },
+        {
+            "id": "840",
+            "authority_department_id": "148",
+            "code": "2",
+            "name": "Marmande"
+        },
+        {
+            "id": "841",
+            "authority_department_id": "148",
+            "code": "3",
+            "name": "Villeneuve-sur-Lot"
+        },
+        {
+            "id": "842",
+            "authority_department_id": "148",
+            "code": "4",
+            "name": "N\u00e9rac"
+        },
+        {
+            "id": "843",
+            "authority_department_id": "149",
+            "code": "1",
+            "name": "Florac"
+        },
+        {
+            "id": "844",
+            "authority_department_id": "149",
+            "code": "2",
+            "name": "Mende"
+        },
+        {
+            "id": "845",
+            "authority_department_id": "150",
+            "code": "1",
+            "name": "Angers"
+        },
+        {
+            "id": "846",
+            "authority_department_id": "150",
+            "code": "2",
+            "name": "Cholet"
+        },
+        {
+            "id": "847",
+            "authority_department_id": "150",
+            "code": "3",
+            "name": "Saumur"
+        },
+        {
+            "id": "848",
+            "authority_department_id": "150",
+            "code": "4",
+            "name": "Segr\u00e9"
+        },
+        {
+            "id": "849",
+            "authority_department_id": "151",
+            "code": "1",
+            "name": "Avranches"
+        },
+        {
+            "id": "850",
+            "authority_department_id": "151",
+            "code": "2",
+            "name": "Cherbourg-Octeville"
+        },
+        {
+            "id": "851",
+            "authority_department_id": "151",
+            "code": "3",
+            "name": "Coutances"
+        },
+        {
+            "id": "852",
+            "authority_department_id": "151",
+            "code": "4",
+            "name": "Saint-L\u00f4"
+        },
+        {
+            "id": "853",
+            "authority_department_id": "152",
+            "code": "1",
+            "name": "Ch\u00e2lons-en-Champagne"
+        },
+        {
+            "id": "854",
+            "authority_department_id": "152",
+            "code": "2",
+            "name": "\u00c9pernay"
+        },
+        {
+            "id": "855",
+            "authority_department_id": "152",
+            "code": "3",
+            "name": "Reims"
+        },
+        {
+            "id": "856",
+            "authority_department_id": "152",
+            "code": "4",
+            "name": "Vitry-le-Fran\u00e7ois"
+        },
+        {
+            "id": "857",
+            "authority_department_id": "152",
+            "code": "5",
+            "name": "Sainte-Menehould"
+        },
+        {
+            "id": "858",
+            "authority_department_id": "153",
+            "code": "1",
+            "name": "Chaumont"
+        },
+        {
+            "id": "859",
+            "authority_department_id": "153",
+            "code": "2",
+            "name": "Langres"
+        },
+        {
+            "id": "860",
+            "authority_department_id": "153",
+            "code": "3",
+            "name": "Saint-Dizier"
+        },
+        {
+            "id": "861",
+            "authority_department_id": "154",
+            "code": "1",
+            "name": "Ch\u00e2teau-Gontier"
+        },
+        {
+            "id": "862",
+            "authority_department_id": "154",
+            "code": "2",
+            "name": "Laval"
+        },
+        {
+            "id": "863",
+            "authority_department_id": "154",
+            "code": "3",
+            "name": "Mayenne"
+        },
+        {
+            "id": "864",
+            "authority_department_id": "155",
+            "code": "1",
+            "name": "Briey"
+        },
+        {
+            "id": "865",
+            "authority_department_id": "155",
+            "code": "2",
+            "name": "Lun\u00e9ville"
+        },
+        {
+            "id": "866",
+            "authority_department_id": "155",
+            "code": "3",
+            "name": "Nancy"
+        },
+        {
+            "id": "867",
+            "authority_department_id": "155",
+            "code": "4",
+            "name": "Toul"
+        },
+        {
+            "id": "868",
+            "authority_department_id": "156",
+            "code": "1",
+            "name": "Bar-le-Duc"
+        },
+        {
+            "id": "869",
+            "authority_department_id": "156",
+            "code": "2",
+            "name": "Commercy"
+        },
+        {
+            "id": "870",
+            "authority_department_id": "156",
+            "code": "3",
+            "name": "Verdun"
+        },
+        {
+            "id": "871",
+            "authority_department_id": "157",
+            "code": "1",
+            "name": "Lorient"
+        },
+        {
+            "id": "872",
+            "authority_department_id": "157",
+            "code": "2",
+            "name": "Pontivy"
+        },
+        {
+            "id": "873",
+            "authority_department_id": "157",
+            "code": "3",
+            "name": "Vannes"
+        },
+        {
+            "id": "874",
+            "authority_department_id": "158",
+            "code": "1",
+            "name": "Boulay-Moselle"
+        },
+        {
+            "id": "875",
+            "authority_department_id": "158",
+            "code": "2",
+            "name": "Ch\u00e2teau-Salins"
+        },
+        {
+            "id": "876",
+            "authority_department_id": "158",
+            "code": "3",
+            "name": "Forbach"
+        },
+        {
+            "id": "877",
+            "authority_department_id": "158",
+            "code": "4",
+            "name": "Metz-Campagne"
+        },
+        {
+            "id": "878",
+            "authority_department_id": "158",
+            "code": "5",
+            "name": "Sarrebourg"
+        },
+        {
+            "id": "879",
+            "authority_department_id": "158",
+            "code": "6",
+            "name": "Sarreguemines"
+        },
+        {
+            "id": "880",
+            "authority_department_id": "158",
+            "code": "7",
+            "name": "Thionville-Est"
+        },
+        {
+            "id": "881",
+            "authority_department_id": "158",
+            "code": "8",
+            "name": "Thionville-Ouest"
+        },
+        {
+            "id": "882",
+            "authority_department_id": "158",
+            "code": "9",
+            "name": "Metz-Ville"
+        },
+        {
+            "id": "883",
+            "authority_department_id": "159",
+            "code": "1",
+            "name": "Ch\u00e2teau-Chinon(Ville)"
+        },
+        {
+            "id": "884",
+            "authority_department_id": "159",
+            "code": "2",
+            "name": "Clamecy"
+        },
+        {
+            "id": "885",
+            "authority_department_id": "159",
+            "code": "3",
+            "name": "Nevers"
+        },
+        {
+            "id": "886",
+            "authority_department_id": "159",
+            "code": "4",
+            "name": "Cosne-Cours-sur-Loire"
+        },
+        {
+            "id": "887",
+            "authority_department_id": "160",
+            "code": "1",
+            "name": "Avesnes-sur-Helpe"
+        },
+        {
+            "id": "888",
+            "authority_department_id": "160",
+            "code": "2",
+            "name": "Cambrai"
+        },
+        {
+            "id": "889",
+            "authority_department_id": "160",
+            "code": "3",
+            "name": "Douai"
+        },
+        {
+            "id": "890",
+            "authority_department_id": "160",
+            "code": "4",
+            "name": "Dunkerque"
+        },
+        {
+            "id": "891",
+            "authority_department_id": "160",
+            "code": "5",
+            "name": "Lille"
+        },
+        {
+            "id": "892",
+            "authority_department_id": "160",
+            "code": "6",
+            "name": "Valenciennes"
+        },
+        {
+            "id": "893",
+            "authority_department_id": "161",
+            "code": "1",
+            "name": "Beauvais"
+        },
+        {
+            "id": "894",
+            "authority_department_id": "161",
+            "code": "2",
+            "name": "Clermont"
+        },
+        {
+            "id": "895",
+            "authority_department_id": "161",
+            "code": "3",
+            "name": "Compi\u00e8gne"
+        },
+        {
+            "id": "896",
+            "authority_department_id": "161",
+            "code": "4",
+            "name": "Senlis"
+        },
+        {
+            "id": "897",
+            "authority_department_id": "162",
+            "code": "1",
+            "name": "Alen\u00e7on"
+        },
+        {
+            "id": "898",
+            "authority_department_id": "162",
+            "code": "2",
+            "name": "Argentan"
+        },
+        {
+            "id": "899",
+            "authority_department_id": "162",
+            "code": "3",
+            "name": "Mortagne-au-Perche"
+        },
+        {
+            "id": "900",
+            "authority_department_id": "163",
+            "code": "1",
+            "name": "Arras"
+        },
+        {
+            "id": "901",
+            "authority_department_id": "163",
+            "code": "2",
+            "name": "B\u00e9thune"
+        },
+        {
+            "id": "902",
+            "authority_department_id": "163",
+            "code": "3",
+            "name": "Boulogne-sur-Mer"
+        },
+        {
+            "id": "903",
+            "authority_department_id": "163",
+            "code": "4",
+            "name": "Montreuil"
+        },
+        {
+            "id": "904",
+            "authority_department_id": "163",
+            "code": "5",
+            "name": "Saint-Omer"
+        },
+        {
+            "id": "905",
+            "authority_department_id": "163",
+            "code": "6",
+            "name": "Calais"
+        },
+        {
+            "id": "906",
+            "authority_department_id": "163",
+            "code": "7",
+            "name": "Lens"
+        },
+        {
+            "id": "907",
+            "authority_department_id": "164",
+            "code": "1",
+            "name": "Ambert"
+        },
+        {
+            "id": "908",
+            "authority_department_id": "164",
+            "code": "2",
+            "name": "Clermont-Ferrand"
+        },
+        {
+            "id": "909",
+            "authority_department_id": "164",
+            "code": "3",
+            "name": "Issoire"
+        },
+        {
+            "id": "910",
+            "authority_department_id": "164",
+            "code": "4",
+            "name": "Riom"
+        },
+        {
+            "id": "911",
+            "authority_department_id": "164",
+            "code": "5",
+            "name": "Thiers"
+        },
+        {
+            "id": "912",
+            "authority_department_id": "165",
+            "code": "1",
+            "name": "Bayonne"
+        },
+        {
+            "id": "913",
+            "authority_department_id": "165",
+            "code": "2",
+            "name": "Oloron-Sainte-Marie"
+        },
+        {
+            "id": "914",
+            "authority_department_id": "165",
+            "code": "3",
+            "name": "Pau"
+        },
+        {
+            "id": "915",
+            "authority_department_id": "166",
+            "code": "1",
+            "name": "Argel\u00e8s-Gazost"
+        },
+        {
+            "id": "916",
+            "authority_department_id": "166",
+            "code": "2",
+            "name": "Bagn\u00e8res-de-Bigorre"
+        },
+        {
+            "id": "917",
+            "authority_department_id": "166",
+            "code": "3",
+            "name": "Tarbes"
+        },
+        {
+            "id": "918",
+            "authority_department_id": "167",
+            "code": "1",
+            "name": "C\u00e9ret"
+        },
+        {
+            "id": "919",
+            "authority_department_id": "167",
+            "code": "2",
+            "name": "Perpignan"
+        },
+        {
+            "id": "920",
+            "authority_department_id": "167",
+            "code": "3",
+            "name": "Prades"
+        },
+        {
+            "id": "921",
+            "authority_department_id": "168",
+            "code": "2",
+            "name": "Haguenau"
+        },
+        {
+            "id": "922",
+            "authority_department_id": "168",
+            "code": "3",
+            "name": "Molsheim"
+        },
+        {
+            "id": "923",
+            "authority_department_id": "168",
+            "code": "4",
+            "name": "Saverne"
+        },
+        {
+            "id": "924",
+            "authority_department_id": "168",
+            "code": "5",
+            "name": "S\u00e9lestat-Erstein"
+        },
+        {
+            "id": "925",
+            "authority_department_id": "168",
+            "code": "6",
+            "name": "Strasbourg-Campagne"
+        },
+        {
+            "id": "926",
+            "authority_department_id": "168",
+            "code": "7",
+            "name": "Wissembourg"
+        },
+        {
+            "id": "927",
+            "authority_department_id": "168",
+            "code": "8",
+            "name": "Strasbourg-Ville"
+        },
+        {
+            "id": "928",
+            "authority_department_id": "169",
+            "code": "1",
+            "name": "Altkirch"
+        },
+        {
+            "id": "929",
+            "authority_department_id": "169",
+            "code": "2",
+            "name": "Colmar"
+        },
+        {
+            "id": "930",
+            "authority_department_id": "169",
+            "code": "3",
+            "name": "Guebwiller"
+        },
+        {
+            "id": "931",
+            "authority_department_id": "169",
+            "code": "4",
+            "name": "Mulhouse"
+        },
+        {
+            "id": "932",
+            "authority_department_id": "169",
+            "code": "5",
+            "name": "Ribeauvill\u00e9"
+        },
+        {
+            "id": "933",
+            "authority_department_id": "169",
+            "code": "6",
+            "name": "Thann"
+        },
+        {
+            "id": "934",
+            "authority_department_id": "170",
+            "code": "1",
+            "name": "Lyon"
+        },
+        {
+            "id": "935",
+            "authority_department_id": "170",
+            "code": "2",
+            "name": "Villefranche-sur-Sa\u00f4ne"
+        },
+        {
+            "id": "936",
+            "authority_department_id": "171",
+            "code": "1",
+            "name": "Lure"
+        },
+        {
+            "id": "937",
+            "authority_department_id": "171",
+            "code": "2",
+            "name": "Vesoul"
+        },
+        {
+            "id": "938",
+            "authority_department_id": "172",
+            "code": "1",
+            "name": "Autun"
+        },
+        {
+            "id": "939",
+            "authority_department_id": "172",
+            "code": "2",
+            "name": "Chalon-sur-Sa\u00f4ne"
+        },
+        {
+            "id": "940",
+            "authority_department_id": "172",
+            "code": "3",
+            "name": "Charolles"
+        },
+        {
+            "id": "941",
+            "authority_department_id": "172",
+            "code": "4",
+            "name": "Louhans"
+        },
+        {
+            "id": "942",
+            "authority_department_id": "172",
+            "code": "5",
+            "name": "M\u00e2con"
+        },
+        {
+            "id": "943",
+            "authority_department_id": "173",
+            "code": "1",
+            "name": "(La)\tFl\u00e8che"
+        },
+        {
+            "id": "944",
+            "authority_department_id": "173",
+            "code": "2",
+            "name": "Mamers"
+        },
+        {
+            "id": "945",
+            "authority_department_id": "173",
+            "code": "3",
+            "name": "(Le)\tMans"
+        },
+        {
+            "id": "946",
+            "authority_department_id": "174",
+            "code": "1",
+            "name": "Albertville"
+        },
+        {
+            "id": "947",
+            "authority_department_id": "174",
+            "code": "2",
+            "name": "Chamb\u00e9ry"
+        },
+        {
+            "id": "948",
+            "authority_department_id": "174",
+            "code": "3",
+            "name": "Saint-Jean-de-Maurienne"
+        },
+        {
+            "id": "949",
+            "authority_department_id": "175",
+            "code": "1",
+            "name": "Annecy"
+        },
+        {
+            "id": "950",
+            "authority_department_id": "175",
+            "code": "2",
+            "name": "Bonneville"
+        },
+        {
+            "id": "951",
+            "authority_department_id": "175",
+            "code": "3",
+            "name": "Saint-Julien-en-Genevois"
+        },
+        {
+            "id": "952",
+            "authority_department_id": "175",
+            "code": "4",
+            "name": "Thonon-les-Bains"
+        },
+        {
+            "id": "953",
+            "authority_department_id": "176",
+            "code": "1",
+            "name": "Paris"
+        },
+        {
+            "id": "954",
+            "authority_department_id": "177",
+            "code": "1",
+            "name": "Dieppe"
+        },
+        {
+            "id": "955",
+            "authority_department_id": "177",
+            "code": "2",
+            "name": "(Le)\tHavre"
+        },
+        {
+            "id": "956",
+            "authority_department_id": "177",
+            "code": "3",
+            "name": "Rouen"
+        },
+        {
+            "id": "957",
+            "authority_department_id": "178",
+            "code": "1",
+            "name": "Meaux"
+        },
+        {
+            "id": "958",
+            "authority_department_id": "178",
+            "code": "2",
+            "name": "Melun"
+        },
+        {
+            "id": "959",
+            "authority_department_id": "178",
+            "code": "3",
+            "name": "Provins"
+        },
+        {
+            "id": "960",
+            "authority_department_id": "178",
+            "code": "4",
+            "name": "Fontainebleau"
+        },
+        {
+            "id": "961",
+            "authority_department_id": "178",
+            "code": "5",
+            "name": "Torcy"
+        },
+        {
+            "id": "962",
+            "authority_department_id": "179",
+            "code": "1",
+            "name": "Mantes-la-Jolie"
+        },
+        {
+            "id": "963",
+            "authority_department_id": "179",
+            "code": "2",
+            "name": "Rambouillet"
+        },
+        {
+            "id": "964",
+            "authority_department_id": "179",
+            "code": "3",
+            "name": "Saint-Germain-en-Laye"
+        },
+        {
+            "id": "965",
+            "authority_department_id": "179",
+            "code": "4",
+            "name": "Versailles"
+        },
+        {
+            "id": "966",
+            "authority_department_id": "180",
+            "code": "1",
+            "name": "Bressuire"
+        },
+        {
+            "id": "967",
+            "authority_department_id": "180",
+            "code": "2",
+            "name": "Niort"
+        },
+        {
+            "id": "968",
+            "authority_department_id": "180",
+            "code": "3",
+            "name": "Parthenay"
+        },
+        {
+            "id": "969",
+            "authority_department_id": "181",
+            "code": "1",
+            "name": "Abbeville"
+        },
+        {
+            "id": "970",
+            "authority_department_id": "181",
+            "code": "2",
+            "name": "Amiens"
+        },
+        {
+            "id": "971",
+            "authority_department_id": "181",
+            "code": "3",
+            "name": "Montdidier"
+        },
+        {
+            "id": "972",
+            "authority_department_id": "181",
+            "code": "4",
+            "name": "P\u00e9ronne"
+        },
+        {
+            "id": "973",
+            "authority_department_id": "182",
+            "code": "1",
+            "name": "Albi"
+        },
+        {
+            "id": "974",
+            "authority_department_id": "182",
+            "code": "2",
+            "name": "Castres"
+        },
+        {
+            "id": "975",
+            "authority_department_id": "183",
+            "code": "1",
+            "name": "Castelsarrasin"
+        },
+        {
+            "id": "976",
+            "authority_department_id": "183",
+            "code": "2",
+            "name": "Montauban"
+        },
+        {
+            "id": "977",
+            "authority_department_id": "184",
+            "code": "1",
+            "name": "Draguignan"
+        },
+        {
+            "id": "978",
+            "authority_department_id": "184",
+            "code": "2",
+            "name": "Toulon"
+        },
+        {
+            "id": "979",
+            "authority_department_id": "184",
+            "code": "3",
+            "name": "Brignoles"
+        },
+        {
+            "id": "980",
+            "authority_department_id": "185",
+            "code": "1",
+            "name": "Apt"
+        },
+        {
+            "id": "981",
+            "authority_department_id": "185",
+            "code": "2",
+            "name": "Avignon"
+        },
+        {
+            "id": "982",
+            "authority_department_id": "185",
+            "code": "3",
+            "name": "Carpentras"
+        },
+        {
+            "id": "983",
+            "authority_department_id": "186",
+            "code": "1",
+            "name": "Fontenay-le-Comte"
+        },
+        {
+            "id": "984",
+            "authority_department_id": "186",
+            "code": "2",
+            "name": "(La)\tRoche-sur-Yon"
+        },
+        {
+            "id": "985",
+            "authority_department_id": "186",
+            "code": "3",
+            "name": "(Les)\tSables-d'Olonne"
+        },
+        {
+            "id": "986",
+            "authority_department_id": "187",
+            "code": "1",
+            "name": "Ch\u00e2tellerault"
+        },
+        {
+            "id": "987",
+            "authority_department_id": "187",
+            "code": "2",
+            "name": "Montmorillon"
+        },
+        {
+            "id": "988",
+            "authority_department_id": "187",
+            "code": "3",
+            "name": "Poitiers"
+        },
+        {
+            "id": "989",
+            "authority_department_id": "188",
+            "code": "1",
+            "name": "Bellac"
+        },
+        {
+            "id": "990",
+            "authority_department_id": "188",
+            "code": "2",
+            "name": "Limoges"
+        },
+        {
+            "id": "991",
+            "authority_department_id": "188",
+            "code": "3",
+            "name": "Rochechouart"
+        },
+        {
+            "id": "992",
+            "authority_department_id": "189",
+            "code": "1",
+            "name": "\u00c9pinal"
+        },
+        {
+            "id": "993",
+            "authority_department_id": "189",
+            "code": "2",
+            "name": "Neufch\u00e2teau"
+        },
+        {
+            "id": "994",
+            "authority_department_id": "189",
+            "code": "3",
+            "name": "Saint-Di\u00e9-des-Vosges"
+        },
+        {
+            "id": "995",
+            "authority_department_id": "190",
+            "code": "1",
+            "name": "Auxerre"
+        },
+        {
+            "id": "996",
+            "authority_department_id": "190",
+            "code": "2",
+            "name": "Avallon"
+        },
+        {
+            "id": "997",
+            "authority_department_id": "190",
+            "code": "3",
+            "name": "Sens"
+        },
+        {
+            "id": "998",
+            "authority_department_id": "191",
+            "code": "1",
+            "name": "Belfort"
+        },
+        {
+            "id": "999",
+            "authority_department_id": "192",
+            "code": "1",
+            "name": "\u00c9tampes"
+        },
+        {
+            "id": "1000",
+            "authority_department_id": "192",
+            "code": "2",
+            "name": "\u00c9vry"
+        },
+        {
+            "id": "1001",
+            "authority_department_id": "192",
+            "code": "3",
+            "name": "Palaiseau"
+        },
+        {
+            "id": "1002",
+            "authority_department_id": "193",
+            "code": "1",
+            "name": "Antony"
+        },
+        {
+            "id": "1003",
+            "authority_department_id": "193",
+            "code": "2",
+            "name": "Nanterre"
+        },
+        {
+            "id": "1004",
+            "authority_department_id": "193",
+            "code": "3",
+            "name": "Boulogne-Billancourt"
+        },
+        {
+            "id": "1005",
+            "authority_department_id": "194",
+            "code": "1",
+            "name": "Bobigny"
+        },
+        {
+            "id": "1006",
+            "authority_department_id": "194",
+            "code": "2",
+            "name": "(Le)\tRaincy"
+        },
+        {
+            "id": "1007",
+            "authority_department_id": "194",
+            "code": "3",
+            "name": "Saint-Denis"
+        },
+        {
+            "id": "1008",
+            "authority_department_id": "195",
+            "code": "1",
+            "name": "Cr\u00e9teil"
+        },
+        {
+            "id": "1009",
+            "authority_department_id": "195",
+            "code": "2",
+            "name": "Nogent-sur-Marne"
+        },
+        {
+            "id": "1010",
+            "authority_department_id": "195",
+            "code": "3",
+            "name": "Ha\u00f3-les-Roses"
+        },
+        {
+            "id": "1011",
+            "authority_department_id": "196",
+            "code": "1",
+            "name": "Argenteuil"
+        },
+        {
+            "id": "1012",
+            "authority_department_id": "196",
+            "code": "2",
+            "name": "Sarcelles"
+        },
+        {
+            "id": "1013",
+            "authority_department_id": "196",
+            "code": "3",
+            "name": "Pontoise"
+        },
+        {
+            "id": "1014",
+            "authority_department_id": "197",
+            "code": "1",
+            "name": "Basse-Terre"
+        },
+        {
+            "id": "1015",
+            "authority_department_id": "197",
+            "code": "2",
+            "name": "Pointe-\u00e0-Pitre"
+        },
+        {
+            "id": "1016",
+            "authority_department_id": "197",
+            "code": "3",
+            "name": "Saint-Martin-Saint-Barth\u00e9lemy"
+        },
+        {
+            "id": "1017",
+            "authority_department_id": "198",
+            "code": "1",
+            "name": "Fort-de-France"
+        },
+        {
+            "id": "1018",
+            "authority_department_id": "198",
+            "code": "2",
+            "name": "(La)\tTrinit\u00e9"
+        },
+        {
+            "id": "1019",
+            "authority_department_id": "198",
+            "code": "3",
+            "name": "(Le)\tMarin"
+        },
+        {
+            "id": "1020",
+            "authority_department_id": "198",
+            "code": "4",
+            "name": "Saint-Pierre"
+        },
+        {
+            "id": "1021",
+            "authority_department_id": "199",
+            "code": "1",
+            "name": "Cayenne"
+        },
+        {
+            "id": "1022",
+            "authority_department_id": "199",
+            "code": "2",
+            "name": "Saint-Laurent-du-Maroni"
+        },
+        {
+            "id": "1023",
+            "authority_department_id": "200",
+            "code": "1",
+            "name": "Saint-Denis"
+        },
+        {
+            "id": "1024",
+            "authority_department_id": "200",
+            "code": "2",
+            "name": "Saint-Pierre"
+        },
+        {
+            "id": "1025",
+            "authority_department_id": "200",
+            "code": "3",
+            "name": "Saint-Beno\u00eet"
+        },
+        {
+            "id": "1026",
+            "authority_department_id": "200",
+            "code": "4",
+            "name": "Saint-Paul"
+        },
+        {
+            "id": "1027",
+            "authority_department_id": "201",
+            "code": "1",
+            "name": "DIRAJ - Direction de la r\u00e8glementation et des affaires juridiques"
+        },
+        {
+            "id": "1028",
+            "authority_department_id": "201",
+            "code": "2",
+            "name": "SAIDV - Subdivision administrative des \u00eeles du Vent"
+        },
+        {
+            "id": "1029",
+            "authority_department_id": "201",
+            "code": "3",
+            "name": "SAISLV - Subdivision administrative des \u00eeles Sous-Le-Vent"
+        },
+        {
+            "id": "1030",
+            "authority_department_id": "201",
+            "code": "4",
+            "name": "SAIA - Subdivision administrative des \u00eeles Australes"
+        },
+        {
+            "id": "1031",
+            "authority_department_id": "201",
+            "code": "5",
+            "name": "SAITG - Subdivision administrative des \u00eeles des Tuamotu-Gambier"
+        },
+        {
+            "id": "1032",
+            "authority_department_id": "201",
+            "code": "6",
+            "name": "SAIM - Subdivision administrative des \u00eeles Marquises"
+        }
+    ],
+    "helios_status": [
+        {
+            "id": "-1",
+            "name": "Erreur"
+        },
+        {
+            "id": "0",
+            "name": "Annul\u00e9"
+        },
+        {
+            "id": "1",
+            "name": "Post\u00e9"
+        },
+        {
+            "id": "2",
+            "name": "En attente de transmission. Fichier valide."
+        },
+        {
+            "id": "3",
+            "name": "Transmis"
+        },
+        {
+            "id": "4",
+            "name": "Acquittement re\u00e7u"
+        },
+        {
+            "id": "5",
+            "name": "Valid\u00e9. Non utilis\u00e9 en Helios."
+        },
+        {
+            "id": "6",
+            "name": "Refus\u00e9"
+        },
+        {
+            "id": "7",
+            "name": "En traitement"
+        },
+        {
+            "id": "8",
+            "name": "Information disponible"
+        },
+        {
+            "id": "10",
+            "name": "Accepter par le SAE"
+        },
+        {
+            "id": "11",
+            "name": "Refuser par le SAE"
+        },
+        {
+            "id": "9",
+            "name": "Envoy\u00e9 au SAE"
+        },
+        {
+            "id": "19",
+            "name": "En attente de transmission au SAE"
+        },
+        {
+            "id": "20",
+            "name": "Erreur lors de l'envoi au SAE"
+        },
+        {
+            "id": "14",
+            "name": "En attente d'\u00eatre post\u00e9e"
+        },
+        {
+            "id": "13",
+            "name": "En attente d'\u00eatre sign\u00e9e"
+        }
+    ],
+    "actes_messages_status": [
+        {
+            "id": "1",
+            "nom": "Post\u00e9 la r\u00e9ponse echou\u00e9                                         "
+        },
+        {
+            "id": "2",
+            "nom": "Ech\u00e8c de la transmission                                        "
+        },
+        {
+            "id": "3",
+            "nom": "En attente de la transmission                                   "
+        },
+        {
+            "id": "4",
+            "nom": "Transmis                                                        "
+        },
+        {
+            "id": "20",
+            "nom": "un courrier simple re\u00e7u                                         "
+        },
+        {
+            "id": "21",
+            "nom": "Post\u00e9 la r\u00e9ponse de courrier simple                             "
+        },
+        {
+            "id": "30",
+            "nom": "R\u00e9ception de la demande des pi\u00e8ces compl\u00e9mentaire               "
+        },
+        {
+            "id": "31",
+            "nom": "AR demande pi\u00e8ces compl\u00e9mentaires                               "
+        },
+        {
+            "id": "32",
+            "nom": "Refus de pi\u00e8ce compl\u00e9mentaire post\u00e9                             "
+        },
+        {
+            "id": "33",
+            "nom": "Pi\u00e8ce compl\u00e9mentaire post\u00e9s                                     "
+        },
+        {
+            "id": "36",
+            "nom": "AR pi\u00e8ce compl\u00e9mentaire ou refus                                "
+        },
+        {
+            "id": "40",
+            "nom": "R\u00e9ception du lettre d'observation                               "
+        },
+        {
+            "id": "41",
+            "nom": "Ar de lettre d'observation                                      "
+        },
+        {
+            "id": "42",
+            "nom": "La r\u00e9ponse de lettre d'observations                             "
+        },
+        {
+            "id": "43",
+            "nom": "R\u00e9fus de lettre d'observation                                   "
+        },
+        {
+            "id": "46",
+            "nom": "AR lettre d'observation                                         "
+        },
+        {
+            "id": "50",
+            "nom": "R\u00e9ception d'info d\u00e9f\u00e9r\u00e9 au TA                                   "
+        }
+    ]
+}
