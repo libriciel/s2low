@@ -13,6 +13,13 @@ define('DB_USER', "${POSTGRES_USER:-tedetis}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD}");
 define('DB_DATABASE', "${POSTGRES_DB:-tedetis}");
 
+
+define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-localhost}");
+define('DB_USER_TEST', "${POSTGRES_USER_TEST:-tedetis}");
+define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-tedetis}");
+define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-tedetis}");
+
+
 define('TRACE_FILE_PATH','/tmp/slow.log');
 define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
 define('HELIOS_FILES_UPLOAD_ROOT', '/data/tdt-workspace/helios/sending/');

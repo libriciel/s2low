@@ -12,6 +12,11 @@ services:
             - "${WEB_HTTPS_PORT}:443"
         volumes:
             - .:/var/www/s2low
+        environment:
+            POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST}
+            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
+            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST}
+            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
 
     phppgadmin:
         image: keepitcool/phppgadmin
