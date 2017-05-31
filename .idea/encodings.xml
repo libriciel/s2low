@@ -12,6 +12,7 @@
     <file url="file://$PROJECT_DIR$/docker-resources/docker-s2low-entrypoint" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docker-resources/generate-config.sh" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/docker-resources/init-docker.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/docker-resources/ssmtp/ssmtp.conf" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/PsqlDiff.class.php" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/lib/PsqlSchemaInfo.class.php" charset="UTF-8" />
     <file url="PROJECT" charset="ISO-8859-1" />
