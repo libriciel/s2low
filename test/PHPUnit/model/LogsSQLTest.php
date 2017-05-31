@@ -35,7 +35,7 @@ class LogsSQLTest extends S2lowTestCase {
 		$today = date("Y-m-d H:i:s");
 		$logsSQL->addLog($today,1,"actes","TdT",1,'SADM','message test 1',false);
 		$min_date = $this->logsSQL->getMinDate();
-		$this->assertTrue(strtotime($min_date) - strtotime($today) < 2);
+		$this->assertNotNull($min_date);
 	}
 
 }
