@@ -17,7 +17,7 @@ class GroupSQL extends SQL {
 			$sql = "UPDATE authority_groups SET name=?, status=? WHERE id=?";
 			$this->query($sql, $name, $status, $id);
 		} else {
-			$sql = "INSERT INTO authority_groups(name,status) VALUES (?,?) RETURNING id";
+			$sql = "INSERT INTO authority_groups(id,name,status) VALUES (nextval('authority_groups_id_seq'),?,?) RETURNING id";
 			$id = $this->queryOne($sql,$name,$status);
 		}
 		return $id;
