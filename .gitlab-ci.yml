@@ -10,8 +10,6 @@ variables:
     POSTGRES_USER: tedetis
     POSTGRES_PASSWORD: tedetis
 
-services:
-    - postgres:latest
 
 
 build:
@@ -27,15 +25,16 @@ build:
 unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
+    services:
+        - postgres:latest
     variables:
         XDEBUG_ON: "true"
         POSTGRES_USER: tedetis
         POSTGRES_PASSWORD: tedetis
         POSTGRES_DB: tedetis
+        POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "http://localhost/"
         S2LOW_WEBSITE_SSL: "https://localhost/"
-    services:
-        - postgres
     script:
         - /usr/local/lib/composer/vendor/bin/phpunit --coverage-text --colors=never -c /var/www/s2low/test/PHPUnit/phpunit.xml
 
