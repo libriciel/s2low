@@ -14,24 +14,7 @@ fi
 
 /bin/bash /var/www/s2low/docker-resources/generate-config.sh > /etc/s2low/DockerSettings.php
 
-
-# Création de l'arborescence du workspace
-mkdir /data/tdt-workspace/actes && \
-    mkdir /data/tdt-workspace/helios && \
-    mkdir /data/tdt-workspace/mail && \
-    mkdir /data/tdt-workspace/uploads && \
-    mkdir /data/tdt-workspace/dia && \
-    mkdir /data/tdt-workspace/actes/uploads && \
-    mkdir /data/tdt-workspace/actes/batchs && \
-    mkdir /data/tdt-workspace/helios/sending-tmp && \
-    mkdir /data/tdt-workspace/helios/sending && \
-    mkdir /data/tdt-workspace/helios/response && \
-    mkdir /data/tdt-workspace/helios/response_tmp && \
-    mkdir /data/tdt-workspace/helios/response_backup && \
-    mkdir /data/tdt-workspace/helios/response_error && \
-    mkdir /data/tdt-workspace/helios/temp && \
-    mkdir /data/tdt-workspace/logs-export && \
-    mkdir -p /data/tdt-workspace/uploads/etat_civil
+/bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh
 
 # Pour HTMLPurifier qui marche pas sans son repertoire vide (et qui du coup est supprimé par git)
 # TODO dans le dockerfile ?
