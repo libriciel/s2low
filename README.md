@@ -10,24 +10,5 @@
 
 Le docker est basé sur [php5.6-apache](https://hub.docker.com/_/php/).
 
-
-
-Variable d'environnement du docker 
-
-| Variable d'environnement | Signification | Valeur par défaut |
-| S2LOW_WEBSITE | URL du site HTTP | |
-| S2LOW_WEBSITE_SSL | URL du site HTTPS | |
- 
-
-WORKSPACE_VOLUME=/Users/eric/data_docker/s2low/workspace
-PHP_SESSION=/Users/eric/data_docker/s2low/session
-SERVER_SSL_CERTIFICAT=/Users/eric/data_docker/s2low/certificat/
-POSTGRES_USER=tedetis
-POSTGRES_PASSWORD=tedetis
-POSTGRES_DB=tedetis
-POSTGRESQL_DATADIR=/Users/eric/data_docker/s2low/pgdata/
-
-WEB_HTTP_PORT=10080
-WEB_HTTPS_PORT=10443
-PHPPGADMIN_HTTP_PORT=10001
+Le fichier des variables d'environnement du docker ou du docker-compose peut être trouvé sur le fichier .env.exemple
 
