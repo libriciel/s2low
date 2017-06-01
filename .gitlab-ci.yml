@@ -37,6 +37,10 @@ unit_test:
         S2LOW_WEBSITE_SSL: "https://localhost/"
     script:
         - /usr/local/lib/composer/vendor/bin/phpunit --coverage-text --colors=never -c /var/www/s2low/test/PHPUnit/phpunit.xml
+#TODO a supprimer
+    except:
+        - master
+
 
 deploy_app:
     stage: staging
@@ -52,4 +56,4 @@ deploy_app:
         - scp ./docker-compose.staging.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-compose.override.yml
         - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
         - scp /tmp/.env s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/
-        - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/docker-file/  && docker-compose pull && docker-compose up -d"
+        - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/s2low/docker-file/  && docker-compose pull && docker-compose up -d"
