@@ -29,7 +29,7 @@ services:
             PASV_MIN_PORT: ${PASV_MIN_PORT}
             PASV_MAX_PORT: ${PASV_MAX_PORT}
         volumes:
-          - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${FTP_USER}/
+          - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${HELIOS_FTP_LOGIN}/
 
     tomcat:
         image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
