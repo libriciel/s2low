@@ -30,9 +30,6 @@ services:
             PASV_MAX_PORT: ${PASV_MAX_PORT}
         volumes:
           - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${FTP_USER}/
-        ports:
-          - "${FTP_PORT}:21"
-          - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
 
     tomcat:
         image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
@@ -55,7 +52,6 @@ services:
         volumes:
             - ${ACTES_FILES_UPLOAD_ROOT}:/data/tdt-workspace/actes/uploads/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/timestamp-certificate/s2low_timestamp_cert.p12
-
         ports:
             - ${TOMCAT_PORT}:8080
 

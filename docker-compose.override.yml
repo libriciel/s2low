@@ -42,8 +42,8 @@ services:
     ftp:
         image: mcreations/ftp
         environment:
-            FTP_USER: ${FTP_USER}
-            FTP_PASS: ${FTP_PASS}
+            FTP_USER: ${HELIOS_FTP_LOGIN}
+            FTP_PASS: ${HELIOS_FTP_PASSWORD}
             PASV_MIN_PORT: ${PASV_MIN_PORT}
             PASV_MAX_PORT: ${PASV_MAX_PORT}
         volumes:
