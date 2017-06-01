@@ -7,6 +7,9 @@ services:
             - simulateur
             - ftp:ftp
             - tomcat:tomcat
+        ports:
+            - "80:80"
+            - "443:443"
 
     simulateur:
         image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
