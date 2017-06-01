@@ -10,7 +10,7 @@ define("WEBSITE","${S2LOW_WEBSITE:-http://localhost/}");
 define("WEBSITE_SSL","${S2LOW_WEBSITE_SSL:-https://localhost}");
 define('DB_HOST', "${POSTGRES_HOST:-localhost}");
 define('DB_USER', "${POSTGRES_USER:-tedetis}");
-define('DB_PASSWORD', "${POSTGRES_PASSWORD}");
+define('DB_PASSWORD', "${POSTGRES_PASSWORD:-tedetis}");
 define('DB_DATABASE', "${POSTGRES_DB:-tedetis}");
 
 
