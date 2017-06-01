@@ -56,5 +56,5 @@ deploy_app:
         - scp ./docker-compose.staging.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-compose.override.yml
         - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
         - scp /tmp/.env s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/
-        - scp ./docker-resources/Dockerfile* s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-resources
+        - scp ./docker-resources/Dockerfile* ./docker-resources/docker_postgres.sh s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-resources
         - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/s2low/docker-file/  && docker-compose pull && docker-compose up -d"
