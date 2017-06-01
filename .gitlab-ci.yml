@@ -52,7 +52,7 @@ deploy_app:
         - ssh-add <(echo "$SSH_PRIVATE_KEY")
         - mkdir -p ~/.ssh
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - scp ./docker-compose.yml s2low@s2low.test.libriciel.fr:/data/docker-file
+        - scp ./docker-compose.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file
         - scp ./docker-compose.staging.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-compose.override.yml
         - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
         - scp /tmp/.env s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/
