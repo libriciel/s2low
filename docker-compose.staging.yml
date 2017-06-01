@@ -2,31 +2,13 @@ version: '2.0'
 
 services:
     web:
-        build: .
+        image: gitlab.libriciel.fr:4567/s2low/s2low:master
         links:
             - simulateur
             - ftp:ftp
             - tomcat:tomcat
-        ports:
-            - "${WEB_HTTP_PORT}:80"
-            - "${WEB_HTTPS_PORT}:443"
         volumes:
             - .:/var/www/s2low
-        environment:
-            POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST}
-            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
-            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST}
-            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
-
-    phppgadmin:
-        image: keepitcool/phppgadmin
-        environment:
-            - DB_HOST=db
-            - DB_PORT=5432
-        links:
-            - db:db
-        ports:
-            - "${PHPPGADMIN_HTTP_PORT}:80"
 
     simulateur:
         image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
@@ -42,19 +24,15 @@ services:
     ftp:
         image: mcreations/ftp
         environment:
-            FTP_USER: ${HELIOS_FTP_LOGIN}
-            FTP_PASS: ${HELIOS_FTP_PASSWORD}
+            FTP_USER: ${FTP_USER}
+            FTP_PASS: ${FTP_PASS}
             PASV_MIN_PORT: ${PASV_MIN_PORT}
             PASV_MAX_PORT: ${PASV_MAX_PORT}
         volumes:
           - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${FTP_USER}/
-        ports:
-          - "${FTP_PORT}:21"
-          - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
 
     tomcat:
         image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
-        #image: tedetisjava_tomcat
         links:
             - db:db
             - mail:mail
@@ -74,7 +52,6 @@ services:
         volumes:
             - ${ACTES_FILES_UPLOAD_ROOT}:/data/tdt-workspace/actes/uploads/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/timestamp-certificate/s2low_timestamp_cert.p12
-
         ports:
             - ${TOMCAT_PORT}:8080
 
@@ -82,8 +59,6 @@ services:
         build:
             context: ./docker-resources/
             dockerfile: Dockerfile-mail
-        ports:
-            - "10143:143"
         environment:
             - MAILNAME=tedetis.org
             - MAIL_ADDRESS=mail@tedetis.org

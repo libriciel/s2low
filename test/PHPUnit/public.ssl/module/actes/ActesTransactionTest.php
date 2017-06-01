@@ -15,7 +15,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	protected function setUp() {
 		parent::setUp();
 		$this->actesTransaction = new ActesTransaction();
-		$this->actesTransaction->set("destDir","");
+		$this->actesTransaction->set("destDir","toto");
 
 		$this->pdf_filepath = __DIR__."/../../../fixtures/vide.pdf";
 		$this->xml_filepath = __DIR__."/../../../fixtures/toto.xml";
@@ -54,20 +54,21 @@ class ActesTransactionTest extends S2lowTestCase {
 
 	private function addActePDF(){
 		$dest_filename = mt_rand(0,mt_getrandmax());
-		$this->assertTrue($this->actesTransaction->addActeFile("vide.pdf","$dest_filename",$this->pdf_filepath));
-		$this->validateAndRemoveFile("{$dest_filename}.pdf");
+		$r = $this->actesTransaction->addActeFile("vide.pdf","toto/$dest_filename",$this->pdf_filepath);
+		$this->assertTrue($r);
+		$this->validateAndRemoveFile("toto/{$dest_filename}.pdf");
 	}
 
 	public function addActeXML(){
 		$dest_filename = mt_rand(0,mt_getrandmax());
-		$this->assertTrue($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
-		$this->validateAndRemoveFile("{$dest_filename}.xml");
+		$this->assertTrue($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
+		$this->validateAndRemoveFile("toto/{$dest_filename}.xml");
 	}
 
 	private function addAnnexePDF(){
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.pdf",$dest_filename2,$this->pdf_filepath));
-		$this->validateAndRemoveFile("{$dest_filename2}.pdf");
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.pdf","toto/$dest_filename2",$this->pdf_filepath));
+		$this->validateAndRemoveFile("toto/{$dest_filename2}.pdf");
 	}
 
 	public function testAddFileActePDF(){
@@ -103,14 +104,14 @@ class ActesTransactionTest extends S2lowTestCase {
 
 	public function testAddActesXMLBadNature(){
 		$dest_filename = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
+		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
 		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddActesXMLBadClassif(){
 		$this->actesTransaction->set('nature_code',5);
 		$dest_filename = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","$dest_filename",$this->xml_filepath));
+		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
 		$this->assertEquals("Seul la classification 7.1 est autorisé pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
 	}
 
@@ -126,21 +127,21 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->setActesBudgetaire();
 		$this->addActePDF();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
-		$this->validateAndRemoveFile("{$dest_filename2}.xml");
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
+		$this->validateAndRemoveFile("toto/{$dest_filename2}.xml");
 	}
 
 	public function testAttachmentXMLNoBudgetaire(){
 		$this->addActePDF();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
+		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddManyXMLAttachment(){
 		$this->testAttachmentXML();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml",$dest_filename2,$this->xml_filepath));
+		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
 	}
 

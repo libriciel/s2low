@@ -1,10 +1,7 @@
 config/LocalSettings.php
-**/.idea/workspace.xml
-**/.idea/tasks.xml
-**/.idea/*.iml
-**/.idea/dataSources.local.xml
+.idea
 vendor/
 .env
 .DS_STORE
 temp/
-
+public.ssl/libersign

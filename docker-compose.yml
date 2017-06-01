@@ -20,6 +20,7 @@ services:
             HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD}
             SMTP_SERVER: ${SMTP_SERVER}
             SMTP_PORT: ${SMTP_PORT}
+            LIBERSIGN_INSTALLER: ${LIBERSIGN_INSTALLER}
 
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace

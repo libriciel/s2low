@@ -228,6 +228,9 @@ class HeliosAnalyseFichierRecu {
 	}
 	
 	private function sendMailToAdmin($subject,$msg){
+		if (TESTING_ENVIRONNEMENT){
+			return;
+		}
 		mail($this->email_admin,$subject,$msg,"from: {$this->email_from}");
 	}
 	

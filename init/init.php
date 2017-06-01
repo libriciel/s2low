@@ -8,8 +8,8 @@ set_include_path( 	get_include_path() . PATH_SEPARATOR .
 					__DIR__ . "/../class/" . PATH_SEPARATOR . 
 					__DIR__ . "/../class/actes"  . PATH_SEPARATOR . 
 					__DIR__ . "/../class/helios"  . PATH_SEPARATOR . 
-					__DIR__ . "/../class/mailsec". PATH_SEPARATOR . 
-					__DIR__ . "/../class/dia"
+					__DIR__ . "/../class/mailsec". PATH_SEPARATOR
+
 					);
 					
 if ( ! function_exists('s2low_autoload')) {

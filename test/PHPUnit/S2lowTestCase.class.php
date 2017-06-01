@@ -17,6 +17,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
 		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
 		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
+		$this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
+		$this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+
 		$_GET = array();
 		$_POST = array();
 		$_SESSION = array();
