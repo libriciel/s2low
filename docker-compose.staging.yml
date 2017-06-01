@@ -24,8 +24,8 @@ services:
     ftp:
         image: mcreations/ftp
         environment:
-            FTP_USER: ${FTP_USER}
-            FTP_PASS: ${FTP_PASS}
+            FTP_USER: ${HELIOS_FTP_LOGIN}
+            FTP_PASS: ${HELIOS_FTP_PASSWORD}
             PASV_MIN_PORT: ${PASV_MIN_PORT}
             PASV_MAX_PORT: ${PASV_MAX_PORT}
         volumes:
@@ -50,7 +50,7 @@ services:
             IMAP_PASSWORD: password
             TIMESTAMP_CERTIFICAT_PASSWORD: ${TIMESTAMP_CERTIFICAT_PASSWORD}
         volumes:
-            - ${ACTES_FILES_UPLOAD_ROOT}:/data/tdt-workspace/actes/uploads/
+            - ${ACTES_FILES_UPLOAD_ROOT}:/data/s2low/workspace/actes/uploads/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/timestamp-certificate/s2low_timestamp_cert.p12
         ports:
             - ${TOMCAT_PORT}:8080
