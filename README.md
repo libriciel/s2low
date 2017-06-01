@@ -3,7 +3,7 @@
 [![build status](https://gitlab.libriciel.fr/s2low/s2low/badges/master/build.svg)](https://gitlab.libriciel.fr/s2low/s2low/commits/master)
 [![coverage report](https://gitlab.libriciel.fr/s2low/s2low/badges/master/coverage.svg)](https://gitlab.libriciel.fr/s2low/s2low/commits/master)
 
-#s2low
+# S2low
 
 
 ## Configuration du docker

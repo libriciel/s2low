@@ -44,7 +44,7 @@ ob_start();
 
 		<div class="alert alert-warning">
 			Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
-			parcimonie pour les besoins du services.
+			parcimonie pour les besoins du service.
 		</div>
 
 		<h2>Actes</h2>
