@@ -49,7 +49,7 @@ deploy_app:
         - mkdir -p ~/.ssh
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         - scp ./docker-compose.yml gitlab@s2low.test.libriciel.fr:/data/docker-file
-        - scp ./docker-compose.staging.yml gitlab@s2low.test.libriciel.fr:/data/docker-file/docker-compose.override.yml
+        - scp ./docker-compose.staging.yml gitlab@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-compose.override.yml
         - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
-        - scp /tmp/.env gitlab@s2low.test.libriciel.fr:/data/docker-file/
+        - scp /tmp/.env gitlab@s2low.test.libriciel.fr:/data/s2low/docker-file/
         - ssh -tt gitlab@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/docker-file/  && docker-compose pull && docker-compose up -d"
