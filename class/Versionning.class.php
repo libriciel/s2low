@@ -3,53 +3,59 @@
 class VersionningFactory {
 	
 	public static function getInstance(){
-		
-		$version_file = dirname(__FILE__)."/../version.txt";
-		$revision_file = dirname(__FILE__)."/../revision.txt";
-		$versionning = new Versionning($version_file,$revision_file);
+		$manifest = __DIR__."/../manifest.txt";
+		$versionning = new Versionning($manifest);
 		return $versionning;
 	}
 }
 
 class Versionning {
-	
-	private $versionFile ;
-	private $revisionFile;
-	
-	public function __construct($versionFile,$revisionFile){
-		$this->versionFile = $versionFile;
-		$this->revisionFile = $revisionFile;
+
+	const BUILD_ID = "BUILD_ID";
+	const BUILD_DATE = "BUILD_DATE";
+	const VERSION = "VERSION";
+
+	private $manifest_file;
+
+	public function __construct($manifest_file){
+		$this->manifest_file = $manifest_file;
 	}
-	
+
+	private function getInfo(){
+		$revisionFileContent = file_get_contents($this->manifest_file);
+		$result = array();
+		foreach(explode("\n",$revisionFileContent) as $line){
+			foreach(array(self::BUILD_DATE,self::BUILD_ID,self::VERSION) as $info){
+				if (preg_match("#^$info=(.*)#",$line,$matches)){
+					$result[$info] = $matches[1];
+				}
+			}
+		}
+		return $result;
+	}
+
+	private function getSpecificInfo($key){
+		$info = $this->getInfo();
+		return $info[$key];
+	}
+
 	public function getRevision(){
-		$revisionFileContent = file_get_contents($this->revisionFile);
-		foreach(explode("\n",$revisionFileContent) as $line){
-			if (preg_match('#^\$Rev: (\d*) \$#',$line,$matches)){
-				return $matches[1];
-			}
-		}
-		return false;
+		return $this->getSpecificInfo(self::BUILD_ID);
 	}
-	
+
 	public function getDate(){
-		$revisionFileContent = file_get_contents($this->revisionFile);
-		foreach(explode("\n",$revisionFileContent) as $line){
-			if (preg_match('#^\$LastChangedDate: (\d{4}-\d{2}-\d{2}).* \$#',$line,$matches)){
-				return $matches[1];
-			}
-		}
-		return false;
+		return $this->getSpecificInfo(self::BUILD_DATE);
 	}
-	
+
 	public function getVersion(){
-		return file_get_contents($this->versionFile);
+		return $this->getSpecificInfo(self::VERSION);
 	}
-	
+
 	public function getAllInfo(){
 		$result['version'] = $this->getVersion();
 		$result['revision'] = $this->getRevision();
-		$result['date'] = date("d/m/Y",strtotime($this->getDate()));
-		
+		$result['date'] = $this->getDate();
+
 		$result['version-complete'] =  "Version {$result['version']} - Révision  {$result['revision']} - {$result['date']}" ;
 		return $result;
 	}
