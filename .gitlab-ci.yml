@@ -3,23 +3,21 @@ stages:
     - test
     - staging
 
-
 variables:
     CONTAINER_IMAGE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     POSTGRES_DB: tedetis
     POSTGRES_USER: tedetis
     POSTGRES_PASSWORD: tedetis
 
-
 build:
   stage: build
   tags:
     - docker-build
   script:
+    - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --pull -t ${CONTAINER_IMAGE} .
     - docker push ${CONTAINER_IMAGE}
-
 
 unit_test:
     stage: test
@@ -37,10 +35,6 @@ unit_test:
         S2LOW_WEBSITE_SSL: "https://localhost/"
     script:
         - /usr/local/lib/composer/vendor/bin/phpunit --coverage-text --colors=never -c /var/www/s2low/test/PHPUnit/phpunit.xml
-#TODO a supprimer
-    except:
-        - master
-
 
 deploy_app:
     stage: staging
