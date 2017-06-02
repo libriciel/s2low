@@ -29,6 +29,13 @@ chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 usermod -s /bin/bash www-data
 
 
+if [ "${PUBLISH_SIMULATEUR}" = true ] ; then
+    a2ensite simulateur
+else
+    a2dissite simulateur
+fi
+
+
 php /var/www/s2low/docker-resources/init-docker.php
 
 exec "$@"

@@ -103,7 +103,7 @@ EXPOSE 443 80
 WORKDIR /var/www/s2low/
 
 
-COPY ./docker-resources/apache/s2low-apache-config.conf /etc/apache2/sites-available/s2low-apache-config.conf
+COPY ./docker-resources/apache/* /etc/apache2/sites-available/
 RUN a2ensite s2low-apache-config.conf
 
 
