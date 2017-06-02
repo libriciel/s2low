@@ -1,6 +1,6 @@
 config/LocalSettings.php
 .idea
-vendor/
+/vendor/
 .env
 .DS_STORE
 temp/
