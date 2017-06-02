@@ -34,6 +34,7 @@ RUN pecl install xdebug-2.5.3 && \
 COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
 
 RUN a2enmod \
+    expires \
     headers \
     proxy \
     proxy_http \
