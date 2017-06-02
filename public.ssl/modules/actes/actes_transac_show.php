@@ -414,9 +414,11 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
 
     $org = new Authority($me->get("authority_id"));
     $defaultbroadcast_email = $org->get("default_broadcast_email");
-    if ($defaultbroadcast_email != NULL)
-        $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
-
+    if ($defaultbroadcast_email != NULL) {
+		$defaultbroadcast_email = explode(",", $defaultbroadcast_email);
+	} else {
+		$defaultbroadcast_email = array();
+    }
 
     $broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
     $broadcast_email = explode(",", $broadcast_email);
