@@ -23,7 +23,6 @@ class PsqlDiff {
 		$db2 = $this->normalizeDBDefinition($db2);
 		$sql = array();
 		$sql = array_merge($sql,$this->createSequence($db1, $db2));
-		
 		$table_create_sql = $this->createTable($db1, $db2);
 
 		usort($table_create_sql['constraint'],function($a,$b){
