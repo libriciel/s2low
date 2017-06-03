@@ -10,6 +10,9 @@ services:
         ports:
             - "80:80"
             - "443:443"
+        environment:
+            LETSENCRYPT_DOMAIN: ${LETSENCRYPT_DOMAIN}
+            LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
         volumes:
             - ${LETSENCRYPT_DATADIR}:/etc/letsencrypt
 
@@ -67,11 +70,4 @@ services:
             - MAIL_ADDRESS=mail@tedetis.org
             - MAIL_PASS=password
 
-    letsencrypt:
-        image:  blacklabelops/letsencrypt
-        environment:
-            LETSENCRYPT_HTTPS_ENABLED: "false"
-            LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-            LETSENCRYPT_DOMAIN1: ${LETSENCRYPT_DOMAIN}
-        volumes:
-            - ${LETSENCRYPT_DATADIR}:/etc/letsencrypt
+
