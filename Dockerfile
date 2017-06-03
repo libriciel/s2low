@@ -38,6 +38,7 @@ RUN a2enmod \
     headers \
     proxy \
     proxy_http \
+    rewrite \
     ssl
 
 # Extensions PHP
