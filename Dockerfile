@@ -16,6 +16,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     && rm -r /var/lib/apt/lists/*
 
+# Installation de certbot
+RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list
+RUN apt-get update && apt-get install -y -t jessie-backports \
+    certbot \
+    python-certbot-apache
 
 # Gestion des locales
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \

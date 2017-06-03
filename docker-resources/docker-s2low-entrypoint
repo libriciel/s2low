@@ -36,18 +36,12 @@ else
 fi
 
 if [ "$LETSENCRYPT_DOMAIN" ] ; then
-
     if [ -f "/etc/apache2/ssl/fullchain.pem" ] ; then
-        if [ -f /usr/bin/certbot ] ; then
-            certbot renew --dry-run
-        fi
+            certbot renew
     else
-        echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list
-
-        apt-get update
-        apt-get install -y -t jessie-backports certbot python-certbot-apache
-        #certbot --apache certonly --
-
+        certbot --standalone --noninteractive --agree-to --preferred-challenges http -d ${LETSENCRYPT_DOMAIN} -m ${LETSENCRYPT_EMAIL} certonly
+        ln -s /etc/letsencrypt/live/s2low.test.libriciel.fr/fullchain.pem /etc/apache2/ssl/
+        ln -s /etc/letsencrypt/live/s2low.test.libriciel.fr/privkey.pem /etc/apache2/ssl/
     fi
 
 fi
