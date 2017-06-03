@@ -10,6 +10,8 @@ services:
         ports:
             - "80:80"
             - "443:443"
+        volumes:
+            - ${LETSENCRYPT_DATADIR}:/etc/letsencrypt
 
     simulateur:
         image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
@@ -64,3 +66,12 @@ services:
             - MAILNAME=tedetis.org
             - MAIL_ADDRESS=mail@tedetis.org
             - MAIL_PASS=password
+
+    letsencrypt:
+        image:  blacklabelops/letsencrypt
+        environment:
+            LETSENCRYPT_HTTPS_ENABLED: "false"
+            LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+            LETSENCRYPT_DOMAIN1: ${LETSENCRYPT_DOMAIN}
+        volumes:
+            - ${LETSENCRYPT_DATADIR}:/etc/letsencrypt
