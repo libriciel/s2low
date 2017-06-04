@@ -110,16 +110,16 @@ class PostgreSQLDifference {
 
 	private function createConstraint(array $base_definition,array $base_cible_definition){
 
-
-
 		$result = array();
-		foreach($base_cible_definition['constraint'] as $index_name => $index_param){
-			if (empty($base_definition['constraint'][$index_name])){
-				$result[] = $index_param;
-				continue;
-			}
-			if (! $this->isConstraintEqual($base_definition['constraint'][$index_name],$base_cible_definition['constraint'][$index_name])){
-				$result[] = $index_param;
+		foreach($base_cible_definition['constraint'] as $table_name => $table_constraint){
+			foreach($table_constraint as $index_name => $index_param) {
+				if (empty($base_definition['constraint'][$table_name][$index_name])) {
+					$result[] = $index_param;
+					continue;
+				}
+				if (!$this->isConstraintEqual($base_definition['constraint'][$table_name][$index_name], $base_cible_definition['constraint'][$table_name][$index_name])) {
+					$result[] = $index_param;
+				}
 			}
 		}
 		return $result;
@@ -127,13 +127,17 @@ class PostgreSQLDifference {
 
 	private function dropConstraint(array $base_definition,array $base_cible_definition){
 		$result = array();
-		foreach($base_definition['constraint'] as $index_name => $index_param){
-			if (empty($base_cible_definition['constraint'][$index_name])){
-				$result[] = $index_param;
-				continue;
-			}
-			if (! $this->isConstraintEqual($base_definition['constraint'][$index_name],$base_cible_definition['constraint'][$index_name])){
-				$result[] = $index_param;
+		foreach($base_definition['constraint'] as $table_name => $table_constraint) {
+			foreach ($table_constraint as $index_name => $index_param) {
+				if (empty($base_cible_definition['constraint'][$table_name][$index_name])) {
+					$result[] = $index_param;
+					continue;
+				}
+				if (!$this->isConstraintEqual(
+					$base_definition['constraint'][$table_name][$index_name],
+					$base_cible_definition['constraint'][$table_name][$index_name])) {
+					$result[] = $index_param;
+				}
 			}
 		}
 		return $result;

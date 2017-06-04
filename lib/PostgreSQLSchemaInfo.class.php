@@ -40,7 +40,7 @@ class PostgreSQLSchemaInfo extends SQL {
 		$sql = "SELECT tablename,indexname,indexdef FROM pg_indexes WHERE schemaname='public'";
 		$result = array();
 		foreach($this->query($sql) as $line){
-			if ( isset($constraint[$line['indexname']])){
+			if ( isset($constraint[$line['tablename']][$line['indexname']])){
 				continue;
 			}
 			$indexname = $line['indexname'];
@@ -69,7 +69,7 @@ class PostgreSQLSchemaInfo extends SQL {
 		foreach($this->query($sql) as $line){
 			$line['conkey'] = $this->convertConkeyToConkeyname($line['conkey'],$table, $line['conrelname']);
 			$line['confkey'] = $this->convertConkeyToConkeyname($line['confkey'],$table,$line['confrelname']);
-			$result[] = $line;
+			$result[$line['conrelname']][$line['conname']] = $line;
 		}
 		return $result;
 	}

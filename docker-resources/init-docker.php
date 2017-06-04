@@ -25,7 +25,6 @@ if (DB_DATABASE_TEST) {
 
 	/** @var PostgreSQLController $postgreSQLController */
 	$postgreSQLController = $objectInstancierTest->get('PostgreSQLController');
-	//$postgreSQLController->alterDatabase(function($m){echo "[docker-init]".$m."\n";});
-	print_r($postgreSQLController->getAlterDatabaseCommand());
+	$postgreSQLController->alterDatabase(function($m){echo "[Mise à jour base de données de test]".$m."\n";});
 }
 

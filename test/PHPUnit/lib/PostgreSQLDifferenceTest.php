@@ -49,29 +49,29 @@ class PostgreSQLDifferenceTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateConstraint(){
-		$constraint_list = array(array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array()));
+		$constraint_list =  array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array());
 		$db1 = array();
-		$db2 = array('constraint'=>$constraint_list);
+		$db2 = array('constraint'=>array('table1' => array('foo' =>$constraint_list)));
 		$result = $this->postgreSQLDifference->getDifference($db1,$db2);
-		$this->assertEquals($constraint_list,$result['create_constraint']);
+		$this->assertEquals($constraint_list,$result['create_constraint'][0]);
 	}
 
 	public function testDeleteConstraint(){
-		$constraint_list = array(array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array()));
-		$db1 = array('constraint'=>$constraint_list);
+		$constraint_list = array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array());
+		$db1 = array('constraint'=>array('table1' => array('foo' =>$constraint_list)));
 		$db2 = array();
 		$result = $this->postgreSQLDifference->getDifference($db1,$db2);
-		$this->assertEquals($constraint_list,$result['drop_constraint']);
+		$this->assertEquals($constraint_list,$result['drop_constraint'][0]);
 	}
 
 	public function testModifConstraint(){
-		$constraint_list_1 = array(array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array()));
-		$constraint_list_2 = array(array('contype'=>'p','conrelname'=>'foo','conkey'=>array('new_id'),'confrelname'=>null,'confkey'=>array()));
-		$db1 = array('constraint'=>$constraint_list_1);
-		$db2 = array('constraint'=>$constraint_list_2);
+		$constraint_list_1 = array('contype'=>'p','conrelname'=>'foo','conkey'=>array('id'),'confrelname'=>null,'confkey'=>array());
+		$constraint_list_2 = array('contype'=>'p','conrelname'=>'foo','conkey'=>array('new_id'),'confrelname'=>null,'confkey'=>array());
+		$db1 = array('constraint'=>array('table1' => array('foo' =>$constraint_list_1)));
+		$db2 = array('constraint'=>array('table1' => array('foo' =>$constraint_list_2)));
 		$result = $this->postgreSQLDifference->getDifference($db1,$db2);
-		$this->assertEquals($constraint_list_2,$result['create_constraint']);
-		$this->assertEquals($constraint_list_1,$result['drop_constraint']);
+		$this->assertEquals($constraint_list_2,$result['create_constraint'][0]);
+		$this->assertEquals($constraint_list_1,$result['drop_constraint'][0]);
 	}
 
 	public function testCreateTable(){

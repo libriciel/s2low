@@ -109,8 +109,8 @@ class PostgreSQLDifferenceToSQL {
 			return ($contype[$a['contype']] < $contype[$b['contype']]) ? -1 : 1;
 		});
 		$result = array();
-		foreach($constraint_list as $constraint_name => $constraint_info){
-			$result[] = "ALTER TABLE {$constraint_info['conrelname']} DROP CONSTRAINT $constraint_name;";
+		foreach($constraint_list as $constraint_info){
+			$result[] = "ALTER TABLE {$constraint_info['conrelname']} DROP CONSTRAINT {$constraint_info['conname']};";
 		}
 		return $result;
 	}

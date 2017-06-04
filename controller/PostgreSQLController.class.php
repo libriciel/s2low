@@ -28,10 +28,6 @@ class PostgreSQLController {
 
 	public function getAlterDatabaseCommand(){
 		$database_definition = $this->postgreSQLSchemaInfo->getDatabaseDefinition();
-
-		print_r($database_definition);
-		exit;
-
 		$db_definition = file_get_contents($this->database_json_definition_filepath);
 		$file_defintion = json_decode($db_definition,true);
 		$difference = $this->postgreSQLDifference->getDifference($database_definition,$file_defintion);
@@ -56,7 +52,7 @@ class PostgreSQLController {
 			$log_function("Base de données modifié avec succès");
 		} catch (Exception $e){
 			$log_function($e->getMessage());
-			$this->sqlQuery->query("ROLBACK");
+			$this->sqlQuery->query("ROLLBACK");
 			$log_function("Erreur : La base de données N'A PAS été modifié");
 		}
 	}
