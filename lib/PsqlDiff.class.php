@@ -1,6 +1,21 @@
 <?php
 
+//TODO a supprimer
+
 class PsqlDiff {
+
+
+
+	/*
+
+
+
+	Les contraintes (unique) crée des index automatiquement
+
+	Il faut donc d'abord créer les contraintes AVANT Les index !
+
+	 *
+	 */
 	
 	/**
 	 * Return an array of SQL commands to eliminate differences 

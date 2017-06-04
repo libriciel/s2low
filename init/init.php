@@ -48,6 +48,8 @@ function sortir($message) {
 
 $objectInstancier = new ObjectInstancier();
 $objectInstancier->SQLQuery = $sqlQuery;
+$objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
+$objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
 
 $frontController = new FrontController($objectInstancier);
 
