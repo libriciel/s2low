@@ -14,4 +14,11 @@ require_once(__DIR__."/../../init/init.php");
 
 require_once(__DIR__."/S2lowTestCase.class.php");
 
+$sqlQuery = new SQLQuery(DB_DATABASE_TEST);
+$sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
+$sqlQuery->setDatabaseHost(DB_HOST_TEST);
+$sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
+
+/** @var ObjectInstancier $objectInstancier */
+$objectInstancier->sqlQuery = $sqlQuery;
 

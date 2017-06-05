@@ -242,7 +242,6 @@ actes_classification_requests:
 actes_envelopes:
 actes_included_files:
 actes_transactions:
-actes_transactions_workflow:
 actes_classification_codes:
 actes_envelope_serials:
 authority_group_siren:
@@ -250,3 +249,14 @@ helios_transactions:
 helios_transactions_workflow:
 nounce:
 message_admin:
+actes_status:
+  -
+    id: -1
+    name: Erreur
+  -
+    id: 19
+    name: En attente de transmission au SAE
+  -
+    id: 20
+    name: Erreur lors de l'envoi au SAE
+actes_transactions_workflow:

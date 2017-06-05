@@ -1,7 +1,8 @@
-config/LocalSettings.php
-.idea
+/config/LocalSettings.php
+/.idea
 /vendor/
-.env
+/.env
 .DS_STORE
-temp/
-public.ssl/libersign
+/temp/
+/public.ssl/libersign
+/public.ssl/temp

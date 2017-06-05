@@ -3,15 +3,22 @@
 
 class S2lowBootstrap {
 
-	public function bootstrap($sqlQuery){
+	private $sqlQuery;
+
+	public function __construct(SQLQuery $sqlQuery, PostgreSQLController $postgreSQLController) {
+		$this->sqlQuery = $sqlQuery;
+		$this->postgreSQLController = $postgreSQLController;
+	}
+
+	public function bootstrap(){
 		$this->log("Initialisation de S2low");
 		try {
 
 			$this->installCertificate();
 			$this->installHorodateur();
-			$this->dbUpdate($sqlQuery);
-			$this->insertDemou($sqlQuery);
-			$this->populateDatabase($sqlQuery);
+			$this->dbUpdate();
+			$this->insertDemou();
+			$this->populateDatabase();
 			$this->installLibersign();
 		} catch (Exception $e){
 			$this->log("Erreur : " . $e->getMessage());
@@ -45,32 +52,18 @@ class S2lowBootstrap {
 		}
 	}
 
-	private function dbUpdate(SQLQuery $sqlQuery){
-		$psqlSchemaInfo = new PsqlSchemaInfo($sqlQuery);
-		$database_definition = $psqlSchemaInfo->getDatabaseDefinition();
-		$db_definition = file_get_contents(__DIR__."/../db/s2low.sql.json");
-		$file_defintion = json_decode($db_definition,true);
-
-
-		$psqlDiff = new PsqlDiff();
-
-		$diff = $psqlDiff->diff($database_definition, $file_defintion);
-
-		foreach($diff as $query){
-			$this->log("$query");
-			$sqlQuery->query($query);
-		}
-
+	private function dbUpdate(){
+		$this->postgreSQLController->alterDatabase(function($message){$this->log($message);});
 	}
 
-	private function insertDemoU(SQLQuery $sqlQuery){
+	private function insertDemoU(){
 
-		if ($sqlQuery->queryOne("SELECT * FROM users WHERE name='admin'")){
+		if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE name='admin'")){
 			$this->log("L'utilisateur admin existe déjà");
 			return;
 		}
 
-		$authority_id = $sqlQuery->queryOne(
+		$authority_id = $this->sqlQuery->queryOne(
 			"INSERT INTO authorities (id, status, name) VALUES(nextval('authorities_id_seq'), 1, 'Administrateurs') RETURNING id"
 		);
 		$this->log("Création de l'utilisateur admin [certificat DEMO-SUPER Adullact G3]");
@@ -91,19 +84,20 @@ class S2lowBootstrap {
 
 		$user_id = $him->getId();
 
-		$userSQL = new UserSQL($sqlQuery);
+		$userSQL = new UserSQL($this->sqlQuery);
 		$userSQL->saveCertificateRGS2Etoiles($user_id,"");
 
 		$this->log("Utilisateur créé avec succès");
 	}
 
-	private function populateDatabase(SQLQuery $sqlQuery){
+	private function populateDatabase(){
 		$data = file_get_contents(__DIR__."/database/database_populate.json");
 		$all = json_decode($data,true);
 		foreach($all as $table => $table_definition){
 			foreach($table_definition as $line){
-				$sql = "SELECT * FROM $table WHERE id=?";
-				if ($sqlQuery->queryOne($sql,$line['id'])){
+				$sql = "SELECT * " .
+						" FROM $table WHERE id=?";
+				if ($this->sqlQuery->queryOne($sql,$line['id'])){
 					continue;
 				}
 				$all_id = array();
@@ -124,7 +118,7 @@ class S2lowBootstrap {
 				$point = implode(",",$point);
 				$sql2 = "INSERT INTO $table ($all_id) VALUES ($point)";
 				$this->log($sql2);
-				$sqlQuery->query($sql2,$all_value);
+				$this->sqlQuery->query($sql2,$all_value);
 			}
 		}
 
@@ -167,6 +161,7 @@ class S2lowBootstrap {
 		$make = file_get_contents(LIBERSIGN_INSTALLER);
 		file_put_contents("/tmp/libersign_make.sh",$make);
 		exec("/bin/bash /tmp/libersign_make.sh PROD",$output,$result);
+		return true;
 	}
 
 	private function log($message){

@@ -539,3 +539,7 @@ if (! defined("NEW_BANNER")) {
 }
 
 
+if (! defined("LIBERSIGN_INSTALLER")){
+	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign
+	define("LIBERSIGN_INSTALLER",false);
+}
