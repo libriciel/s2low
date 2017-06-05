@@ -21,3 +21,4 @@ $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 /** @var ObjectInstancier $objectInstancier */
 $objectInstancier->sqlQuery = $sqlQuery;
+
