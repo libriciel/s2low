@@ -24,7 +24,7 @@ unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
     services:
-        - postgres:9.6.2
+        - postgres
     variables:
         XDEBUG_ON: "true"
         POSTGRES_USER_TEST: tedetis
