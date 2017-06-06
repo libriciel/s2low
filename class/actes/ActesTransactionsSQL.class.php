@@ -60,6 +60,17 @@ class ActesTransactionsSQL {
 				" WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' ";
 		return $this->sqlQuery->query($sql,$status_id);	
 	}
+
+    public function getLastArchiveFromStatus($status_id,$start_date){
+        $sql = "SELECT  actes_transactions.*,authorities.*,actes_transactions.id as id FROM actes_transactions " .
+            " JOIN authorities ON actes_transactions.authority_id=authorities.id " .
+            " JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id".
+            " AND actes_transactions_workflow.status_id=? ".
+            " WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL " .
+            " AND authorities.pastell_url != '' AND actes_transactions_workflow.date > ?";
+        return $this->sqlQuery->query($sql,$status_id,$status_id,$start_date);
+    }
+
 	
 	public function getEnvelopeToDelete(){
 		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .
