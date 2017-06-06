@@ -259,4 +259,8 @@ actes_status:
   -
     id: 20
     name: Erreur lors de l'envoi au SAE
+  -
+    id: 12
+    name: Envoyé au SAE
+
 actes_transactions_workflow:
