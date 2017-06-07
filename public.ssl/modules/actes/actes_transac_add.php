@@ -53,7 +53,7 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
       $owner->init();
 
       // Vérification des permissions sur le lot
-      if (($me->isAuthorityAdmin && $me->get("authority_id") == $owner->get("authority_id")) || ($me->getId() == $owner->getId())) {
+      if (($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) || ($me->getId() == $owner->getId())) {
         $batchMode = true;
       }
     }
