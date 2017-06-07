@@ -42,7 +42,7 @@ deploy_app:
     only:
         - master
     variables:
-        PAYLOAD: "payload={\"text\": \"[s2low.test.libriciel.fr](https://s2low.test.libriciel.fr) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
+        PAYLOAD: "payload={\"text\": \"[s2low.test.libriciel.fr](https://s2low.test.libriciel.fr) a Ã©tÃ© mis Ã  jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
 
     script:
         - eval $(ssh-agent -s)
