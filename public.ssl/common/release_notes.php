@@ -88,6 +88,11 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+$html .= "<h2>V2.6.2 du 08.06.2017</h2>";
+$html .= "<ul>";
+$html .= "<li>Version n'apportant pas d'évolution fonctionnelle ;</li>";
+$html .= "</ul>";
+
 $html .= "<h2>V2.6.1 du 23.05.2017</h2>";
 $html .= "<ul>";
 $html .= "<li>Administration : permettre l'ajout d'un message d'information pour les utilisateurs ;</li>";

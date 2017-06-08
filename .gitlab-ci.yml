@@ -23,8 +23,6 @@ build:
 
 unit_test:
     stage: test
-    only:
-        - tags
     image : "$CONTAINER_IMAGE"
     services:
         - postgres
@@ -62,7 +60,8 @@ deploy_app:
 
 deploy_ftp:
     stage: production
-#    only: tags
+    only:
+      - tags
     image : "$CONTAINER_IMAGE"
     services:
         - postgres
