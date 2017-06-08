@@ -66,10 +66,18 @@ deploy_ftp:
     image : "$CONTAINER_IMAGE"
     services:
         - postgres
+
     variables:
         TARBALL_NAME: s2low-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID}.tar.gz
         PAYLOAD: "payload={\"text\": \"[s2low] Création de la version [$CI_COMMIT_REF_NAME](http://ressources.libriciel.fr/s2low/$TARBALL_NAME)\"}"
-
+        XDEBUG_ON: "true"
+        POSTGRES_USER_TEST: tedetis
+        POSTGRES_PASSWORD_TEST: tedetis
+        POSTGRES_DB_TEST: tedetis
+        POSTGRES_HOST_TEST: postgres
+        POSTGRES_HOST: postgres
+        S2LOW_WEBSITE: "http://localhost/"
+        S2LOW_WEBSITE_SSL: "https://localhost/"
     before_script:
         - apt-get -qq update && apt-get -yqq install openssh-client lftp
         - mkdir -p ~/.ssh
