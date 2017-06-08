@@ -2,6 +2,7 @@ stages:
     - build
     - test
     - staging
+    - production
 
 variables:
     CONTAINER_IMAGE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
@@ -13,6 +14,8 @@ build:
   stage: build
   tags:
     - docker-build
+  only:
+      - tags
   script:
     - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
     - mkdir -p ./ext/standalone/HTMLPurifier/DefinitionCache/Serializer
@@ -22,6 +25,8 @@ build:
 
 unit_test:
     stage: test
+    only:
+        - tags
     image : "$CONTAINER_IMAGE"
     services:
         - postgres
@@ -57,3 +62,22 @@ deploy_app:
         - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/s2low/docker-file/  && docker-compose pull && docker-compose up -d"
         - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
 
+deploy_ftp:
+    stage: production
+#    only: tags
+    image : "$CONTAINER_IMAGE"
+    variables:
+        TARBALL_NAME: s2low-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID}.tar.gz
+        PAYLOAD: "payload={\"text\": \"[s2low] Création de la version [$CI_COMMIT_REF_NAME](http://ressources.libriciel.fr/s2low/$TARBALL_NAME)\"}"
+
+    before_script:
+        - apt-get -qq update && apt-get -yqq install openssh-client lftp
+        - mkdir -p ~/.ssh
+        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    script:
+        - cd /var/www/ && tar cvzf /tmp/${TARBALL_NAME} s2low
+        - lftp -p 2222 -u "s2low","${RESSOURCE_LIBRICIEL_FTP_PASSWD}"  "sftp://ressources.libriciel.fr/s2low" -e "put /tmp/${TARBALL_NAME}; bye"
+
+
+
+  
