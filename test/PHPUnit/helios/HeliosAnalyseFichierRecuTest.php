@@ -172,7 +172,11 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	public function testPesAcquitDeuxPESUnTransmisDeux(){
 		$transaction_id_1 = $this->createPESAller();
 		$transaction_id_2 = $this->createPESAller();
-		$this->heliosTransactionSQL->updateStatus($transaction_id_2,HeliosTransactionsSQL::ACQUITTER,"test");
+		$this->heliosTransactionSQL->updateStatus(
+		    $transaction_id_2,
+            HeliosTransactionsSQL::ACQUITTER,
+            "test"
+        );
 		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
 	}
 }
