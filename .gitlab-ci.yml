@@ -64,6 +64,8 @@ deploy_ftp:
     stage: production
 #    only: tags
     image : "$CONTAINER_IMAGE"
+    services:
+        - postgres
     variables:
         TARBALL_NAME: s2low-${CI_COMMIT_REF_NAME}-${CI_PIPELINE_ID}.tar.gz
         PAYLOAD: "payload={\"text\": \"[s2low] Création de la version [$CI_COMMIT_REF_NAME](http://ressources.libriciel.fr/s2low/$TARBALL_NAME)\"}"
