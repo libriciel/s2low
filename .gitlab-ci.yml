@@ -85,6 +85,7 @@ deploy_ftp:
     script:
         - cd /var/www/ && tar cvzf /tmp/${TARBALL_NAME} s2low
         - lftp -p 2222 -u "s2low","${RESSOURCE_LIBRICIEL_FTP_PASSWD}"  "sftp://ressources.libriciel.fr/s2low" -e "put /tmp/${TARBALL_NAME}; bye"
+        - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
 
 
 
