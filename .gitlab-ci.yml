@@ -14,8 +14,6 @@ build:
   stage: build
   tags:
     - docker-build
-  only:
-      - tags
   script:
     - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
     - mkdir -p ./ext/standalone/HTMLPurifier/DefinitionCache/Serializer
