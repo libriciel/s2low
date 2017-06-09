@@ -7,6 +7,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
  
+## [2.6.3] - 2017-06-09
+ 
+- Mise à jour du schéma PES en version 5.3
+ 
 ## [2.6.2] - 2017-06-08
 
 ### Evolutions

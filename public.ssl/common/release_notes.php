@@ -88,6 +88,13 @@ $html .= "";
 // $html .= "<ul>";
 // $html .= "<li>";
 // $html .= "</ul>";
+
+$html .= "<h2>V2.6.3 du 09.06.2017</h2>";
+$html .= "<ul>";
+$html .= "<li>Mise à jour du schéma PES en version 5.3 ;</li>";
+$html .= "</ul>";
+
+
 $html .= "<h2>V2.6.2 du 08.06.2017</h2>";
 $html .= "<ul>";
 $html .= "<li>Version n'apportant pas d'évolution fonctionnelle ;</li>";
