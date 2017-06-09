@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type_Retour.xsd" />
+  <xs:complexType name="TEnveloppe">
+    <xs:annotation>
+      <xs:documentation>L'enveloppe contient les éléments d'identification du flux (fichier, émetteur et récepteur)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Parametres" type="TParametres">
+        <xs:annotation>
+          <xs:documentation>Caractéristiques du fichier</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Emetteur" type="TCarteVisite" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Carte de visite de l'émetteur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Recepteur" type="TCarteVisite" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Carte de visite du récepteur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TParametres">
+    <xs:annotation>
+      <xs:documentation>Caractéristiques du fichier</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Version" type="Base_Num2">
+        <xs:annotation>
+          <xs:documentation>Numéro de version du message. Ce numéro est relatif à l'enveloppe. Doit être valorisé à 1</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypFic" type="Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Code du type de fichier : 
+- PES2R_DEP pour le PES_Retour Dépense</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomFic" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Nom du fichier.
+- pour le PES Retour Dépense : PES2R_DEP__NatureRestit_CodColl_CodBud_Codique_DateSituation_Date_Traitement_TimeStamp.xml.
+NatureRestit = R pour flux de mandats rejetés/mis en instance, P pour flux périodique RR pour ré émission flux de mandats rejetés ou mis en instance, RP pour ré émission Flux périodiques.
+-pour le PES Retour Recette et PES Retour Client : 
+PES2R_RCE__NatureRestit_CodColl_CodBud_Codique_DateSituation_Date_Traitement_TimeStamp.xml.
+NatureRestit = R pour flux de mandats titres rejetés/mis en instance , P pour flux titre périodique, S pour flux titre stock, RR pour réémission flux de titres rejetés ou mis en instance, RP pour réémission Flux titre périodique, RS pour réémission flux titre stock, RO pour flux ORMC rejetés/mis en instance, PO pour flux ORMC Périodique, SO pour flux ORMC stock, RRO pour réémission flux ORMC rejetés/mis en instance
+RPO pour réémission flux ORMC Périodique, RSO pour réémission flux ORMC stock, CO pour flux ORMC Client, RCO pour réémission flux ORMC Client.
+
+- pour tous les PES Retour : 
+CodColl = Code Collectivité
+CodBud = Code Budget
+Codique= codique du poste comptable
+Date Situation : Date de l'extraction des éléments (Dte structure)
+Date_Traitement : date de constitution du flux
+Time Stamp = Horodatage : AAAAMMJJhhmmss.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TCarteVisite">
+    <xs:annotation>
+      <xs:documentation>Carte de visite du partenaire émetteur / récepteur</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Sigle" type="Base_Texte32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Sigle de l'émetteur / récepteur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse physique de l'émetteur / récepteur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
