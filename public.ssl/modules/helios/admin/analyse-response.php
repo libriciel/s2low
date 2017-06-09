@@ -19,6 +19,8 @@ $authoritySiretSQL = new AuthoritySiretSQL($sqlQuery);
 
 $heliosAnalyseFichierRecu = new HeliosAnalyseFichierRecu($heliosTransactionSQL,$authoritySQL,$heliosRetourSQL,$authoritySiretSQL, HELIOS_XSD_PATH,EMAIL_ADMIN,TDT_FROM_EMAIL);
 
+$_SESSION['error'] = "";
+
 ob_start();
 try {
 	$filepath = $heliosResponsesError->getFilepath($filename);
