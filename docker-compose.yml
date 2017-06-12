@@ -37,3 +37,10 @@ services:
             - POSTGRES_DB="${POSTGRES_DB}"
         volumes:
             - ${POSTGRESQL_DATADIR}:/var/lib/postgresql/data
+
+    openstack:
+        image: serverascode/swift-onlyone
+        volumes:
+            - /Users/eric/data_docker/s2low/openstack:/srv
+        ports:
+            - 10003:8080
