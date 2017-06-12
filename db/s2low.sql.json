@@ -1,7 +1,7 @@
 {
     "sequence": [
-        "actes_batches_id_seq",
         "actes_batch_files_id_seq",
+        "actes_batches_id_seq",
         "actes_classification_codes_id_seq",
         "actes_classification_requests_id_seq",
         "actes_envelope_serials_id_seq",
@@ -17,8 +17,8 @@
         "authorities_id_seq",
         "authority_departments_id_seq",
         "authority_districts_id_seq",
-        "authority_groups_id_seq",
         "authority_group_siren_id_seq",
+        "authority_groups_id_seq",
         "authority_siret_id_seq",
         "dia_transactions_id_seq",
         "dia_transactions_workflow_id_seq",
@@ -44,50 +44,6 @@
         "users_perms_id_seq"
     ],
     "table": {
-        "actes_batches": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('actes_batches_id_seq'::regclass)"
-            },
-            "user_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "submission_date": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "storage_dir": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "description": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "num_prefix": {
-                "data_type": "character varying",
-                "character_maximum_length": 16,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "next_suffix": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
         "actes_batch_files": {
             "id": {
                 "data_type": "integer",
@@ -127,6 +83,50 @@
             },
             "signature": {
                 "data_type": "text",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            }
+        },
+        "actes_batches": {
+            "id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "nextval('actes_batches_id_seq'::regclass)"
+            },
+            "user_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "submission_date": {
+                "data_type": "timestamp with time zone",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "storage_dir": {
+                "data_type": "character varying",
+                "character_maximum_length": 1024,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "description": {
+                "data_type": "character varying",
+                "character_maximum_length": 1024,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "num_prefix": {
+                "data_type": "character varying",
+                "character_maximum_length": 16,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "next_suffix": {
+                "data_type": "integer",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
@@ -197,6 +197,32 @@
             },
             "xml_data": {
                 "data_type": "text",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            }
+        },
+        "actes_envelope_serials": {
+            "id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "nextval('actes_envelope_serials_id_seq'::regclass)"
+            },
+            "authority_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "reset_date": {
+                "data_type": "timestamp with time zone",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "serial": {
+                "data_type": "integer",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
@@ -286,32 +312,6 @@
                 "character_maximum_length": 1,
                 "is_nullable": "YES",
                 "column_default": "NULL::bpchar"
-            }
-        },
-        "actes_envelope_serials": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('actes_envelope_serials_id_seq'::regclass)"
-            },
-            "authority_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "reset_date": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "serial": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
             }
         },
         "actes_included_files": {
@@ -1050,26 +1050,6 @@
                 "column_default": null
             }
         },
-        "authority_groups": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('authority_groups_id_seq'::regclass)"
-            },
-            "name": {
-                "data_type": "character varying",
-                "character_maximum_length": 128,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "status": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
         "authority_group_siren": {
             "id": {
                 "data_type": "integer",
@@ -1086,6 +1066,26 @@
             "siren": {
                 "data_type": "character varying",
                 "character_maximum_length": 10,
+                "is_nullable": "YES",
+                "column_default": null
+            }
+        },
+        "authority_groups": {
+            "id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "nextval('authority_groups_id_seq'::regclass)"
+            },
+            "name": {
+                "data_type": "character varying",
+                "character_maximum_length": 128,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "status": {
+                "data_type": "integer",
+                "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
             }
@@ -2082,6 +2082,20 @@
                 "column_default": null
             }
         },
+        "openstack_swift_counter": {
+            "container": {
+                "data_type": "character varying",
+                "character_maximum_length": 32,
+                "is_nullable": "NO",
+                "column_default": null
+            },
+            "last_insert_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "0"
+            }
+        },
         "service_user": {
             "id": {
                 "data_type": "integer",
@@ -2266,11 +2280,11 @@
         }
     },
     "constraint": {
-        "mail_transaction": {
-            "mail_transaction_pkey": {
-                "conname": "mail_transaction_pkey",
+        "mail_included_file": {
+            "mail_included_file_pkey": {
+                "conname": "mail_included_file_pkey",
                 "contype": "p",
-                "conrelname": "mail_transaction",
+                "conrelname": "mail_included_file",
                 "conkey": [
                     "id"
                 ],
@@ -2288,6 +2302,30 @@
                 ],
                 "confrelname": null,
                 "confkey": []
+            }
+        },
+        "service_user": {
+            "service_user_pkey": {
+                "conname": "service_user_pkey",
+                "contype": "p",
+                "conrelname": "service_user",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "service_user_parent_id_fkey": {
+                "conname": "service_user_parent_id_fkey",
+                "contype": "f",
+                "conrelname": "service_user",
+                "conkey": [
+                    "parent_id"
+                ],
+                "confrelname": "service_user",
+                "confkey": [
+                    "id"
+                ]
             }
         },
         "actes_batch_files": {
@@ -2326,54 +2364,6 @@
                 ]
             }
         },
-        "actes_status": {
-            "actes_status_pkey": {
-                "conname": "actes_status_pkey",
-                "contype": "p",
-                "conrelname": "actes_status",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "actes_classification_codes": {
-            "actes_classification_codes_pkey": {
-                "conname": "actes_classification_codes_pkey",
-                "contype": "p",
-                "conrelname": "actes_classification_codes",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_classification_codes_authority_id_fk": {
-                "conname": "actes_classification_codes_authority_id_fk",
-                "contype": "f",
-                "conrelname": "actes_classification_codes",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "actes_classification_codes_parent_id_fk": {
-                "conname": "actes_classification_codes_parent_id_fk",
-                "contype": "f",
-                "conrelname": "actes_classification_codes",
-                "conkey": [
-                    "parent_id"
-                ],
-                "confrelname": "actes_classification_codes",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
         "actes_transmission_window_hours": {
             "actes_transmission_window_hours_pkey": {
                 "conname": "actes_transmission_window_hours_pkey",
@@ -2398,25 +2388,25 @@
                 ]
             }
         },
-        "service_user": {
-            "service_user_pkey": {
-                "conname": "service_user_pkey",
+        "nounce": {
+            "nounce_pkey": {
+                "conname": "nounce_pkey",
                 "contype": "p",
-                "conrelname": "service_user",
+                "conrelname": "nounce",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "service_user_parent_id_fkey": {
-                "conname": "service_user_parent_id_fkey",
+            "authority_id_fk": {
+                "conname": "authority_id_fk",
                 "contype": "f",
-                "conrelname": "service_user",
+                "conrelname": "nounce",
                 "conkey": [
-                    "parent_id"
+                    "authority_id"
                 ],
-                "confrelname": "service_user",
+                "confrelname": "authorities",
                 "confkey": [
                     "id"
                 ]
@@ -2446,28 +2436,28 @@
                 ]
             }
         },
-        "mail_included_file": {
-            "mail_included_file_pkey": {
-                "conname": "mail_included_file_pkey",
+        "authority_types": {
+            "authority_types_pkey": {
+                "conname": "authority_types_pkey",
                 "contype": "p",
-                "conrelname": "mail_included_file",
+                "conrelname": "authority_types",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
-            }
-        },
-        "authority_groups": {
-            "authority_groups_pkey": {
-                "conname": "authority_groups_pkey",
-                "contype": "p",
-                "conrelname": "authority_groups",
+            },
+            "authority_types_parent_type_id_fk": {
+                "conname": "authority_types_parent_type_id_fk",
+                "contype": "f",
+                "conrelname": "authority_types",
                 "conkey": [
-                    "id"
+                    "parent_type_id"
                 ],
-                "confrelname": null,
-                "confkey": []
+                "confrelname": "authority_types",
+                "confkey": [
+                    "id"
+                ]
             }
         },
         "mail_annuaire": {
@@ -2493,11 +2483,11 @@
                 "confkey": []
             }
         },
-        "mail_errors": {
-            "mail_errors_pkey": {
-                "conname": "mail_errors_pkey",
+        "actes_status": {
+            "actes_status_pkey": {
+                "conname": "actes_status_pkey",
                 "contype": "p",
-                "conrelname": "mail_errors",
+                "conrelname": "actes_status",
                 "conkey": [
                     "id"
                 ],
@@ -2505,11 +2495,11 @@
                 "confkey": []
             }
         },
-        "modules": {
-            "modules_pkey": {
-                "conname": "modules_pkey",
+        "authority_departments": {
+            "authority_departments_pkey": {
+                "conname": "authority_departments_pkey",
                 "contype": "p",
-                "conrelname": "modules",
+                "conrelname": "authority_departments",
                 "conkey": [
                     "id"
                 ],
@@ -2517,40 +2507,148 @@
                 "confkey": []
             }
         },
-        "users_perms": {
-            "users_perms_pkey": {
-                "conname": "users_perms_pkey",
+        "actes_classification_codes": {
+            "actes_classification_codes_pkey": {
+                "conname": "actes_classification_codes_pkey",
                 "contype": "p",
-                "conrelname": "users_perms",
+                "conrelname": "actes_classification_codes",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "users_perms_module_id_fk": {
-                "conname": "users_perms_module_id_fk",
+            "actes_classification_codes_parent_id_fk": {
+                "conname": "actes_classification_codes_parent_id_fk",
                 "contype": "f",
-                "conrelname": "users_perms",
+                "conrelname": "actes_classification_codes",
                 "conkey": [
-                    "module_id"
+                    "parent_id"
                 ],
-                "confrelname": "modules",
+                "confrelname": "actes_classification_codes",
                 "confkey": [
                     "id"
                 ]
             },
-            "users_perms_user_id_fk": {
-                "conname": "users_perms_user_id_fk",
+            "actes_classification_codes_authority_id_fk": {
+                "conname": "actes_classification_codes_authority_id_fk",
                 "contype": "f",
-                "conrelname": "users_perms",
+                "conrelname": "actes_classification_codes",
                 "conkey": [
-                    "user_id"
+                    "authority_id"
                 ],
-                "confrelname": "users",
+                "confrelname": "authorities",
                 "confkey": [
                     "id"
                 ]
+            }
+        },
+        "dia_transactions_workflow": {
+            "dia_transactions_workflow_pkey": {
+                "conname": "dia_transactions_workflow_pkey",
+                "contype": "p",
+                "conrelname": "dia_transactions_workflow",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "dia_transactions_workflow_transaction_id_fk": {
+                "conname": "dia_transactions_workflow_transaction_id_fk",
+                "contype": "f",
+                "conrelname": "dia_transactions_workflow",
+                "conkey": [
+                    "transaction_id"
+                ],
+                "confrelname": "dia_transactions",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "authority_group_siren": {
+            "authority_group_siren_pkey": {
+                "conname": "authority_group_siren_pkey",
+                "contype": "p",
+                "conrelname": "authority_group_siren",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "authority_group_siren_authority_group_id_fk": {
+                "conname": "authority_group_siren_authority_group_id_fk",
+                "contype": "f",
+                "conrelname": "authority_group_siren",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "helios_retour": {
+            "helios_retour_pkey": {
+                "conname": "helios_retour_pkey",
+                "contype": "p",
+                "conrelname": "helios_retour",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "helios_retour_authority_id": {
+                "conname": "helios_retour_authority_id",
+                "contype": "f",
+                "conrelname": "helios_retour",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "helios_transmission_window_hours": {
+            "helios_transmission_window_hours_pkey": {
+                "conname": "helios_transmission_window_hours_pkey",
+                "contype": "p",
+                "conrelname": "helios_transmission_window_hours",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "helios_transmission_window_hours_transmission_window_id_fk": {
+                "conname": "helios_transmission_window_hours_transmission_window_id_fk",
+                "contype": "f",
+                "conrelname": "helios_transmission_window_hours",
+                "conkey": [
+                    "transmission_window_id"
+                ],
+                "confrelname": "helios_transmission_windows",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "authority_groups": {
+            "authority_groups_pkey": {
+                "conname": "authority_groups_pkey",
+                "contype": "p",
+                "conrelname": "authority_groups",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
             }
         },
         "actes_classification_requests": {
@@ -2577,6 +2675,90 @@
                 ]
             }
         },
+        "helios_transactions": {
+            "helios_transactions_pkey": {
+                "conname": "helios_transactions_pkey",
+                "contype": "p",
+                "conrelname": "helios_transactions",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "at_authority_id": {
+                "conname": "at_authority_id",
+                "contype": "f",
+                "conrelname": "helios_transactions",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "helios_transactions_user_id_fk": {
+                "conname": "helios_transactions_user_id_fk",
+                "contype": "f",
+                "conrelname": "helios_transactions",
+                "conkey": [
+                    "user_id"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "users": {
+            "users_pkey": {
+                "conname": "users_pkey",
+                "contype": "p",
+                "conrelname": "users",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "users_authority_group_id_fk": {
+                "conname": "users_authority_group_id_fk",
+                "contype": "f",
+                "conrelname": "users",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "users_entity_id_fk": {
+                "conname": "users_entity_id_fk",
+                "contype": "f",
+                "conrelname": "users",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "mail_errors": {
+            "mail_errors_pkey": {
+                "conname": "mail_errors_pkey",
+                "contype": "p",
+                "conrelname": "mail_errors",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
         "actes_envelope_serials": {
             "actes_envelope_serials_pkey": {
                 "conname": "actes_envelope_serials_pkey",
@@ -2601,83 +2783,11 @@
                 ]
             }
         },
-        "users": {
-            "users_pkey": {
-                "conname": "users_pkey",
+        "modules": {
+            "modules_pkey": {
+                "conname": "modules_pkey",
                 "contype": "p",
-                "conrelname": "users",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "users_entity_id_fk": {
-                "conname": "users_entity_id_fk",
-                "contype": "f",
-                "conrelname": "users",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "users_authority_group_id_fk": {
-                "conname": "users_authority_group_id_fk",
-                "contype": "f",
-                "conrelname": "users",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "logs": {
-            "logs_pkey": {
-                "conname": "logs_pkey",
-                "contype": "p",
-                "conrelname": "logs",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "logs_authority_group_id": {
-                "conname": "logs_authority_group_id",
-                "contype": "f",
-                "conrelname": "logs",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "logs_authority_id": {
-                "conname": "logs_authority_id",
-                "contype": "f",
-                "conrelname": "logs",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "logs_historique": {
-            "logs_historique_pkey": {
-                "conname": "logs_historique_pkey",
-                "contype": "p",
-                "conrelname": "logs_historique",
+                "conrelname": "modules",
                 "conkey": [
                     "id"
                 ],
@@ -2685,21 +2795,33 @@
                 "confkey": []
             }
         },
-        "message_admin": {
-            "message_admin_pkey": {
-                "conname": "message_admin_pkey",
+        "helios_status": {
+            "helios_status_pkey": {
+                "conname": "helios_status_pkey",
                 "contype": "p",
-                "conrelname": "message_admin",
+                "conrelname": "helios_status",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "users_perms": {
+            "users_perms_pkey": {
+                "conname": "users_perms_pkey",
+                "contype": "p",
+                "conrelname": "users_perms",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "message_admin_user_id_fkey": {
-                "conname": "message_admin_user_id_fkey",
+            "users_perms_user_id_fk": {
+                "conname": "users_perms_user_id_fk",
                 "contype": "f",
-                "conrelname": "message_admin",
+                "conrelname": "users_perms",
                 "conkey": [
                     "user_id"
                 ],
@@ -2708,182 +2830,134 @@
                     "id"
                 ]
             },
-            "message_admin_user_id_publieur_fkey": {
-                "conname": "message_admin_user_id_publieur_fkey",
+            "users_perms_module_id_fk": {
+                "conname": "users_perms_module_id_fk",
                 "contype": "f",
-                "conrelname": "message_admin",
+                "conrelname": "users_perms",
                 "conkey": [
-                    "user_id_publieur"
+                    "module_id"
                 ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "message_admin_user_id_retireur_fkey": {
-                "conname": "message_admin_user_id_retireur_fkey",
-                "contype": "f",
-                "conrelname": "message_admin",
-                "conkey": [
-                    "user_id_retireur"
-                ],
-                "confrelname": "users",
+                "confrelname": "modules",
                 "confkey": [
                     "id"
                 ]
             }
         },
-        "logs_request": {
-            "logs_request_pkey": {
-                "conname": "logs_request_pkey",
+        "actes_natures": {
+            "actes_natures_pkey": {
+                "conname": "actes_natures_pkey",
                 "contype": "p",
-                "conrelname": "logs_request",
+                "conrelname": "actes_natures",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "actes_messages_status": {
+            "actes_messages_status_pkey": {
+                "conname": "actes_messages_status_pkey",
+                "contype": "p",
+                "conrelname": "actes_messages_status",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "actes_included_files": {
+            "actes_included_files_pkey": {
+                "conname": "actes_included_files_pkey",
+                "contype": "p",
+                "conrelname": "actes_included_files",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "logs_request_user_id_fkey": {
-                "conname": "logs_request_user_id_fkey",
+            "actes_included_files_envelope_id_fk": {
+                "conname": "actes_included_files_envelope_id_fk",
                 "contype": "f",
-                "conrelname": "logs_request",
+                "conrelname": "actes_included_files",
                 "conkey": [
-                    "user_id"
+                    "envelope_id"
                 ],
-                "confrelname": "users",
+                "confrelname": "actes_envelopes",
                 "confkey": [
                     "id"
                 ]
             },
-            "logs_request_user_id_demandeur_fkey": {
-                "conname": "logs_request_user_id_demandeur_fkey",
+            "actes_included_files_transaction_id_fk": {
+                "conname": "actes_included_files_transaction_id_fk",
                 "contype": "f",
-                "conrelname": "logs_request",
+                "conrelname": "actes_included_files",
                 "conkey": [
-                    "user_id_demandeur"
+                    "transaction_id"
                 ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "logs_request_authority_group_id_fkey": {
-                "conname": "logs_request_authority_group_id_fkey",
-                "contype": "f",
-                "conrelname": "logs_request",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "logs_request_authority_id_fkey": {
-                "conname": "logs_request_authority_id_fkey",
-                "contype": "f",
-                "conrelname": "logs_request",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
+                "confrelname": "actes_transactions",
                 "confkey": [
                     "id"
                 ]
             }
         },
-        "authorities": {
-            "authorities_pkey": {
-                "conname": "authorities_pkey",
+        "actes_messages_reponses": {
+            "actes_messages_reponses_pkey": {
+                "conname": "actes_messages_reponses_pkey",
                 "contype": "p",
-                "conrelname": "authorities",
+                "conrelname": "actes_messages_reponses",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "authorities_authority_type_id_fk": {
-                "conname": "authorities_authority_type_id_fk",
+            "actes_messages_reponses_actes_messages_id_fkey": {
+                "conname": "actes_messages_reponses_actes_messages_id_fkey",
                 "contype": "f",
-                "conrelname": "authorities",
+                "conrelname": "actes_messages_reponses",
                 "conkey": [
-                    "authority_type_id"
+                    "actes_messages_id"
                 ],
-                "confrelname": "authority_types",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "authorities_authority_group_id_fk": {
-                "conname": "authorities_authority_group_id_fk",
-                "contype": "f",
-                "conrelname": "authorities",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
+                "confrelname": "actes_messages",
                 "confkey": [
                     "id"
                 ]
             }
         },
-        "authority_siret": {
-            "authority_siret_pkey": {
-                "conname": "authority_siret_pkey",
+        "actes_transactions_workflow": {
+            "actes_transactions_workflow_pkey": {
+                "conname": "actes_transactions_workflow_pkey",
                 "contype": "p",
-                "conrelname": "authority_siret",
+                "conrelname": "actes_transactions_workflow",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "authority_siret_authority_id_fk": {
-                "conname": "authority_siret_authority_id_fk",
+            "actes_transactions_workflow_transaction_id_fk": {
+                "conname": "actes_transactions_workflow_transaction_id_fk",
                 "contype": "f",
-                "conrelname": "authority_siret",
+                "conrelname": "actes_transactions_workflow",
                 "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "actes_messages": {
-            "actes_messages_pkey": {
-                "conname": "actes_messages_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_messages_actes_transactions_id_fkey": {
-                "conname": "actes_messages_actes_transactions_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages",
-                "conkey": [
-                    "actes_transactions_id"
+                    "transaction_id"
                 ],
                 "confrelname": "actes_transactions",
                 "confkey": [
                     "id"
                 ]
             },
-            "actes_messages_actes_messages_status_id_fkey": {
-                "conname": "actes_messages_actes_messages_status_id_fkey",
+            "actes_transactions_workflow_status_id_fk": {
+                "conname": "actes_transactions_workflow_status_id_fk",
                 "contype": "f",
-                "conrelname": "actes_messages",
+                "conrelname": "actes_transactions_workflow",
                 "conkey": [
-                    "actes_messages_status_id"
+                    "status_id"
                 ],
-                "confrelname": "actes_messages_status",
+                "confrelname": "actes_status",
                 "confkey": [
                     "id"
                 ]
@@ -2912,61 +2986,325 @@
                 "confkey": []
             }
         },
-        "actes_messages_workflow": {
-            "actes_messages_workflow_pkey": {
-                "conname": "actes_messages_workflow_pkey",
+        "logs": {
+            "logs_pkey": {
+                "conname": "logs_pkey",
                 "contype": "p",
-                "conrelname": "actes_messages_workflow",
+                "conrelname": "logs",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "actes_messages_workflow_actes_messages_id_fkey": {
-                "conname": "actes_messages_workflow_actes_messages_id_fkey",
+            "logs_authority_id": {
+                "conname": "logs_authority_id",
                 "contype": "f",
-                "conrelname": "actes_messages_workflow",
+                "conrelname": "logs",
                 "conkey": [
-                    "actes_messages_id"
+                    "authority_id"
                 ],
-                "confrelname": "actes_messages",
+                "confrelname": "authorities",
                 "confkey": [
                     "id"
                 ]
             },
-            "actes_messages_workflow_actes_messages_status_id_fkey": {
-                "conname": "actes_messages_workflow_actes_messages_status_id_fkey",
+            "logs_authority_group_id": {
+                "conname": "logs_authority_group_id",
                 "contype": "f",
-                "conrelname": "actes_messages_workflow",
+                "conrelname": "logs",
                 "conkey": [
-                    "actes_messages_status_id"
+                    "authority_group_id"
                 ],
-                "confrelname": "actes_messages_status",
+                "confrelname": "authority_groups",
                 "confkey": [
                     "id"
                 ]
             }
         },
-        "actes_envelopes": {
-            "actes_envelopes_pkey": {
-                "conname": "actes_envelopes_pkey",
+        "actes_transmission_windows": {
+            "actes_transmission_windows_pkey": {
+                "conname": "actes_transmission_windows_pkey",
                 "contype": "p",
-                "conrelname": "actes_envelopes",
+                "conrelname": "actes_transmission_windows",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "actes_batches": {
+            "actes_batches_pkey": {
+                "conname": "actes_batches_pkey",
+                "contype": "p",
+                "conrelname": "actes_batches",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "actes_envelopes_user_id_fk": {
-                "conname": "actes_envelopes_user_id_fk",
+            "actes_batches_user_id_fk": {
+                "conname": "actes_batches_user_id_fk",
                 "contype": "f",
-                "conrelname": "actes_envelopes",
+                "conrelname": "actes_batches",
                 "conkey": [
                     "user_id"
                 ],
                 "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "logs_historique": {
+            "logs_historique_pkey": {
+                "conname": "logs_historique_pkey",
+                "contype": "p",
+                "conrelname": "logs_historique",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "helios_transactions_workflow": {
+            "helios_transactions_workflow_pkey": {
+                "conname": "helios_transactions_workflow_pkey",
+                "contype": "p",
+                "conrelname": "helios_transactions_workflow",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "message_admin": {
+            "message_admin_pkey": {
+                "conname": "message_admin_pkey",
+                "contype": "p",
+                "conrelname": "message_admin",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "message_admin_user_id_retireur_fkey": {
+                "conname": "message_admin_user_id_retireur_fkey",
+                "contype": "f",
+                "conrelname": "message_admin",
+                "conkey": [
+                    "user_id_retireur"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "message_admin_user_id_publieur_fkey": {
+                "conname": "message_admin_user_id_publieur_fkey",
+                "contype": "f",
+                "conrelname": "message_admin",
+                "conkey": [
+                    "user_id_publieur"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "message_admin_user_id_fkey": {
+                "conname": "message_admin_user_id_fkey",
+                "contype": "f",
+                "conrelname": "message_admin",
+                "conkey": [
+                    "user_id"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "helios_transmission_windows": {
+            "helios_transmission_windows_pkey": {
+                "conname": "helios_transmission_windows_pkey",
+                "contype": "p",
+                "conrelname": "helios_transmission_windows",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "dia_transactions": {
+            "dia_transactions_pkey": {
+                "conname": "dia_transactions_pkey",
+                "contype": "p",
+                "conrelname": "dia_transactions",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "logs_request": {
+            "logs_request_pkey": {
+                "conname": "logs_request_pkey",
+                "contype": "p",
+                "conrelname": "logs_request",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "logs_request_authority_id_fkey": {
+                "conname": "logs_request_authority_id_fkey",
+                "contype": "f",
+                "conrelname": "logs_request",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "logs_request_authority_group_id_fkey": {
+                "conname": "logs_request_authority_group_id_fkey",
+                "contype": "f",
+                "conrelname": "logs_request",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "logs_request_user_id_demandeur_fkey": {
+                "conname": "logs_request_user_id_demandeur_fkey",
+                "contype": "f",
+                "conrelname": "logs_request",
+                "conkey": [
+                    "user_id_demandeur"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "logs_request_user_id_fkey": {
+                "conname": "logs_request_user_id_fkey",
+                "contype": "f",
+                "conrelname": "logs_request",
+                "conkey": [
+                    "user_id"
+                ],
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "authority_districts": {
+            "authority_districts_pkey": {
+                "conname": "authority_districts_pkey",
+                "contype": "p",
+                "conrelname": "authority_districts",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "authority_districts_authority_department_id_fkey": {
+                "conname": "authority_districts_authority_department_id_fkey",
+                "contype": "f",
+                "conrelname": "authority_districts",
+                "conkey": [
+                    "authority_department_id"
+                ],
+                "confrelname": "authority_departments",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "authorities": {
+            "authorities_pkey": {
+                "conname": "authorities_pkey",
+                "contype": "p",
+                "conrelname": "authorities",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "authorities_authority_group_id_fk": {
+                "conname": "authorities_authority_group_id_fk",
+                "contype": "f",
+                "conrelname": "authorities",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "authorities_authority_type_id_fk": {
+                "conname": "authorities_authority_type_id_fk",
+                "contype": "f",
+                "conrelname": "authorities",
+                "conkey": [
+                    "authority_type_id"
+                ],
+                "confrelname": "authority_types",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "modules_authorities": {
+            "modules_authorities_pkey": {
+                "conname": "modules_authorities_pkey",
+                "contype": "p",
+                "conrelname": "modules_authorities",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "modules_authorities_module_id_fk": {
+                "conname": "modules_authorities_module_id_fk",
+                "contype": "f",
+                "conrelname": "modules_authorities",
+                "conkey": [
+                    "module_id"
+                ],
+                "confrelname": "modules",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "modules_authorities_authority_id_fk": {
+                "conname": "modules_authorities_authority_id_fk",
+                "contype": "f",
+                "conrelname": "modules_authorities",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
                 "confkey": [
                     "id"
                 ]
@@ -3032,81 +3370,21 @@
                 ]
             }
         },
-        "modules_authorities": {
-            "modules_authorities_pkey": {
-                "conname": "modules_authorities_pkey",
+        "actes_envelopes": {
+            "actes_envelopes_pkey": {
+                "conname": "actes_envelopes_pkey",
                 "contype": "p",
-                "conrelname": "modules_authorities",
+                "conrelname": "actes_envelopes",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "modules_authorities_module_id_fk": {
-                "conname": "modules_authorities_module_id_fk",
+            "actes_envelopes_user_id_fk": {
+                "conname": "actes_envelopes_user_id_fk",
                 "contype": "f",
-                "conrelname": "modules_authorities",
-                "conkey": [
-                    "module_id"
-                ],
-                "confrelname": "modules",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "modules_authorities_authority_id_fk": {
-                "conname": "modules_authorities_authority_id_fk",
-                "contype": "f",
-                "conrelname": "modules_authorities",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "authority_districts": {
-            "authority_districts_pkey": {
-                "conname": "authority_districts_pkey",
-                "contype": "p",
-                "conrelname": "authority_districts",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "authority_districts_authority_department_id_fkey": {
-                "conname": "authority_districts_authority_department_id_fkey",
-                "contype": "f",
-                "conrelname": "authority_districts",
-                "conkey": [
-                    "authority_department_id"
-                ],
-                "confrelname": "authority_departments",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "actes_batches": {
-            "actes_batches_pkey": {
-                "conname": "actes_batches_pkey",
-                "contype": "p",
-                "conrelname": "actes_batches",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_batches_user_id_fk": {
-                "conname": "actes_batches_user_id_fk",
-                "contype": "f",
-                "conrelname": "actes_batches",
+                "conrelname": "actes_envelopes",
                 "conkey": [
                     "user_id"
                 ],
@@ -3116,201 +3394,21 @@
                 ]
             }
         },
-        "helios_transactions_workflow": {
-            "helios_transactions_workflow_pkey": {
-                "conname": "helios_transactions_workflow_pkey",
+        "actes_messages_workflow": {
+            "actes_messages_workflow_pkey": {
+                "conname": "actes_messages_workflow_pkey",
                 "contype": "p",
-                "conrelname": "helios_transactions_workflow",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "helios_transmission_windows": {
-            "helios_transmission_windows_pkey": {
-                "conname": "helios_transmission_windows_pkey",
-                "contype": "p",
-                "conrelname": "helios_transmission_windows",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "dia_transactions": {
-            "dia_transactions_pkey": {
-                "conname": "dia_transactions_pkey",
-                "contype": "p",
-                "conrelname": "dia_transactions",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "actes_transmission_windows": {
-            "actes_transmission_windows_pkey": {
-                "conname": "actes_transmission_windows_pkey",
-                "contype": "p",
-                "conrelname": "actes_transmission_windows",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "helios_transactions": {
-            "helios_transactions_pkey": {
-                "conname": "helios_transactions_pkey",
-                "contype": "p",
-                "conrelname": "helios_transactions",
+                "conrelname": "actes_messages_workflow",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "at_authority_id": {
-                "conname": "at_authority_id",
+            "actes_messages_workflow_actes_messages_id_fkey": {
+                "conname": "actes_messages_workflow_actes_messages_id_fkey",
                 "contype": "f",
-                "conrelname": "helios_transactions",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "helios_transactions_user_id_fk": {
-                "conname": "helios_transactions_user_id_fk",
-                "contype": "f",
-                "conrelname": "helios_transactions",
-                "conkey": [
-                    "user_id"
-                ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "helios_status": {
-            "helios_status_pkey": {
-                "conname": "helios_status_pkey",
-                "contype": "p",
-                "conrelname": "helios_status",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "actes_transactions_workflow": {
-            "actes_transactions_workflow_pkey": {
-                "conname": "actes_transactions_workflow_pkey",
-                "contype": "p",
-                "conrelname": "actes_transactions_workflow",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_transactions_workflow_status_id_fk": {
-                "conname": "actes_transactions_workflow_status_id_fk",
-                "contype": "f",
-                "conrelname": "actes_transactions_workflow",
-                "conkey": [
-                    "status_id"
-                ],
-                "confrelname": "actes_status",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "actes_transactions_workflow_transaction_id_fk": {
-                "conname": "actes_transactions_workflow_transaction_id_fk",
-                "contype": "f",
-                "conrelname": "actes_transactions_workflow",
-                "conkey": [
-                    "transaction_id"
-                ],
-                "confrelname": "actes_transactions",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "actes_included_files": {
-            "actes_included_files_pkey": {
-                "conname": "actes_included_files_pkey",
-                "contype": "p",
-                "conrelname": "actes_included_files",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_included_files_envelope_id_fk": {
-                "conname": "actes_included_files_envelope_id_fk",
-                "contype": "f",
-                "conrelname": "actes_included_files",
-                "conkey": [
-                    "envelope_id"
-                ],
-                "confrelname": "actes_envelopes",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "actes_included_files_transaction_id_fk": {
-                "conname": "actes_included_files_transaction_id_fk",
-                "contype": "f",
-                "conrelname": "actes_included_files",
-                "conkey": [
-                    "transaction_id"
-                ],
-                "confrelname": "actes_transactions",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "actes_natures": {
-            "actes_natures_pkey": {
-                "conname": "actes_natures_pkey",
-                "contype": "p",
-                "conrelname": "actes_natures",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "actes_messages_reponses": {
-            "actes_messages_reponses_pkey": {
-                "conname": "actes_messages_reponses_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages_reponses",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_messages_reponses_actes_messages_id_fkey": {
-                "conname": "actes_messages_reponses_actes_messages_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages_reponses",
+                "conrelname": "actes_messages_workflow",
                 "conkey": [
                     "actes_messages_id"
                 ],
@@ -3318,35 +3416,35 @@
                 "confkey": [
                     "id"
                 ]
-            }
-        },
-        "actes_messages_status": {
-            "actes_messages_status_pkey": {
-                "conname": "actes_messages_status_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages_status",
+            },
+            "actes_messages_workflow_actes_messages_status_id_fkey": {
+                "conname": "actes_messages_workflow_actes_messages_status_id_fkey",
+                "contype": "f",
+                "conrelname": "actes_messages_workflow",
                 "conkey": [
-                    "id"
+                    "actes_messages_status_id"
                 ],
-                "confrelname": null,
-                "confkey": []
+                "confrelname": "actes_messages_status",
+                "confkey": [
+                    "id"
+                ]
             }
         },
-        "helios_retour": {
-            "helios_retour_pkey": {
-                "conname": "helios_retour_pkey",
+        "authority_siret": {
+            "authority_siret_pkey": {
+                "conname": "authority_siret_pkey",
                 "contype": "p",
-                "conrelname": "helios_retour",
+                "conrelname": "authority_siret",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "helios_retour_authority_id": {
-                "conname": "helios_retour_authority_id",
+            "authority_siret_authority_id_fk": {
+                "conname": "authority_siret_authority_id_fk",
                 "contype": "f",
-                "conrelname": "helios_retour",
+                "conrelname": "authority_siret",
                 "conkey": [
                     "authority_id"
                 ],
@@ -3356,35 +3454,11 @@
                 ]
             }
         },
-        "dia_transactions_workflow": {
-            "dia_transactions_workflow_pkey": {
-                "conname": "dia_transactions_workflow_pkey",
+        "mail_transaction": {
+            "mail_transaction_pkey": {
+                "conname": "mail_transaction_pkey",
                 "contype": "p",
-                "conrelname": "dia_transactions_workflow",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "dia_transactions_workflow_transaction_id_fk": {
-                "conname": "dia_transactions_workflow_transaction_id_fk",
-                "contype": "f",
-                "conrelname": "dia_transactions_workflow",
-                "conkey": [
-                    "transaction_id"
-                ],
-                "confrelname": "dia_transactions",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "authority_departments": {
-            "authority_departments_pkey": {
-                "conname": "authority_departments_pkey",
-                "contype": "p",
-                "conrelname": "authority_departments",
+                "conrelname": "mail_transaction",
                 "conkey": [
                     "id"
                 ],
@@ -3392,110 +3466,37 @@
                 "confkey": []
             }
         },
-        "helios_transmission_window_hours": {
-            "helios_transmission_window_hours_pkey": {
-                "conname": "helios_transmission_window_hours_pkey",
+        "actes_messages": {
+            "actes_messages_pkey": {
+                "conname": "actes_messages_pkey",
                 "contype": "p",
-                "conrelname": "helios_transmission_window_hours",
+                "conrelname": "actes_messages",
                 "conkey": [
                     "id"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "helios_transmission_window_hours_transmission_window_id_fk": {
-                "conname": "helios_transmission_window_hours_transmission_window_id_fk",
+            "actes_messages_actes_transactions_id_fkey": {
+                "conname": "actes_messages_actes_transactions_id_fkey",
                 "contype": "f",
-                "conrelname": "helios_transmission_window_hours",
+                "conrelname": "actes_messages",
                 "conkey": [
-                    "transmission_window_id"
+                    "actes_transactions_id"
                 ],
-                "confrelname": "helios_transmission_windows",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "authority_group_siren": {
-            "authority_group_siren_pkey": {
-                "conname": "authority_group_siren_pkey",
-                "contype": "p",
-                "conrelname": "authority_group_siren",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "authority_group_siren_authority_group_id_fk": {
-                "conname": "authority_group_siren_authority_group_id_fk",
-                "contype": "f",
-                "conrelname": "authority_group_siren",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "authority_types": {
-            "authority_types_pkey": {
-                "conname": "authority_types_pkey",
-                "contype": "p",
-                "conrelname": "authority_types",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "authority_types_parent_type_id_fk": {
-                "conname": "authority_types_parent_type_id_fk",
-                "contype": "f",
-                "conrelname": "authority_types",
-                "conkey": [
-                    "parent_type_id"
-                ],
-                "confrelname": "authority_types",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "service_user_content": {
-            "service_user_content_id_user_fkey": {
-                "conname": "service_user_content_id_user_fkey",
-                "contype": "f",
-                "conrelname": "service_user_content",
-                "conkey": [
-                    "id_user"
-                ],
-                "confrelname": "users",
+                "confrelname": "actes_transactions",
                 "confkey": [
                     "id"
                 ]
             },
-            "service_user_content_unique": {
-                "conname": "service_user_content_unique",
-                "contype": "u",
-                "conrelname": "service_user_content",
-                "conkey": [
-                    "id_user",
-                    "id_service"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "service_user_content_id_service_fkey": {
-                "conname": "service_user_content_id_service_fkey",
+            "actes_messages_actes_messages_status_id_fkey": {
+                "conname": "actes_messages_actes_messages_status_id_fkey",
                 "contype": "f",
-                "conrelname": "service_user_content",
+                "conrelname": "actes_messages",
                 "conkey": [
-                    "id_service"
+                    "actes_messages_status_id"
                 ],
-                "confrelname": "service_user",
+                "confrelname": "actes_messages_status",
                 "confkey": [
                     "id"
                 ]
@@ -3538,119 +3539,144 @@
                 ]
             }
         },
-        "nounce": {
-            "nounce_pkey": {
-                "conname": "nounce_pkey",
-                "contype": "p",
-                "conrelname": "nounce",
+        "service_user_content": {
+            "service_user_content_unique": {
+                "conname": "service_user_content_unique",
+                "contype": "u",
+                "conrelname": "service_user_content",
                 "conkey": [
-                    "id"
+                    "id_user",
+                    "id_service"
                 ],
                 "confrelname": null,
                 "confkey": []
             },
-            "authority_id_fk": {
-                "conname": "authority_id_fk",
+            "service_user_content_id_user_fkey": {
+                "conname": "service_user_content_id_user_fkey",
                 "contype": "f",
-                "conrelname": "nounce",
+                "conrelname": "service_user_content",
                 "conkey": [
-                    "authority_id"
+                    "id_user"
                 ],
-                "confrelname": "authorities",
+                "confrelname": "users",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "service_user_content_id_service_fkey": {
+                "conname": "service_user_content_id_service_fkey",
+                "contype": "f",
+                "conrelname": "service_user_content",
+                "conkey": [
+                    "id_service"
+                ],
+                "confrelname": "service_user",
                 "confkey": [
                     "id"
                 ]
             }
+        },
+        "openstack_swift_counter": {
+            "openstack_swift_counter_pkey": {
+                "conname": "openstack_swift_counter_pkey",
+                "contype": "p",
+                "conrelname": "openstack_swift_counter",
+                "conkey": [
+                    "container"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
         }
     },
     "index": {
-        "helios_transactions_workflow_transaction_id_idx": {
+        "helios_transactions_workflow_date_idx": {
             "tablename": "helios_transactions_workflow",
-            "indexdef": "CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id)"
+            "indexdef": "CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date)"
         },
         "helios_transactions_workflow_status_id_idx": {
             "tablename": "helios_transactions_workflow",
             "indexdef": "CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id)"
         },
-        "helios_transactions_workflow_date_idx": {
+        "helios_transactions_workflow_transaction_id_idx": {
             "tablename": "helios_transactions_workflow",
-            "indexdef": "CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date)"
-        },
-        "xml_nomfic_cod_col_index": {
-            "tablename": "helios_transactions",
-            "indexdef": "CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)"
-        },
-        "xml_nomfic_index": {
-            "tablename": "helios_transactions",
-            "indexdef": "CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)"
-        },
-        "modules_name_idx": {
-            "tablename": "modules",
-            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
-        },
-        "atw_tid_idx": {
-            "tablename": "actes_transactions_workflow",
-            "indexdef": "CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)"
+            "indexdef": "CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id)"
         },
         "atw_id_date": {
             "tablename": "actes_transactions_workflow",
             "indexdef": "CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)"
         },
-        "users_certificate_hash_idx": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX users_certificate_hash_idx ON users USING btree (certificate_hash)"
+        "atw_tid_idx": {
+            "tablename": "actes_transactions_workflow",
+            "indexdef": "CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)"
         },
-        "user_certificat_index": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX user_certificat_index ON users USING btree (subject_dn, issuer_dn)"
-        },
-        "users_login": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX users_login ON users USING btree (login)"
-        },
-        "users_certificate_login": {
-            "tablename": "users",
-            "indexdef": "CREATE UNIQUE INDEX users_certificate_login ON users USING btree (subject_dn, issuer_dn, login)"
-        },
-        "u_authority_id": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX u_authority_id ON users USING btree (authority_id, id)"
-        },
-        "toto": {
-            "tablename": "actes_included_files",
-            "indexdef": "CREATE INDEX toto ON actes_included_files USING btree (transaction_id)"
-        },
-        "authority_group_index": {
-            "tablename": "logs",
-            "indexdef": "CREATE INDEX authority_group_index ON logs USING btree (authority_group_id, id)"
-        },
-        "authority_index": {
-            "tablename": "logs",
-            "indexdef": "CREATE INDEX authority_index ON logs USING btree (authority_id, id)"
-        },
-        "t4": {
-            "tablename": "logs",
-            "indexdef": "CREATE INDEX t4 ON logs USING btree (user_id)"
-        },
-        "logs_request_user_id_demandeur_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
-        },
-        "t3": {
+        "at_enveloppe_id": {
             "tablename": "actes_transactions",
-            "indexdef": "CREATE INDEX t3 ON actes_transactions USING btree (authority_id)"
-        },
-        "t2": {
-            "tablename": "actes_transactions",
-            "indexdef": "CREATE INDEX t2 ON actes_transactions USING btree (number)"
+            "indexdef": "CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)"
         },
         "at_related_id": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX at_related_id ON actes_transactions USING btree (related_transaction_id)"
         },
-        "at_enveloppe_id": {
+        "t2": {
             "tablename": "actes_transactions",
-            "indexdef": "CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)"
+            "indexdef": "CREATE INDEX t2 ON actes_transactions USING btree (number)"
+        },
+        "t3": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX t3 ON actes_transactions USING btree (authority_id)"
+        },
+        "toto": {
+            "tablename": "actes_included_files",
+            "indexdef": "CREATE INDEX toto ON actes_included_files USING btree (transaction_id)"
+        },
+        "logs_request_user_id_demandeur_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
+        },
+        "modules_name_idx": {
+            "tablename": "modules",
+            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
+        },
+        "t4": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX t4 ON logs USING btree (user_id)"
+        },
+        "authority_index": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX authority_index ON logs USING btree (authority_id, id)"
+        },
+        "authority_group_index": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX authority_group_index ON logs USING btree (authority_group_id, id)"
+        },
+        "xml_nomfic_index": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)"
+        },
+        "xml_nomfic_cod_col_index": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)"
+        },
+        "u_authority_id": {
+            "tablename": "users",
+            "indexdef": "CREATE INDEX u_authority_id ON users USING btree (authority_id, id)"
+        },
+        "users_certificate_login": {
+            "tablename": "users",
+            "indexdef": "CREATE UNIQUE INDEX users_certificate_login ON users USING btree (subject_dn, issuer_dn, login)"
+        },
+        "users_login": {
+            "tablename": "users",
+            "indexdef": "CREATE INDEX users_login ON users USING btree (login)"
+        },
+        "user_certificat_index": {
+            "tablename": "users",
+            "indexdef": "CREATE INDEX user_certificat_index ON users USING btree (subject_dn, issuer_dn)"
+        },
+        "users_certificate_hash_idx": {
+            "tablename": "users",
+            "indexdef": "CREATE INDEX users_certificate_hash_idx ON users USING btree (certificate_hash)"
         }
     }
 }

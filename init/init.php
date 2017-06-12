@@ -1,5 +1,7 @@
 <?php 
 
+require_once __DIR__."/../vendor/autoload.php";
+
 set_include_path( 	get_include_path() . PATH_SEPARATOR .
 					__DIR__. "/../lib/" . PATH_SEPARATOR .
 					__DIR__. "/../core/" . PATH_SEPARATOR .
@@ -50,6 +52,15 @@ $objectInstancier = new ObjectInstancier();
 $objectInstancier->SQLQuery = $sqlQuery;
 $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
+
+$objectInstancier->set("openstack_authentication_url_v2",OPENSTACK_AUTHENTICATION_URL_V2);
+$objectInstancier->set("openstack_username",OPENSTACK_USERNAME);
+$objectInstancier->set("openstack_password",OPENSTACK_PASSWORD);
+$objectInstancier->set("openstack_tenant",OPENSTACK_TENANT);
+$objectInstancier->set("openstack_region",OPENSTACK_REGION);
+$objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAINER_PREFIX);
+
+$objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 
 $frontController = new FrontController($objectInstancier);
 
