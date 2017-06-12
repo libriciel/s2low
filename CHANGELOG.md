@@ -6,6 +6,9 @@ Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/)
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
+
+- Utilisation d'un stockage objet pour les PES Aller
+- Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde.
  
 ## [2.6.3] - 2017-06-09
  
