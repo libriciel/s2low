@@ -543,3 +543,34 @@ if (! defined("LIBERSIGN_INSTALLER")){
 	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign
 	define("LIBERSIGN_INSTALLER",false);
 }
+
+
+
+## Configuration OpenStack (facultative)
+
+if (! defined("OPENSTACK_AUTHENTICATION_URL_V2")) {
+    define("OPENSTACK_URL_V2", 'https://identity.fr1.cloudwatt.com/v2.0');
+}
+
+if (! defined("OPENSTACK_USERNAME")) {
+    define("OPENSTACK_USERNAME","");
+}
+
+if (! defined("OPENSTACK_PASSWORD")) {
+    define("OPENSTACK_PASSWORD", "");
+}
+
+if (! defined("OPENSTACK_TENANT")) {
+    define("OPENSTACK_TENANT", "0750189044_S2LOWDEV");
+}
+
+if (! defined("OPENSTACK_REGION")) {
+    define("OPENSTACK_REGION", "fr1");
+}
+
+if (! defined("OPENSTACK_SWIFT_CONTAINER_PREFIX")) {
+    define("OPENSTACK_SWIFT_CONTAINER_PREFIX", "s2low_dev_");
+}
+
+
+
