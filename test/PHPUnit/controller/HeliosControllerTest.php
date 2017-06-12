@@ -9,6 +9,31 @@ class HeliosControllerTest extends S2lowTestCase {
 
 	private $testStreamUrl;
 
+
+    protected function setUp(){
+        parent::setUp();
+
+        org\bovigo\vfs\vfsStream::setup("test");
+        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+
+        mkdir($this->testStreamUrl."/helios");
+
+        $tmp_file = $this->testStreamUrl."/pes_aller.xml";
+        file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
+
+        $_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
+
+        $rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
+        $rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(true);
+
+        $this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
+        $this->getObjectInstancier()->set("helios_files_upload_root",$this->testStreamUrl);
+
+        $this->setUserAuthentification();
+        $this->heliosController = new HeliosController($this->getObjectInstancier());
+    }
+
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess
@@ -146,7 +171,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
 		$heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
-		file_put_contents($this->testStreamUrl . "/helios/d8d1a344f31de311d32134064695df85f3801897", "<test/>");
+		file_put_contents($this->testStreamUrl . "/d8d1a344f31de311d32134064695df85f3801897", "<test/>");
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#le fichier PES ALLER ne contient pas de SIRET#");
 		$heliosController->updateSiretFromPESAller();
@@ -156,7 +181,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
 		$heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
-		file_put_contents($this->testStreamUrl . "/helios/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
+		file_put_contents($this->testStreamUrl . "/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#siret 12345678912345 ajouté à la collectivite 1#");
 		$heliosController->updateSiretFromPESAller();
@@ -204,27 +229,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->heliosController->importAPIAction();
 	}
 
-	protected function setUp(){
-		parent::setUp();
 
-		org\bovigo\vfs\vfsStream::setup("test");
-		$this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
-
-		mkdir($this->testStreamUrl."/helios");
-
-		$tmp_file = $this->testStreamUrl."/pes_aller.xml";
-		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
-
-		$_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
-
-		$rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
-		$rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(true);
-
-		$this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
-
-		$this->setUserAuthentification();
-		$this->heliosController = new HeliosController($this->getObjectInstancier());
-	}
 
 
 }

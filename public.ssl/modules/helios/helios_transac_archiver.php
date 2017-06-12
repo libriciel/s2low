@@ -5,7 +5,8 @@ require_once( __DIR__ . "/../../../init/init-www-helios.php");
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
+/** @var HeliosArchiveControler $heliosArchiveControler */
+$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
 $id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $id_d){

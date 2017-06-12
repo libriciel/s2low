@@ -6,8 +6,8 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-
-$heliosEnvoiControler = new HeliosEnvoiControler($sqlQuery);
+/** @var HeliosEnvoiControler $heliosEnvoiControler */
+$heliosEnvoiControler = $objectInstancier->get("HeliosEnvoiControler");
 $heliosEnvoiControler->setDoNotVerifyNomFicUnicity(HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY);
 $heliosEnvoiControler->validateAllTransactions();
 

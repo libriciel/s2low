@@ -18,7 +18,8 @@ $allTransactions = $heliosTransactionsSQL->getArchiveFromStatusWithSAE(9);
 
 echo count($allTransactions). " transactions HELIOS trouvées dans l'état <envoyé au SAE>\n";
 
-$heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
+/** @var HeliosArchiveControler $heliosArchiveControler */
+$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
 
 foreach($allTransactions as $transactionInfo){
 	$heliosArchiveControler->verifArchive($transactionInfo);

@@ -34,6 +34,9 @@ if (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
 
 $nb_signature = Helpers :: getVarFromPost("nb_signature");
 
+/** @var PesAllerRetriever $pesAllerRetriever */
+$pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+
 
 
 for($i=1;$i<=$nb_signature;$i++) {
@@ -64,9 +67,9 @@ for($i=1;$i<=$nb_signature;$i++) {
 	
 	
 	$sha1 = $trans->get('sha1');
-	
-	$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1');
-	
+
+    $file_path = $pesAllerRetriever->getPath($trans->get('sha1'));
+
 	$heliosSignature = new HeliosSignature();
 	
 	$new_pes_content = $heliosSignature->injectSignature($file_path, $signature_1,$is_bordereau_1);
@@ -79,9 +82,10 @@ for($i=1;$i<=$nb_signature;$i++) {
 		header("Location: " . WEBSITE_SSL);
 		exit ();
 	}
-	
-	
-	file_put_contents(HELIOS_FILES_UPLOAD_ROOT."/".$new_sha1, $new_pes_content);
+
+    $new_file_path = $pesAllerRetriever->getPathForNonExistingFile($new_sha1);
+
+    file_put_contents($new_file_path, $new_pes_content);
 	
 	$trans->set('sha1', $new_sha1);
 	$trans->set('filesize', $new_filesize);

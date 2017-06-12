@@ -12,7 +12,14 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 
 	private $last_transaction_workflow_id;
 
-	public function testSetArchiveEnAttenteEnvoiSEA(){
+    protected function setUp(){
+        parent::setUp();
+        $this->heliosArchiveControler = $this->getObjectInstancier()->get("HeliosArchiveControler");
+        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+
+    }
+
+    public function testSetArchiveEnAttenteEnvoiSEA(){
 		$transaction_id = $this->createTransaction();
 		$this->heliosArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
 	}
@@ -97,11 +104,5 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 		$this->heliosArchiveControler->sendAllArchive();
 	}
 
-	protected function setUp(){
-		parent::setUp();
-		$this->heliosArchiveControler = new HeliosArchiveControler($this->getSQLQuery());
-		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-
-	}
 
 }

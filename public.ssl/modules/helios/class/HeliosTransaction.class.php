@@ -375,27 +375,7 @@ class HeliosTransaction extends DataObject {
     }
   }
 
-  /**
-   * \brief Méthode qui renvoie le fichier au navigateur
-   */
-  public function sendFile($sha1,$filename) {
-    if (!file_exists(HELIOS_FILES_UPLOAD_ROOT . "/" . $sha1)) {
-      $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";
-      echo "<br>helios Tansaction_class: sendFile " . $this->errorMsg;
-      return false;
-    }
 
-    $ret_value = true;
-    //AICI pot incerca sa modific parametrii...
-    if (!Helpers :: sendFileToBrowser(HELIOS_FILES_UPLOAD_ROOT . "/" . $sha1, $filename, "text/xml")) {
-      $this->errorMsg = "Erreur envoi fichier";
-      echo "<br> heliosTansaction_class: sendFile " . $this->errorMsg;
-      $ret_value = false;
-    }
-
-    return $ret_value;
-  }
-  
   public function sendAcquit($filename) {
     if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null) {
       $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";

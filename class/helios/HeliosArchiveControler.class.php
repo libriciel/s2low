@@ -12,11 +12,19 @@ class HeliosArchiveControler {
 	/** @var  PastellFactory */
 	private $pastellFactory;
 
-	public function __construct(SQLQuery $sqlQuery){
+	private $pesAllerRetriever;
+
+	public function __construct(
+	    SQLQuery $sqlQuery,
+        PesAllerRetriever $pesAllerRetriever
+
+    ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$this->setPastellFactory(new PastellFactory());
+
+		$this->pesAllerRetriever = $pesAllerRetriever;
 	}
 	
 	public function setPastellFactory(PastellFactory $pastellFactory){
@@ -126,9 +134,9 @@ class HeliosArchiveControler {
 		if (! $id_d){
 			throw new Exception($pastell->getLastError());
 		}
-		
-		$file_path = HELIOS_FILES_UPLOAD_ROOT . "/". $transactionsInfo['sha1'];
-		
+
+		$file_path = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
+
 		$pastell->postFile($id_d,'fichier_pes',$file_path,$transactionsInfo['complete_name']);
 				
 		$pes_retour_path = HELIOS_RESPONSES_ROOT . "/".  $transactionsInfo['acquit_filename'];
