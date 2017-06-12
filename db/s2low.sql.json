@@ -2093,7 +2093,7 @@
                 "data_type": "integer",
                 "character_maximum_length": null,
                 "is_nullable": "NO",
-                "column_default": "0"
+                "column_default": null
             }
         },
         "service_user": {
