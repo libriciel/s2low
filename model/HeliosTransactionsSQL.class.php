@@ -206,5 +206,9 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->query($sql);
 	}
 
+	public function getNextTransactionById($last_id){
+	    $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE id>?";
+	    return $this->queryOne($sql,$last_id);
+    }
 
 }
