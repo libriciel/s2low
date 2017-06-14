@@ -490,8 +490,8 @@ ob_start();
 						<option value='<?php echo $s['id'] ?>'><?php hecho($s['name']) ?></option>	
 					<?php endforeach; ?>
 				</select>
-			</div>\
-			<input class="btn btn-primary btn-sm col-md-2" type='submit' value='Ajouter'>
+			</div>
+			    <input class="btn btn-primary btn-sm col-md-2" type='submit' value='Ajouter'>
 			</div>
 	</form>
 	
