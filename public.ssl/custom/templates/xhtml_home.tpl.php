@@ -73,7 +73,7 @@
                         <div id="mention_partenaires">
                             <h2 class="home">Partenaires</h2>
                             <p class="home">
-								<a href="http://adullact-projet.coop/">SCOP SA ADULLACT PROJET</a>, financeur et mainteneur de la solution
+								<a href="http://www.libriciel.fr/">LIBRICIEL SCOP S.A.</a>, financeur et mainteneur de la solution
                             </p>
                         </div>
                     </div>
