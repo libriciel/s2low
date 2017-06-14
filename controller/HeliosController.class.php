@@ -63,6 +63,12 @@ class HeliosController extends Controller {
 			throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
 		}
 
+		if ($_FILES['enveloppe']['error'] != UPLOAD_ERR_OK){
+		    throw new Exception(
+		        "Erreur lors du téléchargement du fichier : code {$_FILES['enveloppe']['error']}");
+        }
+
+
 		$file_size = $_FILES['enveloppe']['size'];
 		if ($file_size > $this->helios_max_upload_size) {
 			$message = "Taille de fichier supérieur à la limite autorisée (".
