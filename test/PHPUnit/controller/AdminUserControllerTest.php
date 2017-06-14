@@ -111,7 +111,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testCreateGADMWithoutGroupId(){
 		$this->setDataOk();
 		$_POST['role'] = 'GADM';
-		$this->setExpectedException("Exception","Vous devez indiquez un groupe pour créer un administrateur de groupe");
+		$this->setExpectedException("Exception","Vous devez indiquer un groupe pour créer un administrateur de groupe");
 		$this->adminUserController->doEditAction();
 	}
 
