@@ -21,7 +21,12 @@ class HeliosControllerTest extends S2lowTestCase {
         $tmp_file = $this->testStreamUrl."/pes_aller.xml";
         file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
 
-        $_FILES['enveloppe'] = array('name'=>'pes_aller.xml','tmp_name'=>$tmp_file,'size'=>filesize($tmp_file));
+        $_FILES['enveloppe'] = array(
+            'name'=>'pes_aller.xml',
+            'tmp_name'=>$tmp_file,
+            'size'=>filesize($tmp_file),
+            'error' => UPLOAD_ERR_OK
+        );
 
         $rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
         $rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(true);
