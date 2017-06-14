@@ -32,7 +32,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 
 // Récupération de la liste des enveloppes en fonction de l'utilisateur en cours
-
+$author_filter = "";
 if ($me->isAuthorityAdmin()) {
   $author_filter= "AND users.authority_id=" . $me->get("authority_id");;
 }
@@ -90,7 +90,7 @@ elseif ($me->isGroupAdmin())
 {
     $TempGroup=new Group($me->get("authority_group_id"));
     $TempGroup->init();
-		$html .="pour le Group ".$TempGroup->get("name");
+		$html .=" pour le groupe ".$TempGroup->get("name");
 }
 else 
 {
