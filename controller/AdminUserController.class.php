@@ -44,7 +44,7 @@ class AdminUserController extends Controller {
 		}
 
 		if ($role == 'GADM' && ! $authority_group_id){
-			throw new Exception("Vous devez indiquez un groupe pour créer un administrateur de groupe");
+			throw new Exception("Vous devez indiquer un groupe pour créer un administrateur de groupe");
 		}
 
 		if (! $api && $password != $password2){
