@@ -534,7 +534,7 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
 
 // Boutons de réponse à un courrier
 
-if (($transStatus == 7 || $transStatus == 8) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
+if ( in_array($transStatus, array(7,8,21)) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";

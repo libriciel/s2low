@@ -5,7 +5,8 @@ Toutes les modifications apportées au projet seront documentées dans ce fichier.
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [non publié]
+## [2.6.4] - 2017-06-14
+- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple 
  
 ## [2.6.3] - 2017-06-09
  
