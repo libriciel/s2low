@@ -180,7 +180,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
 		$this->adminUserController->doEditAction();
-		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
+		$this->setExpectedException("Exception","Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -213,7 +213,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testSameInfo(){
 		$this->setDataOk();
 		$this->adminUserController->doEditAction();
-		$this->setExpectedException("Exception","Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
+		$this->setExpectedException("Exception","Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
