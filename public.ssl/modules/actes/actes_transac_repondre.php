@@ -6,6 +6,8 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
 
+$batchMode = false;
+
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
