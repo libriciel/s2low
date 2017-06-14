@@ -9,6 +9,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Utilisation d'un stockage objet pour les PES Aller
 - Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde.
+- Suppression de l'autocomplete sur les mots de passe de la création d'utilisarteur (bug Firefox)
+- Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR))
+- Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide
+
  
 ## [2.6.3] - 2017-06-09
  
