@@ -19,6 +19,11 @@ $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
 $sqlQuery->setDatabaseHost(DB_HOST_TEST);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
+//$objectInstancier = new ObjectInstancier();
 /** @var ObjectInstancier $objectInstancier */
-$objectInstancier->sqlQuery = $sqlQuery;
+$objectInstancier->set('SQLQuery',$sqlQuery);
 
+/** @var PostgreSQLController $postgreSQLControler */
+$postgreSQLControler = $objectInstancier->get('postgreSQLController');
+
+$postgreSQLControler->alterDatabase(function($message){echo $message . "\n";});

@@ -36,6 +36,7 @@ class PostgreSQLController {
 	}
 
 	public function alterDatabase(Closure $log_function){
+
 		$sql_command = $this->getAlterDatabaseCommand() ;
 		if (! $sql_command){
 			$log_function("La base de données est déjà à jour");

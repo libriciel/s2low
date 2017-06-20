@@ -31,7 +31,7 @@ class PostgreSQLDifferenceToSQL {
 		}
 		foreach($alter_list['alter_column'] as $table_name => $col_def){
 			foreach($col_def as $col_name => $col_info){
-				$sql[] = "ALTER TABLE $table_name ALTER COLUMN ".$this->getColumnDefinition($col_name,$col_info).";";
+				$sql[] = "ALTER TABLE $table_name ALTER COLUMN ".$this->getColumnDefinition($col_name,$col_info,true).";";
 			}
 		}
 		return $sql;
@@ -58,12 +58,23 @@ class PostgreSQLDifferenceToSQL {
 		return $result;
 	}
 
-	private function getColumnDefinition($column_name,$column_info){
-		$sql =  "{$column_name} {$column_info['data_type']}";
+	private function getColumnDefinition($column_name,$column_info, $add_type = false){
+		$sql =  "{$column_name} ";
+
+		if ($add_type){
+		    $sql .= " TYPE ";
+        }
+
+		$sql .= "{$column_info['data_type']}";
+
+
 		if ($column_info['character_maximum_length']){
 			$sql.="({$column_info['character_maximum_length']})";
 		}
 		if ($column_info['column_default']){
+		    if ($add_type){
+		        $sql.= " SET ";
+            }
 			$sql.= " DEFAULT {$column_info['column_default']}";
 		}
 		if ($column_info['is_nullable'] == 'NO'){
