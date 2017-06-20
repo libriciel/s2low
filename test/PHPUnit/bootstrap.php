@@ -24,6 +24,6 @@ $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 $objectInstancier->set('SQLQuery',$sqlQuery);
 
 /** @var PostgreSQLController $postgreSQLControler */
-$postgreSQLControler = $objectInstancier->get('postgreSQLController');
+$postgreSQLControler = $objectInstancier->get('PostgreSQLController');
 
 $postgreSQLControler->alterDatabase(function($message){echo $message . "\n";});
