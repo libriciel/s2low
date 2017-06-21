@@ -3,14 +3,15 @@ require_once( __DIR__ . "/../../../init/init-www-helios.php");
 
 $liste_id = Helpers::getVarFromPost("liste_id");
 
-$heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
+/** @var HeliosArchiveControler $heliosArchiveControler */
+$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
 
 $msg = "";
     
 foreach ($liste_id as $id) {
 	$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 	if ($id_d) {
-		$msg = "Programmation de l'envoie de la transaction $id à Pastell";
+		$msg = "Programmation de l'envoi de la transaction $id à Pastell";
 	} else {
 		$msg .= "Erreur lors de l'envoi de la transaction $id à Pastell: " . $heliosArchiveControler->getLastError() ."\n";
 	}

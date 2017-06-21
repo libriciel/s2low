@@ -10,9 +10,13 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	}
 
 	private function importFile($pes_aller){
-		copy($pes_aller,"/tmp/".sha1_file($pes_aller));
+	    /** @var PesAllerRetriever $pesAllerRetriever */
+	    $pesAllerRetriever = $this->getObjectInstancier()->get("PesAllerRetriever");
+	    $filepath = $pesAllerRetriever->getPathForNonExistingFile(sha1_file($pes_aller));
+
+		copy($pes_aller,$filepath);
 		$heliosControler = new HeliosController($this->getObjectInstancier());
-		$heliosControler->setHeliosFilesUploadRoot("/tmp/");
+
 		return $heliosControler->importFile(8,$pes_aller,"pes_aller.xml");
 	}
 
@@ -39,7 +43,15 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 	private function getHeliosSignatureTechnique(){
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		return new HeliosSignatureTechnique($heliosTransactionSQL, "/tmp/",$this->getXadesSignature());
+		/** @var PesAllerRetriever $pesAllerRetriever */
+		$pesAllerRetriever = $this->getObjectInstancier()->get("PesAllerRetriever");
+		return new HeliosSignatureTechnique(
+		    $heliosTransactionSQL,
+            "/tmp/",
+            $this->getXadesSignature(),
+            true,
+            $pesAllerRetriever
+        );
 	}
 
 	private function getXadesSignature(){

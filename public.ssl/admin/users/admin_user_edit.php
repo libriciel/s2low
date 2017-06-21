@@ -255,7 +255,7 @@ ob_start();
 			setFormAuth();
 
 		});
-	});
+    });
 
 </script>
 
@@ -300,9 +300,22 @@ ob_start();
 	
 <?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (à nouveau)") as $input_id => $input_label): ?>
 <div class="form-group">
-	<label class="control-label col-md-4"><?php echo $input_label?>: </label>
+	<label class="control-label col-md-4" for="<?php echo $input_id ?>"><?php echo $input_label?>: </label>
 	<div class="col-md-6">
-		<input class="form-control" id='<?php echo $input_id ?>' type="password" name="<?php echo $input_id ?>" value="" size="30" maxlength="60" autocomplete="off" />
+        <!-- disables autocomplete https://stackoverflow.com/questions/17781077/autocomplete-off-is-not-working-on-firefox -->
+        <input type="text" style="display:none">
+        <input type="password" style="display:none">
+
+        <input
+                class="form-control"
+                id='<?php echo $input_id ?>'
+                type="password"
+                name="<?php echo $input_id ?>"
+                value=""
+                size="30"
+                maxlength="60"
+                autocomplete="off"
+        />
 	</div>
 </div>	
 <?php endforeach;?>
@@ -477,8 +490,8 @@ ob_start();
 						<option value='<?php echo $s['id'] ?>'><?php hecho($s['name']) ?></option>	
 					<?php endforeach; ?>
 				</select>
-			</div>\
-			<input class="btn btn-primary btn-sm col-md-2" type='submit' value='Ajouter'>
+			</div>
+			    <input class="btn btn-primary btn-sm col-md-2" type='submit' value='Ajouter'>
 			</div>
 	</form>
 	

@@ -168,7 +168,7 @@ if (in_array($currentStatusId,array(8,4,11,20))) {
 
 if ($me->isSuper()) {
 
-	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera héradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
 	$actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
@@ -218,7 +218,9 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 	
 	$heliosSignature = new HeliosSignature();
 	try{
-		$signatureInfo=$heliosSignature->getInfoForSignature(HELIOS_FILES_UPLOAD_ROOT."/".$trans->get('sha1'));
+        $pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+        $pesaller_path = $pesAllerRetriever->getPath($trans->get('sha1'));
+		$signatureInfo=$heliosSignature->getInfoForSignature($pesaller_path);
 		$id_pes = $signatureInfo['bordereau_id'];
 
 		ob_start();

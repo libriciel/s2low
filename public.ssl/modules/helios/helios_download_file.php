@@ -69,8 +69,14 @@ $ownerId = $entity->getUserForId($transaction_id);
 $owner = new User($ownerId);
 $owner->init();
 
-
-if (!$entity->sendfile($sha1,$filename)) {
-  $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();
-  exit ();
+try {
+    $pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+    $filepath = $pesAllerRetriever->getPath($sha1);
+} catch (Exception $e){
+    $_SESSION["error"] = "Erreur lors de la récupération du fichier : ". $e->getMessage();
+    header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$transaction_id");
+    exit ();
 }
+
+Helpers::sendFileToBrowser($filepath,$filename, "text/xml");
+

@@ -72,7 +72,7 @@ foreach ($liste_id as $id) {
     if ($new_status_id == 19) {
     	$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($me->getId(),$id);
 		if ($result){
-			$msg = "Programmation de l'envoie de la transaction $id à Pastell\n";
+			$msg = "Programmation de l'envoi de la transaction $id à Pastell\n";
 	    	$severity = 1;
 	      	$status = 0;	
 		} else {

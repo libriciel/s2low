@@ -373,7 +373,7 @@ class mailController {
   	if (count($InputFileName)>0)
   	{
 	    $now = date("Y-m-d H:i:s");
-	    $mailTransaction->set("fn_download",md5("mail".$now));
+	    $mailTransaction->set("fn_download",md5("mail".$now).mt_rand(0,mt_getrandmax()));
 	    $mailTransaction->save(false);
 	    
 	    require_once ( __DIR__."/../om/mail_included_file.class.php");

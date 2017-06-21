@@ -28,8 +28,8 @@ echo "$nb_transaction vont être traité\n";
 
 
 $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
-
-$heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
+/** @var HeliosArchiveControler $heliosArchiveControler */
+$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
 
 foreach($transaction_id_list as $transaction_id){
 	$transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);

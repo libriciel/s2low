@@ -22,7 +22,8 @@ $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
 
 $info = $heliosTransactionsSQL->getInfo($transaction_id);
 
-$filename = HELIOS_FILES_UPLOAD_ROOT."/{$info['sha1']}";
+$pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+$filename = $pesAllerRetriever->getPath($info['sha1']);
 
 $pes_content = file_get_contents($filename);
 

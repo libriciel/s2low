@@ -5,7 +5,8 @@ require_once( __DIR__ . "/../../../init/init-www-helios.php");
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$heliosArchiveControler = new HeliosArchiveControler($sqlQuery);
+/** @var HeliosArchiveControler $heliosArchiveControler */
+$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
 $id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $id_d){
@@ -14,7 +15,7 @@ if (! $id_d){
 	exit;
 }
 
-$msg = "Programmation de l'envoie de la transaction $id à Pastell";
+$msg = "Programmation de l'envoi de la transaction $id à Pastell";
 
 $_SESSION['error'] = $msg;
 	

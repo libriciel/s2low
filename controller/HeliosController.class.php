@@ -9,20 +9,21 @@ class HeliosController extends Controller {
 	const MODULE_NAME = 'helios';
 
 	private $helios_max_upload_size;
-	private $helios_files_upload_root;
 
 	public function __construct(ObjectInstancier $objectInstancier){
 		parent::__construct($objectInstancier);
 		$this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
-		$this->setHeliosFilesUploadRoot(HELIOS_FILES_UPLOAD_ROOT);
 	}
+
+    /**
+     * @return PesAllerRetriever
+     */
+	private function getPesAllerRetriever(){
+        return $this->getObjectInstancier()->get("PesAllerRetriever");
+    }
 
 	public function setHeliosMaxUploadSize($helios_max_upload_size){
 		$this->helios_max_upload_size = $helios_max_upload_size;
-	}
-
-	public function setHeliosFilesUploadRoot($helios_files_upload_root){
-		$this->helios_files_upload_root = $helios_files_upload_root;
 	}
 
 	public function importAction(){
@@ -62,6 +63,12 @@ class HeliosController extends Controller {
 			throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
 		}
 
+		if ($_FILES['enveloppe']['error'] != UPLOAD_ERR_OK){
+		    throw new Exception(
+		        "Erreur lors du téléchargement du fichier : code {$_FILES['enveloppe']['error']}");
+        }
+
+
 		$file_size = $_FILES['enveloppe']['size'];
 		if ($file_size > $this->helios_max_upload_size) {
 			$message = "Taille de fichier supérieur à la limite autorisée (".
@@ -76,18 +83,17 @@ class HeliosController extends Controller {
 			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
 		}
 
-		$uploaddir = $this->helios_files_upload_root;
-
+        $pes_aller_destination = $this->getPesAllerRetriever()->getPathForNonExistingFile($SHA1);
 		try {
 			$pes_aller_original_name = $_FILES['enveloppe']['name'];
-			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $uploaddir.$SHA1)) {
+			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
 				throw new Exception("Échec lors du téléchargement du fichier");
 			}
-			chmod($uploaddir.$SHA1, 0644);
+			chmod($pes_aller_destination, 0644);
 		} catch (Exception $e){
 			throw new Exception("Échec lors du téléchargement du fichier");
 		}
-		return $this->importFile($user_id,$uploaddir.$SHA1,$pes_aller_original_name);
+		return $this->importFile($user_id,$pes_aller_destination,$pes_aller_original_name);
 	}
 
 	public function importFile($user_id,$filepath,$original_filename){
@@ -190,7 +196,7 @@ class HeliosController extends Controller {
 		$id_list = $heliosTransactionSQL->getAllId($min_id);
 		foreach($id_list as $transaction_id){
 			$info = $heliosTransactionSQL->getInfo($transaction_id);
-			$pes_aller_path = $this->helios_files_upload_root . "/" . $info['sha1'];
+			$pes_aller_path = $this->getPesAllerRetriever()->getPath($info['sha1']);
 			if (! file_exists($pes_aller_path)){
 				echo "Transaction $transaction_id : le fichier PES ALLER n'est pas disponible\n";
 				continue;

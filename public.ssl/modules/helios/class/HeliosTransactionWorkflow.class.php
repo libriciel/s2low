@@ -23,7 +23,7 @@ class HeliosTransactionWorkflow extends DataObject {
   protected $xmlFilesize;
   protected $xmlObj;
 
-  protected $rootDir;
+
   protected $destDir;
 
   //..............................................................................
@@ -81,13 +81,6 @@ class HeliosTransactionWorkflow extends DataObject {
   */
 
   public function set($name, $val) {
-    switch ($name) {
-      case "transaction_id" :
-      case "status_id" :
-      case "destDir" : // A VOIR 
-        parent :: set("rootDir", HELIOS_FILES_UPLOAD_ROOT);
-        break;
-    }
     parent :: set($name, $val);
   }
 

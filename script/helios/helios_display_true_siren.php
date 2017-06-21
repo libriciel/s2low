@@ -17,10 +17,15 @@ $transactions_list = $sqlQuery->query($sql,$authority_id);
 
 echo count($transactions_list)." transactions trouvées\n";
 
+
+/** @var PesAllerRetriever $pesAllerRetriever */
+$pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+
+
 foreach($transactions_list as $transaction_info) {
 	try {
 		echo "Analyse de la transaction {$transaction_info['id']}: ";
-		$filename = HELIOS_FILES_UPLOAD_ROOT . "/" . $transaction_info['sha1'];
+        $filename = $pesAllerRetriever->getPath( $transaction_info['sha1']);
 		if (!file_exists($filename)){
 			throw new Exception("file not found");
 		}

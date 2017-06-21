@@ -10,13 +10,24 @@ class HeliosEnvoiControler {
 	private $heliosTransmissionWindowsSQL;
 
 	private $do_not_verify_nom_fic_unicity;
+
+	private $pesAllerRetriever;
+
+	private $helios_files_upload_root;
 	
-	public function __construct(SQLQuery $sqlQuery){
+	public function __construct(
+	    SQLQuery $sqlQuery,
+        PesAllerRetriever $pesAllerRetriever,
+        $helios_files_upload_root
+
+    ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($sqlQuery);
 		$this->fichierCompteur = new FichierCompteur(HELIOS_COUNTER_FILE);
 		$this->heliosTransmissionWindowsSQL = new HeliosTransmissionWindowsSQL($sqlQuery);
+		$this->pesAllerRetriever = $pesAllerRetriever;
+		$this->helios_files_upload_root = $helios_files_upload_root;
 	}
 
 	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
@@ -41,8 +52,8 @@ class HeliosEnvoiControler {
 			$message =  "Transaction $transaction_id en cours de traitement";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::EN_TRAITEMENT,$message,$transactionInfo['user_id']);
 			
-			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
-		
+			$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+
 			$pes_content = file_get_contents($file_path);
 			if (! $pes_content){
 				$message = "Transaction $transaction_id : le fichier est introuvable";
@@ -81,7 +92,13 @@ class HeliosEnvoiControler {
 				continue;
 			}
 			$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), EXTENDED_VALIDCA_PATH);
-			$heliosSignatureTechnique = new HeliosSignatureTechnique($this->heliosTransactionsSQL, HELIOS_FILES_UPLOAD_ROOT, $xadesSignature, HELIOS_ENABLE_SIGNATURE_TECHNIQUE);
+			$heliosSignatureTechnique = new HeliosSignatureTechnique(
+			    $this->heliosTransactionsSQL,
+                $this->helios_files_upload_root,
+                $xadesSignature,
+                HELIOS_ENABLE_SIGNATURE_TECHNIQUE,
+                $this->pesAllerRetriever
+            );
 			$xadesSignatureProperties = new XadesSignatureProperties();
 			$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
 			$xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
@@ -170,7 +187,8 @@ class HeliosEnvoiControler {
 			$completeName = $this->createCompleteName($transactionInfo['siren']);
 			$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
 			echo "Nom du fichier à envoyer : $completeName\n";
-			$file_path = HELIOS_FILES_UPLOAD_ROOT."/".$transactionInfo['sha1'];
+
+            $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
 
 			$file_path_with_complete_name = $file_sending_repository."/".$completeName;
 			if (! copy($file_path, $file_path_with_complete_name)){

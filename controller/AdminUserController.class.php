@@ -44,7 +44,7 @@ class AdminUserController extends Controller {
 		}
 
 		if ($role == 'GADM' && ! $authority_group_id){
-			throw new Exception("Vous devez indiquez un groupe pour créer un administrateur de groupe");
+			throw new Exception("Vous devez indiquer un groupe pour créer un administrateur de groupe");
 		}
 
 		if (! $api && $password != $password2){
@@ -101,7 +101,7 @@ class AdminUserController extends Controller {
 		}
 
 		if ($this->userSQL->hasDoublon($user_id,$certificat_connexion_info,$login,$certificate_rgs_2_etoiles_clean_content)){
-			throw new Exception("Un utilisateur avec les même information de connexion et d'identification existe dans la base S2low");
+			throw new Exception("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
 		}
 
 		//OK ALL GOOD !

@@ -9,7 +9,8 @@ class PostgreSQLSchemaInfoTest extends S2lowTestCase {
 		$this->assertContains('authorities_id_seq',$definition['sequence']);
 		$this->assertEquals('integer',$definition['table']['authorities']['id']['data_type']);
 		$this->assertEquals("id",$definition['constraint']['authorities']['authorities_pkey']['conkey'][0]);
-		$this->assertEquals('CREATE INDEX toto ON actes_included_files USING btree (transaction_id)',$definition['index']['toto']['indexdef']);
+		//print_r($definition);
+		$this->assertEquals('CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)',$definition['index']['xml_nomfic_index']['indexdef']);
 	}
 
 }

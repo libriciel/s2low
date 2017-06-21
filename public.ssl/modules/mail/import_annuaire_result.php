@@ -56,9 +56,9 @@ function affiche20Premier($texte,$tab){
 	</div>
         <?php if(! empty($annuaire)) : ?>
 	<h2>Résultat de l'import</h2>
-	<?php affiche20Premier("Nombre de nouvelle adresse email enregistré",$tabOK) ?>
- 	<?php affiche20Premier("Nombre d'adresse email déjà dans la base",$tabAlreadyExists) ?>
-	<?php affiche20Premier("Nombre de ligne du fichier en erreur",$tabError) ?>		
+	<?php affiche20Premier("Nombre de nouvelles adresses emails enregistrés",$tabOK) ?>
+ 	<?php affiche20Premier("Nombre d'adresses emails déjà dans la base",$tabAlreadyExists) ?>
+	<?php affiche20Premier("Nombre de lignes du fichier en erreur",$tabError) ?>
         <?php endif;?>
 
 	<h2>Importer un fichier</h2>

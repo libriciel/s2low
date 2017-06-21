@@ -28,6 +28,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_I_DN'] = "";
 		$_SERVER['SSL_CLIENT_CERT'] = "";
 		$_SERVER["QUERY_STRING"] = "";
+
+
+
 	}
 
 	/**
@@ -42,6 +45,16 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		}
 		$this->objectInstancier = new ObjectInstancier();
 		$this->objectInstancier->__set('SQLQuery',self::$sqlQueryStatic);
+        $this->objectInstancier->helios_files_upload_root = "/tmp";
+
+
+        $this->objectInstancier->set("openstack_authentication_url_v2","");
+        $this->objectInstancier->set("openstack_username","a");
+        $this->objectInstancier->set("openstack_password","a");
+        $this->objectInstancier->set("openstack_tenant","a");
+        $this->objectInstancier->set("openstack_region","a");
+        $this->objectInstancier->set("openstack_swift_container_prefix","a");
+
 
 		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
 		global $sqlQuery;

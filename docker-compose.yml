@@ -22,6 +22,12 @@ services:
             SMTP_PORT: ${SMTP_PORT}
             LIBERSIGN_INSTALLER: ${LIBERSIGN_INSTALLER}
             PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR}
+            OPENSTACK_AUTHENTICATION_URL_V2: ${OPENSTACK_AUTHENTICATION_URL_V2}
+            OPENSTACK_USERNAME: ${OPENSTACK_USERNAME}
+            OPENSTACK_PASSWOR: ${OPENSTACK_PASSWORD}
+            OPENSTACK_TENANT: ${OPENSTACK_TENANT}
+            OPENSTACK_REGION: ${OPENSTACK_REGION}
+            OPENSTACK_SWIFT_CONTAINER_PREFIX: ${OPENSTACK_SWIFT_CONTAINER_PREFIX}
 
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
@@ -37,3 +43,10 @@ services:
             - POSTGRES_DB="${POSTGRES_DB}"
         volumes:
             - ${POSTGRESQL_DATADIR}:/var/lib/postgresql/data
+
+    openstack:
+        image: serverascode/swift-onlyone
+        volumes:
+            - /Users/eric/data_docker/s2low/openstack:/srv
+        ports:
+            - 10003:8080

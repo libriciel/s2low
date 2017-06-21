@@ -7,9 +7,6 @@
         "actes_envelope_serials_id_seq",
         "actes_envelopes_id_seq",
         "actes_included_files_id_seq",
-        "actes_messages_id_seq",
-        "actes_messages_reponses_seq",
-        "actes_messages_workflow_id_seq",
         "actes_transactions_id_seq",
         "actes_transactions_workflow_id_seq",
         "actes_transmission_window_hours_id_seq",
@@ -33,7 +30,13 @@
         "mail_errors_id_seq",
         "mail_groupe_id_seq",
         "mail_included_file_id_seq",
+        "mail_message_emis_id_seq",
+        "mail_transaction_fn_download_seq",
         "mail_transaction_id_seq",
+        "mail_transaction_message_seq",
+        "mail_transaction_objet_seq",
+        "mail_transaction_status_seq",
+        "mail_transaction_users_id_seq",
         "message_admin_id_seq",
         "modules_authorities_id_seq",
         "modules_id_seq",
@@ -370,146 +373,6 @@
                 "column_default": "''::character varying"
             }
         },
-        "actes_messages": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('actes_messages_id_seq'::regclass)"
-            },
-            "actes_transactions_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "messages_type": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "actes_messages_status_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "received_date": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "actes_messages_reponses": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('actes_messages_reponses_seq'::regclass)"
-            },
-            "actes_messages_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "dir_path": {
-                "data_type": "character varying",
-                "character_maximum_length": 4096,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "xml_filename": {
-                "data_type": "character varying",
-                "character_maximum_length": 512,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "filename": {
-                "data_type": "character varying",
-                "character_maximum_length": 512,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "agreement": {
-                "data_type": "boolean",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "file_size": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "warning_sent": {
-                "data_type": "boolean",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": "false"
-            },
-            "first_sent_time": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "actual_sent_time": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "actes_messages_status": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": null
-            },
-            "nom": {
-                "data_type": "character",
-                "character_maximum_length": 64,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "actes_messages_workflow": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('actes_messages_workflow_id_seq'::regclass)"
-            },
-            "actes_messages_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "actes_messages_status_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "action_time": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "message": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
         "actes_natures": {
             "id": {
                 "data_type": "integer",
@@ -691,13 +554,7 @@
             },
             "classification_string": {
                 "data_type": "character varying",
-                "character_maximum_length": 64,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "date_affichage": {
-                "data_type": "date",
-                "character_maximum_length": null,
+                "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": null
             }
@@ -842,8 +699,8 @@
                 "column_default": null
             },
             "postal_code": {
-                "data_type": "integer",
-                "character_maximum_length": null,
+                "data_type": "character",
+                "character_maximum_length": 20,
                 "is_nullable": "YES",
                 "column_default": null
             },
@@ -1270,6 +1127,12 @@
             "siret": {
                 "data_type": "character",
                 "character_maximum_length": 14,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "sha1": {
+                "data_type": "character varying",
+                "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": null
             }
@@ -2082,6 +1945,20 @@
                 "column_default": null
             }
         },
+        "openstack_swift_counter": {
+            "container": {
+                "data_type": "character varying",
+                "character_maximum_length": 32,
+                "is_nullable": "NO",
+                "column_default": null
+            },
+            "last_insert_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": null
+            }
+        },
         "service_user": {
             "id": {
                 "data_type": "integer",
@@ -2202,8 +2079,8 @@
                 "column_default": null
             },
             "cert_serial": {
-                "data_type": "text",
-                "character_maximum_length": null,
+                "data_type": "character varying",
+                "character_maximum_length": 100,
                 "is_nullable": "YES",
                 "column_default": null
             },
@@ -2349,18 +2226,6 @@
                 "confrelname": null,
                 "confkey": []
             },
-            "actes_classification_codes_authority_id_fk": {
-                "conname": "actes_classification_codes_authority_id_fk",
-                "contype": "f",
-                "conrelname": "actes_classification_codes",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            },
             "actes_classification_codes_parent_id_fk": {
                 "conname": "actes_classification_codes_parent_id_fk",
                 "contype": "f",
@@ -2480,17 +2345,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "mail_annuaire_mail_adresse": {
-                "conname": "mail_annuaire_mail_adresse",
-                "contype": "u",
-                "conrelname": "mail_annuaire",
-                "conkey": [
-                    "authority_id",
-                    "mail_address"
-                ],
-                "confrelname": null,
-                "confkey": []
             }
         },
         "mail_errors": {
@@ -2563,18 +2417,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "actes_classification_requests_requested_by_fk": {
-                "conname": "actes_classification_requests_requested_by_fk",
-                "contype": "f",
-                "conrelname": "actes_classification_requests",
-                "conkey": [
-                    "requested_by"
-                ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
             }
         },
         "actes_envelope_serials": {
@@ -2587,18 +2429,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "actes_envelope_serials_authority_id_fk": {
-                "conname": "actes_envelope_serials_authority_id_fk",
-                "contype": "f",
-                "conrelname": "actes_envelope_serials",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
             }
         },
         "users": {
@@ -2683,6 +2513,54 @@
                 ],
                 "confrelname": null,
                 "confkey": []
+            },
+            "logs_historique_authority_id": {
+                "conname": "logs_historique_authority_id",
+                "contype": "f",
+                "conrelname": "logs_historique",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "logs_historique_authority_group_id": {
+                "conname": "logs_historique_authority_group_id",
+                "contype": "f",
+                "conrelname": "logs_historique",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "nounce": {
+            "nounce_pkey": {
+                "conname": "nounce_pkey",
+                "contype": "p",
+                "conrelname": "nounce",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            },
+            "authority_id_fk": {
+                "conname": "authority_id_fk",
+                "contype": "f",
+                "conrelname": "nounce",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
             }
         },
         "message_admin": {
@@ -2804,18 +2682,6 @@
                 "confrelname": null,
                 "confkey": []
             },
-            "authorities_authority_type_id_fk": {
-                "conname": "authorities_authority_type_id_fk",
-                "contype": "f",
-                "conrelname": "authorities",
-                "conkey": [
-                    "authority_type_id"
-                ],
-                "confrelname": "authority_types",
-                "confkey": [
-                    "id"
-                ]
-            },
             "authorities_authority_group_id_fk": {
                 "conname": "authorities_authority_group_id_fk",
                 "contype": "f",
@@ -2824,6 +2690,18 @@
                     "authority_group_id"
                 ],
                 "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "authorities_authority_type_id_fk": {
+                "conname": "authorities_authority_type_id_fk",
+                "contype": "f",
+                "conrelname": "authorities",
+                "conkey": [
+                    "authority_type_id"
+                ],
+                "confrelname": "authority_types",
                 "confkey": [
                     "id"
                 ]
@@ -2853,42 +2731,6 @@
                 ]
             }
         },
-        "actes_messages": {
-            "actes_messages_pkey": {
-                "conname": "actes_messages_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_messages_actes_transactions_id_fkey": {
-                "conname": "actes_messages_actes_transactions_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages",
-                "conkey": [
-                    "actes_transactions_id"
-                ],
-                "confrelname": "actes_transactions",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "actes_messages_actes_messages_status_id_fkey": {
-                "conname": "actes_messages_actes_messages_status_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages",
-                "conkey": [
-                    "actes_messages_status_id"
-                ],
-                "confrelname": "actes_messages_status",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
         "mail_groupe": {
             "mail_groupe_pkey": {
                 "conname": "mail_groupe_pkey",
@@ -2912,42 +2754,6 @@
                 "confkey": []
             }
         },
-        "actes_messages_workflow": {
-            "actes_messages_workflow_pkey": {
-                "conname": "actes_messages_workflow_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages_workflow",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_messages_workflow_actes_messages_id_fkey": {
-                "conname": "actes_messages_workflow_actes_messages_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages_workflow",
-                "conkey": [
-                    "actes_messages_id"
-                ],
-                "confrelname": "actes_messages",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "actes_messages_workflow_actes_messages_status_id_fkey": {
-                "conname": "actes_messages_workflow_actes_messages_status_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages_workflow",
-                "conkey": [
-                    "actes_messages_status_id"
-                ],
-                "confrelname": "actes_messages_status",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
         "actes_envelopes": {
             "actes_envelopes_pkey": {
                 "conname": "actes_envelopes_pkey",
@@ -2958,18 +2764,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "actes_envelopes_user_id_fk": {
-                "conname": "actes_envelopes_user_id_fk",
-                "contype": "f",
-                "conrelname": "actes_envelopes",
-                "conkey": [
-                    "user_id"
-                ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
             }
         },
         "actes_transactions": {
@@ -2982,18 +2776,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "at_user_id": {
-                "conname": "at_user_id",
-                "contype": "f",
-                "conrelname": "actes_transactions",
-                "conkey": [
-                    "user_id"
-                ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
             },
             "actes_transactions_envelope_id_fk": {
                 "conname": "actes_transactions_envelope_id_fk",
@@ -3015,18 +2797,6 @@
                     "related_transaction_id"
                 ],
                 "confrelname": "actes_transactions",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "at_authority_id": {
-                "conname": "at_authority_id",
-                "contype": "f",
-                "conrelname": "actes_transactions",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
                 "confkey": [
                     "id"
                 ]
@@ -3078,18 +2848,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "authority_districts_authority_department_id_fkey": {
-                "conname": "authority_districts_authority_department_id_fkey",
-                "contype": "f",
-                "conrelname": "authority_districts",
-                "conkey": [
-                    "authority_department_id"
-                ],
-                "confrelname": "authority_departments",
-                "confkey": [
-                    "id"
-                ]
             }
         },
         "actes_batches": {
@@ -3102,18 +2860,6 @@
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "actes_batches_user_id_fk": {
-                "conname": "actes_batches_user_id_fk",
-                "contype": "f",
-                "conrelname": "actes_batches",
-                "conkey": [
-                    "user_id"
-                ],
-                "confrelname": "users",
-                "confkey": [
-                    "id"
-                ]
             }
         },
         "helios_transactions_workflow": {
@@ -3296,42 +3042,6 @@
                 "confkey": []
             }
         },
-        "actes_messages_reponses": {
-            "actes_messages_reponses_pkey": {
-                "conname": "actes_messages_reponses_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages_reponses",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
-            "actes_messages_reponses_actes_messages_id_fkey": {
-                "conname": "actes_messages_reponses_actes_messages_id_fkey",
-                "contype": "f",
-                "conrelname": "actes_messages_reponses",
-                "conkey": [
-                    "actes_messages_id"
-                ],
-                "confrelname": "actes_messages",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
-        "actes_messages_status": {
-            "actes_messages_status_pkey": {
-                "conname": "actes_messages_status_pkey",
-                "contype": "p",
-                "conrelname": "actes_messages_status",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
         "helios_retour": {
             "helios_retour_pkey": {
                 "conname": "helios_retour_pkey",
@@ -3502,17 +3212,6 @@
             }
         },
         "mail_user_groupe": {
-            "mail_user_groupe_unique": {
-                "conname": "mail_user_groupe_unique",
-                "contype": "u",
-                "conrelname": "mail_user_groupe",
-                "conkey": [
-                    "id_user",
-                    "id_groupe"
-                ],
-                "confrelname": null,
-                "confkey": []
-            },
             "mail_user_groupe_id_user_fkey": {
                 "conname": "mail_user_groupe_id_user_fkey",
                 "contype": "f",
@@ -3536,30 +3235,17 @@
                 "confkey": [
                     "id"
                 ]
-            }
-        },
-        "nounce": {
-            "nounce_pkey": {
-                "conname": "nounce_pkey",
-                "contype": "p",
-                "conrelname": "nounce",
+            },
+            "mail_user_groupe_unique": {
+                "conname": "mail_user_groupe_unique",
+                "contype": "u",
+                "conrelname": "mail_user_groupe",
                 "conkey": [
-                    "id"
+                    "id_user",
+                    "id_groupe"
                 ],
                 "confrelname": null,
                 "confkey": []
-            },
-            "authority_id_fk": {
-                "conname": "authority_id_fk",
-                "contype": "f",
-                "conrelname": "nounce",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
             }
         }
     },
@@ -3588,6 +3274,10 @@
             "tablename": "modules",
             "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
+        "actes_transactions_workflow_date_idx": {
+            "tablename": "actes_transactions_workflow",
+            "indexdef": "CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date)"
+        },
         "atw_tid_idx": {
             "tablename": "actes_transactions_workflow",
             "indexdef": "CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)"
@@ -3596,13 +3286,9 @@
             "tablename": "actes_transactions_workflow",
             "indexdef": "CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)"
         },
-        "users_certificate_hash_idx": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX users_certificate_hash_idx ON users USING btree (certificate_hash)"
-        },
-        "user_certificat_index": {
-            "tablename": "users",
-            "indexdef": "CREATE INDEX user_certificat_index ON users USING btree (subject_dn, issuer_dn)"
+        "mt_ui": {
+            "tablename": "mail_transaction",
+            "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
         },
         "users_login": {
             "tablename": "users",
@@ -3612,13 +3298,37 @@
             "tablename": "users",
             "indexdef": "CREATE UNIQUE INDEX users_certificate_login ON users USING btree (subject_dn, issuer_dn, login)"
         },
+        "users_certificate_hash_idx": {
+            "tablename": "users",
+            "indexdef": "CREATE INDEX users_certificate_hash_idx ON users USING btree (certificate_hash)"
+        },
         "u_authority_id": {
             "tablename": "users",
             "indexdef": "CREATE INDEX u_authority_id ON users USING btree (authority_id, id)"
         },
-        "toto": {
+        "aif_ei": {
             "tablename": "actes_included_files",
-            "indexdef": "CREATE INDEX toto ON actes_included_files USING btree (transaction_id)"
+            "indexdef": "CREATE INDEX aif_ei ON actes_included_files USING btree (envelope_id)"
+        },
+        "aif_ti": {
+            "tablename": "actes_included_files",
+            "indexdef": "CREATE INDEX aif_ti ON actes_included_files USING btree (transaction_id)"
+        },
+        "acc_ai": {
+            "tablename": "actes_classification_codes",
+            "indexdef": "CREATE INDEX acc_ai ON actes_classification_codes USING btree (authority_id)"
+        },
+        "l_u": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX l_u ON logs USING btree (user_id)"
+        },
+        "logs_user_id_visibility_id_idx": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX logs_user_id_visibility_id_idx ON logs USING btree (user_id, visibility, id)"
+        },
+        "l_date": {
+            "tablename": "logs",
+            "indexdef": "CREATE INDEX l_date ON logs USING btree (date, id)"
         },
         "authority_group_index": {
             "tablename": "logs",
@@ -3628,21 +3338,37 @@
             "tablename": "logs",
             "indexdef": "CREATE INDEX authority_index ON logs USING btree (authority_id, id)"
         },
-        "t4": {
-            "tablename": "logs",
-            "indexdef": "CREATE INDEX t4 ON logs USING btree (user_id)"
+        "logs_request_state_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
         },
         "logs_request_user_id_demandeur_idx": {
             "tablename": "logs_request",
             "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
         },
-        "t3": {
+        "actes_transactions_authority_id_last_status_id_idx": {
             "tablename": "actes_transactions",
-            "indexdef": "CREATE INDEX t3 ON actes_transactions USING btree (authority_id)"
+            "indexdef": "CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)"
         },
-        "t2": {
+        "actes_transactions_auto_broadcasted_last_status_id_type_idx": {
             "tablename": "actes_transactions",
-            "indexdef": "CREATE INDEX t2 ON actes_transactions USING btree (number)"
+            "indexdef": "CREATE INDEX actes_transactions_auto_broadcasted_last_status_id_type_idx ON actes_transactions USING btree (auto_broadcasted, last_status_id, type)"
+        },
+        "actes_transactions_user_id_last_status_id_idx": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX actes_transactions_user_id_last_status_id_idx ON actes_transactions USING btree (user_id, last_status_id)"
+        },
+        "at_lsi_ac": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX at_lsi_ac ON actes_transactions USING btree (last_status_id, antivirus_check)"
+        },
+        "at_n": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX at_n ON actes_transactions USING btree (number)"
+        },
+        "at_user_id_index": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX at_user_id_index ON actes_transactions USING btree (user_id, last_status_id, id)"
         },
         "at_related_id": {
             "tablename": "actes_transactions",
@@ -3651,6 +3377,22 @@
         "at_enveloppe_id": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)"
+        },
+        "logs_historique_user": {
+            "tablename": "logs_historique",
+            "indexdef": "CREATE INDEX logs_historique_user ON logs_historique USING btree (user_id)"
+        },
+        "lh_authority_index": {
+            "tablename": "logs_historique",
+            "indexdef": "CREATE INDEX lh_authority_index ON logs_historique USING btree (authority_id, id)"
+        },
+        "lh_authority_group_index": {
+            "tablename": "logs_historique",
+            "indexdef": "CREATE INDEX lh_authority_group_index ON logs_historique USING btree (authority_group_id, id)"
+        },
+        "lh_date": {
+            "tablename": "logs_historique",
+            "indexdef": "CREATE INDEX lh_date ON logs_historique USING btree (date, id)"
         }
     }
 }

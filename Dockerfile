@@ -98,10 +98,11 @@ RUN cd /tmp/ && \
     php composer-setup.php --install-dir=/usr/local/bin && \
     mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
+
 # Installation des dépendances composer
-COPY ./composer.* /usr/local/lib/composer/
-RUN cd /usr/local/lib/composer && \
-    composer install --dev
+#COPY ./composer.* /usr/local/lib/composer/
+#RUN cd /usr/local/lib/composer && \
+#    composer install --dev
 
 # Ports
 EXPOSE 443 80
@@ -122,6 +123,11 @@ COPY ./docker-resources/s2low-supervisord.conf /etc/supervisor/conf.d/
 
 
 COPY ./ /var/www/s2low/
+
+#Composer
+RUN composer update
+ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
+
 
 # Pour libersign
 RUN mkdir -p /var/www/parapheur/libersign
