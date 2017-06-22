@@ -60,7 +60,7 @@ class PesAllerStorage {
             if (in_array($file,array('.','..'))){
                 continue;
             }
-            if ($this->isRecentlyAcceded($file,$no_access_during_nb_days)){
+            if ($this->isRecentlyCreated($file,$no_access_during_nb_days)){
                 continue;
             }
             if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
@@ -76,8 +76,8 @@ class PesAllerStorage {
         closedir($dh);
     }
 
-    private function isRecentlyAcceded($filename,$no_access_during_nb_days = 9999){
-        $last_access_time = fileatime($this->helios_files_upload_root."/".$filename);
+    private function isRecentlyCreated($filename, $no_access_during_nb_days = 9999){
+        $last_access_time = filectime($this->helios_files_upload_root."/".$filename);
         $nb_seconds_without_access = time() - $last_access_time;
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);

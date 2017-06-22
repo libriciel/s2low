@@ -29,7 +29,7 @@ class HeliosTransactionsSQL extends SQL {
 		$sql = "SELECT * FROM helios_transactions WHERE id=?";
 		return $this->queryOne($sql,$id);
 	}
-	
+
 	public function updateStatus($transaction_id,$status_id,$message){
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
