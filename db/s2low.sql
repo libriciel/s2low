@@ -287,7 +287,8 @@ CREATE TABLE helios_transactions (
     signature_technique boolean DEFAULT false NOT NULL,
     xml_cod_col character(3),
     xml_id_post character varying(7),
-    xml_cod_bud character(2)
+    xml_cod_bud character(2),
+    is_in_cloud boolean DEFAULT false NOT NULL
 );
 CREATE TABLE helios_transactions_workflow (
     id integer DEFAULT nextval('helios_transactions_workflow_id_seq'::regclass) NOT NULL,
@@ -431,10 +432,6 @@ CREATE TABLE nounce (
     creation timestamp with time zone,
     authority_id integer
 );
-CREATE TABLE openstack_swift_counter (
-    container character varying(32) NOT NULL,
-    last_insert_id integer NOT NULL
-);
 CREATE TABLE service_user (
     id integer DEFAULT nextval('service_user_id_seq'::regclass) NOT NULL,
     authority_id integer,
@@ -475,12 +472,13 @@ CREATE TABLE users_perms (
 CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id)
 CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id)
 CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date)
-CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)
-CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)
 CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)
 CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date)
 CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)
 CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)
+CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id)
+CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)
+CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)
 CREATE INDEX users_login ON users USING btree (login)
 CREATE UNIQUE INDEX users_certificate_login ON users USING btree (subject_dn, issuer_dn, login)

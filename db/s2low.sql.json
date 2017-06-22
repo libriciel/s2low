@@ -1271,6 +1271,12 @@
                 "character_maximum_length": 2,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "is_in_cloud": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "helios_transactions_workflow": {
@@ -1942,20 +1948,6 @@
                 "data_type": "integer",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "openstack_swift_counter": {
-            "container": {
-                "data_type": "character varying",
-                "character_maximum_length": 32,
-                "is_nullable": "NO",
-                "column_default": null
-            },
-            "last_insert_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
                 "column_default": null
             }
         },
@@ -3262,14 +3254,6 @@
             "tablename": "helios_transactions_workflow",
             "indexdef": "CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date)"
         },
-        "xml_nomfic_cod_col_index": {
-            "tablename": "helios_transactions",
-            "indexdef": "CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)"
-        },
-        "xml_nomfic_index": {
-            "tablename": "helios_transactions",
-            "indexdef": "CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)"
-        },
         "modules_name_idx": {
             "tablename": "modules",
             "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
@@ -3285,6 +3269,18 @@
         "atw_id_date": {
             "tablename": "actes_transactions_workflow",
             "indexdef": "CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)"
+        },
+        "ht_id_is_in_cloud": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id)"
+        },
+        "xml_nomfic_cod_col_index": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)"
+        },
+        "xml_nomfic_index": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)"
         },
         "mt_ui": {
             "tablename": "mail_transaction",

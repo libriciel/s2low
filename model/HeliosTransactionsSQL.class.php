@@ -206,9 +206,20 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->query($sql);
 	}
 
-	public function getNextTransactionById($last_id){
-	    $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE id>? ORDER BY id ASC LIMIT 1";
-	    return $this->queryOne($sql,$last_id);
+	public function getNextTransactionToSendInCloud(){
+	    $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC LIMIT 1";
+	    return $this->queryOne($sql);
     }
+
+    public function setTransactionInCloud($id){
+	    $sql = "UPDATE helios_transactions SET is_in_cloud=TRUE WHERE id=?";
+	    $this->query($sql,$id);
+    }
+
+    public function setTransactionInCloudRemove($id){
+        $sql = "UPDATE helios_transactions SET is_in_cloud=FALSE WHERE id=?";
+        $this->query($sql,$id);
+    }
+
 
 }

@@ -5,7 +5,6 @@ class PesAllerStorage {
     const CONTAINER_NAME = "pes_aller";
 
     private $helios_files_upload_root;
-    private $openStackSwiftCounterSQL;
     private $heliosTransactionsSQL;
     private $openStackSwiftWrapper;
     private $logger;
@@ -13,13 +12,11 @@ class PesAllerStorage {
 
     public function __construct(
         $helios_files_upload_root,
-        OpenStackSwiftCounterSQL $openStackSwiftCounterSQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         Logger $logger
     ) {
         $this->helios_files_upload_root = $helios_files_upload_root;
-        $this->openStackSwiftCounterSQL = $openStackSwiftCounterSQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
@@ -32,8 +29,7 @@ class PesAllerStorage {
     }
 
     public function storeNextFile(){
-        $last_id = $this->openStackSwiftCounterSQL->getLastInsertId(self::CONTAINER_NAME);
-        $transaction_info = $this->heliosTransactionsSQL->getNextTransactionById($last_id);
+        $transaction_info = $this->heliosTransactionsSQL->getNextTransactionToSendInCloud();
         if (! $transaction_info){
             $this->log("Il n'y a plus aucune transaction uniquement en local");
             return false;
@@ -49,10 +45,7 @@ class PesAllerStorage {
             $this->helios_files_upload_root."/".$transaction_info['sha1']
         );
 
-        $this->openStackSwiftCounterSQL->setLastInsertId(
-            self::CONTAINER_NAME,
-            $transaction_info['id']
-        );
+        $this->heliosTransactionsSQL->setTransactionInCloud($transaction_info['id']);
         $this->log("Fichier {$transaction_info['sha1']} envoyé");
         return true;
     }
