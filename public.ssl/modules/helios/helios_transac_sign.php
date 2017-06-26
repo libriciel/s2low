@@ -87,9 +87,13 @@ for($i=1;$i<=$nb_signature;$i++) {
 
     file_put_contents($new_file_path, $new_pes_content);
 	
-	$trans->set('sha1', $new_sha1);
-	$trans->set('filesize', $new_filesize);
-	
+
+    $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+    $heliosTransactionSQL->setTransactionInCloudRemove($id);
+
+    $trans->set('sha1', $new_sha1);
+    $trans->set('filesize', $new_filesize);
+
 	if (! $trans->save(true)){
 		$msg =  "Erreur de l'enregistrement de la signature.";
 		
@@ -100,11 +104,8 @@ for($i=1;$i<=$nb_signature;$i++) {
 		header("Location:  ". WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
 		exit ();
 	}
-	
-	
-	$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+
 	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
-	
 }
 	
 if ($nb_signature>1){	
