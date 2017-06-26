@@ -28,6 +28,10 @@ services:
             OPENSTACK_TENANT: ${OPENSTACK_TENANT}
             OPENSTACK_REGION: ${OPENSTACK_REGION}
             OPENSTACK_SWIFT_CONTAINER_PREFIX: ${OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            IMAP_SERVER: ${IMAP_SERVER}
+            IMAP_LOGIN: ${IMAP_LOGIN}
+            IMAP_PASS: ${IMAP_PASS}
+
 
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace

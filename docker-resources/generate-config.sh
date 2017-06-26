@@ -29,6 +29,8 @@ define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
 define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");
 define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/data/tdt-workspace/helios/response_tmp/');
 
+define('MAIL_FILES_UPLOAD_ROOT','/data/tdt-workspace/mail/');
+
 
 define('TIMESTAMPING_CERT', '/etc/apache2/ssl/s2low_timestamp_cert.pem');
 define('TIMESTAMPING_PRIV_KEY', '/etc/apache2/ssl/s2low_timestamp_key.pem');
@@ -62,6 +64,11 @@ define("OPENSTACK_PASSWORD","${OPENSTACK_PASSWORD}");
 define("OPENSTACK_TENANT","${OPENSTACK_TENANT}");
 define("OPENSTACK_REGION","${OPENSTACK_REGION}");
 define("OPENSTACK_SWIFT_CONTAINER_PREFIX","${OPENSTACK_SWIFT_CONTAINER_PREFIX}");
+
+define("IMAP_SERVER","${IMAP_SERVER}");
+define("IMAP_LOGIN","${IMAP_LOGIN}");
+define("IMAP_PASS","${IMAP_PASS}");
+
 
 EOF
 

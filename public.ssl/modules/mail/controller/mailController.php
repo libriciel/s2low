@@ -379,11 +379,11 @@ class mailController {
 	    require_once ( __DIR__."/../om/mail_included_file.class.php");
         
         // créer un repertoir de md5
-  		$newdir=MAIL_FILES_UPLOAD_ROOT.$mailTransaction->getFNDownload().'/';
+  		$newdir=MAIL_FILES_UPLOAD_ROOT."/".$mailTransaction->getFNDownload().'/';
   		if (!mkdir ($newdir, 0755, true))
   		{
   			$this->lastError ="La création de répertoire a echoué.";
-  			$this->logError();
+  			$this->logError($this->lastError);
   			return false;
   		}
   		$mailFiles=array();
@@ -425,7 +425,7 @@ class mailController {
 	if (!$mailUtil->sendMail($this->MailMessageEmis,$mailTransaction,$mailIncludedFiles,$send_password))
 	{	
 	  	$this->lastError = "Échec lors de l'envoi.";
-		$this->logError();
+		$this->logError($message);
 	  	//traiter les messages d'échec.
 	  	$mailTransaction->delete();
 	  	foreach ($this->MailMessageEmis as $mailEmis )

@@ -1,7 +1,9 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    libc-client-dev \
     libjpeg-dev \
+    libkrb5-dev \
     libpng-dev \
     libpq-dev \
     locales \
@@ -55,6 +57,11 @@ RUN docker-php-ext-install \
     pdo \
     pdo_pgsql \
     pgsql
+
+# Installation de l'extension imap
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install imap
+
 
 # Paquets PEAR
 RUN pear install \
