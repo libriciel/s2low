@@ -14,7 +14,7 @@ if (isset($_SESSION['last_annuaire'])) {
 }
 
 require_once ("lib/MailLayout.class.php");
-$doc = new MailLayout('xhtml_mail.tpl.php');
+$doc = new MailLayout();
 $doc->disableError(); 
 $doc->setTitle("Gestion du carnet d'adresse");
 
