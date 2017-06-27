@@ -56,7 +56,8 @@ RUN docker-php-ext-install \
     gd \
     pdo \
     pdo_pgsql \
-    pgsql
+    pgsql \
+    zip
 
 # Installation de l'extension imap
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
