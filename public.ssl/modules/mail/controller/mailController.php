@@ -289,6 +289,7 @@ class mailController {
 	  
 	    $subject=Helpers :: getVarFromPost("objet");
 	    $message=Helpers :: getVarFromPost("message");
+	    $message = str_replace("\r", "", $message);
 	    $send_password = Helpers :: getVarFromPost("send_password");
 	    
 	    if ( ! $mailTo ) {
@@ -310,6 +311,11 @@ class mailController {
 	    	$this->lastError =  "Le corps du message ne peut pas être vide";
 	    	return false;
 		}
+
+		if (strlen($message)>2000){
+            $this->lastError =  "Le corps du message ne peut dépasser les 2000 caractères : ".strlen($message)." caractères trouvés.";
+            return false;
+        }
 		if ($mailCC && ! checkAllEmail($mailCC)) {
     		$this->lastError =  "mailCC: Adresse email incorrecte !";
     		return false;
