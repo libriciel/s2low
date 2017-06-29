@@ -94,7 +94,7 @@
             <div class="form-group">
                 <label class="col-md-2" for="message">Message : </label>
                 <div class="col-md-10">
-                    <textarea name="message" rows="8" cols="80" id="message" class="form-control"></textarea>
+                    <textarea maxlength="2000" name="message" rows="8" cols="80" id="message" class="form-control"></textarea>
 		</div>
             </div>
             <div class="form-group">
