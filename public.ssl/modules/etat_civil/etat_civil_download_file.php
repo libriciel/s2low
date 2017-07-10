@@ -108,17 +108,6 @@ echo "<br>ec: download_file: owner_id".$ownerId;
 $owner = new User($ownerId);
 $owner->init();
 
-// Vérification des permissions
-/* A FAIRE...
-if (! $me->isSuper()) {
-  if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $owner->getId() && $me->canAccess($module->get("name")))) {
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/etat_civil/index.php");
-	exit();
-  }
-}
-
-*/
 
 
 if (! $entity->sendfile($filename)) {

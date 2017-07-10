@@ -1,4 +1,5 @@
-<?php 
+<?php
+//require_once( __DIR__ . "/../../../init/init.php");
 
 require_once( __DIR__ . "/../../../init/init-www-actes.php");
 
@@ -9,7 +10,7 @@ $id = $recuperateur->getInt('id');
 $authorityInfo = $authoritySQL->getInfo($id);
 
 if (! $authorityInfo  || ! $droit->hasDroit($userInfo,$authorityInfo)){
-	sortir("Accès refusé");
+    $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
 }
 
 $menuHTML = new MenuHTML();

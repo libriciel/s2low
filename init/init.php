@@ -63,4 +63,3 @@ $objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAI
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 
 $frontController = new FrontController($objectInstancier);
-
