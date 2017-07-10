@@ -25,7 +25,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 
 	public function testBadQuery(){
 		$sql = "NOT_SQL_WORD";
-		$this->setExpectedException("Exception",'syntax error at or near "NOT_SQL_WORD"');
+		$this->setExpectedException("Exception",'NOT_SQL_WORD');
 		$this->sqlQuery->query($sql);
 	}
 
