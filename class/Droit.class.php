@@ -22,7 +22,7 @@ class Droit {
 			return false;
 		}
 		if ( $groupeInfo && $groupeInfo['status'] != 1){
-			sortir("Échec de l'authentification");
+			return false;
 		}
 		if ($this->isGroupOrSuperAdmin($userInfo)){
 			return true;

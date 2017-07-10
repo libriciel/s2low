@@ -7,7 +7,7 @@ $id = $recuperateur->getInt('id');
 $authorityInfo = $authoritySQL->getInfo($id);
 
 if (! $authorityInfo  || ! $droit->hasDroit($userInfo,$authorityInfo)){
-	sortir("Accès refusé");
+    $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
 }
 
 $pastell = new Pastell($authorityInfo['pastell_url'],

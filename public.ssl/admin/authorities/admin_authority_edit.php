@@ -54,8 +54,6 @@ $authority_types_info = $authorityTypesSQL->getInfo($authority->get("authority_t
 $authority_type_name = $authority_types_info['id']. "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
 
 
-
-
 /****************/
 
 $doc = new HTMLLayout();
@@ -160,7 +158,7 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 	}
 	?>
 	<script	language="JavaScript">
-	
+
 
 	function groupchange()  {
 		var   sirenArray   =   [<?php   echo   $valueString;   ?> ];
@@ -170,20 +168,20 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 		for (var i=0;i< groupIdArray.length;i++)
 		{
 			if (groupIdArray[i]==groupId.value)
-			{ 
+			{
 				var siren=sirenArray[i];
-				sienSelect.options.length = 0; 
+				sienSelect.options.length = 0;
 				for(var j = 0; j < siren.length; j++) {
-	
-					sienSelect.options[j]=new Option(siren[j],siren[j]); 		
+
+					sienSelect.options[j]=new Option(siren[j],siren[j]);
 				}
-				break;	
+				break;
 			}
 		}
 	}
-	
+
 	</script>
-	<?php 
+	<?php
   $html .= " <div class=\"form-group\">\n";
   $html .= "  <label for=\"authority_group_id\" class=\"control-label col-md-4\">Groupe</label>\n";
   $html .= "  <div class=\"col-md-6\">\n";
@@ -335,7 +333,7 @@ if (HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY && $me->isSuper()){
 	$html .= " </div>\n";
 }
 
-echo $authority->get('helios_do_not_verify_nom_fic_unicity');
+//echo $authority->get('helios_do_not_verify_nom_fic_unicity');
 
 if ($me->isGroupAdminOrSuper()) {
 	$modules = Module::getActiveModulesList();

@@ -42,14 +42,17 @@ $sqlQuery->setDatabaseHost(DB_HOST);
 $sqlQuery->setCredential(DB_USER,DB_PASSWORD);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
-function sortir($message) {
-	$_SESSION["error"] = $message;
-	header("Location: " . WEBSITE_SSL);
-	exit;
-};
-
 $objectInstancier = new ObjectInstancier();
 $objectInstancier->SQLQuery = $sqlQuery;
+
+if (isset($_SESSION)) {
+    $objectInstancier->set("SessionWrapper", new SessionWrapper($_SESSION));
+} else {
+    $session = array();
+    $objectInstancier->set("SessionWrapper", new SessionWrapper($session));
+}
+$objectInstancier->set("website_ssl",WEBSITE_SSL);
+
 $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
 

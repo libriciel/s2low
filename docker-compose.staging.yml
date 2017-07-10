@@ -74,4 +74,3 @@ services:
             - MAIL_ADDRESS=mail@tedetis.org
             - MAIL_PASS=password
 
-

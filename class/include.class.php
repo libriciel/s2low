@@ -30,7 +30,7 @@ function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="iso-8859-15"){
 	return htmlspecialchars($message,$quot_style,$encoding);
 }
 
-if (defined(TESTING_ENVIRONNEMENT) && TESTING_ENVIRONNEMENT) {
+if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
 
     function exit_wrapper($status = "") {
         $message = "exit() called";

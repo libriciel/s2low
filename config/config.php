@@ -549,7 +549,7 @@ if (! defined("LIBERSIGN_INSTALLER")){
 ## Configuration OpenStack (facultative)
 
 if (! defined("OPENSTACK_AUTHENTICATION_URL_V2")) {
-    define("OPENSTACK_URL_V2", 'https://identity.fr1.cloudwatt.com/v2.0');
+    define("OPENSTACK_AUTHENTICATION_URL_V2", 'https://identity.fr1.cloudwatt.com/v2.0');
 }
 
 if (! defined("OPENSTACK_USERNAME")) {
