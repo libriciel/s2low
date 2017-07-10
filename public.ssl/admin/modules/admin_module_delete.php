@@ -37,6 +37,7 @@
 */
 ?>
 <?php
+
 /**
  * \file admin_module_delete.php
  * \brief Page de suppression d'un module
@@ -64,7 +65,7 @@ if (! $me->authenticate()) {
   exit();
 }
 
-if (! $me->isAdmin()) {
+if (! $me->isSuper()) {
   $_SESSION["error"] = "Accès refusé";
   header("Location: " . WEBSITE_SSL);
   exit();
@@ -72,7 +73,10 @@ if (! $me->isAdmin()) {
 
 $id = (isset($_POST["id"])) ? $_POST["id"] : null;
 
+
 if (isset($id)) {
+
+
   $module = new Module($id);
   if ($module->delete()) {
 	$msg = "Suppression du module " . $module->get("name") . ". Résultat ok.";
