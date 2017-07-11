@@ -2,7 +2,6 @@
 
 class Droit {
 
-	//hasDroit($user_id,$authority_id,$module_id,$droit)
 
 	public function canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser, $droit_specific = array()){	
 		
