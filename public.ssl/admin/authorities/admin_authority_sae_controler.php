@@ -7,7 +7,7 @@ $id = $recuperateur->getInt('id');
 $authorityInfo = $authoritySQL->getInfo($id);
 
 if (! $authorityInfo  || ! $droit->isSuperAdmin($userInfo)){
-	sortir("Accès refusé");
+    $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
 }
 
 foreach(AuthoritySQL::getSAEProperties() as $name => $label){

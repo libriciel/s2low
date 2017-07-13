@@ -7,21 +7,51 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
 
+### Corrections de sécurités
+
+- Correction d'une faille de sécurité sur les modules ~admin
+
+### Évolutions
+
+- La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~admin 
+- Les admin sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
+- modification du libellé des natures d'actes dans le filtre de recherche #163 ~Actes
+
+### Corrections
+
+- Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité #187 ~admin
+- Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0 #146 ~Actes  
+
+
+## [2.6.5] - 2017-06-29
+
+### Ajouts
 - Utilisation d'un stockage objet pour les PES Aller
-- Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde.
-- Suppression de l'autocomplete sur les mots de passe de la création d'utilisarteur (bug Firefox)
-- Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR))
-- Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide
-- Correction faute d'orthographe
+
+### Corrections
+- Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde. ~mailsec
+- Suppression de l'autocomplete sur les mots de passe de la création d'utilisateur (bug Firefox)
+- Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR)) ~Actes
+- Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide ~Helios
+- Correction de fautes d'orthographes 
 
 ## [2.6.4] - 2017-06-14
-- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple 
+
+### Corrections
+
+- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple ~Actes 
  
 ## [2.6.3] - 2017-06-09
+
  
-- Mise à jour du schéma PES en version 5.3
+### Évolutions
+
+- Mise à jour du schéma PES en version 5.3 ~Helios
  
 ## [2.6.2] - 2017-06-08
+
+## Ajouts
+- script de monitoring des fichiers Actes et Helios restés trop longtemps dans un certain état ~Actes ~Helios
 
 ### Evolutions
 - création d'un pipeline d'intégration continue
@@ -32,26 +62,28 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## Corrections
 - correction de warning dans le code
 
-## Ajouts
-- script de monitoring des fichiers Actes et Helios restés trop longtemps dans un certain état.
-
 ## [2.6.1] - 2017-05-23
+
+### Ajouts
+- le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~admin
 
 ### Evolutions
 - migration du code source vers git
 
 
-### Ajouts
-- le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisatuers
-
 
 ## [2.6.0] - 2017-04-13
+
 ### Evolutions
-- Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur  (NomFic, CodCol) et plus uniquemnet sur (NomFic).
+- Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur 
+(NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
 - Le script de migration (script/migration/v2.5-to-v2.6.php) permet  de mettre à jour la base de données.
 
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
+[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.5
+[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.4
+[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.3
 [2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.2
 [2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.1
 [2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/V2.6/

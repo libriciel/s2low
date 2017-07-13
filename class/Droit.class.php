@@ -2,7 +2,6 @@
 
 class Droit {
 
-	//hasDroit($user_id,$authority_id,$module_id,$droit)
 
 	public function canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser, $droit_specific = array()){	
 		
@@ -22,7 +21,7 @@ class Droit {
 			return false;
 		}
 		if ( $groupeInfo && $groupeInfo['status'] != 1){
-			sortir("Échec de l'authentification");
+			return false;
 		}
 		if ($this->isGroupOrSuperAdmin($userInfo)){
 			return true;

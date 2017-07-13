@@ -30,7 +30,38 @@ function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="iso-8859-15"){
 	return htmlspecialchars($message,$quot_style,$encoding);
 }
 
+if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
+
+    function exit_wrapper($status = "") {
+        $message = "exit() called";
+        if ($status){
+            $message.=" with status $status";
+        }
+        throw new Exception($message);
+    }
+
+    function header_wrapper($string, $replace = true, $http_response_code = null) {
+        echo "header('$string','$replace','$http_response_code') called";
+    }
+
+} else {
+
+    function exit_wrapper($status = "")
+    {
+        exit($status);
+    }
+
+    function header_wrapper($string, $replace = true, $http_response_code = null)
+    {
+        header($string, $replace, $http_response_code);
+    }
+}
+
+
 //Cette variable est utilisée partout sans être initialisé...
 $html = "";
 
 $jsonOutput = new JSONoutput();
+
+
+

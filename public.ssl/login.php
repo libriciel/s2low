@@ -10,7 +10,7 @@ $userSQL = new UserSQL($sqlQuery);
 $allUser = $userSQL->getInfoFromCertificateInfo($certificateInfo);
 
 if (! $allUser) {
-	sortir("Certificat invalide");
+    $objectInstancier->get('S2lowRedirect')->redirect("/","Certificat invalide");
 }
 
 $doc = new HTMLLayout();

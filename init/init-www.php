@@ -40,8 +40,8 @@ if ( ! empty($module_name)) {
 	$permUser = $moduleSQL->getInfoPerms($moduleInfo['id'],$connexion->getId());
 	
 	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific)){
-		sortir("Accès refusé");
-	}	
+        $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
+    }
 }
 
 $modulesInfo = $moduleSQL->getModulesForUser($userInfo);

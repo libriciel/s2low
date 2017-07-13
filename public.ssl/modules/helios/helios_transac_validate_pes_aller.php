@@ -36,7 +36,7 @@ $xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certifica
 $verify_sign =  $xadesSignature->verify($filename);
 $xades_output = $xadesSignature->getLastOutput();
 
-
+$is_signed = $xadesSignature->isSigned($filename);
 
 
 $doc = new HTMLLayout();
@@ -97,7 +97,9 @@ ob_start();
 
 <h2>Validation de la signature du PES</h2>
 
-<?php if($verify_sign): ?>
+<?php if(! $is_signed): ?>
+    <div class="alert alert-warning">Le fichier n'est pas signé !</div>
+<?php elseif($verify_sign): ?>
 	<div class="alert alert-success">La signature du fichier est valide !</div>
 <?php else : ?>
 	<div class="alert alert-danger">La signature du fichier n'est pas valide !</div>

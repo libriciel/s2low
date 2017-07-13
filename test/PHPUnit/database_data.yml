@@ -55,6 +55,12 @@ modules_authorities:
   module_id: 2
   authority_id: 1
 
+ -
+  id: 3
+  module_id: 2
+  authority_id: 2
+
+
 users:
  -
   id: 1
@@ -223,6 +229,19 @@ users:
   authority_id: 1
   status: 1
 
+ -
+  id: 9
+  email: eric+9@sigmalis.com
+  name: Dupont
+  givenname: Alice
+  role: ADM
+  authority_id: 1
+  subject_dn: admin_col1
+  issuer_dn: admin_col1
+  certificate_hash: admin_col1
+  status: 1
+  certificate_rgs_2_etoiles: ''
+
 users_perms:
  -
   module_id: 1
@@ -231,6 +250,14 @@ users_perms:
  -
   module_id: 2
   user_id: 8
+  perm: RW
+ -
+  module_id: 2
+  user_id: 9
+  perm: RW
+ -
+  module_id: 2
+  user_id: 6
   perm: RW
 
 logs:

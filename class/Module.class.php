@@ -139,7 +139,6 @@ class Module extends DataObject {
 		return false;
       }
     }
-
 	if (! $this->db->begin()) {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
       return false;
@@ -152,8 +151,8 @@ class Module extends DataObject {
 	  $this->db->rollback();
 	  return false;
     }
-    
-    $sql = "DELETE FROM modules_authorities WHERE module_id=" . pg_escape_string($id);
+
+      $sql = "DELETE FROM modules_authorities WHERE module_id=" . pg_escape_string($id);
 
     if (! $this->db->exec($sql)) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";

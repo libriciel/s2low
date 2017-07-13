@@ -202,7 +202,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testGetPESRetourEmptyListAction(){
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#<idColl>1</idColl>#");
-		$this->setExpectedException("Exception","Exit !");
+		$this->setExpectedException("Exception","exit() called");
 		$heliosController->getPESRetourListAction();
 	}
 
@@ -216,9 +216,39 @@ class HeliosControllerTest extends S2lowTestCase {
 
 		$heliosController = new HeliosController($this->getObjectInstancier());
 		$this->expectOutputRegex("#<nom>toto.xml</nom>#");
-		$this->setExpectedException("Exception","Exit !");
+		$this->setExpectedException("Exception","exit() called");
 		$heliosController->getPESRetourListAction();
 	}
+
+    /**
+     * @preserveGlobalState disabled
+     * @runInSeparateProcess
+     */
+    public function testGetPESRetourListActionForAdmin(){
+        $this->setAdminColAuthentication();
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL->add(1,"123456789","toto.xml");
+
+        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->expectOutputRegex("#<nom>toto.xml</nom>#");
+        $this->setExpectedException("Exception","exit() called");
+        $heliosController->getPESRetourListAction();
+    }
+
+    /**
+     * @preserveGlobalState disabled
+     * @runInSeparateProcess
+     */
+    public function testGetPESRetourListActionForAdminUnauthorized(){
+        $this->setAdminCol2Authentication();
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL->add(1,"123456789","toto.xml");
+
+        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->expectOutputRegex("#^((?!toto.xml).)*$#s");
+        $this->setExpectedException("Exception","exit() called");
+        $heliosController->getPESRetourListAction();
+    }
 
 	/**
 	 * @preserveGlobalState disabled
@@ -230,7 +260,7 @@ class HeliosControllerTest extends S2lowTestCase {
 
 		$this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
 		$this->expectOutputRegex("#<message>Votre certificat n'est pas RGS et ne vous permet donc pas de#");
-		$this->setExpectedException("Exception","Exit !");
+		$this->setExpectedException("Exception","exit() called");
 		$this->heliosController->importAPIAction();
 	}
 

@@ -233,10 +233,7 @@ class Controller {
 	}
 
 	public function controller_exit(){
-		if (TESTING_ENVIRONNEMENT){
-			throw new Exception("Exit !");
-		}
-		exit;  // @codeCoverageIgnore
+	    exit_wrapper();
 	}
 
 	public function log($message){

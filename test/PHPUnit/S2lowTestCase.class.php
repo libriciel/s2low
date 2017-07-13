@@ -105,7 +105,14 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     	$_SERVER['SSL_CLIENT_I_DN'] = "admin_groupe";
 		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_groupe";
 	}
-    
+
+    public function setAdminColAuthentication(){
+        $_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
+        $_SERVER['SSL_CLIENT_S_DN'] = "admin_col1";
+        $_SERVER['SSL_CLIENT_I_DN'] = "admin_col1";
+        $_SERVER['TESTING_CERTIFICATE_HASH'] = "admin_col1";
+    }
+
     public function setAdminCol2Authentication(){
     	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
     	$_SERVER['SSL_CLIENT_S_DN'] = "admin_col2";

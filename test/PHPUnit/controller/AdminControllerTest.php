@@ -127,7 +127,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$_GET['api'] = 1;
 		$_GET['id'] = 1;
 		$this->expectOutputRegex("#\[\"12345678900014\"\]#");
-		$this->setExpectedException("Exception","Exit");
+		$this->setExpectedException("Exception","exit() called");
 		$adminController->authoritySiretAction();
 	}
 
@@ -158,7 +158,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$_GET['api'] = 1;
 		$this->setAdminGroupAuthentication();
 		$adminController = new AdminController($this->getObjectInstancier());
-		$this->setExpectedException("Exception","Exit");
+		$this->setExpectedException("Exception","exit() called");
 		$this->expectOutputRegex("##");
 		$adminController->authoritiesAction();
 		$out = $this->getActualOutput();

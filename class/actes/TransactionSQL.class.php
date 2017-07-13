@@ -15,12 +15,12 @@ class TransactionSQL {
 	);
 
 	private static $natureTransaction = array (
-		3 => 'Arretes individuels',
-		2 => 'Arretes reglementaires', 
+		3 => 'Actes individuels',
+		2 => 'Actes réglementaires',
 		6 => 'Autres',
-		4 => 'Contrats et conventions',
-		1 => 'Deliberations',
-		5 => 'Documents budgetaires et financiers' 
+		4 => 'Contrats, conventions et avenants',
+		1 => 'Délibérations',
+		5 => 'Documents budgétaires et financiers'
 	);
 	
 	private static $status = array ( 

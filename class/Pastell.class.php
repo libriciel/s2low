@@ -34,13 +34,16 @@ class Pastell {
 		}
 				
 		$data = $curl_wrapper->get($this->url."/".$url);
-		
+
 		if (!$data){
 			$this->lastError = $curl_wrapper->getLastError();
 			return false;
 		}
 		
 		$data = json_decode($data,true);
+		if (! $data){
+            $this->lastError = "Impossible de décoder les données reçu : $data ";
+        }
 		
 		if (isset($data['status']) && $data['status']=='error' ){
 			$this->lastError = "Message de Pastell : " . utf8_decode($data['error-message']);
@@ -159,8 +162,14 @@ class Pastell {
 	public function getFile($id_d,$field){
 		$url = "recuperation-fichier.php?id_e={$this->id_e}&id_d=$id_d&field=$field";
 		$curl_wrapper = new CurlWrapper();
+		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->login, $this->password);
-		return $curl_wrapper->get($this->url."/".$url);
+		$result = $curl_wrapper->get($this->url."/".$url);
+		if (! $result){
+		    $this->lastError = $curl_wrapper->getLastError();
+		    return false;
+        }
+		return $result;
 	}
 	
 	public function delete($id_d){
