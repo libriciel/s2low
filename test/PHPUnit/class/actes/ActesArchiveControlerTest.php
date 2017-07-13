@@ -58,7 +58,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	public function testSendCreateActeFailed(){
 		$transaction_id = $this->setTransactionEnattente();
 		$this->actesArchiveControler->setPastellFactory($this->getPastellFactory());
-		$this->expectOutputString("Impossible d'envoyer la transaction $transaction_id : Erreur renvoyé par le mock\n");
+		$this->expectOutputString("Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock\n");
 		$this->actesArchiveControler->sendArchive($transaction_id);
 	}
 
@@ -86,7 +86,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	public function testSend(){
 		$transaction_id = $this->setTransactionEnattente();
 		$this->actesArchiveControler->setPastellFactory($this->getPastellFactory());
-		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur renvoyé par le mock#");
+		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock#");
 		$this->actesArchiveControler->sendAllArchive();
 	}
 
