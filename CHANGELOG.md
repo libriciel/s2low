@@ -21,7 +21,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité #187 ~admin
 - Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0 #146 ~Actes  
-
+- La date d'acquittement du tampon est prise dans l'ARActe #173 ~Actes
 
 ## [2.6.5] - 2017-06-29
 
