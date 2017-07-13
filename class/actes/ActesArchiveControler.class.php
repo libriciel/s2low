@@ -100,7 +100,7 @@ class ActesArchiveControler {
 		$id_d = $pastell->createActes($transactionsInfo);
 
 		if (! $id_d){
-			throw new Exception($pastell->getLastError());
+			throw new Exception("Erreur pastell : ". $pastell->getLastError());
 		}
 		
 		$actesFile = $this->actesTransactionsSQL->getAllFile($id);
@@ -268,6 +268,8 @@ class ActesArchiveControler {
 			return false;
 		}
 		$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'],'reply_sae');
+
+
 		if (! $reply_sae){
 			echo "Pas encore de réponse (".$pastell->getLastError().") \n";
 			return false;
@@ -287,8 +289,9 @@ class ActesArchiveControler {
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 
 
-		if ($nodeName == 'ArchiveTransferAcceptance'){
-			$url = $info['data']['url_archive'];
+		//s2lowif ($nodeName == 'ArchiveTransferAcceptance'){
+        if ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->ReplyCode) == '000'))){
+            $url = $info['data']['url_archive'];
 			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
 			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$reply_sae);
 			$actesTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);

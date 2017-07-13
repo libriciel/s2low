@@ -64,10 +64,16 @@ class CurlWrapper {
 		//curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, true);
 		
 		$output = curl_exec($this->curlHandle);
-
 		//print_r(curl_getinfo($this->curlHandle,CURLINFO_HEADER_OUT));
-		
-		$this->lastError = curl_error($this->curlHandle);
+        //echo $url;
+        $httpcode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+        if (! in_array($httpcode,array('200','201','0'))){
+            $this->lastError = "Erreur HTTP : Code $httpcode";
+            return false;
+        }
+
+
+        $this->lastError = curl_error($this->curlHandle);
 		if ($this->lastError){
 			$this->lastError = "Erreur de connexion au serveur : " . $this->lastError;
 			return false;

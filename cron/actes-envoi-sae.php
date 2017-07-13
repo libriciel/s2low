@@ -1,11 +1,11 @@
 #! /usr/bin/php
 <?php
+require_once( __DIR__ . "/../init/init.php");
 
 $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-require_once( __DIR__ . "/../init/init.php");
 
 $actesArchiveControler = new ActesArchiveControler($sqlQuery);
 $actesArchiveControler->sendAllArchive();
