@@ -11,6 +11,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Correction d'une faille de sécurité sur les modules
 - Super admin : la validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé
 - Helios : Les admin sont autorisé à récupérer les PES Retour via l'API
+- Actes : modification du libellé des natures d'actes dans le filtre de recherche
 
 ## [2.6.5] - 2017-06-29
 
