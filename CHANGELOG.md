@@ -9,7 +9,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité
 - Correction d'une faille de sécurité sur les modules
-
+- Super admin : la validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé
 
 ## [2.6.5] - 2017-06-29
 
@@ -58,6 +58,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
+[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.5
+[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.4
+[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.3
 [2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.2
 [2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.1
 [2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/V2.6/
