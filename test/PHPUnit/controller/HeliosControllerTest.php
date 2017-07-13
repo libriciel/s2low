@@ -220,6 +220,36 @@ class HeliosControllerTest extends S2lowTestCase {
 		$heliosController->getPESRetourListAction();
 	}
 
+    /**
+     * @preserveGlobalState disabled
+     * @runInSeparateProcess
+     */
+    public function testGetPESRetourListActionForAdmin(){
+        $this->setAdminColAuthentication();
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL->add(1,"123456789","toto.xml");
+
+        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->expectOutputRegex("#<nom>toto.xml</nom>#");
+        $this->setExpectedException("Exception","exit() called");
+        $heliosController->getPESRetourListAction();
+    }
+
+    /**
+     * @preserveGlobalState disabled
+     * @runInSeparateProcess
+     */
+    public function testGetPESRetourListActionForAdminUnauthorized(){
+        $this->setAdminCol2Authentication();
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL->add(1,"123456789","toto.xml");
+
+        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->expectOutputRegex("#^((?!toto.xml).)*$#s");
+        $this->setExpectedException("Exception","exit() called");
+        $heliosController->getPESRetourListAction();
+    }
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess

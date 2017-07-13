@@ -35,11 +35,11 @@ try{
 	  $msg= "Échec de l'authentification";
 	  throw new Exception('KO'); 
 	}
-	
-	if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-	  $msg= "Accès refusé";
-	 throw new Exception('KO'); 
-	}
+
+    if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+        $msg= "Accès refusé";
+        throw new Exception('KO');
+    }
 	
 		$nomUSer = $me->get("name");
 		$userId = $me->getId();

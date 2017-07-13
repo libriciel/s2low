@@ -214,7 +214,15 @@ class HeliosController extends Controller {
 	}
 
 	public function getPESRetourListAction(){
+        $msg = "";
 		try{
+
+            $doc = new DOMDocument();
+            $doc->formatOutput = true;
+            $doc->preserveWhiteSpace = false;
+            $root=$doc->createElement("liste");
+            $doc->appendChild($root);
+
 			$module = new Module();
 			if (!$module->initByName("helios")) {
 				$msg= "Erreur d'initialisation du module";
@@ -228,19 +236,14 @@ class HeliosController extends Controller {
 				throw new Exception('KO');
 			}
 
-			if ($me->isAdmin() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-				$msg= "Accès refusé";
-				throw new Exception('KO');
-			}
+            if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+                $msg= "Accès refusé";
+                throw new Exception('KO');
+            }
 
 			$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
 			$envelops = $heliosRetourSQL->getList($me->get("authority_id"));
 
-			$doc = new DOMDocument();
-			$doc->formatOutput = true;
-			$doc->preserveWhiteSpace = false;
-			$root=$doc->createElement("liste");
-			$doc->appendChild($root);
 
 			$idCollElement=$doc->createElement("idColl",$me->get('authority_id'));
 			$resultatElement=$doc->createElement("resultat");
@@ -262,11 +265,17 @@ class HeliosController extends Controller {
 			$msg="liste réussi";
 		}
 		catch (Exception $e) {
-			echo $msg;
+		   if (! isset($resultatElement)){
+                $resultatElement=$doc->createElement("resultat");
+                $root->appendChild($resultatElement);
+            }
 			$resultatElement->appendChild( $doc->createTextNode( "KO" ));
 		}
-
-		$messageElement->appendChild( $doc->createTextNode( $msg ));
+        if (! isset($messageElement)){
+            $messageElement=$doc->createElement("message");
+            $root->appendChild($messageElement);
+        }
+		$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg) ));
 
 		header("Content-type: text/xml");
 		echo $doc->saveXML();
