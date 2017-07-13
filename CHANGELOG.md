@@ -7,12 +7,18 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
 
+- Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité
+- Correction d'une faille de sécurité sur les modules
+
+
+## [2.6.5] - 2017-06-29
+
 - Utilisation d'un stockage objet pour les PES Aller
 - Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde.
 - Suppression de l'autocomplete sur les mots de passe de la création d'utilisarteur (bug Firefox)
 - Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR))
 - Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide
-- Correction faute d'orthographe
+- Correction de fautes d'orthographes
 
 ## [2.6.4] - 2017-06-14
 - Correction d'un bug d'affichage empechant de répondre au message de type courrier simple 
