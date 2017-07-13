@@ -7,11 +7,12 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
 
-- Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité
-- Correction d'une faille de sécurité sur les modules
-- Super admin : la validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé
-- Helios : Les admin sont autorisé à récupérer les PES Retour via l'API
-- Actes : modification du libellé des natures d'actes dans le filtre de recherche
+- Bufix #187 : Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité
+- Bugfix : Correction d'une faille de sécurité sur les modules
+- Evolution #188 : Super admin : la validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé
+- Evolution #164 : Helios : Les admin sont autorisés à récupérer les PES Retour via l'API
+- Evolution #163 : Actes : modification du libellé des natures d'actes dans le filtre de recherche
+- Bugfix #146 : Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0  
 
 ## [2.6.5] - 2017-06-29
 
