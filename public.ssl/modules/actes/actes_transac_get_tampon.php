@@ -84,7 +84,7 @@ foreach ($workflow as $stage) {
 	}
 }
 if(! $has_file){
-	echo "KO\nPas d'aquittement recu";
+	echo "KO\nPas d'acquittement recu";
 	exit();
 }
 
