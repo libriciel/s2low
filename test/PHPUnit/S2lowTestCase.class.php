@@ -8,12 +8,13 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 */
 	private static $sqlQueryStatic;
 
-	private $objectInstancier;
+	//private $objectInstancier;
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
 
 	protected function setUp(){
 		parent::setUp();
+
 		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
 		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
 		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
@@ -29,7 +30,23 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_CERT'] = "";
 		$_SERVER["QUERY_STRING"] = "";
 
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        $this->getObjectInstancier()->__set('SQLQuery',$this->getSQLQuery());
+        $this->getObjectInstancier()->set('helios_files_upload_root',"/tmp");
+        $this->getObjectInstancier()->set("openstack_authentication_url_v2","");
+        $this->getObjectInstancier()->set("openstack_username","a");
+        $this->getObjectInstancier()->set("openstack_password","a");
+        $this->getObjectInstancier()->set("openstack_tenant","a");
+        $this->getObjectInstancier()->set("openstack_region","a");
+        $this->getObjectInstancier()->set("openstack_swift_container_prefix","a");
 
+        $get = array();
+        $post = array();
+        $request = array();
+        $session = array();
+        $server = array();
+
+        $this->getObjectInstancier()->set('Environnement',new Environnement($get,$post,$request,$session,$server));
 
 	}
 
@@ -43,31 +60,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 			self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
 			self::$sqlQueryStatic->setClientEncoding(DB_CLIENT_ENCODING);
 		}
-		$this->objectInstancier = new ObjectInstancier();
-		$this->objectInstancier->__set('SQLQuery',self::$sqlQueryStatic);
-        $this->objectInstancier->helios_files_upload_root = "/tmp";
 
-
-        $this->objectInstancier->set("openstack_authentication_url_v2","");
-        $this->objectInstancier->set("openstack_username","a");
-        $this->objectInstancier->set("openstack_password","a");
-        $this->objectInstancier->set("openstack_tenant","a");
-        $this->objectInstancier->set("openstack_region","a");
-        $this->objectInstancier->set("openstack_swift_container_prefix","a");
-
-        $get = array();
-        $post = array();
-        $request = array();
-        $session = array();
-        $server = array();
-
-        $this->objectInstancier->set('Environnement',new Environnement($get,$post,$request,$session,$server));
-
-		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
-		global $sqlQuery;
-		$sqlQuery = $this->getSQLQuery();
-		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8...
-		$sqlQuery->query("SET CLIENT_ENCODING TO 'UTF-8';");
+        //Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus haut)
+        self::$sqlQueryStatic->query("SET CLIENT_ENCODING TO 'UTF-8';");
 		return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
 
@@ -89,7 +84,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 * @return ObjectInstancier
 	 */
     public function getObjectInstancier(){
-    	return $this->objectInstancier;
+        return  ObjectInstancierFactory::getObjetInstancier();
     }
 
 	/**

@@ -53,7 +53,7 @@
 					</p>
                     <?php
 
-                    global $objectInstancier;
+                    $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
 					/** @var MessageAdminSQL $messageAdminSQL */
 					$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
 					$messageAdmin = $messageAdminSQL->getPublishedMessage();

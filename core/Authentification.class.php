@@ -1,7 +1,7 @@
 <?php
 
 class Authentification {
-	
+
 	public static function getInstance(){
 		global $sqlQuery;
 		$userSQL = new UserSQL($sqlQuery);
@@ -38,7 +38,7 @@ class Authentification {
 			return $this->session['id_login'];
 		} else {
 			$this->session['id_login'] = $this->detectConnexionID();
-			//TODO Refactorer ici : + Refactorer les Heloper:redirect
+			//TODO Refactorer ici : + Refactorer les Helper:redirect
 			$_SESSION['id_login'] = $this->session['id_login'];
 		}
 		

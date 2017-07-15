@@ -72,3 +72,5 @@ $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 
 
 $frontController = new FrontController($objectInstancier);
+
+ObjectInstancierFactory::setObjectInstancier($objectInstancier);

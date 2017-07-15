@@ -44,7 +44,7 @@ class MenuHTML  {
                     <div id="menu-header">
                         Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
                         <?php
-                    global $objectInstancier;
+                    $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
                     /** @var MessageAdminSQL $messageAdminSQL */
                     $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
                     $messageAdmin = $messageAdminSQL->getPublishedMessage();
