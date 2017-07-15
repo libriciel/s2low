@@ -12,7 +12,8 @@ class Controller {
 	 * @var ObjectInstancier
 	 */
 	private $objectInstancier;
-	
+
+
 	public function __construct(ObjectInstancier $objectInstancier){
 		$this->objectInstancier = $objectInstancier;
 		$this->viewParameter = array();
@@ -44,6 +45,11 @@ class Controller {
 	public function getAllViewParameter(){
 		return $this->viewParameter;
 	}
+
+
+	protected function getEnvironnement(){
+	    return $this->objectInstancier->get("Environnement");
+    }
 	
 	public function setErrorMessage($error_message){
 		$_SESSION["error"] = $error_message ;
@@ -200,11 +206,11 @@ class Controller {
 	}
 	
 	public function getRecuperateurGet(){
-		return new Recuperateur($_GET);
+	    return $this->getEnvironnement()->get();
 	}
 	
 	public function getRecuperateurPost(){
-		return new Recuperateur($_POST);
+        return $this->getEnvironnement()->post();
 	}
 
 	public function getFiles(){

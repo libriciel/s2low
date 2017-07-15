@@ -190,20 +190,16 @@ class ControllerTest extends S2lowTestCase {
 		$this->assertInstanceOf("ObjectInstancier",$this->controller->getObjectInstancier());
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testDisplayErrorAndExitAPI(){
 		$this->setAdminGroupAuthentication();
-		$_POST['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api','1');
 		$this->setExpectedException("Exception","Exit");
 		$this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
 		$this->controller->verifAdmin(1);
 	}
 
 	public function testIsApiCall(){
-		$_GET['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->get()->set('api','1');
 		$this->assertTrue($this->controller->isApiCall());
 	}
 

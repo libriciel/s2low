@@ -2,6 +2,63 @@
 
 class Droit {
 
+    //Droit:checkUser()
+    //Droit:checkSuperAdmin()
+    //Droit:checkSuperAdminOrGroupAdmin()
+    //DroitActes::checkActes($transaction_id=0)
+    //DroitHelios::checkHelios($transaction_id=0)
+
+
+
+    private $userSQL;
+    private $authoritySQL;
+    private $groupSQL;
+    private $moduleSQL;
+
+    public function __construct(
+        UserSQL $userSQL,
+        AuthoritySQL $authoritySQL,
+        GroupSQL $groupSQL,
+        ModuleSQL $moduleSQL
+
+    ) {
+        $this->userSQL = $userSQL;
+        $this->authoritySQL = $authoritySQL;
+        $this->groupSQL = $groupSQL;
+        $this->moduleSQL = $moduleSQL;
+    }
+
+
+
+
+    //Repond à la question : est-ce que tel utilisateur peut accéder au module XYZ
+    //TODO : A tester et remplacer la fonction plus bas
+    public function canAccessNG($user_id,$module_name = ''){
+
+        $userInfo = $this->userSQL->getInfo($user_id);
+
+        $authorityInfo = $this->authoritySQL->getInfo($userInfo['authority_id']);
+
+
+        $groupeInfo = false;
+        if ($authorityInfo['authority_group_id']){
+            $groupeInfo = $this->groupSQL->getInfo($authorityInfo['authority_group_id']);
+        }
+
+        $droit_specific = array();
+        if ($module_name == 'actes'){
+            $droit_specific = array('CS','TT');
+        }
+
+        if ( ! empty($module_name)) {
+            $moduleInfo = $this->moduleSQL->getInfoByName($module_name);
+            $droitModuleInfo = $this->moduleSQL->getInfoModuleAuthority($moduleInfo['id'],$userInfo['authority_id']);
+            $permUser = $this->moduleSQL->getInfoPerms($moduleInfo['id'],$user_id);
+
+            return $this->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific);
+        }
+        return true;
+    }
 
 	public function canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser, $droit_specific = array()){	
 		

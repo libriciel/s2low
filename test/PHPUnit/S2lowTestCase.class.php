@@ -55,6 +55,13 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $this->objectInstancier->set("openstack_region","a");
         $this->objectInstancier->set("openstack_swift_container_prefix","a");
 
+        $get = array();
+        $post = array();
+        $request = array();
+        $session = array();
+        $server = array();
+
+        $this->objectInstancier->set('Environnement',new Environnement($get,$post,$request,$session,$server));
 
 		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
 		global $sqlQuery;

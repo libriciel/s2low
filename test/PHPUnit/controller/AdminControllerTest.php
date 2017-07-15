@@ -4,22 +4,24 @@ class AdminControllerTest extends S2lowTestCase {
 	
 	public function testActionBefore(){
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$adminController->_actionBefore("Mock", "mock");
+        $adminController = $this->getObjectInstancier()->get("AdminController");
+        $adminController->_actionBefore("Mock", "mock");
 	}
 
 	public function testAuthoritySiretAction(){
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
+
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_GET['id'] = 1;
+		$adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->authoritySiretAction();
 		$this->assertEquals(1, $adminController->authority_info['id']);
 	}
 
 	public function testAuthoritySiretTemplate(){
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
+
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_GET['id'] = 1;
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->_actionBefore("Admin","authoritySiret");
 		$this->expectOutputRegex("#Numéros SIRET - Bourg-en-Bresse#");
 		$adminController->authoritySiretAction();
@@ -32,7 +34,7 @@ class AdminControllerTest extends S2lowTestCase {
 	 */
 	public function testAuthoritySiretActionNoId(){
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$this->setExpectedException("RedirectException","admin_authorities.php");
 		$adminController->authoritySiretAction();
 	}
@@ -43,7 +45,7 @@ class AdminControllerTest extends S2lowTestCase {
 	 */
 	public function testOtherAuthority(){
 		$this->setAdminCol2Authentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$_GET['id'] = 1;
 		$this->setExpectedException("RedirectException","Redirect to");
 		$adminController->authoritySiretAction();
@@ -55,77 +57,64 @@ class AdminControllerTest extends S2lowTestCase {
 	 */
 	public function testAddSiretNoValue(){
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$this->setExpectedException("RedirectException","admin_authorities.php");
 		$adminController->authoritySiretAddAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testAddSiretBadSiret(){
+	    $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('siret','badsiret');
+
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_POST['authority_id'] = 1;
-		$_POST['siret'] = "badsiret";
+        $adminController = $this->getObjectInstancier()->get("AdminController");
+
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?id=1&siret=badsiret");
 		$adminController->authoritySiretAddAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testAddSiret(){
-		$this->setSuperAdminAuthentication();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('siret','06552185881996');
+
+        $this->setSuperAdminAuthentication();
 		$adminController = new AdminController($this->getObjectInstancier());
-		$_POST['authority_id'] = 1;
-		$_POST['siret'] = "06552185881996";
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?id=1");
 		$adminController->authoritySiretAddAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testDelSiret(){
-		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_POST['authority_id'] = 42;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',42);
+
+        $this->setSuperAdminAuthentication();
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$this->setExpectedException("RedirectException","admin_authority_siret.php?");
 		$adminController->authoritySiretDelAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testAddSiretAPI(){
-		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_POST['authority_id'] = 1;
-		$_POST['siret'] = "06552185881996";
-		$_POST['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('siret',"06552185881996");
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api',1);
+        $this->setSuperAdminAuthentication();
+        $adminController = $this->getObjectInstancier()->get("AdminController");
+
 		$this->setExpectedException("Exception","Exit");
 		$this->expectOutputRegex("#Num\\\u00e9ro SIRET ajout\\\u00e9#");
 		$adminController->authoritySiretAddAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testListSiretApi(){
+
+        $this->getObjectInstancier()->get("Environnement")->get()->set('api',1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id',"1");
 
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySiret->add(1, "12345678900014");
 
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
-		$_GET['api'] = 1;
-		$_GET['id'] = 1;
+        $adminController = $this->getObjectInstancier()->get("AdminController");
+
 		$this->expectOutputRegex("#\[\"12345678900014\"\]#");
 		$this->setExpectedException("Exception","exit() called");
 		$adminController->authoritySiretAction();
@@ -133,14 +122,14 @@ class AdminControllerTest extends S2lowTestCase {
 
 	public function testAuthoritiesAction(){
 		$this->setSuperAdminAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->authoritiesAction();
 		$this->assertEquals("Gestion des collectivités",$adminController->getViewParameter('titre'));
 	}
 
 	public function testAuthoritiesActionGroupAdmin(){
 		$this->setAdminGroupAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->authoritiesAction();
 		$this->assertEquals("Gestion des collectivités du groupe Groupe de test",$adminController->getViewParameter('titre'));
 
@@ -150,14 +139,11 @@ class AdminControllerTest extends S2lowTestCase {
 		}
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testAuthoritiesActionAPI(){
-		$_GET['api'] = 1;
-		$this->setAdminGroupAuthentication();
-		$adminController = new AdminController($this->getObjectInstancier());
+        $this->getObjectInstancier()->get("Environnement")->get()->set('api',1);
+
+        $this->setAdminGroupAuthentication();
+        $adminController = $this->getObjectInstancier()->get("AdminController");
 		$this->setExpectedException("Exception","exit() called");
 		$this->expectOutputRegex("##");
 		$adminController->authoritiesAction();

@@ -30,11 +30,12 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_FILES['certificate'] = array('name'=>'user1.pem','tmp_name'=>$certificate_file,'size'=>filesize($certificate_file));
 		$_FILES['certificate_rgs_2_etoiles'] = array('name'=>'user1.pem','tmp_name'=>$certificate_file,'size'=>filesize($certificate_file));
 
-		$_POST['authority_id'] = 1;
-		$_POST['email'] = 'eric@sigmalis.com';
-		$_POST['name'] = 'Pommateau';
-		$_POST['givenname'] = 'Eric';
-		$_POST['status']= UserSQL::STATUS_ACTIVE;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('email','eric@sigmalis.com');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('name','Pommateau');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('givenname','Eric');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('status',UserSQL::STATUS_ACTIVE);
+
 	}
 
 	public function testDoEdit(){
@@ -47,20 +48,16 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->adminUserController->doEditAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testDoEditApi(){
 		$this->setDataOk();
-		$_POST['api'] = 1;
-		$this->expectOutputRegex("#Cr\\\u00e9ation de l'utilisateur Eric Pommateau#");
-		$this->setExpectedException("Exception","Exit !");
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api',1);
+        $this->expectOutputRegex("#Cr\\\u00e9ation de l'utilisateur Eric Pommateau#");
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testDoEditApiFailed(){
-		$_POST['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api',1);
+        $_POST['api'] = 1;
 		$this->setExpectedException("Exception","Le certificat n'est pas valide");
 		$this->expectOutputRegex("#KO\nLe certificat n'est pas valide#");
 		$this->adminUserController->doEditAction();
@@ -68,7 +65,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 
 	public function testDoEditModifNotExistingUser(){
 		$this->setDataOk();
-		$_POST['id'] = 42;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('id',42);
 		$this->setExpectedException("Exception","Erreur lors de la modification de l'utilisateur");
 		$this->adminUserController->doEditAction();
 	}
@@ -87,14 +84,10 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->adminUserController->doEditAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testDoEditAuthorityIdMandatoryInApi(){
 		$this->setDataOk();
-		unset($_POST['authority_id']);
-		$_POST['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id','');
 		$this->setExpectedException("Exception","Exit !");
 		$this->expectOutputRegex("#authority_id est obligatoire#");
 		$this->adminUserController->doEditAction();
@@ -103,21 +96,23 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testNotRightToModify(){
 		$this->setAdminCol2Authentication();
 		$this->setOnlyDataOk();
-		$_POST['id'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('id',1);
 		$this->setExpectedException("Exception","Accès refusé pour la modification de cet utilisateur");
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testCreateGADMWithoutGroupId(){
 		$this->setDataOk();
-		$_POST['role'] = 'GADM';
+		$this->getObjectInstancier()->get("Environnement")->post()->set('role','GADM');
 		$this->setExpectedException("Exception","Vous devez indiquer un groupe pour créer un administrateur de groupe");
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testPasswordsDontMatch(){
 		$this->setDataOk();
-		$_POST['password'] = "ku9eiBae";
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password','ku9eiBae');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password','Ce6vohya');
+        $_POST['password'] = "ku9eiBae";
 		$_POST['password2'] = "Ce6vohya";
 		$this->setExpectedException("Exception"," Les mots de passe ne correspondent pas");
 		$this->adminUserController->doEditAction();
@@ -132,7 +127,9 @@ class AdminUserControllerTest extends S2lowTestCase {
 
 	public function testCloneWithoutLogin(){
 		$this->setDataOk();
-		$_POST['new_id'] = 8;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('new_id',8);
+
+        $_POST['new_id'] = 8;
 		$this->setExpectedException("Exception","Le login et le mot de passe sont obligatoire pour cloner un certificat");
 		$this->adminUserController->doEditAction();
 	}
@@ -149,10 +146,12 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testCloneSameCertificate(){
 		$this->setDataOk();
 		$this->adminUserController->doEditAction();
-		$_POST['new_id'] = 8;
-		$_POST['login'] = 'alice';
-		$_POST['password'] = 'eey3fo4A';
-		$_POST['password2'] = 'eey3fo4A';
+        $this->getObjectInstancier()->get("Environnement")->post()->set('new_id',8);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('login','alice');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password','eey3fo4A');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password2','eey3fo4A');
+
+
 		$this->setExpectedException("Exception", "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier");
 		$this->adminUserController->doEditAction();
 	}
@@ -160,17 +159,17 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testModifGroupAdmin(){
 		$this->setOnlyDataOk();
 		$this->setAdminGroupAuthentication();
-		$_POST['login'] = 'bob';
-		$_POST['password'] = 'eey3fo4A';
-		$_POST['password2'] = 'eey3fo4A';
-		$_POST['id'] = 6;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('login','bob');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password','eey3fo4A');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password2','eey3fo4A');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('id',6);
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testCreateDifferentAuthorities(){
 		$this->setOnlyDataOk();
 		$this->setAdminCol2Authentication();
-		$_POST['authority_id'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
 		$this->adminUserController->doEditAction();
 	}
 
@@ -187,15 +186,15 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testSetInGroupOK(){
 		$this->setOnlyDataOk();
 		$this->setAdminGroupAuthentication();
-		$_POST['authority_id'] = 2;
-		$this->adminUserController->doEditAction();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',2);
+        $this->adminUserController->doEditAction();
 	}
 
 	public function testForceRole(){
 		$this->setOnlyDataOk();
 		$this->setAdminGroupAuthentication();
-		$_POST['authority_id'] = 2;
-		$_POST['role'] = 'SADM';
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',2);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('role','SADM');
 		$user_id = $this->adminUserController->doEditAction();
 		$userSQL = new UserSQL($this->getSQLQuery());
 		$user_info = $userSQL->getInfo($user_id);

@@ -48,7 +48,7 @@ class JSONoutput {
 	
 	public function display(array $array){	
 		//header("Content-type: application/json");
-		header("Content-type: text/plain");
+		header_wrapper("Content-type: text/plain");
 		$array = $this->normalize($array);
 		echo json_encode($array);
 		

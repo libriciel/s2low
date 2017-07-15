@@ -20,7 +20,7 @@ class Authentification {
 	
 	public function __construct(
 		array $server,
-		array $session,
+		array $session, #A remplacer par SessionWrapper
 		UserSQL $userSQL,
 		array $get=array(),
 		NounceSQL $nounceSQL=null
@@ -38,13 +38,14 @@ class Authentification {
 			return $this->session['id_login'];
 		} else {
 			$this->session['id_login'] = $this->detectConnexionID();
+			//TODO Refactorer ici : + Refactorer les Heloper:redirect
 			$_SESSION['id_login'] = $this->session['id_login'];
 		}
 		
 		return $this->session['id_login'];
 	}
 
-	public function detectConnexionID() {
+	private function detectConnexionID() {
 
 		$connexion_info = $this->getAllConnexionInfo();
 		$id = $this->getConnexionIdFromNounce($connexion_info);
@@ -70,7 +71,7 @@ class Authentification {
 		return $id_list[0];
 	}
 
-	public function verifConnexion($user_id) {
+	private function verifConnexion($user_id) {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);

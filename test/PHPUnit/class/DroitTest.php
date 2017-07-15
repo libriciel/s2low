@@ -2,6 +2,10 @@
 
 class DroitTest extends S2lowTestCase {
 
+    private function getDroit(){
+        return $this->getObjectInstancier()->get('Droit');
+    }
+
     public function testCanAccess(){
 
         $moduleInfo = array();
@@ -12,7 +16,7 @@ class DroitTest extends S2lowTestCase {
         $permUser= array();
         $droit_specific = array();
 
-        $droit = new Droit();
+        $droit = $this->getDroit();
 
         $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
 
@@ -52,7 +56,7 @@ class DroitTest extends S2lowTestCase {
     }
 
     public function testIsSuperAdmin(){
-        $droit = new Droit();
+        $droit = $this->getDroit();
         $this->assertTrue($droit->isSuperAdmin(array('role'=>'SADM')));
         $this->assertFalse($droit->isSuperAdmin(array('role'=>'GADM')));
         $this->assertFalse($droit->isSuperAdmin(array('role'=>'ADM')));
@@ -60,7 +64,7 @@ class DroitTest extends S2lowTestCase {
     }
 
     public function testIsAdmin(){
-        $droit = new Droit();
+        $droit = $this->getDroit();
         $this->assertTrue($droit->isAdmin(array('role'=>'SADM')));
         $this->assertTrue($droit->isAdmin(array('role'=>'GADM')));
         $this->assertTrue($droit->isAdmin(array('role'=>'ADM')));
@@ -68,7 +72,7 @@ class DroitTest extends S2lowTestCase {
     }
 
     public function testIsGroupAdmin(){
-        $droit = new Droit();
+        $droit = $this->getDroit();
         $this->assertFalse($droit->isGroupAdmin(array('role'=>'SADM')));
         $this->assertTrue($droit->isGroupAdmin(array('role'=>'GADM')));
         $this->assertFalse($droit->isGroupAdmin(array('role'=>'ADM')));
@@ -76,7 +80,7 @@ class DroitTest extends S2lowTestCase {
     }
 
     public function testIsAuthorityAdmin(){
-        $droit = new Droit();
+        $droit = $this->getDroit();
         $this->assertFalse($droit->isAuthorityAdmin(array('role'=>'SADM')));
         $this->assertFalse($droit->isAuthorityAdmin(array('role'=>'GADM')));
         $this->assertTrue($droit->isAuthorityAdmin(array('role'=>'ADM')));
@@ -84,7 +88,7 @@ class DroitTest extends S2lowTestCase {
     }
 
     public function testHasDroit(){
-        $droit = new Droit();
+        $droit = $this->getDroit();
         $this->assertTrue($droit->hasDroit(array('role'=>'SADM'),array()));
         $this->assertTrue($droit->hasDroit(array('role'=>'ADM','authority_group_id'=>42),array('authority_group_id'=>42)));
         $this->assertTrue($droit->hasDroit(array('role'=>'GADM','authority_group_id'=>42),array('authority_group_id'=>42)));

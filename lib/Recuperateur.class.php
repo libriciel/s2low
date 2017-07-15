@@ -19,5 +19,9 @@ class Recuperateur {
 		$value = stripslashes($value);
 		return trim($value);
 	}
+
+	public function set($key,$value){
+	    $this->tableauInput[$key] = $value;
+    }
 	
 }

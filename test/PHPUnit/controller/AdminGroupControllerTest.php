@@ -12,8 +12,8 @@ class AdminGroupControllerTest extends S2lowTestCase {
 
 	public function testDoEditActionQuote(){
 		$this->setSuperAdminAuthentication();
-		$_POST['id'] = 1;
-		$_POST['name'] = "apo'strophe";
+        $this->getObjectInstancier()->get("Environnement")->post()->set('id',1);
+        $this->getObjectInstancier()->get("Environnement")->post()->set('name', "apo'strophe");
 
 		try {
 			$this->adminGroupController->doEditAction();
