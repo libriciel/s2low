@@ -448,7 +448,7 @@ class HTMLLayout extends Layout {
 
         ob_start();
         if (isset($_SESSION["error"])) { 
-            $this->afficheErrors($_SESSION["error"]);
+            $this->afficheErrors();
         }
         $html = ob_get_contents();
         ob_end_clean();

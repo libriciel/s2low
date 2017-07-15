@@ -56,6 +56,7 @@ if (isset($_SESSION)) {
 }
 $objectInstancier->set("Environnement",$environnement);
 $objectInstancier->set("website_ssl",WEBSITE_SSL);
+$objectInstancier->set("website",WEBSITE);
 
 $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");

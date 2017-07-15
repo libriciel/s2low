@@ -40,7 +40,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $this->getObjectInstancier()->set("openstack_tenant","a");
         $this->getObjectInstancier()->set("openstack_region","a");
         $this->getObjectInstancier()->set("openstack_swift_container_prefix","a");
-
+        $this->getObjectInstancier()->set("website","http://s2low");
+        $this->getObjectInstancier()->set("website_ssl","https://s2low");
         $get = array();
         $post = array();
         $request = array();
@@ -48,6 +49,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $server = array();
 
         $this->getObjectInstancier()->set('Environnement',new Environnement($get,$post,$request,$session,$server));
+        $this->getObjectInstancier()->set("SessionWrapper",$this->getObjectInstancier()->get("Environnement")->session());
 
 	}
 
