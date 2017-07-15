@@ -21,6 +21,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
 		$this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
 
+
 		$_GET = array();
 		$_POST = array();
 		$_SESSION = array();
@@ -93,40 +94,58 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     public function getSQLQuery(){
     	return self::$sqlQueryStatic;
     }
-    
+
+    protected function setServerInfo(array $server_info){
+        foreach($server_info as $key => $value){
+            $this->getObjectInstancier()->get("Environnement")->server()->set($key,$value);
+        }
+    }
+
     public function setSuperAdminAuthentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "test_subject";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "test_issuer";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=";
+        $this->setServerInfo([
+                'SSL_CLIENT_VERIFY' => "SUCCESS",
+                'SSL_CLIENT_S_DN' => "test_subject",
+                'SSL_CLIENT_I_DN' => "test_issuer",
+                'TESTING_CERTIFICATE_HASH' => "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=",
+        ]);
     }
     
     public function setAdminGroupAuthentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "admin_groupe";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "admin_groupe";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_groupe";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_groupe",
+            'SSL_CLIENT_I_DN' => "admin_groupe",
+            'TESTING_CERTIFICATE_HASH' => "hash_admin_groupe",
+        ]);
 	}
 
     public function setAdminColAuthentication(){
-        $_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-        $_SERVER['SSL_CLIENT_S_DN'] = "admin_col1";
-        $_SERVER['SSL_CLIENT_I_DN'] = "admin_col1";
-        $_SERVER['TESTING_CERTIFICATE_HASH'] = "admin_col1";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_col1",
+            'SSL_CLIENT_I_DN' => "admin_col1",
+            'TESTING_CERTIFICATE_HASH' => "admin_col1",
+        ]);
     }
 
     public function setAdminCol2Authentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "admin_col2";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "admin_col2";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_col2";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_col2",
+            'SSL_CLIENT_I_DN' => "admin_col2",
+            'TESTING_CERTIFICATE_HASH' => "hash_admin_col2",
+        ]);
     }
 
 	public function setUserAuthentification(){
-		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$_SERVER['SSL_CLIENT_S_DN'] = "user_col1";
-		$_SERVER['SSL_CLIENT_I_DN'] = "user_col1";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_user_col1";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "user_col1",
+            'SSL_CLIENT_I_DN' => "user_col1",
+            'TESTING_CERTIFICATE_HASH' => "hash_user_col1",
+        ]);
 	}
+
+
 
 }

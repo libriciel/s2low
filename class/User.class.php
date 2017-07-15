@@ -116,7 +116,7 @@ class User extends DataObject {
    * et initialiser les données de l'utilisateur.
   */
 	public function authenticate() {
-		$authenfication = Authentification::getInstance();
+		$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
 		$this->id = $authenfication->authenticate();
 
 	  	$this->is_loggued = true;

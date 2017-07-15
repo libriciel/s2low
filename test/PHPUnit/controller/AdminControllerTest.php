@@ -28,10 +28,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController->_actionAfter();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
+
 	public function testAuthoritySiretActionNoId(){
 		$this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
@@ -39,10 +36,6 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController->authoritySiretAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testOtherAuthority(){
 		$this->setAdminCol2Authentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
@@ -51,10 +44,6 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController->authoritySiretAction();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testAddSiretNoValue(){
 		$this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
