@@ -1,6 +1,7 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    git \
     libc-client-dev \
     libjpeg-dev \
     libkrb5-dev \
