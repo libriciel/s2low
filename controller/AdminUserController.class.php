@@ -111,25 +111,47 @@ class AdminUserController extends Controller {
 		$this->verifAdmin();
 		$my_user_id = $this->me->getId();
 
-		$api = Helpers::getVarFromPost("api");
-		$id = Helpers::getVarFromPost("id");
-		$name = Helpers::getVarFromPost("name", true);
-		$givenname = Helpers::getVarFromPost("givenname", true);
-		$email = trim(Helpers::getVarFromPost("email", true));
-		$telephone = Helpers::getVarFromPost("telephone", true);
-		$status = Helpers::getVarFromPost("status", true);
-		$authority_id = Helpers::getVarFromPost("authority_id", true);
-		$role = Helpers::getVarFromPost("role", true);
-		$authority_group_id = Helpers::getVarFromPost("authority_group_id", true);
-		$login = Helpers::getVarFromPost("login", true);
-		$password = Helpers::getVarFromPost("password", true);
-		$password2 = Helpers::getVarFromPost("password2", true);
-		$new_id = Helpers::getVarFromPost("new_id", true);
+		$api = $this->getEnvironnement()->post()->get('api');
+		$id = $this->getEnvironnement()->post()->get('id');
 
-		$auth_method = Helpers::getVarFromPost("auth_method",true);
+        $name = $this->getEnvironnement()->post()->get('name');
+        Helpers::putInSession("name", $name);
 
+        $givenname = $this->getEnvironnement()->post()->get('givenname');
+        Helpers::putInSession("givenname", $givenname);
 
+        $email = $this->getEnvironnement()->post()->get('email');
+        Helpers::putInSession("email", $email);
 
+        $telephone = $this->getEnvironnement()->post()->get('telephone');
+        Helpers::putInSession("telephone", $telephone);
+
+        $status = $this->getEnvironnement()->post()->get('status');
+        Helpers::putInSession("status", $status);
+
+        $authority_id = $this->getEnvironnement()->post()->get('authority_id');
+        Helpers::putInSession("authority_id", $authority_id);
+
+        $role = $this->getEnvironnement()->post()->get('role');
+        Helpers::putInSession("role", $role);
+
+        $authority_group_id = $this->getEnvironnement()->post()->get('authority_group_id');
+        Helpers::putInSession("authority_group_id", $authority_group_id);
+
+        $login = $this->getEnvironnement()->post()->get('login');
+        Helpers::putInSession("login", $login);
+
+        $password = $this->getEnvironnement()->post()->get('password');
+        Helpers::putInSession("password", $password);
+
+        $password2 = $this->getEnvironnement()->post()->get('password2');
+        Helpers::putInSession("password2", $password2);
+
+        $new_id = $this->getEnvironnement()->post()->get('new_id');
+        Helpers::putInSession("new_id", $new_id);
+
+        $auth_method = $this->getEnvironnement()->post()->get('auth_method');
+        Helpers::putInSession("auth_method", $auth_method);
 
 
 		$certificate = $_FILES["certificate"];
@@ -159,7 +181,10 @@ class AdminUserController extends Controller {
 
 			// On vérifie que l'utilisateur courant à le droit de modifier cet utilisateur
 			if (! $me->canEditUser($id)) {
-				$this->displayErrorAndExit("Accès refusé pour la modification de cet utilisateur", "/admin/users/admin_users.php");
+				$this->displayErrorAndExit(
+				    "Accès refusé pour la modification de cet utilisateur",
+                    "/admin/users/admin_users.php"
+                );
 			}
 			$mod = true;
 		}
@@ -313,7 +338,7 @@ class AdminUserController extends Controller {
 
 		if ($api){
 			$jsonOutput = new JSONoutput();
-			$jsonOutput->displayAndExit(array('status'=>'ok','message'=>$msg,'id'=>$him->getId()));
+			$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$him->getId()));
 		} else {
 			$_SESSION["error"] = nl2br($msg);
 			Helpers::purgeTempSession();

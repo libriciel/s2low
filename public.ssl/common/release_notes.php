@@ -134,7 +134,7 @@ $html .= "</ul>";
 $html .= "<h2>V2.4.1 du 24.05.2016</h2>";
 $html .= "<ul>";
 $html .= "<li>Modules HELIOS : correction sur certains fichiers acquitement rejetés à tort</li>";
-$html .= "<li>Modules HELIOS : surveillance des fichiers d'aquittement non-intégrés et aquittement non-reçus</li>";
+$html .= "<li>Modules HELIOS : surveillance des fichiers d'acquittement non-intégrés et acquittement non-reçus</li>";
 $html .= "<li>Modules HELIOS : correction liste sur FTP différent en fonction du serveur</li>";
 $html .= "</ul>";
 

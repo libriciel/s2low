@@ -14,7 +14,19 @@ class ActeTamponne {
 
 		$transactionInfo = $this->actesTransactionsSQL->getDateTampon($transaction_id);
 
-		set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
+        $date_reception = date("d/m/Y",strtotime($transactionInfo['date']));
+
+        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
+
+        $arActes = $actesTransactionsStatusInfo['flux_retour'];
+
+        $xml = simplexml_load_string($arActes);
+
+        if ($xml && $xml->asXML()){
+            $date_reception = strval($xml->attributes("http://www.interieur.gouv.fr/ACTES#v1.1-20040216")->DateReception);
+        }
+
+        set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
 		require_once(SITEROOT."/class/TamponPDF.class.php");
 
 		$pdftkise='/tmp/modif_' .basename($file_path);
@@ -32,23 +44,23 @@ class ActeTamponne {
 
 		try {
 			$pdf = Zend_Pdf::load($pdftkise);
-		} catch (Exception $e){
-			return file_get_contents($pdftkise);
-		}
-		$tampon = new TamponPDF($pdf);
-		if ($date_affichage) {
-			$date_affichage = date("d/m/Y", strtotime($date_affichage));
-		}
-		$tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-			"Reçu en préfecture le ".date("d/m/Y",strtotime($transactionInfo['date'])),
-			"Affiché le ".$date_affichage ,
-			"ID : ".$transactionInfo['unique_id']));
-		try {
+
+            $tampon = new TamponPDF($pdf);
+            if ($date_affichage) {
+                $date_affichage = date("d/m/Y", strtotime($date_affichage));
+            }
+            $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
+                "Reçu en préfecture le ".$date_reception,
+                "Affiché le ".$date_affichage ,
+                "ID : ".$transactionInfo['unique_id']));
+
 			$txt =  $tampon->getFileAsString();
+            return $txt;
+
 		} catch (Exception $e){
 			return file_get_contents($pdftkise);
 		}
-		return $txt;
+
 	}
 
 	public function render($file_path,$transaction_id, $date_affichage = false){

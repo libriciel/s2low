@@ -4,7 +4,7 @@ define("TESTING_ENVIRONNEMENT", true);
 require_once(__DIR__ . "/../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-$authenfication = Authentification::getInstance();
+$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
 
 $connexion_info = $authenfication->getAllConnexionInfo();
 

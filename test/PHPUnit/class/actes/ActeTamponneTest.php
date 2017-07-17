@@ -7,7 +7,7 @@ class ActeTamponneTest extends PHPUnit_Framework_TestCase {
 
 		$actesTransactionsSQL = $this->getMockBuilder("ActesTransactionsSQL")->disableOriginalConstructor()->getMock();
 
-		$transactionInfo = array('submission_date'=>'2016-12-12','date'=>'toto','unique_id'=>'hhhh');
+		$transactionInfo = array('submission_date'=>'2016-12-12','date'=>'toto','unique_id'=>'hhhh','flux_retour'=>'<toto></toto>');
 
 		$actesTransactionsSQL->expects($this->any())->method('getInfo')->willReturn($transactionInfo);
 		/** @var  ActesTransactionsSQL $actesTransactionsSQL */

@@ -7,7 +7,7 @@ require_once( __DIR__ . "/../init/init.php");
 
 echo "OK";
 
-$authentification = Authentification::getInstance();
+$authentification = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
 
 $connexion_info = $authentification->getAllConnexionInfo();
 

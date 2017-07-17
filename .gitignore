@@ -6,3 +6,4 @@
 /temp/
 /public.ssl/libersign
 /public.ssl/temp
+ext/standalone/HTMLPurifier/DefinitionCache

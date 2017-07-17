@@ -1,50 +1,38 @@
 <?php
 
 class Authentification {
-	
-	public static function getInstance(){
-		global $sqlQuery;
-		$userSQL = new UserSQL($sqlQuery);
-		$nounceSQL = new NounceSQL($sqlQuery,new PasswordGenerator());
-		$authentification = new Authentification($_SERVER,$_SESSION, $userSQL,$_GET,$nounceSQL);
-		return $authentification;
-	}
-	
-	private $session;
-	private $server;
+
 	private $userSQL;
-	private $get;
 
 	/** @var NounceSQL */
 	private $nounceSQL;
+
+	/** @var  Environnement */
+	private $environnement;
 	
 	public function __construct(
-		array $server,
-		array $session,
+        Environnement $environnement,
 		UserSQL $userSQL,
-		array $get=array(),
 		NounceSQL $nounceSQL=null
 	){
-		$this->session = $session;
-		$this->server = $server;
+		$this->environnement = $environnement;
 		$this->userSQL = $userSQL;
-		$this->get = $get;
 		$this->nounceSQL = $nounceSQL;
 	}
 	
 	public function authenticate(){
-		if (! empty($this->session['id_login'])){
-			$this->verifConnexion($this->session['id_login']);
-			return $this->session['id_login'];
+		if ($this->environnement->session()->get('id_login')){
+			$this->verifConnexion($this->environnement->session()->get('id_login'));
+			return $this->environnement->session()->get('id_login');
 		} else {
-			$this->session['id_login'] = $this->detectConnexionID();
-			$_SESSION['id_login'] = $this->session['id_login'];
+            $this->environnement->session()->set('id_login',$this->detectConnexionID());
 		}
 		
-		return $this->session['id_login'];
+		return $this->environnement->session()->get('id_login');
 	}
 
-	public function detectConnexionID() {
+	private function detectConnexionID() {
+        //TODO Refactorer les Helper:redirect
 
 		$connexion_info = $this->getAllConnexionInfo();
 		$id = $this->getConnexionIdFromNounce($connexion_info);
@@ -70,7 +58,7 @@ class Authentification {
 		return $id_list[0];
 	}
 
-	public function verifConnexion($user_id) {
+	private function verifConnexion($user_id) {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
@@ -87,7 +75,7 @@ class Authentification {
 		if (function_exists('apache_request_headers')) {
 			$h = apache_request_headers();
 			if (isset($h['org.s2low.forward-x509-identification'])) {
-				$this->server['HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'] = $h['org.s2low.forward-x509-identification'];
+				$this->environnement->server()->set('HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION',$h['org.s2low.forward-x509-identification']);
 			}
 		}
 
@@ -104,10 +92,10 @@ class Authentification {
 					'TESTING_CERTIFICATE_HASH' => 'certificate_hash',
 				) as $server_key => $result_key) {
 					
-				if (empty($this->server[$server_key])){
+				if (! $this->environnement->server()->get($server_key)){
 					$result[$result_key] = false;
 				} else {
-					$result[$result_key] = $this->server[$server_key];
+					$result[$result_key] = $this->environnement->server()->get($server_key);
 				}
 		}
 	
@@ -147,13 +135,13 @@ class Authentification {
 	}
 
 	private function getConnexionIdFromNounce($connexion_info){
-		if (empty($this->get['nounce'])){
+		if (empty($this->environnement->get()->get('nounce'))){
 			return false;
 		}
 		$authority_id = $this->nounceSQL->verify(
-			$this->get['login'],
-			$this->get['nounce'],
-			$this->get['hash']
+			$this->environnement->get()->get('login'),
+            $this->environnement->get()->get('nounce'),
+            $this->environnement->get()->get('hash')
 		);
 
 		if(! $authority_id){

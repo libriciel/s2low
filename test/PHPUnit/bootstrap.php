@@ -14,6 +14,9 @@ require_once(__DIR__."/../../init/init.php");
 
 require_once(__DIR__."/S2lowTestCase.class.php");
 
+
+
+/* Uniquement pour la mise à jour de la base de test...*/
 $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
 $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
 $sqlQuery->setDatabaseHost(DB_HOST_TEST);
@@ -23,7 +26,6 @@ $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 /** @var ObjectInstancier $objectInstancier */
 $objectInstancier->set('SQLQuery',$sqlQuery);
 
-/** @var PostgreSQLController $postgreSQLControler */
 $postgreSQLControler = $objectInstancier->get('PostgreSQLController');
 
 $postgreSQLControler->alterDatabase(function($message){echo $message . "\n";});

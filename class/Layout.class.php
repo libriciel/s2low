@@ -151,8 +151,7 @@ class HTMLLayout extends Layout {
       $html .= "                         <div id=\"menu-header\">\n";
       $html .= "                             Bienvenue " . $user->getPrettyName() . "<br />\n";;
 
-
-                    global $objectInstancier;
+                    $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
                     /** @var MessageAdminSQL $messageAdminSQL */
                     $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
                     $messageAdmin = $messageAdminSQL->getPublishedMessage();
@@ -449,7 +448,7 @@ class HTMLLayout extends Layout {
 
         ob_start();
         if (isset($_SESSION["error"])) { 
-            $this->afficheErrors($_SESSION["error"]);
+            $this->afficheErrors();
         }
         $html = ob_get_contents();
         ob_end_clean();

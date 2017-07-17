@@ -36,10 +36,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->assertEquals(array('foo'=>42),$this->controller->getAllViewParameter());
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testRedirect(){
 		$this->setExpectedException("RedirectException","Redirect to http://redirect_url with message : error message");
 		$this->controller->redirect("http://redirect_url","error message");
@@ -56,16 +52,13 @@ class ControllerTest extends S2lowTestCase {
 		$this->controller->verifAdmin();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testVerifNotAdmin(){
-		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$_SERVER['SSL_CLIENT_S_DN'] = "adullact_user";
-		$_SERVER['SSL_CLIENT_I_DN'] = "adullact_user";
-		$_SERVER['SSL_CLIENT_I_DN'] = "adullact_user";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_adullact_user";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "adullact_user",
+            'SSL_CLIENT_I_DN' => "adullact_user",
+            'TESTING_CERTIFICATE_HASH' => "hash_adullact_user",
+        ]);
 		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin();
 	}
@@ -108,10 +101,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->assertInstanceOf("SQLQuery",$this->controller->getSQLQuery());
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testRedirectSSL(){
 		$this->setExpectedException("RedirectException","/toto/index.php?foo=bar");
 		$this->controller->redirectSSL("/toto/index.php","foo=bar");
@@ -127,10 +116,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->controller->verifGroupAdmin(2);
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testVerifGroupAdminNotAuthorized(){
 		$this->setAdminGroupAuthentication();
 		$this->setExpectedException("Exception","Accès refusé");
@@ -146,10 +131,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->controller->verifSuperAdmin();
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testVerifSuperAdminFailed(){
 		$this->setAdminGroupAuthentication();
 		$this->setExpectedException("Exception","Redirect to");
@@ -161,10 +142,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->controller->verifAdmin(2);
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testVerifAdminAdminGroupFailed(){
 		$this->setAdminGroupAuthentication();
 		$this->setExpectedException("Exception","Redirect to");
@@ -176,10 +153,6 @@ class ControllerTest extends S2lowTestCase {
 		$this->controller->verifAdmin(2);
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testVerifAdminFail(){
 		$this->setAdminCol2Authentication();
 		$this->setExpectedException("Exception","Redirect to");
@@ -190,20 +163,16 @@ class ControllerTest extends S2lowTestCase {
 		$this->assertInstanceOf("ObjectInstancier",$this->controller->getObjectInstancier());
 	}
 
-	/**
-	 * @preserveGlobalState disabled
-	 * @runInSeparateProcess
-	 */
 	public function testDisplayErrorAndExitAPI(){
 		$this->setAdminGroupAuthentication();
-		$_POST['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->post()->set('api','1');
 		$this->setExpectedException("Exception","Exit");
 		$this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
 		$this->controller->verifAdmin(1);
 	}
 
 	public function testIsApiCall(){
-		$_GET['api'] = 1;
+        $this->getObjectInstancier()->get("Environnement")->get()->set('api','1');
 		$this->assertTrue($this->controller->isApiCall());
 	}
 

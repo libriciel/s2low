@@ -1,6 +1,7 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    git \
     libc-client-dev \
     libjpeg-dev \
     libkrb5-dev \
@@ -98,7 +99,7 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
-
+# Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
 
 # Installation de composer
 RUN cd /tmp/ && \
@@ -106,11 +107,6 @@ RUN cd /tmp/ && \
     php composer-setup.php --install-dir=/usr/local/bin && \
     mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
-
-# Installation des dépendances composer
-#COPY ./composer.* /usr/local/lib/composer/
-#RUN cd /usr/local/lib/composer && \
-#    composer install --dev
 
 # Ports
 EXPOSE 443 80

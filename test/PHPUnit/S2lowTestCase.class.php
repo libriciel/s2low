@@ -8,17 +8,19 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 */
 	private static $sqlQueryStatic;
 
-	private $objectInstancier;
+	//private $objectInstancier;
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
 
 	protected function setUp(){
 		parent::setUp();
+
 		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
 		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
 		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
 		$this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
 		$this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+
 
 		$_GET = array();
 		$_POST = array();
@@ -29,7 +31,25 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$_SERVER['SSL_CLIENT_CERT'] = "";
 		$_SERVER["QUERY_STRING"] = "";
 
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        $this->getObjectInstancier()->__set('SQLQuery',$this->getSQLQuery());
+        $this->getObjectInstancier()->set('helios_files_upload_root',"/tmp");
+        $this->getObjectInstancier()->set("openstack_authentication_url_v2","");
+        $this->getObjectInstancier()->set("openstack_username","a");
+        $this->getObjectInstancier()->set("openstack_password","a");
+        $this->getObjectInstancier()->set("openstack_tenant","a");
+        $this->getObjectInstancier()->set("openstack_region","a");
+        $this->getObjectInstancier()->set("openstack_swift_container_prefix","a");
+        $this->getObjectInstancier()->set("website","http://s2low");
+        $this->getObjectInstancier()->set("website_ssl","https://s2low");
+        $get = array();
+        $post = array();
+        $request = array();
+        $session = array();
+        $server = array();
 
+        $this->getObjectInstancier()->set('Environnement',new Environnement($get,$post,$request,$session,$server));
+        $this->getObjectInstancier()->set("SessionWrapper",$this->getObjectInstancier()->get("Environnement")->session());
 
 	}
 
@@ -43,24 +63,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 			self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
 			self::$sqlQueryStatic->setClientEncoding(DB_CLIENT_ENCODING);
 		}
-		$this->objectInstancier = new ObjectInstancier();
-		$this->objectInstancier->__set('SQLQuery',self::$sqlQueryStatic);
-        $this->objectInstancier->helios_files_upload_root = "/tmp";
 
-
-        $this->objectInstancier->set("openstack_authentication_url_v2","");
-        $this->objectInstancier->set("openstack_username","a");
-        $this->objectInstancier->set("openstack_password","a");
-        $this->objectInstancier->set("openstack_tenant","a");
-        $this->objectInstancier->set("openstack_region","a");
-        $this->objectInstancier->set("openstack_swift_container_prefix","a");
-
-
-		//C'est utilisé pour les vieux truc User qui authentifie à l'aide d'un singleton...
-		global $sqlQuery;
-		$sqlQuery = $this->getSQLQuery();
-		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8...
-		$sqlQuery->query("SET CLIENT_ENCODING TO 'UTF-8';");
+        //Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus haut)
+        self::$sqlQueryStatic->query("SET CLIENT_ENCODING TO 'UTF-8';");
 		return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
 
@@ -82,7 +87,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 * @return ObjectInstancier
 	 */
     public function getObjectInstancier(){
-    	return $this->objectInstancier;
+        return  ObjectInstancierFactory::getObjetInstancier();
     }
 
 	/**
@@ -91,40 +96,58 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
     public function getSQLQuery(){
     	return self::$sqlQueryStatic;
     }
-    
+
+    protected function setServerInfo(array $server_info){
+        foreach($server_info as $key => $value){
+            $this->getObjectInstancier()->get("Environnement")->server()->set($key,$value);
+        }
+    }
+
     public function setSuperAdminAuthentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "test_subject";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "test_issuer";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=";
+        $this->setServerInfo([
+                'SSL_CLIENT_VERIFY' => "SUCCESS",
+                'SSL_CLIENT_S_DN' => "test_subject",
+                'SSL_CLIENT_I_DN' => "test_issuer",
+                'TESTING_CERTIFICATE_HASH' => "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=",
+        ]);
     }
     
     public function setAdminGroupAuthentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "admin_groupe";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "admin_groupe";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_groupe";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_groupe",
+            'SSL_CLIENT_I_DN' => "admin_groupe",
+            'TESTING_CERTIFICATE_HASH' => "hash_admin_groupe",
+        ]);
 	}
 
     public function setAdminColAuthentication(){
-        $_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-        $_SERVER['SSL_CLIENT_S_DN'] = "admin_col1";
-        $_SERVER['SSL_CLIENT_I_DN'] = "admin_col1";
-        $_SERVER['TESTING_CERTIFICATE_HASH'] = "admin_col1";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_col1",
+            'SSL_CLIENT_I_DN' => "admin_col1",
+            'TESTING_CERTIFICATE_HASH' => "admin_col1",
+        ]);
     }
 
     public function setAdminCol2Authentication(){
-    	$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-    	$_SERVER['SSL_CLIENT_S_DN'] = "admin_col2";
-    	$_SERVER['SSL_CLIENT_I_DN'] = "admin_col2";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_admin_col2";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_col2",
+            'SSL_CLIENT_I_DN' => "admin_col2",
+            'TESTING_CERTIFICATE_HASH' => "hash_admin_col2",
+        ]);
     }
 
 	public function setUserAuthentification(){
-		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$_SERVER['SSL_CLIENT_S_DN'] = "user_col1";
-		$_SERVER['SSL_CLIENT_I_DN'] = "user_col1";
-		$_SERVER['TESTING_CERTIFICATE_HASH'] = "hash_user_col1";
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "user_col1",
+            'SSL_CLIENT_I_DN' => "user_col1",
+            'TESTING_CERTIFICATE_HASH' => "hash_user_col1",
+        ]);
 	}
+
+
 
 }

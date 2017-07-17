@@ -1,7 +1,6 @@
 {
   "name": "S2low/S2low",
-  "version": "2.6.4",
-
+  "version": "2.6.7",
   "require": {
     "rackspace/php-opencloud": "^1.16"
   },
