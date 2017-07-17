@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "12033f488fc61dc74c87f0be91b7ea98",
+    "content-hash": "0aecace8f0cfb1c24e59498321a56d65",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -101,52 +101,6 @@
             ],
             "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18T18:23:50+00:00"
-        },
-        {
-            "name": "libriciel/tdt-lib-actes",
-            "version": "0.0.1",
-            "source": {
-                "type": "git",
-                "url": "git@gitlab.libriciel.fr:s2low/tdt-lib-actes.git",
-                "reference": "4eb79d81d2c106019ef390c9e4ecae937505194b"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Libriciel\\LibActes\\": "src"
-                },
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ],
-                "test-cover": [
-                    "phpunit --coverage-text --colors=never"
-                ]
-            },
-            "license": [
-                "CecillV2"
-            ],
-            "authors": [
-                {
-                    "name": "Eric Pommateau",
-                    "email": "eric.pommateau@libriciel.fr"
-                }
-            ],
-            "description": "Bibliothèque pour le protocole @CTES http://www.collectivites-locales.gouv.fr/actes-0",
-            "keywords": [
-                "@CTES",
-                "ACTES",
-                "DGCL",
-                "Tiers de télétransmission"
-            ],
-            "time": "2017-07-17T08:43:25+00:00"
         },
         {
             "name": "mikemccabe/json-patch-php",
