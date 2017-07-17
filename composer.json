@@ -1,16 +1,7 @@
 {
   "name": "S2low/S2low",
   "version": "2.6.7",
-
-  "repositories" : [
-    {
-      "type": "git",
-      "no-api": true,
-      "url": "git@gitlab.libriciel.fr:s2low/tdt-lib-actes.git"
-    }
-  ],
   "require": {
-    "libriciel/tdt-lib-actes" : "*",
     "rackspace/php-opencloud": "^1.16"
   },
 
