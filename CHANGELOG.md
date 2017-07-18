@@ -7,6 +7,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
 
+### Ajouts
+- Création du script cron/actes-analyse-fichier-a-envoyer.php qui vise à remplacer la partie Tomcat #190 ~Actes
+
 ### Corrections de sécurités
 
 - Correction d'une faille de sécurité sur les modules ~admin
