@@ -1,6 +1,6 @@
 <?php 
 class ActesTransactionsSQL {
-	
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
@@ -31,7 +31,8 @@ class ActesTransactionsSQL {
     			" WHERE id=?";
 		$this->sqlQuery->query($sql,$archive_url,$transaction_id);
 	}
-	
+
+
 	public function updateStatus($transaction_id,$status_id,$message,$flux_retour=''){
   	
 	    $date = date("Y-m-d H:i:s");
@@ -53,12 +54,29 @@ class ActesTransactionsSQL {
 				" WHERE last_status_id=? ";
 		return $this->sqlQuery->query($sql,$status_id);
 	}
-	
-	public function getArchiveFromStatus($status_id){
-		$sql = "SELECT  *,actes_transactions.id as id FROM actes_transactions " .
-				" JOIN authorities ON actes_transactions.authority_id=authorities.id " .
-				" WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' ";
-		return $this->sqlQuery->query($sql,$status_id);	
+
+	public function getArchiveFromStatusWithSAE($status_id){
+        $sql = "SELECT  *,actes_transactions.id as id FROM actes_transactions " .
+            " JOIN authorities ON actes_transactions.authority_id=authorities.id " .
+            " WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' ";
+        return $this->sqlQuery->query($sql,$status_id);
+    }
+
+    public function getEnveloppeIdByTransactionsStatus($last_status_id,$antivirus_check = true){
+        $sql = "SELECT DISTINCT envelope_id FROM actes_transactions WHERE last_status_id=? AND antivirus_check=?";
+        return $this->sqlQuery->queryOneCol($sql,$last_status_id,$antivirus_check);
+    }
+
+    public function getIdByEnvelopeId($envelope_id){
+        $sql = "SELECT id FROM actes_transactions WHERE envelope_id=?";
+        return $this->sqlQuery->queryOneCol($sql,$envelope_id);
+
+    }
+
+	public function getTransactionIdFromStatus($status_id, $antivirus_check = true){
+		$sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
+				" WHERE last_status_id=? AND antivirus_check=?";
+		return $this->sqlQuery->queryOneCol($sql,$status_id,$antivirus_check);
 	}
 
     public function getLastArchiveFromStatus($status_id,$start_date){
@@ -154,6 +172,10 @@ class ActesTransactionsSQL {
         return $status[0];
     }
 
+    public function getLastTransactionWorkflowInfo($id){
+        $sql = " select * from actes_transactions_workflow where transaction_id = ? ORDER BY id DESC limit 1";
+        return $this->sqlQuery->queryOne($sql,$id);
+    }
 
     public function getNbTransactionByMonth(){
     	$sql = "SELECT count(*) as nb,date_trunc('month', submission_date) as month  FROM actes_transactions " .

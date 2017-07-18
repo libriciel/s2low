@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aecace8f0cfb1c24e59498321a56d65",
+    "content-hash": "4ca37622c69567d8362276224559214d",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -101,6 +101,25 @@
             ],
             "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18T18:23:50+00:00"
+        },
+        {
+            "name": "libriciel/tdt-lib-actes",
+            "version": "0.0.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=1",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Libriciel\\LibActes\\": "src"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            }
         },
         {
             "name": "mikemccabe/json-patch-php",
@@ -235,7 +254,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.24",
+            "version": "v2.8.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -1413,7 +1432,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.4",
+            "version": "v3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

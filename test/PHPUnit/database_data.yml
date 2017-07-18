@@ -281,6 +281,9 @@ actes_status:
     id: -1
     name: Erreur
   -
+    id: 2
+    name: En attente de transmission
+  -
     id: 19
     name: En attente de transmission au SAE
   -

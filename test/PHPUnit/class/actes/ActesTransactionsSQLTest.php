@@ -11,7 +11,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 
         $actesTransactionsSQL->updateStatus($transaction_id,12,"test");
 
-        $result_1 = $actesTransactionsSQL->getArchiveFromStatus(12);
+        $result_1 = $actesTransactionsSQL->getArchiveFromStatusWithSAE(12);
         $this->assertNotEmpty($result_1);
 
         $result = $actesTransactionsSQL->getLastArchiveFromStatus(12,date("Y-m-d"));
