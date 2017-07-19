@@ -265,6 +265,22 @@ if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY_PASS')){
     define('ACTES_MINISTERE_CERTIFICATE_KEY_PASS','');
 }
 
+if (!defined('ACTES_IMAP_HOST')){
+    define('ACTES_IMAP_HOST','mail');
+}
+
+if (!defined('ACTES_IMAP_PORT')){
+    define('ACTES_IMAP_PORT','143');
+}
+
+if (!defined('ACTES_IMAP_LOGIN')){
+    define('ACTES_IMAP_LOGIN','mail@tedetis.org');
+}
+
+if (!defined('ACTES_IMAP_PASSWORD')){
+    define('ACTES_IMAP_PASSWORD','password');
+}
+
 // Nom de l'application vis à vis du MIAT
 if(!defined('ACTES_APPLI_NAME')){
         define('ACTES_APPLI_NAME', 'TACT');
@@ -320,6 +336,17 @@ if(!defined('ACTES_FILES_UPLOAD_ROOT')){
 if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
         define('ACTES_BATCHES_UPLOAD_ROOT', '/tdt-workspace/actes/batchs');
 }
+
+// Répertoire temporaire de stockage des réponses du ministère par mail
+if(!defined('ACTES_RESPONSE_TMP_LOCAL_PATH')){
+    define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
+}
+
+// Répertoire temporaire de stockage des réponses en erreur du ministère
+if(!defined('ACTES_RESPONSE_ERROR_PATH')){
+    define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
+}
+
 
 // Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){

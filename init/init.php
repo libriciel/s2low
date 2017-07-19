@@ -83,10 +83,17 @@ $actesMinistereProperties->password = ACTES_MINISTERE_PASSWORD;
 $actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
 $actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
 $actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
-
-
 $objectInstancier->set('ActesMinistereProperties',$actesMinistereProperties);
 
+$actesImapProperties = new ActesImapProperties();
+$actesImapProperties->host = ACTES_IMAP_HOST;
+$actesImapProperties->port = ACTES_IMAP_PORT;
+$actesImapProperties->login = ACTES_IMAP_LOGIN;
+$actesImapProperties->password = ACTES_IMAP_PASSWORD;
+$objectInstancier->set('ActesImapProperties',$actesImapProperties);
+
+$objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
+$objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
 
 $frontController = new FrontController($objectInstancier);
 
