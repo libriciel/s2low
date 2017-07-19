@@ -36,7 +36,7 @@ unit_test:
         S2LOW_WEBSITE: "http://localhost/"
         S2LOW_WEBSITE_SSL: "https://localhost/"
     script:
-        - phpunit --coverage-text --colors=never -c /var/www/s2low/test/PHPUnit/phpunit.xml
+        - composer test-cover
 
 deploy_app:
     stage: staging

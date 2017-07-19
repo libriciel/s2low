@@ -31,6 +31,10 @@
     "phpunit/php-code-coverage": "^2.1",
     "mikey179/vfsStream": "^1.5",
     "phpunit/DbUnit": "^1.4"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-cover": "phpunit --coverage-text --colors=never"
   }
 
 }
