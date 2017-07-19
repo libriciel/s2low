@@ -35,6 +35,7 @@ unit_test:
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "http://localhost/"
         S2LOW_WEBSITE_SSL: "https://localhost/"
+        COMPOSER_PROCESS_TIMEOUT: 600
     script:
         - cd /var/www/s2low/
         - composer test-cover
