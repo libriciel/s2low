@@ -38,7 +38,7 @@ unit_test:
         COMPOSER_PROCESS_TIMEOUT: 600
     script:
         - cd /var/www/s2low/
-        - composer test-cover
+        - phpunit --coverage-text --colors=never
 
 deploy_app:
     stage: staging
