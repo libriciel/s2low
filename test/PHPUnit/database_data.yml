@@ -271,6 +271,8 @@ actes_included_files:
 actes_transactions:
 actes_classification_codes:
 actes_envelope_serials:
+actes_transmission_windows:
+actes_transmission_window_hours:
 authority_group_siren:
 helios_transactions:
 helios_transactions_workflow:
@@ -283,6 +285,9 @@ actes_status:
   -
     id: 2
     name: En attente de transmission
+  -
+    id: 3
+    name: Transmis
   -
     id: 19
     name: En attente de transmission au SAE

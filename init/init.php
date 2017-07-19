@@ -73,6 +73,20 @@ $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
 
+$actesMinistereProperties = new ActesMinistereProperties();
+
+$actesMinistereProperties->url = ACTES_MINISTERE_URL;
+$actesMinistereProperties->authentification_type = ACTES_MINISTERE_AUTHENTICATION;
+
+$actesMinistereProperties->login = ACTES_MINISTERE_LOGIN;
+$actesMinistereProperties->password = ACTES_MINISTERE_PASSWORD;
+$actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
+$actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
+$actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
+
+
+$objectInstancier->set('ActesMinistereProperties',$actesMinistereProperties);
+
 
 $frontController = new FrontController($objectInstancier);
 

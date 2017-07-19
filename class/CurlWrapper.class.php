@@ -72,7 +72,6 @@ class CurlWrapper {
             return false;
         }
 
-
         $this->lastError = curl_error($this->curlHandle);
 		if ($this->lastError){
 			$this->lastError = "Erreur de connexion au serveur : " . $this->lastError;

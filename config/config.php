@@ -236,6 +236,35 @@ if (!defined("EXPORT_LOGS_DIRECTORY")){
 ///// Paramètre module Actes /////
 //////////////////////////////////
 
+if (!defined('ACTES_MINISTERE_URL')){
+    define('ACTES_MINISTERE_URL','http://tomcat:8080/TedetisActes/SimulateurMinistere');
+}
+
+if (!defined('ACTES_MINISTERE_AUTHENTICATION')){
+    #One off NONE, POST or BASIC
+    define('ACTES_MINISTERE_AUTHENTICATION','NONE');
+}
+
+if (!defined('ACTES_MINISTERE_LOGIN')){
+    define('ACTES_MINISTERE_LOGIN','');
+}
+
+if (!defined('ACTES_MINISTERE_PASSWORD')){
+    define('ACTES_MINISTERE_PASSWORD','');
+}
+
+if (!defined('ACTES_MINISTERE_CERTIFICATE')){
+    define('ACTES_MINISTERE_CERTIFICATE','');
+}
+
+if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY')){
+    define('ACTES_MINISTERE_CERTIFICATE_KEY','');
+}
+
+if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY_PASS')){
+    define('ACTES_MINISTERE_CERTIFICATE_KEY_PASS','');
+}
+
 // Nom de l'application vis à vis du MIAT
 if(!defined('ACTES_APPLI_NAME')){
         define('ACTES_APPLI_NAME', 'TACT');
