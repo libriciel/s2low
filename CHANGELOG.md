@@ -8,10 +8,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## [non publié]
 
 ### Ajouts
+
 - Création du script cron/actes-analyse-fichier-a-envoyer.php qui vise à remplacer la partie Tomcat #190 ~Actes
 - Création du script cron/acte-envoi-fichier.php pour remplacer la partie Tomcat #192 ~Actes
-- Création du script cron/acte-recpetion-fichier.php pour remplacer la partie Tomcat #195 ~Actes
-  
+- Création du script cron/acte-reception-fichier.php pour remplacer la partie Tomcat #195 ~Actes
+- Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
 
 ### Corrections de sécurités
 

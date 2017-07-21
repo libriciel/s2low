@@ -185,5 +185,12 @@ class ActesTransactionsSQL {
 			" ORDER BY month DESC";
 		return $this->sqlQuery->query($sql);
 	}
+
+	public function getBySirenAndNumeroInterne($siren,$numero_interne){
+        $sql = "SELECT actes_transactions.id from actes_transactions " .
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " WHERE siren=? AND number=? AND type='1'";
+        return $this->sqlQuery->queryOne($sql,$siren,$numero_interne);
+    }
 	
 }

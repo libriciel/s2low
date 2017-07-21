@@ -289,6 +289,9 @@ actes_status:
     id: 3
     name: Transmis
   -
+    id: 4
+    name: Acquittement reçu
+  -
     id: 19
     name: En attente de transmission au SAE
   -
