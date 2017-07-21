@@ -177,6 +177,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
             HeliosTransactionsSQL::ACQUITTER,
             "test"
         );
+
 		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
 	}
 }

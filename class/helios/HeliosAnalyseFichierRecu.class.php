@@ -183,13 +183,21 @@ class HeliosAnalyseFichierRecu {
 				'date' => $workflow_info['date']
 			);
 		}
+
 		usort($transaction_list,function ($a,$b){
-			if (
+            if (
 				$a['status_id'] == HeliosTransactionsSQL::TRANSMIS &&
 				$b['status_id'] != HeliosTransactionsSQL::TRANSMIS
 			){
-				return -1;
+                return -1;
 			}
+            if (
+                $b['status_id'] == HeliosTransactionsSQL::TRANSMIS &&
+                $a['status_id'] != HeliosTransactionsSQL::TRANSMIS
+            ){
+
+                return 1;
+            }
 			if ($a['date'] > $b['date']){
 				return -1;
 			} else {
