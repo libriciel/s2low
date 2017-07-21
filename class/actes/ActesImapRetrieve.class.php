@@ -4,60 +4,66 @@ class ActesImapRetrieve {
 
     private $actesImapProperties;
     private $actes_response_tmp_local_path;
-    private $imapWrapper;
     private $logger;
+    private $imapFetchServerFactory;
 
     public function __construct(
         ActesImapProperties $actesImapProperties,
         $actes_response_tmp_local_path,
-        ImapWrapper $imapWrapper,
+        ImapFetchServerFactory $imapFetchServerFactory,
         Logger $logger
     ) {
         $this->actesImapProperties = $actesImapProperties;
-        $this->actes_response_tmp_local_path = $actesImapProperties;
-        $this->imapWrapper = $imapWrapper;
+        $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
+        $this->imapFetchServerFactory = $imapFetchServerFactory;
         $this->logger = $logger;
     }
+
     private function log($message){
         $this->logger->log("actes-reception-fichier",$message);
     }
+
     public function retrieve(){
         $this->log("Debut du script");
         $this->log("Connection au serveur IMAP {$this->actesImapProperties->host}");
-        $this->imapWrapper->setLogin($this->actesImapProperties->login,$this->actesImapProperties->password);
-        $this->imapWrapper->setServer($this->actesImapProperties->host);
-        $this->imapWrapper->setPort($this->actesImapProperties->port);
-        $this->imapWrapper->setOption("novalidate-cert");
-        $this->imapWrapper->open();
 
-        $nb_mail =  $this->imapWrapper->getNbMessage();
-        $this->log("Il y a $nb_mail mails disponibles");
+        $server = $this->imapFetchServerFactory->getInstance($this->actesImapProperties->host, $this->actesImapProperties->port);
+        $server->setAuthentication($this->actesImapProperties->login,$this->actesImapProperties->password);
 
-        $overview = $this->imapWrapper->mailboxStatus();
+        $messages = $server->getMessages();
+        $this->log("Il y a ".count($messages)." messages dans la boite au lettres");
 
-        $overview = $this->imapWrapper->fetchOverview(1,$nb_mail);
+        foreach($messages as $message){
+            $this->saveMail($message);
 
-        print_r($overview);
-        foreach($overview as $mail){
-            $structure = $this->imapWrapper->getMessageStructure($mail->uid);
-            $this->parcourPart($structure);
-
+            $this->log("Suppression du message : ".($message->getOverview()->message_id));
+            $message->delete();
+            $server->expunge();
         }
 
-
-        //recup des mails
-        //
         $this->log("Fin du script");
+        return true;
     }
 
 
-    private function parcourPart($structure){
-        foreach($structure->parts as $part){
-            print_r($part);
-            //$this->imapWrapper->getBodyPart(($uid,$part);
-            if (isset($part->parts)){
-                $this->parcourPart($part);
-            }
+    private function saveMail(\Fetch\Message $message){
+        $this->log("Récupération du message : ".($message->getOverview()->message_id));
+
+        $path = $this->actes_response_tmp_local_path . "/" . date("YmdHis")."_".mt_rand(0,mt_getrandmax());
+        $this->log("Création du répertoire $path");
+        if (! mkdir( $path)){
+            $exception_message = "Impossible de créer le répertoire $path";
+            $this->log($exception_message);
+            throw new Exception($exception_message);
+        }
+        $message_body_path = $path."/message_body.html";
+        $this->log("Sauvegarde du contenu du message HTML $message_body_path");
+        file_put_contents($message_body_path,$message->getMessageBody(true));
+
+        foreach($message->getAttachments() as $attachment){
+            $attachment_path = $path . "/" . $attachment->getFileName();
+            $this->log("Sauvegarde de $attachment_path");
+            $attachment->saveAs($attachment_path);
         }
     }
 

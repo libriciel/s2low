@@ -23,7 +23,8 @@
 
   "require": {
     "rackspace/php-opencloud": "^1.16",
-    "libriciel/tdt-lib-actes": "*"
+    "libriciel/tdt-lib-actes": "*",
+    "tedivm/fetch": "^0.7.1"
   },
 
   "require-dev": {
