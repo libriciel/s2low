@@ -192,7 +192,7 @@ $archiveDeleted = false;
   $archiveDeleted = true;
 }*/
 if ($trans->get("type") == 6 ||
- 	$trans->get("type") == 7 ||
+
  	 $status <= 0 || 
  	 $status == 5 ||
  	 $status == 6 ||
@@ -202,12 +202,10 @@ if ($trans->get("type") == 6 ||
 	$archiveDeleted = true;
 }
 // Fichiers contenus dans la transaction
-$html .= "<h2>Fichiers contenus dans l'archive transmise (";
+$html .= "<h2>Fichiers contenus dans l'archive transmise </h2>";
 
 $archiveName = get_hecho(basename($envelope->get("file_path")));
-$html .= ($archiveDeleted) ? $archiveName : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
 
-$html .= ")</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $files = $trans->fetchFilesList();
 
@@ -323,6 +321,9 @@ $html .= " <tbody>\n";
 } else {
   $html .= "  <p>Pas de fichier trouvé</p>";
 }
+
+$html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
+
 
 $html .= "</div>\n";
 // Affichage du Workflow

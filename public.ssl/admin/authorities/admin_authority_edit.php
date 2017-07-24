@@ -390,6 +390,13 @@ $html .="<div><a class=\"btn btn-primary\" href='admin_authority_sae.php?id=".$i
 $html .= "<br/>";
 $html .="<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=".$id."'>Configurer les numéros SIRET »</a></div>";
 
+if ($me->isSuper()){
+    $html.="<br/><div><a class=\"btn btn-primary\" href='".WEBSITE_SSL."/modules/actes/admin/actes_force_classifiction.php?authority_id=".$id."'>Envoyer une demande de classification</a></div>";
+    $html.="<br/><div><a class=\"btn btn-primary\" href='".WEBSITE_SSL."/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=".$id."'>Envoyer demande de classification vide</a></div>";
+
+}
+
+
 $html .= "</div>\n";
 
 $doc->addBody($html);
