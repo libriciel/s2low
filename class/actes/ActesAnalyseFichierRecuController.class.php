@@ -89,7 +89,7 @@ class ActesAnalyseFichierRecuController {
                 $this->traitementRetourClassification($fichierXML);
 
             } else {
-
+                //1-3 2-1 3-1 3-5 4.1 4.5 5.1 6.2
                 //TODO on crée une transaction complémentaire
 
                 //TODO on traite l'anomalie
@@ -106,11 +106,16 @@ class ActesAnalyseFichierRecuController {
     private function traitementARActe(MessageMetierARActes $fichierXML){
         $this->log("AR Actes trouvé pour l'acte : " . $fichierXML->id_actes);
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
+
+
         if (! $transaction_id){
             throw new Exception(
                 "Aucune transation trouver pour le couple SIREN {$fichierXML->siren} - numéro interne {$fichierXML->numero_interne}"
             );
         }
+
+        $this->actesTransactionsSQL->setUniqueID($transaction_id,$fichierXML->id_actes);
+
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
 

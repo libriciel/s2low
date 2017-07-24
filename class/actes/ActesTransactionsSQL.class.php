@@ -201,5 +201,10 @@ class ActesTransactionsSQL extends SQL{
             " WHERE siren=? AND type='7' AND last_status_id=? ORDER BY submission_date DESC";
         return $this->queryOne($sql,$siren,ActesStatusSQL::STATUS_TRANSMIS);
     }
+
+    public function setUniqueID($acteID,$unique_id) {
+        $sql = "UPDATE actes_transactions SET unique_id=? WHERE id=?";
+        $this->query($sql,$unique_id,$acteID);
+    }
 	
 }
