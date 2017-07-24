@@ -73,7 +73,7 @@ class ActesUpdateClassificationSQL extends SQL{
     }
 
     public function getClassificationCode($authority_id){
-        $sql = "SELECT * FROM actes_classification_codes WHERE authority_id=?";
+        $sql = "SELECT * FROM actes_classification_codes WHERE authority_id=? ORDER BY id";
         return $this->query($sql,$authority_id);
     }
 
