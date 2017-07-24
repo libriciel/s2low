@@ -194,5 +194,12 @@ class ActesTransactionsSQL extends SQL{
         $sql = "SELECT count(*) FROM actes_transactions WHERE last_status_id=?";
         return $this->queryOne($sql,$status_id);
     }
+
+    public function getLastDemandeClassificationTransmis($siren){
+        $sql = "SELECT actes_transactions.id FROM actes_transactions ".
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " WHERE siren=? AND type='7' AND last_status_id=? ORDER BY submission_date DESC";
+        return $this->queryOne($sql,$siren,ActesStatusSQL::STATUS_TRANSMIS);
+    }
 	
 }
