@@ -13,6 +13,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Création du script cron/acte-envoi-fichier.php pour remplacer la partie Tomcat #192 ~Actes
 - Création du script cron/acte-reception-fichier.php pour remplacer la partie Tomcat #195 ~Actes
 - Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
+- Visualisation rapide de l'état des transactions Actes #90 ~Actes
 
 ### Corrections de sécurités
 

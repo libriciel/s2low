@@ -2,19 +2,22 @@
 
 class ActesTransactionsSQLTest extends S2lowTestCase {
 
+    private function getActesTransactionsSQL(){
+        return $this->getObjectInstancier()->get("ActesTransactionsSQL");
+    }
+
     public function testGetLastArchiveFromStatus(){
 
         $transaction_id =$this->createTransaction('14');
 
-        /** @var ActesTransactionsSQL $actesTransactionsSQL */
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
-        $actesTransactionsSQL->updateStatus($transaction_id,12,"test");
 
-        $result_1 = $actesTransactionsSQL->getArchiveFromStatusWithSAE(12);
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id,12,"test");
+
+        $result_1 = $this->getActesTransactionsSQL()->getArchiveFromStatusWithSAE(12);
         $this->assertNotEmpty($result_1);
 
-        $result = $actesTransactionsSQL->getLastArchiveFromStatus(12,date("Y-m-d"));
+        $result = $this->getActesTransactionsSQL()->getLastArchiveFromStatus(12,date("Y-m-d"));
         $this->assertEquals($result_1,$result);
 
     }
@@ -29,6 +32,11 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         $authoritySQL->updateSAE(1,array('pastell_url'=>'test','pastell_login'=>'test','pastell_password'=>'test','pastell_id_e'=>'12'));
 
         return $transaction_id;
+    }
+
+    public function testGetNbByStatus(){
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->assertEquals(1,$this->getActesTransactionsSQL()->getNbByStatus(ActesStatusSQL::STATUS_POSTE));
     }
 
 }

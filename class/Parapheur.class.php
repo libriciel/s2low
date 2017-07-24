@@ -35,7 +35,7 @@ class Parapheur {
 	}
 	
 	public function setKeyPaswordFromFile($passwordFile){
-		$this->keyPassword = `sudo /bin/cat $passwordFile `;
+		$this->keyPassword = `/bin/cat $passwordFile `;
 	}
 	
 	public function getLastError(){
