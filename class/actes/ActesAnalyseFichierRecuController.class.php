@@ -3,6 +3,7 @@
 use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
+use Libriciel\LibActes\FichierXML\MessageMetierARAnnulation;
 
 class ActesAnalyseFichierRecuController {
 
@@ -87,9 +88,11 @@ class ActesAnalyseFichierRecuController {
             } elseif ($code_message == MessageMetierRetourClassification::CODE_MESSAGE){
                 /** @var MessageMetierRetourClassification $fichierXML */
                 $this->traitementRetourClassification($fichierXML);
-
+            } elseif ($code_message == MessageMetierARAnnulation::CODE_MESSAGE){
+                /** @var MessageMetierARAnnulation $fichierXML */
+                $this->traitementARAnnulation($fichierXML);
             } else {
-                //1-3 2-1 3-1 3-5 4.1 4.5 5.1 6.2
+                //1-3 2-1 3-1 3-5 4.1 4.5 5.1
                 //TODO on crée une transaction complémentaire
 
                 //TODO on traite l'anomalie
@@ -106,7 +109,6 @@ class ActesAnalyseFichierRecuController {
     private function traitementARActe(MessageMetierARActes $fichierXML){
         $this->log("AR Actes trouvé pour l'acte : " . $fichierXML->id_actes);
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
-
 
         if (! $transaction_id){
             throw new Exception(
@@ -157,6 +159,41 @@ class ActesAnalyseFichierRecuController {
         $this->log($message);
         $this->actesScriptHelper->updateStatus(
             array($transaction_id),
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            $message,
+            $xml
+        );
+    }
+
+    public function traitementARAnnulation(MessageMetierARAnnulation $fichierXML){
+        $this->log("Annulation trouvé pour l'Acte : " . $fichierXML->id_actes);
+        $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
+
+        if (! $transaction_id){
+            throw new Exception(
+                "Aucune transation trouvée pour le couple SIREN {$fichierXML->siren} - numéro interne {$fichierXML->numero_interne}"
+            );
+        }
+
+        $this->log("{$fichierXML->id_actes} -> transaction_id = $transaction_id");
+        $message = "Annulation recu par le MIOCT le ".$fichierXML->date_reception;
+
+        $xml = file_get_contents($fichierXML->file_path);
+        $this->log($message);
+        $this->actesScriptHelper->updateStatus(
+            array($transaction_id),
+            ActesStatusSQL::STATUS_ANNULER,
+            $message,
+            $xml
+        );
+        $transaction_annulation_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,'6');
+        if (! $transaction_annulation_id){
+            throw new Exception(
+                "Aucune transation d'annulation trouvée pour le couple SIREN {$fichierXML->siren} - numéro interne {$fichierXML->numero_interne}"
+            );
+        }
+        $this->actesScriptHelper->updateStatus(
+            array($transaction_annulation_id),
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
             $message,
             $xml

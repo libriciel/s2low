@@ -183,11 +183,11 @@ class ActesTransactionsSQL extends SQL{
 		return $this->query($sql);
 	}
 
-	public function getBySirenAndNumeroInterne($siren,$numero_interne){
+	public function getBySirenAndNumeroInterne($siren,$numero_interne,$type = '1'){
         $sql = "SELECT actes_transactions.id from actes_transactions " .
             " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
-            " WHERE siren=? AND number=? AND type='1'";
-        return $this->queryOne($sql,$siren,$numero_interne);
+            " WHERE siren=? AND number=? AND type=?";
+        return $this->queryOne($sql,$siren,$numero_interne,$type);
     }
 
     public function getNbByStatus($status_id){
