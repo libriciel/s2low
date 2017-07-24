@@ -636,8 +636,8 @@ class ActesTransaction extends DataObject {
       return false;
     }
 
-    if (! file_put_contents($this->rootDir . "/" . $this->xmlFileName, $xml)) {    	
-      $this->errorMsg = "Erreur système de fichiers (file_put_contents).";
+    if (! file_put_contents($this->rootDir . "/" . $this->xmlFileName, $xml)) {
+        $this->errorMsg = "Erreur système de fichiers (file_put_contents ) : ".$this->rootDir . "/" . $this->xmlFileName;
       return false;
     }
 
