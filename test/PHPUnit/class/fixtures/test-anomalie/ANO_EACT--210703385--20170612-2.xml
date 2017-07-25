@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<actes:AnomalieEnveloppe xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" xmlns:insee="http://xml.insee.fr/schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd">
+  <actes:Date>2017-06-12</actes:Date>
+  <actes:Nature>5</actes:Nature>
+  <actes:Detail>SLO-EACT--210703385--20170612-2.tar.gz -&gt; PREF-VERIF-02 : Votre numéro de SIREN n'est pas encore enregistré dans l'application ACTES. Veuillez réessayez ultérieurement. Si le même problème persiste, veuillez contacter votre préfecture pour vérification.</actes:Detail>
+  <actes:EnveloppeRecue>
+    <actes:Emetteur>
+      <actes:IDCL actes:Arrondissement="2" actes:Departement="007" actes:Nature="31" insee:SIREN="210703385"/>
+      <actes:Referent>
+        <actes:Nom>Robert Petitpoid</actes:Nom>
+        <actes:Telephone>555-555</actes:Telephone>
+        <actes:Email>robert@petit.poid.fr</actes:Email>
+      </actes:Referent>
+    </actes:Emetteur>
+    <actes:AdressesRetour>
+      <actes:Email>robert@petit.poid.fr</actes:Email>
+    </actes:AdressesRetour>
+    <actes:FormulairesEnvoyes>
+      <actes:Formulaire>
+        <actes:NomFichier>007-210703385-20170519-2017_048-DE-1-1_0.xml</actes:NomFichier>
+      </actes:Formulaire>
+    </actes:FormulairesEnvoyes>
+  </actes:EnveloppeRecue>
+</actes:AnomalieEnveloppe>

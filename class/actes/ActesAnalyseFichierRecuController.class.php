@@ -1,5 +1,6 @@
 <?php
 
+use Libriciel\LibActes\ArchiveData;
 use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
@@ -13,6 +14,7 @@ class ActesAnalyseFichierRecuController {
     private $actesTransactionsSQL;
     private $actesScriptHelper;
     private $actesUpdateClassificationSQL;
+    private $actesEnvelopeSQL;
 
     public function __construct(
         Logger $logger,
@@ -20,7 +22,8 @@ class ActesAnalyseFichierRecuController {
         $actes_response_error_path,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesScriptHelper $actesScriptHelper,
-        ActesUpdateClassificationSQL $actesUpdateClassificationSQL
+        ActesUpdateClassificationSQL $actesUpdateClassificationSQL,
+        ActesEnvelopeSQL $actesEnvelopeSQL
     ) {
         $this->logger = $logger;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
@@ -28,6 +31,7 @@ class ActesAnalyseFichierRecuController {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesScriptHelper = $actesScriptHelper;
         $this->actesUpdateClassificationSQL = $actesUpdateClassificationSQL;
+        $this->actesEnvelopeSQL = $actesEnvelopeSQL;
     }
 
     public function analyseAll(){
@@ -76,6 +80,11 @@ class ActesAnalyseFichierRecuController {
 
         $archiveData = $archive->getArchiveDataFromFolder($rep_path);
 
+        if ($archiveData->is_ano){
+            $this->traitementEnveloppeAnomalie($archiveData);
+            return;
+        }
+
         foreach($archiveData->fichierXML as $fichierXML){
             $code_message = $fichierXML->getCodeMessage();
             $this->log("Code message : $code_message");
@@ -92,7 +101,8 @@ class ActesAnalyseFichierRecuController {
                 /** @var MessageMetierARAnnulation $fichierXML */
                 $this->traitementARAnnulation($fichierXML);
             } else {
-                //1-3 2-1 3-1 3-5 4.1 4.5 5.1
+                // 1-3
+                // 2-1 3-1 3-5 4.1 4.5 5.1
                 //TODO on crée une transaction complémentaire
 
                 //TODO on traite l'anomalie
@@ -104,6 +114,34 @@ class ActesAnalyseFichierRecuController {
             $this->log("Suppression du répertoire $rep_path");
             $tmpDir->delete($rep_path);
         }
+    }
+
+    private function traitementEnveloppeAnomalie(ArchiveData $archiveData){
+        $enveloppe_anomalie_name = basename($archiveData->enveloppe_path);
+        $this->log("Anomalie trouvée pour l'enveloppe $enveloppe_anomalie_name");
+        $envelope_id = $this->actesEnvelopeSQL->findByAnomalieEnveloppeName($enveloppe_anomalie_name);
+        if (! $envelope_id){
+            throw new Exception("L'enveloppe d'anomalie $enveloppe_anomalie_name ne correspond à aucune enveloppe de la base");
+        }
+        $this->log("Enveloppe $envelope_id trouvé pour l'anomalie $enveloppe_anomalie_name");
+
+        $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($envelope_id);
+
+        $actesXML = new \Libriciel\LibActes\ActesXML();
+        /** @var \Libriciel\LibActes\FichierXML\EnveloppeAnomalie $anomalieEnveloppe */
+        $anomalieEnveloppe = $actesXML->getDataFromXML(file_get_contents($archiveData->enveloppe_path));
+
+        $detail_erreur = utf8_decode($anomalieEnveloppe->detail_erreur);
+        $message = "Enveloppe rejetée par le MIOCT ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
+
+        $xml = file_get_contents($archiveData->enveloppe_path);
+        $this->log($message);
+        $this->actesScriptHelper->updateStatus(
+            $transaction_ids,
+            ActesStatusSQL::STATUS_EN_ERREUR,
+            $message,
+            $xml
+        );
     }
 
     private function traitementARActe(MessageMetierARActes $fichierXML){

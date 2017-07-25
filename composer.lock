@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7969f51d7e0f88b637faecfefacc2439",
+    "content-hash": "371b135e802785387f3e3576184c2764",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -104,10 +104,10 @@
         },
         {
             "name": "libriciel/tdt-lib-actes",
-            "version": "0.0.6",
+            "version": "0.0.7",
             "dist": {
                 "type": "tar",
-                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.6",
+                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.7",
                 "reference": null,
                 "shasum": null
             },

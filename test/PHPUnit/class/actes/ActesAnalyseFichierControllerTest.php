@@ -92,5 +92,4 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         return $transaction_id;
     }
 
-
 }

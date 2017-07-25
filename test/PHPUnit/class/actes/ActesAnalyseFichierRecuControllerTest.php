@@ -73,7 +73,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
         $actesAnalyseFichierRecuController->analyseAll();
 
-
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
@@ -101,19 +100,16 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     }
 
     private function createTransaction($status){
-
-        $sql="INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql,"foo");
-
+        $envelope_id = $this->getObjectInstancier()->get("ActesEnvelopeSQL")->create(
+            1,
+            "000000000/abc-EACT--210703385--20170612-2.tar.gz"
+        );
 
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";
         $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true);
 
-
         return $transaction_id;
     }
-
-
 
     public function testAnalyseAllActeErrorRep(){
         $this->getObjectInstancier()->set('actes_response_tmp_local_path',$this->tmp_dir."/not-exists/");
@@ -124,6 +120,28 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $logs = $this->logger->getAllLog();
 
         $this->assertRegExp("#Aucune transation trouver pour le couple SIREN 000000000 - numéro interne 20170721D#",$logs[6]);
+    }
+
+    public function testEnveloppeAnomalie(){
+        $dest = $this->tmp_dir."/test-anomalie";
+        $src = __DIR__."/../fixtures/test-anomalie";
+
+        `cp -r $src $dest`;
+
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $actesTransactionsSQL= $this->getObjectInstancier()->get('ActesTransactionsSQL');
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+        $this->assertRegExp(
+            "#Enveloppe rejetée par le MIOCT#",
+            $transaction_info['message']
+        );
+
     }
 
 }
