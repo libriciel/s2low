@@ -39,4 +39,20 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         $this->assertEquals(1,$this->getActesTransactionsSQL()->getNbByStatus(ActesStatusSQL::STATUS_POSTE));
     }
 
+    public function testCreateRelatedTransaction(){
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $transaction_info = $this->getActesTransactionsSQL()->getInfo($transaction_id);
+        $related_transaction_id = $this->getActesTransactionsSQL()->createRelatedTransaction(
+            $transaction_info['envelope_id'],
+            2,
+            '2017-07-25',
+            $transaction_id
+        );
+        $this->assertNotNull($related_transaction_id);
+        $transaction_info = $this->getActesTransactionsSQL()->getInfo($related_transaction_id);
+        $this->assertEquals($transaction_id,$transaction_info['related_transaction_id']);
+
+
+    }
+
 }

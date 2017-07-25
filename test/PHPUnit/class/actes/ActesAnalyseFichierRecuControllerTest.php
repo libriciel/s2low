@@ -6,6 +6,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     private $tmpFolder;
     private $tmp_dir;
     private $tmp_dir2;
+    private $actes_files_upload_root;
 
     /** @var  Logger */
     private $logger;
@@ -19,6 +20,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->tmp_dir2 = $this->tmpFolder->create();
         $this->getObjectInstancier()->set('actes_response_error_path',$this->tmp_dir);
 
+        $this->actes_files_upload_root = $this->tmpFolder->create();
+        $this->getObjectInstancier()->set('actes_files_upload_root',$this->actes_files_upload_root);
+
 
         $this->logger = $this->getObjectInstancier()->get("Logger");
         $this->logger->setLogType(Logger::TYPE_MEMORY);
@@ -28,6 +32,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
         $this->tmpFolder->delete($this->tmp_dir2);
+        $this->tmpFolder->delete($this->actes_files_upload_root);
     }
 
     public function testAnalyseAllEmpty(){
@@ -52,22 +57,24 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertRegExp("#Déplacement du répertoire test_bad#",$logs[5]);
     }
 
-    public function testAnalyseAll(){
-        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
 
+    private function mockGetBySirenAndNumeroInterne($transaction_id){
         $actesTransactionsSQL = $this->getMockBuilder('ActesTransactionsSQL')
             ->setConstructorArgs(array($this->getSQLQuery()))
             ->setMethods(array('getBySirenAndNumeroInterne'))
             ->getMock();
         $actesTransactionsSQL->expects($this->any())->method('getBySirenAndNumeroInterne')->willReturn($transaction_id);
-
-        /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $this->getObjectInstancier()->set('ActesTransactionsSQL',$actesTransactionsSQL);
+        /** @var ActesTransactionsSQL $actesTransactionsSQL */
+        return $actesTransactionsSQL;
+    }
 
-        $dest = $this->tmp_dir."/test-archive-MISILCL";
-        $src = __DIR__."/../fixtures/test-archive-MISILCL";
+    public function testAnalyseAll(){
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
 
-        `cp -r $src $dest`;
+        $actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
+
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-archive-MISILCL");
 
 
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
@@ -87,11 +94,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     }
 
     public function testAnalyseAllActeNotFound(){
-        $dest = $this->tmp_dir."/test-archive-MISILCL";
-        $src = __DIR__."/../fixtures/test-archive-MISILCL";
-
-        `cp -r $src $dest`;
-
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-archive-MISILCL");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
         $actesAnalyseFichierRecuController->analyseAll();
         $logs = $this->logger->getAllLog();
@@ -123,11 +126,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     }
 
     public function testEnveloppeAnomalie(){
-        $dest = $this->tmp_dir."/test-anomalie";
-        $src = __DIR__."/../fixtures/test-anomalie";
-
-        `cp -r $src $dest`;
-
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-anomalie");
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
         $actesAnalyseFichierRecuController->analyseAll();
@@ -141,7 +140,36 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
             "#Enveloppe rejetée par le MIOCT#",
             $transaction_info['message']
         );
-
     }
 
+    public function testCourrierSimple(){
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id);
+        mkdir($this->actes_files_upload_root."/000000000/20170725A/",0777,true);
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-courrier-simple");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
+        $this->assertEquals(1,$enveloppe_info['user_id']);
+    }
+
+    public function testDefereTA(){
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id);
+        mkdir($this->actes_files_upload_root."/000000000/20170725A/",0777,true);
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-defere-ta");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
+        $this->assertEquals(1,$enveloppe_info['user_id']);
+    }
+
+
+    private function copyDirectoryToAnalysePath($directory){
+        `cp -r $directory {$this->tmp_dir}/test`;
+    }
 }

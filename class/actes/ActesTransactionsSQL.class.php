@@ -206,5 +206,20 @@ class ActesTransactionsSQL extends SQL{
         $sql = "UPDATE actes_transactions SET unique_id=? WHERE id=?";
         $this->query($sql,$unique_id,$acteID);
     }
-	
+
+    public function createRelatedTransaction($envelope_id, $type, $date,$related_transaction_id)  {
+        $sql = "INSERT INTO actes_transactions (envelope_id,type,related_transaction_id," .
+            " nature_code,nature_descr,title, subject, number,classification,classification_date,decision_date," .
+            " unique_id, archive_url,broadcast_emails,broadcast_send_sources, broadcasted,user_id,authority_id) " .
+            " SELECT ?,?,?,nature_code,nature_descr,title, subject, number,classification" .
+            ",classification_date,?,unique_id, archive_url,broadcast_emails,broadcast_send_sources, broadcasted,user_id,authority_id " .
+            " FROM actes_transactions where id = ? RETURNING id";
+        return $this->queryOne($sql,$envelope_id,$type,$related_transaction_id,$date,$related_transaction_id);
+    }
+    public function create($envelope_id, $status,$user_id,$authority_id)
+    {
+        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) RETURNING ID;";
+        return $this->queryOne($sql, $envelope_id, $status, $user_id,$authority_id, true);
+    }
+
 }
