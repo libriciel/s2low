@@ -2,7 +2,7 @@
 require_once( __DIR__ . "/../init/init.php");
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
-$allTransactions = $actesTransactionsSQL->getArchiveFromStatus(12);
+$allTransactions = $actesTransactionsSQL->getArchiveFromStatusWithSAE(12);
 
 echo count($allTransactions). " transactions ACTES trouvées dans l'état <envoyé au SAE>\n";
 

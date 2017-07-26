@@ -1,8 +1,30 @@
 {
   "name": "S2low/S2low",
   "version": "2.6.7",
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "libriciel/tdt-lib-actes",
+        "version": "0.0.7",
+        "dist": {
+          "type": "tar",
+          "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.7"
+        },
+        "autoload": {
+          "psr-4": {
+            "Libriciel\\LibActes\\": "src"
+          },
+          "classmap": ["src/"]
+        }
+      }
+    }
+  ],
+
   "require": {
-    "rackspace/php-opencloud": "^1.16"
+    "rackspace/php-opencloud": "^1.16",
+    "libriciel/tdt-lib-actes": "*",
+    "tedivm/fetch": "^0.7.1"
   },
 
   "require-dev": {
@@ -10,6 +32,10 @@
     "phpunit/php-code-coverage": "^2.1",
     "mikey179/vfsStream": "^1.5",
     "phpunit/DbUnit": "^1.4"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-cover": "phpunit --coverage-text --colors=never"
   }
 
 }

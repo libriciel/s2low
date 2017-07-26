@@ -7,8 +7,11 @@ require_once( SITEROOT . "class/User.class.php");
 
 
 class ActesClassificationCreation {
-	
+
+    /** @var  Authority */
 	private $authority;
+
+	/** @var  User */
 	private $user;
 	
 	private $frequencyRestriction = true;
@@ -37,7 +40,7 @@ class ActesClassificationCreation {
 		return $this->lastTransactionId;
 	}
 	
-	public function createEnveloppe(Authority $authority,User $user = null){	
+	public function createEnveloppe(Authority $authority,User $user = null,$force = false){
 		$this->authority = $authority;
 		$this->user = $user;
 		if (! $user){
@@ -54,7 +57,7 @@ class ActesClassificationCreation {
 		}
 		
 		$env = $this->initEnveloppe();
-		$trans = $this->initTransaction();
+		$trans = $this->initTransaction($force);
 		
 		// Génération du fichier XML de la transaction
 		$xml_name = $trans->getStdFileName($env, false);
@@ -64,7 +67,6 @@ class ActesClassificationCreation {
 		}
 		
 		$env->addTransaction($trans);
-		require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 
 		$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
@@ -157,7 +159,8 @@ class ActesClassificationCreation {
 		  $telephone = $this->user->get("telephone");
 		} else {
 		  $telephone = $this->authority->get("telephone");
-		}	
+		}
+		return $telephone;
 	}	
 	
 	private function initEnveloppe(){
@@ -182,11 +185,13 @@ class ActesClassificationCreation {
 		return $env;
 	}
 	
-	private function initTransaction(){
+	private function initTransaction($force = false){
 		$last_classification_date = ActesClassification::getLastRevisionDate($this->authority->getId());
 		$trans = new ActesTransaction();
 		$trans->set("type", "7");
-		$trans->set("last_classification_date",$last_classification_date);
+		if (! $force) {
+            $trans->set("last_classification_date", $last_classification_date);
+        }
 		$trans->set("destDir", $this->authority->get("siren") . "/" );
 		$trans->set("authority_id",$this->authority->getId());
 		$trans->set("user_id",$this->user->getId());

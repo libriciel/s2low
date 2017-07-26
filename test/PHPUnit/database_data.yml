@@ -267,10 +267,12 @@ helios_retour:
 authority_siret:
 actes_classification_requests:
 actes_envelopes:
-actes_included_files:
 actes_transactions:
+actes_included_files:
 actes_classification_codes:
 actes_envelope_serials:
+actes_transmission_windows:
+actes_transmission_window_hours:
 authority_group_siren:
 helios_transactions:
 helios_transactions_workflow:
@@ -281,11 +283,23 @@ actes_status:
     id: -1
     name: Erreur
   -
+    id: 2
+    name: En attente de transmission
+  -
+    id: 3
+    name: Transmis
+  -
+    id: 4
+    name: Acquittement reçu
+  -
     id: 19
     name: En attente de transmission au SAE
   -
     id: 20
     name: Erreur lors de l'envoi au SAE
+  -
+    id: 21
+    name: Document reçu (pas d'AR)
   -
     id: 12
     name: Envoyé au SAE

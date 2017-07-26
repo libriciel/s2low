@@ -51,7 +51,12 @@ define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
 
 define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads/');
 define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
+define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
+define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
+
 define('ACTES_TDT_MAIL_ADDRESS', 'mail@tedetis.org');
+
+
 
 define('LIBERSIGN_INSTALLER',"${LIBERSIGN_INSTALLER}");
 define("LIBERSIGN_URL","${S2LOW_WEBSITE_SSL}/libersign/");

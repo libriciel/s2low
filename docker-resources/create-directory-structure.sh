@@ -8,6 +8,8 @@ mkdir -p /data/tdt-workspace/actes && \
     mkdir -p /data/tdt-workspace/dia && \
     mkdir -p /data/tdt-workspace/actes/uploads && \
     mkdir -p /data/tdt-workspace/actes/batchs && \
+    mkdir -p /data/tdt-workspace/actes/response_tmp && \
+    mkdir -p /data/tdt-workspace/actes/response_error && \
     mkdir -p /data/tdt-workspace/helios/sending-tmp && \
     mkdir -p /data/tdt-workspace/helios/sending && \
     mkdir -p /data/tdt-workspace/helios/response && \

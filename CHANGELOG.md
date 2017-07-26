@@ -7,6 +7,17 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [non publié]
 
+### Ajouts
+
+- Création du script cron/actes-analyse-fichier-a-envoyer.php qui vise à remplacer la partie Tomcat #190 ~Actes
+- Création du script cron/acte-envoi-fichier.php pour remplacer la partie Tomcat #192 ~Actes
+- Création du script cron/acte-reception-fichier.php pour remplacer la partie Tomcat #195 ~Actes
+- Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
+- Visualisation rapide de l'état des transactions Actes #90 ~Actes
+- Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~admin ~Actes
+- Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~admin ~Actes
+
+
 ### Corrections de sécurités
 
 - Correction d'une faille de sécurité sur les modules ~admin
@@ -16,6 +27,13 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~admin 
 - Les admin sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
 - modification du libellé des natures d'actes dans le filtre de recherche #163 ~Actes
+- Sur la visualtion d'une transaction, le lien de téléchargement des archives transmisses passent du titre (Fichiers contenus dans l'archive transmise) en bas 
+du tableau des fichiers contenus dans l'archive ~Actes
+- Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
+- Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
+- Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~admin
+
+
 
 ### Corrections
 
@@ -23,6 +41,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0 #146 ~Actes  
 - La date d'acquittement du tampon est prise dans l'ARActe #173 ~Actes
 - Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu #158 ~Actes
+- Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
+
 
 ## [2.6.5] - 2017-06-29
 

@@ -34,6 +34,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
         $this->getObjectInstancier()->__set('SQLQuery',$this->getSQLQuery());
         $this->getObjectInstancier()->set('helios_files_upload_root',"/tmp");
+        $this->getObjectInstancier()->set('actes_files_upload_root',sys_get_temp_dir());
+
         $this->getObjectInstancier()->set("openstack_authentication_url_v2","");
         $this->getObjectInstancier()->set("openstack_username","a");
         $this->getObjectInstancier()->set("openstack_password","a");

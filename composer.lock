@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0aecace8f0cfb1c24e59498321a56d65",
+    "content-hash": "371b135e802785387f3e3576184c2764",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -101,6 +101,25 @@
             ],
             "abandoned": "guzzlehttp/guzzle",
             "time": "2015-03-18T18:23:50+00:00"
+        },
+        {
+            "name": "libriciel/tdt-lib-actes",
+            "version": "0.0.7",
+            "dist": {
+                "type": "tar",
+                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.7",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Libriciel\\LibActes\\": "src"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            }
         },
         {
             "name": "mikemccabe/json-patch-php",
@@ -235,7 +254,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.8.24",
+            "version": "v2.8.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -292,6 +311,55 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
             "time": "2017-06-02T07:47:27+00:00"
+        },
+        {
+            "name": "tedivm/fetch",
+            "version": "v0.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tedious/Fetch.git",
+                "reference": "ea3f1bbde6bd6388488105240640642dc82c06a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tedious/Fetch/zipball/ea3f1bbde6bd6388488105240640642dc82c06a6",
+                "reference": "ea3f1bbde6bd6388488105240640642dc82c06a6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-imap": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "0.5.*",
+                "phpunit/phpunit": "4.2.*",
+                "satooshi/php-coveralls": "dev-master",
+                "tedivm/dovecottesting": "1.2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Fetch": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Hafner",
+                    "email": "tedivm@tedivm.com"
+                }
+            ],
+            "description": "A PHP IMAP Library",
+            "homepage": "http://github.com/tedious/Fetch",
+            "keywords": [
+                "email",
+                "imap",
+                "pop3"
+            ],
+            "time": "2015-08-02T03:38:12+00:00"
         }
     ],
     "packages-dev": [
@@ -1413,7 +1481,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.4",
+            "version": "v3.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

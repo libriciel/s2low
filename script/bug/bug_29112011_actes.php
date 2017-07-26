@@ -9,7 +9,6 @@ require_once ( __DIR__."/../../init/init.php");
 require_once (SITEROOT . '/class/include.class.php');
 
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $all = $actesTransactionsSQL->getArchiveFStatus(1);

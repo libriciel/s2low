@@ -112,4 +112,9 @@ class LogsSQL extends SQL {
 		return $this->queryOne($sql);
 	}
 
+	public function getLastLog(){
+	    $sql = "SELECT * FROM logs ORDER BY date DESC LIMIT 1";
+	    return $this->queryOne($sql);
+    }
+
 }

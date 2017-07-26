@@ -113,16 +113,16 @@ $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
 $trans->set("destDir", $dest);
 $env->set("destDir", $dest);
 
+
 // Génération du fichier XML de la transaction
 $xml_name = $trans->getStdFileName($env, false);
 if (! $trans->generateMessageXMLFile($xml_name)) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération du message métier.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+  Helpers::returnAndExit(1, "Erreur lors de la génération du message métier : ".$trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
 $env->addTransaction($trans);
 
 
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 $authority_id = $me->get("authority_id");
 
@@ -131,12 +131,12 @@ $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 // Génération du fichier XML de l'enveloppe
 if (! $env->generateEnvelopeXMLFile($serialNumber)) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+  Helpers::returnAndExit(1, "Erreur lors de la génération de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
 // Création de l'archive .tar.gz
 if (! $env->generateArchiveFile()) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+  Helpers::returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
 // Purge des fichiers intermédiaires
@@ -149,7 +149,7 @@ if (! $env->save()) {
 	$msg .= "\nErreur de journalisation.";
   }
 
-  Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/index.php");
+  Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
 $trans->set("envelope_id", $env->getId());

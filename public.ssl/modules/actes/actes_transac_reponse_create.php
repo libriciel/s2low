@@ -200,7 +200,6 @@ if (!$trans->generateMessageXMLFile($xml_name)) {
 
 $env->addTransaction($trans);
 
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 $authority_id = $me->get("authority_id");
 

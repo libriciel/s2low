@@ -2,8 +2,21 @@
 
 class ActesStatusSQL {
 
+    const STATUS_EN_ERREUR = -1;
+    const STATUS_ANNULER = 0;
+
+    const STATUS_POSTE = 1;
+    const STATUS_EN_ATTENTE_DE_TRANSMISSION = 2;
+    const STATUS_TRANSMIS = 3;
+    const STATUS_ACQUITTEMENT_RECU = 4;
+
+    const STATUS_DOCUMENT_RECU = 7;
+    const STATUS_ACQUITTEMENT_ENVOYE = 8;
+
 	const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
 	const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
+
+	const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
 
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;

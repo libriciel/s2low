@@ -44,6 +44,8 @@ $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 $objectInstancier = new ObjectInstancier();
 $objectInstancier->{'SQLQuery'} = $sqlQuery;
 
+$objectInstancier->set('Database',DatabasePool::getInstance());
+
 if (isset($_SESSION)) {
     $objectInstancier->set("SessionWrapper", new SessionWrapper($_SESSION));
     $environnement = new Environnement($_GET,$_POST,$_REQUEST,$_SESSION,$_SERVER);
@@ -70,6 +72,30 @@ $objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAI
 
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 
+$objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
+$objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
+
+$actesMinistereProperties = new ActesMinistereProperties();
+
+$actesMinistereProperties->url = ACTES_MINISTERE_URL;
+$actesMinistereProperties->authentification_type = ACTES_MINISTERE_AUTHENTICATION;
+
+$actesMinistereProperties->login = ACTES_MINISTERE_LOGIN;
+$actesMinistereProperties->password = ACTES_MINISTERE_PASSWORD;
+$actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
+$actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
+$actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
+$objectInstancier->set('ActesMinistereProperties',$actesMinistereProperties);
+
+$actesImapProperties = new ActesImapProperties();
+$actesImapProperties->host = ACTES_IMAP_HOST;
+$actesImapProperties->port = ACTES_IMAP_PORT;
+$actesImapProperties->login = ACTES_IMAP_LOGIN;
+$actesImapProperties->password = ACTES_IMAP_PASSWORD;
+$objectInstancier->set('ActesImapProperties',$actesImapProperties);
+
+$objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
+$objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
 
 $frontController = new FrontController($objectInstancier);
 
