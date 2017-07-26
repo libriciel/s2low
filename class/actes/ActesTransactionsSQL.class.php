@@ -183,10 +183,18 @@ class ActesTransactionsSQL extends SQL{
 		return $this->query($sql);
 	}
 
-	public function getBySirenAndNumeroInterne($siren,$numero_interne,$type = '1'){
+	public function getBySirenAndNumeroInterne($siren,$numero_interne,$type = '1',$type_reponse_not_null = false){
         $sql = "SELECT actes_transactions.id from actes_transactions " .
             " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
-            " WHERE siren=? AND number=? AND type=? ORDER BY submission_date DESC";
+            " WHERE siren=? AND number=? AND type=? " ;
+
+        if ($type_reponse_not_null){
+            $sql.= " AND type_reponse IS NOT NULL ";
+        }
+
+        $sql .= " ORDER BY submission_date DESC";
+
+
         return $this->queryOne($sql,$siren,$numero_interne,$type);
     }
 

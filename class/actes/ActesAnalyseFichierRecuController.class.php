@@ -133,10 +133,6 @@ class ActesAnalyseFichierRecuController {
                 /** @var MessageMetierARReponseRejetLettreObservations $fichierXML */
                 $this->traitementARReponseLO($fichierXML);
             } else {
-                //  4.5
-                //TODO on crée une transaction complémentaire
-
-
                 throw new Exception("Code message $code_message non géré");
             }
             $tmpDir = new TmpFolder();
@@ -276,7 +272,7 @@ class ActesAnalyseFichierRecuController {
     private function traitementARPC(MessageMetierARPieceComplementaire $fichierXML){
         $this->log("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,3);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,3,true);
 
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
@@ -294,7 +290,7 @@ class ActesAnalyseFichierRecuController {
     private function traitementARReponseLO(MessageMetierARReponseRejetLettreObservations $fichierXML){
         $this->log("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,4);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,4,true);
 
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
@@ -399,8 +395,8 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
-    private function getBySirenAndNumeroInterne($siren,$numeroInterne,$type=1){
-        $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren,$numeroInterne,$type);
+    private function getBySirenAndNumeroInterne($siren,$numeroInterne,$type=1,$type_reponse_not_null=false){
+        $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren,$numeroInterne,$type,$type_reponse_not_null);
         if (! $transaction_id){
             throw new Exception(
                 "Aucune transation trouver pour le couple SIREN $siren - numéro interne $numeroInterne"
