@@ -44,6 +44,7 @@ ou le message de passage dans l'état #110 ~Helios
 - Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu #158 ~Actes
 - Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
 - Correction de l'orthographe des notes de mise à jour de version #89
+- Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~admin
 
 ## [2.6.5] - 2017-06-29
 
