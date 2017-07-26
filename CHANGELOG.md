@@ -46,6 +46,7 @@ ou le message de passage dans l'état #110 ~Helios
 - Correction de l'orthographe des notes de mise à jour de version #89
 - Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~admin
 - La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~mailsec 
+- Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 
 ## [2.6.5] - 2017-06-29
 
