@@ -33,7 +33,8 @@ du tableau des fichiers contenus dans l'archive ~Actes
 - Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
 - Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~admin
 - Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
-
+- La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur 
+ou le message de passage dans l'état #110 ~Helios  
 
 ### Corrections
 
