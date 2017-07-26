@@ -304,7 +304,6 @@ if (!$trans->generateMessageXMLFile($xml_name)) {
 }
 
 $env->addTransaction($trans);
-require_once(__DIR__. '/class/ActesEnvelopeSerialSQL.class.php');
 
 $authority_id = $me->get("authority_id");
 

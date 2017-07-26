@@ -43,7 +43,7 @@ class ActesScriptHelper {
 
     public function getStatusName($status_id){
         $status_list = array(
-            -1 => 'erreur', 'annule', 'poste', 'en attente','transmis','recu', 7=>'document reçu', 21=>"document reçu (pas d'AR)"
+            -1 => 'erreur', 'annule', 'poste', 'en attente','transmis','recu', 7=>'document reçu','acquittement envoyé', 21=>"document reçu (pas d'AR)"
         );
         return $status_list[$status_id];
     }

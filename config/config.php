@@ -582,13 +582,15 @@ if(!defined("DIA_UPSTART_TOUCH_FILE")){
 
 require_once('config-static.php');
 
-//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
-//on fait en sorte que config.php charge init.php et réciproquement
-require_once(__DIR__."/../init/init.php");
 
 if (! defined("TESTING_ENVIRONNEMENT")) {
 	define("TESTING_ENVIRONNEMENT", false);
 }
+
+//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
+//on fait en sorte que config.php charge init.php et réciproquement
+require_once(__DIR__."/../init/init.php");
+
 
 if (! defined("NEW_BANNER")) {
 	define("NEW_BANNER", true);

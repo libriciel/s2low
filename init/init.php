@@ -44,6 +44,8 @@ $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 $objectInstancier = new ObjectInstancier();
 $objectInstancier->{'SQLQuery'} = $sqlQuery;
 
+$objectInstancier->set('Database',DatabasePool::getInstance());
+
 if (isset($_SESSION)) {
     $objectInstancier->set("SessionWrapper", new SessionWrapper($_SESSION));
     $environnement = new Environnement($_GET,$_POST,$_REQUEST,$_SESSION,$_SERVER);

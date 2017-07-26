@@ -67,7 +67,6 @@ class ActesClassificationCreation {
 		}
 		
 		$env->addTransaction($trans);
-		require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelopeSerialSQL.class.php');
 
 
 		$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
