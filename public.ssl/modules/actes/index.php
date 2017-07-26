@@ -15,7 +15,7 @@ $objet = $recuperateur->get("objet");
 if (isset( $_GET['status']) && $_GET['status'] === '0'){
 	$fstatus = 0;
 } else {
-	$fstatus =  $recuperateur->get("status",TransactionSQL::EN_COURS);
+	$fstatus =  $recuperateur->get("status",'all');
 }
 
 if ($fstatus != TransactionSQL::EN_COURS && $fstatus != "all" && ! is_numeric($fstatus)) {

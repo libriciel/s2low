@@ -32,7 +32,7 @@ du tableau des fichiers contenus dans l'archive ~Actes
 - Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
 - Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
 - Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~admin
-
+- Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
 
 
 ### Corrections
