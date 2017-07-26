@@ -123,12 +123,19 @@ class ActesAnalyseFichierRecuController {
                 )
             )){
                 $this->traitementDocumentRecu($archiveData);
+            } elseif ($code_message == MessageMetieAnomalieActe::CODE_MESSAGE){
+                /** @var MessageMetieAnomalieActe $fichierXML */
+                $this->traitementAnomalie($fichierXML);
+            } elseif ($code_message == MessageMetierARPieceComplementaire::CODE_MESSAGE){
+                /** @var MessageMetierARPieceComplementaire $fichierXML */
+                $this->traitementARPC($fichierXML);
+            } elseif ($code_message == MessageMetierARReponseRejetLettreObservations::CODE_MESSAGE){
+                /** @var MessageMetierARReponseRejetLettreObservations $fichierXML */
+                $this->traitementARReponseLO($fichierXML);
             } else {
-                // 1-3
-                // 3-5 4.5
+                //  4.5
                 //TODO on crée une transaction complémentaire
 
-                //TODO on traite l'anomalie
 
                 throw new Exception("Code message $code_message non géré");
             }
@@ -261,6 +268,55 @@ class ActesAnalyseFichierRecuController {
         $this->updateStatus(
             $transaction_id,
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            $message,
+            $xml
+        );
+    }
+
+    private function traitementARPC(MessageMetierARPieceComplementaire $fichierXML){
+        $this->log("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
+
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,3);
+
+        $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
+        $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
+
+        $xml = file_get_contents($fichierXML->file_path);
+
+        $this->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            $message,
+            $xml
+        );
+    }
+
+    private function traitementARReponseLO(MessageMetierARReponseRejetLettreObservations $fichierXML){
+        $this->log("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
+
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,4);
+
+        $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
+        $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
+
+        $xml = file_get_contents($fichierXML->file_path);
+
+        $this->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            $message,
+            $xml
+        );
+    }
+
+    private function traitementAnomalie(MessageMetieAnomalieActe $fichierXML){
+        $this->log("Anomalie trouvé pour l'acte : " . $fichierXML->numero_interne);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
+        $message = "Anomalie signalee par le MIOCT : ".$fichierXML->nature_anomalie." - ".$fichierXML->detail_anomalie;
+        $xml = file_get_contents($fichierXML->file_path);
+        $this->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_EN_ERREUR,
             $message,
             $xml
         );
