@@ -120,7 +120,7 @@ class ControllerTest extends S2lowTestCase {
 	}
 
 	public function testVerifGroupAdminNotAuthorized(){
-		$this->setAdminGroupAuthentication();
+		$this->setAdminGroup2Authentication();
 		$this->setExpectedException("Exception","Accès refusé");
 		$this->controller->verifGroupAdmin(1);
 	}
@@ -146,7 +146,7 @@ class ControllerTest extends S2lowTestCase {
 	}
 
 	public function testVerifAdminAdminGroupFailed(){
-		$this->setAdminGroupAuthentication();
+		$this->setAdminGroup2Authentication();
 		$this->setExpectedException("Exception","Redirect to");
 		$this->controller->verifAdmin(1);
 	}
@@ -167,7 +167,7 @@ class ControllerTest extends S2lowTestCase {
 	}
 
 	public function testDisplayErrorAndExitAPI(){
-		$this->setAdminGroupAuthentication();
+		$this->setAdminGroup2Authentication();
         $this->getObjectInstancier()->get("Environnement")->post()->set('api','1');
 		$this->setExpectedException("Exception","Exit");
 		$this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");

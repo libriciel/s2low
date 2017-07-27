@@ -7,11 +7,12 @@ class FrontController {
 
 	private $objectInstancier;
 
-	public function __construct($objectInstancier){
+	public function __construct(ObjectInstancier $objectInstancier){
 		$this->objectInstancier = $objectInstancier;
 	}
 	
 	public function go($controller, $action){
+
 		$controllerName = "{$controller}Controller";
 		$actionName = "{$action}Action";
 		/** @var Controller $controllerObject */
