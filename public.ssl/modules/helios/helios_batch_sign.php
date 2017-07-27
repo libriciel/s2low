@@ -43,7 +43,8 @@ $menuHTML = new MenuHTML();
 $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : Signature de plusieurs fichier PES");
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

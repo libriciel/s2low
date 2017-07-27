@@ -5,6 +5,12 @@ if (! $me->isAuthorityAdmin()){
   	}
 $name = Helpers::getVarFromPost('name');
 
+if (! $name){
+    $_SESSION['error'] = "Le nom du groupe ne doit pas être vide !";
+    header("Location: ajouter-groupe.php");
+    exit;
+}
+
 $groupe = new GroupeMail();
 
 $id = $groupe->getGroupeIdFromName($name,$me->get('authority_id'));

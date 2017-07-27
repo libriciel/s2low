@@ -2,32 +2,33 @@
 
 class MenuHTML  {
 
-	public function getMenu(array $userInfo,$modulesInfo) {
- 	
- 		ob_start();
- 	?>
-            <div id="sidebar" class="col-md-3" role="navigation">
-                <div class="well sidebar-nav">
+ 	public function getMenuContent(array $userInfo,$modulesInfo) {
+	    ob_start();
+	    ?>
+        <div class="well sidebar-nav">
                     <?php if ($userInfo): ?>
-                        <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
-                    <?php else: ?>
-                    <div id="menu-header">
-                            <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-                    (Certificat nécessaire)
-                    </div>
-                    <?php endif;?>
- 		</div>
- 	<?php  	
- 		$result = ob_get_contents();
+            <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
+        <?php else: ?>
+            <div id="menu-header">
+                <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
+                (Certificat nécessaire)
+            </div>
+        <?php endif;?>
+        </div>
+        <?php
+        $result = ob_get_contents();
  		ob_end_clean();
  		return $result;
  	}
+
  
 	private function displayUserMenu($userInfo,$modulesInfo) {
 
 		$module_admin = array();
 		$module_stat = array();
-		
+        $module_export = array();
+
+
 		foreach ($modulesInfo as $i => $module) {
 			
 			if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php")){
@@ -38,6 +39,9 @@ class MenuHTML  {
 					$module_admin[] = $module;
 				}
 			}
+            if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_export.php")){
+                $module_export[] = $module;
+            }
 		 }
 		 
 		?>
@@ -87,9 +91,8 @@ class MenuHTML  {
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/admin/index.php">Utilitaires module <?php echo $module["name"] ?></a></li>
  			<?php endforeach;?>
 
-	
 
- 			
+
  			<li class="menu-list-title">Modules</li>
  			<?php if (count($modulesInfo) == 0): ?>
  				<li>Aucun module accessible</li>
@@ -97,11 +100,22 @@ class MenuHTML  {
  			<?php foreach ($modulesInfo as $module) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>"><?php echo $module["menu_entry"] ?></a></li>
  			<?php endforeach; ?>
- 			<li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" :""?></li>
+
+            <?php if($module_export && in_array($userInfo['role'],array('ADM','GADM','SADM'))) : ?>
+                <li class="menu-list-title">Export des informations</li>
+                <?php foreach ($module_export as $module) : ?>
+                    <li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/<?php echo $module["name"]?>_export.php">Exports module <?php echo $module["name"] ?></a></li>
+                <?php endforeach;?>
+            <?php endif; ?>
+
+
+            <li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" :""?></li>
 			<li><a href="<?php echo WEBSITE_SSL ?>/common/logs_view.php">Journal des événements</a></li>
 			<?php foreach ($module_stat as $module) : ?>
 				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/<?php echo $module["name"]?>_stats.php">Statistiques module <?php echo $module["name"] ?></a></li>
 			<?php endforeach;?>
+
+
  		</ul>
  	<?php 
 		return;

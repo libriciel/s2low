@@ -13,7 +13,8 @@ $doc = new HTMLLayout();
 $doc->setTitle("Utilitaires module ACTES");
 
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

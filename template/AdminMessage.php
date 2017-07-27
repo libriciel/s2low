@@ -29,7 +29,7 @@
         <tbody>
 		<?php foreach($message_list as $message):?>
             <tr>
-                <td><a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>"><?php hecho($message->titre?:$message->id) ?></a></td>
+                <td><a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>"><?php hecho($message->titre?:$message->message_id) ?></a></td>
 
                 <td>
                     <?php $message->displayEtatLabel() ?>

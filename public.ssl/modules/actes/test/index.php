@@ -7,8 +7,9 @@ $menuHTML = new MenuHTML();
 $doc = new HTMLLayout();
 
 $doc->setTitle("Tedetis : outils de test");
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
-
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->closeSideBar();
 
 ob_start();
 ?>

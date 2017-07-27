@@ -29,7 +29,9 @@ class ModuleSQL extends SQL {
 	}
 	
  	public function getModulesForUser($userInfo) {
- 		
+ 		if (! $userInfo){
+ 		    return array();
+        }
  		if ($userInfo['role'] == 'SADM'){
 			$sql = "SELECT * FROM modules WHERE status=1" . " ORDER BY modules.name ";
  			return $this->query($sql);

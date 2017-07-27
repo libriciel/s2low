@@ -32,7 +32,8 @@ $menuHTML = new MenuHTML();
 $doc = new HTMLLayout();
 $doc->setTitle("Statistiques - ACTES - S²low");
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo, $modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

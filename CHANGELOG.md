@@ -16,7 +16,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Visualisation rapide de l'état des transactions Actes #90 ~Actes
 - Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~admin ~Actes
 - Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~admin ~Actes
-
+- Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
+  
 
 ### Corrections de sécurités
 
@@ -32,8 +33,9 @@ du tableau des fichiers contenus dans l'archive ~Actes
 - Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
 - Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
 - Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~admin
-
-
+- Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
+- La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur 
+ou le message de passage dans l'état #110 ~Helios  
 
 ### Corrections
 
@@ -42,7 +44,10 @@ du tableau des fichiers contenus dans l'archive ~Actes
 - La date d'acquittement du tampon est prise dans l'ARActe #173 ~Actes
 - Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu #158 ~Actes
 - Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
-
+- Correction de l'orthographe des notes de mise à jour de version #89
+- Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~admin
+- La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~mailsec 
+- Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 
 ## [2.6.5] - 2017-06-29
 

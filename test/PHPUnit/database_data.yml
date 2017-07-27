@@ -3,6 +3,10 @@ authority_groups:
   id: 1
   status: 1
   name: Groupe de test
+ -
+  id: 2
+  status: 1
+  name: second groupe
 
 authority_types:
  -
@@ -21,6 +25,7 @@ authorities:
   siren: 123456789
   name: Bourg-en-Bresse
   authority_type_id: 11
+  authority_group_id: 1
 
  -
   id: 2
@@ -241,6 +246,19 @@ users:
   certificate_hash: admin_col1
   status: 1
   certificate_rgs_2_etoiles: ''
+ -
+  id: 10
+  email: eric+10@sigmalis.com
+  name: François
+  givenname: Frédéric
+  role: GADM
+  subject_dn: admin_groupe2
+  issuer_dn: admin_groupe2
+  certificate_hash: hash_admin_groupe2
+  certificate_rgs_2_etoiles: ''
+  authority_id: 2
+  authority_group_id: 2
+  status: 1
 
 users_perms:
  -

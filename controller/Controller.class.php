@@ -52,12 +52,12 @@ class Controller {
     }
 	
 	public function setErrorMessage($error_message){
-		$_SESSION["error"] = $error_message ;
+	    $this->getEnvironnement()->session()->set('error',$error_message);
 	}
 	
 	public function setMessage($message){
-		//En attendant mieux...
-		$_SESSION["error"] = $message ;
+	    //En attendant mieux...
+        $this->getEnvironnement()->session()->set('error',$message);
 	}
 
 	public function redirectSSL($url_path = "",$url_arg = ""){
@@ -167,7 +167,9 @@ class Controller {
 		
 		$doc->openContainer();
 		$doc->openSideBar();
-		$doc->buildMenu($this->me);
+		if($this->me) {
+            $doc->buildMenu($this->me);
+        }
 
 		$doc->addBody($this->getViewParameter('side_bar'));
 

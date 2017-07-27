@@ -123,6 +123,16 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         ]);
 	}
 
+    public function setAdminGroup2Authentication(){
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "admin_groupe2",
+            'SSL_CLIENT_I_DN' => "admin_groupe2",
+            'TESTING_CERTIFICATE_HASH' => "hash_admin_groupe2",
+        ]);
+    }
+
+
     public function setAdminColAuthentication(){
         $this->setServerInfo([
             'SSL_CLIENT_VERIFY' => "SUCCESS",

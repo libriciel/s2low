@@ -78,7 +78,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	}
 
 	public function testDoEditNoGroupIdForGroupAdmin(){
-		$this->setAdminGroupAuthentication();
+		$this->setAdminGroup2Authentication();
 		$this->setOnlyDataOk();
 		$this->setExpectedException("Exception","La collectivité n'appartient pas au groupe courant");
 		$this->adminUserController->doEditAction();

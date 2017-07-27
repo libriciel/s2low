@@ -3,6 +3,8 @@
 require_once("../../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
+require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
+
 require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosAPIResponse.class.php');
 
 $transId = (int) Helpers::getVarFromGet("transaction");
@@ -67,6 +69,10 @@ if(in_array($transaction['status'],$status_averifier)){
 	$filename = $zeTrans->getAcquitFilenameForId($transId);
 	if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null)
 		$transaction['status'] = '3';
+}
+
+if (! $transaction['message']) {
+    $transaction['message'] = HeliosTransactionWorkflow::getCurrentStatus($transId);
 }
 
 $heliosAPIResponse->displayAndExit($transaction,"transaction");

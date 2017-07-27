@@ -15,7 +15,7 @@ $objet = $recuperateur->get("objet");
 if (isset( $_GET['status']) && $_GET['status'] === '0'){
 	$fstatus = 0;
 } else {
-	$fstatus =  $recuperateur->get("status",TransactionSQL::EN_COURS);
+	$fstatus =  $recuperateur->get("status",'all');
 }
 
 if ($fstatus != TransactionSQL::EN_COURS && $fstatus != "all" && ! is_numeric($fstatus)) {
@@ -106,7 +106,8 @@ $doc->addJavascript("/javascript/date-picker.js");
 $doc->addJavascript("/javascript/tedetis.js");
 
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
 $doc->closeSideBar();
 $doc->openContent();
