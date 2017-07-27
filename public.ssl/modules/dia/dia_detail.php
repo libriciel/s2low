@@ -17,7 +17,9 @@ $doc->addJavascript("/javascript/date-picker.js");
 $doc->addJavascript("/javascript/tedetis.js");
 $menuHTML = new MenuHTML();
 
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+
 
 ob_start();
 ?>

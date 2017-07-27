@@ -139,118 +139,24 @@ class HTMLLayout extends Layout {
    * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
-  public function buildMenu($user = false, $displayInline = false) {
-    $html = "                    <div class=\"well sidebar-nav\">\n";
+  public function buildMenu(User $user = null, $displayInline = false) {
 
-    if (! $user) { // Si pas d'utilisateur on se trouve dans la page d'accueil
-      $html .= "                         <div id=\"menu-header\">\n";
-      $html .= "                             <a href=\"" . WEBSITE_SSL . "\">Accéder au site</a><br />\n";
-      $html .= "                             (Certificat nécessaire)";
-      $html .= "                         </div>\n";
-    } else { // Personnalisation du menu en fonction du rôle de l'utilisateur
-      $html .= "                         <div id=\"menu-header\">\n";
-      $html .= "                             Bienvenue " . $user->getPrettyName() . "<br />\n";;
+      $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get('SQLQuery');
 
-                    $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
-                    /** @var MessageAdminSQL $messageAdminSQL */
-                    $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
-                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
-                    ob_start();
-                    $messageAdmin->displayTitre();
-                    $html .= ob_get_clean();
+      $userSQL = new UserSQL($sqlQuery);
+      $userInfo = $userSQL->getInfo($user->getId());
+      $moduleSQL = new ModuleSQL($sqlQuery);
 
+      $modulesInfo = $moduleSQL->getModulesForUser($userInfo);
 
+      $menuHTML = new MenuHTML();
+      $html =  $menuHTML->getMenuContent($userInfo,$modulesInfo);
 
-      $html .= "                             Rôle " . $user->getRoleDescr();
-      if ($user->isLogged() && 	$user->getNbUserWithMyCertificate() > 1 ) {
-      	$html .= "                   <br/><a href='".WEBSITE_SSL."/logout.php'>déconnexion</a>";
+      if ($displayInline) {
+          echo $html;
+      } else {
+          $this->addBody($html);
       }
-      $html .= "\n                        </div>\n";
-      $html .= "                         <ul class=\"text-menu nav\">\n";
-
-	  $modules = Module::getModulesForUser($user->getId());
-
-	  $modHTML = $modHTML = "                             <li class=\"menu-list-title\">Modules</li>\n";
-	  $adminModHTML = "";
-	  $statsModHTML = "";
-	  if (count($modules) > 0) {
-		foreach ($modules as $module) {
-		  if ($user->canAccess($module["name"])) {
-			$modHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/\">" . $module["menu_entry"] . "</a></li>\n";
-			
-			if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php")) {
-			  $statsModHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php\">Statistiques module " . $module["name"] . "</a></li>\n";
-			}
-		  }
-		  if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/admin/index.php")) {
-			$adminModHTML .= "                         <li><a href=\"" . WEBSITE_SSL . "/modules/" . $module["name"] . "/admin/index.php\">Utilitaires module " . $module["name"] . "</a></li>\n";
-		  }
-		}
-	  } else {
-		$modHTML .= "                         <li>Aucun module accessible</li>";
-	  }
-
-      switch ($user->get("role")) {
-      case 'SADM': // Super Administrateur
-		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_modules.php\">Gestion des modules</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_groups.php\">Gestion des groupes</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
-		
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/utilities/index.php\">Utilitaires système</a></li>\n";
-		$html .= $adminModHTML;
-		$html .= $modHTML;
-		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
-		$html .= $statsModHTML;
-
-        break;
-
-      case 'GADM': // Administrateur de groupe
-		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\">Gestion des collectivités</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
-		$html .= $adminModHTML;
-		$html .= $modHTML;
-		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
-		$html .= $statsModHTML;
-        break;
-
-      case 'ADM': // Administrateur collectivité
-		$html .= "                             <li class=\"menu-list-title\">Administration</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/modules/mail/index.php?command=annuaire\">Carnet d'adresses de la collectivité</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $user->get("authority_id") . "\">Paramètres collectivité</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/users/admin_users.php\">Gestion des utilisateurs</a></li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/admin/services/admin_services.php\">Gestion des services</a></li>\n";
-		$html .= $modHTML;
-		$html .= "                             <li class=\"menu-list-title\">Suivi du site</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
-		$html .= $statsModHTML;
-        break;
-
-      case 'USER': // Utilisateur simple
-		$html .= $modHTML;
-		$html .= "                             <li class=\"menu-list-title\">Suivi</li>\n";
-		$html .= "                             <li><a href=\"" . WEBSITE_SSL . "/common/logs_view.php\">Journal des événements</a></li>\n";
-		$html .= $statsModHTML;
-
-		break;
-      }
-      
-      $html .= "                         </ul>\n";
-    }
-
-    $html .= "                    </div>\n";
-    
-    if ($displayInline) {
-      echo $html;
-    } else {
-      $this->addBody($html);
-    }
   }
   
   

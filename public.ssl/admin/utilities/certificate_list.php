@@ -39,7 +39,8 @@ $doc = new HTMLLayout();
 $doc->setTitle("Liste des certificats - S²low");
 
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -167,7 +167,9 @@ class Controller {
 		
 		$doc->openContainer();
 		$doc->openSideBar();
-		$doc->buildMenu($this->me);
+		if($this->me) {
+            $doc->buildMenu($this->me);
+        }
 
 		$doc->addBody($this->getViewParameter('side_bar'));
 

@@ -106,7 +106,8 @@ $doc->addJavascript("/javascript/date-picker.js");
 $doc->addJavascript("/javascript/tedetis.js");
 
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
 $doc->closeSideBar();
 $doc->openContent();

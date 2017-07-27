@@ -58,9 +58,8 @@ $doc = new HTMLLayout();
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
-
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
-
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 
 

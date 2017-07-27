@@ -23,7 +23,8 @@ $doc = new HTMLLayout();
 $doc->setTitle(($id?"Edition":"Ajout")." d'un contact de l'annuaire - Mail sécurisé - S²low");
 
 $doc->openContainer();
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -18,6 +18,9 @@ class UserSQL extends SQL {
 	}
 
 	public function getInfo($id){
+	    if (!$id){
+	        return array();
+        }
 		$sql = "SELECT * FROM users WHERE id=?";
 		$result = $this->queryOne($sql,$id);
 		if (! $result){

@@ -2,26 +2,25 @@
 
 class MenuHTML  {
 
-	public function getMenu(array $userInfo,$modulesInfo) {
- 	
- 		ob_start();
- 	?>
-            <div id="sidebar" class="col-md-3" role="navigation">
-                <div class="well sidebar-nav">
+ 	public function getMenuContent(array $userInfo,$modulesInfo) {
+	    ob_start();
+	    ?>
+        <div class="well sidebar-nav">
                     <?php if ($userInfo): ?>
-                        <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
-                    <?php else: ?>
-                    <div id="menu-header">
-                            <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-                    (Certificat nécessaire)
-                    </div>
-                    <?php endif;?>
- 		</div>
- 	<?php  	
- 		$result = ob_get_contents();
+            <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
+        <?php else: ?>
+            <div id="menu-header">
+                <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
+                (Certificat nécessaire)
+            </div>
+        <?php endif;?>
+        </div>
+        <?php
+        $result = ob_get_contents();
  		ob_end_clean();
  		return $result;
  	}
+
  
 	private function displayUserMenu($userInfo,$modulesInfo) {
 
@@ -87,9 +86,8 @@ class MenuHTML  {
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/admin/index.php">Utilitaires module <?php echo $module["name"] ?></a></li>
  			<?php endforeach;?>
 
-	
 
- 			
+
  			<li class="menu-list-title">Modules</li>
  			<?php if (count($modulesInfo) == 0): ?>
  				<li>Aucun module accessible</li>

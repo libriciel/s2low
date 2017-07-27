@@ -33,7 +33,8 @@ $doc->setTitle("Tedetis : module helios statistique");
 
 $doc->openContainer();
 
-$doc->addBody($menuHTML->getMenu($userInfo,$modulesInfo));
+$doc->openSideBar();
+$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
 
 $doc->closeSideBar();
 
