@@ -111,7 +111,7 @@ class ActesEnvoiAR {
         $this->actesScriptHelper->updateStatus(
             array($transaction_id),
             ActesStatusSQL::STATUS_ACQUITTEMENT_ENVOYE,
-            "Acquittement envoye"
+            "Acquittement envoyé"
         );
     }
 
