@@ -95,5 +95,11 @@ class UserSQLTest extends S2lowTestCase {
 		$this->assertEquals("ieQoLUcitdU9iZIJLPoIdp8TcUY=", $this->getSQLQuery()->queryOne("SELECT certificate_hash FROM users WHERE id=?", 1));
 	}
 
+	public function testGetListFromCertificateInfo(){
+	    $list = $this->userSQL->getListFromCertificateInfo("hash_adullact");
+	    $this->assertEquals(2,$list[0]['id']);
+        $this->assertEquals("Bourg-en-Bresse",$list[1]['authority_name']);
+    }
+
 }
 

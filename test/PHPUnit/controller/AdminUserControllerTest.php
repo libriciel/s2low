@@ -216,4 +216,12 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->adminUserController->doEditAction();
 	}
 
+	public function testUserList(){
+	    $this->setSuperAdminAuthentication();
+	    $this->getObjectInstancier()->get("Environnement")->get()->set('user_id','2');
+        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $this->expectOutputRegex("#eric\+3@sigmalis.com#");
+        $frontController->go("AdminUser","list");
+    }
+
 }

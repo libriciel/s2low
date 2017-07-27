@@ -14,39 +14,41 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Création du script cron/acte-reception-fichier.php pour remplacer la partie Tomcat #195 ~Actes
 - Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
 - Visualisation rapide de l'état des transactions Actes #90 ~Actes
-- Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~admin ~Actes
-- Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~admin ~Actes
+- Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~Administration ~Actes
+- Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
   
 
 ### Corrections de sécurités
 
-- Correction d'une faille de sécurité sur les modules ~admin
+- Correction d'une faille de sécurité sur les modules ~Administration
 
 ### Évolutions
 
-- La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~admin 
+- La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~Administration 
 - Les admin sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
 - modification du libellé des natures d'actes dans le filtre de recherche #163 ~Actes
 - Sur la visualtion d'une transaction, le lien de téléchargement des archives transmisses passent du titre (Fichiers contenus dans l'archive transmise) en bas 
 du tableau des fichiers contenus dans l'archive ~Actes
 - Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
 - Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
-- Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~admin
+- Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~Administration
 - Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
 - La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur 
 ou le message de passage dans l'état #110 ~Helios  
+- La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification 
+d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
 
 ### Corrections
 
-- Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité #187 ~admin
+- Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité #187 ~Administration
 - Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0 #146 ~Actes  
 - La date d'acquittement du tampon est prise dans l'ARActe #173 ~Actes
 - Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu #158 ~Actes
 - Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
 - Correction de l'orthographe des notes de mise à jour de version #89
-- Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~admin
-- La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~mailsec 
+- Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~Administration
+- La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~Mailsec 
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 
 ## [2.6.5] - 2017-06-29
@@ -91,7 +93,7 @@ ou le message de passage dans l'état #110 ~Helios
 ## [2.6.1] - 2017-05-23
 
 ### Ajouts
-- le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~admin
+- le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~Administration
 
 ### Evolutions
 - migration du code source vers git

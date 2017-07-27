@@ -266,7 +266,7 @@ ob_start();
 	</div>
 </div>
 <?php if ($him->get('certificate')) : ?>
-	<div class="alert alert-info col-md-9 col-md-offset-1">
+	<div class="alert alert-info col-md-9 col-md-offset-1 " style="word-wrap: break-word;">
 		<?php hecho($him->get('subject_dn')) ?>
 		<br/>
 		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
@@ -414,49 +414,29 @@ ob_start();
 	
 </form>
 
-<h2>Autre utilisateur partageant le même certificat</h2>
+<h2>Autres utilisateurs partageant le même certificat</h2>
 <?php if (count($certitificate_id_list) > 1) : ?>
-	<div class="data_table">
-		<table class="data-table table table-striped">
-			<tr>
-				<th class="data">Login</th>
-				<th class="data">Nom</th>
-				<th class="data">Adresse électronique</th>
-				<th class="data">R&ocirc;le</th>
-				<th class="data">État</th>
-				<th class="data">Collectivit&eacute;</th>
-				<th class="data">Actions</th>
-			</tr>
-			<?php foreach($certitificate_id_list as $i => $id_other):
-					if ($id_other == $him->getId()){
-						continue;
-					}
-					$he = new User($id_other);
-					$he->init();
-					$he_authority = new Authority($he->get("authority_id"));  ?>
-	 				<tr class="alternate<?php echo (($i%2) + 1) ?>">
-						<td><?php echo $he->get("login") ?></td> 		
-						<td><?php echo $he->get("givenname") . " " . $he->get("name") ?></td>
-						<td><a href="mailto: <?php echo $he->get("email") ?>"><?php echo $he->get("email") ?></a></td>
-						<td><?php echo $roles_type_list[$he->get("role")] ?></td>
-						<td><?php echo $status_type_list[$he->get("status")] ?></td>
-						<td><a href="<?php echo WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $he->get("authority_id") ?>"><?php echo $he_authority->get("name")  ?></a></td>
-						<td>
-							<a href="<?php echo WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $he->get("id") ?>" class="icon">
-								<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
-							</a>
-						</td>
-					</tr>
-			<?php endforeach;?>
-		</table>
-	</div>
-<?php endif;?>
-		
-<?php if ($him->get('login')) : ?>
-	<a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>'>Créer un nouvel utilisateur avec le même certificat </a>
-	<?php if ($him->get('subject_dn')) : ?>
-		<?php echo $him->get('subject_dn') ?>	
-	<?php endif; ?>
+    <p>
+        <a href="admin_user_list.php?user_id=<?php hecho($him->getId())?>"><?php echo count($certitificate_id_list)?> utilisateurs</a> partagent ce certificat.
+    </p>
+<?php endif; ?>
+
+<?php if ($him->get('login') && ($him->get('subject_dn'))) : ?>
+
+
+    <div class="alert alert-info" style="word-wrap: break-word;">
+        <?php hecho($him->get('subject_dn')) ?>
+        <br/>
+        Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
+
+            <br/>
+            <br/>
+            <a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>' class="btn btn-primary">
+                Créer un nouvel utilisateur avec le même certificat
+            </a>
+
+    </div>
+
 <?php else: ?>
 	Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login
 <?php endif;?>

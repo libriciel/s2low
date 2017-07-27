@@ -351,5 +351,31 @@ class AdminUserController extends Controller {
 
 	}
 
+    public function listAction(){
+        $this->verifAdmin();
+        $user_id = $this->getRecuperateurGet()->get('user_id');
+        if (! $user_id){
+            $this->redirect("/");
+        }
+        if(!$this->me->canEditUser($user_id)){
+            $this->redirect("/");
+        }
+
+        $this->user_id = $user_id;
+
+        $userSQL = $this->getObjectInstancier()->get("UserSQL");
+
+        $x509Certificate = new X509Certificate();
+
+        $this->user_info = $userSQL->getInfo($user_id);
+        $this->certificat_expiration =  date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($this->user_info['certificate'])));
+
+        $this->user_list = $userSQL->getListFromCertificateInfo($this->user_info['certificate_hash']);
+
+        $this->title = "Utilisateurs partageant le même certificat";
+
+        $this->status_type_list = $this->me->get("statusTypes");
+        $this->roles_type_list = $this->me->get("roleTypes");
+    }
 
 }

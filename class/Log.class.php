@@ -75,6 +75,7 @@ class Log extends DataObject {
 
 
 	if ($user) {
+	    /** @var User $user */
 		$userid = $user->getId();
 	}
 

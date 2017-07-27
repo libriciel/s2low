@@ -51,6 +51,15 @@ class UserSQL extends SQL {
 		$sql = "SELECT id FROM users WHERE certificate_hash=? ";
 		return $this->queryOneCol($sql, $certificate_hash);
 	}
+
+    public function getListFromCertificateInfo($certificate_hash) {
+        $sql = "SELECT users.id,login,users.name,givenname,users.email,users.status,role,authority_id, authorities.name as authority_name FROM users " .
+            " JOIN authorities ON users.authority_id = authorities.id ".
+            " WHERE certificate_hash=? " .
+            " ORDER BY login ";
+        return $this->query($sql, $certificate_hash);
+    }
+
 	
 	public function  getRoleStr($role) {		
 		$roleTypes = array( "SADM" => "Super administrateur",
