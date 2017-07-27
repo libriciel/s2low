@@ -41,7 +41,7 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
     }
 
     function header_wrapper($string, $replace = true, $http_response_code = null) {
-        echo "header('$string','$replace','$http_response_code') called";
+        echo "header('$string','$replace','$http_response_code') called\n";
     }
 
 } else {
