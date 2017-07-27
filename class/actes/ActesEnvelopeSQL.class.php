@@ -19,7 +19,7 @@ class ActesEnvelopeSQL extends SQL
 
     public function create($user_id, $file_path)
     {
-        $sql = "INSERT INTO actes_envelopes(user_id,file_path) VALUES(?,?) RETURNING ID";
+        $sql = "INSERT INTO actes_envelopes(user_id,file_path,submission_date) VALUES(?,?,now()) RETURNING ID";
         return $this->getSQLQuery()->queryOne($sql, $user_id, $file_path);
     }
 
@@ -34,6 +34,24 @@ class ActesEnvelopeSQL extends SQL
     public function getLastEnvelope(){
         $sql = "SELECT * FROM actes_envelopes ORDER BY id DESC LIMIT 1";
         return $this->queryOne($sql);
+    }
+
+    public function listEnveloppe($date_begin,$date_end,$authority_id = false,$authority_group_id = false){
+        $sql = "SELECT actes_envelopes.* FROM actes_envelopes " .
+                " JOIN users ON actes_envelopes.user_id = users.id ".
+                " JOIN authorities ON users.authority_id = authorities.id ".
+                " WHERE submission_date>=? AND submission_date<=? ";
+        $data = array($date_begin,$date_end);
+        if ($authority_id){
+            $sql.=" AND users.authority_id = ? ";
+            $data[] = $authority_id;
+        }
+        if ($authority_group_id){
+            $sql.=" AND authorities.authority_group_id = ? ";
+            $data[] = $authority_group_id;
+        }
+
+        return $this->query($sql,$data);
     }
 
 }

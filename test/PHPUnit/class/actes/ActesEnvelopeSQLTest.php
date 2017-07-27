@@ -43,4 +43,39 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
         $this->assertEquals($info['user_id'],$info_envelope['user_id']);
     }
 
+    public function testgetLastEnvelope(){
+        $id_envelope  = $this->getActesEnvelopeSQL()->create(
+            1,
+            "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz"
+        );
+        $info = $this->getActesEnvelopeSQL()->getLastEnvelope();
+        $this->assertEquals($id_envelope,$info['id']);
+    }
+
+    public function createAndList($authority_id,$authorit_group_id){
+        $id_envelope  = $this->getActesEnvelopeSQL()->create(
+            1,
+            "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz"
+        );
+        $info = $this->getActesEnvelopeSQL()->listEnveloppe(
+            date("Y-m-d",strtotime("-1 month")),
+            date("Y-m-d 23:59:59"),
+            $authority_id,
+            $authorit_group_id
+        );
+        $this->assertEquals($id_envelope,$info[0]['id']);
+    }
+
+    public function testlistEnveloppe(){
+        $this->createAndList(false,false);
+    }
+
+    public function testlistEnveloppeAuthority(){
+        $this->createAndList(1,false);
+    }
+
+    public function testlistEnveloppeAuthorityGroup(){
+        $this->createAndList(false,1);
+    }
+
 }

@@ -41,4 +41,9 @@ class ActesIncludedFileSQL extends SQL {
         return $this->query($sql,$transaction_id);
     }
 
+    public function getAllFilenameInEnvelope($envelope_id){
+        $sql = "SELECT filename FROM actes_included_files WHERE envelope_id=? ORDER BY id ASC";
+        return $this->queryOneCol($sql,$envelope_id);
+    }
+
 }

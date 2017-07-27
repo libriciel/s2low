@@ -16,7 +16,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Visualisation rapide de l'état des transactions Actes #90 ~Actes
 - Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~admin ~Actes
 - Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~admin ~Actes
-
+- Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
+  
 
 ### Corrections de sécurités
 

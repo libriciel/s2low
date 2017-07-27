@@ -26,7 +26,9 @@ class MenuHTML  {
 
 		$module_admin = array();
 		$module_stat = array();
-		
+        $module_export = array();
+
+
 		foreach ($modulesInfo as $i => $module) {
 			
 			if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php")){
@@ -37,6 +39,9 @@ class MenuHTML  {
 					$module_admin[] = $module;
 				}
 			}
+            if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_export.php")){
+                $module_export[] = $module;
+            }
 		 }
 		 
 		?>
@@ -95,11 +100,22 @@ class MenuHTML  {
  			<?php foreach ($modulesInfo as $module) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>"><?php echo $module["menu_entry"] ?></a></li>
  			<?php endforeach; ?>
- 			<li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" :""?></li>
+
+            <?php if($module_export && in_array($userInfo['role'],array('ADM','GADM','SADM'))) : ?>
+                <li class="menu-list-title">Export des informations</li>
+                <?php foreach ($module_export as $module) : ?>
+                    <li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/<?php echo $module["name"]?>_export.php">Exports module <?php echo $module["name"] ?></a></li>
+                <?php endforeach;?>
+            <?php endif; ?>
+
+
+            <li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" :""?></li>
 			<li><a href="<?php echo WEBSITE_SSL ?>/common/logs_view.php">Journal des événements</a></li>
 			<?php foreach ($module_stat as $module) : ?>
 				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/<?php echo $module["name"]?>_stats.php">Statistiques module <?php echo $module["name"] ?></a></li>
 			<?php endforeach;?>
+
+
  		</ul>
  	<?php 
 		return;
