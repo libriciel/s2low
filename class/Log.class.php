@@ -26,7 +26,8 @@ class Log extends DataObject {
 						 "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
 						 "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
 	  						"authority_id" => array("descr"=>"Authority","type"=>"isInt","mandatory"=>false),
-	  "authority_group_id" => array("descr"=>"Authority group","type"=>"isInt","mandatory"=>false),
+                            "authority_group_id" => array("descr"=>"Authority group","type"=>"isInt","mandatory"=>false),
+                            "message_horodate" => array("descr"=>"Message horodate","type"=>"isString","mandatory"=>false),
 						 );
 
   protected $severities = array( 0 => "DEBUG",
@@ -86,7 +87,9 @@ class Log extends DataObject {
 	  $logEntry->set("visibility", $visibility);
 	}
 
-	  global $sqlQuery;
+
+      $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get("SQLQuery");
+
 	  $authority_id = false;
 	  $authority_group_id = false;
 	  if ($userid) {
@@ -108,17 +111,19 @@ class Log extends DataObject {
 	  $logEntry->set("authority_id",$authority_id);
 	  $logEntry->set("authority_group_id",$authority_group_id);
 
-
 	// Enregistrement de l'entrée pour déterminer son id
 	if (! $logEntry->save()) {
 	  return false;
 	}
 
-	if (! $timestamp = $logEntry->genTimestamp()) {
+	$message_horodate = $logEntry->generateMessageHorodate();
+
+	if (! $timestamp = $logEntry->genTimestamp($message_horodate)) {
 	  return false;
 	}
 
 	$logEntry->set("timestamp", $timestamp);
+	$logEntry->set('message_horodate',$message_horodate);
 
 	if (! $logEntry->save()) {
 	  return false;
@@ -127,11 +132,8 @@ class Log extends DataObject {
 	return true;
   }
 
-  /**
-   * \brief Méthode de détermination de l'horodatage d'une ligne de journal
-   * \return La chaîne correspondant à l'horodatage de l'entrée, false sinon
-   */
-  public function genTimestamp() {
+
+  private function genTimestamp($data) {
 	  if (TESTING_ENVIRONNEMENT){
 		  //FIXME
 		return "TESTING";
@@ -139,7 +141,7 @@ class Log extends DataObject {
 	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
 	$logFile = tempnam('/tmp', 'tedetis_web_');
 
-	$data = $this->getConcatLog();
+
 
 	if (! $this->writeLogEntryToFile($logFile, $data)) {
 	  return false;
@@ -231,7 +233,7 @@ class Log extends DataObject {
 	  $logFile = $tmpDir . "/tedetis_journal_" . $this->id . ".log";
 	  $timestampFile = $logFile . ".sig";
 
-	  if (! $this->writeLogEntryToFile($logFile, $this->getConcatLog())) {
+	  if (! $this->writeLogEntryToFile($logFile, $this->retrieveMessageHorodate())) {
 		return false;
 	  }
 
@@ -301,12 +303,12 @@ class Log extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-   * \return La chaîne de tous les champs séparés par '**||**'
+   * Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
+   * @return string La chaîne de tous les champs séparés par '**||**'
    */
-  public function getConcatLog() {
+  public function generateMessageHorodate() {
 	$data[] = $this->id;
-	$data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
+	$data[] = date('c', Helpers::getTimestampFromBDDDate($this->date));
 	$data[] = $this->module;
 	$data[] = $this->severity;
 	$data[] = $this->issuer;
@@ -319,6 +321,31 @@ class Log extends DataObject {
 
 	return $log;
   }
+
+    /**
+     *  Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
+     * @return string La chaîne de tous les champs séparés par '**||**'
+     */
+    public function retrieveMessageHorodate() {
+        if ($this->get('message_horodate')){
+            return $this->get('message_horodate');
+        }
+        //Ancienne méthode de génération du message horodaté
+        $data[] = $this->id;
+        $data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
+        $data[] = $this->module;
+        $data[] = $this->severity;
+        $data[] = $this->issuer;
+        $data[] = $this->user_id;
+        $data[] = $this->visibility;
+        $data[] = $this->message;
+
+
+        $log = implode($data, "**||**");
+
+        return $log;
+    }
+
 
   /**
    * \brief Méthode d'écriture de l'horodatage dans un fichier
