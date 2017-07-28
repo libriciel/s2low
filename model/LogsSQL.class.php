@@ -93,6 +93,18 @@ class LogsSQL extends SQL {
 		return $this->query($sql,$data);
 	}
 
+    /**
+     * FOR TESTING PURPOSE ONLY !!!
+     *
+     * @param $date
+     * @param $severity
+     * @param $module
+     * @param $issuer
+     * @param $user_id
+     * @param $visibility
+     * @param $message
+     * @param $timestamp
+     */
 	public function addLog($date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp){
 		$sql = "SELECT authority_id,authority_group_id FROM users WHERE id=?";
 		$line = $this->queryOne($sql,$user_id);

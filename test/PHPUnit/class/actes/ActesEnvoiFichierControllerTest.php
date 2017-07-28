@@ -53,7 +53,7 @@ class ActesEnvoiFichierControllerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#L'archive [0-9]* passe à l'état transmis#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
     }
 
     public function testEnvoiUneEnveloppeFailed(){

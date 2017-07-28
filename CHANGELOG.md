@@ -38,6 +38,8 @@ du tableau des fichiers contenus dans l'archive ~Actes
 ou le message de passage dans l'état #110 ~Helios  
 - La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification 
 d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
+- Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
+  
 
 ### Corrections
 
@@ -50,6 +52,8 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~Administration
 - La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~Mailsec 
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
+- Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
+
 
 ## [2.6.5] - 2017-06-29
 

@@ -230,4 +230,26 @@ class ActesTransactionsSQL extends SQL{
         return $this->queryOne($sql, $envelope_id, $status, $user_id,$authority_id, true);
     }
 
+    public function guessUniqueId($transaction_id){
+        //034-000000000-20170701-20170728C-AI
+
+        $sql = "SELECT * FROM actes_transactions ".
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " WHERE actes_transactions.id=?";
+        $info = $this->queryOne($sql,$transaction_id);
+
+        $sql2 = "SELECT short_descr FROM actes_natures WHERE id=?";
+        $nature = $this->queryOne($sql2,$info['nature_code']);
+
+
+        return sprintf(
+            "%s-%s-%s-%s-%s",
+            $info['department'],
+            $info['siren'],
+            date("Ymd",strtotime($info['decision_date'])),
+            $info['number'],
+            $nature
+        );
+    }
+
 }
