@@ -87,12 +87,15 @@ class ActesAnalyseFichierRecuController {
     }
 
     public function analyseOneFile($rep_path){
-
         $this->log("Traitement de $rep_path");
 
         $archive = new \Libriciel\LibActes\Archive();
 
-        $archiveData = $archive->getArchiveDataFromFolder($rep_path);
+        try {
+            $archiveData = $archive->getArchiveDataFromFolder($rep_path);
+        } catch(Exception $e){
+            throw new Exception(utf8_decode($e->getMessage()));
+        }
 
         if ($archiveData->is_ano){
             $this->traitementEnveloppeAnomalie($archiveData);
