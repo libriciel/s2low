@@ -70,6 +70,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     }
 
     public function testAnalyseAll(){
+
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
 
         $actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
@@ -90,7 +91,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#L'acte : [0-9]* passe en recu#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état acquittement reçu#",$liste['message']);
     }
 
     public function testAnalyseAllActeNotFound(){

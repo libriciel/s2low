@@ -10,7 +10,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set("actes_appli_trigramme","SLO");
+
     }
 
     protected function tearDown() {
@@ -41,7 +41,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#L'archive [0-9]* passe à l'état en attente#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
     }
 
     public function testValidateAllOneBad(){
@@ -57,7 +57,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#L'archive [0-9]* passe à l'état erreur#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
 
     }
 
