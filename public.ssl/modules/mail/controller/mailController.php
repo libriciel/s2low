@@ -251,7 +251,7 @@ class mailController {
  		
 	}   
 	
-	public function logError($message){
+	public function logError(){
 		global $me, $module;
 		$result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError , 3, false, 'USER', $module->get("name"), $me);
 		if (! $result){
@@ -389,7 +389,7 @@ class mailController {
   		if (!mkdir ($newdir, 0755, true))
   		{
   			$this->lastError ="La création de répertoire a echoué.";
-  			$this->logError($this->lastError);
+  			$this->logError();
   			return false;
   		}
   		$mailFiles=array();
@@ -431,7 +431,7 @@ class mailController {
 	if (!$mailUtil->sendMail($this->MailMessageEmis,$mailTransaction,$mailIncludedFiles,$send_password))
 	{	
 	  	$this->lastError = "Échec lors de l'envoi.";
-		$this->logError($message);
+		$this->logError();
 	  	//traiter les messages d'échec.
 	  	$mailTransaction->delete();
 	  	foreach ($this->MailMessageEmis as $mailEmis )
