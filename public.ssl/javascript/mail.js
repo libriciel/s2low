@@ -26,7 +26,7 @@ function checkFormCreateMail() {
 	}
 	if (message.value=="" || message.value==null)
 	{
-		alert("Le message ne peut pas Ãªtre vide");
+		alert("Le message ne peut pas être vide");
 		returnvalue=false;
 	}
 	return returnvalue;
@@ -109,7 +109,7 @@ function checkFormCreateMail() {
 	}
 	
   /**
-   *\brief  java scripte pour crÃ©er dynamiquement les upload bar.
+   *\brief  java scripte pour créer dynamiquement les upload bar.
    *\param FileNumber: le nombre total de upload fichier.
    *
    */
@@ -123,7 +123,7 @@ function checkFormCreateMail() {
     divElement.innerHTML+="<input type='file' class='col-md-4' name='uploadFile"+FileNumber+"' id='file"+FileNumber+"'>";
     divElement.innerHTML+="<input class='btn btn-warning col-md-1 col-md-offset-1 btn-sm' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
     var parentElement = document.getElementById("file").parentNode.parentNode;
-    /*on commente pour Ãªtre compatible avec IE > 10
+    /*on commente pour être compatible avec IE > 10
      * console.log(parentElement);
     console.log(parentElement.parentNode);  
     console.log(parentElement.nextSibling);*/

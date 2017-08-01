@@ -48,6 +48,7 @@ foreach($actes_status as $status_id => $status_libelle){
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
+$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
 
 
 $menuHTML = new MenuHTML();
@@ -94,6 +95,15 @@ ob_start();
                     </td>
                 </tr>
             <?php endforeach ?>
+            <tr class="<?php echo $nb_actes_transmis_4hours_before?"danger":"success" ?>">
+                <td>Actes transmis depuis plus de 4 heures</td>
+                <td><span class="label label-<?php echo $nb_actes_transmis_4hours_before?"danger":"success" ?>"><?php echo $nb_actes_transmis_4hours_before ?></span></td>
+                <td>
+                    <a href="/modules/actes/index.php?status=<?php echo 3 ?>" class="icon">
+                        Liste
+                    </a>
+                </td>
+            </tr>
             <tr class="<?php echo $actes_nb_responses_error?"danger":"success" ?>">
                 <td>Emails reçus depuis Actes en erreur</td>
                 <td><span class="label label-<?php echo $actes_nb_responses_error?"danger":"success" ?>"><?php echo $actes_nb_responses_error ?></span></td>

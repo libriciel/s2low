@@ -252,4 +252,11 @@ class ActesTransactionsSQL extends SQL{
         );
     }
 
+    public function getNbByStatusAndDate($status_id,$submission_date_max){
+        $sql = "SELECT count(*) FROM actes_transactions " .
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " WHERE last_status_id=? AND submission_date <?";
+        return $this->queryOne($sql,$status_id,$submission_date_max);
+    }
+
 }

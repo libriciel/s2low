@@ -11,17 +11,37 @@ $mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
 
 $doc->DisplayHead();
 ?>
-<div class="col-md-9">
-  <h1>Mail : Espace de Mail sécurisé</h1>
+    <div class="container">
 
-<p>Vous avez besoin d'un mot de passe pour voir le contenu du mail.</p>
+<div >
+  <h2>Document protégé par un mot de passe</h2>
 
-<form name="mailpsw" action="index.php?mail_emis_id=<?php echo $mail_emis_id;?>" method="POST">
 
-  <div>
-  Mot de passe: <input type='password' name='mdp' /> <p></p>
-          		<input type="submit" name='submit' onclick="checkDownloadPW();"/>
-  </div>
-</form>
+    <div class="alert alert-info">
+        <p>Vous avez besoin d'un mot de passe pour voir le contenu du mail.</p>
+    </div>
+    <div id="filtering-area" >
+
+        <form name="mailpsw" action="index.php?mail_emis_id=<?php echo $mail_emis_id;?>" method="POST" class="form-horizontal">
+
+            <div class="form-group">
+                <label for="mdp" class="col-md-4 control-label">Mot de passe</label>
+                <div class="col-md-4">
+                    <input type='password' name='mdp' id="mdp"/>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default" onclick="checkDownloadPW();" >Accéder au contenu</button>
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+
+
 <?php 
 $doc->DisplayFoot();
