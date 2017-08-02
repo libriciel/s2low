@@ -6,10 +6,10 @@
       "type": "package",
       "package": {
         "name": "libriciel/tdt-lib-actes",
-        "version": "0.0.7",
+        "version": "0.0.12",
         "dist": {
           "type": "tar",
-          "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.7"
+          "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.12"
         },
         "autoload": {
           "psr-4": {

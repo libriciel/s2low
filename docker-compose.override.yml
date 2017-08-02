@@ -6,7 +6,6 @@ services:
         links:
             - simulateur
             - ftp:ftp
-            - tomcat:tomcat
             - db_test:db_test
         ports:
             - "${WEB_HTTP_PORT}:80"
@@ -41,14 +40,19 @@ services:
             - "${PHPPGADMIN_HTTP_PORT}:80"
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
-        #image: simulateurhelios_web
+        #image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
+        image: simulateurhelios_web
         links:
-             - ftp:ftp
+            - ftp:ftp
+            - mail:mail
         ports:
             - ${SIMULATEUR_SITE_PORT}:80
         volumes:
             - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/var/www/simulateur-helios/workspace
+        environment:
+            MAIL_HOST: mail
+            MAIL_PORT: 25
+            MAIL_FROM: mail@tedetis.org
 
     ftp:
         image: mcreations/ftp
@@ -62,32 +66,6 @@ services:
         ports:
           - "${FTP_PORT}:21"
           - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
-
-    tomcat:
-        image: gitlab.libriciel.fr:4567/s2low/tedetisjava:master
-        #image: tedetisjava_tomcat
-        links:
-            - db:db
-            - mail:mail
-        environment:
-            POSTGRES_HOST: db
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            MAIL_HOST: mail
-            MAIL_PORT: 25
-            MAIL_FROM: mail@tedetis.org
-            IMAP_HOST: mail
-            IMAP_PORT: 143
-            IMAP_LOGIN: mail@tedetis.org
-            IMAP_PASSWORD: password
-            TIMESTAMP_CERTIFICAT_PASSWORD: ${TIMESTAMP_CERTIFICAT_PASSWORD}
-        volumes:
-            - ${ACTES_FILES_UPLOAD_ROOT}:/data/tdt-workspace/actes/uploads/
-            - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/timestamp-certificate/s2low_timestamp_cert.p12
-
-        ports:
-            - ${TOMCAT_PORT}:8080
 
     mail:
         build:
