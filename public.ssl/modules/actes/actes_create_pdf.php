@@ -5,8 +5,7 @@ require_once (SITEROOT . '/class/include.class.php');
 	
 	
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesPdf.class.php');
-		
+
 $id = Helpers :: getVarFromGet("trans_id");
 
 if (empty($id) ){
@@ -63,9 +62,9 @@ if ( ! $permission->canView($me,$owner)){
 	exit ();
 }
 //passer les paramètre
-$pdf=new ActesPdf($trans,$owner);
+$pdf=new ActesPdf();
 	
-//construire le fichier pdf. 
-$pdf->create_pdf();
+//construire le fichier pdf.
+$pdf->create_pdf($id);
 
 $pdf->output("acquittement");

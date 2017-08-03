@@ -7,11 +7,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
     }
 
     public function testGetLastArchiveFromStatus(){
-
         $transaction_id =$this->createTransaction('14');
-
-
-
         $this->getActesTransactionsSQL()->updateStatus($transaction_id,12,"test");
 
         $result_1 = $this->getActesTransactionsSQL()->getArchiveFromStatusWithSAE(12);

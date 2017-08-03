@@ -1,6 +1,5 @@
 <?php 
 
-require_once (SITEROOT . '/class/ExtendPdf.class.php');
 
 class ActesPdf {
 
@@ -15,21 +14,27 @@ class ActesPdf {
 
 	private $addEmailNotificationField;
 	
-	public function __construct(ActesTransaction $actesTransaction,User $user) {
-		if (defined("NEW_BANNER")) {
-			$this->img = SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg";
-		} else {
-			$this->img = SITEROOT . "public.ssl/custom/images/home_banner.jpg";
-		}
-  		$this->actesTransaction=$actesTransaction;
-  		$this->user = $user;
+	public function __construct() {
+        $this->img = SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg";
   	}
 
   	public function addEmailNotificationField(){
   		$this->addEmailNotificationField = true;
   	}
   	
-	public function create_pdf() {
+	public function create_pdf($transaction_id) {
+        $trans = new ActesTransaction();
+        $trans->setId($transaction_id);
+        $trans->init();
+        $envelope = new ActesEnvelope($trans->get("envelope_id"));
+        $envelope->init();
+
+        $owner = new User($envelope->get("user_id"));
+        $owner->init();
+
+
+        $this->actesTransaction=$trans;
+        $this->user = $owner;
 
 		$author = new Authority($this->user->get("authority_id"));
 		$author->init();
@@ -87,11 +92,8 @@ class ActesPdf {
 	protected function set_head()
 	{
 		$title="BORDEREAU D'ACQUITTEMENT DE TRANSACTION";
-		if (defined("NEW_BANNER")) {
-			$this->pdf->Image($this->img, 10, 10, 190, 26);
-		} else {
-			$this->pdf->Image($this->img, 10, 10, 190, 30);
-		}
+        $this->pdf->Image($this->img, 10, 10, 190, 26);
+
 		$this->pdf->Ln(40);
 		$this->pdf->SetFont('Arial','B',16);
 		$this->pdf->Cell(20);
@@ -106,7 +108,7 @@ class ActesPdf {
 	}
 	
 	
-	private function getNotifieA($trans){
+	private function getNotifieA(ActesTransaction $trans){
 		if ($trans->get("broadcasted") == 't' ) {
       		return "Notifiée à " . $trans->get("broadcast_emails");
 		}
@@ -115,12 +117,7 @@ class ActesPdf {
 		}
     	return "Non notifiée";
 	}
-	
-  /**
-  * \brief ajouter la table de tansaction
-  * \param $trans= objet de ActesTransaction
-  * 
-  */
+
 	protected function trans_table(ActesTransaction $trans)
 	{
 		//traiter des requêtes
@@ -159,13 +156,8 @@ class ActesPdf {
 		$this->pdf->myRow(array("","URL d'archivage:",$arch_url));
 		$this->pdf->myRow(array("","Notification:",$notification));
 	}
-	
-	/**
-  * \brief ajouter la fichier de tansaction
-  * \param $trans= objet de ActesTransaction
-  * 
-  */
-	public function fichier_table($trans)
+
+	public function fichier_table(ActesTransaction $trans)
 	{
 		//traiter des requêtes
 		$files = $trans->fetchFilesList();
@@ -203,13 +195,8 @@ class ActesPdf {
 			}
 		}	
 	}
-	
-  /**
-  * \brief ajouter la table de cycle
-  * \param $trans= objet de ActesTransaction
-  * 
-  */
-	public function cycle_table($trans)
+
+	public function cycle_table(ActesTransaction $trans)
 	{
 		//traiter des requêtes
 		$workflow = $trans->fetchWorkflow();
@@ -232,12 +219,7 @@ class ActesPdf {
 			$this->pdf->myRow(array("",$status[$stage["status_id"]],Helpers :: getDateFromBDDDate($stage["date"], true),$stage["message"]));
 		}
 	}
-	
-  /**
-  * \brief ajouter un retangle sur un cell
-  * \param $w, h=width , hight. position est défini par la position du cell.
-  * 
-  */	
+
 	protected function 	myRectangle($w,$h=6)
 	{
 		$x=$this->pdf->GetX();

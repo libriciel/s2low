@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__."/../ext/FPDF.class.php";
+
 class ExtendPdf extends FPDF {
 
 	public $widths;
@@ -21,7 +22,7 @@ class ExtendPdf extends FPDF {
 		$this->Cell(120);
 
 		//Framed title
-		$this->Cell(30,6,'Adullact Projet');
+		$this->Cell(30,6,'Adullact');
 		//Line break
 		$this->Ln(6);
 		  $this->Line(10, 6, 120, 6);

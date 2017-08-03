@@ -136,19 +136,11 @@ class ActesArchiveControler {
 		$datepostage = $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
 		$pastell->setDatePostage($id_d,date("d/m/Y",strtotime($datepostage['date'])));
 
-		$trans = new ActesTransaction();
-		$trans->setId($id);
-		if ( ! $trans->init()) {
-			throw new Exception("Impossible de récupérer la transaction...");
-		}
-		$owner = new User($transactionsInfo['user_id']);
-		$owner->init();
-		
 		//passer les paramètre
-		$pdf=new ActesPdf($trans,$owner);
+		$pdf=new ActesPdf();
 		
 		//construire le fichier pdf.
-		$pdf->create_pdf();
+		$pdf->create_pdf($id);
 		$pdf->output($tmp_folder."/bordereau_acquit","F");
 		$pastell->postFile($id_d,"bordereau",$tmp_folder."/bordereau_acquit.pdf","bordereau_acquittement.pdf");
 		
@@ -290,7 +282,7 @@ class ActesArchiveControler {
 
 
 		//s2lowif ($nodeName == 'ArchiveTransferAcceptance'){
-        if ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->ReplyCode) == '000'))){
+        if ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->{'ReplyCode'}) == '000'))){
             $url = $info['data']['url_archive'];
 			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
 			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$reply_sae);
