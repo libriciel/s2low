@@ -591,12 +591,6 @@ if (! defined("TESTING_ENVIRONNEMENT")) {
 //on fait en sorte que config.php charge init.php et réciproquement
 require_once(__DIR__."/../init/init.php");
 
-
-if (! defined("NEW_BANNER")) {
-	define("NEW_BANNER", true);
-}
-
-
 if (! defined("LIBERSIGN_INSTALLER")){
 	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign
 	define("LIBERSIGN_INSTALLER",false);

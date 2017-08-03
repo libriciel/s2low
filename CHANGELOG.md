@@ -17,7 +17,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~Administration ~Actes
 - Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
-  
+- Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
 
 ### Corrections de sécurités
 
@@ -54,6 +54,9 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 - Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
 
+### Retraits
+
+- L'ancienne bannière et la constante NEW_BANNER remplacer définitivement par la nouvelle bannière
 
 ## [2.6.5] - 2017-06-29
 

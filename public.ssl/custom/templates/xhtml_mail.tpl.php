@@ -12,18 +12,10 @@
         <?php echo $this->header ?>
     </head>
     <body>
-	<?php if (defined("NEW_BANNER")) : ?>
 		<div id="bandeau_s2low" class="container">
 			<a href='<?php echo WEBSITE_SSL ?>'>
 				<img src="<?php echo WEBSITE_SSL ?>/custom/images/bandeau_s2low.jpg"  />
 			</a>
 		</div>
-	<?php else: ?>
-        <div id="header" class="navbar">
-            <div id="home-header" class="container">
-                <img id="home-banner" src="<?php echo WEBSITE ?>/custom/images/home_banner.jpg" alt="" usemap="#map" />
-                <map id="map" name="map"><area shape="rect" alt="Bandeau" coords="0,120,900,180" href="<?php echo WEBSITE ?>"/></map>
-            </div>
-        </div>
-	<?php endif; ?>
+
         <?php echo $this->body ?>
