@@ -237,7 +237,7 @@ if (!defined("EXPORT_LOGS_DIRECTORY")){
 //////////////////////////////////
 
 if (!defined('ACTES_MINISTERE_URL')){
-    define('ACTES_MINISTERE_URL','http://tomcat:8080/TedetisActes/SimulateurMinistere');
+    define('ACTES_MINISTERE_URL','http://simulateur/Simulateur/actesPost');
 }
 
 if (!defined('ACTES_MINISTERE_AUTHENTICATION')){

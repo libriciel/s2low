@@ -57,7 +57,7 @@ ob_start();
 			?>
 				<tr>
 					<td><a href="/modules/helios/admin/download-response.php?file=<?php echo urlencode($errorFile->getFilename()) ?>"><?php echo $errorFile->getFilename() ?></a></td>
-					<td><?php echo date("Y-m-d h:i:s",$errorFile->getCTime()) ?></td>
+					<td><?php echo date("Y-m-d H:i:s",$errorFile->getCTime()) ?></td>
 					<td><?php echo ceil($errorFile->getSize()/1024) ?> ko</td>
 					<td class="text-center">
 						<a class="btn btn-danger"
