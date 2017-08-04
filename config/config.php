@@ -321,12 +321,6 @@ if(!defined('ANTIVIRUS_TMP_PATH')){
         define('ANTIVIRUS_TMP_PATH','/tmp/');
 }
 
-
-// Adresse de la servlet effectuant le controle des archives
-if(!defined('ACTES_CHECK_ARCHIVE_SERVLET')){
-        define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8080/TedetisActes/ValideArchive');
-}
-
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
         define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');

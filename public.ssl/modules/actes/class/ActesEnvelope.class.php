@@ -778,46 +778,6 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief Méthode de vérification de l'archive par le module transactionnel
-   * \return True en cas de succès, false si l'archive n'est pas conforme
-   */
-  public function externalArchiveCheck() {
-
-
-	if (isset($this->file_path) && ! empty($this->file_path)) {
-		return $this->externalArchiveCheckFromFile($this->file_path);
-
-	}
-  }
-
-  public function externalArchiveCheckFromFile($file_path){
-
-  	$trace = Trace::getInstance();
-  	$trace->log("Check du fichier $file_path");
-
-  	$cHandle = curl_init(ACTES_CHECK_ARCHIVE_SERVLET . "?file=" . $file_path);
-
-	  curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
-	  curl_setopt($cHandle, CURLOPT_HEADER, false);
-	  if (($ret = curl_exec($cHandle)) === false) {
-		$this->errorMsg = "Erreur de communication interne.";
-		curl_close($cHandle);
-		return false;
-	  }
-
-	  curl_close($cHandle);
-	  $res = explode("\n", $ret);
-
-	  if (strcmp(trim($res[0]), "OK") == 0) {
-		return true;
-	  } else {
-		$trace->log("Erreur lors de la validation de l'enveloppe : $ret");
-	  	$this->errorMsg = $ret;
-		return false;
-	  }
-  }
-
-  /**
    * \brief Méthode de suppression des fichiers intermédiaires ayant servi à la contruction de l'archive
    * \return True en cas de succès, false sinon
   */
