@@ -165,9 +165,6 @@ class ActesTransactionTest extends S2lowTestCase {
 	        print_r($e->getValidationErrors());
 	        throw $e;
         }
-
-        echo $xml;
-
     }
 
 }
