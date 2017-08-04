@@ -17,7 +17,12 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~Administration ~Actes
 - Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
-  
+- Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
+- le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
+- Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
+- Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
+- Horodatage systématique des mails de notification  #181 ~Actes
+- Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225 
 
 ### Corrections de sécurités
 
@@ -39,7 +44,9 @@ ou le message de passage dans l'état #110 ~Helios
 - La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification 
 d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
 - Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
-  
+- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
+<num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
+- Mise en place du nouveau schéma Actes V2.2 #177 ~Actes
 
 ### Corrections
 
@@ -54,6 +61,11 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 - Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
 
+### Retraits
+
+- L'ancienne bannière et la constante NEW_BANNER remplacer définitivement par la nouvelle bannière
+- Suppression du check de l'archive lors de son postage (check fait à l'étape de validation)
+- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET
 
 ## [2.6.5] - 2017-06-29
 

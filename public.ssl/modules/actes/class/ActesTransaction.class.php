@@ -701,6 +701,7 @@ class ActesTransaction extends DataObject {
     }
 
     $xml .= " </actes:Annexes>\n";
+    $xml .= "<actes:DocumentPapier>N</actes:DocumentPapier>\n";
     $xml .= "</actes:Acte>\n";
 
     return $xml;
@@ -1462,7 +1463,8 @@ class ActesTransaction extends DataObject {
     if ($new && $this->get('authority_id')){
     	$sql_verif = "SELECT actes_transactions.id FROM actes_transactions ".
     			" WHERE actes_transactions.number='" . pg_escape_string($this->get('number')) . "' AND authority_id=" . $this->get('authority_id');
-    	if ($this->db->getOneValue($sql_verif)){
+
+    	if ($this->type == 1 && $this->db->getOneValue($sql_verif)){
     		$this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
     		$this->db->rollback();
     		return false;

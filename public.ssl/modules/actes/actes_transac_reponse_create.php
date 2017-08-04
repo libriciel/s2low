@@ -111,6 +111,12 @@ $trans->set("subject", $related_trans->get("subject"));
 $trans->set("number", $related_trans->get("number"));
 $trans->set("decision_date", Helpers::getANSIDateFromBDDDate($related_trans->get("decision_date")));
 $trans->set("type_reponse",$type_envoie);
+$trans->set("user_id",$related_trans->get('user_id'));
+$trans->set("authority_id",$related_trans->get('authority_id'));
+$trans->set("classification",$related_trans->get('classification'));
+$trans->set("classification_date",$related_trans->get('classification_date'));
+$trans->set("unique_id",$related_trans->get('unique_id'));
+
 
 // Destination de création des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";

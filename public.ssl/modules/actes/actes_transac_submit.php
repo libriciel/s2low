@@ -135,11 +135,6 @@ if (! $env->checkArchiveSize()) {
 // Purge des fichiers intermédiaires
 $env->purgeFiles();
 
-// Contrôle de l'archive par le module transactionnel
-if (! $env->externalArchiveCheck()) {
-  $env->deleteArchiveFile();
-  Helpers::returnAndExit(1, "L'archive n'est pas conforme :\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
-}
 
 // Enregistrement de l'enveloppe
 if (! $env->save()) {

@@ -26,6 +26,7 @@ authorities:
   name: Bourg-en-Bresse
   authority_type_id: 11
   authority_group_id: 1
+  new_notification: t
 
  -
   id: 2

@@ -15,6 +15,7 @@ class ActesFiles {
 			return false;
 		}
 		`rm -rf $dir_to_delete`;
+		return true;
 	}
 	
 	

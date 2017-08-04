@@ -224,6 +224,9 @@ class ActesTransactionsSQL extends SQL{
             " FROM actes_transactions where id = ? RETURNING id";
         return $this->queryOne($sql,$envelope_id,$type,$related_transaction_id,$date,$related_transaction_id);
     }
+
+
+
     public function create($envelope_id, $status,$user_id,$authority_id)
     {
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) RETURNING ID;";
@@ -259,4 +262,21 @@ class ActesTransactionsSQL extends SQL{
         return $this->queryOne($sql,$status_id,$submission_date_max);
     }
 
+    public function getTransactionToAutoBroadcast(){
+        $sql = "SELECT actes_transactions.id  FROM actes_transactions ".
+            " WHERE last_status_id IN ('4','8','21')  AND auto_broadcasted=false AND type IN ('1','2','3','4','5','6')";
+        return $this->queryOneCol($sql);
+    }
+
+    public function setBroadcasted($transactionId) {
+        $sql = "UPDATE actes_transactions SET broadcasted = TRUE " .
+            " WHERE actes_transactions.id = ?";
+        $this->query($sql, $transactionId);
+    }
+
+    public function setAutoBroadcasted($transactionId){
+        $sql = "UPDATE actes_transactions SET auto_broadcasted = TRUE " .
+            " WHERE actes_transactions.id = ?" ;
+        $this->query($sql,$transactionId);
+    }
 }

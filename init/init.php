@@ -97,6 +97,11 @@ $objectInstancier->set('ActesImapProperties',$actesImapProperties);
 $objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
 $objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
 
+if (php_sapi_name() != 'cli'){
+    $objectInstancier->get('Logger')->setLogType(Logger::TYPE_MEMORY);
+}
+
+
 $frontController = new FrontController($objectInstancier);
 
 ObjectInstancierFactory::setObjectInstancier($objectInstancier);

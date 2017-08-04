@@ -19,6 +19,11 @@ date_default_timezone_set("Europe/Paris");
 //Cette locale est cohérente avec le code de S2low
 setlocale(LC_TIME, "fr_FR.UTF-8");
 
+if ( ! defined("OPERATEUR_DE_TELETRANSMISSION")) {
+    define("OPERATEUR_DE_TELETRANSMISSION", "Libriciel SCOP");
+}
+
+
 if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","eric@sigmalis.com");
 }
@@ -316,12 +321,6 @@ if(!defined('ANTIVIRUS_TMP_PATH')){
         define('ANTIVIRUS_TMP_PATH','/tmp/');
 }
 
-
-// Adresse de la servlet effectuant le controle des archives
-if(!defined('ACTES_CHECK_ARCHIVE_SERVLET')){
-        define('ACTES_CHECK_ARCHIVE_SERVLET', 'http://127.0.0.1:8080/TedetisActes/ValideArchive');
-}
-
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
         define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');
@@ -590,12 +589,6 @@ if (! defined("TESTING_ENVIRONNEMENT")) {
 //Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
 //on fait en sorte que config.php charge init.php et réciproquement
 require_once(__DIR__."/../init/init.php");
-
-
-if (! defined("NEW_BANNER")) {
-	define("NEW_BANNER", true);
-}
-
 
 if (! defined("LIBERSIGN_INSTALLER")){
 	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign

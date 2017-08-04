@@ -8,7 +8,6 @@
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-require_once(dirname(__FILE__)."/class/ActesNotification.class.php");
 
 // Instanciation du module courant
 $module = new Module();
@@ -41,8 +40,10 @@ if (! $liste_id){
 	Helpers :: returnAndExit(1, "Pas d'identifiant de transaction spécifié.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
+$msg = "";
 
 foreach ($liste_id as $id) {
+    $severity = 1;
 	$trans = new ActesTransaction();
 	$trans->setId($id);
     
@@ -75,16 +76,16 @@ foreach ($liste_id as $id) {
 	     $sortie .= $msg;
 	   }
 	}
-	$db = DatabasePool::getInstance();
-	$actesNotification = new ActesNotification($db);
-	$actesNotification->sendNotificationManuel($id);
-	if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, $severity, false, 'USER', $module->get("name"), $me)) {
-		$msg .= "\nErreur de journalisation.\n";
-    	$sortie .= $msg;
-	}
-  
-  
-  
+    try {
+
+        $actesNotification = $objectInstancier->get('ActesNotification');
+        $actesNotification->sendNotificationManuel($id);
+    } catch (Exception $e){
+        $severity = 3;
+        $msg = "Erreur lors de la notification : ".$e->getMessage();
+        $sortie .= $msg;
+    }
+
 }
 
   
