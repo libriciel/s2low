@@ -40,8 +40,10 @@ if (! $liste_id){
 	Helpers :: returnAndExit(1, "Pas d'identifiant de transaction spécifié.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
+$msg = "";
 
 foreach ($liste_id as $id) {
+    $severity = 1;
 	$trans = new ActesTransaction();
 	$trans->setId($id);
     
@@ -74,16 +76,20 @@ foreach ($liste_id as $id) {
 	     $sortie .= $msg;
 	   }
 	}
+    try {
 
-    $actesNotification = $objectInstancier->get('ActesNotification');
-    $actesNotification->sendAutomaticNotification();
+        $actesNotification = $objectInstancier->get('ActesNotification');
+        $actesNotification->sendNotificationManuel($id);
+    } catch (Exception $e){
+        $severity = 3;
+        $msg = "Erreur lors de la notification : ".$e->getMessage();
+        $sortie .= $msg;
+    }
 
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, $severity, false, 'USER', $module->get("name"), $me)) {
 		$msg .= "\nErreur de journalisation.\n";
     	$sortie .= $msg;
 	}
-  
-  
   
 }
 

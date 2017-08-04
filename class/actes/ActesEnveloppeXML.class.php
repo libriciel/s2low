@@ -26,9 +26,8 @@ class ActesEnveloppeXML {
 	  	?>
 
 <actes:EnveloppeCLMISILL 	xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" 
-							xmlns:insee="http://xml.insee.fr/schema" 
-							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-							xsi:schemaLocation="http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd">
+							xmlns:insee="http://xml.insee.fr/schema"
+							>
 	<actes:Emetteur>
 		<actes:IDCL insee:SIREN="<?php echo $authorityInfo["siren"] ?>"
 					actes:Departement="<?php echo  $authorityInfo["department"]?>"

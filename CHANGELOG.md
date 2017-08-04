@@ -18,6 +18,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
 - Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
+- le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
+- Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
+
 
 ### Corrections de sécurités
 
@@ -39,7 +42,8 @@ ou le message de passage dans l'état #110 ~Helios
 - La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification 
 d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
 - Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
-  
+- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
+<num_unique_acte>-<type transaction>-<identifiant s2low>-AR.xml à la place de retour.xml ~Actes
 
 ### Corrections
 
