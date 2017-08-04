@@ -112,7 +112,7 @@ class ActesNotification {
 
         $status_info = $this->actesTransactionsSQL->getStatusInfo($transactionInfo['id'],4);
 
-        $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-AR.xml";
+        $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
         $mailer->addStringAsFile($ar_actes_filename, $status_info['flux_retour']);
 
         $mailContent = $this->getMailContent($transactionInfo,$add_url_recup);
@@ -126,13 +126,13 @@ class ActesNotification {
         $authority_info = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 
         $mailer->sendMail(
-                "[{$authority_info['name']}] Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] ,
+                "[{$authority_info['name']}] Notification concernant l'acte " . $transactionInfo['number'] ,
                 $mailContent
         );
 
         $message_log =
             sprintf(
-                "[%s] Transaction %s (%d) : Envoi d'une notification d'AR à %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                "[%s] Transaction %s (%d) : Envoi d'une notification à %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
                 $this->actes_appli_trigramme,
                 $transactionInfo['unique_id'],
                 $transactionInfo['id'],
@@ -144,18 +144,33 @@ class ActesNotification {
     }
 
 	private function getMailContent($transaction_info,$add_url_recup){
-        $status_info = $this->actesTransactionsSQL->getStatusInfo($transaction_info['id'],4);
+
+	    $last_status_id = $transaction_info['last_status_id'];
+
+	    if ($last_status_id == ActesStatusSQL::STATUS_ACQUITTEMENT_RECU) {
+            $status_info = $this->actesTransactionsSQL->getStatusInfo($transaction_info['id'], $last_status_id);
+        } else {
+            $status_info = $this->actesTransactionsSQL->getStatusInfo($transaction_info['id'], ActesStatusSQL::STATUS_DOCUMENT_RECU);
+        }
+
+
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
 
+        //$this->actesTransactionsSQL->getInfo($transaction_info['related_transaction_id']);
 
         ob_start();?>
 <?php if ($transaction_info['type'] == 1) : ?>
 L'acte de référence interne <?php echo $transaction_info['number'] ?> a été acquitté sous l'identifiant unique <?php echo $transaction_info['unique_id']  ?>.
-<?php elseif ($transaction_info['type'] == 3) : ?>
+<?php elseif ($transaction_info['type'] == 3 && $last_status_id == 4) : ?>
 L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
-<?php elseif ($transaction_info['type'] == 4) : ?>
+<?php elseif ($transaction_info['type'] == 4 && $last_status_id == 4) : ?>
 L'envoi de la lettre d'observation (ou du refus de réponse) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
+<?php elseif ($transaction_info['type'] == 6 && $last_status_id == 4) : ?>
+L'annulation de l'acte <?php echo $transaction_info['number'] ?> a été acquitté.
+<?php else:?>
+Réception de document pour l'acte  <?php echo $transaction_info['number'] ?>
 <?php endif; ?>
+
 
 Nature de l'Acte : <?php echo $transaction_info['nature_descr'] ?>
 
@@ -165,7 +180,11 @@ Décision du : <?php echo $transaction_info['decision_date']?>
 
 Transmise le :  <?php echo $envelope_info['submission_date']?>
 
+<?php if ($last_status_id == 4): ?>
 Accusé reçu le :  <?php echo $status_info['date'] ?>
+<?php else: ?>
+Document reçu le :  <?php echo $status_info['date'] ?>
+<?php endif; ?>
 
 <?php if($add_url_recup) : ?>
 URL pour récupérer les fichiers : <?php $url = WEBSITE_SSL."/modules/actes/actes_transac_show.php?id=".$transaction_info['id']; echo $url; ?>

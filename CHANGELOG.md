@@ -20,7 +20,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
 - le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
 - Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
-- Horodatage systématique des mails de notification d'AR #181 ~Actes
+- Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
+- Horodatage systématique des mails de notification  #181 ~Actes
 
 ### Corrections de sécurités
 
@@ -43,7 +44,7 @@ ou le message de passage dans l'état #110 ~Helios
 d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
 - Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
 - Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
-<num_unique_acte>-<type transaction>-<identifiant s2low>-AR.xml à la place de retour.xml ~Actes
+<num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
 
 ### Corrections
 

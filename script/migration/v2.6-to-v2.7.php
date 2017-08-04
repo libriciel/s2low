@@ -22,6 +22,6 @@ $sql = "UPDATE actes_transactions  SET authority_id=users.authority_id FROM user
 $sqlQuery->query($sql);
 
 //Cela permet d'éviter de notifier toutes les vieilles transactions autre que les 1-1
-echo "Suppression de toutes les notifications message 3 et 4\n";
-$sql = "UPDATE actes_transactions SET auto_broadcasted=TRUE WHERE type IN ('3','4') AND last_status_id=4";
-
+echo "Suppression de toutes les notifications message 2,3,4 et 5\n";
+$sql = "UPDATE actes_transactions SET auto_broadcasted=TRUE WHERE type IN ('2','3','4','5','6')";
+$sqlQuery->query($sql);
