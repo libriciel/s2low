@@ -86,11 +86,6 @@ foreach ($liste_id as $id) {
         $sortie .= $msg;
     }
 
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, $severity, false, 'USER', $module->get("name"), $me)) {
-		$msg .= "\nErreur de journalisation.\n";
-    	$sortie .= $msg;
-	}
-  
 }
 
   

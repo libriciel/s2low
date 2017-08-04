@@ -12,6 +12,8 @@ class ActesNotification {
     private $mailerFactory;
 
     private $logger;
+
+    private $actes_appli_trigramme;
 	
 	public function __construct(
 	        ActesTransactionsSQL $actesTransactionsSQL,
@@ -19,7 +21,8 @@ class ActesNotification {
             AuthoritySQL $authoritySQL,
             ActesEnvelopeSQL $actesEnveloppeSQL,
             MailerFactory $mailerFactory,
-            Logger $logger
+            Logger $logger,
+            $actes_appli_trigramme
     ){
 		$this->setFilePath(ACTES_FILES_UPLOAD_ROOT);
 
@@ -29,6 +32,7 @@ class ActesNotification {
         $this->actesEnveloppeSQL = $actesEnveloppeSQL;
         $this->mailerFactory = $mailerFactory;
         $this->logger = $logger;
+        $this->actes_appli_trigramme = $actes_appli_trigramme;
 	}
 	
 	public function setFilePath($filePath){
@@ -125,7 +129,19 @@ class ActesNotification {
                 "[{$authority_info['name']}] Notification d'accusé de réception pour l'acte " . $transactionInfo['number'] ,
                 $mailContent
         );
-	}
+
+        $message_log =
+            sprintf(
+                "[%s] Transaction %s (%d) : Envoi d'une notification d'AR à %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                $this->actes_appli_trigramme,
+                $transactionInfo['unique_id'],
+                $transactionInfo['id'],
+                $emails,
+                $authority_info['siren'],
+                $transactionInfo['type']
+            );
+        Log::newEntry(LOG_ISSUER_NAME,$message_log,1,false,"USER","actes",false,$transactionInfo['user_id']);
+    }
 
 	private function getMailContent($transaction_info,$add_url_recup){
         $status_info = $this->actesTransactionsSQL->getStatusInfo($transaction_info['id'],4);

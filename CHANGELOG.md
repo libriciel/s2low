@@ -20,7 +20,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
 - le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
 - Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
-
+- Horodatage systématique des mails de notification d'AR #181 ~Actes
 
 ### Corrections de sécurités
 

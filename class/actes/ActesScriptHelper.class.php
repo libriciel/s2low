@@ -29,8 +29,6 @@ class ActesScriptHelper {
     }
 
     public function updateStatus($transactions_ids,$status_id,$message,$flux_retour = ""){
-
-
         foreach($transactions_ids as $transactions_id) {
             $this->actesTransactionsSQL->updateStatus($transactions_id,$status_id,$message,$flux_retour);
             $info = $this->actesTransactionsSQL->getInfo($transactions_id);
@@ -52,6 +50,7 @@ class ActesScriptHelper {
             Log::newEntry(LOG_ISSUER_NAME,$message_log,1,false,"USER","actes",false,$info['user_id']);
         }
     }
+
 
     public function getStatusName($status_id){
         $status_list = array(
