@@ -63,9 +63,9 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 ### Retraits
 
-- L'ancienne bannière et la constante NEW_BANNER remplacer définitivement par la nouvelle bannière
-- Suppression du check de l'archive lors de son postage (check fait à l'étape de validation)
-- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET
+- L'ancienne bannière et la constante NEW_BANNER remplacée définitivement par la nouvelle bannière
+- Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
+- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
 
 ## [2.6.5] - 2017-06-29
 
