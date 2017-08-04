@@ -19,6 +19,11 @@ date_default_timezone_set("Europe/Paris");
 //Cette locale est cohérente avec le code de S2low
 setlocale(LC_TIME, "fr_FR.UTF-8");
 
+if ( ! defined("OPERATEUR_DE_TELETRANSMISSION")) {
+    define("OPERATEUR_DE_TELETRANSMISSION", "Libriciel SCOP");
+}
+
+
 if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","eric@sigmalis.com");
 }

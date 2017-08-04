@@ -22,7 +22,7 @@ class ExtendPdf extends FPDF {
 		$this->Cell(120);
 
 		//Framed title
-		$this->Cell(30,6,'Adullact');
+		$this->Cell(30,6,OPERATEUR_DE_TELETRANSMISSION);
 		//Line break
 		$this->Ln(6);
 		  $this->Line(10, 6, 120, 6);

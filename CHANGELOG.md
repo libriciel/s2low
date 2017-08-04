@@ -22,6 +22,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
 - Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
 - Horodatage systématique des mails de notification  #181 ~Actes
+- Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225 
 
 ### Corrections de sécurités
 
