@@ -145,4 +145,29 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
 	}
 
+	public function testgenerateActeXMLFile(){
+        $this->addActePDF();
+        $this->actesTransaction->set('decision_date',"2013-04-05");
+        $this->actesTransaction->set('classification_date',"2013-04-05");
+        $this->actesTransaction->set('nature_code','1');
+        $this->actesTransaction->set('objet','test');
+        $this->actesTransaction->set('classif1','1');
+        $this->actesTransaction->set('classif2','1');
+
+	    $xml = $this->actesTransaction->generateActeXMLFile("toto");
+
+	    $actesXSD = new \Libriciel\LibActes\ActesXSD();
+
+	    try {
+            $actesXSD->validate($xml);
+        } catch (\Libriciel\LibActes\Utils\XSDValidationException $e){
+            echo $xml;
+	        print_r($e->getValidationErrors());
+	        throw $e;
+        }
+
+        echo $xml;
+
+    }
+
 }

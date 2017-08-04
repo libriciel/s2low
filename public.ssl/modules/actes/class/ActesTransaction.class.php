@@ -701,6 +701,7 @@ class ActesTransaction extends DataObject {
     }
 
     $xml .= " </actes:Annexes>\n";
+    $xml .= "<actes:DocumentPapier>N</actes:DocumentPapier>\n";
     $xml .= "</actes:Acte>\n";
 
     return $xml;
