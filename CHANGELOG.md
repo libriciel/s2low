@@ -47,6 +47,8 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
 <num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
 - Mise en place du nouveau schéma Actes V2.2 #177 ~Actes
+- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes 
+- Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 
 ### Corrections
 

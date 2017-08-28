@@ -557,6 +557,12 @@
                 "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "document_papier": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "actes_transactions_workflow": {
@@ -3270,18 +3276,6 @@
             "tablename": "mail_transaction",
             "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
         },
-        "logs_request_user_id_demandeur_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
-        },
-        "logs_request_state_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
-        },
-        "modules_name_idx": {
-            "tablename": "modules",
-            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
-        },
         "at_enveloppe_id": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)"
@@ -3313,6 +3307,18 @@
         "actes_transactions_authority_id_last_status_id_idx": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)"
+        },
+        "logs_request_user_id_demandeur_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
+        },
+        "logs_request_state_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
+        },
+        "modules_name_idx": {
+            "tablename": "modules",
+            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
         "atw_id_date": {
             "tablename": "actes_transactions_workflow",

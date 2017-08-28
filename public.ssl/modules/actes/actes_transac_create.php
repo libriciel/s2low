@@ -60,6 +60,7 @@ if (strtotime($decision_date) > time()){
 	Helpers :: returnAndExit(1, "La date de décision est une date dans le futur", WEBSITE_SSL );
 }
 
+$document_papier =  Helpers :: getVarFromPost("document_papier", true)?1:0;
 
 $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
@@ -164,6 +165,7 @@ $trans->set("type", "1");
 $trans->set("nature_code", $nature_code);
 $trans->set("nature_descr", $transNatures[$nature_code]);
 $trans->set("subject", $subject);
+$trans->set("document_papier",$document_papier);
 $trans->set("number", $number);
 $trans->set("user_id",$me->getId());
 $trans->set("authority_id",$me->get("authority_id"));

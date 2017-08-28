@@ -143,7 +143,8 @@ CREATE TABLE actes_transactions (
     authority_id integer,
     sae_transfer_identifier character varying(256),
     antivirus_check boolean DEFAULT false,
-    classification_string character varying(256)
+    classification_string character varying(256),
+    document_papier boolean DEFAULT false NOT NULL
 );
 CREATE TABLE actes_transactions_workflow (
     id integer DEFAULT nextval('actes_transactions_workflow_id_seq'::regclass) NOT NULL,
@@ -475,9 +476,6 @@ CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workfl
 CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id)
 CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id)
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)
-CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)
-CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)
-CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)
 CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)
 CREATE INDEX at_related_id ON actes_transactions USING btree (related_transaction_id)
 CREATE INDEX at_user_id_index ON actes_transactions USING btree (user_id, last_status_id, id)
@@ -486,6 +484,9 @@ CREATE INDEX at_lsi_ac ON actes_transactions USING btree (last_status_id, antivi
 CREATE INDEX actes_transactions_user_id_last_status_id_idx ON actes_transactions USING btree (user_id, last_status_id)
 CREATE INDEX actes_transactions_auto_broadcasted_last_status_id_type_idx ON actes_transactions USING btree (auto_broadcasted, last_status_id, type)
 CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)
+CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)
+CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)
+CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)
 CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)
 CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)
 CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date)

@@ -197,8 +197,7 @@ if ($batchMode) {
 }
 
 $decision_date = Helpers :: getFromSession("decision_date");
-//<div class="form-group">
-//                <label for="min_submission_date" class="col-md-6 control-label">Date de postage minimale</label>
+
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"nature_code\" class=\"control-label\"> Nature de l'acte : </label>\n";
 $html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code")) ;
@@ -257,6 +256,17 @@ if ($decision_date) {
 $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_decision_date_calendar\"></div>\n";
 $html .= "   </div>\n";
+
+$document_papier_checked = Helpers :: getFromSession("document_papier")?'checked="checked"':"";
+
+$html .= <<<"EOL"
+    <div class="form-group">
+        <label for="document_papier" class="control-label">Envoi de documents papiers complémentaires : </label>
+        <input type="checkbox" name="document_papier" $document_papier_checked />
+    </div>
+EOL;
+
+
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"subject\" class=\"control-label\">Objet : </label>\n";
 $html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></div>\n";

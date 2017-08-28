@@ -30,7 +30,7 @@ class ActesTransaction extends DataObject {
   protected $broadcast_send_sources;
   protected $broadcast_emails;
   protected $last_status_id; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
- protected $type_reponse;
+  protected $type_reponse;
   protected $related_transaction;
   protected $last_classification_date;
   protected $xmlFileName;
@@ -40,6 +40,7 @@ class ActesTransaction extends DataObject {
   protected $destDir;
 
 	protected $classification_string;
+	protected $document_papier;
 
   protected $dbFields = array (
     "envelope_id" => array (
@@ -157,6 +158,11 @@ class ActesTransaction extends DataObject {
 		  "maxlength" => 256,
 		  "mandatory" => false
 	  ),
+      "document_papier" => array(
+          "descr" => "indique si la télétransmission est suivi d'un envoi de piece papier",
+          "type" => "isInt",
+          "mandatory" => false
+      ),
   );
   protected $transactionTypes = array (
     "1" => "Transmission d'actes",
@@ -701,10 +707,14 @@ class ActesTransaction extends DataObject {
     }
 
     $xml .= " </actes:Annexes>\n";
-    $xml .= "<actes:DocumentPapier>N</actes:DocumentPapier>\n";
+    $xml .= "<actes:DocumentPapier>".($this->getDocumentPapier()?"O":"N")."</actes:DocumentPapier>\n";
     $xml .= "</actes:Acte>\n";
 
     return $xml;
+  }
+
+  public function getDocumentPapier(){
+      return ($this->document_papier && $this->document_papier != 'f');
   }
 
   public function generateReponseCourrierXMLFile($xml_name){

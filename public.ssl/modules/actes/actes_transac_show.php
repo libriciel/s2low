@@ -106,8 +106,7 @@ switch ($trans->get("type")) {
     $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
     $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
     $html .= $doc->getHTMLArrayline("Objet", nl2br(get_hecho($trans->get("subject"))));
-	  
-   
+    $html .= $doc->getHTMLArrayline("Documents papiers complémentaires",$trans->getDocumentPapier()?"OUI":"NON");
 
 	$classification = get_hecho($trans->get("classification"));
 	if(  $trans->get("classification_string")){
