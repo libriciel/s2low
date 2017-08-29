@@ -84,6 +84,10 @@ if (isset($_FILES["acte_attachments_sign"])){
 	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 }
 
+$type_pj = Helpers::getVarFromPost('type_pj',true);
+
+
+
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
 $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);

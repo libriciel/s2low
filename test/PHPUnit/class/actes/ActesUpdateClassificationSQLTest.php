@@ -25,7 +25,7 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         );
 
         $this->assertEquals(
-            'Arretes reglementaires',
+            'Actes réglementaires',
             $this->actesUpdateClassificationSQL->getActeNature()[1]['descr']
         );
         $authority_id = $this->getObjectInstancier()->get("AuthoritySQL")->getIdBySIREN("123456789");
@@ -33,6 +33,9 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
             "Commande Publique",
             $this->actesUpdateClassificationSQL->getClassificationCode($authority_id)[0]['description']
         );
+
+        $actesTypePJSQL = $this->getObjectInstancier()->get('ActesTypePJSQL');
+        $this->assertEquals(12,count($actesTypePJSQL->getAll()));
     }
 
     public function testUpdateClassificationBadSiren(){

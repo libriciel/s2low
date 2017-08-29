@@ -38,6 +38,7 @@ class ActesUpdateClassificationSQL extends SQL{
 
         $this->updateClassificationRequest($siren,$date_classification,$fichier_xml);
 
+        $this->deleteActesTypePJ();
         $this->deleteActeNature();
 
         $actes_nature_list = $xml->xpath("/actes:RetourClassification/actes:NaturesActes/actes:NatureActe");
@@ -48,11 +49,23 @@ class ActesUpdateClassificationSQL extends SQL{
             $libelle = utf8_decode(strval($actes_nature->xpath('@actes:Libelle')[0]));
             $this->insertActeNature($codeNatureActe,$typeAbrege, $libelle);
         }
+        $this->updateCodePJ($xml);
+
 
         $this->deleteClassification($authority_id);
         $matiere = $xml->xpath("/actes:RetourClassification/actes:Matieres")[0];
         $this->ajoutMatieres($matiere,null,1,$authority_id);
     }
+
+    private function updateCodePJ(SimpleXMLElement $xml){
+        foreach( $xml->xpath("//actes:TypePJNatureActe") as $type_pj){
+            $code = strval($type_pj->xpath("@actes:CodeTypePJ")[0]);
+            $libelle = strval($type_pj->xpath("@actes:Libelle")[0]);
+            $nature_id = strval($type_pj->xpath("parent::actes:NatureActe/@actes:CodeNatureActe")[0]);
+            $this->insertActeTypePJ($nature_id,$code,$libelle);
+        }
+    }
+
     private function ajoutMatieres(SimpleXMLElement $matiere,$parent_id, $level,$authority_id){
 
         /** @var SimpleXMLElement $matiere_children */
@@ -95,9 +108,19 @@ class ActesUpdateClassificationSQL extends SQL{
         $this->query($sql);
     }
 
+    public function deleteActesTypePJ(){
+        $sql = "DELETE FROM actes_type_pj";
+        $this->query($sql);
+    }
+
     public function insertActeNature($codeNatureActe, $typeAbrege, $libelle) {
         $sql = "INSERT into actes_natures (id, short_descr, descr) VALUES (?,?,?)";
         $this->query($sql,$codeNatureActe,$typeAbrege,$libelle);
+    }
+
+    public function insertActeTypePJ($codeNatureActe, $code, $libelle) {
+        $sql = "INSERT into actes_type_pj (nature_id, code, libelle) VALUES (?,?,?)";
+        $this->query($sql,$codeNatureActe,$code,$libelle);
     }
 
     public function getActeNature(){

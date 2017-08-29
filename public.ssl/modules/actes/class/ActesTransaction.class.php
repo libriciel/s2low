@@ -40,7 +40,7 @@ class ActesTransaction extends DataObject {
   protected $destDir;
 
 	protected $classification_string;
-	protected $document_papier;
+	protected $document_papier = 0;
 
   protected $dbFields = array (
     "envelope_id" => array (

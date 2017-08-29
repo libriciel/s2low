@@ -371,6 +371,12 @@
                 "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": "''::character varying"
+            },
+            "code_pj": {
+                "data_type": "character varying",
+                "character_maximum_length": 5,
+                "is_nullable": "YES",
+                "column_default": null
             }
         },
         "actes_natures": {
@@ -645,6 +651,26 @@
             "rate_limit": {
                 "data_type": "integer",
                 "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            }
+        },
+        "actes_type_pj": {
+            "nature_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "code": {
+                "data_type": "character varying",
+                "character_maximum_length": 5,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "libelle": {
+                "data_type": "character varying",
+                "character_maximum_length": 128,
                 "is_nullable": "YES",
                 "column_default": null
             }
@@ -3253,6 +3279,20 @@
                     "id_service"
                 ],
                 "confrelname": "service_user",
+                "confkey": [
+                    "id"
+                ]
+            }
+        },
+        "actes_type_pj": {
+            "actes_type_pj_nature_id_fk": {
+                "conname": "actes_type_pj_nature_id_fk",
+                "contype": "f",
+                "conrelname": "actes_type_pj",
+                "conkey": [
+                    "nature_id"
+                ],
+                "confrelname": "actes_natures",
                 "confkey": [
                     "id"
                 ]

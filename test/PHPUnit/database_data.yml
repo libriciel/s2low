@@ -295,12 +295,16 @@ actes_transmission_window_hours:
 authority_group_siren:
 helios_transactions:
 helios_transactions_workflow:
+actes_type_pj:
 nounce:
 message_admin:
 actes_status:
   -
     id: -1
     name: Erreur
+  -
+    id: 1
+    name: Posté
   -
     id: 2
     name: En attente de transmission
