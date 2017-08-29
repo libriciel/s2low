@@ -174,8 +174,8 @@ class ActesTransactionTest extends S2lowTestCase {
         $envelope_id = $actesEnvelopeSQL->create(1,"000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
 
         $this->actesTransaction->set('envelope_id',$envelope_id);
-        $this->actesTransaction->generateActeXMLFile("toto.xml");
-        $this->actesTransaction->save();
+        /*$this->actesTransaction->generateActeXMLFile("toto.xml");
+        $this->actesTransaction->save();*/
 
     }
 
