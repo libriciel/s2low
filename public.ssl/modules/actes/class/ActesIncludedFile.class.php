@@ -173,7 +173,7 @@ class ActesIncludedFile extends DataObject {
    */
   static public function fetchFilesList($id) {
 	if (isset($id)) {
-	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
+	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign, code_pj FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
 	  
 	  
 	  $db =DatabasePool::getInstance();

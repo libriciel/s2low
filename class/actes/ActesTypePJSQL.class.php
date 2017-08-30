@@ -15,4 +15,10 @@ class ActesTypePJSQL extends SQL {
         return $result;
     }
 
+    public function getLibelle($code){
+        $sql = "SELECT libelle FROM actes_type_pj WHERE code=? LIMIT 1";
+        return $this->queryOne($sql,$code);
+
+    }
+
 }

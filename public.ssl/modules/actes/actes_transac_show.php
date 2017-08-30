@@ -6,6 +6,9 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.ph
 
 require_once( __DIR__ . "/../../../init/init-www-actes.php");
 
+
+$actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
+
 $actionHtml = "";
 
 // Instanciation du module courant
@@ -306,8 +309,12 @@ $html .= " <tbody>\n";
     	$html .= "<dt>Signature</dt>";
     	$html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>"; 
     }
-    
-    
+
+    if ($file['code_pj']){
+        $html .= '<dt>Type de pièce jointe :</dt>';
+        $html .= "<dd>". get_hecho($actesTypePJSQL->getLibelle($file['code_pj'])?:$file['code_pj'])."</dd>";
+    }
+
     $html .= "</td>\n";
     $html .= "  <td headers=\"type\" >" . $file["mimetype"] . "</td>\n";
     $html .= "  <td headers=\"size\" >" . $file["size"] . " octets</td>\n";

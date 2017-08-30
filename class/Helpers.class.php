@@ -341,6 +341,7 @@ class Helpers {
 	  $relPath = preg_replace('/^' . $escBase . '\\/*/', "", $path);
 	} else {
 		$t = Trace::getInstance();
+
 		$t->log("Impossible de créer le répertoire (unknow reason): $path ",Trace::$TRACE_ERROR);
 	  return false;
 	}

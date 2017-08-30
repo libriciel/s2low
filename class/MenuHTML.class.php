@@ -67,7 +67,7 @@ class MenuHTML  {
  			
  			<?php if ($userInfo['role'] == 'SADM') : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/admin/modules/admin_modules.php">Gestion des modules</a></li>
-				<li><a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php\">Gestion des groupes</a></li>
+				<li><a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php">Gestion des groupes</a></li>
 			<?php endif;?>
  			<?php if (in_array($userInfo['role'],array('SADM','GADM'))) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>

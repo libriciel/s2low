@@ -60,7 +60,7 @@ class ActesUpdateClassificationSQL extends SQL{
     private function updateCodePJ(SimpleXMLElement $xml){
         foreach( $xml->xpath("//actes:TypePJNatureActe") as $type_pj){
             $code = strval($type_pj->xpath("@actes:CodeTypePJ")[0]);
-            $libelle = strval($type_pj->xpath("@actes:Libelle")[0]);
+            $libelle = utf8_decode(strval($type_pj->xpath("@actes:Libelle")[0]));
             $nature_id = strval($type_pj->xpath("parent::actes:NatureActe/@actes:CodeNatureActe")[0]);
             $this->insertActeTypePJ($nature_id,$code,$libelle);
         }

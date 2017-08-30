@@ -91,18 +91,18 @@ $(function(){
   $("#addField").click(function(){
       var field_nb = $(".actes_pj").length + 1 ;
       var html = $(
-          '<div class="actes_files_form row actes_pj">' +
-                '<div class="form-group">' +
-                    '<label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-5 control-label">' +
-                        'Pièce jointe n°' + field_nb + ' (.pdf, .xml, .png ou .jpg)' +
+          '<div class="actes_pj">' +
+                '<div class="form-group col-md-offset-1">' +
+                    '<label for="acte_attachments_' + field_nb + '" class="">' +
+                        'Pièce jointe n°' + field_nb + ':' +
                     '</label>' +
-                    '<div class="col-md-2">' +
-                        '<select class="select_type_pj" id="actes_attachments_type_'+field_nb+'" name="type_pj[]">' +
-                         '</select>' +
-                    '</div>' +
-                    '<div class="col-md-2">' +
-                        '<input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />' +
-                    '</div>' +
+                         '<div class="form-group col-sm-offset-1" >' +   
+                         '<label>Type de pièce jointe</label><br/>' +
+                         '<select class="select_type_pj" id="actes_attachments_type_'+field_nb+'" name="type_pj[]">' +
+                         '</select></div>' +
+                        '<div class="form-group col-md-offset-1" >' +
+                        '<label>Fichier (.pdf, .xml, .png ou .jpg)</label><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />' +
+                        '</div>'+
                 '</div>' +
          '</div>'
       );
@@ -287,9 +287,9 @@ if (!$batchMode) {
   $html .= "   <div class=\"row-legend\">\n";
   $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
   $html .= "     <div class=\"actes_files_form\">\n";
-  $html .= "       <div class=\"form-group\">\n";  
-  $html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF ou XML : </label>\n";
-  $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
+  $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
+  $html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
+  $html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
   $html .= "       </div>\n";
   $html .= "     </div>\n";
   $html .= "   </fieldset>\n";
@@ -298,7 +298,7 @@ if (!$batchMode) {
 $html .= "<div class=\"form-group\">\n";    
 $html .= "  <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
-$html .= "  <legend>Pièces jointes supplémentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
+$html .= "  <legend>Pièces jointes supplémentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter une pièce jointe</a></legend></div>\n";
 $html .= "   <div id=\"attachments_fields\"></div>\n";
 $html .= " </fieldset>\n";  
 $html .= "</div>\n";

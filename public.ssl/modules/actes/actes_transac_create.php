@@ -273,16 +273,14 @@ if (isset ($acteAttachments)) {
 	if (! $uploader->verifOKAll("acte_attachments")){
 		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
 	}
-	
-	
+
 	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
 		if (! strlen($acteAttachments["tmp_name"][$i])){
 			continue;
 		}
-	
-		
-        $dest_name = $trans->getStdFileName($env);
-        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i])) {
+
+        $dest_name = $trans->getStdFileName($env,true,$type_pj[$i]);
+        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i],true,$type_pj[$i])) {
           $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
           $fileImportError = true;
         } else {
