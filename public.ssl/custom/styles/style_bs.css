@@ -18,6 +18,7 @@ h2 {
 input[type="radio"], input[type="checkbox"] {
     margin-top: 10px;
     margin-right: 10px;
+    vertical-align: text-bottom;
 }
 
 .pagination > li {

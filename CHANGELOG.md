@@ -47,6 +47,9 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
 <num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
 - Mise en place du nouveau schéma Actes V2.2 #177 ~Actes
+- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes 
+- Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
+- Gestion de la typologie des pièces jointes #179 ~Actes
 
 ### Corrections
 
@@ -63,9 +66,9 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 ### Retraits
 
-- L'ancienne bannière et la constante NEW_BANNER remplacer définitivement par la nouvelle bannière
-- Suppression du check de l'archive lors de son postage (check fait à l'étape de validation)
-- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET
+- L'ancienne bannière et la constante NEW_BANNER remplacée définitivement par la nouvelle bannière
+- Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
+- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
 
 ## [2.6.5] - 2017-06-29
 

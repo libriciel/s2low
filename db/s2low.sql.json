@@ -371,6 +371,12 @@
                 "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": "''::character varying"
+            },
+            "code_pj": {
+                "data_type": "character varying",
+                "character_maximum_length": 5,
+                "is_nullable": "YES",
+                "column_default": null
             }
         },
         "actes_natures": {
@@ -557,6 +563,12 @@
                 "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "document_papier": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "actes_transactions_workflow": {
@@ -639,6 +651,26 @@
             "rate_limit": {
                 "data_type": "integer",
                 "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            }
+        },
+        "actes_type_pj": {
+            "nature_id": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "code": {
+                "data_type": "character varying",
+                "character_maximum_length": 5,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "libelle": {
+                "data_type": "character varying",
+                "character_maximum_length": 128,
                 "is_nullable": "YES",
                 "column_default": null
             }
@@ -3251,6 +3283,20 @@
                     "id"
                 ]
             }
+        },
+        "actes_type_pj": {
+            "actes_type_pj_nature_id_fk": {
+                "conname": "actes_type_pj_nature_id_fk",
+                "contype": "f",
+                "conrelname": "actes_type_pj",
+                "conkey": [
+                    "nature_id"
+                ],
+                "confrelname": "actes_natures",
+                "confkey": [
+                    "id"
+                ]
+            }
         }
     },
     "index": {
@@ -3269,18 +3315,6 @@
         "mt_ui": {
             "tablename": "mail_transaction",
             "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
-        },
-        "logs_request_user_id_demandeur_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
-        },
-        "logs_request_state_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
-        },
-        "modules_name_idx": {
-            "tablename": "modules",
-            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
         "at_enveloppe_id": {
             "tablename": "actes_transactions",
@@ -3313,6 +3347,18 @@
         "actes_transactions_authority_id_last_status_id_idx": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)"
+        },
+        "logs_request_user_id_demandeur_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
+        },
+        "logs_request_state_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
+        },
+        "modules_name_idx": {
+            "tablename": "modules",
+            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
         "atw_id_date": {
             "tablename": "actes_transactions_workflow",

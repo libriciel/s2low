@@ -18,10 +18,15 @@ class ActesIncludedFile extends DataObject {
   protected $filesize;
   protected $signature;
 
+  protected $code_pj;
+
+
   protected $envelope;
 
-  private $tampon;
+  	private $tampon;
 	private $date_affichage;
+
+
   
   
   protected $dbFields = array( "envelope_id" => array( "descr" => "Identifiant enveloppe", "type" => "isInt", "mandatory" => true),
@@ -30,7 +35,8 @@ class ActesIncludedFile extends DataObject {
 						 "posted_filename" => array( "descr" => "Nom du fichier original", "type" => "isString", "mandatory" => false),
 						 "filetype" => array( "descr" => "Type du fichier", "type" => "isString", "maxlength" => 499, "mandatory" => true),
 						 "filesize" => array( "descr" => "Taille du fichier", "type" => "isInt", "mandatory" => true),
-						 "signature" => array( "descr" => "Signature électronique du fichier", "type" => "isString", "mandatory" => false)
+						 "signature" => array( "descr" => "Signature électronique du fichier", "type" => "isString", "mandatory" => false),
+	  					"code_pj" => array( "descr" => "Code de la PJ", "type" => "isString", "mandatory" => false)
 						 );
 
   /**
@@ -167,7 +173,7 @@ class ActesIncludedFile extends DataObject {
    */
   static public function fetchFilesList($id) {
 	if (isset($id)) {
-	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
+	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign, code_pj FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
 	  
 	  
 	  $db =DatabasePool::getInstance();

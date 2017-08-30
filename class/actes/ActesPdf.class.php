@@ -152,7 +152,9 @@ class ActesPdf {
 		$this->pdf->myRow(array("","Numéro de l'acte:",$trans->get("number")));
 		$this->pdf->myRow(array("","Date de la décision:",$trans->get("decision_date")));
 		$this->pdf->myRow(array("","Objet:",$trans->get("subject")));
-		$this->pdf->myRow(array("","Classification matières/sous-matières:",$trans->get("classification")));
+        $this->pdf->myRow(array("","Documents papiers complémentaires:",$trans->getDocumentPapier()?"OUI":"NON"));
+
+        $this->pdf->myRow(array("","Classification matières/sous-matières:",$trans->get("classification")));
 		$this->pdf->myRow(array("","Identifiant unique:",$trans->get("unique_id")));
 		$this->pdf->myRow(array("","URL d'archivage:",$arch_url));
 		$this->pdf->myRow(array("","Notification:",$notification));

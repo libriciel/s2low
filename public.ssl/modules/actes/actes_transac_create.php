@@ -60,6 +60,7 @@ if (strtotime($decision_date) > time()){
 	Helpers :: returnAndExit(1, "La date de décision est une date dans le futur", WEBSITE_SSL );
 }
 
+$document_papier =  Helpers :: getVarFromPost("document_papier", true)?1:0;
 
 $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
@@ -82,6 +83,10 @@ $acteAttachments = $_FILES["acte_attachments"];
 if (isset($_FILES["acte_attachments_sign"])){
 	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 }
+
+$type_pj = Helpers::getVarFromPost('type_pj',true);
+
+
 
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
 $broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
@@ -164,6 +169,7 @@ $trans->set("type", "1");
 $trans->set("nature_code", $nature_code);
 $trans->set("nature_descr", $transNatures[$nature_code]);
 $trans->set("subject", $subject);
+$trans->set("document_papier",$document_papier);
 $trans->set("number", $number);
 $trans->set("user_id",$me->getId());
 $trans->set("authority_id",$me->get("authority_id"));
@@ -267,16 +273,14 @@ if (isset ($acteAttachments)) {
 	if (! $uploader->verifOKAll("acte_attachments")){
 		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
 	}
-	
-	
+
 	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
 		if (! strlen($acteAttachments["tmp_name"][$i])){
 			continue;
 		}
-	
-		
-        $dest_name = $trans->getStdFileName($env);
-        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i])) {
+
+        $dest_name = $trans->getStdFileName($env,true,$type_pj[$i]);
+        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i],true,$type_pj[$i])) {
           $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
           $fileImportError = true;
         } else {

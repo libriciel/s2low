@@ -165,9 +165,56 @@ class ActesTransactionTest extends S2lowTestCase {
 	        print_r($e->getValidationErrors());
 	        throw $e;
         }
+    }
 
-        echo $xml;
+    public function testSave(){
 
+
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+
+        $envelope_id = $actesEnvelopeSQL->create(1,"000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
+
+        $this->actesTransaction->set('envelope_id',$envelope_id);
+        $this->actesTransaction->set('decision_date','2017-08-29');
+        $this->actesTransaction->set('classification_date','2017-08-29');
+        $this->actesTransaction->set('classif1','1');
+        $this->actesTransaction->set('classif2','1');
+
+        $this->actesTransaction->set('type','1');
+        $this->actesTransaction->set('nature_code','1');
+        $this->actesTransaction->set('nature_descr','toto');
+        $this->actesTransaction->set('subject','TEST');
+        $this->actesTransaction->set('number','TEST');
+
+
+        $env = new ActesEnvelope();
+        $env->set('department','001');
+        $env->set('siren','000000000');
+
+        $dest_name = $this->actesTransaction->getStdFileName($env);
+
+        $this->actesTransaction->addActeFile("vide.pdf",$dest_name,$this->pdf_filepath);
+
+        $dest_name = $this->actesTransaction->getStdFileName($env,true,"99_AU");
+        $this->actesTransaction->addAttachmentFile(
+            "vide2.pdf",
+            "$dest_name",
+            $this->pdf_filepath,
+            true,
+            '99_AU'
+        );
+        $xml_name =  $this->actesTransaction->getStdFileName($env, false);
+
+        $this->actesTransaction->generateMessageXMLFile($xml_name);
+
+        $this->actesTransaction->save();
+
+        $transaction_id = $this->actesTransaction->getId();
+
+        $actesIncludedFileSQL = $this->getObjectInstancier()->get('ActesIncludedFileSQL');
+        $file_list = $actesIncludedFileSQL->getAll($transaction_id);
+        $this->assertEquals("99_AU",$file_list[2]['code_pj']);
+        $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf",$file_list[2]['filename']);
     }
 
 }

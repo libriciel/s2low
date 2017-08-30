@@ -30,7 +30,7 @@ class ActesTransaction extends DataObject {
   protected $broadcast_send_sources;
   protected $broadcast_emails;
   protected $last_status_id; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
- protected $type_reponse;
+  protected $type_reponse;
   protected $related_transaction;
   protected $last_classification_date;
   protected $xmlFileName;
@@ -40,6 +40,7 @@ class ActesTransaction extends DataObject {
   protected $destDir;
 
 	protected $classification_string;
+	protected $document_papier = 0;
 
   protected $dbFields = array (
     "envelope_id" => array (
@@ -157,6 +158,11 @@ class ActesTransaction extends DataObject {
 		  "maxlength" => 256,
 		  "mandatory" => false
 	  ),
+      "document_papier" => array(
+          "descr" => "indique si la télétransmission est suivi d'un envoi de piece papier",
+          "type" => "isInt",
+          "mandatory" => false
+      ),
   );
   protected $transactionTypes = array (
     "1" => "Transmission d'actes",
@@ -436,7 +442,7 @@ class ActesTransaction extends DataObject {
    * \param $use_serial boolean (optionnel) : Ajouter le numéro de série à la fin du nom de fichier puis l'incrémenter (true par défaut)
    * \return Le nom du fichier sans extension
    */
-  public function getStdFileName($env, $use_serial = true) {
+  public function getStdFileName($env, $use_serial = true,$code_pj = '') {
     if ($this->type == 6) {
       $trans = $this->related_transaction;
     } else {
@@ -447,6 +453,10 @@ class ActesTransaction extends DataObject {
 
     // Racine
     $name = $this->destDir . "/";
+
+    if ($code_pj){
+       $name .= $code_pj."-";
+    }
 
     // Nom du fichier
     // Département
@@ -676,7 +686,6 @@ class ActesTransaction extends DataObject {
         $xml .= " <actes:CodeMatiere" . $i . " actes:CodeMatiere=\"" . $this-> $var . "\"/>\n";
       }
     }
-
     $xml .= " <actes:Objet>" . XML_escaping($this->subject) . "</actes:Objet>\n";
     $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
     $xml .= " <actes:Document>\n";
@@ -701,10 +710,14 @@ class ActesTransaction extends DataObject {
     }
 
     $xml .= " </actes:Annexes>\n";
-    $xml .= "<actes:DocumentPapier>N</actes:DocumentPapier>\n";
+    $xml .= "<actes:DocumentPapier>".($this->getDocumentPapier()?"O":"N")."</actes:DocumentPapier>\n";
     $xml .= "</actes:Acte>\n";
 
     return $xml;
+  }
+
+  public function getDocumentPapier(){
+      return ($this->document_papier && $this->document_papier != 'f');
   }
 
   public function generateReponseCourrierXMLFile($xml_name){
@@ -1026,7 +1039,7 @@ class ActesTransaction extends DataObject {
    * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
    * \return True en cas de succès, false sinon
    */
-  public function addFile($type, $name, $dest_name, $path = false, $validate = true) {
+  public function addFile($type, $name, $dest_name, $path = false, $validate = true, $code_pj = '') {
     $ext = null;
 
     // Si le chemin n'est pas spécifié et les deux noms fournis identiques
@@ -1134,8 +1147,10 @@ class ActesTransaction extends DataObject {
         "posted_filename" => $name,
         "mimetype" => $mimeType,
         "size" => $size,
-      	"sha1" => $sha1
+      	"sha1" => $sha1,
+          "code_pj" => ""
       );
+
     } else {
       if (!$import) {
         if (!$ext) {
@@ -1150,7 +1165,8 @@ class ActesTransaction extends DataObject {
         "posted_filename" => $name,
         "mimetype" => $mimeType,
         "size" => $size,
-      	"sha1" => $sha1
+      	"sha1" => $sha1,
+          "code_pj" => $code_pj
       );
     }
 
@@ -1158,11 +1174,12 @@ class ActesTransaction extends DataObject {
     if (!$import) {
       if ($path) {
         if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $new_name))) {
-          $this->errorMsg = "Erreur système. Abandon";
+          $this->errorMsg = "Erreur système (createDirTree). Abandon";
           return false;
         } else {
+
           if (!copy($path, $this->rootDir . "/" . $new_name)) {
-            $this->errorMsg = "Erreur système. Abandon";
+            $this->errorMsg = "Erreur système (copy). Abandon";
             return false;
           }
         }
@@ -1180,8 +1197,8 @@ class ActesTransaction extends DataObject {
    * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
    * \return True en cas de succès, false sinon
    */
-  public function addAttachmentFile($name, $dest_name, $path = null, $validate = true) {
-    if (!$this->addFile("attachment", $name, $dest_name, $path, $validate)) {
+  public function addAttachmentFile($name, $dest_name, $path = null, $validate = true,$code_pj='') {
+    if (!$this->addFile("attachment", $name, $dest_name, $path, $validate,$code_pj)) {
       return false;
     }
 
@@ -1510,19 +1527,23 @@ class ActesTransaction extends DataObject {
       if (isset ($this->files["attachment"])) {
         $files = array_merge($files, $this->files["attachment"]);
       }
-
       foreach ($files as $file) {
 
       	if (empty($file['sha1'])){
       		$file['sha1'] = "";
       	}
+          if (empty($file['code_pj'])){
+              $file['code_pj'] = "";
+          }
 
-        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature,sha1) VALUES("
+          $code_pj = addslashes($file['code_pj']);
+        $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature,sha1,code_pj) VALUES("
         		. $this->envelope_id . ", " .
         		 $this->id . ", '" .
         		 basename($file["name"]) . "', '" .
         		 addslashes(isset($file["posted_filename"])?$file["posted_filename"]:"") .
-        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"])?$file["sign"]:"") . "','{$file['sha1']}')";
+        		   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"])?$file["sign"]:"") . "',
+        		   '{$file['sha1']}','$code_pj')";
 
         if (!$this->db->exec($sql)) {
           $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";

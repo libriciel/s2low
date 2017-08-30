@@ -107,7 +107,8 @@ CREATE TABLE actes_included_files (
     filesize integer,
     signature text,
     posted_filename character varying(512),
-    sha1 character varying(256) DEFAULT ''::character varying
+    sha1 character varying(256) DEFAULT ''::character varying,
+    code_pj character varying(5)
 );
 CREATE TABLE actes_natures (
     id integer NOT NULL,
@@ -143,7 +144,8 @@ CREATE TABLE actes_transactions (
     authority_id integer,
     sae_transfer_identifier character varying(256),
     antivirus_check boolean DEFAULT false,
-    classification_string character varying(256)
+    classification_string character varying(256),
+    document_papier boolean DEFAULT false NOT NULL
 );
 CREATE TABLE actes_transactions_workflow (
     id integer DEFAULT nextval('actes_transactions_workflow_id_seq'::regclass) NOT NULL,
@@ -163,6 +165,11 @@ CREATE TABLE actes_transmission_window_hours (
 CREATE TABLE actes_transmission_windows (
     id integer DEFAULT nextval('actes_transmission_windows_id_seq'::regclass) NOT NULL,
     rate_limit integer
+);
+CREATE TABLE actes_type_pj (
+    nature_id integer,
+    code character varying(5),
+    libelle character varying(128)
 );
 CREATE TABLE authorities (
     id integer DEFAULT nextval('authorities_id_seq'::regclass) NOT NULL,
@@ -475,9 +482,6 @@ CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workfl
 CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id)
 CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id)
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)
-CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)
-CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)
-CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)
 CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)
 CREATE INDEX at_related_id ON actes_transactions USING btree (related_transaction_id)
 CREATE INDEX at_user_id_index ON actes_transactions USING btree (user_id, last_status_id, id)
@@ -486,6 +490,9 @@ CREATE INDEX at_lsi_ac ON actes_transactions USING btree (last_status_id, antivi
 CREATE INDEX actes_transactions_user_id_last_status_id_idx ON actes_transactions USING btree (user_id, last_status_id)
 CREATE INDEX actes_transactions_auto_broadcasted_last_status_id_type_idx ON actes_transactions USING btree (auto_broadcasted, last_status_id, type)
 CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)
+CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)
+CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)
+CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)
 CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id)
 CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)
 CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date)
@@ -508,63 +515,63 @@ CREATE INDEX l_u ON logs USING btree (user_id)
 CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id)
 CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic)
 CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col)
-ALTER TABLE logs_request ADD CONSTRAINT logs_request_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transmission_window_hours ADD CONSTRAINT helios_transmission_window_hours_pkey PRIMARY KEY (id);
 ALTER TABLE modules_params ADD CONSTRAINT modules_params_pkey PRIMARY KEY (id);
-ALTER TABLE authorities ADD CONSTRAINT authorities_pkey PRIMARY KEY (id);
-ALTER TABLE mail_included_file ADD CONSTRAINT mail_included_file_pkey PRIMARY KEY (id);
-ALTER TABLE mail_message_emis ADD CONSTRAINT mail_message_emis_pkey PRIMARY KEY (id);
-ALTER TABLE dia_transactions ADD CONSTRAINT dia_transactions_pkey PRIMARY KEY (id);
-ALTER TABLE mail_transaction ADD CONSTRAINT mail_transaction_pkey PRIMARY KEY (id);
-ALTER TABLE helios_status ADD CONSTRAINT helios_status_pkey PRIMARY KEY (id);
-ALTER TABLE nounce ADD CONSTRAINT nounce_pkey PRIMARY KEY (id);
-ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_pkey PRIMARY KEY (id);
-ALTER TABLE actes_envelope_serials ADD CONSTRAINT actes_envelope_serials_pkey PRIMARY KEY (id);
-ALTER TABLE modules ADD CONSTRAINT modules_pkey PRIMARY KEY (id);
-ALTER TABLE actes_included_files ADD CONSTRAINT actes_included_files_pkey PRIMARY KEY (id);
-ALTER TABLE mail_errors ADD CONSTRAINT mail_errors_pkey PRIMARY KEY (id);
-ALTER TABLE actes_envelopes ADD CONSTRAINT actes_envelopes_pkey PRIMARY KEY (id);
-ALTER TABLE actes_transmission_windows ADD CONSTRAINT actes_transmission_windows_pkey PRIMARY KEY (id);
-ALTER TABLE actes_classification_requests ADD CONSTRAINT actes_classification_requests_pkey PRIMARY KEY (id);
-ALTER TABLE authority_groups ADD CONSTRAINT authority_groups_pkey PRIMARY KEY (id);
-ALTER TABLE authority_types ADD CONSTRAINT authority_types_pkey PRIMARY KEY (id);
-ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_pkey PRIMARY KEY (id);
-ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_pkey PRIMARY KEY (id);
-ALTER TABLE actes_transactions ADD CONSTRAINT actes_transactions_pkey PRIMARY KEY (id);
-ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_pkey PRIMARY KEY (id);
-ALTER TABLE actes_natures ADD CONSTRAINT actes_natures_pkey PRIMARY KEY (id);
-ALTER TABLE actes_transmission_window_hours ADD CONSTRAINT actes_transmission_window_hours_pkey PRIMARY KEY (id);
-ALTER TABLE authority_districts ADD CONSTRAINT authority_districts_pkey PRIMARY KEY (id);
-ALTER TABLE logs ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
-ALTER TABLE actes_status ADD CONSTRAINT actes_status_pkey PRIMARY KEY (id);
-ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transactions ADD CONSTRAINT helios_transactions_pkey PRIMARY KEY (id);
-ALTER TABLE mail_annuaire ADD CONSTRAINT mail_annuaire_pkey PRIMARY KEY (id);
-ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_pkey PRIMARY KEY (id);
-ALTER TABLE service_user ADD CONSTRAINT service_user_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transactions_workflow ADD CONSTRAINT helios_transactions_workflow_pkey PRIMARY KEY (id);
-ALTER TABLE message_admin ADD CONSTRAINT message_admin_pkey PRIMARY KEY (id);
-ALTER TABLE actes_classification_codes ADD CONSTRAINT actes_classification_codes_pkey PRIMARY KEY (id);
-ALTER TABLE actes_transactions_workflow ADD CONSTRAINT actes_transactions_workflow_pkey PRIMARY KEY (id);
-ALTER TABLE users_perms ADD CONSTRAINT users_perms_pkey PRIMARY KEY (id);
-ALTER TABLE authority_departments ADD CONSTRAINT authority_departments_pkey PRIMARY KEY (id);
-ALTER TABLE actes_batches ADD CONSTRAINT actes_batches_pkey PRIMARY KEY (id);
-ALTER TABLE dia_transactions_workflow ADD CONSTRAINT dia_transactions_workflow_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transmission_windows ADD CONSTRAINT helios_transmission_windows_pkey PRIMARY KEY (id);
 ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_pkey PRIMARY KEY (id);
+ALTER TABLE nounce ADD CONSTRAINT nounce_pkey PRIMARY KEY (id);
+ALTER TABLE mail_message_emis ADD CONSTRAINT mail_message_emis_pkey PRIMARY KEY (id);
+ALTER TABLE mail_transaction ADD CONSTRAINT mail_transaction_pkey PRIMARY KEY (id);
+ALTER TABLE logs_request ADD CONSTRAINT logs_request_pkey PRIMARY KEY (id);
+ALTER TABLE message_admin ADD CONSTRAINT message_admin_pkey PRIMARY KEY (id);
+ALTER TABLE logs ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
+ALTER TABLE actes_included_files ADD CONSTRAINT actes_included_files_pkey PRIMARY KEY (id);
+ALTER TABLE dia_transactions_workflow ADD CONSTRAINT dia_transactions_workflow_pkey PRIMARY KEY (id);
+ALTER TABLE actes_envelopes ADD CONSTRAINT actes_envelopes_pkey PRIMARY KEY (id);
+ALTER TABLE mail_annuaire ADD CONSTRAINT mail_annuaire_pkey PRIMARY KEY (id);
+ALTER TABLE actes_classification_requests ADD CONSTRAINT actes_classification_requests_pkey PRIMARY KEY (id);
+ALTER TABLE authority_departments ADD CONSTRAINT authority_departments_pkey PRIMARY KEY (id);
+ALTER TABLE authority_types ADD CONSTRAINT authority_types_pkey PRIMARY KEY (id);
+ALTER TABLE actes_transmission_window_hours ADD CONSTRAINT actes_transmission_window_hours_pkey PRIMARY KEY (id);
+ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_pkey PRIMARY KEY (id);
+ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_pkey PRIMARY KEY (id);
+ALTER TABLE actes_transactions ADD CONSTRAINT actes_transactions_pkey PRIMARY KEY (id);
+ALTER TABLE service_user ADD CONSTRAINT service_user_pkey PRIMARY KEY (id);
+ALTER TABLE actes_natures ADD CONSTRAINT actes_natures_pkey PRIMARY KEY (id);
+ALTER TABLE actes_transactions_workflow ADD CONSTRAINT actes_transactions_workflow_pkey PRIMARY KEY (id);
+ALTER TABLE authority_districts ADD CONSTRAINT authority_districts_pkey PRIMARY KEY (id);
+ALTER TABLE authorities ADD CONSTRAINT authorities_pkey PRIMARY KEY (id);
+ALTER TABLE actes_status ADD CONSTRAINT actes_status_pkey PRIMARY KEY (id);
+ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transactions ADD CONSTRAINT helios_transactions_pkey PRIMARY KEY (id);
+ALTER TABLE dia_transactions ADD CONSTRAINT dia_transactions_pkey PRIMARY KEY (id);
+ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_pkey PRIMARY KEY (id);
+ALTER TABLE mail_errors ADD CONSTRAINT mail_errors_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transactions_workflow ADD CONSTRAINT helios_transactions_workflow_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transmission_window_hours ADD CONSTRAINT helios_transmission_window_hours_pkey PRIMARY KEY (id);
+ALTER TABLE actes_classification_codes ADD CONSTRAINT actes_classification_codes_pkey PRIMARY KEY (id);
+ALTER TABLE actes_transmission_windows ADD CONSTRAINT actes_transmission_windows_pkey PRIMARY KEY (id);
+ALTER TABLE users_perms ADD CONSTRAINT users_perms_pkey PRIMARY KEY (id);
+ALTER TABLE helios_status ADD CONSTRAINT helios_status_pkey PRIMARY KEY (id);
+ALTER TABLE actes_batches ADD CONSTRAINT actes_batches_pkey PRIMARY KEY (id);
+ALTER TABLE authority_groups ADD CONSTRAINT authority_groups_pkey PRIMARY KEY (id);
+ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_pkey PRIMARY KEY (id);
+ALTER TABLE mail_included_file ADD CONSTRAINT mail_included_file_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transmission_windows ADD CONSTRAINT helios_transmission_windows_pkey PRIMARY KEY (id);
+ALTER TABLE actes_envelope_serials ADD CONSTRAINT actes_envelope_serials_pkey PRIMARY KEY (id);
+ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_pkey PRIMARY KEY (id);
+ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE modules ADD CONSTRAINT modules_pkey PRIMARY KEY (id);
 ALTER TABLE service_user_content ADD CONSTRAINT service_user_content_unique UNIQUE (id_user,id_service);
 ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_unique UNIQUE (id_user,id_groupe);
 ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_unique UNIQUE (authority_id,name);
 ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
-ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_user_fkey FOREIGN KEY (id_user) REFERENCES mail_annuaire (id);
+ALTER TABLE service_user_content ADD CONSTRAINT service_user_content_id_service_fkey FOREIGN KEY (id_service) REFERENCES service_user (id);
 ALTER TABLE users_perms ADD CONSTRAINT users_perms_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
 ALTER TABLE actes_transmission_window_hours ADD CONSTRAINT actes_transmission_window_hours_transmission_window_id_fk FOREIGN KEY (transmission_window_id) REFERENCES actes_transmission_windows (id);
-ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES actes_transactions (id);
+ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_user_fkey FOREIGN KEY (id_user) REFERENCES mail_annuaire (id);
 ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE dia_transactions_workflow ADD CONSTRAINT dia_transactions_workflow_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES dia_transactions (id);
+ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_batch_id_fk FOREIGN KEY (batch_id) REFERENCES actes_batches (id);
 ALTER TABLE nounce ADD CONSTRAINT authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
-ALTER TABLE authorities ADD CONSTRAINT authorities_authority_type_id_fk FOREIGN KEY (authority_type_id) REFERENCES authority_types (id);
 ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
 ALTER TABLE users ADD CONSTRAINT users_entity_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE helios_transactions ADD CONSTRAINT helios_transactions_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id);
@@ -573,7 +580,7 @@ ALTER TABLE actes_transactions ADD CONSTRAINT actes_transactions_envelope_id_fk 
 ALTER TABLE message_admin ADD CONSTRAINT message_admin_user_id_fkey FOREIGN KEY (user_id) REFERENCES users (id);
 ALTER TABLE actes_included_files ADD CONSTRAINT actes_included_files_envelope_id_fk FOREIGN KEY (envelope_id) REFERENCES actes_envelopes (id);
 ALTER TABLE message_admin ADD CONSTRAINT message_admin_user_id_publieur_fkey FOREIGN KEY (user_id_publieur) REFERENCES users (id);
-ALTER TABLE modules_params ADD CONSTRAINT modules_params_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
+ALTER TABLE logs ADD CONSTRAINT logs_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE actes_transactions_workflow ADD CONSTRAINT actes_transactions_workflow_status_id_fk FOREIGN KEY (status_id) REFERENCES actes_status (id);
 ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE actes_transactions_workflow ADD CONSTRAINT actes_transactions_workflow_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES actes_transactions (id);
@@ -590,13 +597,14 @@ ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_authority_group_id FO
 ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE actes_included_files ADD CONSTRAINT actes_included_files_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES actes_transactions (id);
-ALTER TABLE logs ADD CONSTRAINT logs_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
-ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_batch_id_fk FOREIGN KEY (batch_id) REFERENCES actes_batches (id);
+ALTER TABLE authorities ADD CONSTRAINT authorities_authority_type_id_fk FOREIGN KEY (authority_type_id) REFERENCES authority_types (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_authority_id_fkey FOREIGN KEY (authority_id) REFERENCES authorities (id);
-ALTER TABLE authorities ADD CONSTRAINT authorities_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_authority_group_id_fkey FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
-ALTER TABLE service_user_content ADD CONSTRAINT service_user_content_id_user_fkey FOREIGN KEY (id_user) REFERENCES users (id);
-ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_groupe_fkey FOREIGN KEY (id_groupe) REFERENCES mail_groupe (id);
+ALTER TABLE authorities ADD CONSTRAINT authorities_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_user_id_demandeur_fkey FOREIGN KEY (user_id_demandeur) REFERENCES users (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_user_id_fkey FOREIGN KEY (user_id) REFERENCES users (id);
-ALTER TABLE service_user_content ADD CONSTRAINT service_user_content_id_service_fkey FOREIGN KEY (id_service) REFERENCES service_user (id);
+ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_groupe_fkey FOREIGN KEY (id_groupe) REFERENCES mail_groupe (id);
+ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES actes_transactions (id);
+ALTER TABLE service_user_content ADD CONSTRAINT service_user_content_id_user_fkey FOREIGN KEY (id_user) REFERENCES users (id);
+ALTER TABLE modules_params ADD CONSTRAINT modules_params_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
+ALTER TABLE actes_type_pj ADD CONSTRAINT actes_type_pj_nature_id_fk FOREIGN KEY (nature_id) REFERENCES actes_natures (id);

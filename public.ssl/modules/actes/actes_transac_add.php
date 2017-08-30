@@ -35,7 +35,6 @@ if ($module->getParam("paper") == "on") {
 }
 
 
-
 // Collectivité de l'utilisateur courant
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -61,6 +60,10 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
 }
 
 
+$actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
+$type_pj_list = json_encode($actesTypePJSQL->getAllByNature());
+
+
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
 $trans = new ActesTransaction();
@@ -70,62 +73,68 @@ $doc = new HTMLLayout();
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"".WEBSITE_SSL."/custom/styles/date-picker.css\" />");
 $doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
 
 $js =<<<EOJS
 <script type="text/javascript">
 //<![CDATA[
-var field_nb = 1;
 
 var progress_bar = new Image();
 progress_bar.src = "/custom/images/progress_bar.gif";
 
-function add_attachment_field() {
-  field = document.getElementById("attachments_fields");
-  newfield=document.createElement("div");
-  newfield.className="actes_files_form row";
-  html = '        <div class="form-group">';
-  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .xml, .png ou .jpg)\\x3C/label>';
-  html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
-  html += '       \\x3C/div>';
-EOJS;
-$js .=<<<EOJS
-html += '    \\x3C/div>';
-html += '    \\x3C/div>';
-html += '    \\x3C/div>';
-
-  newfield.innerHTML = html;
-  field.appendChild(newfield);
-  field_nb++;
-}
-
-        function getFullPath(obj)
-        {
-            if(obj)
-            {
-                //ie
-                if (window.navigator.userAgent.indexOf("MSIE")>=1)
-                {
-                    obj.select();
-                    return document.selection.createRange().text;
-                }
-                //firefox
-                else if(window.navigator.userAgent.indexOf("Firefox")>=1)
-                {
-                    if(obj.files)
-                    {
-                        return obj.files[0].getAsDataURL();
-                    }
-                    return obj.value;
-                }
-                return obj.value;
-            }
-        } 
-       
-
-// affichage/masquage d'un bloc
 function hide_bloc(bloc_id){
 	document.getElementById(bloc_id).style.visibility=document.getElementById(bloc_id).style.visibility=="hidden"?"visible":"hidden";;
 }  
+
+$(function(){
+  
+  $("#addField").click(function(){
+      var field_nb = $(".actes_pj").length + 1 ;
+      var html = $(
+          '<div class="actes_pj">' +
+                '<div class="form-group col-md-offset-1">' +
+                    '<label for="acte_attachments_' + field_nb + '" class="">' +
+                        'Pièce jointe n°' + field_nb + ':' +
+                    '</label>' +
+                         '<div class="form-group col-sm-offset-1" >' +   
+                         '<label>Type de pièce jointe</label><br/>' +
+                         '<select class="select_type_pj" id="actes_attachments_type_'+field_nb+'" name="type_pj[]">' +
+                         '</select></div>' +
+                        '<div class="form-group col-md-offset-1" >' +
+                        '<label>Fichier (.pdf, .xml, .png ou .jpg)</label><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />' +
+                        '</div>'+
+                '</div>' +
+         '</div>'
+      );
+      
+      $("#attachments_fields").append(html);
+      
+      setTypePJ($("#actes_attachments_type_"+field_nb));
+      
+  });
+  
+  var setTypePJ = function(selector){
+      selector.empty();
+      var nature_code = $("#nature_code").val();
+      if (nature_code){
+          $.each(type_pj[nature_code], function(key, value) {   
+           selector
+             .append($("<option></option>")
+                        .attr("value",key)
+                        .text(value)); 
+          });
+     }
+  };
+  
+  $("#nature_code").on('change', function() {
+        $(".select_type_pj").each(function(){
+            setTypePJ($(this))
+        });
+  });
+  
+  var type_pj = $type_pj_list;
+});
+
 
 //]]>
 </script>
@@ -197,11 +206,10 @@ if ($batchMode) {
 }
 
 $decision_date = Helpers :: getFromSession("decision_date");
-//<div class="form-group">
-//                <label for="min_submission_date" class="col-md-6 control-label">Date de postage minimale</label>
+
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"nature_code\" class=\"control-label\"> Nature de l'acte : </label>\n";
-$html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code")) ;
+$html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code"),"id='nature_code'") ;
 $html .= " </div>";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"classification_text\" class=\"control-label\">Classification : </label>\n";
@@ -257,6 +265,17 @@ if ($decision_date) {
 $html .= "</a>\n";
 $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_decision_date_calendar\"></div>\n";
 $html .= "   </div>\n";
+
+$document_papier_checked = Helpers :: getFromSession("document_papier")?'checked="checked"':"";
+
+$html .= <<<"EOL"
+    <div class="form-group">
+        <label for="document_papier" class="control-label">Envoi de documents papiers complémentaires : </label>
+        <input type="checkbox" name="document_papier" $document_papier_checked />
+    </div>
+EOL;
+
+
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"subject\" class=\"control-label\">Objet : </label>\n";
 $html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></div>\n";
@@ -268,9 +287,9 @@ if (!$batchMode) {
   $html .= "   <div class=\"row-legend\">\n";
   $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
   $html .= "     <div class=\"actes_files_form\">\n";
-  $html .= "       <div class=\"form-group\">\n";  
-  $html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF ou XML : </label>\n";
-  $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
+  $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
+  $html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
+  $html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
   $html .= "       </div>\n";
   $html .= "     </div>\n";
   $html .= "   </fieldset>\n";
@@ -279,7 +298,7 @@ if (!$batchMode) {
 $html .= "<div class=\"form-group\">\n";    
 $html .= "  <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
-$html .= "  <legend>Pièces jointes supplémentaires : <a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
+$html .= "  <legend>Pièces jointes supplémentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter une pièce jointe</a></legend></div>\n";
 $html .= "   <div id=\"attachments_fields\"></div>\n";
 $html .= " </fieldset>\n";  
 $html .= "</div>\n";
