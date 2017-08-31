@@ -61,7 +61,8 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
 
 
 $actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
-$type_pj_list = json_encode($actesTypePJSQL->getAllByNature());
+
+$type_pj_list = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNature()));
 
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
