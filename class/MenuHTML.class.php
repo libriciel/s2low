@@ -2,6 +2,10 @@
 
 class MenuHTML  {
 
+    const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING = 30;
+
+    const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER = 7;
+
  	public function getMenuContent(array $userInfo,$modulesInfo) {
 	    ob_start();
 	    ?>
@@ -43,10 +47,23 @@ class MenuHTML  {
                 $module_export[] = $module;
             }
 		 }
+
+        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo)
 		 
 		?>
                     <div id="menu-header">
                         Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
+
+                        <?php if($nb_days_before_certificate_expires<self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
+                            <div class="alert alert-danger message-admin">
+                                <b>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</b>
+                            </div>
+                        <?php elseif ($nb_days_before_certificate_expires<self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING):?>
+                            <div class="alert alert-warning message-admin">
+                                <b>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</b>
+                            </div>
+                        <?php endif; ?>
+
                         <?php
                     $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
                     /** @var MessageAdminSQL $messageAdminSQL */
@@ -120,4 +137,11 @@ class MenuHTML  {
  	<?php 
 		return;
   }
+
+    public function getNbDaysBeforeCertificatExpire($userInfo){
+        $x509Certificate = new X509Certificate();
+        $expiration_time =  strtotime($x509Certificate->getExpirationDate($userInfo['certificate']));
+        return floor(($expiration_time - time())/86400);
+    }
+
 }
