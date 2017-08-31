@@ -348,7 +348,6 @@ class AdminUserController extends Controller {
 				$this->redirectSSL("/admin/users/admin_user_edit.php?id=" . $him->getId());
 			}
 		}
-
 	}
 
     public function listAction(){
@@ -376,6 +375,56 @@ class AdminUserController extends Controller {
 
         $this->status_type_list = $this->me->get("statusTypes");
         $this->roles_type_list = $this->me->get("roleTypes");
+    }
+
+    public function doBulkModifCertifAction(){
+        $this->verifAdmin();
+
+        $me = new User();
+        $me->authenticate();
+
+        $user_id = $this->getRecuperateurPost()->get('user_id');
+        if (! $user_id){
+            $this->redirect("/","Aucun identifiant utilisateur n'a été présenté");
+        }
+
+        $confirm = $this->getRecuperateurPost()->get('confirm');
+        if ($confirm != 'OUI'){
+            $this->redirect(
+                "/admin/users/admin_user_list.php?user_id=$user_id",
+                "Vous devez confirmer la modification"
+            );
+        }
+
+        $files = $this->getFiles();
+
+        if (empty($files['certificat'])){
+            $this->redirect(
+                "/admin/users/admin_user_list.php?user_id=$user_id",
+                "Vous devez fournir un certificat"
+            );
+        }
+
+        $certificate_filepath = $files['certificat']['tmp_name'];
+
+
+
+
+        $userSQL = $this->getObjectInstancier()->get("UserSQL");
+
+        $user_info = $userSQL->getInfo($user_id);
+        $list = $userSQL->getListFromCertificateInfo($user_info['certificate_hash']);
+        foreach($list as $user_info){
+            if (! $me->canEditUser($user_info['id'])){
+                continue;
+            }
+            $him = new User($user_info['id']);
+            $him->init();
+            $him->set('certFilePath',$certificate_filepath);
+            $him->save();
+        }
+
+        $this->redirect("/admin/users/admin_user_list.php?user_id=$user_id","Certificat mis à jour");
     }
 
 }

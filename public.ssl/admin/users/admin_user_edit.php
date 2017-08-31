@@ -269,7 +269,7 @@ ob_start();
 	<div class="alert alert-info col-md-9 col-md-offset-1 " style="word-wrap: break-word;">
 		<?php hecho($him->get('subject_dn')) ?>
 		<br/>
-		Expire le <?php echo date("d/m/Y H:i:s",strtotime($x509Certificate->getExpirationDate($him->get('certificate')))); ?>
+		Expire le <?php echo $him->getCertificateExpirationDate(); ?>
 		<?php if($me->isSuper()) : ?>
 			<br/>
 			<a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_download_cert.php?id=<?php echo $him->getId()?>">Télécharger</a>

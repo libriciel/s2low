@@ -1,6 +1,7 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    cron \
     git \
     libc-client-dev \
     libjpeg-dev \
@@ -98,6 +99,9 @@ RUN touch /tmp/slow.log && \
 ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
+
+# Copie des crontab
+COPY ./docker-resources/cron.d/* /etc/cron.d/
 
 # Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
 

@@ -24,7 +24,6 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-
 $html = " <h1>Espace de télétransmission</h1>\n";
 $html .= "<p>Vous êtes connecté avec le rôle";
 

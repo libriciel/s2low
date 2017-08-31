@@ -46,6 +46,8 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
 
 fi
 
+#Mise à jour du validca
+/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 php /var/www/s2low/docker-resources/init-docker.php
 

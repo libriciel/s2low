@@ -23,6 +23,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
 - Horodatage systématique des mails de notification  #181 ~Actes
 - Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225 
+- Ajout d'une infobulle pour indiquer que le certificat de l'utilisateur connecté expire bientôt #93
 
 ### Corrections de sécurités
 
@@ -50,6 +51,8 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes 
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
+- Modification en masse des certificats partagés #31 ~Administration
+  
 
 ### Corrections
 

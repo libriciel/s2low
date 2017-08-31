@@ -804,6 +804,19 @@ class User extends DataObject {
 		}
 		return $result;
 	}
-	
+
+    private function getCertificateExpirationTime(){
+        $x509Certificate = new X509Certificate();
+        return strtotime($x509Certificate->getExpirationDate($this->get('certificate')));
+    }
+
+    public function getCertificateExpirationDate(){
+        return date("d/m/Y H:i:s",$this->getCertificateExpirationTime());
+    }
+
+    public function getNbDaysBeforeCertificatExpire(){
+        return floor(($this->getCertificateExpirationTime() - time())/86400);
+    }
+
 }
 
