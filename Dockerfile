@@ -99,6 +99,9 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
+# Copie des crontab
+COPY ./docker-resources/cron.d/* /etc/cron.d/
+
 # Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
 
 # Installation de composer

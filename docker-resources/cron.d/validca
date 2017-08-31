@@ -1,0 +1,1 @@
+10  *   *   *   *   root  /usr/local/bin/recup_crl.sh /etc/s2low/ssl/ > /var/log/recup_crl.log 2>&1
