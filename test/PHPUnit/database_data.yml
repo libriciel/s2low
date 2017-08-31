@@ -138,7 +138,10 @@ users:
   issuer_dn: adullact
   certificate_hash: hash_adullact
   status: 1
+  login: bob
+  password: 6384e2b2184bcbf58eccf10ca7a6563c
   certificate_rgs_2_etoiles: ''
+
  -
   id: 4
   email: eric+4@sigmalis.com

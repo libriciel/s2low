@@ -20,7 +20,6 @@
 <h2>Liste des utilisateurs</h2>
 
 
-
 <div class="data_table">
     <table class="data-table table table-striped">
         <tr>
@@ -49,3 +48,35 @@
         <?php endforeach;?>
     </table>
 </div>
+
+<h2>Modifier le certificat</h2>
+
+<div class="alert alert-danger">
+    <b>Attention</b> Ce formulaire permet de modifier le certificat pour tous les utilisateurs listés sur cette page.
+</div>
+
+
+<form action="/admin/users/do_modif_bulk_certif.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="user_id" value="<?php hecho($user_id)?>"/>
+    <table class="data-table table table-striped">
+        <tr>
+            <th><label for="certificat">Nouveau certificat</label></th>
+            <td>
+                <input type="file" id="certificat" name="certificat" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <th><label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label></th>
+            <td>
+                <input  id="confirm" name="confirm" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            <td><input type="submit" value="Modifier" class="btn btn-danger"/></td>
+        </tr>
+
+    </table>
+
+</form>
+

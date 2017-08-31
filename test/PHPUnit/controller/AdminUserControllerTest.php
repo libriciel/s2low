@@ -224,4 +224,62 @@ class AdminUserControllerTest extends S2lowTestCase {
         $frontController->go("AdminUser","list");
     }
 
+    public function testDoBulkModifCertifActionNoUserId(){
+        $this->setSuperAdminAuthentication();
+        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController->go("AdminUser","doBulkModifCertif");
+        $this->assertEquals(
+            "Aucun identifiant utilisateur n'a été présenté",
+            $this->getObjectInstancier()->get("Environnement")->session()->get('error')
+            );
+    }
+
+    public function testDoBulkModifCertifActionNoConfirm(){
+        $this->setSuperAdminAuthentication();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('user_id','2');
+        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController->go("AdminUser","doBulkModifCertif");
+        $this->assertEquals(
+            "Vous devez confirmer la modification",
+            $this->getObjectInstancier()->get("Environnement")->session()->get('error')
+        );
+    }
+
+    public function testDoBulkModifCertifActionNoCertif(){
+        $this->setSuperAdminAuthentication();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('user_id','2');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('confirm','OUI');
+
+        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController->go("AdminUser","doBulkModifCertif");
+        $this->assertEquals(
+            "Vous devez fournir un certificat",
+            $this->getObjectInstancier()->get("Environnement")->session()->get('error')
+        );
+    }
+
+    public function testDoBulkModifCertifAction(){
+        $certificate_file = __DIR__."/fixtures/user1.pem";
+        $this->setSuperAdminAuthentication();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('user_id','2');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('confirm','OUI');
+        $_FILES['certificat'] = array('tmp_name'=>$certificate_file);
+
+        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController->go("AdminUser","doBulkModifCertif");
+        $this->assertEquals(
+            "Certificat mis à jour",
+            $this->getObjectInstancier()->get("Environnement")->session()->get('error')
+        );
+
+        $userSQL = $this->getObjectInstancier()->get('UserSQL');
+        $info = $userSQL->getInfo(2);
+        $this->assertEquals($info['certificate'],file_get_contents($certificate_file));
+
+        $info = $userSQL->getInfo(3);
+        $this->assertEquals($info['certificate'],file_get_contents($certificate_file));
+
+    }
+
+
 }
