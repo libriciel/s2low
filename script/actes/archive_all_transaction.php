@@ -12,7 +12,14 @@ if (empty($argv[1])){
 $authority_id = $argv[1];
 
 
-$sql = "SELECT  actes_transactions.id as id FROM actes_transactions WHERE authority_id=? AND last_status_id=? OR last_status_id=? ";
+$sql = "SELECT at.id ".
+    "FROM actes_transactions AS at ".
+    "INNER JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= at.last_status_id) ".
+    "WHERE ".
+    "authority_id=? ".
+    "AND at.type=1 ".
+    "AND at.last_status_id IN (?,?) ".
+    "AND AGE(atw.date::TIMESTAMP) > INTERVAL '30 day' ";
 
 $transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5);
 
