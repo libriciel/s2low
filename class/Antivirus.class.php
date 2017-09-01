@@ -26,7 +26,7 @@ class Antivirus
 
 		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
 	 	
-		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " $new_file", $output, $ret);
+		Trace::wrap_exec(ANTIVIRUS_COMMAND . " $new_file", $output, $ret);
 
 	  switch ($ret) {
 		  case 0:
@@ -53,7 +53,7 @@ class Antivirus
  	}
 
 	public static function isAlive(){
-		Trace::wrap_exec(ACTES_ANTIVIRUS_COMMAND . " " . __FILE__ ." 2>&1", $output, $ret);
+		Trace::wrap_exec(ANTIVIRUS_COMMAND . " " . __FILE__ ." 2>&1", $output, $ret);
 
 		if ($ret == 0){
 			return true;

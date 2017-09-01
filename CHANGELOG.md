@@ -72,6 +72,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - L'ancienne bannière et la constante NEW_BANNER remplacée définitivement par la nouvelle bannière
 - Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
 - Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
+- Suppression de la constante ACTES_ANTIVIRUS_COMMAND, utilisation de ANTIVIRUS_COMMAND à la place #220
 
 ## [2.6.5] - 2017-06-29
 

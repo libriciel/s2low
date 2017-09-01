@@ -311,11 +311,6 @@ if(!defined('ACTES_MAX_BATCH_UPLOAD_SIZE')){
         define('ACTES_MAX_BATCH_UPLOAD_SIZE', 20*1024*1024);
 }
 
-// Commande d'invocation du scanner anti-virus
-//define('ACTES_ANTIVIRUS_COMMAND', '/usr/bin/clamdscan --stdout ');
-if(!defined('ACTES_ANTIVIRUS_COMMAND')){
-        define('ACTES_ANTIVIRUS_COMMAND', 'ls');
-}
 
 if(!defined('ANTIVIRUS_TMP_PATH')){
         define('ANTIVIRUS_TMP_PATH','/tmp/');
