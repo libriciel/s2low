@@ -32,6 +32,11 @@ try {
 
 $message = ob_get_contents();
 ob_end_clean();
+
+if (!$message){
+    $message = "Le fichier a été analysé";
+}
+
 $_SESSION['error'] .= "<br/>".nl2br($message);
 
 header("Location: responses-actes-error.php");
