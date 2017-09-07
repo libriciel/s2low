@@ -1,5 +1,5 @@
 <?php
-require_once( __DIR__ . "/loadlocalsettings.php");
+require_once( __DIR__ . "/LoadLocalSettings.php");
 
 
 ini_set("error_reporting", E_ALL & ~E_STRICT);
