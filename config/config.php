@@ -1,14 +1,5 @@
 <?php
-if (file_exists( __DIR__ . "/LocalSettings.php")){
-	//Il est possible d'écraser les valeurs par défaut en
-	//créant un fichier LocalSettings.php
-	
-	require_once( __DIR__ . "/LocalSettings.php");
-}
-
-foreach(glob("/etc/s2low/*.php") as $file_name){
-	include_once($file_name);
-}
+require_once( __DIR__ . "/LoadLocalSettings.php");
 
 
 ini_set("error_reporting", E_ALL & ~E_STRICT);
@@ -577,24 +568,14 @@ if(!defined("DIA_UPSTART_TOUCH_FILE")){
 	define("DIA_UPSTART_TOUCH_FILE",'/tmp/dia-upstart');
 }
 
-
-
-require_once('config-static.php');
-
-
 if (! defined("TESTING_ENVIRONNEMENT")) {
 	define("TESTING_ENVIRONNEMENT", false);
 }
-
-//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
-//on fait en sorte que config.php charge init.php et réciproquement
-require_once(__DIR__."/../init/init.php");
 
 if (! defined("LIBERSIGN_INSTALLER")){
 	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign
 	define("LIBERSIGN_INSTALLER",false);
 }
-
 
 
 ## Configuration OpenStack (facultative)
@@ -624,4 +605,10 @@ if (! defined("OPENSTACK_SWIFT_CONTAINER_PREFIX")) {
 }
 
 
+
+//Ceci doit toujours etre la fin du fichier
+require_once('config-static.php');
+//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
+//on fait en sorte que config.php charge init.php et réciproquement
+require_once(__DIR__."/../init/init.php");
 
