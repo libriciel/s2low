@@ -3,7 +3,7 @@
 
 require_once( __DIR__ . "/../../config/loadlocalsettings.php");
 echo "récupération des constantes surchargées";
-$constantes_surchargee = get_defiined_constants();
+$constantes_surchargee = get_defined_constants();
 
 require_once( __DIR__ . "/../../../config/config.php");
 
