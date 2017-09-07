@@ -31,7 +31,20 @@ class PostgreSQLDifferenceToSQL {
 		}
 		foreach($alter_list['alter_column'] as $table_name => $col_def){
 			foreach($col_def as $col_name => $col_info){
-				$sql[] = "ALTER TABLE $table_name ALTER COLUMN ".$this->getColumnDefinition($col_name,$col_info,true).";";
+
+				$sql[] = "ALTER TABLE $table_name " .
+                            " ALTER COLUMN $col_name TYPE {$col_info['data_type']} ".($col_info['character_maximum_length']?"({$col_info['character_maximum_length']})":"").";"
+                ;
+                if ($col_info['column_default']){
+                    $sql[]= "ALTER TABLE $table_name ALTER COLUMN $col_name SET DEFAULT {$col_info['column_default']};";
+                } else {
+                    $sql[]= "ALTER TABLE $table_name ALTER COLUMN $col_name DROP DEFAULT;";
+                }
+                if ($col_info['is_nullable'] == 'NO'){
+                    $sql[] ="ALTER TABLE $table_name ALTER COLUMN $col_name SET NOT NULL;";
+                } else {
+                    $sql[] ="ALTER TABLE $table_name ALTER COLUMN $col_name DROP NOT NULL;";
+                }
 			}
 		}
 		return $sql;
@@ -58,12 +71,8 @@ class PostgreSQLDifferenceToSQL {
 		return $result;
 	}
 
-	private function getColumnDefinition($column_name,$column_info, $add_type = false){
+	private function getColumnDefinition($column_name,$column_info){
 		$sql =  "{$column_name} ";
-
-		if ($add_type){
-		    $sql .= " TYPE ";
-        }
 
 		$sql .= "{$column_info['data_type']}";
 
@@ -72,9 +81,6 @@ class PostgreSQLDifferenceToSQL {
 			$sql.="({$column_info['character_maximum_length']})";
 		}
 		if ($column_info['column_default']){
-		    if ($add_type){
-		        $sql.= " SET ";
-            }
 			$sql.= " DEFAULT {$column_info['column_default']}";
 		}
 		if ($column_info['is_nullable'] == 'NO'){
@@ -129,7 +135,7 @@ class PostgreSQLDifferenceToSQL {
 	private function createIndex($index_list){
 		$sql = array();
 		foreach($index_list as $index_properties){
-			$sql[] = $index_properties['indexdef'];
+			$sql[] = $index_properties['indexdef'] .";";
 		}
 		return $sql;
 	}
