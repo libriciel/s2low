@@ -1,7 +1,7 @@
 <?php
 // Ce script a pour but de retourner les macro qui n'ont pas été surchargées
 
-require_once( __DIR__ . "/../../config/loadlocalsettings.php");
+require_once( __DIR__ . "/../../config/LoadLocalSettings.php");
 echo "récupération des constantes surchargées";
 $constantes_surchargee = get_defined_constants();
 
