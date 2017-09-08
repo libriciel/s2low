@@ -203,7 +203,7 @@ class CurlWrapper {
         return curl_getinfo($this->curlHandle);
     }
 
-    public function getServerCertificateCommonName(){
+    public function getServerCertificate(){
 	    $info = $this->getInfo();
 	    if (!$info){
 	        throw new Exception("Impossible de récupérer les informations sur la connexion Curl");
@@ -212,7 +212,7 @@ class CurlWrapper {
             throw new Exception("Impossible de récupérer le certificat de la connexion Curl");
         }
 
-	    return $info['certinfo'][0]['Subject']['CN'];
+	    return $info['certinfo'][0]['Cert'];
 	}
 
 	

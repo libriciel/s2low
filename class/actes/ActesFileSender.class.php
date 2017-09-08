@@ -43,11 +43,16 @@ class ActesFileSender {
         }
 
         if (substr($url,0,5)=='https'){
-            $certificat_cn = $curlWrapper->getServerCertificateCommonName();
-            $expected_cn = $this->actesMinistereProperties->server_certificate_cn;
+            $x509Certificate = new X509Certificate();
 
-            if ($certificat_cn != $expected_cn){
-                throw new Exception("Le certificat présenté n'a pas le bon CN : $certificat_cn ($expected_cn attendu)");
+            $actual_certificat = $curlWrapper->getServerCertificate();
+            $expected_certificat = file_get_contents($this->actesMinistereProperties->server_certificate_path);
+
+            $actual_hash = $x509Certificate->getBase64Hash($actual_certificat);
+            $expected_hash = $x509Certificate->getBase64Hash($expected_certificat);
+
+            if ($actual_hash != $expected_hash){
+                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
             }
         }
 

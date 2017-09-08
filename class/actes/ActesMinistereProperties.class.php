@@ -18,6 +18,6 @@ class ActesMinistereProperties {
     public $client_certificate_key;
     public $client_certificate_key_password;
 
-    public $server_certificate_cn;
+    public $server_certificate_path;
 
 }

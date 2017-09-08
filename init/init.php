@@ -85,7 +85,7 @@ $actesMinistereProperties->password = ACTES_MINISTERE_PASSWORD;
 $actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
 $actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
 $actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
-$actesMinistereProperties->server_certificate_cn = ACTES_MINISTERE_SERVER_CERTIFICATE_CN;
+$actesMinistereProperties->server_certificate_path = ACTES_MINISTERE_SERVER_CERTIFICATE_PATH;
 $objectInstancier->set('ActesMinistereProperties',$actesMinistereProperties);
 
 $actesImapProperties = new ActesImapProperties();
