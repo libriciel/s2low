@@ -264,7 +264,7 @@ class ActesTransactionsSQL extends SQL{
 
     public function getTransactionToAutoBroadcast(){
         $sql = "SELECT actes_transactions.id  FROM actes_transactions ".
-            " WHERE last_status_id IN ('4','8','21')  AND auto_broadcasted=false AND type IN ('1','2','3','4','5','6')";
+            " WHERE last_status_id IN ('-1','4','7','8','11','21')  AND auto_broadcasted=false AND type IN ('1','2','3','4','5','6')";
         return $this->queryOneCol($sql);
     }
 

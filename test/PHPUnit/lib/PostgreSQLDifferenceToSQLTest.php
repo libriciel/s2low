@@ -42,7 +42,8 @@ class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase {
 					)
 			)
 		);
-		$this->assertEquals(array($index_command),$result);
+
+		$this->assertEquals(array($index_command.";"),$result);
 	}
 
 	public function testDropIndex(){
@@ -264,7 +265,7 @@ class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("ALTER TABLE actes_batch_files DROP COLUMN id;",$result[0]);
 	}
 
-	/*public function testAlterTableAlterColumn(){
+	public function testAlterTableAlterColumn(){
 		$result = $this->postgreSQLDifferenceToSQL->getSQL( array(
 			'alter_table' => array(
 				'alter_column' => array(
@@ -279,8 +280,30 @@ class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase {
 				)
 			)
 		));
-		$this->assertEquals("ALTER TABLE actes_batch_files ALTER COLUMN id character varying(64) DEFAULT nextval('actes_batch_files_id_seq'::regclass) NOT NULL;",$result[0]);
-	}*/
+		$this->assertEquals("ALTER TABLE actes_batch_files  ALTER COLUMN id TYPE character varying (64);",$result[0]);
+        $this->assertEquals("ALTER TABLE actes_batch_files ALTER COLUMN id SET DEFAULT nextval('actes_batch_files_id_seq'::regclass);",$result[1]);
+        $this->assertEquals("ALTER TABLE actes_batch_files ALTER COLUMN id SET NOT NULL;",$result[2]);
+	}
+
+    public function testAlterTableAlterColumnNullable(){
+        $result = $this->postgreSQLDifferenceToSQL->getSQL( array(
+            'alter_table' => array(
+                'alter_column' => array(
+                    "actes_batch_files"=> array(
+                        "id" => array(
+                            "data_type" =>  "character varying",
+                            "character_maximum_length" => 64,
+                            "is_nullable" =>  "YES",
+                            "column_default"=> ""
+                        )
+                    )
+                )
+            )
+        ));
+        $this->assertEquals("ALTER TABLE actes_batch_files  ALTER COLUMN id TYPE character varying (64);",$result[0]);
+        $this->assertEquals("ALTER TABLE actes_batch_files ALTER COLUMN id DROP DEFAULT;",$result[1]);
+        $this->assertEquals("ALTER TABLE actes_batch_files ALTER COLUMN id DROP NOT NULL;",$result[2]);
+    }
 
 	public function testCreateS2lowDatabase(){
 		$s2low_definition = $this->getS2lowDefinition();
@@ -288,7 +311,7 @@ class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase {
 		$result = $postgreSQLDifference->getDifference(array(),$s2low_definition);
 		$result = $this->postgreSQLDifferenceToSQL->getSQL($result);
 		$this->assertContains("CREATE SEQUENCE actes_batches_id_seq;",$result);
-		$this->assertContains("CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id)",$result);
+		$this->assertContains("CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id);",$result);
 		$this->assertContains("ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);",$result);
 	}
 

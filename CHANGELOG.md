@@ -15,7 +15,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
 - Visualisation rapide de l'état des transactions Actes #90 ~Actes
 - Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~Administration ~Actes
-- Le super admin peut envoyer une demande de classification forcé à vide (pas de date de classification) ~Administration ~Actes
+- Le super admin peut envoyer une demande de classification forcée à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
 - Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
 - le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
@@ -72,6 +72,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - L'ancienne bannière et la constante NEW_BANNER remplacée définitivement par la nouvelle bannière
 - Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
 - Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
+- Suppression de la constante ACTES_ANTIVIRUS_COMMAND, utilisation de ANTIVIRUS_COMMAND à la place #220
 
 ## [2.6.5] - 2017-06-29
 

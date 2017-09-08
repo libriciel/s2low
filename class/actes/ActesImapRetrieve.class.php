@@ -30,7 +30,7 @@ class ActesImapRetrieve {
         $server = $this->imapFetchServerFactory->getInstance($this->actesImapProperties->host, $this->actesImapProperties->port);
         $server->setAuthentication($this->actesImapProperties->login,$this->actesImapProperties->password);
 
-        $messages = $server->getMessages();
+        $messages = array_reverse($server->getMessages());
         $this->log("Il y a ".count($messages)." messages dans la boite au lettres");
 
         foreach($messages as $message){

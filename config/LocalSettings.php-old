@@ -20,7 +20,6 @@ define("WEBSITE_SSL","https://192.168.1.10/");
 define("WEBSITE","http://192.168.1.10/phpstorm/s2low/public/");
 
 
-define("ACTES_ANTIVIRUS_COMMAND","ls");
 
 if (! defined("TRACE_FILE_PATH")) {
 	define("TRACE_FILE_PATH", "/dev/null");
