@@ -249,6 +249,7 @@ if (!defined('ACTES_MINISTERE_PASSWORD')){
     define('ACTES_MINISTERE_PASSWORD','');
 }
 
+/* Il s'agit du certificat du client ! */
 if (!defined('ACTES_MINISTERE_CERTIFICATE')){
     define('ACTES_MINISTERE_CERTIFICATE','');
 }
@@ -259,6 +260,10 @@ if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY')){
 
 if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY_PASS')){
     define('ACTES_MINISTERE_CERTIFICATE_KEY_PASS','');
+}
+
+if (!defined('ACTES_MINISTERE_SERVER_CERTIFICATE_CN')){
+    define('ACTES_MINISTERE_SERVER_CERTIFICATE_CN','');
 }
 
 if (!defined('ACTES_IMAP_HOST')){

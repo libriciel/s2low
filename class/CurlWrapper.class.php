@@ -76,7 +76,9 @@ class CurlWrapper {
 		if ($this->lastError){
 			$this->lastError = "Erreur de connexion au serveur : " . $this->lastError;
 			return false;
-		}	
+		}
+
+
 		return $output;
 	}
 	
@@ -196,5 +198,22 @@ class CurlWrapper {
 	public function getHTTPCode() {
 		return curl_getinfo($this->curlHandle,CURLINFO_HTTP_CODE);
 	}
+
+	public function getInfo(){
+        return curl_getinfo($this->curlHandle);
+    }
+
+    public function getServerCertificateCommonName(){
+	    $info = $this->getInfo();
+	    if (!$info){
+	        throw new Exception("Impossible de récupérer les informations sur la connexion Curl");
+        }
+        if (empty($info['certinfo'])){
+            throw new Exception("Impossible de récupérer le certificat de la connexion Curl");
+        }
+
+	    return $info['certinfo'][0]['Subject']['CN'];
+	}
+
 	
 }
