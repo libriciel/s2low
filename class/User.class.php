@@ -740,7 +740,7 @@ class User extends DataObject {
    * \return Un tableau contenant les données des utilisateurs
   */
   public function getUsersList($cond = "") {
-	if (! $this->pagerInit('users.id, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name, users.login', 'users LEFT OUTER JOIN authorities ON users.authority_id=authorities.id', $cond, 'users.name', null, null, "ASC")) {
+	if (! $this->pagerInit('users.id, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name, users.login, users.cert_not_after ', 'users LEFT OUTER JOIN authorities ON users.authority_id=authorities.id', $cond, 'users.name', null, null, "ASC")) {
 	  return false;
 	}
 
