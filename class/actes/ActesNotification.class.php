@@ -111,17 +111,17 @@ class ActesNotification {
         }
 
         $status_info = $this->actesTransactionsSQL->getStatusInfo($transactionInfo['id'],4);
-
-        $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
-        $mailer->addStringAsFile($ar_actes_filename, $status_info['flux_retour']);
+        if ($status_info) {
+            $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
+            $mailer->addStringAsFile($ar_actes_filename, $status_info['flux_retour']);
+            $pdf = new ActesPdf();
+            $pdf->addEmailNotificationField();
+            $pdf->create_pdf($transactionInfo['id']);
+            $monpdf = $pdf->output("bordereau_acquittement", "S");
+            $mailer->addStringAsFile("bordereau_acquittement.pdf", $monpdf);
+        }
 
         $mailContent = $this->getMailContent($transactionInfo,$add_url_recup);
-
-		$pdf=new ActesPdf();
-		$pdf->addEmailNotificationField();
-		$pdf->create_pdf($transactionInfo['id']);
-		$monpdf = $pdf->output("bordereau_acquittement","S");
-		$mailer->addStringAsFile("bordereau_acquittement.pdf",$monpdf);
 
         $authority_info = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 
@@ -156,10 +156,11 @@ class ActesNotification {
 
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
 
-        //$this->actesTransactionsSQL->getInfo($transaction_info['related_transaction_id']);
-
         ob_start();?>
-<?php if ($transaction_info['type'] == 1) : ?>
+
+<?php if ($last_status_id == -1) : ?>
+            L'acte de référence interne <?php echo $transaction_info['number'] ?> est en erreur.
+<?php elseif ($transaction_info['type'] == 1) : ?>
 L'acte de référence interne <?php echo $transaction_info['number'] ?> a été acquitté sous l'identifiant unique <?php echo $transaction_info['unique_id']  ?>.
 <?php elseif ($transaction_info['type'] == 3 && $last_status_id == 4) : ?>
 L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
