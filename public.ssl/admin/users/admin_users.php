@@ -183,6 +183,16 @@ ob_start();?>
 			<?php if($user['login']) :  ?>
 			(<?php hecho($user["login"]) ?>)
 			<?php endif;?>
+            <?php $nb_days_before_expire = floor((strtotime($user["cert_not_after"]) - time())/86400) ?>
+            <?php if($nb_days_before_expire<1): ?>
+                <div class="alert alert-danger message-admin">
+                    <b>Certificat expiré</b>
+                </div>
+            <?php elseif ($nb_days_before_expire<30): ?>
+                <div class="alert alert-warning message-admin">
+                    <b>Certificat expire dans <?php echo $nb_days_before_expire ?> jours</b>
+                </div>
+            <?php endif; ?>
 		</td>
 		<td headers="email">
 			<a href="mailto:<?php hecho($user["email"]) ?>"><?php hecho($user["email"]) ?></a>
