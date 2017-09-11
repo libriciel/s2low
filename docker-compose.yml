@@ -32,6 +32,7 @@ services:
             IMAP_SERVER: ${IMAP_SERVER}
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
+            PADES_VALID_URL: ${PADES_VALID_URL}
 
 
         volumes:
@@ -58,3 +59,6 @@ services:
 
     clamav:
         image: mkodockx/docker-clamav
+
+    pades-valid:
+        image: gitlab.libriciel.fr:4567/outils/pades-valid

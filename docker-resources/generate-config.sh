@@ -76,6 +76,6 @@ define("IMAP_PASS","${IMAP_PASS}");
 
 
 define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
-
+define('PADES_VALID_URL', "${PADES_VALID_URL}:-http://pades-valid:8080");
 EOF
 
