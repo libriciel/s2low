@@ -11,6 +11,9 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
 
+        $padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
+        $padesValid->expects($this->any())->method("validate")->willReturn(true);
+        $this->getObjectInstancier()->set('PadesValid',$padesValid);
     }
 
     protected function tearDown() {

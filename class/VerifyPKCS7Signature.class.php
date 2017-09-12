@@ -85,7 +85,7 @@ class VerifyPKCS7SIgnature {
 	}
 
 
-	private function checkCertificate($certificate_path) {
+	public function checkCertificate($certificate_path) {
 		$verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path";
 		exec($verifyCmd, $out, $ret);
 
