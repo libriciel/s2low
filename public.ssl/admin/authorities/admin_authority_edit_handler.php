@@ -185,6 +185,15 @@ if (! $authority->save($savePerms)) {
 
 }
 
+
+if (isset($_FILES['convention_actes'])) {
+    $fileUploader = new FileUploader();
+    if ($fileUploader->verifOK('convention_actes')){
+        $actesConventions = $objectInstancier->get("ActesConventions");
+        $actesConventions->setConvention($authority->getId(),$_FILES['convention_actes']['tmp_name']);
+    }
+}
+
 if ($me->isSuper()) {
 	$authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(),$helios_do_not_verify_nom_fic_unicity);
 }
