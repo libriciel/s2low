@@ -82,7 +82,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= "<h2>" . $modStr . " collectivité</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax') . ")\">\n";
+$html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax') . ")\">\n";
 
 if ($mod) {
   $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $authority->getId() . "\" />\n";
@@ -301,6 +301,8 @@ if ($me->isGroupAdminOrSuper()) {
   $html .= $authority->getDeptDistrString();
 }
 
+$actesConventions = $objectInstancier->get('ActesConventions');
+
 $html .= "  </div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -315,7 +317,24 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
 
+
+
+$html .= "  <label class=\"control-label col-md-4\">Conventions @ctes:</label>\n";
+if ($actesConventions->hasConvention($id)){
+    $html.="<div class=\"col-md-6 alert alert-info\">
+        <a href='".WEBSITE_SSL."/admin/authorities/admin_authority_download_convention.php?authority_id=".$id."'>" .
+            $actesConventions->getConventionFilename($id) .
+        "</a></div>";
+} else {
+    $html.="<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
+}
+$html .= " <div class=\"form-group\">\n";
+$html .= "  <label class=\"control-label col-md-4\">&nbsp;</label>\n";
+
+$html .= "  <div class=\"col-md-6\"><input type=\"file\" class=\"form-control\" name=\"convention_actes\" /></div>\n";
+$html .= " </div>\n";
 
 
 

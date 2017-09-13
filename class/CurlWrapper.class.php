@@ -8,6 +8,7 @@ class CurlWrapper {
 	private $postData;
 	private $postFile;
 	private $postFileProperties;
+	private $last_output;
 	
 	public function __construct(){
 		$this->curlHandle = curl_init();
@@ -30,6 +31,10 @@ class CurlWrapper {
 	public function getLastError(){
 		return $this->lastError;
 	}
+
+	public function getLastOutput(){
+	    return $this->last_output;
+    }
 	
 	public function setProperties($properties,$values){
 		curl_setopt($this->curlHandle, $properties, $values); 
@@ -63,7 +68,8 @@ class CurlWrapper {
 		}
 		//curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, true);
 		
-		$output = curl_exec($this->curlHandle);
+		$this->last_output = curl_exec($this->curlHandle);
+
 		//print_r(curl_getinfo($this->curlHandle,CURLINFO_HEADER_OUT));
         //echo $url;
         $httpcode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
@@ -75,11 +81,12 @@ class CurlWrapper {
         $this->lastError = curl_error($this->curlHandle);
 		if ($this->lastError){
 			$this->lastError = "Erreur de connexion au serveur : " . $this->lastError;
+
 			return false;
 		}
 
 
-		return $output;
+		return $this->last_output;
 	}
 	
 	public function addPostData($name,$value){

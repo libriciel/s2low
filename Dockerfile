@@ -1,6 +1,7 @@
 FROM php:5.5-apache
 
 RUN apt-get update && apt-get install -y \
+    clamdscan \
     cron \
     git \
     libc-client-dev \
@@ -19,6 +20,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     zip \
     && rm -r /var/lib/apt/lists/*
+
+# Configuration de clamav
+COPY ./docker-resources/clamav/* /etc/clamav/
 
 # Installation de certbot
 RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list

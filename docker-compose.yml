@@ -4,6 +4,7 @@ services:
     web:
         links:
             - db
+            - clamav
         environment:
             S2LOW_WEBSITE: ${S2LOW_WEBSITE}
             S2LOW_WEBSITE_SSL: ${S2LOW_WEBSITE_SSL}
@@ -31,6 +32,7 @@ services:
             IMAP_SERVER: ${IMAP_SERVER}
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
+            PADES_VALID_URL: ${PADES_VALID_URL}
 
 
         volumes:
@@ -54,3 +56,9 @@ services:
             - /Users/eric/data_docker/s2low/openstack:/srv
         ports:
             - 10003:8080
+
+    clamav:
+        image: mkodockx/docker-clamav
+
+    pades-valid:
+        image: gitlab.libriciel.fr:4567/outils/pades-valid

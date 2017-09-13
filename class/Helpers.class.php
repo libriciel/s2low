@@ -473,11 +473,11 @@ class Helpers {
 	  header("Content-type: " . $content_type);
 	}
 
-	header('Content-disposition: attachment; filename="' . $filename . '"');
+      header('Content-disposition: attachment; filename="' . $filename . '"');
 	// Celles-ci pour IE
-	header("Expires: 0");
-	header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-	header("Pragma: public");
+      header("Expires: 0");
+      header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+      header("Pragma: public");
 
 	if ($path) {
 	  if (! @readfile($path)) {

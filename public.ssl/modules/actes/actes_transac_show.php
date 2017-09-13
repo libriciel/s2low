@@ -194,7 +194,6 @@ $archiveDeleted = false;
 }*/
 if ($trans->get("type") == 6 ||
 
- 	 $status <= 0 || 
  	 $status == 5 ||
  	 $status == 6 ||
  	 $status == 16 

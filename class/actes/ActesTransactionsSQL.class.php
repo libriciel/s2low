@@ -279,4 +279,19 @@ class ActesTransactionsSQL extends SQL{
             " WHERE actes_transactions.id = ?" ;
         $this->query($sql,$transactionId);
     }
+
+    public function getNbByStatusAndAuthority($status_id,$authority_id){
+        $sql = "SELECT count(*) FROM actes_transactions " .
+            " WHERE last_status_id=? AND authority_id = ?";
+        return $this->queryOne($sql,$status_id,$authority_id);
+    }
+
+    public function getListByStatusAndAuthority($status_id,$authority_id,$offset,$limit){
+        $offset = intval($offset);
+        $limit = intval($limit);
+        $sql = "SELECT id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions " .
+            " WHERE last_status_id=? AND authority_id = ? ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
+        return $this->query($sql,$status_id,$authority_id);
+    }
+
 }

@@ -25,6 +25,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225 
 - Ajout d'une infobulle pour indiquer que le certificat de l'utilisateur connecté expire bientôt #93
 - Ajout de cette information dans la liste des utilisateurs (certificat expiré ou dans moins de 30 jours) #93
+- Validation de la signature PADES des ~Actes #176
+- Possibilité d'ajouter la conventions ~Actes lors de l'édition d'une collectivité #147
 
 ### Corrections de sécurités
 

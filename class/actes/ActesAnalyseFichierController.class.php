@@ -7,19 +7,22 @@ class ActesAnalyseFichierController {
     private $logger;
     private $actesEnvelopeSQL;
     private $actesScriptHelper;
+    private $padesValid;
 
     public function __construct(
         Logger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
-        ActesScriptHelper $actesScriptHelper
+        ActesScriptHelper $actesScriptHelper,
+        PadesValid $padesValid
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesScriptHelper = $actesScriptHelper;
+        $this->padesValid = $padesValid;
     }
 
     private function log($message){
@@ -49,9 +52,13 @@ class ActesAnalyseFichierController {
         $this->log("[$envelope_libelle] Emplacement de l'archive :  $archive_path");
 
         $archive = new \Libriciel\LibActes\ArchiveValidator($this->actes_appli_trigramme);
+        $tmpFolder = new TmpFolder();
+        $tmp_dir = $tmpFolder->create();
         try {
             $archive->validate($archive_path);
+            $this->validatePades($archive_path,$tmp_dir);
         } catch (Exception $e){
+            $tmpFolder->delete($tmp_dir);
             $message = utf8_decode( $e->getMessage());
             $this->log("[$envelope_libelle] L'archive n'est valide : $message");
             $this->actesScriptHelper->updateStatus($transaction_ids,ActesStatusSQL::STATUS_EN_ERREUR,"Enveloppe invalide : $message");
@@ -65,6 +72,34 @@ class ActesAnalyseFichierController {
         );
 
         return true;
+    }
+
+    private function validatePades($archive_filepath,$tmp_dir){
+        $archive = new \Libriciel\LibActes\Archive();
+
+        $archiveData = $archive->getArchiveDataFromTarball($archive_filepath,$tmp_dir);
+
+        foreach($archiveData->fichierXML as $fichierXML) {
+                foreach($fichierXML->getFileList() as $filekey){
+                    if (is_array($fichierXML->$filekey)){
+                        foreach($fichierXML->$filekey as $i => $filepath){
+                            $this->validatePADESOneFile($filepath);
+                        }
+                    } else {
+                        $this->validatePADESOneFile($fichierXML->$filekey);
+                    }
+            }
+        }
+    }
+
+    private function validatePADESOneFile($filepath){
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $filepath);
+        finfo_close($finfo);
+        if ($mime_type != 'application/pdf') {
+            return;
+        }
+        $this->padesValid->validate($filepath);
     }
 
 }

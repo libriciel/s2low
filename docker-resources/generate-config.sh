@@ -74,8 +74,8 @@ define("IMAP_SERVER","${IMAP_SERVER}");
 define("IMAP_LOGIN","${IMAP_LOGIN}");
 define("IMAP_PASS","${IMAP_PASS}");
 
-#Attention, le docker n'utilise pas l'antivirus !
-define('ANTIVIRUS_COMMAND','/bin/ls');
 
+define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
+define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 EOF
 
