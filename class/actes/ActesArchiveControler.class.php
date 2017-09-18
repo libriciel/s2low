@@ -229,7 +229,9 @@ class ActesArchiveControler {
 	public function tamponerActe($tmpfolder,$fileorig,$transactionId){
 		$pdftkise=$tmpfolder."/tampon_".$fileorig;
 
-		$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($this->sqlQuery));
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+
+		$acteTamponne = $objectInstancier->get("ActeTamponne");
 		$tampon_content = $acteTamponne->tamponnerPDF($tmpfolder."/".$fileorig,$transactionId);
 
 		file_put_contents($pdftkise,$tampon_content);

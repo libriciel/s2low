@@ -114,14 +114,14 @@ class ActesIncludedFile extends DataObject {
 
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
-			
-			global $sqlQuery;
+
+			$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+
 			$pathpdforig = $tmpDir . '/' .$this->filename;
 
-			$acteTamponne = new ActeTamponne(new ActesTransactionsSQL($sqlQuery));
+			$acteTamponne = $objectInstancier->get("ActeTamponne");
 			$acteTamponne->render($pathpdforig,$this->get("transaction_id"), $this->date_affichage);
-			
-			
+
 		} elseif (! Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
 		  $this->errorMsg .= "Erreur envoi fichier";
 		  $ret_value = false;
@@ -132,7 +132,6 @@ class ActesIncludedFile extends DataObject {
                         $ret_value = false;
                     }
 			}
-
 	  }
 
 	  // Suppression du répertoire temporaire

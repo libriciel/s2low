@@ -99,6 +99,8 @@ $objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_
 $objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
 
 $objectInstancier->set('pades_valid_url',PADES_VALID_URL);
+$objectInstancier->set('pdf_stamp_url',PDF_STAMP_URL);
+
 $objectInstancier->set('rgs_validca_path',RGS_VALIDCA_PATH);
 
 if (php_sapi_name() != 'cli'){

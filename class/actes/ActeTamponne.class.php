@@ -5,16 +5,22 @@ class ActeTamponne {
 	/** @var  ActesTransactionsSQL */
 	private $actesTransactionsSQL;
 
-	public function __construct(ActesTransactionsSQL $actesTransactionsSQL) {
-		$this->actesTransactionsSQL = $actesTransactionsSQL;
-	}
+	/** @var  PDFStampWrapper */
+	private $pdfStampWrapper;
 
+	public function __construct(
+	    ActesTransactionsSQL $actesTransactionsSQL,
+        PDFStampWrapper $pdfStampWrapper
+    ) {
+		$this->actesTransactionsSQL = $actesTransactionsSQL;
+		$this->pdfStampWrapper = $pdfStampWrapper;
+	}
 
 	public function tamponnerPDF($file_path,$transaction_id,$date_affichage = false){
 
 		$transactionInfo = $this->actesTransactionsSQL->getDateTampon($transaction_id);
 
-        $date_reception = date("d/m/Y",strtotime($transactionInfo['date']));
+        $date_reception = $transactionInfo['date'];
 
         $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
 
@@ -26,41 +32,17 @@ class ActeTamponne {
             $date_reception = strval($xml->attributes("http://www.interieur.gouv.fr/ACTES#v1.1-20040216")->DateReception);
         }
 
-        set_include_path(SITEROOT."/ext/" . PATH_SEPARATOR .   get_include_path());
-		require_once(SITEROOT."/class/TamponPDF.class.php");
+        $pdfStampData = new PDFStampData();
+        $pdfStampData->envoi_prefecture_date = $transactionInfo['submission_date'];
+        $pdfStampData->recu_prefecture_date = $date_reception;
+        $pdfStampData->affichage_date = $date_affichage;
+        $pdfStampData->identifiant_unique = $transactionInfo['unique_id'];
 
-		$pdftkise='/tmp/modif_' .basename($file_path);
-		$cmdpdftk='timeout 10 pdftk '.$file_path." stamp ".SITEROOT."/data-exemple/vide.pdf output ".$pdftkise;
-		$status='';
-		$ret='';
-		@ Trace::wrap_exec($cmdpdftk, $status, $ret);
-		if ($status === false || $ret != 0) {
-			$cmdpdftk='timeout 10 pdfsam-console -f '.$file_path." -o ".$pdftkise ." concat";
-			@ Trace::wrap_exec($cmdpdftk, $status, $ret);
-			if ($status === false || $ret != 0) {
-				$pdftkise=$file_path;
-			}
-		}
-
-		try {
-			$pdf = Zend_Pdf::load($pdftkise);
-
-            $tampon = new TamponPDF($pdf);
-            if ($date_affichage) {
-                $date_affichage = date("d/m/Y", strtotime($date_affichage));
-            }
-            $tampon->setText(array("Envoyé en préfecture le ".date("d/m/Y",strtotime($transactionInfo['submission_date'])),
-                "Reçu en préfecture le ".$date_reception,
-                "Affiché le ".$date_affichage ,
-                "ID : ".$transactionInfo['unique_id']));
-
-			$txt =  $tampon->getFileAsString();
-            return $txt;
-
-		} catch (Exception $e){
-			return file_get_contents($pdftkise);
-		}
-
+        try {
+            return $this->pdfStampWrapper->stamp($file_path, $pdfStampData);
+        } catch (Exception $e){
+            return file_get_contents($file_path);
+        }
 	}
 
 	public function render($file_path,$transaction_id, $date_affichage = false){
