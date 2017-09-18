@@ -8,8 +8,8 @@ class PadesValid {
     /** @var  CurlWrapper */
     private $curlWrapper;
 
-    /** @var  VerifyPKCS7SIgnature */
-    private $verifyPKCS7SIgnature;
+    /** @var  VerifyPKCS7Signature */
+    private $verifyPKCS7Signature;
 
     private $last_result;
 
@@ -17,14 +17,15 @@ class PadesValid {
         $this->pades_valid_url = $pades_valid_url;
         $this->rgs_validca_path = $rgs_validca_path;
         $this->setCurlWrapper(new CurlWrapper());
-        $this->setVerifyPKCS7Signature(new VerifyPKCS7SIgnature($this->rgs_validca_path));
+        $this->setVerifyPKCS7Signature(new VerifyPKCS7Signature($this->rgs_validca_path));
     }
+
     public function setCurlWrapper(CurlWrapper $curlWrapper){
         $this->curlWrapper = $curlWrapper;
     }
 
-    public function setVerifyPKCS7Signature(VerifyPKCS7SIgnature $verifyPKCS7SIgnature){
-        $this->verifyPKCS7SIgnature = $verifyPKCS7SIgnature;
+    public function setVerifyPKCS7Signature(VerifyPKCS7Signature $verifyPKCS7Signature){
+        $this->verifyPKCS7Signature = $verifyPKCS7Signature;
     }
 
     public function getLastResult(){
@@ -88,7 +89,7 @@ class PadesValid {
         file_put_contents($certificate_path,$signing_cert);
 
         try {
-            $this->verifyPKCS7SIgnature->checkCertificate($certificate_path);
+            $this->verifyPKCS7Signature->checkCertificate($certificate_path);
         } catch (Exception $e){
             unlink($certificate_path);
             throw $e;

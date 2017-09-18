@@ -18,10 +18,10 @@ class PadesValidTest extends S2lowTestCase {
     }
 
     public function getPKCS7Signature(){
-        $verifyPKCS7SIgnature = $this->getMockBuilder('VerifyPKCS7SIgnature')->disableOriginalConstructor()->getMock();
-        $verifyPKCS7SIgnature->expects($this->any())->method("checkCertificate")->willReturn(true);
-        /** @var VerifyPKCS7SIgnature $verifyPKCS7SIgnature */
-        return $verifyPKCS7SIgnature;
+        $verifyPKCS7Signature = $this->getMockBuilder('VerifyPKCS7Signature')->disableOriginalConstructor()->getMock();
+        $verifyPKCS7Signature->expects($this->any())->method("checkCertificate")->willReturn(true);
+        /** @var VerifyPKCS7Signature $verifyPKCS7Signature */
+        return $verifyPKCS7Signature;
     }
 
     public function testValidateNotSigned(){
