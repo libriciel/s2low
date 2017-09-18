@@ -33,6 +33,8 @@ class ActesNotificationsTest extends S2lowTestCase {
         $tmp_folder = $tmpFolder->create();
         copy(__DIR__."/fixtures/abc-TACT--000000000--20170803-16.tar.gz",$tmp_folder."/abc-TACT--000000000--20170803-16.tar.gz");
 
+
+        $this->getObjectInstancier()->set("pdf_stamp_url","");
         $actesNotification = $this->getObjectInstancier()->get('ActesNotification');
         $actesNotification->setFilePath($tmp_folder);
 
@@ -51,7 +53,6 @@ class ActesNotificationsTest extends S2lowTestCase {
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
         $actesTransactionsSQL->updateStatus($transaction_id,4,"test");
-
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 

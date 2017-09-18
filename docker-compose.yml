@@ -33,6 +33,7 @@ services:
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
             PADES_VALID_URL: ${PADES_VALID_URL}
+            PDF_STAMP_URL: ${PDF_STAMP_URL}
 
 
         volumes:
@@ -62,3 +63,8 @@ services:
 
     pades-valid:
         image: gitlab.libriciel.fr:4567/outils/pades-valid
+
+    pdf-stamp:
+        image: gitlab.libriciel.fr:4567/outils/pdf-stamp
+
+

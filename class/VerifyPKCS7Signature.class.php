@@ -1,5 +1,5 @@
 <?php
-class VerifyPKCS7SIgnature {
+class VerifyPKCS7Signature {
 
 	private $authorized_ca_path;
 

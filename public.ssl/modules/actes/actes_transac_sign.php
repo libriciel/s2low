@@ -45,7 +45,7 @@ try{
 		$all_transaction_id[] = $actesSignature->setSignature($signature_id, $signature);
 
 		/** Vérifier la signature ici */
-		$verifyPKCS7Signature = new VerifyPKCS7SIgnature(RGS_VALIDCA_PATH);
+		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH);
 		$verifyPKCS7Signature->verifyCertificate($signature);
 
 

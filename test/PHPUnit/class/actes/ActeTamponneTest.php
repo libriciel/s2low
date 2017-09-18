@@ -13,7 +13,7 @@ class ActeTamponneTest extends PHPUnit_Framework_TestCase {
 		/** @var  ActesTransactionsSQL $actesTransactionsSQL */
 
 
-		$acteTamponne = new ActeTamponne($actesTransactionsSQL);
+		$acteTamponne = new ActeTamponne($actesTransactionsSQL,new PDFStampWrapper(""));
 
 		$acteTamponne->tamponnerPDF(__DIR__."/../fixtures/vide.pdf","12");
 
