@@ -221,5 +221,9 @@ class HeliosTransactionsSQL extends SQL {
         $this->query($sql,$id);
     }
 
+    public function getAllTransactionToSendInCloud(){
+        $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC";
+        return $this->query($sql);
+    }
 
 }
