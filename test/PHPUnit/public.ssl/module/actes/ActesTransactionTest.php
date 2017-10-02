@@ -11,6 +11,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	private $pdf_filepath;
 	private $xml_filepath;
 	private $txt_filepath;
+	private $jpg_filepath;
 
 	protected function setUp() {
 		parent::setUp();
@@ -20,6 +21,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->pdf_filepath = __DIR__."/../../../fixtures/vide.pdf";
 		$this->xml_filepath = __DIR__."/../../../fixtures/toto.xml";
 		$this->txt_filepath = __DIR__."/../../../fixtures/toto.txt";
+        $this->jpg_filepath = __DIR__."/../../../fixtures/test.jpg";
 	}
 
 	private function numberTest($number,$valide){
@@ -59,6 +61,13 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->validateAndRemoveFile("toto/{$dest_filename}.pdf");
 	}
 
+    private function addActeJPG(){
+        $dest_filename = mt_rand(0,mt_getrandmax());
+        $r = $this->actesTransaction->addActeFile("test.jpg","toto/$dest_filename",$this->jpg_filepath);
+        $this->assertTrue($r);
+        $this->validateAndRemoveFile("toto/{$dest_filename}.jpg");
+    }
+
 	public function addActeXML(){
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertTrue($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
@@ -83,7 +92,23 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->assertEquals(2,count($file_list['attachment']));
 	}
 
+    public function testAddJPGCourrierSimple(){
+        $this->actesTransaction->set('type',3);
+        $this->addActeJPG();
+
+    }
+
+    public function testAddTextCourrierSimple(){
+        $this->actesTransaction->set('type',3);
+        $this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
+        $this->assertEquals(
+            "Le fichier de réponse «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+            $this->actesTransaction->getErrorMsg()
+        );
+    }
+
 	public function testAddActeTxt(){
+        $this->actesTransaction->set('type',1);
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
 		$this->assertEquals(
 			"Le fichier de l'acte «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF ou XML requis.",
@@ -103,12 +128,14 @@ class ActesTransactionTest extends S2lowTestCase {
 	}
 
 	public function testAddActesXMLBadNature(){
+        $this->actesTransaction->set('type',1);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
 		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddActesXMLBadClassif(){
+        $this->actesTransaction->set('type',1);
 		$this->actesTransaction->set('nature_code',5);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));

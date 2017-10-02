@@ -1040,6 +1040,7 @@ class ActesTransaction extends DataObject {
    * \return True en cas de succès, false sinon
    */
   public function addFile($type, $name, $dest_name, $path = false, $validate = true, $code_pj = '') {
+
     $ext = null;
 
     // Si le chemin n'est pas spécifié et les deux noms fournis identiques
@@ -1073,7 +1074,7 @@ class ActesTransaction extends DataObject {
 		}
 
 
-      if ($type == 'acte'){
+      if ($type == 'acte' && $this->type == 1){
       	if (! in_array($ext,array('pdf','xml'))){
 			$this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF ou XML requis.";
       		return false;
@@ -1089,7 +1090,11 @@ class ActesTransaction extends DataObject {
       			return false;
       		}
       	}
-
+      } elseif($type == "acte") {
+          if (! in_array($ext,array('pdf','jpg','png','xml'))){
+              $this->errorMsg = "Le fichier de réponse «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
+              return false;
+          }
  	  } elseif($type == "attachment") {
  	  	if (! in_array($ext,array('pdf','jpg','png','xml'))){
 			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";

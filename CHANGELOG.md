@@ -56,6 +56,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Gestion de la typologie des pièces jointes #179 ~Actes
 - Modification en masse des certificats partagés #31 ~Administration
 - Limitation de la taille des pièces jointes dans les mails sortants à 10Mo   
+- Possibilité d'envoyer des réponses (flux 3 et 4) en JPG et PNG (en plus de XML et PDF). #194 ~Actes 
 
 ### Corrections
 
