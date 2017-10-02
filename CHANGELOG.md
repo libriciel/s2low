@@ -70,6 +70,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 - Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
 - Remplacement complet du système de tampon des actes #202 ~Actes 
+- Correction d'un problème d'encodage dans le traitement par lot #211 ~Actes 
 
 ### Retraits
 

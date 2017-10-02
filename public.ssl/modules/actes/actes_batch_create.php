@@ -20,7 +20,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($modu
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$description = Helpers::getVarFromPost("intitule");
+$description = utf8_decode(Helpers::getVarFromPost("intitule"));
 $num_prefix = Helpers::getVarFromPost("prefixe");
 
 $zeBatch = new ActesBatch();
@@ -45,7 +45,7 @@ for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
 }
 for ($i = 0; $i <= max($filerefs);$i++){
   $name = $_FILES['files']['name'][$i];
-  $converted[$name]['name'] = $name;
+  $converted[$name]['name'] = utf8_decode($name);
   $converted[$name]['type'] = $_FILES['files']['type'][$i];
   $converted[$name]['tmp_name'] = $_FILES['files']['tmp_name'][$i];
   $converted[$name]['error'] = $_FILES['files']['error'][$i];
@@ -84,7 +84,7 @@ $elvl = 0;
 
 foreach ($converted as $kFile => $file){
        $jsontest = new stdClass();
-        $jsontest->name = $file['name'];
+        $jsontest->name = utf8_encode($file['name']);
         $jsontest->size = $file['size'];
         $jsontest->type = $file['type'];
         $alljson[] = $jsontest;
