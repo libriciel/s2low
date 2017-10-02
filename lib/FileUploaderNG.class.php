@@ -71,7 +71,7 @@ class FileUploaderNG {
 	public function getLastError(){
 		switch($this->lastError){
 			case UPLOAD_ERR_INI_SIZE: return "Le fichier dépasse ". ini_get("upload_max_filesize");
-			case UPLOAD_ERR_FORM_SIZE : return "Le fichier dépasse la taille limite autorisé par le formulaire";
+			case UPLOAD_ERR_FORM_SIZE : return "Le fichier dépasse la taille limite autorisée par le formulaire";
 			case UPLOAD_ERR_PARTIAL: return "Le fichier n'a été que partiellement reçu";
 			case UPLOAD_ERR_NO_FILE: return "Aucun fichier n'a été reçu";
 			case UPLOAD_ERR_NO_TMP_DIR: return "Erreur de configuration : le répertoire temporaire n'existe pas";
