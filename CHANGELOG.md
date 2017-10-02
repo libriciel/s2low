@@ -55,7 +55,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
 - Modification en masse des certificats partagés #31 ~Administration
-  
+- Limitation de la taille des pièces jointes dans les mails sortants à 10Mo   
 
 ### Corrections
 
