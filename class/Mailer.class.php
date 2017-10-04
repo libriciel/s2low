@@ -4,7 +4,9 @@ require_once("PEAR.php");
 require_once (SITEROOT."/class/pearMail.class.php");
 
 class Mailer {
-	
+
+    const FILESIZE_LIMIT =  10485760; /* 10 Mio */
+
 	private $recipients;
 	private $lastError;
 	private $fichier;	
@@ -68,7 +70,9 @@ class Mailer {
             );
 
 		foreach($this->fichier as $file){
-			$mime->addAttachment( $file);
+		    if (filesize($file) < self::FILESIZE_LIMIT) {
+                $mime->addAttachment($file);
+            }
 		}
             
 		foreach($this->dataAsFile as $dataAsFile){

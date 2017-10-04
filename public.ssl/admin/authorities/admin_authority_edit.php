@@ -321,7 +321,7 @@ $html .= " <div class=\"form-group\">\n";
 
 
 
-$html .= "  <label class=\"control-label col-md-4\">Conventions @ctes:</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
 if ($actesConventions->hasConvention($id)){
     $html.="<div class=\"col-md-6 alert alert-info\">
         <a href='".WEBSITE_SSL."/admin/authorities/admin_authority_download_convention.php?authority_id=".$id."'>" .

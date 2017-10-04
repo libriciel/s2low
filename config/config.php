@@ -299,12 +299,12 @@ if(!defined('ACTES_APPLI_QUADRIGRAMME')){
 
 // Taille maximum autorisée des archives (en octets)
 if(!defined('ACTES_ARCHIVE_MAX_SIZE')){
-        define('ACTES_ARCHIVE_MAX_SIZE', 20 * 1024 * 1024);
+        define('ACTES_ARCHIVE_MAX_SIZE', 150 * 1024 * 1024);
 }
 
 // Taille maximum pour les envois de fichiers par lot
 if(!defined('ACTES_MAX_BATCH_UPLOAD_SIZE')){
-        define('ACTES_MAX_BATCH_UPLOAD_SIZE', 20*1024*1024);
+        define('ACTES_MAX_BATCH_UPLOAD_SIZE', 150*1024*1024);
 }
 
 

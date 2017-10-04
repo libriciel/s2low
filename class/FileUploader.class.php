@@ -106,7 +106,7 @@ class FileUploader {
 				$message = "La taille du fichier excède la taille maximum (".ini_get('upload_max_filesize').")";
 				break;
 			case UPLOAD_ERR_FORM_SIZE : 
-				$message = "Le fichier dépasse la taille limite autorisé par le formulaire";
+				$message = "Le fichier dépasse la taille limite autorisée par le formulaire";
 				break;
 			case UPLOAD_ERR_PARTIAL: 
 				$message = "Le fichier n'a été que partiellement reçu";

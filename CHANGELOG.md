@@ -55,7 +55,8 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
 - Modification en masse des certificats partagés #31 ~Administration
-  
+- Limitation de la taille des pièces jointes dans les mails sortants à 10Mo   
+- Possibilité d'envoyer des réponses (flux 3 et 4) en JPG et PNG (en plus de XML et PDF). #194 ~Actes 
 
 ### Corrections
 
@@ -70,6 +71,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
 - Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
 - Remplacement complet du système de tampon des actes #202 ~Actes 
+- Correction d'un problème d'encodage dans le traitement par lot #211 ~Actes 
 
 ### Retraits
 
