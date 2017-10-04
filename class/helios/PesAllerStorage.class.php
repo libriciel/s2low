@@ -23,31 +23,32 @@ class PesAllerStorage {
     }
 
     public function storeAll(){
-        while($this->storeNextFile()){
-            //empty
+        $result = $this->heliosTransactionsSQL->getAllTransactionToSendInCloud();
+        
+        foreach($result as $transaction_info){
+            $this->storeNextFile($transaction_info);
         }
     }
-
-    public function storeNextFile(){
-        $transaction_info = $this->heliosTransactionsSQL->getNextTransactionToSendInCloud();
-        if (! $transaction_info){
-            $this->log("Il n'y a plus aucune transaction uniquement en local");
-            return false;
-        }
+    
+    public function storeNextFile($transaction_info){
+        
         $this->log(
             "Transaction {$transaction_info['id']} - ".
             "Fichier {$transaction_info['filename']} -".
             " {$transaction_info['sha1']}"
         );
-
+        if ( ! file_exists($this->helios_files_upload_root."/".$transaction_info['sha1'])){
+            return true;
+        }
+        
+        echo "Depot du fichier : ".$this->helios_files_upload_root."/".$transaction_info['sha1'];
         $this->openStackSwiftWrapper->sendFile(
             self::CONTAINER_NAME,
             $this->helios_files_upload_root."/".$transaction_info['sha1']
-        );
-
+            );
+        
         $this->heliosTransactionsSQL->setTransactionInCloud($transaction_info['id']);
         $this->log("Fichier {$transaction_info['sha1']} envoyé");
-        return true;
     }
 
     public function menageLocal($no_access_during_nb_days = 9999){

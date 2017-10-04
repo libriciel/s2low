@@ -144,5 +144,9 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 		$this->assertTrue((boolean)$this->heliosTransactionSQL->isDuplicate("aaa"));
 	}
 
+	public function testgetAllTransactionToSendInCloud(){
+	    $info = $this->heliosTransactionSQL->getAllTransactionToSendInCloud();
+	    $this->assertEquals($this->transaction_id,$info[0]['id']);
+	}
 
 }
