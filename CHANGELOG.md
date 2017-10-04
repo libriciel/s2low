@@ -5,7 +5,12 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [non publié]
+## [2.6.6] - 2017-10-02
+
+### Corrections
+- Prise en compte des cas où les PES_ALLER ne sont plus sur le serveur
+
+## [2.6.5] - 2017-06-29
 
 - Utilisation d'un stockage objet pour les PES Aller
 - Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde.
@@ -52,6 +57,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
+[2.6.6]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.6
+[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.5
+[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.4
+[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.3
 [2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.2
 [2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.1
 [2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/V2.6/
