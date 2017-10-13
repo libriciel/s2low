@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgres:9.6.5
 
 
 ADD docker_postgres.sh /docker-entrypoint-initdb.d/

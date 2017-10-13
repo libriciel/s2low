@@ -5,12 +5,7 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [2.6.6] - 2017-10-02
-
-### Corrections
-- Prise en compte des cas où les PES_ALLER ne sont plus sur le serveur
-
-## [2.6.5] - 2017-06-29
+## Non versionné 
 
 ### Ajouts
 
@@ -84,6 +79,13 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
 - Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
 - Suppression de la constante ACTES_ANTIVIRUS_COMMAND, utilisation de ANTIVIRUS_COMMAND à la place #220
+
+## [2.6.6] - 2017-10-02
+
+### Corrections
+- Prise en compte des cas où les PES_ALLER ne sont plus sur le serveur
+
+
 
 ## [2.6.5] - 2017-06-29
 
