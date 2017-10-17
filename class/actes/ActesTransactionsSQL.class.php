@@ -163,5 +163,16 @@ class ActesTransactionsSQL {
 			" ORDER BY month DESC";
 		return $this->sqlQuery->query($sql);
 	}
+
+    public function getEnveloppeIdByTransactionsStatus($last_status_id,$antivirus_check = true){
+        $sql = "SELECT DISTINCT envelope_id FROM actes_transactions WHERE last_status_id=? AND antivirus_check=?";
+        return $this->sqlQuery->queryOneCol($sql,$last_status_id,$antivirus_check);
+    }
+
+    public function getIdByEnvelopeId($envelope_id){
+        $sql = "SELECT id FROM actes_transactions WHERE envelope_id=?";
+        return $this->sqlQuery->queryOneCol($sql,$envelope_id);
+
+    }
 	
 }

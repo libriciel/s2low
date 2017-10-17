@@ -47,6 +47,8 @@ class ObjectInstancier {
         	try {
         		$bind_value = $this->$param_name;
         	} catch (Exception $e){
+        	    //print_r($this);
+        	    //throw $e;
         		//On a pas trouvé le paramètre...
         	}
         	

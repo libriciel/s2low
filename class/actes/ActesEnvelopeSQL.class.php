@@ -3,7 +3,7 @@
 
 class ActesEnvelopeSQL {
 	
-	public function __construct($sqlQuery){
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
 		
