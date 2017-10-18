@@ -9,7 +9,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## Corrections
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
-
+- Typo #241
 
 
 ## [3.0.0-rc1] - 2017-09-18 

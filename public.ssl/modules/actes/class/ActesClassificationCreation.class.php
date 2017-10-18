@@ -115,7 +115,7 @@ class ActesClassificationCreation {
 			return false;
 	  	}
 		
-		$this->lastMessage = "Création envelope n°" . $env->getId() . " contenant une demande de classification. Résultat OK.";
+		$this->lastMessage = "Création de l'enveloppe n°" . $env->getId() . " contenant une demande de classification. Résultat OK.";
 		$this->logLastMessage(1);
 
 		$this->lastTransactionId = $trans->getId() . "\n";
