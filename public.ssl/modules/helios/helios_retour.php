@@ -28,6 +28,11 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 $HR = new HeliosRetour();
 
 $fstatus = Helpers :: getVarFromGet("status");
+
+if ($fstatus !== '0' && $fstatus != 1){
+    $fstatus = 2;
+}
+
 $fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
 $fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
 $fnum = Helpers :: getVarFromGet("num");
