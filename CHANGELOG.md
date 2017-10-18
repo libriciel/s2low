@@ -5,7 +5,19 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## Non versionné 
+## Non versionné
+
+## Corrections
+- Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
+- Typo #241
+- Modification libéllé réponse au message ministère ~Actes #194
+- Seul l'admin de groupe et le super admin peuvent uploader une convention @ctes ~Actes #147
+- Correction d'un warning lors du post d'un acte hors 7-1 avec un fichier XML et une annexe XML ~Actes #251
+- Typo #250, #247, #255, #246, #245, #242, #248
+- MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
+
+
+## [3.0.0-rc1] - 2017-09-18 
 
 ### Ajouts
 
@@ -145,6 +157,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
+[3.0.0-rc1]: https://gitlab.libriciel.fr/s2low/s2low/tags/3.0.0-rc1
 [2.6.6]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.6
 [2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.5
 [2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.4

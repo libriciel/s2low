@@ -48,7 +48,7 @@ class ActesEnvoiFichierControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['status_id']);
         $this->assertEquals(
-            "Transmis au MIOCT",
+            "Transmis au MI",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");

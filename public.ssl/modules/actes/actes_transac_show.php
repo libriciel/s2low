@@ -100,7 +100,7 @@ if ($trans->get("type_reponse")){
 	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
 }
 
-$html .= $doc->getHTMLArrayline("Dossier suivie par", get_hecho($owner->get("givenname") . " " . $owner->get("name")));
+$html .= $doc->getHTMLArrayline("Dossier suivi par", get_hecho($owner->get("givenname") . " " . $owner->get("name")));
 
 // Contenu différent en fonction du type de transaction
 switch ($trans->get("type")) {

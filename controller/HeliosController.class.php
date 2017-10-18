@@ -75,7 +75,7 @@ class HeliosController extends Controller {
 
 		$file_size = $_FILES['enveloppe']['size'];
 		if ($file_size > $this->helios_max_upload_size) {
-			$message = "Taille de fichier supérieur à la limite autorisée (".
+			$message = "Taille de fichier supérieure à la limite autorisée (".
 				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
 			throw new Exception($message);
 		}

@@ -39,7 +39,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
         $this->assertEquals(
-            "Accepte par le TdT : validation OK",
+            "Accepté par le TdT : validation OK",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");

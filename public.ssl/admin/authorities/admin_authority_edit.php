@@ -330,11 +330,14 @@ if ($actesConventions->hasConvention($id)){
 } else {
     $html.="<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
 }
-$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">&nbsp;</label>\n";
 
-$html .= "  <div class=\"col-md-6\"><input type=\"file\" class=\"form-control\" name=\"convention_actes\" /></div>\n";
-$html .= " </div>\n";
+if ($me->isGroupAdminOrSuper()) {
+    $html .= " <div class=\"form-group\">\n";
+    $html .= "  <label class=\"control-label col-md-4\">&nbsp;</label>\n";
+
+    $html .= "  <div class=\"col-md-6\"><input type=\"file\" class=\"form-control\" name=\"convention_actes\" /></div>\n";
+    $html .= " </div>\n";
+}
 
 
 

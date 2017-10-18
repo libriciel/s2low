@@ -232,6 +232,12 @@ if (!defined("EXPORT_LOGS_DIRECTORY")){
 ///// Paramètre module Actes /////
 //////////////////////////////////
 
+if (!defined("ACTES_MINISTERE_ACRONYME")){
+    //MISILL, MIAT, MIOCT, puis MIOCTI entre 2002 et 2012
+    //MI - Ministère de l'intérieur - depuis le 16/05/2012
+    define('ACTES_MINISTERE_ACRONYME','MI');
+}
+
 if (!defined('ACTES_MINISTERE_URL')){
     define('ACTES_MINISTERE_URL','http://simulateur/Simulateur/actesPost');
 }
@@ -446,7 +452,7 @@ if(!defined('HELIOS_UPSTART_TOUCH_FILE')){
 }
 
 if(!defined('HELIOS_MAX_UPLOAD_SIZE')){
-	define('HELIOS_MAX_UPLOAD_SIZE',100*1024*1024);
+	define('HELIOS_MAX_UPLOAD_SIZE',128*1024*1024);
 }
 
 if(!defined('HELIOS_GENERATED_FILE_PERMISSION')){

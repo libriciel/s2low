@@ -75,6 +75,8 @@ $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
 
+$objectInstancier->set("actes_ministere_acronyme",ACTES_MINISTERE_ACRONYME);
+
 $actesMinistereProperties = new ActesMinistereProperties();
 
 $actesMinistereProperties->url = ACTES_MINISTERE_URL;

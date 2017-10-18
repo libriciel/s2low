@@ -97,7 +97,7 @@ class ListeActesHTML {
                 </div>
             </div>
             <div class="form-group">
-                <label for="status" class="col-md-3 control-label">état</label>
+                <label for="status" class="col-md-3 control-label">État</label>
                 <div class="col-md-3">
                     <?php echo $this->getHTMLSelect("status", $status, $fstatus) ?>
                 </div>

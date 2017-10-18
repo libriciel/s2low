@@ -11,6 +11,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     /** @var  Logger */
     private $logger;
 
+    private $actes_ministere_acronyme;
+
     protected function setUp(){
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
@@ -26,6 +28,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
         $this->logger = $this->getObjectInstancier()->get("Logger");
         $this->logger->setLogType(Logger::TYPE_MEMORY);
+
+        $this->actes_ministere_acronyme = ACTES_MINISTERE_ACRONYME;
+
     }
 
     protected function tearDown() {
@@ -86,7 +91,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['status_id']);
         $this->assertRegExp(
-            "#Recu par le MIOCT le#",
+            "#Reçu par le {$this->actes_ministere_acronyme} le#",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
@@ -138,7 +143,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
         $this->assertRegExp(
-            "#Enveloppe rejetée par le MIOCT#",
+            "#Enveloppe rejetée par le {$this->actes_ministere_acronyme}#",
             $transaction_info['message']
         );
     }

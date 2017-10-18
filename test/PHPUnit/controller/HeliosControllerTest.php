@@ -159,7 +159,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	 */
 	public function testMaxSize(){
 		$this->heliosController->setHeliosMaxUploadSize(0);
-		$this->expectedError("Taille de fichier supérieur à la limite autorisée");
+		$this->expectedError("Taille de fichier supérieure à la limite autorisée");
 		$this->importAPI();
 	}
 
