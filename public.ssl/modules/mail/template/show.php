@@ -71,7 +71,7 @@
                         echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
                 }
             }?>
-            <tr><th id="mailbcc" <?php if ($mailBccSize > 1) echo 'rowspan="'.$mailBccSize.'"'; ?>>BCC</th>
+            <tr><th id="mailbcc" <?php if ($mailBccSize > 1) echo 'rowspan="'.$mailBccSize.'"'; ?>>CCI</th>
             <?php
             $isFirstBcc = true;
             foreach ($mailEmisArray as $mailEmis) 

@@ -1086,7 +1086,7 @@ class ActesTransaction extends DataObject {
       			return false;
       		}
       		if ($this->classif1 != 7 || $this->classif2 != 1){
-      			$this->errorMsg = "Seul la classification 7.1 est autorisé pour la transmission au format XML";
+      			$this->errorMsg = "Seule la classification 7.1 est autorisée pour la transmission au format XML";
       			return false;
       		}
       	}
@@ -1111,7 +1111,7 @@ class ActesTransaction extends DataObject {
 				  return false;
 			  }
 			  if ($this->classif1 != 7 || $this->classif2 != 1){
-				  $this->errorMsg = "Seul la classification 7.1 est autorisé pour la transmission au format XML";
+				  $this->errorMsg = "Seule la classification 7.1 est autorisée pour la transmission au format XML";
 				  return false;
 			  }
 

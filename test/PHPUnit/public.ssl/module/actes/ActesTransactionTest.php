@@ -139,7 +139,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->actesTransaction->set('nature_code',5);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
-		$this->assertEquals("Seul la classification 7.1 est autorisé pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
+		$this->assertEquals("Seule la classification 7.1 est autorisée pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testBadAttachment(){

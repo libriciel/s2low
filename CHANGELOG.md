@@ -13,7 +13,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Modification libéllé réponse au message ministère ~Actes #194
 - Seul l'admin de groupe et le super admin peuvent uploader une convention @ctes ~Actes #147
 - Correction d'un warning lors du post d'un acte hors 7-1 avec un fichier XML et une annexe XML ~Actes #251
-- Typo #250, #247, #255
+- Typo #250, #247, #255, #246, #245, #242, #248
 - MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
 
 

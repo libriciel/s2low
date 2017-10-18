@@ -231,7 +231,7 @@ ob_start();
 <div id="filtering-area">
 	<form  role="form" class="form-horizontal" action="<?php echo WEBSITE_SSL ?>/modules/helios/index.php" method="get">
 		<div class="form-group">
-			<label class="col-md-3 control-label" for="status">Etat</label>
+			<label class="col-md-3 control-label" for="status">État</label>
 			<div class="col-md-3">
 				<?php echo $doc->getHTMLSelect("status", $status, $fstatus)  ?>
 			</div>
