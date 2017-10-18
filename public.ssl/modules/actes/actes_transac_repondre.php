@@ -218,7 +218,7 @@ $html .= "   <div class=\"row-legend\">\n";
 $html .= "   <legend>Fichier PDF contenant la réponse :</legend></div>\n";
 $html .= "     <div class=\"actes_files_form\">\n";
 $html .= "       <div class=\"form-group\">\n";  
-$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF : </label>\n";
+$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
 $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
 $html .= "       </div>\n";
 $html .= "       <div class=\"form-group\">\n";  
