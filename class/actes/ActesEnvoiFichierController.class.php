@@ -9,6 +9,7 @@ class ActesEnvoiFichierController {
     private $actesScriptHelper;
     private $actesTransmissionWindowsSQL;
     private $actesFileSender;
+    private $actes_ministere_acronyme;
 
     public function __construct(
         $actes_files_upload_root,
@@ -17,7 +18,8 @@ class ActesEnvoiFichierController {
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesScriptHelper $actesScriptHelper,
         ActesTransmissionWindowsSQL $actesTransmissionWindowsSQL,
-        ActesFileSender $actesFileSender
+        ActesFileSender $actesFileSender,
+        $actes_ministere_acronyme
     ) {
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->logger = $logger;
@@ -26,6 +28,7 @@ class ActesEnvoiFichierController {
         $this->actesScriptHelper = $actesScriptHelper;
         $this->actesTransmissionWindowsSQL = $actesTransmissionWindowsSQL;
         $this->actesFileSender = $actesFileSender;
+        $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
     private function log($message){
@@ -68,7 +71,7 @@ class ActesEnvoiFichierController {
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_TRANSMIS,
-            "Transmis au MIOCT"
+            "Transmis au {$this->actes_ministere_acronyme}"
         );
 
         $this->actesTransmissionWindowsSQL->addFile($envelope_info['file_size']);

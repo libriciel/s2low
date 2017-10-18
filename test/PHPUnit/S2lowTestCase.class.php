@@ -45,6 +45,8 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $this->getObjectInstancier()->set("website","http://s2low");
         $this->getObjectInstancier()->set("website_ssl","https://s2low");
         $this->getObjectInstancier()->set("actes_appli_trigramme","SLO");
+        $this->getObjectInstancier()->set("actes_ministere_acronyme","MI");
+
         $get = array();
         $post = array();
         $request = array();

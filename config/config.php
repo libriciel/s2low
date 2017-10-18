@@ -232,6 +232,12 @@ if (!defined("EXPORT_LOGS_DIRECTORY")){
 ///// Paramètre module Actes /////
 //////////////////////////////////
 
+if (!defined("ACTES_MINISTERE_ACRONYME")){
+    //MISILL, MIAT, MIOCT, puis MIOCTI entre 2002 et 2012
+    //MI - Ministère de l'intérieur - depuis le 16/05/2012
+    define('ACTES_MINISTERE_ACRONYME','MI');
+}
+
 if (!defined('ACTES_MINISTERE_URL')){
     define('ACTES_MINISTERE_URL','http://simulateur/Simulateur/actesPost');
 }

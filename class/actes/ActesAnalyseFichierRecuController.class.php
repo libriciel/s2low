@@ -25,6 +25,7 @@ class ActesAnalyseFichierRecuController {
     private $actesEnvelopeSQL;
     private $actes_files_upload_root;
     private $actesIncludedFileSQL;
+    private $actes_ministere_acronyme;
 
     public function __construct(
         Logger $logger,
@@ -35,7 +36,8 @@ class ActesAnalyseFichierRecuController {
         ActesUpdateClassificationSQL $actesUpdateClassificationSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesIncludedFileSQL $actesIncludedFileSQL,
-        $actes_files_upload_root
+        $actes_files_upload_root,
+        $actes_ministere_acronyme
     ) {
         $this->logger = $logger;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
@@ -46,6 +48,7 @@ class ActesAnalyseFichierRecuController {
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->actesIncludedFileSQL = $actesIncludedFileSQL;
+        $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
     public function analyseAll(){
@@ -161,7 +164,7 @@ class ActesAnalyseFichierRecuController {
 
         $detail_erreur = utf8_decode($anomalieEnveloppe->detail_erreur);
 
-        $message = "Enveloppe rejetée par le MIOCT ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
+        $message = "Enveloppe rejetée par le {$this->actes_ministere_acronyme} ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
         $xml = file_get_contents($archiveData->enveloppe_path);
 
         $this->updateStatus(
@@ -222,10 +225,10 @@ class ActesAnalyseFichierRecuController {
             array(MessageMetierCourrierSimple::CODE_MESSAGE,
                 MessageMetierDefereTA::CODE_MESSAGE)
         )){
-            $message = "Recu par le Tdt (pas d'AR envoyé)";
+            $message = "Reçu par le Tdt (pas d'AR envoyé)";
             $status = ActesStatusSQL::STATUS_DOCUMENT_RECU_PAS_DAR;
         } else {
-            $message = "Recu par le Tdt";
+            $message = "Reçu par le Tdt";
             $status = ActesStatusSQL::STATUS_DOCUMENT_RECU;
         }
         $this->updateStatus(
@@ -260,7 +263,8 @@ class ActesAnalyseFichierRecuController {
         $this->actesTransactionsSQL->setUniqueID($transaction_id,$fichierXML->id_actes);
 
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
-        $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
+
+        $message = "Reçu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -278,7 +282,7 @@ class ActesAnalyseFichierRecuController {
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,3,true);
 
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
-        $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
+        $message = "Reçu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -296,7 +300,7 @@ class ActesAnalyseFichierRecuController {
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,4,true);
 
         $this->log("$fichierXML->id_actes -> transaction_id = $transaction_id");
-        $message = "Recu par le MIOCT le ".$fichierXML->date_reception;
+        $message = "Reçu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -311,7 +315,7 @@ class ActesAnalyseFichierRecuController {
     private function traitementAnomalie(MessageMetieAnomalieActe $fichierXML){
         $this->log("Anomalie trouvé pour l'acte : " . $fichierXML->numero_interne);
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
-        $message = "Anomalie signalee par le MIOCT : ".$fichierXML->nature_anomalie." - ".$fichierXML->detail_anomalie;
+        $message = "Anomalie signalee par le {$this->actes_ministere_acronyme} : ".$fichierXML->nature_anomalie." - ".$fichierXML->detail_anomalie;
         $xml = file_get_contents($fichierXML->file_path);
         $this->updateStatus(
             $transaction_id,
@@ -360,7 +364,7 @@ class ActesAnalyseFichierRecuController {
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
 
         $this->log("{$fichierXML->id_actes} -> transaction_id = $transaction_id");
-        $message = "Annulation recu par le MIOCT le ".$fichierXML->date_reception;
+        $message = "Annulation recu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 

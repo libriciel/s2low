@@ -68,7 +68,7 @@ class ActesAnalyseFichierController {
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
-            "Accepte par le TdT : validation OK"
+            "Accepté par le TdT : validation OK"
         );
 
         return true;
