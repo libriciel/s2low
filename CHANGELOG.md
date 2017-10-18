@@ -11,6 +11,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
 - Typo #241
 - Modification libéllé réponse au message ministère ~Actes #194
+- Seul l'admin de groupe et le super admin peuvent uploader une convention @ctes ~Actes #147
 
 
 ## [3.0.0-rc1] - 2017-09-18 

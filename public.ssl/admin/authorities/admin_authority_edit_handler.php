@@ -186,7 +186,7 @@ if (! $authority->save($savePerms)) {
 }
 
 
-if (isset($_FILES['convention_actes'])) {
+if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
     $fileUploader = new FileUploader();
     if ($fileUploader->verifOK('convention_actes')){
         $actesConventions = $objectInstancier->get("ActesConventions");
