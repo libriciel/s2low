@@ -10,6 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## Corrections
 
 - suppression d'un lien mort ~Actes #273
+- possibilité de désactiver un utilisateur #271
 
 
 ## [3.0.0-rc2]

@@ -126,7 +126,7 @@ class AdminUserController extends Controller {
         $telephone = $this->getEnvironnement()->post()->get('telephone');
         Helpers::putInSession("telephone", $telephone);
 
-        $status = $this->getEnvironnement()->post()->get('status');
+        $status = $this->getEnvironnement()->post()->getInt('status');
         Helpers::putInSession("status", $status);
 
         $authority_id = $this->getEnvironnement()->post()->get('authority_id');
