@@ -12,6 +12,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - suppression d'un lien mort ~Actes #273
 - possibilité de désactiver un utilisateur #271
 - controle minimum du SIREN même si VERIFICATION_SIREN est désactivé #266
+- VERIFICATION_SIREN est maintenant true par défaut
+
+## Élements dépréciés
+- VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
 
 ## [3.0.0-rc2]
