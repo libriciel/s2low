@@ -60,7 +60,7 @@
     <input type="hidden" name="user_id" value="<?php hecho($user_id)?>"/>
     <table class="data-table table table-striped">
         <tr>
-            <th><label for="certificat">Nouveau certificat</label></th>
+            <th><label for="certificat">Nouveau certificat (partie publique au format PEM)</label></th>
             <td>
                 <input type="file" id="certificat" name="certificat" class="form-control" />
             </td>

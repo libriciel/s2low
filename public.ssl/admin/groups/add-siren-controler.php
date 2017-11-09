@@ -13,6 +13,14 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->get("id");
 $siren = $recuperateur->get("siren");
 
+$siren = preg_replace("#\s#","",$siren);
+
+if (strlen($siren) != 9){
+    $_SESSION["error"] = "Le siren ne semble  pas valide.";
+    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    exit;
+}
+
 $theSiren  = new Siren(new LuhnKey());
 
 if(VERIFICATION_SIREN){

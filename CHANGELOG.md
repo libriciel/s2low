@@ -5,7 +5,25 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## Non versionné
+## [3.0.0-rc3]
+
+## Évolutions
+
+- un warning apparait 90 jours avant l'expiration d'un certificat (was: 30 jours)
+- Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
+
+## Corrections
+
+- suppression d'un lien mort ~Actes #273
+- possibilité de désactiver un utilisateur #271
+- controle minimum du SIREN même si VERIFICATION_SIREN est désactivé #266
+- VERIFICATION_SIREN est maintenant true par défaut
+
+## Élements dépréciés
+- VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
+
+
+## [3.0.0-rc2]
 
 ## Corrections
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253

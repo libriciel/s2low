@@ -29,10 +29,7 @@ $html .= "La transmission des données vers le serveur du ministère se fait par d
 $html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php\">Accéder à l'interface de définition des fenêtres</a></p>\n";
 
 ob_start();
-?>
-<h2>Outils de test</h2>
-<a href='<?php echo WEBSITE_SSL?>/modules/actes/test/enveloppe_generate.php'>Générer une enveloppe</a>
-<?php 
+
 $html .= ob_get_contents();
 ob_end_clean();
 $html .= "</div>\n";
