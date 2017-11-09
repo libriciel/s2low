@@ -7,6 +7,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.0-rc3]
 
+## Évolutions
+
+- un warning apparait 90 jours avant l'expiration d'un certificat (was: 30 jours)
+
 ## Corrections
 
 - suppression d'un lien mort ~Actes #273
