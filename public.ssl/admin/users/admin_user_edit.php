@@ -260,7 +260,7 @@ ob_start();
 </script>
 
 <div class="form-group">
-	<label class="control-label col-md-4">Importer le certificat utilisateur (format PEM) :</label>
+	<label class="control-label col-md-4">Importer le certificat utilisateur (partie publique au format PEM) :</label>
 	<div class="col-md-6">
 		<input type="file" name="certificate" />
 	</div>

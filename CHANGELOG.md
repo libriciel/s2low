@@ -10,6 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## Évolutions
 
 - un warning apparait 90 jours avant l'expiration d'un certificat (was: 30 jours)
+- Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
 
 ## Corrections
 
