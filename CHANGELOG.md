@@ -18,6 +18,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - possibilité de désactiver un utilisateur #271
 - controle minimum du SIREN même si VERIFICATION_SIREN est désactivé #266
 - VERIFICATION_SIREN est maintenant true par défaut
+- Correction du problème du retour de la fonction actes_transac_get_files_list.php ne retournant pas les fichiers avec
+    des caractères accentués ~Actes #278
 
 ## Élements dépréciés
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
