@@ -90,7 +90,7 @@ class S2lowBootstrap {
 		$this->log("Utilisateur créé avec succès");
 	}
 
-	private function populateDatabase(){
+	public function populateDatabase(){
 		$data = file_get_contents(__DIR__."/database/database_populate.json");
 		$all = json_decode($data,true);
 		foreach($all as $table => $table_definition){

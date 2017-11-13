@@ -1,9 +1,6 @@
 <?php
 require_once( __DIR__."/../../init/init.php");
 
-# NE PAS UTILISER EN PRODUCTION !
-if (true) exit;
-
 # Ce script permet de mettre automatiquement la base à jour en fonction du fichier de définition de la base
 
 
