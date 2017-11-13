@@ -63,7 +63,11 @@ if (! $me->isSuper() && $mod) {
 
 
 if ($mod){
-	$title = "Modification de l'utilisateur « {$him->get('givenname')} {$him->get('name')} »";
+    if ($new_id){
+        $title = "Ajout d'un nouvel utilisateur (à partir de « {$him->get('givenname')} {$him->get('name')} »)";
+    } else {
+        $title = "Modification de l'utilisateur « {$him->get('givenname')} {$him->get('name')} »";
+    }
 } else {
 	$title = "Ajout d'un nouvel utilisateur";
 }

@@ -20,6 +20,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - VERIFICATION_SIREN est maintenant true par défaut
 - Correction du problème du retour de la fonction actes_transac_get_files_list.php ne retournant pas les fichiers avec
     des caractères accentués ~Actes #278
+- Correction du titre en cas de création d'un nouvel utilisateur partageant un certificat #289    
 
 ## Élements dépréciés
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
