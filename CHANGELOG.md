@@ -22,6 +22,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
     des caractères accentués ~Actes #278
 - Correction du titre en cas de création d'un nouvel utilisateur partageant un certificat #289    
 - On accepte que des documents PDF pour la convention ~Actes #287
+- Le filtre helios sur la date d'acquittement ne fonctionnait plus depuis que les fichiers étaient en information disponible ~Helios #283
 
 ## Élements dépréciés
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
