@@ -62,7 +62,10 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
 
 $actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
 
+
 $type_pj_list = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNature()));
+$type_pj_default = json_encode(utf8_encode_array($actesTypePJSQL->getAllDefaultNature()));
+
 
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
@@ -117,23 +120,44 @@ $(function(){
   var setTypePJ = function(selector){
       selector.empty();
       var nature_code = $("#nature_code").val();
-      if (nature_code){
-          $.each(type_pj[nature_code], function(key, value) {   
-           selector
-             .append($("<option></option>")
-                        .attr("value",key)
-                        .text(value)); 
+      var matiere1 = $("#classif1").val();
+      var matiere2 = $("#classif2").val();
+      if (nature_code && matiere1 && matiere2){
+          if (nature_code in type_pj && matiere1 in type_pj[nature_code] && matiere2 in type_pj[nature_code][matiere1]){
+          
+              $.each(type_pj[nature_code][matiere1][matiere2], function(key, value) {   
+               selector
+                 .append($("<option></option>")
+                            .attr("value",key)
+                            .text(value)); 
+              });
+          }
+     }
+     
+     if (nature_code){
+          $.each(type_pj_default[nature_code],function(key,value){
+              selector
+                 .append($("<option></option>")
+                            .attr("value",key)
+                            .text(value)); 
           });
      }
+      selector
+             .append($("<option></option>")
+                        .attr("value","99_AU")
+                        .text("Autre document")); 
   };
   
-  $("#nature_code").on('change', function() {
+  $("#nature_code, #classification_text").on('change', function() {
         $(".select_type_pj").each(function(){
+            
             setTypePJ($(this))
         });
+        
   });
   
   var type_pj = $type_pj_list;
+  var type_pj_default = $type_pj_default;
 });
 
 
@@ -289,9 +313,13 @@ if (!$batchMode) {
   $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
   $html .= "     <div class=\"actes_files_form\">\n";
   $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
-  $html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
-  $html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
+  $html .= "         <label>Type de pièce jointe</label><br/>";
+  $html .= "            <select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\"></select>";
   $html .= "       </div>\n";
+    $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
+    $html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
+    $html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
+    $html .= "       </div>\n";
   $html .= "     </div>\n";
   $html .= "   </fieldset>\n";
   $html .= " </div>\n";

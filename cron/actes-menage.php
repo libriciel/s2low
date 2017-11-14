@@ -1,7 +1,7 @@
 <?php 
 require_once( __DIR__ . "/../init/init.php");
 
-throw new Exception("Avec le stockage objet, on peut se poser la question du ménage...");
+throw new Exception("Script désactivé pour le moment. Avec le stockage objet, on peut se poser la question du ménage...");
 
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);

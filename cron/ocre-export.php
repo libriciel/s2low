@@ -43,3 +43,5 @@ while (false !== ($file = readdir($dir_handle)) ) {
 	echo "Suppression de $file_path\n";
 	unlink($file_path);
 }
+
+sleep(10);

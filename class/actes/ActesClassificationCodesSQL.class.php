@@ -32,4 +32,36 @@ class ActesClassificationCodesSQL extends SQL {
 		return $data;
 	}
 
+	public function getAllDescription($authority_id){
+	    $sql = "SELECT * FROM actes_classification_codes WHERE authority_id=? ORDER BY level,code";
+        $result = array();
+	    foreach($this->query($sql,$authority_id) as $line){
+	        $result[$line['id']] = $line;
+        }
+
+        $result = $this->getAllChildrenRecur($result,'');
+
+
+        return $result;
+    }
+
+    private function getAllChildrenRecur($result,$parent_id){
+        $return = $this->getAllChildren($result,$parent_id);
+        foreach($return as $id => $children){
+            $return[$id]['children'] = $this->getAllChildrenRecur($result,$id);
+        }
+        return $return;
+    }
+
+    private function getAllChildren($result,$parent_id){
+	    $return = array();
+        foreach($result as $line){
+            if ($line['parent_id'] == $parent_id){
+                $return[$line['id']] = $line;
+            }
+        }
+
+        return $return;
+    }
+
 }

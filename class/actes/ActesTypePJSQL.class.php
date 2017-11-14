@@ -10,10 +10,23 @@ class ActesTypePJSQL extends SQL {
     public function getAllByNature(){
         $result = array();
         foreach($this->getAll() as $type){
-            $result[$type['nature_id']][$type['code']] =$type['libelle'];
+            $matiere1 = $type['code'][0];
+            $matiere2 = $type['code'][1];
+            $result[$type['nature_id']][$matiere1][$matiere2][$type['code']] =$type['libelle'];
         }
         return $result;
     }
+
+    public function getAllDefaultNature(){
+        $result = array();
+        foreach($this->getAll() as $type){
+            if (substr($type['code'],0,2) == '99') {
+                $result[$type['nature_id']][$type['code']] = $type['libelle'];
+            }
+        }
+        return $result;
+    }
+
 
     public function getLibelle($code){
         $sql = "SELECT libelle FROM actes_type_pj WHERE code=? LIMIT 1";

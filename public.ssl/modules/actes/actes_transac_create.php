@@ -84,8 +84,8 @@ if (isset($_FILES["acte_attachments_sign"])){
 	$acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 }
 
+$type_acte = Helpers::getVarFromPost('type_acte',true);
 $type_pj = Helpers::getVarFromPost('type_pj',true);
-
 
 
 $auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
@@ -237,8 +237,8 @@ if (isset ($actePDFFile) || $batchMode) {
 	
   }
 
-  $dest_name = $trans->getStdFileName($env);
-  if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath)) {
+  $dest_name = $trans->getStdFileName($env,true,$type_acte);
+  if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath,true,$type_acte)) {
     $errorMsg .= "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
     $fileImportError = true;
   } else {

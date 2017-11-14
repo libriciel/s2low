@@ -140,6 +140,7 @@ switch ($type) {
 	 $js .= "    }\n";
 	 $js .= "  }\n";
 	 $js .= "  window.opener.document.getElementById('classification_text').innerHTML = text;\n";
+     $js .= "  window.opener.document.getElementById('classification_text').dispatchEvent(new Event('change'))\n";
 	 $js .= "  window.close();\n";
 	 $js .= "}\n";
 	 $js .= "</script>\n";

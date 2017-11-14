@@ -19,5 +19,10 @@ class ActesClassificationCodesSQLTest extends S2lowTestCase {
 		$this->assertEquals("toto",$actesClassificationCodesSQL->getDescription(1,array(1,2,3,1)));
 	}
 
+	public function testgetAllDescription(){
+        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($this->getSQLQuery());
+        $result = $actesClassificationCodesSQL->getAllDescription(1);
+        $this->assertEquals("toto",$result[1]['children'][2]['children'][3]['description']);
+    }
 
 }

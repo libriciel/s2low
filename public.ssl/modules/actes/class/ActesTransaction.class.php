@@ -1022,8 +1022,8 @@ class ActesTransaction extends DataObject {
    * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
    * \return True en cas de succès, false sinon
    */
-  public function addActeFile($name, $dest_name, $path = null, $validate = true) {
-    if (!$this->addFile("acte", $name, $dest_name, $path, $validate)) {
+  public function addActeFile($name, $dest_name, $path = null, $validate = true,$code_pj='') {
+    if (!$this->addFile("acte", $name, $dest_name, $path, $validate,$code_pj)) {
       return false;
     }
 
