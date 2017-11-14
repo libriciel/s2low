@@ -8,3 +8,4 @@ $logsController->doRequest();
 
 
 
+sleep(60);

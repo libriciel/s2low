@@ -263,7 +263,7 @@ class HeliosEnvoiControler {
 		}
 
 		if ($nb_file_send == 0 && count($transaction_id_list)){
-			$message = "Le script helios-envoi-fichier.php n'a pas envoyé de transactions sur les ".count($transaction_id_list)." à poster !\n";
+			$message = "Le script helios-reception-envoi.php n'a pas envoyé de transactions sur les ".count($transaction_id_list)." à poster !\n";
 			echo $message;
 			mail(EMAIL_ADMIN,"[ALERTE CRITIQUE] L'envoi des PES à la DGFiP ne fonctionne plus",$message,"From: ".TDT_FROM_EMAIL);
 		}

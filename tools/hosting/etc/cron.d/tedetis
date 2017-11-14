@@ -41,6 +41,3 @@
 #Mise a jour des classification
 MAILTO=''
 20 3 1 * * www-data /usr/bin/php /var/www/tedetis/cron/jour.php >/dev/null 2>&1
-
-#Envoi des notifications d'ack
-*/1 * * * * www-data /usr/bin/php /var/www/tedetis/cron/notification.php >> /tmp/log-notification.log 2>&1

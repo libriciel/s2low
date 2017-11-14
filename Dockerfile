@@ -131,7 +131,7 @@ COPY ./docker-resources/docker-s2low-entrypoint /usr/local/bin/
 RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
 
 
-COPY ./docker-resources/s2low-supervisord.conf /etc/supervisor/conf.d/
+COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
 
 
 COPY ./ /var/www/s2low/
