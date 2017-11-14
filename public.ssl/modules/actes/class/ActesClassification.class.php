@@ -207,6 +207,7 @@ class ActesClassification extends DataObject {
 
 	  $result = $db->select($sql);
 
+
 	  $classif = array();
 
 	  if (! $result->isError()) {
