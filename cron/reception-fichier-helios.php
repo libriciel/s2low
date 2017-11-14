@@ -1,5 +1,10 @@
 #! /usr/bin/php
 <?php
+
+/* ATTENTION - NE PAS UTILISER EN PRODUCTION */
+/* le serveur FTP de la DGFIP ne supporte pas l'envoi et la réception simultané */
+/* Il faut utiliser helios-reception-envoi à la place */
+
 require_once (__DIR__."/../config/config.php");
 
 $start = time();

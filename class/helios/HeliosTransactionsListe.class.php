@@ -63,7 +63,7 @@ class HeliosTransactionsListe {
 		$this->filter[] = "(SELECT date " .
 				" FROM helios_transactions_workflow atw " .
 				" WHERE helios_transactions.id = atw.transaction_id " .
-				" AND (atw.status_id =  4 OR atw.status_id= 6) LIMIT 1 ) >= ? ";
+				" AND (atw.status_id =  4 OR atw.status_id= 6 OR atw.status_id=8 ) LIMIT 1 ) >= ? ";
 		$this->value[] = $date;
 	}
 	
@@ -72,7 +72,7 @@ class HeliosTransactionsListe {
 		$this->filter[] = "(SELECT date " .
 				" FROM helios_transactions_workflow atw " .
 				" WHERE helios_transactions.id = atw.transaction_id " .
-				" AND (atw.status_id =  4 OR atw.status_id= 6) LIMIT 1 ) <= ? ";
+				" AND (atw.status_id =  4 OR atw.status_id= 6 OR atw.status_id=8) LIMIT 1 ) <= ? ";
 		$this->value[] = $date;
 	}
 	

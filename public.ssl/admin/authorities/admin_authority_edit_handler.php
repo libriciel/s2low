@@ -190,7 +190,17 @@ if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
     $fileUploader = new FileUploader();
     if ($fileUploader->verifOK('convention_actes')){
         $actesConventions = $objectInstancier->get("ActesConventions");
-        $actesConventions->setConvention($authority->getId(),$_FILES['convention_actes']['tmp_name']);
+
+        $finfo = new finfo();
+        if ($finfo->file($_FILES['convention_actes']['tmp_name'],FILEINFO_MIME_TYPE) == 'application/pdf'){
+            $actesConventions->setConvention($authority->getId(),$_FILES['convention_actes']['tmp_name']);
+        } else {
+            exitOrDisplayError(
+                $api,
+                nl2br("Erreur lors de la sauvegarde de la convention (PDF attendu)"),
+                $location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId()
+            );
+        }
     }
 }
 

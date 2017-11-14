@@ -18,4 +18,5 @@ mkdir -p /data/tdt-workspace/actes && \
     mkdir -p /data/tdt-workspace/helios/response_error && \
     mkdir -p /data/tdt-workspace/helios/temp && \
     mkdir -p /data/tdt-workspace/logs-export && \
-    mkdir -p /data/tdt-workspace/uploads/etat_civil
+    mkdir -p /data/tdt-workspace/uploads/etat_civil && \
+    mkdir -p /data/log/

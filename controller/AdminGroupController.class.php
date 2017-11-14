@@ -32,7 +32,7 @@ class AdminGroupController extends Controller {
 
 		$file_content = $fileUploaderNG->getFileContent('siren_file');
 
-		foreach (explode("\n",$file_content) as $siren) {
+		foreach (preg_split('/\n|\r\n?/',$file_content) as $siren) {
 			if ($theSiren->isValid($siren)) {
 				$authorityGroupSirenSQL->add($id, $siren);
 			}
