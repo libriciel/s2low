@@ -422,6 +422,9 @@ class AdminUserController extends Controller {
             $him->init();
             $him->set('certFilePath',$certificate_filepath);
             $him->save();
+            if ( ! $him->get('certificate_rgs_2_etoiles')){
+                $userSQL->deleteCertificateRGS2Etoiles($user_info['id']);
+            }
         }
 
         $this->redirect("/admin/users/admin_user_list.php?user_id=$user_id","Certificat mis à jour");

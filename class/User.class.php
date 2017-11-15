@@ -29,6 +29,7 @@ class User extends DataObject {
 	protected $certificate_hash;
   protected $certFilePath;
   protected $certPassphrase;
+  protected $certificate_rgs_2_etoiles;
   protected $dbFields = array( "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => true),
 						 "subject_dn" => array( "descr" => "Dn du certificat", "type" => "isString", "mandatory" => true),
 						 "issuer_dn" => array( "descr" => "DN du fournisseur du certificat", "type" => "isString", "mandatory" => true),
@@ -536,6 +537,7 @@ class User extends DataObject {
 		return false;
 	  }
 	}
+
 
     if (! ($sql = parent::save($validate, true))) {
 	  return false;
