@@ -5,7 +5,15 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.0-rc3]
+## [3.0.0-rc4] 
+
+## Corrections
+- une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci 
+    était encore dans un groupe #295
+- Le typage disparraissait après avoir posté un actes provoquant une erreur (doublon) #296
+- Connexion impossible après modification en masse de certificat partagé #293
+   
+## [3.0.0-rc3] - 15/11/2017
 
 ## Évolutions
 

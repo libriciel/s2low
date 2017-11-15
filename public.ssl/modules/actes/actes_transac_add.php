@@ -149,8 +149,7 @@ $(function(){
   };
   
   $("#nature_code, #classification_text").on('change', function() {
-        $(".select_type_pj").each(function(){
-            
+        $(".select_type_pj").each(function(){            
             setTypePJ($(this))
         });
         
@@ -158,6 +157,10 @@ $(function(){
   
   var type_pj = $type_pj_list;
   var type_pj_default = $type_pj_default;
+});
+
+$(document).ready(function (){
+      $("#nature_code").trigger('change');
 });
 
 
