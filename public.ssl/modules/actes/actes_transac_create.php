@@ -237,6 +237,18 @@ if (isset ($actePDFFile) || $batchMode) {
 	
   }
 
+  if (empty($type_acte)){
+      $correspondance_nature_type = array(
+          '1'=> '99_DE',
+          '2' => '99_AT',
+          '3' => '99_AI',
+          '4' => '99_CO',
+          '5' => '99_BU',
+          '6' => '99_AU',
+      );
+      $type_acte = $correspondance_nature_type[$nature_code];
+  }
+
   $dest_name = $trans->getStdFileName($env,true,$type_acte);
   if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath,true,$type_acte)) {
     $errorMsg .= "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
@@ -279,8 +291,17 @@ if (isset ($acteAttachments)) {
 			continue;
 		}
 
+		if ( empty($type_pj[$i])){
+		    //Type par defaut des annexes
+		    $type_pj[$i] = '99_AU';
+        }
+
         $dest_name = $trans->getStdFileName($env,true,$type_pj[$i]);
-        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i],true,$type_pj[$i])) {
+        if (!$trans->addAttachmentFile(
+            $acteAttachments["name"][$i],
+            $dest_name, $acteAttachments["tmp_name"][$i],
+            true,$type_pj[$i])
+        ) {
           $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
           $fileImportError = true;
         } else {
