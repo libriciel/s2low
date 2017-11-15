@@ -35,7 +35,13 @@ class GroupeMail extends DataObject {
   		$sql = "DELETE FROM mail_user_groupe WHERE id_user=$id AND id_groupe=".$this->id;
   		$this->db->exec($sql);
   	}
-	
+
+  	public function isUserInGroup($id_user){
+  	    $sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_user=$id_user";
+  	    $nb_groupe = $this->db->getOneValue($sql);
+  	    return $nb_groupe != 0;
+    }
+
 	
 	public function getGroupeIdFromName($name,$authority_id){
 		

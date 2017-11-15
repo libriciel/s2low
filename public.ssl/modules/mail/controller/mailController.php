@@ -499,12 +499,21 @@ class mailController {
   					$groupe->addUser($id);
   				}
   			} else {
-  				$annuaire=new mail_annuaire($id);
-  				$annuaire->delete();
+  			    if ($groupe->isUserInGroup($id)){
+                    $this->lastError = "Impossible de supprimer un utilisateur qui est encore dans un groupe";
+
+                } else {
+                    $annuaire = new mail_annuaire($id);
+                    $annuaire->delete();
+                }
   			}
   		}
   		unset($groupe_id);
-  		$_SESSION['last_message'] = "Opération effectuée avec succés";
+  		if ($this->lastError){
+            $_SESSION['last_error'] = $this->lastError;
+        } else {
+            $_SESSION['last_message'] = "Opération effectuée avec succés";
+        }
   	}
   	
   	if ($old_groupe_id) {

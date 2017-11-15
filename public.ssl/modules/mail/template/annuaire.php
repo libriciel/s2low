@@ -30,6 +30,16 @@ function retirer(){
     <?php 
     unset($_SESSION["last_message"]);
     endif;?>
+
+<?php if (isset($_SESSION["last_error"])) : ?>
+    <div class="alert alert-danger" >
+        <?php echo $_SESSION["last_error"]; ?>
+    </div>
+    <?php
+    unset($_SESSION["last_error"]);
+endif;?>
+
+
     <div id="address-book" class="row">    
         <div class="col-md-9">
             <ul class="nav nav-tabs">
