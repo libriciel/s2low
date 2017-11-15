@@ -10,6 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## Corrections
 - une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci 
     était encore dans un groupe #295
+- Le typage disparraissait après avoir posté un actes provoquant une erreur (doublon) #296
 
 ## [3.0.0-rc3] - 15/11/2017
 
