@@ -12,6 +12,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
     était encore dans un groupe #295
 - Le typage disparraissait après avoir posté un actes provoquant une erreur (doublon) #296
 - Connexion impossible après modification en masse de certificat partagé #293
+- Ajout des type possible en fonction de la matiere2 0 dans le code #292
    
 ## [3.0.0-rc3] - 15/11/2017
 
