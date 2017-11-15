@@ -64,9 +64,8 @@ $actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
 
 
 $type_pj_list = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNature()));
+$type_pj_list_matiere1 = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNatureMatiere1()));
 $type_pj_default = json_encode(utf8_encode_array($actesTypePJSQL->getAllDefaultNature()));
-
-
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
@@ -134,6 +133,16 @@ $(function(){
           }
      }
      
+     if (nature_code in type_pj_matiere1 && matiere1 in type_pj_matiere1[nature_code]){
+           $.each(type_pj_matiere1[nature_code][matiere1], function(key, value) {   
+               selector
+                 .append($("<option></option>")
+                            .attr("value",key)
+                            .text(value)); 
+              });
+     }
+     
+     
      if (nature_code){
           $.each(type_pj_default[nature_code],function(key,value){
               selector
@@ -157,6 +166,8 @@ $(function(){
   
   var type_pj = $type_pj_list;
   var type_pj_default = $type_pj_default;
+  var type_pj_matiere1 = $type_pj_list_matiere1;
+ 
 });
 
 $(document).ready(function (){

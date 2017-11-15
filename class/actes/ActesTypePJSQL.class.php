@@ -17,6 +17,17 @@ class ActesTypePJSQL extends SQL {
         return $result;
     }
 
+    public function getAllByNatureMatiere1(){
+        $result = array();
+        foreach($this->getAll() as $type){
+            if ($type['code'][1] == '0'){
+                $matiere1 = $type['code'][0];
+                $result[$type['nature_id']][$matiere1][$type['code']] = $type['libelle'];
+            }
+        }
+        return $result;
+    }
+
     public function getAllDefaultNature(){
         $result = array();
         foreach($this->getAll() as $type){
