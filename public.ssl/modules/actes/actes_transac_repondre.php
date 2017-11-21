@@ -78,14 +78,7 @@ function add_attachment_field() {
   html += '       \\x3C/div>';
 EOJS;
 
-if (!$batchMode) {
-  $js .=<<<EOJS
-        html += '     <div class="form-group">';
-	html += '       <label for="acte_attachments_sign' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Fichier signature numérique pièce jointe n°' + field_nb + ' (optionnel)&nbsp;:\\x3C/label>';
-  	html += '       <div class="col-md-3"><input type="file" id="acte_attachments_sign_' + field_nb + '" name="acte_attachments_sign[]" size="40" maxlength="255" />\\x3C/div>';
-        html += '       \\x3C/div>';        
-EOJS;
-}
+
 
 $js .=<<<EOJS
 html += '    \\x3C/div>';
@@ -221,11 +214,6 @@ $html .= "       <div class=\"form-group\">\n";
 $html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
 $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
 $html .= "       </div>\n";
-$html .= "       <div class=\"form-group\">\n";  
-$html .= "         <label for=\"acte_pdf_file_sign\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier signature numérique (optionnel, voir ci-contre) :</label>\n";
-$html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file_sign\" class=\"control-form\" name=\"acte_pdf_file_sign\" /></div>\n";
-$html .= "       </div>\n";
-$html .= "     </div>\n";
 $html .= "   </fieldset>\n";
 $html .= " </div>\n";
 

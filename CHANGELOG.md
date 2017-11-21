@@ -24,6 +24,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Vérification du content-type du fichier contenant les SIREN #265 
   
+## Retrait
+
+- Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
    
 ## [3.0.0-rc3] - 2017-11-15
 
