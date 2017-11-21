@@ -16,6 +16,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout des type possible en fonction de la matiere2 0 dans le code ~Actes #292
 - Typage par défaut des pièces ~Actes #298
 - Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
+- Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)  
 
 ## Évolutions
 
