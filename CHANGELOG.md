@@ -15,6 +15,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Connexion impossible après modification en masse de certificat partagé #293
 - Ajout des type possible en fonction de la matiere2 0 dans le code ~Actes #292
 - Typage par défaut des pièces ~Actes #298
+- Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
   
    
 ## [3.0.0-rc3] - 15/11/2017
