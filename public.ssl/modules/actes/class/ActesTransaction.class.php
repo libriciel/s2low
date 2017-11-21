@@ -1082,7 +1082,7 @@ class ActesTransaction extends DataObject {
 
       	if ($ext == "xml"){
       		if ($this->nature_code != 5){
-      			$this->errorMsg = "Seul les documents budgétaires et financiers peuvent être au format XML.";
+      			$this->errorMsg = "Seuls les documents budgétaires et financiers peuvent être au format XML.";
       			return false;
       		}
       		if ($this->classif1 != 7 || $this->classif2 != 1){
@@ -1107,7 +1107,7 @@ class ActesTransaction extends DataObject {
  	  	}
 		  if ($ext == "xml"){
 			  if ($this->nature_code != 5){
-				  $this->errorMsg = "Seul les documents budgétaires et financiers peuvent être au format XML.";
+				  $this->errorMsg = "Seuls les documents budgétaires et financiers peuvent être au format XML.";
 				  return false;
 			  }
 			  if ($this->classif1 != 7 || $this->classif2 != 1){

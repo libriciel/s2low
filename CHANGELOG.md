@@ -18,6 +18,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
 - Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)  
 - La fenêtre de classification reste ouverte sous IE 11 #299
+- Typo #257
   
 
 ## Évolutions
