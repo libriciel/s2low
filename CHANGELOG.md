@@ -19,6 +19,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)  
 - La fenêtre de classification reste ouverte sous IE 11 #299
 - Typo #257
+- Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303
   
 
 ## Évolutions
