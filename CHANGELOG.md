@@ -16,9 +16,13 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout des type possible en fonction de la matiere2 0 dans le code ~Actes #292
 - Typage par défaut des pièces ~Actes #298
 - Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
+
+## Évolutions
+
+- Vérification du content-type du fichier contenant les SIREN #265 
   
    
-## [3.0.0-rc3] - 15/11/2017
+## [3.0.0-rc3] - 2017-11-15
 
 ## Évolutions
 

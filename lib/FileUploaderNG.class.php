@@ -20,6 +20,15 @@ class FileUploaderNG {
 		return $this->getValueIntern($filename,'name',$num_file);
 	}
 
+	public function getFileType($form_name,$num_file = 0){
+        $tmp_name = $this->getValueIntern($form_name,'tmp_name',$num_file);
+        if (! $tmp_name){
+            return false;
+        }
+        $finfo = new finfo();
+        return $finfo->file($tmp_name,FILEINFO_MIME_TYPE);
+    }
+
 	public function getFileContent($form_name,$num_file = 0){
 		$tmp_name = $this->getValueIntern($form_name,'tmp_name',$num_file);
 		if (! $tmp_name){
