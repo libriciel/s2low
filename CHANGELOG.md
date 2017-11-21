@@ -25,7 +25,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
 - Normalisation des noms des scripts cron (actes-*, helios-*,...)
 - Utilisation de supervisord en remplacement de upstart
-- Ajout du typage du fichier principal de l'actes (mauvaise interpretation intiale de l'exigence) ~Actes #291
+- Ajout du typage du fichier principal de l'actes (mauvaise interpretation initiale de l'exigence) ~Actes #291
 - Restriction des types de pièces en fonction de la classification (mauvaise interprétation de la notice) ~Actes #292
 
 ## Corrections
