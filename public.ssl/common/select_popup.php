@@ -16,6 +16,7 @@ $type = Helpers::getVarFromGet("type", true);
 $myAuthority = new Authority($me->get("authority_id"));
 
 $doc = new HTMLLayout("xhtml_simple.tpl.php");
+$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
 
 $doc->setTitle("Tedetis : sélection attribut");
 
@@ -140,7 +141,7 @@ switch ($type) {
 	 $js .= "    }\n";
 	 $js .= "  }\n";
 	 $js .= "  window.opener.document.getElementById('classification_text').innerHTML = text;\n";
-     $js .= "  window.opener.document.getElementById('classification_text').dispatchEvent(new Event('change'))\n";
+     $js .= "   window.opener.$(\"#classification_text\").trigger('change'); ";
 	 $js .= "  window.close();\n";
 	 $js .= "}\n";
 	 $js .= "</script>\n";
