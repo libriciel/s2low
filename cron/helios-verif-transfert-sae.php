@@ -1,4 +1,6 @@
 <?php
+declare(ticks = 1);
+
 require_once( __DIR__ . "/../init/init.php");
 
 $start = time();
@@ -12,9 +14,12 @@ echo count($allTransactions). " transactions HELIOS trouvees dans l'etat <envoye
 
 /** @var HeliosArchiveControler $heliosArchiveControler */
 $heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
-
+$sigtermHandler = new SigTermHandler();
 foreach($allTransactions as $transactionInfo){
 	$heliosArchiveControler->verifArchive($transactionInfo);
+    if ($sigtermHandler->isSigtermCalled()){
+        break;
+    }
 }
 
 $stop = time();

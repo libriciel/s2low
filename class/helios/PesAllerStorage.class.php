@@ -24,9 +24,12 @@ class PesAllerStorage {
 
     public function storeAll(){
         $result = $this->heliosTransactionsSQL->getAllTransactionToSendInCloud();
-        
+        $sigtermHandler = new SigTermHandler();
         foreach($result as $transaction_info){
             $this->storeNextFile($transaction_info);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
     }
     
@@ -52,12 +55,16 @@ class PesAllerStorage {
     }
 
     public function menageLocal($no_access_during_nb_days = 9999){
+        $sigtermHandler = new SigTermHandler();
         $dh = opendir($this->helios_files_upload_root);
         if (! $dh) {
             throw new Exception("Impossible d'ouvrir " . $this->helios_files_upload_root);
         }
 
         while (($file = readdir($dh)) !== false) {
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
             if (in_array($file,array('.','..'))){
                 continue;
             }

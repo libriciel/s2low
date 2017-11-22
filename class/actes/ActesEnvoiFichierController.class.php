@@ -36,11 +36,15 @@ class ActesEnvoiFichierController {
     }
 
     public function sendAllEnvelopes(){
+        $sigtermHandler = new SigTermHandler();
         $this->log("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
         $this->log("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
             $this->envoiEnveloppe($enveloppe_id);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
         $this->log("Fin du script");
         return true;

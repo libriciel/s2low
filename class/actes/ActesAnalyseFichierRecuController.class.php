@@ -69,9 +69,12 @@ class ActesAnalyseFichierRecuController {
             return true;
         }
         $this->log("Traitement de ".count($file_list)." répertoire trouvés");
-
+        $sigtermHandler = new SigTermHandler();
         foreach($file_list as $file){
            $this->analyseOneFileMoveIfError($file);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
 
         $this->log("Fin du script");

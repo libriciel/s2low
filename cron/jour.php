@@ -1,4 +1,5 @@
-<?php 
+<?php
+declare(ticks = 1);
 
 //Ce script est trèss gourmand en mémoire s'il y a beaucoup de collectivité à  traiter.
 ini_set("memory_limit","100M");

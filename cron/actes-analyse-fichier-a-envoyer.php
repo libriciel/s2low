@@ -1,5 +1,7 @@
 #! /usr/bin/php
 <?php
+declare(ticks = 1);
+
 require_once( __DIR__ . "/../init/init.php");
 
 $start = time();

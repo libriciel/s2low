@@ -81,6 +81,7 @@ class HeliosArchiveControler {
 	}
 
 	public function sendAllArchive(){
+        $sigtermHandler = new SigTermHandler();
 		echo "Début de l'envoie:\n";
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$info_list = $heliosTransactionSQL->getIdsByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
@@ -88,6 +89,9 @@ class HeliosArchiveControler {
 		foreach($info_list as $transaction_id){
 			echo "Envoi de la transaction $transaction_id.\n";
 			$this->sendArchive($transaction_id);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
 		}
 		echo "Fin de l'envoie\n";
 	}

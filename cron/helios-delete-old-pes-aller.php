@@ -1,5 +1,6 @@
 <?php
 
+declare(ticks = 1);
 
 if (isset($argv[1])){
     $nb_days = $argv[1];

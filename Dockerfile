@@ -60,6 +60,7 @@ RUN docker-php-ext-configure \
 
 RUN docker-php-ext-install \
     gd \
+    pcntl \
     pdo \
     pdo_pgsql \
     pgsql \

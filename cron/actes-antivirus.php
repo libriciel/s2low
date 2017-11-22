@@ -1,7 +1,12 @@
 #! /usr/bin/php
 <?php
+declare(ticks = 1);
 
 require_once( __DIR__ . "/../init/init.php");
+
+$sigTermHandler = new SigTermHandler();
+
+
 $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
@@ -21,6 +26,10 @@ print_r($id_list);
 
 
 foreach($id_list as $id){
+    if ($sigTermHandler->isSigtermCalled()){
+        echo "Arret du script demandé !";
+        exit;
+    }
 	echo "Traitement transaction $id : ";
 	$zeTrans = new ActesTransaction();
 	$zeTrans->setId($id);

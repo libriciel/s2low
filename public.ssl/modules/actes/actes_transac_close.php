@@ -61,7 +61,7 @@ foreach ($liste_id as $id) {
       Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
     }
 
-    if (! $trans->canValidate() && ! ACTES_ALWAYS_CAN_VALIDATE){
+    if (! $trans->canValidate() && ! ACTES_ALWAYS_CAN_VALIDATE && $new_status_id !=19){
         $sortie .= "Cette transaction $id ne peut pas encore être clôturé\n";
         continue;
     }

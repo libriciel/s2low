@@ -32,13 +32,16 @@ class ActesImapRetrieve {
 
         $messages = array_reverse($server->getMessages());
         $this->log("Il y a ".count($messages)." messages dans la boite au lettres");
-
+        $sigtermHandler = new SigTermHandler();
         foreach($messages as $message){
             $this->saveMail($message);
 
             $this->log("Suppression du message : ".($message->getOverview()->message_id));
             $message->delete();
             $server->expunge();
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
 
         $this->log("Fin du script");

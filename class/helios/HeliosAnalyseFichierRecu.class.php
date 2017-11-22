@@ -50,9 +50,13 @@ class HeliosAnalyseFichierRecu {
 		$this->log("Traitement de ".count($file_list)." fichiers trouvés");
 
 		$erreur_list = array();
+		$sigtermHandler = new SigTermHandler();
 		foreach($file_list as $file){
 			try {
 				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root,$ocre_file_path);
+                if ($sigtermHandler->isSigtermCalled()){
+                    break;
+                }
 			} catch (Exception $e){
 				$this->log("[ERREUR] ". $e->getMessage());
 				$erreur_list[$file] = $e->getMessage();

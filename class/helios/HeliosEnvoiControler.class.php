@@ -45,8 +45,11 @@ class HeliosEnvoiControler {
 
 		libxml_use_internal_errors(true);
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
-		
+        $sigtermHandler = new SigTermHandler();
 		foreach($transaction_id_list as $transaction_id){
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
 			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 		
 			$message =  "Transaction $transaction_id en cours de traitement";
