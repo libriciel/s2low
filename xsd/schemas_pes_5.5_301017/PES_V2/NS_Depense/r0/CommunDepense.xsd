@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:complexType name="TTypBordAller">
+    <xs:annotation>
+      <xs:documentation>Type de bordereau. A utiliser en fonction du TypPce et de NatPce (cf grille des triplets en annexe).
+Les types 01 02 sont ceux utilisés dans Hélios et pour lesquels les éditeurs au PESV2 ont réalisé les développements.
+Le type 04 ne fonctionne pas en PES Aller : rejet du bordereau.
+Toute valeur différente de 01 02 03 et 04 (retour uniquement), rejet du flux</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Annulation/réduction</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Ordres de paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypPce">
+    <xs:annotation>
+      <xs:documentation>Informations destinées à déterminer le type de pièce transmis par l'ordonnateur. Cette zone permet d'effectuer des contrôles avec le type de bordereau.
+A utiliser en fonction du TypBord et de NatPce (cf grille des triplets en annexe. Toute combinaison inexistante aboutit à un rejet du bordereau.
+Tout autre type de pièce aboutit à un rejet du flux</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Mandat ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Mandat correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Mandat d'ordre budgétaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Mandat d'ordre mixte</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Mandat émis après paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Mandat global</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Mandat d'admission en non valeurs</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Mandat collectif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Mandat sur marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Mandat de rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Ordre de paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12" />
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Charges constatées d'avance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNatPce">
+    <xs:annotation>
+      <xs:documentation>Nature du mandat.
+Le triplet du PESV2 fonctionne avec l'association TypBord TypPce NatPce. Le tableau des triplets doit être respecté. Toute valorisation non prévue dans le tableau doit aboutir à un rejet du bordereau concerné.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Fonctionnement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Investissement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Inventaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Emprunt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Régie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Annulation-Réduction</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Complémentaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Reémis</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Annulant un titre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Annulation du mandat de rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Paie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Retenue de garantie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Dernier acompte sur marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Avance forfaitaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <!--<xs:enumeration value="15"/> -->
+          <xs:enumeration value="18">
+            <xs:annotation>
+              <xs:documentation>Opération d'ordre liée aux cessions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TCodIntMor">
+    <xs:annotation>
+      <xs:documentation>Code du taux des intérêts moratoires : cette information indique le type de taux sur lequel se base les intérêts moratoires
+Ne peut être présent que si le bloc DGP est servi.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Taux légal</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Taux BCE</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TCodePaiement">
+    <xs:annotation>
+      <xs:documentation>Code indiquant le moyen de paiement.
+Les valeurs dépendent pour la plupart du triplet TypBord, TypPce et NatPce
+Le code 03 et le code 05 nécessitent la présence du bloc CpteBancaire, à défaut rejet du bordereau. Sa validité doit être assurée.
+
+Un RIB ou un SEPA peut être transmis ou non dans le cadre d'un CodePaiement 06 virement à l'étranger ou 10 Prélèvement. Pas de rejet du bordereau si le RIB ou le Sepa est absent. Si un RIB ou SEPA est présent, il est vérifié dans le cas du CodePaiement 10 et s'il est invalide rejet du bordereau.
+
+Pour les valeurs  01 numéraire, 02 chèques, 04 appli externe 07 budgets rattachés, 08 opérations d'ordre, 09 Avis de règlement ou 11 Virement interne, aucun RIB ou SEPA ne doit être porté sur le tiers. Si un RIB Ou SEPA est présent avec ces valeurs de CodePaiement, rejet du bordereau.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Numéraire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Chèque</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Virement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Virement appli externe</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Virement gros montant</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Virement à l'étranger</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Opération budget rattaché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Opération d'ordre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Avis de règlement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Prélèvement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Virement interne</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TCodOpSpec">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01" />
+          <xs:enumeration value="02" />
+          <xs:enumeration value="03" />
+          <xs:enumeration value="04" />
+          <xs:enumeration value="05" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNatPceOrig">
+    <xs:annotation>
+      <xs:documentation>Type de la pièce d'origine à rattacher. 
+La NatPceOrig ne peut avoir que les valeurs décrites sinon rejet du flux
+Elle s'inscrit dans le bloc RattachPiece.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Mandat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Titre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Liste non valeur</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Ordre de paiement ordonnateur</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

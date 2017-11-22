@@ -1,0 +1,21 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2
+2
+11
+f:Simple_Type.xsd|1|15e1a3dd0d3|893b|887a822d|d193699e28d311e79cfd00163e0c063f|0
+a:NS_Facture|2|0|0|0|80752caf8ed011e590ae00163e0c063f|0
+11:Class_Adresse.xsd|1|15e1a3dd0aa|132c|c6203e27|a0e96d80d3f411e6958100163e0c063f|0
+15:Class_PJReference.xsd|1|15e1a3dd0c7|8a0|7c97b7cc|a1a96da0d3f411e6958100163e0c063f|0
+13:Class_EntetePES.xsd|1|15e1a3dd0b7|b2c|c784a831|4e8ff491cf3811e59fb400163e0c063f|0
+15:Class_Chiffrement.xsd|1|15e1a3dd0b7|3c9|b0b448e8|85e52dd78ed011e590ae00163e0c063f|0
+6:RETOUR|2|0|0|0|4c43a2634b8611e787ba00163e0c063f|0
+13:Class_Signature.xsd|1|15e1a3dd0d3|42f|b7ff59ed|87452e378ed011e590ae00163e0c063f|0
+4:Rev0|2|0|0|0|7e152c078ed011e590ae00163e0c063f|0
+a:NS_Depense|2|0|0|0|7d752bd78ed011e590ae00163e0c063f|0
+12:Class_Bancaire.xsd|1|15e1a3dd0aa|1438|a618ac0c|a1296d88d3f411e6958100163e0c063f|0
+d:CommunPES.xsd|1|15e1a3dd0da|59b4|f16126b7|16adca9bfcc911e59f0300163e0c063f|0
+a:NS_Recette|2|0|0|0|7dc52bef8ed011e590ae00163e0c063f|0
+c:Class_PJ.xsd|1|15e1a3dd0b6|25e5|d9dd85ec|a1796d98d3f411e6958100163e0c063f|0
+18:Class_SchemasCommuns.xsd|1|15e1a3dd0c7|276|a418d9ec|87152e278ed011e590ae00163e0c063f|0
+13:Class_Enveloppe.xsd|1|15ee7923751|d19|2a1532f1|4dbfc549a90811e7987200163e0c063e|0
+d:CommunAck.xsd|1|15e1a3dd0d7|125e|38ae7acf|8c352f778ed011e590ae00163e0c063f|0

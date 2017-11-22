@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by ffff (VRL) -->
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:z="odm:enrichissement"
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TAPCPs">
+		<xs:sequence>
+			<xs:element name="APCP" type="TAPCP" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TAPCP">
+		<xs:sequence>
+			<xs:element name="CodTypAutori" type="ATCodTypAutori">
+				<xs:annotation>
+					<xs:documentation>Type autorisation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodSTypAutori" type="ATCodSTypAutori">
+				<xs:annotation>
+					<xs:documentation>Sous-type autorisation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumAutori" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro de l'autorisation (AP ou AE)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibAutori" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Libellé de l'autorisation (AP ou AE)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Chapitre" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code du chapitre</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriPrec" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Autorisations votées (délibérations précédentes)</z:libelle>
+						<z:description><![CDATA[<html>
+							utilisé en M14, M4x, M52.<br/>
+							Les montants qui doivent être saisis sont :							
+							<ul>
+								<li>Montant des AP/AE votées sur les délibérations des exercices antérieurs pour un BP.</li>
+								<li>Montant des AP/AE votées sur les délibérations des exercices antérieurs et les délibérations antérieures de l’exercice pour un BS ou une DM.</li>
+							</ul>
+							</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutori_NMoins1" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Autorisations votées (délibérations précédentes)</z:libelle>
+						<z:description><![CDATA[<html>
+							utilisé en M71.<br/>
+							Les montants qui doivent être saisis sont :							
+							<ul>
+								<li>Montant des AP/AE votées sur les délibérations des exercices antérieurs pour un BP.</li>
+								<li>Montant des AP/AE votées sur les délibérations des exercices antérieurs et les délibérations antérieures de l’exercice pour un BS ou une DM.</li>
+							</ul>
+							</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriPropose" type="Base_Montant" minOccurs="0">				
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Autorisation proposée (délibération en cours)</z:libelle>
+						<z:description><![CDATA[<html>alimente la colonne « Révision de l’exercice N » si on est sur un projet de budget.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriVote" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Autorisation votée (délibération en cours)</z:libelle>
+						<z:description><![CDATA[<html>alimente la colonne « Révision de l’exercice N » si on est sur budget voté.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriDispoAffectation" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Stock d'autorisation votée disponible à l'affectation (exercices antérieurs)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriNonCouvParCP_01_01_N" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Autorisation affectée non couverte par des CP réalisés au 01/01/N</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriAffectee" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Autorisation affectée dans l'année</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAutoriAffecteeAnnulee" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Autorisation affectée annulée</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCPAnt" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Crédits de paiement antérieurs (exercices antérieurs)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCPOuv" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Crédits de paiement ouverts au titre de l'exercice N</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCPReal" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Crédits de paiement réalisés durant l'exercice N</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCredAFinanc_NPlus1" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Restes à financer de l'exercice N+1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCredAFinanc_Sup_N" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Restes à financer (exercices au-delà de N)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCredAFinanc_Sup_NPlus1" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Restes à financer (exercices au-delà de N+1)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RatioCouvAutoriAffect_N" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ratio de couverture des autorisations affectées (exercice N)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RatioCouvAutoriAffect_NMoins1" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ratio de couverture des autorisations affectées (exercice N-1)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RatioCouvAutoriAffect_NMoins2" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ratio de couverture des autorisations affectées (exercice N-2)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RatioCouvAutoriAffect_NMoins3" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ratio de couverture des autorisations affectées (exercice N-3)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

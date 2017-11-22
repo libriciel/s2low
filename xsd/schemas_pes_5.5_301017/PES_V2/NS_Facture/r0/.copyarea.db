@@ -1,0 +1,13 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\NS_Facture\r0
+2
+9
+14:Class_PESFacture.xsd|1|15e1a3dd4f8|19ce|7b0ca056|a6696e38d3f411e6958100163e0c063f|0
+19:Class_BancaireFacture.xsd|1|15e1a3dd10c|1944|cf9c7388|a5e96e20d3f411e6958100163e0c063f|0
+1e:Class_RepartitionParNature.xsd|1|15e1a3dd508|7ba|2fe276f2|a6996e40d3f411e6958100163e0c063f|0
+16:Class_Nomenclature.xsd|1|15e1a3dd11c|767|1a366561|a6396e30d3f411e6958100163e0c063f|0
+12:CommunsFacture.xsd|1|15e1a3dd50c|a21|bbb6073d|a7196e58d3f411e6958100163e0c063f|0
+17:Class_TiersEmetteur.xsd|1|15e1a3dd505|1bfe|11653ccf|a6b96e48d3f411e6958100163e0c063f|0
+16:Class_TiersFacture.xsd|1|15e1a3dd525|1dda|a0cee4bc|a6e96e50d3f411e6958100163e0c063f|0
+19:Class_FacturePESIndiv.xsd|1|15e1a3dd118|4d83|e06a3dfd|3587cfc951c511e7823600163e0c063f|0
+18:Class_AdresseFacture.xsd|1|15e1a3dd10c|13a4|4a586aa1|a5b96e18d3f411e6958100163e0c063f|0

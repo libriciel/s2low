@@ -25,7 +25,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Vérification du content-type du fichier contenant les SIREN #265 
 - Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
-
+- Mise à jour du schéma XSD des PES en version 5.5 (applicable dès fin novembre 2017)
   
 ## Retrait
 
