@@ -15,9 +15,23 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Connexion impossible après modification en masse de certificat partagé #293
 - Ajout des type possible en fonction de la matiere2 0 dans le code ~Actes #292
 - Typage par défaut des pièces ~Actes #298
+- Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
+- Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)  
+- La fenêtre de classification reste ouverte sous IE 11 #299
+- Typo #257
+- Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303  
+
+## Évolutions
+
+- Vérification du content-type du fichier contenant les SIREN #265 
+- Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
+
   
+## Retrait
+
+- Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
    
-## [3.0.0-rc3] - 15/11/2017
+## [3.0.0-rc3] - 2017-11-15
 
 ## Évolutions
 
@@ -25,7 +39,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
 - Normalisation des noms des scripts cron (actes-*, helios-*,...)
 - Utilisation de supervisord en remplacement de upstart
-- Ajout du typage du fichier principal de l'actes (mauvaise interpretation intiale de l'exigence) ~Actes #291
+- Ajout du typage du fichier principal de l'actes (mauvaise interpretation initiale de l'exigence) ~Actes #291
 - Restriction des types de pièces en fonction de la classification (mauvaise interprétation de la notice) ~Actes #292
 
 ## Corrections

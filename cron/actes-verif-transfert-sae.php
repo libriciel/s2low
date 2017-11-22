@@ -1,4 +1,6 @@
 <?php
+declare(ticks = 1);
+
 require_once( __DIR__ . "/../init/init.php");
 
 $start = time();
@@ -14,9 +16,12 @@ $allTransactions = $actesTransactionsSQL->getLastArchiveFromStatus(12,$date);
 echo count($allTransactions). " transactions ACTES trouvees dans l'etat <envoye au SAE>\n";
 
 $actesArchiveControler = new ActesArchiveControler($sqlQuery);
-
+$sigtermHandler = new SigTermHandler();
 foreach($allTransactions as $transactionInfo){
 	$actesArchiveControler->verifArchive($transactionInfo);
+    if ($sigtermHandler->isSigtermCalled()){
+        break;
+    }
 }
 
 $stop = time();

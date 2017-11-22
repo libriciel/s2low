@@ -34,11 +34,15 @@ class ActesEnvoiAR {
     }
 
     public function sendAllAR(){
+        $sigtermHandler = new SigTermHandler();
         $this->log("Lancement du script");
         $transaction_ids = $this->actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_DOCUMENT_RECU);
         $this->log("Envoie de ".count($transaction_ids)." enveloppes de transaction à l'état DOCUMENT RECU");
         foreach($transaction_ids as $transaction_id){
             $this->envoiAR($transaction_id['id']);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
         $this->log("Fin du script");
         return true;

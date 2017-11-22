@@ -1,4 +1,5 @@
 <?php
+declare(ticks = 1);
 
 /* Fichier a mettre sur S2low afin d'envoyer le fichier ocre */
 require_once( __DIR__ . "/../init/init.php");
@@ -8,7 +9,7 @@ $dir_handle = opendir(HELIOS_OCRE_FILE_PATH);
 
 
 echo "Envoi des fichier du répertoire : ".HELIOS_OCRE_FILE_PATH."\n";
-
+$sigtermHandler = new SigTermHandler();
 while (false !== ($file = readdir($dir_handle)) ) {
 	$file_path = HELIOS_OCRE_FILE_PATH . "/".$file;
 	if (! is_file($file_path)){
@@ -42,6 +43,9 @@ while (false !== ($file = readdir($dir_handle)) ) {
 	echo "Envoi OK\n";
 	echo "Suppression de $file_path\n";
 	unlink($file_path);
+    if ($sigtermHandler->isSigtermCalled()){
+        break;
+    }
 }
 
 sleep(10);

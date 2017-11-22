@@ -171,7 +171,7 @@ class LogsController extends Controller {
 	public function doRequest(){
 		$all_request = $this->getLogsRequestSQL()->getAllByState(LogsRequestData::STATE_ASKING);
 		echo count($all_request)." requêtes en attente...";
-
+        $sigtermHandler = new SigTermHandler();
 		foreach($all_request as $request) {
 
 			echo "Traitement de la requête {$request['id']}\n";
@@ -196,6 +196,9 @@ class LogsController extends Controller {
 				"Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur ".
 				WEBSITE_SSL."/common/logs_request_view.php\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n"
 			);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
 		}
 
 		$old_request = $this->getLogsRequestSQL()->getOldRequest();

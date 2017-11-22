@@ -1,5 +1,6 @@
 #! /usr/bin/php
 <?php
+declare(ticks = 1);
 
 $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";

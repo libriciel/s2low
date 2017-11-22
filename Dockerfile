@@ -60,6 +60,7 @@ RUN docker-php-ext-configure \
 
 RUN docker-php-ext-install \
     gd \
+    pcntl \
     pdo \
     pdo_pgsql \
     pgsql \
@@ -143,6 +144,9 @@ ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 # Pour libersign
 RUN mkdir -p /var/www/parapheur/libersign
+ADD https://ressources.libriciel.fr/s2low/libersign_v1_compat.tgz /var/www/parapheur/libersign
+RUN cd /var/www/parapheur/libersign && tar xvzf libersign_v1_compat.tgz
+
 RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
 
 

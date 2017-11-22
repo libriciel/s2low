@@ -60,10 +60,14 @@ class ActesArchiveControler {
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$info_list = $actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
 		echo count($info_list)." transactions à envoyer...\n";
+        $sigtermHandler = new SigTermHandler();
 		foreach($info_list as $info){
 			$transaction_id = $info['id'];
 			echo "Envoi de la transaction $transaction_id : \n";
 			$this->sendArchive($transaction_id);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
 		}
 		echo "Fin de l'envoie\n";
 	}

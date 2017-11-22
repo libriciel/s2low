@@ -19,6 +19,7 @@ class FTP {
 	}
 	
 	public function recupAll($remote_path,$local_path){
+        $sigtermHandler = new SigTermHandler();
 		$ftp = ftp_connect($this->host,$this->port);
 		
 		if (!$ftp){
@@ -62,6 +63,10 @@ class FTP {
 			if ($err && $this->delete){
 				ftp_delete($ftp, $file);
 			}
+            if ($sigtermHandler->isSigtermCalled()){
+                ftp_close($ftp);
+                break;
+            }
 		}
 		
 		ftp_close($ftp);

@@ -40,9 +40,13 @@ class ActesNotification {
 	}
 	
 	public function sendAutomaticNotification(){
+        $sigtermHandler = new SigTermHandler();
         foreach($this->actesTransactionsSQL->getTransactionToAutoBroadcast() as $transaction_id){
             $this->log("Notification de la transaction $transaction_id");
             $this->sendNotificationManuel($transaction_id);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
 	}
 	

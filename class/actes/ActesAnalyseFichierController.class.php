@@ -30,11 +30,15 @@ class ActesAnalyseFichierController {
     }
 
     public function validateAllEnveloppe(){
+        $sigtermHandler = new SigTermHandler();
         $this->log("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_POSTE);
         $this->log("Analyse de ".count($enveloppe_ids)." enveloppe de transaction à l'état POSTE");
         foreach($enveloppe_ids as $enveloppe_id){
             $this->validateOneEnveloppe($enveloppe_id);
+            if ($sigtermHandler->isSigtermCalled()){
+                break;
+            }
         }
         $this->log("Fin du script");
         return true;

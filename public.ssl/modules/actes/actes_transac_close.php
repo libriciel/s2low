@@ -61,6 +61,10 @@ foreach ($liste_id as $id) {
       Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
     }
 
+    if (! $trans->canValidate() && ! ACTES_ALWAYS_CAN_VALIDATE && $new_status_id !=19){
+        $sortie .= "Cette transaction $id ne peut pas encore être clôturé\n";
+        continue;
+    }
     $envelope = new ActesEnvelope($trans->get("envelope_id"));
     $envelope->init();
 
@@ -85,7 +89,7 @@ foreach ($liste_id as $id) {
       $severity = 3;
       $status = 1;
     } else {
-      $msg = "Passage de la transaction n°" . $trans->getId() . " à l'état « " . $types[$new_status_id] . " ». Résultat ok.";
+      $msg = "Passage de la transaction n°" . $trans->getId() . " à l'état « " . $types[$new_status_id] . " ». Résultat ok.\n";
       $severity = 1;
       $status = 0;
     }

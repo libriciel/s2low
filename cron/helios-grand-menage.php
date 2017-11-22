@@ -1,4 +1,5 @@
 <?php
+declare(ticks = 1);
 
 require_once(__DIR__ . "/../init/init.php");
 
@@ -31,7 +32,7 @@ $sql = "SELECT id,sha1,filename,submission_date FROM helios_transactions WHERE i
 $all_pes = $sqlQuery->query($sql,$submission_date);
 
 echo "Il y a ".count($all_pes)." PES ALLER à analyser\n";
-
+$sigtermHandler = new SigTermHandler();
 foreach($all_pes as $pes) {
     echo "Analyse du fichier {$pes['sha1']} - {$pes['id']} - {$pes['submission_date']}\n";
     $filename = HELIOS_FILES_UPLOAD_ROOT."/{$pes['sha1']}";
@@ -47,6 +48,9 @@ foreach($all_pes as $pes) {
         } else {
             echo "Le fichier $filename aurait été supprimé [PASS]\n";
         }
+    }
+    if ($sigtermHandler->isSigtermCalled()){
+        break;
     }
 
 }

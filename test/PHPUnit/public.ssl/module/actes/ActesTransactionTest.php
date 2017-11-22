@@ -131,7 +131,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',1);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
-		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+		$this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddActesXMLBadClassif(){
@@ -162,7 +162,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->addActePDF();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
-		$this->assertEquals("Seul les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+		$this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddManyXMLAttachment(){
