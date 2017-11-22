@@ -20,3 +20,5 @@ mkdir -p /data/tdt-workspace/actes && \
     mkdir -p /data/tdt-workspace/logs-export && \
     mkdir -p /data/tdt-workspace/uploads/etat_civil && \
     mkdir -p /data/log/
+
+chown -R www-data:www-data /data/tdt-workspace/
