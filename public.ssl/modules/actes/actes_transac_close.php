@@ -62,7 +62,7 @@ foreach ($liste_id as $id) {
     }
 
     if (! $trans->canValidate() && ! ACTES_ALWAYS_CAN_VALIDATE && $new_status_id !=19){
-        $sortie .= "Cette transaction $id ne peut pas encore être clôturé\n";
+        $sortie .= "Cette transaction $id ne peut pas encore être clôturée\n";
         continue;
     }
     $envelope = new ActesEnvelope($trans->get("envelope_id"));
