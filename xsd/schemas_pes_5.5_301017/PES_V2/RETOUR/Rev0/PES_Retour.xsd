@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" xmlns:depr="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour" xmlns:recr="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/retour" xmlns:clir="http://www.minefi.gouv.fr/cp/helios/pes_v2/client/r0/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/retour" schemaLocation="../NS_Recette/r0/PES_Recette_Retour.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour" schemaLocation="../NS_Depense/r0/PES_Depense_Retour.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/client/r0/retour" schemaLocation="../NS_Client/r0/PES_Client_Retour.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../Class_SchemasCommuns_Retour.xsd" />
+  <xs:element name="PES_Retour">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Enveloppe" type="cm:TEnveloppe">
+          <xs:annotation>
+            <xs:documentation>Enveloppe d'identification du flux</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="EnTetePES" type="cm:TEnTetePES">
+          <xs:annotation>
+            <xs:documentation>En-Tête du PES</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_DepenseRetour" type="depr:TPES_DepenseRetour" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine PES Dépense Retour</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_RecetteRetour" type="recr:TPES_RecetteRetour" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine PES Recette Retour</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_ClientRetour" type="clir:TPES_ClientRetour" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine PES Client Retour</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

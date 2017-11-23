@@ -1,0 +1,5 @@
+Les schémas PES fourni par la DGFip doivent être modifié à cause d'un bug dans libXML.
+
+Sur le fichier xmldsig-core-schema.xsd, il faut passer le type de X509SerialNumber de integer à string.
+
+cf : 	//http://stackoverflow.com/questions/29953032/large-number-failing-validation-as-type-xsinteger
