@@ -21,13 +21,14 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - La fenêtre de classification reste ouverte sous IE 11 #299
 - Typo #257
 - Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303  
-
+- Suppression de la possibilité de valider une transaction dans l'état 'en attente de signature' #307
 ## Évolutions
 
 - Vérification du content-type du fichier contenant les SIREN #265 
 - Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
 - Mise à jour du schéma XSD des PES en version 5.5 (applicable dès fin novembre 2017)
 - Console admin Helios: ajout d'infos dans le mail des transactions à l'état transmis ~Helios #306
+
   
 ## Retrait
 
