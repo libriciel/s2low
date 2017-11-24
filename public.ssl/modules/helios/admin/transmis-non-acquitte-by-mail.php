@@ -16,11 +16,11 @@ $heliosTransactionsSQL = $objectInstancier->{'HeliosTransactionsSQL'};
 $transactions_list = $heliosTransactionsSQL->getNonAcquitte();
 
 ob_start();
-if (! $all){
+if (! $transactions_list){
 	$subject =  "Aucune transaction n'est resté en transmis";
 
 } else {
-	$subject = count($all) . " transactions sont resté à l'état transmis.";
+	$subject = count($transactions_list) . " transactions sont resté à l'état transmis.";
 }
 
 $output = fopen("php://output","w");

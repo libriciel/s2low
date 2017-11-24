@@ -5,7 +5,7 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.0-rc4] 
+## [3.0.0-rc4] - 2017-11-24
 
 
 ## Corrections
@@ -22,6 +22,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Typo #257
 - Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303  
 - Suppression de la possibilité de valider une transaction dans l'état 'en attente de signature' #307
+- Suppression de warning (mail récapitulatif helios en erreur)
+
 ## Évolutions
 
 - Vérification du content-type du fichier contenant les SIREN #265 
@@ -33,6 +35,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## Retrait
 
 - Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
+
    
 ## [3.0.0-rc3] - 2017-11-15
 
