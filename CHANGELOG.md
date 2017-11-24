@@ -5,7 +5,7 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.0-rc4] 
+## [3.0.0-rc4] - 2017-11-24
 
 
 ## Corrections
