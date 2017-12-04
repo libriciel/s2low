@@ -8,7 +8,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ## [3.0.0-rc4] - 2017-11-24
 
 
-## Corrections
+### Corrections
 
 - une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci 
     était encore dans un groupe #295
@@ -24,7 +24,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Suppression de la possibilité de valider une transaction dans l'état 'en attente de signature' #307
 - Suppression de warning (mail récapitulatif helios en erreur)
 
-## Évolutions
+### Évolutions
 
 - Vérification du content-type du fichier contenant les SIREN #265 
 - Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
@@ -32,14 +32,14 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Console admin Helios: ajout d'infos dans le mail des transactions à l'état transmis ~Helios #306
 
   
-## Retrait
+### Retrait
 
 - Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
 
    
 ## [3.0.0-rc3] - 2017-11-15
 
-## Évolutions
+### Évolutions
 
 - un warning apparait 90 jours avant l'expiration d'un certificat (was: 30 jours)
 - Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
@@ -48,7 +48,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout du typage du fichier principal de l'actes (mauvaise interpretation initiale de l'exigence) ~Actes #291
 - Restriction des types de pièces en fonction de la classification (mauvaise interprétation de la notice) ~Actes #292
 
-## Corrections
+### Corrections
 
 - suppression d'un lien mort ~Actes #273
 - possibilité de désactiver un utilisateur #271
@@ -61,7 +61,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Le filtre helios sur la date d'acquittement ne fonctionnait plus depuis que les fichiers étaient en information disponible ~Helios #283
 - L'import des SIREN ne fonctionnait qu'avec des fichiers Unix, ajout du support Windows et Mac OS #265
 
-## Élements dépréciés
+### Élements dépréciés
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
 
