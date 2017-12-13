@@ -10,6 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Corrections
 
 - suppression de la memory_limit sur jour.php
+- optimisation script grand-ménage
 
 
 ## [3.0.0-rc4] - 2017-11-24

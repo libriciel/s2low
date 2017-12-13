@@ -29,11 +29,12 @@ $submission_date = date("Y-m-d",strtotime("-$nb_days days"));
 
 $sql = "SELECT id,sha1,filename,submission_date FROM helios_transactions WHERE is_in_cloud=TRUE AND submission_date<? ORDER BY id ASC";
 
-$all_pes = $sqlQuery->query($sql,$submission_date);
+$sqlQuery->prepareAndExecute($sql,$submission_date);
 
-echo "Il y a ".count($all_pes)." PES ALLER à analyser\n";
+echo "Il y a un certain nombre de PES ALLER à analyser\n";
 $sigtermHandler = new SigTermHandler();
-foreach($all_pes as $pes) {
+while($sqlQuery->hasMoreResult()){
+    $pes = $sqlQuery->fetch();
     echo "Analyse du fichier {$pes['sha1']} - {$pes['id']} - {$pes['submission_date']}\n";
     $filename = HELIOS_FILES_UPLOAD_ROOT."/{$pes['sha1']}";
     if (! file_exists($filename)){
