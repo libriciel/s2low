@@ -159,14 +159,17 @@ if (!defined("ANTIVIRUS_UPSTART_TOUCH_FILE")){
 }
 
 
+//A SUPPRIMER
 if(!defined('TEDETIS_CERT_PATH')){
         define('TEDETIS_CERT_PATH','/home/tedetis/dev/certificat/site/dev.s2low-asoft.fr');
 }
 
+//A SUPPRIMER
 if(!defined('TEDETIS_KEY_PATH')){
         define('TEDETIS_KEY_PATH','/home/tedetis/dev/certificat/site/dev.s2low-asoft.fr-key');
 }
 
+//A SUPPRIMER
 if(!defined('TEDETIS_KEY_PASS')){
         define('TEDETIS_KEY_PASS','tedetis');
 }
