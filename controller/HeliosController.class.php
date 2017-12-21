@@ -184,7 +184,9 @@ class HeliosController extends Controller {
 			$messageElement->appendChild( $doc->createTextNode( utf8_encode($e->getMessage())));
 		}
 
-		$xmlFile=HELIOS_FILES_ROOT."/temp/import-".uniqid().".xml";
+		$xmlFile = HELIOS_FILES_ROOT."/temp/import-".date('YmdHis').mt_rand(0,mt_getrandmax()).".xml";
+
+
 		$doc->save($xmlFile);
 
 		if (!Helpers::sendFileToBrowser($xmlFile, "import.xml", "text/xml")) {
