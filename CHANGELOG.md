@@ -9,7 +9,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ### Corrections
 
-- problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaise information lors de la création des PES via l'APIs 
+- problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaise information lors de la création des PES via l'APIs
+- Augmentation de la longueur du type de fichier inclu dans actes de 64 à 512 car les réponses de la préfecture peuvent inclure des fichier avec des types très long #320 ~Actes
+
+ 
 
 ## [3.0.0] - 2017-12-15 
 
