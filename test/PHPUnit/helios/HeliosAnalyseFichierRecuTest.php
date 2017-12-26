@@ -73,9 +73,10 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	
 	public function testAnalyseDeplacementErreurImpossible(){
 		copy(__DIR__."/fixtures/pes_retour_nonabonne.xml", $this->helios_responses_error_path."/pes_retour_nonabonne.xml");
-		$this->expectOutputRegex("#Impossible de déplacer le fichier pes_retour_nonabonne.xml dans le répertoire des fichiers en erreur : le fichier existe déjà#");
+		//$this->expectOutputRegex("#Impossible de déplacer le fichier pes_retour_nonabonne.xml dans le répertoire des fichiers en erreur : le fichier existe déjà#");
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
-		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
+		$this->assertTrue(file_exists($this->helios_responses_error_path."/pes_retour_nonabonne.xml"));
+        $this->assertTrue(file_exists($this->helios_responses_error_path."/pes_retour_nonabonne.xml.1"));
 	}
 
 	public function testAnalysePesRetourDoubleSire(){
