@@ -28,4 +28,5 @@ class ActesIncludedFileSQLTest extends S2lowTestCase {
         $this->assertEquals("toto.xml",$all[0]['posted_filename']);
     }
 
+
 }

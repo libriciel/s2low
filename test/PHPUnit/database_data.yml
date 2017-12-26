@@ -298,6 +298,15 @@ actes_transmission_window_hours:
 authority_group_siren:
 helios_transactions:
 helios_transactions_workflow:
+actes_natures:
+  -
+    id: 3
+    short_descr: AI
+    descr: Arretes individuelles
+  -
+    id: 1
+    short_descr: DE
+    descr: Deliberations
 actes_type_pj:
 nounce:
 message_admin:
