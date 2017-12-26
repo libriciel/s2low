@@ -75,9 +75,13 @@ class HeliosAnalyseFichierRecu {
 
 		foreach($erreur_list as $file => $message){
 			if (file_exists($helios_responses_error_path."/".$file)){
-				$this->log("[ERREUR] Impossible de déplacer le fichier $file dans le répertoire des fichiers en erreur : le fichier existe déjà");
-				$this->sendMailToAdmin("[S2low][Helios] Impossible de déplacer un fichier dans le répertoire des fichiers en erreur","Le fichier $file existe déjà");
-				continue;
+                $i = 0;
+                do {
+                    $i++;
+                    $file_num = "$helios_responses_error_path/$file.$i";
+                } while (file_exists($file_num));
+                $this->log("[WARNING] Le fichier $file existe déjà dans le répertoire des fichiers en erreur : renommé en *.$i");
+                rename($helios_responses_error_path."/".$file,$file_num);
 			}
 			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
 		}

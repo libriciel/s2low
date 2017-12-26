@@ -19,7 +19,7 @@ class ActesIncludedFileSQLTest extends S2lowTestCase {
         $this->getObjectInstancier()->get("ActesIncludedFileSQL")->addIncludedFile(
             $transaction_info['envelope_id'],
             $transaction_id,
-            "text/xml",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             42,
             "toto.xml"
         );
@@ -27,5 +27,6 @@ class ActesIncludedFileSQLTest extends S2lowTestCase {
         $all = $this->getObjectInstancier()->get("ActesIncludedFileSQL")->getAll($transaction_id);
         $this->assertEquals("toto.xml",$all[0]['posted_filename']);
     }
+
 
 }

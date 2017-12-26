@@ -5,6 +5,16 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
+## [3.0.1] 
+
+### Corrections
+
+- problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaise information lors de la création des PES via l'APIs
+- Augmentation de la longueur du type de fichier inclu dans actes de 64 à 512 car les réponses de la préfecture peuvent inclure des fichier avec des types très long #320 ~Actes
+- vérification de la balise de scellement sur les annexes (tdt-lib-actes) #319 ~Actes
+- problème si les fichiers recu sur Helios sont plusieurs fois en erreur #321 ~Helios 
+- correction d'un problème sur l'api admin_user_edit_handler #317  
+- nettoyage de fichier temporaire (analyse fihcier actes)
 
 ## [3.0.0] - 2017-12-15 
 
@@ -12,6 +22,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - suppression de la memory_limit sur jour.php
 - optimisation script grand-ménage
+
 
 
 ## [3.0.0-rc4] - 2017-11-24

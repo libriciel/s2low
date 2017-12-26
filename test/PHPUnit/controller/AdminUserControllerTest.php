@@ -52,6 +52,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->setDataOk();
         $this->getObjectInstancier()->get("Environnement")->post()->set('api',1);
         $this->expectOutputRegex("#Cr\\\u00e9ation de l'utilisateur Eric Pommateau#");
+        $this->setExpectedException("Exception","exit() called");
 		$this->adminUserController->doEditAction();
 	}
 
