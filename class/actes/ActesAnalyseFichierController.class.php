@@ -68,6 +68,7 @@ class ActesAnalyseFichierController {
             $this->actesScriptHelper->updateStatus($transaction_ids,ActesStatusSQL::STATUS_EN_ERREUR,"Enveloppe invalide : $message");
             return false;
         }
+        $tmpFolder->delete($tmp_dir);
         $this->log("[$envelope_libelle] L'archive est valide !");
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
