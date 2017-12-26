@@ -13,6 +13,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Augmentation de la longueur du type de fichier inclu dans actes de 64 à 512 car les réponses de la préfecture peuvent inclure des fichier avec des types très long #320 ~Actes
 - vérification de la balise de scellement sur les annexes (tdt-lib-actes) #319 ~Actes
 - problème si les fichiers recu sur Helios sont plusieurs fois en erreur #321 ~Helios 
+- correction d'un problème sur l'api admin_user_edit_handler #317  
 
 ## [3.0.0] - 2017-12-15 
 

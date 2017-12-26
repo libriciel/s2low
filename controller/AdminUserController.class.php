@@ -339,6 +339,7 @@ class AdminUserController extends Controller {
 		if ($api){
 			$jsonOutput = new JSONoutput();
 			$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$him->getId()));
+			exit_wrapper();
 		} else {
 			$_SESSION["error"] = nl2br($msg);
 			Helpers::purgeTempSession();
