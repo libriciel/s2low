@@ -5,7 +5,13 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.1] 
+## [3.0.2] 
+
+### Évolutions
+
+- Modification de l'opacité du tampon (0.5 -> 0.8) ~Actes #339
+
+## [3.0.1] - 2017-12-26
 
 ### Corrections
 
