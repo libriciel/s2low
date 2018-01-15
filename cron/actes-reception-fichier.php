@@ -16,7 +16,7 @@ $actesImapRetrieve->retrieve();
 
 
 $stop = time();
-echo "Debut ".date("Y-m-d H:i:s",$stop)." \n";
+echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
 $sleep = $min_exec_time - ($stop -$start);
 if ($sleep > 0){
     echo "Arret du script : $sleep \n";
