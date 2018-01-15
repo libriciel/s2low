@@ -10,6 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Évolutions
 
 - Modification de l'opacité du tampon (0.5 -> 0.8) ~Actes #339
+- Ajout de log dans le tamponnage ~Actes
 
 ### Corrections
 

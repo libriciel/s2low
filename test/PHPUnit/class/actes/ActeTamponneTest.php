@@ -13,8 +13,9 @@ class ActeTamponneTest extends PHPUnit_Framework_TestCase {
 		/** @var  ActesTransactionsSQL $actesTransactionsSQL */
 
 
-		$acteTamponne = new ActeTamponne($actesTransactionsSQL,new PDFStampWrapper(""));
+		$acteTamponne = new ActeTamponne($actesTransactionsSQL,new PDFStampWrapper(""), new Logger());
 
+		$this->expectOutputRegex("#Impossible de tamponné l'acte 12#");
 		$acteTamponne->tamponnerPDF(__DIR__."/../fixtures/vide.pdf","12");
 
 	}
