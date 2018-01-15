@@ -20,6 +20,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
 - Typo dans le nom d'un script supervisor ~Actes #328
 - La signature par lot dans @ctes n'était plus fonctionnel ~Actes #334
+- Modification script supervisor pour éviter les warning #327
 
 ## [3.0.1] - 2017-12-26
 
