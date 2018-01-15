@@ -16,7 +16,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Typo actes-reception-fichier (Début -> Fin) ~Actes #338
 - Reception des actes ; Expunge de la boite à la fin du processus pour éviter les locks ~Actes #337
 - Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331 
-
+- Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
+- Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
 
 ## [3.0.1] - 2017-12-26
 
