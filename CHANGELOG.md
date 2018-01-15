@@ -19,6 +19,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
 - Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
 - Typo dans le nom d'un script supervisor ~Actes #328
+- La signature par lot dans @ctes n'était plus fonctionnel ~Actes #334
 
 ## [3.0.1] - 2017-12-26
 
