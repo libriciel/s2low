@@ -18,6 +18,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331 
 - Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
 - Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
+- Typo dans le nom d'un script supervisor ~Actes #328
 
 ## [3.0.1] - 2017-12-26
 
