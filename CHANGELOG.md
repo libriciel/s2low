@@ -10,7 +10,12 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Évolutions
 
 - Modification de l'opacité du tampon (0.5 -> 0.8) ~Actes #339
+
+### Corrections
+
 - Typo actes-reception-fichier (Début -> Fin) ~Actes #338
+- Reception des actes ; Expunge de la boite à la fin du processus pour éviter les locks ~Actes #337
+
 
 ## [3.0.1] - 2017-12-26
 
