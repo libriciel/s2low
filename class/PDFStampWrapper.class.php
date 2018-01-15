@@ -5,22 +5,29 @@ class PDFStampWrapper {
 
     private $pdf_stamp_url;
 
-    /** @var  CurlWrapper */
-    private $curlWrapper;
+    /** @var CurlWrapperFactory */
+    private $curlWrapperFactory;
 
     public function __construct($pdf_stamp_url) {
         $this->pdf_stamp_url = $pdf_stamp_url;
-        $this->setCurlWrapper(new CurlWrapper());
+        $this->setCurlWrapperFactory(new CurlWrapperFactory());
     }
 
-    public function setCurlWrapper(CurlWrapper $curlWrapper){
-        $this->curlWrapper = $curlWrapper;
+    public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
+        $this->curlWrapperFactory = $curlWrapperFactory;
     }
+
 
     public function getLogoPath(){
         return __DIR__."/../public.ssl/custom/images/s2low-stamp.png";
     }
 
+    /**
+     * @param $pdf_filepath
+     * @param PDFStampData $pdfStampData
+     * @return bool|mixed
+     * @throws Exception
+     */
     public function stamp($pdf_filepath,PDFStampData $pdfStampData){
         $date_affichage = "";
         if ($pdfStampData->affichage_date){
@@ -62,14 +69,14 @@ class PDFStampWrapper {
         );
 
         /* curl -F "file=@Courrier.pdf" -F "metadata=$SAMPLE" -X POST http://pdf-stamp:8080 (!) */
+        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
+        $curlWrapper->addPostFile('file',$pdf_filepath);
+        $curlWrapper->addPostData('metadata',json_encode(utf8_encode_array($data)));
 
-        $this->curlWrapper->addPostFile('file',$pdf_filepath);
-        $this->curlWrapper->addPostData('metadata',json_encode(utf8_encode_array($data)));
 
-
-        $result = $this->curlWrapper->get($this->pdf_stamp_url);
+        $result = $curlWrapper->get($this->pdf_stamp_url);
         if (!$result){
-            throw new Exception($this->curlWrapper->getLastError()." ".$this->curlWrapper->getLastOutput());
+            throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
         }
         return $result;
     }

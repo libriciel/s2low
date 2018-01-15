@@ -2,16 +2,21 @@
 
 class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
 
-    private function getCurlWrapper($return_string){
+    private function getCurlWrapperFactory($return_string){
         $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
         $curlWrapper->expects($this->any())->method("get")->willReturn($return_string);
-        /** @var CurlWrapper $curlWrapper */
-        return $curlWrapper;
+        $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
+        $curlWrapperFactory->expects($this->any())->method("getNewInstance")->willReturn($curlWrapper);
+        /** @var CurlWrapperFactory $curlWrapperFactory */
+        return $curlWrapperFactory;
     }
 
+    /**
+     * @throws Exception
+     */
     public function testStamp(){
         $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/");
-        $pdfStampWrapper->setCurlWrapper($this->getCurlWrapper("test"));
+        $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory("test"));
         $pdfStampData = new PDFStampData();
         $pdfStampData->identifiant_unique = "toto";
         $pdfStampData->affichage_date = "2017-09-18";

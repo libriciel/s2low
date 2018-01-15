@@ -22,6 +22,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Typo dans le nom d'un script supervisor ~Actes #328
 - La signature par lot dans @ctes n'était plus fonctionnel ~Actes #334
 - Modification script supervisor pour éviter les warning #327
+- Correction d'un problème dans le tamponnage des actes sur les notifications ~Actes
 
 ## [3.0.1] - 2017-12-26
 
