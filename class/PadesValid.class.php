@@ -5,23 +5,24 @@ class PadesValid {
     private $pades_valid_url;
     private $rgs_validca_path;
 
-    /** @var  CurlWrapper */
-    private $curlWrapper;
 
     /** @var  VerifyPKCS7Signature */
     private $verifyPKCS7Signature;
 
     private $last_result;
 
+    /** @var CurlWrapperFactory */
+    private $curlWrapperFactory;
+
     public function __construct($pades_valid_url, $rgs_validca_path) {
         $this->pades_valid_url = $pades_valid_url;
         $this->rgs_validca_path = $rgs_validca_path;
-        $this->setCurlWrapper(new CurlWrapper());
+        $this->setCurlWrapperFactory(new CurlWrapperFactory());
         $this->setVerifyPKCS7Signature(new VerifyPKCS7Signature($this->rgs_validca_path));
     }
 
-    public function setCurlWrapper(CurlWrapper $curlWrapper){
-        $this->curlWrapper = $curlWrapper;
+    public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
+        $this->curlWrapperFactory = $curlWrapperFactory;
     }
 
     public function setVerifyPKCS7Signature(VerifyPKCS7Signature $verifyPKCS7Signature){
@@ -32,16 +33,23 @@ class PadesValid {
         return $this->last_result;
     }
 
+    /**
+     * @param $filepath
+     * @return bool
+     * @throws Exception
+     */
     public function validate($filepath){
-        $this->curlWrapper->addPostFile('file',$filepath);
-        $result = $this->curlWrapper->get($this->pades_valid_url);
+        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
+
+        $curlWrapper->addPostFile('file',$filepath);
+        $result = $curlWrapper->get($this->pades_valid_url);
         $this->last_result = $result;
         if (!$result){
-            throw new Exception($this->curlWrapper->getLastError()." ".$this->curlWrapper->getLastOutput());
+            throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
         }
         $result = json_decode($result);
         if (! $result){
-            throw new Exception("Impossible de décoder le message de pades-valid : ".$this->curlWrapper->getLastOutput());
+            throw new Exception("Impossible de décoder le message de pades-valid : ".$curlWrapper->getLastOutput());
         }
         if (! isset($result->signed)){
             throw new Exception("Impossible de determiner si le fichier est signé");
@@ -60,6 +68,11 @@ class PadesValid {
         return true;
     }
 
+    /**
+     * @param $signature
+     * @return bool
+     * @throws Exception
+     */
     private function validSignature($signature){
         if (empty($signature->valid) || ! $signature->valid){
             throw new Exception("Au moins une signature n'est pas valide");

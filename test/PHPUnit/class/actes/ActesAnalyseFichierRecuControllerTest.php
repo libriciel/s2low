@@ -82,7 +82,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
         $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-archive-MISILCL");
 
-
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
         $actesAnalyseFichierRecuController->analyseAll();
 
@@ -97,6 +96,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état acquittement reçu#",$liste['message']);
+
+        $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
     }
 
     public function testAnalyseAllActeNotFound(){
@@ -146,6 +147,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
             "#Enveloppe rejetée par le {$this->actes_ministere_acronyme}#",
             $transaction_info['message']
         );
+        $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
+
     }
 
     public function testCourrierSimple(){

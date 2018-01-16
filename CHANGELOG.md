@@ -5,7 +5,26 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.1] 
+## [3.0.2] 
+
+### Évolutions
+
+- Modification de l'opacité du tampon (0.5 -> 0.8) ~Actes #339
+- Ajout de log dans le tamponnage ~Actes
+
+### Corrections
+
+- Typo actes-reception-fichier (Début -> Fin) ~Actes #338
+- Reception des actes ; Expunge de la boite à la fin du processus pour éviter les locks ~Actes #337
+- Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331 
+- Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
+- Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
+- Typo dans le nom d'un script supervisor ~Actes #328
+- La signature par lot dans @ctes n'était plus fonctionnel ~Actes #334
+- Modification script supervisor pour éviter les warning #327
+- Correction d'un problème dans le tamponnage des actes sur les notifications ~Actes
+
+## [3.0.1] - 2017-12-26
 
 ### Corrections
 

@@ -10,11 +10,14 @@ class PadesValidTest extends S2lowTestCase {
         $this->padesValid->setVerifyPKCS7Signature($this->getPKCS7Signature());
     }
 
-    private function getCurlWrapper($return_string){
+    private function getCurlWrapperFactory($return_string){
         $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
         $curlWrapper->expects($this->any())->method("get")->willReturn($return_string);
-        /** @var CurlWrapper $curlWrapper */
-        return $curlWrapper;
+
+        $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
+        $curlWrapperFactory->expects($this->any())->method("getNewInstance")->willReturn($curlWrapper);
+        /** @var CurlWrapperFactory $curlWrapperFactory */
+        return $curlWrapperFactory;
     }
 
     public function getPKCS7Signature(){
@@ -24,20 +27,29 @@ class PadesValidTest extends S2lowTestCase {
         return $verifyPKCS7Signature;
     }
 
+    /**
+     * @throws Exception
+     */
     public function testValidateNotSigned(){
-        $this->padesValid->setCurlWrapper($this->getCurlWrapper('{"signatures":[],"signed":false}'));
+        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory('{"signatures":[],"signed":false}'));
         $this->assertFalse($this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf"));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testValidateSigned(){
-        $this->padesValid->setCurlWrapper($this->getCurlWrapper(
+        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
             file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
         );
         $this->assertTrue($this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf"));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testNotValidateSigned(){
-        $this->padesValid->setCurlWrapper($this->getCurlWrapper(
+        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
             file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-alter.json"))
         );
         $this->setExpectedException("Exception","Au moins une signature n'est pas valide");

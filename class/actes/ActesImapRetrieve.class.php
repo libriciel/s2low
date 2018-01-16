@@ -23,6 +23,10 @@ class ActesImapRetrieve {
         $this->logger->log("actes-reception-fichier",$message);
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function retrieve(){
         $this->log("Debut du script");
         $this->log("Connection au serveur IMAP {$this->actesImapProperties->host}");
@@ -30,6 +34,7 @@ class ActesImapRetrieve {
         $server = $this->imapFetchServerFactory->getInstance($this->actesImapProperties->host, $this->actesImapProperties->port);
         $server->setAuthentication($this->actesImapProperties->login,$this->actesImapProperties->password);
 
+        /** @var Fetch\Message[] $messages */
         $messages = array_reverse($server->getMessages());
         $this->log("Il y a ".count($messages)." messages dans la boite au lettres");
         $sigtermHandler = new SigTermHandler();
@@ -38,17 +43,22 @@ class ActesImapRetrieve {
 
             $this->log("Suppression du message : ".($message->getOverview()->message_id));
             $message->delete();
-            $server->expunge();
+
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
         }
-
+        $this->log("Expunge de la boite au lettes");
+        $server->expunge();
         $this->log("Fin du script");
         return true;
     }
 
 
+    /**
+     * @param \Fetch\Message $message
+     * @throws Exception
+     */
     private function saveMail(\Fetch\Message $message){
         $this->log("Récupération du message : ".($message->getOverview()->message_id));
 

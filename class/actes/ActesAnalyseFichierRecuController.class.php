@@ -85,6 +85,9 @@ class ActesAnalyseFichierRecuController {
         $rep_path = $this->actes_response_tmp_local_path."/".$file;
         try {
             $this->analyseOneFile($rep_path);
+            $tmpDir = new TmpFolder();
+            $this->log("Suppression du répertoire $rep_path");
+            $tmpDir->delete($rep_path);
         } catch (Exception $e){
             $this->log("Echec du traitement de $rep_path : " . $e->getMessage());
             $this->log("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
@@ -144,10 +147,8 @@ class ActesAnalyseFichierRecuController {
             } else {
                 throw new Exception("Code message $code_message non géré");
             }
-            $tmpDir = new TmpFolder();
-            $this->log("Suppression du répertoire $rep_path");
-            $tmpDir->delete($rep_path);
         }
+
     }
 
     private function traitementEnveloppeAnomalie(ArchiveData $archiveData){
