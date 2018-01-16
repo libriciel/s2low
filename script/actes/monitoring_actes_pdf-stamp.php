@@ -22,16 +22,16 @@ $pdfStampData->affichage_date = "2018-01-17 00:00:00";
 $pdfStampData->identifiant_unique = "034-491011698-20180116-TESTPDFSTAMP-DE";
 
 $pdfStampWrapper = $objectInstancier->get('PDFStampWrapper');
-$result =  $pdfStampWrapper->stamp($file_path, $pdfStampData);
+$result =  $pdfStampWrapper->stamp($origfile_path, $pdfStampData);
 file_put_contents($file_tampone,$result);
 
 $pdftamponorig= new Imagick($origfiletampone_path);
 $pdftampon= new Imagick($file_tampone);
-
-if($md5sum != md5_file($file_tampone)){
-    $message="CRITICAL : le md5sum est différent de celui attendu";
+$result = $pdftamponorig->compareImages($pdftampon, \Imagick::METRIC_MEANSQUAREERROR);
+if($result[1] != 0){
+    $message="CRITICAL : le pdf tampone n est pas celui attendu";
     $retour=2;
 }
-
+//print_r($result);
 echo "$message\n";
 exit($retour);
