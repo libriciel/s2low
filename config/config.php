@@ -16,7 +16,7 @@ if ( ! defined("OPERATEUR_DE_TELETRANSMISSION")) {
 
 
 if(!defined("EMAIL_ADMIN")){
-        define("EMAIL_ADMIN","eric@sigmalis.com");
+        define("EMAIL_ADMIN","noreply@noreplyaaaaa.aaaa");
 }
 
 if(!defined("WEBSITE_TITLE")){

@@ -38,10 +38,10 @@ class PDFStampWrapper {
             'opacity'=> 0.8,
             'fontSize' => 7,
             'position' => array(
-                'width' => 168,
-                'height' => 50,
-                'x'=> 24,
-                'y'=>22
+                'width' => 190,
+                'height' => 55,
+                'x'=> 10,
+                'y'=>10
             ),
             'rows' => array(
                 array(
