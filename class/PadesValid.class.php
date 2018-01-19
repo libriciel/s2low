@@ -86,7 +86,9 @@ class PadesValid {
 
         $beginpem = "-----BEGIN CERTIFICATE-----\n";
         $endpem = "\n-----END CERTIFICATE-----\n";
-        $signing_cert = $beginpem.$signature->signingCert.$endpem;
+
+        $signing_cert = implode("\n",str_split($signature->signingCert,78));
+        $signing_cert = $beginpem.$signing_cert.$endpem;
         $x509_info = openssl_x509_parse($signing_cert);
 
         $signatureDate = floor($signature->signatureDate / 1000);
