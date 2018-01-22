@@ -11,6 +11,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Correction d'un problème de vérification du certificat dans PADES valid.
 
+### Ajouts
+
+- script de monitoring du service pdf-stamp
+- script permettant de supprimer les fichiers PES qui ne se trouvent pas dans la base de données ~Helios #343
+
 ## [3.0.3]
 
 ### Évolutions
