@@ -10,6 +10,14 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Corrections
 
 - Correction d'un problème de vérification du certificat dans PADES valid.
+- les & ne passait pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
+- rétablissement de l'export des fichiers OCRE dans le docker
+
+### Ajouts
+
+- script de monitoring du service pdf-stamp
+- script permettant de supprimer les fichiers PES qui ne se trouvent pas dans la base de données ~Helios #343
+- script permettant la validation d'une archive actes ~Actes
 
 ## [3.0.3]
 
