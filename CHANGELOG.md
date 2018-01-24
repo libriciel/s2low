@@ -11,6 +11,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Correction d'un problème de vérification du certificat dans PADES valid.
 - les & ne passait pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
+- rétablissement de l'export des fichiers OCRE dans le docker
 
 ### Ajouts
 
