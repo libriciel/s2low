@@ -10,7 +10,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Corrections
 
 - Correction d'un problème de vérification du certificat dans PADES valid.
-- les & ne passait pas dans le nom des utilisateurs à cause d'un bug dans tdt-lib-actes ~Actes #346
+- les & ne passait pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
 
 ### Ajouts
 
