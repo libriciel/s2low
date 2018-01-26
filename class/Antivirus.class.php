@@ -3,6 +3,11 @@ class Antivirus
 {
 	public static $errorMsg;
 
+    /**
+     * @param $path
+     * @return bool
+     * @throws Exception
+     */
  	public static function checkArchiveSanity($path) {
 
 		//FIXME
@@ -45,7 +50,8 @@ class Antivirus
 				break;
 		  default:
 				Antivirus::$errorMsg = "Erreur " . $ret . " lors du scan antivirus de l'archive.";
-				$returnValue= false;
+				throw new Exception("Erreur " . $ret . " lors du scan antivirus de l'archive.");
+
 				break;
 	  }
 	  Trace::wrap_exec("rm $new_file",$output, $ret);
