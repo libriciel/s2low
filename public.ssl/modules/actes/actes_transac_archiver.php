@@ -5,7 +5,7 @@ require_once( __DIR__ . "/../../../init/init-www-actes.php");
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$actesArchiveControler = new ActesArchiveControler($sqlQuery);
+$actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
 $result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $result){

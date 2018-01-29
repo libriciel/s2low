@@ -41,8 +41,8 @@ if ($status == "valid") {
 	$new_status_id = 6;
 } elseif ($status == "sae"){
 	$new_status_id = 19;
-	$actesArchiveControler = new ActesArchiveControler($sqlQuery);
-	
+    $actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
+
 } else {
 	Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
 }

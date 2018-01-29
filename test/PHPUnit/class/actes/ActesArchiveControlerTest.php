@@ -106,8 +106,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	protected function setUp(){
 		parent::setUp();
 		$this->transaction_id = $this->createTransaction(1);
-		$this->actesArchiveControler = new ActesArchiveControler($this->getSQLQuery());
-
+		$this->actesArchiveControler = $this->getObjectInstancier()->get("ActesArchiveControler");
 	}
 
 
