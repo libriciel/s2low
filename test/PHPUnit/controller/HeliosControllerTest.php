@@ -57,7 +57,8 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
-		echo $output;
+
+		$output = preg_replace("#header.*called\n#","",$output);
 		$xml = simplexml_load_string($output);
 		$transaction_id = $xml->id;
 
@@ -86,7 +87,8 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
-		$xml = simplexml_load_string($output);
+		$output = preg_replace("#header.*called\n#","",$output);
+        $xml = simplexml_load_string($output);
 		$transaction_id = $xml->id;
 		$info = $heliosTransactionsSQL->getInfo($transaction_id);
 		$this->assertEquals(HeliosTransactionsSQL::ATTENTE_SIGNEE,$info['last_status_id']);
@@ -105,7 +107,8 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->importAPI();
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$output = $this->getActualOutput();
-		$xml = simplexml_load_string($output);
+        $output = preg_replace("#header.*called\n#","",$output);
+        $xml = simplexml_load_string($output);
 		$transaction_id = $xml->id;
 		$info = $heliosTransactionsSQL->getInfo($transaction_id);
 		$this->assertEquals(HeliosTransactionsSQL::ATTENTE_POSTEE,$info['last_status_id']);

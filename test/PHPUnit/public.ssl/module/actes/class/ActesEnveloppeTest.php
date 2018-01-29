@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/../../../../../../public.ssl/modules/actes/class/ActesEnvelope.class.php";
 
-class ActesEnveloppeTest extends PHPUnit_Framework_TestCase {
+class ActesEnveloppeTest extends S2lowTestCase {
 
     public function testSendFileNotInit(){
         $actesEnvelope = new ActesEnvelope();
@@ -17,16 +17,15 @@ class ActesEnveloppeTest extends PHPUnit_Framework_TestCase {
             'Le fichier archive n\'est pas/plus disponible.',
             $actesEnvelope->getErrorMsg()
         );
-        echo ACTES_FILES_UPLOAD_ROOT;
     }
 
     public function testSendFile(){
-        file_put_contents(ACTES_FILES_UPLOAD_ROOT."/test.txt","toto");
+        $actesRetriever = $this->getObjectInstancier()->get("ActesRetriever");
+        $file_path = $actesRetriever->getPath("test.txt");
+        file_put_contents($file_path,"toto");
         $actesEnvelope = new ActesEnvelope();
         $actesEnvelope->set('file_path',"test.txt");
         $this->expectOutputRegex("#toto#");
         $actesEnvelope->sendFile();
     }
-
-
 }
