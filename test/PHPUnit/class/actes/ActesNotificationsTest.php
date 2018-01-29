@@ -35,8 +35,8 @@ class ActesNotificationsTest extends S2lowTestCase {
 
 
         $this->getObjectInstancier()->set("pdf_stamp_url","");
+        $this->getObjectInstancier()->set('actes_files_upload_root',$tmp_folder);
         $actesNotification = $this->getObjectInstancier()->get('ActesNotification');
-        $actesNotification->setFilePath($tmp_folder);
 
         $actesNotification->sendAutomaticNotification();
         $this->assertRegExp("#Notification de la transaction $transaction_id#",$logger->getAllLog()[0]);
