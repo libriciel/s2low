@@ -15,7 +15,7 @@ $allTransactions = $actesTransactionsSQL->getLastArchiveFromStatus(12,$date);
 
 echo count($allTransactions). " transactions ACTES trouvees dans l'etat <envoye au SAE>\n";
 
-$actesArchiveControler = new ActesArchiveControler($sqlQuery);
+$actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
 $sigtermHandler = new SigTermHandler();
 foreach($allTransactions as $transactionInfo){
 	$actesArchiveControler->verifArchive($transactionInfo);
