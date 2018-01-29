@@ -20,7 +20,7 @@ class ActesIncludedFile extends DataObject {
 
   protected $code_pj;
 
-
+	/** @var  ActesEnvelope */
   protected $envelope;
 
   	private $tampon;
@@ -39,10 +39,10 @@ class ActesIncludedFile extends DataObject {
 	  					"code_pj" => array( "descr" => "Code de la PJ", "type" => "isString", "mandatory" => false)
 						 );
 
-  /**
-   * \brief Constructeur
-   * \param id integer Numéro d'identifiant d'un fichier attaché
-   */
+    /**
+     * ActesIncludedFile constructor.
+     * @param bool $id
+     */
   public function __construct($id = false) {
 	parent::__construct($id);
 
@@ -88,13 +88,17 @@ class ActesIncludedFile extends DataObject {
 		$this->errorMsg .= "Erreur système de fichiers";
 		return false;
 	  }
-	  
-	  if (! file_exists(ACTES_FILES_UPLOAD_ROOT . '/' . $this->envelope->get("file_path"))) {
+
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $actesRetriever = $objectInstancier->get('ActesRetriever');
+        $envelope_path = $actesRetriever->getPath($this->envelope->get("file_path"));
+
+	  if (! file_exists($envelope_path)) {
 		$this->errorMsg .= "Le fichier archive n'est pas/plus disponible.";
 		return false;
 	  }
 
-	  $cmd = 'tar xzf ' . ACTES_FILES_UPLOAD_ROOT . '/' . $this->envelope->get("file_path") . " -C " . $tmpDir . " " . $this->filename;
+	  $cmd = 'tar xzf ' . $envelope_path . " -C " . $tmpDir . " " . $this->filename;
 	  
 	  Trace::wrap_exec($cmd, $status, $ret);
 
@@ -114,8 +118,6 @@ class ActesIncludedFile extends DataObject {
 
 		//FIXME SALE 
 		if ($path_parts['extension'] == 'pdf' && $this->tampon){
-
-			$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 
 			$pathpdforig = $tmpDir . '/' .$this->filename;
 
@@ -144,6 +146,7 @@ class ActesIncludedFile extends DataObject {
 
 	  return $ret_value;
 	}
+	return false;
   }
   
   function modificationPDF($pathpdforig, $pathpdfout){
@@ -165,12 +168,14 @@ class ActesIncludedFile extends DataObject {
   /* Méthodes statiques */
   /**********************/
 
+
   /**
-   * \brief Méthode de récupération de la liste des fichiers associés à une transaction
-   * \param id entier : identifiant de la transaction
-   * \return Un tableau de description des fichiers
+   * Méthode de récupération de la liste des fichiers associés à une transaction
+   * @param id int identifiant de la transaction
+   * @return array Un tableau de description des fichiers
    */
   static public function fetchFilesList($id) {
+      $files = array();
 	if (isset($id)) {
 	  $sql = "SELECT id, filename AS name, posted_filename, filetype AS mimetype, filesize AS size, signature AS sign, code_pj FROM actes_included_files WHERE transaction_id=" . $id . " ORDER BY id";
 	  
@@ -189,4 +194,4 @@ class ActesIncludedFile extends DataObject {
 	return $files;
   }
 }
-?>
+
