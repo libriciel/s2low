@@ -470,14 +470,14 @@ class Helpers {
 	}
 	
 	if ($content_type) {
-	  header("Content-type: " . $content_type);
+	  header_wrapper("Content-type: " . $content_type);
 	}
 
-      header('Content-disposition: attachment; filename="' . $filename . '"');
+      header_wrapper('Content-disposition: attachment; filename="' . $filename . '"');
 	// Celles-ci pour IE
-      header("Expires: 0");
-      header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-      header("Pragma: public");
+      header_wrapper("Expires: 0");
+      header_wrapper("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+      header_wrapper("Pragma: public");
 
 	if ($path) {
 	  if (! @readfile($path)) {
