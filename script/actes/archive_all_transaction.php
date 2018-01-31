@@ -17,9 +17,9 @@ $sql = "SELECT at.id ".
     "INNER JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= at.last_status_id) ".
     "WHERE ".
     "authority_id=? ".
-    "AND at.type=1 ".
+    "AND at.type='1' ".
     "AND at.last_status_id IN (?,?) ".
-    "AND AGE(atw.date::TIMESTAMP) > INTERVAL '30 day' ";
+    "AND AGE(atw.date::TIMESTAMP) > INTERVAL '62 day' ";
 
 $transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5);
 
