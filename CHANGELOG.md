@@ -13,16 +13,20 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - les & ne passait pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
 - rétablissement de l'export des fichiers OCRE dans le docker
 - Problème majeur en cas de bug sur l'antivirus : toutes les transactions passe à erreur : on préfère donc tuer le script ~Helios
-- Problème majeur en cas de bug sur l'antivirus : toutes les transactions passe à erreur : on préfère donc tuer le script ~Helios
 - Correction d'une erreur de syntaxe dans la requete SQL dans le script archive_all_transaction.php pour les actes
 - Correction dans la requete SQL dans le script archive_all_transaction.php pour les actes sur le délais avant versement
 - Harmonisation des noms des programmes dans supervisord
+- Certain chemin d'execution laissait des fichier s2low_xades dans /tmp/ ~Helios #348
 
 ### Ajouts
 
 - script de monitoring du service pdf-stamp
 - script permettant de supprimer les fichiers PES qui ne se trouvent pas dans la base de données ~Helios #343
 - script permettant la validation d'une archive actes ~Actes
+
+### Évolutions
+
+- préparation de s2low pour le versement des @ctes dans un stockage objet
 
 ## [3.0.3]
 
