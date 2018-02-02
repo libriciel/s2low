@@ -17,6 +17,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Correction dans la requete SQL dans le script archive_all_transaction.php pour les actes sur le délais avant versement
 - Harmonisation des noms des programmes dans supervisord
 - Certain chemin d'execution laissait des fichier s2low_xades dans /tmp/ ~Helios #348
+- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysé avant d'être entièrement récupéré ~Helios #341
 
 ### Ajouts
 
