@@ -27,6 +27,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Évolutions
 
 - préparation de s2low pour le versement des @ctes dans un stockage objet
+- un utilisateur peut a nouveau "refusé" une transaction "en attente d'être signé" sur la liste des transactions
 
 ## [3.0.3]
 
