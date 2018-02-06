@@ -2,7 +2,6 @@
 
 class ActesEnvoiFichierController {
 
-    private $actes_files_upload_root;
     private $actesTransactionsSQL;
     private $logger;
     private $actesEnvelopeSQL;
@@ -12,7 +11,6 @@ class ActesEnvoiFichierController {
     private $actes_ministere_acronyme;
 
     public function __construct(
-        $actes_files_upload_root,
         Logger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
@@ -21,7 +19,6 @@ class ActesEnvoiFichierController {
         ActesFileSender $actesFileSender,
         $actes_ministere_acronyme
     ) {
-        $this->actes_files_upload_root = $actes_files_upload_root;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;

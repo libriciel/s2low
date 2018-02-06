@@ -869,23 +869,29 @@ class ActesEnvelope extends DataObject {
   /**
    * \brief Méthode qui renvoie le fichier archive .tar.gz au navigateur
    */
-  public function sendFile() {
-	$ret_value = false;
+    public function sendFile() {
+        if (! isset($this->file_path)){
+            return false;
+        }
 
-	if (isset($this->file_path)) {
-	  $archiveFile = ACTES_FILES_UPLOAD_ROOT . "/" . $this->file_path;
-	  if (file_exists($archiveFile)) {
-		if (! Helpers::sendFileToBrowser($archiveFile, basename($this->file_path), "application/x-gzip")) {
-		  $this->errorMsg = "Erreur envoi fichier";
-		} else {
-		  $ret_value = true;
-		}
-	  } else {
-		$this->errorMsg = "Le fichier archive n'est pas/plus disponible.";
-	  }
-	}
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $actesRetriever = $objectInstancier->get('ActesRetriever');
+        $archive_path = $actesRetriever->getPath($this->file_path);
 
-	return $ret_value;
+        if (! file_exists($archive_path)) {
+            $this->errorMsg = "Le fichier archive n'est pas/plus disponible.";
+            return false;
+        }
+
+		if (! Helpers::sendFileToBrowser(
+		        $archive_path,
+                basename($archive_path),
+                "application/x-gzip")
+        ) {
+            $this->errorMsg = "Erreur envoi fichier";
+            return false;
+        }
+        return true;
   }
 
   /**

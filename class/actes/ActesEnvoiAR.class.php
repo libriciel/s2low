@@ -9,28 +9,28 @@ class ActesEnvoiAR {
 
     private $actesTransactionsSQL;
     private $logger;
-    private $actes_files_upload_root;
     private $actesEnvelopeSQL;
     private $actesEnvelopeSerialSQL;
     private $actesFileSender;
     private $actesScriptHelper;
+    private $actesRetriever;
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
         Logger $logger,
-        $actes_files_upload_root,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
         ActesFileSender $actesFileSender,
-        ActesScriptHelper $actesScriptHelper
+        ActesScriptHelper $actesScriptHelper,
+        ActesRetriever $actesRetriever
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->logger = $logger;
-        $this->actes_files_upload_root = $actes_files_upload_root;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesEnvelopeSerialSQL = $actesEnvelopeSerialSQL;
         $this->actesFileSender = $actesFileSender;
         $this->actesScriptHelper = $actesScriptHelper;
+        $this->actesRetriever = $actesRetriever;
     }
 
     public function sendAllAR(){
@@ -67,8 +67,10 @@ class ActesEnvoiAR {
 
         $archive = new \Libriciel\LibActes\Archive();
 
+        $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+
         $archiveData = $archive->getArchiveDataFromTarball(
-            $this->actes_files_upload_root . "/".$envelope_info['file_path'],
+            $archive_path,
             $tmp_folder
         );
         if ($transaction_info['type'] == 3){

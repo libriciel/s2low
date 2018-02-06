@@ -41,8 +41,8 @@ if ($status == "valid") {
 	$new_status_id = 6;
 } elseif ($status == "sae"){
 	$new_status_id = 19;
-	$actesArchiveControler = new ActesArchiveControler($sqlQuery);
-	
+    $actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
+
 } else {
 	Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
 }
@@ -61,13 +61,18 @@ foreach ($liste_id as $id) {
       Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
     }
 
-    if (! in_array($trans->get('last_status_id'),array(4,5,14,20))){
+    if (! in_array($trans->get('last_status_id'),array(4,5,14,20,18))){
 	    $last_status_id = $trans->get('last_status_id');
         $sortie .= "Cette transaction $id ne peut pas encore être clôturée (statut $last_status_id)\n";
         continue;
     }
 
-    if (! $trans->canValidate() && $new_status_id !=19){
+    if ($trans->get('last_status_id') == 18 && $new_status_id != 6){
+        $sortie .= "La transaction $id en attente de signature peut seulement être rejeté\n";
+        continue;
+    }
+
+    if (! $trans->canValidate() && $new_status_id !=19 && $trans->get('last_status_id') != 18){
         $sortie .= "Cette transaction $id ne peut pas encore être clôturée\n";
         continue;
     }

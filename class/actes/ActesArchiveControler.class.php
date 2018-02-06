@@ -20,11 +20,17 @@ class ActesArchiveControler {
 	/** @var AuthoritySQL  */
 	private $authoritySQL;
 
-	public function __construct(SQLQuery $sqlQuery){
+	private $actesRetriever;
+
+	public function __construct(
+	    SQLQuery $sqlQuery,
+        ActesRetriever $actesRetriever
+    ){
 		$this->sqlQuery = $sqlQuery;
 		$this->setPastellFactory(new PastellFactory());
 		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
+		$this->actesRetriever = $actesRetriever;
 	}
 
 	public function setPastellFactory(PastellFactory $pastellFactory){
@@ -111,8 +117,8 @@ class ActesArchiveControler {
 		
 		$actesEnvelopeSQL = new ActesEnvelopeSQL($this->sqlQuery);
 		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
-		$enveloppe_path =  ACTES_FILES_UPLOAD_ROOT . "/" .  $actesEnvelopeInfo['file_path'];
-		
+		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+
 		$tmpFolder = new TmpFolder();
 		$tmp_folder = $tmpFolder->create();
 		
@@ -178,8 +184,7 @@ class ActesArchiveControler {
 			
 			$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transaction['envelope_id']);
 			$actesFile = $this->actesTransactionsSQL->getAllFile($transaction['id']);
-			$file_to_send =  ACTES_FILES_UPLOAD_ROOT . "/" .  $actesEnvelopeInfo['file_path'];
-			
+            $file_to_send = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
 			if ($transaction['related_transaction_id'] == $orig_acte_transaction_id){
 				//Transaction aller
 				$echange_prefecture_type[] = $transaction['type'].'A';

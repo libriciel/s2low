@@ -2,30 +2,30 @@
 
 class ActesScriptHelper {
 
-    private $actes_files_upload_root;
     private $actesTransactionsSQL;
     private $logger;
     private $actesEnvelopeSQL;
     private $actes_appli_trigramme;
+    private $actesRetriever;
 
     public function __construct(
-        $actes_files_upload_root,
         Logger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
-        $actes_appli_trigramme
+        $actes_appli_trigramme,
+        ActesRetriever $actesRetriever
     ) {
-        $this->actes_files_upload_root = $actes_files_upload_root;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actes_appli_trigramme = $actes_appli_trigramme;
+        $this->actesRetriever = $actesRetriever;
 
     }
 
     public function getArchivePath($enveloppe_id){
         $envelope_info = $this->actesEnvelopeSQL->getInfo($enveloppe_id);
-        return $this->actes_files_upload_root . "/" . $envelope_info['file_path'];
+        return $this->actesRetriever->getPath($envelope_info['file_path']);
     }
 
     public function updateStatus($transactions_ids,$status_id,$message,$flux_retour = ""){

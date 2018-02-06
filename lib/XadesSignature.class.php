@@ -220,6 +220,7 @@ class XadesSignature {
 
 
 			if (! file_exists($file_r0)){
+                unlink($file);
 				continue;
 			}
 

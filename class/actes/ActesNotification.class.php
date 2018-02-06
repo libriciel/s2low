@@ -1,8 +1,6 @@
 <?php
 
 class ActesNotification {
-	
-	private $filePath;
 
     private $actesTransactionsSQL;
     private $acteTamponne;
@@ -14,7 +12,9 @@ class ActesNotification {
     private $logger;
 
     private $actes_appli_trigramme;
-	
+
+    private $actesRetriever;
+
 	public function __construct(
 	        ActesTransactionsSQL $actesTransactionsSQL,
             ActeTamponne $acteTamponne,
@@ -22,10 +22,9 @@ class ActesNotification {
             ActesEnvelopeSQL $actesEnveloppeSQL,
             MailerFactory $mailerFactory,
             Logger $logger,
-            $actes_appli_trigramme
+            $actes_appli_trigramme,
+            ActesRetriever $actesRetriever
     ){
-		$this->setFilePath(ACTES_FILES_UPLOAD_ROOT);
-
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->acteTamponne = $acteTamponne;
         $this->authoritySQL = $authoritySQL;
@@ -33,12 +32,9 @@ class ActesNotification {
         $this->mailerFactory = $mailerFactory;
         $this->logger = $logger;
         $this->actes_appli_trigramme = $actes_appli_trigramme;
+        $this->actesRetriever = $actesRetriever;
 	}
-	
-	public function setFilePath($filePath){
-		$this->filePath = $filePath;
-	}
-	
+
 	public function sendAutomaticNotification(){
         $sigtermHandler = new SigTermHandler();
         foreach($this->actesTransactionsSQL->getTransactionToAutoBroadcast() as $transaction_id){
@@ -75,7 +71,9 @@ class ActesNotification {
 		$brodcastEmail =explode(',',$transaction_info['broadcast_emails']);
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 
-		$fichiers_tamponnees =  $this->tamponnerTGZ($this->filePath . "/" . $envelope_info['file_path'],$transaction_info,$tmp_folder);
+		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+
+		$fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
 
 
 		if ($transaction_info['auto_broadcasted'] == false){

@@ -17,7 +17,12 @@ class FTP {
 	public function setDeleteFileAfterDownload(){
 		$this->delete = true;
 	}
-	
+
+    /**
+     * @param $remote_path
+     * @param $local_path
+     * @throws Exception
+     */
 	public function recupAll($remote_path,$local_path){
         $sigtermHandler = new SigTermHandler();
 		$ftp = ftp_connect($this->host,$this->port);
@@ -54,11 +59,22 @@ class FTP {
 				echo "$i : $file : PES ALLER ignoré\n";
 				continue;
 			}
-			if (disk_free_space($local_path) < 1000000){
+
+            $tmp_file = sys_get_temp_dir()."/s2low_helios_ftp_retrieve_".mt_rand(0,mt_getrandmax());
+
+			if (disk_free_space($local_path) < 1000000 || disk_free_space(dirname($tmp_file)) < 1000000){
 				throw new Exception("Il ne reste pas assez d'espace sur le disque !");
 			}
 
-			$err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
+
+            $err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
+
+            if (!$err){
+                if (!rename($tmp_file,"$local_path/$file")){
+                    throw new Exception("Impossible de déplacer le fichier récupérer sur le FTP !");
+                }
+            }
+
 			echo $i." : ".$file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
 			if ($err && $this->delete){
 				ftp_delete($ftp, $file);

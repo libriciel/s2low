@@ -103,7 +103,9 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($xadesSignature->isSigned($file));
 		$xadesSignature->deleteSignature($file,$result);
 		$this->assertFalse($xadesSignature->isSigned($result));
-		//unset($result);
 	}
+
+
+
 
 }
