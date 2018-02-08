@@ -24,6 +24,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - script de monitoring du service pdf-stamp
 - script permettant de supprimer les fichiers PES qui ne se trouvent pas dans la base de données ~Helios #343
 - script permettant la validation d'une archive actes ~Actes
+- script de monitoring des notifications des actes
 
 ### Évolutions
 
