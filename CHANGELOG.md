@@ -18,6 +18,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Harmonisation des noms des programmes dans supervisord
 - Certain chemin d'execution laissait des fichier s2low_xades dans /tmp/ ~Helios #348
 - Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysé avant d'être entièrement récupéré ~Helios #341
+- Correction d'un problème de sécurité
 
 ### Ajouts
 

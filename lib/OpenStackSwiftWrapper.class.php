@@ -27,6 +27,15 @@ class OpenStackSwiftWrapper {
         $container->uploadObject(basename($filename), $fileData);
     }
 
+    /* TODO Il faut permettre de dépose des fichiers avec un arborescence pour les Actes
+    public function sendFile2($container_name,$filepath,$filename){
+        $container = $this->getContainer($container_name);
+        $fileData = fopen($filepath, 'r+');
+        $container->uploadObject($filename, $fileData);
+    }
+
+    */
+
     /*
      * Récupère et copie le fichier depuis OpenStack vers le système de fichier local
      */
@@ -42,6 +51,22 @@ class OpenStackSwiftWrapper {
         file_put_contents($filepath, $stream);
         return $filepath;
     }
+
+    /* TODO La récupération semble plus complexe quand on est dans un répertoire
+    public function retrieveFile2($container_name, $filepath_on_cloud,$filepath_local){
+        if (file_exists($filepath_local)){
+            return $filepath_local;
+        };
+        $container = $this->getContainer($container_name);
+
+        $objectContent = $container->getObject($filepath_on_cloud)->getContent();
+        $objectContent->rewind();
+        $stream = $objectContent->getStream();
+        file_put_contents($filepath_local, $stream);
+        return $filepath_local;
+    }
+    */
+
 
     public function deleteFile($container_name,$filepath){
         $filename = basename($filepath);

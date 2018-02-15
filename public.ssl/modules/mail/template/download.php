@@ -3,7 +3,10 @@ require_once(dirname(__FILE__).'/../../../../config/config.php');
 $filename=$_GET['filename'];
 
 $root=$_GET['root'];
-	
+
+$filename = strtr($filename,"/","-");
+$root = strtr($root,"/","-");
+
 switch(strrchr(basename($filename), ".")) {
 
     case ".gz": $type = "application/x-gzip"; break;
@@ -20,7 +23,15 @@ switch(strrchr(basename($filename), ".")) {
     default: $type = "application/octet-stream"; break;
 }
 
-$file=MAIL_FILES_UPLOAD_ROOT.$root.'/'.$filename;
+$file = MAIL_FILES_UPLOAD_ROOT.$root.'/'.$filename;
+
+$realpath  = realpath($file);
+
+if (! preg_match("#^".MAIL_FILES_UPLOAD_ROOT."#",$realpath)){
+    return false;
+}
+
+
 header("Content-Type: $type");
 header("Pragma: public");
 header("Content-Length: ".filesize($file));
