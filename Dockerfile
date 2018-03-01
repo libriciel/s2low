@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     zip \
     netcat \
-    php-imagick \
+    php5-imagick \
     && rm -r /var/lib/apt/lists/*
 
 # Configuration de clamav
