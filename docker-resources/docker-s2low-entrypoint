@@ -53,13 +53,10 @@ fi
 until nc -z -v -w30 ${POSTGRES_HOST} 5432 
 do 
   echo "Waiting for database connection..." 
-  sleep 5 
+  sleep 5
 done
 
-if [ "${DB_DATABASE_ENABLE}" = true ] 
-then 
-  php /var/www/s2low/docker-resources/init-docker.php 
-fi
+php /var/www/s2low/docker-resources/init-docker.php 
 
 
 exec "$@"

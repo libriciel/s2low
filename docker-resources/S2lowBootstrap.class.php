@@ -58,7 +58,7 @@ class S2lowBootstrap {
 
 	private function insertDemoU(){
 
-		if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE name='admin'")){
+		if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")){
 			$this->log("L'utilisateur admin existe déjà");
 			return;
 		}
