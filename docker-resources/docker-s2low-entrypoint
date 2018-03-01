@@ -50,13 +50,16 @@ fi
 /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 #On attend que la base de données soit accessible avant de l'initialiser
-until nc -z -v -w30 ${POSTGRES_HOST} 5432 
-do 
-  echo "Waiting for database connection..." 
+until nc -z -v -w30 ${POSTGRES_HOST} 5432
+do
+  echo "Waiting for database connection..."
   sleep 5
 done
 
-php /var/www/s2low/docker-resources/init-docker.php 
+php /var/www/s2low/docker-resources/init-docker.php
 
+if [ "$POSTGRES_DATABASE_TEST" ]; then
+    php /var/www/s2low/docker-resources/init-bdd-test.phpo
+fi
 
 exec "$@"
