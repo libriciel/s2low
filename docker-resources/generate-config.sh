@@ -54,7 +54,7 @@ define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
 define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
 define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
 
-define('ACTES_TDT_MAIL_ADDRESS', 'mail@tedetis.org');
+define('ACTES_TDT_MAIL_ADDRESS', "${IMAP_LOGIN:-mail@tedetis.org}");
 
 
 

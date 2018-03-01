@@ -10,8 +10,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libpq-dev \
     locales \
-    pdfsam \
-    pdftk \
     ssmtp \
     sudo \
     supervisor \
@@ -19,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     xmlstarlet \
     wget \
     zip \
+    netcat \
+    php-imagick \
     && rm -r /var/lib/apt/lists/*
 
 # Configuration de clamav
@@ -151,4 +151,4 @@ RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
 
 
 ENTRYPOINT ["docker-s2low-entrypoint"]
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
