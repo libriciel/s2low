@@ -5,6 +5,33 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
+## [3.0.5] - 2018-xx-xx
+
+### Corrections
+
+- Docker : les certificats TIME_STAMP appartiennent à www-data
+- Docker : corrections minimes de syntaxes dans le bootstrap (Pastell remplacé par S2LOW, Demou par Demos)
+- Docker : le lien symbolique letsencrypt était écrit en dur sur s2low.test.libriciel.fr au lieu de prendre l'URL en paramètre
+- Docker : la variable IMAP_LOGIN n'était pas prise en compte dans la génération du fichier DockerSettings.php
+
+
+### Ajouts
+
+- Docker : ajout d'un fichier compose par defaut
+- Les URL de Libersign sont renseignées par défaut
+
+### Évolutions
+
+- Docker : la base de données de tests n'est créée uniquement lorsque la variable POSTGRES_DATABASE_TEST est présente
+- Docker : contrôle d'accès à la base de données dans le entrypoint
+- Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
+- Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
+
+### Retrait
+
+- Docker : suppression des paquets pdfsam et pdftk
+
+
 ## [3.0.4] - 2018-02-21
 
 ### Corrections

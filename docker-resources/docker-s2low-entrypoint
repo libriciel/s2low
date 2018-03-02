@@ -40,8 +40,8 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
             certbot renew
     else
         certbot --standalone --noninteractive --agree-to --preferred-challenges http -d ${LETSENCRYPT_DOMAIN} -m ${LETSENCRYPT_EMAIL} certonly
-        ln -s /etc/letsencrypt/live/s2low.test.libriciel.fr/fullchain.pem /etc/apache2/ssl/
-        ln -s /etc/letsencrypt/live/s2low.test.libriciel.fr/privkey.pem /etc/apache2/ssl/
+        ln -s /etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/fullchain.pem /etc/apache2/ssl/
+        ln -s /etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/privkey.pem /etc/apache2/ssl/
     fi
 
 fi
@@ -49,6 +49,17 @@ fi
 #Mise à jour du validca
 /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
+#On attend que la base de données soit accessible avant de l'initialiser
+until nc -z -v -w30 ${POSTGRES_HOST} 5432
+do
+  echo "Waiting for database connection..."
+  sleep 5
+done
+
 php /var/www/s2low/docker-resources/init-docker.php
+
+if [ "$POSTGRES_DATABASE_TEST" ]; then
+    php /var/www/s2low/docker-resources/init-bdd-test.phpo
+fi
 
 exec "$@"

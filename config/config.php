@@ -186,7 +186,7 @@ if(!defined("VERIFICATION_SIREN")){
 //Paramètre pour l'outil de signature Libersign
 
 if(!defined("LIBERSIGN_URL")){
-        define("LIBERSIGN_URL","https://signature.services.adullact.org/libersign");
+        define("LIBERSIGN_URL",WEBSITE_SSL."/libersign");
 }
 
 if(!defined("LIBERSIGN_HELP_URL")){
@@ -194,7 +194,11 @@ if(!defined("LIBERSIGN_HELP_URL")){
 }
 
 if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")){
-	define("LIBERSIGN_EXTENSION_UPDATE_URL",false);
+    define("LIBERSIGN_EXTENSION_UPDATE_URL",WEBSITE_SSL."/libersign");
+}
+
+if (! defined("LIBERSIGN_INSTALLER")){
+    define("LIBERSIGN_INSTALLER","https://libersign.libriciel.fr/make.sh");
 }
 
 //Paramètre outils pour donner la forme canonique d'un document XML (C14N)
@@ -582,10 +586,7 @@ if (! defined("TESTING_ENVIRONNEMENT")) {
 	define("TESTING_ENVIRONNEMENT", false);
 }
 
-if (! defined("LIBERSIGN_INSTALLER")){
-	# Uniquement pour l'installation Docker afin que celui-ci puisse récupérer le script d'installation de Libersign
-	define("LIBERSIGN_INSTALLER",false);
-}
+
 
 
 ## Configuration OpenStack (facultative)

@@ -10,8 +10,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libpq-dev \
     locales \
-    pdfsam \
-    pdftk \
     ssmtp \
     sudo \
     supervisor \
@@ -19,10 +17,12 @@ RUN apt-get update && apt-get install -y \
     xmlstarlet \
     wget \
     zip \
+    netcat \
+    php5-imagick \
     && rm -r /var/lib/apt/lists/*
 
 # Configuration de clamav
-COPY ./docker-resources/clamav/* /etc/clamav/
+COPY ./docker-resources/clamav/clamd.conf /etc/clamav/
 
 # Installation de certbot
 RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list
@@ -33,10 +33,10 @@ RUN apt-get update && apt-get install -y -t jessie-backports \
 # Gestion des locales
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
     echo 'LANG="fr_FR.UTF-8"'>/etc/default/locale&& \
-    dpkg-reconfigure --frontend=noninteractive locales && \
+    set -eux && dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=fr_FR.UTF-8 && \
     echo "Europe/Paris" > /etc/timezone &&\
-	dpkg-reconfigure -f noninteractive tzdata
+    set -eux && dpkg-reconfigure -f noninteractive tzdata
 
 
 # Installation de xdebug
@@ -105,8 +105,9 @@ ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl
 RUN chmod +x /usr/local/bin/recup_crl.sh
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
+#TODO passer validca dans supervisor
 # Copie des crontab
-COPY ./docker-resources/cron.d/* /etc/cron.d/
+COPY ./docker-resources/cron.d/validca /etc/cron.d/
 
 # Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
 
@@ -138,7 +139,7 @@ COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
 COPY ./ /var/www/s2low/
 
 #Composer
-RUN composer update
+RUN composer install
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 
@@ -149,6 +150,10 @@ RUN cd /var/www/parapheur/libersign && tar xvzf libersign_v1_compat.tgz
 
 RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
 
+#TODO : mettre des VOLUME pour les logs
+#TODO : mettre des VOLUME pour le workspace ?
+#TODO : mettre un VOLUME pour les certificats letsencrypt ?
+
 
 ENTRYPOINT ["docker-s2low-entrypoint"]
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
