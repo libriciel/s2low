@@ -1,0 +1,79 @@
+version: '2.0'
+
+services:
+    web:
+        image: s2low:docker
+        links:
+            - db
+            - clamav
+            - ftp
+            - simulateur
+            - pades-valid
+            - pdf-stamp
+            - mail
+        environment:
+            S2LOW_WEBSITE: "s2low.docker.libriciel.fr"
+            POSTGRES_USER: "s2lowuser"
+            POSTGRES_PASSWORD: "s2lowpassword"
+            POSTGRES_DB: "s2lowdb"
+            POSTGRES_HOST: "db"
+            HELIOS_FTP_SERVER: "ftp"
+            HELIOS_FTP_LOGIN: "ftpuser"
+            HELIOS_FTP_PASSWORD: "ftppassword"
+            SMTP_SERVER: mail
+            SMTP_PORT: 25
+            PUBLISH_SIMULATEUR: "true"
+            IMAP_SERVER: mail
+            IMAP_LOGIN: tedetis@s2low.docker.libriciel.fr
+            IMAP_PASS: tedetis
+        ports:
+          - 80:80
+          - 443:443
+    db:
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-postgres
+        environment:
+            - POSTGRES_USER=s2lowuser
+            - POSTGRES_PASSWORD=s2lowpassword
+            - POSTGRES_DB=s2lowdb
+
+    clamav:
+        image: mkodockx/docker-clamav
+
+    pades-valid:
+        image: gitlab.libriciel.fr:4567/outils/pades-valid
+
+    pdf-stamp:
+        image: gitlab.libriciel.fr:4567/outils/pdf-stamp
+
+    ftp:
+        image: mcreations/ftp
+        environment:
+            FTP_USER: ftpuser
+            FTP_PASS: ftppassword
+            PASV_MIN_PORT: 65000
+            PASV_MAX_PORT: 65004
+        volumes:
+          - /tmp/simulateur:/data/ftpuser/
+
+    mail:
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-mail
+        environment:
+            - MAILNAME=mail.docker.libriciel.fr
+            - MAIL_ADDRESS=tedetis@s2low.docker.libriciel.fr
+            - MAIL_PASS=tedetis
+
+    simulateur:
+        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
+        links:
+             - ftp:ftp
+             - mail:mail
+        environment:
+            MAIL_HOST: mail
+            MAIL_PORT: 25
+            MAIL_FROM: tedetis@s2low.docker.libriciel.fr
+        volumes:
+            - /tmp/simulateur/:/var/www/simulateur-helios/workspace

@@ -17,7 +17,7 @@ class S2lowBootstrap {
 			$this->installCertificate();
 			$this->installHorodateur();
 			$this->dbUpdate();
-			$this->insertDemou();
+			$this->insertDemoS();
 			$this->populateDatabase();
 			$this->installLibersign();
 		} catch (Exception $e){
@@ -48,7 +48,7 @@ class S2lowBootstrap {
 		exec("$script $hostname",$output,$return_var);
 		$this->log(implode("\n",$output));
 		if ($return_var != 0){
-			throw new Exception("Impossible de générer ou de trouver le certificat du site !");
+			throw new Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
 		}
 	}
 
@@ -56,7 +56,7 @@ class S2lowBootstrap {
 		$this->postgreSQLController->alterDatabase(function($message){$this->log($message);});
 	}
 
-	private function insertDemoU(){
+	private function insertDemos(){
 
 		if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")){
 			$this->log("L'utilisateur admin existe déjà");
@@ -144,7 +144,11 @@ class S2lowBootstrap {
 		}
 
 		file_put_contents(TIMESTAMPING_PRIV_KEY_PASS,"");
-
+		
+		$username='www-data';
+		chown($key_file,$username);
+		chown($cert_file,$username);
+		
 		$this->log("Certificat d'horodatage créé");
 	}
 
@@ -165,7 +169,7 @@ class S2lowBootstrap {
 	}
 
 	private function log($message){
-		echo "[".date("Y-m-d H:i:s")."][Pastell bootstrap] $message\n";
+		echo "[".date("Y-m-d H:i:s")."][S²LOW bootstrap] $message\n";
 	}
 
 	private function getHostname(){

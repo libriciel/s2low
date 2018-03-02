@@ -6,8 +6,8 @@ set -e
 cat <<EOF
 <?php
 
-define("WEBSITE","${S2LOW_WEBSITE:-http://localhost/}");
-define("WEBSITE_SSL","${S2LOW_WEBSITE_SSL:-https://localhost}");
+define("WEBSITE","http://${S2LOW_WEBSITE:-http://localhost/}");
+define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-https://localhost}");
 define('DB_HOST', "${POSTGRES_HOST:-localhost}");
 define('DB_USER', "${POSTGRES_USER:-tedetis}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-tedetis}");
@@ -44,8 +44,8 @@ define("OPENSSL_PATH","/usr/bin/openssl");
 define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-localhost}");
 define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT:-21}");
 define("HELIOS_FTP_PASSIVE_MODE", ${HELIOS_FTP_PASSIVE_MODE:-false});
-define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION:-/entree}");
-define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/sortie}");
+define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION:-/entree/}");
+define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/sortie/}");
 define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN}");
 define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
 
@@ -55,13 +55,9 @@ define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp'
 define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
 
 define('ACTES_TDT_MAIL_ADDRESS', "${IMAP_LOGIN:-mail@tedetis.org}");
-
-
-
-define('LIBERSIGN_INSTALLER',"${LIBERSIGN_INSTALLER}");
-define("LIBERSIGN_URL","${S2LOW_WEBSITE_SSL}/libersign/");
-define("LIBERSIGN_EXTENSION_UPDATE_URL","${S2LOW_WEBSITE_SSL}/libersign/");
-
+define('ACTES_IMAP_SERVER', "${IMAP_SERVER:-mail}");
+define('ACTES_IMAP_LOGIN', "${IMAP_LOGIN:-mail@tedetis.org}");
+define('ACTES_IMAP_PASSWORD', "${IMAP_PASS:-password}");
 
 define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}");
 define("OPENSTACK_USERNAME","${OPENSTACK_USERNAME}");
@@ -80,4 +76,3 @@ define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
 
 EOF
-
