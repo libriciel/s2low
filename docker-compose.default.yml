@@ -11,6 +11,7 @@ services:
             - pades-valid
             - pdf-stamp
             - mail
+            - db_test
         environment:
             S2LOW_WEBSITE: "s2low.docker.libriciel.fr"
             POSTGRES_USER: "s2lowuser"
@@ -26,9 +27,13 @@ services:
             IMAP_SERVER: mail
             IMAP_LOGIN: tedetis@s2low.docker.libriciel.fr
             IMAP_PASS: tedetis
+            POSTGRES_HOST_TEST: db_test
+            POSTGRES_USER_TEST: s2lowtestuser
+            POSTGRES_PASSWORD_TEST: s2lowtestpassword
         ports:
           - 80:80
           - 443:443
+
     db:
         build:
             context: ./docker-resources/
@@ -38,6 +43,14 @@ services:
             - POSTGRES_PASSWORD=s2lowpassword
             - POSTGRES_DB=s2lowdb
 
+    db_test:
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-postgres
+        environment:
+            - POSTGRES_USER=s2lowtestuser
+            - POSTGRES_PASSWORD=s2lowtestpassword
+            - POSTGRES_DB=s2lowdbtest
     clamav:
         image: mkodockx/docker-clamav
 
