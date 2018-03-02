@@ -59,7 +59,7 @@ done
 php /var/www/s2low/docker-resources/init-docker.php
 
 if [ "$POSTGRES_DATABASE_TEST" ]; then
-    php /var/www/s2low/docker-resources/init-bdd-test.phpo
+    php /var/www/s2low/docker-resources/init-bdd-test.php
 fi
 
 exec "$@"
