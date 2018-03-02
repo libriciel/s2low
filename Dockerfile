@@ -1,6 +1,6 @@
 FROM php:5.5-apache
 
-RUN set -eux && apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     clamdscan \
     cron \
     git \
@@ -26,7 +26,7 @@ COPY ./docker-resources/clamav/clamd.conf /etc/clamav/
 
 # Installation de certbot
 RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list
-RUN set -eux && apt-get update && apt-get install -y -t jessie-backports \
+RUN apt-get update && apt-get install -y -t jessie-backports \
     certbot \
     python-certbot-apache
 
@@ -40,7 +40,7 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 
 
 # Installation de xdebug
-RUN set -eux && pecl install xdebug-2.5.3 && \
+RUN pecl install xdebug-2.5.3 && \
     docker-php-ext-enable xdebug
 
 
@@ -55,7 +55,7 @@ RUN a2enmod \
     ssl
 
 # Extensions PHP
-RUN set -eux && docker-php-ext-configure \
+RUN docker-php-ext-configure \
     gd --with-jpeg-dir=/usr/include/
 
 RUN docker-php-ext-install \
@@ -67,7 +67,7 @@ RUN docker-php-ext-install \
     zip
 
 # Installation de l'extension imap
-RUN set -eux && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap
 
 
@@ -103,7 +103,7 @@ RUN touch /tmp/slow.log && \
 #TODO voir comment gérer la récupération du validca
 ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
 RUN chmod +x /usr/local/bin/recup_crl.sh
-RUN	set -eux && /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
+RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 #TODO passer validca dans supervisor
 # Copie des crontab
@@ -113,8 +113,8 @@ COPY ./docker-resources/cron.d/validca /etc/cron.d/
 
 # Installation de composer
 RUN cd /tmp/ && \
-    set -eux && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    set -eux && php composer-setup.php --install-dir=/usr/local/bin && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin && \
     mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
 
