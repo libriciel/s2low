@@ -7,19 +7,19 @@ set -e
 cat <<EOF
 <?php
 
-define("WEBSITE","http://${S2LOW_WEBSITE:-http://localhost/}");
-define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-https://localhost}");
-define('DB_HOST', "${POSTGRES_HOST:-localhost}");
-define('DB_USER', "${POSTGRES_USER:-tedetis}");
-define('DB_PASSWORD', "${POSTGRES_PASSWORD:-tedetis}");
-define('DB_DATABASE', "${POSTGRES_DB:-tedetis}");
+define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr/}");
+define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr/}");
+define('DB_HOST', "${POSTGRES_HOST:-db}");
+define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
+define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");
+define('DB_DATABASE', "${POSTGRES_DB:-s2lowdb}");
 
 define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-localhost}");
 define('DB_USER_TEST', "${POSTGRES_USER_TEST:-tedetis}");
 define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-tedetis}");
 define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-tedetis}");
 
-define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-simulateur}");
+define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-ftp}");
 define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT:-21}");
 define("HELIOS_FTP_PASSIVE_MODE", ${HELIOS_FTP_PASSIVE_MODE:-false});
 define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION:-/entree/}");

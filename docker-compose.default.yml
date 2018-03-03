@@ -46,8 +46,8 @@ services:
         image: gitlab.libriciel.fr:4567/docker/docker-imap-devel:1.0
         environment:
             - MAILNAME=mail.docker.libriciel.fr
-            - MAIL_ADDRESS=tedetis@s2low.docker.libriciel.fr
-            - MAIL_PASS=tedetis
+            - MAIL_ADDRESS=s2low@s2low.docker.libriciel.fr
+            - MAIL_PASS=password
 
     simulateur:
         image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.1

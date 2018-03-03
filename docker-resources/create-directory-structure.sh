@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Création de l'arborescence du workspace
+# Crï¿½ation de l'arborescence du workspace
 mkdir -p /data/tdt-workspace/actes && \
 mkdir -p /data/tdt-workspace/helios && \
 mkdir -p /data/tdt-workspace/mail && \
@@ -23,3 +23,4 @@ mkdir -p /data/log/
 
 chown -R www-data:www-data /data/tdt-workspace/
 chown -R www-data:www-data /var/lib/php/session
+chown -R www-data:www-data /data/log
