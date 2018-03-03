@@ -35,6 +35,8 @@ else
     a2dissite simulateur
 fi
 
+#TODO vérifier qu'il y a aussi LETSENCRYPT_EMAIL de définit
+#voir si on peu s'assurer que le dossier letsencrypt est un point de montage
 if [ "$LETSENCRYPT_DOMAIN" ] ; then
     if [ -f "/etc/apache2/ssl/fullchain.pem" ] ; then
             certbot renew
