@@ -7,8 +7,8 @@ set -e
 cat <<EOF
 <?php
 
-define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr/}");
-define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr/}");
+define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}/");
+define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}/");
 define('DB_HOST', "${POSTGRES_HOST:-db}");
 define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");
