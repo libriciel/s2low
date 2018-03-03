@@ -16,7 +16,7 @@ if ( ! defined("OPERATEUR_DE_TELETRANSMISSION")) {
 
 
 if(!defined("EMAIL_ADMIN")){
-        define("EMAIL_ADMIN","noreply@noreplyaaaaa.aaaa");
+        define("EMAIL_ADMIN","noreply@s2low.docker.libriciel.fr");
 }
 
 if(!defined("WEBSITE_TITLE")){
@@ -24,38 +24,38 @@ if(!defined("WEBSITE_TITLE")){
 }
 
 if(!defined('WEBSITE')){
-        define('WEBSITE', "http://192.168.1.28:4443/");
+        define('WEBSITE', "http://s2low.docker.libriciel.fr/");
 }
 
 if(!defined('WEBSITE_SSL')){
-        define('WEBSITE_SSL', "https://192.168.1.28:4443/");
+        define('WEBSITE_SSL', "https://s2low.docker.libriciel.fr/");
 }
 
 if(!defined('WEBMASTER')){
-        define('WEBMASTER', "webmaster@invalid.fr");
+        define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
 }
 
 // Adresse du From des emails émis
 if(!defined('TDT_FROM_EMAIL')){
-        define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@invalid.fr>");
+        define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@s2low.docker.libriciel.fr>");
 }
 
 
 // Paramètres base de données
 if(!defined('DB_HOST')){
-        define('DB_HOST', "localhost");
+        define('DB_HOST', "db");
 }
 
 if(!defined('DB_USER')){
-        define('DB_USER', "tedetis");
+        define('DB_USER', "s2lowuser");
 }
 
 if(!defined('DB_PASSWORD')){
-        define('DB_PASSWORD', "tedetis");
+        define('DB_PASSWORD', "s2lowpassword");
 }
 
 if(!defined('DB_DATABASE')){
-	define('DB_DATABASE', "tedetis");
+	define('DB_DATABASE', "s2lowdb");
 }
 
 if(!defined('DB_CLIENT_ENCODING')){
@@ -66,19 +66,19 @@ if(!defined('DB_CLIENT_ENCODING')){
 
 //Définition de la connexion à la base de données pour les tests unitaires et les tests de validation
 if(!defined('DB_HOST_TEST')){
-	define('DB_HOST_TEST', "localhost");
+	define('DB_HOST_TEST', "dbtest");
 }
 
 if(!defined('DB_USER_TEST')){
-	define('DB_USER_TEST', "tedetis");
+	define('DB_USER_TEST', "s2lowusertest");
 }
 
 if(!defined('DB_PASSWORD_TEST')){
-	define('DB_PASSWORD_TEST', "tedetis");
+	define('DB_PASSWORD_TEST', "s2lowpasswordtest");
 }
 
 if(!defined('DB_DATABASE_TEST')){
-	define('DB_DATABASE_TEST', "tedetis_test");
+	define('DB_DATABASE_TEST', "s2low_test");
 }
 
 if (! defined('PHP_UNIT_AUTOLOADER')) {
@@ -108,21 +108,21 @@ if (MODE == "dev"){
 
 // Emplacement certificat/clef privée pour l'horodatage des logs
 if(!defined('TIMESTAMPING_CERT')){
-        define('TIMESTAMPING_CERT', '/etc/tedetis/ssl/tedetis_timestamp_cert.pem');
+        define('TIMESTAMPING_CERT', '/etc/s2low/ssl/tedetis_timestamp_cert.pem');
 }
 
 if(!defined('TIMESTAMPING_PRIV_KEY')){
-        define('TIMESTAMPING_PRIV_KEY', '/etc/tedetis/ssl/tedetis_timestamp_priv_key.pem');
+        define('TIMESTAMPING_PRIV_KEY', '/etc/s2low/ssl/tedetis_timestamp_priv_key.pem');
 }
 
 if(!defined('TIMESTAMPING_PRIV_KEY_PASS')){
-        define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/tedetis/ssl/tedetis_timestamp_priv_key.pass');
+        define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/s2low/ssl/tedetis_timestamp_priv_key.pass');
 }
 
 //Constante pour l'horodatage
 //Chemin vers openssl version > 1.0.0a
 if(!defined("OPENSSL_PATH")){
-        define("OPENSSL_PATH","/Users/eric/Logiciel/openssl-1.0.0l/apps/openssl");
+        define("OPENSSL_PATH","/usr/bin/openssl");
 }
 
 //WDSL du service d'horodatage
@@ -156,22 +156,6 @@ if(!defined('ANTIVIRUS_COMMAND')){
 
 if (!defined("ANTIVIRUS_UPSTART_TOUCH_FILE")){
 	define("ANTIVIRUS_UPSTART_TOUCH_FILE","/tmp/antivirus-upstart");
-}
-
-
-//A SUPPRIMER
-if(!defined('TEDETIS_CERT_PATH')){
-        define('TEDETIS_CERT_PATH','/home/tedetis/dev/certificat/site/dev.s2low-asoft.fr');
-}
-
-//A SUPPRIMER
-if(!defined('TEDETIS_KEY_PATH')){
-        define('TEDETIS_KEY_PATH','/home/tedetis/dev/certificat/site/dev.s2low-asoft.fr-key');
-}
-
-//A SUPPRIMER
-if(!defined('TEDETIS_KEY_PASS')){
-        define('TEDETIS_KEY_PASS','tedetis');
 }
 
 if(!defined('TEDETIS_TMP_PATH')){
@@ -215,13 +199,13 @@ if (!defined("XMLSEC1_PATH")){
 //voir "man c_rehash" pour le "hasher"
 //Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
 if (! defined("RGS_VALIDCA_PATH")){
-	define("RGS_VALIDCA_PATH","/etc/tedetis/ssl/validca/");
+	define("RGS_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 }
 
 //Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
 //des flux PES
 if (! defined("EXTENDED_VALIDCA_PATH")){
-	define("EXTENDED_VALIDCA_PATH","/etc/tedetis/ssl/validca/");
+	define("EXTENDED_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 }
 
 
@@ -232,7 +216,7 @@ if (! defined("KEEP_NB_MONTHS_IN_LOGS")){
 }
 
 if (!defined("EXPORT_LOGS_DIRECTORY")){
-	define("EXPORT_LOGS_DIRECTORY","/tdt-workspace/logs-export/");
+	define("EXPORT_LOGS_DIRECTORY","/data/tdt-workspace/logs-export/");
 }
 
 
@@ -289,7 +273,7 @@ if (!defined('ACTES_IMAP_PORT')){
 }
 
 if (!defined('ACTES_IMAP_LOGIN')){
-    define('ACTES_IMAP_LOGIN','mail@tedetis.org');
+    define('ACTES_IMAP_LOGIN','s2low@s2low.docker.libriciel.fr');
 }
 
 if (!defined('ACTES_IMAP_PASSWORD')){
@@ -328,17 +312,17 @@ if(!defined('ANTIVIRUS_TMP_PATH')){
 
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
-        define('ACTES_TDT_MAIL_ADDRESS', 'tedetis@sigmalis.com');
+        define('ACTES_TDT_MAIL_ADDRESS', 's2low@s2low.docker.libriciel.fr');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
 if(!defined('ACTES_FILES_UPLOAD_ROOT')){
-        define('ACTES_FILES_UPLOAD_ROOT', '/tdt-workspace/actes/uploads');
+        define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads');
 }
 
 // Répertoire de stockage des fichiers constituant les lots
 if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
-        define('ACTES_BATCHES_UPLOAD_ROOT', '/tdt-workspace/actes/batchs');
+        define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
 }
 
 // Répertoire temporaire de stockage des réponses du ministère par mail
@@ -354,7 +338,7 @@ if(!defined('ACTES_RESPONSE_ERROR_PATH')){
 
 // Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){
-	define('ACTES_COMMON_BROADCAST_EMAILS', 'eric@sigmalis.com');
+	define('ACTES_COMMON_BROADCAST_EMAILS', 'defaut@s2low.docker.libriciel.fr');
 } 
 
 // Restreindre ou non plusieurs demandes de classification par jour par collectivité (1 par jour si restreint)
@@ -378,27 +362,27 @@ if (!defined('ACTES_ALWAYS_CAN_VALIDATE')){
 ///// Paramètre module Helios /////
 /////////////////////////////////
 if(!defined('HELIOS_FILES_ROOT')){
-	define('HELIOS_FILES_ROOT', '/tdt-workspace/helios/');
+	define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('HELIOS_FILES_UPLOAD_ROOT')){
-	define('HELIOS_FILES_UPLOAD_ROOT', '/tdt-workspace/helios/sending/');
+	define('HELIOS_FILES_UPLOAD_ROOT', '/data/tdt-workspace/helios/sending/');
 }
 // Repertoire de stockage des reponses
 if(!defined('HELIOS_RESPONSES_ROOT')){
-	define('HELIOS_RESPONSES_ROOT', '/tdt-workspace/helios/response/');
+	define('HELIOS_RESPONSES_ROOT', '/data/tdt-workspace/helios/response/');
 }
 
 // Repertoire de stockage des reponses en erreur 
 if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
-	define('HELIOS_RESPONSES_ERROR_PATH', '/tdt-workspace/helios/response_error/');
+	define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
 }
 
 
 // Repertoire de stockage des fichiers temporaires à envoyer au FTP
 if(!defined('HELIOS_FILES_UPLOAD_TMP')){
-	define('HELIOS_FILES_UPLOAD_TMP', '/tdt-workspace/helios/sending-tmp/');
+	define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
 }
 
 
@@ -410,7 +394,7 @@ if(!defined('HELIOS_VALIDATION_UPSTART_TOUCH_FILE')){
 
 
 if(!defined('HELIOS_COUNTER_FILE')){
-	define('HELIOS_COUNTER_FILE',"/tdt-workspace/helios/counter.txt");
+	define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");
 }
 
 if(!defined("HELIOS_ZIP_BEFORE_SEND")){
@@ -419,7 +403,7 @@ if(!defined("HELIOS_ZIP_BEFORE_SEND")){
 //Mettre "" pour la production, mettre un répertoire de destination pour un serveur de test
 //Faire terminer la destination par un /
 if(!defined("HELIOS_SENDING_DESTINATION")){
-	define("HELIOS_SENDING_DESTINATION","");
+	define("HELIOS_SENDING_DESTINATION","/entree/");
 }
 
 if(!defined("HELIOS_SENDING_MODE_DEMO")){
@@ -428,11 +412,11 @@ if(!defined("HELIOS_SENDING_MODE_DEMO")){
 
 //Pour le script de récupération des enveloppe Helios
 if(!defined('HELIOS_FTP_SERVER')){
-	define('HELIOS_FTP_SERVER','127.0.0.1');
+	define('HELIOS_FTP_SERVER','ftp');
 }
 
 if (!defined('HELIOS_FTP_PASSIVE_MODE')){
-	define('HELIOS_FTP_PASSIVE_MODE',true);
+	define('HELIOS_FTP_PASSIVE_MODE',false);
 }
 
 if(!defined('HELIOS_FTP_PORT')){
@@ -448,11 +432,11 @@ if(!defined('HELIOS_FTP_PASSWORD')){
 }
 
 if(!defined('HELIOS_FTP_RESPONSE_SERVER_PATH')){
-	define('HELIOS_FTP_RESPONSE_SERVER_PATH','/home/helios/response/');
+	define('HELIOS_FTP_RESPONSE_SERVER_PATH','/sortie/');
 }
 
 if(!defined('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH')){
-	define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/tdt-workspace/helios/response_tmp/');
+	define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/data/tdt-workspace/helios/response_tmp/');
 }
 
 if(!defined('HELIOS_UPSTART_TOUCH_FILE')){
@@ -500,7 +484,7 @@ if (empty($helios_authorized_rollback_ids)){
 }
 
 if (!defined("HELIOS_OCRE_FILE_PATH")){
-	define("HELIOS_OCRE_FILE_PATH","/tdt-workspace/helios/ocre/");
+	define("HELIOS_OCRE_FILE_PATH","/data/tdt-workspace/helios/ocre/");
 }
 
 if (!defined("HELIOS_OCRE_EXPORT_URL")){
@@ -523,7 +507,7 @@ if ( ! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")){
 /////////////////////////////////
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
-	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', '/home/tedetis/dev/tdt-workspace/uploads/etat_civil');
+	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/uploads/etat_civil');
 }
 
 //////////////////////////////
@@ -531,11 +515,11 @@ if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
 //////////////////////////////////
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('MAIL_FILES_UPLOAD_ROOT')){
-	define('MAIL_FILES_UPLOAD_ROOT', '/tdt-workspace/mail/');
+	define('MAIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/mail/');
 }
 
 if(!defined('MAIL_TEDETIS_FROM')){
-	define('MAIL_TEDETIS_FROM','tedetis-mailsec@adullact.fr');
+	define('MAIL_TEDETIS_FROM','tedetis-mailsec@s2low.docker.libriciel.fr');
 }
 
 if(!defined('IMAP_LOGIN')){
@@ -543,11 +527,11 @@ if(!defined('IMAP_LOGIN')){
 }
 
 if(!defined('IMAP_PASS')){
-	define('IMAP_PASS','Yi7eequa');
+	define('IMAP_PASS','password');
 }
 
 if(!defined('IMAP_SERVER')){
-	define('IMAP_SERVER','mail.ntsys.fr');
+	define('IMAP_SERVER','mailsec');
 }
 
 if(!defined('MAIL_MESSAGE')){
@@ -565,17 +549,17 @@ Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par
 
 //Répertoire pour les DIA utilisé dans S²low
 if(!defined("DIA_UPLOAD_PATH")){
-	define("DIA_UPLOAD_PATH","/tdt-workspace/dia/upload");
+	define("DIA_UPLOAD_PATH","/data/tdt-workspace/dia/upload");
 }
 
 //Répertoire pour les DIA reçu via PEC/PRESTO
 if(!defined("DIA_DELIVERY_PATH")){
-	define("DIA_DELIVERY_PATH","/tdt-workspace/dia/delivery");
+	define("DIA_DELIVERY_PATH","/data/tdt-workspace/dia/delivery");
 }
 
 //Répertoire pour les envois vers PEC/PRESTO
 if(!defined("DIA_TO_PRESTO")){
-	define("DIA_TO_PRESTO","/tdt-workspace/dia/to-presto");
+	define("DIA_TO_PRESTO","/data/tdt-workspace/dia/to-presto");
 }
 
 if(!defined("DIA_UPSTART_TOUCH_FILE")){
@@ -585,9 +569,6 @@ if(!defined("DIA_UPSTART_TOUCH_FILE")){
 if (! defined("TESTING_ENVIRONNEMENT")) {
 	define("TESTING_ENVIRONNEMENT", false);
 }
-
-
-
 
 ## Configuration OpenStack (facultative)
 

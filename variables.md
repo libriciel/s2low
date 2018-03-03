@@ -83,7 +83,7 @@
 | `SITE_INDEX`|`localhost`|Définit l'URL d'accès au simulateur|
 | `MAIL_HOST`|`mail`|Définit l'adresse du serveur de mail pour envoyer les ack des actes. Cette valeur doit être la même que celle définit pour l'application S²LOW dans `ACTES_IMAP_HOST` et dans `MAIL_ADRESS` du docker `mail`|
 | `MAIL_PORT`|`25`|Définit le port SMTP du serveur de mail pour envoyer les ack des actes.|
-| `MAIL_FROM`|`dgfip@mail.docker.libriciel.fr`|Définit l'adresse émétrice pour les mails d'acquittement. Par exemple : `dgfip@mail.docker.libriciel.fr`|
+| `MAIL_FROM`|`dgfip@mail.docker.libriciel.fr`|Définit l'adresse émétrice pour les mails d'acquittement. Par exemple : `dgcl@mail.docker.libriciel.fr`|
 | `SIMULATEUR_SITE_PORT`||Cette variable sert pour le mapping de port vers 80|
 
 ## Pour le serveur ftp

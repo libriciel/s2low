@@ -26,10 +26,14 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : contrôle d'accès à la base de données dans le entrypoint
 - Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
+- Ménage dans le fichier config.php
+- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
+
 
 ### Retrait
 
 - Docker : suppression des paquets pdfsam et pdftk
+- Suppression du fichier LocalSettings devenu inutile
 
 
 ## [3.0.4] - 2018-02-21
