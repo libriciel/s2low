@@ -1,8 +1,9 @@
 #! /bin/bash
 set -e
 
-# Utiliser pour créer un fichier de settings en fonction des variables d'environnement (envoyé par Docker)
-#TODO : intégrer les variables WEB_HTTP_PORT et WEB_HTTPS_PORT
+# Utiliser pour creer un fichier de settings en fonction des variables d'environnement (envoye par Docker)
+#TODO : integrer les variables WEB_HTTP_PORT et WEB_HTTPS_PORT
+
 cat <<EOF
 <?php
 
@@ -28,10 +29,10 @@ define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD:-helios}");
 
 define('ACTES_TDT_MAIL_ADDRESS', "${IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_HOST', "${IMAP_SERVER:-mail}");
-define('ACTES_IMAP_LOGIN', "${IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr");
+define('ACTES_IMAP_LOGIN', "${IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_PASSWORD', "${IMAP_PASS:-password}");
 
-define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}:-https://identity.fr1.cloudwatt.com/v2.0");
+define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}:-https://identity.fr1.cloudwatt.com/v2.0}");
 define("OPENSTACK_USERNAME","${OPENSTACK_USERNAME}");
 define("OPENSTACK_PASSWORD","${OPENSTACK_PASSWORD}");
 define("OPENSTACK_TENANT","${OPENSTACK_TENANT}");
