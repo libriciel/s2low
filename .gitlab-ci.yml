@@ -38,6 +38,7 @@ unit_test:
     script:
         - cd /var/www/s2low/
         - composer test-cover
+        - cat /tmp/DockerSettings.php
 
 deploy_app:
     stage: staging
