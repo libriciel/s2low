@@ -78,7 +78,7 @@ if(!defined('DB_PASSWORD_TEST')){
 }
 
 if(!defined('DB_DATABASE_TEST')){
-	define('DB_DATABASE_TEST', "s2low_test");
+	define('DB_DATABASE_TEST', "s2lowdbtest");
 }
 
 if (! defined('PHP_UNIT_AUTOLOADER')) {
@@ -519,15 +519,15 @@ if(!defined('MAIL_FILES_UPLOAD_ROOT')){
 }
 
 if(!defined('MAIL_TEDETIS_FROM')){
-	define('MAIL_TEDETIS_FROM','tedetis-mailsec@s2low.docker.libriciel.fr');
+	define('MAIL_TEDETIS_FROM','s2low-mailsec@s2low.docker.libriciel.fr');
 }
 
 if(!defined('IMAP_LOGIN')){
-	define('IMAP_LOGIN','tedetis-mailsec');
+	define('IMAP_LOGIN','s2low-mailsec@s2low.docker.libriciel.fr');
 }
 
 if(!defined('IMAP_PASS')){
-	define('IMAP_PASS','password');
+	define('IMAP_PASS','s2low-mailsec');
 }
 
 if(!defined('IMAP_SERVER')){
