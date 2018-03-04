@@ -14,10 +14,7 @@ if (! file_exists("/etc/s2low/DockerSettings.php")) {
 
 	require_once "/tmp/DockerSettings.php";
 
-  $contenu=file_get_contents("/tmp/DockerSettings.php");
-  echo "<br><br>Contenu du fichier $file : <br><pre>$contenu</pre>";
-
-  // Toujours sur phpstorm, y a un bug avec ça...
+    // Toujours sur phpstorm, y a un bug avec ça...
 	//https://www.quora.com/How-do-I-fix-Class-PHPUnit_Util_Configuration-not-found-error-in-PHPUNIT-2
 	if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 		define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
@@ -26,3 +23,6 @@ if (! file_exists("/etc/s2low/DockerSettings.php")) {
 	exec("/bin/bash ". __DIR__."/create-directory-structure.sh");
 
 }
+
+$contenu=file_get_contents("/tmp/DockerSettings.php");
+echo "<br><br>Contenu du fichier : <br><pre>$contenu</pre>";
