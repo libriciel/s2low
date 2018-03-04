@@ -24,5 +24,5 @@ if (! file_exists("/etc/s2low/DockerSettings.php")) {
 
 }
 
-$contenu=file_get_contents("/tmp/DockerSettings.php");
+$contenu=file_get_contents("/etc/s2low/DockerSettings.php");
 echo "<br><br>Contenu du fichier : <br><pre>$contenu</pre>";

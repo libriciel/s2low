@@ -31,6 +31,7 @@ unit_test:
         POSTGRES_USER_TEST: s2lowuser
         POSTGRES_PASSWORD_TEST: s2lowpassword
         POSTGRES_DB_TEST: s2lowdb
+        POSTGRES_DATABASE_TEST: s2lowdb
         POSTGRES_HOST_TEST: postgres
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
