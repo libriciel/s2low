@@ -25,7 +25,8 @@ unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
     services:
-        - gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        - name: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+          alias: postgres
     variables:
         XDEBUG_ON: "true"
         POSTGRES_USER_TEST: s2lowuser
@@ -66,19 +67,20 @@ deploy_ftp:
       - tags
     image : "$CONTAINER_IMAGE"
     services:
-        - postgres
+        - name: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+          alias: postgres
 
     variables:
         TARBALL_NAME: s2low-${CI_COMMIT_REF_NAME}.tar.gz
         PAYLOAD: "payload={\"text\": \"[s2low] Création de la version [$CI_COMMIT_REF_NAME](http://ressources.libriciel.fr/s2low/s2low-${CI_COMMIT_REF_NAME}.tar.gz)\"}"
         XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: tedetis
-        POSTGRES_PASSWORD_TEST: tedetis
-        POSTGRES_DB_TEST: tedetis
+        POSTGRES_USER_TEST: s2lowuser
+        POSTGRES_PASSWORD_TEST: s2lowpassword
+        POSTGRES_DB_TEST: s2lowdb
+        POSTGRES_DATABASE_TEST: s2lowdb
         POSTGRES_HOST_TEST: postgres
         POSTGRES_HOST: postgres
-        S2LOW_WEBSITE: "http://localhost/"
-        S2LOW_WEBSITE_SSL: "https://localhost/"
+        S2LOW_WEBSITE: "localhost"
     before_script:
         - apt-get -qq update && apt-get -yqq install openssh-client lftp
         - mkdir -p ~/.ssh
