@@ -31,8 +31,8 @@ unit_test:
         POSTGRES_USER_TEST: s2lowusertest
         POSTGRES_PASSWORD_TEST: s2lowpasswordtest
         POSTGRES_DB_TEST: s2lowdbtest
-        POSTGRES_HOST_TEST: dbtest
-        POSTGRES_HOST: db
+        POSTGRES_HOST_TEST: postgres
+        POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
     script:
