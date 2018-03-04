@@ -17,10 +17,10 @@ define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");
 define('DB_DATABASE', "${POSTGRES_DB:-s2lowdb}");
 
-define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-localhost}");
-define('DB_USER_TEST', "${POSTGRES_USER_TEST:-tedetis}");
-define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-tedetis}");
-define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-tedetis}");
+define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-dbtest}");
+define('DB_USER_TEST', "${POSTGRES_USER_TEST:-s2lowusertest}");
+define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-s2lowpasswordtest}");
+define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-s2lowdbtest}");
 
 define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-ftp}");
 define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT:-21}");
@@ -42,9 +42,9 @@ define("OPENSTACK_TENANT","${OPENSTACK_TENANT}");
 define("OPENSTACK_REGION","${OPENSTACK_REGION}");
 define("OPENSTACK_SWIFT_CONTAINER_PREFIX","${OPENSTACK_SWIFT_CONTAINER_PREFIX}");
 
-define("IMAP_SERVER","${IMAP_SERVER}");
-define("IMAP_LOGIN","${IMAP_LOGIN}");
-define("IMAP_PASS","${IMAP_PASS}");
+define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
+define("IMAP_LOGIN","${IMAP_LOGIN:-s2low-mailsec@s2low.docker.libriciel.fr}");
+define("IMAP_PASS","${IMAP_PASS:-s2low-mailsec}");
 
 #A v�rifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');

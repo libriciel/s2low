@@ -68,4 +68,7 @@ if [ "$POSTGRES_DATABASE_TEST" ]; then
     php /var/www/s2low/docker-resources/init-bdd-test.php
 fi
 
+#On remet le bon propriétaire sur le log slow.log
+chown -R www-data:www-data /data/log
+
 exec "$@"

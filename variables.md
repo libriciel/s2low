@@ -15,11 +15,10 @@
 |`HELIOS_FTP_PASSWORD`|`helios`|Mot de passe associé à l'utilisteur FTP|
 |`HELIOS_SENDING_DESTINATION`|`/entree/`|On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT||
 |`HELIOS_FTP_RESPONSE_SERVER_PATH`|`/sortie/`|On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE||
-|`IMAP_SERVER`|`mailsec`|Adresse du serveur mail où sont stockés les mails retour dans le cadre du module `mailsec`||
-|`IMAP_LOGIN`|`tedetis-mailsec`|Nom de l'utilisateur pour les mails retour dans le cadre du module `mailsec`||
+|`IMAP_LOGIN`|`s2low-mailsec`|Nom de l'utilisateur pour les mails retour dans le cadre du module `mailsec`||
 |`IMAP_PASS`|`password`|Mot de passe du l'utilisateur `IMAP_LOGIN`||
 |`POSTGRES_HOST_TEST`|`dbtest`|Renseigne l'adresse du serveur PostgreSQL pour la base de données de tests|`DB_HOST_TEST`|
-|`POSTGRES_DB_TEST`|`s2low_test`|Nom de la base de données de tests|`DB_DATABASE_TEST`|
+|`POSTGRES_DB_TEST`|`s2lowdbtest`|Nom de la base de données de tests|`DB_DATABASE_TEST`|
 |`POSTGRES_USER_TEST`|`s2lowusertest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_USER_TEST`|
 |`POSTGRES_PASSWORD_TEST`|`s2lowpasswordtest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_PASSWORD_TEST`|
 |`OPENSTACK_AUTHENTICATION_URL_V2`|`https://identity.fr1.cloudwatt.com/v2.0`|URL de l'API Openstack pour le stockage objet des PESv2|
@@ -36,13 +35,10 @@
 |`ACTES_IMAP_PASSWORD`|`password`|Mot de passe de l'utilisateur `ACTES_IMAP_LOGIN`|
 
 
-
-
-
-## Pour la configuration système
+### Pour la configuration système
 |Container| Nom de la variable | valeur par defaut | Description |
 | ------------------------------ | ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Application S²LOW|`SMTP_SERVER`|`mail`|Adresse du serveur SMTP pour pouvoir envoyer des mails.|
+| Application S²LOW|`SMTP_SERVER`|`mailsec`|Adresse du serveur SMTP pour pouvoir envoyer des mails. Elle sera utilisée pour la variable `IMAP_SERVER`|
 | Application S²LOW|`SMTP_PORT`|`25`|Port du serveur SMTP|
 | Application S²LOW|`PUBLISH_SIMULATEUR`|`false`|Permet d'ajouter une redirection web vers le simulateur depuis l'adresse `S2LOW_WEBSITE`/simulateur|
 | Application S²LOW|`LETSENCRYPT_DOMAIN`||Si la variable est présente, elle permet de créer un certificat `letsencrypt` et de lancer le renouvellement. La valeur doit être égale à `S2LOW_WEBSITE`|
@@ -63,21 +59,24 @@
 |Simulateur |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/var/www/simulateur-helios/workspace`|Ce volume est obligatoire car il doit être partagé avec le serveur FTP |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
 |ftp |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/data/$HELIOS_FTP_LOGIN`|Ce volume est obligatoire car il doit être partagé avec le simulateur |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
 
-## Pour le serveur Postgres principal
+
+## Pour le serveur Postgres principal, `db`
 | Nom de la variable | A mettre par défautl |Description |
 | -------- | -------- | -------- |
 | `POSTGRES_USER` | `s2lowuser` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_USER`|
 | `POSTGRES_PASSWORD` | `s2lowpassword` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_PASSWORD`|
 | `POSTGRES_DB` | `s2lowdb` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_DB`|
 
-## Pour le serveur Postgres de test
+
+## Pour le serveur Postgres de test, `dbtest`
 | Nom de la variable | A mettre par défautl |Description |
 | -------- | -------- | -------- |
 | `POSTGRES_USER` | `s2lowusertest` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_USER_TEST`|
 | `POSTGRES_PASSWORD` | `s2lowpasswordtest` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_PASSWORD_TEST`|
 | `POSTGRES_DB` | `s2low_test` | Cette valeur sera à renseignée dans l'application S²LOW dans la macro `POSTGRES_DB_TEST`|
 
-## Pour le simulateur
+
+## Pour le `simulateur`
 | Nom de la variable | A mettre par défaut | Description |
 | ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `SITE_INDEX`|`localhost`|Définit l'URL d'accès au simulateur|
@@ -86,7 +85,8 @@
 | `MAIL_FROM`|`dgfip@mail.docker.libriciel.fr`|Définit l'adresse émétrice pour les mails d'acquittement. Par exemple : `dgcl@mail.docker.libriciel.fr`|
 | `SIMULATEUR_SITE_PORT`||Cette variable sert pour le mapping de port vers 80|
 
-## Pour le serveur ftp
+
+## Pour le serveur `ftp`
 | Nom de la variable | A mettre par défaut | Description |
 | ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `FTP_USER`|`helios`|Nom de l'utilisateur FTP qui est aussi renseigné dans S²LOW,`HELIOS_FTP_LOGIN`|
@@ -94,6 +94,25 @@
 | `FTP_PORT`|`21`|Mapping du port FTP|
 | `PASV_MIN_PORT`|`65000`|Début de la plage de ports du serveur FTP|
 | `PASV_MAX_PORT`|`65004`|Fin de la plage de ports du serveur FTP|
+
+
+## Pour le serveur `mail` utilisé pour ACTES (`simulateur` et l'application S²LOW)
+| Nom de la variable | A mettre par défaut | Description |
+| ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MAILNAME`|`s2low.docker.libriciel.f`|Nom du domaine géré par postfix|
+| `MAIL_ADDRESS`|`s2low@s2low.docker.libriciel.fr`|Adresse le BAL. C'est à cette adresse que seront envoyés les ACK de la DGCL. Cette valeur sera la même que pour `ACTES_TDT_MAIL_ADDRESS` et `ACTES_IMAP_LOGIN`|
+| `MAIL_PASS`|`password`|Mot de passe du la BAL `MAIL_ADDRESS` (et donc `ACTES_TDT_MAIL_ADDRESS` et `ACTES_IMAP_LOGIN`). Cette valeur doit être la même que pour `ACTES_IMAP_PASSWORD`|
+| `POSTFIX_HOSTNAME`|`s2low-mailsec.docker.libriciel.fr`|Domaine principal du serveur postfix|
+
+
+## Pour le serveur `mailsec` utilisé pour le mail sécurisé et l'envoie de mails vers l'extérieur
+| Nom de la variable | A mettre par défaut | Description |
+| ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DOMAINS`|`s2low.docker.libriciel.f`|liste (séparée par des espaces) des domaines pour lesquels vous souhaitez créer des boites mails.|
+| `MAILS`|`s2low-mailsec@s2low.docker.libriciel.fr`|liste (séparée par des espaces) des adresses mails que vous souhaitez créer.|
+| `NPASS`|`true`|true si définit les comptes utilisateurs auront pour mot de passe le début de l'adresse mail (exemple : utilisateur s2low-mailsec@s2low.docker.libriciel.fr => mot de passe : s2low-mailsec)|
+| `POSTFIX_HOSTNAME`|`s2low-mailsec.docker.libriciel.fr`|Domaine principal du serveur postfix|
+
 
 ## Pour le serveur phppgadmin
 | Nom de la variable | A mettre par défaut | Description |

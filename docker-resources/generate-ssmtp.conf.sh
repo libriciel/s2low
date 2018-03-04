@@ -1,10 +1,9 @@
 #! /bin/bash
 set -e
 
-#TODO mettre les valeurs par défaut
 cat <<EOF
 
-mailhub=${SMTP_SERVER}:${SMTP_PORT}
+mailhub=${SMTP_SERVER:-mailsec}:${SMTP_PORT:-25}
 FromLineOverride=YES
 
 
