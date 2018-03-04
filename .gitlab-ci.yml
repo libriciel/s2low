@@ -25,7 +25,7 @@ unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
     services:
-        - postgres
+        - gitlab.libriciel.fr:4567/docker/postgres:9.6.5
     variables:
         XDEBUG_ON: "true"
         POSTGRES_USER_TEST: s2lowuser

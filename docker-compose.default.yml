@@ -18,7 +18,7 @@ services:
           - 80:80
           - 443:443
     db:
-        image: gitlab.libriciel.fr:4567/docker/postgres:9.5
+        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
         environment:
             - POSTGRES_USER=s2lowuser
             - POSTGRES_PASSWORD=s2lowpassword
