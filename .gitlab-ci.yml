@@ -28,9 +28,9 @@ unit_test:
         - postgres
     variables:
         XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: s2lowusertest
-        POSTGRES_PASSWORD_TEST: s2lowpasswordtest
-        POSTGRES_DB_TEST: s2lowdbtest
+        POSTGRES_USER_TEST: s2lowuser
+        POSTGRES_PASSWORD_TEST: s2lowpassword
+        POSTGRES_DB_TEST: s2lowdb
         POSTGRES_HOST_TEST: postgres
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
@@ -38,7 +38,6 @@ unit_test:
     script:
         - cd /var/www/s2low/
         - composer test-cover
-        - cat /tmp/DockerSettings.php
 
 deploy_app:
     stage: staging
