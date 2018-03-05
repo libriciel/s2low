@@ -7,10 +7,33 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
 
     public function setUp(){
 
+    	$logger = new Monolog\Logger("PHPUNIT");
+    	$logger->pushHandler(new Monolog\Handler\NullHandler());
+
+    	$content =
+			$this->getMockBuilder(\Guzzle\Http\EntityBody::class)
+				->disableOriginalConstructor()
+				->getMock();
+
+    	$dataObject =
+			$this->getMockBuilder(\OpenCloud\ObjectStore\Resource\DataObject::class)
+				->disableOriginalConstructor()
+				->getMock();
+
+    	$dataObject
+			->expects($this->any())
+			->method("getContent")
+			->willReturn($content);
+
         $container =
             $this->getMockBuilder("OpenCloud\ObjectStore\Resource\Container")
                 ->disableOriginalConstructor()
                 ->getMock();
+
+		$container
+			->expects($this->any())
+			->method("getObject")
+			->willReturn($dataObject);
 
         $service =
             $this->getMockBuilder("\OpenCloud\ObjectStore\Service")
@@ -32,6 +55,8 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             ->method("objectStoreService")
             ->willReturn($service);
 
+
+
         $openStackFactory =
             $this->getMockBuilder("OpenStackFactory")
                 ->disableOriginalConstructor()
@@ -46,11 +71,15 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
         $this->openStackSwiftWrapper = new OpenStackSwiftWrapper(
             $openStackFactory,
             "b",
-            "c"
+            "c",
+			$logger
         );
 
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testSendFile(){
         $this->openStackSwiftWrapper->sendFile(
             "container_test",
@@ -75,5 +104,15 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             )
         );
     }
+
+    public function testRetrieveFile(){
+
+		$this->openStackSwiftWrapper->retrieveFile(
+			"test",
+			"/tmp/toto"
+		);
+
+	}
+
 
 }

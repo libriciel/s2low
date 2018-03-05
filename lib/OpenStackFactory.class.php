@@ -22,6 +22,9 @@ class OpenStackFactory {
     }
 
 
+	/**
+	 * @return OpenStack
+	 */
     public function getInstance(){
         return new OpenStack(
             $this->openstack_authentication_url_v2,
