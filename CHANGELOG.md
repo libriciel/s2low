@@ -7,6 +7,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.5] - 2018-xx-xx
 
+*Cette version nécessite une modification de la base de données*
+
 ### Corrections
 
 - Docker : les certificats TIME_STAMP appartiennent à www-data

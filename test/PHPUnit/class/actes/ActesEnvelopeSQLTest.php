@@ -78,4 +78,43 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
         $this->createAndList(false,1);
     }
 
+    public function testGetAllTransactionToSendInCloud(){
+    	$filename = "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz";
+		$id_envelope  = $this->getActesEnvelopeSQL()->create(
+			1,$filename
+		);
+
+		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
+		$this->assertEquals($id_envelope,$all[0]['id']);
+		$this->assertEquals($filename,$all[0]['file_path']);
+	}
+
+	public function testGetNextTransactionToSendInCloud(){
+		$filename = "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz";
+		$id_envelope  = $this->getActesEnvelopeSQL()->create(
+			1,$filename
+		);
+		$info = $this->getActesEnvelopeSQL()->getNextTransactionToSendInCloud();
+		$this->assertEquals($id_envelope,$info['id']);
+		$this->assertEquals($filename,$info['file_path']);
+	}
+
+	public function testSetTransactionInCloud(){
+		$filename = "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz";
+		$id_envelope  = $this->getActesEnvelopeSQL()->create(
+			1,$filename
+		);
+		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
+		$this->assertEquals($id_envelope,$all[0]['id']);
+		$this->assertEquals($filename,$all[0]['file_path']);
+		$this->getActesEnvelopeSQL()->setTransactionInCloud($id_envelope);
+		$this->assertEmpty(
+			$this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud()
+		);
+		$this->getActesEnvelopeSQL()->setTransactionInCloudRemove($id_envelope);
+		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
+		$this->assertEquals($id_envelope,$all[0]['id']);
+		$this->assertEquals($filename,$all[0]['file_path']);
+	}
+	
 }

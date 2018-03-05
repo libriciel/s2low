@@ -54,4 +54,25 @@ class ActesEnvelopeSQL extends SQL
         return $this->query($sql,$data);
     }
 
+
+	public function getNextTransactionToSendInCloud(){
+		$sql = "SELECT id,file_path FROM actes_envelopes WHERE is_in_cloud=FALSE ORDER BY id ASC LIMIT 1";
+		return $this->queryOne($sql);
+	}
+
+	public function setTransactionInCloud($id){
+		$sql = "UPDATE actes_envelopes SET is_in_cloud=TRUE WHERE id=?";
+		$this->query($sql,$id);
+	}
+
+	public function setTransactionInCloudRemove($id){
+		$sql = "UPDATE actes_envelopes SET is_in_cloud=FALSE WHERE id=?";
+		$this->query($sql,$id);
+	}
+
+	public function getAllTransactionToSendInCloud(){
+		$sql = "SELECT id,file_path FROM actes_envelopes WHERE is_in_cloud=FALSE ORDER BY id ASC";
+		return $this->query($sql);
+	}
+
 }
