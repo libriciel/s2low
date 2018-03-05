@@ -1,4 +1,7 @@
 <?php
+/* Quel bordel, dès fois on appel config.php, dès fois init.php. Je rajoute ca là à cause de Monolog */
+require_once __DIR__."/../vendor/autoload.php";
+
 require_once( __DIR__ . "/LoadLocalSettings.php");
 
 

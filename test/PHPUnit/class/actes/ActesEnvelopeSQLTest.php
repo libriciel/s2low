@@ -116,5 +116,11 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
 		$this->assertEquals($id_envelope,$all[0]['id']);
 		$this->assertEquals($filename,$all[0]['file_path']);
 	}
-	
+
+
+	public function testgetOlderTransactionHandle(){
+    	$sqlQuery = $this->getActesEnvelopeSQL()->getOlderTransactionHandle('2001-01-01','2001-12-31');
+    	$this->assertInstanceOf(SQLQuery::class,$sqlQuery);
+	}
+
 }

@@ -1,0 +1,26 @@
+<?php
+
+declare(ticks = 1);
+
+require_once(__DIR__ . "/../init/init.php");
+
+/** @var ScriptSleeping $scriptSleeping */
+$scriptSleeping = $objectInstancier->get("ScriptSleeping");
+
+$scriptSleeping->debut("actes-store-envelope-in-cloud");
+
+$logger  = $objectInstancier->get("Monolog\Logger");
+$logger->pushHandler(new  Monolog\Handler\StreamHandler('php://stdout'));
+
+$logger->info("Starting actes-store-envelope-in-cloud");
+/** @var PesAllerStorage $pesAllerStorage */
+$pesAllerStorage = $objectInstancier->get(ActesEnvelopeStorage::class);
+try {
+	$pesAllerStorage->storeAll();
+} catch (Exception $e){
+	$logger->critical("Exception thrown during actes-store-envelope-in-cloud",$e);
+	exit(-1);
+}
+$logger->info("Ending actes-store-envelope-in-cloud");
+$scriptSleeping->fin();
+exit(0);

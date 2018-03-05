@@ -21,6 +21,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Docker : ajout d'un fichier compose par defaut
 - Les URL de Libersign sont renseignées par défaut
+- Utilisation d'un stockage objet pour les ~actes #345 
 
 ### Évolutions
 

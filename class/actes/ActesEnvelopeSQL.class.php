@@ -75,4 +75,12 @@ class ActesEnvelopeSQL extends SQL
 		return $this->query($sql);
 	}
 
+	public function getOlderTransactionHandle($min_date,$max_date){
+		$sql = "SELECT id,file_path,submission_date FROM actes_envelopes " .
+				" WHERE is_in_cloud=TRUE AND submission_date > ? AND submission_date<?  ORDER BY id ASC";
+		$this->getSQLQuery()->prepareAndExecute($sql,$min_date,$max_date);
+		return $this->getSQLQuery();
+	}
+
+
 }
