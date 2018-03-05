@@ -40,6 +40,14 @@ if(!defined('TDT_FROM_EMAIL')){
         define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@invalid.fr>");
 }
 
+if (!defined('LOG_FILE')){
+	define('LOG_FILE','/data/log/s2low.log');
+}
+
+if (!defined('LOG_LEVEL')){
+	define('LOG_LEVEL',Monolog\Logger::INFO);
+}
+
 
 // Paramètres base de données
 if(!defined('DB_HOST')){

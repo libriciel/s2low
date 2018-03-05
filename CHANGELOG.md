@@ -26,6 +26,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : contrôle d'accès à la base de données dans le entrypoint
 - Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
+- Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes LOG_FILE et LOG_LEVEL
 
 ### Retrait
 
