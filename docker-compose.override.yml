@@ -77,3 +77,13 @@ services:
             - MAILNAME=tedetis.org
             - MAIL_ADDRESS=mail@tedetis.org
             - MAIL_PASS=password
+
+
+    elk:
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-elk
+        ports:
+          - "5601:5601"
+          - "9200:9200"
+          - "5044:5044"
