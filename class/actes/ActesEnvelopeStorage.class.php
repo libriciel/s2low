@@ -42,7 +42,7 @@ class ActesEnvelopeStorage {
 	 * @throws Exception
 	 */
 	public function storeNextFile($transaction_info){
-		$this->logger->info(
+		$this->logger->debug(
 			"Storing envelope {$transaction_info['id']} - ".
 			"file {$transaction_info['file_path']}"
 		);
@@ -82,10 +82,10 @@ class ActesEnvelopeStorage {
 		while($sqlQuery->hasMoreResult()){
 			$actes_envelope = $sqlQuery->fetch();
 
-			$this->logger->info("Analysing file : {$actes_envelope['file_path']} {$actes_envelope['id']} - {$actes_envelope['submission_date']}");
+			$this->logger->debug("Analysing file : {$actes_envelope['file_path']} {$actes_envelope['id']} - {$actes_envelope['submission_date']}");
 			$filename = $this->actes_files_upload_root."/{$actes_envelope['file_path']}";
 			if (! file_exists($filename)){
-				$this->logger->info( "File not exists {$actes_envelope['file_path']} [PASS]");
+				$this->logger->debug( "File not exists {$actes_envelope['file_path']} [PASS]");
 				continue;
 			}
 			if ($this->openStackSwiftWrapper->fileExistsOnCloud(
@@ -97,7 +97,7 @@ class ActesEnvelopeStorage {
 					unlink($filename);
 					$this->logger->info( "File {$actes_envelope['file_path']} deleted");
 				} else {
-					$this->logger->info( "File {$actes_envelope['file_path']} will be deleted if confirm is ok");
+					$this->logger->debug( "File {$actes_envelope['file_path']} will be deleted if confirm is ok");
 				}
 			}
 			if ($sigtermHandler->isSigtermCalled()){
