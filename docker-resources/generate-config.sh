@@ -7,11 +7,16 @@ set -e
 cat <<EOF
 <?php
 
+<<<<<<< HEAD
 define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}/");
 define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}/");
 
 define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-tedetis@localhost}");
 
+=======
+define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}${S2LOW_URL_PATH:-}/");
+define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}${S2LOW_URL_PATH:-}/");
+>>>>>>> bc09cd2... prise en compte de S²LOW_URL_PATH et WEB_HTTP(s)_PORT
 define('DB_HOST', "${POSTGRES_HOST:-db}");
 define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");

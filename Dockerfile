@@ -141,6 +141,7 @@ COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 COPY ./ /var/www/s2low/
 
 #Composer
+# https://adamcod.es/2013/03/07/composer-install-vs-composer-update.html
 RUN composer install
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 

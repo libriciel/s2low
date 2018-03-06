@@ -45,6 +45,7 @@
 | Application S²LOW|`LETSENCRYPT_EMAIL`||Si la variable est présente, elle permet de créer un certificat `letsencrypt` et de lancer le renouvellement. La valeur doit être égale à `S2LOW_WEBSITE`|
 | Application S²LOW|`WEB_HTTP_PORT`|`80`|Permet de spécifier le port d'écoute sur la partie http|
 | Application S²LOW|`WEB_HTTPS_PORT`|`443`|Permet de spécifier le port d'écoute sur la partie http|
+| Application S²LOW|`S2LOW_URL_PATH`|null|Permet de spécifier un chemin d'accès à l'application|
 
 
 ## Pour les volumes
