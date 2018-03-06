@@ -20,7 +20,7 @@ if (isset($argv[2])){
 }
 
 
-if (empty($argv[2]) || $argv[2] != 'ok'){
+if (empty($argv[3]) || $argv[3] != 'ok'){
 	$confirm = false;
 } else {
 	$confirm = true;
