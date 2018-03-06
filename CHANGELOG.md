@@ -41,6 +41,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes LOG_FILE et LOG_LEVEL
 - Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
 - Ménage dans le fichier config.php
+- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
+- Docker : docker-compose.defaut.yml passe en version 3.5
+- Docker : utilisation des network, de la notion dependance et des volumes par défaut
 
 
 ### Retrait
