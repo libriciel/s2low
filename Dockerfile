@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libpq-dev \
     locales \
+    logrotate \
     ssmtp \
     sudo \
     supervisor \
@@ -134,6 +135,7 @@ RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
 
 
 COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
+COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 
 
 COPY ./ /var/www/s2low/

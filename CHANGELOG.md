@@ -7,6 +7,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.5] - 2018-xx-xx
 
+*Cette version nécessite une modification de la base de données*
+
 ### Corrections
 
 - Docker : les certificats TIME_STAMP appartiennent à www-data
@@ -19,6 +21,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Docker : ajout d'un fichier compose par defaut
 - Les URL de Libersign sont renseignées par défaut
+- Utilisation d'un stockage objet pour les ~actes #345 
 
 ### Évolutions
 
@@ -26,6 +29,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : contrôle d'accès à la base de données dans le entrypoint
 - Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
+- Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes LOG_FILE et LOG_LEVEL
 
 ### Retrait
 

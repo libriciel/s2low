@@ -12,6 +12,9 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp(){
 		parent::setUp();
 
@@ -55,7 +58,10 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 
         $this->getObjectInstancier()->set('Environnement',new Environnement($get,$post,$request,$session,$server));
         $this->getObjectInstancier()->set("SessionWrapper",$this->getObjectInstancier()->get("Environnement")->session());
-
+		$this->getObjectInstancier()->set("Monolog\Logger",new  Monolog\Logger('PHPUNIT'));
+		$testHandler = new Monolog\Handler\TestHandler();
+		$this->getObjectInstancier()->set("Monolog\Handler\TestHandler",$testHandler);
+		$this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
 	}
 
 	/**

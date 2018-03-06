@@ -90,7 +90,8 @@ CREATE TABLE actes_envelopes (
     file_path character varying(1024),
     file_size integer,
     return_mail character varying(1024),
-    warning_sent character(1) DEFAULT NULL::bpchar
+    warning_sent character(1) DEFAULT NULL::bpchar,
+    is_in_cloud boolean DEFAULT false NOT NULL
 );
 CREATE TABLE actes_envelope_serials (
     id integer DEFAULT nextval('actes_envelope_serials_id_seq'::regclass) NOT NULL,
@@ -482,6 +483,7 @@ CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transacti
 CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id);
 CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date);
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id);
+CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id);
 CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date);
 CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id);
 CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id);

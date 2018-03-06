@@ -14,7 +14,7 @@ class PesAllerStorage {
         $helios_files_upload_root,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Logger $logger
+        Monolog\Logger $logger
     ) {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
@@ -22,6 +22,9 @@ class PesAllerStorage {
         $this->logger = $logger;
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function storeAll(){
         $result = $this->heliosTransactionsSQL->getAllTransactionToSendInCloud();
         $sigtermHandler = new SigTermHandler();
@@ -32,28 +35,37 @@ class PesAllerStorage {
             }
         }
     }
-    
+
+	/**
+	 * @param $transaction_info
+	 * @return bool
+	 * @throws Exception
+	 */
     public function storeNextFile($transaction_info){
-        
-        $this->log(
-            "Transaction {$transaction_info['id']} - ".
-            "Fichier {$transaction_info['filename']} -".
-            " {$transaction_info['sha1']}"
+        $this->logger->info(
+            "Storing transaction {$transaction_info['id']} - ".
+            "file {$transaction_info['filename']} - ".
+            "{$transaction_info['sha1']}"
         );
         if ( ! file_exists($this->helios_files_upload_root."/".$transaction_info['sha1'])){
             return true;
         }
-        
-        echo "Depot du fichier : ".$this->helios_files_upload_root."/".$transaction_info['sha1'];
+        $this->logger->info("Storing file ".$this->helios_files_upload_root."/".$transaction_info['sha1']);
+
         $this->openStackSwiftWrapper->sendFile(
             self::CONTAINER_NAME,
             $this->helios_files_upload_root."/".$transaction_info['sha1']
             );
         
         $this->heliosTransactionsSQL->setTransactionInCloud($transaction_info['id']);
-        $this->log("Fichier {$transaction_info['sha1']} envoyé");
+        $this->logger->info("Stored file : {$transaction_info['sha1']}");
+        return true;
     }
 
+	/**
+	 * @param int $no_access_during_nb_days
+	 * @throws Exception
+	 */
     public function menageLocal($no_access_during_nb_days = 9999){
         $sigtermHandler = new SigTermHandler();
         $dh = opendir($this->helios_files_upload_root);
@@ -75,10 +87,10 @@ class PesAllerStorage {
                 self::CONTAINER_NAME,
                 $file
             )){
-                $this->log("Le fichier $file n'existe pas sur le cloud !");
+            	$this->logger->info("File $file not existing on cloud : not deleted");
                 continue;
             }
-            $this->log("Suppression du fichier $file");
+			$this->logger->info("Deleting file : $file");
             unlink($this->helios_files_upload_root."/".$file);
         }
         closedir($dh);
@@ -89,10 +101,6 @@ class PesAllerStorage {
         $nb_seconds_without_access = time() - $last_access_time;
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
-    }
-
-    private function log($message){
-        $this->logger->log("PesAllerStorage",$message);
     }
 
 }

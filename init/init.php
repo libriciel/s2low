@@ -42,6 +42,17 @@ $sqlQuery->setCredential(DB_USER,DB_PASSWORD);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 $objectInstancier = new ObjectInstancier();
+
+$logger = new Monolog\Logger("S2LOW");
+$logger->pushHandler(new Monolog\Handler\StreamHandler(LOG_FILE, LOG_LEVEL));
+$logger->pushProcessor(function ($record) {
+	$record['extra']['pid'] = getmypid();
+	return $record;
+});
+
+
+$objectInstancier->set('Monolog\Logger',$logger);
+
 $objectInstancier->{'SQLQuery'} = $sqlQuery;
 
 $objectInstancier->set('Database',DatabasePool::getInstance());
@@ -108,6 +119,7 @@ $objectInstancier->set('rgs_validca_path',RGS_VALIDCA_PATH);
 if (php_sapi_name() != 'cli'){
     $objectInstancier->get('Logger')->setLogType(Logger::TYPE_MEMORY);
 }
+
 
 
 $frontController = new FrontController($objectInstancier);

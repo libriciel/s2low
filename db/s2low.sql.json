@@ -289,6 +289,12 @@
                 "character_maximum_length": 1,
                 "is_nullable": "YES",
                 "column_default": "NULL::bpchar"
+            },
+            "is_in_cloud": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "actes_envelope_serials": {
@@ -3315,6 +3321,10 @@
         "mt_ui": {
             "tablename": "mail_transaction",
             "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
+        },
+        "ae_id_is_in_cloud": {
+            "tablename": "actes_envelopes",
+            "indexdef": "CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id)"
         },
         "actes_transactions_workflow_date_idx": {
             "tablename": "actes_transactions_workflow",
