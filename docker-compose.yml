@@ -7,7 +7,6 @@ services:
             - clamav
         environment:
             S2LOW_WEBSITE: ${S2LOW_WEBSITE}
-            S2LOW_WEBSITE_SSL: ${S2LOW_WEBSITE_SSL}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB: ${POSTGRES_DB}
@@ -34,8 +33,6 @@ services:
             IMAP_PASS: ${IMAP_PASS}
             PADES_VALID_URL: ${PADES_VALID_URL}
             PDF_STAMP_URL: ${PDF_STAMP_URL}
-
-
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${PHP_SESSION}:/var/lib/php/session
@@ -66,5 +63,3 @@ services:
 
     pdf-stamp:
         image: gitlab.libriciel.fr:4567/outils/pdf-stamp
-
-

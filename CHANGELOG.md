@@ -28,6 +28,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
 - Ménage dans le fichier config.php
 - Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
+- Docker : docker-compose.defaut.yml passe en version 3.5
+- Docker : utilisation des network, de la notion dependance et des volumes par défaut
 
 
 ### Retrait
