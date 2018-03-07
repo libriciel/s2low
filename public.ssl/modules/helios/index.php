@@ -325,7 +325,7 @@ ob_start();
 			<?php endif;?>
 			<label class="col-md-3 control-label" for="xml-nomfic-contain">La balise NomFic contient</label>
 			<div class="col-md-3">
-				<input id="xml-nomfic-contain" class="form-control" type="text" name="nomFic" size="20" maxlength="25"
+				<input id="xml-nomfic-contain" class="form-control" type="text" name="nomFic" size="20"
 					value="<?php echo (strlen($fnomFic) > 0)?$fnomFic:"" ?>" />
 			</div>
 
