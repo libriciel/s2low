@@ -22,6 +22,12 @@ if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","noreply@noreplyaaaaa.aaaa");
 }
 
+// Adresse email sur laquelle seront reçu les alertes critiques du système nécessitant une intervention immédiate
+// Possibilité de mettre plusieurs emails séparés par des virgules
+if (!defined("EMAIL_ADMIN_TECHNIQUE")){
+	define("EMAIL_ADMIN_TECHNIQUE","noreply@noreplyaaaaa.aaaa");
+}
+
 if(!defined("WEBSITE_TITLE")){
         define('WEBSITE_TITLE', "Tiers de télétransmission multiprotocoles");
 }

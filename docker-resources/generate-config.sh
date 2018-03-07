@@ -8,6 +8,9 @@ cat <<EOF
 
 define("WEBSITE","http://${S2LOW_WEBSITE:-http://localhost/}");
 define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-https://localhost}");
+
+define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-tedetis@localhost}");
+
 define('DB_HOST', "${POSTGRES_HOST:-localhost}");
 define('DB_USER', "${POSTGRES_USER:-tedetis}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-tedetis}");
@@ -74,5 +77,8 @@ define("IMAP_PASS","${IMAP_PASS}");
 define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
 define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
+
+define('HELIOS_OCRE_FILE_PATH','/data/tdt-workspace/helios/ocre/');
+
 
 EOF

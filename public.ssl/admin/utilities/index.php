@@ -98,6 +98,7 @@ ob_start()
 	<h2>Action</h2>
 	<a class="btn btn-primary" href='/admin/utilities/certificate_list.php'>Liste des certificats</a>
 	<a class="btn btn-primary" href='/admin/utilities/libersign.php'>Libersign</a>
+    <a class="btn btn-danger" href='/admin/utilities/send-critical-message.php'>Déclencher une erreur critique (test)</a>
 </div>
 
 
