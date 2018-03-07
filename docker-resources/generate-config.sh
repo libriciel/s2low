@@ -79,6 +79,7 @@ define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
 
 define('HELIOS_OCRE_FILE_PATH','/data/tdt-workspace/helios/ocre/');
+define('EXPORT_LOGS_DIRECTORY','/data/tdt-workspace/logs-export/');
 
 
 EOF
