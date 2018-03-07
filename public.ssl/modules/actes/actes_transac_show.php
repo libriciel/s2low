@@ -33,7 +33,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
   exit ();
 }
 
-$id = Helpers :: getVarFromGet("id");
+$id = intval(Helpers :: getVarFromGet("id"));
 if (empty($id) ){
 	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
