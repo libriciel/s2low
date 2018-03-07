@@ -169,7 +169,7 @@ L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes <?p
 <?php elseif ($transaction_info['type'] == 4 && $last_status_id == 4) : ?>
 L'envoi de la lettre d'observation (ou du refus de réponse) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
 <?php elseif ($transaction_info['type'] == 6 && $last_status_id == 4) : ?>
-L'annulation de l'acte <?php echo $transaction_info['number'] ?> a été acquitté.
+L'annulation de l'acte <?php echo $transaction_info['number'] ?> a été acquittée.
 <?php else:?>
 Réception de document pour l'acte  <?php echo $transaction_info['number'] ?>
 <?php endif; ?>

@@ -12,6 +12,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
 - Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
 - Ajout du HOMEDIR dans les script lancé par supervisord #327
+- typo (mail et état de l'annulation acquitéE) #354
 
 ## Ajouts
 
