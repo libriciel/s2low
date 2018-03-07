@@ -1,43 +1,22 @@
-version: '2.0'
+version: '3.5'
 
 services:
     web:
-        image: s2low:docker
-        links:
-            - db
-            - clamav
-            - ftp
-            - simulateur
-            - pades-valid
-            - pdf-stamp
-            - mail
-            - db_test
+        images: gitlab.libriciel.fr:4567/s2low:master
+        networks:
+          - dgcl
+          - dgfip
+          - services
         environment:
-            S2LOW_WEBSITE: "s2low.docker.libriciel.fr"
-            POSTGRES_USER: "s2lowuser"
-            POSTGRES_PASSWORD: "s2lowpassword"
-            POSTGRES_DB: "s2lowdb"
-            POSTGRES_HOST: "db"
-            HELIOS_FTP_SERVER: "ftp"
-            HELIOS_FTP_LOGIN: "ftpuser"
-            HELIOS_FTP_PASSWORD: "ftppassword"
-            SMTP_SERVER: mail
-            SMTP_PORT: 25
             PUBLISH_SIMULATEUR: "true"
-            IMAP_SERVER: mail
-            IMAP_LOGIN: tedetis@s2low.docker.libriciel.fr
-            IMAP_PASS: tedetis
-            POSTGRES_HOST_TEST: db_test
-            POSTGRES_USER_TEST: s2lowtestuser
-            POSTGRES_PASSWORD_TEST: s2lowtestpassword
         ports:
           - 80:80
           - 443:443
 
     db:
-        build:
-            context: ./docker-resources/
-            dockerfile: Dockerfile-postgres
+        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        networks:
+          - services
         environment:
             - POSTGRES_USER=s2lowuser
             - POSTGRES_PASSWORD=s2lowpassword
@@ -53,40 +32,69 @@ services:
             - POSTGRES_DB=s2lowdbtest
     clamav:
         image: mkodockx/docker-clamav
+        networks:
+          - services
 
     pades-valid:
-        image: gitlab.libriciel.fr:4567/outils/pades-valid
+        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.1.1
+        networks:
+          - services
 
     pdf-stamp:
-        image: gitlab.libriciel.fr:4567/outils/pdf-stamp
+        image: gitlab.libriciel.fr:4567/outils/pdf-stamp:1.3.0
+        networks:
+          - services
 
     ftp:
         image: mcreations/ftp
+        networks:
+          - dgfip
         environment:
-            FTP_USER: ftpuser
-            FTP_PASS: ftppassword
+            FTP_USER: helios
+            FTP_PASS: helios
             PASV_MIN_PORT: 65000
             PASV_MAX_PORT: 65004
         volumes:
-          - /tmp/simulateur:/data/ftpuser/
+          - dgfip:/data/helios/
 
     mail:
-        build:
-            context: ./docker-resources/
-            dockerfile: Dockerfile-mail
+        image: gitlab.libriciel.fr:4567/docker/docker-imap-devel:1.0
+        networks:
+          - services
         environment:
-            - MAILNAME=mail.docker.libriciel.fr
-            - MAIL_ADDRESS=tedetis@s2low.docker.libriciel.fr
-            - MAIL_PASS=tedetis
+            - MAILNAME=s2low.docker.libriciel.fr
+            - MAIL_ADDRESS=s2low@s2low.docker.libriciel.fr
+            - MAIL_PASS=password
+
+    mailsec:
+        image: gitlab.libriciel.fr:4567/docker/mail-master:1.0
+        networks:
+          - services
+        environment:
+            - DOMAINS=s2low.docker.libriciel.fr
+            - POSTFIX_HOSTNAME=s2low-mailsec.docker.libriciel.fr
+            - MAILS=s2low-mailsec@s2low.docker.libriciel.fr
+            - NOPASS=true
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
-        links:
-             - ftp:ftp
-             - mail:mail
+        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.2
+        networks:
+          - dgfip
+          - dgcl
+          - services
+        depends_on:
+          - ftp
         environment:
             MAIL_HOST: mail
             MAIL_PORT: 25
-            MAIL_FROM: tedetis@s2low.docker.libriciel.fr
+            MAIL_FROM: dgcl@s2low.docker.libriciel.fr
         volumes:
-            - /tmp/simulateur/:/var/www/simulateur-helios/workspace
+            - dgfip:/var/www/simulateur-helios/workspace
+
+networks:
+  dgcl:
+  dgfip:
+  services:
+
+volumes:
+  dgfip:

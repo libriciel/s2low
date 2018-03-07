@@ -1,80 +1,50 @@
 #! /bin/bash
 set -e
 
-# Utiliser pour créer un fichier de settings en fonction des variables d'environnement (envoyé par Docker)
+# Utiliser pour creer un fichier de settings en fonction des variables d'environnement (envoye par Docker)
+#TODO : integrer les variables WEB_HTTP_PORT et WEB_HTTPS_PORT
 
 cat <<EOF
 <?php
 
-define("WEBSITE","http://${S2LOW_WEBSITE:-http://localhost/}");
-define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-https://localhost}");
+define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}${S2LOW_URL_PATH:-}/");
+define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}${S2LOW_URL_PATH:-}/");
+define('DB_HOST', "${POSTGRES_HOST:-db}");
+define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
+define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");
+define('DB_DATABASE', "${POSTGRES_DB:-s2lowdb}");
 
-define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-tedetis@localhost}");
+define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-dbtest}");
+define('DB_USER_TEST', "${POSTGRES_USER_TEST:-s2lowusertest}");
+define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-s2lowpasswordtest}");
+define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-s2lowdbtest}");
 
-define('DB_HOST', "${POSTGRES_HOST:-localhost}");
-define('DB_USER', "${POSTGRES_USER:-tedetis}");
-define('DB_PASSWORD', "${POSTGRES_PASSWORD:-tedetis}");
-define('DB_DATABASE', "${POSTGRES_DB:-tedetis}");
-
-
-define('DB_HOST_TEST', "${POSTGRES_HOST_TEST:-localhost}");
-define('DB_USER_TEST', "${POSTGRES_USER_TEST:-tedetis}");
-define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-tedetis}");
-define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-tedetis}");
-
-
-define('TRACE_FILE_PATH','/tmp/slow.log');
-define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
-define('HELIOS_FILES_UPLOAD_ROOT', '/data/tdt-workspace/helios/sending/');
-define('HELIOS_RESPONSES_ROOT', '/data/tdt-workspace/helios/response/');
-define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
-define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
-define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");
-define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/data/tdt-workspace/helios/response_tmp/');
-
-define('MAIL_FILES_UPLOAD_ROOT','/data/tdt-workspace/mail/');
-
-
-define('TIMESTAMPING_CERT', '/etc/apache2/ssl/s2low_timestamp_cert.pem');
-define('TIMESTAMPING_PRIV_KEY', '/etc/apache2/ssl/s2low_timestamp_key.pem');
-define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/apache2/ssl/tedetis_timestamp_key.pass');
-
-define("RGS_VALIDCA_PATH","/etc/s2low/ssl/validca/");
-define("EXTENDED_VALIDCA_PATH","/etc/s2low/ssl/validca/");
-define("OPENSSL_PATH","/usr/bin/openssl");
-
-
-define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-localhost}");
+define("HELIOS_FTP_SERVER","${HELIOS_FTP_SERVER:-ftp}");
 define("HELIOS_FTP_PORT","${HELIOS_FTP_PORT:-21}");
 define("HELIOS_FTP_PASSIVE_MODE", ${HELIOS_FTP_PASSIVE_MODE:-false});
 define("HELIOS_SENDING_DESTINATION","${HELIOS_SENDING_DESTINATION:-/entree/}");
 define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/sortie/}");
-define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN}");
-define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD}");
+define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN:-helios}");
+define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD:-helios}");
 
-define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads/');
-define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
-define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
-define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
+define('ACTES_TDT_MAIL_ADDRESS', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
+define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
+define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
+define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
 
-define('ACTES_TDT_MAIL_ADDRESS', "${IMAP_LOGIN:-mail@tedetis.org}");
-define('ACTES_IMAP_SERVER', "${IMAP_SERVER:-mail}");
-define('ACTES_IMAP_LOGIN', "${IMAP_LOGIN:-mail@tedetis.org}");
-define('ACTES_IMAP_PASSWORD', "${IMAP_PASS:-password}");
-
-define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}");
+define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}:-https://identity.fr1.cloudwatt.com/v2.0}");
 define("OPENSTACK_USERNAME","${OPENSTACK_USERNAME}");
 define("OPENSTACK_PASSWORD","${OPENSTACK_PASSWORD}");
 define("OPENSTACK_TENANT","${OPENSTACK_TENANT}");
 define("OPENSTACK_REGION","${OPENSTACK_REGION}");
 define("OPENSTACK_SWIFT_CONTAINER_PREFIX","${OPENSTACK_SWIFT_CONTAINER_PREFIX}");
 
-define("IMAP_SERVER","${IMAP_SERVER}");
-define("IMAP_LOGIN","${IMAP_LOGIN}");
-define("IMAP_PASS","${IMAP_PASS}");
+define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
+define("IMAP_LOGIN","${IMAP_LOGIN:-s2low-mailsec@s2low.docker.libriciel.fr}");
+define("IMAP_PASS","${IMAP_PASS:-s2low-mailsec}");
 
-
-define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
+#A v�rifier
+#define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
 define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
 

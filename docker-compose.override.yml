@@ -1,27 +1,29 @@
-version: '2.0'
+version: '3.5'
 
 services:
     web:
         build: .
-        links:
-            - simulateur
-            - ftp:ftp
-            - db_test:db_test
+        networks:
+          - dgcl
+          - dgfip
+          - services
         ports:
             - "${WEB_HTTP_PORT}:80"
             - "${WEB_HTTPS_PORT}:443"
-        volumes:
-            - .:/var/www/s2low
+        #volumes:
+        #    - .:/var/www/s2low
         environment:
             POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST}
             POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
             POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST}
             POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
+            WEB_HTTP_PORT: ${WEB_HTTP_PORT}
+            WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
 
     db_test:
-        build:
-            context: ./docker-resources/
-            dockerfile: Dockerfile-postgres
+        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        networks:
+          - services
         environment:
             - POSTGRES_USER=${POSTGRES_USER_TEST}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST}
@@ -31,6 +33,8 @@ services:
 
     phppgadmin:
         image: keepitcool/phppgadmin
+        networks:
+          - services
         environment:
             - DB_HOST=db
             - DB_PORT=5432
@@ -38,42 +42,3 @@ services:
             - db:db
         ports:
             - "${PHPPGADMIN_HTTP_PORT}:80"
-
-    simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:master
-        #image: simulateurhelios_web
-        links:
-            - ftp:ftp
-            - mail:mail
-        ports:
-            - ${SIMULATEUR_SITE_PORT}:80
-        volumes:
-            - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/var/www/simulateur-helios/workspace
-        environment:
-            MAIL_HOST: mail
-            MAIL_PORT: 25
-            MAIL_FROM: mail@tedetis.org
-
-    ftp:
-        image: mcreations/ftp
-        environment:
-            FTP_USER: ${HELIOS_FTP_LOGIN}
-            FTP_PASS: ${HELIOS_FTP_PASSWORD}
-            PASV_MIN_PORT: ${PASV_MIN_PORT}
-            PASV_MAX_PORT: ${PASV_MAX_PORT}
-        volumes:
-          - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${HELIOS_FTP_LOGIN}/
-        ports:
-          - "${FTP_PORT}:21"
-          - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
-
-    mail:
-        build:
-            context: ./docker-resources/
-            dockerfile: Dockerfile-mail
-        ports:
-            - "10143:143"
-        environment:
-            - MAILNAME=tedetis.org
-            - MAIL_ADDRESS=mail@tedetis.org
-            - MAIL_PASS=password

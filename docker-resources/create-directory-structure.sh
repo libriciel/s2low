@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Création de l'arborescence du workspace
+# Crï¿½ation de l'arborescence du workspace
 mkdir -p /data/tdt-workspace/actes && \
 mkdir -p /data/tdt-workspace/helios && \
 mkdir -p /data/tdt-workspace/mail && \

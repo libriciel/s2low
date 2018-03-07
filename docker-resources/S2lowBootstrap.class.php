@@ -169,7 +169,7 @@ class S2lowBootstrap {
 	}
 
 	private function log($message){
-		echo "[".date("Y-m-d H:i:s")."][S²LOW bootstrap] $message\n";
+		echo "[".date("Y-m-d H:i:s")."][S2LOW bootstrap] $message\n";
 	}
 
 	private function getHostname(){

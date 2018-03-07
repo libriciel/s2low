@@ -1,27 +1,20 @@
-version: '2.0'
+version: '3.5'
 
 services:
     web:
-        links:
-            - db
-            - clamav
+        networks:
+          - openstack
         environment:
             S2LOW_WEBSITE: ${S2LOW_WEBSITE}
-            S2LOW_WEBSITE_SSL: ${S2LOW_WEBSITE_SSL}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_HOST: ${POSTGRES_HOST}
-            HELIOS_FTP_SERVER: ${HELIOS_FTP_SERVER}
-            HELIOS_FTP_PORT: ${HELIOS_FTP_PORT}
             HELIOS_FTP_PASSIVE_MODE: ${HELIOS_FTP_PASSIVE_MODE}
-            HELIOS_SENDING_DESTINATION: ${HELIOS_SENDING_DESTINATION}
-            HELIOS_FTP_RESPONSE_SERVER_PATH: ${HELIOS_FTP_RESPONSE_SERVER_PATH}
             HELIOS_FTP_LOGIN: ${HELIOS_FTP_LOGIN}
             HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD}
             SMTP_SERVER: ${SMTP_SERVER}
             SMTP_PORT: ${SMTP_PORT}
-            LIBERSIGN_INSTALLER: ${LIBERSIGN_INSTALLER}
             PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR}
             OPENSTACK_AUTHENTICATION_URL_V2: ${OPENSTACK_AUTHENTICATION_URL_V2}
             OPENSTACK_USERNAME: ${OPENSTACK_USERNAME}
@@ -29,21 +22,21 @@ services:
             OPENSTACK_TENANT: ${OPENSTACK_TENANT}
             OPENSTACK_REGION: ${OPENSTACK_REGION}
             OPENSTACK_SWIFT_CONTAINER_PREFIX: ${OPENSTACK_SWIFT_CONTAINER_PREFIX}
-            IMAP_SERVER: ${IMAP_SERVER}
+            ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN}
+            ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD}
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
-            PADES_VALID_URL: ${PADES_VALID_URL}
-            PDF_STAMP_URL: ${PDF_STAMP_URL}
             EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
-
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${PHP_SESSION}:/var/lib/php/session
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
+            - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
+
     db:
-        build:
-            context: ./docker-resources/
-            dockerfile: Dockerfile-postgres
+        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        networks:
+          - services
         environment:
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -53,18 +46,81 @@ services:
 
     openstack:
         image: serverascode/swift-onlyone
+        networks:
+          - openstack
         volumes:
-            - /Users/eric/data_docker/s2low/openstack:/srv
+            - ${VOL_OPENSTACK}:/srv
         ports:
             - 10003:8080
 
+    simulateur:
+        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.2
+        networks:
+          - dgfip
+          - dgcl
+          - services
+        depends_on:
+          - ftp
+        ports:
+            - ${SIMULATEUR_SITE_PORT}:80
+        volumes:
+            - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/var/www/simulateur-helios/workspace
+        environment:
+            MAIL_HOST: mail
+            MAIL_PORT: 25
+            MAIL_FROM: "dgcl@${MAILNAME}"
+
+    ftp:
+        image: mcreations/ftp
+        networks:
+          - dgfip
+        environment:
+            FTP_USER: ${HELIOS_FTP_LOGIN}
+            FTP_PASS: ${HELIOS_FTP_PASSWORD}
+            PASV_MIN_PORT: ${PASV_MIN_PORT}
+            PASV_MAX_PORT: ${PASV_MAX_PORT}
+        volumes:
+          - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${HELIOS_FTP_LOGIN}/
+        ports:
+          - "${FTP_PORT}:21"
+          - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
+
+    mail:
+        image: gitlab.libriciel.fr:4567/docker/docker-imap-devel:1.0
+        networks:
+          - services
+        environment:
+            - MAILNAME=${MAILNAME}
+            - MAIL_ADDRESS=${ACTES_IMAP_LOGIN}
+            - MAIL_PASS=${ACTES_IMAP_PASSWORD}
+
+    mailsec:
+        image: gitlab.libriciel.fr:4567/docker/mail-master:1.0
+        networks:
+          - services
+        environment:
+            - DOMAINS=${MAILNAME}
+            - POSTFIX_HOSTNAME=s2low-mailsec.libriciel.fr
+            - MAILS=${IMAP_LOGIN}
+            - NOPASS=true
     clamav:
         image: mkodockx/docker-clamav
+        networks:
+          - services
 
     pades-valid:
-        image: gitlab.libriciel.fr:4567/outils/pades-valid
+        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.1.1
+        networks:
+          - services
 
     pdf-stamp:
-        image: gitlab.libriciel.fr:4567/outils/pdf-stamp
+        image: gitlab.libriciel.fr:4567/outils/pdf-stamp:1.3.0
+        networks:
+          - services
 
 
+networks:
+  dgcl:
+  dgfip:
+  services:
+  openstack:
