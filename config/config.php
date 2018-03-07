@@ -29,7 +29,7 @@ if (!defined("EMAIL_ADMIN_TECHNIQUE")){
 }
 
 if(!defined("WEBSITE_TITLE")){
-        define('WEBSITE_TITLE', "Tiers de tï¿½lï¿½transmission multiprotocoles");
+        define('WEBSITE_TITLE', "Tiers de téléransmission multiprotocoles");
 }
 
 if(!defined('WEBSITE')){
@@ -46,7 +46,7 @@ if(!defined('WEBMASTER')){
 
 // Adresse du From des emails ï¿½mis
 if(!defined('TDT_FROM_EMAIL')){
-        define('TDT_FROM_EMAIL', "Tiers de tï¿½lï¿½transmission <tedetis@s2low.docker.libriciel.fr>");
+        define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@s2low.docker.libriciel.fr>");
 }
 
 if (!defined('LOG_FILE')){
@@ -469,7 +469,7 @@ if(!defined('HELIOS_GENERATED_FILE_PERMISSION')){
 }
 
 if (!defined('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE')){
-	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rï¿½le invalide ï¿½ configurer');
+	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rôle invalide à configurer');
 }
 
 if (! defined('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME')){
@@ -552,13 +552,13 @@ if(!defined('IMAP_SERVER')){
 }
 
 if(!defined('MAIL_MESSAGE')){
-	define('MAIL_MESSAGE',"Vous avez reï¿½u un courrier recommandï¿½ par S2LOW");
+	define('MAIL_MESSAGE',"Vous avez reçu un courrier recommandé par S2LOW");
 }
 
 if(!defined('MAIL_TEXT')){
 	define('MAIL_TEXT',"Bonjour,
     
-Un courrier recommandï¿½ avec d'ï¿½ventuelles piï¿½ces jointes vous a ï¿½tï¿½ transmis par la plateforme sï¿½curisï¿½e de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accï¿½der au courrier recommandï¿½ et confirmer la rï¿½ception : accï¿½s au courrier recommandï¿½.");
+Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
 }
 /*************************
  * Paramï¿½tre module DIA
