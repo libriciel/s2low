@@ -34,7 +34,7 @@ services:
             IMAP_PASS: ${IMAP_PASS}
             PADES_VALID_URL: ${PADES_VALID_URL}
             PDF_STAMP_URL: ${PDF_STAMP_URL}
-
+            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
 
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace

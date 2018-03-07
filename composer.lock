@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8082628ee612dc9f4126eb9d9daeb532",
+    "content-hash": "8bec62044630b1fd429590a942ee7844",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -225,6 +225,48 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
+        },
+        {
+            "name": "mtdowling/supervisor-event",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mtdowling/php-supervisor-event.git",
+                "reference": "28a4a938ddce10a00aa22b052e12106610c3fe7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mtdowling/php-supervisor-event/zipball/28a4a938ddce10a00aa22b052e12106610c3fe7a",
+                "reference": "28a4a938ddce10a00aa22b052e12106610c3fe7a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "component",
+            "autoload": {
+                "psr-0": {
+                    "Mtdowling\\Supervisor": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Wires callback functions to Supervisor events",
+            "keywords": [
+                "event",
+                "supervisor",
+                "supervisord"
+            ],
+            "time": "2012-07-22T22:14:43+00:00"
         },
         {
             "name": "psr/log",

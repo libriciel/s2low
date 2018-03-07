@@ -50,6 +50,15 @@ $logger->pushProcessor(function ($record) {
 	return $record;
 });
 
+$mailHandler = new Monolog\Handler\NativeMailerHandler(
+	[EMAIL_ADMIN_TECHNIQUE],
+	"Erreur critique sur ".WEBSITE,
+	TDT_FROM_EMAIL,
+	Monolog\Logger::CRITICAL
+);
+$mailHandler->setEncoding('iso-8859-1');
+$logger->pushHandler($mailHandler);
+
 
 $objectInstancier->set('Monolog\Logger',$logger);
 

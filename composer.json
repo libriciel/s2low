@@ -26,7 +26,8 @@
     "libriciel/tdt-lib-actes": "*",
     "tedivm/fetch": "^0.7.1",
     "symfony/filesystem": "^3.4",
-    "monolog/monolog": "^1.23"
+    "monolog/monolog": "^1.23",
+    "mtdowling/supervisor-event": "^1.0"
   },
 
   "require-dev": {
