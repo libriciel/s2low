@@ -5,7 +5,30 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
-## [3.0.5] - 2018-xx-xx
+## [3.0.6] - 2018-xx-xx
+
+### Corrections
+
+
+### Ajouts
+
+
+### Évolutions
+
+- Ménage dans le fichier config.php
+- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
+- Docker : docker-compose.defaut.yml passe en version 3.5
+- Docker : utilisation des network, de la notion dependance et des volumes par défaut
+
+
+### Retrait
+
+- Suppression du fichier LocalSettings.php devenu inutile
+
+
+## [3.0.5] - 2018-03-06
+
+*Cette version nécessite une modification de la base de données*
 
 ### Corrections
 
@@ -19,6 +42,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Docker : ajout d'un fichier compose par defaut
 - Les URL de Libersign sont renseignées par défaut
+- Utilisation d'un stockage objet pour les ~Actes #345 
 
 ### Évolutions
 
@@ -26,16 +50,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : contrôle d'accès à la base de données dans le entrypoint
 - Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
-- Ménage dans le fichier config.php
-- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
-- Docker : docker-compose.defaut.yml passe en version 3.5
-- Docker : utilisation des network, de la notion dependance et des volumes par défaut
-
+- Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes LOG_FILE et LOG_LEVEL
 
 ### Retrait
 
 - Docker : suppression des paquets pdfsam et pdftk
-- Suppression du fichier LocalSettings devenu inutile
 
 
 ## [3.0.4] - 2018-02-21

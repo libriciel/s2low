@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
     web:
-        image: s2low:docker
+        images: gitlab.libriciel.fr:4567/s2low:master
         networks:
           - dgcl
           - dgfip
