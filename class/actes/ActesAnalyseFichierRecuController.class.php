@@ -363,12 +363,12 @@ class ActesAnalyseFichierRecuController {
     }
 
     public function traitementARAnnulation(MessageMetierARAnnulation $fichierXML){
-        $this->log("Annulation trouvé pour l'Acte : " . $fichierXML->id_actes);
+        $this->log("Annulation trouvée pour l'Acte : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
 
         $this->log("{$fichierXML->id_actes} -> transaction_id = $transaction_id");
-        $message = "Annulation recu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
+        $message = "Annulation reçue par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
