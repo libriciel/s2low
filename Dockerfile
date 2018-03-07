@@ -46,6 +46,7 @@ RUN pecl install xdebug-2.5.3 && \
 
 
 COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
+COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 
 RUN a2enmod \
     expires \

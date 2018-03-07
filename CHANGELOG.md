@@ -2,7 +2,7 @@
 
 Toutes les modifications apportées au projet seront documentées dans ce fichier.
 
-Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) 
+Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/)
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.6] - 2018-xx-xx
@@ -22,6 +22,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 ### Ajouts
+
+- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
+- Surveillance des échecs de lancement des process par supervisord
 
 
 ### Évolutions
@@ -53,7 +56,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Docker : ajout d'un fichier compose par defaut
 - Les URL de Libersign sont renseignées par défaut
-- Utilisation d'un stockage objet pour les ~Actes #345 
+- Utilisation d'un stockage objet pour les ~Actes #345
 
 ### Évolutions
 
@@ -104,9 +107,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ### Évolutions
 
-- Modification de la position du tampon ~Actes 
+- Modification de la position du tampon ~Actes
 
-## [3.0.2] 
+## [3.0.2]
 
 ### Évolutions
 
@@ -117,7 +120,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Typo actes-reception-fichier (Début -> Fin) ~Actes #338
 - Reception des actes ; Expunge de la boite à la fin du processus pour éviter les locks ~Actes #337
-- Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331 
+- Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331
 - Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
 - Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
 - Typo dans le nom d'un script supervisor ~Actes #328
@@ -132,11 +135,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaise information lors de la création des PES via l'APIs
 - Augmentation de la longueur du type de fichier inclu dans actes de 64 à 512 car les réponses de la préfecture peuvent inclure des fichier avec des types très long #320 ~Actes
 - vérification de la balise de scellement sur les annexes (tdt-lib-actes) #319 ~Actes
-- problème si les fichiers recu sur Helios sont plusieurs fois en erreur #321 ~Helios 
+- problème si les fichiers recu sur Helios sont plusieurs fois en erreur #321 ~Helios
 - correction d'un problème sur l'api admin_user_edit_handler #317  
 - nettoyage de fichier temporaire (analyse fihcier actes)
 
-## [3.0.0] - 2017-12-15 
+## [3.0.0] - 2017-12-15
 
 ### Corrections
 
@@ -150,7 +153,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ### Corrections
 
-- une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci 
+- une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci
     était encore dans un groupe #295
 - Le typage disparraissait après avoir posté un actes provoquant une erreur (doublon) #296
 - Connexion impossible après modification en masse de certificat partagé #293
@@ -166,17 +169,17 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ### Évolutions
 
-- Vérification du content-type du fichier contenant les SIREN #265 
+- Vérification du content-type du fichier contenant les SIREN #265
 - Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
 - Mise à jour du schéma XSD des PES en version 5.5 (applicable dès fin novembre 2017)
 - Console admin Helios: ajout d'infos dans le mail des transactions à l'état transmis ~Helios #306
 
-  
+
 ### Retrait
 
 - Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
 
-   
+
 ## [3.0.0-rc3] - 2017-11-15
 
 ### Évolutions
@@ -217,7 +220,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
 
 
-## [3.0.0-rc1] - 2017-09-18 
+## [3.0.0-rc1] - 2017-09-18
 
 ### Ajouts
 
@@ -234,7 +237,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
 - Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
 - Horodatage systématique des mails de notification  #181 ~Actes
-- Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225 
+- Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225
 - Ajout d'une infobulle pour indiquer que le certificat de l'utilisateur connecté expire bientôt #93
 - Ajout de cette information dans la liste des utilisateurs (certificat expiré ou dans moins de 30 jours) #93
 - Validation de la signature PADES des ~Actes #176
@@ -246,29 +249,29 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ### Évolutions
 
-- La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~Administration 
+- La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~Administration
 - Les admin sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
 - modification du libellé des natures d'actes dans le filtre de recherche #163 ~Actes
-- Sur la visualtion d'une transaction, le lien de téléchargement des archives transmisses passent du titre (Fichiers contenus dans l'archive transmise) en bas 
+- Sur la visualtion d'une transaction, le lien de téléchargement des archives transmisses passent du titre (Fichiers contenus dans l'archive transmise) en bas
 du tableau des fichiers contenus dans l'archive ~Actes
 - Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
 - Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
 - Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~Administration
 - Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
-- La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur 
+- La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur
 ou le message de passage dans l'état #110 ~Helios  
-- La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification 
+- La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification
 d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
 - Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
-- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle 
+- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle
 <num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
 - Mise en place du nouveau schéma Actes V2.2 #177 ~Actes
-- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes 
+- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
 - Modification en masse des certificats partagés #31 ~Administration
 - Limitation de la taille des pièces jointes dans les mails sortants à 10Mo   
-- Possibilité d'envoyer des réponses (flux 3 et 4) en JPG et PNG (en plus de XML et PDF). #194 ~Actes 
+- Possibilité d'envoyer des réponses (flux 3 et 4) en JPG et PNG (en plus de XML et PDF). #194 ~Actes
 
 ### Corrections
 
@@ -279,11 +282,11 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
 - Correction de l'orthographe des notes de mise à jour de version #89
 - Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~Administration
-- La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~Mailsec 
-- Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes 
-- Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté 
-- Remplacement complet du système de tampon des actes #202 ~Actes 
-- Correction d'un problème d'encodage dans le traitement par lot #211 ~Actes 
+- La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~Mailsec
+- Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes
+- Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté
+- Remplacement complet du système de tampon des actes #202 ~Actes
+- Correction d'un problème d'encodage dans le traitement par lot #211 ~Actes
 
 ### Retraits
 
@@ -309,21 +312,21 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Suppression de l'autocomplete sur les mots de passe de la création d'utilisateur (bug Firefox)
 - Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR)) ~Actes
 - Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide ~Helios
-- Correction de fautes d'orthographes 
+- Correction de fautes d'orthographes
 
 ## [2.6.4] - 2017-06-14
 
 ### Corrections
 
-- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple ~Actes 
- 
+- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple ~Actes
+
 ## [2.6.3] - 2017-06-09
 
- 
+
 ### Évolutions
 
 - Mise à jour du schéma PES en version 5.3 ~Helios
- 
+
 ## [2.6.2] - 2017-06-08
 
 ## Ajouts
@@ -331,7 +334,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 ### Evolutions
 - création d'un pipeline d'intégration continue
-- les fichiers version.txt et revision.txt sont remplacé par manifest.txt géré automatiquement par gitlab 
+- les fichiers version.txt et revision.txt sont remplacé par manifest.txt géré automatiquement par gitlab
 - la nouvelle bannière introduite en version 2.5.0 devient la bannière par défaut
 - modification du système de mise à jour de la base de données.
 
@@ -351,7 +354,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 ## [2.6.0] - 2017-04-13
 
 ### Evolutions
-- Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur 
+- Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur
 (NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
 - Le script de migration (script/migration/v2.5-to-v2.6.php) permet  de mettre à jour la base de données.
 
