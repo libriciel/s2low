@@ -1,4 +1,7 @@
 <?php
+/* Quel bordel, des fois on appel config.php, des fois init.php. Je rajoute ca la a cause de Monolog */
+require_once __DIR__."/../vendor/autoload.php";
+
 require_once( __DIR__ . "/LoadLocalSettings.php");
 
 
@@ -40,6 +43,13 @@ if(!defined('TDT_FROM_EMAIL')){
         define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@s2low.docker.libriciel.fr>");
 }
 
+if (!defined('LOG_FILE')){
+    define('LOG_FILE','/data/log/s2low.log');
+}
+
+if (!defined('LOG_LEVEL')){
+    define('LOG_LEVEL',Monolog\Logger::INFO);
+}
 
 // Paramètres base de données
 if(!defined('DB_HOST')){

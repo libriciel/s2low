@@ -42,6 +42,26 @@ $sqlQuery->setCredential(DB_USER,DB_PASSWORD);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 $objectInstancier = new ObjectInstancier();
+
+$logger = new Monolog\Logger("S2LOW");
+$logger->pushHandler(new Monolog\Handler\StreamHandler(LOG_FILE, LOG_LEVEL));
+$logger->pushProcessor(function ($record) {
+	$record['extra']['pid'] = getmypid();
+	return $record;
+});
+
+$mailHandler = new Monolog\Handler\NativeMailerHandler(
+    	[EMAIL_ADMIN_TECHNIQUE],
+    	"Erreur critique sur ".WEBSITE,
+    	TDT_FROM_EMAIL,
+    	Monolog\Logger::CRITICAL
+    );
+$mailHandler->setEncoding('iso-8859-1');
+$logger->pushHandler($mailHandler);
+
+
+$objectInstancier->set('Monolog\Logger',$logger);
+    
 $objectInstancier->{'SQLQuery'} = $sqlQuery;
 
 $objectInstancier->set('Database',DatabasePool::getInstance());
