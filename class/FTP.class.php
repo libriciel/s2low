@@ -67,16 +67,19 @@ class FTP {
 			}
 
 
-            $err = ftp_get($ftp, "$local_path/$file", "$file", FTP_ASCII);
+            $ftp_get_result = ftp_get($ftp, $tmp_file, "$file", FTP_ASCII);
 
-            if (!$err){
-                if (!rename($tmp_file,"$local_path/$file")){
-                    throw new Exception("Impossible de déplacer le fichier récupérer sur le FTP !");
-                }
+            if (!$ftp_get_result){
+             	throw new Exception("Impossible de récupérer le fichier $file pour le mettre sur $tmp_file sur le FTP {$this->host}");
             }
 
-			echo $i." : ".$file . " récupéré : ".($err?"SUCCES":"ECHEC")."\n";
-			if ($err && $this->delete){
+			$rename_result = rename($tmp_file,"$local_path/$file");
+			if (!$rename_result){
+				throw new Exception("Impossible de déplacer le fichier $tmp_file vers $local_path/$file");
+			}
+
+			echo $i." : ".$file . " récupéré : ".($ftp_get_result?"SUCCES":"ECHEC")."\n";
+			if ($this->delete){
 				ftp_delete($ftp, $file);
 			}
             if ($sigtermHandler->isSigtermCalled()){
