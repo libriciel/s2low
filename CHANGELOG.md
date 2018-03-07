@@ -13,6 +13,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
 - Ajout du HOMEDIR dans les script lancé par supervisord #327
 - typo (mail et état de l'annulation acquitéE) #354
+- actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
 
 ## Ajouts
 
