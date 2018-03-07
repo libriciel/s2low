@@ -27,6 +27,7 @@ services:
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
             EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
+            MAILNAME: ${MAILNAME}
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${PHP_SESSION}:/var/lib/php/session
