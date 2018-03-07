@@ -35,10 +35,10 @@ define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/so
 define('HELIOS_FTP_LOGIN',"${HELIOS_FTP_LOGIN:-helios}");
 define('HELIOS_FTP_PASSWORD',"${HELIOS_FTP_PASSWORD:-helios}");
 
-define('ACTES_TDT_MAIL_ADDRESS', "${IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
-define('ACTES_IMAP_HOST', "${IMAP_SERVER:-mail}");
-define('ACTES_IMAP_LOGIN', "${IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
-define('ACTES_IMAP_PASSWORD', "${IMAP_PASS:-password}");
+define('ACTES_TDT_MAIL_ADDRESS', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
+define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
+define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
+define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
 
 define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}:-https://identity.fr1.cloudwatt.com/v2.0}");
 define("OPENSTACK_USERNAME","${OPENSTACK_USERNAME}");
