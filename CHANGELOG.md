@@ -7,6 +7,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.6] - 2018-xx-xx
 
+## Corrections
+
+- Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
+
 ## Ajouts
 
 - Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique 
