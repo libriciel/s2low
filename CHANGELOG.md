@@ -7,6 +7,24 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.6] - 2018-xx-xx
 
+## Corrections
+
+- Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
+- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
+- Ajout du HOMEDIR dans les script lancé par supervisord #327
+- typo (mail et état de l'annulation acquitéE) #354
+- actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
+- Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
+
+## Corrections
+
+- Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
+- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
+- Ajout du HOMEDIR dans les script lancé par supervisord #327
+- typo (mail et état de l'annulation acquitéE) #354
+- actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
+- Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
+
 ## Ajouts
 
 - Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique 
@@ -88,7 +106,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Correction dans la requete SQL dans le script archive_all_transaction.php pour les actes sur le délais avant versement
 - Harmonisation des noms des programmes dans supervisord
 - Certain chemin d'execution laissait des fichier s2low_xades dans /tmp/ ~Helios #348
-- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysé avant d'être entièrement récupéré ~Helios #341
+- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysé avant d'être entièrement récupéré ~Helios #341 (correction invalide, reprise de la correction en version 3.0.6)
 - Correction d'un problème de sécurité
 
 ### Ajouts

@@ -42,3 +42,4 @@ services:
             - db:db
         ports:
             - "${PHPPGADMIN_HTTP_PORT}:80"
+

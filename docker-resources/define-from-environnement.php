@@ -21,8 +21,7 @@ if (! file_exists("/etc/s2low/DockerSettings.php")) {
 	}
 
 	exec("/bin/bash ". __DIR__."/create-directory-structure.sh");
-
+	return;
 }
 
-$contenu=file_get_contents("/etc/s2low/DockerSettings.php");
-echo "<br><br>Contenu du fichier : <br><pre>$contenu</pre>";
+

@@ -1,5 +1,7 @@
 FROM php:5.5-apache
 
+# add https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
+
 RUN apt-get update && apt-get install -y \
     clamdscan \
     cron \
