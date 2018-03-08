@@ -3,9 +3,10 @@ version: '3.5'
 services:
     web:
         image: gitlab.libriciel.fr:4567/s2low/s2low:master
-        links:
-            - simulateur
-            - ftp:ftp
+        networks:
+          - dgcl
+          - dgfip
+          - services
         ports:
             - "80:80"
             - "443:443"
