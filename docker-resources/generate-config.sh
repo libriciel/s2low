@@ -32,7 +32,7 @@ define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
 define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
 
-define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2}:-https://identity.fr1.cloudwatt.com/v2.0}");
+define("OPENSTACK_AUTHENTICATION_URL_V2","${OPENSTACK_AUTHENTICATION_URL_V2:-https://identity.fr1.cloudwatt.com/v2.0}");
 define("OPENSTACK_USERNAME","${OPENSTACK_USERNAME}");
 define("OPENSTACK_PASSWORD","${OPENSTACK_PASSWORD}");
 define("OPENSTACK_TENANT","${OPENSTACK_TENANT}");
