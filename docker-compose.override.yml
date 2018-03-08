@@ -42,3 +42,12 @@ services:
             - db:db
         ports:
             - "${PHPPGADMIN_HTTP_PORT}:80"
+
+    elk:
+            context: ./docker-resources/
+        build:
+            dockerfile: Dockerfile-elk
+        ports:
+          - "5601:5601"
+          - "9200:9200"
+          - "5044:5044"
