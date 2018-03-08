@@ -5,6 +5,7 @@ services:
         networks:
           - openstack
         environment:
+            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
             S2LOW_WEBSITE: ${S2LOW_WEBSITE}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
