@@ -26,9 +26,10 @@ class ActesEnvelopeStorage {
 	 * @throws Exception
 	 */
 	public function storeAll(){
-		$result = $this->actesEnvelopeSQL->getAllTransactionToSendInCloud();
+		$sqlQuery = $this->actesEnvelopeSQL->getAllTransactionToSendInCloudHandle();
 		$sigtermHandler = new SigTermHandler();
-		foreach($result as $transaction_info){
+		while($sqlQuery->hasMoreResult()){
+			$transaction_info = $sqlQuery->fetch();
 			$this->storeNextFile($transaction_info);
 			if ($sigtermHandler->isSigtermCalled()){
 				break;

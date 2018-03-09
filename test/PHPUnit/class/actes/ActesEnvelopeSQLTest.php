@@ -3,6 +3,9 @@
 class ActesEnvelopeSQLTest extends S2lowTestCase {
 
 
+	/**
+	 * @return ActesEnvelopeSQL
+	 */
     public function getActesEnvelopeSQL(){
         return $this->getObjectInstancier()->get("ActesEnvelopeSQL");
     }
@@ -84,9 +87,10 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
 			1,$filename
 		);
 
-		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
-		$this->assertEquals($id_envelope,$all[0]['id']);
-		$this->assertEquals($filename,$all[0]['file_path']);
+		$sqlQuery = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle();
+		$all = $sqlQuery->fetch();
+		$this->assertEquals($id_envelope,$all['id']);
+		$this->assertEquals($filename,$all['file_path']);
 	}
 
 	public function testGetNextTransactionToSendInCloud(){
@@ -104,17 +108,19 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
 		$id_envelope  = $this->getActesEnvelopeSQL()->create(
 			1,$filename
 		);
-		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
-		$this->assertEquals($id_envelope,$all[0]['id']);
-		$this->assertEquals($filename,$all[0]['file_path']);
+		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->fetch();
+
+		$this->assertEquals($id_envelope,$all['id']);
+		$this->assertEquals($filename,$all['file_path']);
 		$this->getActesEnvelopeSQL()->setTransactionInCloud($id_envelope);
-		$this->assertEmpty(
-			$this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud()
+		$this->assertFalse(
+			$this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->hasMoreResult()
 		);
+
 		$this->getActesEnvelopeSQL()->setTransactionInCloudRemove($id_envelope);
-		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloud();
-		$this->assertEquals($id_envelope,$all[0]['id']);
-		$this->assertEquals($filename,$all[0]['file_path']);
+		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->fetch();
+		$this->assertEquals($id_envelope,$all['id']);
+		$this->assertEquals($filename,$all['file_path']);
 	}
 
 
