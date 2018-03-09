@@ -4,6 +4,9 @@ declare(ticks = 1);
 
 require_once(__DIR__ . "/../init/init.php");
 
+$objectInstancier->set("Monolog\Logger",$logger->withName('ACTES-GRAND-MENAGE'));
+
+
 if (empty($argv[1])){
 	$min_date = '1969-12-31';
 } else {
