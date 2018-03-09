@@ -13,10 +13,10 @@ $logger  = $objectInstancier->get("Monolog\Logger");
 $logger->pushHandler(new  Monolog\Handler\StreamHandler('php://stdout'));
 
 $logger->info("Starting actes-store-envelope-in-cloud");
-/** @var PesAllerStorage $pesAllerStorage */
-$pesAllerStorage = $objectInstancier->get(ActesEnvelopeStorage::class);
+/** @var ActesEnvelopeStorage $actesEnvelopeStorage */
+$actesEnvelopeStorage = $objectInstancier->get(ActesEnvelopeStorage::class);
 try {
-	$pesAllerStorage->storeAll();
+	$actesEnvelopeStorage->storeAll();
 } catch (Exception $e){
 	$logger->critical("Exception thrown during actes-store-envelope-in-cloud",$e);
 	exit(-1);
