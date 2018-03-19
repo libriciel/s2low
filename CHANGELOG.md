@@ -16,46 +16,10 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
 - Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
 
-## Corrections
-
-- Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
-- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
-- Ajout du HOMEDIR dans les script lancé par supervisord #327
-- typo (mail et état de l'annulation acquitéE) #354
-- actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
-- Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
-
 ## Ajouts
 
 - Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique 
 - Surveillance des échecs de lancement des process par supervisord
-
-
-
-## [3.0.5] - 2018-03-06
-
-*Cette version nécessite une modification de la base de données*
-
-### Corrections
-
-
-### Ajouts
-
-- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
-- Surveillance des échecs de lancement des process par supervisord
-
-
-### Évolutions
-
-- Ménage dans le fichier config.php
-- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
-- Docker : docker-compose.defaut.yml passe en version 3.5
-- Docker : utilisation des network, de la notion dependance et des volumes par défaut
-
-
-### Retrait
-
-- Suppression du fichier LocalSettings.php devenu inutile
 
 
 ## [3.0.5] - 2018-03-06
@@ -75,6 +39,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Docker : ajout d'un fichier compose par defaut
 - Les URL de Libersign sont renseignées par défaut
 - Utilisation d'un stockage objet pour les ~Actes #345
+- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
+- Surveillance des échecs de lancement des process par supervisord
+
 
 ### Évolutions
 
@@ -92,6 +59,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 ### Retrait
 
 - Docker : suppression des paquets pdfsam et pdftk
+- Suppression du fichier LocalSettings.php devenu inutile
+
 
 
 ## [3.0.4] - 2018-02-21
