@@ -15,6 +15,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - typo (mail et état de l'annulation acquitéE) #354
 - actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
 - Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
+- Remplacement de Phar par tar pour la génération des notifications #361
 
 ## Ajouts
 
