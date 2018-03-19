@@ -132,7 +132,12 @@ class ActesPdf {
 		}
 		
 		$notification = $this->getNotifieA($trans);
-	
+
+		$classifcation = $trans->get("classification") ;
+		$classifcation_string = $trans->get('classification_string');
+		if ($classifcation_string) {
+			$classifcation .= " - $classifcation_string";
+		}
       		
       	$arch_url = $trans->get("archive_url");
 		if (empty($arch_url))
@@ -153,8 +158,7 @@ class ActesPdf {
 		$this->pdf->myRow(array("","Date de la décision:",$trans->get("decision_date")));
 		$this->pdf->myRow(array("","Objet:",$trans->get("subject")));
         $this->pdf->myRow(array("","Documents papiers complémentaires:",$trans->getDocumentPapier()?"OUI":"NON"));
-
-        $this->pdf->myRow(array("","Classification matières/sous-matières:",$trans->get("classification")));
+        $this->pdf->myRow(array("","Classification matières/sous-matières:",$classifcation));
 		$this->pdf->myRow(array("","Identifiant unique:",$trans->get("unique_id")));
 		$this->pdf->myRow(array("","URL d'archivage:",$arch_url));
 		$this->pdf->myRow(array("","Notification:",$notification));
