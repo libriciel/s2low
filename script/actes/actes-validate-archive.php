@@ -13,7 +13,9 @@ $archive_path = $argv[1];
 $archive = new \Libriciel\LibActes\ArchiveValidator($objectInstancier->get('actes_appli_trigramme'));
 
 try {
-    $archive->validate($archive_path);
+	$archive->validate($archive_path);
+} catch (\Libriciel\LibActes\Utils\XSDValidationException $e){
+	print_r($e->displayValidationErrors());
 } catch (Exception $e){
     echo "L'archive n'est pas valide : " . $e->getMessage();
     return false;
