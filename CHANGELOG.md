@@ -21,6 +21,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique 
 - Surveillance des échecs de lancement des process par supervisord
+- Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
 
 
 ## [3.0.5] - 2018-03-06
