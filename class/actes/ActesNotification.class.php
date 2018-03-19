@@ -202,10 +202,22 @@ Archive disponible sur :<?php echo $transaction_info['archive_url']?>
 		return $result;
 	}
 
-	
+
+	/**
+	 * @param $filePath
+	 * @param $transactionInfo
+	 * @param $tmp_folder
+	 * @return array
+	 * @throws Exception
+	 */
 	private function tamponnerTGZ($filePath,$transactionInfo,$tmp_folder){
-        $pharData = new PharData($filePath);
-        $pharData->extractTo($tmp_folder);
+
+		$command = "tar xzf $filePath --directory $tmp_folder 2>&1";
+		$this->log("Executing comand : $command");
+		exec($command, $output, $return_var);
+		if ($return_var != 0) {
+			throw new Exception("Erreur ($return_var) lors de la décompression de l'archive $filePath : " . implode("\n", $output));
+		}
 
 		$result = array();
 		$files = array_diff(scandir($tmp_folder),array('.','..'));

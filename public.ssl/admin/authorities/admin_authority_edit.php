@@ -417,6 +417,9 @@ if ($me->isSuper()){
     $html.="<br/><div><a class=\"btn btn-primary\" href='".WEBSITE_SSL."/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=".$id."'>Envoyer demande de classification vide</a></div>";
 
 }
+if ($me->isGroupAdminOrSuper()){
+    $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivité</a></div>";
+}
 
 
 $html .= "</div>\n";
