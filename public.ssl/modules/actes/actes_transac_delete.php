@@ -13,6 +13,12 @@ $id = $recuperateur->get('id');
 $transactionSQL = new TransactionSQL($sqlQuery);
 $transactionSQL->delete($id);
 
+$msg = "La transaction $id a été éradiquée ....";
 
-$_SESSION['error'] = "La transaction $id a été éradiquée ....";
+
+if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module_name, null,$userInfo['id'])) {
+	$msg .= "\nErreur de journalisation.";
+}
+
+$_SESSION['error'] = $msg;
 header("Location: index.php");

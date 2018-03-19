@@ -7,6 +7,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## [3.0.6] - 2018-xx-xx
 
+## Évolutions
+
+- Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
+
+
 ## Corrections
 
 - Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
