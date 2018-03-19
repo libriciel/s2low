@@ -15,12 +15,12 @@ $nb_user = $groupe->getNbUtilisateur();
 $name = $groupe->get('name');
 
 if ($nb_user){
-	$_SESSION['error'] = "Le groupe $name n'est pas vide !";
+	$_SESSION['last_error'] = "Le groupe $name n'est pas vide !";
 	header("Location: index.php?command=annuaire&groupe_id=$groupe_id");
 	exit;
 }
 
 $groupe->delete();
 
-$_SESSION['message_ok'] = "Le groupe $name a été supprimé";
+$_SESSION['last_message'] = "Le groupe $name a été supprimé";
 header("Location: index.php?command=annuaire");

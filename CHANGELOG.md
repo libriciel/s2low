@@ -16,6 +16,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
 - Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
 - Remplacement de Phar par tar pour la génération des notifications #361
+- Ajout d'un message d'erreur si on tente de supprimer un groupe avec des utilisateurs dedans ~mailsec #62
 
 ## Ajouts
 
