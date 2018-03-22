@@ -10,6 +10,9 @@ class GroupSQLTest extends S2lowTestCase {
 	 */
 	private $groupeSQL;
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp(){
 		parent::setUp();
 		$this->groupeSQL = new GroupSQL($this->getSQLQuery());
@@ -51,6 +54,10 @@ class GroupSQLTest extends S2lowTestCase {
 
 	public function testGroupNameAlreadyExistsChangeOK(){
 		$this->assertFalse($this->groupeSQL->groupNameAlreadyExists(1,"autre nom"));
+	}
+
+	public function testgetGroupsIdName(){
+		$this->assertEquals([1=> 'Groupe de test', 2 => 'second groupe'],$this->groupeSQL->getGroupsIdName());
 	}
 
 }

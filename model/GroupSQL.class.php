@@ -38,5 +38,15 @@ class GroupSQL extends SQL {
 		return true;
 	}
 
+	public function getGroupsIdName(){
+		$sql = "SELECT authority_groups.id, authority_groups.name FROM authority_groups ORDER BY authority_groups.name ASC";
+		foreach($this->query($sql) as $line){
+			$result[$line['id']] = $line['name'];
+		}
+		return $result;
+	}
+
+
+
 
 }
