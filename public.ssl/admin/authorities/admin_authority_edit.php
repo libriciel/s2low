@@ -137,13 +137,17 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
 //********************************
 
 	if ($me->isSuper()) {
-		$groups = Group::getGroupsIdName();
+
+        $groupSQL = $objectInstancier->get(GroupSQL::class);
+
+		$groups = $groupSQL->getGroupsIdName();
 		$groupIds = array();
 		$sirenList = array();
+		$authorityGroupSirenSQL = $objectInstancier->get(AuthorityGroupSirenSQL::class);
 
 	  foreach($groups as $key =>$value) {
 		$group = new Group($key);
-		$sirenList[] = $group->getAuthorizedSiren();
+		$sirenList[] = $authorityGroupSirenSQL->getUnusedSiren($key);
 		$groupIds[]=$key;
 	  }
 

@@ -1,13 +1,9 @@
 <?php 
-class AuthorityGroupSirenSQL {
-	
-	public function __construct(SQLQuery $sqlQuery){
-		$this->sqlQuery = $sqlQuery;
-	}
-	
+class AuthorityGroupSirenSQL extends SQL {
+
 	public function exist($id,$siren){
 		$sql = "SELECT * FROM authority_group_siren WHERE authority_group_id=? AND siren=?";
-		return $this->sqlQuery->queryOne($sql,$id,$siren);	
+		return $this->queryOne($sql,$id,$siren);
 	}
 	
 	public function add($id,$siren){
@@ -15,7 +11,13 @@ class AuthorityGroupSirenSQL {
 			return;
 		}
 		$sql = "INSERT INTO authority_group_siren(authority_group_id,siren) VALUES (?,?)";
-		$this->sqlQuery->query($sql,$id,$siren);
+		$this->query($sql,$id,$siren);
 	}
-	
+
+	public function getUnusedSiren($authority_group_id){
+		$sql = "SELECT siren FROM authority_group_siren " .
+			" WHERE authority_group_id=? AND siren NOT IN (SELECT siren FROM authorities WHERE siren IS NOT NULL)".
+			" ORDER BY siren";
+		return $this->queryOneCol($sql,$authority_group_id);
+	}
 }

@@ -9,8 +9,8 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## Évolutions
 
-- Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
-
+- Journalisation de la suppression d'une transaction super admin ~actes ~helios #83 
+- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
 
 ## Corrections
 
