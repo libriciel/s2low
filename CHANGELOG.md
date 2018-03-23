@@ -11,6 +11,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 - Journalisation de la suppression d'une transaction super admin ~actes ~helios #83 
 - Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
+- redémarrage systématique du tunnel ipsec s'il y en a un pour la communication avec Helios 
 
 ## Corrections
 
