@@ -18,6 +18,8 @@ class ActesStatusSQL {
 
 	const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
 
+	const STATUS_ARCHIVE_PAR_LE_SAE = 13;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
