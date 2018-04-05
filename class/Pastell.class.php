@@ -43,6 +43,7 @@ class Pastell {
 		$data = json_decode($data,true);
 		if (! $data){
             $this->lastError = "Impossible de décoder les données reçu : $data ";
+            return false;
         }
 		
 		if (isset($data['status']) && $data['status']=='error' ){
