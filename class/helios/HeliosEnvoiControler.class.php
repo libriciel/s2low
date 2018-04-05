@@ -169,6 +169,8 @@ class HeliosEnvoiControler {
 
 		$nb_file_send = 0;
 
+		echo "Il y a ".count($transaction_id_list)." transactions à envoyer\n";
+
 		foreach($transaction_id_list as $transaction_id){
 			echo "Préparation de l'envoi de la transaction $transaction_id\n";
 			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
