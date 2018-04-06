@@ -10,18 +10,20 @@ if (empty($argv[1])){
 }
 
 $authority_id = $argv[1];
+$date=date('Y-m-d',strtotime(date('Y-m-d').'- 62 DAY'));
 
 
 $sql = "SELECT at.id ".
     "FROM actes_transactions AS at ".
-    "INNER JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= at.last_status_id) ".
+    "INNER JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= 4) ".
     "WHERE ".
     "authority_id=? ".
     "AND at.type='1' ".
     "AND at.last_status_id IN (?,?) ".
-    "AND AGE(atw.date::TIMESTAMP) > INTERVAL '62 day' ";
+    "AND atw.date > '2008-06-01' ".
+    "AND atw.date < ? ";
 
-$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5);
+$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5,date);
 
 if (! $transaction_id_list){
 	echo "Aucune transaction trouvée\n";
