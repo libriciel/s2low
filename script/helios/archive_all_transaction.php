@@ -10,11 +10,16 @@ if (empty($argv[1])){
 }
 
 $authority_id = $argv[1];
+$date=date('Y-m-d',strtotime(date('Y-m-d').'- 15 DAY'));
 
 
-$sql = "SELECT  helios_transactions.id as id FROM helios_transactions WHERE authority_id=? AND last_status_id=?";
+$sql = "SELECT  helios_transactions.id as id ".
+    "FROM helios_transactions ".
+    "WHERE authority_id=? ".
+    "AND last_status_id IN (?,?) ".
+    "AND submission_date < ? ";
 
-$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,8);
+$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,8,20,$date);
 
 if (! $transaction_id_list){
 	echo "Aucune transaction trouvée\n";
