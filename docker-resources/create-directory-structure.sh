@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Cr�ation de l'arborescence du workspace
+# Création de l'arborescence du workspace
 mkdir -p /data/tdt-workspace/actes && \
 mkdir -p /data/tdt-workspace/helios && \
 mkdir -p /data/tdt-workspace/mail && \
@@ -14,7 +14,6 @@ mkdir -p /data/tdt-workspace/helios/sending-tmp && \
 mkdir -p /data/tdt-workspace/helios/sending && \
 mkdir -p /data/tdt-workspace/helios/response && \
 mkdir -p /data/tdt-workspace/helios/response_tmp && \
-mkdir -p /data/tdt-workspace/helios/response_backup && \
 mkdir -p /data/tdt-workspace/helios/response_error && \
 mkdir -p /data/tdt-workspace/helios/temp && \
 mkdir -p /data/tdt-workspace/helios/ocre && \
