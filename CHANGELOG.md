@@ -32,6 +32,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
 - Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
 
+## Retrait
+
+- supression de workspace/helios/response_backup lors de la création de la structure du workspace 
 
 ## [3.0.5] - 2018-03-06
 
