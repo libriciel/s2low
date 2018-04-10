@@ -9,9 +9,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## Évolutions
 
-- Journalisation de la suppression d'une transaction super admin ~actes ~helios #83 
+- Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
 - Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
-- redémarrage systématique du tunnel ipsec s'il y en a un pour la communication avec Helios 
+- Redémarrage systématique du tunnel ipsec s'il y en a un pour la communication avec Helios
+- Versement des flux PESv2 ayant plus de 15 jours
+- Versements des actes uniquement ceux créés après le 01-06-2008
 
 ## Corrections
 
@@ -27,10 +29,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 ## Ajouts
 
-- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique 
+- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
 - Surveillance des échecs de lancement des process par supervisord
 - Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
 - Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
+- Ajout du script de rapport des versement des actes
 
 
 ## [3.0.5] - 2018-03-06
