@@ -9,7 +9,7 @@ $min_exec_time = 10;
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
-$date = date("Y-m-d",strtotime("-30 days"));
+$date = date("Y-m-d",strtotime("-60 days"));
 
 $allTransactions = $actesTransactionsSQL->getLastArchiveFromStatus(12,$date);
 
