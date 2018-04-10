@@ -7,8 +7,10 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
+$date = date("Y-m-d",strtotime("-60 days"));
+
 $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
-$allTransactions = $heliosTransactionsSQL->getArchiveFromStatusWithSAE(9);
+$allTransactions = $heliosTransactionsSQL->getArchiveFromStatusWithSAE(9,$date);
 
 echo count($allTransactions). " transactions HELIOS trouvees dans l'etat <envoye au SAE>\n";
 
