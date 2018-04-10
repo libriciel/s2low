@@ -33,7 +33,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Surveillance des échecs de lancement des process par supervisord
 - Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
 - Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
-- Ajout du script de rapport des versement des actes
+- Ajout du script de rapport des versement des actes et helios
 
 
 ## [3.0.5] - 2018-03-06
