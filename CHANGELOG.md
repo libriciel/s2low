@@ -5,6 +5,10 @@ Toutes les modifications apportées au projet seront documentées dans ce fichie
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/)
 et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
+## [3.0.7] - 2018-04-10
+
+- Bug sur le traitement par lot (problème de sécurité sur chrome sur le mime-type du fichier javascript)
+
 ## [3.0.6] - 2018-04-10
 
 ## Évolutions
