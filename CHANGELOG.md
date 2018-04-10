@@ -12,6 +12,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
 - Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
 - Redémarrage systématique du tunnel ipsec s'il y en a un pour la communication avec Helios
+- On ne vérifie pas les transferts SAE vieux de plus de 60 jours automatiquement
 - Versement des flux PESv2 ayant plus de 15 jours
 - Versements des actes uniquement ceux créés après le 01-06-2008
 
@@ -35,6 +36,9 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
 - Ajout du script de rapport des versement des actes et helios
 
+## Retrait
+
+- supression de workspace/helios/response_backup lors de la création de la structure du workspace 
 
 ## [3.0.5] - 2018-03-06
 

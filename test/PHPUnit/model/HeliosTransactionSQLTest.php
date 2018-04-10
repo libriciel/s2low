@@ -41,7 +41,8 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetArchiveFormStatusWithSAE(){
-		$this->assertEmpty($this->heliosTransactionSQL->getArchiveFromStatusWithSAE(HeliosTransactionsSQL::EN_TRAITEMENT));
+		$date = "2017-01-01";
+		$this->assertEmpty($this->heliosTransactionSQL->getArchiveFromStatusWithSAE(HeliosTransactionsSQL::EN_TRAITEMENT,$date));
 	}
 
 	public function testSetArchiveURL(){

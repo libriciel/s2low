@@ -8,7 +8,7 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-$actesAnalyseFichierRecuController = $objectInstancier->get("ActesAnalyseFichierRecuController");
+$actesAnalyseFichierRecuController = $objectInstancier->get(ActesAnalyseFichierRecuController::class);
 $actesAnalyseFichierRecuController->analyseAll();
 
 
