@@ -47,6 +47,13 @@ class ActesEnvelopeStorage {
 			"Storing envelope {$transaction_info['id']} - ".
 			"file {$transaction_info['file_path']}"
 		);
+		if (! $transaction_info['file_path'] ){
+			$this->logger->error(
+				"Unable to store transaction #{$transaction_info['id']} in cloud : file_path not set ! ",
+				$transaction_info
+			);
+			return false;
+		}
 		if ( ! file_exists($this->actes_files_upload_root."/".$transaction_info['file_path'])){
 			$this->logger->error(
 				"Unable to store {$transaction_info['file_path']} in cloud : file did not exist ! ",
