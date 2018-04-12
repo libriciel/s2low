@@ -1,17 +1,22 @@
 # Change Log
 
-Toutes les modifications apportées au projet seront documentées dans ce fichier.
 
-Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/)
-et adhère aux principes du [Semantic Versioning](http://semver.org/).
+## 3.0.8 
 
-## [3.0.7] - 2018-04-10
 
+### Corrections
+
+- backport d'un hotfix corrigeant des lancement d'erreurs inaproprié dans la sauvegarde cloud
+
+
+## 3.0.7 - 2018-04-10
+
+### Corrections
 - Bug sur le traitement par lot (problème de sécurité sur chrome sur le mime-type du fichier javascript)
 
-## [3.0.6] - 2018-04-10
+# 3.0.6 - 2018-04-10
 
-## Évolutions
+### Évolutions
 
 - Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
 - Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
@@ -20,7 +25,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Versement des flux PESv2 ayant plus de 15 jours
 - Versements des actes uniquement ceux créés après le 01-06-2008
 
-## Corrections
+### Corrections
 
 - Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
 - Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
@@ -32,7 +37,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Ajout d'un message d'erreur si on tente de supprimer un groupe avec des utilisateurs dedans ~mailsec #62
 - Problème lors de la connexion à Pastell si on ne récupère pas du JSON #365
 
-## Ajouts
+### Ajouts
 
 - Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
 - Surveillance des échecs de lancement des process par supervisord
@@ -40,11 +45,11 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
 - Ajout du script de rapport des versement des actes et helios
 
-## Retrait
+### Retrait
 
 - supression de workspace/helios/response_backup lors de la création de la structure du workspace 
 
-## [3.0.5] - 2018-03-06
+## 3.0.5 - 2018-03-06
 
 *Cette version nécessite une modification de la base de données*
 
@@ -85,7 +90,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 
-## [3.0.4] - 2018-02-21
+## 3.0.4 - 2018-02-21
 
 ### Corrections
 
@@ -112,13 +117,13 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - préparation de s2low pour le versement des @ctes dans un stockage objet
 - un utilisateur peut a nouveau "refusé" une transaction "en attente d'être signé" sur la liste des transactions
 
-## [3.0.3]
+## 3.0.3 
 
 ### Évolutions
 
 - Modification de la position du tampon ~Actes
 
-## [3.0.2]
+## 3.0.2
 
 ### Évolutions
 
@@ -137,7 +142,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Modification script supervisor pour éviter les warning #327
 - Correction d'un problème dans le tamponnage des actes sur les notifications ~Actes
 
-## [3.0.1] - 2017-12-26
+## 3.0.1 - 2017-12-26
 
 ### Corrections
 
@@ -148,7 +153,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - correction d'un problème sur l'api admin_user_edit_handler #317  
 - nettoyage de fichier temporaire (analyse fihcier actes)
 
-## [3.0.0] - 2017-12-15
+## 3.0.0 - 2017-12-15
 
 ### Corrections
 
@@ -157,7 +162,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 
-## [3.0.0-rc4] - 2017-11-24
+## 3.0.0-rc4 - 2017-11-24
 
 
 ### Corrections
@@ -189,7 +194,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
 
 
-## [3.0.0-rc3] - 2017-11-15
+## 3.0.0-rc3 - 2017-11-15
 
 ### Évolutions
 
@@ -217,7 +222,7 @@ et adhère aux principes du [Semantic Versioning](http://semver.org/).
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
 
-## [3.0.0-rc2]
+## 3.0.0-rc2
 
 ## Corrections
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
@@ -366,6 +371,12 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur
 (NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
 - Le script de migration (script/migration/v2.5-to-v2.6.php) permet  de mettre à jour la base de données.
+
+# Notes
+
+Toutes les modifications apportées au projet seront documentées dans ce fichier.
+
+Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) et adhère aux principes du [Semantic Versioning](http://semver.org/).
 
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
