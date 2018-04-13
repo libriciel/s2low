@@ -41,7 +41,7 @@ foreach($file_list as $file){
 
 $list_coll=array();
 
-$message="TEST TEST TEST ceci est un TEST \n\n David suite a notre conversation, est-ce qu'un tel rapport convient ?\n\n";
+$message='';
 foreach($list_siret as $siret){
     $sql = "SELECT id,name FROM authorities WHERE id IN (SELECT authority_id FROM authority_siret WHERE siret like '".$siret."')";
     $authority_id=$sqlQuery->query($sql);
