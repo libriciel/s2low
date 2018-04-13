@@ -1,13 +1,17 @@
 # Change Log
 
 
-## 3.0.8 
+## 3.0.8
 
 
 ### Corrections
 
 - backport d'un hotfix corrigeant des lancement d'erreurs inaproprié dans la sauvegarde cloud
 - Correction d'un problème d'intégration d'actes arrivant en 0ko car l'analyse arrivent avant la fin du download du mail
+
+### Ajouts
+
+- HELIOS PES_RETOUR : création d'un rapport indiquant les SIRET appartenant à plusieurs collectivité
 
 ## 3.0.7 - 2018-04-10
 
@@ -47,7 +51,7 @@
 
 ### Retrait
 
-- supression de workspace/helios/response_backup lors de la création de la structure du workspace 
+- supression de workspace/helios/response_backup lors de la création de la structure du workspace
 
 ## 3.0.5 - 2018-03-06
 
@@ -117,7 +121,7 @@
 - préparation de s2low pour le versement des @ctes dans un stockage objet
 - un utilisateur peut a nouveau "refusé" une transaction "en attente d'être signé" sur la liste des transactions
 
-## 3.0.3 
+## 3.0.3
 
 ### Évolutions
 

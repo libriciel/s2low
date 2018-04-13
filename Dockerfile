@@ -111,7 +111,7 @@ RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 #TODO passer validca dans supervisor
 # Copie des crontab
-COPY ./docker-resources/cron.d/validca /etc/cron.d/
+COPY ./docker-resources/cron.d/* /etc/cron.d/
 
 # Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
 
