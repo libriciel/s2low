@@ -3,7 +3,7 @@
 class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
 
     public function testRetrieve() {
-        $logger = $this->getLogger();
+		$logger = $this->getLogger();
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS(),
@@ -11,32 +11,35 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
             $logger
         );
         $actesImapRetrieve->retrieve();
+
         $logs = $logger->getAllLog();
         $this->assertRegExp("#Connection au serveur IMAP#", $logs[1]);
         $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2]);
         $this->assertRegExp("#Récupération du message : 13#", $logs[3]);
-        $this->assertRegExp("#Création du répertoire #", $logs[4]);
-        $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[5]);
-        $this->assertRegExp("#Sauvegarde de.*foo.pdf#", $logs[6]);
+
+        $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4]);
+        $this->assertRegExp("#Sauvegarde de.*foo.pdf#", $logs[5]);
+		$this->assertRegExp("#Déplacement du répertoire#", $logs[6]);
         $this->assertRegExp("#Suppression du message : 13#", $logs[7]);
     }
 
 
     public function testRetrieveDirectoryCreationFailed() {
+		$logger = $this->getLogger();
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
-            $this->getVFS()."/foo/",
+            $this->getVFS()."/foo/bar",
             $this->getImapFetchServerFactory(),
-            $this->getLogger()
-
+			$logger
         );
-        $this->setExpectedException("Exception","Impossible de créer le répertoire");
+        $this->setExpectedException("Exception","Impossible de déplacer");
         $actesImapRetrieve->retrieve();
     }
 
     public function getVFS(){
-        org\bovigo\vfs\vfsStream::setup("test");
-        return org\bovigo\vfs\vfsStream::url("test");
+    	$tmp = sys_get_temp_dir()."/test_actes_imap".mt_rand(0,mt_getrandmax());
+    	mkdir ($tmp);
+    	return $tmp;
     }
 
     private function getLogger(){

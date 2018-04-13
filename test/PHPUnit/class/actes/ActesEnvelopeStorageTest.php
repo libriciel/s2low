@@ -94,11 +94,14 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 
 		$actesEnvelopeStorage->storeAll();
 
+
 		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		$this->assertEquals(
+		//print_r($testHandler->getRecords());
+		//Donc non en fait suite bug en prod...
+		/*$this->assertEquals(
 			"Unable to store 000000000/abc-EACT--210703385--20170612-2.tar.gz in cloud : file did not exist ! ",
 			$testHandler->getRecords()[1]['message']
-			);
+			);*/
 	}
 
 
