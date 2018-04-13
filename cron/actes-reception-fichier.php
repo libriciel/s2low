@@ -10,7 +10,7 @@ $min_exec_time = 10;
 
 
 
-$actesImapRetrieve = $objectInstancier->get('ActesImapRetrieve');
+$actesImapRetrieve = $objectInstancier->get(ActesImapRetrieve::class);
 
 $actesImapRetrieve->retrieve();
 
