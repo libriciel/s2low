@@ -13,7 +13,7 @@ $filename = $recuperateur->get('file');
 
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 
-$actesAnalyseFichierRecuController = $objectInstancier->get('ActesAnalyseFichierRecuController');
+$actesAnalyseFichierRecuController = $objectInstancier->get(ActesAnalyseFichierRecuController::class);
 
 
 $_SESSION['error'] = "";
@@ -23,10 +23,9 @@ try {
 	$filepath = $actesResponsesError->getFilepath($filename);
 
     $actesAnalyseFichierRecuController->analyseOneFile($filepath);
-
+	$tmpDir = new TmpFolder();
+	$tmpDir->delete($filepath);
 } catch (Exception $e){
-
-
 	$_SESSION['error'] = $e->getMessage();
 }
 
