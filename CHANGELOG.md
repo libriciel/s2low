@@ -7,7 +7,7 @@
 ### Corrections
 
 - backport d'un hotfix corrigeant des lancement d'erreurs inaproprié dans la sauvegarde cloud
-
+- Correction d'un problème d'intégration d'actes arrivant en 0ko car l'analyse arrivent avant la fin du download du mail
 
 ## 3.0.7 - 2018-04-10
 

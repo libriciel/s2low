@@ -61,25 +61,30 @@ class ActesImapRetrieve {
      */
     private function saveMail(\Fetch\Message $message){
         $this->log("Récupération du message : ".($message->getOverview()->message_id));
+		$tmp_file = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
 
-        $path = $this->actes_response_tmp_local_path . "/" . date("YmdHis")."_".mt_rand(0,mt_getrandmax());
-        $this->log("Création du répertoire $path");
-        if (! mkdir( $path)){
-            $exception_message = "Impossible de créer le répertoire $path";
+        if (! mkdir( $tmp_file)){
+            $exception_message = "Impossible de créer le répertoire $tmp_file";
             $this->log($exception_message);
             throw new Exception($exception_message);
         }
-        $message_body_path = $path."/message_body.html";
+        $message_body_path = $tmp_file."/message_body.html";
         $this->log("Sauvegarde du contenu du message HTML $message_body_path");
         file_put_contents($message_body_path,$message->getMessageBody(true));
 
         foreach($message->getAttachments() as $attachment){
-            $attachment_path = $path . "/" . $attachment->getFileName();
+            $attachment_path = $tmp_file . "/" . $attachment->getFileName();
             $this->log("Sauvegarde de $attachment_path");
             $attachment->saveAs($attachment_path);
             $this->transcode($attachment_path);
-
         }
+
+		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
+		$command = "mv $tmp_file {$this->actes_response_tmp_local_path}";
+		exec($command,$output,$return_var);
+        if ($return_var != 0){
+        	throw new Exception("Impossible de déplacer $tmp_file ");
+		}
     }
 
     //Je vois vraiment pas pourquoi on doit faire ça
