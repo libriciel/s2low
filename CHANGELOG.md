@@ -3,6 +3,9 @@
 
 ## 3.0.8
 
+### Ajouts
+
+- Ajout d'un index sha1 sur la table helios_transactions.
 
 ### Corrections
 
