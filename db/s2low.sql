@@ -488,6 +488,7 @@ CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow
 CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id);
 CREATE INDEX atw_id_date ON actes_transactions_workflow USING btree (transaction_id, date, id);
 CREATE INDEX acc_ai ON actes_classification_codes USING btree (authority_id);
+CREATE INDEX helios_transactions_sha1 ON helios_transactions USING btree (sha1);
 CREATE INDEX xml_nomfic_cod_col_index ON helios_transactions USING btree (xml_nomfic, xml_cod_col);
 CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic);
 CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id);

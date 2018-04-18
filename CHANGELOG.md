@@ -1,13 +1,19 @@
 # Change Log
 
 
-## 3.0.8
+## 3.0.8 - 2018-04-18
 
+*Cette version nécessite une modification de la base de données*
+
+### Ajouts
+
+- Ajout d'un index sha1 sur la table helios_transactions.
 
 ### Corrections
 
 - backport d'un hotfix corrigeant des lancement d'erreurs inaproprié dans la sauvegarde cloud
 - Correction d'un problème d'intégration d'actes arrivant en 0ko car l'analyse arrivent avant la fin du download du mail
+- La DGCL envoi des fichiers métier et des enveloppes métier avec plus de 4 chiffres sur le compteur journalier
 
 ### Ajouts
 
