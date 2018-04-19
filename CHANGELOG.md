@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.9 
+
+### Corrections
+
+- erreur SQL si la nature de l'acte n'est pas envoyé sous la forme d'un entier
+
+
 
 ## 3.0.8 - 2018-04-18
 

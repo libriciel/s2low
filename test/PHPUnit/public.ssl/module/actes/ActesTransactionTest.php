@@ -13,6 +13,9 @@ class ActesTransactionTest extends S2lowTestCase {
 	private $txt_filepath;
 	private $jpg_filepath;
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp() {
 		parent::setUp();
 		$this->actesTransaction = new ActesTransaction();
@@ -172,6 +175,10 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
 	}
 
+	/**
+	 * @throws Exception
+	 * @throws \Libriciel\LibActes\Utils\XSDValidationException
+	 */
 	public function testgenerateActeXMLFile(){
         $this->addActePDF();
         $this->actesTransaction->set('decision_date',"2013-04-05");
@@ -243,5 +250,12 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->assertEquals("99_AU",$file_list[2]['code_pj']);
         $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf",$file_list[2]['filename']);
     }
+
+    public function testGetTransactionNatureDescr(){
+		$this->assertEquals(['short_descr'=>'DE','descr'=>'Deliberations'],ActesTransaction::getTransactionNatureDescr(1));
+	}
+	public function testGetTransactionNatureDescrFailed(){
+		$this->assertFalse(ActesTransaction::getTransactionNatureDescr('Délibération'));
+	}
 
 }

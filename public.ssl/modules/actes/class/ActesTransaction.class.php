@@ -523,6 +523,7 @@ class ActesTransaction extends DataObject {
    *
    */
   public static function getTransactionNatureDescr($id) {
+  	$id = intval($id);
     if (!empty ($id)) {
       $sql = "SELECT short_descr, descr FROM actes_natures WHERE id=" . $id;
 
