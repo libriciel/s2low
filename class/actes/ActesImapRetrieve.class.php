@@ -72,12 +72,14 @@ class ActesImapRetrieve {
         $this->log("Sauvegarde du contenu du message HTML $message_body_path");
         file_put_contents($message_body_path,$message->getMessageBody(true));
 
-        foreach($message->getAttachments() as $attachment){
-            $attachment_path = $tmp_file . "/" . $attachment->getFileName();
-            $this->log("Sauvegarde de $attachment_path");
-            $attachment->saveAs($attachment_path);
-            $this->transcode($attachment_path);
-        }
+        if ($message->getAttachments()) {
+			foreach ($message->getAttachments() as $attachment) {
+				$attachment_path = $tmp_file . "/" . $attachment->getFileName();
+				$this->log("Sauvegarde de $attachment_path");
+				$attachment->saveAs($attachment_path);
+				$this->transcode($attachment_path);
+			}
+		}
 
 		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
 		$command = "mv $tmp_file {$this->actes_response_tmp_local_path}";
