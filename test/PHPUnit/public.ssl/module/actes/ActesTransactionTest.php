@@ -164,15 +164,13 @@ class ActesTransactionTest extends S2lowTestCase {
 	public function testAttachmentXMLNoBudgetaire(){
 		$this->addActePDF();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
-		$this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 	}
 
 	public function testAddManyXMLAttachment(){
 		$this->testAttachmentXML();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
-		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 	}
 
 	/**
