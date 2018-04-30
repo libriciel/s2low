@@ -18,7 +18,7 @@ $actesEnvelopeStorage = $objectInstancier->get(ActesEnvelopeStorage::class);
 try {
 	$actesEnvelopeStorage->storeAll();
 } catch (Exception $e){
-	$logger->critical("Exception thrown during actes-store-envelope-in-cloud",[$e->getMessage(),$e->getTrace()]);
+	$logger->critical("Exception thrown during actes-store-envelope-in-cloud : ".$e->getMessage(),[$e->getMessage(),$e->getTrace()]);
 	exit(-1);
 }
 $logger->info("Ending actes-store-envelope-in-cloud");
