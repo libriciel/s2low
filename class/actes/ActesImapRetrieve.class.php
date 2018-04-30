@@ -82,7 +82,14 @@ class ActesImapRetrieve {
 		}
 
 		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
+
+        if (! file_exists($this->actes_response_tmp_local_path)){
+        	throw new Exception("{$this->actes_response_tmp_local_path} n'existe pas");
+		}
+
+        // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
 		$command = "mv $tmp_file {$this->actes_response_tmp_local_path}";
+
 		exec($command,$output,$return_var);
         if ($return_var != 0){
         	throw new Exception("Impossible de déplacer $tmp_file ");
