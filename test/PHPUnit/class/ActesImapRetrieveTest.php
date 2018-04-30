@@ -24,15 +24,19 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
     }
 
 
+	/**
+	 * @throws Exception
+	 */
     public function testRetrieveDirectoryCreationFailed() {
 		$logger = $this->getLogger();
+
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS()."/foo/bar",
             $this->getImapFetchServerFactory(),
 			$logger
         );
-        $this->setExpectedException("Exception","Impossible de déplacer");
+        $this->setExpectedException("Exception","n'existe pas");
         $actesImapRetrieve->retrieve();
     }
 

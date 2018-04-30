@@ -523,6 +523,7 @@ class ActesTransaction extends DataObject {
    *
    */
   public static function getTransactionNatureDescr($id) {
+  	$id = intval($id);
     if (!empty ($id)) {
       $sql = "SELECT short_descr, descr FROM actes_natures WHERE id=" . $id;
 
@@ -1105,31 +1106,7 @@ class ActesTransaction extends DataObject {
  	  		$this->errorMsg = "Les pièces jointes doivent être au format PDF avec un acte au format XML";
  	  		return false;
  	  	}
-		  if ($ext == "xml"){
-			  if ($this->nature_code != 5){
-				  $this->errorMsg = "Seuls les documents budgétaires et financiers peuvent être au format XML.";
-				  return false;
-			  }
-			  if ($this->classif1 != 7 || $this->classif2 != 1){
-				  $this->errorMsg = "Seule la classification 7.1 est autorisée pour la transmission au format XML";
-				  return false;
-			  }
 
-				if (isset($this->files['attachment'])){
-					foreach ($this->files['attachment'] as $attachment){
-						if ($attachment['mimetype'] == 'application/xml'){
-							$this->errorMsg = "Un seul attachement XML est autorisé pour les actes budgétaires";
-							return false;
-						}
-					}
-				}
-		  }
-
-
-
-      } else {
-      	//Ben, dans le code initiale, on fait rien ....
-      	//C'est probablement un bug...
       }
 
       	if (!$size = @ filesize($path)) {

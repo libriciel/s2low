@@ -13,6 +13,9 @@ class ActesTransactionTest extends S2lowTestCase {
 	private $txt_filepath;
 	private $jpg_filepath;
 
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp() {
 		parent::setUp();
 		$this->actesTransaction = new ActesTransaction();
@@ -161,17 +164,19 @@ class ActesTransactionTest extends S2lowTestCase {
 	public function testAttachmentXMLNoBudgetaire(){
 		$this->addActePDF();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
-		$this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 	}
 
 	public function testAddManyXMLAttachment(){
 		$this->testAttachmentXML();
 		$dest_filename2 = mt_rand(0,mt_getrandmax());
-		$this->assertFalse($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
-		$this->assertEquals("Un seul attachement XML est autorisé pour les actes budgétaires",$this->actesTransaction->getErrorMsg());
+		$this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml","toto/".$dest_filename2,$this->xml_filepath));
 	}
 
+	/**
+	 * @throws Exception
+	 * @throws \Libriciel\LibActes\Utils\XSDValidationException
+	 */
 	public function testgenerateActeXMLFile(){
         $this->addActePDF();
         $this->actesTransaction->set('decision_date',"2013-04-05");
@@ -243,5 +248,12 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->assertEquals("99_AU",$file_list[2]['code_pj']);
         $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf",$file_list[2]['filename']);
     }
+
+    public function testGetTransactionNatureDescr(){
+		$this->assertEquals(['short_descr'=>'DE','descr'=>'Deliberations'],ActesTransaction::getTransactionNatureDescr(1));
+	}
+	public function testGetTransactionNatureDescrFailed(){
+		$this->assertFalse(ActesTransaction::getTransactionNatureDescr('Délibération'));
+	}
 
 }

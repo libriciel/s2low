@@ -72,15 +72,24 @@ class ActesImapRetrieve {
         $this->log("Sauvegarde du contenu du message HTML $message_body_path");
         file_put_contents($message_body_path,$message->getMessageBody(true));
 
-        foreach($message->getAttachments() as $attachment){
-            $attachment_path = $tmp_file . "/" . $attachment->getFileName();
-            $this->log("Sauvegarde de $attachment_path");
-            $attachment->saveAs($attachment_path);
-            $this->transcode($attachment_path);
-        }
+        if ($message->getAttachments()) {
+			foreach ($message->getAttachments() as $attachment) {
+				$attachment_path = $tmp_file . "/" . $attachment->getFileName();
+				$this->log("Sauvegarde de $attachment_path");
+				$attachment->saveAs($attachment_path);
+				$this->transcode($attachment_path);
+			}
+		}
 
 		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
+
+        if (! file_exists($this->actes_response_tmp_local_path)){
+        	throw new Exception("{$this->actes_response_tmp_local_path} n'existe pas");
+		}
+
+        // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
 		$command = "mv $tmp_file {$this->actes_response_tmp_local_path}";
+
 		exec($command,$output,$return_var);
         if ($return_var != 0){
         	throw new Exception("Impossible de déplacer $tmp_file ");
