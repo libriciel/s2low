@@ -59,7 +59,21 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         $unique_id = $this->getActesTransactionsSQL()->guessUniqueId($transaction_id);
 
         $this->assertEquals("034-000000000-20170701-20170728C-AI",$unique_id);
-
     }
+
+    public function testUpdateStatus(){
+		$transaction_id =$this->createTransaction('14');
+		$this->getActesTransactionsSQL()->updateStatus($transaction_id,1,"foo");
+		$info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id,1);
+		$this->assertEquals("foo",$info['message']);
+	}
+
+    public function testUpdateStatusTooLong(){
+		$transaction_id =$this->createTransaction('14');
+		$message = str_repeat("1234567890",53);
+		$this->getActesTransactionsSQL()->updateStatus($transaction_id,1,$message);
+		$info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id,1);
+		$this->assertEquals(512,strlen($info['message']));
+	}
 
 }
