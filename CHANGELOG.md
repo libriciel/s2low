@@ -10,15 +10,13 @@
 - On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
 
 
+### Évolutions
+- les messages d'erreurs de la mise en cloud actes passe de critical à error (trop de faux positifs)
 
 
 ## 3.0.8 - 2018-04-18
 
 *Cette version nécessite une modification de la base de données*
-
-### Ajouts
-
-- Ajout d'un index sha1 sur la table helios_transactions.
 
 ### Corrections
 
@@ -28,6 +26,7 @@
 
 ### Ajouts
 
+- Ajout d'un index sha1 sur la table helios_transactions.
 - HELIOS PES_RETOUR : création d'un rapport indiquant les SIRET appartenant à plusieurs collectivité
 
 ## 3.0.7 - 2018-04-10
