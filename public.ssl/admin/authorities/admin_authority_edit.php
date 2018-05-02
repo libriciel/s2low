@@ -112,18 +112,7 @@ $accessHelios=0;
 
 
 		
-if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper())
-{
-	$html .=" <div class=\"form-group\">\n";
-	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp login</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\" type=\"text\" name=\"helios_ftp_login\" value=\"" . get_hecho($authority->get("helios_ftp_login")) . "\"  /></div>\n";
-	$html .=" </div>\n";
-	
-	$html .=" <div class=\"form-group\">\n";
-	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp mot de passe</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_password\" value=\"" . get_hecho($authority->get("helios_ftp_password")) . "\"  /></div>\n";
-	$html .=" </div>\n";
-	
+if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
 	$html .=" <div class=\"form-group\">\n";
 	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp Dest</label>\n";
 	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";

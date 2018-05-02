@@ -8,6 +8,7 @@
 - Suppression d'un warning dans la reception des mail sans attachemnt.
 - Bloquage de la file actes en cas d'erreur trop longue ~actes #370 #369
 - On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
+- Suppression de helios_ftp_login et helios_ftp_password qui ne servent à rien (on prend les login/pass dans la macro) ~helios #159
 
 
 ### Évolutions
