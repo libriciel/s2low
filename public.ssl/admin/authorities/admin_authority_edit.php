@@ -117,11 +117,6 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
 	$html .= "  <label class=\"control-label col-md-4\">HELIOS ftp Dest</label>\n";
 	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";
 	$html .=" </div>\n";
-	
-	$html .=" <div class=\"form-group\">\n";
-	$html .= "  <label class=\"control-label col-md-4\">Numéro de EXT SIRET</label>\n";
-	$html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"ext_siret\" value=\"" . get_hecho($authority->get("ext_siret")) . "\" /></div>\n";
-	$html .=" </div>\n";
 }
 //********************************
 

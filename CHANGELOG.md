@@ -8,12 +8,13 @@
 - Suppression d'un warning dans la reception des mail sans attachemnt.
 - Bloquage de la file actes en cas d'erreur trop longue ~actes #370 #369
 - On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
-- Suppression de helios_ftp_login et helios_ftp_password qui ne servent à rien (on prend les login/pass dans la macro) ~helios #159
-
 
 ### Évolutions
 - les messages d'erreurs de la mise en cloud actes passe de critical à error (trop de faux positifs)
 
+### Retraits
+- Suppression de helios_ftp_login et helios_ftp_password qui ne servent à rien (on prend les login/pass dans la macro) ~helios #159
+- Suppression de ext_siret, inutile depuis le nouveau traitement des PES Retour ~helios
 
 ## 3.0.8 - 2018-04-18
 

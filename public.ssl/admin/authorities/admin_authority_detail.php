@@ -31,7 +31,7 @@ foreach(AuthoritySQL::getSAEProperties() as $id_properties => $properties){
 
 
 if ($me->isGroupAdminOrSuper()){
-	$info_to_display = array_merge($info_to_display,array("authority_group_id","helios_ftp_dest","ext_siret"));
+	$info_to_display = array_merge($info_to_display,array("authority_group_id","helios_ftp_dest"));
 }
 
 $authoritySQL = new AuthoritySQL($sqlQuery);
