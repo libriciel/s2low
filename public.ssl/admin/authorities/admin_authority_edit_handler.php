@@ -45,9 +45,6 @@ $department = Helpers::getVarFromPost("department");
 $district = Helpers::getVarFromPost("district");
 $telephone = Helpers::getVarFromPost("telephone");
 $fax = Helpers::getVarFromPost("fax");
-$ext_siret=Helpers::getVarFromPost("ext_siret");
-$helios_ftp_login=Helpers::getVarFromPost("helios_ftp_login");
-$helios_ftp_password=Helpers::getVarFromPost("helios_ftp_password");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
 $helios_do_not_verify_nom_fic_unicity =
@@ -132,10 +129,7 @@ if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || s
 
 if ($me->isGroupAdminOrSuper()) {
   $authority->set("name", $name);
-  $authority->set("helios_ftp_login", $helios_ftp_login);
-  $authority->set("helios_ftp_password", $helios_ftp_password);
   $authority->set("siren", $siren);
-  $authority->set("ext_siret",$ext_siret);
   $authority->set("authority_group_id", $authorityGroupId);
   $authority->set("agreement", $agreement);
   $authority->set("status", $status);

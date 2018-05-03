@@ -115,11 +115,10 @@ class HeliosController extends Controller {
 		$must_signed = Helpers::getVarFromPost("must_signed",true);
 
 		$siren = $authority_info['siren'];
-		$ext_siret = $authority_info['ext_siret'];
 
 		$filesize = filesize($filepath);
 		$sha1 = sha1_file($filepath);
-		$id_transaction = $heliosTransactionSQL->create($original_filename,$sha1,$user_id,$user_info['authority_id'],$filesize,$siren.$ext_siret);
+		$id_transaction = $heliosTransactionSQL->create($original_filename,$sha1,$user_id,$user_info['authority_id'],$filesize,$siren);
 
 		if ($must_signed){
 			$state = HeliosTransactionsSQL::ATTENTE_SIGNEE;

@@ -85,7 +85,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 
-$helios_configured = $authorityInfo["helios_ftp_dest"] && $authorityInfo["helios_ftp_login"] && $authorityInfo["helios_ftp_password"];
+$helios_configured = $authorityInfo["helios_ftp_dest"];
 
 
 $envelopes = $heliosTransactionsListe->getAll();
