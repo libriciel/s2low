@@ -456,7 +456,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
 if (!$trans->hasPendingCancelTrans()) {
     // Boutons de cloture de la transaction
     // Affichés quand la transaction a été acquittée par le MIAT
-    if ($trans->get("type") == 1 && $transStatus == 4) {
+    if ($trans->get("type") == 1 && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
   
         if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
@@ -519,7 +519,7 @@ if (!$trans->hasPendingCancelTrans()) {
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
-if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "TT")) {
+if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
   $actionHtml .= "<div class=\"action\">\n";
   if (!$trans->hasPendingCancelTrans()) {
     if ($module->getParam("paper") == "on") {
