@@ -8,6 +8,11 @@
 - Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
 - Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
 
+### Évolutions
+
+- Le lien vers les logs est présent quelque soit le statut ~actes #281
+
+
 ## 3.0.9 - 2018-05-04
 
 ### Corrections
