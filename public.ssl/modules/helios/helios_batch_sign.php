@@ -23,7 +23,7 @@ foreach ($liste_id as $transaction_id){
 	try{
 	 	$transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
 	 	if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
-	 		Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
+	 		Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
 	 	}
         $pesaller_path = $pesAllerRetriever->getPath($transactionInfo['sha1']);
 	 	$signature = $heliosSignature->getInfoForSignature($pesaller_path);
