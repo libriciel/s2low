@@ -48,7 +48,7 @@ class Controller {
 
 
 	protected function getEnvironnement(){
-	    return $this->objectInstancier->get("Environnement");
+	    return $this->objectInstancier->get(Environnement::class);
     }
 	
 	public function setErrorMessage($error_message){
@@ -210,7 +210,7 @@ class Controller {
 	public function getRecuperateurGet(){
 	    return $this->getEnvironnement()->get();
 	}
-	
+
 	public function getRecuperateurPost(){
         return $this->getEnvironnement()->post();
 	}

@@ -10,8 +10,8 @@
 	}
 ?>
 	<h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering_area');">Filtrage</h2>
-	<div id="filtering_area">	
-            <form action="index.php?command=list" method="post" accept-charset="utf-8" role="form" class="form-horizontal">
+	<div id="filtering_area">
+            <form action="index.php?command=list" accept-charset="utf-8" role="form" class="form-horizontal">
                 <input type="hidden" name="search" value="1" />
                 <div class="form-group">
                     <label for="state-type" class="col-md-2 control-label">Type d'état</label>

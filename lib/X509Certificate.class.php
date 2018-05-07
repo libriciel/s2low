@@ -15,26 +15,53 @@ class X509Certificate {
 		if (empty($_SERVER['SSL_CLIENT_CERT'])){
 			return false;
 		}
-		
-		if (($tab = openssl_x509_parse($_SERVER['SSL_CLIENT_CERT'])) === false) {
-       		return false;
-        }
 
-		$result['issuer'] = "";
-        foreach ($tab['issuer'] as $key => $val) {
- 	       $result['issuer'] .= "/" . $key . "=" . utf8_decode($val);
-        }
-
-		$result['subject'] = "";
-		foreach ($tab['subject'] as $key => $val) {
-			$result['subject'] .= "/" . $key . "=" . utf8_decode($val);
+		try {
+			$info = $this->getInfo($_SERVER['SSL_CLIENT_CERT']);
+		} catch (Exception $e){
+			return false;
 		}
 
-		$result['certificate_hash'] = $this->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-
-		return $result;		
+		$result['issuer'] = $info['issuer_name'];
+		$result['subject'] = $info['subject_name'];
+		$result['certificate_hash'] = $info['certificate_hash'];
+		return $result;
 	}
-	
+
+	/**
+	 * @param $pem_certificate_content
+	 * @return array|bool
+	 * @throws Exception
+	 */
+	public function getInfo($pem_certificate_content){
+		if (! $pem_certificate_content){
+			return false;
+		}
+		$resource = $this->readCertContent($pem_certificate_content);
+		$info =  openssl_x509_parse($resource);
+		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo_time_t']);
+		$info['issuer_name'] = $this->linearizeCertInfo($info['issuer']);
+		$info['subject_name'] = $this->linearizeCertInfo($info['subject']);
+		$info['certificate_hash'] = $this->getBase64Hash($pem_certificate_content, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
+		return $info;
+	}
+
+	private function linearizeCertInfo(array $info){
+		$result = "";
+		foreach ($info as $key => $val) {
+			if (is_array($val)){
+				$val = utf8_encode_array($val);
+				$val = implode(",",$val);
+			} else {
+				$val = utf8_decode($val);
+			}
+
+			$result .= "/$key=$val";
+
+		}
+		return $result;
+	}
+
 	public function getBase64Hash($cert_content, $hash_alg = 'sha1') {
 		$tmp_file = sys_get_temp_dir()."/".uniqid("x509_pem").mt_rand(0,mt_getrandmax());
 		file_put_contents($tmp_file,$cert_content);
@@ -45,7 +72,12 @@ class X509Certificate {
 		unlink($tmp_file);
 		return $certDigest;
 	}
-	
+
+	/**
+	 * @param $pem_certificate_content
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
 	public function getExpirationDate($pem_certificate_content){
 		$info = $this->getInfo($pem_certificate_content);
 		if ( ! $info){
@@ -54,26 +86,11 @@ class X509Certificate {
 		return $info['expiration_date'];
 	}
 
-	public function getInfo($pem_certificate_content){
-		if (! $pem_certificate_content){
-			return false;
-		}
-		$resource = $this->readCertContent($pem_certificate_content);
-		$info =  openssl_x509_parse($resource);
-		$info['expiration_date'] = $this->certTime2IsoDate($info['validTo_time_t']);
-		$info['issuer_name'] = "";
-		foreach ($info['issuer'] as $key => $val) {
-			$info['issuer_name'] .= "/" . $key . "=" . utf8_decode($val);
-		}
-
-		$info['subject_name'] = "";
-		foreach ($info['subject'] as $key => $val) {
-			$info['subject_name'] .= "/" . $key . "=" . utf8_decode($val);
-		}
-		$info['certificate_hash'] = $this->getBase64Hash($pem_certificate_content, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-		return $info;
-	}
-
+	/**
+	 * @param $cert_content
+	 * @return resource
+	 * @throws Exception
+	 */
 	private function readCertContent($cert_content){
 		@ $resource = openssl_x509_read($cert_content);
 		if (! $resource){
@@ -86,10 +103,16 @@ class X509Certificate {
 		return date("Y-m-d H:i:s",$validTo);
 	}
 
+	/**
+	 * @param $pem_certificate_content
+	 * @param bool $strtoupper
+	 * @return string
+	 * @throws Exception
+	 */
 	public function getIssuerDN($pem_certificate_content,$strtoupper = false){
 		$info = $this->getInfo($pem_certificate_content);
 
-		$issuerName = "";
+		$issuerName = [];
 		foreach(array_reverse($info['issuer']) as $document_id => $value){
 			if ($strtoupper) {
 				$issuerName[] = strtoupper($document_id) . "=$value";
@@ -99,7 +122,12 @@ class X509Certificate {
 		}
 		return implode(", ",$issuerName);
 	}
-	
+
+	/**
+	 * @param $not_clean_pem
+	 * @return mixed
+	 * @throws Exception
+	 */
 	public function pemClean($not_clean_pem){
 		$resource = $this->readCertContent($not_clean_pem);
 		openssl_x509_export($resource, $output);

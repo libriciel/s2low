@@ -22,6 +22,11 @@ class AdminUserController extends Controller {
 		return file_get_contents($_FILES[$name]['tmp_name']);
 	}
 
+	/**
+	 * @param $my_user_id
+	 * @param Recuperateur $recuperateur
+	 * @throws Exception
+	 */
 	private function doEdit($my_user_id, Recuperateur $recuperateur){
 		$api = $recuperateur->getInt('api');
 
@@ -107,6 +112,10 @@ class AdminUserController extends Controller {
 		//OK ALL GOOD !
 	}
 
+	/**
+	 * @return bool|null
+	 * @throws RedirectException
+	 */
 	public function doEditAction(){
 		$this->verifAdmin();
 		$my_user_id = $this->me->getId();
@@ -349,8 +358,13 @@ class AdminUserController extends Controller {
 				$this->redirectSSL("/admin/users/admin_user_edit.php?id=" . $him->getId());
 			}
 		}
+		return true;
 	}
 
+	/**
+	 * @throws Exception
+	 * @throws RedirectException
+	 */
     public function listAction(){
         $this->verifAdmin();
         $user_id = $this->getRecuperateurGet()->get('user_id');
@@ -378,6 +392,9 @@ class AdminUserController extends Controller {
         $this->roles_type_list = $this->me->get("roleTypes");
     }
 
+	/**
+	 * @throws RedirectException
+	 */
     public function doBulkModifCertifAction(){
         $this->verifAdmin();
 
@@ -408,9 +425,6 @@ class AdminUserController extends Controller {
 
         $certificate_filepath = $files['certificat']['tmp_name'];
 
-
-
-
         $userSQL = $this->getObjectInstancier()->get("UserSQL");
 
         $user_info = $userSQL->getInfo($user_id);
@@ -422,7 +436,9 @@ class AdminUserController extends Controller {
             $him = new User($user_info['id']);
             $him->init();
             $him->set('certFilePath',$certificate_filepath);
-            $him->save();
+            if (! $him->save()){
+				$this->redirect("/admin/users/admin_user_list.php?user_id=$user_id",$him->getErrorMsg());
+			}
             if ( ! $him->get('certificate_rgs_2_etoiles')){
                 $userSQL->deleteCertificateRGS2Etoiles($user_info['id']);
             }

@@ -103,13 +103,13 @@ class ListeActesHTML {
                 </div>
                 <label for="number" class="col-md-3 control-label">Le numéro contient</label>
                 <div class="col-md-3">
-                    <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php echo $fnum ?>" />
+                    <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php hecho($fnum) ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="object" class="col-md-offset-6 col-md-3 control-label">L'objet contient</label>
                 <div class="col-md-3">
-                    <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php echo $objet ?>" />
+                    <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php hecho($objet) ?>" />
                 </div>
             </div>
             <div class="form-group">

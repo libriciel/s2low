@@ -1,5 +1,27 @@
 # Change Log
 
+## 3.0.10 
+
+### Corrections
+
+- Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur existant #290
+- Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
+- Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
+- Suppression des boutons "Annuler", "Validé" et "Refusé" pour le super admin et l'admin de groupe qui ne pouvait de toute manière pas les utiliser #279
+- Problème sur le filtre des mail sécurisé non-paginé #74 
+- les antislash n'était pas récupéré correctement dans certain cas
+- possibilité de filtrer avec des caractère \_ #67
+
+### Évolutions
+
+- Le lien vers les logs est présent quelque soit le statut ~actes #281
+- le changement du nombre d'éléments affiché par page ramène à la page 1 #75
+
+### Ajouts
+
+- méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
+
+
 ## 3.0.9 - 2018-05-04
 
 ### Corrections

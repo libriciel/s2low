@@ -26,7 +26,7 @@ class PagerHTML {
                                     <li class="disabled"><a href="#"><?php echo $val ?></a></li>
                                 <?php else : ?>
                                     <li>
-                                        <a href="<?php echo get_url_same_page(array("count" => $val)) ?>"
+                                        <a href="<?php echo get_url_same_page(array("count" => $val,"page"=>1)) ?>"
                                                 title="Afficher <?php echo $val ?>  éléments par page">
                                                 <?php echo $val?>
                                         </a>

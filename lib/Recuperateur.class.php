@@ -16,7 +16,6 @@ class Recuperateur {
 			return $default;
 		}
 		$value = $this->tableauInput[$name];
-		$value = stripslashes($value);
 		return trim($value);
 	}
 
