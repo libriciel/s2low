@@ -13,6 +13,10 @@
 
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
 
+### Ajouts
+
+- méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
+
 
 ## 3.0.9 - 2018-05-04
 
