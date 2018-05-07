@@ -12,6 +12,7 @@
 ### Évolutions
 
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
+- le changement du nombre d'éléments affiché par page ramène à la page 1 #75
 
 ### Ajouts
 
