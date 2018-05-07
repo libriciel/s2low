@@ -21,6 +21,7 @@
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
 - Le changement du nombre d'éléments affiché par page ramène à la page 1 #75
 - La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
+- Modification du message de suppression d'un lot quand il reste des fichiers #78
 
 ### Ajouts
 
