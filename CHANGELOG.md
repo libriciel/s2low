@@ -12,6 +12,7 @@
 - les antislash n'était pas récupéré correctement dans certain cas
 - possibilité de filtrer avec des caractère \_ #67
 - Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
+- On ne peux plus valider plusieurs fois la même transaction #64
 
 
 ### Évolutions

@@ -76,6 +76,13 @@ foreach ($liste_id as $id) {
         $sortie .= "Cette transaction $id ne peut pas encore être clôturée\n";
         continue;
     }
+
+    if (in_array($new_status_id,[5,6]) && in_array($trans->get('last_status_id'),[5,6])){
+		$sortie .= "La transaction $id est déjà terminée et ne peut l'être de nouveau directement\n";
+		continue;
+	}
+
+
     $envelope = new ActesEnvelope($trans->get("envelope_id"));
     $envelope->init();
 
