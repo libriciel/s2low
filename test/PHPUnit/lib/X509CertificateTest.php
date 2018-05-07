@@ -82,16 +82,14 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase {
 		$this->x509Certificate->getInfo("toto");
 	}
 
-	public function testGetBase64Hash()
-	{
+	public function testGetBase64Hash() {
 		$this->assertEquals(
 			"ieQoLUcitdU9iZIJLPoIdp8TcUY=",
 			$this->x509Certificate->getBase64Hash(file_get_contents(__DIR__ . "/fixtures/clean_pem.pem"), 'sha1')
 		);
 	}
 
-	public function testGetIssuerDN()
-	{
+	public function testGetIssuerDN() {
 		$this->assertEquals(
 			"emailAddress=eric@sigmalis.com, CN=Sigmalis Certificate Autority, O=Sigmalis, L=Lyon, ST=France, C=FR",
 			$this->x509Certificate->getIssuerDN(file_get_contents(__DIR__ . "/fixtures/clean_pem.pem"))
