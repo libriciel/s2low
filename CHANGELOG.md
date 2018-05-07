@@ -5,6 +5,7 @@
 ### Corrections
 
 - Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur existant #290
+- Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
 
 ## 3.0.9 - 2018-05-04
 

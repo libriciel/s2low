@@ -49,7 +49,15 @@ class X509Certificate {
 	private function linearizeCertInfo(array $info){
 		$result = "";
 		foreach ($info as $key => $val) {
-			$result .= "/" . $key . "=" . utf8_decode($val);
+			if (is_array($val)){
+				$val = utf8_encode_array($val);
+				$val = implode(",",$val);
+			} else {
+				$val = utf8_decode($val);
+			}
+
+			$result .= "/$key=$val";
+
 		}
 		return $result;
 	}
@@ -77,8 +85,6 @@ class X509Certificate {
 		}
 		return $info['expiration_date'];
 	}
-
-
 
 	/**
 	 * @param $cert_content
