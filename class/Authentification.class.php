@@ -19,7 +19,11 @@ class Authentification {
 		$this->userSQL = $userSQL;
 		$this->nounceSQL = $nounceSQL;
 	}
-	
+
+	/**
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
 	public function authenticate(){
 		if ($this->environnement->session()->get('id_login')){
 			$this->verifConnexion($this->environnement->session()->get('id_login'));
@@ -31,6 +35,10 @@ class Authentification {
 		return $this->environnement->session()->get('id_login');
 	}
 
+	/**
+	 * @return array|bool|mixed
+	 * @throws Exception
+	 */
 	private function detectConnexionID() {
         //TODO Refactorer les Helper:redirect
 
@@ -58,6 +66,10 @@ class Authentification {
 		return $id_list[0];
 	}
 
+	/**
+	 * @param $user_id
+	 * @throws Exception
+	 */
 	private function verifConnexion($user_id) {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
@@ -98,28 +110,20 @@ class Authentification {
 					$result[$result_key] = $this->environnement->server()->get($server_key);
 				}
 		}
-	
+
 		if (! $result['ssl_client_verify']){
 			return false;
 		}
 
-
 		if ($result['ssl_client_cert']){
-			if (($tab = openssl_x509_parse($result['ssl_client_cert'])) === false) {
+			$x509 = new X509Certificate();
+			$info = $x509->getInfo($result['ssl_client_cert']);
+			if (! $info){
 				return false;
 			}
-			$result['issuer_dn'] = '';
-			foreach ($tab['issuer'] as $key => $val) {
-				$result['issuer_dn'] .= "/" . $key . "=" . utf8_decode($val);
-			}
-			$result['subject_dn'] = "";
-			foreach ($tab['subject'] as $key => $val) {
-				$result['subject_dn'] .= "/" . $key . "=" . utf8_decode($val);
-			}
-
-			$x509 = new X509Certificate();
-			$result['certificate_hash'] = $x509->getBase64Hash($result['ssl_client_cert'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-
+			$result['issuer_dn'] = $info['issuer_name'];
+			$result['subject_dn'] = $info['subject_name'];
+			$result['certificate_hash'] = $info['certificate_hash'];
 		}
 		if ($result['certificate_rgs_2_etoiles']){
 			$result['certificate_rgs_2_etoiles'] = $this->der2pem(base64_decode($result['certificate_rgs_2_etoiles']));
