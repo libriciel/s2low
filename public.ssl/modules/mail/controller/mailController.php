@@ -74,8 +74,8 @@ class mailController {
      $sujet = "";
      $SendDateFrom = "";
      $SendDateTo = "";
-     $search=Helpers :: getVarFromPost("search");
-     $deleteId=Helpers :: getVarFromPost("list_id");
+     $search=Helpers :: getVarFromGet("search");
+     $deleteId=Helpers :: getVarFromGet("list_id");
      
      //---delete l'enregistment choisi.
      //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
@@ -91,14 +91,14 @@ class mailController {
   	 if (!$search) {
   	 	$MailTransactions= MailPeer::mailList($MailTransaction,$me->getId());
   	 } else {  	 	
-  	 	$etat=Helpers :: getVarFromPost("etat");
+  	 	$etat=Helpers :: getVarFromGet("etat");
   	 	
   	 	$tabStatus = mail_transaction::getTabStatus();
   	 	$etat_string = $tabStatus[$etat];
 
-  	 	$sujet = utf8_decode(Helpers :: getVarFromPost("sujet"));
-  	 	$SendDateFrom=Helpers :: getVarFromPost("SendDateFrom");
-  	 	$SendDateTo=Helpers :: getVarFromPost("SendDateTo");
+  	 	$sujet = utf8_decode(Helpers :: getVarFromGet("sujet"));
+  	 	$SendDateFrom=Helpers :: getVarFromGet("SendDateFrom");
+  	 	$SendDateTo=Helpers :: getVarFromGet("SendDateTo");
   	 	$cond=" user_id=".$me->getId();
   	 	
   	 	if ($etat_string)

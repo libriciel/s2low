@@ -8,6 +8,7 @@
 - Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
 - Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
 - Suppression des boutons "Annuler", "Validé" et "Refusé" pour le super admin et l'admin de groupe qui ne pouvait de toute manière pas les utiliser #279
+- Problème sur le filtre des mail sécurisé non-paginé #74
 
 ### Évolutions
 
