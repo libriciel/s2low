@@ -54,6 +54,12 @@ class HeliosArchiveControler {
 		return $id;
 	}
 
+	/**
+	 * @param $user_id
+	 * @param $transactionsInfo
+	 * @return bool
+	 * @throws Exception
+	 */
 	private function isAllowToSendArchive($user_id,$transactionsInfo){
 		if (! $transactionsInfo){
 			throw new Exception("Impossible de d'envoyer la transaction");

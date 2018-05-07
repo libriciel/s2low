@@ -45,8 +45,7 @@ class ActesScriptHelper {
                     $envelope_info['siren'],
                     $info['type']
                 );
-
-
+            
             Log::newEntry(LOG_ISSUER_NAME,$message_log,1,false,"USER","actes",false,$info['user_id']);
         }
     }

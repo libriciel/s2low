@@ -177,9 +177,9 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
   $html .= "  <p>Pas de fichier trouvé</p>";
 }
 
-
+$nb_fichier = count($batchFiles);
 $html .= "</div>\n";
-$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce lot ?')\" method=\"post\">\n";
+$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Il reste $nb_fichier fichier(s) à traiter dans ce lot. Souhaitez-vous réellement supprimer ce lot ?')\" method=\"post\">\n";
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeBatch->getId(). "\" />\n";
 $html .= "<input type=\"submit\" value=\"Supprimer ce lot\" class=\"btn btn-warning\" />\n";
 $html .= "</form>\n";

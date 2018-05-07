@@ -19,7 +19,7 @@ if (!$me->authenticate()) {
   Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
 }
 
-if (!$module->isActive() || $me->isGroupAdminOrSuper() || !$me->checkDroit($module->get("name"),'CS')) {
+if (! $me->isGroupAdminOrSuper() && (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS'))) {
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
@@ -42,9 +42,13 @@ if ($status == "valid") {
 } elseif ($status == "sae"){
 	$new_status_id = 19;
     $actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
-
 } else {
 	Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
+}
+
+
+if ($status != 'sae' && $me->isGroupAdminOrSuper()){
+	Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
     
 foreach ($liste_id as $id) {
@@ -76,11 +80,18 @@ foreach ($liste_id as $id) {
         $sortie .= "Cette transaction $id ne peut pas encore être clôturée\n";
         continue;
     }
+
+    if (in_array($new_status_id,[5,6]) && in_array($trans->get('last_status_id'),[5,6])){
+		$sortie .= "La transaction $id est déjà terminée et ne peut l'être de nouveau directement\n";
+		continue;
+	}
+
+
     $envelope = new ActesEnvelope($trans->get("envelope_id"));
     $envelope->init();
 
     // Vérification des permissions
-    if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->checkDroit($module->get("name"),'CS'))) {
+    if ($status != 'sae' && (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->checkDroit($module->get("name"),'CS')))) {
       Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
     }
     

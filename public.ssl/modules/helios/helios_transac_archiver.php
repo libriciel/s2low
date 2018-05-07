@@ -6,7 +6,7 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
 /** @var HeliosArchiveControler $heliosArchiveControler */
-$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
+$heliosArchiveControler = $objectInstancier->get(HeliosArchiveControler::class);
 $id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $id_d){

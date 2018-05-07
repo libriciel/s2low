@@ -11,8 +11,14 @@ $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
 
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
-$actesTransactionSQL->updateStatus($id,-1,"Transaction passée manuellement en erreur");
+$actesScriptHelper  = $objectInstancier->get(ActesScriptHelper::class);
+
+$actesScriptHelper->updateStatus(
+	[$id],
+	ActesStatusSQL::STATUS_EN_ERREUR,
+	"Transaction passée manuellement en erreur"
+);
+
 
 
 $_SESSION['error'] = "La transaction $id a été passée en erreur.";

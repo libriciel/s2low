@@ -11,16 +11,22 @@
 - Problème sur le filtre des mail sécurisé non-paginé #74 
 - les antislash n'était pas récupéré correctement dans certain cas
 - possibilité de filtrer avec des caractère \_ #67
+- Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
+- On ne peux plus valider plusieurs fois la même transaction #64
+- Ajout d'un filtre SIREN sur la liste des collectivités #59
+- Possibilité pour le super admin d'archiver les transactions en traitement par lot #154
 
 ### Évolutions
 
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
-- le changement du nombre d'éléments affiché par page ramène à la page 1 #75
+- Le changement du nombre d'éléments affiché par page ramène à la page 1 #75
+- La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
+- Modification du message de suppression d'un lot quand il reste des fichiers #78
 
 ### Ajouts
 
-- méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
-
+- Méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
+- Ajout du passage manuel en erreur dans le journal des évenements #81
 
 ## 3.0.9 - 2018-05-04
 

@@ -46,6 +46,13 @@
 			</div>
 			</div>
 
+        <div class="form-group">
+            <label for="name-contain" class="col-md-3 control-label">SIREN</label>
+            <div class="col-md-3">
+                <input id="siren" class="form-control" type="text" name="siren" size="20" maxlength="25" value="<?php hecho($fsiren) ?>" />
+            </div>
+        </div>
+
 		<div class="form-group">
 			<button class="btn btn-default col-md-offset-3 col-md-3" type="submit">Filtrer</button>
 		</div>
@@ -63,7 +70,7 @@
 			<th id="authority-type">Type de collectivité</th>
 			<th id="address">Adresse</th>
 			<th id="phone">Téléphone</th>
-			<th id="fax">Fax</th>
+			<th id="fax">SIREN</th>
 			<th id="actions">Actions</th>
 		</tr>
 		</thead>
@@ -80,7 +87,7 @@
 				<?php hecho($authority_info["city"]) ?>
 			</td>
 			<td headers="phone"><?php hecho($authority_info["telephone"]) ?></td>
-			<td headers="fax"><?php hecho($authority_info["fax"]) ?></td>
+			<td headers="fax"><?php hecho($authority_info["siren"]) ?></td>
 			<td headers="actions">
 				<a href="admin_authority_edit.php?id=<?php echo $authority_info["id"] ?>" class="icon">
 					<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
