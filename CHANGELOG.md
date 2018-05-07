@@ -19,13 +19,13 @@
 ### Évolutions
 
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
-- le changement du nombre d'éléments affiché par page ramène à la page 1 #75
-- la colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
+- Le changement du nombre d'éléments affiché par page ramène à la page 1 #75
+- La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
 
 ### Ajouts
 
-- méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
-
+- Méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
+- Ajout du passage manuel en erreur dans le journal des évenements #81
 
 ## 3.0.9 - 2018-05-04
 
