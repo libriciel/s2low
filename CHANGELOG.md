@@ -6,6 +6,7 @@
 
 - Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur existant #290
 - Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
+- Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
 
 ## 3.0.9 - 2018-05-04
 
