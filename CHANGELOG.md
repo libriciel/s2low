@@ -14,6 +14,7 @@
 - Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
 - On ne peux plus valider plusieurs fois la même transaction #64
 - Ajout d'un filtre SIREN sur la liste des collectivités #59
+- Possibilité pour le super admin d'archiver les transactions en traitement par lot #154
 
 ### Évolutions
 

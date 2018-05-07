@@ -52,7 +52,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$transaction_id = $this->createTransaction(4);
 		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(5,$transaction_id);
 		$this->assertFalse($result);
-		$this->assertEquals("Accès refusé (seul le créateur de l'Acte peut l'archiver)",$this->actesArchiveControler->getLastError());
+		$this->assertEquals("Accès interdit",$this->actesArchiveControler->getLastError());
 	}
 
 	public function testSendCreateActeFailed(){

@@ -46,9 +46,8 @@ class ActesArchiveControler {
 			$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
 			$user = new User($user_id);
 			$user->init();
-			if ( ! $transactionsInfo || ($transactionsInfo['user_id'] != $user_id && !$user->isAdmin())){
-				throw new Exception("Accès refusé (seul le créateur de l'Acte peut l'archiver)");
-			}
+			$this->isAllowToSendArchive($user_id,$transactionsInfo);
+
 			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14,20)) && $transactionsInfo['type'] != 1) {
 				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».");
 			}
@@ -60,6 +59,39 @@ class ActesArchiveControler {
 		$id = $this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
 		return $id;
 	}
+
+	/**
+	 * @param $user_id
+	 * @param $transactionsInfo
+	 * @return bool
+	 * @throws Exception
+	 */
+	private function isAllowToSendArchive($user_id,$transactionsInfo){
+		if (! $transactionsInfo){
+			throw new Exception("Impossible de d'envoyer la transaction");
+		}
+		if ($transactionsInfo['user_id'] == $user_id){
+			return true;
+		}
+		$transactionsInfo['authority_id'];
+		$userSQL = new UserSQL($this->sqlQuery);
+		$user_info = $userSQL->getInfo($user_id);
+
+		if ($user_info['role'] == 'SADM'){
+			return true;
+		}
+
+		if ($user_info['role'] != 'ADM'){
+			throw new Exception("Accès interdit");
+		}
+
+		if ($user_info['authority_id'] == $transactionsInfo['authority_id']){
+			return true;
+		}
+
+		throw new Exception("Accès interdit");
+	}
+
 
 	public function sendAllArchive(){
 		echo "Début de l'envoie:\n";
