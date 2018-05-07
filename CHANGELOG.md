@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.10 
+
+### Corrections
+
+- Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur existant #290
+
 ## 3.0.9 - 2018-05-04
 
 ### Corrections

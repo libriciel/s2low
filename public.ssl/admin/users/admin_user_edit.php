@@ -149,9 +149,9 @@ if ($him->getId()){
 }
 
 $userSQL = new UserSQL($sqlQuery);
-$ident_method_id = $userSQL->getIdentificationMethod($him->getId());
-$ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
 
+$ident_method_id = $userSQL->getIdentificationMethod($him->getId()?:$new_id);
+$ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
 
 $certificate_rgs_2_etoiles = $him->get('certificate_rgs_2_etoiles');
 
