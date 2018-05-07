@@ -11,6 +11,8 @@
 - Problème sur le filtre des mail sécurisé non-paginé #74 
 - les antislash n'était pas récupéré correctement dans certain cas
 - possibilité de filtrer avec des caractère \_ #67
+- Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
+
 
 ### Évolutions
 

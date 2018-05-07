@@ -28,4 +28,9 @@ class HeliosRetourSQL extends SQL {
 		return $this->query($sql,self::STATUS_NON_LU,$authority_id);
 	}
 
+	public function changeStatus($id, $status){
+		$sql = "UPDATE helios_retour SET status = ? WHERE id = ?";
+		$this->query($sql,$status, $id);
+	}
+
 }
