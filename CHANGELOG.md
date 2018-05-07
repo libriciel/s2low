@@ -13,12 +13,13 @@
 - possibilité de filtrer avec des caractère \_ #67
 - Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
 - On ne peux plus valider plusieurs fois la même transaction #64
-
+- Ajout d'un filtre SIREN sur la liste des collectivités #59
 
 ### Évolutions
 
 - Le lien vers les logs est présent quelque soit le statut ~actes #281
 - le changement du nombre d'éléments affiché par page ramène à la page 1 #75
+- la colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
 
 ### Ajouts
 
