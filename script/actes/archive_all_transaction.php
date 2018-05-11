@@ -23,7 +23,7 @@ $sql = "SELECT at.id ".
     "AND atw.date > '2008-06-01' ".
     "AND atw.date < ? ";
 
-$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5,date);
+$transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5,$date);
 
 if (! $transaction_id_list){
 	echo "Aucune transaction trouvée\n";

@@ -1,6 +1,6 @@
 # Change Log
 
-## 3.0.10 
+## 3.0.10
 
 ### Corrections
 
@@ -8,7 +8,7 @@
 - Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
 - Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
 - Suppression des boutons "Annuler", "Validé" et "Refusé" pour le super admin et l'admin de groupe qui ne pouvait de toute manière pas les utiliser #279
-- Problème sur le filtre des mail sécurisé non-paginé #74 
+- Problème sur le filtre des mail sécurisé non-paginé #74
 - les antislash n'était pas récupéré correctement dans certain cas
 - possibilité de filtrer avec des caractère \_ #67
 - Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
@@ -27,6 +27,7 @@
 
 - Méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
 - Ajout du passage manuel en erreur dans le journal des évenements #81
+- Ajout script rapport sur l'historique d'une collectivité
 
 ## 3.0.9 - 2018-05-04
 
