@@ -496,10 +496,6 @@ if (!defined("HELIOS_ENABLE_SIGNATURE_TECHNIQUE")){
 	define("HELIOS_ENABLE_SIGNATURE_TECHNIQUE",false);
 }
 
-if (empty($helios_authorized_rollback_ids)){
-	$helios_authorized_rollback_ids = array();
-}
-
 if (!defined("HELIOS_OCRE_FILE_PATH")){
 	define("HELIOS_OCRE_FILE_PATH","/data/tdt-workspace/helios/ocre/");
 }
