@@ -162,6 +162,14 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
         $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
         $this->assertEquals(1,$enveloppe_info['user_id']);
+
+        $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+        $transaction_id = $actesTransactionSQL->getIdByEnvelopeId($enveloppe_info['id']);
+
+        $info = $actesTransactionSQL->getInfo($transaction_id);
+
+        $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
     }
 
     public function testDefereTA(){
