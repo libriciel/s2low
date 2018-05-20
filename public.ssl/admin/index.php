@@ -37,7 +37,7 @@ $actes_status = array(
     3=>"Transmis",
     7=>"Document reçu"
 );
-$actesTransactionsSQL = $objectInstancier->get('ActesTransactionsSQL');
+$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 
 $actes_nb_transaction_by_status = array();
