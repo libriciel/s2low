@@ -507,6 +507,7 @@ CREATE INDEX aif_ei ON actes_included_files USING btree (envelope_id);
 CREATE INDEX aif_ti ON actes_included_files USING btree (transaction_id);
 CREATE INDEX logs_request_state_idx ON logs_request USING btree (state);
 CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur);
+CREATE UNIQUE INDEX actes_transactions_last_status_id_id ON actes_transactions USING btree (last_status_id, id);
 CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id);
 CREATE INDEX actes_transactions_auto_broadcasted_last_status_id_type_idx ON actes_transactions USING btree (auto_broadcasted, last_status_id, type);
 CREATE INDEX actes_transactions_user_id_last_status_id_idx ON actes_transactions USING btree (user_id, last_status_id);

@@ -3418,6 +3418,10 @@
             "tablename": "logs_request",
             "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
         },
+        "actes_transactions_last_status_id_id": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE UNIQUE INDEX actes_transactions_last_status_id_id ON actes_transactions USING btree (last_status_id, id)"
+        },
         "actes_transactions_authority_id_last_status_id_idx": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id)"
