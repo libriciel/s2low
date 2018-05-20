@@ -10,4 +10,5 @@ ext/standalone/HTMLPurifier/DefinitionCache
 .settings
 .project
 .buildpath
-
+/build/
+.scannerwork
