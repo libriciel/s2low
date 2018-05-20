@@ -3326,6 +3326,10 @@
             "tablename": "mail_transaction",
             "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
         },
+        "actes_envelopes_submission_date_id": {
+            "tablename": "actes_envelopes",
+            "indexdef": "CREATE UNIQUE INDEX actes_envelopes_submission_date_id ON actes_envelopes USING btree (submission_date, id)"
+        },
         "ae_id_is_in_cloud": {
             "tablename": "actes_envelopes",
             "indexdef": "CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id)"

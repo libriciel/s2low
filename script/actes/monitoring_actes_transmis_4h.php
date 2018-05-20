@@ -16,7 +16,7 @@ $limit=50;
 $last_status="3";
 $timestamp=time()-(60*60);
 $timestampmax=time()-(4*60*60);
-$sql="SELECT count(*) ".
+$sql="SELECT count(actes_envelopes.id) ".
      "FROM actes_envelopes INNER JOIN actes_transactions ON actes_envelopes.id = actes_transactions.envelope_id ".
      "WHERE actes_transactions.last_status_id = '".$last_status."' ".
      "AND actes_envelopes.submission_date < '".date("Y-m-d H:i:s",$timestamp)."' ".
