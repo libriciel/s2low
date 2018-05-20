@@ -3342,6 +3342,10 @@
             "tablename": "actes_classification_codes",
             "indexdef": "CREATE INDEX acc_ai ON actes_classification_codes USING btree (authority_id)"
         },
+        "helios_transactions_last_status_id": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE UNIQUE INDEX helios_transactions_last_status_id ON helios_transactions USING btree (last_status_id, id)"
+        },
         "helios_transactions_sha1": {
             "tablename": "helios_transactions",
             "indexdef": "CREATE INDEX helios_transactions_sha1 ON helios_transactions USING btree (sha1)"
