@@ -201,7 +201,7 @@ class ActesTransactionsSQL extends SQL{
     }
 
     public function getNbByStatus($status_id){
-        $sql = "SELECT count(*) FROM actes_transactions WHERE last_status_id=?";
+        $sql = "SELECT count(id) FROM actes_transactions WHERE last_status_id=?";
         return $this->queryOne($sql,$status_id);
     }
 
