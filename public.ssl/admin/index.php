@@ -48,7 +48,8 @@ foreach($actes_status as $status_id => $status_libelle){
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
-$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
+//$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
+$nb_actes_transmis_4hours_before= "??";
 
 
 $menuHTML = new MenuHTML();
