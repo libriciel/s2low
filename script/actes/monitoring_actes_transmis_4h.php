@@ -19,9 +19,9 @@ $timestampmax=time()-(4*60*60);
 $sql="SELECT count(*) ".
      "FROM actes_envelopes INNER JOIN actes_transactions ON actes_envelopes.id = actes_transactions.envelope_id ".
      "WHERE actes_transactions.last_status_id = '".$last_status."' ".
-     "AND DATE_TRUNC('minute',actes_envelopes.submission_date) < DATE_TRUNC('minute',TIMESTAMP '".date("Y-m-d H:i:s",$timestamp)."') ".
-     "AND DATE_TRUNC('minute',actes_envelopes.submission_date) > DATE_TRUNC('minute',TIMESTAMP '".date("Y-m-d H:i:s",$timestampmax)."') ".
-     "AND (actes_transactions.type like '1' OR actes_transactions.type like '6') "  ;
+     "AND actes_envelopes.submission_date < '".date("Y-m-d H:i:s",$timestamp)."' ".
+     "AND actes_envelopes.submission_date > '".date("Y-m-d H:i:s",$timestampmax)."' ".
+     "AND (actes_transactions.type = '1' OR actes_transactions.type = '6') "  ;
 
 #echo "$sql \n";
 
