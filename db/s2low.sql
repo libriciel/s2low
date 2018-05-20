@@ -482,6 +482,7 @@ CREATE TABLE users_perms (
 CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id);
 CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_workflow USING btree (status_id);
 CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date);
+CREATE INDEX mail_message_emis_mail_transaction_id ON mail_message_emis USING btree (mail_transaction_id);
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id);
 CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id);
 CREATE INDEX actes_transactions_workflow_date_idx ON actes_transactions_workflow USING btree (date);

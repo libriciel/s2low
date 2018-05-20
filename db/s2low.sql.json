@@ -3318,6 +3318,10 @@
             "tablename": "helios_transactions_workflow",
             "indexdef": "CREATE INDEX helios_transactions_workflow_date_idx ON helios_transactions_workflow USING btree (date)"
         },
+        "mail_message_emis_mail_transaction_id": {
+            "tablename": "mail_message_emis",
+            "indexdef": "CREATE INDEX mail_message_emis_mail_transaction_id ON mail_message_emis USING btree (mail_transaction_id)"
+        },
         "mt_ui": {
             "tablename": "mail_transaction",
             "indexdef": "CREATE INDEX mt_ui ON mail_transaction USING btree (user_id)"
