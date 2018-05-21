@@ -107,7 +107,7 @@ if(!defined('DEFAULT_ITEMS_PER_PAGE')){
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
 
-// Mode de l'application : dev ou prod (utilis� dans Database.class.php)
+// Mode de l'application : dev ou prod
 if(!defined("MODE")){
         //define("MODE", "prod");
         define("MODE", "dev");
