@@ -28,7 +28,7 @@ spl_autoload_register('s2low_autoload');
 
 require_once(__DIR__."/../config/config.php");
 
-//A cause du chargement d'objet ï¿½ partir de la session ... BEURK !
+//A cause du chargement d'objet à partir de la session ... BEURK !
 require_once(SITEROOT."/public.ssl/modules/mail/lib/Annuaire.class.php");
 
 require_once(SITEROOT . '/class/include.class.php');
@@ -42,6 +42,7 @@ $sqlQuery->setCredential(DB_USER,DB_PASSWORD);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 $objectInstancier = new ObjectInstancier();
+ObjectInstancierFactory::setObjectInstancier($objectInstancier);
 
 $logger = new Monolog\Logger("S2LOW");
 $logger->pushHandler(new Monolog\Handler\StreamHandler(LOG_FILE, LOG_LEVEL));
@@ -133,4 +134,3 @@ if (php_sapi_name() != 'cli'){
 
 $frontController = new FrontController($objectInstancier);
 
-ObjectInstancierFactory::setObjectInstancier($objectInstancier);

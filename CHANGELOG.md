@@ -23,6 +23,7 @@
 - Le changement du nombre d'éléments affiché par page ramène à la page 1 #75
 - La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
 - Modification du message de suppression d'un lot quand il reste des fichiers #78
+- Utilisation unique de PDO afin de diminuer le nombre de connexions simultané à la base #377
 
 ### Ajouts
 

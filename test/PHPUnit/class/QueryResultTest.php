@@ -1,0 +1,37 @@
+<?php
+
+class QueryResultTest extends S2lowTestCase {
+
+	/**
+	 * @var Database
+	 */
+	private $database;
+
+	/**
+	 * @throws Exception
+	 */
+	protected function setUp() {
+		parent::setUp();
+		$this->database = DatabasePool::getInstance();
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testQuery(){
+		$queryResult = $this->database->select("SELECT name,email,id FROM users ORDER BY id");
+		$this->assertEquals(10,$queryResult->num_row());
+		$this->assertEquals(3,$queryResult->num_field());
+		$this->assertEquals('eric@sigmalis.com',$queryResult->get_all_rows()[0]['email']);
+	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetNextRow(){
+		$queryResult = $this->database->select("SELECT name,email,id FROM users ORDER BY id");
+		$this->assertEquals('eric@sigmalis.com',$queryResult->get_next_row()['email']);
+	}
+
+}
