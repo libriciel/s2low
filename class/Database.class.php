@@ -5,52 +5,27 @@ require_once __DIR__."/QueryResult.class.php";
 
 class Database {
 
-	/**
-	 * @var string machine supportant la base PostgresSQL
-	 */
-	private $host;
-
-	/**
-	 * @var string Utilisateur de la base
-	 */
-	private $user;
-
-	/**
-	 * @var string Mot de passe de connexion
-	 */
-	private $password;
-
-	/**
-	 * @var string Base de donnees courante
-	 */
-	private $base;
-
-	/**
-	 * @var null|resource Lien sur la base
-	 */
-	private $link = null;
-
-	/**
-	 * @var bool true si une transaction est en cours
-	 */
-	public $transaction_mode;
+	private $database_host;
+	private $database_user;
+	private $database_password;
+	private $database_name;
+	private $connection_link = null;
+	private $is_in_a_transaction;
+	private $query_log;
+	private $last_query;
+	private $last_query_error;
 
 	/**
 	 * @var string contient le message de la première erreur
 	 */
-	public $transaction_error;
+	private $transaction_error;
 
-	public $query_log;
-
-	public $last_query;
-	public $last_query_error;
-	
   	public function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
-		$this->host     = $host;
-		$this->user    = $user;
-		$this->password = $password;
-		$this->base    = $base;
-		$this->transaction_mode=false;
+		$this->database_host     = $host;
+		$this->database_user    = $user;
+		$this->database_password = $password;
+		$this->database_name    = $base;
+		$this->is_in_a_transaction=false;
 		$this->transaction_error='';
 		$this->query_log=false;
 		$this->last_query="No request yet";
@@ -58,15 +33,15 @@ class Database {
 	}
 
   	public function connect() {
-		if ($this->link){
+		if ($this->connection_link){
 			return true;
 		}
 
 		// Connexion à la base    host=sheep port=5432 dbname=marie user=mouton password=baaaa
-		$connection_string= "dbname=".$this->base." user=".$this->user." password=".$this->password;
-		if ($this->host != "") $connection_string="host=".$this->host." ".$connection_string;
-		$this->link = pg_connect($connection_string);
-		if ( ! $this->link  ) {
+		$connection_string= "dbname=".$this->database_name." user=".$this->database_user." password=".$this->database_password;
+		if ($this->database_host != "") $connection_string="host=".$this->database_host." ".$connection_string;
+		$this->connection_link = pg_connect($connection_string);
+		if ( ! $this->connection_link  ) {
 			header("Location: /maintenance.php");
 			exit(false);
 		}
@@ -77,7 +52,7 @@ class Database {
   	}
 
   	public function close() {
-    	pg_close($this->link);
+    	pg_close($this->connection_link);
     	return true;
   	}
 
@@ -128,7 +103,7 @@ class Database {
 	 * @throws Exception
 	 */
   	public function select($query,$return_queryresult=true) {
-		if (! $this->link) {
+		if (! $this->connection_link) {
 		  if (! $this->connect()) {
 		return false;
 		  }
@@ -153,7 +128,7 @@ class Database {
 
 				$trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
 
-				if ($this->transaction_mode && $this->transaction_error=='') {
+				if ($this->is_in_a_transaction && $this->transaction_error=='') {
 				$this->transaction_error=$error;
 				}
 
@@ -179,11 +154,11 @@ class Database {
 	 * @throws Exception
 	 */
 	public function begin() {
-		if ($this->transaction_mode) {
+		if ($this->is_in_a_transaction) {
 		  return 0;
 		}
 		if ($this->exec("BEGIN")===true) {
-		  $this->transaction_mode=true;
+		  $this->is_in_a_transaction=true;
 		  $this->transaction_error='';
 		  return 1;
 		}
@@ -195,11 +170,11 @@ class Database {
 	 * @throws Exception
 	 */
 	public function commit() {
-		if (!$this->transaction_mode) {
+		if (!$this->is_in_a_transaction) {
 		  return 0;
 		}
 		if ($this->exec("COMMIT")===true) {
-		  $this->transaction_mode=false;
+		  $this->is_in_a_transaction=false;
 		  if ($this->transaction_error=='') return 1;
 		}
 		return 0;
@@ -210,11 +185,11 @@ class Database {
 	 * @throws Exception
 	 */
 	public function rollback() {
-		if (!$this->transaction_mode) {
+		if (!$this->is_in_a_transaction) {
 		  return 0;
 		}
 		if ($this->exec("ROLLBACK")===true) {
-		  $this->transaction_mode=false;
+		  $this->is_in_a_transaction=false;
 		  //$this->transaction_error='';
 		  return 1;
 		}
