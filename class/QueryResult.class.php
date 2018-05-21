@@ -5,10 +5,10 @@
  */
 class QueryResult {
 
-	private $result_ressource;
+	private $pdoStatement;
 
-	public function __construct($result_ressource) {
-		$this->result_ressource=$result_ressource;
+	public function __construct(PDOStatement $pdoStatement) {
+		$this->pdoStatement=$pdoStatement;
 	}
 
 	/** WTF... en simplifiant ca donne toujours false */
@@ -18,27 +18,21 @@ class QueryResult {
 
 	// Compte les lignes de resultat
 	public function num_row() {
-		return @pg_num_rows($this->result_ressource);
+		return $this->pdoStatement->rowCount();
 	}
 
 	// Compte les colonnes de resultat
 	public function num_field() {
-		return @pg_num_fields($this->result_ressource);
+		return $this->pdoStatement->columnCount();
 	}
 
 	// Retourne la ligne courante resultat ou FALSE si plus de lignes
 	public function get_next_row() {
-		return @pg_fetch_assoc($this->result_ressource);
-	}
-
-	public function affected_row(){
-		return @pg_affected_rows ($this->result_ressource);
+		return $this->pdoStatement->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function get_all_rows() {
-		$out=array();
-		while ($row=@pg_fetch_assoc($this->result_ressource)) $out[]=$row;
-		return $out;
+		return $this->pdoStatement->fetchAll(PDO::FETCH_ASSOC);
 	}
 }
 

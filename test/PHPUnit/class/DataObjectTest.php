@@ -52,7 +52,6 @@ class DataObjectTest extends S2lowTestCase {
 		$this->assertTrue($this->user->delete(1));
 	}
 
-
 	public function testDeleteFailed(){
 		$dataObject = new DataObject();
 		$this->assertFalse($dataObject->delete());

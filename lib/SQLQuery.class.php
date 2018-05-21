@@ -58,6 +58,7 @@ class SQLQuery {
 			$this->pdo = new PDO($dsn,$this->login,$this->password);
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 			$this->query("SET CLIENT_ENCODING TO '{$this->client_encoding}';");
+			$this->query("SET standard_conforming_strings = off;");
 		}
 		return $this->pdo;
 	}

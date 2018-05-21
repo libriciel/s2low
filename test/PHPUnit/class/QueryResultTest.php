@@ -25,13 +25,6 @@ class QueryResultTest extends S2lowTestCase {
 		$this->assertEquals('eric@sigmalis.com',$queryResult->get_all_rows()[0]['email']);
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public function testUpdate(){
-		$queryResult = $this->database->select("UPDATE users SET email='toto'");
-		$this->assertEquals(10,$queryResult->affected_row());
-	}
 
 	/**
 	 * @throws Exception
