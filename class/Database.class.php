@@ -9,7 +9,7 @@ class Database {
 	private $database_user;
 	private $database_password;
 	private $database_name;
-	
+
 	private $connection_link = null;
 	private $is_in_a_transaction;
 
@@ -17,7 +17,7 @@ class Database {
 	/**
 	 * @var string contient le message de la première erreur
 	 */
-	private $transaction_error;
+	private $has_transaction_error;
 
   	public function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
 		$this->database_host     = $host;
@@ -25,7 +25,7 @@ class Database {
 		$this->database_password = $password;
 		$this->database_name    = $base;
 		$this->is_in_a_transaction=false;
-		$this->transaction_error='';
+		$this->has_transaction_error=false;
 	}
 
   	public function connect() {
@@ -50,15 +50,34 @@ class Database {
 	/**
 	 * renvoie une ressource sur QueryResult
 	 * @param $query
-	 * @param bool $return_queryresult NE JAMAIS PASSER LE SECOND PARAMETRE => USAGE INTERNE
-	 * @return bool|QueryResult
+	 * @return QueryResult
 	 * @throws Exception
 	 */
-  	public function select($query,$return_queryresult=true) {
+  	public function select($query) {
+		$result = $this->internalQuery($query);
+		return new QueryResult($query,$result);
+	}
+
+	/**
+	 * @param $query
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function exec($query) {
+		$this->internalQuery($query);
+		return true;
+	}
+
+	/**
+	 * @param $query
+	 * @return bool|resource
+	 * @throws Exception
+	 */
+	private function internalQuery($query){
 		if (! $this->connection_link) {
-		  if (! $this->connect()) {
-		return false;
-		  }
+			if (! $this->connect()) {
+				return false;
+			}
 		}
 
 		$trace = Trace::getInstance();
@@ -69,30 +88,20 @@ class Database {
 
 		// Test du resultat
 		if ($result == false) {
-				$error=pg_last_error();
+			$error=pg_last_error();
 
-				$trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
+			$trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
 
-				if ($this->is_in_a_transaction && $this->transaction_error=='') {
-				$this->transaction_error=$error;
-				}
+			if ($this->is_in_a_transaction) {
+				$this->has_transaction_error = true;
+			}
 
-
-				$error = strval(utf8_decode(pg_last_error()));
-				throw new Exception($error);
+			$error = strval(utf8_decode(pg_last_error()));
+			throw new Exception($error);
 		}
-		return ($return_queryresult?new QueryResult($query,$result):true);
+		return $result;
 	}
 
-
-	/**
-	 * @param $query
-	 * @return bool|QueryResult
-	 * @throws Exception
-	 */
-	public function exec($query) {
-		return $this->select($query,false);
-	}
 
 	/**
 	 * @return int
@@ -100,12 +109,12 @@ class Database {
 	 */
 	public function begin() {
 		if ($this->is_in_a_transaction) {
-		  return 0;
+		  	return 0;
 		}
-		if ($this->exec("BEGIN")===true) {
-		  $this->is_in_a_transaction=true;
-		  $this->transaction_error='';
-		  return 1;
+		if ($this->exec("BEGIN") === true) {
+		  	$this->is_in_a_transaction = true;
+		  	$this->has_transaction_error = false;
+		  	return 1;
 		}
 		return 0;
   	}
@@ -116,11 +125,13 @@ class Database {
 	 */
 	public function commit() {
 		if (!$this->is_in_a_transaction) {
-		  return 0;
+		  	return 0;
 		}
-		if ($this->exec("COMMIT")===true) {
-		  $this->is_in_a_transaction=false;
-		  if ($this->transaction_error=='') return 1;
+		if ($this->exec("COMMIT") === true) {
+		  	$this->is_in_a_transaction=false;
+		  	if (! $this->has_transaction_error) {
+		  		return 1;
+			}
 		}
 		return 0;
   	}
@@ -131,25 +142,25 @@ class Database {
 	 */
 	public function rollback() {
 		if (!$this->is_in_a_transaction) {
-		  return 0;
+		  	return 0;
 		}
 		if ($this->exec("ROLLBACK")===true) {
-		  $this->is_in_a_transaction=false;
-		  //$this->transaction_error='';
-		  return 1;
+		  	$this->is_in_a_transaction = false;
+		  	return 1;
 		}
 		return 0;
   	}
 
 	public function quote($valeur,$notnull=false) {
 		if ($valeur!="") {
-		  $valeur=str_replace("\r\n","\n",$valeur);
-		  return "'".addslashes($valeur)."'";
+			  $valeur=str_replace("\r\n","\n",$valeur);
+			  return "'".addslashes($valeur)."'";
 		} else {
-		  if ($notnull)
-		return "''";
-		  else
-		return 'NULL';
+		  	if ($notnull) {
+				return "''";
+			}  else {
+				return 'NULL';
+			}
 		}
   	}
 
