@@ -44,7 +44,7 @@ class Database {
 
 	public $last_query;
 	public $last_query_error;
-
+	
   	public function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PASSWORD, $base=DB_DATABASE) {
 		$this->host     = $host;
 		$this->user    = $user;
@@ -160,9 +160,7 @@ class Database {
 
 				$error = strval(utf8_decode(pg_last_error()));
 				throw new Exception($error);
-		  return ($return_queryresult?new QueryResult($query,$result,$error):false);
 		}
-		$this->query=$result;
 		return ($return_queryresult?new QueryResult($query,$result):true);
 	}
 
@@ -176,6 +174,10 @@ class Database {
 		return $this->select($query,false);
 	}
 
+	/**
+	 * @return int
+	 * @throws Exception
+	 */
 	public function begin() {
 		if ($this->transaction_mode) {
 		  return 0;
@@ -188,6 +190,10 @@ class Database {
 		return 0;
   	}
 
+	/**
+	 * @return int
+	 * @throws Exception
+	 */
 	public function commit() {
 		if (!$this->transaction_mode) {
 		  return 0;
@@ -199,6 +205,10 @@ class Database {
 		return 0;
   	}
 
+	/**
+	 * @return int
+	 * @throws Exception
+	 */
 	public function rollback() {
 		if (!$this->transaction_mode) {
 		  return 0;
@@ -227,22 +237,34 @@ class Database {
 		}
   	}
 
+	/**
+	 * @param $sql
+	 * @return array
+	 * @throws Exception
+	 */
 	public function getOneLine($sql){
   		$result = $this->select($sql);
 		return $result->get_next_row();
 	}
-	
+
+	/**
+	 * @param $sql
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
 	public function getOneValue($sql){
 		$result = $this->getOneLine($sql);
 		if (!$result){
 			return false;
 		}
-		
-		foreach($result as $val){
-			return $val;
-		}
+		return reset($result);
 	}
-	
+
+	/**
+	 * @param $sql
+	 * @return array
+	 * @throws Exception
+	 */
 	public function fetchAll($sql){
 		$result = $this->select($sql);
 		$tabResult = array();
