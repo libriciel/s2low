@@ -121,7 +121,7 @@ class DatabaseTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testFailed(){
-		$this->setExpectedException(Exception::class,'column "toto" does not exist');
+		$this->setExpectedException(Exception::class,' does not exist');
 		$this->database->select("SELECT toto");
 	}
 
