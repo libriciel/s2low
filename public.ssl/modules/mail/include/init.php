@@ -1,10 +1,8 @@
-<?php 
-require_once(dirname(__FILE__).'/../../../../config/config.php');
+<?php
 
-require_once(dirname(__FILE__)."/../lib/Annuaire.class.php");
+require_once __DIR__."/../../../../init/init.php";
 require_once(dirname(__FILE__)."/../lib/GroupeMail.class.php");
 
-require_once(SITEROOT . '/class/include.class.php');
 
 $module = new Module();
 if (!$module->initByName("mail")) {
