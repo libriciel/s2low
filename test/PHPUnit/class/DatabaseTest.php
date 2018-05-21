@@ -13,21 +13,23 @@ class DatabaseTest extends S2lowTestCase {
 	protected function setUp() {
 		parent::setUp();
 		$this->database = DatabasePool::getInstance();
-		$this->database->errorbox =true;
-		$this->database->display_warning =true;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testQuery(){
 		$this->assertEquals(1,$this->database->exec("SELECT 1"));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testLastRequet(){
 		$this->assertEquals(1,$this->database->exec("SELECT 1"));
 		$this->assertEquals("SELECT 1",$this->database->lastRequest());
 		$this->assertEmpty($this->database->lastRequestError());
 	}
-
-
 
 	/**
 	 * @throws Exception
@@ -67,6 +69,9 @@ class DatabaseTest extends S2lowTestCase {
 		$this->assertEquals("NULL",$quote);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testTransaction(){
 		$this->database->begin();
 		$this->database->exec("INSERT into actes_status(id,name) VALUES (42,'toto')");
@@ -77,6 +82,9 @@ class DatabaseTest extends S2lowTestCase {
 		);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testTransactionRollback(){
 		$this->database->begin();
 		$this->database->exec("INSERT into actes_status(id,name) VALUES (42,'toto')");
@@ -88,18 +96,15 @@ class DatabaseTest extends S2lowTestCase {
 
 	public function testBeginBegin(){
 		$this->database->begin();
-		$this->expectOutputString("Database.class.php:begin(): ATTENTION, une transaction est déjà en cours\n");
 		$this->assertEquals(0,$this->database->begin());
 		$this->database->rollback();
 	}
 
 	public function testCommit(){
-		$this->expectOutputString("Database.class.php:commit(): ATTENTION, aucune transaction en cours pour commiter\n");
 		$this->assertEquals(0,$this->database->commit());
 	}
 
 	public function testRollback(){
-		$this->expectOutputString("Database.class.php:rollback(): ATTENTION, aucune transaction en cours pour rollbacker\n");
 		$this->assertEquals(0,$this->database->rollback());
 	}
 
@@ -107,31 +112,45 @@ class DatabaseTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testFailed(){
-		$this->setExpectedException(Exception::class,"ERREUR SQL");
-		$this->expectOutputRegex('#column "toto" does not exist#');
+		$this->setExpectedException(Exception::class,'column "toto" does not exist');
 		$this->database->select("SELECT toto");
 		$this->assertRegExp('#column "toto" does not exist#',$this->database->lastRequestError());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testLog(){
 		$this->database->log(true);
 		$this->expectOutputString("<br />SELECT 1");
 		$this->assertEquals(1,$this->database->exec("SELECT 1"));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testClose(){
 		$this->assertEquals(1,$this->database->exec("SELECT 1"));
 		$this->database->close();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSelectData(){
 		$this->assertEquals(1,$this->database->selectData("SELECT * FROM users","id","id")[1]);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSelectDataWithoutValue(){
 		$this->assertEquals(1,$this->database->selectData("SELECT * FROM users","id")[1]['id']);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSelectDataWithoutKey(){
 		$this->assertEquals(1,$this->database->selectData("SELECT * FROM users")[0]['id']);
 	}

@@ -30,12 +30,6 @@ class Database {
 	 */
 	private $link = null;
 
-	public $errorbox;
-
-	public $display_warning;
-
-	public $exit_on_error;
-
 	/**
 	 * @var bool true si une transaction est en cours
 	 */
@@ -56,16 +50,6 @@ class Database {
 		$this->user    = $user;
 		$this->password = $password;
 		$this->base    = $base;
-
-		if (MODE == "dev") {
-		  $this->errorbox = true;
-		  $this->display_warning=true;
-		} else {
-		  $this->errorbox = false;
-		  $this->display_warning = false;
-		}
-
-		$this->exit_on_error=true;
 		$this->transaction_mode=false;
 		$this->transaction_error='';
 		$this->query_log=false;
@@ -149,11 +133,10 @@ class Database {
 		return false;
 		  }
 		}
-		//echo $query . "<br />\n";
+
 		if ($this->query_log) echo "<br />".$query;
 		$this->last_query=$query;
-		//echo "query=$query";
-		//echo "query=".$this->last_query;
+
 		$this->last_query_error='';
 
 
@@ -165,29 +148,18 @@ class Database {
 
 		// Test du resultat
 		if ($result == false) {
-		  $error=pg_last_error();
-		  $this->last_query_error=$error;
-		  if ($this->display_warning)
-			 echo "<br />Query: $query<br />".$error."<br />";
+				$error=pg_last_error();
+				$this->last_query_error=$error;
 
-		  $trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
+				$trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
+
+				if ($this->transaction_mode && $this->transaction_error=='') {
+				$this->transaction_error=$error;
+				}
 
 
-		  if ($this->transaction_mode && $this->transaction_error=='') {
-			$this->transaction_error=$error;
-		  }
-
-		  if ($this->errorbox) {
-		// Traitement de l'erreur
-		$message =  "Erreur d'&eacute;xecution de requ&ecirc;te. <br />requete=".$query.".<br />erreur pg=".$error.".<br /><br />Contacter l'administrateur systeme.";
-		$message.="<pre>".print_r(debug_backtrace(),true)."</pre>";
-		//$err = new Message_err($message, "Erreur Base de Donn&eacute;es", ERR_ICO_ERR);
-		  }
-
-		  if ($this->exit_on_error) {
-				  throw new Exception("ERREUR SQL");
-
-		  }
+				$error = strval(utf8_decode(pg_last_error()));
+				throw new Exception($error);
 		  return ($return_queryresult?new QueryResult($query,$result,$error):false);
 		}
 		$this->query=$result;
@@ -206,8 +178,6 @@ class Database {
 
 	public function begin() {
 		if ($this->transaction_mode) {
-		  // Déjà en mode transactionnel
-		  if ($this->display_warning) echo "Database.class.php:begin(): ATTENTION, une transaction est déjà en cours\n";
 		  return 0;
 		}
 		if ($this->exec("BEGIN")===true) {
@@ -215,28 +185,22 @@ class Database {
 		  $this->transaction_error='';
 		  return 1;
 		}
-		if ($this->display_warning) echo "Database.class.php:begin(): begin failed()\n";
 		return 0;
   	}
 
 	public function commit() {
 		if (!$this->transaction_mode) {
-		  // pas en mode transactionnel
-		  if ($this->display_warning) echo "Database.class.php:commit(): ATTENTION, aucune transaction en cours pour commiter\n";
 		  return 0;
 		}
 		if ($this->exec("COMMIT")===true) {
 		  $this->transaction_mode=false;
 		  if ($this->transaction_error=='') return 1;
 		}
-		if ($this->display_warning) echo "Database.class.php:commit(): commit failed\n";
 		return 0;
   	}
 
 	public function rollback() {
 		if (!$this->transaction_mode) {
-		  // pas en mode transactionnel
-		  if ($this->display_warning) echo "Database.class.php:rollback(): ATTENTION, aucune transaction en cours pour rollbacker\n";
 		  return 0;
 		}
 		if ($this->exec("ROLLBACK")===true) {
@@ -244,7 +208,6 @@ class Database {
 		  //$this->transaction_error='';
 		  return 1;
 		}
-		if ($this->display_warning) echo "Database.class.php:rollback(): rollback failed\n";
 		return 0;
   	}
 

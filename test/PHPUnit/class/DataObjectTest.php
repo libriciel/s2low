@@ -52,16 +52,6 @@ class DataObjectTest extends S2lowTestCase {
 		$this->assertTrue($this->user->delete(1));
 	}
 
-	public function testDelete2(){
-		/*$db = DatabasePool::getInstance();
-		$db->exit_on_error = false;
-		$dataObject = new DataObject();
-		$dataObject->setId(1);
-		$dataObject->objectName = 'users';
-		$this->setExpectedException("Exception");
-		$this->expectOutputRegex('#update or delete on table "users" violates foreign key constraint#');
-		$this->assertFalse($dataObject->delete());*/
-	}
 
 	public function testDeleteFailed(){
 		$dataObject = new DataObject();
