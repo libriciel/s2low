@@ -55,7 +55,7 @@ class Database {
 	 */
   	public function select($query) {
 		$result = $this->internalQuery($query);
-		return new QueryResult($query,$result);
+		return new QueryResult($result);
 	}
 
 	/**

@@ -4,52 +4,40 @@
  * Class QueryResult
  */
 class QueryResult {
-	var $query;
-	var $res;
-	var $error;
 
-	function QueryResult($query,$res,$error='') {
-		$this->query=$query;
-		$this->res=$res;
-		$this->error=$error;
+	private $result_ressource;
+
+	public function __construct($result_ressource) {
+		$this->result_ressource=$result_ressource;
 	}
 
-	function free() {
-		return @pg_free_result($this->res);
-		$this->res=NULL;
-	}
-
-	function isError() {
-		return ($this->error==''?false:true);
-	}
-
-	function error() {
-		return $this->error;
+	/** WTF... en simplifiant ca donne toujours false */
+	public function isError() {
+		return false;
 	}
 
 	// Compte les lignes de resultat
-	function num_row() {
-		$this->nb_row = @pg_num_rows($this->res);
-		return $this->nb_row;
+	public function num_row() {
+		return @pg_num_rows($this->result_ressource);
 	}
 
 	// Compte les colonnes de resultat
-	function num_field() {
-		return @pg_num_fields($this->res);
+	public function num_field() {
+		return @pg_num_fields($this->result_ressource);
 	}
 
 	// Retourne la ligne courante resultat ou FALSE si plus de lignes
-	function get_next_row() {
-		return @pg_fetch_assoc($this->res);
+	public function get_next_row() {
+		return @pg_fetch_assoc($this->result_ressource);
 	}
 
-	function affected_row(){
-		return @pg_affected_rows ($this->res);
+	public function affected_row(){
+		return @pg_affected_rows ($this->result_ressource);
 	}
 
-	function get_all_rows() {
+	public function get_all_rows() {
 		$out=array();
-		while ($row=@pg_fetch_assoc($this->res)) $out[]=$row;
+		while ($row=@pg_fetch_assoc($this->result_ressource)) $out[]=$row;
 		return $out;
 	}
 }
