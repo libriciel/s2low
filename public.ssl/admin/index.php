@@ -37,7 +37,7 @@ $actes_status = array(
     3=>"Transmis",
     7=>"Document reçu"
 );
-$actesTransactionsSQL = $objectInstancier->get('ActesTransactionsSQL');
+$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 
 $actes_nb_transaction_by_status = array();
@@ -48,7 +48,8 @@ foreach($actes_status as $status_id => $status_libelle){
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
-$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
+//$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
+$nb_actes_transmis_4hours_before= "??";
 
 
 $menuHTML = new MenuHTML();

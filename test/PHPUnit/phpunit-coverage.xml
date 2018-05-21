@@ -5,9 +5,10 @@
         </testsuite>
     </testsuites>
     <logging>
-   <log type="coverage-html" target="/tmp/s2low-coverage" charset="UTF-8"
+   <log type="coverage-html" target="/tmp/coverage" charset="UTF-8"
        yui="true" highlight="false"
        lowUpperBound="35" highLowerBound="90"/>
+    <log type="coverage-clover" target="/tmp/build/clover.xml"/>
 </logging>
 <filter>
 <whitelist processUncoveredFilesFromWhitelist="false">

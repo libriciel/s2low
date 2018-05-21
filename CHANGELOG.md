@@ -15,6 +15,7 @@
 - On ne peux plus valider plusieurs fois la même transaction #64
 - Ajout d'un filtre SIREN sur la liste des collectivités #59
 - Possibilité pour le super admin d'archiver les transactions en traitement par lot #154
+- Recupération correcte de la date des courriers des préfectures, corrigeant le problème de mauvaise date dans les réponses #364 ~Actes
 
 ### Évolutions
 

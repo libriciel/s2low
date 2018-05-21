@@ -201,7 +201,7 @@ class ActesTransactionsSQL extends SQL{
     }
 
     public function getNbByStatus($status_id){
-        $sql = "SELECT count(*) FROM actes_transactions WHERE last_status_id=?";
+        $sql = "SELECT count(id) FROM actes_transactions WHERE last_status_id=?";
         return $this->queryOne($sql,$status_id);
     }
 
@@ -217,14 +217,14 @@ class ActesTransactionsSQL extends SQL{
         $this->query($sql,$unique_id,$acteID);
     }
 
-    public function createRelatedTransaction($envelope_id, $type, $date,$related_transaction_id)  {
+    public function createRelatedTransaction($envelope_id, $type, $decision_date, $related_transaction_id)  {
         $sql = "INSERT INTO actes_transactions (envelope_id,type,related_transaction_id," .
             " nature_code,nature_descr,title, subject, number,classification,classification_date,decision_date," .
             " unique_id, archive_url,broadcast_emails,broadcast_send_sources, broadcasted,user_id,authority_id) " .
             " SELECT ?,?,?,nature_code,nature_descr,title, subject, number,classification" .
             ",classification_date,?,unique_id, archive_url,broadcast_emails,broadcast_send_sources, broadcasted,user_id,authority_id " .
             " FROM actes_transactions where id = ? RETURNING id";
-        return $this->queryOne($sql,$envelope_id,$type,$related_transaction_id,$date,$related_transaction_id);
+        return $this->queryOne($sql,$envelope_id,$type,$related_transaction_id,$decision_date,$related_transaction_id);
     }
 
 

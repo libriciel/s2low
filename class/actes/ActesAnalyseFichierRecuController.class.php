@@ -208,7 +208,7 @@ class ActesAnalyseFichierRecuController {
         $related_transaction_id = $this->actesTransactionsSQL->createRelatedTransaction(
             $related_envelope_id,
             substr($fichierXML->getCodeMessage(),0,1),
-            date("Y-m-d H:i:s"),
+            $fichierXML->date_courrier_pref,
             $transaction_id
         );
 
