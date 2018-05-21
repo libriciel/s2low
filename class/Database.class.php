@@ -9,11 +9,10 @@ class Database {
 	private $database_user;
 	private $database_password;
 	private $database_name;
+	
 	private $connection_link = null;
 	private $is_in_a_transaction;
-	private $query_log;
-	private $last_query;
-	private $last_query_error;
+
 
 	/**
 	 * @var string contient le message de la première erreur
@@ -27,9 +26,6 @@ class Database {
 		$this->database_name    = $base;
 		$this->is_in_a_transaction=false;
 		$this->transaction_error='';
-		$this->query_log=false;
-		$this->last_query="No request yet";
-		$this->last_query_error="";
 	}
 
   	public function connect() {
@@ -51,50 +47,6 @@ class Database {
 		return true;
   	}
 
-  	public function close() {
-    	pg_close($this->connection_link);
-    	return true;
-  	}
-
-  	public function log($state=true) {
-    	return $this->query_log=($state?true:false);
-  	}
-
-  	public function lastRequest() {
-    	return $this->last_query;
-  	}
-
-  	public function lastRequestError() {
-    	return $this->last_query_error;
-  	}
-
-
-	/**
-	 * retourne les éléments dans la réponse
-	 * @param $query
-	 * @param string $key
-	 * @param string $value
-	 * @return array
-	 * @throws Exception
-	 */
-	public function selectData($query,$key='',$value='') {
-		$out=array();
-		$q=$this->select($query);
-		//$nb=$q->num_row();
-		while ($r=$q->get_next_row()) {
-		  if ($key=='') {
-		$out[]=$r;
-		  } else {
-		if ($value=='')
-		  $out[$r[$key]]=$r;
-		else
-		  $out[$r[$key]]=$r[$value];
-		  }
-		}
-		$q->Free();
-		return $out;
-  	}
-
 	/**
 	 * renvoie une ressource sur QueryResult
 	 * @param $query
@@ -109,12 +61,6 @@ class Database {
 		  }
 		}
 
-		if ($this->query_log) echo "<br />".$query;
-		$this->last_query=$query;
-
-		$this->last_query_error='';
-
-
 		$trace = Trace::getInstance();
 		$trace->log($query,Trace::$TRACE_DEBUG);
 
@@ -124,7 +70,6 @@ class Database {
 		// Test du resultat
 		if ($result == false) {
 				$error=pg_last_error();
-				$this->last_query_error=$error;
 
 				$trace->log("Erreur SQL :  " . $error,Trace::$TRACE_ERROR);
 
@@ -194,10 +139,6 @@ class Database {
 		  return 1;
 		}
 		return 0;
-  	}
-
-	public function transactionError() {
-	    return $this->transaction_error;
   	}
 
 	public function quote($valeur,$notnull=false) {
