@@ -128,6 +128,16 @@ services:
         networks:
             - services
 
+    beanstalkd:
+        image: schickling/beanstalkd
+        restart: always
+        networks:
+            - services
+        command: beanstalkd -b /data/ -p 11300
+        volumes:
+            - ${BEANSTALKD_VOLUME}:/data
+
+
 networks:
   dgcl:
   dgfip:
