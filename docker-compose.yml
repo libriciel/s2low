@@ -31,7 +31,6 @@ services:
             MAILNAME: ${MAILNAME}
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
-            - ${PHP_SESSION}:/var/lib/php/session
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
 
@@ -120,6 +119,14 @@ services:
         networks:
           - services
 
+    redis:
+        image: redis:3.2
+        restart: always
+        volumes:
+            - ${REDIS_VOLUME}:/data
+        command: redis-server --appendonly yes
+        networks:
+            - services
 
 networks:
   dgcl:
