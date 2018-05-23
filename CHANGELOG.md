@@ -24,6 +24,7 @@
 - La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
 - Modification du message de suppression d'un lot quand il reste des fichiers #78
 - Utilisation unique de PDO afin de diminuer le nombre de connexions simultané à la base #377
+- Ajout de redis pour la gestion des sessions PHP (docker)
 
 ### Ajouts
 

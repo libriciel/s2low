@@ -46,10 +46,6 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 RUN pecl install xdebug-2.5.3 && \
     docker-php-ext-enable xdebug
 
-
-COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
-COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
-
 RUN a2enmod \
     expires \
     headers \
@@ -74,6 +70,9 @@ RUN docker-php-ext-install \
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap
 
+#Redis
+RUN pecl install redis && \
+    docker-php-ext-enable redis
 
 # Paquets PEAR
 RUN pear install \
@@ -82,6 +81,11 @@ RUN pear install \
     Mail_mimeDecode \
     MDB2 \
     MDB2#pgsql
+
+
+# Copie des fichiers de configurations
+COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
+COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 
 # Répertoire contenant les certificats
 RUN mkdir -p /etc/apache2/ssl/

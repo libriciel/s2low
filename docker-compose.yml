@@ -120,6 +120,14 @@ services:
         networks:
           - services
 
+    redis:
+        image: redis:3.2
+        restart: always
+        volumes:
+            - ${REDIS_VOLUME}:/data
+        command: redis-server --appendonly yes
+        networks:
+            - services
 
 networks:
   dgcl:
