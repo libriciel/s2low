@@ -52,7 +52,6 @@
 | Container |Nom de la variable | Destination | Description | Exemple |
 | ------ | ------ | ------ | ------ | ------ |
 | Application S²LOW |`WORKSPACE_VOLUME`|`/data/tdt-workspace/`|Permet de définir le volume  pour les données de l'application S²LOW | mapping direct `/data/workspace` ou `workspace` définit via `docker volume create workspace`|
-|Application S²LOW|`PHP_SESSION`|`/var/lib/php/session`|Permet de définir le volume  pour les données de sessions de l'application S²LOW|mapping direct `/data/php_session` ou `phpsession` définit via `docker volume create phpsession`|
 |Application S²LOW|`S2LOW_SSL_CERTIFICAT`|`/etc/s2low/ssl/`|Dans ce volume seront stockés les certificats utilisés par S²LOW, comme les TIMESTAMPING|mapping direct `/data/certificats2low` ou `certificats2low` définit via `docker volume create certificats2low`|
 |Application S²LOW|`LETSENCRYPT_DATADIR`|`/etc/letsencrypt/`|Dans ce volume seront stockés les certificats letsencrypt utilisés par le vhost de S²LOW|mapping direct `/data/letsencrypt/` ou `letsencrypt` définit via `docker volume create letsencrypt`|
 |Postgres|`POSTGRESQL_DATADIR`|`/var/lib/postgresql/data`|Persistence de la base de données |mapping direct `/data/pgdata/` ou `pgdata` définit via `docker volume create pgdata` |
@@ -60,6 +59,7 @@
 |Simulateur |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/var/www/simulateur-helios/workspace`|Ce volume est obligatoire car il doit être partagé avec le serveur FTP |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
 |ftp |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/data/$HELIOS_FTP_LOGIN`|Ce volume est obligatoire car il doit être partagé avec le simulateur |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
 |openstack |`VOL_OPENSTACK`|`/data/openstack`|Ce volume est utilisé pour la stockage objet. |mapping direct `/data/openstack/` ou `openstack` définit via `docker volume create openstack` |
+|redis|`REDIS_VOLUME`|`/data/`|Permet de définir le volume  pour les données persistante de Redis|mapping direct `/data/` |
 
 
 ## Pour le serveur Postgres principal, `db`
