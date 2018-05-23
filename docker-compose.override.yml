@@ -20,6 +20,11 @@ services:
             WEB_HTTP_PORT: ${WEB_HTTP_PORT}
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
 
+    db:
+        environment:
+            - POSTGRES_LOG_ALL_QUERY_TO_STDOUT=true
+
+
     db_test:
         image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
         networks:

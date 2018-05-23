@@ -9,3 +9,9 @@ sed -i -e"s/lc_messages = 'C'/lc_messages = 'fr_FR.UTF-8'/" $PGDATA/postgresql.c
 sed -i -e"s/lc_monetary = 'C'/lc_monetary = 'fr_FR.UTF-8'/" $PGDATA/postgresql.conf
 sed -i -e"s/lc_numeric = 'C'/lc_numeric = 'fr_FR.UTF-8'/" $PGDATA/postgresql.conf
 sed -i -e"s/lc_time = 'C'/lc_time = 'fr_FR.UTF-8'/" $PGDATA/postgresql.conf
+
+
+if [ ! -z "$POSTGRES_LOG_ALL_QUERY_TO_STDOUT" ]
+then
+sed -ri "s/#log_statement = 'none'/log_statement = 'all'/g" /var/lib/postgresql/data/postgresql.conf
+fi
