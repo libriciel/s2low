@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.11 
+
+### Évolutions
+
+- le nombre de page des transactions helios n'est plus calculé pour le super admin (trop de ressources)
+
+
 ## 3.0.10 - 2018-05-24
 
 ### Corrections

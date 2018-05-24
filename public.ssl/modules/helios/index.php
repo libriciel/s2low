@@ -58,7 +58,11 @@ $heliosTransactionsListe->setObjet($fnum);
 $heliosTransactionsListe->setNomFic($fnomFic);
 
 
-$nb_transactions = $heliosTransactionsListe->getNbTransaction();
+if ($droit->isSuperAdmin($userInfo)) {
+	$nb_transactions = ($page_number+10)*$taille_page;
+} else {
+	$nb_transactions = $heliosTransactionsListe->getNbTransaction();
+}
 
 
 
