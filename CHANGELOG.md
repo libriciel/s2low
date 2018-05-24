@@ -1,6 +1,6 @@
 # Change Log
 
-## 3.0.10
+## 3.0.10 - 2018-05-24
 
 ### Corrections
 
