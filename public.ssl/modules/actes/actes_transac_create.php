@@ -382,7 +382,7 @@ if (!$trans->save()) {
   $env->deleteArchiveFile();
   $env->delete();
   Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-} 
+}
 
 
   $msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
@@ -418,6 +418,13 @@ $zeBatch->incNextSuffix();
         $msg .= "\nErreur lors de la suppression du fichier de lot.";
       }
     }
+}
+try {
+	$queue = new \Pheanstalk\Pheanstalk("beanstalkd");
+	$queue->useTube('actes-antivirus')->put($trans->getId());
+} catch (Exception $e){
+  	$logger = $objectInstancier->get('Monolog\Logger');
+  	$logger->error("Unable to send actes-antivirus job for transaction {$trans->getId()} : " . $e->getMessage() );
 }
 
 if ($nextBatchFileId) {

@@ -142,6 +142,8 @@ RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
 
 
 COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
+RUN rm /etc/supervisor/conf.d/s2low-script.conf
+
 COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 
 
