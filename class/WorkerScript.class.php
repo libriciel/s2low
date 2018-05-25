@@ -2,154 +2,122 @@
 
 class WorkerScript {
 
-	const QUEUE_NAME = 'actes-antivirus';
 	const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
 	const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
-	private $actesTransactionSQL;
-	private $actesRetriever;
-	private $actesEnvelopeSQL;
-
-	private $antivirus;
-	private $errorMsg;
-
 	private $logger;
 	private $beanstalkdWrapper;
+	private $sigTermHandlerFactory;
+
+	private $min_execution_time_in_seconds;
 
 	public function __construct(
-		ActesTransactionsSQL $actesTransactionSQL,
-		ActesRetriever $actesRetriever,
-		ActesEnvelopeSQL $actesEnvelopeSQL,
-		Antivirus $antivirus,
 		BeanstalkdWrapper $beanstalkdWrapper,
-		S2lowLogger $s2lowLogger
+		S2lowLogger $s2lowLogger,
+		SigTermHandlerFactory $sigTermHandlerFactory
 	){
-		$this->actesTransactionSQL = $actesTransactionSQL;
-		$this->actesRetriever = $actesRetriever;
-		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
-		$this->antivirus = $antivirus;
 		$this->logger = $s2lowLogger;
 		$this->beanstalkdWrapper = $beanstalkdWrapper;
+		$this->sigTermHandlerFactory = $sigTermHandlerFactory;
+		$this->setMinExecutionTimeInSeconds(self::MIN_EXECUTION_TIME_IN_SECONDS);
 	}
 
-	public function putJob($data){
-		$this->beanstalkdWrapper->put(self::QUEUE_NAME,$data);
+	public function setMinExecutionTimeInSeconds($min_execution_time_in_seconds){
+		$this->min_execution_time_in_seconds=$min_execution_time_in_seconds;
 	}
 
-	public function script(){
-		$this->logger->enableStdOut();
+	public function putJob(IWorker $IWorker, $data){
+		return $this->beanstalkdWrapper->put($IWorker->getQueueName(),$data);
+	}
+
+	public function script(IWorker $IWorker){
+
 		if ($this->beanstalkdWrapper->isModeBeanstalked()){
-			$this->beanstalkdWorker();
+			return $this->beanstalkdWorker($IWorker);
 		} else {
-			$this->oldSchoolScript();
+			return $this->oldSchoolScript($IWorker);
 		}
 	}
 
-	public function rebuildQueue(){
-		$this->logger->enableStdOut();
+	public function rebuildQueue(IWorker $IWorker){
+		$this->logger->setName($IWorker->getQueueName()."-rebuild-queue");
 
-		$this->beanstalkdWrapper->emptyQueue(self::QUEUE_NAME);
-		$this->logger->info("Reconstruction de la file ".self::QUEUE_NAME);
-		foreach($this->getAll() as $id){
-			$this->putJob($id);
-			$this->logger->info("Ajout de la transaction $id dans la file d'attente");
+		$this->beanstalkdWrapper->emptyQueue($IWorker->getQueueName());
+		$this->logger->info("Reconstruction de la file ".$IWorker->getQueueName());
+		foreach($IWorker->getAllId() as $id){
+			$this->putJob($IWorker,$id);
+			$this->logger->info("Ajout en file d'attente",[$id]);
 		}
-		$this->logger->info("Reconstruction de la file ".self::QUEUE_NAME.": OK");
+		$this->logger->info("Reconstruction de la file ".$IWorker->getQueueName().": OK");
 	}
 
-	private function beanstalkdWorker(){
-		$queue = $this->beanstalkdWrapper->getQueue(self::QUEUE_NAME);
-
+	private function beanstalkdWorker(IWorker $IWorker){
+		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
+		$this->logger->info("Lancement du worker");
 		while($job = $queue->reserve()){
-			$transaction_id = "undefined";
+			$data = "undefined";
 			try {
-				$transaction_id = $job->getData();
-				$this->check($transaction_id);
+				$data = $job->getData();
+				$this->logger->info("Travail en cours",[$data]);
+				$IWorker->work($data);
 				$queue->delete($job);
 			} catch (Exception $e){
 				$this->logger->error(
-					"Problème lors du check de l'antivirus",
-					['transaction_id'=>$transaction_id,'error_message'=>$e->getMessage()]
+					$e->getMessage(),
+					[$data,$e->getTraceAsString()]
 				);
 				$queue->release(
 					$job,
 					\Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY,
 					self::QUEUE_DELAY_RETRY_IN_SECONDS
 				);
+				return false;
 			}
 		}
 		return true;
 	}
 
-
-	private function oldSchoolScript(){
+	private function oldSchoolScript(IWorker $IWorker){
 		$start = time();
 
 		$this->logger->info("Démarrage en mode supervisord");
 
 		try {
-			$this->checkAll();
+			$this->checkAll($IWorker);
+		} catch (WorkerScriptException $e){
+			$this->logger->notice($e->getMessage());
+			return true;
 		} catch (Exception $e){
-			$this->logger->critical("Erreur lors de l'execution du script",[$e]);
-		}
-
-		$sleep = self::MIN_EXECUTION_TIME_IN_SECONDS - (time() -$start);
-		if ($sleep > 0){
-			$this->logger->debug("Arret du script $sleep secondes");
-			sleep($sleep);
-		}
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function checkAll(){
-		$sigTermHandler = new SigTermHandler();
-
-		$id_list = $this->getAll();
-		$this->logger->info(count($id_list) ." actes trouvés");
-
-		foreach($id_list as $id){
-			if ($sigTermHandler->isSigtermCalled()){
-				$this->logger->notice("SIGTERM reçu !");
-				exit;
-			}
-			$this->check($id);
-		}
-	}
-
-	private function getAll(){
-		return $this->actesTransactionSQL->getTransactionForAntiVirus();
-	}
-
-	/**
-	 * @param $transaction_id
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function check($transaction_id){
-		$this->logger->info("Traitement transaction $transaction_id");
-
-		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
-		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
-
-		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
-		if (! $this->antivirus->checkArchiveSanity($archive_path)){
-			$message = $this->antivirus->errorMsg;
-			$this->logger->notice(
-				"Un virus a été trouvé pour la transaction $transaction_id",[$message]
+			$this->logger->critical(
+				"Erreur lors de l'execution du script : " . $e->getMessage(),[$e->getTraceAsString()]
 			);
-			$this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
 			return false;
 		}
 
-		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
-		$this->logger->info(
-			"La transaction $transaction_id ne contient pas de virus"
-		);
+		$sleep = $this->min_execution_time_in_seconds - (time() -$start);
+		if ($sleep > 0){
+			$this->logger->debug("Arret du script $sleep secondes");
+			sleep_wrapper($sleep);
+		}
 		return true;
 	}
 
+	/**
+	 * @param IWorker $IWorker
+	 * @throws WorkerScriptException
+	 */
+	private function checkAll(IWorker $IWorker){
+		$sigTermHandler = $this->sigTermHandlerFactory->getNewInstance();
 
+		$id_list = $IWorker->getAllId();
+		$this->logger->info(count($id_list) . " travaux trouvées");
 
+		foreach($id_list as $id){
+			if ($sigTermHandler->isSigtermCalled()){
+				throw new WorkerScriptException("SIGTERM reçu");
+			}
+			$data = $IWorker->getData($id);
+			$IWorker->work($data);
+		}
+	}
 }

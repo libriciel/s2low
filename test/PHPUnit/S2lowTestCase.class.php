@@ -173,6 +173,10 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         ]);
 	}
 
+	public function getLogRecords(){
+		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+		return $testHandler->getRecords();
+	}
 
 
 }

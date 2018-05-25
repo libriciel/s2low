@@ -39,7 +39,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 			->willReturn(true);
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
 		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
-		$this->assertTrue($actesAntivirus->check($this->transaction_id));
+		$this->assertTrue($actesAntivirus->work($this->transaction_id));
 	}
 
 	/**
@@ -54,7 +54,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
 
 		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
-		$this->assertFalse($actesAntivirus->check($this->transaction_id));
+		$this->assertFalse($actesAntivirus->work($this->transaction_id));
 	}
 
 	/**
@@ -70,9 +70,22 @@ class ActesAntivirusTest extends S2lowTestCase {
 
 		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
 		$this->setExpectedException(Exception::class,"testing");
-		$actesAntivirus->check($this->transaction_id);
+		$actesAntivirus->work($this->transaction_id);
 	}
 
+	public function testGetAll(){
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$all_id = $actesAntivirus->getAllId();
+		$this->assertEquals([$this->transaction_id],$all_id);
+	}
 
+	public function testGetId(){
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$this->assertEquals($this->transaction_id,$actesAntivirus->getData($this->transaction_id));
+	}
 
+	public function testGetQueueId(){
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$this->assertEquals(ActesAntivirus::QUEUE_NAME,$actesAntivirus->getQueueName());
+	}
 }

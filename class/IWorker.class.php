@@ -1,0 +1,31 @@
+<?php
+
+interface IWorker {
+
+	/**
+	 * Le nom de la queue pour Beanstalkd
+	 * @return string
+	 */
+	public function getQueueName();
+
+	/**
+	 * En fonction d'un identifiant, retourne les données à envoyé sur la queue
+	 * @param $id int identifiant
+	 * @return mixed donnée à envoyé sur la queue
+	 */
+	public function getData($id);
+
+	/**
+	 * Renvoie une liste d'identifiant pour reconstruire une file
+	 * @return int[]
+	 */
+	public function getAllId();
+
+	/**
+	 * Le vrai travail avec les data
+	 * @param $data
+	 * @return bool
+	 */
+	public function work($data);
+
+}

@@ -420,8 +420,9 @@ $zeBatch->incNextSuffix();
     }
 }
 
-$beanstalkWrapper = $objectInstancier->get(BeanstalkdWrapper::class);
-$beanstalkWrapper->put(ActesAntivirus::QUEUE_NAME,$trans->getId());
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJob($actesAntivirus,$trans->getId());
 
 
 if ($nextBatchFileId) {

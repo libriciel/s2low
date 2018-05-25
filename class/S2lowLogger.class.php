@@ -43,21 +43,29 @@ class S2lowLogger {
 	public function enableStdOut(){
 		try {
 			$handler = new  Monolog\Handler\StreamHandler('php://stdout');
+			$this->logger->pushHandler($handler);
 		} catch (Exception $e){
 			$message =  "Impossible de créer un streamHandler sur sdtout : " . $e->getMessage();
 			echo $message;
 			$this->critical($message,[$e]);
 		}
-		$this->logger->pushHandler($handler);
+	}
+
+	private $name;
+
+	public function setName($name) {
+		$this->name = $name;
 	}
 
 	private function getLoggerWithName(){
-		$trace = debug_backtrace();
-		if (empty($trace[2]['class'])){
-			$className = basename($trace[1]['file']);
-		} else {
-			$className = $trace[2]['class'];
+		if (! $this->name) {
+			$trace = debug_backtrace();
+			if (empty($trace[2]['class'])) {
+				$this->name = basename($trace[1]['file']);
+			} else {
+				$this->name = $trace[2]['class'];
+			}
 		}
-		return $this->logger->withName($className);
+		return $this->logger->withName($this->name);
 	}
 }

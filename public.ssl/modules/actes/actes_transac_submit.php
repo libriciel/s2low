@@ -208,7 +208,8 @@ foreach ($transacs as $trans) {
 }
 
 $actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
-$actesAntivirus->putJob($trans->getId());
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJob($actesAntivirus,$trans->getId());
 
 
 
