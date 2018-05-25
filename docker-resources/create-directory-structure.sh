@@ -22,5 +22,4 @@ mkdir -p /data/tdt-workspace/uploads/etat_civil && \
 mkdir -p /data/log/
 
 chown -R www-data:www-data /data/tdt-workspace/
-chown -R www-data:www-data /var/lib/php/session
 chown -R www-data:www-data /data/log/
