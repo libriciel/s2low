@@ -187,10 +187,6 @@ if(!defined('ANTIVIRUS_COMMAND')){
         define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan');
 }
 
-if (!defined("ANTIVIRUS_UPSTART_TOUCH_FILE")){
-	define("ANTIVIRUS_UPSTART_TOUCH_FILE","/tmp/antivirus-upstart");
-}
-
 if(!defined('TEDETIS_TMP_PATH')){
         define('TEDETIS_TMP_PATH','/tmp/');
 }

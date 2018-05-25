@@ -16,7 +16,7 @@ if (MODE_BEANSTALKD){
 }
 
 
-require_once SITEROOT."/public.ssl/modules/actes/class/ActesEnvelope.class.php";
+
 require_once SITEROOT."/public.ssl/modules/actes/class/ActesTransaction.class.php";
 
 
@@ -25,35 +25,14 @@ $id_list = $transactionSQL->getTransactionForAntiVirus();
 
 print_r($id_list);
 
-
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
 
 foreach($id_list as $id){
     if ($sigTermHandler->isSigtermCalled()){
-        echo "Arret du script demandï¿½ !"        exit;
+        echo "Arret du script demandé !";
+        exit;
     }
-	echo "Traitement transaction $id : ";
-	$zeTrans = new ActesTransaction();
-	$zeTrans->setId($id);
-	$zeTrans->init();
-	
-	$zeEnv = new ActesEnvelope($zeTrans->get("envelope_id"));
-	$zeEnv->init();
-	
-	$archive_path =  ACTES_FILES_UPLOAD_ROOT."/". $zeEnv->get('file_path');
-	
-	if ($zeEnv->checkArchiveSanity($archive_path)){
-		
-		$transactionSQL->setAntivirusCheck($id);
-		
-		echo "OK";
-		
-	} else {
-		$message = $zeEnv->getErrorMsg();
-		echo "Virus Found : $message";
-		$transactionSQL->updateStatus($id, -1, $message);
-	}
-	
-	echo "\n";
+	$actesAntivirus->check($id);
 }
 
 

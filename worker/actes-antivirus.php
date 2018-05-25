@@ -13,36 +13,14 @@ $transactionSQL = new ActesTransactionsSQL($sqlQuery);
 
 //TODO et le sigterm en plein milieu ?
 
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+
+
 while($job = $queue->reserve()){
 	try {
-
-	    ##TODO check antivirus
         $transaction_id = $job->getData();
-
         echo "Traitement transaction $transaction_id : ";
-        $zeTrans = new ActesTransaction();
-        $zeTrans->setId($transaction_id);
-        $zeTrans->init();
-
-        if ($zeTrans->get('antivirus_check')){
-            echo "Transaction is already virus free !";
-            $queue->delete($job);
-            continue;
-        }
-
-        $zeEnv = new ActesEnvelope($zeTrans->get("envelope_id"));
-        $zeEnv->init();
-
-        $archive_path =  ACTES_FILES_UPLOAD_ROOT."/". $zeEnv->get('file_path');
-
-		if ($zeEnv->checkArchiveSanity($archive_path)) {
-			$transactionSQL->setAntivirusCheck($transaction_id);
-			echo "OK\n";
-		} else {
-			$message = $zeEnv->getErrorMsg();
-			echo "Virus Found : $message\n";
-			$transactionSQL->updateStatus($transaction_id, -1, $message);
-		}
+		$actesAntivirus->check($transaction_id);
 		$queue->delete($job);
 	} catch (Exception $e){
         echo "Probleme during antivirus check : ".$e->getMessage();

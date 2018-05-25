@@ -1,12 +1,15 @@
 <?php
 
-class ActesAntivirusController {
+require_once SITEROOT."/public.ssl/modules/actes/class/ActesEnvelope.class.php";
 
+class ActesAntivirus {
 
 	private $actesTransactionSQL;
+	private $actesRetriever;
 
-	public function __construct(ActesTransactionsSQL $actesTransactionSQL){
+	public function __construct(ActesTransactionsSQL $actesTransactionSQL,ActesRetriever $actesRetriever){
 		$this->actesTransactionSQL = $actesTransactionSQL;
+		$this->actesRetriever = $actesRetriever;
 	}
 
 	/**
@@ -23,18 +26,18 @@ class ActesAntivirusController {
 		$zeEnv = new ActesEnvelope($zeTrans->get("envelope_id"));
 		$zeEnv->init();
 
-		$archive_path =  ACTES_FILES_UPLOAD_ROOT."/". $zeEnv->get('file_path');
+		$archive_path = $this->actesRetriever->getPath($zeEnv->get('file_path'));
 
 		if ($zeEnv->checkArchiveSanity($archive_path)){
 
-			$this->actesTransactionSQL->setAntivirusCheck($$transaction_id);
+			$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
 
 			echo "OK";
 
 		} else {
 			$message = $zeEnv->getErrorMsg();
 			echo "Virus Found : $message";
-			$this->actesTransactionSQL->updateStatus($$transaction_id, -1, $message);
+			$this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
 		}
 
 		echo "\n";
