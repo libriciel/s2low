@@ -34,10 +34,13 @@ class HeliosEnvoiControler {
 		$this->do_not_verify_nom_fic_unicity = $do_not_verify_nom_fic_unicity;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function validateAllTransactions(){
-
+		$antivirus = new Antivirus();
 		try {
-			Antivirus::isAlive();
+			$antivirus->isAlive();
 		} catch (Exception $e){
 			echo $e->getMessage()."\n";
 			return;
@@ -64,7 +67,7 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			if (!Antivirus::checkArchiveSanity($file_path)) {
+			if (!$antivirus->checkArchiveSanity($file_path)) {
 				$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;

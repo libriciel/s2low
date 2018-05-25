@@ -6,41 +6,53 @@ class ActesAntivirus {
 
 	private $actesTransactionSQL;
 	private $actesRetriever;
+	private $actesEnvelopeSQL;
 
-	public function __construct(ActesTransactionsSQL $actesTransactionSQL,ActesRetriever $actesRetriever){
+	private $antivirus;
+	private $errorMsg;
+
+	private $logger;
+
+	public function __construct(
+		ActesTransactionsSQL $actesTransactionSQL,
+		ActesRetriever $actesRetriever,
+		ActesEnvelopeSQL $actesEnvelopeSQL,
+		Antivirus $antivirus,
+		Monolog\Logger $logger
+	){
 		$this->actesTransactionSQL = $actesTransactionSQL;
 		$this->actesRetriever = $actesRetriever;
+		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
+		$this->antivirus = $antivirus;
+		$this->logger = $logger;
 	}
 
 	/**
 	 * @param $transaction_id
+	 * @return bool
 	 * @throws Exception
 	 */
 	public function check($transaction_id){
+		$this->logger->withName(self::class)->info("Traitement transaction $transaction_id");
 
-		echo "Traitement transaction $transaction_id : ";
-		$zeTrans = new ActesTransaction();
-		$zeTrans->setId($transaction_id);
-		$zeTrans->init();
+		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
-		$zeEnv = new ActesEnvelope($zeTrans->get("envelope_id"));
-		$zeEnv->init();
-
-		$archive_path = $this->actesRetriever->getPath($zeEnv->get('file_path'));
-
-		if ($zeEnv->checkArchiveSanity($archive_path)){
-
-			$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
-
-			echo "OK";
-
-		} else {
-			$message = $zeEnv->getErrorMsg();
-			echo "Virus Found : $message";
+		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+		if (! $this->antivirus->checkArchiveSanity($archive_path)){
+			$message = $this->antivirus->errorMsg;
+			$this->logger->withName(self::class)->notice(
+				"Un virus a été trouvé pour la transaction $transaction_id",[$message]
+			);
 			$this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
+			return false;
 		}
 
-		echo "\n";
+		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
+		$this->logger->withName(self::class)->info(
+			"La transaction $transaction_id ne contient pas de virus"
+		);
+		return true;
 	}
-
+	
 }
