@@ -29,8 +29,7 @@ print_r($id_list);
 
 foreach($id_list as $id){
     if ($sigTermHandler->isSigtermCalled()){
-        echo "Arret du script demandé !";
-        exit;
+        echo "Arret du script demandï¿½ !"        exit;
     }
 	echo "Traitement transaction $id : ";
 	$zeTrans = new ActesTransaction();
@@ -59,7 +58,6 @@ foreach($id_list as $id){
 
 
 
-touch(ANTIVIRUS_UPSTART_TOUCH_FILE);
 $stop = time();
 echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
 $sleep = $min_exec_time - ($stop -$start);
