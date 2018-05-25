@@ -44,7 +44,7 @@ if(!defined('WEBMASTER')){
         define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
 }
 
-// Adresse du From des emails ï¿½mis
+// Adresse du From des emails émis
 if(!defined('TDT_FROM_EMAIL')){
         define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@s2low.docker.libriciel.fr>");
 }
@@ -58,7 +58,7 @@ if (!defined('LOG_LEVEL')){
 }
 
 
-// Paramï¿½tres base de donnï¿½es
+// Paramètres base de données
 if(!defined('DB_HOST')){
         define('DB_HOST', "db");
 }
@@ -80,8 +80,24 @@ if(!defined('DB_CLIENT_ENCODING')){
 }
 
 
+/**
+ * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
+ *
+ */
+if(!defined("MODE_BEANSTALKD")){
+	define("MODE_BEANSTALKD",false);
+}
 
-//Dï¿½finition de la connexion ï¿½ la base de donnï¿½es pour les tests unitaires et les tests de validation
+if (!defined("BEANSTAKLD_SERVER")){
+	define("BEANSTAKLD_SERVER","beanstalked");
+}
+
+if (!defined("BEANSTAKLD_PORT")){
+	define("BEANSTAKLD_PORT","11300");
+}
+
+
+//Définition de la connexion à la base de données pour les tests unitaires et les tests de validation
 if(!defined('DB_HOST_TEST')){
 	define('DB_HOST_TEST', "dbtest");
 }

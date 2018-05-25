@@ -11,7 +11,9 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-
+if (MODE_BEANSTALKD){
+	return require_once __DIR__."/../worker/actes-antivirus.php";
+}
 
 
 require_once SITEROOT."/public.ssl/modules/actes/class/ActesEnvelope.class.php";

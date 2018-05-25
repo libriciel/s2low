@@ -130,6 +130,9 @@ if (php_sapi_name() != 'cli'){
     $objectInstancier->get('Logger')->setLogType(Logger::TYPE_MEMORY);
 }
 
+$objectInstancier->set('mode_beanstalkd',MODE_BEANSTALKD);
+$objectInstancier->set('beanstalkd_server',BEANSTAKLD_SERVER);
+$objectInstancier->set('beanstalkd_port',BEANSTAKLD_PORT);
 
 
 $frontController = new FrontController($objectInstancier);
