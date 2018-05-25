@@ -4,43 +4,5 @@ declare(ticks = 1);
 
 require_once( __DIR__ . "/../init/init.php");
 
-$sigTermHandler = new SigTermHandler();
-
-
-$start = time();
-echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
-$min_exec_time = 10;
-
-if (MODE_BEANSTALKD){
-	return require_once __DIR__."/../worker/actes-antivirus.php";
-}
-
-
-
-require_once SITEROOT."/public.ssl/modules/actes/class/ActesTransaction.class.php";
-
-
-$transactionSQL = new ActesTransactionsSQL($sqlQuery);
-$id_list = $transactionSQL->getTransactionForAntiVirus();
-
-print_r($id_list);
-
 $actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
-
-foreach($id_list as $id){
-    if ($sigTermHandler->isSigtermCalled()){
-        echo "Arret du script demandé !";
-        exit;
-    }
-	$actesAntivirus->check($id);
-}
-
-
-
-$stop = time();
-echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
-$sleep = $min_exec_time - ($stop -$start);
-if ($sleep > 0){
-	echo "Arret du script : $sleep \n";
-	sleep($sleep);
-}
+$actesAntivirus->script();

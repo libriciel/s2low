@@ -1,6 +1,6 @@
 <?php
 
-class ActesAntivirus {
+class WorkerScript {
 
 	const QUEUE_NAME = 'actes-antivirus';
 	const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
@@ -49,7 +49,7 @@ class ActesAntivirus {
 		$this->logger->enableStdOut();
 
 		$this->beanstalkdWrapper->emptyQueue(self::QUEUE_NAME);
-		$this->logger->info("reconstruction de la file ".self::QUEUE_NAME);
+		$this->logger->info("Reconstruction de la file ".self::QUEUE_NAME);
 		foreach($this->getAll() as $id){
 			$this->putJob($id);
 			$this->logger->info("Ajout de la transaction $id dans la file d'attente");

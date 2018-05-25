@@ -207,13 +207,9 @@ foreach ($transacs as $trans) {
   $apiMsg .= $trans->getId() . "\n";
 }
 
-try {
-	$queue = new \Pheanstalk\Pheanstalk("beanstalkd");
-	$queue->useTube('actes-antivirus')->put($trans->getId());
-} catch (Exception $e){
-	$logger = $objectInstancier->get('Monolog\Logger');
-	$logger->error("Unable to send actes-antivirus job for transaction {$trans->getId()} : " . $e->getMessage() );
-}
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+$actesAntivirus->putJob($trans->getId());
+
 
 
 Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/index.php", $apiMsg);
