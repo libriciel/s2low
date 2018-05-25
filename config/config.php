@@ -89,7 +89,7 @@ if(!defined("MODE_BEANSTALKD")){
 }
 
 if (!defined("BEANSTAKLD_SERVER")){
-	define("BEANSTAKLD_SERVER","beanstalked");
+	define("BEANSTAKLD_SERVER","beanstalkd");
 }
 
 if (!defined("BEANSTAKLD_PORT")){

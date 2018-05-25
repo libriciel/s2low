@@ -43,7 +43,7 @@ define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
 define("IMAP_LOGIN","${IMAP_LOGIN:-s2low-mailsec@s2low.docker.libriciel.fr}");
 define("IMAP_PASS","${IMAP_PASS:-s2low-mailsec}");
 
-#A v�rifier
+#A vérifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
 define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
 define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
@@ -53,5 +53,5 @@ define('EXPORT_LOGS_DIRECTORY','/data/tdt-workspace/logs-export/');
 
 define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-noreply@locahost}");
 
-
+define('MODE_BEANSTALKD',true);
 EOF

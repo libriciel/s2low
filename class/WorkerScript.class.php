@@ -53,7 +53,7 @@ class WorkerScript {
 
 	private function beanstalkdWorker(IWorker $IWorker){
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
-		$this->logger->info("Lancement du worker");
+		$this->logger->info("Démarrage en mode beanstalkd");
 		while($job = $queue->reserve()){
 			$data = "undefined";
 			try {

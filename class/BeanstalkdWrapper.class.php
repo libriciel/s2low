@@ -47,6 +47,7 @@ class BeanstalkdWrapper {
 		return $queue;
 	}
 
+
 	public function emptyQueue($queue_name){
 		if (! $this->mode_beanstalkd){
 			return true;
