@@ -1,5 +1,6 @@
 <?php
 class Antivirus {
+
 	public $errorMsg;
 
     /**
@@ -26,7 +27,7 @@ class Antivirus {
 	 	
 		Trace::wrap_exec(ANTIVIRUS_COMMAND . " $new_file", $output, $ret);
 		Trace::wrap_exec("rm $new_file",$output1,$ret1);
-		
+
 		switch ($ret) {
 		  case 0:
 				$returnValue= true;

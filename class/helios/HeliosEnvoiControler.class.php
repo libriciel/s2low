@@ -14,11 +14,14 @@ class HeliosEnvoiControler {
 	private $pesAllerRetriever;
 
 	private $helios_files_upload_root;
+
+	private $antivirus;
 	
 	public function __construct(
 	    SQLQuery $sqlQuery,
         PesAllerRetriever $pesAllerRetriever,
-        $helios_files_upload_root
+        $helios_files_upload_root,
+		Antivirus $antivirus
 
     ){
 		$this->sqlQuery = $sqlQuery;
@@ -28,6 +31,7 @@ class HeliosEnvoiControler {
 		$this->heliosTransmissionWindowsSQL = new HeliosTransmissionWindowsSQL($sqlQuery);
 		$this->pesAllerRetriever = $pesAllerRetriever;
 		$this->helios_files_upload_root = $helios_files_upload_root;
+		$this->antivirus = $antivirus;
 	}
 
 	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
@@ -38,9 +42,8 @@ class HeliosEnvoiControler {
 	 * @throws Exception
 	 */
 	public function validateAllTransactions(){
-		$antivirus = new Antivirus();
 		try {
-			$antivirus->isAlive();
+			$this->antivirus->isAlive();
 		} catch (Exception $e){
 			echo $e->getMessage()."\n";
 			return;
@@ -67,7 +70,7 @@ class HeliosEnvoiControler {
 				continue;
 			}
 
-			if (!$antivirus->checkArchiveSanity($file_path)) {
+			if (!$this->antivirus->checkArchiveSanity($file_path)) {
 				$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
