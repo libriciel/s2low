@@ -25,7 +25,7 @@ chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 /bin/bash /var/www/s2low/docker-resources/generate-ssmtp.conf.sh > /etc/ssmtp/ssmtp.conf
 
 
-#A mettre dans le dockerfile ?
+#TODO A mettre dans le dockerfile ?
 usermod -s /bin/bash www-data
 
 
@@ -48,7 +48,8 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
 
 fi
 
-#Mise à jour du validca
+# Mise à jour du validca
+# TODO faut pas mettre ça ici... plutot dans un worker ou le cron
 /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 #On attend que la base de données soit accessible avant de l'initialiser
