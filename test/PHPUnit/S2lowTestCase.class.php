@@ -52,6 +52,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $this->getObjectInstancier()->set("mode_beanstalkd",false);
 		$this->getObjectInstancier()->set("beanstalkd_server",false);
 		$this->getObjectInstancier()->set("beanstalkd_port",false);
+        $this->getObjectInstancier()->set('antivirus_command','ls');
 
 
         $get = array();

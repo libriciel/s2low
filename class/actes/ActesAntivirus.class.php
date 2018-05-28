@@ -53,7 +53,7 @@ class ActesAntivirus implements IWorker {
 
 		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
 		if (! $this->antivirus->checkArchiveSanity($archive_path)){
-			$message = $this->antivirus->errorMsg;
+			$message = $this->antivirus->getLastError();
 			$this->logger->notice(
 				"Un virus a été trouvé pour la transaction $transaction_id",[$message]
 			);
