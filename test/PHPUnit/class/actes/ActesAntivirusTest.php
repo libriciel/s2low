@@ -33,7 +33,9 @@ class ActesAntivirusTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testOK(){
-		$antivirus = $this->getMockBuilder(Antivirus::class)->getMock();
+		$antivirus = $this->getMockBuilder(Antivirus::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 		$antivirus->expects($this->any())
 			->method("checkArchiveSanity")
 			->willReturn(true);
@@ -46,7 +48,9 @@ class ActesAntivirusTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testFailed(){
-		$antivirus = $this->getMockBuilder(Antivirus::class)->getMock();
+		$antivirus = $this->getMockBuilder(Antivirus::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 		$antivirus->expects($this->any())
 			->method("checkArchiveSanity")
 			->willReturn(false);
@@ -61,7 +65,9 @@ class ActesAntivirusTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testRaiseException(){
-		$antivirus = $this->getMockBuilder(Antivirus::class)->getMock();
+		$antivirus = $this->getMockBuilder(Antivirus::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 		$antivirus->expects($this->any())
 			->method("checkArchiveSanity")
 			->willThrowException(new Exception("testing"));
