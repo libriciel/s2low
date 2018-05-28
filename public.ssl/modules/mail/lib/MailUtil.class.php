@@ -67,46 +67,7 @@ class MailUtil {
 		$this->setSubjet(MAIL_MESSAGE);
 		$this->setFrom(MAIL_TEDETIS_FROM);	
 	}
-	
-	/**
-	 * \brief	Permet de vérifier qu'un repertoire ne contient pas
-	 * 			de fichier infesté par un virus.
-	 * 
-	 * \param	$path string le chemin du repertoire à analyser
-	 * 
-	 * \return 	true : le répertoire ne contient pas de fichier infecter,
-	 * 		 	false sinon (fichier infecté, impossible d'appeller la commande
-	 * 		 	$this->errorMsg contient le message d'erreur
-	 * 
-	 */
- 	public function checkSanity($path){
- 		
- 		Trace::wrap_exec(ANTIVIRUS_COMMAND . " " . $path, $output, $ret);
-		
-		switch ($ret) {
-			
-	  		case 0:
-				return true;
-				break;
-				
-	  		case 1:
-				$this->errorMsg = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
-				// Format de ligne : /Nom/de/fichier: Nom virus
-				foreach ($output as $line) {
-			  		if (preg_match('/^\/.*: .* FOUND$/', $line)) {
-						$line = explode(":", $line);
-						$this->errorMsg .= basename($line[0]) . " : " . $line[1] . "<br />\n";
-		  			}
-				}
-				return false;
-				break;
-				
-	  		default:
-				$this->errorMsg = "Erreur " . $ret . " lors du scan antivirus de l'archive.";
-				return false;
-	  		}
- 	}
- 	
+
  	/**
  	 * \brief extrait un tableau de fichier à partir d'un repertoire
  	 * \param $root le chemin racine

@@ -1,0 +1,70 @@
+<?php
+
+class ActesAntivirus implements IWorker {
+
+	const QUEUE_NAME = 'actes-antivirus';
+
+	private $actesTransactionSQL;
+	private $actesRetriever;
+	private $actesEnvelopeSQL;
+
+	private $antivirus;
+	private $errorMsg;
+
+	private $logger;
+
+	public function __construct(
+		ActesTransactionsSQL $actesTransactionSQL,
+		ActesRetriever $actesRetriever,
+		ActesEnvelopeSQL $actesEnvelopeSQL,
+		Antivirus $antivirus,
+		S2lowLogger $s2lowLogger
+	){
+		$this->actesTransactionSQL = $actesTransactionSQL;
+		$this->actesRetriever = $actesRetriever;
+		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
+		$this->antivirus = $antivirus;
+		$this->logger = $s2lowLogger;
+	}
+
+	public function getQueueName() {
+		return self::QUEUE_NAME;
+	}
+
+	public function getAllId(){
+		return $this->actesTransactionSQL->getTransactionForAntiVirus();
+	}
+
+	public function getData($id){
+		return $id;
+	}
+
+	/**
+	 * @param $data
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function work($data){
+		$transaction_id = $data;
+		$this->logger->info("Traitement transaction $transaction_id");
+
+		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
+
+		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+		if (! $this->antivirus->checkArchiveSanity($archive_path)){
+			$message = $this->antivirus->getLastError();
+			$this->logger->notice(
+				"Un virus a été trouvé pour la transaction $transaction_id",[$message]
+			);
+			$this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
+			return false;
+		}
+
+		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
+		$this->logger->info(
+			"La transaction $transaction_id ne contient pas de virus"
+		);
+		return true;
+	}
+}

@@ -229,10 +229,9 @@ class ActesTransactionsSQL extends SQL{
 
 
 
-    public function create($envelope_id, $status,$user_id,$authority_id)
-    {
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) RETURNING ID;";
-        return $this->queryOne($sql, $envelope_id, $status, $user_id,$authority_id, true);
+    public function create($envelope_id, $status,$user_id,$authority_id) {
+        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id) VALUES (?,?,?,?) RETURNING ID;";
+        return $this->queryOne($sql, $envelope_id, $status, $user_id,$authority_id);
     }
 
     public function guessUniqueId($transaction_id){

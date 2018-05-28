@@ -6,6 +6,10 @@
 
 - le nombre de page des transactions helios n'est plus calculé pour le super admin (trop de ressources)
 
+### Retrait
+
+- retrait de la constante ANTIVIRUS_UPSTART_TOUCH_FILE devenue inutile
+- retrait de la constante ANTIVIRUS_TMP_PATH devenue inutile
 
 ## 3.0.10 - 2018-05-24
 

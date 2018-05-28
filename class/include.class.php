@@ -44,6 +44,10 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
         echo "header('$string','$replace','$http_response_code') called\n";
     }
 
+	function sleep_wrapper($seconds){
+    	//don't sleep
+	}
+
 } else {
 
     function exit_wrapper($status = "")
@@ -55,6 +59,10 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
     {
         header($string, $replace, $http_response_code);
     }
+
+    function sleep_wrapper($seconds){
+    	sleep($seconds);
+	}
 }
 
 

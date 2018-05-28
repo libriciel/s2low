@@ -15,6 +15,7 @@ class ActesIncludedFileSQLTest extends S2lowTestCase {
             1,
             1
         );
+		$this->getObjectInstancier()->get("ActesTransactionsSQL")->setAntivirusCheck($transaction_id);
         $transaction_info = $this->getObjectInstancier()->get("ActesTransactionsSQL")->getInfo($transaction_id);
         $this->getObjectInstancier()->get("ActesIncludedFileSQL")->addIncludedFile(
             $transaction_info['envelope_id'],

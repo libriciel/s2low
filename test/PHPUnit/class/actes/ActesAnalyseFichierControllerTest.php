@@ -1,11 +1,16 @@
 <?php
 
+require_once __DIR__."/ActesCreator.php";
+
 class ActesAnalyseFichierControllerTest extends S2lowTestCase {
 
     /** @var  TmpFolder */
     private $tmpFolder;
     private $tmp_dir;
 
+	/**
+	 * @throws Exception
+	 */
     protected function setUp(){
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
@@ -61,36 +66,22 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
-
     }
 
     private function validateAll($archivepath){
-        $transaction_id = $this->createTransaction(
-            ActesStatusSQL::STATUS_POSTE,
-            $archivepath
-        );
-
+		$actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
+		$transaction_id = $actesCreator->createTransaction(
+			ActesStatusSQL::STATUS_POSTE,
+			$archivepath,
+			$this->tmp_dir
+		);
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$actesTransactionsSQL->setAntivirusCheck($transaction_id);
         $logger = $this->getObjectInstancier()->get("Logger");
         $logger->setLogType(Logger::TYPE_MEMORY);
         $actesAnalyseFichierController = $this->getObjectInstancier()->get('ActesAnalyseFichierController');
 
         $actesAnalyseFichierController->validateAllEnveloppe();
-
-        return $transaction_id;
-    }
-
-    private function createTransaction($status,$archive_path){
-        $archive_name = basename($archive_path);
-
-        copy($archive_path,$this->tmp_dir."/$archive_name");
-
-        $sql="INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql,basename($this->tmp_dir)."/$archive_name");
-
-
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true);
-
 
         return $transaction_id;
     }

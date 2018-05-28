@@ -1,72 +1,79 @@
 <?php
-class Antivirus
-{
-	public static $errorMsg;
+class Antivirus {
+
+    private $shellCommand;
+    private $antivirus_command;
+    private $filesystem;
+
+	private $last_error;
+
+	public function __construct(
+	    ShellCommand $shellCommand,
+        $antivirus_command,
+        \Symfony\Component\Filesystem\Filesystem $filesystem
+    ) {
+	    $this->shellCommand = $shellCommand;
+	    $this->antivirus_command = $antivirus_command;
+	    $this->filesystem = $filesystem;
+    }
 
     /**
      * @param $path
      * @return bool
      * @throws Exception
      */
- 	public static function checkArchiveSanity($path) {
+ 	public function checkArchiveSanity($path) {
+ 	    $tmpFolder = new TmpFolder();
 
-		//FIXME
-		if(TESTING_ENVIRONNEMENT){
-			return true;
-		}
+ 	    $tmp_dir = $tmpFolder->create();
+		$new_file = $tmp_dir ."/". basename($path);
 
-		$new_file = ANTIVIRUS_TMP_PATH . basename($path);		
-		
-		$new_file = escapeshellarg($new_file);
-		$path = escapeshellarg($path);
-		
-		Trace::wrap_exec("cp $path $new_file",$output, $ret);
-		
-		if ( $ret != 0 ){
-			$t = Trace::getInstance();
-			$t->log("Impossible de copier $path vers $new_file",Trace::$TRACE_ERROR);
-			Antivirus::$errorMsg="Impossible de copier $path vers $new_file";
-			return false;
-		}
+        $this->filesystem->copy($path,$new_file);
+        $this->filesystem->chmod($new_file,0644);
 
-		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
-	 	
-		Trace::wrap_exec(ANTIVIRUS_COMMAND . " $new_file", $output, $ret);
+        $ret = $this->shellCommand->exec($this->antivirus_command." ".$new_file);
+        $output = $this->shellCommand->getLastOutput();
+        //$error = $this->shellCommand->getLastError();
 
-	  switch ($ret) {
-		  case 0:
-				$returnValue= true;
-				break;
-		  case 1:
-				Antivirus::$errorMsg = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
-				// Format de ligne : /Nom/de/fichier: Nom virus
-				foreach ($output as $line) {
-				  if (preg_match('/^\/.*: .* FOUND$/', $line)) {
-					$line = explode(":", $line);
-					Antivirus::$errorMsg .= basename($line[0]) . " : " . $line[1] . "<br />\n";
-				  }
-				}
-				$returnValue= false;
-				break;
-		  default:
-				Antivirus::$errorMsg = "Erreur " . $ret . " lors du scan antivirus de l'archive.";
-				throw new Exception("Erreur " . $ret . " lors du scan antivirus de l'archive.");
+        $tmpFolder->delete($tmp_dir);
 
-				break;
-	  }
-	  Trace::wrap_exec("rm $new_file",$output, $ret);
-	  return $returnValue;
+        if ($ret === 1){
+            $this->last_error = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
+            // Format de ligne : /Nom/de/fichier: Nom virus
+            foreach (explode("\n",$output) as $line) {
+                if (preg_match('/^\/.*: .* FOUND$/', $line)) {
+                    $line = explode(":", $line);
+                    $this->last_error .= basename($line[0]) . " : " . $line[1] . "<br />\n";
+                }
+            }
+            return false;
+        }
+
+        if ($ret !== 0){
+            $message = "Erreur " . $ret . " lors du scan antivirus de l'archive.";
+            $this->last_error = $message;
+            throw new Exception($message);
+        }
+        return true;
  	}
 
-	public static function isAlive(){
-		Trace::wrap_exec(ANTIVIRUS_COMMAND . " " . __FILE__ ." 2>&1", $output, $ret);
+ 	public function getLastError() {
+ 	    return $this->last_error;
+    }
 
-		if ($ret == 0){
-			return true;
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function isAlive(){
+        $ret = $this->shellCommand->exec(
+            $this->antivirus_command. " ". __FILE__
+        );
+		if ($ret !== 0){
+	        $output = $this->shellCommand->getLastOutput();
+            throw new Exception("Problème avec l'antivirus : $output");
 		}
-
-		throw new Exception("Problème avec l'antivirus : " . implode("\n",$output));
+        return true;
 	}
-
 
 }

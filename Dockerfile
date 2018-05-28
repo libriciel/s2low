@@ -1,37 +1,37 @@
 FROM php:5.5-apache
 
-# add https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation.html
-
-RUN apt-get update && apt-get install -y \
-    clamdscan \
-    cron \
-    git \
-    libc-client-dev \
-    libjpeg-dev \
-    libkrb5-dev \
-    libpng-dev \
-    libpq-dev \
-    locales \
-    logrotate \
-    ssmtp \
-    sudo \
-    supervisor \
-    xmlsec1 \
-    xmlstarlet \
-    wget \
-    zip \
-    netcat \
-    php5-imagick \
+RUN apt-get update && \
+    apt-get install -y \
+        clamdscan \
+        cron \
+        git \
+        libc-client-dev \
+        libjpeg-dev \
+        libkrb5-dev \
+        libpng-dev \
+        libpq-dev \
+        locales \
+        logrotate \
+        ssmtp \
+        sudo \
+        supervisor \
+        xmlsec1 \
+        xmlstarlet \
+        wget \
+        zip \
+        netcat \
+        php5-imagick \
     && rm -r /var/lib/apt/lists/*
 
-# Configuration de clamav
-COPY ./docker-resources/clamav/clamd.conf /etc/clamav/
 
 # Installation de certbot
-RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list
-RUN apt-get update && apt-get install -y -t jessie-backports \
-    certbot \
-    python-certbot-apache
+RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list && \
+    apt-get update && \
+    apt-get install -y -t jessie-backports \
+        certbot \
+        python-certbot-apache \
+    && rm -r /var/lib/apt/lists/*
+
 
 # Gestion des locales
 RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -42,82 +42,33 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
     set -eux && dpkg-reconfigure -f noninteractive tzdata
 
 
-# Installation de xdebug
-RUN pecl install xdebug-2.5.3 && \
-    docker-php-ext-enable xdebug
-
-RUN a2enmod \
-    expires \
-    headers \
-    proxy \
-    proxy_http \
-    rewrite \
-    ssl
+# Paquet PECL
+RUN pecl install \
+        redis \
+        xdebug-2.5.3 && \
+    docker-php-ext-enable \
+        redis \
+        xdebug
 
 # Extensions PHP
-RUN docker-php-ext-configure \
-    gd --with-jpeg-dir=/usr/include/
-
-RUN docker-php-ext-install \
-    gd \
-    pcntl \
-    pdo \
-    pdo_pgsql \
-    pgsql \
-    zip
-
-# Installation de l'extension imap
-RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
-    && docker-php-ext-install imap
-
-#Redis
-RUN pecl install redis && \
-    docker-php-ext-enable redis
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
+    docker-php-ext-install \
+        gd \
+        imap \
+        pcntl \
+        pdo \
+        pdo_pgsql \
+        pgsql \
+        zip
 
 # Paquets PEAR
 RUN pear install \
-    Mail \
-    Mail_Mime \
-    Mail_mimeDecode \
-    MDB2 \
-    MDB2#pgsql
-
-
-# Copie des fichiers de configurations
-COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
-COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
-
-# Répertoire contenant les certificats
-RUN mkdir -p /etc/apache2/ssl/
-
-
-# Répertoire de configuration de S2low
-RUN mkdir -p /etc/s2low/ssl/
-
-# Workspace
-RUN mkdir -p /data/tdt-workspace/ && \
-    chown -R www-data:www-data /data/tdt-workspace/
-
-
-#Sessions PHP
-RUN mkdir -p /var/lib/php/session/ && \
-    chown www-data: /var/lib/php/session
-
-# Fichier de trace PHP
-RUN touch /tmp/slow.log && \
-    chown www-data: /tmp/slow.log
-
-#Mise en ce place du systeme de recuperation des CRL et AC
-#TODO voir comment gérer la récupération du validca
-ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
-RUN chmod +x /usr/local/bin/recup_crl.sh
-RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
-
-#TODO passer validca dans supervisor
-# Copie des crontab
-COPY ./docker-resources/cron.d/* /etc/cron.d/
-
-# Installation certificat pour récupérer tdt-lib-actes sur gitlab privée...
+        Mail \
+        Mail_Mime \
+        Mail_mimeDecode \
+        MDB2 \
+        MDB2#pgsql
 
 # Installation de composer
 RUN cd /tmp/ && \
@@ -125,6 +76,47 @@ RUN cd /tmp/ && \
     php composer-setup.php --install-dir=/usr/local/bin && \
     mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
+# Module Apache
+RUN a2enmod \
+        expires \
+        headers \
+        proxy \
+        proxy_http \
+        rewrite \
+        ssl
+
+# Copie des fichiers de configurations
+COPY ./docker-resources/php/* /usr/local/etc/php/conf.d/
+COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
+COPY ./docker-resources/clamav/clamd.conf /etc/clamav/
+COPY ./docker-resources/cron.d/* /etc/cron.d/
+COPY ./docker-resources/apache/* /etc/apache2/sites-available/
+COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
+COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
+
+# Copie de l'entrypoint
+COPY ./docker-resources/docker-s2low-entrypoint /usr/local/bin/
+RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
+
+# Répertoire contenant les certificats
+# Répertoire de configuration de S2low
+# Workspace
+RUN mkdir -p /etc/apache2/ssl/ && \
+    mkdir -p /etc/s2low/ssl/ && \
+    mkdir -p /data/tdt-workspace/ && \
+    chown -R www-data:www-data /data/tdt-workspace/
+
+
+#Mise en ce place du systeme de recuperation des CRL et AC
+#TODO voir comment gérer la récupération du validca
+ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
+RUN chmod +x /usr/local/bin/recup_crl.sh
+RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
+
+# Pour libersign
+RUN mkdir -p /var/www/parapheur/libersign
+ADD https://ressources.libriciel.fr/s2low/libersign_v1_compat.tgz /var/www/parapheur/libersign
+RUN cd /var/www/parapheur/libersign && tar xvzf libersign_v1_compat.tgz
 
 # Ports
 EXPOSE 443 80
@@ -132,37 +124,21 @@ EXPOSE 443 80
 # Répertoire de travail
 WORKDIR /var/www/s2low/
 
-
-COPY ./docker-resources/apache/* /etc/apache2/sites-available/
-RUN a2ensite s2low-apache-config.conf
-
-
-COPY ./docker-resources/docker-s2low-entrypoint /usr/local/bin/
-RUN chmod a+x /usr/local/bin/docker-s2low-entrypoint
-
-
-COPY ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
-COPY ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
+#TODO : mettre des VOLUME pour les logs
+#TODO : mettre des VOLUME pour le workspace ?
+#TODO : mettre un VOLUME pour les certificats letsencrypt ?
 
 
 COPY ./ /var/www/s2low/
+
+RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
+
+RUN a2ensite s2low-apache-config.conf
 
 #Composer
 # https://adamcod.es/2013/03/07/composer-install-vs-composer-update.html
 RUN composer install
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
-
-
-# Pour libersign
-RUN mkdir -p /var/www/parapheur/libersign
-ADD https://ressources.libriciel.fr/s2low/libersign_v1_compat.tgz /var/www/parapheur/libersign
-RUN cd /var/www/parapheur/libersign && tar xvzf libersign_v1_compat.tgz
-
-RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
-
-#TODO : mettre des VOLUME pour les logs
-#TODO : mettre des VOLUME pour le workspace ?
-#TODO : mettre un VOLUME pour les certificats letsencrypt ?
 
 
 ENTRYPOINT ["docker-s2low-entrypoint"]

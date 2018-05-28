@@ -725,59 +725,6 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief Méthode de vérification antivirus de l'archive
-   * \param $path chaîne (optionnel) : chemin vers l'archive à controler (file_path par défaut)
-   * \return True en cas de succès, false si l'archive est non saine
-   */
-  public function checkArchiveSanity($path = false) {
-	if ($path || (isset($this->file_path) && ! empty($this->file_path))) {
-	  if (! $path) {
-		$path = $this->rootDir . '/' . $this->file_path;
-	  }
-
-		$new_file = ANTIVIRUS_TMP_PATH . basename($path);
-		Trace::wrap_exec("cp $path $new_file",$output, $ret);
-
-		if ( $ret != 0 ){
-			$t = Trace::getInstance();
-			$this->errorMsg="Impossible de copier $path vers $new_file";
-			$t->log("Impossible de copier $path vers $new_file",Trace::$TRACE_ERROR);
-			return false;
-		}
-
-		Trace::wrap_exec("chmod 644 $new_file",$output, $ret);
-
-		Trace::wrap_exec(ANTIVIRUS_COMMAND . " " . $new_file, $output, $ret);
-		Trace::wrap_exec("rm $new_file",$output2, $ret2);
-
-
-	  switch ($ret) {
-	  case 0:
-		return true;
-		break;
-	  case 1:
-		$this->errorMsg = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
-		// Format de ligne : /Nom/de/fichier: Nom virus
-		foreach ($output as $line) {
-		  if (preg_match('/^\/.*: .* FOUND$/', $line)) {
-			$line = explode(":", $line);
-			$this->errorMsg .= basename($line[0]) . " : " . $line[1] . "<br />\n";
-		  }
-		}
-		return false;
-		break;
-
-	  default:
-		  $result = implode("\n",$output);
-	  	mail(EMAIL_ADMIN, "Erreur lors du scan antivirus des actes","Message de l'antivirus : $result");
-	  	throw new Exception("Clamdscan unexpected error : " . $result);
-	  }
-	}
-	$this->errorMsg="Error: path=".$path." and this->file_path=".$this->file_path;
-	return false;
-  }
-
-  /**
    * \brief Méthode de suppression des fichiers intermédiaires ayant servi à la contruction de l'archive
    * \return True en cas de succès, false sinon
   */

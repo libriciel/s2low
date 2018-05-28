@@ -382,7 +382,7 @@ if (!$trans->save()) {
   $env->deleteArchiveFile();
   $env->delete();
   Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
-} 
+}
 
 
   $msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
@@ -419,6 +419,11 @@ $zeBatch->incNextSuffix();
       }
     }
 }
+
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJob($actesAntivirus,$trans->getId());
+
 
 if ($nextBatchFileId) {
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $nextBatchFileId, $apiMsg);

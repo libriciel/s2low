@@ -207,4 +207,10 @@ foreach ($transacs as $trans) {
   $apiMsg .= $trans->getId() . "\n";
 }
 
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJob($actesAntivirus,$trans->getId());
+
+
+
 Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/index.php", $apiMsg);

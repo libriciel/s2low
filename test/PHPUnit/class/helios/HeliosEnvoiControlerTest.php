@@ -11,15 +11,27 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 	/** @var  HeliosEnvoiControler */
 	private $heliosEnvoiControler;
 
+	/** @var  TmpFolder */
+	private $tmpFolder;
+
+	/**
+	 * @throws Exception
+	 */
 	protected function setUp(){
 		parent::setUp();
-		org\bovigo\vfs\vfsStream::setup("test");
-		$this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+
+		$this->tmpFolder = new TmpFolder();
+		$this->testStreamUrl = $this->tmpFolder->create();
+
 		mkdir($this->testStreamUrl."/helios");
         $this->getObjectInstancier()->set("helios_files_upload_root",$this->testStreamUrl."/helios/");
 		$this->heliosController = new HeliosController($this->getObjectInstancier());
 		$this->heliosEnvoiControler = $this->getObjectInstancier()->get("HeliosEnvoiControler");
+	}
 
+	protected function tearDown() {
+		$this->tmpFolder->delete($this->testStreamUrl);
+		parent::tearDown();
 	}
 
 	public function testValidateAllTransactions(){
