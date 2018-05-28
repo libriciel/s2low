@@ -260,6 +260,12 @@ if (!$trans->save()) {
   $apiMsg = $trans->getId() . "\n";
  
 }
+
+
+$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJob($actesAntivirus,$trans->getId());
+
 if ($api) {
 	echo "OK : id généré : ".$apiMsg;	
 } else {

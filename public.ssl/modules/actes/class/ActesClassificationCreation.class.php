@@ -118,6 +118,13 @@ class ActesClassificationCreation {
 		$this->lastMessage = "Création de l'enveloppe n°" . $env->getId() . " contenant une demande de classification. Résultat OK.";
 		$this->logLastMessage(1);
 
+		$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+
+		$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+
+		$workerScript = $objectInstancier->get(WorkerScript::class);
+		$workerScript->putJob($actesAntivirus,$trans->getId());
+
 		$this->lastTransactionId = $trans->getId() . "\n";
 		return true;
 	}
