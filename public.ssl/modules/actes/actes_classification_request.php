@@ -37,9 +37,5 @@ if (! ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY){
 $result = $classificationCreation->createEnveloppe($myAuthority,$me);
 
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
-
-$workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJob($actesAntivirus,$classificationCreation->getLastTransactionId());
 
 Helpers::returnAndExit( ! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php",$classificationCreation->getLastTransactionId());
