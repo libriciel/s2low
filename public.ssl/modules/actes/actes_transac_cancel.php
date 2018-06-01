@@ -177,7 +177,12 @@ if (! $trans->save()) {
 
   Helpers::purgeTempSession();
 
-  // Message réservé à l'appel via API
+
+    $actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+    $workerScript = $objectInstancier->get(WorkerScript::class);
+    $workerScript->putJob($actesAntivirus,$trans->getId());
+
+    // Message réservé à l'appel via API
   // Id de transaction créée
   $apiMsg = $trans->getId() . "\n";
 
