@@ -11,6 +11,11 @@ class WorkerScript {
 
 	private $min_execution_time_in_seconds;
 
+	/**
+	 * @var SigTermHandler
+	 */
+	private $sigTermHandler;
+
 	public function __construct(
 		BeanstalkdWrapper $beanstalkdWrapper,
 		S2lowLogger $s2lowLogger,
@@ -31,7 +36,7 @@ class WorkerScript {
 	}
 
 	public function script(IWorker $IWorker){
-
+		$this->sigTermHandler = $this->sigTermHandlerFactory->getNewInstance();
 		if ($this->beanstalkdWrapper->isModeBeanstalked()){
 			return $this->beanstalkdWorker($IWorker);
 		} else {
@@ -55,6 +60,9 @@ class WorkerScript {
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
 		$this->logger->info("Démarrage en mode beanstalkd");
 		while($job = $queue->reserve()){
+			if ($this->sigTermHandler->isSigtermCalled()){
+				return true;
+			}
 			$data = "undefined";
 			try {
 				$data = $job->getData();
@@ -72,6 +80,9 @@ class WorkerScript {
 					self::QUEUE_DELAY_RETRY_IN_SECONDS
 				);
 				return false;
+			}
+			if ($this->sigTermHandler->isSigtermCalled()){
+				return true;
 			}
 		}
 		return true;
@@ -107,13 +118,11 @@ class WorkerScript {
 	 * @throws WorkerScriptException
 	 */
 	private function checkAll(IWorker $IWorker){
-		$sigTermHandler = $this->sigTermHandlerFactory->getNewInstance();
-
 		$id_list = $IWorker->getAllId();
 		$this->logger->info(count($id_list) . " travaux trouvées");
 
 		foreach($id_list as $id){
-			if ($sigTermHandler->isSigtermCalled()){
+			if ($this->sigTermHandler->isSigtermCalled()){
 				throw new WorkerScriptException("SIGTERM reçu");
 			}
 			$data = $IWorker->getData($id);

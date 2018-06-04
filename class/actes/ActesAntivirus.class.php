@@ -9,7 +9,6 @@ class ActesAntivirus implements IWorker {
 	private $actesEnvelopeSQL;
 
 	private $antivirus;
-	private $errorMsg;
 
 	private $logger;
 
