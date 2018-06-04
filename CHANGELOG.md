@@ -1,10 +1,12 @@
 # Change Log
 
-## 3.0.11 
+
+## 3.0.11 - 2018-06-04
 
 ### Évolutions
 
 - le nombre de page des transactions helios n'est plus calculé pour le super admin (trop de ressources)
+- Ajout du MODE_BEANSTALKD : test de la gestion de la tache actes-antivirus via un message broker
 
 ### Retrait
 
