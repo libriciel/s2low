@@ -1,5 +1,10 @@
 # Change Log
 
+## 3.0.12
+
+## Correction
+
+- Erreur d'échapement provoquant le non fonctionnement de actes_transac_get_status.php
 
 ## 3.0.11 - 2018-06-04
 
