@@ -3406,6 +3406,10 @@
             "tablename": "logs_historique",
             "indexdef": "CREATE INDEX lh_date ON logs_historique USING btree (date, id)"
         },
+        "actes_included_files_filename": {
+            "tablename": "actes_included_files",
+            "indexdef": "CREATE INDEX actes_included_files_filename ON actes_included_files USING btree (filename)"
+        },
         "aif_ei": {
             "tablename": "actes_included_files",
             "indexdef": "CREATE INDEX aif_ei ON actes_included_files USING btree (envelope_id)"
@@ -3421,6 +3425,10 @@
         "logs_request_user_id_demandeur_idx": {
             "tablename": "logs_request",
             "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
+        },
+        "actes_transactions_unique_id": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE UNIQUE INDEX actes_transactions_unique_id ON actes_transactions USING btree (unique_id, type, id)"
         },
         "actes_transactions_last_status_id_id": {
             "tablename": "actes_transactions",

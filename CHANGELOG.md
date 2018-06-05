@@ -6,6 +6,9 @@
 
 - Erreur d'échapement provoquant le non fonctionnement de actes_transac_get_status.php
 
+## Ajouts
+- Ajout d'index pour la requete de récupération d'id à partir de l'uniqid
+
 ## 3.0.11 - 2018-06-04
 
 ### Évolutions
