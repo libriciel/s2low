@@ -86,4 +86,20 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         return $transaction_id;
     }
 
+	public function testValidateAllOnePadesFailed(){
+
+		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
+		$padesValid->expects($this->any())->method("validate")->willThrowException(new Exception("erreur de test"));
+		$this->getObjectInstancier()->set('PadesValid',$padesValid);
+
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_POSTE,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_POSTE,$transaction_info['status_id']);
+
+	}
+
 }

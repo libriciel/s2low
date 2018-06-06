@@ -44,6 +44,11 @@ class ActesAnalyseFichierController {
         return true;
     }
 
+	/**
+	 * @param $enveloppe_id
+	 * @return bool
+	 * @throws Exception
+	 */
     public function validateOneEnveloppe($enveloppe_id){
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
 
@@ -60,7 +65,6 @@ class ActesAnalyseFichierController {
         $tmp_dir = $tmpFolder->create();
         try {
             $archive->validate($archive_path);
-            $this->validatePades($archive_path,$tmp_dir);
         } catch (Exception $e){
             $tmpFolder->delete($tmp_dir);
             $message = utf8_decode( $e->getMessage());
@@ -68,6 +72,12 @@ class ActesAnalyseFichierController {
             $this->actesScriptHelper->updateStatus($transaction_ids,ActesStatusSQL::STATUS_EN_ERREUR,"Enveloppe invalide : $message");
             return false;
         }
+        try {
+			$this->validatePades($archive_path,$tmp_dir);
+		} catch (Exception $e){
+        	$this->log("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : ". $e->getMessage());
+        	return false;
+		}
         $tmpFolder->delete($tmp_dir);
         $this->log("[$envelope_libelle] L'archive est valide !");
         $this->actesScriptHelper->updateStatus(
