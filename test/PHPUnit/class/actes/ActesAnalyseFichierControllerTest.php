@@ -86,10 +86,10 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         return $transaction_id;
     }
 
-	public function testValidateAllOnePadesFailed(){
+	public function testValidateAllOnePadesFailedRecoverable(){
 
 		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
-		$padesValid->expects($this->any())->method("validate")->willThrowException(new Exception("erreur de test"));
+		$padesValid->expects($this->any())->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
 		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
@@ -99,6 +99,30 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
 		$this->assertEquals(ActesStatusSQL::STATUS_POSTE,$transaction_info['last_status_id']);
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_POSTE,$transaction_info['status_id']);
+
+	}
+
+	public function testValidateAllOnePadesFailedNotRecoverable(){
+
+		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
+		$padesValid->expects($this->any())->method("validate")->willThrowException(new Exception("erreur de test"));
+		$this->getObjectInstancier()->set('PadesValid',$padesValid);
+
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Enveloppe invalide : erreur de test",
+			$transaction_info['message']
+		);
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+
 
 	}
 
