@@ -67,6 +67,7 @@ class ActesAnalyseFichierController {
 			$archive->validate($archive_path);
 			$this->validatePades($archive_path,$tmp_dir);
 		} catch (RecoverableException $e){
+			$tmpFolder->delete($tmp_dir);
 			$this->log("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : ". $e->getMessage());
 			return false;
         } catch (Exception $e){
