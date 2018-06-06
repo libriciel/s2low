@@ -76,6 +76,9 @@ foreach($id_list as $id){
 	}
 	
 	$actesTransactionsSQL->updateStatus($id,1,$msg);
+	$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+	$workerScript = $objectInstancier->get(WorkerScript::class);
+	$workerScript->putJob($actesAntivirus,$id);
 	
 	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId());	
 }
