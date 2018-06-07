@@ -65,14 +65,13 @@ class ActesAntivirusWorker implements IWorker {
 		}
 
 		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
+		$this->logger->info(
+			"La transaction $transaction_id ne contient pas de virus"
+		);
 
 		$this->workerScript->putJobByClassName(
 			ActesAnalyseFichierAEnvoyerWorker::class,
 			$transaction_info["envelope_id"]
-		);
-
-		$this->logger->info(
-			"La transaction $transaction_id ne contient pas de virus"
 		);
 		return true;
 	}
