@@ -44,6 +44,11 @@ class ActesAnalyseFichierController {
         return true;
     }
 
+	/**
+	 * @param $enveloppe_id
+	 * @return bool
+	 * @throws Exception
+	 */
     public function validateOneEnveloppe($enveloppe_id){
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
 
@@ -59,8 +64,12 @@ class ActesAnalyseFichierController {
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
         try {
-            $archive->validate($archive_path);
-            $this->validatePades($archive_path,$tmp_dir);
+			$archive->validate($archive_path);
+			$this->validatePades($archive_path,$tmp_dir);
+		} catch (RecoverableException $e){
+			$tmpFolder->delete($tmp_dir);
+			$this->log("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : ". $e->getMessage());
+			return false;
         } catch (Exception $e){
             $tmpFolder->delete($tmp_dir);
             $message = utf8_decode( $e->getMessage());
@@ -68,6 +77,7 @@ class ActesAnalyseFichierController {
             $this->actesScriptHelper->updateStatus($transaction_ids,ActesStatusSQL::STATUS_EN_ERREUR,"Enveloppe invalide : $message");
             return false;
         }
+
         $tmpFolder->delete($tmp_dir);
         $this->log("[$envelope_libelle] L'archive est valide !");
         $this->actesScriptHelper->updateStatus(
@@ -79,6 +89,12 @@ class ActesAnalyseFichierController {
         return true;
     }
 
+	/**
+	 * @param $archive_filepath
+	 * @param $tmp_dir
+	 * @throws RecoverableException
+	 * @throws Exception
+	 */
     private function validatePades($archive_filepath,$tmp_dir){
         $archive = new \Libriciel\LibActes\Archive();
 
@@ -97,6 +113,10 @@ class ActesAnalyseFichierController {
         }
     }
 
+	/**
+	 * @param $filepath
+	 * @throws RecoverableException
+	 */
     private function validatePADESOneFile($filepath){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filepath);

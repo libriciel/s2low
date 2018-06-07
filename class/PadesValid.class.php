@@ -33,11 +33,12 @@ class PadesValid {
         return $this->last_result;
     }
 
-    /**
-     * @param $filepath
-     * @return bool
-     * @throws Exception
-     */
+	/**
+	 * @param $filepath
+	 * @return bool
+	 * @throws RecoverableException
+	 * @throws Exception
+	 */
     public function validate($filepath){
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
 
@@ -45,7 +46,7 @@ class PadesValid {
         $result = $curlWrapper->get($this->pades_valid_url);
         $this->last_result = $result;
         if (!$result){
-            throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
+            throw new RecoverableException($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
         }
         $result = json_decode($result);
         if (! $result){
