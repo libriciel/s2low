@@ -2,10 +2,19 @@
 
 require_once __DIR__."/../../init/init.php";
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
-$workerScript = $objectInstancier->get(WorkerScript::class);
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2lowLogger->setName($actesAntivirus->getQueueName()."-rebuild-queue");
-$s2lowLogger->enableStdOut();
+$all = [
+	ActesAntivirusWorker::class,
+	ActesAnalyseFichierAEnvoyerWorker::class
+];
 
-$workerScript->rebuildQueue($actesAntivirus);
+
+$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
+$s2lowLogger->enableStdOut();
+$workerScript = $objectInstancier->get(WorkerScript::class);
+
+foreach($all as $workerClassname) {
+	/** @var IWorker $worker */
+	$worker = $objectInstancier->get($workerClassname);
+	$s2lowLogger->setName($worker->getQueueName() . "-rebuild-queue");
+	$workerScript->rebuildQueue($worker);
+}

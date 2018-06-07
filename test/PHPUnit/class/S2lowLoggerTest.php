@@ -11,8 +11,7 @@ class S2lowLoggerTest extends S2lowTestCase {
 			$s2lowLogger->$type("test-$type");
 		}
 
-		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		$records = $testHandler->getRecords();
+		$records = $this->getLogRecords();
 		foreach($message_type_list as $i => $type) {
 			$this->assertEquals($records[$i]['message'], "test-$type");
 			$this->assertEquals($records[$i]['level_name'], strtoupper($type));

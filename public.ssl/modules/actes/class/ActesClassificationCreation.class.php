@@ -120,7 +120,7 @@ class ActesClassificationCreation {
 
 		$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 
-		$actesAntivirus = $objectInstancier->get(ActesAntivirus::class);
+		$actesAntivirus = $objectInstancier->get(ActesAntivirusWorker::class);
 
 		$workerScript = $objectInstancier->get(WorkerScript::class);
 		$workerScript->putJob($actesAntivirus,$trans->getId());

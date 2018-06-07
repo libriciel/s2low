@@ -53,6 +53,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$this->getObjectInstancier()->set("beanstalkd_server",false);
 		$this->getObjectInstancier()->set("beanstalkd_port",false);
         $this->getObjectInstancier()->set('antivirus_command','ls');
+        $this->getObjectInstancier()->set('pades_valid_url','https://s2low');
 
 
         $get = array();

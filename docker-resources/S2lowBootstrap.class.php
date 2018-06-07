@@ -13,13 +13,13 @@ class S2lowBootstrap {
 	public function bootstrap(){
 		$this->log("Initialisation de S2low");
 		try {
-
 			$this->installCertificate();
 			$this->installHorodateur();
+			$this->installLibersign();
+			$this->sqlQuery->waitStarting(function($m)  {echo "$m\n";});
 			$this->dbUpdate();
 			$this->insertDemoS();
 			$this->populateDatabase();
-			$this->installLibersign();
 		} catch (Exception $e){
 			$this->log("Erreur : " . $e->getMessage());
 		}

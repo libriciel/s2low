@@ -124,7 +124,7 @@ EXPOSE 443 80
 # Répertoire de travail
 WORKDIR /var/www/s2low/
 
-#TODO : mettre des VOLUME pour les logs
+
 #TODO : mettre des VOLUME pour le workspace ?
 #TODO : mettre un VOLUME pour les certificats letsencrypt ?
 
