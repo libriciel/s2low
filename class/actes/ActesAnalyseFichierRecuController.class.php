@@ -51,6 +51,10 @@ class ActesAnalyseFichierRecuController {
         $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
     public function analyseAll(){
         $this->log("Début du script");
         $this->log("Analyse du répertoire : {$this->actes_response_tmp_local_path}");
@@ -95,6 +99,10 @@ class ActesAnalyseFichierRecuController {
         }
     }
 
+	/**
+	 * @param $rep_path
+	 * @throws Exception
+	 */
     public function analyseOneFile($rep_path){
         $this->log("Traitement de $rep_path");
 
@@ -151,6 +159,10 @@ class ActesAnalyseFichierRecuController {
 
     }
 
+	/**
+	 * @param ArchiveData $archiveData
+	 * @throws Exception
+	 */
     private function traitementEnveloppeAnomalie(ArchiveData $archiveData){
         $enveloppe_anomalie_name = basename($archiveData->enveloppe_path);
         $this->log("Anomalie trouvée pour l'enveloppe $enveloppe_anomalie_name");
@@ -179,6 +191,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param ArchiveData $archiveData
+	 * @throws Exception
+	 */
     private function traitementDocumentRecu(ArchiveData $archiveData){
         $fichierXML = $archiveData->fichierXML;
         $fichierXML = $fichierXML[0];
@@ -259,6 +275,10 @@ class ActesAnalyseFichierRecuController {
         $this->log("Attachement du fichier $file_id");
     }
 
+	/**
+	 * @param MessageMetierARActes $fichierXML
+	 * @throws Exception
+	 */
     private function traitementARActe(MessageMetierARActes $fichierXML){
         $this->log("AR Actes trouvé pour l'acte : " . $fichierXML->id_actes);
 
@@ -280,6 +300,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetierARPieceComplementaire $fichierXML
+	 * @throws Exception
+	 */
     private function traitementARPC(MessageMetierARPieceComplementaire $fichierXML){
         $this->log("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
@@ -298,6 +322,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetierARReponseRejetLettreObservations $fichierXML
+	 * @throws Exception
+	 */
     private function traitementARReponseLO(MessageMetierARReponseRejetLettreObservations $fichierXML){
         $this->log("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
 
@@ -316,6 +344,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetieAnomalieActe $fichierXML
+	 * @throws Exception
+	 */
     private function traitementAnomalie(MessageMetieAnomalieActe $fichierXML){
         $this->log("Anomalie trouvé pour l'acte : " . $fichierXML->numero_interne);
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
@@ -329,6 +361,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetierRetourClassification $fichierXML
+	 * @throws Exception
+	 */
     private function traitementRetourClassification(MessageMetierRetourClassification $fichierXML){
         $transaction_id = $this->actesTransactionsSQL->getLastDemandeClassificationTransmis($fichierXML->siren);
         if (! $transaction_id){
@@ -346,6 +382,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetierReponseClassificationSansChangement $fichierXML
+	 * @throws Exception
+	 */
     private function traitementRetourClassificationSansChangement(MessageMetierReponseClassificationSansChangement $fichierXML){
         $this->log("Classification sans changement reçu");
         $transaction_id = $this->actesTransactionsSQL->getLastDemandeClassificationTransmis($fichierXML->siren);
@@ -362,6 +402,10 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param MessageMetierARAnnulation $fichierXML
+	 * @throws Exception
+	 */
     public function traitementARAnnulation(MessageMetierARAnnulation $fichierXML){
         $this->log("Annulation trouvée pour l'Acte : " . $fichierXML->id_actes);
 
@@ -406,6 +450,14 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+	/**
+	 * @param $siren
+	 * @param $numeroInterne
+	 * @param int $type
+	 * @param bool $type_reponse_not_null
+	 * @return array|bool|mixed
+	 * @throws Exception
+	 */
     private function getBySirenAndNumeroInterne($siren,$numeroInterne,$type=1,$type_reponse_not_null=false){
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren,$numeroInterne,$type,$type_reponse_not_null);
         if (! $transaction_id){

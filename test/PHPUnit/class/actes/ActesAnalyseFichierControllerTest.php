@@ -26,6 +26,9 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $this->tmpFolder->delete($this->tmp_dir);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testValidateAllEmpty(){
         $logger = $this->getObjectInstancier()->get("Logger");
         $logger->setLogType(Logger::TYPE_MEMORY);
