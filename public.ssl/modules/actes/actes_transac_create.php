@@ -420,10 +420,8 @@ $zeBatch->incNextSuffix();
     }
 }
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirusWorker::class);
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJob($actesAntivirus,$trans->getId());
-
+$workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 
 if ($nextBatchFileId) {
     Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $nextBatchFileId, $apiMsg);

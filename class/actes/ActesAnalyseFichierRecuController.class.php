@@ -51,6 +51,10 @@ class ActesAnalyseFichierRecuController {
         $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
+    
+	private function log($message){
+		$this->logger->log("actes-analyse-fichier-recu",$message);
+	}
 	/**
 	 * @return bool
 	 * @throws Exception
@@ -431,11 +435,6 @@ class ActesAnalyseFichierRecuController {
             $xml
         );
     }
-
-    private function log($message){
-        $this->logger->log("actes-analyse-fichier-recu",$message);
-    }
-
 
     private function updateStatus($transaction_ids,$status_id,$message,$xml=false){
         if (! is_array($transaction_ids)){

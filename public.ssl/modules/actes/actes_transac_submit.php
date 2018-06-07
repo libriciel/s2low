@@ -207,9 +207,11 @@ foreach ($transacs as $trans) {
   $apiMsg .= $trans->getId() . "\n";
 }
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirusWorker::class);
+
+
+
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJob($actesAntivirus,$trans->getId());
+$workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 
 
 

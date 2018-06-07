@@ -80,9 +80,9 @@ if($info['last_status_id'] != 17){
 
 $actesTransactionsSQL->updateStatus($id,1,$msg);
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirusWorker::class);
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJob($actesAntivirus,$id);
+$workerScript->putJobByClassName(ActesAntivirusWorker::class,$id);
+
 
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId())) {
 	$msg .= "\nErreur de journalisation.\n";

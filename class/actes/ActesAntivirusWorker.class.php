@@ -12,7 +12,6 @@ class ActesAntivirusWorker implements IWorker {
 
 	private $logger;
 
-	private $actesAnalyseFichierAEnvoyerWorker;
 	private $workerScript;
 
 	public function __construct(
@@ -21,7 +20,6 @@ class ActesAntivirusWorker implements IWorker {
 		ActesEnvelopeSQL $actesEnvelopeSQL,
 		Antivirus $antivirus,
 		S2lowLogger $s2lowLogger,
-		ActesAnalyseFichierAEnvoyerWorker $actesAnalyseFichierAEnvoyerWorker,
 		WorkerScript $workerScript
 	){
 		$this->actesTransactionSQL = $actesTransactionSQL;
@@ -30,7 +28,6 @@ class ActesAntivirusWorker implements IWorker {
 		$this->antivirus = $antivirus;
 		$this->logger = $s2lowLogger;
 		$this->workerScript = $workerScript;
-		$this->actesAnalyseFichierAEnvoyerWorker = $actesAnalyseFichierAEnvoyerWorker;
 	}
 
 	public function getQueueName() {
@@ -55,6 +52,11 @@ class ActesAntivirusWorker implements IWorker {
 		$this->logger->info("Traitement transaction $transaction_id");
 
 		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+		if ($transaction_info['antivirus_check']){
+			$this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
+			return true;
+		}
+
 		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
 		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
@@ -68,14 +70,13 @@ class ActesAntivirusWorker implements IWorker {
 		}
 
 		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
-
-		$this->workerScript->putJob(
-			$this->actesAnalyseFichierAEnvoyerWorker,
-			$transaction_info["envelope_id"]
-		);
-
 		$this->logger->info(
 			"La transaction $transaction_id ne contient pas de virus"
+		);
+
+		$this->workerScript->putJobByClassName(
+			ActesAnalyseFichierAEnvoyerWorker::class,
+			$transaction_info["envelope_id"]
 		);
 		return true;
 	}

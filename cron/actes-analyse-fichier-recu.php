@@ -2,6 +2,8 @@
 <?php
 declare(ticks = 1);
 
+//Ce script ne génère pas de requêtes de base de données, on a pas besoin de le mettre dans beanstalked dans un premier temps
+
 require_once( __DIR__ . "/../init/init.php");
 
 $start = time();

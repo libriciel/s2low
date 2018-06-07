@@ -1,6 +1,6 @@
 <?php
 
-class ActesEnvoiFichierControllerTest extends S2lowTestCase {
+class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
 
     /** @var  TmpFolder */
     private $tmpFolder;
@@ -24,13 +24,12 @@ class ActesEnvoiFichierControllerTest extends S2lowTestCase {
     }
 
     public function testValidateAllEmpty(){
-        $logger = $this->getObjectInstancier()->get("Logger");
-        $logger->setLogType(Logger::TYPE_MEMORY);
-        $actesEnvoiFichierController = $this->getObjectInstancier()->get('ActesEnvoiFichierController');
+        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
-        $this->assertRegExp("#Lancement du script#",$logger->getAllLog()[0]);
-        $this->assertRegExp("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logger->getAllLog()[1]);
-        $this->assertRegExp("#Fin du script#",$logger->getAllLog()[2]);
+        $logs = $this->getLogRecords();
+        $this->assertRegExp("#Lancement du script#",$logs[0]['message']);
+        $this->assertRegExp("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
+        $this->assertRegExp("#Fin du script#",$logs[2]['message']);
     }
 
     public function testEnvoiUneEnveloppe(){
@@ -39,7 +38,7 @@ class ActesEnvoiFichierControllerTest extends S2lowTestCase {
             __DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
 
-        $actesEnvoiFichierController = $this->getObjectInstancier()->get('ActesEnvoiFichierController');
+        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
@@ -66,15 +65,15 @@ class ActesEnvoiFichierControllerTest extends S2lowTestCase {
 
         $actesFileSender->expects($this->any())->method("send")->willThrowException(new Exception("Erreur du mock"));
 
-        $actesEnvoiFichierController = $this->getObjectInstancier()->get('ActesEnvoiFichierController');
+        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
 
-        $log = $this->getObjectInstancier()->get("Logger")->getAllLog();
-        $this->assertRegExp("#Erreur du mock#",$log[3]);
+		$logs = $this->getLogRecords();
+        $this->assertRegExp("#Erreur du mock#",$logs[3]['message']);
     }
 
     private function createTransaction($status,$archive_path){

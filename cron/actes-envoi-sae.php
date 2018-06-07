@@ -9,7 +9,7 @@ echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
 
-$actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
+$actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
 $actesArchiveControler->sendAllArchive();
 
 

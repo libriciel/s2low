@@ -78,6 +78,18 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$this->setExpectedException(Exception::class,"testing");
 		$actesAntivirus->work($this->transaction_id);
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public function testAlreadyAnalysed(){
+		$actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+		$actesTransactionSQL->setAntivirusCheck($this->transaction_id);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+		$actesAntivirus->work($this->transaction_id);
+		$logs = $this->getLogRecords();
+		$this->assertEquals("La transaction {$this->transaction_id} a déjà été analysé par l'antivirus",$logs[1]['message']);
+	}
 
 	public function testGetAll(){
 		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);

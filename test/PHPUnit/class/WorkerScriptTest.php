@@ -5,17 +5,19 @@ class WorkerScriptTest extends S2lowTestCase {
 	public function testPutJob(){
 		/** @var IWorker $IWorker */
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
+		$this->getObjectInstancier()->set('MockWorker',$IWorker);
+
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-		$this->assertTrue($workerScript->putJob($IWorker,true));
+		$this->assertTrue($workerScript->putJobByClassName("MockWorker",true));
 	}
 
 	public function testScript(){
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
 		$IWorker->expects($this->any())->method("getAllId")->willReturn([1]);
 		/** @var IWorker $IWorker */
-
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-		$this->assertTrue($workerScript->script($IWorker));
+		$this->getObjectInstancier()->set('MockWorker',$IWorker);
+		$this->assertTrue($workerScript->scriptByClassName('MockWorker', false));
 	}
 
 

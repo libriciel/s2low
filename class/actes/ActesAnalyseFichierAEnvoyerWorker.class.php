@@ -10,6 +10,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
     private $actesEnvelopeSQL;
     private $actesScriptHelper;
     private $padesValid;
+    private $workerScript;
 
     public function __construct(
         S2lowLogger $logger,
@@ -17,7 +18,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
         ActesScriptHelper $actesScriptHelper,
-        PadesValid $padesValid
+        PadesValid $padesValid,
+		WorkerScript $workerScript
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->logger = $logger;
@@ -25,6 +27,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesScriptHelper = $actesScriptHelper;
         $this->padesValid = $padesValid;
+        $this->workerScript = $workerScript;
     }
 
 	public function getQueueName(){
@@ -82,7 +85,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             "Accepté par le TdT : validation OK"
         );
-
+		$this->workerScript->putJobByClassName(ActesEnvoiFichierWorker::class,$enveloppe_id);
         return true;
     }
 
