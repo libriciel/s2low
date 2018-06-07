@@ -12,8 +12,13 @@ $recuperateur = new Recuperateur($_POST);
 $id = (int) $recuperateur->get('id');
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
+
 $actesTransactionSQL->updateStatus($id,2,"Transaction repassee manuellement en attente de transmission");
 
+$info = $actesTransactionSQL->getInfo($id);
+
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJobByClassName(ActesEnvoiFichierWorker::class,$info['envelope_id']);
 
 $_SESSION['error'] = "La transaction $id a ete passee en attente de transmission.";
 header("Location: actes_transac_show.php?id=$id");
