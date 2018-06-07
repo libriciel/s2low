@@ -12,18 +12,25 @@ class ActesAntivirusWorker implements IWorker {
 
 	private $logger;
 
+	private $actesAnalyseFichierAEnvoyerWorker;
+	private $workerScript;
+
 	public function __construct(
 		ActesTransactionsSQL $actesTransactionSQL,
 		ActesRetriever $actesRetriever,
 		ActesEnvelopeSQL $actesEnvelopeSQL,
 		Antivirus $antivirus,
-		S2lowLogger $s2lowLogger
+		S2lowLogger $s2lowLogger,
+		ActesAnalyseFichierAEnvoyerWorker $actesAnalyseFichierAEnvoyerWorker,
+		WorkerScript $workerScript
 	){
 		$this->actesTransactionSQL = $actesTransactionSQL;
 		$this->actesRetriever = $actesRetriever;
 		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
 		$this->antivirus = $antivirus;
 		$this->logger = $s2lowLogger;
+		$this->workerScript = $workerScript;
+		$this->actesAnalyseFichierAEnvoyerWorker = $actesAnalyseFichierAEnvoyerWorker;
 	}
 
 	public function getQueueName() {
@@ -61,6 +68,12 @@ class ActesAntivirusWorker implements IWorker {
 		}
 
 		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
+
+		$this->workerScript->putJob(
+			$this->actesAnalyseFichierAEnvoyerWorker,
+			$transaction_info["envelope_id"]
+		);
+
 		$this->logger->info(
 			"La transaction $transaction_id ne contient pas de virus"
 		);

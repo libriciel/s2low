@@ -1,6 +1,8 @@
 <?php
 
-class ActesAnalyseFichierAEnvoyerWorker {
+class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
+
+	const QUEUE_NAME = "actes-analyze-fichier-a-envoyer";
 
     private $actes_appli_trigramme;
     private $actesTransactionsSQL;
@@ -24,32 +26,28 @@ class ActesAnalyseFichierAEnvoyerWorker {
         $this->actesScriptHelper = $actesScriptHelper;
         $this->padesValid = $padesValid;
     }
-	/**
-	 * @return bool
-	 * @throws Exception
-	 */
-    public function validateAllEnveloppe(){
-        $sigtermHandler = new SigTermHandler();
-        $this->logger->debug("Lancement du script");
-        $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_POSTE);
-		$this->logger->info("Analyse de ".count($enveloppe_ids)." enveloppe de transaction à l'état POSTE");
-        foreach($enveloppe_ids as $enveloppe_id){
-            $this->validateOneEnveloppe($enveloppe_id);
-            if ($sigtermHandler->isSigtermCalled()){
-                break;
-            }
-        }
-		$this->logger->debug("Fin du script");
-        return true;
-    }
+
+	public function getQueueName(){
+    	return self::QUEUE_NAME;
+	}
+
+	public function getData($id){
+    	return $id;
+	}
+
+	public function getAllId(){
+		return $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_POSTE);
+	}
 
 	/**
-	 * @param $enveloppe_id
+	 * @param $data - envl
 	 * @return bool
 	 * @throws Exception
 	 */
-    public function validateOneEnveloppe($enveloppe_id){
+	public function work($data){
+		$enveloppe_id = $data;
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
+
 
         $envelope_libelle = "enveloppe $enveloppe_id (transactions ".implode(",",$transaction_ids).")";
 
@@ -68,7 +66,7 @@ class ActesAnalyseFichierAEnvoyerWorker {
 		} catch (RecoverableException $e){
 			$tmpFolder->delete($tmp_dir);
 			$this->logger->error("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : ". $e->getMessage());
-			return false;
+			throw $e;
         } catch (Exception $e){
             $tmpFolder->delete($tmp_dir);
             $message = utf8_decode( $e->getMessage());

@@ -7,6 +7,9 @@
 - Lorsque le service pades-valid est down, on ne passe plus la transaction en erreur ~actes 
 - Le mode beanstalked ne prenait pas en compte les transactions en attente d'être posté.
 
+## Evolution
+- actes-analyse-fichier-a-envoyer en mode beanstalked
+
 ## 3.0.12 - 2018-06-05
 
 ## Correction

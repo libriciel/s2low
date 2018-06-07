@@ -19,27 +19,36 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         $padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
         $padesValid->expects($this->any())->method("validate")->willReturn(true);
         $this->getObjectInstancier()->set('PadesValid',$padesValid);
-    }
+	}
+
+	private function getActesAnalysFichierAEnvoyerWorker(){
+    	return  $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
+	}
 
     protected function tearDown() {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
     }
 
-	/**
-	 * @throws Exception
-	 */
-    public function testValidateAllEmpty(){
-        $logger = $this->getObjectInstancier()->get("Logger");
-        $logger->setLogType(Logger::TYPE_MEMORY);
-        $actesAnalyseFichierController = $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
-        $actesAnalyseFichierController->validateAllEnveloppe();
-		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		$records = $testHandler->getRecords();
-        $this->assertRegExp("#Lancement du script#",$records[0]['message']);
-        $this->assertRegExp("#Analyse de 0 enveloppe de transaction à l'état POSTE#",$records[1]['message']);
-        $this->assertRegExp("#Fin du script#",$records[2]['message']);
-    }
+	public function testQueueName(){
+		$this->assertEquals(
+			ActesAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
+			$this->getActesAnalysFichierAEnvoyerWorker()->getQueueName()
+		);
+	}
+
+	public function testGetId(){
+		$this->assertEquals(
+			42,
+			$this->getActesAnalysFichierAEnvoyerWorker()->getData(42)
+		);
+	}
+
+	public function testGetList(){
+		$data = $this->createOneTransaction(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+		$result = $this->getActesAnalysFichierAEnvoyerWorker()->getAllId();
+		$this->assertEquals([$data['envelope_id']],$result);
+	}
 
 	/**
 	 * @throws Exception
@@ -85,22 +94,23 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
     private function validateAll($archivepath){
+		$data = $this->createOneTransaction($archivepath);
+        $this->getActesAnalysFichierAEnvoyerWorker()->work($data['envelope_id']);
+        return $data['transaction_id'];
+    }
+
+    private function createOneTransaction($archivepath){
 		$actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 		$transaction_id = $actesCreator->createTransaction(
 			ActesStatusSQL::STATUS_POSTE,
 			$archivepath,
 			$this->tmp_dir
 		);
+		$envelope_id = $actesCreator->getLastEnvelopeId();
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 		$actesTransactionsSQL->setAntivirusCheck($transaction_id);
-        $logger = $this->getObjectInstancier()->get("Logger");
-        $logger->setLogType(Logger::TYPE_MEMORY);
-        $actesAnalyseFichierController = $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
-
-        $actesAnalyseFichierController->validateAllEnveloppe();
-
-        return $transaction_id;
-    }
+		return ['envelope_id'=>$envelope_id,'transaction_id'=>$transaction_id];
+	}
 
 	/**
 	 * @throws Exception
@@ -111,6 +121,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$padesValid->expects($this->any())->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
+		$this->setExpectedException(RecoverableException::class,"erreur de test");
 		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");

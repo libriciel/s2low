@@ -10,6 +10,7 @@ interface IWorker {
 
 	/**
 	 * En fonction d'un identifiant, retourne les données à envoyé sur la queue
+	 * Cela permettrait d'optimiser pour ne pas avoir a faire des requêtes lors du travail, mais charge la queue...
 	 * @param $id int identifiant
 	 * @return mixed donnée à envoyé sur la queue
 	 */
