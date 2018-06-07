@@ -52,6 +52,10 @@ class ActesAntivirusWorker implements IWorker {
 		$this->logger->info("Traitement transaction $transaction_id");
 
 		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+		if ($transaction_info['antivirus_check']){
+			$this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
+			return true;
+		}
 
 		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
