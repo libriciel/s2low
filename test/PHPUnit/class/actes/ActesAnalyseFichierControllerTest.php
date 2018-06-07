@@ -34,11 +34,16 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $logger->setLogType(Logger::TYPE_MEMORY);
         $actesAnalyseFichierController = $this->getObjectInstancier()->get('ActesAnalyseFichierController');
         $actesAnalyseFichierController->validateAllEnveloppe();
-        $this->assertRegExp("#Lancement du script#",$logger->getAllLog()[0]);
-        $this->assertRegExp("#Analyse de 0 enveloppe de transaction à l'état POSTE#",$logger->getAllLog()[1]);
-        $this->assertRegExp("#Fin du script#",$logger->getAllLog()[2]);
+		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+		$records = $testHandler->getRecords();
+        $this->assertRegExp("#Lancement du script#",$records[0]['message']);
+        $this->assertRegExp("#Analyse de 0 enveloppe de transaction à l'état POSTE#",$records[1]['message']);
+        $this->assertRegExp("#Fin du script#",$records[2]['message']);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testValidateAllOne(){
         $transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
@@ -55,6 +60,9 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testValidateAllOneBad(){
         $transaction_id = $this->validateAll(__DIR__."/../../fixtures/bad/SLO-EACT--214502494--20170717-5.tar.gz");
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
@@ -71,6 +79,11 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
     }
 
+	/**
+	 * @param $archivepath
+	 * @return array|bool|mixed
+	 * @throws Exception
+	 */
     private function validateAll($archivepath){
 		$actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 		$transaction_id = $actesCreator->createTransaction(
@@ -89,6 +102,9 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
         return $transaction_id;
     }
 
+	/**
+	 * @throws Exception
+	 */
 	public function testValidateAllOnePadesFailedRecoverable(){
 
 		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
@@ -105,6 +121,9 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
 
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testValidateAllOnePadesFailedNotRecoverable(){
 
 		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
