@@ -29,6 +29,10 @@ class ActesAnalyseFichierController {
         $this->logger->log("actes-analyse-fichier-a-envoyer",$message);
     }
 
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
     public function validateAllEnveloppe(){
         $sigtermHandler = new SigTermHandler();
         $this->log("Lancement du script");

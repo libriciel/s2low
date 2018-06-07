@@ -1,6 +1,6 @@
 <?php
 
-class ActesAntivirus implements IWorker {
+class ActesAntivirusWorker implements IWorker {
 
 	const QUEUE_NAME = 'actes-antivirus';
 

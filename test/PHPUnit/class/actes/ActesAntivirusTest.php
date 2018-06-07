@@ -40,7 +40,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 			->method("checkArchiveSanity")
 			->willReturn(true);
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$this->assertTrue($actesAntivirus->work($this->transaction_id));
 	}
 
@@ -57,7 +57,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
 
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$this->assertFalse($actesAntivirus->work($this->transaction_id));
 	}
 
@@ -74,24 +74,24 @@ class ActesAntivirusTest extends S2lowTestCase {
 
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
 
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$this->setExpectedException(Exception::class,"testing");
 		$actesAntivirus->work($this->transaction_id);
 	}
 
 	public function testGetAll(){
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$all_id = $actesAntivirus->getAllId();
 		$this->assertEquals([$this->transaction_id],$all_id);
 	}
 
 	public function testGetId(){
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$this->assertEquals($this->transaction_id,$actesAntivirus->getData($this->transaction_id));
 	}
 
 	public function testGetQueueId(){
-		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirus::class);
-		$this->assertEquals(ActesAntivirus::QUEUE_NAME,$actesAntivirus->getQueueName());
+		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+		$this->assertEquals(ActesAntivirusWorker::QUEUE_NAME,$actesAntivirus->getQueueName());
 	}
 }
