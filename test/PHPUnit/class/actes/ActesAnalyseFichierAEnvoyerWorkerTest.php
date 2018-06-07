@@ -2,7 +2,7 @@
 
 require_once __DIR__."/ActesCreator.php";
 
-class ActesAnalyseFichierControllerTest extends S2lowTestCase {
+class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 
     /** @var  TmpFolder */
     private $tmpFolder;
@@ -32,7 +32,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
     public function testValidateAllEmpty(){
         $logger = $this->getObjectInstancier()->get("Logger");
         $logger->setLogType(Logger::TYPE_MEMORY);
-        $actesAnalyseFichierController = $this->getObjectInstancier()->get('ActesAnalyseFichierController');
+        $actesAnalyseFichierController = $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
         $actesAnalyseFichierController->validateAllEnveloppe();
 		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
 		$records = $testHandler->getRecords();
@@ -95,7 +95,7 @@ class ActesAnalyseFichierControllerTest extends S2lowTestCase {
 		$actesTransactionsSQL->setAntivirusCheck($transaction_id);
         $logger = $this->getObjectInstancier()->get("Logger");
         $logger->setLogType(Logger::TYPE_MEMORY);
-        $actesAnalyseFichierController = $this->getObjectInstancier()->get('ActesAnalyseFichierController');
+        $actesAnalyseFichierController = $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
 
         $actesAnalyseFichierController->validateAllEnveloppe();
 

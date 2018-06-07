@@ -1,6 +1,6 @@
 <?php
 
-class ActesAnalyseFichierController {
+class ActesAnalyseFichierAEnvoyerWorker {
 
     private $actes_appli_trigramme;
     private $actesTransactionsSQL;
