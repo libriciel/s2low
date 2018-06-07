@@ -12,7 +12,6 @@ class ActesAntivirusWorker implements IWorker {
 
 	private $logger;
 
-	private $actesAnalyseFichierAEnvoyerWorker;
 	private $workerScript;
 
 	public function __construct(
@@ -21,7 +20,6 @@ class ActesAntivirusWorker implements IWorker {
 		ActesEnvelopeSQL $actesEnvelopeSQL,
 		Antivirus $antivirus,
 		S2lowLogger $s2lowLogger,
-		ActesAnalyseFichierAEnvoyerWorker $actesAnalyseFichierAEnvoyerWorker,
 		WorkerScript $workerScript
 	){
 		$this->actesTransactionSQL = $actesTransactionSQL;
@@ -30,7 +28,6 @@ class ActesAntivirusWorker implements IWorker {
 		$this->antivirus = $antivirus;
 		$this->logger = $s2lowLogger;
 		$this->workerScript = $workerScript;
-		$this->actesAnalyseFichierAEnvoyerWorker = $actesAnalyseFichierAEnvoyerWorker;
 	}
 
 	public function getQueueName() {
@@ -69,8 +66,8 @@ class ActesAntivirusWorker implements IWorker {
 
 		$this->actesTransactionSQL->setAntivirusCheck($transaction_id);
 
-		$this->workerScript->putJob(
-			$this->actesAnalyseFichierAEnvoyerWorker,
+		$this->workerScript->putJobByClassName(
+			ActesAnalyseFichierAEnvoyerWorker::class,
 			$transaction_info["envelope_id"]
 		);
 

@@ -5,11 +5,13 @@ class WorkerScript {
 	const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
 	const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
-	private $logger;
+	private $s2lowLogger;
 	private $beanstalkdWrapper;
 	private $sigTermHandlerFactory;
 
 	private $min_execution_time_in_seconds;
+
+	private $objectInstancier;
 
 	/**
 	 * @var SigTermHandler
@@ -19,13 +21,16 @@ class WorkerScript {
 	public function __construct(
 		BeanstalkdWrapper $beanstalkdWrapper,
 		S2lowLogger $s2lowLogger,
-		SigTermHandlerFactory $sigTermHandlerFactory
+		SigTermHandlerFactory $sigTermHandlerFactory,
+		ObjectInstancier $objectInstancier
 	){
-		$this->logger = $s2lowLogger;
+		$this->s2lowLogger = $s2lowLogger;
 		$this->beanstalkdWrapper = $beanstalkdWrapper;
 		$this->sigTermHandlerFactory = $sigTermHandlerFactory;
 		$this->setMinExecutionTimeInSeconds(self::MIN_EXECUTION_TIME_IN_SECONDS);
+		$this->objectInstancier = $objectInstancier;
 	}
+
 
 	public function setMinExecutionTimeInSeconds($min_execution_time_in_seconds){
 		$this->min_execution_time_in_seconds=$min_execution_time_in_seconds;
@@ -33,6 +38,21 @@ class WorkerScript {
 
 	public function putJob(IWorker $IWorker, $data){
 		return $this->beanstalkdWrapper->put($IWorker->getQueueName(),$data);
+	}
+
+	public function putJobByClassName($workerClassName,$data){
+		/** @var IWorker $worker */
+		$worker = $this->objectInstancier->get($workerClassName);
+		return $this->beanstalkdWrapper->put($worker->getQueueName(),$data);
+	}
+
+	public function scriptByClassName($workerClassName, $log_enable_stdout=true){
+		/** @var IWorker $worker */
+		$worker = $this->objectInstancier->get($workerClassName);
+
+		$this->s2lowLogger->setName($worker->getQueueName()."-script");
+		$this->s2lowLogger->enableStdOut($log_enable_stdout);
+		return $this->script($worker);
 	}
 
 	public function script(IWorker $IWorker){
@@ -45,20 +65,20 @@ class WorkerScript {
 	}
 
 	public function rebuildQueue(IWorker $IWorker){
-		$this->logger->setName($IWorker->getQueueName()."-rebuild-queue");
+		$this->s2lowLogger->setName($IWorker->getQueueName()."-rebuild-queue");
 
 		$this->beanstalkdWrapper->emptyQueue($IWorker->getQueueName());
-		$this->logger->info("Reconstruction de la file ".$IWorker->getQueueName());
+		$this->s2lowLogger->info("Reconstruction de la file ".$IWorker->getQueueName());
 		foreach($IWorker->getAllId() as $id){
 			$this->putJob($IWorker,$id);
-			$this->logger->info("Ajout en file d'attente",[$id]);
+			$this->s2lowLogger->info("Ajout en file d'attente",[$id]);
 		}
-		$this->logger->info("Reconstruction de la file ".$IWorker->getQueueName().": OK");
+		$this->s2lowLogger->info("Reconstruction de la file ".$IWorker->getQueueName().": OK");
 	}
 
 	private function beanstalkdWorker(IWorker $IWorker){
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
-		$this->logger->info("Démarrage en mode beanstalkd");
+		$this->s2lowLogger->info("Démarrage en mode beanstalkd");
 		while($job = $queue->reserve()){
 			if ($this->sigTermHandler->isSigtermCalled()){
 				return true;
@@ -66,11 +86,11 @@ class WorkerScript {
 			$data = "undefined";
 			try {
 				$data = $job->getData();
-				$this->logger->info("Travail en cours",[$data]);
+				$this->s2lowLogger->info("Travail en cours",[$data]);
 				$IWorker->work($data);
 				$queue->delete($job);
 			} catch (Exception $e){
-				$this->logger->error(
+				$this->s2lowLogger->error(
 					$e->getMessage(),
 					[$data,$e->getTraceAsString()]
 				);
@@ -91,15 +111,15 @@ class WorkerScript {
 	private function oldSchoolScript(IWorker $IWorker){
 		$start = time();
 
-		$this->logger->info("Démarrage en mode supervisord");
+		$this->s2lowLogger->info("Démarrage en mode supervisord");
 
 		try {
 			$this->checkAll($IWorker);
 		} catch (WorkerScriptException $e){
-			$this->logger->notice($e->getMessage());
+			$this->s2lowLogger->notice($e->getMessage());
 			return true;
 		} catch (Exception $e){
-			$this->logger->critical(
+			$this->s2lowLogger->critical(
 				"Erreur lors de l'execution du script : " . $e->getMessage(),[$e->getTraceAsString()]
 			);
 			return false;
@@ -107,7 +127,7 @@ class WorkerScript {
 
 		$sleep = $this->min_execution_time_in_seconds - (time() -$start);
 		if ($sleep > 0){
-			$this->logger->debug("Arret du script $sleep secondes");
+			$this->s2lowLogger->debug("Arret du script $sleep secondes");
 			sleep_wrapper($sleep);
 		}
 		return true;
@@ -119,7 +139,7 @@ class WorkerScript {
 	 */
 	private function checkAll(IWorker $IWorker){
 		$id_list = $IWorker->getAllId();
-		$this->logger->info(count($id_list) . " travaux trouvées");
+		$this->s2lowLogger->info(count($id_list) . " travaux trouvées");
 
 		foreach($id_list as $id){
 			if ($this->sigTermHandler->isSigtermCalled()){

@@ -1,8 +1,11 @@
 <?php
 
-class ActesEnvoiFichierWorker {
+class ActesEnvoiFichierWorker implements IWorker {
 
-    private $actesTransactionsSQL;
+	const QUEUE_NAME = "actes-envoi-fichier";
+
+
+	private $actesTransactionsSQL;
     private $logger;
     private $actesEnvelopeSQL;
     private $actesScriptHelper;
@@ -28,13 +31,28 @@ class ActesEnvoiFichierWorker {
         $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
+	public function getQueueName(){
+		return self::QUEUE_NAME;
+	}
+
+	public function getData($id){
+		return $id;
+	}
+
+	public function getAllId(){
+		return $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(
+			ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION
+		);
+	}
+
+
     public function sendAllEnvelopes(){
         $sigtermHandler = new SigTermHandler();
         $this->logger->debug("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
 		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
-            $this->envoiEnveloppe($enveloppe_id);
+            $this->work($enveloppe_id);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
@@ -43,7 +61,7 @@ class ActesEnvoiFichierWorker {
         return true;
     }
 
-    public function envoiEnveloppe($enveloppe_id){
+    public function work($enveloppe_id){
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
 
         $envelope_libelle = "enveloppe $enveloppe_id (transactions ".implode(",",$transaction_ids).")";

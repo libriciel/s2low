@@ -40,7 +40,10 @@ class S2lowLogger {
 		$this->getLoggerWithName()->emergency($message,$context);
 	}
 
-	public function enableStdOut(){
+	public function enableStdOut($enable_stdout = true){
+		if (! $enable_stdout){
+			return;
+		}
 		try {
 			$handler = new  Monolog\Handler\StreamHandler('php://stdout');
 			$this->logger->pushHandler($handler);

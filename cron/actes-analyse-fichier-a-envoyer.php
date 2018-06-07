@@ -4,13 +4,8 @@ declare(ticks = 1);
 
 require_once( __DIR__ . "/../init/init.php");
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
-$actesAnalyseFichierAEnvoyerWorker = $objectInstancier->get(ActesAnalyseFichierAEnvoyerWorker::class);
-
-$s2lowLogger->setName($actesAnalyseFichierAEnvoyerWorker->getQueueName()."-script");
-$s2lowLogger->enableStdOut();
-
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->script($actesAnalyseFichierAEnvoyerWorker);
+$workerScript->scriptByClassName(ActesAnalyseFichierAEnvoyerWorker::class);
+
 
 

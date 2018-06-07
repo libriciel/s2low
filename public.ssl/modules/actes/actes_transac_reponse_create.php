@@ -262,9 +262,9 @@ if (!$trans->save()) {
 }
 
 
-$actesAntivirus = $objectInstancier->get(ActesAntivirusWorker::class);
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJob($actesAntivirus,$trans->getId());
+$workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
+
 
 if ($api) {
 	echo "OK : id généré : ".$apiMsg;	
