@@ -432,11 +432,6 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
-    private function log($message){
-        $this->logger->log("actes-analyse-fichier-recu",$message);
-    }
-
-
     private function updateStatus($transaction_ids,$status_id,$message,$xml=false){
         if (! is_array($transaction_ids)){
             $transaction_ids = array($transaction_ids);

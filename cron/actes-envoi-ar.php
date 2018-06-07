@@ -8,7 +8,7 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-$actesEnvoiAR = $objectInstancier->get("ActesEnvoiAR");
+$actesEnvoiAR = $objectInstancier->get(ActesEnvoiAR::class);
 $actesEnvoiAR->sendAllAR();
 
 

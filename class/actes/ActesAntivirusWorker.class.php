@@ -52,6 +52,7 @@ class ActesAntivirusWorker implements IWorker {
 		$this->logger->info("Traitement transaction $transaction_id");
 
 		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+
 		$envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
 		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);

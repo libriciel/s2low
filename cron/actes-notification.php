@@ -9,7 +9,7 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-$actesNotification = $objectInstancier->get('ActesNotification');
+$actesNotification = $objectInstancier->get(ActesNotification::class);
 $actesNotification->sendAutomaticNotification();
 
 $stop = time();
