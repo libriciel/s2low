@@ -51,6 +51,10 @@ class ActesAnalyseFichierRecuController {
         $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
+    
+	private function log($message){
+		$this->logger->log("actes-analyse-fichier-recu",$message);
+	}
 	/**
 	 * @return bool
 	 * @throws Exception
