@@ -1,6 +1,6 @@
 <?php
 
-class ActesEnvoiFichierController {
+class ActesEnvoiFichierWorker {
 
     private $actesTransactionsSQL;
     private $logger;
@@ -11,7 +11,7 @@ class ActesEnvoiFichierController {
     private $actes_ministere_acronyme;
 
     public function __construct(
-        Logger $logger,
+        S2lowLogger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesScriptHelper $actesScriptHelper,
@@ -28,22 +28,18 @@ class ActesEnvoiFichierController {
         $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
-    private function log($message){
-        $this->logger->log("actes-envoi-fichier",$message);
-    }
-
     public function sendAllEnvelopes(){
         $sigtermHandler = new SigTermHandler();
-        $this->log("Lancement du script");
+        $this->logger->debug("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
-        $this->log("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
+		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
             $this->envoiEnveloppe($enveloppe_id);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
         }
-        $this->log("Fin du script");
+		$this->logger->debug("Fin du script");
         return true;
     }
 
@@ -52,11 +48,11 @@ class ActesEnvoiFichierController {
 
         $envelope_libelle = "enveloppe $enveloppe_id (transactions ".implode(",",$transaction_ids).")";
 
-        $this->log("[$envelope_libelle] Envoi");
+		$this->logger->debug("[$envelope_libelle] Envoi");
         $envelope_info = $this->actesEnvelopeSQL->getInfo($enveloppe_id);
 
         if (! $this->actesTransmissionWindowsSQL->canSend($envelope_info['file_size'])) {
-            $this->log("[$envelope_libelle] Impossible d'envoyer la transaction : la fenêtre est pleine");
+			$this->logger->notice("[$envelope_libelle] Impossible d'envoyer la transaction : la fenêtre est pleine");
             return false;
         }
         try {
@@ -64,10 +60,10 @@ class ActesEnvoiFichierController {
             $this->actesFileSender->send($archive_path);
         } catch(Exception $e){
             $message = utf8_decode( $e->getMessage());
-            $this->log("[$envelope_libelle] Impossible d'envoyer l'archive : $message");
+			$this->logger->error("[$envelope_libelle] Impossible d'envoyer l'archive : $message");
             return false;
         }
-        $this->log("[$envelope_libelle] L'archive a été envoyé");
+		$this->logger->info("[$envelope_libelle] L'archive a été envoyé");
 
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
