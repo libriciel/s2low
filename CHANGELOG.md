@@ -6,6 +6,7 @@
 
 - Lorsque le service pades-valid est down, on ne passe plus la transaction en erreur ~actes 
 - Le mode beanstalked ne prenait pas en compte les transactions en attente d'être posté.
+- Correction d'un changement subtil dans l'api mailsec (detail-mail : renvoi 1/0 au lieu de t/f)
 
 ## Evolution
 - actes-analyse-fichier-a-envoyer en mode beanstalked
