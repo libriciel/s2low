@@ -9,6 +9,7 @@
 
 ## Evolution
 - actes-analyse-fichier-a-envoyer en mode beanstalked
+- ajout des fonction de l'API : admin/services/add-service-user.php, admin/services/list-service.php, admin/users/add-user-to-service.php  #350
 
 ## 3.0.12 - 2018-06-05
 
