@@ -38,23 +38,23 @@ class ActesEnvelopeStorage {
 	}
 
 	/**
-	 * @param $transaction_info
+	 * @param $envelope_info
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function storeNextFile($transaction_info){
+	public function storeNextFile($envelope_info){
 		$this->logger->debug(
-			"Storing envelope {$transaction_info['id']} - ".
-			"file {$transaction_info['file_path']}"
+			"Storing envelope {$envelope_info['id']} - ".
+			"file {$envelope_info['file_path']}"
 		);
-		if (! $transaction_info['file_path'] ){
+		if (! $envelope_info['file_path'] ){
 			$this->logger->error(
-				"Unable to store transaction #{$transaction_info['id']} in cloud : file_path not set ! ",
-				$transaction_info
+				"Unable to store envelope #{$envelope_info['id']} in cloud : file_path not set ! ",
+				$envelope_info
 			);
 			return false;
 		}
-		if ( ! file_exists($this->actes_files_upload_root."/".$transaction_info['file_path'])){
+		if ( ! file_exists($this->actes_files_upload_root."/".$envelope_info['file_path'])){
 			// FIXME : Les transactions de type 7 sont perdus et ne seront jamais dans le cloud...
 			// L'algorithme de récupération des transactions à envoyer dans le cloud est donc pas parfaitement opérant
 			/*$this->logger->error(
@@ -63,16 +63,16 @@ class ActesEnvelopeStorage {
 			);*/
 			return false;
 		}
-		$this->logger->info("Storing file ".$this->actes_files_upload_root."/".$transaction_info['file_path']);
+		$this->logger->info("Storing file ".$this->actes_files_upload_root."/".$envelope_info['file_path']);
 
 		$this->openStackSwiftWrapper->sendFile(
 			self::CONTAINER_NAME,
-			$this->actes_files_upload_root."/".$transaction_info['file_path'],
-			$transaction_info['file_path']
+			$this->actes_files_upload_root."/".$envelope_info['file_path'],
+			$envelope_info['file_path']
 		);
 
-		$this->actesEnvelopeSQL->setTransactionInCloud($transaction_info['id']);
-		$this->logger->info("Stored file : {$transaction_info['file_path']}");
+		$this->actesEnvelopeSQL->setTransactionInCloud($envelope_info['id']);
+		$this->logger->info("Stored file : {$envelope_info['file_path']}");
 		return true;
 	}
 
