@@ -1,5 +1,12 @@
 # Change Log
 
+## 3.0.14 
+
+### Corrections
+
+- Le mode document papier complémentaire ne retournait pas la bonne valeur. #386
+
+
 ## 3.0.13 - 2018-06-28
 
 ## Correction
