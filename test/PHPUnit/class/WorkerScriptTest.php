@@ -81,7 +81,7 @@ class WorkerScriptTest extends S2lowTestCase {
 			->method('getData')
 			->willThrowException(new Exception("foo"));
 
-		$this->assertFalse($this->runBeanstalkd($job));
+		$this->assertTrue($this->runBeanstalkd($job));
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals("foo",$logs_records[1]['message']);
 	}
