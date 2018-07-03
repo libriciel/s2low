@@ -1,6 +1,13 @@
 # Change Log
 
-## 3.0.13
+## 3.0.14 
+
+### Corrections
+
+- Le mode document papier complémentaire ne retournait pas la bonne valeur. #386
+
+
+## 3.0.13 - 2018-06-28
 
 ## Correction
 
@@ -10,6 +17,7 @@
 
 ## Evolution
 - actes-analyse-fichier-a-envoyer en mode beanstalked
+- ajout des fonction de l'API : admin/services/add-service-user.php, admin/services/list-service.php, admin/users/add-user-to-service.php  #350
 
 ## 3.0.12 - 2018-06-05
 

@@ -718,7 +718,7 @@ class ActesTransaction extends DataObject {
   }
 
   public function getDocumentPapier(){
-      return ($this->document_papier && $this->document_papier != 'f');
+      return $this->document_papier;
   }
 
   public function generateReponseCourrierXMLFile($xml_name){
