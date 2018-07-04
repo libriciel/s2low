@@ -69,7 +69,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 		} catch (RecoverableException $e){
 			$tmpFolder->delete($tmp_dir);
 			$this->logger->error("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : ". $e->getMessage());
-			throw $e;
+			return false;
         } catch (Exception $e){
             $tmpFolder->delete($tmp_dir);
             $message = utf8_decode( $e->getMessage());
