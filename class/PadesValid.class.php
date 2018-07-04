@@ -46,6 +46,11 @@ class PadesValid {
         $result = $curlWrapper->get($this->pades_valid_url);
         $this->last_result = $result;
         if (!$result){
+
+            if ($curlWrapper->getLastHttpCode() ){
+                throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
+            }
+
             throw new RecoverableException($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
         }
         $result = json_decode($result);

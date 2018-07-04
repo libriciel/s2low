@@ -9,6 +9,7 @@ class CurlWrapper {
 	private $postFile;
 	private $postFileProperties;
 	private $last_output;
+	private $lastHttpCode;
 	
 	public function __construct(){
 		$this->curlHandle = curl_init();
@@ -34,6 +35,10 @@ class CurlWrapper {
 
 	public function getLastOutput(){
 	    return $this->last_output;
+    }
+
+    public function getLastHttpCode(){
+	    return $this->lastHttpCode;
     }
 	
 	public function setProperties($properties,$values){
@@ -73,6 +78,7 @@ class CurlWrapper {
 		//print_r(curl_getinfo($this->curlHandle,CURLINFO_HEADER_OUT));
         //echo $url;
         $httpcode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+        $this->lastHttpCode = $httpcode;
         if (! in_array($httpcode,array('200','201','0'))){
             $this->lastError = "Erreur HTTP : Code $httpcode";
             return false;
