@@ -6,7 +6,7 @@
 
 - Le mode document papier complémentaire ne retournait pas la bonne valeur. #386
 - Lorsqu'un worker échoue, on ne sort plus du script
-
+- Lorsque PADES-Valid envoi un code d'erreur, on passe le document en erreur
 
 ## 3.0.13 - 2018-06-28
 

@@ -121,7 +121,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$padesValid->expects($this->any())->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
-		//$this->setExpectedException(RecoverableException::class,"erreur de test");
+		$this->setExpectedException(RecoverableException::class,"erreur de test");
 		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");

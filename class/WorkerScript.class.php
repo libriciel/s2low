@@ -99,7 +99,7 @@ class WorkerScript {
 					\Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY,
 					self::QUEUE_DELAY_RETRY_IN_SECONDS
 				);
-				break;
+				continue;
 			}
 			if ($this->sigTermHandler->isSigtermCalled()){
 				return true;
