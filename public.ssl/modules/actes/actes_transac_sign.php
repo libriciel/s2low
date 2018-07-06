@@ -52,7 +52,10 @@ try{
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
 		$workerScript = $objectInstancier->get(WorkerScript::class);
-		$workerScript->putJobByClassName(ActesAntivirusWorker::class,$transaction_info['envelope_id']);
+		$workerScript->putJobByClassName(
+			ActesAnalyseFichierAEnvoyerWorker::class,
+			$transaction_info['envelope_id']
+		);
 	} 
 } catch (Exception $e){
 	$_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
