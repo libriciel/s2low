@@ -42,13 +42,17 @@ try{
 	for($i=1; $i<=$nb_signature;$i++){
 		$signature = base64_decode(Helpers::getVarFromPost("signature_$i"));
 		$signature_id = Helpers::getVarFromPost("signature_id_$i");
-		$all_transaction_id[] = $actesSignature->setSignature($signature_id, $signature);
-
+		$transaction_id = $actesSignature->setSignature($signature_id, $signature);
+		$all_transaction_id[] = $transaction_id;
 		/** Vérifier la signature ici */
 		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH);
 		$verifyPKCS7Signature->verifyCertificate($signature);
 
+		$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
+		$workerScript = $objectInstancier->get(WorkerScript::class);
+		$workerScript->putJobByClassName(ActesAntivirusWorker::class,$transaction_info['envelope_id']);
 	} 
 } catch (Exception $e){
 	$_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
