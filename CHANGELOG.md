@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.0.15
+
+## Evolution
+
+- Passage de la signature Libersign de sha1 à sha256 #170
+
 ## 3.0.14 
 
 ### Corrections

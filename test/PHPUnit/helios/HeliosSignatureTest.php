@@ -7,7 +7,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 		$info = $helios_signature->getInfoForSignature(__DIR__."/fixtures/pes_aller.xml");
 		
 		$this->assertEquals("BORD1093357910", $info['bordereau_id']);
-		$this->assertEquals("f686479857d4fb5dd1621a274d77c848c5a7342a", $info['bordereau_hash']);
+		$this->assertEquals("5bacc4255471f1aedd219e851e7fcfc0164ee34f714903f8385b459ec3de6507", $info['bordereau_hash']);
 		$this->assertTrue($info['isbordereau']);
 	}
 	
@@ -18,7 +18,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("c78a9729c1eb89ff9b47401bd7cd9d7e", $info['bordereau_id']);
 		//b154007082d85457480a716b350b9452df35ac7b avec xmlstarlet
 		//af7231795b1c9c3b050895e3e0444d2f9ec7cac6 avec PHP DOM C14N 
-		$this->assertEquals("af7231795b1c9c3b050895e3e0444d2f9ec7cac6", $info['bordereau_hash']);
+		$this->assertEquals("1be37cca95ada30af16aca31d71833c699675d386fe0dfedd634d758cab38c2c", $info['bordereau_hash']);
 		$this->assertFalse($info['isbordereau']);
 	}
 	
@@ -32,7 +32,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 		$helios_signature = new HeliosSignature();
 		$info = $helios_signature->getInfoForSignature(__DIR__."/fixtures/pes_aller_recette.xml");
 		$this->assertEquals("BORD1093357910", $info['bordereau_id']);
-		$this->assertEquals("f686479857d4fb5dd1621a274d77c848c5a7342a", $info['bordereau_hash']);
+		$this->assertEquals("5bacc4255471f1aedd219e851e7fcfc0164ee34f714903f8385b459ec3de6507", $info['bordereau_hash']);
 		$this->assertTrue($info['isbordereau']);
 	}
 	
