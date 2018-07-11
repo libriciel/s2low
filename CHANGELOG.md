@@ -6,6 +6,10 @@
 
 - Passage de la signature Libersign de sha1 à sha256 #170
 
+## Corrections
+
+- Les mails sécurisés ne pouvaient pas être supprimé. #388
+
 ## 3.0.14 
 
 ### Corrections

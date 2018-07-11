@@ -75,8 +75,8 @@ class mailController {
      $SendDateFrom = "";
      $SendDateTo = "";
      $search=Helpers :: getVarFromGet("search");
-     $deleteId=Helpers :: getVarFromGet("list_id");
-     
+     $deleteId=Helpers :: getVarFromPost("list_id");
+
      //---delete l'enregistment choisi.
      //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
      if ($deleteId!=null)
