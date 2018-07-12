@@ -10,7 +10,7 @@
 
 - Les mails sécurisés ne pouvaient pas être supprimé. #388
 
-## 3.0.14 
+## 3.0.14 - 2018-07-12
 
 ### Corrections
 
