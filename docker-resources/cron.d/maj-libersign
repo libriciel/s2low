@@ -1,0 +1,1 @@
+10  2   *   *   *   root  php /var/www/s2low/script/installation/maj-libersign.php  >> /data/log/maj-libersign.log 2>&1

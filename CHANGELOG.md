@@ -1,6 +1,16 @@
 # Change Log
 
-## 3.0.14 
+## 3.0.15
+
+## Evolution
+
+- Passage de la signature Libersign de sha1 à sha256 #170
+
+## Corrections
+
+- Les mails sécurisés ne pouvaient pas être supprimé. #388
+
+## 3.0.14 - 2018-07-12
 
 ### Corrections
 
