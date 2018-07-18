@@ -9,6 +9,7 @@
 ## Corrections
 
 - Les mails sécurisés ne pouvaient pas être supprimé. #388
+- Correction de lien vers le bandeau dans le mail sécurisé
 
 ## 3.0.14 - 2018-07-12
 
