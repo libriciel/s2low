@@ -5,6 +5,7 @@
 ## Evolution
 
 - Passage de la signature Libersign de sha1 à sha256 #170
+- Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
 
 ## Corrections
 
