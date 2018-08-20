@@ -40,6 +40,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->tmpFolder->delete($this->actes_files_upload_root);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testAnalyseAllEmpty(){
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
         $actesAnalyseFichierRecuController->analyseAll();
@@ -48,6 +51,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertRegExp("#Aucun répertoire à analyser#",$logs[2]);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testAnalyseAllBadDirectory(){
         $bad_dir = $this->tmp_dir."/test_bad";
         mkdir($bad_dir);
@@ -74,6 +80,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         return $actesTransactionsSQL;
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testAnalyseAll(){
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
@@ -100,6 +109,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testAnalyseAllActeNotFound(){
         $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-archive-MISILCL");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
@@ -121,6 +133,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         return $transaction_id;
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testAnalyseAllActeErrorRep(){
         $this->getObjectInstancier()->set('actes_response_tmp_local_path',$this->tmp_dir."/not-exists/");
 
@@ -132,6 +147,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertRegExp("#Aucune transation trouver pour le couple SIREN 000000000 - numéro interne 20170721D#",$logs[6]);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testEnveloppeAnomalie(){
         $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-anomalie");
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
@@ -151,6 +169,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testCourrierSimple(){
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id);
@@ -172,6 +193,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testDefereTA(){
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id);
@@ -189,4 +213,65 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
     private function copyDirectoryToAnalysePath($directory){
         `cp -r $directory {$this->tmp_dir}/test`;
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function testCourrierSimpleRenumerote()
+	{
+		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+		$this->mockGetBySirenAndNumeroInterne($transaction_id);
+		mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+		$this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple-renumerote");
+		$actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+		$actesAnalyseFichierRecuController->analyseAll();
+
+		$actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+		$enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
+		$this->assertEquals(1, $enveloppe_info['user_id']);
+
+		$actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+		$transaction_id = $actesTransactionSQL->getIdByEnvelopeId($enveloppe_info['id']);
+
+		$info = $actesTransactionSQL->getInfo($transaction_id);
+
+		$this->assertEquals("2017-07-25", substr($info['decision_date'], 0, 10));
+
+
+		/*print_r($enveloppe_info);
+
+
+		$actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
+		$all_files = $actesIncludedFileSQL->getAll($transaction_id);
+		print_r($all_files);*/
+
+
+		$actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
+
+		$path = $actesRetriever->getPath($enveloppe_info['file_path']);
+
+
+		$pharData = new PharData($path);
+		$all_files_in_tar_gz = [];
+
+		/** @var PharFileInfo $file */
+		foreach ($pharData as $file) {
+			$all_files_in_tar_gz[] = $file->getBasename();
+		}
+		sort($all_files_in_tar_gz);
+
+		$this->assertEquals(
+			[
+				'034-000000000-20170701-20170725A-AI-2-1_16.pdf',
+				'034-000000000-20170701-20170725A-AI-2-1_17.xml',
+				'TACT--SPREF0011-000000000-20170725-1.xml',
+				'logo_s2low.jpg',
+    			'message_body.html'
+			],
+			$all_files_in_tar_gz
+		);
+
+	}
+
 }

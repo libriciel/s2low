@@ -146,7 +146,7 @@ class ActesAnalyseFichierRecuController {
                     MessageMetierDefereTA::CODE_MESSAGE,
                 )
             )){
-                $this->traitementDocumentRecu($archiveData);
+                $this->traitementDocumentRecu($archiveData,$rep_path);
             } elseif ($code_message == MessageMetieAnomalieActe::CODE_MESSAGE){
                 /** @var MessageMetieAnomalieActe $fichierXML */
                 $this->traitementAnomalie($fichierXML);
@@ -195,11 +195,27 @@ class ActesAnalyseFichierRecuController {
         );
     }
 
+
+    private function generateZip($rep_path,ArchiveData $archiveData,$archive_folder){
+    	$archiveFilename = new \Libriciel\LibActes\ArchiveFilename();
+		$targz_filename = $archiveFilename->getFilename($archiveData->id_tdt,basename($archiveData->enveloppe_path));
+
+		$tar_filename = substr($targz_filename,0,-3);
+
+		$pharData = new \PharData($archive_folder."/".$tar_filename);
+		foreach(glob("$rep_path/*") as $file) {
+			$pharData->addFile($file, basename($file));
+		}
+		$pharData->compress(\Phar::GZ);
+
+		return $archive_folder."/".$tar_filename.".gz";
+	}
+
 	/**
 	 * @param ArchiveData $archiveData
 	 * @throws Exception
 	 */
-    private function traitementDocumentRecu(ArchiveData $archiveData){
+    private function traitementDocumentRecu(ArchiveData $archiveData,$rep_path){
         $fichierXML = $archiveData->fichierXML;
         $fichierXML = $fichierXML[0];
 
@@ -209,9 +225,9 @@ class ActesAnalyseFichierRecuController {
 
         $archiveData->id_tdt = ACTES_APPLI_TRIGRAMME;
 
-        $archive = new \Libriciel\LibActes\Archive();
+		$archive_path = $this->generateZip($rep_path,$archiveData,$archive_folder);
 
-        $archive_path = $archive->generateZip($archiveData,$archive_folder);
+
         $envelope_path = substr($archive_path, strlen($this->actes_files_upload_root));
         $envelope_size = filesize($archive_path);
 
@@ -233,6 +249,7 @@ class ActesAnalyseFichierRecuController {
         );
 
         $this->log("Création de la transaction $related_transaction_id");
+
 
 
         foreach($fichierXML->getFileList() as $item){
