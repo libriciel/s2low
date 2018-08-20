@@ -348,9 +348,7 @@ if (count($workflow) > 0) {
   	$create_pdf_html ="&nbsp;<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
 	$create_pdf_html.="<br/>[Télécharger]</a>";
 
-	if ($me->isSuper()){
-		$create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
-	}
+    $create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
 
 
 	//---fin de modification
