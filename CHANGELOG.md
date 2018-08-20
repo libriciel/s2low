@@ -11,6 +11,7 @@
 
 - Les mails sécurisés ne pouvaient pas être supprimé. #388
 - Correction de lien vers le bandeau dans le mail sécurisé
+- Si on arrive pas à sauvegarder un attachment (fichier accentué par exemple), on ignore le fichier ~actes #392  
 
 ## 3.0.14 - 2018-07-12
 
