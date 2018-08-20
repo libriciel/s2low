@@ -348,9 +348,7 @@ if (count($workflow) > 0) {
   	$create_pdf_html ="&nbsp;<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
 	$create_pdf_html.="<br/>[Télécharger]</a>";
 
-	if ($me->isSuper()){
-		$create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
-	}
+    $create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
 
 
 	//---fin de modification
@@ -575,17 +573,22 @@ if ($me->isSuper()) {
 
 
 	if (in_array($transStatus,array(3,-1))  && $trans->get("type") == 1) {
+
 		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
-		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Revenir à l'état En attente de transmission </label>\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-		$actionHtml .= "<input type=\"submit\" value=\"Revenir en arrière\" class=\"btn btn-warning\" />\n";
+		$actionHtml .= "<input type=\"submit\" value=\"Passer en attente de transmission\" class=\"btn btn-warning\" />\n";
+		$actionHtml .= "</div></form>\n";
+
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à Poster </label>\n";
+		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+		$actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"1\" />\n";
+		$actionHtml .= "<input type=\"submit\" value=\"Passer à Poster\" class=\"btn btn-warning\" />\n";
 		$actionHtml .= "</div></form>\n";
 	}
 
-
 }
-
-
 
 
 if (isset($actionHtml)) {

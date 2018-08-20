@@ -149,7 +149,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
 		$this->assertEquals(
-			"Enveloppe invalide : erreur de test",
+			"Enveloppe invalide : Problème sur 045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
 			$transaction_info['message']
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");

@@ -76,7 +76,10 @@ class ActesImapRetrieve {
 			foreach ($message->getAttachments() as $attachment) {
 				$attachment_path = $tmp_file . "/" . $attachment->getFileName();
 				$this->log("Sauvegarde de $attachment_path");
-				$attachment->saveAs($attachment_path);
+				if (! $attachment->saveAs($attachment_path)){
+					$this->log("Impossible de sauvegarder le fichier $attachment_path !");
+					continue;
+				}
 				$this->transcode($attachment_path);
 			}
 		}

@@ -2,6 +2,9 @@
 
 class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
 
+	/**
+	 * @throws Exception
+	 */
     public function testRetrieve() {
 		$logger = $this->getLogger();
         $actesImapRetrieve = new ActesImapRetrieve(
@@ -18,11 +21,33 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
         $this->assertRegExp("#Récupération du message : 13#", $logs[3]);
 
         $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4]);
-        $this->assertRegExp("#Sauvegarde de.*foo.pdf#", $logs[5]);
+        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5]);
 		$this->assertRegExp("#Déplacement du répertoire#", $logs[6]);
         $this->assertRegExp("#Suppression du message : 13#", $logs[7]);
     }
 
+	/**
+	 * @throws Exception
+	 */
+	public function testRetrieveCantSaveAttachment() {
+		$logger = $this->getLogger();
+		$actesImapRetrieve = new ActesImapRetrieve(
+			$this->getImapProperties(),
+			$this->getVFS(),
+			$this->getImapFetchServerFactory(false),
+			$logger
+		);
+		$actesImapRetrieve->retrieve();
+
+		$logs = $logger->getAllLog();
+		$this->assertRegExp("#Connection au serveur IMAP#", $logs[1]);
+		$this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2]);
+		$this->assertRegExp("#Récupération du message : 13#", $logs[3]);
+
+		$this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4]);
+		$this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5]);
+		$this->assertRegExp("#Impossible de sauvegarder le fichier#", $logs[6]);
+	}
 
 	/**
 	 * @throws Exception
@@ -40,6 +65,8 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
         $actesImapRetrieve->retrieve();
     }
 
+
+
     public function getVFS(){
     	$tmp = sys_get_temp_dir()."/test_actes_imap".mt_rand(0,mt_getrandmax());
     	mkdir ($tmp);
@@ -56,13 +83,13 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
         return new ActesImapProperties();
     }
 
-    private function getImapFetchServerFactory(){
+    private function getImapFetchServerFactory($saveAsReturn = true){
 
         $overview = new stdClass();
         $overview->message_id = "13";
         $attachement = $this->getMockBuilder('\Fetch\Attachment')->disableOriginalConstructor()->getMock();
-        $attachement->expects($this->any())->method('getFileName')->willReturn("foo.pdf");
-
+        $attachement->expects($this->any())->method('getFileName')->willReturn("foo-école.pdf");
+		$attachement->expects($this->any())->method('saveAs')->willReturn($saveAsReturn);
 
         $message = $this->getMockBuilder('\Fetch\Message')->disableOriginalConstructor()->getMock();
         $message->expects($this->any())->method('getOverview')->willReturn($overview);
@@ -76,4 +103,7 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
         /** @var ImapFetchServerFactory $imapFetchServerFactory */
         return $imapFetchServerFactory;
     }
+
+
+
 }

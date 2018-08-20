@@ -6,11 +6,18 @@
 
 - Passage de la signature Libersign de sha1 à sha256 #170
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
+- Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
+- Les utilisateurs peuvent visualiser les ARActes. ~actes #383
 
 ## Corrections
 
 - Les mails sécurisés ne pouvaient pas être supprimé. #388
 - Correction de lien vers le bandeau dans le mail sécurisé
+- Si on arrive pas à sauvegarder un attachment (fichier accentué par exemple), on ignore le fichier ~actes #392  
+- Le numéro des actes peut avoir un seul caractère. On se base sur le XSD @ctes ~actes #380
+- Si une signature PADES est invalide, on l'indique désormais dans le message d'erreur ~actes #384
+- On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
+
 
 ## 3.0.14 - 2018-07-12
 

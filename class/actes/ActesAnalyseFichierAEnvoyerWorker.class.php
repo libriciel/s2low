@@ -64,7 +64,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
         try {
-			$archive->validate($archive_path);
+        	try {
+				$archive->validate($archive_path);
+			} catch (Exception $e){
+				throw new Exception(utf8_decode($e->getMessage()),$e->getCode(),$e);
+			}
 			$this->validatePades($archive_path,$tmp_dir);
 		} catch (RecoverableException $e){
 			$tmpFolder->delete($tmp_dir);
@@ -72,7 +76,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 			throw $e;
         } catch (Exception $e){
             $tmpFolder->delete($tmp_dir);
-            $message = utf8_decode( $e->getMessage());
+            $message = $e->getMessage();
 			$this->logger->notice("[$envelope_libelle] L'archive n'est valide : $message");
             $this->actesScriptHelper->updateStatus($transaction_ids,ActesStatusSQL::STATUS_EN_ERREUR,"Enveloppe invalide : $message");
             return false;
@@ -116,6 +120,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 	/**
 	 * @param $filepath
 	 * @throws RecoverableException
+	 * @throws Exception
 	 */
     private function validatePADESOneFile($filepath){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -124,7 +129,13 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         if ($mime_type != 'application/pdf') {
             return;
         }
-        $this->padesValid->validate($filepath);
+        try {
+			$this->padesValid->validate($filepath);
+		} catch(RecoverableException $e){
+        	throw $e;
+		} catch (Exception $e){
+        	throw new Exception("Problème sur ".basename($filepath)." : " . $e->getMessage(),$e->getCode(),$e);
+		}
     }
 
 }
