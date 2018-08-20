@@ -1945,34 +1945,16 @@
             "name": "Vannes"
         },
         {
-            "id": "874",
-            "authority_department_id": "158",
-            "code": "1",
-            "name": "Boulay-Moselle"
-        },
-        {
-            "id": "875",
-            "authority_department_id": "158",
-            "code": "2",
-            "name": "Ch\u00e2teau-Salins"
-        },
-        {
             "id": "876",
             "authority_department_id": "158",
             "code": "3",
-            "name": "Forbach"
-        },
-        {
-            "id": "877",
-            "authority_department_id": "158",
-            "code": "4",
-            "name": "Metz-Campagne"
+            "name": "Forbach-Boulay-Moselle"
         },
         {
             "id": "878",
             "authority_department_id": "158",
             "code": "5",
-            "name": "Sarrebourg"
+            "name": "Sarrebourg-Ch\u00e2teau-Salins"
         },
         {
             "id": "879",
@@ -1984,19 +1966,13 @@
             "id": "880",
             "authority_department_id": "158",
             "code": "7",
-            "name": "Thionville-Est"
-        },
-        {
-            "id": "881",
-            "authority_department_id": "158",
-            "code": "8",
-            "name": "Thionville-Ouest"
+            "name": "Thionville"
         },
         {
             "id": "882",
             "authority_department_id": "158",
             "code": "9",
-            "name": "Metz-Ville"
+            "name": "Metz"
         },
         {
             "id": "883",
