@@ -17,6 +17,7 @@
 - Le numéro des actes peut avoir un seul caractère. On se base sur le XSD @ctes ~actes #380
 - Si une signature PADES est invalide, on l'indique désormais dans le message d'erreur ~actes #384
 - On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
+- On ne calcule plus le nombre de page de logs pour le super admin (trop gourmand)
 
 
 ## 3.0.14 - 2018-07-12

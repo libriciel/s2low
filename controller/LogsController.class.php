@@ -103,7 +103,11 @@ class LogsController extends Controller {
 		$offset = ($this->page_number - 1) * $this->taille_page;
 		$this->logs_list = $logsSQL->getList($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility,$offset,$this->taille_page,$this->date_debut,$this->date_fin);
 
-		$nb_logs = $logsSQL->getNbLog($authority_group_id,$authority_id,$user_id,$this->fuser,$this->fmodule,$this->fseverity,$this->fmessage,$visibility,$this->date_debut,$this->date_fin);
+		if ($this->me->isSuper()){
+			$nb_logs = ($this->page_number + 10) * $this->taille_page;
+		} else {
+			$nb_logs = $logsSQL->getNbLog($authority_group_id, $authority_id, $user_id, $this->fuser, $this->fmodule, $this->fseverity, $this->fmessage, $visibility, $this->date_debut, $this->date_fin);
+		}
 
 		$pagerHTML  = new PagerHTML();
 		$this->side_bar = $pagerHTML->getHTML($this->page_number,$nb_logs,$this->taille_page);;
