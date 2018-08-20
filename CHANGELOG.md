@@ -6,6 +6,7 @@
 
 - Passage de la signature Libersign de sha1 à sha256 #170
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
+- Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
 
 ## Corrections
 

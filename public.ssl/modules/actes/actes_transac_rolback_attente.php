@@ -1,7 +1,6 @@
 <?php
 
 require_once(dirname(__FILE__)."/../../../init/init-www-actes.php");
-//require_once(__DIR__."/../../../class/actes/ActesTransactionsSQL.class.php");
 
 if (! $droit->isSuperAdmin($userInfo)){
 	header("Location: index.php");
@@ -11,14 +10,35 @@ $recuperateur = new Recuperateur($_POST);
 
 $id = (int) $recuperateur->get('id');
 
+$status_id = (int) $recuperateur->get('status_id',ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
+
+switch ($status_id){
+
+	case ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION:
+		$message = "La transaction $id a été passée manuellement en attente de transmission";
+		$workerClassName = ActesEnvoiFichierWorker::class;
+		break;
+
+	case ActesStatusSQL::STATUS_POSTE:
+		$message = "La transaction $id a été passée manuellement en posté";
+		$workerClassName = ActesAnalyseFichierAEnvoyerWorker::class;
+		break;
+
+	default:
+		$_SESSION['error'] = "Impossible de passer la transaction $id dans l'état $status_id.";
+		header("Location: actes_transac_show.php?id=$id");
+		exit;
+}
+
+
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
-$actesTransactionSQL->updateStatus($id,2,"Transaction repassee manuellement en attente de transmission");
+$actesTransactionSQL->updateStatus($id,$status_id,$message);
 
 $info = $actesTransactionSQL->getInfo($id);
 
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJobByClassName(ActesEnvoiFichierWorker::class,$info['envelope_id']);
+$workerScript->putJobByClassName($workerClassName,$info['envelope_id']);
 
-$_SESSION['error'] = "La transaction $id a ete passee en attente de transmission.";
+$_SESSION['error'] = $message;
 header("Location: actes_transac_show.php?id=$id");
