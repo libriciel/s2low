@@ -8,12 +8,16 @@
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
 - Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
 
+
 ## Corrections
 
 - Les mails sécurisés ne pouvaient pas être supprimé. #388
 - Correction de lien vers le bandeau dans le mail sécurisé
 - Si on arrive pas à sauvegarder un attachment (fichier accentué par exemple), on ignore le fichier ~actes #392  
 - Le numéro des actes peut avoir un seul caractère. On se base sur le XSD @ctes ~actes #380
+- Si une signature PADES est invalide, on l'indique désormais dans le message d'erreur ~actes #384
+
+
 
 ## 3.0.14 - 2018-07-12
 
