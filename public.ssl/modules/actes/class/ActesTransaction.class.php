@@ -79,7 +79,15 @@ class ActesTransaction extends DataObject {
       "type" => "isString",
       "maxlength" => 15,
       "mandatory" => true,
-		"regexp" => '/^[0-9A-Z][0-9A-Z_]*[0-9A-Z]$/',
+		//Règle original sur s2low depuis le début
+		//"regexp" => '/^[0-9A-Z][0-9A-Z_]*[0-9A-Z]$/',
+
+		// Ci-dessous, c'est la bonne règle qui est dans le XSD @ctes
+		//"regexp" => '/^([a-zA-Z0-9][a-zA-Z0-9\-_&#x20;]{0,13})?[a-zA-Z0-9]$/',
+
+		//Règle intermédiaire
+		"regexp" => '/^([A-Z0-9][A-Z0-9_]{0,13})?[A-Z0-9]$/',
+
       "regexp_txt" => "ne peut contenir que des chiffres, des lettres en majuscules et _"
     ),
     "classification" => array (
