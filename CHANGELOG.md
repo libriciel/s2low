@@ -28,7 +28,7 @@
 ## Ajouts
 
 - Ajout des fonctions de l'API list_document_prefecture.php et document_prefecture_mark_as_read.php #379
-
+- Ajout d'une page (caché) de pré-requis générique pour les navigateurs #360
 
 ## 3.0.14 - 2018-07-12
 
