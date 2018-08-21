@@ -18,6 +18,8 @@
 - Si une signature PADES est invalide, on l'indique désormais dans le message d'erreur ~actes #384
 - On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
 - On ne calcule plus le nombre de page de logs pour le super admin (trop gourmand)
+- On peut récupérer la liste des documents d'un actes via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4 uniquement)
+
 
 
 ## 3.0.14 - 2018-07-12
