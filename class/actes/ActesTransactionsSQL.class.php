@@ -295,4 +295,16 @@ class ActesTransactionsSQL extends SQL{
         return $this->query($sql,$status_id,$authority_id);
     }
 
+    public function listDocumentPrefectureNonLu($authority_id){
+		$sql = "SELECT id,type,related_transaction_id,number,unique_id,last_status_id FROM actes_transactions " .
+			" WHERE authority_id=? AND type IN ('2','3','4','5') AND type_reponse IS NULL AND lu=false" .
+			" ORDER BY id";
+		return $this->query($sql,$authority_id);
+	}
+
+	public function markAsRead($authority_id,$transaction_id){
+		$sql = "UPDATE actes_transactions SET lu=true WHERE id=? AND authority_id=?";
+		$this->query($sql,$transaction_id,$authority_id);
+	}
+
 }
