@@ -283,7 +283,7 @@ if (isset ($acteAttachments)) {
 	
 	
 	if (! $uploader->verifOKAll("acte_attachments")){
-		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 	}
 
 	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {

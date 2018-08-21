@@ -23,6 +23,7 @@
 - On peut récupérer la liste des documents d'un actes via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4 uniquement)
 - Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
 - Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
+- On ne se fait plus ejecter du traitement par lot si on ouvre une annexe qu'on ne rempli pas #203
 
 ## Ajouts
 
