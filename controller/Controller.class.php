@@ -47,6 +47,9 @@ class Controller {
 	}
 
 
+	/**
+	 * @return Environnement
+	 */
 	protected function getEnvironnement(){
 	    return $this->objectInstancier->get(Environnement::class);
     }
