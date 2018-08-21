@@ -34,8 +34,17 @@ $fnomFic = $recuperateur->get("nomFic");
 
 $heliosTransactionsListe = new HeliosTransactionsListe($sqlQuery);
 
+
 if ($droit->isSuperAdmin($userInfo) ) {
 	$heliosTransactionsListe->setAuthority($fauthority);
+}elseif ($droit->isGroupAdmin($userInfo) && $fauthority){
+	$authorityFiltreInfo = $authoritySQL->getInfo($fauthority);
+
+	if ($droit->hasDroit($userInfo,$authorityFiltreInfo)){
+		$heliosTransactionsListe->setAuthority($fauthority);
+	} else {
+		$heliosTransactionsListe->setAuthority($userInfo['authority_id']);
+	}
 }elseif ($droit->isAdmin($userInfo)){
 	$heliosTransactionsListe->setAuthority($userInfo['authority_id']);
 } else {
@@ -318,8 +327,8 @@ ob_start();
 				<label for="authority" class="col-md-3 control-label">Collectivité</label>
 				<div class="col-md-3">
 					<select class="form-control zselect_authorities" name="authority">
-						<option value="">Toutes</option>
-						<?php foreach ( $me->getAllPossibleAuthority() as $key => $val) : ?>
+						<?php if($me->isSuper()) : ?><option value="">Toutes</option><?php endif; ?>
+                        <?php foreach ( $me->getAllPossibleAuthority() as $key => $val) : ?>
 							<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
 								<?php hecho($val)?>
 							</option>

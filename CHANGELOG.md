@@ -21,12 +21,14 @@
 - On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
 - On ne calcule plus le nombre de page de logs pour le super admin (trop gourmand)
 - On peut récupérer la liste des documents d'un actes via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4 uniquement)
-
+- Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
+- Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
+- On ne se fait plus ejecter du traitement par lot si on ouvre une annexe qu'on ne rempli pas #203
 
 ## Ajouts
 
 - Ajout des fonctions de l'API list_document_prefecture.php et document_prefecture_mark_as_read.php #379
-
+- Ajout d'une page (caché) de pré-requis générique pour les navigateurs #360
 
 ## 3.0.14 - 2018-07-12
 

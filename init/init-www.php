@@ -32,7 +32,7 @@ if ($authorityInfo['authority_group_id']){
 
 $moduleSQL = new ModuleSQL($sqlQuery);
 
-$droit = $objectInstancier->get("Droit");
+$droit = $objectInstancier->get(Droit::class);
 
 if ( ! empty($module_name)) {
 	$moduleInfo = $moduleSQL->getInfoByName($module_name,$userInfo['authority_id']);
