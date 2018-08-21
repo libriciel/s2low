@@ -46,10 +46,18 @@ if (isset ($fstatus) && is_numeric($fstatus) && $fstatus != 2) {//si = 2 : tous 
 }
 
 //collectivité (si sadmin)
-if (!$me->isSuper()) { // Le super utilisateur voit les reponses de toutes les collectivité
-   // Un utilisateur ne voit que les reponses de sa collectivité
-  $filter[] .= "helios_retour.authority_id='" . $me->get('authority_id'). "'";
-}else {
+if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de toutes les collectivité
+	// Un utilisateur ne voit que les reponses de sa collectivité
+	$filter[] .= "helios_retour.authority_id='" . $me->get('authority_id') . "'";
+} elseif( $me->isGroupAdmin() && in_array($fauthority,array_keys($me->getAllPossibleAuthority()))) {
+
+	if (isset($fauthority) && !empty($fauthority) ) {
+		$filter[] .= "helios_retour.authority_id='" . $fauthority . "'";
+	} else {
+		$filter[] .= "helios_retour.authority_id='" . $me->get('authority_id') . "'";
+    }
+
+} else {
   if (isset($fauthority) && !empty($fauthority) )
   	$filter[] .= "helios_retour.authority_id='" . $fauthority . "'";
 }
@@ -166,7 +174,7 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicke
 
 
 //colectivitïvité  pour superuser
-if ($me->isSuper()) {
+if ($me->isGroupAdminOrSuper()) {
 
     ob_start();
     ?>
@@ -176,7 +184,7 @@ if ($me->isSuper()) {
 
         <div class="col-md-3">
             <select class="form-control zselect_authorities" name="authority">
-                <option value="">Toutes</option>
+                <?php if($me->isSuper()) : ?><option value="">Toutes</option><?php endif; ?>
                 <?php foreach ($me->getAllPossibleAuthority() as $key => $val) : ?>
                     <option
                         value="<?php hecho($key) ?>" <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>

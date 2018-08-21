@@ -21,7 +21,8 @@
 - On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
 - On ne calcule plus le nombre de page de logs pour le super admin (trop gourmand)
 - On peut récupérer la liste des documents d'un actes via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4 uniquement)
-
+- Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
+- Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
 
 ## Ajouts
 
