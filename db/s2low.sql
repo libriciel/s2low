@@ -146,7 +146,8 @@ CREATE TABLE actes_transactions (
     sae_transfer_identifier character varying(256),
     antivirus_check boolean DEFAULT false,
     classification_string character varying(256),
-    document_papier boolean DEFAULT false NOT NULL
+    document_papier boolean DEFAULT false NOT NULL,
+    lu boolean DEFAULT false NOT NULL
 );
 CREATE TABLE actes_transactions_workflow (
     id integer DEFAULT nextval('actes_transactions_workflow_id_seq'::regclass) NOT NULL,
@@ -507,8 +508,6 @@ CREATE INDEX lh_date ON logs_historique USING btree (date, id);
 CREATE INDEX actes_included_files_filename ON actes_included_files USING btree (filename);
 CREATE INDEX aif_ei ON actes_included_files USING btree (envelope_id);
 CREATE INDEX aif_ti ON actes_included_files USING btree (transaction_id);
-CREATE INDEX logs_request_state_idx ON logs_request USING btree (state);
-CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur);
 CREATE UNIQUE INDEX actes_transactions_unique_id ON actes_transactions USING btree (unique_id, type, id);
 CREATE UNIQUE INDEX actes_transactions_last_status_id_id ON actes_transactions USING btree (last_status_id, id);
 CREATE INDEX actes_transactions_authority_id_last_status_id_idx ON actes_transactions USING btree (authority_id, last_status_id);
@@ -519,6 +518,8 @@ CREATE INDEX at_n ON actes_transactions USING btree (number);
 CREATE INDEX at_user_id_index ON actes_transactions USING btree (user_id, last_status_id, id);
 CREATE INDEX at_related_id ON actes_transactions USING btree (related_transaction_id);
 CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id);
+CREATE INDEX logs_request_state_idx ON logs_request USING btree (state);
+CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur);
 CREATE INDEX users_login ON users USING btree (login);
 CREATE UNIQUE INDEX users_certificate_login ON users USING btree (subject_dn, issuer_dn, login);
 CREATE INDEX users_certificate_hash_idx ON users USING btree (certificate_hash);

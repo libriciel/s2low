@@ -575,6 +575,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "NO",
                 "column_default": "false"
+            },
+            "lu": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "actes_transactions_workflow": {
@@ -3418,14 +3424,6 @@
             "tablename": "actes_included_files",
             "indexdef": "CREATE INDEX aif_ti ON actes_included_files USING btree (transaction_id)"
         },
-        "logs_request_state_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
-        },
-        "logs_request_user_id_demandeur_idx": {
-            "tablename": "logs_request",
-            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
-        },
         "actes_transactions_unique_id": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE UNIQUE INDEX actes_transactions_unique_id ON actes_transactions USING btree (unique_id, type, id)"
@@ -3465,6 +3463,14 @@
         "at_enveloppe_id": {
             "tablename": "actes_transactions",
             "indexdef": "CREATE INDEX at_enveloppe_id ON actes_transactions USING btree (envelope_id)"
+        },
+        "logs_request_state_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
+        },
+        "logs_request_user_id_demandeur_idx": {
+            "tablename": "logs_request",
+            "indexdef": "CREATE INDEX logs_request_user_id_demandeur_idx ON logs_request USING btree (user_id_demandeur)"
         },
         "users_login": {
             "tablename": "users",

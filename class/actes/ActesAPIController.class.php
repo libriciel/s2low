@@ -6,6 +6,10 @@ class ActesAPIController extends Controller {
         /* Nothing to do*/
     }
 
+    private function getActesTransactionsSQL(){
+    	return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+	}
+
     public function listStatusAction(){
         $this->verifUser();
         $actesStatusSQL = $this->getObjectInstancier()->get('ActesStatusSQL');
@@ -22,8 +26,7 @@ class ActesAPIController extends Controller {
 
         $authority_id = intval($this->me->get("authority_id"));
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get('ActesTransactionsSQL');
-        $nb_transactions = $actesTransactionsSQL->getNbByStatusAndAuthority($status_id,$authority_id);
+        $nb_transactions = $this->getActesTransactionsSQL()->getNbByStatusAndAuthority($status_id,$authority_id);
 
         $result = array('status_id'=>$status_id,'authority_id'=>$authority_id,'nb_transactions'=>$nb_transactions);
 
@@ -40,8 +43,7 @@ class ActesAPIController extends Controller {
 
         $authority_id = intval($this->me->get("authority_id"));
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get('ActesTransactionsSQL');
-        $transactions_list = $actesTransactionsSQL->getListByStatusAndAuthority(
+        $transactions_list = $this->getActesTransactionsSQL()->getListByStatusAndAuthority(
             $status_id,
             $authority_id,
             $offset,
@@ -59,5 +61,25 @@ class ActesAPIController extends Controller {
         echo json_encode(utf8_encode_array($result));
         return true;
     }
+
+    public function listDocumentPrefectureAction(){
+    	$this->verifUser();
+
+		$authority_id = intval($this->me->get("authority_id"));
+		$list = $this->getActesTransactionsSQL()->listDocumentPrefectureNonLu($authority_id);
+
+		echo json_encode(utf8_encode_array($list));
+		return true;
+	}
+
+	public function documentPrefectureMarkAsReadAction(){
+    	$this->verifUser();
+		$authority_id = intval($this->me->get("authority_id"));
+		$transaction_id = $this->getRecuperateurGet()->getInt('transaction_id',0);
+		$this->getActesTransactionsSQL()->markAsRead($authority_id,$transaction_id);
+		echo json_encode(["result" => "ok"]);
+		return true;
+	}
+
 
 }

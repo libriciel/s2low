@@ -70,7 +70,7 @@ $workflow = $zeTrans->fetchWorkflow();
 
 $has_file = false;
 foreach ($workflow as $stage) {
-	if ($stage['status_id'] == 4){
+	if (! in_array($stage['status_id'],[1,2,3] )){
 		$has_file = true;
 	}
 }
