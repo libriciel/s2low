@@ -27,6 +27,7 @@
     <actes:NatureActe actes:CodeNatureActe="6" actes:Libelle="Autres" actes:TypeAbrege="AU">
       <actes:TypePJNatureActe actes:CodeTypePJ="01_AU" actes:Libelle="Test autre"/>
       <actes:TypePJNatureActe actes:CodeTypePJ="99_AU" actes:Libelle="Autres"/>
+      <actes:TypePJNatureActe actes:CodeTypePJ="99_SE" actes:Libelle="Fichier de signature électronique"/>
     </actes:NatureActe>
   </actes:NaturesActes>
   <actes:Matieres>

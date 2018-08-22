@@ -24,8 +24,9 @@
 - Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
 - Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
 - On ne se fait plus ejecter du traitement par lot si on ouvre une annexe qu'on ne rempli pas #203
-- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362 pour le groupe selectionné #382 
+- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362 pour le groupe selectionné #382
 - Le type de la pièce principal n'était pas enregistré correctement ~actes
+- Ajout de la typologie 99_SE **Fichier de signature électronique** quelque soit la matière et la nature de l'acte ~actes #393 
 
 ## Ajouts
 

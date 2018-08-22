@@ -130,7 +130,7 @@ switch ($trans->get("type")) {
     if ($trans->get("sae_transfer_identifier")) {
         $html .= $doc->getHTMLArrayline("Identifiant Pastell (archivage)", get_hecho($trans->get("sae_transfer_identifier")));
     }
-    
+
 
     if ($trans->get("broadcasted") == 't')
       $notification = "Notifiée à " . $trans->get("broadcast_emails");
@@ -138,38 +138,38 @@ switch ($trans->get("type")) {
       $notification = "Non notifiée";
     $html .= $doc->getHTMLArrayline("Notification", $notification);
     break;
-    
+
   case 2 :
   case 3 :
   case 4 :
-  case 5 : 
+  case 5 :
     $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
     $related_trans->init();
-    
-    
+
+
     $html .= $doc->getHTMLArrayline("Date de réception du document  ", $related_trans->get("decision_date"));
-    
+
     if ($related_trans->get("related_transaction_id")){
-		    	
+
     	$files = $related_trans->fetchFilesList();
 		foreach ($files as $file) {
     		$html .= $doc->getHTMLArrayline("Document reçu   ",
     			"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>"
     	 	);
 		}
-    	
+
     	$related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
-        $related_trans->init();	
+        $related_trans->init();
 		$html .= $doc->getHTMLArrayline("Date de décision de l'acte initial   ", $related_trans->get("decision_date"));
 		$html .= $doc->getHTMLArrayline("Acte initial", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
-		
+
     } else {
     	  $html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
     }
 
-    
+
     break;
-    
+
   case 6 :
     $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
     $related_trans->init();
@@ -196,8 +196,8 @@ if ($trans->get("type") == 6 ||
 
  	 $status == 5 ||
  	 $status == 6 ||
- 	 $status == 16 
- 	 
+ 	 $status == 16
+
  	 ) {
 	$archiveDeleted = true;
 }
@@ -236,13 +236,13 @@ $html .= " <tbody>\n";
       } else {
             $html .= $file["posted_filename"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>" ;
             $html .= "&nbsp;&nbsp;";
-            
-            
+
+
             //TODO Horrible hack....
             foreach ($workflow as  $stage) {
-            
+
             	if ($stage['status_id'] == 4){
-            		
+
             		if (preg_match("/\.pdf$/i",$file["posted_filename"])) {
 
 						$name="tampon_date";
@@ -288,7 +288,7 @@ $html .= " <tbody>\n";
             		}
             	}
             }
-			
+
 			$html .= "</dd>";
       }
      }
@@ -304,9 +304,9 @@ $html .= " <tbody>\n";
 
     $html .= "</dd>";
     $html .= "</dl>\n";
-    if ($file['sign']) {    
+    if ($file['sign']) {
     	$html .= "<dt>Signature</dt>";
-    	$html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>"; 
+    	$html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>";
     }
 
     if ($file['code_pj']){
@@ -352,20 +352,20 @@ if (count($workflow) > 0) {
 
 
 	//---fin de modification
-	
+
   foreach ($workflow as $stage) {
     $html .= "<tr>\n";
-	
+
    if (in_array($stage["status_id"],array(4,11) ))
     {
-    	
+
     	$html .= "  <td headers=\"status\">" . $status_list[$stage["status_id"]].$create_pdf_html."</td>\n";
     }
     else
     	$html .= "  <td headers=\"status\">" . $status_list[$stage["status_id"]] . "</td>\n";
-    	
+
 	//---------end
- 
+
     $html .= "  <td headers=\"date\">" . Helpers :: getDateFromBDDDate($stage["date"], true) . "</td>\n";
     $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
     $html .= " </tr>\n";
@@ -398,11 +398,11 @@ if (count($courrier) != 0){
   		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" .$id . "\"><img alt=\"pdf\" src=\"../../custom/images/erreur.png\"> </a></td>\n";
   		$html .= " </tr>\n";
 	}
-	
+
   $html .= "</tbody>\n";
   $html .= "</table>\n";
   $html .= "</div>\n";
-	
+
 }
 
 
@@ -413,7 +413,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
   // Affichés quand la transaction a été acquittée par le MIAT et non notifiée
   if ($trans->get("type") == 1 && $transStatus == 4 && $trans->get("broadcasted") == 'f') {
     // adresses emails de diffusion
-    
+
 
     $org = new Authority($me->get("authority_id"));
     $defaultbroadcast_email = $org->get("default_broadcast_email");
@@ -443,7 +443,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-offset-1 control-label\" for=\"$email\"><input type=\"checkbox\"  name=\"broadcast_email[]\" value=\"$email\" " . $checked . " />" . $email . "</label></div>\n";
     }
 
-    
+
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "</form>\n";
     $actionHtml .= "</div>\n";
@@ -455,7 +455,7 @@ if (!$trans->hasPendingCancelTrans()) {
     // Boutons de cloture de la transaction
     // Affichés quand la transaction a été acquittée par le MIAT
     if ($trans->get("type") == 1 && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
-  
+
         if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
 		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
@@ -466,7 +466,7 @@ if (!$trans->hasPendingCancelTrans()) {
 		$actionHtml .= "</div>\n</form>\n";
 		$actionHtml .= "</div>\n";
 	}//fin if verfiie canValidate
-  
+
         $actionHtml .= "<div class=\"action\">\n";
         $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
@@ -563,7 +563,7 @@ if ($me->isSuper()) {
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
       $actionHtml .= "</div></form>\n";
-      
+
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -598,7 +598,7 @@ if (isset($actionHtml)) {
 
 
 if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
-	
+
 	$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 	$tab_included_files = $actesIncludedFileSQL->getSendFile($id);
 	$tab_included_files = array_slice($tab_included_files,0,1);
@@ -658,7 +658,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 		<?php endforeach;?>
 	</form>
 
-	<?php 	
+	<?php
 		$html.= ob_get_contents();
 		ob_end_clean();
 }
