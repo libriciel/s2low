@@ -1138,7 +1138,7 @@ class ActesTransaction extends DataObject {
         "mimetype" => $mimeType,
         "size" => $size,
       	"sha1" => $sha1,
-          "code_pj" => ""
+          "code_pj" => $code_pj
       );
 
     } else {

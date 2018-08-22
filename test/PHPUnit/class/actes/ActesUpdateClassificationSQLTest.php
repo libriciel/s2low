@@ -35,7 +35,7 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         );
 
         $actesTypePJSQL = $this->getObjectInstancier()->get('ActesTypePJSQL');
-        $this->assertEquals(12,count($actesTypePJSQL->getAll()));
+        $this->assertEquals(13,count($actesTypePJSQL->getAll()));
     }
 
     public function testUpdateClassificationBadSiren(){

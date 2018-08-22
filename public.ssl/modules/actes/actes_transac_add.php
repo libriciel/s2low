@@ -154,7 +154,11 @@ $(function(){
       selector
              .append($("<option></option>")
                         .attr("value","99_AU")
-                        .text("Autre document")); 
+                        .text("Autre document"));
+      selector
+             .append($("<option></option>")
+                        .attr("value","99_SE")
+                        .text("Fichier de signature électronique"));
   };
   
   $("#nature_code, #classification_text").on('change', function() {

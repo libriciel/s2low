@@ -60,12 +60,14 @@ class TransactionSQL {
 	private $order;
 	private $sortWay;
 	
-	public function __construct($sqlQuery){		
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 		$this->limit = 10;
 		$this->offset = 0;
 		$this->filter = array();
 		$this->value = array();
+		$this->order = 'actes_transactions.id';
+		$this->sortWay = 'ASC';
 	}
 	
 	public function getTypes(){
@@ -144,6 +146,7 @@ class TransactionSQL {
 		}
 		$this->filter[] = "actes_transactions.number LIKE ?";
 		$this->value[] = "%$numero%";
+		//$this->value[] = "$numero"; FIX #378
 	}
 	
 	public function setObjet($objet){
@@ -152,6 +155,7 @@ class TransactionSQL {
 		}
 		$this->filter[] = "actes_transactions.subject ILIKE ?";
 		$this->value[] = "%$objet%";
+		//$this->value[] = "$objet"; FIX #378
 	}
 	
 	

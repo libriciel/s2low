@@ -55,7 +55,7 @@ services:
             - 10003:8080
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.2
+        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.3
         networks:
           - dgfip
           - dgcl
