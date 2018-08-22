@@ -24,6 +24,7 @@
 - Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
 - Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
 - On ne se fait plus ejecter du traitement par lot si on ouvre une annexe qu'on ne rempli pas #203
+- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362 pour le groupe selectionné #382 
 
 ## Ajouts
 

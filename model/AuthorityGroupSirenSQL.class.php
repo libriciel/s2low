@@ -16,8 +16,8 @@ class AuthorityGroupSirenSQL extends SQL {
 
 	public function getUnusedSiren($authority_group_id){
 		$sql = "SELECT siren FROM authority_group_siren " .
-			" WHERE authority_group_id=? AND siren NOT IN (SELECT siren FROM authorities WHERE siren IS NOT NULL)".
+			" WHERE authority_group_id=? AND siren NOT IN (SELECT siren FROM authorities WHERE siren IS NOT NULL AND authority_group_id=?)".
 			" ORDER BY siren";
-		return $this->queryOneCol($sql,$authority_group_id);
+		return $this->queryOneCol($sql,$authority_group_id,$authority_group_id);
 	}
 }
