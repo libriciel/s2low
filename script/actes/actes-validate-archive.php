@@ -10,7 +10,7 @@ if ($argc < 1){
 
 $archive_path = $argv[1];
 
-$archive = new \Libriciel\LibActes\ArchiveValidator($objectInstancier->get('actes_appli_trigramme'));
+$archive = new \Libriciel\LibActes\ArchiveValidator($objectInstancier->get('actes_appli_trigramme'),$objectInstancier->get('actes_appli_quadrigramme'));
 
 try {
 	$archive->validate($archive_path);

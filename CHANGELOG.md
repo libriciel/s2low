@@ -10,6 +10,8 @@
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
 - Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
 - Les utilisateurs peuvent visualiser les ARActes. ~actes #383
+- Vérification de l'identifiant de l'application (quadrigramme) avec EACT par défaut ~actes #397 
+
 
 ## Corrections
 
@@ -27,6 +29,10 @@
 - Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362 pour le groupe selectionné #382
 - Le type de la pièce principal n'était pas enregistré correctement ~actes
 - Ajout de la typologie 99_SE **Fichier de signature électronique** quelque soit la matière et la nature de l'acte ~actes #393 
+- on vérifie que l'emetteur n'est pas vide ~actes #399
+- on vérifier que le nombre d'annexe indiqué est identique au nombre trouvé ~actes #398  
+
+
 
 ## Ajouts
 

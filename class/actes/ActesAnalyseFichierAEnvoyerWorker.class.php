@@ -5,6 +5,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 	const QUEUE_NAME = "actes-analyze-fichier-a-envoyer";
 
     private $actes_appli_trigramme;
+    private $actes_appli_quadrigramme;
     private $actesTransactionsSQL;
     private $logger;
     private $actesEnvelopeSQL;
@@ -17,11 +18,13 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
+		$actes_appli_quadrigramme,
         ActesScriptHelper $actesScriptHelper,
         PadesValid $padesValid,
 		WorkerScript $workerScript
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
+        $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
@@ -60,7 +63,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
 		$this->logger->debug("[$envelope_libelle] Emplacement de l'archive :  $archive_path");
 
-        $archive = new \Libriciel\LibActes\ArchiveValidator($this->actes_appli_trigramme);
+		$this->logger->debug("id_tdt : {$this->actes_appli_trigramme}, id_appli : {$this->actes_appli_quadrigramme}");
+
+        $archive = new \Libriciel\LibActes\ArchiveValidator($this->actes_appli_trigramme,$this->actes_appli_quadrigramme);
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
         try {

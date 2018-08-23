@@ -48,6 +48,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
         $this->getObjectInstancier()->set("website","http://s2low");
         $this->getObjectInstancier()->set("website_ssl","https://s2low");
         $this->getObjectInstancier()->set("actes_appli_trigramme","SLO");
+		$this->getObjectInstancier()->set("actes_appli_quadrigramme","EACT");
         $this->getObjectInstancier()->set("actes_ministere_acronyme","MI");
         $this->getObjectInstancier()->set("mode_beanstalkd",false);
 		$this->getObjectInstancier()->set("beanstalkd_server",false);
