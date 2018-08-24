@@ -10,7 +10,8 @@
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
 - Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
 - Les utilisateurs peuvent visualiser les ARActes. ~actes #383
-- Vérification de l'identifiant de l'application (quadrigramme) avec EACT par défaut ~actes #397 
+- Vérification de l'identifiant de l'application (quadrigramme) avec EACT par défaut ~actes #397
+- On ne vérifie pas la chaine de certification des signatures de pièces de marchés publics (nature 4, classification 1.1) ~actes #400  
 
 
 ## Corrections
@@ -32,12 +33,11 @@
 - on vérifie que l'emetteur n'est pas vide ~actes #399
 - on vérifier que le nombre d'annexe indiqué est identique au nombre trouvé ~actes #398  
 
-
-
 ## Ajouts
 
 - Ajout des fonctions de l'API list_document_prefecture.php et document_prefecture_mark_as_read.php #379
 - Ajout d'une page (caché) de pré-requis générique pour les navigateurs #360
+- Ajout de la constante de configuration ACTES_DONT_VALID_SIGNING_CERTIFICATE permettant de ne jamais valider les certificat de signature des actes ~actes
 
 ## 3.0.14 - 2018-07-12
 

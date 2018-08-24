@@ -99,6 +99,8 @@ $objectInstancier->set("actes_appli_quadrigramme",ACTES_APPLI_QUADRIGRAMME);
 
 $objectInstancier->set("actes_ministere_acronyme",ACTES_MINISTERE_ACRONYME);
 
+$objectInstancier->set("actes_dont_valid_signing_certificate",ACTES_DONT_VALID_SIGNING_CERTIFICATE);
+
 $actesMinistereProperties = new ActesMinistereProperties();
 
 $actesMinistereProperties->url = ACTES_MINISTERE_URL;

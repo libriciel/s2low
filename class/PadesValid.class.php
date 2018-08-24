@@ -35,44 +35,78 @@ class PadesValid {
 
 	/**
 	 * @param $filepath
+	 * @return bool|mixed
+	 * @throws Exception
+	 * @throws RecoverableException
+	 */
+    public function validateWithoutCertificateChecking($filepath){
+		$result = $this->getPadesValidResult($filepath);
+		if ($result === false){
+			return false;
+		}
+		foreach($result->signatures as $signature){
+			$signature->pemCertificate = $this->getPERMCertificate($signature);
+			$this->validSignatureWithoutCertificateChecking($signature);
+		}
+		return true;
+	}
+
+
+	/**
+	 * @param $filepath
 	 * @return bool
 	 * @throws RecoverableException
 	 * @throws Exception
 	 */
     public function validate($filepath){
-        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
-
-        $curlWrapper->addPostFile('file',$filepath);
-        $result = $curlWrapper->get($this->pades_valid_url);
-        $this->last_result = $result;
-        if (!$result){
-
-            if ($curlWrapper->getLastHttpCode() ){
-                throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
-            }
-
-            throw new RecoverableException($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
-        }
-        $result = json_decode($result);
-        if (! $result){
-            throw new Exception("Impossible de décoder le message de pades-valid : ".$curlWrapper->getLastOutput());
-        }
-        if (! isset($result->signed)){
-            throw new Exception("Impossible de determiner si le fichier est signé");
-        }
-
-        if ($result->signed == false){
-            //Le fichier n'est pas signée
-            return false;
-        }
-        if (empty($result->signatures)){
-            throw new Exception("Impossible de determiner si le fichier est signé");
-        }
+    	$result = $this->getPadesValidResult($filepath);
+    	if ($result === false){
+    		return false;
+		}
         foreach($result->signatures as $signature){
+         	$signature->pemCertificate = $this->getPERMCertificate($signature);
             $this->validSignature($signature);
         }
         return true;
     }
+
+	/**
+	 * @param $filepath
+	 * @return bool|mixed
+	 * @throws Exception
+	 * @throws RecoverableException
+	 */
+    private function getPadesValidResult($filepath){
+		$curlWrapper = $this->curlWrapperFactory->getNewInstance();
+
+		$curlWrapper->addPostFile('file',$filepath);
+		$result = $curlWrapper->get($this->pades_valid_url);
+		$this->last_result = $result;
+		if (!$result){
+
+			if ($curlWrapper->getLastHttpCode() ){
+				throw new Exception($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
+			}
+
+			throw new RecoverableException($curlWrapper->getLastError()." ".$curlWrapper->getLastOutput());
+		}
+		$result = json_decode($result);
+		if (! $result){
+			throw new Exception("Impossible de décoder le message de pades-valid : ".$curlWrapper->getLastOutput());
+		}
+		if (! isset($result->signed)){
+			throw new Exception("Impossible de determiner si le fichier est signé");
+		}
+
+		if ($result->signed == false){
+			//Le fichier n'est pas signée
+			return false;
+		}
+		if (empty($result->signatures)){
+			throw new Exception("Impossible de determiner si le fichier est signé");
+		}
+		return $result;
+	}
 
     /**
      * @param $signature
@@ -80,35 +114,10 @@ class PadesValid {
      * @throws Exception
      */
     private function validSignature($signature){
-        if (empty($signature->valid) || ! $signature->valid){
-            throw new Exception("Au moins une signature n'est pas valide");
-        }
-        if(empty($signature->signingCert)){
-            throw new Exception("Impossible de récupérer le certificat de signature");
-        };
-        if (empty($signature->signatureDate)){
-            throw new Exception("Impossible de determiner la date de la signature");
-        }
 
-        $beginpem = "-----BEGIN CERTIFICATE-----\n";
-        $endpem = "\n-----END CERTIFICATE-----\n";
-
-        $signing_cert = implode("\n",str_split($signature->signingCert,78));
-        $signing_cert = $beginpem.$signing_cert.$endpem;
-        $x509_info = openssl_x509_parse($signing_cert);
-
-        $signatureDate = floor($signature->signatureDate / 1000);
-
-        if ($signatureDate < $x509_info['validFrom_time_t'] ||
-            $signatureDate > $x509_info['validTo_time_t']
-        ) {
-            throw new Exception("La date de la signature {$signature->signatureDate}" .
-                " n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
-        }
-
+    	$this->validSignatureWithoutCertificateChecking($signature);
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
-        file_put_contents($certificate_path,$signing_cert);
-
+        file_put_contents($certificate_path,$signature->pemCertificate);
         try {
             $this->verifyPKCS7Signature->checkCertificate($certificate_path);
         } catch (Exception $e){
@@ -118,5 +127,44 @@ class PadesValid {
         unlink($certificate_path);
         return true;
     }
+
+	/**
+	 * @param $signature
+	 * @return bool
+	 * @throws Exception
+	 */
+    private function validSignatureWithoutCertificateChecking($signature){
+		if (empty($signature->valid) || ! $signature->valid){
+			throw new Exception("Au moins une signature n'est pas valide");
+		}
+		if(empty($signature->signingCert)){
+			throw new Exception("Impossible de récupérer le certificat de signature");
+		};
+		if (empty($signature->signatureDate)){
+			throw new Exception("Impossible de determiner la date de la signature");
+		}
+
+
+		$x509_info = openssl_x509_parse($signature->pemCertificate);
+
+		$signatureDate = floor($signature->signatureDate / 1000);
+
+		if ($signatureDate < $x509_info['validFrom_time_t'] ||
+			$signatureDate > $x509_info['validTo_time_t']
+		) {
+			throw new Exception("La date de la signature {$signature->signatureDate}" .
+				" n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
+		}
+		return true;
+	}
+
+	private function getPERMCertificate($signature){
+		$beginpem = "-----BEGIN CERTIFICATE-----\n";
+		$endpem = "\n-----END CERTIFICATE-----\n";
+
+		$signing_cert = implode("\n",str_split($signature->signingCert,78));
+		return $beginpem.$signing_cert.$endpem;
+	}
+
 
 }
