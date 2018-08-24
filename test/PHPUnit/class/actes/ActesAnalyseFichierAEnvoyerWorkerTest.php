@@ -93,22 +93,35 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	 * @return array|bool|mixed
 	 * @throws Exception
 	 */
-    private function validateAll($archivepath){
-		$data = $this->createOneTransaction($archivepath);
+    private function validateAll($archivepath,$is_marche_public = false){
+		$data = $this->createOneTransaction($archivepath,$is_marche_public);
         $this->getActesAnalysFichierAEnvoyerWorker()->work($data['envelope_id']);
         return $data['transaction_id'];
     }
 
-    private function createOneTransaction($archivepath){
+	/**
+	 * @param $archivepath
+	 * @param bool $is_marche_public
+	 * @return array
+	 * @throws Exception
+	 */
+    private function createOneTransaction($archivepath,$is_marche_public = false){
 		$actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 		$transaction_id = $actesCreator->createTransaction(
 			ActesStatusSQL::STATUS_POSTE,
 			$archivepath,
 			$this->tmp_dir
 		);
+
 		$envelope_id = $actesCreator->getLastEnvelopeId();
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 		$actesTransactionsSQL->setAntivirusCheck($transaction_id);
+
+		if ($is_marche_public) {
+			$sql = "UPDATE actes_transactions SET nature_code=?,classification=? WHERE id=?";
+			$this->getSQLQuery()->query($sql, "4", "1.1", $transaction_id);
+		}
+
 		return ['envelope_id'=>$envelope_id,'transaction_id'=>$transaction_id];
 	}
 
@@ -155,8 +168,39 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
 		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
-
-
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllOneNoChekingCertificate(){
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-6.tar.gz",true);
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Accepté par le TdT : validation OK",
+			$transaction_info['message']
+		);
+
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllNoChekingCertificateGlobale(){
+		$this->getObjectInstancier()->set("actes_dont_valid_signing_certificate",true);
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+	}
+
 
 }

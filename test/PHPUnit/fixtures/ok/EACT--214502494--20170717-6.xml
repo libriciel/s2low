@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<actes:EnveloppeCLMISILL xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" xmlns:insee="http://xml.insee.fr/schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd">
+ <actes:Emetteur>
+  <actes:IDCL insee:SIREN="214502494" actes:Departement="045" actes:Arrondissement="1" actes:Nature="31"/>
+  <actes:Referent>
+   <actes:Nom>ETest</actes:Nom>
+   <actes:Telephone></actes:Telephone>
+   <actes:Email>test@test.fr</actes:Email>
+  </actes:Referent>
+ </actes:Emetteur>
+ <actes:AdressesRetour>
+  <actes:Email>totoo@toto.org</actes:Email>
+ </actes:AdressesRetour>
+ <actes:FormulairesEnvoyes>
+  <actes:Formulaire>
+   <actes:NomFichier>045-214502494-20170717-D201717-DE-1-1_0.xml</actes:NomFichier>
+  </actes:Formulaire>
+ </actes:FormulairesEnvoyes>
+</actes:EnveloppeCLMISILL>
