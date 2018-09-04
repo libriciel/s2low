@@ -120,6 +120,17 @@ class User extends DataObject {
 		$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
 		$this->id = $authenfication->authenticate();
 
+		// Utile si on veut vérifier qui n'est pas en TLSv1.2
+		/*
+		if (isset($_SERVER['SSL_PROTOCOL']) && $_SERVER['SSL_PROTOCOL'] != 'TLSv1.2' ) {
+			file_put_contents(
+				"/tmp/openssl_version.log",
+				"{$_SERVER['SSL_PROTOCOL']} {$this->id}\n",
+				FILE_APPEND
+			);
+		}
+		*/
+
 	  	$this->is_loggued = true;
 	  	$init = $this->init();
 	  	$is_active = $this->isActive();
