@@ -50,7 +50,7 @@ class ActesTransactionsSQL extends SQL{
 	
 	public function getArchiveFStatus($status_id){
 		$sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-				" WHERE last_status_id=? ";
+				" WHERE last_status_id=? ORDER BY id";
 		return $this->query($sql,$status_id);
 	}
 

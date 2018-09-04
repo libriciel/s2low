@@ -9,7 +9,7 @@ $min_exec_time = 10;
 require_once( __DIR__ . "/../init/init.php");
 
 
-$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
+$heliosArchiveControler = $objectInstancier->get(HeliosArchiveControler::class);
 $heliosArchiveControler->sendAllArchive();
 
 
