@@ -93,10 +93,13 @@ class ActesArchiveControler {
 	}
 
 
-	public function sendAllArchive(){
+	public function sendAllArchive($authority_id = 0){
 		echo "Début de l'envoie:\n";
+
+		echo "Authority_id : $authority_id\n";
+
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-		$info_list = $actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+		$info_list = $actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,$authority_id);
 		echo count($info_list)." transactions à envoyer...\n";
         $sigtermHandler = new SigTermHandler();
 		foreach($info_list as $info){

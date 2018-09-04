@@ -48,10 +48,16 @@ class ActesTransactionsSQL extends SQL{
 		return $id;
 	}
 	
-	public function getArchiveFStatus($status_id){
+	public function getArchiveFStatus($status_id,$authority_id=0){
 		$sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-				" WHERE last_status_id=? ORDER BY id";
-		return $this->query($sql,$status_id);
+				" WHERE last_status_id=? " ;
+		$data = [$status_id];
+		if ($authority_id){
+			$sql.=" AND authority_id= ? ";
+			$data[] = $authority_id;
+		}
+		$sql .= "ORDER BY id";
+		return $this->query($sql,$data);
 	}
 
 	public function getArchiveFromStatusWithSAE($status_id){

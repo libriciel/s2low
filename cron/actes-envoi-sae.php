@@ -8,9 +8,16 @@ $start = time();
 echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
+if (empty($argv[1])){
+    $authority_id = 0;
+} else {
+    $authority_id = $argv[1];
+}
+
+
 /** @var ActesArchiveControler $actesArchiveControler */
 $actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
-$actesArchiveControler->sendAllArchive();
+$actesArchiveControler->sendAllArchive($authority_id);
 
 
 $stop = time();
