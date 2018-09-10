@@ -101,7 +101,7 @@ class HeliosTransactionsSQL extends SQL {
 	
 	public function getIdsByStatus($status_id){
 		$sql = "SELECT  id FROM helios_transactions " .
-				" WHERE last_status_id=?";
+				" WHERE last_status_id=? ORDER BY id";
 		return $this->queryOneCol($sql,$status_id);
 	}
 	

@@ -12,7 +12,7 @@
 - Les utilisateurs peuvent visualiser les ARActes. ~actes #383
 - Vérification de l'identifiant de l'application (quadrigramme) avec EACT par défaut ~actes #397
 - On ne vérifie pas la chaine de certification des signatures de pièces de marchés publics (nature 4, classification 1.1) ~actes #400  
-
+- Les versements SAE se font par ordre chronologique et plus aléatoirement #402 
 
 ## Corrections
 
@@ -32,6 +32,7 @@
 - Ajout de la typologie 99_SE **Fichier de signature électronique** quelque soit la matière et la nature de l'acte ~actes #393 
 - on vérifie que l'emetteur n'est pas vide ~actes #399
 - on vérifier que le nombre d'annexe indiqué est identique au nombre trouvé ~actes #398  
+- vérification des noms de fichiers attaché à un message métier ~actes #404 #405
 
 ## Ajouts
 
