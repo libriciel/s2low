@@ -32,6 +32,7 @@
 - Ajout de la typologie 99_SE **Fichier de signature électronique** quelque soit la matière et la nature de l'acte ~actes #393 
 - on vérifie que l'emetteur n'est pas vide ~actes #399
 - on vérifier que le nombre d'annexe indiqué est identique au nombre trouvé ~actes #398  
+- vérification des noms de fichiers attaché à un message métier ~actes #404 #405
 
 ## Ajouts
 
