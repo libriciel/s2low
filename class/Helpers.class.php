@@ -166,6 +166,7 @@ class Helpers {
    * \return Le timestamp correspondant
   */
   public static function ansiDateToTimestamp($date, $at_midnight = false) {
+
 	$tmp = explode('-', $date);
 	$year = (int) $tmp[0];
 	$month = (int) $tmp[1];

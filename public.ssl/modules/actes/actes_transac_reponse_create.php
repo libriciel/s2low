@@ -54,6 +54,9 @@ $related_id = Helpers::getVarFromPost("id");
 $related_trans = new ActesTransaction($related_id);
 $related_trans->init();
 
+
+
+
 $type_transaction = $related_trans->get("type");
 $type_envoie = Helpers :: getVarFromPost("type_envoie", true);
 
@@ -100,6 +103,7 @@ $env->set("name", $me->getprettyName());
 $env->set("telephone", "");
 $env->set("email", $me->get("email"));
 $env->set("file_path", "");
+
 
 // Initialisation de la transaction
 $trans->set("type", $related_trans->get("type"));

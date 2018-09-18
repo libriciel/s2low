@@ -215,17 +215,18 @@ class ActesAnalyseFichierRecuController {
 	 * @param ArchiveData $archiveData
 	 * @throws Exception
 	 */
-    private function traitementDocumentRecu(ArchiveData $archiveData,$rep_path){
+    private function traitementDocumentRecu(ArchiveData $archiveData,$rep_path)
+    {
         $fichierXML = $archiveData->fichierXML;
         $fichierXML = $fichierXML[0];
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne);
 
-        $archive_folder = $this->actes_files_upload_root."/{$fichierXML->siren}/{$fichierXML->numero_interne}";
+        $archive_folder = $this->actes_files_upload_root . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
 
         $archiveData->id_tdt = ACTES_APPLI_TRIGRAMME;
 
-		$archive_path = $this->generateZip($rep_path,$archiveData,$archive_folder);
+        $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
         $envelope_path = substr($archive_path, strlen($this->actes_files_upload_root));
@@ -237,14 +238,25 @@ class ActesAnalyseFichierRecuController {
 
         $related_envelope_id = $this->actesEnvelopeSQL->createRelatedEnveloppe(
             $transaction_info['envelope_id'],
-            $envelope_path,$envelope_size
+            $envelope_path, $envelope_size
         );
         $this->log("Création de l'enveloppe $related_envelope_id");
+
+        //HORRIBLE HACK
+        if (isset($fichierXML->date_courrier_pref)) {
+            $date_decision = $fichierXML->date_courrier_pref;
+        } else if (isset($fichierXML->date_lettre_observation)) {
+            $date_decision = $fichierXML->date_lettre_observation;
+        } else {
+            $date_decision = "";
+        }
+
+
 
         $related_transaction_id = $this->actesTransactionsSQL->createRelatedTransaction(
             $related_envelope_id,
             substr($fichierXML->getCodeMessage(),0,1),
-            $fichierXML->date_courrier_pref,
+            $date_decision,
             $transaction_id
         );
 
