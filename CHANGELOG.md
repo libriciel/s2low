@@ -1,6 +1,13 @@
 # Change Log
 
-## 3.0.15
+
+## 3.0.16 
+
+## Ajouts
+
+- Le lien des pré-requis est disponible également en HTTPS #411
+
+## 3.0.15 - 2018-09-18
 
 ***Cette version nécessite une modification de la base de données**
 
