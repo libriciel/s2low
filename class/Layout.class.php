@@ -64,6 +64,7 @@ class HTMLLayout extends Layout {
 	protected $template = false;
 	
 	private $errorDisabled;
+
 	
   public function __construct($template = false) {
     if ($template) {
@@ -76,6 +77,7 @@ class HTMLLayout extends Layout {
   public function disableError(){
   	$this->errorDisabled = true;
   }
+
 
   public function openContainer($displayInline = false) {
       $html = "        <div class=\"container\">\n";
