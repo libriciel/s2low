@@ -7,6 +7,10 @@
 
 - Le lien des pré-requis est disponible également en HTTPS #411
 
+## Corrections
+
+- la taille du login est désormais limité à 128 caractères sur le formulaire #410
+
 ## 3.0.15 - 2018-09-18
 
 ***Cette version nécessite une modification de la base de données**
