@@ -214,6 +214,7 @@ class ExtendPdf extends FPDF {
         else
             $op='S';
         $MyArc = 4/3 * (sqrt(2) - 1);
+
         $this->_out(sprintf('%.2f %.2f m',($x+$r)*$k,($hp-$y)*$k ));
 
         $xc = $x+$w-$r;

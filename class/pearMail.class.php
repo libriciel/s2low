@@ -8,7 +8,7 @@ class pearMail extends Mail {
 
 	
 	//EP : A priori la classe Pear::Mail a été surchargé afin de pouvoir integrer le champs FROM
-    function send($recipients, $headers, $body,$from) {
+    function send($recipients, $headers, $body,$from='') {
 
         $this->_sanitizeHeaders($headers);
 

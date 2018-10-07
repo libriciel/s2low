@@ -219,7 +219,7 @@ class ActesTransaction extends DataObject {
   public static function getTransactionNatures() {
     $sql = "SELECT id, short_descr, descr FROM actes_natures ORDER BY descr ASC";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -267,7 +267,7 @@ class ActesTransaction extends DataObject {
     // TODO: utiliser le pager pour multipages
     $sql = "SELECT actes_transactions.id, actes_transactions.envelope_id, actes_transactions.type, actes_transactions.related_transaction_id, actes_transactions.nature_code, actes_transactions.nature_descr, actes_transactions.subject, actes_transactions.number, actes_transactions.classification, actes_transactions.classification_date, actes_transactions.decision_date, actes_transactions.unique_id, actes_transactions.archive_url FROM actes_transactions " . $cond;
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -535,7 +535,7 @@ class ActesTransaction extends DataObject {
     if (!empty ($id)) {
       $sql = "SELECT short_descr, descr FROM actes_natures WHERE id=" . $id;
 
-      $db = & DatabasePool :: getInstance();
+      $db =  DatabasePool :: getInstance();
 
       $result = $db->select($sql);
 
@@ -1073,6 +1073,7 @@ class ActesTransaction extends DataObject {
 
 		$typeA = array('application/pdf' => 'pdf',
       					'application/xml' => 'xml',
+      					'text/xml' => 'xml',
       					'image/jpeg' => 'jpg',
       					'image/png' => 'png',
       	);
@@ -1261,7 +1262,7 @@ class ActesTransaction extends DataObject {
     $sql = "SELECT id FROM actes_transactions WHERE unique_id='" .
     	 addslashes($unique_id) . "' AND type='1'";
 
-   	$db = & DatabasePool :: getInstance();
+   	$db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -1705,7 +1706,7 @@ class ActesTransaction extends DataObject {
    {
    	$sql = "DELETE FROM actes_transactions_workflow where transaction_id=".$this->id."and status_id=3";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->exec($sql);
 
