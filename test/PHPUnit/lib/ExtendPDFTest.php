@@ -16,7 +16,7 @@ class ExtendPdfTest extends PHPUnit_Framework_TestCase {
 		$this->extendPDF->addPage();
 		$this->extendPDF->Header();
 
-		$this->extendPDF->RoundedRect(10,10,100,100,'DF','13');
+		$this->extendPDF->RoundedRect(10,10,100,100,3,'DF','13');
 		$this->extendPDF->myRow(array("","Etat","Date", "Message"));
 
 		$this->extendPDF->SetMyWidths(100);

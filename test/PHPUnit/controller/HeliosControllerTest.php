@@ -127,7 +127,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	}
 
 	private function expectedError($message){
-		$message = htmlspecialchars($message);
+		$message = htmlspecialchars($message,ENT_COMPAT,"UTF-8");
 		$this->expectOutputRegex("#$message#");
 	}
 
@@ -151,7 +151,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
 		$this->importAPI();
 		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
-		$message = htmlspecialchars("doublon détecté. Ce fichier a déjà été posté.");
+		$message = htmlspecialchars("doublon détecté. Ce fichier a déjà été posté.",ENT_COMPAT,"UTF-8");
 		$this->expectOutputRegex("#$message>#");
 		$this->importAPI();
 	}
