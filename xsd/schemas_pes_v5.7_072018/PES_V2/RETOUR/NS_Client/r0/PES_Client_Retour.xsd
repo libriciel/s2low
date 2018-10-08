@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/client/r0/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/client/r0/retour" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:complexType name="TPES_ClientRetour">
+    <xs:sequence>
+      <xs:element name="EnTeteClient" type="TEnTeteClient">
+        <xs:annotation>
+          <xs:documentation>Description de l'entête du PES retour Client</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Client" type="TClient" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Client.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteClient">
+    <xs:sequence>
+      <xs:element name="DateCalcul" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de calcul des restes à recouvrer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdVer" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>N° de version du PES Client – Mettre à « 2 »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TClient">
+    <xs:annotation>
+      <xs:documentation>Client.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="RefTiers" type="cm:Base_Texte30">
+        <xs:annotation>
+          <xs:documentation>Référence locale attribuée au tiers par l'ordonnateur.
+Ne sont extraites que les références pour lesquelles il existe au moins un sous article de rôle(ou une ligne d'un rôle titre)porteur d'un reste à recouvrer.
+Les restes à recouvrer sont alors déclinés par code produit local</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ResteARecouvrer" type="TResteARecouvrer" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TResteARecouvrer">
+    <xs:sequence>
+      <xs:element name="CodProdLoc" type="cm:Base_Alphanum4">
+        <xs:annotation>
+          <xs:documentation>Code produit local</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Rar" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Reste à recouvrer sur le principal (pour RefTiers et CodProdLoc concernés)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RarFrais" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Reste à recouvrer sur les frais (pour RefTiers et CodProdLoc concernés)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

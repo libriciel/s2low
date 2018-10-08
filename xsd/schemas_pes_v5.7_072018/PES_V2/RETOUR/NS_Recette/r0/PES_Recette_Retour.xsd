@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/retour" elementFormDefault="unqualified">
+  <!-- Directives d'inclusion -->
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunRecette_Retour.xsd" />
+  <xs:include schemaLocation="Class_BordereauRecette_Retour.xsd" />
+  <xs:include schemaLocation="Class_Titre_Retour.xsd" />
+  <xs:include schemaLocation="Class_LigneTitre_Retour.xsd" />
+  <xs:include schemaLocation="Class_InfoTiersRecette_Retour.xsd" />
+  <xs:include schemaLocation="Class_Encaissement_Retour.xsd" />
+  <xs:complexType name="TPES_RecetteRetour">
+    <xs:sequence>
+      <xs:element name="EnTeteRecette" type="TEnTeteRecette">
+        <xs:annotation>
+          <xs:documentation>Description de l'entête du PES retour Recette</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Bordereau" type="TBordereau" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteRecette">
+    <xs:sequence>
+      <xs:element name="TypRestit" type="cm:Base_Texte2">
+        <xs:annotation>
+          <xs:documentation>Information permettant de préciser le type de restitution effectué par le flux retour</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdVer" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>N° de version du PES Recette – Mettre à « 2 »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatInf" type="TNatInf">
+        <xs:annotation>
+          <xs:documentation>Nature du retour d'information demandé par l'ordonnateur. La valeur 2 'flux détaillé' est utilisée  pour les flux périodiques et les flux de rejets ( titres ou ORMC). La valeur 1 'stock détaillé' est utilisée pour les stocks ( titres ou ORMC).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBordereau">
+    <xs:annotation>
+      <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+      <xs:sequence>
+      <xs:element name="BlocBordereau" type="TBlocBordereau">
+        <xs:annotation>
+          <xs:documentation>Caractéristiques du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Piece" type="TPiece" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:element name="BordereauORMCGlobal" type="TBordereauORMCGlobal">
+        <xs:annotation>
+            <xs:documentation>Ce bloc est utlisé pour véhiculer les évènements globaux affectant l'ensemble des articles du bordereau(PEC,MEI ou rejet global)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPiece">
+    <xs:sequence>
+      <xs:element name="BlocPiece" type="TBlocPiece" />
+      <xs:element name="LigneDePiece" type="TLigneDePiece" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLigneDePiece">
+    <xs:sequence>
+      <xs:element name="BlocLignePiece" type="TBlocLignePiece" />
+      <xs:element name="Tiers" type="TTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc Tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EncaissementEmargement" type="TEncaissementEmargement" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc EncaissementEmargement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTiers">
+    <xs:annotation>
+      <xs:documentation>Bloc Tiers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InfoTiers" type="TInfoTiersRecette">
+        <xs:annotation>
+          <xs:documentation>Les éléments renvoyés dans le cadre du PESRetour Recette sont :
+- Les éléments du référentiel Tiers Hélios dans le cas où la pièce a été rattachée à un Tiers Hélios. Il s'agit des informations du Tiers sur lequel la pièce a été rattachée s'il est isolé, sinon du tiers de référence de son groupe de consolidation. 
+Dans ce cas, les balises NatIdTiers et IdTiers ne sont pas servies si elles représentent un NIR (NatIdTiers = 04 valeur HELIOS = 4 NUMERO_SS).
+- Les éléments du Tiers de la pièce ( tiers de l'encaissement) pour les pièces créées par le comptable (pièces à régulariser). Dans ce cas, les balises NatIdTiers et IdTiers ne sont pas servies si elles représentent un NIR (NatIdTiers = 04 valeur HELIOS = 4 NUMERO_SS).
+- Les éléments du Tiers de la pièce (débiteur), pour les pièces rejetées ou mise en instance (dans ce cas en effet, aucun rattachement n'est effectué).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="cm:TAdresse" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers.
+Si l'adresse principale du tiers a pour origine La Poste via les référentiels DGFIP, alors le bloc adresse n'est pas renseigné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteBancaire" type="cm:TCpteBancaire" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte bancaire du tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

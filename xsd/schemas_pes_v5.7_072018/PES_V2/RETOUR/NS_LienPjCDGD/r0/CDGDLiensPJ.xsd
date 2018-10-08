@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.minefi.gouv.fr/cp/helios/liensPj" xmlns="http://www.minefi.gouv.fr/cp/helios/liensPj">
+  <xs:element name="liensPj">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="collectivite">
+          <xs:complexType>
+            <xs:attribute name="siret" type="TSiret" use="required"/>
+            <xs:attribute name="codique" type="TCodique" use="required"/>
+            <xs:attribute name="codeCollectivite" type="TCodeCollectivite" use="required"/>
+            <xs:attribute name="codeBudget" type="TCodeBudget" use="required"/>
+            <xs:attribute name="idNational" type="TIdNational" use="required"/>
+            <xs:attribute name="exercice" type="TExercice" use="required"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="liens">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="lien">
+                <xs:complexType>
+                  <xs:attribute name="domaine" type="TDomaine" use="required"/>
+                  <xs:attribute name="typeObjet" type="TObjet" use="required"/>
+                  <xs:attribute name="identifiant" type="xs:string" use="required"/>
+                  <xs:attribute name="complementIdentifiant" type="xs:string"/>
+                  <xs:attribute name="idUnique" type="xs:string" use="required"/>
+                  <xs:attribute name="statut" type="TStatut" use="required"/>
+                  <xs:attribute name="nomPj" type="xs:string" use="required"/>
+                  <xs:attribute name="idAtlas" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="dateProduction" type="xs:dateTime" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="TSiret">
+    <xs:restriction base="xs:string">
+      <xs:length value="14"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TCodique">
+    <xs:restriction base="xs:string">
+      <xs:length value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TCodeCollectivite">
+    <xs:restriction base="xs:string">
+      <xs:length value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+    <xs:simpleType name="TCodeBudget">
+        <xs:restriction base="xs:string">
+            <xs:length value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TIdNational">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1,10}"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TExercice">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TStatut">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="0">
+                <xs:annotation>
+                    <xs:documentation>Pièce accessible</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Pièce rejetée ou annulée après PEC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Lien PJ pièce refusée</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TDomaine">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="01">
+              <xs:annotation>
+                    <xs:documentation>Dépense</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="02">
+              <xs:annotation>
+                    <xs:documentation>Recette</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="03">
+              <xs:annotation>
+                    <xs:documentation>Rôle</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="04">
+              <xs:annotation>
+                    <xs:documentation>Budget</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TObjet">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="01">
+            <xs:annotation>
+                    <xs:documentation>Dépense : Bordereau de mandats
+                                      Recette : Bordereau de titres
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="02">
+            <xs:annotation>
+                    <xs:documentation>Dépense : Bordereau d'annulation de mandats
+                                      Recette : Bordereau d'annulation de titres
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="03">
+            <xs:annotation>
+                    <xs:documentation>Dépense : Bordereau d'ordre de paiement ordonnateur
+                                      Recette : Bordereau d'ordre de recette ordonnateur
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="06">
+            <xs:annotation>
+                    <xs:documentation>Recette : Bordereau d'ordre de recette multi créanciers
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

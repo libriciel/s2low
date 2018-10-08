@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:depa="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:fcta="http://www.minefi.gouv.fr/cp/helios/pes_v2/facture/r0/aller" xmlns:mara="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:reca="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" schemaLocation="../NS_Depense/r0/PES_DepenseAller.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/recette/r0/aller" schemaLocation="../NS_Recette/r0/PES_RecetteAller.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" schemaLocation="../NS_Marche/r0/PES_MarcheAller.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/facture/r0/aller" schemaLocation="../NS_Facture/r0/Class_PESFacture.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd" />
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../Class_Signature.xsd" />
+  <xs:import namespace="http://uri.etsi.org/01903/v1.1.1#" schemaLocation="../../xades/XAdES-core-schema.xsd" />
+  <xs:include schemaLocation="../Class_PJ.xsd" />
+  <xs:element name="PES_Aller">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Enveloppe" type="cm:TEnveloppe">
+          <xs:annotation>
+            <xs:documentation>Enveloppe d'identification du flux.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="EnTetePES" type="cm:TEnTetePES">
+          <xs:annotation>
+            <xs:documentation>En-Tête du PES.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_DepenseAller" type="depa:TPES_DepenseAller" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine Dépense Aller.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_RecetteAller" type="reca:TPES_RecetteAller" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine Recette Aller.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_Facture" type="fcta:TPESFacture" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>PES_Facture encapsulé dans un PESPJ pour la transmission à destination de la DGFIP.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_Marche" type="mara:TPES_MarcheAller" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine Marché</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PES_PJ" type="TPES_PJs" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Domaine PJ.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:group ref="ds:PESSignatureGroup" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Signature électronique éventuelle.</xs:documentation>
+          </xs:annotation>
+        </xs:group>
+      </xs:sequence>
+      <xs:attribute name="Id" type="xs:ID" use="optional" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+

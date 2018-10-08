@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	xmlns:z="odm:enrichissement"
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TSignature">
+		<xs:sequence>
+			<xs:element name="NbrMembExer" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Nombre de membres en exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NbrMembPresent" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Nombre de membres présents</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NbrSuffExprime" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Nombre de suffrages exprimés</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NbrVotePour" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Votes pour</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NbrVoteContre" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Votes contre</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NbrVoteAbstention" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Votes abstention</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtConvoc" type="Base_Date">
+				<xs:annotation>
+					<xs:documentation>Date convocation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibPresentPar" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Présenté par</z:libelle>
+						<z:description>Renseigner avec l'article tout en minuscule (ex. le maire, la présidente)</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibPresentLieu" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Lieu de Présentation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtPresent" type="Base_Date">
+				<xs:annotation>
+					<xs:documentation>Date de présentation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibDelibPar" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Délibéré par</z:libelle>
+						<z:description>Renseigner avec l'article tout en minuscule (ex. le conseil municipal, l'assemblée délibérante)</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibReuniSession" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Libellé de la réunion en session</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibDelibLieu" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Lieu de délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelib" type="Base_Date">
+				<xs:annotation>
+					<xs:documentation>Date délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtTransmPrefect" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date transmission Préfecture</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtPub" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date publication</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibFin" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Lieu de mise en place de l'arrêté</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtfFin" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de mise en place de l'arrêté</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TSignatures">
+		<xs:sequence maxOccurs="1">
+			<xs:element name="SIGNATURE" type="TSignature" maxOccurs="1" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TSignataire">
+		<xs:sequence>
+			<xs:element name="Signataire" type="Base_Texte100" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Nom et prénom du signataire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TSignataires">
+		<xs:sequence>
+			<xs:element name="SIGNATAIRE" type="TSignataire" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

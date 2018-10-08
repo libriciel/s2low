@@ -1,11 +1,12 @@
 # Change Log
 
 
-## 3.0.16 
+## 3.0.16 - 2018-10-08
 
 ## Ajouts
 
 - Le lien des pré-requis est disponible également en HTTPS #411
+- Passage au schéma PES V2 5.7 ~helios
 
 ## Corrections
 
