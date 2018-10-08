@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified"
+	xmlns:z="odm:enrichissement" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TEmprunts">
+		<xs:sequence>
+			<xs:element name="EMPRUNT" type="TEmprunt" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TEmprunt">
+		<xs:sequence>
+			<xs:element name="CodTypEmpr" type="ATCodTypEmprunt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Code type d'emprunt</z:libelle>
+						<z:description><![CDATA[<html>La valeur "02" est à utiliser uniquement en "M14".<br/>Les valeurs 07 et 08 ne sont plus à utiliser à compter de 2013.<br/>Il ne doit y avoir qu'une ligne avec le code "10" ("Eléments pour ratio") :<br/>les informations de cette ligne permettent de remplir l'état "Eléments du calcul du ratio d'endettement".<br/>
+Pour ce type d'emprunt, les zones précédés de "Pour ratio:" doivent être renseignées.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodProfilAmort" type="ATCodProfilAmort" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Profil amortissement (contrat initial)</z:libelle>
+						<z:description><![CDATA[<html>Les valeurs S et M ne doivent pas être utilisées sur les états de la dette à compter de 2013.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodProfilAmortDtVote" type="ATCodProfilAmort" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Profil amortissement (contrat en cours)</z:libelle>
+						<z:description><![CDATA[<html>Les valeurs S et M ne doivent pas être utilisées sur les états de la dette à compter de 2013.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodArticle" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Article</z:libelle>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibCpte" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Libellé ligne budgétaire</z:libelle>
+						<z:description>Nom de donnée DGFiP</z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AnEncaisse" type="Base_Annee" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Année encaissement</z:libelle>
+						<z:description>Année de mobilisation</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ObjEmpr" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Objet emprunt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtEmprOrig" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant emprunt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeRest" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée résiduelle (contrat en cours)</z:libelle>
+						<z:description><![CDATA[<html>A partir de 2013, indiquer la durée en années.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeRestInit" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée résiduelle (contrat initial))</z:libelle>
+						<z:description><![CDATA[<html>Indiquer la durée en années.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeRestReneg" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée résiduelle (contrat renégocié))</z:libelle>
+						<z:description><![CDATA[<html>Indiquer la durée en années.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypPreteur" type="ATCodTypPreteur" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type prêteur</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibOrgaPreteur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Organisme prêteur</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodPeriodRemb" type="ATCodPeriod" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code périodicité remboursement (contrat initial)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodPeriodRembDtVote" type="ATCodPeriod" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code périodicité remboursement (contrat en cours)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodPeriodRembReneg" type="ATCodPeriod" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code périodicité remboursement (contrat renégocié)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTyptxInit" type="ATCodTyptx" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code type taux (contrat initial)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTyptxDtVote" type="ATCodTyptx" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Code type taux à la date du vote (BP/BS/DM) ou au 31/12/N (CA)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndexTxVariInit" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Index taux variable (contrat initial)</z:libelle>
+						<z:description>Type d'index (ex: Euribor, 3 mois, ...)</z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxActuaInit" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Taux actuariel initial</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxMargeInit" type="Base_Pourcentage" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Taux marge initial</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndexTxVariDtVote" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Index taux variable à la date de vote (BP/BS/DM) ou au 31/12/N (CA)</z:libelle>
+						<z:description>Type d'index (ex: Euribor, 3 mois, ...)</z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxActua" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Niveau de taux d'intérêt à la date de vote du budget(BP/BS/DM) ou au 31/12/N (CA)</z:libelle>
+						<z:description><![CDATA[<html>Taux après opérations de couverture éventuelle.<br/> Pour les emprunts à taux variables,<br/>indiquer le niveau à la date de vote du budget (BP/BS/DM) <br/>ou le niveau moyen constaté sur l'année CA).</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndiceEmpr" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indice ou devises pouvant modifier l'emprunt (contrat initial)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndiceEmprDtVote" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indice ou devises pouvant modifier l'emprunt (contrat en cours)</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtIntExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Charges d'intérêt de l'exercice.</z:libelle>
+						<z:description><![CDATA[<html>Intérêts dus au titre du contrat initial<br/>et comptabilisés à l'article 66111 et<br/>intérêts dus au titre du contrat<br/>d'échange éventuel et comptabilisés<br/>à l'article 668</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capital à rembourser dans l'exercice (BP/BS/DM) ou remboursé dans l'exercice (CA)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalRestDu_01_01" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capital restant dû au 01/01 (BP) ou la date de vote (BS/DM)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtICNE" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant ICNE</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCapitalRestDu_31_12" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Capital restant dû au 31/12</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomBenefEmprGaranti" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nom du bénéficiaire de l'emprunt garanti</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypEmprGaranti" type="ATCodTypEmprGaranti" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type d'emprunt garanti</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodNatEmpr" type="ATCodNatEmpr" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nature Emprunt</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeAnn" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée total du contrat (contrat en cours)</z:libelle>
+						<z:description><![CDATA[<html>A partir de 2013, indiquer la durée en années.</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TotGarEchoirExer" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Pour ratio : Total des annuités déjà garanties à échoir dans l'exercice</z:libelle>
+						<z:description><![CDATA[<html>Total des annuités déjà garanties à échoir dans l'exercice.</br>Cette information doit être renseignée seulement pour LA ligne de type "10-Eléments pour ratio" :<br/>.</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AnnuitNetDette" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Pour ratio : Annuité nette de la dette de l'exercice</z:libelle>
+						<z:description><![CDATA[<html></br>Cette information doit être renseignée seulement pour LA ligne de type "10-Eléments pour ratio" :<br/>.</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProvGarantiEmpr" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Pour ratio : Provisions pour garanties d'emprunts</z:libelle>
+						<z:description><![CDATA[<html>Cette information doit être renseignée seulement pour LA ligne de type "10-Eléments pour ratio" :<br/>.</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:code>display&gt;</z:code>
+						<z:value>false</z:value>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RReelFon" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Pour ratio : Pour mémoire : recettes réelles de fonctionnement</z:libelle>
+						<z:description><![CDATA[<html>Cette information doit être renseignée seulement pour LA ligne de type "10-Eléments pour ratio" :<br/>.</html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumContrat" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro de contrat de l'emprunt</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PartGarantie" type="Base_Pourcentage" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Part garantie (en %)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Tot1Annuite" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Pour ratio : Total des premières annuités entières</z:libelle>
+						<z:description><![CDATA[<html>Total des premières annuités entières des nouvelles garanties de l'exercice.</br>Cette information doit être renseignée seulement pour LA ligne de type "10-Eléments pour ratio" :<br/>.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndSousJacent" type="ATIndSousJacent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indice sous-jacent (contrat initial)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndSousJacentDtVote" type="ATIndSousJacent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indice sous-jacent (contrat en cours)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Structure" type="ATStructEmprunt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Structure (contrat initial)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StructureDtVote" type="ATStructEmprunt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Structure (contrat en cours)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtSignInit" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de signature du contrat initial</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtEmission" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Date d'émission ou de mobilisation</z:libelle>
+						<z:description><![CDATA[<html>A partir de 2013, indiquer la date de dernière mobilisation.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Dt1RembInit" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date du 1er remboursement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Txinit" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Taux d'intérêt initial du contrat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RtAnticipe" type="Base_Booleen" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Possibilité de remboursement anticipé partiel ?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CoutSortie" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Coût de sortie</z:libelle>
+						<z:description><![CDATA[<html>Indemnité contractuelle de<br/>remboursement définitif de l'emprunt<br/> au 01/01 (BP), à la date de vote<br/>(BS/DM) ou au 31/12 (CA).</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Couverture" type="Base_Booleen" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Couverture ?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCouvert" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant couvert</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Renegocie" type="Base_Booleen" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Emprunt renégocié sur l'exercice N ?</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeContratInit" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée totale du contrat (contrat initial)</z:libelle>
+						<z:description><![CDATA[<html>A partir de 2013, indiquer la durée en années.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtPeriodeBonif" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Dates des périodes bonifiées</z:libelle>
+						<z:description>Format texte car plusieurs dates possibles</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxMini" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Taux minimal (montant, index ou formule)</z:libelle>
+						<z:description><![CDATA[<html>Taux hors opération de couverture.<br/>Indiquer le montant, l'index ou la<br/>formule correspondant au taux<br/>minimal du contrat de prêt sur toute<br/>la durée du contrat.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxMaxi" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Taux maximal (montant, index ou formule)</z:libelle>
+						<z:description><![CDATA[<html>Taux hors opération de couverture.<br/>Indiquer le montant, l'index ou la<br/>formule correspondant au taux<br/>maximal du contrat de prêt sur toute<br/>la durée du contrat.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxApresCouv" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Taux maximal après couverture éventuelle (montant, index ou formule)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtInt778" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Intérêts à percevoir (BP/BS/DM) ou perçus (CA) au titre du contrat d'échange et comptabilisés au 778</z:libelle>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtFinContr" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de fin du contrat de prêt (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibOrgCoContr" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Organisme co-contractant du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TypCouv" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type d'instrument de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NatCouv" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Nature de la couverture (si emprunt couvert)</z:libelle>
+						<z:description>Change ou Taux</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCouv" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant de la dette couverte au 01/01 (BP) ou à la date de vote (BS/DM) ou au 31/12 (CA) (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDebCouv" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date du début du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtFinCouv" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de fin du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypTxCouv" type="ATCodTypTxCouv" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type de taux du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndiceCouv" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Index de référence du taux de l'instrument de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtRegltCouv" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Dates de règlement du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCommCouv" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commissions diverses du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtPrimePayeeCouv" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Primes payées pour l'achat d'option (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MPrimeRecueCouv" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Primes reçues pour la vente d'option (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxPaye" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Effet de l'instrument de couverture : taux payé (si emprunt couvert)</z:libelle>
+						<z:description>Niveau de taux après couverture</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxRecu" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Effet de l'instrument de couverture : taux reçu (si emprunt couvert)</z:libelle>
+						<z:description>Niveau de taux après couverture si l'instrument de couverture est un swap</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCharges" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Effet de l'instrument de couverture : charges constatées depuis l'origine du contrat (si emprunt couvert)</z:libelle>
+						<z:description>Comtpte 668</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtProduits" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Effet de l'instrument de couverture : produits constatés depuis l'origine du contrat (si emprunt couvert)</z:libelle>
+						<z:description>Comte 768</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndSousJacentAvantCouv" type="ATIndSousJacent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Effet de l'instrument de couverture : indice sous-jacent avant couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StuctureAvantCouv" type="ATStructEmprunt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Effet de l'instrument de couverture : structure avant couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndSousJacentApresCouv" type="ATIndSousJacent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indice sous-jacent après couverture éventuelle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StuctureApresCouv" type="ATStructEmprunt" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Structure après couverture éventuelle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtReneg" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de renégociation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeContratReneg" type="Base_Num3" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Durée du contrat renégocié en mois</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodTypTxReneg" type="ATCodTyptx" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Code type taux (contrat renégocié)</z:libelle>
+						<z:description><![CDATA[<html>La valeur "R" n'est plus à utiliser à compter de 2013.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndexTxVariReneg" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Index taux variable (contrat renégocié)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TxActuaReneg" type="Base_Pourcentage_3deci" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Taux actuariel contrat renégocié</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodProfilAmortReneg" type="ATCodProfilAmort" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Profil d'amortissement (contrat renégocié)</z:libelle>
+						<z:description><![CDATA[<html>Les valeurs S et M ne doivent pas être utilisées sur les états de la dette à compter de 2013.</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtEmprReneg" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant du contrat de l'emprunt renégocié</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Commentaire</z:libelle>
+						<z:description>Donnée libre</z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumContratCouv" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro du contrat de couverture (si emprunt couvert)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

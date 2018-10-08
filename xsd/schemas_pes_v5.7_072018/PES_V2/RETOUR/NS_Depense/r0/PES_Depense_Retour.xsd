@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/retour" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunDepense_Retour.xsd" />
+  <xs:include schemaLocation="Class_BordereauDepense_Retour.xsd" />
+  <xs:include schemaLocation="Class_Mandat_Retour.xsd" />
+  <xs:include schemaLocation="Class_LigneMandat_Retour.xsd" />
+  <xs:include schemaLocation="Class_Paiement_Retour.xsd" />
+  <xs:include schemaLocation="Class_InfoTiersDepense_Retour.xsd" />
+  <xs:complexType name="TPES_DepenseRetour">
+    <xs:sequence>
+      <xs:element name="EnTeteDepense" type="TEnTeteDepense" />
+      <xs:element name="Bordereau" type="TBordereau" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteDepense">
+    <xs:sequence>
+      <xs:element name="TypRestit" type="cm:Base_Texte2">
+        <xs:annotation>
+          <xs:documentation>Information permettant de préciser le type de restitution effectué par le flux retour</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdVer" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>N° de version du PES dépense – Mettre à « 2 »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatInf" type="TNatInf">
+        <xs:annotation>
+          <xs:documentation>Nature du retour d'information demandé par l'ordonnateur (informatif). Le type de retour d'information est paramétré dans l'application.La valeur est « 0 » pour le stock détaillé, ou "2" pour le flux détaillé (retours périodiques).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBordereau">
+    <xs:annotation>
+      <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BlocBordereau" type="TBlocBordereau">
+        <xs:annotation>
+          <xs:documentation>Caractéristiques du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Piece" type="TPiece" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPiece">
+    <xs:sequence>
+      <xs:element name="InfoPiece" type="TInfoPiece" />
+      <xs:element name="LigneDePiece" type="TLigneDePiece" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLigneDePiece">
+    <xs:sequence>
+      <xs:element name="BlocLignePiece" type="TBlocLignePiece" />
+      <xs:element name="Tiers" type="TTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc Tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PaiementEmargement" type="TPaiementEmargement" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc PaiementEmargement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTiers">
+    <xs:annotation>
+      <xs:documentation>Bloc Tiers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InfoTiers" type="TInfoTiersDepense">
+        <xs:annotation>
+          <xs:documentation>Les éléments renvoyés dans le cadre du PESRetour Dépense sont :
+- les éléments du référentiel Tiers Hélios dans le cas où la pièce a été rattachée à un Tiers Hélios. Il s'agit des informations du Tiers sur lequel la pièce a été rattachée s'il est isolé, sinon du tiers de référence de son groupe de consolidation. Dans ce cas, les balises NatIdTiers et IdTiers ne sont pas servies si elles représentent un NIR (NatIdTiers = 04 valeur HELIOS = 4 NUMERO_SS).
+- Les éléments du Tiers de la pièce pour les pièces créées par le comptable (pièces à régulariser). Dans ce cas, les balises NatIdTiers et IdTiers ne sont pas servies si elles représentent un NIR (NatIdTiers = 04 valeur HELIOS = 4 NUMERO_SS).
+- Les éléments du Tiers de la pièce (créancier), pour les mandats rejetés ou mis en instance (dans ce cas en effet, aucun rattachement n'est effectué).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="cm:TAdresse" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers. Si l'adresse principale du tiers a pour origine La Poste via les référentiels DGFIP, alors le bloc adresse n'est pas renseigné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteBancaire" type="cm:TCpteBancaire" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte bancaire du tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

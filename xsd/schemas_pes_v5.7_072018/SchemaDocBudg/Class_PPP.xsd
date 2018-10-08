@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TPPPs">
+		<xs:sequence>
+			<xs:element name="PPP" type="TPPP" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPPP">
+		<xs:sequence>
+			<xs:element name="LibContr" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Libellé du contrat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AnnSignContr" type="Base_Annee">
+				<xs:annotation>
+					<xs:documentation>Année de signature du contrat de PPP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomOrgaContr" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Organismes contractants</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NatPrestaContr" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nature des prestations prévues par le contrat de PPP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtTotContr" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant total prévu au titre du contrat de PPP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRemunCoContr" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant de la rémunération du cocontractant</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeContr" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>Durée du contrat de PPP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtFinContr" type="Base_Date">
+				<xs:annotation>
+					<xs:documentation>Date de fin du contrat de PPP</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PartInvest" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Somme des parts / investissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PartNetteInvest" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Somme nette des parts / investissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

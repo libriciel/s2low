@@ -1,11 +1,16 @@
 # Change Log
 
 
-## 3.0.16 
+## 3.0.16 - 2018-10-08
 
 ## Ajouts
 
 - Le lien des pré-requis est disponible également en HTTPS #411
+- Passage au schéma PES V2 5.7 ~helios
+
+## Corrections
+
+- la taille du login est désormais limité à 128 caractères sur le formulaire #410
 
 ## 3.0.15 - 2018-09-18
 

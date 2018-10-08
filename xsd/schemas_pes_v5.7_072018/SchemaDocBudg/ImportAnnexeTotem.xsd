@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="Class_Annexes.xsd"/>
+	<xs:include schemaLocation="CommunBudget.xsd"/>
+
+	<xs:element name="data" type="TAnnexes"/>
+	
+	<!--<xs:element name="EMPRUNT" type="TEmprunt"/>
+	<xs:element name="TRESORERIE" type="TTresorerie"/>
+	<xs:element name="CHARGE" type="TCharge"/>
+	<xs:element name="TIERS" type="TTiers"/>
+	<xs:element name="CREDIT_BAIL" type="TCreditBail"/>
+	<xs:element name="PPP" type="TPPP"/>
+	<xs:element name="AUTRE_ENGAGEMENT" type="TAutreEngagement"/>
+	<xs:element name="CONCOURS" type="TUnConcours"/>
+	<xs:element name="RECETTE_AFFECTEE" type="TRecetteAffectee"/>
+	<xs:element name="FORMATION" type="TFormation"/>
+	<xs:element name="FISCALITE" type="TFiscalite"/>
+	<xs:element name="CONSOLIDATION" type="TConsolidation"/>
+	<xs:element name="ORGANISME_ENG" type="TOrganismeEng"/>
+	<xs:element name="ORGANISME_GROUP" type="TOrganismeGroup"/>
+	<xs:element name="PATRIMOINE" type="TPatrimoine"/>
+	<xs:element name="PERSONNEL" type="TPersonnel"/>
+	<xs:element name="PERSONNEL_SOLDE" type="TPersonnelSolde"/>
+	<xs:element name="DETTE" type="TDette"/>
+	<xs:element name="VENTILATION" type="TVentilation"/>
+	<xs:element name="CONTRAT_COUV" type="TContrat_Couv"/>
+	<xs:element name="AMORTISSEMENT_METHODE" type="TAmortissement_Methode"/>
+	<xs:element name="PROVISION" type="TProvision"/>
+	<xs:element name="APCP" type="TAPCP"/>
+	<xs:element name="SIGNATURE" type="TSignature"/>
+	<xs:element name="SIGNATAIRE" type="TSignataire"/>
+	<xs:element name="ETAB_SERVICE" type="TEtab_Service"/>
+	<xs:element name="PRET" type="TPret"/>
+	<xs:element name="CONTRAT_COUV_REFERENCE" type="TContratCouvReference"/>
+	<xs:element name="SERVICE_FERROVIAIRE_BUD" type="TServiceFerroviaireBud"/>
+	<xs:element name="SERVICE_FERROVIAIRE_PATRIM" type="TServiceFerroviairePatrim"/>
+	<xs:element name="SERVICE_FERROVIAIRE_TER" type="TServiceFerroviaireTer"/>
+	<xs:element name="FOND_COMM_HEBERGEMENT" type="TFondCommHebergement"/>
+	<xs:element name="FOND_EUROPEEN" type="TFondEuropeen"/>
+	<xs:element name="FOND_AIDES_ECO" type="TFondAideEco"/>
+	<xs:element name="FORMATION_PRO_JEUNES" type="TFormationProJeunes"/>
+	<xs:element name="SOMMAIRE" type="TSommaire"/> -->
+	<xs:element name="Information" type="TInformationGenerale"/>
+</xs:schema>

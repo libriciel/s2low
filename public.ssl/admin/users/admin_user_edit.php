@@ -298,7 +298,7 @@ ob_start();
 <div class="form-group">
 	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
 	<div class="col-md-6">
-		<input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+		<input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="128" />
 	</div>
 </div>	
 	

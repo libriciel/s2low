@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/depense/r0/aller" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="../../Class_Signature.xsd" />
+  <xs:include schemaLocation="CommunDepense.xsd" />
+  <xs:include schemaLocation="Class_BordereauDepenseAller.xsd" />
+  <xs:include schemaLocation="Class_MandatAller.xsd" />
+  <xs:include schemaLocation="Class_LigneMandatAller.xsd" />
+  <xs:include schemaLocation="Class_TiersDepense.xsd" />
+  <xs:complexType name="TPES_DepenseAller">
+    <xs:sequence>
+      <xs:element name="EnTeteDepense">
+        <xs:annotation>
+          <xs:documentation>En-tête.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="IdVer" type="cm:Base_Num2">
+              <xs:annotation>
+                <xs:documentation>N° de version du PES dépense - Mettre à « 2 ». A défaut rejet du flux</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="InfoDematerialisee" type="cm:Base_Booleen" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Précise si les blocs Dépense véhiculent des bordereaux &amp; mandats dématérialisées (1) ou non (0).
+La valeur (0) n'empêche pas de communiquer des pièces justificatives dématérialisées et leurs références (PJRef).
+Si non présent considéré à '0' par défaut.
+La valeur 1 ne peut être autorisée qu'avec une signature électronique. Si valeur= 1 et absence de signature électronique, rejet du flux .
+La valeur 0 et la présence d'une signature électronique aboutissent au rejet  du flux.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Bordereau" type="TBordereau" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBordereau">
+    <xs:sequence>
+      <xs:element name="BlocBordereau" type="TBlocBordereau">
+        <xs:annotation>
+          <xs:documentation>Caractéristiques du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Piece" type="TPiece" maxOccurs="unbounded" />
+      <xs:group ref="ds:PESSignatureGroup" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:ID" use="optional">
+      <xs:annotation>
+        <xs:documentation>Obligatoire si dématérialisation et signature unitaire des bordereaux du flux.
+Fournit la référence pour la signature électronique du bordereau.
+L'identifiant doit être unique dans le fichier XML.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TPiece">
+    <xs:sequence>
+      <xs:element name="BlocPiece" type="TBlocPiece" />
+      <xs:element name="LigneDePiece" type="TLigneDePiece" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLigneDePiece">
+    <xs:sequence>
+      <xs:element name="BlocLignePiece" type="TBlocLignePiece" />
+      <xs:element name="Tiers" type="TTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc Tiers</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTiers">
+    <xs:sequence>
+      <xs:element name="InfoTiers" type="TInfoTiersDepense">
+        <xs:annotation>
+          <xs:documentation>Identifiant du tiers</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="cm:TAdresse" minOccurs="0" />
+      <!-- xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0"/    HLS00125485-->
+      <xs:element name="CpteBancaire" type="cm:TBancaire" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- Ajout HLS00125485-->
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

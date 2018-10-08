@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://odm-budgetaire.org/xsl/schemas.xsl"?><schemas>
+   <schema version="43" file="schema_doc_budg_V43.zip"
+           md5="b30d8143521208eae4f4cc2ca139b8ed">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>Annexe <b>CONSOLIDATION</b> :
+									 <ul style="line-height: 100%; list-style-type:square">
+					             <li>Le champ SiretBudAnnexe a été ajouté.</li>
+				           </ul>
+			         </li>			
+		       </ol>
+      </description>
+   </schema>
+   <schema version="42" file="schema_doc_budg_V42.zip"
+           md5="1e2451b0ae851666566919ebdb50a738">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>Annexe <b>EMPRUNT</b> :
+									 <ul style="line-height: 100%; list-style-type:square">
+					             <li>Pour les champs "Type taux initial" et "Type taux à Date du vote", les listes associées ont été totalement modifiées en version 38 du schéma.</li>
+					             <li>Le document présent ne décrivait pas précisément ces modifications et il y avait un problème de compatibilité de schéma.</li>
+					             <li>Les anciens "codes" ont donc été remis avec comme libellé "Obsolète" pour garder une compatibilité ascendante du schéma.</li>
+					             <li>Les nouvelles valeurs sont :</li>
+											       <ul style="line-height: 100%; list-style-type:square">
+												         <li>F : Fixe</li>
+												         <li>V : Post-fixé</li>
+												         <li>R : Préfixé</li>
+												         <li>C : Complexe</li>
+											       </ul>
+				           </ul>
+			         </li>			
+			         <li>Annexe <b>CONCOURS</b> :
+									 <ul style="line-height: 100%; list-style-type:square">
+					             <li>Le siret était mal défini : sa définition a été changé et dorénavant ce champ ressemble aux autres champs avec une balise V=</li>
+					             <span style="color: red">
+											          <li>Attention, il y a une incompatibilité par rapport à l'ancienne version de schéma mais seulement pour ce champ SIRET de l'annexe CONCOURS.</li>
+											       </span>
+				           </ul>
+			         </li>			
+		       </ol>
+      </description>
+   </schema>
+   <schema version="41" file="schema_doc_budg_V41.zip"
+           md5="c7b26adafc0e6cf40cc7e177f1284438">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>Annexe <b>FISCALITE</b> :
+									 <ul style="line-height: 100%; list-style-type:square">
+					             <li>Champ CodSousTypContrib ("Indicateur type de contribution directe") : Ajout de la ligne "23 - Taxe d'aménagement" dans la liste associée.</li>
+					             <li>Cette valeur peut être utilisée dès le BP 2012.</li>
+				           </ul>
+			         </li>			
+		       </ol>
+      </description>
+   </schema>
+   <schema version="40" file="schema_doc_budg_V40.zip"
+           md5="d0e0073081210a48e0af9839512949d3">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>Annexe <b>EMPRUNTS</b> :
+									<ul style="line-height: 100%; list-style-type:square">
+					             <li>Modification description CodTypEmpr : Il ne doit y avoir qu'une ligne avec le type "10-Eléments pour ratio" :<br/>
+les informations de cette ligne permettent de remplir l'état "Eléments du calcul du ratio d'endettement".<br/>  
+Pour ce type d'emprunt, les zones précédés de "Pour ratio:" doivent être renseignées. <br/>
+Dans la liste déroulante, l'élément 10 a pour nouveau libellé : "Eléments pour ratio". <br/>
+Le libellé est plus clair mais c'est la même chose que l'ancien élément de la liste dont le code était 10.
+											 </li>
+					             <li>Modification description TotGarEchoirExer : Ajout de "Pour ratio" dans le libellé.</li>
+					             <li>Modification description AnnuitNetDette : Ajout de "Pour ratio" dans le libellé.</li>
+					             <li>Modification description ProvGarantiEmpr : Ajout de "Pour ratio" dans le libellé.</li>
+					             <li>Modification description RReelFon : Ajout de "Pour ratio" dans le libellé.</li>
+					             <li>Modification description Tot1Annuite : Ajout de "Pour ratio" dans le libellé.</li>
+					             <li>Modification description AnnuitNetDette : Ajout de "Pour ratio" dans le libellé.</li>
+				           </ul>
+			         </li>			
+		       </ol>
+      </description>
+   </schema>
+   <schema version="39" file="schema_doc_budg_V39.zip"
+           md5="aae41ce3afbb37a64937f1d003c7e223">
+      <description>RAS : Ne pas utiliser</description>
+   </schema>
+   <schema version="38" file="schema_doc_budg_V38.zip"
+           md5="588effee12c574f131b7bd20ae640b96">
+      <description>
+				     <ol style="line-height: 200%">
+					       <li>Annexe <b>CONCOURS</b> (les nouvelles balises sont utilisées sur les CA 2012) :
+							<ul style="line-height: 100%; list-style-type:square">
+									         <li>Ajout de Siret : Numéro de SIRET/SIREN</li>
+									         <li>Ajout de PopCommune : Population de la commune</li>
+									         <li>Remarque : concerne les subventions et concours</li>
+							        </ul>
+					       </li>		
+					       <li>Annexe <b>CONTRAT_COUV</b> :
+							<ul style="line-height: 100%; list-style-type:square">
+									         <li>L'annexe CONTRAT_COUV ne sera plus utilisée à compter du CA 2012, les informations liées aux contrats de couverture ont été regroupées dans EMPRUNT,</li>
+									         <li>Les nouvelles annexes sur les instruments de couverture rappellent des informations contenues dans les emprunts, c’est pourquoi ces informations sont regroupées dans EMPRUNT.</li>
+							        </ul>
+					       </li>		
+					       <li>Annexe <b>EMPRUNTS</b> (les nouvelles balises sont utilisées sur les CA 2012) :
+							<ul style="line-height: 100%; list-style-type:square">
+									         <li>Modification du type de TxActuaInit : Base_Pourcentage_3deci à la place de Base_Pourcentage</li>
+									         <li>Modification du type de TxActua : Base_Pourcentage_3deci à la place de Base_Pourcentage</li>
+									         <li>Ajout de DtSignInit : Date de signature du contrat initial</li>
+									         <li>Ajout de DtEmission : Date d'émission ou de mobilisation</li>
+									         <li>Ajout de Dt1RembInit : Date du 1er remboursement</li>
+									         <li>Ajout de Txinit : Taux d'intérêt initial du contrat</li>
+									         <li>Ajout de RtAnticipe : Possibilité de remboursement anticipé </li>
+									         <li>Ajout de CoutSortie : Coût de sortie</li>
+									         <li>Ajout de Couverture : Couverture ?</li>
+									         <li>Ajout de MtCouvert : Montant couvert</li>
+									         <li>Ajout de Renegocie : Emprunt renégocié sur l'exercice N ?</li>
+									         <li>Ajout de DureeContratInit : Durée du contrat en mois</li>
+									         <li>Ajout de DtPeriodeBonif : Dates des périodes bonifiées</li>
+									         <li>Ajout de TxMini : Taux minimal (montant, index ou formule)</li>
+									         <li>Ajout de TxMaxi : Taux maximal (montant, index ou formule)</li>
+									         <li>Ajout de TxApresCouv : Taux après couverture éventuelle</li>
+									         <li>Ajout de MtInt778 : Intérêts perçus (778)</li>
+									         <li>Ajout de DtFinContr : Date de fin de contrat (si emprunt couvert)</li>
+									         <li>Ajout de LibOrgCoContr	: Organisme co-contractant (si emprunt couvert)</li>
+									         <li>Ajout de TypCouv	: Type d'instrument de couverture (si emprunt couvert)</li>
+									         <li>Ajout de NatCouv	: Nature de la couverture (si emprunt couvert)</li>
+									         <li>Ajout de MtCouv	: Montant de la dette couverte sur N (si emprunt couvert)</li>
+									         <li>Ajout de DtDebCouv	: Date du début du contrat de couverture (si emprunt couvert)</li>
+									         <li>Ajout de DtFinCouv	: Date de fin du contrat de couverture (si emprunt couvert)</li>
+									         <li>Ajout de CodTypTxCouv	: Nature du taux de l'instrument de couverture (si emprunt couvert)</li>
+									         <li>Ajout de IndiceCouv	: Indice de référence du taux de l'instrument de couverture (si emprunt couvert)</li>
+									         <li>Ajout de DtRegltCouv	: Date de règlement de l'instrument de couverture (si emprunt couvert)</li>
+									         <li>Ajout de MtCommCouv : Commissions diverses de l'instrument de  couverture (si emprunt couvert)</li>
+									         <li>Ajout de MtPrimePayeeCouv : Primes payées pour l'achat d'option (si emprunt couvert)</li>
+									         <li>Ajout de MPrimeRecueCouv : Primes reçues pour la vente d'option (si emprunt couvert)</li>
+									         <li>Ajout de TxPaye : Effet de l'instrument de couverture : taux payé (si emprunt couvert)</li>
+									         <li>Ajout de TxRecu : Effet de l'instrument de couverture : taux reçu (si emprunt couvert)</li>
+									         <li>Ajout de MtCharges : Effet de l'instrument de couverture : charges constatés depuis l'origine du contrat (si emprunt couvert)</li>
+									         <li>Ajout de MtProduits : Effet de l'instrument de couverture : produits constatés depuis l'origine du contrat (si emprunt couvert)</li>
+									         <li>Ajout de IndSousJacentAvantCouv : Indice sous-jacent avant couverture</li>
+									         <li>Ajout de StuctureAvantCouv : Structure avant couverture</li>
+									         <li>Ajout de IndSousJacentApresCouv : Indice sous-jacent après couverture</li>
+									         <li>Ajout de StuctureApresCouv : Structure après couverture</li>
+									         <li>Ajout de DtReneg : Date de renégociation</li>
+									         <li>Ajout de DureeContratReneg : Durée du contrat renégocié en mois</li>
+									         <li>Ajout de CodTypTxReneg : Code type taux contrat renégocié</li>
+									         <li>Ajout de IndexTxVariReneg : Index contrat renégocié</li>
+									         <li>Ajout de TxActuaReneg : Taux actuariel contrat renégocié</li>
+									         <li>Ajout de CodProfilAmortReneg : Profil d'amortissement suite à renégociation</li>
+									         <li>Ajout de MtEmprReneg : Montant du contrat de l'emprunt renégocié</li>
+							        </ul>
+					       </li>		
+					       <li>Annexe <b>TRESORERIE</b> (les nouvelles balises sont utilisées sur les CA 2012) :
+							<ul style="line-height: 100%; list-style-type:square">
+									         <li>Ajout de NumContrat : Numéro de contrat</li>
+									         <li>Ajout de MtRembInt : Montant des remboursements - Intérêts</li>
+							        </ul>
+					       </li>		
+			      </ol>
+			   </description>
+   </schema>
+   <schema version="37" file="schema_doc_budg_V37.zip"
+           md5="d785bd0da9c07acdc6fb73b1fce5455e">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>
+				           <b>BlocBudget</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Ajout de l'élément facultatif ProjetBudget qui indique s'il s'agit d'un projet de budget.<br/>
+Ce champ contient true s'il s'agit d'un projet (non voté), sinon false (par défaut).<br/>
+Pour le moment, il n'est utilisé que dans le cadre de la M52 BP 2011.</li>
+				           </ul>
+			         </li>			
+		       </ol>
+      </description>
+   </schema>
+   <schema md5="2d259e0d64c3c47ef14d3d34e3eb3cb8" file="schema_doc_budg_V36.zip"
+           version="36">
+      <description>
+         <ol style="line-height: 200%">
+			         <li>
+				           <b>BlocBudget</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>DteDecEx est devenue facultative.</li>
+				           </ul>
+			         </li>			
+		       </ol>	  
+      </description>
+   </schema>
+   <schema md5="b77118c4d1ef3ec923742e97c016d479" file="schema_doc_budg_V35.zip"
+           version="35">
+      <description>
+	        <ol style="line-height: 200%">
+			         <li>
+               <b>DocumentBudgetaire</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Ajout de l'élément BlocEditeur. Cet élément, réservé à l'éditeur, peut contenir tout type d'information.
+					Pour plus d'informations quant à son utilisation, se référer à cet <a href="https://adullact.net/forum/forum.php?thread_id=315598&amp;forum_id=2615&amp;group_id=677">article</a> du forum.</li>
+				           </ul>
+			         </li>
+			         <li>
+               <b>EnteteBudget</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Ajout de CodInseeColl.</li>
+				           </ul>
+			         </li>
+			         <li>
+               <b>BlocBudget</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>DteDec est devenue facultative.</li>
+					             <li>Ajout de LibelleEtabPal.</li>
+				           </ul>
+			         </li>
+			         <li>Annexe <b>ETAB_SERVICE</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Ajout de SiretEtab.</li>
+				           </ul>
+			         </li>
+			         <li>Annexe <b>TIERS</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>DtDelib est devenue facultative.</li>
+				           </ul>
+			         </li>
+		       </ol>	  
+	     </description>
+   </schema>
+   <schema version="34" file="schema_doc_budg_V34.zip"
+           md5="ee35a5f8773d8f13d70b71e11db51d32">
+      <description>
+		       <ol style="line-height: 200%">
+			         <li>Annexe <b>DATA_VENTILATION</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Modification de la description de l'annexe.</li>
+				           </ul>
+			         </li>
+			         <li>Annexe <b>DATA_AUTRE_ENGAGEMENT</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Modification de la description de l'élément CodArticle.</li>
+				           </ul>
+			         </li>
+			         <li>Annexe <b>DATA_EMPRUNT</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Modification de la description de l'élément DureeRest.</li>
+				           </ul>
+			         </li>
+		       </ol>	  
+	     </description>
+   </schema>
+   <schema version="33" file="schema_doc_budg_V33.zip"
+           md5="809dad8820a121a3cb284971142fd1b5">
+      <description>
+		       <ol style="line-height: 200%">
+			         <li>Annexe <b>DATA_FOND_AIDES_ECO</b> : <ul style="line-height: 100%; list-style-type:square">
+					             <li>Suite à l'ajout du S à AIDES en version 32, correction des annotations à destination de l'applicatif.</li>
+				           </ul>
+			         </li>
+		       </ol>
+	     </description>
+   </schema>
+   <schema version="32" file="schema_doc_budg_V32.zip"
+           md5="62bd73023784d7dd7a462b1ce269c3f0">
+      <description>
+			      <ol style="line-height: 200%">
+				        <span style="color: red">
+               <b>Remarque</b> : si vous ne générez pas dans vos flux d'annexes "FOND_AIDES_ECO", il n'y aura pas de problème.</span>
+				        <span style="color: red">Attention, version incompatible avec les précédentes car la balise Annexe Fond aide eco a été renommé :
+					DATA_FOND_AIDE_ECO/FOND_AIDES_ECO remplacé par DATA_FOND_AIDES_ECO/FOND_AIDES_ECO.</span>
+				        <li>Annexe <b>DATA_FOND_AIDE_ECO</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>DATA_FOND_AIDE_ECO/FOND_AIDES_ECO est devenu DATA_FOND_AIDES_ECO/FOND_AIDES_ECO : en effet, il n'y avait pas de S à aide dans le
+							niveau DATA (DATA_FOND_AIDE_ECO) alors qu'il y avait un S dans FOND_AIDES_ECO</li>
+					          </ul>
+				        </li>
+
+				        <li>Annexe <b>DATA_AUTRE_ENGAGEMENT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Pour la balise CodArticle, il faut rajouter une description : <ul style="line-height: 100%; list-style-type:square">
+								                <li>Pour les engagements reçus, sélectionner un des articles suivants : 8017 ou 8018</li>
+								                <li>Pour les engagements donnés, sélectionner un des articles suivants : 8026 ou 8027 ou 8028</li>
+							              </ul>
+						            </li>
+						            <li>Pour la balise CodTypPersoMorale, il faut rajouter une description : <ul style="line-height: 100%; list-style-type:square">
+								                <li>Pour le compte 8018, sélectionner Public ou Privé.</li>
+								                <li>Pour le compte 8028, sélectionner Entreprises ou à l’exception des entreprises.</li>
+							              </ul>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>DATA_TRESORERIE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Pour la balise CodArticle, il faut rajouter une documentation pour tous les articles, actuellement, il n’y en a que pour le 51928. <ul style="line-height: 100%; list-style-type:square">
+								                <li>5191 : Avances du Trésor</li>
+								                <li>5192 : Avances de trésorerie</li>
+								                <li>51921 : Avances de la collectivité de rattachement</li>
+								                <li>51931 : Lignes de crédits de trésorerie</li>
+								                <li>51932 : Lignes de trésorerie liées à un emprunt</li>
+								                <li>5194 : Billets de trésorerie</li>
+								                <li>5198 : Autres crédits de trésorerie </li>
+							              </ul>
+						            </li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+   </schema>
+   <schema version="29" file="schema_doc_budg_V29.zip"
+           md5="51bb7815b483aeddcf38f081a6da36bc">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <span style="color: red">Dans cette version du schéma, des balises ont été enlevées au niveau des annexes car elles ne servaient à rien. Il
+					était difficile de les renseigner correctement dans le flux vu qu'elles ne correspondait à rien. Elles ont donc été supprimées pour éviter
+					de garder dans le schéma des informations erronnées.</span>
+				        <li>Annexe <b>DATA_RECETTE_AFFECTEE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Pour la balise CodRAffect, modifciation de la description : Numéroter la recette de 1 à 99.</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>DATA_AUTRE_ENGAGEMENT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>La balise CodTypPersoMorale n'est plus obligatoire et une description est ajoutée : Cette information doit être renseignée pour les
+							articles 8018 et 8028 uniquement.</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>EMPRUNT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balises TotGarEchoirExer , AnnuitNetDette, ProvGarantiEmpr, RReelFonc : suppression de la description l’information "uniquement pour
+							la m52" </li>
+						            <li>Suppression des balises DtDebRembInt, DtDebRembCapital, MtVNCBien3112, TxMargeDtVote </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>SERVICE_FERROVIAIRE_TER</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise CodCPTTER : Correction dans les libellés : <ul style="line-height: 100%; list-style-type:square">
+								                <li>Valeur 02 : traffic par trafic </li>
+								                <li>Valeur 11 : assimillés par assimilés </li>
+								                <li>Valeur 31 : Variation des provisions transfert de charges par Variation des provisions / transfert de charges </li>
+								                <li>Valeur 33 et 34 : à mettre au singulier</li>
+							              </ul>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>SERVICE_FERROVIAIRE_BUD</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <span style="color: red">Suppression de la balise CodEffortPropreReg </span>
+						            </li>
+						            <li>
+							              <span style="color: red">Suppression de l’information "Obligatoire si effort propre de la région = non" sur les balises CodRD,
+								CodInvFonc et CodRegroupBudFerrov </span>
+						            </li>
+						            <li>
+							              <span style="color: red">Les balises CodInvFonc, CodRD et CodRegroupBudFerrov sont obligatoires</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>FISCALITE</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise CodTypContrib : suppression de la valeur O et modification de la description pour supprimer "Attention, les valeur D, I, O …
+							transmises dans le flux</li>
+						            <li>Remplacement du terme "Conseil municipal" par "Assemblée" dans les balises TxApplicConsMunic et MtProdVote</li>
+						            <li>Balise LibTaxe : remplacer "la région" dans le libellé et la description par "la région ou le département"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>TIERS</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise CodOper : compléter la description avec l’information "valeur discriminante requise"</li>
+						            <li>
+							              <span style="color: red">Suppression des balises "MtBudCum" et "RAR_NMoins1"</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PATRIMOINE</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise CodVariPatrim : suppression des valeurs 08 et 09</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>SIGNATAIRE</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise Signataire : modification du libellé en "Nom et prénom du signataire"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>SIGNATURE</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise LibDelibPar : compléter la description avec l’information "Renseigner avec l’article tout en minuscule (ex : le conseil
+							municipal, l’assemblée délibérante)"</li>
+						            <li> Balise LibPresentPar : compléter la description avec l’information "Renseigner avec l’article tout en minuscule (ex : le maire, la
+							présidente)" </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>VENTILATION</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Balise NomService : modification de la description en : "obligatoire sauf pour la ventilation de la TEOM où le service n’est pas
+							renseigné"</li>
+						            <li>Balise CodArticle : Obligatoire et modification de la description par : lignes en dépenses liées à une opération présentée pour vote :
+							numéro d’opération lignes liées à une opération pour comptes de tiers : numéro de compte lié à l’opération pour compte de tiers suivi du
+							numéro de convention autres lignes : numéro de compte</li>
+						            <li> Balise CodChapitre : Obligatoire et modification de la description par : lignes en dépenses liées à une opération présentée pour vote
+							: numéro d’opération lignes liées à une opération pour comptes de tiers : numéro de compte lié à l’opération pour compte de tiers suivi
+							du numéro de convention autres lignes : numéro de chapitre </li>
+						            <li>Balise LibCpte : Obligatoire et modification du libellé en "Libellé du compte ou de l’opération" et modification de la description en
+							: lignes en dépenses liées à une opération présentée pour vote : libellé de l’opération lignes liées à une opération pour comptes de
+							tiers : libellé de l’opération autres lignes : libellé du compte</li>
+					          </ul>
+				        </li>
+				        <li>
+					          <b>LIGNEBUDGET</b>
+					          <ul style="line-height: 100%; list-style-type:square">
+						            <li>Libellé "Operation" à modifier par "Code de l’opération"</li>
+						            <li>Libellé "ArtSpe" à modifier par "Article spécialisé"</li>
+						            <li>Balise OpBudg : suppression de l’information sur la valeur T </li>
+						            <li>Modifier l’information figurant sur OpeCpteTiers par "Numéro de convention de l’opération pour compte de tiers"</li>
+					          </ul>
+				        </li>
+
+				        <li> Les types <ul style="line-height: 100%; list-style-type:square">
+						            <li>Type <b>ATCodCptTER</b> : passé du type xs:int à xs:string</li>
+						            <li>Type <b>ATCodDestFond</b> : passé du type xs:int à xs:string</li>
+						            <li>Type <b>ATCodApprent</b> : passé du type xs:int à xs:string</li>
+						            <li>Type <b>ATCodOperR</b> , utilisé entre autre pour Opération Compte de tiers: M71 CA <ul style="line-height: 100%; list-style-type:square">
+								                <li>Le code 01 est associé au libellé "Financement par le mandant" au lieu de "Financement par le mandantaire"</li>
+							              </ul>
+						            </li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="c6cc257d67174101e2460c681a0892b6" file="schema_doc_budg_V27.zip"
+           version="27">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>Annexe <b>CONTRAT_COUV</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>DtDebContr</b> est devenu non obligatoire</li>
+						            <li>
+							              <span style="color: red">Le champ <b>DtDebCouv</b> n'existe plus</span>
+						            </li>
+						            <li>Le type <b>ATCodTyptx</b> est modifié</li>
+						            <li>Le type <b>ATCodTyptxContratCouvRef</b> est ajouté</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>FISCALITE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>La description du champ <b>CodSousTypContrib</b> devient : Attention, la valeur TOTAL sert à renseigner la ligne "Total général" qui
+							n'est pas calculée mais transmise dans le flux</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>FORMATION_PRO_JEUNES</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le type du champ <b>CodRDTot</b> devient <b>ATCodRD</b> au lieu de <b>ATCodRDTot</b>
+						            </li>
+						            <li>La description du champ <b>CodApprent</b> est amélioré et devient : <ul>
+								                <li>Si Total <li>Si Dépense <ul>
+											                      <li>Apprentissage</li>
+											                      <li>Enseignement Professionnel</li>
+											                      <li>Formation continue</li>
+										                    </ul>
+									                  </li>
+									                  <li>Si Recette <ul>
+											                      <li>Première section FNDMA</li>
+											                      <li>Seconde section FNDMA</li>
+											                      <li>Doctation décentralisation</li>
+											                      <li>Dotation indemnité compensatoire forfaitaire</li>
+											                      <li>Contribution additionnelle</li>
+											                      <li>FSE</li>
+											                      <li>FEDER</li>
+											                      <li>FEOGA</li>
+											                      <li>Reversement excédent de ressources CFA</li>
+											                      <li>Autres ressources</li>
+											                      <li>Effort propre de la région</li>
+										                    </ul>
+									                  </li>
+								                </li>
+							              </ul>
+						            </li>
+						            <li>Le type <br>ATCodApprent</br> ne contient les valeurs 15 à 25. </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PATRIMOINE</b> : Dans les commentaires, les informations "uniquement pour la M52" ont été supprimées car non utile. </li>
+				        <li>Annexe <b>PROVISION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>LibNatProv</b> est devenu non obligatoire</li>
+						            <li>
+							              <span style="color: red">Le champ <b>MtProvConstit_31_12_N</b> n'existe plus</span>
+						            </li>
+						            <li>
+							              <span style="color: red">Le champ <b>MtProvConstitTot</b> n'existe plus</span>
+						            </li>
+						            <li>
+							              <span style="color: red">Le champ <b>MtProvNouv</b> n'existe plus</span>
+						            </li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="92334d10d932b21882f32f8262a95f47" file="schema_doc_budg_V26.zip"
+           version="26">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li> L'élément <b>DATA_SOMMAIRE</b> n'est plus obligatoire. </li>
+				        <li> Annexe <b>CONTRAT_COUV_REFERENCE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le type de l'élément <b>CodTyptxInit</b> devient <b>ATCodTyptxContratCouvRef</b> au lieu de <b>ATCodTyptx</b>
+						            </li>
+						            <li>Le type <b>ATCodTyptx</b> est modifié</li>
+						            <li>Le type <b>ATCodTyptxContratCouvRef</b> est ajouté</li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="7c4320eca7743b6c227ec60fe0abc4fe" file="schema_doc_budg_V25.zip"
+           version="25">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>
+					          <span style="color: red">Le type ATCodArticleTresorerie a été modifié.</span> Cela impacte le champ <b>CodArticle</b> (Article) de l'annexe
+						<b>TRESORERIE</b>. <ul style="line-height: 100%; list-style-type:square">
+						            <li style="color: red">
+							              <b>5193</b> n'est plus accepté,</li>
+						            <li>
+							              <b>51928</b> (Avances de trésorerie) est une nouvelle valeur acceptée.</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodSousTypContrib</b> accepte de nouvelles valeurs. Cela concerne le champ <b>CodSousTypContrib</b> (Indicateur type de
+					contribution directe) de l'annexe <b>FISCALITE</b>. <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <b>18</b> Taxe destinée au financement des dépenses des conseils d'architecture, d'urbanisme et d'environnement</li>
+						            <li>
+							              <b>19</b> Taxe départementale des espaces naturels sensibles</li>
+						            <li>
+							              <b>20</b> Taxe départementale de publicité foncière et droit départemental d'enregistrement</li>
+						            <li>
+							              <b>21</b> Taxe locale d'électricité</li>
+						            <li>
+							              <b>22</b> Taxe sur les remontées mécaniques</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodTypEmprunt</b> accepte de nouvelles valeurs. Cela concerne le champ <b>CodTypEmpr</b> (Type d'emprunt) de l'annexe
+						<b>EMPRUNT</b>. <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <b>07</b> Emprunt d'un autre organisme de refinancement</li>
+						            <li>
+							              <b>08</b> Emprunt d'un autre organisme refinancé</li>
+					          </ul>
+				        </li>
+				        <li>
+					          <span style="color: red">Le type <b>ATCodTyptx</b> a été modifé.</span> Cela impacte les champs suivants : <ul style="line-height: 100%;">
+						            <li>
+							              <b>CodTyptxInit</b> (Type taux initial) de l'annexe <b>EMPRUNT</b>,</li>
+						            <li>
+							              <b>CodTyptxDtVote</b> (Type taux à date du vote) de l'annexe <b>EMPRUNT</b>,</li>
+						            <li>
+							              <b>CodTyptxInit</b> (Type taux initial) de l'annexe <b>CONTRAT_COUV_REFERENCE</b> (Lignes composant le notionnel de référence pour les
+							M52 et M71).</li>
+					          </ul> Anciennes valeurs acceptées : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <b>F</b> Fixe sur toute la durée</li>
+						            <li>
+							              <b>I</b> Indexé sur toute la durée</li>
+						            <li>
+							              <b>H</b> Avec tranches</li>
+						            <li>
+							              <b>O</b> Avec options</li>
+						            <li>
+							              <b>P</b> Préfixé</li>
+						            <li>
+							              <b>A</b> Postfixé</li>
+						            <li>
+							              <b>X</b> Autre</li>
+					          </ul> Maintenant : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <b>F</b> Fixe</li>
+						            <li>
+							              <b>V</b> Variable</li>
+						            <li>
+							              <b>R</b> Révisable</li>
+					          </ul>
+				        </li>
+				        <li>Dans un soucis d'uniformisation, l'élément englobant de l'annexe Fonds Aides Eco., <span style="color: red">
+						            <b>DATA_FOND_AIDE_ECO</b>, a été renomé en <b>DATA_FOND_AIDES_ECO</b>
+					          </span>.</li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="2a8908a2f55a36c3f4ab4693ed5eea5d" file="schema_doc_budg_V22.zip"
+           version="22">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>Annexe <b>CONTRAT_COUV</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>NbEmpruntCouv</b> est ajouté, non obligatoire, de type Base_Num5 (5 chiffres), dont le libellé est "Nombre d'emprunts
+							couverts"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>CONTRAT_COUV_REFERENCE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>NumContratEmprunt</b> est ajouté, non obligatoire, de type Base_Texte30, dont le libellé est "N° du contrat
+							d'emprunt"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>DETTE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <span style="color: red">Le champ <b>CodTypDette</b> est supprimé</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>ETAB_SERVICE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le libellé du champ <b>LibNatActivEtab</b> est modifié et devient : "Nature de l'activité" au lieu de "Date de création de
+							l'établissement"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PERSONNEL</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <span style="color: red">Le champ <b>CodSousSectAgent</b> est supprimé</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PROVISION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <span style="color: red">Le champ <b>MtProvConstExer</b> est supprimé</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>RECETTE_AFFECTEE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>
+							              <span style="color: red">Le champ <b>MtRAE3112</b> est supprimé</span>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>SIGNATAIRE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le libellé du champ <b>LibFin</b> est modifié et devient "Lieu de mise en place de l'arrêté" au lieu de "Lieu délibération"</li>
+						            <li>Le libellé du champ <b>DtfFin</b> est modifié et devient "Date de mise en place de l'arrêté" au lieu de "Date délibération"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>TIERS</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Un commentaire est ajouté au champ <b>CodOper</b> : Ce champ ne doit contenir que des chiffres, et il peut débuter par des '0'</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodSectAgentTitulaire</b> ne contient plus les valeurs DIR, DIR1 et DIR2. </li>
+				        <li>Le type <b>ATCodTypEmprunt</b> ne contient plus la valeur 11. </li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="e887db59b666f83e0b7cfa450f7337f8" file="schema_doc_budg_V20.zip"
+           version="20">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>Annexe <b>APCP</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li style="color: red">L'annexe est en grande partie revue. Il est préférable de visualiser le schéma pour récupérer toutes les
+							différences.</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>EMPRUNT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>IndSousJacent</b> est ajouté, non obligatoire, de type ATIndSousJacent, dont le libellé est "Indice sous jacent de
+							l’emprunt"</li>
+						            <li>Le champ <b>Structure</b> est ajouté, non obligatoire, de type ATStructEmprunt, dont le libellé est "Structure de l'emprunt"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>FISCALITE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>LibTaxe</b> est ajouté, non obligatoire, de type Base_Texte50, dont le libellé est "Libellé de la taxe pour laquelle la
+							région a un pouvoir de modulation du taux"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>M71_CA</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li style="color: red">L'annexe est supprimée.</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PROVISION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le libellé du champ <b>CodNatProv</b> est modifié et devient : 'Sous-type provision pour risques et charges ou pour dépréciation' =
+							'Risques et charges' <ul>
+								                <li>Provisions pour litiges</li>
+								                <li>Provisions pour pertes de changes</li>
+								                <li>Provisions pour garanties d’emprunts</li>
+								                <li>Provisions pour gros entretiens ou grandes révisions</li>
+								                <li>Autres provisions pour risques</li>
+							              </ul> 'Sous-type provision pour risques et charges ou pour dépréciation' = 'Dépréciations' <ul>
+								                <li>Provisions pour dépréciation des immobilisations</li>
+								                <li>Provisions pour dépréciation des stocks</li>
+								                <li>Provisions pour dépréciation des stocks et encours</li>
+								                <li>Provisions pour dépréciation des comptes de tiers</li>
+								                <li>Provisions pour dépréciation des comptes financiers</li>
+							              </ul>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>TNatProv</b> est modifié : <ul>
+						            <li>Code E ajouté : "Provisions pour gros entretiens ou grandes révisions"</li>
+						            <li>Code S modifié : "Provisions pour dépréciations des stocks et encours"</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodSousTypContrib</b> est modifié : <ul>
+						            <li>Code 07 dont le libellé est modifié : "07"</li>
+						            <li>Les codes 09 à 17 sont ajoutés</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodSousTypContrib</b> est modifié : <ul>
+						            <li>Le code 08 est ajouté</li>
+					          </ul>
+				        </li>
+
+			      </ol>
+		    </description>
+	  </schema>
+   <schema md5="571461c7c98fb50f26ad660133d77ea7" file="schema_doc_budg_V16.zip"
+           version="16">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>Les libellés des champs dont la description contient "en années pleines" sont modifiés : ce terme "en années pleines" est supprimé.</li>
+				        <li>Annexe <b>AMORTISSEMENT_METHODE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>ProcAmort</b> est ajouté, non obligatoire, de type TProcAmort, dont le libellé est "Procédure d'amortissement"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>AUTRE_ENGAGEMENT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>ProcAmort</b> est ajouté, non obligatoire, de type TProcAmort, dont le libellé est "Procédure d'amortissement"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>CONSOLIDATION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>MtCredAnnul</b> est supprimé</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>CONTRAT_COUV_REFERENCE</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>DtDebEcheance</b> change de type : son nouveau type est Base_Date au lieu de Base_Date_MM_AAAA</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>EMPRUNT</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>NumContrat</b> est ajouté, non obligatoire, de type Base_Texte30, dont le libellé est "Numéro de contrat de
+							l'emprunt"</li>
+						            <li>Le champ <b>PartGarantie</b> est ajouté, non obligatoire, de type Base_Pourcentage, dont le libellé est "Part garantie (en %)"</li>
+						            <li>Le champ <b>Tot1Annuite</b> est ajouté, non obligatoire, de type Base_Montant, dont le libellé est "Total des premières annuités
+							entières des nouvelles garanties de l'exercice"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PROVISION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>CodNatProv</b> est ajouté, non obligatoire, de type TNatProv, dont le libellé est "Nature de la provision"</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodTypBudAgreg</b> est modifié : <ul>
+						            <li>Le code 02 est modifié</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodOperR</b> est modifié : <ul>
+						            <li>Le code 01 est modifié</li>
+						            <li>Le code 09 est ajouté</li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+
+	  </schema>
+   <schema version="12" file="schema_doc_budg_V12.zip"
+           md5="c3e84682e57f4d9c622f9452e6e544ac">
+		    <description>
+			      <ol style="line-height: 200%">
+				        <li>
+					          <b>LigneBudget</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>Nature</b> a pour type "Base_ChaineNum30" au lieu de "Base_Texte30"</li>
+						            <li>Le champ <b>ContNat</b> a pour type "Base_ChaineNum12" au lieu de "Base_Texte12"</li>
+						            <li>Le champ <b>ContFon</b> a pour type "Base_ChaineNum10" au lieu de "Base_Num10"</li>
+						            <li>Le champ <b>ContOp</b> a pour type "Base_Texte10" au lieu de "Base_Num10"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>CONSOLIDATION</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>MtRealMandatTitre</b> est ajouté à la place de <b>MtReal-MandatTitre</b>
+						            </li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PERSONNEL</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>MtPrev6215</b> est ajouté, non obligatoire, de type Base_Montant, dont le libellé est "Montant prévu à l'article
+							6215"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>PPP</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>PartInvest</b> est ajouté, non obligatoire, de type Base_Montant, dont le libellé est "Somme des parts /
+							investissement"</li>
+						            <li>Le champ <b>PartNetteInvest</b> est ajouté, non obligatoire, de type Base_Montant, dont le libellé est "Somme nette des parts /
+							investissement"</li>
+					          </ul>
+				        </li>
+				        <li>Annexe <b>TIERS</b> : <ul style="line-height: 100%; list-style-type:square">
+						            <li>Le champ <b>MtCredAnnul</b> est supprimé</li>
+						            <li>Le champ <b>DtDelib</b> est modifié : son type devient Base_Date au lieu de Base_Texte100</li>
+					          </ul>
+				        </li>
+				        <li>Le type <b>ATCodTypVentil</b> est modifié : <ul>
+						            <li>Le code A est ajouté</li>
+					          </ul>
+				        </li>
+			      </ol>
+		    </description>
+	  </schema>
+   <schema version="2" file="schema_doc_budg_V2.zip"
+           md5="a4971690ded39ef2905696932e3c3a68">
+		    <description>à compléter</description>
+	  </schema>
+   <schema version="4.0" file="4.0/SchemaDocBudg-4.0-alpha29.zip"
+           md5="edc4efa83d43e62b5691243ff3884467">
+		    <description/>
+	  </schema>
+</schemas>

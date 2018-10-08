@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunRecette_Retour.xsd" />
+  <xs:complexType name="TEncaissementEmargement">
+    <xs:annotation>
+      <xs:documentation>Ce bloc est présent pour les lignes de pièces du flux récurrent, dès lors qu'il y a une réalité d'émargement non neutralisée. 
+Il y a autant de bloc que d'encaissement/émargement.
+Ce bloc est absent des lignes de pièces du retour quotidien (titres rejetés/mis en instance).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="OrgEma" type="TOrgEma">
+        <xs:annotation>
+          <xs:documentation>Origine de l'émargement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteReco" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date du recouvrement ou de l'émargement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtReco" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant du recouvrement ou de l'émargement réalisé au niveau de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

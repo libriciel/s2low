@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:z="odm:enrichissement" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+  <!--<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:include schemaLocation="Class_Emprunt.xsd"/>
+	<xs:include schemaLocation="Class_Tresorerie.xsd"/>
+	<xs:include schemaLocation="Class_Charges.xsd"/>
+	<xs:include schemaLocation="Class_Tiers.xsd"/>
+	<xs:include schemaLocation="Class_CreditBail.xsd"/>
+	<xs:include schemaLocation="Class_PPP.xsd"/>
+	<xs:include schemaLocation="Class_AutresEngagements.xsd"/>
+	<xs:include schemaLocation="Class_Concours.xsd"/>
+	<xs:include schemaLocation="Class_RecettesAffectees.xsd"/>
+	<xs:include schemaLocation="Class_Formation.xsd"/>
+	<xs:include schemaLocation="Class_Fiscalite.xsd"/>
+	<xs:include schemaLocation="Class_Consolidation.xsd"/>
+	<xs:include schemaLocation="Class_OrganismeEng.xsd"/>
+	<xs:include schemaLocation="Class_OrganismeGroup.xsd"/>
+	<xs:include schemaLocation="Class_Patrimoine.xsd"/>
+	<xs:include schemaLocation="Class_Personnel.xsd"/>
+	<xs:include schemaLocation="Class_Dettes.xsd"/>
+	<xs:include schemaLocation="Class_Ventilation.xsd"/>
+	<xs:include schemaLocation="Class_ContratCouv.xsd"/>
+	<xs:include schemaLocation="Class_AmortissementMethode.xsd"/>
+	<xs:include schemaLocation="Class_Provision.xsd"/>
+	<xs:include schemaLocation="Class_APCP.xsd"/>
+	<xs:include schemaLocation="Class_Signatures.xsd"/>
+	<xs:include schemaLocation="Class_EtabService.xsd"/>
+	<xs:include schemaLocation="Class_Sommaire.xsd"/>
+	<xs:include schemaLocation="Class_Pret.xsd"/>
+	<xs:include schemaLocation="Class_ContratCouvReference.xsd"/>
+	<xs:include schemaLocation="Class_PersonnelSolde.xsd"/>
+	<xs:include schemaLocation="Class_Service_Ferroviaire_Bud.xsd"/>
+	<xs:include schemaLocation="Class_Service_Ferroviaire_Patrim.xsd"/>
+	<xs:include schemaLocation="Class_Service_Ferroviaire_Ter.xsd"/>
+	<xs:include schemaLocation="Class_Fonds_Comm_Hebergement.xsd"/>
+	<xs:include schemaLocation="Class_Fonds_Europeens.xsd"/>
+	<xs:include schemaLocation="Class_Fonds_Aides_Eco.xsd"/>
+	<xs:include schemaLocation="Class_Formation_Pro_Jeunes.xsd"/>-->
+  <xs:complexType name="TAnnexes">
+    <xs:annotation>
+      <xs:documentation>Ce bloc n'est pas utilisé dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+      <!--<xs:element name="DATA_EMPRUNT" type="TEmprunts" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Emprunts</z:libelle>
+						<z:description><![CDATA[<html>Bloc "technique" permettant de stocker les informations concernant les emprunts.<br/>
+Ces informations sont visibles dans la partie IV du document budgétaires dans les états suivants :<br/>
+  <ul><li>Répartition par prêteur</li>
+      <li>Répartition des emprunts par type de taux</li>
+      <li>Répartition par nature de dettes</li>
+      <li>Répartition de l'encours (typologie)</li></ul></html>]]></z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_EMPRUNT/EMPRUNT</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_TRESORERIE" type="TTresoreries" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Crédits de trésorerie</xs:documentation>
+					<xs:appinfo><z:path-to-element>DATA_TRESORERIE/TRESORERIE</z:path-to-element></xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CHARGE" type="TCharges" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Charges transférées</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CHARGE/CHARGE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_TIERS" type="TOpeComptesTiers" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Opérations pour compte de tiers</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_TIERS/TIERS</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CREDIT_BAIL" type="TCreditsBails" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Contrats de Crédit-Bail</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CREDIT_BAIL/CREDIT_BAIL</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PPP" type="TPPPs" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Partenariats Public Privé</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PPP/PPP</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_AUTRE_ENGAGEMENT" type="TAutresEngagements" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Autres engagements donnés ou reçus</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_AUTRE_ENGAGEMENT/AUTRE_ENGAGEMENT</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CONCOURS" type="TConcours" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Concours attribués à des tiers en nature ou en subvention</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CONCOURS/CONCOURS</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_RECETTE_AFFECTEE" type="TRecettesAffectees" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Recettes grevées d'une affectation spéciale</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_RECETTE_AFFECTEE/RECETTE_AFFECTEE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FORMATION" type="TFormations" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Actions de formation des élus</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FORMATION/FORMATION</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FISCALITE" type="TFiscalites" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Taux de contributions directes</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FISCALITE/FISCALITE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CONSOLIDATION" type="TConsolidations" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Agrégation du budget principal et des budgets annexes</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CONSOLIDATION/CONSOLIDATION</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_ORGANISME_ENG" type="TOrganismesEng" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Organismes dans lesquels la collectivité a pris un engagement financier</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_ORGANISME_ENG/ORGANISME_ENG</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_ORGANISME_GROUP" type="TOrganismesGroup" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Organismes de regroupement auxquels adhère la collectivité</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_ORGANISME_GROUP/ORGANISME_GROUP</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PATRIMOINE" type="TPatrimoines" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Variation du patrimoine. Entrée / Sortie</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PATRIMOINE/PATRIMOINE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PERSONNEL" type="TPersonnels" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Etat du personnel</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PERSONNEL/PERSONNEL</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PERSONNEL_SOLDE" type="TPersonnelsSolde" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Créations / Suppressions d'emplois</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PERSONNEL_SOLDE/PERSONNEL_SOLDE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_DETTE" type="TDettes" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Dettes</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_DETTE/DETTE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_VENTILATION" type="TVentilations" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Ventilation TEOM, Eau/Assainissement, Services assujettis TVA</z:libelle>
+						<z:description><![CDATA[<html>Bloc "technique" permettant de stocker les montants ventilés pour la répartition de la TEOM, .<br/>
+Dépenses et Recettes des services d'eau et d'assainissement, Dépenses et Recettes des services assujettis à la TVA.<br/>
+Les montants par article sont ventilés selon la hiérarchie suivante :<br/>
+  <ul><li>Investissement / Fonctionnement</li>
+    <ul><li>Dépense / Recette</li>
+      <ul><li>Opération d'ordre / Opération réelle</li>
+      <ul><li>Code article de rattachement et / ou code regroupement</li></ul></ul></ul></ul></html>]]></z:description></xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_VENTILATION/VENTILATION</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CONTRAT_COUV" type="TContrats_Couv" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Contrats de couverture du risque financier</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CONTRAT_COUV/CONTRAT_COUV</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_AMORTISSEMENT_METHODE" type="TAmortissement_Methodes"
+				minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Méthodes d'amortissement</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_AMORTISSEMENT_METHODE/AMORTISSEMENT_METHODE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PROVISION" type="TProvisions" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Etat des provisions et étalement des provisions</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PROVISION/PROVISION</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_APCP" type="TAPCPs" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Autorisations de Programme (ou d'engagement) et crédits de paiement</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_APCP/APCP</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element> -->
+      <!-- xs:element name="DATA_APCP_M71_CA" type="TAPCP_M71_CAs" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Autorisations de Programme (ou d'engagement) et crédits de paiement pour les M71 BP et CA</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_APCP_M71_CA/APCP_M71_CA</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element -->
+      <!--<xs:element name="DATA_SIGNATURE" type="TSignatures" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Arrété</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SIGNATURE/SIGNATURE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_SIGNATAIRE" type="TSignataires" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Signatures</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SIGNATAIRE/SIGNATAIRE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_ETAB_SERVICE" type="TEtabs_Services" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Liste des établissements ou services publics</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_ETAB_SERVICE/ETAB_SERVICE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_PRET" type="TPrets" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_PRET/PRET</z:path-to-element>
+					</xs:appinfo>
+					<xs:documentation>Prêt octroyé par le département ou par la région</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_CONTRAT_COUV_REFERENCE" type="TContratsCouvReferences"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_CONTRAT_COUV_REFERENCE/CONTRAT_COUV_REFERENCE</z:path-to-element>
+					</xs:appinfo>
+					<xs:documentation>Lignes composant le notionnel de référence</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_SERVICE_FERROVIAIRE_BUD" type="TServicesFerroviairesBud"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Services ferroviaires régionaux, volet budgétaire</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SERVICE_FERROVIAIRE_BUD/SERVICE_FERROVIAIRE_BUD</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_SERVICE_FERROVIAIRE_PATRIM" type="TServicesFerroviairesPatrim"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Services ferroviaires régionaux, volet annexe patrimoniale</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SERVICE_FERROVIAIRE_PATRIM/SERVICE_FERROVIAIRE_PATRIM</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_SERVICE_FERROVIAIRE_TER" type="TServicesFerroviairesTer"
+				minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Services ferroviaires régionaux, volet compte TER</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SERVICE_FERROVIAIRE_TER/SERVICE_FERROVIAIRE_TER</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FOND_COMM_HEBERGEMENT" type="TFondsCommHebergement" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Compte d'emploi du fonds commun des services d'hébergement</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FOND_COMM_HEBERGEMENT/FOND_COMM_HEBERGEMENT</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FOND_EUROPEEN" type="TFondsEuropeens" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Fonds Européens</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FOND_EUROPEEN/FOND_EUROPEEN</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FOND_AIDES_ECO" type="TFondAidesEco" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Fonds Aides Eco.</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FOND_AIDES_ECO/FOND_AIDES_ECO</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_FORMATION_PRO_JEUNES" type="TFormationsProJeunes" minOccurs="0"
+				maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Formation professionnelle des jeunes</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_FORMATION_PRO_JEUNES/FORMATION_PRO_JEUNES</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DATA_SOMMAIRE" type="TSommaire" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Sommaire Annexes</xs:documentation>
+					<xs:appinfo>
+						<z:path-to-element>DATA_SOMMAIRE/SOMMAIRE</z:path-to-element>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>-->
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
