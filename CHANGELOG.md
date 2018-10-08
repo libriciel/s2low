@@ -1,14 +1,19 @@
 # Change Log
 
+## 3.0.17
+
+### Corrections
+ 
+- Correction d'un bug sur la signature local via un certificat contenant un caractère non-ANSI
 
 ## 3.0.16 - 2018-10-08
 
-## Ajouts
+### Ajouts
 
 - Le lien des pré-requis est disponible également en HTTPS #411
 - Passage au schéma PES V2 5.7 ~helios
 
-## Corrections
+### Corrections
 
 - la taille du login est désormais limité à 128 caractères sur le formulaire #410
 
