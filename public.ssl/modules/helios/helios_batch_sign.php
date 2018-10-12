@@ -106,16 +106,16 @@ $libersignController->displayLibersignJS();
 				siginfos.push({
 					hash: "<?php echo $transactionInfo['bordereau_hash']?>",
 					pesid: "<?php echo $transactionInfo['bordereau_id']?>",
-					pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.4",
+                    pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.7",
 					pespolicydesc: "Politique de signature Helios de la DGFiP",
-					pespolicyhash: "Jkdb+aba0Hz6+ZPKmKNhPByzQ+Q=",
-					pesspuri: "https://portail.dgfip.finances.gouv.fr/documents/PS_Helios_DGFiP.pdf",
+                    pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E",
+                    pesspuri: "https://www.collectivites-locales.gouv.fr/files/files/finances_locales/dematerialisation/ps_helios_dgfip.pdf",
 					pescity: "<?php hecho($authorityInfo['city'])?>",
 					pespostalcode: "<?php hecho($authorityInfo['postal_code'])?>",
 					pescountryname: "France",
 					pesclaimedrole: "Ordonnateur",
 					pesencoding: "iso-8859-1",
-					format: "XADES-env"
+                    format: "xades-env-1.2.2-sha256"
 				});
 				<?php endforeach;?>
 
