@@ -1,8 +1,8 @@
 <?php
 
 
-abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
-
+//abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
+abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var SQLQuery
 	 */
@@ -17,6 +17,10 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 	 */
 	protected function setUp(){
 		parent::setUp();
+        $this->getConnection();
+
+
+        $this->getSQLQuery()->exec(file_get_contents(__DIR__."/s2low-test.sql"));
 
 		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
 		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
@@ -85,7 +89,7 @@ abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 
         //Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus haut)
         self::$sqlQueryStatic->query("SET CLIENT_ENCODING TO 'UTF-8';");
-		return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
+		//return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
 
 	/**
