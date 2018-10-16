@@ -2,10 +2,18 @@
 
 ## 3.0.17
 
+### Evolutions
+
+- Cette version est la première compatible avec la version 7.2 de PHP.
+
 ### Corrections
  
 - Correction d'un bug sur la signature local via un certificat contenant un caractère non-ANSI
 - Correction d'un bug sur la signature local par lot pour les PES #414
+
+### Retraits
+
+- Retraits de DBUnit qui était top lent pour la suite de test de s2low
 
 ## 3.0.16 - 2018-10-08
 

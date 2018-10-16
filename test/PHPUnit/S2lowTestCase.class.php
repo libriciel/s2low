@@ -1,16 +1,16 @@
 <?php
 
-
-//abstract class S2lowTestCase extends PHPUnit_Extensions_Database_TestCase {
 abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var SQLQuery
 	 */
 	private static $sqlQueryStatic;
 
-	//private $objectInstancier;
+	private static $sqlContentStatic;
 
 	protected $backupGlobalsBlacklist = array('sqlQuery');
+
+	protected $sql_content;
 
 	/**
 	 * @throws Exception
@@ -19,11 +19,8 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 		parent::setUp();
         $this->getConnection();
 
+        $this->getSQLQuery()->exec($this->getSQLContent());
 
-        $this->getSQLQuery()->exec(file_get_contents(__DIR__."/s2low-test.sql"));
-
-		//Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus bas)
-		$this->getSQLQuery()->query("SET CLIENT_ENCODING TO 'LATIN9';");
 		$this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
 		$this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
 		$this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
@@ -76,9 +73,6 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 		$this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
 	}
 
-	/**
-	 * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection
-	 */
 	public function getConnection() {
 		if (! self::$sqlQueryStatic) {
 			self::$sqlQueryStatic = new SQLQuery(DB_DATABASE_TEST);
@@ -86,19 +80,16 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 			self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
 			self::$sqlQueryStatic->setClientEncoding(DB_CLIENT_ENCODING);
 		}
-
-        //Bon, c'est sale, mais le fichier YML est forcément en UTF-8... (voir plus haut)
-        self::$sqlQueryStatic->query("SET CLIENT_ENCODING TO 'UTF-8';");
-		//return $this->createDefaultDBConnection(self::$sqlQueryStatic->getPdo(), DB_DATABASE_TEST);
 	}
 
-	/**
-	 * @return PHPUnit_Extensions_Database_DataSet_IDataSet
-	 */
-	public function getDataSet() {
-		return new PHPUnit_Extensions_Database_DataSet_YamlDataSet( __DIR__."/database_data.yml");
+
+	protected function getSQLContent(){
+		if (! self::$sqlContentStatic){
+			self::$sqlContentStatic = file_get_contents(__DIR__."/s2low-test.sql");
+		}
+		return self::$sqlContentStatic;
 	}
-	
+
  	protected function getSetUpOperation() {
         return new \PHPUnit_Extensions_Database_Operation_Composite(array(
             \PHPUnit_Extensions_Database_Operation_Factory::DELETE_ALL(),
@@ -185,6 +176,4 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
 		return $testHandler->getRecords();
 	}
-
-
 }
