@@ -18,6 +18,8 @@ require_once(__DIR__."/S2lowSimpleTestCase.class.php");
 require_once(__DIR__."/ActesUtilitiesTestTrait.php");
 
 
+echo "Utilisation de PHP ".phpversion()."\n";
+
 
 /* Uniquement pour la mise à jour de la base de test...*/
 $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
