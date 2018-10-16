@@ -43,7 +43,8 @@ class Mailer {
 	}
 	
 	public function isValidMail($mail){
-		$lo_mail = Mail_RFC822::parseAddressList($mail, NULL, FALSE);
+		$mail_RFC822 = new Mail_RFC822();
+		$lo_mail = $mail_RFC822->parseAddressList($mail, NULL, FALSE);
 		if(PEAR::isError($lo_mail)){
     		return false;
 		} elseif ($lo_mail[0]->host=='localhost'){
