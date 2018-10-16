@@ -4,7 +4,7 @@
 
 ### Evolutions
 
-- Cette version est la première compatible avec la version 7.2 de PHP.
+- Préparation de la compatibilité avec la version 7.2 de PHP.
 
 ### Corrections
  

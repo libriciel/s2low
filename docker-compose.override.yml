@@ -34,8 +34,6 @@ services:
         ports:
             - "${WEB_HTTP_PORT_72:-10780}:80"
             - "${WEB_HTTPS_PORT_72:-10743}:443"
-        volumes:
-            - .:/var/www/s2low
         environment:
             POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST}
             POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
@@ -68,6 +66,7 @@ services:
             EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
             MAILNAME: ${MAILNAME}
         volumes:
+            - .:/var/www/s2low
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
@@ -76,6 +75,9 @@ services:
     db:
         environment:
             - POSTGRES_LOG_ALL_QUERY_TO_STDOUT=true
+
+
+
 
 
     db_test:
