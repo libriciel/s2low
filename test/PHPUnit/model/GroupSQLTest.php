@@ -60,4 +60,16 @@ class GroupSQLTest extends S2lowTestCase {
 		$this->assertEquals([1=> 'Groupe de test', 2 => 'second groupe'],$this->groupeSQL->getGroupsIdName());
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public function testGroupeVide(){
+		$this->getSQLQuery()->query("DELETE FROM users_perms");
+		$this->getSQLQuery()->query("DELETE FROM users");
+		$this->getSQLQuery()->query("DELETE FROM modules_authorities");
+		$this->getSQLQuery()->query("DELETE FROM authorities");
+		$this->getSQLQuery()->query("DELETE FROM authority_groups");
+		$this->groupeSQL->getGroupsIdName();
+	}
+
 }
