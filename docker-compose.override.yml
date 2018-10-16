@@ -4,7 +4,7 @@ services:
     web:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: ${DOCKERFILE:-Dockerfile}
         networks:
           - dgcl
           - dgfip
@@ -22,62 +22,9 @@ services:
             WEB_HTTP_PORT: ${WEB_HTTP_PORT}
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
 
-    web_php72:
-        build:
-            context: .
-            dockerfile: Dockerfile-php7.2
-        networks:
-          - dgcl
-          - dgfip
-          - services
-          - openstack
-        ports:
-            - "${WEB_HTTP_PORT_72:-10780}:80"
-            - "${WEB_HTTPS_PORT_72:-10743}:443"
-        environment:
-            POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST}
-            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
-            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST}
-            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
-            WEB_HTTP_PORT: ${WEB_HTTP_PORT}
-            WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
-            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
-            S2LOW_WEBSITE: ${S2LOW_WEBSITE}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_HOST: ${POSTGRES_HOST}
-            HELIOS_FTP_PASSIVE_MODE: ${HELIOS_FTP_PASSIVE_MODE}
-            HELIOS_FTP_LOGIN: ${HELIOS_FTP_LOGIN}
-            HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD}
-            SMTP_SERVER: ${SMTP_SERVER}
-            SMTP_PORT: ${SMTP_PORT}
-            PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR}
-            OPENSTACK_AUTHENTICATION_URL_V2: ${OPENSTACK_AUTHENTICATION_URL_V2}
-            OPENSTACK_USERNAME: ${OPENSTACK_USERNAME}
-            OPENSTACK_PASSWORD: ${OPENSTACK_PASSWORD}
-            OPENSTACK_TENANT: ${OPENSTACK_TENANT}
-            OPENSTACK_REGION: ${OPENSTACK_REGION}
-            OPENSTACK_SWIFT_CONTAINER_PREFIX: ${OPENSTACK_SWIFT_CONTAINER_PREFIX}
-            ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN}
-            ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD}
-            IMAP_LOGIN: ${IMAP_LOGIN}
-            IMAP_PASS: ${IMAP_PASS}
-            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
-            MAILNAME: ${MAILNAME}
-        volumes:
-            - .:/var/www/s2low
-            - ${WORKSPACE_VOLUME}:/data/tdt-workspace
-            - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
-            - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
-
-
     db:
         environment:
             - POSTGRES_LOG_ALL_QUERY_TO_STDOUT=true
-
-
-
 
 
     db_test:
