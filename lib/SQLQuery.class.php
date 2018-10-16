@@ -145,6 +145,10 @@ class SQLQuery {
 		$this->fetch();
 	}
 
+	public function exec($query){
+	    $this->getPdo()->exec($query);
+    }
+
 	public function hasMoreResult(){
 		return $this->hasMoreResult;
 	}

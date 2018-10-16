@@ -97,7 +97,7 @@ class HeliosTransactionWorkflow extends DataObject {
    */
   public static function getDatePoste($transaction_id) {
     $sql = "SELECT date from helios_transactions_workflow where status_id=1 AND transaction_id=" . $transaction_id;
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
     $result = $db->select($sql);
 
     if (!$result->isError() && $result->num_row() == 1) {
@@ -109,7 +109,7 @@ class HeliosTransactionWorkflow extends DataObject {
   }
   
  public static function getCurrentStatusId($transaction_id) {
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $sql = "SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $transaction_id . " ORDER BY atw.id DESC LIMIT 1";
 
@@ -124,7 +124,7 @@ class HeliosTransactionWorkflow extends DataObject {
   }
 
   public static function getCurrentStatus($transaction_id) {
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $sql = "SELECT message FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = " . $transaction_id . " ORDER BY atw.id DESC LIMIT 1";
 
@@ -139,7 +139,7 @@ class HeliosTransactionWorkflow extends DataObject {
   }
   public static function getCurrentDate($transaction_id)
   {
-  	$db = & DatabasePool :: getInstance();
+  	$db = DatabasePool :: getInstance();
     $sql = "SELECT submission_date FROM helios_transactions WHERE id=". $transaction_id;
 
     $result = $db->select($sql);

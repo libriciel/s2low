@@ -2,12 +2,22 @@
 
 class ActesClassificationCodesSQLTest extends S2lowTestCase {
 
-	/**
-	 * @return PHPUnit_Extensions_Database_DataSet_IDataSet
-	 */
-	public function getDataSet() {
-		return new PHPUnit_Extensions_Database_DataSet_YamlDataSet( __DIR__."/database_classification.yml");
-	}
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->getSQLQuery()->query(
+            "INSERT INTO actes_classification_codes(id,authority_id,level,code,parent_id,description)".
+            "   VALUES (1,1,1,1,NULL,'Commande Publique')"
+        );
+        $this->getSQLQuery()->query(
+            "INSERT INTO actes_classification_codes(id,authority_id,level,code,parent_id,description)".
+            "   VALUES (2,1,2,2,1,'Marches publics')"
+        );
+        $this->getSQLQuery()->query(
+            "INSERT INTO actes_classification_codes(id,authority_id,level,code,parent_id,description)".
+            "   VALUES (3,1,3,3,2,'toto')"
+        );
+    }
 
 	public function testGetDescription(){
 		$actesClassificationCodesSQL = new ActesClassificationCodesSQL($this->getSQLQuery());

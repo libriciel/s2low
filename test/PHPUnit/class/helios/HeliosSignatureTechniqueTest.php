@@ -6,7 +6,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 	public function setUp(){
 		parent::setUp();
-		$this->transaction_id = $this->importFile(__DIR__."/../../helios/fixtures/pes_aller_ok.xml");
+        $this->transaction_id = $this->importFile(__DIR__."/../../helios/fixtures/pes_aller_ok.xml");
 	}
 
 	private function importFile($pes_aller){
@@ -30,7 +30,9 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
 
 		$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
-		$this->assertTrue($heliosPESValidation->validate(file_get_contents("/tmp/{$info['sha1']}")));
+		$r = $heliosPESValidation->validate(file_get_contents("/tmp/{$info['sha1']}"));
+
+		$this->assertTrue($r);
 	}
 
 	private function sign(){

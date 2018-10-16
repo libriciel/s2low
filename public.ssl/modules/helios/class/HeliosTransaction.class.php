@@ -163,7 +163,7 @@ class HeliosTransaction extends DataObject {
 
     $sql = "SELECT id FROM helios_transactions" . " WHERE filename=" . pg_escape_string($filename);
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -208,7 +208,7 @@ class HeliosTransaction extends DataObject {
     $sql .= " WHERE " . $t1 . ".id=" . $t2 . ".transaction_id AND " . $t1 . ".user_id=" . $userID;
     $sql .= " AND " . $t2 . ".status_id=" . $t3 . ".id";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
 
@@ -246,7 +246,7 @@ class HeliosTransaction extends DataObject {
   public function getFilenameForId($id) {
     $sql = "SELECT filename FROM helios_transactions" . " WHERE id=" . $id;
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
     $result = $db->select($sql);
 
     if (!$result->isError()) {
@@ -260,7 +260,7 @@ class HeliosTransaction extends DataObject {
   {
    	$sql = "SELECT sha1 FROM helios_transactions" . " WHERE id=" . $id;
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
     $result = $db->select($sql);
 
     if (!$result->isError()) {
@@ -274,7 +274,7 @@ class HeliosTransaction extends DataObject {
   public function getAcquitFilenameForId($id) {
     $sql = "SELECT acquit_filename FROM helios_transactions" . " WHERE id=" . $id;
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
     $result = $db->select($sql);
 
     if (!$result->isError()) {
@@ -301,7 +301,7 @@ class HeliosTransaction extends DataObject {
     if (!empty ($id)) {
       $sql = "SELECT helios_transactions_workflow.id FROM helios_transactions_workflow WHERE helios_transactions_workflow.transaction_id = " . $id;
 
-      $db = & DatabasePool :: getInstance();
+      $db = DatabasePool :: getInstance();
 
       $result = $db->select($sql);
 
@@ -364,7 +364,7 @@ class HeliosTransaction extends DataObject {
   public function getUserForId($id) {
     $sql = "SELECT user_id FROM helios_transactions" . " WHERE id=" . $id;
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
     $result = $db->select($sql);
 
     if (!$result->isError()) {
@@ -401,7 +401,7 @@ class HeliosTransaction extends DataObject {
   public static function getStatusList() {
     $sql = "SELECT id, name FROM helios_status";
 
-    $db = & DatabasePool :: getInstance();
+    $db = DatabasePool :: getInstance();
 
     $result = $db->select($sql);
     $types = array ();

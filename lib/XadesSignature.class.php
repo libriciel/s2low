@@ -28,6 +28,7 @@ class XadesSignature {
 	}
 
 	public function sign($xml_file_to_sign,$p12_certificate_path,$p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
+	    //throw new Exception("La signature technique n'est plus implémenté dans s2low");
 		$certificate_info = $this->getCertificateInfo($p12_certificate_path,$p12_password);
 
 		$domDocument = $this->loadDomDocument($xml_file_to_sign);
@@ -132,7 +133,10 @@ class XadesSignature {
 
 		$signedSignatureProperties->SigningTime = gmdate('Y-m-d\TH:i:s\Z');
 
-		$issuer_serial_child = $signedSignatureProperties->SigningCertificate->Cert->IssuerSerial->children(self::NS_XAD_URI);
+
+
+		$issuer_serial_child = $signedSignatureProperties->SigningCertificate->Cert->IssuerSerial->children(self::NS_DS_URI);
+
 		$issuer_serial_child->X509IssuerName = $certificate_info['issuerName'];
 		$issuer_serial_child->X509SerialNumber = $certificate_info['serialNumber'];
 		$cert_digest_child = $signedSignatureProperties->SigningCertificate->Cert->CertDigest->children(self::NS_XAD_URI);
