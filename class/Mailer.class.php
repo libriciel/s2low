@@ -56,9 +56,9 @@ class Mailer {
   public function sendMail($subject, $body) {
   	
   	
-  	assert('$subject');
-  	assert('$body');
-  	assert('$this->recipients');
+  	assert($subject);
+  	assert($body);
+  	assert($this->recipients);
   	 	
   	foreach ($this->recipients as $recipient) {
   		$crlf="\n";
@@ -95,7 +95,7 @@ class Mailer {
   }
   
   public function getNormalizedEmailAdresse(array $recipient){
-  		assert('$recipient["email"]');
+  		assert($recipient["email"]);
 		
 	  	$recip = "";
 		if (! empty($recipient['givenname'])){

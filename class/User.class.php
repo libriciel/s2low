@@ -803,7 +803,7 @@ class User extends DataObject {
   }
 	
 	public function getAllPossibleAuthority(){
-		assert('$this->id');
+		assert($this->id);
 		if ($this->isSuper()){
 			$sql = "SELECT id,name FROM authorities ORDER by name";
 		} elseif ($this->isGroupAdmin()){

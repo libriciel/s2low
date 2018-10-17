@@ -19,7 +19,7 @@ class GroupeMail extends DataObject {
   	}
 	
 	public function addUser($id){
-		assert('$this->id');
+		assert($this->id);
 		$sql = "SELECT * FROM mail_user_groupe WHERE id_user = $id AND id_groupe = ".$this->id;
 		$result = $this->db->select($sql);
 		if ($result->num_row() != 0){
@@ -31,7 +31,7 @@ class GroupeMail extends DataObject {
 	}
   	
   	public function removeUser($id){
-  		assert('$this->id');
+  		assert($this->id);
   		$sql = "DELETE FROM mail_user_groupe WHERE id_user=$id AND id_groupe=".$this->id;
   		$this->db->exec($sql);
   	}
@@ -83,7 +83,7 @@ class GroupeMail extends DataObject {
 	}	
 	
 	public function getNbUtilisateur(){
-		assert('$this->id');
+		assert($this->id);
 		$sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_groupe=".$this->id;
 		$result = $this->db->select($sql);
 		$ligne = $result->get_next_row();

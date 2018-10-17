@@ -1711,13 +1711,17 @@ class ActesTransaction extends DataObject {
     $result = $db->exec($sql);
 
     return $result;
-   } 
-   
+   }
+
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function canValidate(){
 		if (ACTES_ALWAYS_CAN_VALIDATE){
 			return true;
 		}
-		assert('$this->id');
+		assert($this->id);
 		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 
 				" FROM actes_transactions_workflow " .
 				" WHERE transaction_id=".$this->id.
