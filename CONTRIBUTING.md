@@ -7,7 +7,7 @@ docker-compose run  --entrypoint "composer install" web
 docker compose up -d
 
 
-# Lancer les tests d'int�grations
+# Lancer les tests d'intégrations
 
 docker-compose exec web bash
     composer test

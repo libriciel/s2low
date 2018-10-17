@@ -62,9 +62,22 @@ class ActesEnvoiFichierWorker implements IWorker {
     }
 
     public function work($enveloppe_id){
+
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
 
-        $envelope_libelle = "enveloppe $enveloppe_id (transactions ".implode(",",$transaction_ids).")";
+		//On vérifie qu'on est dans l'état qui va bien car si on fait un rebuild-queue pendant le traitement d'une transaction,
+		//celle-ci peut être envoyé deux fois.
+		foreach($transaction_ids as $transaction_id){
+			$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
+			if ($transaction_info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION){
+				$this->logger->error(
+					"La transaction $transaction_id à poster n'est pas en attente de transmission : état {$transaction_info['last_status_id']} trouvé"
+				);
+				return false;
+			}
+		}
+
+		$envelope_libelle = "enveloppe $enveloppe_id (transactions ".implode(",",$transaction_ids).")";
 
 		$this->logger->debug("[$envelope_libelle] Envoi");
         $envelope_info = $this->actesEnvelopeSQL->getInfo($enveloppe_id);

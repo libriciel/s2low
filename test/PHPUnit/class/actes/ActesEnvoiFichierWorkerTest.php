@@ -55,6 +55,37 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
     }
 
+	public function testEnvoiUneEnveloppeMauvaisEtat(){
+		$transaction_id = $this->createTransaction(
+			ActesStatusSQL::STATUS_TRANSMIS,
+			__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
+		);
+
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+
+		$envelope_id = $transaction_info['envelope_id'];
+
+		$actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
+
+		$actesEnvoiFichierController->work($envelope_id);
+
+
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Creation",
+			$transaction_info['message']
+		);
+
+		$this->assertEquals(
+			"La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
+			$this->getLogRecords()[0]['message']
+		);
+	}
+
     public function testEnvoiUneEnveloppeFailed(){
         $transaction_id = $this->createTransaction(
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
@@ -88,6 +119,8 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";
         $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true);
 
+        $sql = "INSERT INTO actes_transactions_workflow(transaction_id, status_id, date, message, flux_retour) VALUES (?,?,now(),?,?)";
+        $this->getSQLQuery()->queryOne($sql,$transaction_id,$status,"Creation","");
         return $transaction_id;
     }
 }
