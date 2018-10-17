@@ -435,8 +435,8 @@ class ActesBatch extends DataObject {
       $this->errorMsg = "<span style='font-weight:bold;color:red;'>Echec de la cr&eacute;ation du lot.</span><br />\n";
 
       reset($files);
-      while ((list ($key, $file) = each($files))) {
-        
+      foreach($files as $file) {
+
       	$filename=str_replace("\'","-",$file['name']);
       	$filename=str_replace("'","-",$filename);
 		if (strstr($filename,"?"))

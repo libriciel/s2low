@@ -763,6 +763,7 @@ class ActesEnvelope extends DataObject {
    * \brief Méthode de contrôle de la cloture de toutes les transactions d'une enveloppe puis suppression de l'archive
    * \return True en cas de suppression, false sinon
   */
+  //Il semnblerait que cette fonction ne soit utilisé nulle part... Je la supprime pas, mais j'enlève pas non plus le each (deprecated)
   public function deleteArchiveFileIfAllClose() {
 	$this->initTransactions();
 
