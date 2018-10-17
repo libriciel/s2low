@@ -52,7 +52,7 @@ services:
         volumes:
             - ${VOL_OPENSTACK}:/srv
         ports:
-            - 10003:8080
+            - ${BEANSTALKD_PORT:-10003}:8080
 
     simulateur:
         image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.0.3

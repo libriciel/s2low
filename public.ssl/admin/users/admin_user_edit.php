@@ -137,7 +137,8 @@ if ($mod) {
 }
 
 
-$certitificate_id_list = $him->getIdFromCertData($him->get("certificate_hash"));
+$certitificate_id_list = $him->getIdFromCertData($him->get("certificate_hash"))?:[];
+
 
 $status_type_list = $me->get("statusTypes");
 $roles_type_list = $me->get("roleTypes");

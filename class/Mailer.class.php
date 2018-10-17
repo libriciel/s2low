@@ -43,7 +43,8 @@ class Mailer {
 	}
 	
 	public function isValidMail($mail){
-		$lo_mail = Mail_RFC822::parseAddressList($mail, NULL, FALSE);
+		$mail_RFC822 = new Mail_RFC822();
+		$lo_mail = $mail_RFC822->parseAddressList($mail, NULL, FALSE);
 		if(PEAR::isError($lo_mail)){
     		return false;
 		} elseif ($lo_mail[0]->host=='localhost'){
@@ -55,9 +56,9 @@ class Mailer {
   public function sendMail($subject, $body) {
   	
   	
-  	assert('$subject');
-  	assert('$body');
-  	assert('$this->recipients');
+  	assert(!!$subject);
+  	assert(!!$body);
+  	assert(!!$this->recipients);
   	 	
   	foreach ($this->recipients as $recipient) {
   		$crlf="\n";
@@ -94,7 +95,7 @@ class Mailer {
   }
   
   public function getNormalizedEmailAdresse(array $recipient){
-  		assert('$recipient["email"]');
+  		assert(!!$recipient["email"]);
 		
 	  	$recip = "";
 		if (! empty($recipient['givenname'])){

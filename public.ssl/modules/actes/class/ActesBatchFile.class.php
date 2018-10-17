@@ -75,15 +75,11 @@ class ActesBatchFile extends DataObject {
 							  "status" => array( "descr" => "Statut du fichier", "type" => "isString", "mandatory" => true)
 							  );
 
-  private $fileStatus = array(
-							  "UNPRO" => "Non traité",
-							  "PRO" => "Traité"
-							  );
 
-  /**
-   * \brief Constructeur d'un fichier de lot
-   * \param id integer Numéro d'identifiant d'un fichier de lot existant avec lequel initialiser l'objet
-   */
+	/**
+	 * ActesBatchFile constructor.
+	 * @param bool|int $id Numéro d'identifiant d'un fichier de lot existant avec lequel initialiser l'objet
+	 */
   public function __construct($id = false) {
 	parent::__construct($id);
 
@@ -160,16 +156,15 @@ class ActesBatchFile extends DataObject {
 	return Helpers::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->filename);
   }
 
-  /**
-   * \brief Méthode d'enregistrement d'un lot dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \return true si succès, false sinon
-   */
-  public function save($validate = true) {
-	$new = false;
-	if ($this->isNew()) {
-	  $new = true;
 
+	/**
+	 * Méthode d'enregistrement d'un lot dans la base de données // EP - 2018-10-17 : non visiblement ca a pas l'air d'être ça...
+	 * @param bool $validate Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+	 * @param bool $return_rather_than_exec - pas utilisé, juste pour assurer la compatibilité avec la fonction de la classe mère
+	 * @return bool|string true si succès, false sinon
+	 */
+  public function save($validate = true,$return_rather_than_exec = false) {
+	if ($this->isNew()) {
 	  if (empty($this->storage_dir) || empty($this->tmpFile) || empty($this->tmpName)) {
 		$this->errorMsg = "Informations manquantes pour la création du fichier de lot.";
 		return false;
@@ -195,11 +190,12 @@ class ActesBatchFile extends DataObject {
 	return true;
   }
 
-  /**
-   * \brief Méthode de suppression d'un fichier de lot
-   * \return true si succès, false sinon
-  */
-  public function delete() {
+	/**
+	 * Méthode de suppression d'un fichier de lot
+	 * @param bool $id - Pas utilisé, uniquemnet pour la compatibilité
+	 * @return bool true si succès, false sinon
+	 */
+  public function delete($id=false) {
 	if (! $this->deleteFile()) {
 	  return false;
 	}
@@ -238,11 +234,12 @@ class ActesBatchFile extends DataObject {
   /* Méthodes statiques */
   /**********************/
 
-  /**
-   * \brief Récupération des id des fichiers associés à un lot
-   * \param id integer Numéro d'identifiant du lot
-   * \return Un tableau contenant les id des fichiers
-   */
+	/**
+	 * Récupération des id des fichiers associés à un lot
+	 * @param int $id Numéro d'identifiant du lot
+	 * @return array Un tableau contenant les id des fichiers
+	 * @throws Exception
+	 */
   public static function getFilesIdForBatch($id) {
 	$tabFiles = array();
 
@@ -263,4 +260,4 @@ class ActesBatchFile extends DataObject {
     return $tabFiles;
   }
 }
-?>
+

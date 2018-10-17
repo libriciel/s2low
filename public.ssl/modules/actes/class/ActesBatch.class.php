@@ -97,13 +97,15 @@ class ActesBatch extends DataObject {
     )
   );
 
+  /** @var ActesBatchFile[] */
   protected $batchFiles;
   protected $unprocessedBatchFiles;
 
-  /**
-   * \brief Constructeur d'un lot
-   * \param id integer Numéro d'identifiant d'un lot existant avec lequel initialiser l'objet
-   */
+	/**
+     * Constructeur d'un lot
+	 * ActesBatch constructor.
+	 * @param bool|int $id Numéro d'identifiant d'un lot existant avec lequel initialiser l'objet
+	 */
   public function __construct($id = false) {
     parent :: __construct($id);
   }
@@ -201,11 +203,11 @@ class ActesBatch extends DataObject {
     return $this->batchFiles;
   }
 
-  /**
-   * \brief Méthode d'obtention de la liste des lots et tous leurs attributs
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return Tableau des lots
-   */
+	/**
+     * Méthode d'obtention de la liste des lots et tous leurs attributs
+	 * @param string $cond Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+	 * @return bool|array Tableau des lots
+	 */
   public function getBatchesList($cond = "") {
     if (!$this->pagerInit('DISTINCT actes_batches.id, actes_batches.user_id, actes_batches.submission_date, actes_batches.storage_dir, actes_batches.num_prefix, actes_batches.description', 'actes_batches', $cond)) {
       return false;
@@ -214,11 +216,11 @@ class ActesBatch extends DataObject {
     return $this->data;
   }
 
-  /**
-   * \brief Méthode d'obtention de la liste des lots et tous leurs attributs pour un utilisateur
-   * \param $user_id integer : Identifiant de l'utilisateur
-   * \return Tableau des lots
-   */
+	/**
+     * Méthode d'obtention de la liste des lots et tous leurs attributs pour un utilisateur
+	 * @param int $user_id  Identifiant de l'utilisateur
+	 * @return array|bool Tableau des lots
+	 */
   public function getBatchesListForUser($user_id) {
     if (is_numeric($user_id)) {
       return $this->getBatchesList(" WHERE actes_batches.user_id=" . $user_id);
@@ -305,11 +307,11 @@ class ActesBatch extends DataObject {
     return $this->getFilesIdName($this->batchFiles);
   }
 
-  /**
-   * \brief Méthode d'obtention de la liste de fichiers du lot sous forme id/name
-   * \param $files Tableau d'objet ActesBatchFiles
-   * \return Tableau des fichiers, clef=id, valeur=nom fichier
-   */
+	/**
+     * Méthode d'obtention de la liste de fichiers du lot sous forme id/name
+	 * @param array $files Tableau d'objet ActesBatchFiles
+	 * @return array Tableau des fichiers, clef=id, valeur=nom fichier
+	 */
   private function getFilesIdName($files) {
     $retFiles = array ();
 
@@ -322,11 +324,11 @@ class ActesBatch extends DataObject {
     return $retFiles;
   }
 
-  /**
-   * \brief Récupération du prochain Id de fichier à traiter
-   * \param $currentId entier (optionnel) : identifiant du fichier courant
-   * \return L'identifiant du prochain fichier à traiter ou null si plus de fichier à traiter
-   */
+	/**
+     * Récupération du prochain Id de fichier à traiter
+	 * @param null|int $currentId identifiant du fichier courant
+	 * @return null|int L'identifiant du prochain fichier à traiter ou null si plus de fichier à traiter
+	 */
   public function getNextUnprocessedId($currentId = null) {
     $nextId = null;
 
@@ -359,9 +361,15 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief Récupération du prochain suffixe pour le numéro interne
-   * \return Le suffixe pour le numéro interne
+   * \brief
+   * \return
    */
+
+	/**
+     * Récupération du prochain suffixe pour le numéro interne
+	 * @return bool|int|null|string Le suffixe pour le numéro interne
+	 * @throws Exception
+	 */
   public function getNextSuffix() {
     if (isset ($this->id)) {
       $next_suffix = 1;
@@ -387,9 +395,11 @@ class ActesBatch extends DataObject {
     }
   }
 
-  /**
-   * \brief Incrémentaiton du prochain suffixe pour le numéro interne
-   */
+	/**
+     * Incrémentaiton du prochain suffixe pour le numéro interne
+	 * @return bool|int|null|string
+	 * @throws Exception
+	 */
   public function incNextSuffix() {
     if (isset ($this->id)) {
       $next_suffix = $this->getNextSuffix();
@@ -406,13 +416,14 @@ class ActesBatch extends DataObject {
         $this->errorMsg = "Impossible de récupérer le suffixe courant.";
         return $this->errorMsg;
     }
+    return false;
   }
 
-  /**
-   * \brief Méthode d'importation des fichiers depuis les parametres du formulaire
-   * \param $files tableau des fichiers (format $_FILE)
-   * \return True en cas de succès ou False sinon
-   */
+	/**
+     * Méthode d'importation des fichiers depuis les parametres du formulaire
+	 * @param array $files tableau des fichiers (format $_FILE)
+	 * @return bool True en cas de succès ou False sinon
+	 */
   public function importFilesFromForm($files) {
     $ret_value = true;
 
@@ -424,8 +435,8 @@ class ActesBatch extends DataObject {
       $this->errorMsg = "<span style='font-weight:bold;color:red;'>Echec de la cr&eacute;ation du lot.</span><br />\n";
 
       reset($files);
-      while ((list ($key, $file) = each($files))) {
-        
+      foreach($files as $file) {
+
       	$filename=str_replace("\'","-",$file['name']);
       	$filename=str_replace("'","-",$filename);
 		if (strstr($filename,"?"))
@@ -474,13 +485,14 @@ class ActesBatch extends DataObject {
     return $ret_value;
   }
 
-  /**
-   * \brief Méthode d'ajout d'un fichier dans le lot
-   * \param $filepath chemin vers le fichier dans le système de fichier
-   * \param $name nom du fichier final
-   * \param $sign chaine : signature électronique du fichier
-   * \return True en cas de succès ou False sinon
-   */
+
+	/**
+     * Méthode d'ajout d'un fichier dans le lot
+	 * @param string $filepath chemin vers le fichier dans le système de fichier
+	 * @param string $name nom du fichier final
+	 * @param string $sign signature électronique du fichier
+	 * @return bool True en cas de succès ou False sinon
+	 */
   public function addBatchFile($filepath, $name, $sign) {
     $batchF = new ActesBatchFile();
 
@@ -494,12 +506,14 @@ class ActesBatch extends DataObject {
     return true;
   }
 
-  /**
-   * \brief Méthode d'enregistrement d'un lot dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \return true si succès, false sinon
-   */
-  public function save($validate = true) {
+	/**
+     * Méthode d'enregistrement d'un lot dans la base de données
+	 * @param bool $validate Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+	 * @param bool $return_rather_than_exec : Attention, ce paramètre ne sert pas et est utilisé que pour la compatibilité
+	 * @return bool|string true si succès, false sinon
+	 * @throws Exception
+	 */
+  public function save($validate = true,$return_rather_than_exec = false) {
     $new = false;
     if ($this->isNew()) {
       $new = true;
@@ -575,11 +589,14 @@ class ActesBatch extends DataObject {
     return true;
   }
 
-  /**
-   * \brief Méthode de suppression d'un lot
-   * \return true si succès, false sinon
-  */
-  public function delete() {
+	/**
+     *
+     * Méthode de suppression d'un lot
+	 * @param bool $id - Ne sert pas, uniquement pour assurer la compatibilité
+	 * @return bool
+	 * @throws Exception
+	 */
+  public function delete($id=false) {
     if (!$this->db->begin()) {
       $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
       return false;
@@ -616,4 +633,4 @@ class ActesBatch extends DataObject {
     return true;
   }
 }
-?>
+

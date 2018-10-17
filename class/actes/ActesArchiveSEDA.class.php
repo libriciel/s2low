@@ -94,7 +94,7 @@ class ActesArchiveSEDA {
 	}
 
 	public function calcTransferIdentifier($numero_transfert){
-		assert('$this->authorityInfo');
+		assert(!!$this->authorityInfo);
 		return $this->authorityInfo['sae_numero_aggrement'] ."-". date("Y-m-d") ."-".$numero_transfert;
 	}
 	

@@ -37,7 +37,6 @@ class ActesFileSender {
 
         $curlWrapper->get($url);
 
-
         if ($curlWrapper->getHTTPCode() != 200){
             throw new Exception($curlWrapper->getLastError());
         }

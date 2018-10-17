@@ -14,7 +14,7 @@ class ActesTransactionsXML {
 	}
 	
 	public function getFileName(array $autorityInfo, array $transactionInfo) {
-		assert('$transactionInfo["type"] != 6 ');  //Dans ce cas, il faux les info de la transaction 1 correspondante
+		assert($transactionInfo["type"] != 6 );  //Dans ce cas, il faux les info de la transaction 1 correspondante
 	 	
 	    $name = $autorityInfo['department'] . "-" . $autorityInfo['siren'] . "-";
 	    if ($transactionInfo['type'] == 7) {
@@ -41,14 +41,14 @@ class ActesTransactionsXML {
 	}
 
 	public function getXML(array $transactionInfo) {
-		assert('$transactionInfo["date_decision"]');
-		assert('$transactionInfo["numero_interne"]');
-		assert('$transactionInfo["code_nature"]');
-		assert('$transactionInfo["classification"]');
-		assert('$transactionInfo["objet"]');
-		assert('$transactionInfo["classification_date_version"]');
-		assert('$transactionInfo["nom_fichier"]');
-		assert('isset($transactionInfo["annexe"])');
+		assert(!!$transactionInfo["date_decision"]);
+		assert(!!$transactionInfo["numero_interne"]);
+		assert(!!$transactionInfo["code_nature"]);
+		assert(!!$transactionInfo["classification"]);
+		assert(!!$transactionInfo["objet"]);
+		assert(!!$transactionInfo["classification_date_version"]);
+		assert(!!$transactionInfo["nom_fichier"]);
+		assert(isset($transactionInfo["annexe"]));
 		$xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";
 		ob_start(); ?>
 		
