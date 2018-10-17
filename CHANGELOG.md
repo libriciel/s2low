@@ -5,6 +5,7 @@
 ### Evolutions
 
 - Préparation de la compatibilité avec la version 7.2 de PHP.
+- Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
 
 ### Corrections
  
