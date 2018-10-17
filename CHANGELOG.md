@@ -14,6 +14,9 @@
 - Correction du pespolicyhash sur la signature incorrect #417
 - Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job queue #408
 
+### Ajouts
+- Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
+
 ### Retraits
 
 - Retraits de DBUnit qui était top lent pour la suite de test de s2low
