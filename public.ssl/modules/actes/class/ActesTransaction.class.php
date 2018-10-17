@@ -1721,7 +1721,7 @@ class ActesTransaction extends DataObject {
 		if (ACTES_ALWAYS_CAN_VALIDATE){
 			return true;
 		}
-		assert($this->id);
+		assert(!!$this->id);
 		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 
 				" FROM actes_transactions_workflow " .
 				" WHERE transaction_id=".$this->id.

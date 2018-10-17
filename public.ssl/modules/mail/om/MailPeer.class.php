@@ -78,7 +78,7 @@ class MailPeer {
   //FIXME fonction catastrophique...
 	public static function GetMailEmis($trans_id) {
   		
-		assert($trans_id);
+		assert(!!$trans_id);
 		
 		$db =DatabasePool::getInstance();
 		
@@ -133,7 +133,7 @@ class MailPeer {
   
   
 	public static function GetAnnuaire($authority_id,$groupe_id = null) {
-		assert($authority_id);
+		assert(!!$authority_id);
 		$sql = "SELECT * FROM mail_annuaire ";
 		if ($groupe_id){
 			$sql .= " JOIN mail_user_groupe ON mail_annuaire.id = mail_user_groupe.id_user ";

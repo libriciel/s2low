@@ -41,13 +41,13 @@ class ActesTransactionsXML {
 	}
 
 	public function getXML(array $transactionInfo) {
-		assert($transactionInfo["date_decision"]);
-		assert($transactionInfo["numero_interne"]);
-		assert($transactionInfo["code_nature"]);
-		assert($transactionInfo["classification"]);
-		assert($transactionInfo["objet"]);
-		assert($transactionInfo["classification_date_version"]);
-		assert($transactionInfo["nom_fichier"]);
+		assert(!!$transactionInfo["date_decision"]);
+		assert(!!$transactionInfo["numero_interne"]);
+		assert(!!$transactionInfo["code_nature"]);
+		assert(!!$transactionInfo["classification"]);
+		assert(!!$transactionInfo["objet"]);
+		assert(!!$transactionInfo["classification_date_version"]);
+		assert(!!$transactionInfo["nom_fichier"]);
 		assert(isset($transactionInfo["annexe"]));
 		$xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>";
 		ob_start(); ?>
