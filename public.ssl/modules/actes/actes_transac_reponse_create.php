@@ -166,7 +166,7 @@ if (isset ($actePDFFile) ) {
 
 
 if (isset ($acteAttachments)) {
-  for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
+  for ($i = 0; $i < count($acteAttachments["tmp_name"]?:[]); $i++) {
     if (strlen($acteAttachments["tmp_name"][$i])) {
       if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
         // Sauvegarde dans la session pour réaffichage en cas d'erreur dans le formulaire
