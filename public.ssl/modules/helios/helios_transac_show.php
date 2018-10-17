@@ -243,7 +243,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 						pesid: "<?php echo $signatureInfo['bordereau_id']?>",
                         pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.7",
 						pespolicydesc: "Politique de signature Helios de la DGFiP",
-                        pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E",
+                        pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E=",
                         pesspuri: "https://www.collectivites-locales.gouv.fr/files/files/finances_locales/dematerialisation/ps_helios_dgfip.pdf",
 						pescity: "<?php hecho($authorityInfo->get('city'))?>",
 						pespostalcode: "<?php hecho($authorityInfo->get('postal_code'))?>",

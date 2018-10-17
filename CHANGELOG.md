@@ -11,6 +11,7 @@
  
 - Correction d'un bug sur la signature local via un certificat contenant un caractère non-ANSI
 - Correction d'un bug sur la signature local par lot pour les PES #414
+- Correction du pespolicyhash sur la signature incorrect #417
 
 ### Retraits
 
