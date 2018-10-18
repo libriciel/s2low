@@ -4,9 +4,9 @@ class AuthoritySQL extends SQL {
   	public static function getSAEProperties(){
   		return  array(
 			'pastell_url' => "URL Pastell",
-			'pastell_login' => "Login Pastell",
-			'pastell_password' => "Mot de passe Pastell",
-			'pastell_id_e' => "Identifiant collectivité sur pastell (id_e)"
+			'pastell_login' => "Login",
+			'pastell_password' => "Mot de passe",
+			'pastell_id_e' => "Identifiant de l'entité (id_e)"
 		);
   	}
 	
