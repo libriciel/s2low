@@ -328,6 +328,10 @@ $html .= " <tbody>\n";
 
 $html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
 
+if ($me->isSuper()) {
+	$link = WEBSITE_SSL ."/modules/actes/actes_transac_validate.php?transaction_id=$id";
+	$html .= "<br/><a href='$link'>Validation de l'archive</a>";
+}
 
 $html .= "</div>\n";
 // Affichage du Workflow

@@ -16,6 +16,7 @@
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
+- Validation des fichiers XML et des signatures PADES des actes pour le super admin 
 
 ### Retraits
 
