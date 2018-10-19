@@ -1,6 +1,7 @@
 DELETE FROM logs;
 DELETE FROM logs_historique;
 
+DELETE FROM authority_pastell_config;
 DELETE FROM actes_classification_codes;
 DELETE FROM actes_classification_requests;
 DELETE FROM actes_included_files;

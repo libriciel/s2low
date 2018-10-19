@@ -32,16 +32,20 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1);
 
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$authoritySQL->updateSAE(1,array('pastell_url'=>'test','pastell_login'=>'test','pastell_password'=>'test','pastell_id_e'=>'12'));
-
-
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "toto";
+        $pastellProperties->id_e = 12;
+		$authoritySQL->updateSAE(1,$pastellProperties);
 		return $transaction_id;
 	}
 
 	public function testSetArchiveEnAttenteEnvoiSAEPastellNotConfigured(){
 		$transaction_id = $this->createTransaction(4);
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$authoritySQL->updateSAE(1,array('pastell_url'=>'','pastell_login'=>'','pastell_password'=>'','pastell_id_e'=>0));
+
+        $pastellProperties = new PastellProperties();
+
+		$authoritySQL->updateSAE(1,$pastellProperties);
 
 		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
 		$this->assertFalse($result);

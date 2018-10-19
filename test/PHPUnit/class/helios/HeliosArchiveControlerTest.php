@@ -28,13 +28,14 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 		$sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename) VALUES (?,?,?,?) returning ID;";
 		$transaction_id = $this->getSQLQuery()->queryOne($sql,1,1,4,"toto.txt");
 
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "test";
+        $pastellProperties->login = "test";
+        $pastellProperties->password = "test";
+        $pastellProperties->id_e = 12;
+
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$authoritySQL->updateSAE(1,array(
-			'pastell_url'=>'test',
-			'pastell_login'=>'test',
-			'pastell_password'=>'test',
-			'pastell_id_e'=>'12')
-		);
+		$authoritySQL->updateSAE(1,$pastellProperties);
 
 		return $transaction_id;
 	}

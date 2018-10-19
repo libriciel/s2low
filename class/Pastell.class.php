@@ -57,7 +57,7 @@ class Pastell {
 	public function testConnexion(){
 		$data = $this->callAPI("list-entite.php");
 		if (! $data){
-			$this->lastError = "Impossible de lire des données depuis Pastell.";
+			$this->lastError = "Impossible de lire des données depuis Pastell : " . $this->lastError;
 			return false;
 		}
 		foreach($data as $entite){

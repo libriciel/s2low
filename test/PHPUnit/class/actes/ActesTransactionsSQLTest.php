@@ -28,7 +28,12 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code) VALUES (?,?,?,?,?,?,?) returning ID;";
         $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,"2017-07-01","20170728C",3);
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
-        $authoritySQL->updateSAE(1,array('pastell_url'=>'test','pastell_login'=>'test','pastell_password'=>'test','pastell_id_e'=>'12'));
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "test";
+        $pastellProperties->login = "test";
+        $pastellProperties->password = "test";
+        $pastellProperties->id_e = 12;
+        $authoritySQL->updateSAE(1,$pastellProperties);
 
         return $transaction_id;
     }
