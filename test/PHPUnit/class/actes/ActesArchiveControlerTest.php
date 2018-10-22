@@ -106,7 +106,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$sql = "UPDATE actes_transactions_workflow SET date=? WHERE id=?";
 		$this->getSQLQuery()->query($sql,$date,$this->last_transaction_workflow_id);
 
-		$this->expectOutputRegex("#Passage de la transaction en erreur !#");
+		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->actesArchiveControler->sendAllArchive();
 	}
 

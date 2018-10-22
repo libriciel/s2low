@@ -66,7 +66,7 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 	public function testSend(){
 		$transaction_id = $this->setTransactionEnattente();
 		$this->heliosArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
-		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur renvoyé par le mock#");
+		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->heliosArchiveControler->sendAllArchive();
 	}
 
@@ -100,7 +100,7 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE id=?";
 		$this->getSQLQuery()->query($sql,$date,$this->last_transaction_workflow_id);
 
-		$this->expectOutputRegex("#Passage de la transaction en erreur !#");
+		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->heliosArchiveControler->sendAllArchive();
 	}
 
