@@ -6,6 +6,9 @@
 
 - Préparation de la compatibilité avec la version 7.2 de PHP.
 - Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
+- Les transactions envoyé au SAE sont considéré en erreur dès le premier envoi et pas au bout de 24 heures d'essai
+- Modification de l'interface de connexion à Pastell #416
+
 
 ### Corrections
  

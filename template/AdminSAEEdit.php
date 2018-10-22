@@ -85,6 +85,7 @@
             />
         </div>
     </div>
+    <!--
     <div class="form-group">
         <label class="col-md-4 label-form" for="actes_destination">Destination&nbsp;: </label>
         <div class="col-md-6">
@@ -114,7 +115,7 @@
             />
         </div>
     </div>
-
+-->
 
     <h3>Hélios</h3>
     <div class="form-group">
@@ -140,6 +141,7 @@
             />
         </div>
     </div>
+    <!--
     <div class="form-group">
         <label class="col-md-4 label-form" for="helios_destination">Destination&nbsp;: </label>
         <div class="col-md-6">
@@ -169,7 +171,7 @@
             />
         </div>
     </div>
-
+-->
 
 
     <div class="form-group">

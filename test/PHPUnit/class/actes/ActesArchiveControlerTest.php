@@ -61,7 +61,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 	public function testSendCreateActeFailed(){
 		$transaction_id = $this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellFactory($this->getPastellFactory());
+		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
 		$this->expectOutputString("Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock\n");
 		$this->actesArchiveControler->sendArchive($transaction_id);
 	}
@@ -74,29 +74,32 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 	/**
 	 * @param int $returnCreateActes
-	 * @return PastellFactory
+	 * @return PastellWrapperFactory
 	 */
 	private function getPastellFactory($returnCreateActes = 0){
-		$pastell = $this->getMockBuilder('Pastell')->disableOriginalConstructor()->getMock();
+		$pastell = $this->getMockBuilder('PastellWrapper')->disableOriginalConstructor()->getMock();
 		$pastell->expects($this->any())->method('createActes')->willReturn($returnCreateActes);
 		$pastell->expects($this->any())->method('getLastError')->willReturn("Erreur renvoyé par le mock");
 
 
-		$pastellFactory = $this->getMockBuilder('PastellFactory')->getMock();
+		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->getMock();
 		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
 		return $pastellFactory;
 	}
 
 	public function testSend(){
 		$transaction_id = $this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellFactory($this->getPastellFactory());
+		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
 		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock#");
 		$this->actesArchiveControler->sendAllArchive();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSendTransactionEnErreur(){
 		$this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellFactory($this->getPastellFactory());
+		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
 
 		$date = date("Y-m-d",strtotime("-2 days"));
 

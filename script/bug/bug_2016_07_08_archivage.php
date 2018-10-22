@@ -1,10 +1,15 @@
 <?php
 
 /*
+ * Ce script n'est plus fonctionnel
+ *
  * Les transactions helios versé et accepté par le SAE n'ont pas été supprimé sur Pastell
  *
  *
  */
+
+exit;
+
 
 require_once ( __DIR__."/../../init/init.php");
 
@@ -21,7 +26,7 @@ foreach($all as $i => $transaction_info){
 
 	echo "Transaction {$transaction_info['id']} - Pastell {$transaction_info['sae_transfer_identifier']}\n";
 
-	$pastell = new Pastell($transaction_info['pastell_url'],
+	$pastell = new PastellWrapper($transaction_info['pastell_url'],
 		$transaction_info['pastell_id_e'],
 		$transaction_info['pastell_login'],
 		$transaction_info['pastell_password']);

@@ -16,26 +16,29 @@ class AdminSAEController extends Controller {
 		$this->title = "SAE - Configuration";
 	}
 
+	/**
+	 * @throws RedirectException
+	 * @throws Exception
+	 */
 	public function testAction(){
         $id = $this->getRecuperateurGet()->getInt('id');
-        $authorityInfo = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo($id);
 
-        $pastell = new Pastell($authorityInfo['pastell_url'],
-            $authorityInfo['pastell_id_e'],
-            $authorityInfo['pastell_login'],
-            $authorityInfo['pastell_password']);
+		$pastellProperties = $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->getPastellProperties($id);
 
-        $result = $pastell->testConnexion();
-        if ($result){
-            $message =  "Connexion OK";
-        } else {
-            $message = $pastell->getLastError();
-        }
-
-        $this->setErrorMessage($message);
+        $pastellFactory = $this->getObjectInstancier()->get(PastellWrapperFactory::class);
+        $pastell = $pastellFactory->getNewInstance($pastellProperties);
+		try {
+			$pastell->testConnexion();
+			$this->setErrorMessage("Connexion OK");
+		} catch (Exception $e){
+			$this->setErrorMessage($e->getMessage());
+		}
         $this->redirect("/admin/authorities/admin_authority_sae.php?id=$id");
     }
 
+	/**
+	 * @throws RedirectException
+	 */
     public function doEditAction(){
         $id = $this->getRecuperateurPost()->getInt('id');
         $pastellProperties = new PastellProperties();

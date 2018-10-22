@@ -5,14 +5,11 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class
 
 class ActesArchiveControler {
 
-	/* Nombre de seconde avant de considérer l'envoi comme une erreur */
-	const PASSER_EN_ERREUR_APRES_NB_SECOND = 86400;
-
 	private $sqlQuery;
 	private $lastError;
 
-	/** @var  PastellFactory */
-	private $pastellFactory;
+	/** @var  PastellWrapperFactory */
+	private $pastellWrapperFactory;
 
 	/** @var  ActesTransactionsSQL */
 	private $actesTransactionsSQL;
@@ -22,19 +19,29 @@ class ActesArchiveControler {
 
 	private $actesRetriever;
 
+	/** @var PastellPropertiesSQL */
+	private $pastellPropetiesSQL;
+
+	/** @var S2lowLogger */
+	private $logger;
+
 	public function __construct(
 	    SQLQuery $sqlQuery,
-        ActesRetriever $actesRetriever
+        ActesRetriever $actesRetriever,
+		PastellPropertiesSQL $pastellPropertiesSQL,
+		S2lowLogger $logger
     ){
 		$this->sqlQuery = $sqlQuery;
-		$this->setPastellFactory(new PastellFactory());
+		$this->setPastellWrapperFactory(new PastellWrapperFactory());
 		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$this->actesRetriever = $actesRetriever;
+		$this->pastellPropetiesSQL = $pastellPropertiesSQL;
+		$this->logger = $logger;
 	}
 
-	public function setPastellFactory(PastellFactory $pastellFactory){
-		$this->pastellFactory = $pastellFactory;
+	public function setPastellWrapperFactory(PastellWrapperFactory $pastellWrapperFactory){
+		$this->pastellWrapperFactory = $pastellWrapperFactory;
 	}
 
 	public function getLastError(){
@@ -117,40 +124,64 @@ class ActesArchiveControler {
 	}
 
 	public function sendArchive($id){
+		$id_d = false;
 		try {
-			$this->sendArchiveThrow($id);
+			$id_d = $this->createPastellDocument($id);
+			$this->sendArchiveThrow($id,$id_d);
 		} catch (Exception $e){
-			echo "Impossible d'envoyer la transaction $id : " . $e->getMessage()."\n";
-			$status_info = $this->actesTransactionsSQL->getLastStatusInfo($id);
-			$first_try = strtotime($status_info['date']);
-			if (time() - $first_try > self::PASSER_EN_ERREUR_APRES_NB_SECOND){
-				$this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,"Le document n'a pas pu être envoyé au SAE");
-				echo "Passage de la transaction en erreur !\n";
+			$message = "Impossible d'envoyer la transaction $id : " . $e->getMessage();
+			if ($id_d){
+				$message .=  " - id_d=$id_d";
 			}
+			echo $message."\n";
+			$this->actesTransactionsSQL->updateStatus(
+				$id,
+				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+				$message
+			);
 		}
 	}
 
-	private function sendArchiveThrow($id){
+	/**
+	 * @param $id
+	 * @return bool
+	 * @throws Exception
+	 */
+	private function createPastellDocument($id){
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
 		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
 
-		$authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
-
-
-		$pastell = $this->pastellFactory->getNewInstance(
-			$authorityInfo['pastell_url'],
-			$authorityInfo['pastell_id_e'],
-			$authorityInfo['pastell_login'],
-			$authorityInfo['pastell_password']
-		);
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
 		$id_d = $pastell->createActes($transactionsInfo);
 
 		if (! $id_d){
 			throw new Exception("Erreur pastell : ". $pastell->getLastError());
 		}
-		
+		$this->logger->debug("création du document id_d : $id_d");
+
+		return $id_d;
+	}
+
+	/**
+	 * @param $id
+	 * @param $id_d
+	 * @throws Exception
+	 */
+	private function sendArchiveThrow($id,$id_d){
+
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
+
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
+
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
+
+		$this->logger->debug("Envoi de la transaction $id sur Pastell");
+
+
 		$actesFile = $this->actesTransactionsSQL->getAllFile($id);
 		
 		$actesEnvelopeSQL = new ActesEnvelopeSQL($this->sqlQuery);
@@ -166,7 +197,7 @@ class ActesArchiveControler {
 		$acte_filename = $actesFile[0]['filename'];
 		
 		$pastell->postActes($id_d,$tmp_folder."/".$actesFile[1]['filename'],$actesFile[1]['posted_filename']);
-		
+		$this->logger->debug("postage de l'actes id_d : $id_d");
 		if ($actesFile[1]['signature']){
 			$signature_file_path = $tmp_folder."/signature.pk7";
 			file_put_contents($signature_file_path, $actesFile[1]['signature']);
@@ -261,9 +292,10 @@ class ActesArchiveControler {
 		
 		$pastell->postRelatedTransaction($id_d,$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar);
 		$tmpFolder->delete($tmp_folder);
-		
-		
-		$result = $pastell->sendSAE($id_d);
+
+		$this->logger->debug("Envoi au SAE : $id_d");
+
+		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
 		if (! $result){
 			throw new Exception($pastell->getLastError());
 		}
@@ -285,7 +317,25 @@ class ActesArchiveControler {
 		return $pdftkise;
 	}
 
+	/**
+	 * @param $transactionInfo
+	 * @return bool
+	 */
 	public function verifArchive($transactionInfo){
+		try {
+			return $this->verifArchiveThrow($transactionInfo);
+		} catch (Exception $e){
+			echo "Problème lors de la vérificationd de l'archive : " . $e->getMessage();
+			return false;
+		}
+	}
+
+	/**
+	 * @param $transactionInfo
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function verifArchiveThrow($transactionInfo){
 		echo "Transaction {$transactionInfo['unique_id']} : ";
 
 		$authoritySQL = new AuthoritySQL($this->sqlQuery);
@@ -296,23 +346,20 @@ class ActesArchiveControler {
 			return false;
 		}
 
-		$pastell = $this->pastellFactory->getNewInstance(
-			$authorityInfo['pastell_url'],
-			$authorityInfo['pastell_id_e'],
-			$authorityInfo['pastell_login'],
-			$authorityInfo['pastell_password']
-		);
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionInfo['authority_id']);
+
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
 
 		$info = $pastell->getInfo($transactionInfo['sae_transfer_identifier']);
 		if(!$info){
 			echo $pastell->getLastError()."\n";
 			return false;
 		}
-		$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'],'reply_sae');
-
-
-		if (! $reply_sae){
-			echo "Pas encore de réponse (".$pastell->getLastError().") \n";
+		try {
+			$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'], 'reply_sae');
+		} catch (Exception $e){
+			echo "Pas encore de réponse (".$e->getMessage().") \n";
 			return false;
 		}
 

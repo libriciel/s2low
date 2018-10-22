@@ -12,11 +12,14 @@ class AdminSAEControllerTest extends S2lowTestCase {
 		$adminServiceController->_actionAfter();
 	}
 
+	/**
+	 * @throws RedirectException
+	 */
 	public function testTestAction(){
         $this->setSuperAdminAuthentication();
         $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
         $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
-        $this->setExpectedException(RedirectException::class);
+        $this->setExpectedException(Exception::class,"Redirect to");
         $adminServiceController->testAction();
     }
 
