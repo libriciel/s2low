@@ -1,8 +1,9 @@
 <?php
 
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
+require_once ("../../../init/init.php");
+
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
+
 
 // Instanciation du module courant
 $module = new Module();
@@ -51,6 +52,8 @@ for ($i = 0; $i <= max($filerefs);$i++){
   $converted[$name]['error'] = $_FILES['files']['error'][$i];
   $converted[$name]['size'] = $_FILES['files']['size'][$i];
 }
+
+$logger->debug("Fichier reçu dans le lot",$converted);
 //Fin
 $alljson = array();
 
@@ -61,6 +64,9 @@ if (count($converted) > 0) {
   if (!$zeBatch->importFilesFromForm($converted)) {
   $msg = $zeBatch->getErrorMsg();
   $elvl = 1;
+
+
+
     //Helpers::returnAndExit(1, $zeBatch->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_batch_add.php");
   } else {
     if (!$zeBatch->save()) {
@@ -100,5 +106,8 @@ foreach ($converted as $kFile => $file){
  	$msg = "Aucun fichier soumis";
 }
 $alljson[] = array('msg' => $msg, 'elvl' => $elvl, 'id' => $id);
+
+
+
 
 echo json_encode($alljson);

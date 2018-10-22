@@ -82,9 +82,11 @@ $(function () {
 		always: function(e, data){
 			var obj = data.result;
 
+
 			var msg = '';
 			var lvl = '';
 			var id = '';
+
 
 			jQuery.each(obj, function(key, value) {
 				jQuery.each(value, function(key2, value2) {

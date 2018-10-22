@@ -439,11 +439,12 @@ class ActesBatch extends DataObject {
 
       	$filename=str_replace("\'","-",$file['name']);
       	$filename=str_replace("'","-",$filename);
-		if (strstr($filename,"?"))
+      	$filename=str_replace("?","-",$filename);
+		/*if (strstr($filename,"?"))
 		{	
 			$this->errorMsg .= "Le fichier " . $filename . " ne doit pas contenir des lettres accentuées";
 			$ret_value = false;	
-		}
+		}*/
       	//echo $fiename;
         //$filename = Helpers :: stripSlashes($file["name"]);
 
