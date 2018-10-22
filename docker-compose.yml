@@ -33,6 +33,7 @@ services:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
             - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
+            - ${LOG_PATH}:/data/log/
 
     db:
         image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
