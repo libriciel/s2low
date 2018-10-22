@@ -17,5 +17,6 @@ services:
             POSTGRES_USER_TEST: ${POSTGRES_USER_TEST}
             POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST}
             POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
+            ACTES_ALWAYS_CAN_VALIDATE: "true"
         volumes:
             - ${LETSENCRYPT_DATADIR}:/etc/letsencrypt
