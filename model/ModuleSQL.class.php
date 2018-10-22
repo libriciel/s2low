@@ -4,6 +4,9 @@ require_once __DIR__."/UsersPermsSQL.class.php";
 
 class ModuleSQL extends SQL {
 
+    const ACTES_MODULE_NAME = 'actes';
+    const HELIOS_MODULE_NAME = 'helios';
+
 	public function getInfoByName($name){
 		$sql = "SELECT * FROM modules WHERE name=?";
 		return $this->queryOne($sql,$name);

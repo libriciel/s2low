@@ -9,8 +9,8 @@ class HeliosArchiveControler {
 	/** @var HeliosTransactionsSQL  */
 	private $heliosTransactionsSQL;
 
-	/** @var  PastellFactory */
-	private $pastellFactory;
+	/** @var  PastellWrapperFactory */
+	private $pastellWrapperFactory;
 
 	private $pesAllerRetriever;
 
@@ -22,13 +22,12 @@ class HeliosArchiveControler {
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$this->setPastellFactory(new PastellFactory());
-
+		$this->setPastellWrapperFactory(new PastellWrapperFactory());
 		$this->pesAllerRetriever = $pesAllerRetriever;
 	}
 	
-	public function setPastellFactory(PastellFactory $pastellFactory){
-		$this->pastellFactory = $pastellFactory;
+	public function setPastellWrapperFactory(PastellWrapperFactory $pastellWrapperFactory){
+		$this->pastellWrapperFactory = $pastellWrapperFactory;
 	}
 
 	public function getLastError(){
@@ -106,18 +105,19 @@ class HeliosArchiveControler {
 		try {
 			$this->sendArchiveThrow($id);
 		} catch (Exception $e){
-			echo "Impossible d'envoyer la transaction $id : " . $e->getMessage()."\n";
-			$status_info = $this->heliosTransactionsSQL->getLastStatusInfo($id);
-			$first_try = strtotime($status_info['date']);
-			if (time() - $first_try > self::PASSER_EN_ERREUR_APRES_NB_SECOND){
-				$this->heliosTransactionsSQL->updateStatus($id,
-					HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-					"Le document n'a pas pu être envoyé au SAE");
-				echo "Passage de la transaction en erreur !\n";
-			}
+			$message = "Le document n'a pas pu être envoyé sur Pastell : " . $e->getMessage();
+			$this->heliosTransactionsSQL->updateStatus($id,
+				HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+				$message);
+			echo $message."\n";
 		}
 	}
 
+	/**
+	 * @param $id
+	 * @return bool
+	 * @throws Exception
+	 */
 	private function sendArchiveThrow($id){
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$transactionsInfo = $heliosTransactionsSQL->getInfo($id);
@@ -131,12 +131,11 @@ class HeliosArchiveControler {
 			throw new Exception("La collectivité n'a pas de Pastell configuré");
 		}
 
-		$pastell = $this->pastellFactory->getNewInstance(
-			$authorityInfo['pastell_url'],
-			$authorityInfo['pastell_id_e'],
-			$authorityInfo['pastell_login'],
-			$authorityInfo['pastell_password']
-		);
+		$pastellPropertiesSQL = new PastellPropertiesSQL($this->sqlQuery);
+		$pastellProperties = $pastellPropertiesSQL->getPastellProperties($transactionsInfo['authority_id']);
+
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
 
 
 		$id_d = $pastell->createHelios($transactionsInfo);
@@ -152,7 +151,7 @@ class HeliosArchiveControler {
 		$pes_retour_path = HELIOS_RESPONSES_ROOT . "/".  $transactionsInfo['acquit_filename'];
 		$pastell->postFile($id_d,'fichier_reponse',$pes_retour_path,$transactionsInfo['acquit_filename']);
 		
-		$result = $pastell->sendSAE($id_d);
+		$result = $pastell->sendSAE($id_d,$pastellProperties->helios_action);
 
 		if (! $result){
 			throw new Exception($pastell->getLastError());
@@ -161,8 +160,23 @@ class HeliosArchiveControler {
 		$heliosTransactionsSQL->setSAETransferIdentifier($id,$id_d);
 		return true;
 	}
-	
+
+
 	public function verifArchive($transactionInfo){
+		try {
+			return $this->verifArchiveThrow($transactionInfo);
+		} catch (Exception $e){
+			echo "Problème lors de la vérificationd de l'archive : " . $e->getMessage();
+			return false;
+		}
+	}
+
+	/**
+	 * @param $transactionInfo
+	 * @return bool
+	 * @throws Exception
+	 */
+	private function verifArchiveThrow($transactionInfo){
 		echo "Transaction {$transactionInfo['id']} : ";
 		
 		$userSQL = new UserSQL($this->sqlQuery);
@@ -175,23 +189,24 @@ class HeliosArchiveControler {
 			echo  "La collectivité n'a pas de Pastell configuré\n";
 			return false;
 		}
-		
-		$pastell = new Pastell($authorityInfo['pastell_url'],
-						$authorityInfo['pastell_id_e'],
-						$authorityInfo['pastell_login'],
-						$authorityInfo['pastell_password']);
 
-		$info = $pastell->getInfo($transactionInfo['sae_transfer_identifier']);
+		$pastellPropertiesSQL = new PastellPropertiesSQL($this->sqlQuery);
+		$pastellProperties = $pastellPropertiesSQL->getPastellProperties($userInfo['authority_id']);
+
+		$pastellWrapper = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
+		$info = $pastellWrapper->getInfo($transactionInfo['sae_transfer_identifier']);
 		if(!$info){
-			echo $pastell->getLastError()."\n";
+			echo $pastellWrapper->getLastError()."\n";
 			return false;
 		}
-		$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'],'reply_sae');
-		if (! $reply_sae){
-			echo "Pas encore de réponse (".$pastell->getLastError().") \n";
+		try {
+			$reply_sae = $pastellWrapper->getFile($transactionInfo['sae_transfer_identifier'], 'reply_sae');
+		} catch (Exception $e){
+			echo "Pas encore de réponse (".$e->getMessage().") \n";
 			return false;
 		}
-		
+
 		@ $xml = simplexml_load_string($reply_sae);
 		
 		if (! $xml){
@@ -220,7 +235,7 @@ class HeliosArchiveControler {
 		
 		echo "$msg\n";
 		
-		$pastell->delete($transactionInfo['sae_transfer_identifier']);
+		$pastellWrapper->delete($transactionInfo['sae_transfer_identifier']);
 		echo "Document supprimé sur Pastell\n";
 		
 		return true;

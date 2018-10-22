@@ -112,6 +112,12 @@ ob_start();
 
 </div>
 
+<div class="alert alert-info">
+    Outil externe de vérification de signatures :
+    <a class="btn btn-info" href="http://dss.nowina.lu/validation" target="_blank">
+        Validation de signature
+    </a>
+</div>
 
 <?php
 

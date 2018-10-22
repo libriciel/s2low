@@ -9,6 +9,5 @@ docker compose up -d
 
 # Lancer les tests d'intégrations
 
-docker-compose exec web bash
-    composer test
+docker-compose exec web composer test
 

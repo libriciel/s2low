@@ -55,4 +55,6 @@ define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-noreply@locahost}");
 
 define('MODE_BEANSTALKD',true);
 
+define('ACTES_ALWAYS_CAN_VALIDATE',${ACTES_ALWAYS_CAN_VALIDATE:-false});
+
 EOF

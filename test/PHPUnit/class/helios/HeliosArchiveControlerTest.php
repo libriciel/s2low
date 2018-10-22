@@ -16,7 +16,6 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
         parent::setUp();
         $this->heliosArchiveControler = $this->getObjectInstancier()->get("HeliosArchiveControler");
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-
     }
 
     public function testSetArchiveEnAttenteEnvoiSEA(){
@@ -28,13 +27,14 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 		$sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename) VALUES (?,?,?,?) returning ID;";
 		$transaction_id = $this->getSQLQuery()->queryOne($sql,1,1,4,"toto.txt");
 
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "test";
+        $pastellProperties->login = "test";
+        $pastellProperties->password = "test";
+        $pastellProperties->id_e = 12;
+
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$authoritySQL->updateSAE(1,array(
-			'pastell_url'=>'test',
-			'pastell_login'=>'test',
-			'pastell_password'=>'test',
-			'pastell_id_e'=>'12')
-		);
+		$authoritySQL->updateSAE(1,$pastellProperties);
 
 		return $transaction_id;
 	}
@@ -65,8 +65,8 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 
 	public function testSend(){
 		$transaction_id = $this->setTransactionEnattente();
-		$this->heliosArchiveControler->setPastellFactory($this->getPastellFactory());
-		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur renvoyé par le mock#");
+		$this->heliosArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
+		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->heliosArchiveControler->sendAllArchive();
 	}
 
@@ -78,29 +78,29 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 
 	/**
 	 * @param int $returnCreateActes
-	 * @return PastellFactory
+	 * @return PastellWrapperFactory
 	 */
 	private function getPastellFactory($returnCreateActes = 0){
-		$pastell = $this->getMockBuilder('Pastell')->disableOriginalConstructor()->getMock();
+		$pastell = $this->getMockBuilder('PastellWrapper')->disableOriginalConstructor()->getMock();
 		$pastell->expects($this->any())->method('createActes')->willReturn($returnCreateActes);
 		$pastell->expects($this->any())->method('getLastError')->willReturn("Erreur renvoyé par le mock");
 
 
-		$pastellFactory = $this->getMockBuilder('PastellFactory')->getMock();
+		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->getMock();
 		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
 		return $pastellFactory;
 	}
 
 	public function testSendTransactionEnErreur(){
 		$this->setTransactionEnattente();
-		$this->heliosArchiveControler->setPastellFactory($this->getPastellFactory());
+		$this->heliosArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
 
 		$date = date("Y-m-d",strtotime("-2 days"));
 
 		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE id=?";
 		$this->getSQLQuery()->query($sql,$date,$this->last_transaction_workflow_id);
 
-		$this->expectOutputRegex("#Passage de la transaction en erreur !#");
+		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->heliosArchiveControler->sendAllArchive();
 	}
 

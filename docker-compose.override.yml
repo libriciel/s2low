@@ -21,6 +21,7 @@ services:
             POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST}
             WEB_HTTP_PORT: ${WEB_HTTP_PORT}
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
+            ACTES_ALWAYS_CAN_VALIDATE: "true"
 
     db:
         environment:

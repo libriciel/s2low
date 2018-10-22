@@ -41,13 +41,15 @@ class AuthoritySQLTest extends S2lowTestCase {
 	}
 
 	public function testUpdateSAE(){
-		$this->authoritySQL->updateSAE(1,array('pastell_url'=>"test",
-												"pastell_login"=>"login",
-												"pastell_password"=>"password",
-												"pastell_id_e"=>"42")
-												);
+	    $pastellProperties = new PastellProperties();
+	    $pastellProperties->url = "test";
+	    $pastellProperties->login = "login";
+	    $pastellProperties->password = "password";
+	    $pastellProperties->id_e = 42;
+		$this->authoritySQL->updateSAE(1,$pastellProperties);
 		$info = $this->authoritySQL->getInfo(1);
 		$this->assertEquals("test",$info['pastell_url']);
+        $this->assertEquals("password",$info['pastell_password']);
 	}
 
 	public function testVerifDepartementAndDistrict(){

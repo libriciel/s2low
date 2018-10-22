@@ -4,9 +4,9 @@ class AuthoritySQL extends SQL {
   	public static function getSAEProperties(){
   		return  array(
 			'pastell_url' => "URL Pastell",
-			'pastell_login' => "Login Pastell",
-			'pastell_password' => "Mot de passe Pastell",
-			'pastell_id_e' => "Identifiant collectivité sur pastell (id_e)"
+			'pastell_login' => "Login",
+			'pastell_password' => "Mot de passe",
+			'pastell_id_e' => "Identifiant de l'entité (id_e)"
 		);
   	}
 	
@@ -42,16 +42,20 @@ class AuthoritySQL extends SQL {
 		return $result;
 	}
   	
-  	public function updateSAE($id,array $info){
-  		$sql = "UPDATE authorities SET pastell_url=?,pastell_login=?,pastell_password=?,pastell_id_e=? WHERE id = ?";
-    	$data['id'] = $id;
-
+  	public function updateSAE($authority_id, PastellProperties $pastellProperties){
+  		$sql = "UPDATE authorities SET pastell_url=?,pastell_login=?,pastell_id_e=? " .
+            " WHERE id = ?";
   		$this->query($sql,
-  								$info['pastell_url'],
-  								$info['pastell_login'],
-  								$info['pastell_password'],
-  								$info['pastell_id_e'],
-  								$id);
+            $pastellProperties->url,
+            $pastellProperties->login,
+            $pastellProperties->id_e,
+            $authority_id
+        );
+
+  		if ($pastellProperties->password){
+  		    $sql = "UPDATE authorities SET pastell_password=? WHERE id=?";
+  		    $this->query($sql,$pastellProperties->password,$authority_id);
+        }
   	}
   	
   	public function verifDepartmentAndDistrict($department_code,$district_code){
