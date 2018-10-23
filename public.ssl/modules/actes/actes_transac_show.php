@@ -605,10 +605,10 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 
 	$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 	$tab_included_files = $actesIncludedFileSQL->getSendFile($id);
+
+
 	$tab_included_files = array_slice($tab_included_files,0,1);
-
 	$libersignController = new LibersignController($objectInstancier);
-
 
 
 	$html .= "<h3>Signature de l'acte</h3>";

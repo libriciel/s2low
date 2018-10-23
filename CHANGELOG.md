@@ -2,6 +2,8 @@
 
 ## 3.0.17
 
+***Cette version nécessite une modification de la base de données**
+
 ### Evolutions
 
 - Préparation de la compatibilité avec la version 7.2 de PHP.
