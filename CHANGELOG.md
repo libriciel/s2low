@@ -24,6 +24,7 @@
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
 - Validation des fichiers XML et des signatures PADES des actes pour le super admin 
 - Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
+- Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
 
 ### Retraits
 

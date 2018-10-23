@@ -54,6 +54,7 @@ ob_start();
 		<h2>Actions</h2>
 		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=extended">Voir les certificats étendus</a>
 		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=rgs">Voir les certificats RGS</a>
+        <a class="btn btn-primary" href="/admin/utilities/test-certificate.php">Tester un certificat</a>
 	</div>
 
 
