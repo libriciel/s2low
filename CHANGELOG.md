@@ -8,7 +8,7 @@
 - Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
 - Les transactions envoyé au SAE sont considéré en erreur dès le premier envoi et pas au bout de 24 heures d'essai
 - Modification de l'interface de connexion à Pastell #416
-
+- Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
 
 ### Corrections
  

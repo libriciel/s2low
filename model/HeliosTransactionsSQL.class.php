@@ -99,10 +99,17 @@ class HeliosTransactionsSQL extends SQL {
 		$this->query($sql,$last_status_id,$transaction_id);
 	}
 	
-	public function getIdsByStatus($status_id){
+	public function getIdsByStatus($status_id,$authority_id = 0){
 		$sql = "SELECT  id FROM helios_transactions " .
-				" WHERE last_status_id=? ORDER BY id";
-		return $this->queryOneCol($sql,$status_id);
+				" WHERE last_status_id=? ";
+		$data = [$status_id];
+		if ($authority_id){
+			$sql.=" AND authority_id= ? ";
+			$data[] = $authority_id;
+		}
+
+		$sql .= " ORDER BY id";
+		return $this->queryOneCol($sql,$data);
 	}
 	
 	public function getIdByNomFicAndCodCol($nomFic, $cod_col)  {

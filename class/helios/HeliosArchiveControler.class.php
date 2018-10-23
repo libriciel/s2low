@@ -85,11 +85,11 @@ class HeliosArchiveControler {
 		throw new Exception("Accès interdit");
 	}
 
-	public function sendAllArchive(){
+	public function sendAllArchive($authority_id = 0){
         $sigtermHandler = new SigTermHandler();
 		echo "Début de l'envoie:\n";
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->sqlQuery);
-		$info_list = $heliosTransactionSQL->getIdsByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+		$info_list = $heliosTransactionSQL->getIdsByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,$authority_id);
 		echo count($info_list)." transactions à envoyer...\n";
 		foreach($info_list as $transaction_id){
 			echo "Envoi de la transaction $transaction_id.\n";
