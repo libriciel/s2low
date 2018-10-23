@@ -39,111 +39,11 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 			$adminUtilitiesCertificateController->doTestAction();
 		} catch (Exception $e){}
 
-		$this->assertEquals(array (
-			'certificate_info' =>
-				array (
-					'name' => '/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles',
-					'subject' =>
-						array (
-							'C' => 'FR',
-							'ST' => 'France',
-							'L' => 'Lyon',
-							'O' => 'Sigmalis',
-							'OU' => 'sigmalis',
-							'CN' => 'Eric_Pommateau_RGS_2_etoiles',
-						),
-					'hash' => 'f3d776ff',
-					'issuer' =>
-						array (
-							'C' => 'FR',
-							'ST' => 'France',
-							'L' => 'Lyon',
-							'O' => 'Sigmalis',
-							'CN' => 'Sigmalis Certificate Autority',
-							'emailAddress' => 'eric@sigmalis.com',
-						),
-					'version' => 0,
-					'serialNumber' => '8',
-					'serialNumberHex' => '08',
-					'validFrom' => '150819083359Z',
-					'validTo' => '250816083359Z',
-					'validFrom_time_t' => 1439973239,
-					'validTo_time_t' => 1755333239,
-					'signatureTypeSN' => 'RSA-SHA1',
-					'signatureTypeLN' => 'sha1WithRSAEncryption',
-					'signatureTypeNID' => 65,
-					'purposes' =>
-						array (
-							1 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'sslclient',
-								),
-							2 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'sslserver',
-								),
-							3 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'nssslserver',
-								),
-							4 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'smimesign',
-								),
-							5 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'smimeencrypt',
-								),
-							6 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'crlsign',
-								),
-							7 =>
-								array (
-									0 => true,
-									1 => true,
-									2 => 'any',
-								),
-							8 =>
-								array (
-									0 => true,
-									1 => false,
-									2 => 'ocsphelper',
-								),
-							9 =>
-								array (
-									0 => false,
-									1 => false,
-									2 => 'timestampsign',
-								),
-						),
-					'extensions' =>
-						array (
-						),
-					'expiration_date' => '2025-08-16 10:33:59',
-					'issuer_name' => '/C=FR/ST=France/L=Lyon/O=Sigmalis/CN=Sigmalis Certificate Autority/emailAddress=eric@sigmalis.com',
-					'subject_name' => '/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles',
-					'certificate_hash' => 'ieQoLUcitdU9iZIJLPoIdp8TcUY=',
-				),
-			'is_rgs' => false,
-			'is_extended' => false,
-			'nb_users' => 1,
-			'user_id' => 1,
-		),
-			$environnement->session()->get(AdminUtilitiesCertificateController::SESSION_KEY)
-		);
+		$result = $environnement->session()->get(AdminUtilitiesCertificateController::SESSION_KEY);
+
+		$this->assertEquals('/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles', $result['certificate_info']['name']);
+		$this->assertEquals(1, $result['nb_users']);
+
 	}
 
 	/**
@@ -151,6 +51,7 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 	 */
 	public function testDoActionNoFile(){
 		$adminUtilitiesCertificateController = $this->getObjectInstancier()->get(AdminUtilitiesCertificateController::class);
+		$adminUtilitiesCertificateController->setFiles([]);
 		$this->setExpectedException(RedirectException::class,"Il faut fournir un fichier");
 		$adminUtilitiesCertificateController->doTestAction();
 	}
