@@ -9,6 +9,8 @@
 - Les transactions envoyé au SAE sont considéré en erreur dès le premier envoi et pas au bout de 24 heures d'essai
 - Modification de l'interface de connexion à Pastell #416
 - Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
+- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic #415
+- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie)
 
 ### Corrections
  

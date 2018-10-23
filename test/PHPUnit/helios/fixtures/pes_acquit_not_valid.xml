@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><n:PES_ACQUIT xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour/v2">
+<Enveloppe>
+<Parametres>
+<Version V="2"/>
+<TypFic V="UNKNOWN_TYPE"/>
+<NomFic V="pescg291201703030412001"/>
+</Parametres>
+</Enveloppe>
+ <EnTetePES> 
+  <DteStr V="2018-10-16"/> 
+  <IdPost V="086016"/>
+  <IdColl V="12345"/>
+  <CodCol V="400"/>
+  <CodBud V="01"/>
+  <LibelleColBud V="BUDGET PRINCIPAL VILLE"/> 
+ </EnTetePES>
+<ACQUIT>
+<EnTeteAcquit>
+<IdVer V="2"/>
+</EnTeteAcquit>
+<ElementACQUIT>
+<DomaineAck V="0"/>
+<EtatAck V="0"/>
+<Erreur>
+<NumAnoAck V="ERREUR_AUTRE"/>
+<LibelleAnoAck V="Une erreur technique est survenue lors de la validation/decoupage technique (Boite 1) : Erreur de validation XSD en boite 1 [(42086,4) attribute &quot;V&quot; has a bad value: the value does not match the regular expression &quot;.+\.[A-Za-z0-9]{2,4}&quot;.] "/>
+</Erreur>
+</ElementACQUIT>
+</ACQUIT>
+</n:PES_ACQUIT>

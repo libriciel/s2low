@@ -24,12 +24,12 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		mkdir($this->helios_ocre);
 		$this->heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 	}
-	
+
 	public function testAnalyseVide(){
 		$this->expectOutputRegex('#Aucun fichier à analyser#');
 		$this->analyse();
 	}
-	
+
 	private function analyse(){
 		$this->getHeliosAnalyseFichierReponse()->analyse(
 			$this->helios_ftp_response_tmp_local_path,
@@ -38,7 +38,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 			$this->helios_ocre
 		);
 	}
-	
+
 	private function getHeliosAnalyseFichierReponse(){
 		$heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
@@ -47,7 +47,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$schema_pes_path = HELIOS_XSD_PATH;
 		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $authoritySiretSQL, $schema_pes_path,"noreply@sigmalis.com","noreply@sigmalis.com");
 	}
-	
+
 	public function testAnalysePesRetour(){
 		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySireSQL->add(1,"12345678900035");
@@ -58,19 +58,19 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$info = $heliosRetourSQL->getInfoFromFilename(1, "pes_retour.xml");
 		$this->assertEquals("12345678900035", $info['siret']);
 	}
-	
+
 	private function analysePesRetour($file_path){
 		$filename = basename($file_path);
 		copy($file_path, $this->helios_ftp_response_tmp_local_path."/$filename");
 		$this->analyse();
 	}
-	
+
 	public function testAnalysePesRetourNonAbonne(){
 		$this->expectOutputRegex("#La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT#");
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
 	}
-	
+
 	public function testAnalyseDeplacementErreurImpossible(){
 		copy(__DIR__."/fixtures/pes_retour_nonabonne.xml", $this->helios_responses_error_path."/pes_retour_nonabonne.xml");
 		$this->expectOutputRegex("#Le fichier pes_retour_nonabonne.xml existe#");
@@ -143,6 +143,9 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->analyse();
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testPesAcquitDeuxPES(){
 		$transaction_id_1 = $this->createPESAller();
 		$transaction_id_2 = $this->createPESAller();
@@ -153,6 +156,9 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->recupPESAcquit("#Transaction {$transaction_id_2} : information disponible#");
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testPesAcquitDeuxPESBefore(){
 		$transaction_id_1 = $this->createPESAller();
 		$transaction_id_2 = $this->createPESAller();
@@ -181,4 +187,25 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
 		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testMalformedAcquit(){
+		$transaction_id = $this->createPESAller();
+		$filename = "pes_acquit_not_valid.xml";
+		file_put_contents(
+			$this->helios_ftp_response_tmp_local_path."/$filename",
+			file_get_contents(__DIR__."/fixtures/pes_acquit_not_valid.xml")
+		);
+		$this->expectOutputRegex("#Transaction {$transaction_id} : erreur#");
+		$this->getHeliosAnalyseFichierReponse()->analyseOneFile(
+			$this->helios_ftp_response_tmp_local_path."/$filename",
+			$this->helios_response_root,
+			$this->helios_ocre,
+			HELIOS_XSD_PATH
+		);
+
+	}
+
 }
