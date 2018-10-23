@@ -3,6 +3,7 @@
 <div id="actions-area">
 	<h2>Actions</h2>
 	<a class="btn btn-primary" href="admin_authority_edit.php" class="bouton">Ajouter une collectivité</a>
+    <a class="btn btn-primary" href="admin_authorities_export.php" class="bouton">Exporter la liste des collectivités</a>
 </div>
 
 <div id="filtering-area">

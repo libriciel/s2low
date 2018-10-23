@@ -32,6 +32,39 @@ class AuthoritySQL extends SQL {
     	}
 		return $result;
   	}
+
+  	public function getColonneNameForExport(){
+  		return [
+			'authorities.name' => 'Nom',
+			'email' => 'Adresse email',
+			'siren' => 'Numéro SIREN',
+			'address' => 'Adresse',
+			'postal_code' => "Code Postal",
+			'city' => 'Ville',
+			'telephone' => 'Numéro de téléphone',
+			'fax' => 'Numéro de fax',
+			'department' => 'Département',
+			'district' => 'Arrondissement',
+			'authorities.status' => 'Status',
+			'authority_groups.name as group_name' => 'Nom du groupe' ,
+			'authority_types.description' => 'Type'
+		];
+	}
+
+  	public function getAllForExport($authority_group_id = 0) {
+  		$fields = implode(',',array_keys($this->getColonneNameForExport()));
+
+  		$sql = "SELECT $fields FROM authorities " .
+		" LEFT JOIN authority_groups ON authority_groups.id=authorities.authority_group_id" .
+		" LEFT JOIN authority_types ON authorities.authority_type_id = authority_types.id " ;
+		if ($authority_group_id) {
+			$sql .=	" WHERE authority_group_id = ? ORDER BY name";
+			return $this->query($sql,$authority_group_id);
+		} else {
+			$sql .= " ORDER BY name";
+			return $this->query($sql);
+		}
+	}
   	
 	public function getAllGroup($authority_group_id){
 		$result = array();
