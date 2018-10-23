@@ -21,6 +21,7 @@
 - Correction du pespolicyhash sur la signature incorrect #417
 - Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job queue #408
 - Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - #353
+- Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validé #57
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
