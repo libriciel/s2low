@@ -84,6 +84,11 @@ class HeliosTransaction extends DataObject {
   		"type" => "isString",
   		"mandatory" =>true
   	),
+  	"acquit_filename" => array(
+		"descr" => "Nom du fichier d'acquittement",
+		"type" => "isString",
+		"mandatory" =>false
+	),
   	"archive_url" => array(
   		"descr" => "",
   		"type" => "isString",

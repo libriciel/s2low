@@ -16,6 +16,7 @@ DELETE FROM actes_transmission_windows;
 
 DELETE FROM helios_transactions;
 DELETE FROM helios_retour;
+DELETE FROM helios_transactions_workflow;
 
 DELETE FROM users_perms;
 DELETE FROM service_user_content;

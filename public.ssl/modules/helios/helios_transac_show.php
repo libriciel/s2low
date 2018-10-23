@@ -139,8 +139,6 @@ if (count($workflow) > 0) {
   foreach ($workflow as $stage) {
 	$html .= " <tr>\n";
 	$html .= "  <td headers=\"status\">" . $status[$stage["status_id"]] ;
-  	if($stage["status_id"] == 4 || $stage["status_id"] == 6  || $stage["status_id"] == 8)
-       $html .= " <a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_acquit.php?id=" .$id. "\" title=\"Télécharger l'acquittement\">voir</a> </h3>";
     $html .= "</td>\n";
 	$html .= "  <td headers=\"date\">" . Helpers::getDateFromBDDDate($stage["date"], true) . "</td>\n";
 	$html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
@@ -151,6 +149,11 @@ if (count($workflow) > 0) {
 } else {
   $html .= "Le cycle de vie est vide pour cette transaction.\n";
 }
+
+if ($trans->get('acquit_filename')){
+	$html .= " <a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_acquit.php?id=" .$id. "\" title=\"Télécharger l'acquittement\">Télécharger le PES Acquit</a> ";
+}
+
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 

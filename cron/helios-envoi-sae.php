@@ -8,9 +8,15 @@ $min_exec_time = 10;
 
 require_once( __DIR__ . "/../init/init.php");
 
+if (empty($argv[1])){
+	$authority_id = 0;
+} else {
+	$authority_id = $argv[1];
+}
+
 
 $heliosArchiveControler = $objectInstancier->get(HeliosArchiveControler::class);
-$heliosArchiveControler->sendAllArchive();
+$heliosArchiveControler->sendAllArchive($authority_id);
 
 
 $stop = time();

@@ -77,6 +77,16 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 		$this->assertEquals($this->transaction_id,$id_list[0]);
 	}
 
+	public function testGetIdByStatusByAuthorityID(){
+		$id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE,1);
+		$this->assertEquals($this->transaction_id,$id_list[0]);
+	}
+
+	public function testGetIdByStatusByAuthorityIDNotExisting(){
+		$id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE,2);
+		$this->assertEmpty($id_list);
+	}
+
 	public function testGetIdByNomFic(){
 
 		$info  = array(

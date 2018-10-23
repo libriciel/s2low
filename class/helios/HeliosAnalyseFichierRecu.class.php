@@ -90,7 +90,14 @@ class HeliosAnalyseFichierRecu {
 	private function log($message){
 		echo utf8_encode(date("Y-m-d H:i:s")." [".self::ID."] $message\n");
 	}
-	
+
+	/**
+	 * @param $file_path
+	 * @param $helios_response_root
+	 * @param $ocre_file_path
+	 * @param bool $validate_xsd
+	 * @throws Exception
+	 */
 	public function analyseOneFile($file_path,$helios_response_root,$ocre_file_path,$validate_xsd = true){
 		$basename = basename($file_path);
 		$this->log("Traitement de $file_path");
@@ -131,13 +138,14 @@ class HeliosAnalyseFichierRecu {
 
 		if ($errors && $validate_xsd){
 			print_r($errors);
-			throw new Exception("Le fichier $basename n'est pas valide (fichier ignoré)");
+			$root_name= "validation_error";
 		}
 
 		switch($root_name){
 			case 'pes_acquit': $this->traitementAck($basename,$xml); break;
 			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
 			case 'pes_retour' : $this->traitementPESRetour($basename,$xml); break;
+			case 'validation_error'  : $this->traitementErreur($basename,$xml); break;
 			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
 		}
 
@@ -145,7 +153,34 @@ class HeliosAnalyseFichierRecu {
 			throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
 		}
 	}
-	
+
+	/**
+	 * @param $basename
+	 * @param SimpleXMLElement $xml
+	 * @throws Exception
+	 */
+	private function traitementErreur($basename,SimpleXMLElement $xml){
+		$helios_transaction_id = $this->retrieveTransaction($xml);
+
+		if (! $helios_transaction_id){
+			throw new Exception("Le fichier $basename n'est pas valide et aucun NomFic n'a peu être extrait");
+		}
+
+		$message = "Transaction $helios_transaction_id : erreur retournée par Helios";
+		$this->heliosTransactionsSQL->updateStatus(
+			$helios_transaction_id,
+			HeliosTransactionsSQL::ERREUR,
+			$message
+		);
+		$this->log($message);
+		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
+	}
+
+	/**
+	 * @param $basename
+	 * @param SimpleXMLElement $xml
+	 * @throws Exception
+	 */
 	private function traitementAck($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
@@ -162,8 +197,18 @@ class HeliosAnalyseFichierRecu {
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 
 	}
-	
+
+	/**
+	 * @param SimpleXMLElement $xml
+	 * @return mixed
+	 * @throws Exception
+	 */
 	private function retrieveTransaction(SimpleXMLElement $xml) {
+
+		if (empty($xml->Enveloppe->Parametres->NomFic['V'])){
+			throw new Exception("Impossible de trouver le NomFic dans le fichier");
+		}
+
 		$nom_fic = utf8_decode(strval($xml->Enveloppe->Parametres->NomFic['V']));
 		$cod_col = strval($xml->EnTetePES->CodCol['V']);
 		if (!$nom_fic){
@@ -214,7 +259,12 @@ class HeliosAnalyseFichierRecu {
 		});
 		return $transaction_list[0]['transaction_id'];
 	}
-	
+
+	/**
+	 * @param $basename
+	 * @param SimpleXMLElement $xml
+	 * @throws Exception
+	 */
 	private function traitementNack($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
@@ -226,7 +276,12 @@ class HeliosAnalyseFichierRecu {
 		$this->log($message);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 	}
-	
+
+	/**
+	 * @param $basename
+	 * @param SimpleXMLElement $xml
+	 * @throws Exception
+	 */
 	private function traitementPESRetour($basename,SimpleXMLElement $xml){
 		$siret = strval($xml->EnTetePES->IdColl['V']);
 

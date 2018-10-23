@@ -8,7 +8,9 @@
 - Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
 - Les transactions envoyé au SAE sont considéré en erreur dès le premier envoi et pas au bout de 24 heures d'essai
 - Modification de l'interface de connexion à Pastell #416
-
+- Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
+- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic #415
+- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie)
 
 ### Corrections
  
@@ -16,6 +18,7 @@
 - Correction d'un bug sur la signature local par lot pour les PES #414
 - Correction du pespolicyhash sur la signature incorrect #417
 - Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job queue #408
+- Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - #353
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
