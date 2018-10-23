@@ -117,7 +117,7 @@ class AuthentificationTest  extends S2lowTestCase {
             'SSL_CLIENT_VERIFY' => "SUCCESS",
             'SSL_CLIENT_S_DN' => "adullact_identification",
             'SSL_CLIENT_I_DN' => "adullact_identification",
-            'SSL_CLIENT_CERT' =>  file_get_contents(__DIR__."/fixtures/clean_pem.pem"),
+			'SSL_CLIENT_CERT' =>  file_get_contents(__DIR__."/../controller/fixtures/user1.pem"),
         ]);
 		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
 		$this->authenticateWith(4);

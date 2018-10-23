@@ -2,6 +2,9 @@
 
 class AdminAuthorityController extends Controller {
 
+	/**
+	 * @throws RedirectException
+	 */
     public function downloadConventionAction(){
 
         $authority_id = $this->getEnvironnement()->get()->get('authority_id');
@@ -26,5 +29,38 @@ class AdminAuthorityController extends Controller {
 
         $this->controller_exit();
     }
+
+	/**
+	 * @throws RedirectException
+	 */
+    public function exportListAction(){
+		$this->verifAdmin();
+
+		$authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+		if ($this->me->isSuper()){
+			$authority_group_id = 0;
+		} else if ($this->me->isGroupAdmin()){
+			$authority_group_id = $this->me->get('authority_group_id');
+		} else {
+			$this->redirect(
+				"/admin/authorities/admin_authorities.php",
+				"Vous devez être administrateur de groupe ou super admin"
+			);
+		}
+
+		$colonne_name = $authoritySQL->getColonneNameForExport();
+
+		$result[] = array_values($colonne_name);
+
+		foreach($authoritySQL->getAllForExport($authority_group_id) as $line){
+			$result[] = $line;
+		}
+
+		$csvOutput = $this->getObjectInstancier()->get("CSVOutput");
+		$csvOutput->sendAttachment("collectivite.csv",$result);
+
+		$this->controller_exit();
+	}
+
 
 }

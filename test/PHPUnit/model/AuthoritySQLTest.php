@@ -88,4 +88,50 @@ class AuthoritySQLTest extends S2lowTestCase {
 		$info = $this->authoritySQL->getInfo(1);
 		$this->assertFalse($info['helios_do_not_verify_nom_fic_unicity']);
 	}
+
+	public function testGetAllForExport(){
+		$info = $this->authoritySQL->getAllForExport();
+		$this->assertEquals(array (
+				0 =>
+					array (
+						'name' => 'Bourg-en-Bresse',
+						'email' => NULL,
+						'siren' => '123456789',
+						'address' => NULL,
+						'postal_code' => NULL,
+						'city' => NULL,
+						'telephone' => NULL,
+						'fax' => NULL,
+						'department' => NULL,
+						'district' => NULL,
+						'status' => 1,
+						'group_name' => 'Groupe de test',
+						'description' => 'Conseil régional',
+					),
+				1 =>
+					array (
+						'name' => 'Saint-Andre de Corcy',
+						'email' => NULL,
+						'siren' => '999999999',
+						'address' => NULL,
+						'postal_code' => NULL,
+						'city' => NULL,
+						'telephone' => NULL,
+						'fax' => NULL,
+						'department' => NULL,
+						'district' => NULL,
+						'status' => 1,
+						'group_name' => 'Groupe de test',
+						'description' => NULL,
+					),
+			)
+		, $info);
+	}
+
+	public function testGetAllForExportGroupAdmin(){
+		$info = $this->authoritySQL->getAllForExport(2);
+		$this->assertEquals([], $info);
+	}
+
+
 }

@@ -14,9 +14,12 @@ class Controller {
 	private $objectInstancier;
 
 
+	private $files;
+
 	public function __construct(ObjectInstancier $objectInstancier){
 		$this->objectInstancier = $objectInstancier;
 		$this->viewParameter = array();
+		$this->setFiles($_FILES);
 	}
 	
 	public function __get($key){
@@ -46,6 +49,9 @@ class Controller {
 		return $this->viewParameter;
 	}
 
+	public function setFiles($files){
+		$this->files = $files;
+	}
 
 	/**
 	 * @return Environnement
@@ -218,8 +224,10 @@ class Controller {
         return $this->getEnvironnement()->post();
 	}
 
+
+
 	public function getFiles(){
-		return $_FILES;
+		return $this->files;
 	}
 
 	public function isApiCall(){

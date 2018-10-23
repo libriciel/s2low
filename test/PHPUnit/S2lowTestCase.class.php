@@ -57,6 +57,9 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 		$this->getObjectInstancier()->set("beanstalkd_port",false);
         $this->getObjectInstancier()->set('antivirus_command','ls');
         $this->getObjectInstancier()->set('pades_valid_url','https://s2low');
+        $this->getObjectInstancier()->set('openssl_path',OPENSSL_PATH);
+		$this->getObjectInstancier()->set('rgs_validca_path',RGS_VALIDCA_PATH);
+		$this->getObjectInstancier()->set('extended_validca_path',EXTENDED_VALIDCA_PATH);
 
 
         $get = array();
@@ -122,7 +125,7 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
                 'SSL_CLIENT_VERIFY' => "SUCCESS",
                 'SSL_CLIENT_S_DN' => "test_subject",
                 'SSL_CLIENT_I_DN' => "test_issuer",
-                'TESTING_CERTIFICATE_HASH' => "q2UZmkpQTMgJgyQBfsnw40wOUCvH7SVy54EVEcgq9kc=",
+                'TESTING_CERTIFICATE_HASH' => "ieQoLUcitdU9iZIJLPoIdp8TcUY=",
         ]);
     }
     
