@@ -392,6 +392,10 @@ if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')){
 	define('ACTES_DONT_VALID_SIGNING_CERTIFICATE',false);
 }
 
+//Le type de PJ est obligatoire, peut-être à partir du 01/01/2020
+if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")){
+	define("ACTES_TYPE_PJ_IS_MANDATORY",false);
+}
 
 
 //////////////////////////////////

@@ -13,6 +13,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
     private $padesValid;
     private $workerScript;
 	private $actes_dont_valid_signing_certificate;
+	private $actes_type_pj_is_mandatory;
+	private $actesTypePJSQL;
 
     public function __construct(
         S2lowLogger $logger,
@@ -23,7 +25,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         ActesScriptHelper $actesScriptHelper,
         PadesValid $padesValid,
 		WorkerScript $workerScript,
-		$actes_dont_valid_signing_certificate
+		$actes_dont_valid_signing_certificate,
+		$actes_type_pj_is_mandatory,
+		ActesTypePJSQL $actesTypePJSQL
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -34,6 +38,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $this->padesValid = $padesValid;
         $this->workerScript = $workerScript;
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
+        $this->actes_type_pj_is_mandatory = $actes_type_pj_is_mandatory;
+        $this->actesTypePJSQL = $actesTypePJSQL;
     }
 
 	public function getQueueName(){
@@ -71,12 +77,24 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
 		$must_validate_certificate = $this->mustValidateCertificate($transaction_ids);
 
-        $archive = new \Libriciel\LibActes\ArchiveValidator($this->actes_appli_trigramme,$this->actes_appli_quadrigramme);
+        $archive = new \Libriciel\LibActes\ArchiveValidator(
+        	$this->actes_appli_trigramme,
+			$this->actes_appli_quadrigramme,
+			$this->actes_type_pj_is_mandatory
+		);
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
+
+
+		$all_type_pj = $this->actesTypePJSQL->getCodeList();
+		
         try {
         	try {
-				$archive->validate($archive_path);
+				$archive->validate(
+					$archive_path,
+					[1,2,3,4,5,6],
+					$all_type_pj
+				);
 			} catch (Exception $e){
 				throw new Exception(utf8_decode($e->getMessage()),$e->getCode(),$e);
 			}

@@ -13,6 +13,8 @@
 - Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
 - Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic #415
 - Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie)
+- Ajout de la constante ACTES_TYPE_PJ_IS_MANDATORY permettant de rendre obligatoire le typage des enveloppes #313
+- Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification #419
 
 ### Corrections
  

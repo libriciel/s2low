@@ -7,6 +7,11 @@ class ActesTypePJSQL extends SQL {
         return $this->query($sql);
     }
 
+    public function getCodeList(){
+		$sql = "SELECT code FROM actes_type_pj ORDER BY nature_id,code";
+		return $this->queryOneCol($sql);
+	}
+
     public function getAllByNature(){
         $result = array();
         foreach($this->getAll() as $type){
