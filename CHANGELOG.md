@@ -28,6 +28,7 @@
 - Validation des fichiers XML et des signatures PADES des actes pour le super admin 
 - Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
 - Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
+- Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
 
 ### Retraits
 
