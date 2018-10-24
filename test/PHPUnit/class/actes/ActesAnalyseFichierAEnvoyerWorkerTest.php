@@ -44,6 +44,9 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testGetList(){
 		$data = $this->createOneTransaction(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
 		$result = $this->getActesAnalysFichierAEnvoyerWorker()->getAllId();
@@ -68,6 +71,62 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         $liste = $logsSQL->getLastLog();
         $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllOneWithTypologieKO(){
+		$this->getObjectInstancier()->set('actes_appli_trigramme','abc');
+		$this->getObjectInstancier()->set('actes_appli_quadrigramme','TACT');
+
+		$this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(4,'CC','Contrat et convention');
+		$this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4,'99_AU','test');
+
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
+
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Enveloppe invalide : La typologie 10_DE n'est pas permise sur le fichier 10_DE-002-000000000-20181001-201810241655-CC-1-1_1.pdf",
+			$transaction_info['message']
+		);
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllOneWithTyplogieOK(){
+
+		$this->getObjectInstancier()->set('actes_appli_trigramme','abc');
+		$this->getObjectInstancier()->set('actes_appli_quadrigramme','TACT');
+
+		$this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(4,'CC','Contrat et convention');
+		$this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4,'99_CO','test');
+		$this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4,'10_DE','test');
+
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Accepté par le TdT : validation OK",
+			$transaction_info['message']
+		);
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+	}
+
+
 
 	/**
 	 * @throws Exception

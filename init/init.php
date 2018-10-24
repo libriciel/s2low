@@ -123,6 +123,7 @@ $objectInstancier->set('ActesImapProperties',$actesImapProperties);
 
 $objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
 $objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
+$objectInstancier->set('actes_type_pj_is_mandatory',ACTES_TYPE_PJ_IS_MANDATORY);
 
 $objectInstancier->set('pades_valid_url',PADES_VALID_URL);
 $objectInstancier->set('pdf_stamp_url',PDF_STAMP_URL);

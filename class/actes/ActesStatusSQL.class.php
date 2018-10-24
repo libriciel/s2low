@@ -20,6 +20,8 @@ class ActesStatusSQL {
 
 	const STATUS_ARCHIVE_PAR_LE_SAE = 13;
 
+	const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}

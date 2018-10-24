@@ -611,7 +611,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	$libersignController = new LibersignController($objectInstancier);
 
 
-	$html .= "<h3>Signature de l'acte</h3>";
+	$html .= "<h2>Signature de l'acte</h2>";
 	ob_start();
 
 	$libersignController->displayLibersignJS();
@@ -649,7 +649,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 	</script>
 
 	<div id='box_signature' class='box' style="width:920px" >
-		<h2>Signature</h2>
+		<h3>Signature</h3>
 		<div class="libersign"></div>
 	</div>
 
@@ -662,13 +662,25 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 		<?php endforeach;?>
 	</form>
 
+
+
+
+
+
 	<?php
 		$html.= ob_get_contents();
 		ob_end_clean();
+        $html .="<h3>Ne plus signer</h3>";
+        $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signé. Êtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n";
+        $html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Ne plus signer l'acte et le poster</label>\n";
+        $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+        $html .= "<input type=\"submit\" value=\"Télétransmettre sans signature\" class=\"btn btn-warning\" />\n";
+        $html .= "</div></form>\n";
 }
 
 
 $html .= "</div>\n";
+
 
 $doc->addBody($html);
 
