@@ -36,6 +36,7 @@
 ### Retraits
 
 - Retraits de DBUnit qui était top lent pour la suite de test de s2low
+- Supression du répertoire tools devenu obsolète
 
 ## 3.0.16 - 2018-10-08
 
