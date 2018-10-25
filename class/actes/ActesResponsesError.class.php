@@ -19,6 +19,11 @@ class ActesResponsesError {
         return new FilesystemIterator($this->actes_response_error_path, FilesystemIterator::SKIP_DOTS);
     }
 
+	/**
+	 * @param $filename
+	 * @return bool|string
+	 * @throws Exception
+	 */
     public function getFilepath($filename){
         $filepath = realpath($this->actes_response_error_path."/".$filename);
 
@@ -32,11 +37,19 @@ class ActesResponsesError {
         return $filepath;
     }
 
+	/**
+	 * @param $filename
+	 * @throws Exception
+	 */
     public function delete($filename){
         $filepath = $this->getFilepath($filename);
         $this->tmpFolder->delete($filepath);
     }
 
+	/**
+	 * @param $filename
+	 * @throws Exception
+	 */
     public function download($filename){
         $filepath = $this->getFilepath($filename);
         $output_directory = $this->tmpFolder->create();
@@ -49,9 +62,10 @@ class ActesResponsesError {
         $pharData->compress(\Phar::GZ);
         unlink($output_directory."/$filename.tar");
 
-        header("Content-type: application/tar+gzip;");
-        header("Content-disposition: attachment;filename=$filename.tar.gz");
+        header_wrapper("Content-type: application/tar+gzip;");
+        header_wrapper("Content-disposition: attachment;filename=$filename.tar.gz");
         readfile($output_directory."/$filename.tar.gz");
+        $this->tmpFolder->delete($output_directory);
     }
 
 }
