@@ -17,6 +17,7 @@
 - Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification #419
 - Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php #308
 - Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs #305
+- Possibilité de spécifier le type de la pièce principale sur le traitement par lot #318
 
 ### Corrections
  

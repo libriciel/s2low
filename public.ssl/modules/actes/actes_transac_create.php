@@ -223,21 +223,19 @@ if (!$batchMode && empty($actePDFFile)) {
 // Validation du type des fichiers uploadés
 // Fichier de l'acte
 if (isset ($actePDFFile) || $batchMode) {
-  if ($batchMode) {
-    $acteFilePath = $zeBatchFile->getAbsoluteFilePath();
-    $acteFileName = $zeBatchFile->getDisplayName();
-  } else {
+	if ($batchMode) {
+    	$acteFilePath = $zeBatchFile->getAbsoluteFilePath();
+    	$acteFileName = $zeBatchFile->getDisplayName();
+  	} else {
   	
-	if (! $uploader->verifOK("acte_pdf_file")){
-		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
-	}
-  	
-	$acteFilePath = $actePDFFile["tmp_name"];
-	$acteFileName = $actePDFFile["name"];
-	
-  }
+		if (! $uploader->verifOK("acte_pdf_file")){
+			Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+		}
+		$acteFilePath = $actePDFFile["tmp_name"];
+		$acteFileName = $actePDFFile["name"];
+  	}
 
-  if (empty($type_acte)){
+  	if (empty($type_acte)){
       $correspondance_nature_type = array(
           '1'=> '99_DE',
           '2' => '99_AT',
@@ -247,7 +245,7 @@ if (isset ($actePDFFile) || $batchMode) {
           '6' => '99_AU',
       );
       $type_acte = $correspondance_nature_type[$nature_code];
-  }
+  	}
 
   $dest_name = $trans->getStdFileName($env,true,$type_acte);
   if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath,true,$type_acte)) {

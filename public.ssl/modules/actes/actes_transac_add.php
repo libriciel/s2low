@@ -323,25 +323,26 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"subject\" class=\"control-label\">Objet : </label>\n";
 $html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></div>\n";
 
-if (!$batchMode) {
 
-  $html .= " <div class=\"form-group\">\n";    
-  $html .= "   <fieldset>\n";
-  $html .= "   <div class=\"row-legend\">\n";
-  $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
-  $html .= "     <div class=\"actes_files_form\">\n";
-  $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
-  $html .= "         <label>Type de pièce jointe</label><br/>";
-  $html .= "            <select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\"></select>";
-  $html .= "       </div>\n";
-    $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
-    $html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
-    $html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
-    $html .= "       </div>\n";
-  $html .= "     </div>\n";
-  $html .= "   </fieldset>\n";
-  $html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
+$html .= "   <fieldset>\n";
+$html .= "   <div class=\"row-legend\">\n";
+$html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
+$html .= "     <div class=\"actes_files_form\">\n";
+$html .= "       <div class=\"form-group col-md-offset-1 \">\n";
+$html .= "         <label>Type de pièce jointe</label><br/>";
+$html .= "            <select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\"></select>";
+$html .= "       </div>\n";
+if (! $batchMode) {
+	$html .= "       <div class=\"form-group col-md-offset-1 \">\n";
+	$html .= "         <label for=\"acte_pdf_file\" class=\"control-label\">Fichier (.pdf ou .xml)</label>\n";
+	$html .= "         <input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/>\n";
+	$html .= "       </div>\n";
 }
+$html .= "     </div>\n";
+$html .= "   </fieldset>\n";
+$html .= " </div>\n";
+
 $html .= "<div class=\"form-group\">\n";    
 $html .= "  <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
