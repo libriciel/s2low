@@ -107,7 +107,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$signed_file = $this->sign(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
 		$this->verify($signed_file);
 	}
-	
+
 	public function testVerifSignatureNotGlobale() {
 		$this->verify(__DIR__ . "/fixtures/signature_bordereau2.xml");
 	}

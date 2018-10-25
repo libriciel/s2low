@@ -6,6 +6,16 @@ class AdminController extends Controller {
 		parent::_actionBefore($controller,$action);
 	}
 
+	/**
+	 * @return AuthoritySiretSQL
+	 */
+	private function getAuthoritySiretSQL(){
+		return $authoritySiretSQL = $this->getObjectInstancier()->get(AuthoritySiretSQL::class);
+	}
+
+	/**
+	 * @throws RedirectException
+	 */
 	public function authoritySiretAction(){
 		$recuperateur = $this->getRecuperateurGet();
 		$id = $recuperateur->getInt('id');
@@ -22,6 +32,7 @@ class AdminController extends Controller {
 		$this->authority_id = $id;
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$this->siret_list = $authoritySiret->siretList($id);
+		$this->siret_blocked_list = $authoritySiret->siretListBlocked($id);
 		if ($this->isApiCall()){
 			$result = array();
 			foreach($this->siret_list as $siret_info){
@@ -37,6 +48,9 @@ class AdminController extends Controller {
 		$this->title = "Numéros SIRET - {$this->authority_info['name']}";
 	}
 
+	/**
+	 * @throws RedirectException
+	 */
 	public function authoritySiretAddAction(){
 		$this->verifSuperAdmin();
 		$recuperateur = $this->getRecuperateurPost();
@@ -68,7 +82,38 @@ class AdminController extends Controller {
 		$authoritySiret->del($authority_siret_id);
 		$this->displayAndExit("Numéro SIRET retiré","/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
 	} // @codeCoverageIgnore
-	
+
+
+	/**
+	 * @throws RedirectException
+	 */
+	public function authoritySiretBlockedAction(){
+		$this->verifSuperAdmin();
+		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
+		$this->getAuthoritySiretSQL()->blocked($authority_siret_id);
+		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été bloqué");
+	}
+
+	/**
+	 * @throws RedirectException
+	 */
+	public function authoritySiretUnblockedAction(){
+		$this->verifSuperAdmin();
+		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
+		$this->getAuthoritySiretSQL()->unblocked($authority_siret_id);
+		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été débloqué");
+	}
+
+	/**
+	 * @param $authority_siret_id
+	 * @param $message
+	 * @throws RedirectException
+	 */
+	private function redirectToSiretPage($authority_siret_id,$message){
+		$info = $this->getAuthoritySiretSQL()->getInfo($authority_siret_id);
+		$this->redirect("/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}",$message);
+	}
+
 	/**
 	 * @return Siret
 	 */
@@ -142,6 +187,10 @@ class AdminController extends Controller {
 		$this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
 	}
 
+	/**
+	 * @throws RedirectException
+	 * @throws Exception
+	 */
 	public function doMessageEditAction(){
 		$this->verifSuperAdmin();
 		$recuperateur = $this->getRecuperateurPost();
@@ -154,6 +203,9 @@ class AdminController extends Controller {
 		$this->redirect("/admin/message/detail.php?message_id=$message_id");
 	}
 
+	/**
+	 * @throws RedirectException
+	 */
 	public function messagePublierAction(){
 		$this->verifSuperAdmin();
 		$recuperateur = $this->getRecuperateurGet();
@@ -163,6 +215,9 @@ class AdminController extends Controller {
 		$this->redirect("/admin/message/detail.php?message_id=$message_id");
 	}
 
+	/**
+	 * @throws RedirectException
+	 */
 	public function messageRetirerAction(){
 		$this->verifSuperAdmin();
 		$recuperateur = $this->getRecuperateurGet();
