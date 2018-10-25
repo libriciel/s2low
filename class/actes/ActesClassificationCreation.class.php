@@ -1,10 +1,7 @@
 <?php 
 
-require_once("ActesEnvelope.class.php");
-require_once("ActesClassification.class.php");
-require_once( SITEROOT . "class/Module.class.php");
-require_once( SITEROOT . "class/User.class.php");
-
+require_once(__DIR__."/../../public.ssl/modules/actes/class/ActesEnvelope.class.php");
+require_once(__DIR__."/../../public.ssl/modules/actes/class/ActesClassification.class.php");
 
 class ActesClassificationCreation {
 
@@ -38,6 +35,31 @@ class ActesClassificationCreation {
 	
 	public function getLastTransactionId(){
 		return $this->lastTransactionId;
+	}
+
+
+	public function sendToAllAuthorities(){
+		$this->unsetFrequencyRestriction();
+
+		$authority = new Authority();
+		$authorities = $authority->getAllAuthorities();
+
+		/** @var Authority $authority */
+		foreach ($authorities as $authority){
+			echo $authority['name'] . ":";
+			if (! $authority['siren']){
+				echo "[PASS]\n";
+				continue;
+			}
+
+			$result = $this->createEnveloppe(new Authority($authority['id']));
+			if ($result){
+				echo "[OK]\n";
+			} else {
+				echo "[FAIL] - " . $this->getLastMessage()."\n";
+			}
+
+		}
 	}
 	
 	public function createEnveloppe(Authority $authority,User $user = null,$force = false){

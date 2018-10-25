@@ -51,7 +51,7 @@ INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 INSERT INTO authority_groups VALUES (2, 'second groupe', 1);
 INSERT INTO authority_types VALUES (1, NULL, 'Région');
 INSERT INTO authority_types VALUES (11, 1, 'Conseil régional');
-INSERT INTO authorities VALUES (1, 11, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO authorities VALUES (1, 11, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO authorities VALUES (2, NULL, 1, 'Saint-Andre de Corcy', NULL, NULL, '999999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, '-----BEGIN CERTIFICATE-----
 MIIFeTCCA2ECAQgwDQYJKoZIhvcNAQEFBQAwgYoxCzAJBgNVBAYTAkZSMQ8wDQYD

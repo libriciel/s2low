@@ -2,7 +2,6 @@
 
 
 require_once( __DIR__ . "/../../../../init/init-www-actes.php");
-require_once(SITEROOT."/public.ssl/modules/actes/class/ActesClassificationCreation.class.php");
 
 if ($userInfo['role'] != 'SADM'){
 $_SESSION["error"] = "Super admin only !";
