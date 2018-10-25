@@ -8,6 +8,11 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->sign($tmp_file);
 	}
 
+	/**
+	 * @param $file_to_sign
+	 * @return string
+	 * @throws XadesSignatureHasSignatureException
+	 */
 	private function sign($file_to_sign){
 		$signed_file = sys_get_temp_dir()."/".uniqid("phpunit");
 		$xadesSignature = $this->getXadesSignature();
@@ -16,7 +21,12 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function getXadesSignature(){
-		$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/fixtures/validca/");
+		$xadesSignature = new XadesSignature(
+			XMLSEC1_PATH,
+			new PKCS12(),
+			new X509Certificate(),
+			__DIR__ . "/fixtures/validca/"
+		);
 		return $xadesSignature;
 	}
 
@@ -64,11 +74,27 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("#$id",$targetId);
 	}
 
+	/**
+	 * @throws XadesSignatureHasSignatureException
+	 */
 	public function testOutputFileNotWritable(){
 		$testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
 		$xadesSignature = $this->getXadesSignature();
 		$this->setExpectedException("Exception","Erreur (1) lors de la signature technique");
-		$xadesSignature->sign(__DIR__."/fixtures/test.xml",__DIR__."/fixtures/robert_petitpoids.p12","robert_petitpoids",$testStreamUrl."/signed.xml",$this->getXadesSignatureProperties());
+		$xadesSignature->sign(
+			__DIR__."/fixtures/test.xml",
+			__DIR__."/fixtures/robert_petitpoids.p12",
+			"robert_petitpoids",
+			$testStreamUrl."/signed.xml",
+			$this->getXadesSignatureProperties())
+		;
+		$xadesSignature->sign(
+			__DIR__."/fixtures/test.xml",
+			__DIR__."/../fixtures/timestamp_certificates/tedetis_timestamp_cert.pem.p12",
+			"",
+			$testStreamUrl."/signed.xml",
+			$this->getXadesSignatureProperties())
+		;
 	}
 
 	public function testVerifyNOCA(){
@@ -82,12 +108,9 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$this->verify($signed_file);
 	}
 
-	public function testVerifyManySignature() {
-		$this->verify(__DIR__ . "/fixtures/signature_bordereau_double.xml");
-	}
-
+	
 	public function testVerifSignatureNotGlobale() {
-		$this->verify(__DIR__ . "/fixtures/signature_bordereau.xml");
+		$this->verify(__DIR__ . "/fixtures/signature_bordereau2.xml");
 	}
 
 	public function testVerifSignatureNotGlobaleBad() {

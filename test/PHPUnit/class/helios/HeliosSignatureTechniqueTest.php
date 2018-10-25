@@ -110,7 +110,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	}
 
 	public function testDejaSigneBordereau() {
-		$transaction_id = $this->importFile(__DIR__ . "/../../lib/fixtures/signature_bordereau.xml");
+		$transaction_id = $this->importFile(__DIR__ . "/../../lib/fixtures/signature_bordereau2.xml");
 		$this->getHeliosSignatureTechnique()->sign(
 			$transaction_id,
 			__DIR__ . "/../../lib/fixtures/robert_petitpoids.p12",
