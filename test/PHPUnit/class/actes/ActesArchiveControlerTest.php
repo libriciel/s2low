@@ -84,6 +84,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->getMock();
 		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
+		/** @var PastellWrapperFactory $pastellFactory */
 		return $pastellFactory;
 	}
 
