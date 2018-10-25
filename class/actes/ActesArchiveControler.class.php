@@ -100,6 +100,10 @@ class ActesArchiveControler {
 	}
 
 
+	/**
+	 * @param int $authority_id
+	 * @throws Exception
+	 */
 	public function sendAllArchive($authority_id = 0){
 		echo "Début de l'envoie:\n";
 
@@ -123,11 +127,19 @@ class ActesArchiveControler {
 		echo "Fin de l'envoie\n";
 	}
 
+
+	/**
+	 * @param $id
+	 * @throws Exception
+	 */
 	public function sendArchive($id){
 		$id_d = false;
+		$tmpFolder = new TmpFolder();
+		$tmp_folder = $tmpFolder->create();
 		try {
+
 			$id_d = $this->createPastellDocument($id);
-			$this->sendArchiveThrow($id,$id_d);
+			$this->sendArchiveThrow($id,$id_d,$tmp_folder);
 		} catch (Exception $e){
 			$message = "Impossible d'envoyer la transaction $id : " . $e->getMessage();
 			if ($id_d){
@@ -140,6 +152,8 @@ class ActesArchiveControler {
 				$message
 			);
 		}
+		$tmpFolder->delete($tmp_folder);
+
 	}
 
 	/**
@@ -167,9 +181,10 @@ class ActesArchiveControler {
 	/**
 	 * @param $id
 	 * @param $id_d
+	 * @param $tmp_folder
 	 * @throws Exception
 	 */
-	private function sendArchiveThrow($id,$id_d){
+	private function sendArchiveThrow($id,$id_d,$tmp_folder){
 
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
 		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
@@ -188,8 +203,7 @@ class ActesArchiveControler {
 		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
 		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
 
-		$tmpFolder = new TmpFolder();
-		$tmp_folder = $tmpFolder->create();
+
 		
 		$tgzExtractor = new TGZExtractor($tmp_folder);
 		$tgzExtractor->extract($enveloppe_path,$actesFile[1]['filename']);
@@ -291,7 +305,7 @@ class ActesArchiveControler {
 		}
 		
 		$pastell->postRelatedTransaction($id_d,$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar);
-		$tmpFolder->delete($tmp_folder);
+
 
 		$this->logger->debug("Envoi au SAE : $id_d");
 

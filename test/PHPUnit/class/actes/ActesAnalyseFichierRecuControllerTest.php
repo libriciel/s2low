@@ -127,8 +127,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
             "000000000/abc-EACT--210703385--20170612-2.tar.gz"
         );
 
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true);
+        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check,number,type) VALUES (?,?,?,?,?,?,?) returning ID;";
+        $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true,'20170721D',1);
 
         return $transaction_id;
     }
@@ -166,8 +166,52 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
             $transaction_info['message']
         );
         $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
-
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function testMessageMetierAnomalie(){
+		$this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-message-anomalie");
+		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+		$actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+		$actesAnalyseFichierRecuController->analyseAll();
+
+		$actesTransactionsSQL= $this->getObjectInstancier()->get('ActesTransactionsSQL');
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+		$this->assertRegExp(
+			"#Anomalie signalee par le MI : 042 - Ca ne fonctionne pas#",
+			$transaction_info['message']
+		);
+		$this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
+	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function testMessageMetierAnomalieAfterAcquitter(){
+		$this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-archive-MISILCL");
+
+
+		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+		$actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+		$actesAnalyseFichierRecuController->analyseAll();
+
+
+		$this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-message-anomalie");
+		$actesAnalyseFichierRecuController->analyseAll();
+
+		$actesTransactionsSQL= $this->getObjectInstancier()->get('ActesTransactionsSQL');
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+
+		$this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['last_status_id']);
+	}
+
 
 	/**
 	 * @throws Exception

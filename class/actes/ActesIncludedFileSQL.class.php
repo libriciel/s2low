@@ -12,7 +12,7 @@ class ActesIncludedFileSQL extends SQL {
 	}
 	
 	/**
-	 * @return le nom du fichier XML decrivant le fichier contenant l'acte
+	 * @return string le nom du fichier XML decrivant le fichier contenant l'acte
 	 */
 	public function getXMLFilename($transaction_id){
 		$sql = "SELECT filename FROM actes_included_files WHERE transaction_id=? ORDER BY id ASC LIMIT 1";

@@ -46,5 +46,30 @@ class AuthoritySiretTest extends S2lowTestCase {
 		$authority_list = $this->authoritySiret->authorityList(self::SIRET_EXEMPLE);
 		$this->assertEquals(1,$authority_list[0]['authority_id']);
 	}
+
+	public function testBlockedEmpty(){
+		$this->authoritySiret->add(1,self::SIRET_EXEMPLE);
+		$this->assertEmpty($this->authoritySiret->siretListBlocked(1));
+	}
+
+	public function testBlocked(){
+		$id = $this->authoritySiret->add(1,self::SIRET_EXEMPLE);
+		$this->authoritySiret->blocked($id);
+		$blocked_list = $this->authoritySiret->siretListBlocked(1);
+		$this->assertEquals(1, count($blocked_list));
+		$this->assertEmpty($this->authoritySiret->authorityList(self::SIRET_EXEMPLE));
+		$this->assertEmpty($this->authoritySiret->siretList(1));
+	}
+
+	public function testUnblocked(){
+		$id = $this->authoritySiret->add(1,self::SIRET_EXEMPLE);
+		$this->authoritySiret->blocked($id);
+		$this->authoritySiret->unblocked($id);
+		$this->assertEmpty($this->authoritySiret->siretListBlocked(1));
+		$this->assertNotEmpty($this->authoritySiret->authorityList(self::SIRET_EXEMPLE));
+		$this->assertNotEmpty($this->authoritySiret->siretList(1));
+	}
+
+
 	
 }

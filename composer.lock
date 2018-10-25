@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "569752e3dfb7d75dc0b764287a9f90c8",
+    "content-hash": "23770d08adb58b43684761910eb848c6",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -104,10 +104,10 @@
         },
         {
             "name": "libriciel/tdt-lib-actes",
-            "version": "0.0.28",
+            "version": "0.0.29",
             "dist": {
                 "type": "tar",
-                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.28",
+                "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.29",
                 "reference": null,
                 "shasum": null
             },

@@ -15,6 +15,9 @@
 - Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie)
 - Ajout de la constante ACTES_TYPE_PJ_IS_MANDATORY permettant de rendre obligatoire le typage des enveloppes #313
 - Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification #419
+- Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php #308
+- Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs #305
+- Possibilité de spécifier le type de la pièce principale sur le traitement par lot #318
 
 ### Corrections
  
@@ -31,10 +34,12 @@
 - Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
 - Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
 - Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
+- Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour #372
 
 ### Retraits
 
 - Retraits de DBUnit qui était top lent pour la suite de test de s2low
+- Supression du répertoire tools devenu obsolète
 
 ## 3.0.16 - 2018-10-08
 

@@ -385,6 +385,15 @@ class ActesAnalyseFichierRecuController {
         $this->log("Anomalie trouvé pour l'acte : " . $fichierXML->numero_interne);
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
         $message = "Anomalie signalee par le {$this->actes_ministere_acronyme} : ".$fichierXML->nature_anomalie." - ".$fichierXML->detail_anomalie;
+
+        $info_transaction = $this->actesTransactionsSQL->getInfo($transaction_id);
+        if ($info_transaction['last_status_id'] != ActesStatusSQL::STATUS_TRANSMIS){
+        	$this->log("$message");
+        	$exception_message  = "Message d'anomalie reçu alors que le status de l'acte n'est plus transmis ({$info_transaction['last_status_id']} trouvé)";
+        	$this->log($exception_message);
+        	throw new Exception($exception_message);
+		}
+
         $xml = file_get_contents($fichierXML->file_path);
         $this->updateStatus(
             $transaction_id,

@@ -17,10 +17,10 @@ class ActesEnvelopeSQL extends SQL
         return $this->queryOne($sql, $file_path);
     }
 
-    public function create($user_id, $file_path)
+    public function create($user_id, $file_path,$siren = '000000000')
     {
-        $sql = "INSERT INTO actes_envelopes(user_id,file_path,submission_date) VALUES(?,?,now()) RETURNING ID";
-        return $this->getSQLQuery()->queryOne($sql, $user_id, $file_path);
+        $sql = "INSERT INTO actes_envelopes(user_id,file_path,submission_date,siren) VALUES(?,?,now(),?) RETURNING ID";
+        return $this->getSQLQuery()->queryOne($sql, $user_id, $file_path,$siren);
     }
 
     public function createRelatedEnveloppe($envelope_id,$file_path, $file_size)  {
