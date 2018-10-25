@@ -134,19 +134,6 @@ class Log extends DataObject {
 
 
   private function genTimestamp($data) {
-	  if (TESTING_ENVIRONNEMENT){
-		  //FIXME
-		return "TESTING";
-	  }
-	// on crée un fichier contenant la concaténation de tous les champs de l'entrée
-	$logFile = tempnam('/tmp', 'tedetis_web_');
-
-
-
-	if (! $this->writeLogEntryToFile($logFile, $data)) {
-	  return false;
-	}
-
 	$parapheur = new Parapheur($data);
 	$signature = $parapheur->getSignature();
 	
@@ -154,9 +141,6 @@ class Log extends DataObject {
 		$this->errorMsg = $parapheur->getLastError();
 		return false;
 	}
-
-	  unlink($logFile);
-	
 	return $signature;
   } 
 

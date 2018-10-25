@@ -19,7 +19,6 @@ class LogTest extends S2lowTestCase {
 
 
     public function testLogEntryOldFashioned(){
-
         Log::newEntry("TOTO","message",4);
 
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
@@ -31,8 +30,9 @@ class LogTest extends S2lowTestCase {
         $log = new Log($last_log['id']);
         $log->init();
         $this->assertNotEquals($last_log['message_horodate'],$log->retrieveMessageHorodate());
-
     }
+
+
 
 
 }
