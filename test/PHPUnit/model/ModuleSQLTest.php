@@ -54,4 +54,21 @@ class ModuleSQLTest extends S2lowTestCase {
 		$this->assertEmpty($info);
 	}
 
+	public function testgetUsers(){
+		$info = $this->moduleSQL->getUsers(1);
+		$this->assertEquals("Eric",$info[0]['givenname']);
+	}
+
+
+	public function testgetUsersSameGroup(){
+		$info = $this->moduleSQL->getUsers(1,1);
+		$this->assertEquals("Eric",$info[0]['givenname']);
+	}
+
+
+	public function testgetUsersDifferentGroup(){
+		$info = $this->moduleSQL->getUsers(1,2);
+		$this->assertEmpty($info);
+	}
 }
+

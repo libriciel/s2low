@@ -18,6 +18,8 @@
 - Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php #308
 - Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs #305
 - Possibilité de spécifier le type de la pièce principale sur le traitement par lot #318
+- Refus des PES Aller qui ne sont pas en ISO-8859-1 #373
+- Possibilité d'envoyer des mails aux membre d'un groupe déterminé #107
 
 ### Corrections
  
@@ -35,6 +37,7 @@
 - Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
 - Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
 - Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour #372
+- Création du script script/actes/actes-close-old-transactions-transmises.php permettant de clore les transactions transmises depuis plus de 30 jours #344 
 
 ### Retraits
 

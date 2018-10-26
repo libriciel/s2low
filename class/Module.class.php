@@ -218,26 +218,6 @@ class Module extends DataObject {
 	return null;
    }
 
-  /** 
-   * \brief Méthode renvoyant l'ensemble des utilisateurs d'un module (ayant au moins la permission lecture seule sur le module)
-   * \return Un tableau associatif des utilisateurs du module
-   */
-  public function getUsers() {
-	$users = array();
-
-	if (! empty($this->id)) {
-	  $sql = "SELECT DISTINCT users.id, users.givenname, users.name, users.email FROM users LEFT JOIN users_perms ON users.id=users_perms.user_id LEFT JOIN modules ON users_perms.module_id=modules.id WHERE modules.id=" . pg_escape_string($this->id) . " AND (users_perms.perm='RO' OR users_perms.perm='RW') AND users.status=1";
-  	
-	  $result = $this->db->select($sql);
-   
-
-	  if (! $result->isError() && $result->num_row() > 0) {
-		$users = $result->get_all_rows();
-	  }
-	}
-
-	return $users;
-  }
 
   /** 
    * \brief Méthode qui permet de fixer le paramètre d'un module

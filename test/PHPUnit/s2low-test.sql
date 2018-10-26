@@ -42,6 +42,7 @@ INSERT INTO actes_status VALUES (1, 'Posté');
 INSERT INTO actes_status VALUES (2, 'En attente de transmission');
 INSERT INTO actes_status VALUES (3, 'Transmis');
 INSERT INTO actes_status VALUES (4, 'Acquittement reçu');
+INSERT INTO actes_status VALUES (14, 'Erreur lors de l''archivage');
 INSERT INTO actes_status VALUES (19, 'En attente de transmission au SAE');
 INSERT INTO actes_status VALUES (20, 'Erreur lors de l''envoi au SAE');
 INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
@@ -85,7 +86,7 @@ yPThsQ7QoSMwU27XzH1zb+NiD8sHNPgHacK6gSg/ZBj53IMGtElUAw3RRgXbuYnK
 eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
 YNN6Z4fNWGHPgI7R6w==
 -----END CERTIFICATE-----
-', NULL, NULL, NULL, NULL, NULL, NULL, '', 'ieQoLUcitdU9iZIJLPoIdp8TcUY=');
+', NULL, NULL, NULL, 1, NULL, NULL, '', 'ieQoLUcitdU9iZIJLPoIdp8TcUY=');
 INSERT INTO users VALUES (2, 'eric+2@sigmalis.com', 'adullact', 'adullact', 'Dupont', 'Alice', NULL, 'ADM', 1, 1, NULL, NULL, NULL, NULL, NULL, 'alice', '6384e2b2184bcbf58eccf10ca7a6563c', '', 'hash_adullact');
 INSERT INTO users VALUES (3, 'eric+3@sigmalis.com', 'adullact', 'adullact', 'Durand', 'Bob', NULL, 'ADM', 1, 1, NULL, NULL, NULL, NULL, NULL, 'bob', '6384e2b2184bcbf58eccf10ca7a6563c', '', 'hash_adullact');
 INSERT INTO users VALUES (4, 'eric+4@sigmalis.com', 'adullact_identification', 'adullact_identification', 'Dupont', 'Charlie', NULL, 'ADM', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '-----BEGIN CERTIFICATE-----

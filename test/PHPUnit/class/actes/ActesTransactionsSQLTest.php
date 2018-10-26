@@ -2,6 +2,8 @@
 
 class ActesTransactionsSQLTest extends S2lowTestCase {
 
+	use ActesUtilitiesTestTrait;
+
     /**
      * @return ActesTransactionsSQL
      */
@@ -19,23 +21,6 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         $result = $this->getActesTransactionsSQL()->getLastArchiveFromStatus(12,date("Y-m-d"));
         $this->assertEquals($result_1,$result);
 
-    }
-
-    private function createTransaction($status){
-        $sql="INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql);
-
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code) VALUES (?,?,?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,"2017-07-01","20170728C",3);
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
-        $pastellProperties = new PastellProperties();
-        $pastellProperties->url = "test";
-        $pastellProperties->login = "test";
-        $pastellProperties->password = "test";
-        $pastellProperties->id_e = 12;
-        $authoritySQL->updateSAE(1,$pastellProperties);
-
-        return $transaction_id;
     }
 
     public function testGetNbByStatus(){
@@ -79,6 +64,21 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 		$this->getActesTransactionsSQL()->updateStatus($transaction_id,1,$message);
 		$info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id,1);
 		$this->assertEquals(512,strlen($info['message']));
+	}
+
+	public function testgetByStatusSinceDate(){
+		$transaction_id =$this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+		$this->assertEmpty(
+			$this->getActesTransactionsSQL()->getByStatusSinceDate(
+				ActesStatusSQL::STATUS_TRANSMIS,
+				"1970-01-01")
+		);
+		$this->assertEquals(
+			[$transaction_id],
+			$this->getActesTransactionsSQL()->getByStatusSinceDate(
+				ActesStatusSQL::STATUS_TRANSMIS,
+				date("Y-m-d",strtotime("+2 days")))
+			);
 	}
 
 }

@@ -11,7 +11,25 @@ class ModuleSQL extends SQL {
 		$sql = "SELECT * FROM modules WHERE name=?";
 		return $this->queryOne($sql,$name);
 	}
-	
+
+	public function getInfo($module_id){
+		$sql =  "SELECT * FROM modules WHERE id=?";
+		return $this->queryOne($sql,$module_id);
+	}
+
+	public function getUsers($module_id, $authority_group_id = 0){
+		$sql = "SELECT DISTINCT users.id, users.givenname, users.name, users.email FROM users " .
+			" LEFT JOIN users_perms ON users.id=users_perms.user_id " .
+			" LEFT JOIN modules ON users_perms.module_id=modules.id " .
+			" WHERE modules.id=? AND (users_perms.perm='RO' OR users_perms.perm='RW') AND users.status=1 ";
+		$data = [$module_id];
+		if ($authority_group_id){
+			$sql .= " AND users.authority_group_id=? ";
+			$data[] = $authority_group_id;
+		}
+		return $this->query($sql,$data);
+	}
+
 	public function getInfoModuleAuthority($module_id,$authority_id){
 		$sql = "SELECT * FROM modules_authorities ". 
 				" WHERE module_id=? AND authority_id=? ";

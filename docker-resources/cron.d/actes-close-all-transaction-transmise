@@ -1,0 +1,1 @@
+50  4   *   *   *   root  php /var/www/s2low/script/actes/actes-close-old-transactions-transmises.php   >> /data/log/aactes-close-old-transactions-transmises.log 2>&1
