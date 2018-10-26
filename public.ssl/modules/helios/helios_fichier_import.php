@@ -67,32 +67,42 @@ $doc->openContent();
 
 $html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
-$html .= "<h2>Import d'un fichier</h2>\n";
-$html .= "<form class=\"form-horizontal import-file-form form col-md-offset-1\" method=\"POST\" enctype=\"multipart/form-data\" ";
-$html .= " action=\"" . WEBSITE_SSL . "/modules/helios/helios_script_reception.php\" > ";
 
-$html .= "<div class=\"form-group\">";
-$html .= "<label for=\"enveloppe\" class=\"control-label\">Fichier XML :</label>\n";
-$html .= "<input class=\"\" type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
-$html .= "</div>\n";
+ob_start();
+?>
+<h2>Import d'un fichier</h2>
+<form class="form-horizontal import-file-form form col-md-offset-1" method="POST" enctype="multipart/form-data" action="/modules/helios/helios_script_reception.php" >
+	<table class="data-table table table-striped">
+		<tr>
+			<th>
+				<label for="enveloppe" class="control-label">Fichier XML</label>
+			</th>
+			<td>
+				<input class="" type="file" id="enveloppe" name="enveloppe"/>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<label for="must_signed" class="control-label">Signer le fichier PES avant de le télétransmettre</label>
+			</th>
+			<td>
+				<input type="checkbox"  name="must_signed" id="must_signed"/>
+			</td>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<td>
+				<button class="btn btn-primary" type="submit" value="">Importer le fichier</button>
+			</td>
+		</tr>
+	</table>
+</form>
+
+<?php
+$html .= ob_get_contents();
+ob_end_clean();
 
 
-$html .= "<div class=\"form-group\">";
-$html .= "<input type=\"checkbox\"  name=\"must_signed\" />";
-$html .= "<label for=\"must_signed\" class=\"control-label\">Signer le fichier PES avant de le télétransmettre.</label>\n";
-
-$html .= "</div>\n";
-
-
-
-$html .= "<div class=\"form-group\"><div class=\"col-md-2\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\" value=\"\" />Importer le fichier</button></div></div>\n";
-$html .= "</form>\n";
-
-
-$html .= "</table>";
-$html .= "</form>";
-
-$html .= "</div>\n";
 
 $doc->addBody($html);
 $doc->closeContent();
