@@ -19,6 +19,7 @@
 - Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs #305
 - Possibilité de spécifier le type de la pièce principale sur le traitement par lot #318
 - Refus des PES Aller qui ne sont pas en ISO-8859-1 #373
+- Possibilité d'envoyer des mails aux membre d'un groupe déterminé #107
 
 ### Corrections
  
