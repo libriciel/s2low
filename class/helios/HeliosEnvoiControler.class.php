@@ -84,7 +84,13 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}*/
-			
+
+			if (! $this->isInIso8859($pes_content)){
+				$message = "Transaction $transaction_id : ce fichier n'est pas encodé en ISO-8859-1";
+				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+				continue;
+			}
+
 			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);
 			if (!$pes_xml){
 				$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
@@ -141,6 +147,11 @@ class HeliosEnvoiControler {
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
 		}
 		libxml_use_internal_errors(false);
+	}
+
+	private function isInIso8859($pes_content){
+		$first_line = substr($pes_content,0,50);
+		return preg_match("#ISO-8859-1#i",$first_line);
 	}
 
 	private function verifNomFicUnicity($authorityInfo,$info_from_pes_aller){
