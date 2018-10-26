@@ -43,6 +43,8 @@
 
 - Retraits de DBUnit qui était top lent pour la suite de test de s2low
 - Supression du répertoire tools devenu obsolète
+- Suppression de ce qui est lié au tampon PDF en PHP avec Zend (remplacé par PDFStamp)
+- Suppression du fichier build.xml pour Jenkins 
 
 ## 3.0.16 - 2018-10-08
 
