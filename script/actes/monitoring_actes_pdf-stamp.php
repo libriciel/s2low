@@ -1,5 +1,8 @@
 <?php
 
+//Marche plus car il faut image-magick
+
+
 //Script tente de faire tamponner un PDF et contrôle l'empreinte SHA1 du PDF retourné
 
 
