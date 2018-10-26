@@ -94,6 +94,13 @@ class ActesTransactionsSQL extends SQL{
         return $this->query($sql,$status_id,$status_id,$start_date);
     }
 
+    public function getByStatusSinceDate($status_id,$date_status){
+		$sql = "SELECT DISTINCT actes_transactions.id FROM actes_transactions " .
+				" JOIN actes_transactions_workflow ON actes_transactions.id = actes_transactions_workflow.transaction_id AND actes_transactions.last_status_id=actes_transactions_workflow.status_id " .
+				" WHERE last_status_id=? AND date<?";
+		return $this->queryOneCol($sql,$status_id,$date_status);
+	}
+
 	
 	public function getEnvelopeToDelete(){
 		$sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .

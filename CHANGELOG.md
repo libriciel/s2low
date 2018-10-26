@@ -36,6 +36,7 @@
 - Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
 - Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
 - Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour #372
+- Création du script script/actes/actes-close-old-transactions-transmises.php permettant de clore les transactions transmises depuis plus de 30 jours #344 
 
 ### Retraits
 

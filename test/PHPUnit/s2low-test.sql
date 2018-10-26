@@ -42,6 +42,7 @@ INSERT INTO actes_status VALUES (1, 'Posté');
 INSERT INTO actes_status VALUES (2, 'En attente de transmission');
 INSERT INTO actes_status VALUES (3, 'Transmis');
 INSERT INTO actes_status VALUES (4, 'Acquittement reçu');
+INSERT INTO actes_status VALUES (14, 'Erreur lors de l''archivage');
 INSERT INTO actes_status VALUES (19, 'En attente de transmission au SAE');
 INSERT INTO actes_status VALUES (20, 'Erreur lors de l''envoi au SAE');
 INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
