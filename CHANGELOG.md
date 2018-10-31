@@ -8,35 +8,36 @@
 
 - Préparation de la compatibilité avec la version 7.2 de PHP.
 - Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
-- Les transactions envoyé au SAE sont considéré en erreur dès le premier envoi et pas au bout de 24 heures d'essai
+- Les transactions envoyées au SAE sont considérées en erreur dès le premier envoi et pas au bout de 24 heures d'essai
 - Modification de l'interface de connexion à Pastell #416
 - Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
-- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic #415
-- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie)
-- Ajout de la constante ACTES_TYPE_PJ_IS_MANDATORY permettant de rendre obligatoire le typage des enveloppes #313
-- Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification #419
-- Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php #308
-- Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs #305
-- Possibilité de spécifier le type de la pièce principale sur le traitement par lot #318
-- Refus des PES Aller qui ne sont pas en ISO-8859-1 #373
+- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic ~helios #415
+- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie) ~helios
+- Ajout de la constante ACTES_TYPE_PJ_IS_MANDATORY permettant de rendre obligatoire le typage des enveloppes ~actes #313
+- Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification ~actes #419
+- Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php ~actes #308
+- Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs ~actes #305
+- Possibilité de spécifier le type de la pièce principale sur le traitement par lot ~actes #318
+- Refus des PES Aller qui ne sont pas en ISO-8859-1 ~helios #373
 - Possibilité d'envoyer des mails aux membre d'un groupe déterminé #107
 
 ### Corrections
  
 - Correction d'un bug sur la signature local via un certificat contenant un caractère non-ANSI
-- Correction d'un bug sur la signature local par lot pour les PES #414
-- Correction du pespolicyhash sur la signature incorrect #417
+- Correction d'un bug sur la signature local par lot pour les PES ~helios #414
+- Correction du pespolicyhash sur la signature incorrect ~helios #417
 - Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job queue #408
-- Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - #353
+- Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - ~actes #353
 - Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validé #57
+- La signature de certaines transactions ne se faisait pas sur le bon document ~actes #323 
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
-- Validation des fichiers XML et des signatures PADES des actes pour le super admin 
+- Validation des fichiers XML et des signatures PADES des actes pour le super admin ~helios  
 - Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
 - Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
 - Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
-- Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour #372
+- Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour ~helios #372
 - Création du script script/actes/actes-close-old-transactions-transmises.php permettant de clore les transactions transmises depuis plus de 30 jours #344 
 
 ### Retraits
