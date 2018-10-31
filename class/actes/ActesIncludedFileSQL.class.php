@@ -2,7 +2,7 @@
 class ActesIncludedFileSQL extends SQL {
 
 	public function getSendFile($transaction_id){
-		$sql = "SELECT * FROM actes_included_files WHERE transaction_id=? AND sha1 != '' ";
+		$sql = "SELECT * FROM actes_included_files WHERE transaction_id=? AND sha1 != '' ORDER BY id";
 		return  $this->query($sql,$transaction_id);
 	}
 	

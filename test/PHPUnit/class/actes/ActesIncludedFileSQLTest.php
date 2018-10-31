@@ -29,5 +29,29 @@ class ActesIncludedFileSQLTest extends S2lowTestCase {
         $this->assertEquals("toto.xml",$all[0]['posted_filename']);
     }
 
+	use ActesUtilitiesTestTrait;
+
+	/**
+	 * @throws Exception
+	 */
+	public function testGetSendFile(){
+
+		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+
+		$actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+		$transaction_info = $actesTransactionSQL->getInfo($transaction_id);
+
+		$actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
+
+
+		$actesIncludedFileSQL->addIncludedFile($transaction_info['envelope_id'],$transaction_id,"text/plain",12,"test.txt");
+		$actesIncludedFileSQL->addIncludedFile($transaction_info['envelope_id'],$transaction_id,"text/plain",12,"test2.txt");
+
+		$sql = "UPDATE actes_included_files SET sha1='aaa'";
+		$this->getSQLQuery()->query($sql);
+
+		$this->assertEquals('test2.txt',$actesIncludedFileSQL->getSendFile($transaction_id)[1]['filename']);
+	}
 
 }
