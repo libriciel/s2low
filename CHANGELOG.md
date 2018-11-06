@@ -30,6 +30,7 @@
 - Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - ~actes #353
 - Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validé #57
 - La signature de certaines transactions ne se faisait pas sur le bon document ~actes #323 
+- Correction d'un problème sur la réception des message de type déféré TA ~actes
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
