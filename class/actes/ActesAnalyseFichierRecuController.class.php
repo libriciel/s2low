@@ -202,13 +202,19 @@ class ActesAnalyseFichierRecuController {
 
 		$tar_filename = substr($targz_filename,0,-3);
 
+		$final_destination = $archive_folder."/".$tar_filename.".gz";
+
+		if (file_exists($final_destination)){
+			unlink($final_destination);
+		}
+
 		$pharData = new \PharData($archive_folder."/".$tar_filename);
 		foreach(glob("$rep_path/*") as $file) {
 			$pharData->addFile($file, basename($file));
 		}
 		$pharData->compress(\Phar::GZ);
 
-		return $archive_folder."/".$tar_filename.".gz";
+		return $final_destination;
 	}
 
 	/**
@@ -247,11 +253,11 @@ class ActesAnalyseFichierRecuController {
             $date_decision = $fichierXML->date_courrier_pref;
         } else if (isset($fichierXML->date_lettre_observation)) {
             $date_decision = $fichierXML->date_lettre_observation;
+		} else if (isset($fichierXML->date_depot)) {
+			$date_decision =  $fichierXML->date_depot;
         } else {
             $date_decision = "";
         }
-
-
 
         $related_transaction_id = $this->actesTransactionsSQL->createRelatedTransaction(
             $related_envelope_id,

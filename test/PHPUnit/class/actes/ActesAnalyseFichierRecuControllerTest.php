@@ -217,8 +217,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
     public function testCourrierSimple(){
-        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
-        $this->mockGetBySirenAndNumeroInterne($transaction_id);
+        $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
         mkdir($this->actes_files_upload_root."/000000000/20170725A/",0777,true);
         $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-courrier-simple");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
@@ -234,7 +234,10 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
         $info = $actesTransactionSQL->getInfo($transaction_id);
 
-        $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+		$this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
+
+
+		$this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
     }
 
 	/**
@@ -251,6 +254,9 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
         $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
         $this->assertEquals(1,$enveloppe_info['user_id']);
+
+        $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id));
     }
 
 
