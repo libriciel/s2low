@@ -2,7 +2,7 @@
 
 require_once( __DIR__."/../../init/init.php");
 
-function verifsae($pastell,$listdocument){
+function verifsae(PastellWrapper $pastell,$listdocument){
     foreach ($listdocument as $document) {
         //echo "Nouveau document :\n";
         //print_r($document);
@@ -22,16 +22,17 @@ $list_col = $sqlQuery->query($sql);
 
 //print_r($list_col);
 //exit;
-$pastellFactory = new PastellFactory();
+$pastellFactory = new PastellWrapperFactory();
 
 foreach($list_col as $col){
-    
-    $pastell =  $pastellFactory->getNewInstance(
-        $col['pastell_url'],
-        $col['pastell_id_e'],
-        $col['pastell_login'],
-        $col['pastell_password']
-        );
+
+	$pastellProperties = new PastellProperties();
+	$pastellProperties->id_e = $col['pastell_id_e'];
+	$pastellProperties->url = $col['pastell_url'];
+	$pastellProperties->login = $col['pastell_login'];
+	$pastellProperties->password = $col['pastell_password'];
+
+    $pastell =  $pastellFactory->getNewInstance($pastellProperties);
     $recherche= $pastell->listDocuments('actes-generique');
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);//exit;

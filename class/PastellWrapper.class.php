@@ -271,5 +271,32 @@ class PastellWrapper {
 		$info = array('id_e'=>$this->pastellProperties->id_e,'id_d'=>$id_d,'action'=>'supression');
 		return $this->callAPI("action.php",$info);
 	}
+
+	/**
+	 * @param $flux
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function listDocuments($flux){
+		$info = array(
+			'id_e'=>$this->pastellProperties->id_e,
+			'type'=>$flux,
+			'lastetat'=>'verif-sae-erreur',
+			'limit'=>50000
+		);
+
+		$output=$this->callAPI("recherche-document.php",$info);
+		return json_decode($output);
+	}
+
+	/**
+	 * @param $id_d
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
+	public function verifsae($id_d){
+		$info = array('id_e'=>$this->pastellProperties->id_e,'id_d'=>$id_d,'action'=>'verif-sae');
+		return $this->callAPI("action.php",$info);
+	}
 	
 }
