@@ -39,9 +39,15 @@ function is_uploaded_file_wrapper($filename){
 
 
 function is_valid_email($email){
-	//Ne supporte pas les adresses email en UTF8 
+	//Ne supporte pas les adresses email en UTF8
 	//http://stackoverflow.com/questions/19522092/should-i-use-filter-var-to-validate-email
-	return !!filter_var($email ,FILTER_VALIDATE_EMAIL);
+	$email_list = explode(",",$email);
+	foreach($email_list as $mail){
+		if (!!!filter_var($mail,FILTER_VALIDATE_EMAIL)){
+			return false;
+		}
+	}
+	return true;
 }
 
 function get_url($url_path){
