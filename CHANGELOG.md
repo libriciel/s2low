@@ -31,6 +31,7 @@
 - Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validé #57
 - La signature de certaines transactions ne se faisait pas sur le bon document ~actes #323 
 - Correction d'un problème sur la réception des message de type déféré TA ~actes
+- La typologie des pièces par défaut pour les contrat convention et avenant passe de 99_CO à 99_DC ~actes #423
 
 ### Ajouts
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
