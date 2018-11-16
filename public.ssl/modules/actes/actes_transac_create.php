@@ -238,7 +238,7 @@ if (isset ($actePDFFile) || $batchMode) {
   	if (empty($type_acte)){
       $correspondance_nature_type = array(
           '1'=> '99_DE',
-          '2' => '99_AT',
+          '2' => '99_AR',
           '3' => '99_AI',
           '4' => '99_DC',
           '5' => '99_BU',
