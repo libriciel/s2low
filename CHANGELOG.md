@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.0.18
+
+### Ajouts
+
+- Ajout du contrat de license (fichier LICENSE)
+
+
+
 ## 3.0.17 - 2018-11-20
 
 ***Cette version nécessite une modification de la base de données**
