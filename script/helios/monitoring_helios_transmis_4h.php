@@ -12,7 +12,7 @@ $subject="Transaction helios a l etat transmis";
 
 $retour=0;
 $message="OK";
-$limit=185;
+$limit=300;
 $last_status="3";
 $timestamp=time()-(60*60);
 $timestampmax=time()-(4*60*60);

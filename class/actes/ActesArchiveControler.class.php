@@ -25,32 +25,34 @@ class ActesArchiveControler {
 	/** @var S2lowLogger */
 	private $logger;
 
+	/** @var WorkerScript */
+	private $workerScript;
+
 	public function __construct(
 	    SQLQuery $sqlQuery,
         ActesRetriever $actesRetriever,
 		PastellPropertiesSQL $pastellPropertiesSQL,
-		S2lowLogger $logger
+		S2lowLogger $logger,
+		WorkerScript $workerScript,
+		PastellWrapperFactory $pastellWrapperFactory
     ){
 		$this->sqlQuery = $sqlQuery;
-		$this->setPastellWrapperFactory(new PastellWrapperFactory());
+		$this->pastellWrapperFactory = $pastellWrapperFactory;
 		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$this->actesRetriever = $actesRetriever;
 		$this->pastellPropetiesSQL = $pastellPropertiesSQL;
 		$this->logger = $logger;
-	}
-
-	public function setPastellWrapperFactory(PastellWrapperFactory $pastellWrapperFactory){
-		$this->pastellWrapperFactory = $pastellWrapperFactory;
+		$this->workerScript = $workerScript;
 	}
 
 	public function getLastError(){
 		return $this->lastError;
 	}
 
-	public function setArchiveEnAttenteEnvoiSEA($user_id,$id){
+	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id){
 		try {
-			$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 			$user = new User($user_id);
 			$user->init();
 			$this->isAllowToSendArchive($user_id,$transactionsInfo);
@@ -63,8 +65,16 @@ class ActesArchiveControler {
 			$this->lastError = $e->getMessage();
 			return false;
 		}
-		$id = $this->actesTransactionsSQL->updateStatus($id,ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
-		return $id;
+		$actes_transaction_workflow_id = $this->actesTransactionsSQL->updateStatus(
+			$transaction_id,
+			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+			"En attente de l'envoi au SAE"
+		);
+
+		$this->workerScript->putJobByClassName(
+			ActesEnvoiSaeWorker::class,$transaction_id
+		);
+		return $actes_transaction_workflow_id;
 	}
 
 	/**
@@ -100,33 +110,18 @@ class ActesArchiveControler {
 	}
 
 
-	/**
-	 * @param int $authority_id
-	 * @throws Exception
-	 */
-	public function sendAllArchive($authority_id = 0){
-		echo "Début de l'envoie:\n";
-
-		echo "Authority_id : $authority_id\n";
-
+	public function getAllTransactionIdToSend($authority_id = 0){
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 		$info_list = $actesTransactionsSQL->getArchiveFStatus(
-		    ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
-            $authority_id
-        );
-		echo count($info_list)." transactions à envoyer...\n";
-        $sigtermHandler = new SigTermHandler();
-		foreach($info_list as $info){
-			$transaction_id = $info['id'];
-			echo "Envoi de la transaction $transaction_id : \n";
-			$this->sendArchive($transaction_id);
-            if ($sigtermHandler->isSigtermCalled()){
-                break;
-            }
+			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+			$authority_id
+		);
+		$transaction_id_list = [];
+		foreach($info_list as $info) {
+			$transaction_id_list[] = $info['id'];
 		}
-		echo "Fin de l'envoie\n";
+		return $transaction_id_list;
 	}
-
 
 	/**
 	 * @param $id
@@ -137,15 +132,19 @@ class ActesArchiveControler {
 		$tmpFolder = new TmpFolder();
 		$tmp_folder = $tmpFolder->create();
 		try {
-
+			$this->logger->info("Envoi de La transaction $id sur le SAE");
 			$id_d = $this->createPastellDocument($id);
-			$this->sendArchiveThrow($id,$id_d,$tmp_folder);
+			if ($id_d) {
+				$this->sendArchiveThrow($id, $id_d, $tmp_folder);
+				$this->logger->info("La transaction $id a été envoyé sur le SAE (id_d pastell : $id_d)");
+			}
 		} catch (Exception $e){
 			$message = "Impossible d'envoyer la transaction $id : " . $e->getMessage();
 			if ($id_d){
+				$this->deletePastellDocument($id,$id_d);
 				$message .=  " - id_d=$id_d";
 			}
-			echo $message."\n";
+			$this->logger->error($message);
 			$this->actesTransactionsSQL->updateStatus(
 				$id,
 				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
@@ -153,7 +152,21 @@ class ActesArchiveControler {
 			);
 		}
 		$tmpFolder->delete($tmp_folder);
+	}
 
+
+	private function deletePastellDocument($transaction_id, $id_d){
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
+
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+		try {
+			$pastell->delete($id_d);
+		} catch (Exception $e){
+			$this->logger->alert("Impossible de supprimer le document id_d sur {$pastellProperties->url} !");
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -163,6 +176,11 @@ class ActesArchiveControler {
 	 */
 	private function createPastellDocument($id){
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+		if($transactionsInfo['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
+			$this->logger->error("La transaction $id à envoyer au SAE n'est pas dans le bon status ! {$transactionsInfo['last_status_id']} trouvé");
+			return false;
+		}
+
 		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
 
 		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
@@ -173,7 +191,7 @@ class ActesArchiveControler {
 		if (! $id_d){
 			throw new Exception("Erreur pastell : ". $pastell->getLastError());
 		}
-		$this->logger->debug("création du document id_d : $id_d");
+		$this->logger->debug("Création du document sur Pastell id_d=$id_d");
 
 		return $id_d;
 	}
@@ -194,7 +212,7 @@ class ActesArchiveControler {
 		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
 
-		$this->logger->debug("Envoi de la transaction $id sur Pastell");
+		$this->logger->debug("Envoi de la transaction $id sur Pastell {$pastellProperties->url} id_e={$pastellProperties->id_e}");
 
 
 		$actesFile = $this->actesTransactionsSQL->getAllFile($id);
@@ -331,84 +349,7 @@ class ActesArchiveControler {
 		return $pdftkise;
 	}
 
-	/**
-	 * @param $transactionInfo
-	 * @return bool
-	 */
-	public function verifArchive($transactionInfo){
-		try {
-			return $this->verifArchiveThrow($transactionInfo);
-		} catch (Exception $e){
-			echo "Problème lors de la vérificationd de l'archive : " . $e->getMessage();
-			return false;
-		}
-	}
 
-	/**
-	 * @param $transactionInfo
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function verifArchiveThrow($transactionInfo){
-		echo "Transaction {$transactionInfo['unique_id']} : ";
-
-		$authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$authorityInfo = $authoritySQL->getInfo($transactionInfo['authority_id']);
-
-		if (! $authorityInfo['pastell_url'] ){
-			echo  "La collectivité n'a pas de Pastell configuré\n";
-			return false;
-		}
-
-		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionInfo['authority_id']);
-
-		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
-
-
-		$info = $pastell->getInfo($transactionInfo['sae_transfer_identifier']);
-		if(!$info){
-			echo $pastell->getLastError()."\n";
-			return false;
-		}
-		try {
-			$reply_sae = $pastell->getFile($transactionInfo['sae_transfer_identifier'], 'reply_sae');
-		} catch (Exception $e){
-			echo "Pas encore de réponse (".$e->getMessage().") \n";
-			return false;
-		}
-
-		@ $xml = simplexml_load_string($reply_sae);
-
-		if (! $xml){
-			echo "Impossible de lire le fichier reply.xml : $reply_sae\n";
-			return false;
-		}
-
-
-		$nodeName = strval($xml->getName());
-		$xml_message = utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
-
-		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-
-
-		//s2lowif ($nodeName == 'ArchiveTransferAcceptance'){
-        if ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->{'ReplyCode'}) == '000'))){
-            $url = $info['data']['url_archive'];
-			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
-			$actesTransactionsSQL->updateStatus($transactionInfo['id'],13,$msg,$reply_sae);
-			$actesTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);
-		} else {
-			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";
-			$actesTransactionsSQL->updateStatus($transactionInfo['id'],14,$msg,$reply_sae);
-		}
-
-		echo "$msg\n";
-
-		$pastell->delete($transactionInfo['sae_transfer_identifier']);
-		echo "Document supprimé sur Pastell\n";
-
-		return true;
-	}
 
 
 }

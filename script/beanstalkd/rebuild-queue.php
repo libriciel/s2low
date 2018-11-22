@@ -5,7 +5,8 @@ require_once __DIR__."/../../init/init.php";
 $all = [
 	ActesAntivirusWorker::class,
 	ActesAnalyseFichierAEnvoyerWorker::class,
-	ActesEnvoiFichierWorker::class
+	ActesEnvoiFichierWorker::class,
+	ActesEnvoiSaeWorker::class
 ];
 
 

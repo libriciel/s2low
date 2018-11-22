@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArchiveTransferReply xmlns="fr:gouv:culture:archivesdefrance:seda:v1.0">
+  <Comment>Votre transfert d'archive a été accepté par la plate-forme as@lae</Comment>
+  <Date>2018-11-14T10:26:03+01:00</Date>
+  <GrantDate>2018-11-14T10:26:03+01:00</GrantDate>
+  <ReplyCode listVersionID="edition 2009">000</ReplyCode>
+  <TransferIdentifier>efa92e33c0d1eceee79edd3e6fb08ebea9965a73a445a67221d96db11f09d016_1542187358</TransferIdentifier>
+  <TransferReplyIdentifier>ATR_105</TransferReplyIdentifier>
+  <ArchivalAgency>
+    <Identification>FRAD000</Identification>
+    <Name>Archives départementales</Name>
+  </ArchivalAgency>
+  <TransferringAgency>
+    <Identification>PASTELL_DEMO</Identification>
+    <Name>Pastell Demo</Name>
+  </TransferringAgency>
+  <Archive>
+    <ArchivalAgencyArchiveIdentifier>89</ArchivalAgencyArchiveIdentifier>
+    <ArchivalAgreement>ACCORD_ACTES</ArchivalAgreement>
+    <ArchivalProfile>Profil_ACTES_AP_v3</ArchivalProfile>
+    <DescriptionLanguage listVersionID="edition 2011">fra</DescriptionLanguage>
+    <Name>Flux ACTES_Actes individuels de LIBRICIEL SCOP en date du 2018-11-14 , Test 1</Name>
+    <ContentDescription>
+      <Description>Archivage d'un acte soumis au contrôle de légalité, accompagné de ses annexes et de son accusé de réception</Description>
+      <DescriptionLevel>file</DescriptionLevel>
+      <Language listVersionID="edition 2011">fra</Language>
+      <LatestDate>2018-11-14</LatestDate>
+      <OldestDate>2018-11-14</OldestDate>
+      <AccessRestrictionRule>
+        <Code listVersionID="edition 2009">AR038</Code>
+        <StartDate>2018-11-14</StartDate>
+      </AccessRestrictionRule>
+      <CustodialHistory>
+        <CustodialHistoryItem languageID="fr">Actes dématérialisés soumis au contrôle de légalité télétransmis via la plateforme S²LOW d'ADULLACT Projet pour LIBRICIEL SCOP. Les données archivées sont structurées selon le schéma métier d'Aide au contrôle de légalité dématérialisé (ACTES) établi par le ministère de l'Intérieur, de l'Outre mer et des Collectivités territoriales. La description est établie selon les règles du standard d'échange de données pour l'archivage (SEDA) version 1.0</CustodialHistoryItem>
+      </CustodialHistory>
+      <Keyword>
+        <KeywordContent>LIBRICIEL SCOP</KeywordContent>
+        <KeywordType listVersionID="edition 2009">corpname</KeywordType>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+      </Keyword>
+      <Keyword>
+        <KeywordContent>contrôle de légalité</KeywordContent>
+        <KeywordReference>67717/T2-25</KeywordReference>
+        <KeywordType listVersionID="edition 2009">subject</KeywordType>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+      </Keyword>
+      <Keyword>
+        <KeywordContent>Actes individuels</KeywordContent>
+        <KeywordType listVersionID="edition 2009">genreform</KeywordType>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+      </Keyword>
+      <Keyword>
+        <KeywordContent>2.1 Documents d urbanisme</KeywordContent>
+        <KeywordType listVersionID="edition 2009">subject</KeywordType>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+      </Keyword>
+      <Keyword>
+        <KeywordContent>2018_100</KeywordContent>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+      </Keyword>
+      <OriginatingAgency>
+        <Identification>FRPROD001</Identification>
+        <Name>Producteur 1 : Assemblées</Name>
+        <Address>
+          <BuildingNumber>1</BuildingNumber>
+          <CityName>Paris</CityName>
+          <Postcode>75000</Postcode>
+        </Address>
+        <Contact>
+          <PersonName>M. Jean Dujardin</PersonName>
+          <Responsibility>Directeur des services</Responsibility>
+        </Contact>
+      </OriginatingAgency>
+    </ContentDescription>
+    <AccessRestrictionRule>
+      <Code listVersionID="edition 2009">AR038</Code>
+      <StartDate>2018-11-14</StartDate>
+    </AccessRestrictionRule>
+    <AppraisalRule>
+      <Code listVersionID="edition 2009">detruire</Code>
+      <Duration>P10Y</Duration>
+      <StartDate>2018-11-14</StartDate>
+    </AppraisalRule>
+    <ArchiveObject>
+      <ArchivalAgencyObjectIdentifier>89_001</ArchivalAgencyObjectIdentifier>
+      <Name>Acte soumis au contrôle de légalité</Name>
+      <ContentDescription>
+        <DescriptionLevel>recordgrp</DescriptionLevel>
+        <Language listVersionID="edition 2011">fra</Language>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+        <OriginatingAgency>
+          <Identification>FRPROD001</Identification>
+          <Name>Producteur 1 : Assemblées</Name>
+          <Address>
+            <BuildingNumber>1</BuildingNumber>
+            <CityName>Paris</CityName>
+            <Postcode>75000</Postcode>
+          </Address>
+          <Contact>
+            <PersonName>M. Jean Dujardin</PersonName>
+            <Responsibility>Directeur des services</Responsibility>
+          </Contact>
+        </OriginatingAgency>
+      </ContentDescription>
+      <AccessRestrictionRule>
+        <Code listVersionID="edition 2009">AR038</Code>
+        <StartDate>2018-11-14</StartDate>
+      </AccessRestrictionRule>
+      <AppraisalRule>
+        <Code listVersionID="edition 2009">detruire</Code>
+        <Duration>P10Y</Duration>
+        <StartDate>2018-11-14</StartDate>
+      </AppraisalRule>
+      <ArchiveObject>
+        <ArchivalAgencyObjectIdentifier>89_002</ArchivalAgencyObjectIdentifier>
+        <Name>Annexe(s) à l'acte</Name>
+        <ContentDescription>
+          <DescriptionLevel>subgrp</DescriptionLevel>
+          <Language listVersionID="edition 2011">fra</Language>
+          <AccessRestrictionRule>
+            <Code listVersionID="edition 2009">AR038</Code>
+            <StartDate>2018-11-14</StartDate>
+          </AccessRestrictionRule>
+          <OriginatingAgency>
+            <Identification>FRPROD001</Identification>
+            <Name>Producteur 1 : Assemblées</Name>
+            <Address>
+              <BuildingNumber>1</BuildingNumber>
+              <CityName>Paris</CityName>
+              <Postcode>75000</Postcode>
+            </Address>
+            <Contact>
+              <PersonName>M. Jean Dujardin</PersonName>
+              <Responsibility>Directeur des services</Responsibility>
+            </Contact>
+          </OriginatingAgency>
+        </ContentDescription>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+        <AppraisalRule>
+          <Code listVersionID="edition 2009">detruire</Code>
+          <Duration>P10Y</Duration>
+          <StartDate>2018-11-14</StartDate>
+        </AppraisalRule>
+      </ArchiveObject>
+      <Document>
+        <ArchivalAgencyDocumentIdentifier>89_001_001</ArchivalAgencyDocumentIdentifier>
+        <Attachment filename="GS_esp.pdf" format="fmt/20" mimeCode="application/pdf"></Attachment>
+        <Control>false</Control>
+        <Copy>false</Copy>
+        <Description>Acte transmis</Description>
+        <Integrity algorithme="http://id.loc.gov/vocabulary/cryptographicHashFunctions/sha-256">efa92e33c0d1eceee79edd3e6fb08ebea9965a73a445a67221d96db11f09d016</Integrity>
+        <Language listVersionID="edition 2011">fra</Language>
+        <Size unitCode="AD">1024287</Size>
+        <Type listVersionID="edition 2009">CDO</Type>
+      </Document>
+      <Document>
+        <ArchivalAgencyDocumentIdentifier>89_001_002</ArchivalAgencyDocumentIdentifier>
+        <Attachment filename="signature.zip"></Attachment>
+        <Control>false</Control>
+        <Copy>false</Copy>
+        <Description>Signature électronique de l'acte</Description>
+        <Integrity algorithme="http://id.loc.gov/vocabulary/cryptographicHashFunctions/sha-256">8bf66249bb05ac4940b2cca075bf93107b0045582edcd92ac41d0929a80a19a1</Integrity>
+        <Language listVersionID="edition 2011">fra</Language>
+        <Size unitCode="AD">14</Size>
+        <Type listVersionID="edition 2009">PDIFIX</Type>
+      </Document>
+    </ArchiveObject>
+    <ArchiveObject>
+      <ArchivalAgencyObjectIdentifier>89_003</ArchivalAgencyObjectIdentifier>
+      <Name>Accusé de réception de l'acte</Name>
+      <ContentDescription>
+        <DescriptionLevel>item</DescriptionLevel>
+        <Language listVersionID="edition 2011">fra</Language>
+        <AccessRestrictionRule>
+          <Code listVersionID="edition 2009">AR038</Code>
+          <StartDate>2018-11-14</StartDate>
+        </AccessRestrictionRule>
+        <OriginatingAgency>
+          <Identification>FRPROD001</Identification>
+          <Name>Producteur 1 : Assemblées</Name>
+          <Address>
+            <BuildingNumber>1</BuildingNumber>
+            <CityName>Paris</CityName>
+            <Postcode>75000</Postcode>
+          </Address>
+          <Contact>
+            <PersonName>M. Jean Dujardin</PersonName>
+            <Responsibility>Directeur des services</Responsibility>
+          </Contact>
+        </OriginatingAgency>
+      </ContentDescription>
+      <AccessRestrictionRule>
+        <Code listVersionID="edition 2009">AR038</Code>
+        <StartDate>2018-11-14</StartDate>
+      </AccessRestrictionRule>
+      <AppraisalRule>
+        <Code listVersionID="edition 2009">detruire</Code>
+        <Duration>P10Y</Duration>
+        <StartDate>2018-11-14</StartDate>
+      </AppraisalRule>
+      <Document>
+        <ArchivalAgencyDocumentIdentifier>89_003_001</ArchivalAgencyDocumentIdentifier>
+        <Attachment filename="ARActes.xml" format="fmt/101" mimeCode="application/xml"></Attachment>
+        <Control>false</Control>
+        <Copy>false</Copy>
+        <Integrity algorithme="http://id.loc.gov/vocabulary/cryptographicHashFunctions/sha-256">d38b877fde036a965175e195f0a137d92fe2d95a571e7a578876e4f63303200f</Integrity>
+        <Language listVersionID="edition 2011">fra</Language>
+        <Size unitCode="AD">854</Size>
+        <Type listVersionID="edition 2009">CDO</Type>
+      </Document>
+    </ArchiveObject>
+  </Archive>
+</ArchiveTransferReply>

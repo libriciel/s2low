@@ -8,13 +8,13 @@ class ActeTamponne {
 	/** @var  PDFStampWrapper */
 	private $pdfStampWrapper;
 
-	/** @var Logger */
+	/** @var S2lowLogger */
 	private $logger;
 
 	public function __construct(
 	    ActesTransactionsSQL $actesTransactionsSQL,
         PDFStampWrapper $pdfStampWrapper,
-        Logger $logger
+        S2lowLogger $logger
     ) {
 		$this->actesTransactionsSQL = $actesTransactionsSQL;
 		$this->pdfStampWrapper = $pdfStampWrapper;
@@ -45,10 +45,10 @@ class ActeTamponne {
 
         try {
             $result =  $this->pdfStampWrapper->stamp($file_path, $pdfStampData);
-            $this->logger->log("PDF STAMP","Tamponnage de l'acte $transaction_id");
+            $this->logger->info("Tamponnage de l'acte $transaction_id");
             return $result;
         } catch (Exception $e){
-            $this->logger->log("PDF STAMP","Impossible de tamponné l'acte $transaction_id : " . $e->getMessage());
+            $this->logger->error("Impossible de tamponné l'acte $transaction_id : " . $e->getMessage());
             return file_get_contents($file_path);
         }
 	}

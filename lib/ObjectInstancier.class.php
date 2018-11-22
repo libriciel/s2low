@@ -23,6 +23,10 @@ class ObjectInstancier {
 		return $this->objects[$name];
 	}
 
+	public function unset_object($name){
+		unset($this->objects[$name]);
+	}
+
 	public function set($name,$value){
 		$this->objects[$name] = $value;
 	}

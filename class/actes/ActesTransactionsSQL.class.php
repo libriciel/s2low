@@ -84,6 +84,13 @@ class ActesTransactionsSQL extends SQL{
 		return $this->queryOneCol($sql,$status_id,$antivirus_check);
 	}
 
+	public function getTransactionIdByStatus($status_id){
+		$sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
+			" WHERE last_status_id=?";
+		return $this->queryOneCol($sql,$status_id);
+	}
+
+
     public function getLastArchiveFromStatus($status_id,$start_date){
         $sql = "SELECT  actes_transactions.*,authorities.*,actes_transactions.id as id FROM actes_transactions " .
             " JOIN authorities ON actes_transactions.authority_id=authorities.id " .

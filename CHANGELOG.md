@@ -5,6 +5,9 @@
 ### Ajouts
 
 - Ajout du contrat de license (fichier LICENSE)
+- Ajout de log plus pertinent sur l'envoi à Pastell ~actes #427
+- Suppression du document sur Pastell en cas d'erreur ~actes #425
+- Modification du statut du document si le document sur Pastell est en erreur ~actes #424
 
 
 

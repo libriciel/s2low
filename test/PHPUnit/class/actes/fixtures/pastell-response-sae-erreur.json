@@ -1,0 +1,84 @@
+{
+  "info": {
+    "id_d": "l8wrYPj",
+    "type": "actes-generique",
+    "titre": "Test 1",
+    "creation": "2018-11-14 10:14:10",
+    "modification": "2018-11-14 10:20:22"
+  },
+  "data": {
+    "acte_nature": "3",
+    "numero_de_lacte": "2018_100",
+    "objet": "Test 1",
+    "date_de_lacte": "2018-11-14",
+    "document_papier": "",
+    "envoi_signature_check": "on",
+    "envoi_tdt": "on",
+    "envoi_ged": "on",
+    "envoi_sae": "on",
+    "arrete": [
+      "GS_esp.pdf"
+    ],
+    "classification": "2.1 Documents d urbanisme",
+    "type_piece": "GS_esp.pdf : Acte individuel",
+    "type_acte": "99_AI",
+    "type_pj": "[]",
+    "envoi_signature": "1",
+    "has_signature_locale": "",
+    "iparapheur_type": "Actes",
+    "iparapheur_sous_type": "Arr\u00eat\u00e9 individuel",
+    "has_historique": "1",
+    "iparapheur_historique": [
+      "iparapheur_historique.xml"
+    ],
+    "has_signature": "1",
+    "signature": [
+      "signature.zip"
+    ],
+    "document_signe": [
+      "document.txt"
+    ],
+    "tedetis_transaction_id": "1344",
+    "has_bordereau": "1",
+    "bordereau": [
+      "Test 1-bordereau.pdf"
+    ],
+    "aractes": [
+      "ARActes.xml"
+    ],
+    "acte_tamponne": [
+      "Test 1-tamponne.pdf"
+    ],
+    "date_ar": "2018-11-14",
+    "sae_bordereau": [
+      "bordereau.xml"
+    ],
+    "sae_transfert_id": "efa92e33c0d1eceee79edd3e6fb08ebea9965a73a445a67221d96db11f09d016_1542187358",
+    "sae_archive": [
+      "archive.tar.gz"
+    ],
+    "ar_sae": [
+      "ar.xml"
+    ],
+    "reply_sae": [
+      "reply.xml"
+    ],
+    "has_archive": "1",
+    "url_archive": "https:\/\/asalae.demonstrations.libriciel.fr\/archives\/viewByArchiveIdentifier\/89"
+  },
+  "action_possible": [
+    "supression",
+    "verif-reponse-tdt",
+    "annulation-tdt"
+  ],
+  "action-possible": [
+    "supression",
+    "verif-reponse-tdt",
+    "annulation-tdt"
+  ],
+  "last_action": {
+    "action": "verif-sae-erreur",
+    "message": "Erreur sur la verification Pastell",
+    "date": "2018-11-14 10:23:31"
+  }
+}

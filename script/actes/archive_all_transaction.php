@@ -37,7 +37,7 @@ echo "$nb_transaction vont être traité\n";
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
-$actesArchiveControler = $objectInstancier->get("ActesArchiveControler");
+$actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
 
 
 foreach($transaction_id_list as $transaction_id){
