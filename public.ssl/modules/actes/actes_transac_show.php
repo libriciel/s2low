@@ -592,6 +592,16 @@ if ($me->isSuper()) {
 		$actionHtml .= "</div></form>\n";
 	}
 
+	if ($transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_send_sae.php\"  method=\"post\">\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Forcer l'envoi synchrone au SAE :</label>\n";
+		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+		$actionHtml .= "<input type=\"submit\" value=\"Forcer l'envoi au SAE\" class=\"btn btn-warning\" />\n";
+		$actionHtml .= "</div></form>\n";
+
+	}
+
+
 }
 
 
@@ -661,8 +671,6 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 			<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i +1?>' value=''/>
 		<?php endforeach;?>
 	</form>
-
-
 
 
 

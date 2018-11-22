@@ -10,6 +10,8 @@ class ActesStatusSQL {
     const STATUS_TRANSMIS = 3;
     const STATUS_ACQUITTEMENT_RECU = 4;
 
+    const STATUS_VALIDE = 5;
+
     const STATUS_DOCUMENT_RECU = 7;
     const STATUS_ACQUITTEMENT_ENVOYE = 8;
 
@@ -18,7 +20,9 @@ class ActesStatusSQL {
 
 	const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
 
+	const STATUS_ENVOYE_AU_SAE = 12;
 	const STATUS_ARCHIVE_PAR_LE_SAE = 13;
+	const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
 
 	const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
 

@@ -46,18 +46,18 @@ class WorkerScript {
 		return $this->beanstalkdWrapper->put($worker->getQueueName(),$data);
 	}
 
-	public function scriptByClassName($workerClassName, $log_enable_stdout=true){
+	public function scriptByClassName($workerClassName, $log_enable_stdout=true, $force_old_school_script = false){
 		/** @var IWorker $worker */
 		$worker = $this->objectInstancier->get($workerClassName);
 
 		$this->s2lowLogger->setName($worker->getQueueName()."-script");
 		$this->s2lowLogger->enableStdOut($log_enable_stdout);
-		return $this->script($worker);
+		return $this->script($worker,$force_old_school_script);
 	}
 
-	public function script(IWorker $IWorker){
+	public function script(IWorker $IWorker, $force_old_school_script = false){
 		$this->sigTermHandler = $this->sigTermHandlerFactory->getNewInstance();
-		if ($this->beanstalkdWrapper->isModeBeanstalked()){
+		if ($this->beanstalkdWrapper->isModeBeanstalked() && ! $force_old_school_script){
 			return $this->beanstalkdWorker($IWorker);
 		} else {
 			return $this->oldSchoolScript($IWorker);
@@ -87,8 +87,13 @@ class WorkerScript {
 			try {
 				$data = $job->getData();
 				$this->s2lowLogger->info("Travail en cours",[$data]);
+
+				//TODO Doit être synchronisé !
 				$IWorker->work($data);
+				//TODO Fin de la synchronisation
+
 				$queue->delete($job);
+
 			} catch (Exception $e){
 				$this->s2lowLogger->error(
 					$e->getMessage(),

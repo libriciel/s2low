@@ -11,12 +11,16 @@ class PastellWrapper {
 
 	private $curlWrapperFactory;
 
+	private $s2lowLogger;
+
 	public function __construct(
 		PastellProperties $pastellProperties,
-		CurlWrapperFactory $curlWrapperFactory
+		CurlWrapperFactory $curlWrapperFactory,
+		S2lowLogger $s2lowLogger
 	){
 		$this->pastellProperties = $pastellProperties;
 		$this->curlWrapperFactory = $curlWrapperFactory;
+		$this->s2lowLogger = $s2lowLogger;
 	}
 
 	public function getLastError(){
@@ -31,6 +35,12 @@ class PastellWrapper {
 	 * @throws Exception
 	 */
 	private function callAPI($url,array $postData = array(),$postFile = array()){
+
+		if (! $url){
+			$this->s2lowLogger->alert("Pastell n'est pas configuré !");
+			return false;
+		}
+
 		$curl_wrapper = $this->curlWrapperFactory->getNewInstance();
 		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->pastellProperties->login, $this->pastellProperties->password);
@@ -41,8 +51,10 @@ class PastellWrapper {
 		foreach($postFile as $field => $file_info){
 			$curl_wrapper->addPostFile($field, $file_info[0],$file_info[1]);
 		}
-				
+
+		$this->s2lowLogger->debug("Pastell request: ".$this->pastellProperties->url."/".$url." with post data :".json_encode($postData));
 		$raw_data = $curl_wrapper->get($this->pastellProperties->url."/".$url);
+		$this->s2lowLogger->debug("Pastell response: $raw_data");
 		if (!$raw_data){
 			throw new Exception($curl_wrapper->getLastError());
 		}

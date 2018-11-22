@@ -16,19 +16,16 @@ class HeliosArchiveControler {
 
 	public function __construct(
 	    SQLQuery $sqlQuery,
-        PesAllerRetriever $pesAllerRetriever
-
+        PesAllerRetriever $pesAllerRetriever,
+		PastellWrapperFactory $pastellWrapperFactory
     ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
-		$this->setPastellWrapperFactory(new PastellWrapperFactory());
+		$this->pastellWrapperFactory = $pastellWrapperFactory;
 		$this->pesAllerRetriever = $pesAllerRetriever;
 	}
-	
-	public function setPastellWrapperFactory(PastellWrapperFactory $pastellWrapperFactory){
-		$this->pastellWrapperFactory = $pastellWrapperFactory;
-	}
+
 
 	public function getLastError(){
 		return $this->lastError;

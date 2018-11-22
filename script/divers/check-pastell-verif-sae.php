@@ -22,7 +22,7 @@ $list_col = $sqlQuery->query($sql);
 
 //print_r($list_col);
 //exit;
-$pastellFactory = new PastellWrapperFactory();
+$pastellFactory = $objectInstancier->get(PastellWrapperFactory::class);
 
 foreach($list_col as $col){
 

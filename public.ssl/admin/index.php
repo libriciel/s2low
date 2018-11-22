@@ -35,7 +35,7 @@ $actes_status = array(
     1=>"Posté",
     2=>"En attente de transmission",
     3=>"Transmis",
-    7=>"Document reçu"
+    7=>"Document reçu",
 );
 $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
@@ -50,6 +50,15 @@ $actes_nb_responses_error = $actesResponsesError->getNbError();
 
 //$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
 $nb_actes_transmis_4hours_before= "??";
+
+
+$actes_nb_en_attente_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+
+$actes_nb_envoye_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
+
+$actes_erreur_lors_de_larchivage = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE);
+$actes_erreur_lors_de_lenvoi_sae = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
+
 
 
 $menuHTML = new MenuHTML();
@@ -110,6 +119,49 @@ ob_start();
                 <td><span class="label label-<?php echo $actes_nb_responses_error?"danger":"success" ?>"><?php echo $actes_nb_responses_error ?></span></td>
                 <td>
                     <a href="/modules/actes/admin/responses-actes-error.php" >
+                        Liste
+                    </a>
+                </td>
+            </tr>
+        </table>
+
+
+        <h2>Actes : SAE</h2>
+
+        <table class="data-table table table-striped ">
+            <tr class="<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>">
+                <td>Actes en attente de transmission au SAE depuis</td>
+                <td><span class="label label-<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_en_attente_sae_4h ?></span></td>
+                <td>
+                    <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ?>" class="icon">
+                        Liste
+                    </a>
+                </td>
+            </tr>
+            <tr class="<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>">
+                <td>Actes envoyé au SAE </td>
+                <td><span class="label label-<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_envoye_sae_4h ?></span></td>
+                <td>
+                    <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_ENVOYE_AU_SAE ?>" class="icon">
+                        Liste
+                    </a>
+                </td>
+            </tr>
+
+            <tr class="<?php echo $actes_erreur_lors_de_lenvoi_sae?"danger":"success" ?>">
+                <td>Actes erreur lors de l'envoi au SAE</td>
+                <td><span class="label label-<?php echo $actes_erreur_lors_de_lenvoi_sae?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_lenvoi_sae ?></span></td>
+                <td>
+                    <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ?>" class="icon">
+                        Liste
+                    </a>
+                </td>
+            </tr>
+            <tr class="<?php echo $actes_erreur_lors_de_larchivage?"danger":"success" ?>">
+                <td>Actes erreur lors de l'archivage</td>
+                <td><span class="label label-<?php echo $actes_erreur_lors_de_larchivage?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_larchivage ?></span></td>
+                <td>
+                    <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ?>" class="icon">
                         Liste
                     </a>
                 </td>

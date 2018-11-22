@@ -11,6 +11,13 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	/** @var  ActesArchiveControler */
 	private $actesArchiveControler;
 
+
+	protected function setUp(){
+		parent::setUp();
+		$this->transaction_id = $this->createTransaction(1);
+		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
+	}
+
 	public function testSetArchiveEnAttenteEnvoiSEABadState(){
 		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$this->transaction_id);
 		$this->assertFalse($result);
@@ -59,11 +66,21 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->assertEquals("Accès interdit",$this->actesArchiveControler->getLastError());
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSendCreateActeFailed(){
 		$transaction_id = $this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
-		$this->expectOutputString("Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock\n");
+		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$this->getPastellFactory());
+		$this->getObjectInstancier()->unset_object(ActesArchiveControler::class);
+		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
+
+		//$this->expectOutputString("Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock\n");
 		$this->actesArchiveControler->sendArchive($transaction_id);
+		$this->assertEquals(
+			"Impossible d'envoyer la transaction {$transaction_id} : Erreur pastell : Erreur renvoyé par le mock",
+			$this->getLogRecords()[3]['message']
+		);
 	}
 
 	private function setTransactionEnattente(){
@@ -82,17 +99,27 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$pastell->expects($this->any())->method('getLastError')->willReturn("Erreur renvoyé par le mock");
 
 
-		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->getMock();
+		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->disableOriginalConstructor()->getMock();
 		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
 		/** @var PastellWrapperFactory $pastellFactory */
 		return $pastellFactory;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSend(){
 		$transaction_id = $this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
-		$this->expectOutputRegex("#Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock#");
-		$this->actesArchiveControler->sendAllArchive();
+		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$this->getPastellFactory());
+		$this->getObjectInstancier()->unset_object(ActesArchiveControler::class);
+		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
+
+		$this->actesArchiveControler->sendArchive($transaction_id);
+
+		$this->assertEquals(
+			"Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock",
+			$this->getLogRecords()[3]['message']
+		);
 	}
 
 	/**
@@ -100,22 +127,23 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	 */
 	public function testSendTransactionEnErreur(){
 		$this->setTransactionEnattente();
-		$this->actesArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
+		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$this->getPastellFactory());
+		$this->getObjectInstancier()->unset_object(ActesArchiveControler::class);
+		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
 
 		$date = date("Y-m-d",strtotime("-2 days"));
 
 		$sql = "UPDATE actes_transactions_workflow SET date=? WHERE id=?";
 		$this->getSQLQuery()->query($sql,$date,$this->last_transaction_workflow_id);
 
-		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
-		$this->actesArchiveControler->sendAllArchive();
+		//$this->expectOutputRegex("#Erreur renvoyé par le mock#");
+		$this->actesArchiveControler->sendArchive($this->transaction_id);
+		$this->assertEquals(
+			"La transaction {$this->transaction_id} à envoyer au SAE n'est pas dans le bon status ! 1 trouvé",
+			$this->getLogRecords()[3]['message']
+		);
 	}
 
-	protected function setUp(){
-		parent::setUp();
-		$this->transaction_id = $this->createTransaction(1);
-		$this->actesArchiveControler = $this->getObjectInstancier()->get("ActesArchiveControler");
-	}
 
 
 }

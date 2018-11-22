@@ -14,7 +14,7 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 
     protected function setUp(){
         parent::setUp();
-        $this->heliosArchiveControler = $this->getObjectInstancier()->get("HeliosArchiveControler");
+        $this->heliosArchiveControler = $this->getObjectInstancier()->get(HeliosArchiveControler::class);
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
     }
 
@@ -64,8 +64,10 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 	}
 
 	public function testSend(){
-		$transaction_id = $this->setTransactionEnattente();
-		$this->heliosArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
+		$this->setTransactionEnattente();
+		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$this->getPastellFactory());
+		$this->getObjectInstancier()->unset_object(HeliosArchiveControler::class);
+		$this->heliosArchiveControler = $this->getObjectInstancier()->get(HeliosArchiveControler::class);
 		$this->expectOutputRegex("#Erreur renvoyé par le mock#");
 		$this->heliosArchiveControler->sendAllArchive();
 	}
@@ -86,14 +88,20 @@ class HeliosArchiveControlerTest extends S2lowTestCase {
 		$pastell->expects($this->any())->method('getLastError')->willReturn("Erreur renvoyé par le mock");
 
 
-		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->getMock();
+		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->disableOriginalConstructor()->getMock();
 		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
+		/** @var PastellWrapperFactory $pastellFactory */
 		return $pastellFactory;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testSendTransactionEnErreur(){
 		$this->setTransactionEnattente();
-		$this->heliosArchiveControler->setPastellWrapperFactory($this->getPastellFactory());
+		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$this->getPastellFactory());
+		$this->getObjectInstancier()->unset_object(HeliosArchiveControler::class);
+		$this->heliosArchiveControler = $this->getObjectInstancier()->get(HeliosArchiveControler::class);
 
 		$date = date("Y-m-d",strtotime("-2 days"));
 

@@ -1,5 +1,19 @@
 # Change Log
 
+## 3.0.18
+
+### Ajouts
+
+- Ajout du contrat de license (fichier LICENSE)
+- Ajout de log plus pertinent sur l'envoi à Pastell ~actes #427
+- Suppression du document sur Pastell en cas d'erreur ~actes #425
+- Modification du statut du document si le document sur Pastell est en erreur ~actes #424
+- Envoi des transactions au SAE dans l'ordre chronologique ~actes #428
+- Ajout d'une case à cocher pour l'envoi automatique au SAE ~actes #429
+- Console d'administration, ajour des état SAE ~actes #431
+- Permettre le postage d'une transaction en mode synchrone ~actes #426
+
+
 ## 3.0.17 - 2018-11-20
 
 ***Cette version nécessite une modification de la base de données**
