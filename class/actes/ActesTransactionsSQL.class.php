@@ -327,4 +327,21 @@ class ActesTransactionsSQL extends SQL{
 		$this->query($sql,$transaction_id,$authority_id);
 	}
 
+	public function getTransactionToArchive($nb_days = 62){
+		$date=date('Y-m-d',strtotime("- $nb_days DAY"));
+
+		$sql = "SELECT at.id FROM actes_transactions AS at ".
+			" JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= 4) ".
+			" JOIN authorities ON authorities.id=at.authority_id ".
+			" JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
+			" WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='t' ".
+			" AND at.type='1' ".
+			" AND at.last_status_id IN (4,5) ".
+			" AND atw.date > '2008-06-01' ".
+			" AND atw.date < ? " .
+			" ORDER BY at.id ";
+
+		return $this->queryOneCol($sql,$date);
+	}
+
 }

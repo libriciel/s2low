@@ -53,6 +53,8 @@ class ActesArchiveControler {
 	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id){
 		try {
 			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+			$this->logger->info("Préparation de l'envou au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
+
 			$user = new User($user_id);
 			$user->init();
 			$this->isAllowToSendArchive($user_id,$transactionsInfo);
@@ -62,6 +64,7 @@ class ActesArchiveControler {
 			}
 			$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
 		} catch (Exception $e){
+			$this->logger->error($e->getMessage());
 			$this->lastError = $e->getMessage();
 			return false;
 		}
@@ -74,6 +77,7 @@ class ActesArchiveControler {
 		$this->workerScript->putJobByClassName(
 			ActesEnvoiSaeWorker::class,$transaction_id
 		);
+		$this->logger->info("Préparation de l'envoi SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : OK");
 		return $actes_transaction_workflow_id;
 	}
 

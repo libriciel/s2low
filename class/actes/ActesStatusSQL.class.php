@@ -10,6 +10,8 @@ class ActesStatusSQL {
     const STATUS_TRANSMIS = 3;
     const STATUS_ACQUITTEMENT_RECU = 4;
 
+    const STATUS_VALIDE = 5;
+
     const STATUS_DOCUMENT_RECU = 7;
     const STATUS_ACQUITTEMENT_ENVOYE = 8;
 

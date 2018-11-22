@@ -79,7 +79,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->actesArchiveControler->sendArchive($transaction_id);
 		$this->assertEquals(
 			"Impossible d'envoyer la transaction {$transaction_id} : Erreur pastell : Erreur renvoyé par le mock",
-			$this->getLogRecords()[1]['message']
+			$this->getLogRecords()[3]['message']
 		);
 	}
 
@@ -115,9 +115,10 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
 
 		$this->actesArchiveControler->sendArchive($transaction_id);
+
 		$this->assertEquals(
 			"Impossible d'envoyer la transaction $transaction_id : Erreur pastell : Erreur renvoyé par le mock",
-			$this->getLogRecords()[1]['message']
+			$this->getLogRecords()[3]['message']
 		);
 	}
 
@@ -139,7 +140,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->actesArchiveControler->sendArchive($this->transaction_id);
 		$this->assertEquals(
 			"La transaction {$this->transaction_id} à envoyer au SAE n'est pas dans le bon status ! 1 trouvé",
-			$this->getLogRecords()[1]['message']
+			$this->getLogRecords()[3]['message']
 		);
 	}
 
