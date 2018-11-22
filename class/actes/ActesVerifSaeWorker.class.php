@@ -58,7 +58,7 @@ class ActesVerifSaeWorker implements IWorker {
 
 		$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
 
-		$this->logger->info("Vérification de la transaction {$transaction_info['unique_id']} sur Pastell");
+		$this->logger->info("Vérification de la transaction {$transaction_info['unique_id']} ({$transaction_info['id']}) sur Pastell");
 
 		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transaction_info['authority_id']);
 		$pastellWrapper = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
@@ -66,7 +66,7 @@ class ActesVerifSaeWorker implements IWorker {
 
 		$pastell_transaction_info = $pastellWrapper->getInfo($transaction_info['sae_transfer_identifier']);
 
-		if (in_array($pastell_transaction_info['last_action']['action'],['verif-sae-erreur','validation-sae-erreur','erreur-envoie-sae'])){
+		if (in_array($pastell_transaction_info['last_action']['action'],['verif-sae-erreur','validation-sae-erreur','erreur-envoie-sae','fatal-error'])){
 			$msg = "La transaction {$transaction_info['id']} a été refusé par le SAE : (état {$pastell_transaction_info['last_action']['action']})";
 
 			$this->actesTransactionsSQL->updateStatus(
