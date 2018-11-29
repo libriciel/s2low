@@ -163,8 +163,8 @@ class ActesTransactionsSQL extends SQL{
 	}
 	
 	public function getTransactionForAntiVirus(){
-		$sql = "SELECT DISTINCT id FROM actes_transactions WHERE last_status_id=? AND antivirus_check=?";
-		return $this->queryOneCol($sql,1,0);
+		$sql = "SELECT DISTINCT id FROM actes_transactions WHERE last_status_id IN (1,2) AND antivirus_check=?";
+		return $this->queryOneCol($sql,0);
 	}
 	
 	public function setAntivirusCheck($transaction_id){
