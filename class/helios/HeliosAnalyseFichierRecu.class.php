@@ -160,7 +160,7 @@ class HeliosAnalyseFichierRecu {
 	 * @throws Exception
 	 */
 	private function traitementErreur($basename,SimpleXMLElement $xml){
-		$helios_transaction_id = $this->retrieveTransaction($xml);
+		$helios_transaction_id = $this->retrieveTransaction($xml,false);
 
 		if (! $helios_transaction_id){
 			throw new Exception("Le fichier $basename n'est pas valide et aucun NomFic n'a peu être extrait");
@@ -203,7 +203,7 @@ class HeliosAnalyseFichierRecu {
 	 * @return mixed
 	 * @throws Exception
 	 */
-	private function retrieveTransaction(SimpleXMLElement $xml) {
+	private function retrieveTransaction(SimpleXMLElement $xml,$verify_cod_col = true) {
 
 		if (empty($xml->Enveloppe->Parametres->NomFic['V'])){
 			throw new Exception("Impossible de trouver le NomFic dans le fichier");
@@ -215,10 +215,14 @@ class HeliosAnalyseFichierRecu {
 			throw new Exception("Impossible de trouver l'attribut NomFic dans le PESAcquit");
 		}
 		if (!$cod_col){
-			throw new Exception("Impossible de trouver l'attribut CodCol dans le PESAcquit");
-		}
-
-		$helios_transaction_list = $this->heliosTransactionsSQL->getIdByNomFicAndCodCol($nom_fic,$cod_col);
+            if ($verify_cod_col){
+                throw new Exception("Impossible de trouver l'attribut CodCol dans le PESAcquit");
+            } else {
+                $helios_transaction_list = $this->heliosTransactionsSQL->getIdByNomFic($nom_fic);
+            }
+		} else {
+            $helios_transaction_list = $this->heliosTransactionsSQL->getIdByNomFicAndCodCol($nom_fic, $cod_col);
+        }
 		
 		if (!$helios_transaction_list){
 			throw new Exception("L'identificant NomFic $nom_fic n'est associé à aucune transaction dans la base de données");	

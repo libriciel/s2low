@@ -1,6 +1,6 @@
 # Change Log
 
-## 3.0.18
+## 3.0.18 - 2018-12-12
 
 ### Ajouts
 
@@ -12,6 +12,7 @@
 - Ajout d'une case à cocher pour l'envoi automatique au SAE ~actes #429
 - Console d'administration, ajour des état SAE ~actes #431
 - Permettre le postage d'une transaction en mode synchrone ~actes #426
+- Prise en compte des PES acquit non valide et sans codcol 
 
 
 ## 3.0.17 - 2018-11-20

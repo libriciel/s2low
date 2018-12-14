@@ -205,7 +205,22 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 			$this->helios_ocre,
 			HELIOS_XSD_PATH
 		);
-
 	}
+
+	public function testMalformaedAcquitWithoutCodCol(){
+        $transaction_id = $this->createPESAller();
+        $filename = "pes_acquit_not_valid_without_cod_col.xml";
+        file_put_contents(
+            $this->helios_ftp_response_tmp_local_path."/$filename",
+            file_get_contents(__DIR__."/fixtures/pes_acquit_not_valid_without_cod_col.xml")
+        );
+        $this->expectOutputRegex("#Transaction {$transaction_id} : erreur#");
+        $this->getHeliosAnalyseFichierReponse()->analyseOneFile(
+            $this->helios_ftp_response_tmp_local_path."/$filename",
+            $this->helios_response_root,
+            $this->helios_ocre,
+            HELIOS_XSD_PATH
+        );
+    }
 
 }
