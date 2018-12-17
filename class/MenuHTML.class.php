@@ -48,12 +48,9 @@ class MenuHTML  {
             }
 		 }
 
-        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo);
+        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo); ?>
 
 
-            if (version_compare(phpversion(),"5.6","gt")):?>
-                <div class="alert alert-danger">V4 expérimentale</div>
-            <?php endif; ?>
                     <div id="menu-header">
                         Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
 

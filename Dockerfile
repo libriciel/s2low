@@ -1,4 +1,4 @@
-FROM php:5.5-apache
+FROM php:7.2-apache
 
 RUN apt-get update && \
     apt-get install -y \
@@ -20,14 +20,14 @@ RUN apt-get update && \
         wget \
         zip \
         netcat \
-        php5-imagick \
     && rm -r /var/lib/apt/lists/*
 
+# Suppression de php5-imagick => A priori, ca ne servait que pour le tampon (qui a disparu) et l'install est complexe
 
 # Installation de certbot
-RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list && \
+RUN echo 'deb http://ftp.debian.org/debian stretch-backports main' >  /etc/apt/sources.list.d/stretch.backport.list && \
     apt-get update && \
-    apt-get install -y -t jessie-backports \
+    apt-get install -y -t stretch-backports \
         certbot \
         python-certbot-apache \
     && rm -r /var/lib/apt/lists/*
@@ -45,7 +45,7 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 # Paquet PECL
 RUN pecl install \
         redis \
-        xdebug-2.5.3 && \
+        xdebug && \
     docker-php-ext-enable \
         redis \
         xdebug

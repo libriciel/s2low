@@ -13,9 +13,6 @@ class Layout {
    * \param $str chaîne : le titre du document
   */
   public function setTitle($str) {
-      if (version_compare(phpversion(),"5.6","gt")){
-          $str = " V4 ! - ".$str;
-      }
         $this->title =  $str;
   }
   

@@ -1,5 +1,12 @@
 # Change Log
 
+## 4.0.0
+
+### Evolutions
+
+- Le fichier Dockerfile de base est basé sur PHP 7.2
+
+
 ## 3.0.18 - 2018-12-12
 
 ### Ajouts

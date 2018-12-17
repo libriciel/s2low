@@ -1,4 +1,6 @@
-FROM php:7.2-apache
+FROM php:5.5-apache
+
+# deprecated 4.0.0 - la maintenance de s2low sur PHP 5.5 n'est pas assuré à partir de la version 4.0.0
 
 RUN apt-get update && \
     apt-get install -y \
@@ -20,14 +22,14 @@ RUN apt-get update && \
         wget \
         zip \
         netcat \
+        php5-imagick \
     && rm -r /var/lib/apt/lists/*
 
-# TODO php5-imagick \ => A priori, ca ne servait que pour le tampon... l'install est complexe
 
 # Installation de certbot
-RUN echo 'deb http://ftp.debian.org/debian stretch-backports main' >  /etc/apt/sources.list.d/stretch.backport.list && \
+RUN echo 'deb http://ftp.debian.org/debian jessie-backports main' >  /etc/apt/sources.list.d/jessie.backport.list && \
     apt-get update && \
-    apt-get install -y -t stretch-backports \
+    apt-get install -y -t jessie-backports \
         certbot \
         python-certbot-apache \
     && rm -r /var/lib/apt/lists/*
@@ -45,7 +47,7 @@ RUN sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen && \
 # Paquet PECL
 RUN pecl install \
         redis \
-        xdebug && \
+        xdebug-2.5.3 && \
     docker-php-ext-enable \
         redis \
         xdebug
