@@ -5,17 +5,17 @@ class ActesImapRetrieve {
     private $actesImapProperties;
     private $actes_response_tmp_local_path;
     private $logger;
-    private $imapFetchServerFactory;
+    private $imapMailBoxFactory;
 
     public function __construct(
         ActesImapProperties $actesImapProperties,
         $actes_response_tmp_local_path,
-        ImapFetchServerFactory $imapFetchServerFactory,
+		ImapMailBoxFactory $imapMailBoxFactory,
         Logger $logger
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
-        $this->imapFetchServerFactory = $imapFetchServerFactory;
+        $this->imapMailBoxFactory = $imapMailBoxFactory;
         $this->logger = $logger;
     }
 
@@ -31,36 +31,36 @@ class ActesImapRetrieve {
         $this->log("Debut du script");
         $this->log("Connection au serveur IMAP {$this->actesImapProperties->host}");
 
-        $server = $this->imapFetchServerFactory->getInstance($this->actesImapProperties->host, $this->actesImapProperties->port);
-        $server->setAuthentication($this->actesImapProperties->login,$this->actesImapProperties->password);
+        $tmpFolder = new TmpFolder();
+        $tmp_folder = $tmpFolder->create();
 
-        /** @var Fetch\Message[] $messages */
-        $messages = array_reverse($server->getMessages());
-        $this->log("Il y a ".count($messages)." messages dans la boite au lettres");
+		$mailbox = $this->imapMailBoxFactory->getInstance($this->actesImapProperties,$tmp_folder);
+		$mailsIds = $mailbox->searchMailbox('ALL');
+
+        $this->log("Il y a ".count($mailsIds)." messages dans la boite au lettres");
         $sigtermHandler = new SigTermHandler();
-        foreach($messages as $message){
-            $this->saveMail($message);
-
-            $this->log("Suppression du message : ".($message->getOverview()->message_id));
-            $message->delete();
-
+        foreach($mailsIds as $mail_id){
+            $this->saveMail($mailbox,$mail_id);
+            $this->log("Suppression du message : $mail_id");
+			$mailbox->deleteMail($mail_id);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
         }
         $this->log("Expunge de la boite au lettes");
-        $server->expunge();
+        $mailbox->expungeDeletedMails();
+		$tmpFolder->delete($tmp_folder);
         $this->log("Fin du script");
         return true;
     }
 
-
-    /**
-     * @param \Fetch\Message $message
-     * @throws Exception
-     */
-    private function saveMail(\Fetch\Message $message){
-        $this->log("Récupération du message : ".($message->getOverview()->message_id));
+	/**
+	 * @param \PhpImap\Mailbox $mailbox
+	 * @param $mail_id
+	 * @throws Exception
+	 */
+    private function saveMail(PhpImap\Mailbox $mailbox,$mail_id){
+        $this->log("Récupération du message : $mail_id");
 		$tmp_file = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
 
         if (! mkdir( $tmp_file)){
@@ -68,21 +68,27 @@ class ActesImapRetrieve {
             $this->log($exception_message);
             throw new Exception($exception_message);
         }
+
         $message_body_path = $tmp_file."/message_body.html";
         $this->log("Sauvegarde du contenu du message HTML $message_body_path");
-        file_put_contents($message_body_path,$message->getMessageBody(true));
 
-        if ($message->getAttachments()) {
-			foreach ($message->getAttachments() as $attachment) {
-				$attachment_path = $tmp_file . "/" . $attachment->getFileName();
-				$this->log("Sauvegarde de $attachment_path");
-				if (! $attachment->saveAs($attachment_path)){
-					$this->log("Impossible de sauvegarder le fichier $attachment_path !");
-					continue;
-				}
-				$this->transcode($attachment_path);
+		$incomingMail = $mailbox->getMail($mail_id);
+        file_put_contents($message_body_path,$incomingMail->textHtml);
+
+
+
+		foreach ($incomingMail->getAttachments() as $attachment) {
+
+			$attachment_path = $tmp_file . "/" . $attachment->name;
+			$this->log("Sauvegarde de $attachment_path");
+
+			if (! copy($attachment->filePath,$attachment_path)){
+				$this->log("Impossible de sauvegarder le fichier $attachment_path !");
+				continue;
 			}
+			$this->transcode($attachment_path);
 		}
+
 
 		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
 

@@ -24,12 +24,12 @@
   "require": {
     "rackspace/php-opencloud": "^1.16",
     "libriciel/tdt-lib-actes": "*",
-    "tedivm/fetch": "^0.7.1",
     "symfony/filesystem": "^3.4",
     "monolog/monolog": "^1.23",
     "mtdowling/supervisor-event": "^1.0",
     "pda/pheanstalk": "^3.1",
-    "symfony/process": "^3.4"
+    "symfony/process": "^3.4",
+    "php-imap/php-imap": "^3.0"
   },
 
   "require-dev": {
