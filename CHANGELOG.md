@@ -5,6 +5,7 @@
 ### Evolutions
 
 - Le fichier Dockerfile de base est basé sur PHP 7.2
+- Mise à jour de pades-valid en version 1.2.0 (docker-compose) 
 
 ### Corrections
 

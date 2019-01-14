@@ -111,7 +111,7 @@ services:
           - services
 
     pades-valid:
-        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.1.1
+        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.2.0
         networks:
           - services
 
