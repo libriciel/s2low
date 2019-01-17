@@ -7,8 +7,8 @@
 
 <?php if($has_logs_request) : ?>
 <div id="actions-area">
-	<h2>Actions</h2>
-	<a class="btn btn-primary" href="/common/logs_request_view.php" class="bouton">Demande de journal</a>
+	<h2>Action</h2>
+	<a class="btn btn-primary" href="/common/logs_request_view.php" class="bouton">Demandes de journal</a>
 </div>
 <?php endif; ?>
 
@@ -103,7 +103,7 @@
 <h2>Entrées du journal</h2>
 <div id="journal_area">
 	<?php if (! $logs_list) : ?>
-		Pas d'entrée de journal correspondant au filtrage spécifié.
+		Aucune entrée du journal ne correspond au filtrage spécifié.
 	<?php else : ?>
 
 		<table class="logs data-table table table-striped"

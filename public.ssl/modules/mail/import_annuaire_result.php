@@ -16,7 +16,7 @@ if (isset($_SESSION['last_annuaire'])) {
 require_once ("lib/MailLayout.class.php");
 $doc = new MailLayout();
 $doc->disableError(); 
-$doc->setTitle("Gestion du carnet d'adresse");
+$doc->setTitle("Gestion du carnet d'adresses");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -49,7 +49,7 @@ function affiche20Premier($texte,$tab){
 ?>
 
         <?php $doc->afficheErrors(); ?>
-        <h1>Carnet d'adresse</h1>
+        <h1>Carnet d'adresses</h1>
         <h2>Actions</h2>
         <div id="actions_area"> 
             <a href="index.php?command=annuaire" class="btn btn-primary">Liste des emails</a>

@@ -44,9 +44,9 @@
                     </ul>
                     </p>
                     <p class="home">
-                        Bien que développé pour les standards du web, le fonctionnement et l'affichage de S²LOW ne sont pas garantie :
+                        Bien que développé pour les standards du web, le fonctionnement et l'affichage de S²LOW ne sont pas garantis :
                         <ul>
-                        <li> sur d'autre versions de Google Chrome ou Mozilla Firefox</li>
+                        <li> sur d'autres versions de Google Chrome ou Mozilla Firefox</li>
                         <li> sur d'autres navigateurs (Microsoft Internet Explorer, Microsoft Edge, Apple Safari, Opera, ...)</li>
                     </ul>
                     </p>

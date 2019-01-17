@@ -6,7 +6,7 @@ if (! $me->isAuthorityAdmin()){
 require_once ("lib/MailLayout.class.php");
 $doc = new MailLayout();
 $doc->disableError(); 
-$doc->setTitle("Gestion du carnet d'adresse");
+$doc->setTitle("Gestion du carnet d'adresses");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -16,7 +16,7 @@ $doc->openContent();
 
 $doc->DisplayHead();
 ?>
-<h1> Carnet d'adresse </h1>  	
+<h1> Carnet d'adresses </h1>
   	
 <h2> Ajout d'email</h2>  	
 

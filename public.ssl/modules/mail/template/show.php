@@ -5,7 +5,7 @@
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
             <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
 	</div>
-        <h2>Détail du messages</h2>
+        <h2>Détail du message</h2>
 
 	<div id="list_area">
             <table id="message-detail" class="data-table table table-bordered">
@@ -95,7 +95,7 @@
             }?>
             <tr>
                 <th id="mail-subject">Sujet</th>
-                <td><?php echo $mailTransaction->getObjet(); ?></td>
+                <td><?php hecho($mailTransaction->getObjet()); ?></td>
             </tr>
             <tr>
                 <th id="mail-date"><dt>Date d'envoi</th>
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                 <th id="mail-message">Message</th>
-                <td><?php echo $mailTransaction->getMessage(); ?></td>
+                <td><?php hecho($mailTransaction->getMessage()); ?></td>
             </tr>
     </table>
     <?php 

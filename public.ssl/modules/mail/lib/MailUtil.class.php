@@ -218,44 +218,10 @@ class MailUtil {
      return true;
 	}
 
-  public function GetMailMessage()
-  {
-	$mbox = imap_open("{".IMAP_SERVER."/novalidate-cert}",IMAP_LOGIN, IMAP_PASS);
-	//echo imap_last_error();
-	$headers = imap_headers($mbox);
-	
-	if ($headers == false) {
-	    return false;
-	}
-	$mailEmis=array("mail_id"=>array(),"mail_emis_id"=>array());
-  	$mail='mail_id=';
-	$emis="mail_emis_id=";
-	$mailLength=strlen($mail);
-	$emisLength=strlen($emis);
-	for($x=1; $x <=count($headers); $x++) {
-		$mailBody=imap_body($mbox,$x);
-		$mailId=strstr($mailBody,$mail);
-		if ($mailId !=null)
-		{
-			$mailEmisId=strstr($mailId,$emis);
-			if ($mailEmisId!=null)
-			{		
-				$mailEmisId=substr($mailEmisId,$emisLength,strlen($mailEmisId)-strlen(strstr($mailEmisId,"-"))-$emisLength);
-				$mailId=substr($mailId,$mailLength,strlen($mailId)-strlen(strstr($mailId,"&"))-$mailLength);
-				$mailEmis["mail_id"][]=$mailId;
-				$mailEmis["mail_emis_id"][]=$mailEmisId;
-				$mailEmis["body"][]=$mailBody;
-				if (defined('MAIL_DEBUG'))
-		    	{
-					echo "<p>mail_id = $mailId     mail_emis_id= $mailEmisId </p>";
-				}
-			}
-		}	
-		imap_delete($mbox,$x);
-	}
-	imap_expunge($mbox);
-	imap_close($mbox);
-	return $mailEmis;
+  public function GetMailMessage() {
+		// Précédemment il y avait un truc très limité pour tester la boite de retour mais ce n'était a priori pas utilisé
+  		return null;
+
    }
 
 }
