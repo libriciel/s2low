@@ -7,8 +7,8 @@
 
 <?php if($has_logs_request) : ?>
 <div id="actions-area">
-	<h2>Actions</h2>
-	<a class="btn btn-primary" href="/common/logs_request_view.php" class="bouton">Demande de journal</a>
+	<h2>Action</h2>
+	<a class="btn btn-primary" href="/common/logs_request_view.php" class="bouton">Demandes de journal</a>
 </div>
 <?php endif; ?>
 
