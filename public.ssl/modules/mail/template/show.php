@@ -5,7 +5,7 @@
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
             <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
 	</div>
-        <h2>Détail du messages</h2>
+        <h2>Détail du message</h2>
 
 	<div id="list_area">
             <table id="message-detail" class="data-table table table-bordered">
