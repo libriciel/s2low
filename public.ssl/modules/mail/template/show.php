@@ -95,7 +95,7 @@
             }?>
             <tr>
                 <th id="mail-subject">Sujet</th>
-                <td><?php echo $mailTransaction->getObjet(); ?></td>
+                <td><?php hecho($mailTransaction->getObjet()); ?></td>
             </tr>
             <tr>
                 <th id="mail-date"><dt>Date d'envoi</th>
@@ -103,7 +103,7 @@
             </tr>
             <tr>
                 <th id="mail-message">Message</th>
-                <td><?php echo $mailTransaction->getMessage(); ?></td>
+                <td><?php hecho($mailTransaction->getMessage()); ?></td>
             </tr>
     </table>
     <?php 

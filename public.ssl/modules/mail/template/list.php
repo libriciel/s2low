@@ -97,7 +97,7 @@
                     $i++; ?>
 		
                 <dt><a href="#tedetis" onclick="toggle_mail_content(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander btn btn-default btn-xs">-</a>
-                mail::<?php echo $MailTrans["objet"]; ?>
+                mail::<?php hecho($MailTrans["objet"]); ?>
                 </dt>
 
                 <dd id="MailTrans_<?php echo $i; ?>" class="mail" style="display: block">
@@ -115,7 +115,7 @@
                         <tbody>
                             <tr>
                                 <td headers="selection"><input type="checkbox" name="list_id[]" value="<?php echo $MailTrans["id"]; ?>" /></td>
-                                <td headers="object"> <?php echo $MailTrans["objet"]?></td>
+                                <td headers="object"> <?php hecho($MailTrans["objet"])?></td>
                                 <td headers="status"> <?php echo $MailTrans["status"] ?></td>	
                                 <td headers="date"> <?php echo $MailTrans["date_envoi"]?></td>
                                 <td headers="detail"><a href="index.php?command=show&trans_id=<?php echo $MailTrans["id"]; ?>"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail"></a></td>

@@ -10,7 +10,7 @@
 ### Corrections
 
 - Remplacement de la bibliothèques tedivm/fetch par php-imap/php-imap pour la récupération des réponses actes afin de corriger le problème des mails non récupérér correctement #420
-
+- Correction de sécurité (XSS possible sur la visualisation de ces propres mail sécurisé) #451
 
 ## 3.0.18 - 2018-12-12
 
