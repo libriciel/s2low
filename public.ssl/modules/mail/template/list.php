@@ -25,7 +25,7 @@
                     </div>
                     <label for="subject" class="col-md-2 control-label">Sujet</label>
                     <div class="col-md-4">
-                        <input id="subject" class="form-control" type="text" name="sujet" size="20" maxlength="25" value='<?php hecho($sujet) ?>' />
+                        <input id="subject" class="form-control" type="text" name="sujet" size="20" value='<?php hecho($sujet) ?>' />
                     </div>
                 </div>
                 <div class="form-group">
