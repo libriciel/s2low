@@ -103,7 +103,7 @@
 <h2>Entrées du journal</h2>
 <div id="journal_area">
 	<?php if (! $logs_list) : ?>
-		Pas d'entrée de journal correspondant au filtrage spécifié.
+		Aucune entrée du journal ne correspond au filtrage spécifié.
 	<?php else : ?>
 
 		<table class="logs data-table table table-striped"
