@@ -22,7 +22,7 @@ function retirer(){
 -->
 </script>
 
-    <h1> Carnet d'adresse </h1>
+    <h1> Carnet d'adresses </h1>
     
     <?php if (isset($_SESSION["last_message"])) : ?>
     <div class="alert alert-success" >

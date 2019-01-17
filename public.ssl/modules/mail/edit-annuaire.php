@@ -31,7 +31,7 @@ $doc->openContent();
 ob_start();
 ?>
 
-    <h1> Carnet d'adresse </h1>  	
+    <h1> Carnet d'adresses </h1>
 
     <h2> Edition d'un contact</h2>  	
 
