@@ -119,7 +119,7 @@ function checkFormCreateMail() {
    
     var divElement  = document.createElement("div"); 
     divElement.className= "form-group";
-    divElement.innerHTML="<label class='form-label col-md-2' for='file"+FileNumber+"'>Fichier"+FileNumber+"</label>"; 
+    divElement.innerHTML="<label class='form-label col-md-2' for='file"+FileNumber+"'>Fichier "+FileNumber+"</label>";
     divElement.innerHTML+="<input type='file' class='col-md-4' name='uploadFile"+FileNumber+"' id='file"+FileNumber+"'>";
     divElement.innerHTML+="<input class='btn btn-warning col-md-1 col-md-offset-1 btn-sm' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
     var parentElement = document.getElementById("file").parentNode.parentNode;
