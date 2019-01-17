@@ -2,7 +2,7 @@ function checkFormCreateMail() {
 	var returnvalue=true;
 	if (checkpsw()==false)
 	{
-		alert("les 2 mots de passes ne sont pas indentiques.");
+		alert("Les mots de passe doivent être identiques.");
 		returnvalue=false;
 	}
 	var email=document.getElementById("mailto");
