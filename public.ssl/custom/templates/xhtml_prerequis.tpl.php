@@ -33,7 +33,7 @@
                     <h1>Pré-requis S²LOW&nbsp;</h1>
                     <h2 class="home">Navigateurs compatibles</h2>
                     <p class="home">
-                        S²LOW est dévelopé principalement pour  <b>Google Chrome</b> et  <b>Mozilla Firefox</b>
+                        S²LOW est développé principalement pour  <b>Google Chrome</b> et  <b>Mozilla Firefox</b>
                     </p>
                     <p class="home">
                         S²LOW assure la compatibilité avec :
