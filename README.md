@@ -9,7 +9,7 @@
 
 ## Configuration du docker
 
-Le docker est basé sur [php5.6-apache](https://hub.docker.com/_/php/).
+Le docker est basé sur [php7.2-apache](https://hub.docker.com/_/php/).
 
 Le fichier des variables d'environnement du docker ou du docker-compose peut être trouvé sur le fichier .env.exemple
 
