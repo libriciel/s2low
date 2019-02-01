@@ -2,18 +2,18 @@
 
 require_once( __DIR__."/../../init/init.php");
 
-function verifsae(PastellWrapper $pastell,$listdocument){
+function verifsae(PastellWrapper $pastell,$listdocument,$last_action){
     foreach ($listdocument as $document) {
         //echo "Nouveau document :\n";
         //print_r($document);
-        
-        if($document['last_action'] == 'verif-sae-erreur'){
+
+        if($document['last_action'] == $last_action){
             echo "le document peut etre verif\n";
             $pastell->verifSAE($document['id_d']);
             //exit;
         }
     }
-    
+
 }
 
 $sql = "select pastell_id_e,pastell_login,pastell_password,pastell_url from authorities where pastell_url not like '' AND pastell_login not like '' AND pastell_password not like ''";
@@ -33,15 +33,18 @@ foreach($list_col as $col){
 	$pastellProperties->password = $col['pastell_password'];
 
     $pastell =  $pastellFactory->getNewInstance($pastellProperties);
-    $recherche= $pastell->listDocuments('actes-generique');
+    //$etat='ar-recu-sae
+    //$etat='send-archive';
+    $etat='verif-sae-erreur';
+    $recherche= $pastell->listDocuments('actes-generique',$etat);
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);//exit;
-        verifsae($pastell,$recherche);
+        verifsae($pastell,$recherche,$etat);
     }
-    
-    
+
+
     //    $recherche=listdocumentpastell($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],'helios-generique');
-    
+
     $recherche= $pastell->listDocuments('helios-generique');
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);

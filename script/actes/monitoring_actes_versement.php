@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier l'etat des versements d'une collectivité donnee
+//Script charge de verifier l'etat des versements d'une collectivitï¿½ donnee
 //Prend en parametre l'id de la collectivite
 
 //RETOURNE 0 si tout va bien
@@ -20,10 +20,16 @@ function nbtransac($sqlquery,$idcoll,$status){
         "AND actes_transactions.type like '1' ".
         "AND authority_id = '".$idcoll."' ";
     //echo "$sql \n";
-    
+
     $nb_transac=$sqlquery->queryOne($sql);
     return $nb_transac;
 }
+
+function pastellinfo($sqlquery,$idcoll){
+	$sql = "SELECT pastell_url,pastell_id_e FROM authorities WHERE id = '".$idcoll."' ";
+	return $sqlquery->query($sql);
+}
+
 
 if (empty($argv[1])){
     echo "Usage : {$argv[0]} authority_id\n";
@@ -44,7 +50,7 @@ $message="---------------------------------\n".
     "id : $id_coll \n".
     "nom de la collectivite : $namecoll\n";
 
-// Vérification : il doit y avoir 0 actes en Erreur lors de l'archivage, statut 14
+// Vï¿½rification : il doit y avoir 0 actes en Erreur lors de l'archivage, statut 14
 $last_status="14";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -52,7 +58,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Erreur lors de l'archivage. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
-// Vérification : il doit y avoir 0 actes en Erreur lors de l'envoie au SAE, statut 20
+// Vï¿½rification : il doit y avoir 0 actes en Erreur lors de l'envoie au SAE, statut 20
 $last_status="20";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -60,7 +66,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Erreur lors de l'envoie au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
-// Indication : il doit y avoir des actes au statut Archivé par le SAE, statut 13
+// Indication : il doit y avoir des actes au statut Archive par le SAE, statut 13
 $last_status="13";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -68,7 +74,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Archive par le SAE.\n";
 }
 
-// Indication : il peut y avoir des actes En attente de transmission au SAE, statut 19. Fixer une limite de temps
+// Indication : il peut y avoir des actes En attente de transmission au SAE, statut 19.
 $last_status="19";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -76,13 +82,18 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut En attente de transmission au SAE.\n";
 }
 
-// Indication : il peut y avoir des actes au statut Envoyé au SAE, statut 12. Fixer une limite de temps
+// Indication : il peut y avoir des actes au statut Envoye au SAE, statut 12.
 $last_status="12";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
 if ( $nb_transac > 0 ){
-    $message .=  "- $nb_transac au statut Erreur lors de l'Envoye au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
+    $message .=  "- $nb_transac au statut Envoye au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
 }
+
+$pastell=pastellinfo($sqlQuery,$id_coll);
+//var_dump($pastell);
+$pastellurl=explode('/api',$pastell[0]["pastell_url"]);
+$message .= "Pastell ".$pastellurl[0]."/Document/index?id_e=".$pastell[0]["pastell_id_e"]."\n";
 
 $message .= "\n";
 echo $message;
