@@ -63,12 +63,23 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ && \
         zip
 
 # Paquets PEAR
-RUN pear install \
-        Mail \
-        Mail_Mime \
-        Mail_mimeDecode \
-        MDB2 \
-        MDB2#pgsql
+#RUN pear install \
+#       Mail \
+#        Mail_Mime \
+#        Mail_mimeDecode \
+#        MDB2 \
+#        MDB2#pgsql
+
+#Suite site pear down suite à attaque
+RUN cd /tmp && \
+    wget \
+            https://ressources.libriciel.fr/deploiement/m/mail-v1.4.1.tar.gz \
+            https://ressources.libriciel.fr/deploiement/m/mail_mime-1.10.2.tar.gz \
+            && \
+    pear install \
+        mail-v1.4.1.tar.gz \
+        mail_mime-1.10.2.tar.gz
+
 
 # Installation de composer
 RUN cd /tmp/ && \
