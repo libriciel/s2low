@@ -289,7 +289,7 @@ class PastellWrapper {
 	 * @return mixed
 	 * @throws Exception
 	 */
-	public function listDocuments($flux,$etat){
+	public function listDocuments($flux,$etat='verif-sae-erreur'){
 		$info = array(
 			'id_e'=>$this->pastellProperties->id_e,
 			'type'=>$flux,
@@ -306,9 +306,8 @@ class PastellWrapper {
 	 * @return bool|mixed
 	 * @throws Exception
 	 */
-	public function verifsae($id_d){
+	public function verifSAE($id_d){
 		$info = array('id_e'=>$this->pastellProperties->id_e,'id_d'=>$id_d,'action'=>'verif-sae');
-		//$info = array('id_e'=>$this->pastellProperties->id_e,'id_d'=>$id_d,'action'=>'validation-sae');
 		return $this->callAPI("action.php",$info);
 	}
 
