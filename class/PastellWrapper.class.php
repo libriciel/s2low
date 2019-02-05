@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class PastellWrapper {
 
@@ -44,7 +44,7 @@ class PastellWrapper {
 		$curl_wrapper = $this->curlWrapperFactory->getNewInstance();
 		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->pastellProperties->login, $this->pastellProperties->password);
-		
+
 		foreach($postData as $name => $value){
 			$curl_wrapper->addPostData($name, $value);
 		}
@@ -58,12 +58,12 @@ class PastellWrapper {
 		if (!$raw_data){
 			throw new Exception($curl_wrapper->getLastError());
 		}
-		
+
 		$data = json_decode($raw_data,true);
 		if (! $data){
 			throw new Exception("Impossible de décoder les données reçu : $raw_data");
         }
-		
+
 		if (isset($data['status']) && $data['status']=='error' ){
 			throw new Exception("Message de Pastell : " . utf8_decode($data['error-message']));
 		}
@@ -112,7 +112,7 @@ class PastellWrapper {
 						'envoi_sae' => 1,
 					    'has_bordereau' => 1
 		);
-		
+
 		$this->callAPI("modif-document.php",$info);
 		return $id_d;
 	}
@@ -136,7 +136,7 @@ class PastellWrapper {
 						'tedetis_transaction_id' => $transactionInfo['id'],
 						'envoi_sae' => 1,
 		);
-		
+
 		$this->callAPI("modif-document.php",$info);
 		return $id_d;
 	}
@@ -289,16 +289,16 @@ class PastellWrapper {
 	 * @return mixed
 	 * @throws Exception
 	 */
-	public function listDocuments($flux){
+	public function listDocuments($flux,$etat='verif-sae-erreur'){
 		$info = array(
 			'id_e'=>$this->pastellProperties->id_e,
 			'type'=>$flux,
-			'lastetat'=>'verif-sae-erreur',
+			'lastetat'=>$etat,
 			'limit'=>50000
 		);
 
 		$output=$this->callAPI("recherche-document.php",$info);
-		return json_decode($output);
+		return $output;
 	}
 
 	/**
@@ -306,9 +306,9 @@ class PastellWrapper {
 	 * @return bool|mixed
 	 * @throws Exception
 	 */
-	public function verifsae($id_d){
+	public function verifSAE($id_d){
 		$info = array('id_e'=>$this->pastellProperties->id_e,'id_d'=>$id_d,'action'=>'verif-sae');
 		return $this->callAPI("action.php",$info);
 	}
-	
+
 }
