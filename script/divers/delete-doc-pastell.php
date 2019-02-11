@@ -3,7 +3,7 @@
 require_once( __DIR__."/../../init/init.php");
 
 
-function curlappel($URL,$login,$mdp,$post_data){
+function curl_appel($URL,$login,$mdp,$post_data){
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl,CURLOPT_URL,$URL);
@@ -24,7 +24,7 @@ function curlappel($URL,$login,$mdp,$post_data){
         return $output;
 }
 
-function listdocumentpastell($id_e,$login,$mdp,$url,$flux,$etat){
+function list_document_pastell($id_e,$login,$mdp,$url,$flux,$etat){
 	$URL=$url."/recherche-document.php";
 	$post_data = array(
                 'id_e'=>$id_e,
@@ -38,7 +38,7 @@ function listdocumentpastell($id_e,$login,$mdp,$url,$flux,$etat){
 	return json_decode($output);
 }
 
-function verifsae($id_e,$login,$mdp,$url,$listdocument){
+function verif_sae($id_e,$login,$mdp,$url,$listdocument){
 	$URL=$url."/action.php";
 	foreach ($listdocument as $document) {
         	echo $document->id_d."\n";
@@ -52,7 +52,7 @@ function verifsae($id_e,$login,$mdp,$url,$listdocument){
 
         	if($document->id_e == $id_e){
         	    echo "le document peut etre supprime\n";
-        	    $output=curlappel($URL,$login,$mdp,$post_data);
+        	    $output=curl_appel($URL,$login,$mdp,$post_data);
         	    var_dump($output);
         	}
          }
@@ -78,18 +78,18 @@ $list_col = $sqlQuery->query($sql,$idcoll);
 
 foreach($list_col as $col){
 
-	$recherche=listdocumentpastell($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],'actes-generique','modification');
+	$recherche=list_document_pastell($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],'actes-generique','modification');
 
 	if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
 		//print_r($recherche);exit;
-		verifsae($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],$recherche);
+		verif_sae($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],$recherche);
 	}
 
 
-	$recherche=listdocumentpastell($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],'helios-generique','modification');
+	$recherche=list_document_pastell($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],'helios-generique','modification');
 
 	if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
-		verifsae($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],$recherche);
+		verif_sae($col['pastell_id_e'],$col['pastell_login'],$col['pastell_password'],$col['pastell_url'],$recherche);
 	}
 
 	
