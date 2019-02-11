@@ -90,6 +90,24 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Envoye au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
+
+$sql = "SELECT count(*) FROM actes_transactions AS at ".
+	" JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= 4) ".
+	" WHERE at.authority_id=? AND at.type='1' ".
+	" AND at.last_status_id IN (4,5) ".
+	" AND atw.date > '2008-06-01' ".
+	" AND atw.date < ? " ;
+
+$nb_to_archive = $sqlQuery->queryOne(
+	$sql,
+	$id_coll,
+	date("Y-m-d",strtotime("-".ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER." days"))
+);
+
+if ($nb_to_archive > 0){
+	$message .=  "- $nb_to_archive en retard pour l'envoi au SAE. \n";
+}
+
 $pastell=pastellinfo($sqlQuery,$id_coll);
 //var_dump($pastell);
 $pastellurl=explode('/api',$pastell[0]["pastell_url"]);
