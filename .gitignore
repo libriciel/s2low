@@ -12,3 +12,4 @@ ext/standalone/HTMLPurifier/DefinitionCache
 .buildpath
 /build/
 .scannerwork
+/coverage-reports/
