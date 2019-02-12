@@ -291,7 +291,11 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 		$pastellProperties = new PastellProperties();
 		$pastellProperties->url = self::FAKE_PASTELL_URL;
 		$pastellProperties->id_e = 12;
+		$pastellProperties->actes_send_auto = true;
+		$pastellProperties->actes_flux_id = 1;
 		$authoritySQL->updateSAE(1,$pastellProperties);
+		$pastellPropertiesSQL  = new PastellPropertiesSQL($this->getSQLQuery());
+		$pastellPropertiesSQL->editProperties(1,$pastellProperties);
 		return $transaction_id;
 	}
 
