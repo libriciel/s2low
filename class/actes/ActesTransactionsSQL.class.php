@@ -344,4 +344,18 @@ class ActesTransactionsSQL extends SQL{
 		return $this->queryOneCol($sql,$date);
 	}
 
+	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
+        $sql = "SELECT at.id FROM actes_transactions AS at ".
+            " JOIN authorities ON authorities.id=at.authority_id ".
+            " JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
+            " WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='t' ".
+            " AND at.last_status_id = ?  ".
+            " ORDER BY at.id ";
+
+        return $this->queryOneCol(
+            $sql,
+            $status_id
+        );
+    }
+
 }

@@ -50,7 +50,7 @@ class ActesArchiveControler {
 		return $this->lastError;
 	}
 
-	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id){
+	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id,$put_in_job_queue = true){
 		try {
 			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 			$this->logger->info("Préparation de l'envou au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
@@ -74,9 +74,11 @@ class ActesArchiveControler {
 			"En attente de l'envoi au SAE"
 		);
 
-		$this->workerScript->putJobByClassName(
-			ActesEnvoiSaeWorker::class,$transaction_id
-		);
+		if ($put_in_job_queue) {
+            $this->workerScript->putJobByClassName(
+                ActesEnvoiSaeWorker::class, $transaction_id
+            );
+        }
 		$this->logger->info("Préparation de l'envoi SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : OK");
 		return $actes_transaction_workflow_id;
 	}
@@ -116,6 +118,11 @@ class ActesArchiveControler {
 
 	public function getAllTransactionIdToSend($authority_id = 0){
 		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+
+		if (! $authority_id){
+            return $actesTransactionsSQL->getTransactionToSendSAE();
+        }
+
 		$info_list = $actesTransactionsSQL->getArchiveFStatus(
 			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
 			$authority_id
@@ -126,6 +133,7 @@ class ActesArchiveControler {
 		}
 		return $transaction_id_list;
 	}
+
 
 	/**
 	 * @param $id

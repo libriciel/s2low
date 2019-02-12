@@ -2,17 +2,14 @@
 
 require_once( __DIR__."/../../init/init.php");
 
-
-if ($argc < 2){
-	echo "Usage {$argv[0]} authority_id\n";
-	echo "{$argv[0]} : permet de passer les transactions des états 4 et 5 dans l'état prepare-sae (19)\n";
-	exit(-1);
+if (empty($argv[1])){
+	echo "Usage : {$argv[0]} authority_id\n";
+	echo "\tEnvoi à l'archivage toutes les transactions d'une collectivité\n";
+	echo "\tLes transactions sont à l'état 'Acquittement reçu' ou 'Validé' et il s'agit uniquement des envois d'actes (pas des réponses de la préfectures)\n";
+	exit;
 }
 
 $authority_id = $argv[1];
-
-$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
-
 $date=date('Y-m-d',strtotime(date('Y-m-d').'- 62 DAY'));
 
 
@@ -47,7 +44,7 @@ foreach($transaction_id_list as $transaction_id){
 	$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 	echo "Traitement de $transaction_id - {$transaction_info['unique_id']}: ";
 
-	$r = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id);
+	$r = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id,false);
 	if ($r){
 		echo "OK";
 	} else {

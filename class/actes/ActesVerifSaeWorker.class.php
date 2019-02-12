@@ -32,9 +32,9 @@ class ActesVerifSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		return $this->actesTransactionsSQL->getTransactionIdByStatus(
-			ActesStatusSQL::STATUS_ENVOYE_AU_SAE
-		);
+        return $this->actesTransactionsSQL->getTransactionToSendSAE(
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE
+        );
 	}
 
 	/**

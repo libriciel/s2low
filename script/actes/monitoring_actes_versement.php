@@ -108,6 +108,13 @@ if ($nb_to_archive > 0){
 	$message .=  "- $nb_to_archive en retard pour l'envoi au SAE. \n";
 }
 
+$pastellPropertiesSQL = $objectInstancier->get(PastellPropertiesSQL::class);
+$pastellProperties = $pastellPropertiesSQL->getPastellProperties($id_coll);
+if ($pastellProperties->actes_send_auto){
+    $message.= "Cette collecitivité est géré automatiquement\n";
+}
+
+
 $pastell=pastellinfo($sqlQuery,$id_coll);
 //var_dump($pastell);
 $pastellurl=explode('/api',$pastell[0]["pastell_url"]);
