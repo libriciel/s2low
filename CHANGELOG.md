@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.0.1 
+
+### Corrections
+
+- Il était possible d'intégrer des SIREN non numériques. #484  
+
 ## 4.0.0 - 2018-02-25
 
 ### Evolutions

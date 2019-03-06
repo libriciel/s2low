@@ -3,6 +3,9 @@
 class LuhnKey {
 	
 	public function isValid($number){
+	    if (strval(intval($number)) != strval($number)){
+	        return false;
+        }
 		$luhn_key = $this->getLuhnKey($number);
 		return $this->testLuhnKey($luhn_key);
 	}
