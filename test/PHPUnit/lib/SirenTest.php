@@ -2,29 +2,33 @@
 
 class SirenTest extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * @var Siren
-	 */
-	private $siren;
+	public function get_data(){
+	    return [
+	        ['000000000',true],
+            ['000000001',false],
+            ['493587273',true],
+            ['',false],
+            ['493587274',false],
+            ['MIG_Blign',false],
+            [493587273,true],
+            [493587274,false],
+        ];
+    }
 
-	public function setUp(){
-		$this->siren = new Siren(new LuhnKey());	
-	}
-	
-	public function testGood(){
-		$this->assertTrue($this->siren->isValid("493587273"));		
-	}
-	
-	public function testBadLength(){
-		$this->assertFalse($this->siren->isValid(""));		
-	}
-	
-	public function testBad(){
-		$this->assertFalse($this->siren->isValid("493587274"));		
-	}
+    /**
+     * @dataProvider get_data
+     */
+    public function testAllSiren($siren_to_test,$expected_result){
+        $siren = new Siren(new LuhnKey());
+        $this->assertEquals(
+            $expected_result,
+            $siren->isValid($siren_to_test)
+            );
+    }
 
 	public function testGenerate(){
-		$this->assertTrue($this->siren->isValid($this->siren->generate()));
+        $siren = new Siren(new LuhnKey());
+		$this->assertTrue($siren->isValid($siren->generate()));
 	}
-	
+
 }

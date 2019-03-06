@@ -23,13 +23,12 @@ if (strlen($siren) != 9){
 
 $theSiren  = new Siren(new LuhnKey());
 
-if(VERIFICATION_SIREN){
-	if (! $theSiren->isValid($siren)) {
-		$_SESSION["error"] = "Le siren ne semble  pas valide.";
-		header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
-		exit;
-	}
+if (! $theSiren->isValid($siren)) {
+    $_SESSION["error"] = "Le siren ne semble  pas valide.";
+    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    exit;
 }
+
 
 $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
