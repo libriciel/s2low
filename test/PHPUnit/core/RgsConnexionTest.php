@@ -32,9 +32,9 @@ class RgsConnexionTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsRgsConnexionOK(){
 		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__."/../lib/fixtures/user1.pem");
+		$server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__."/../lib/fixtures/test/MyClient1.pem");
 		$this->rgsConnexion->setServerGlobal($server);
-		$this->rgsConnexion->setRgsValidCaPath(__DIR__."/../lib/fixtures/validca/");
+		$this->rgsConnexion->setRgsValidCaPath(__DIR__."/../lib/fixtures/test/");
 		$this->assertTrue($this->rgsConnexion->isRgsConnexion());
 	}
 }
