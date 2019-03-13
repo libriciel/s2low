@@ -10,12 +10,12 @@ class RgsCertificateTest extends PHPUnit_Framework_TestCase {
 
 	protected function setUp(){
 		parent::setUp();
-		$validca_path = __DIR__."/fixtures/validca";
+		$validca_path = __DIR__."/fixtures/test";
 		$this->rgsCertificate = new RgsCertificate(OPENSSL_PATH,$validca_path);
 	}
 
 	public function testVerify(){
-		$x509_pem_certificate = file_get_contents(__DIR__."/fixtures/user1.pem");
+		$x509_pem_certificate = file_get_contents(__DIR__."/fixtures/test/MyRootCA.pem");
 		$this->assertTrue($this->rgsCertificate->isRgsCertificate($x509_pem_certificate));
 	}
 
