@@ -34,7 +34,7 @@ if ($nb_signature == 0){
 	header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$id");
 }
 
-$actesSignature = new ActesSignature($sqlQuery, ACTES_FILES_UPLOAD_ROOT);
+$actesSignature = $objectInstancier->get(ActesSignature::class);
 
 $all_transaction_id = array();
 

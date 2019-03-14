@@ -4,7 +4,8 @@
 
 ### Corrections
 
-- Il était possible d'intégrer des SIREN non numériques. #484  
+- Il était possible d'intégrer des SIREN non numériques. #484 
+- Problème de signature si les documents actes ont déjà été envoyé dans le cloud 
 
 ## 4.0.0 - 2018-02-25
 

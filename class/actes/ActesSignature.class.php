@@ -6,13 +6,12 @@ class ActesSignature {
 	private $actesIncludedFileSQL;
 	private $actesTransactionSQL;
 	private $actesEnveloppeSQL;
-	private $actes_files_upload_root;
 
-	public function __construct(SQLQuery $sqlQuery,$actes_files_upload_root){
+	public function __construct(SQLQuery $sqlQuery, ActesRetriever $actesRetriever){
 		$this->actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 		$this->actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 		$this->actesEnveloppeSQL = new ActesEnvelopeSQL($sqlQuery);
-		$this->actes_files_upload_root = $actes_files_upload_root;
+		$this->actesRetriever = $actesRetriever;
 	}
 
 	/**
@@ -61,7 +60,9 @@ class ActesSignature {
 		
 		
 		$actes_envelope_info = $this->actesEnveloppeSQL->getInfo($envelope_id);
-		$archivePath = $this->actes_files_upload_root.'/'.$actes_envelope_info['file_path'];
+        $archivePath = $this->actesRetriever->getPath($actes_envelope_info['file_path']);
+
+        //$archivePath = $this->actes_files_upload_root.'/'.$actes_envelope_info['file_path'];
 		
 		$tgzExtractor = new TGZExtractor($tmp_dir);
 		$tgzExtractor->extract($archivePath, false);
