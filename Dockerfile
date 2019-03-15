@@ -145,6 +145,9 @@ WORKDIR /var/www/s2low/
 
 COPY ./ /var/www/s2low/
 
+#Ajoute droit d'execution sur script monitor ipsec
+RUN chmod +x /var/www/s2low/script/divers/ipsec-monitor.sh
+
 RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
 
 RUN a2ensite s2low-apache-config.conf
