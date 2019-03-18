@@ -6,7 +6,6 @@ stages:
 
 variables:
     CONTAINER_IMAGE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
-    CONTAINER_IMAGE_PHP55: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}-php55"
     POSTGRES_DB: s2lowdb
     POSTGRES_USER: s2lowuser
     POSTGRES_PASSWORD: s2lowpassword
@@ -21,8 +20,6 @@ build:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --pull -t ${CONTAINER_IMAGE} .
     - docker push ${CONTAINER_IMAGE}
-    - docker build --pull -t ${CONTAINER_IMAGE_PHP55} -f Dockerfile-php5.5 .
-    - docker push ${CONTAINER_IMAGE_PHP55}
 
 unit_test:
     stage: test
@@ -43,27 +40,6 @@ unit_test:
     script:
         - cd /var/www/s2low/
         - composer test-cover
-
-unit_test_legacy_php55:
-    stage: test
-    image : "$CONTAINER_IMAGE_PHP55"
-    services:
-        - name: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
-          alias: postgres
-    variables:
-        XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: s2lowuser
-        POSTGRES_PASSWORD_TEST: s2lowpassword
-        POSTGRES_DB_TEST: s2lowdb
-        POSTGRES_DATABASE_TEST: s2lowdb
-        POSTGRES_HOST_TEST: postgres
-        POSTGRES_HOST: postgres
-        S2LOW_WEBSITE: "localhost"
-        COMPOSER_PROCESS_TIMEOUT: 9000
-    script:
-        - cd /var/www/s2low/
-        - composer test-cover
-
 
 deploy_app:
     stage: staging

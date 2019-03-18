@@ -4,7 +4,6 @@ services:
     web:
         build:
             context: .
-            dockerfile: ${DOCKERFILE:-Dockerfile}
         networks:
           - dgcl
           - dgfip

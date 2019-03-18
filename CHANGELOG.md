@@ -7,6 +7,12 @@
 - Il était possible d'intégrer des SIREN non numériques. #484 
 - Problème de signature si les documents actes ont déjà été envoyé dans le cloud 
 
+## Supression
+
+- Supression du Dockerfile PHP 5.5, des tests automatisé sur PHP 5.5 et de fait, supression effective de la compatibilité PHP 5.5
+
+
+
 ## 4.0.0 - 2018-02-25
 
 ### Evolutions
