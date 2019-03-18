@@ -262,4 +262,36 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	}
 
 
+	/**
+	 * @throws Exception
+	 */
+	/*public function testValidateAllOneWithTypologieKOTypologieChecked(){
+
+		$actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
+
+		$actesUpdateClassificationSQL->updateClassification(
+			"123456789",
+			file_get_contents(__DIR__."/../../class/actes/fixtures/classification-exemple.xml")
+		);
+
+		$this->getObjectInstancier()->set('actes_appli_trigramme','abc');
+		$this->getObjectInstancier()->set('actes_appli_quadrigramme','TACT');
+
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
+
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Enveloppe invalide : La typologie 10_DE n'est pas permise sur le fichier 10_DE-002-000000000-20181001-201810241655-CC-1-1_1.pdf",
+			$transaction_info['message']
+		);
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+	}*/
+
+
 }
