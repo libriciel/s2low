@@ -188,8 +188,6 @@ class HTMLLayout extends Layout {
   		$html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms\n";
   	}
 
-  	$html .=" - php ".phpversion();
-
 	$html .= "            </div>\n        </footer>\n";
 
     if ($displayInline) {
