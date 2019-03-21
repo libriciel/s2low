@@ -90,11 +90,18 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 		
         try {
         	try {
-				$archive->validate(
-					$archive_path,
-					[1,2,3,4,5,6],
-					$all_type_pj
-				);
+
+			    if ($this->actes_type_pj_is_mandatory){
+			        // C'est pas très joli...
+                    $archive->setValidationTypologieByNature($this->actesTypePJSQL->getListByNature());
+                }
+
+                $archive->validate(
+                    $archive_path,
+                    [1, 2, 3, 4, 5, 6],
+                    $all_type_pj
+                );
+
 			} catch (Exception $e){
 				throw new Exception(utf8_decode($e->getMessage()),$e->getCode(),$e);
 			}

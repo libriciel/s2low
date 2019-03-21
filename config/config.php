@@ -392,10 +392,25 @@ if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')){
 	define('ACTES_DONT_VALID_SIGNING_CERTIFICATE',false);
 }
 
-//Le type de PJ est obligatoire, peut-être à partir du 01/01/2020
+//Le type de PJ est obligatoire, peut-être à partir du 08/06/2019
 if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")){
-	define("ACTES_TYPE_PJ_IS_MANDATORY",false);
+
+	//ACTES_TYPE_PJ_IS_MANDATORY == false => on vérifie que le code existe, si le code n'est pas fourni, on envoi quand même
+	//ACTES_TYPE_PJ_IS_MANDATORY == true => on vérifie que le code existe et qu'il correspond à la nature données, on bloque si pas de code
+
+	define("ACTES_TYPE_PJ_IS_MANDATORY",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
+
+//L'ancienne notice permettait le choix en fonction de la nature et de la classification
+//la nouvelle notice à compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
+if (! defined("ACTES_TYPE_PAR_NATURE")){
+
+	//ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systématiquement
+	//ACTES_TYPE_PAR_NATURE == true => on filtre uniquement par nature
+
+	define("ACTES_TYPE_PAR_NATURE",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
+}
+
 
 
 //////////////////////////////////

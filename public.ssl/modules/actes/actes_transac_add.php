@@ -66,6 +66,8 @@ $actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
 $type_pj_list = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNature()));
 $type_pj_list_matiere1 = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNatureMatiere1()));
 $type_pj_default = json_encode(utf8_encode_array($actesTypePJSQL->getAllDefaultNature()));
+$type_pj_list_par_nature = json_encode(utf8_encode_array($actesTypePJSQL->getListByNature()));
+$actes_type_par_nature = ACTES_TYPE_PAR_NATURE?"true":"false";
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
@@ -116,7 +118,29 @@ $(function(){
       
   });
   
+  var setTypePJParNature = function(selector){
+      selector.empty();
+      var nature_code = $("#nature_code").val();
+       if (nature_code){
+          $.each(type_pj_liste_par_nature[nature_code],function(key,value){
+              selector
+                 .append($("<option></option>")
+                            .attr("value",key)
+                            .text(value)); 
+          });
+     } else {
+            selector
+                 .append($("<option></option>")
+                            .attr("valie","")
+                            .text("Veuillez sélectionner la nature de l'acte")); 
+     }
+  }
+  
   var setTypePJ = function(selector){
+      if (actes_type_par_nature){
+          console.log(selector);
+          return setTypePJParNature(selector);
+      }
       selector.empty();
       var nature_code = $("#nature_code").val();
       var matiere1 = $("#classif1").val();
@@ -160,18 +184,29 @@ $(function(){
                         .attr("value","99_SE")
                         .text("Fichier de signature électronique"));
   };
-  
-  $("#nature_code, #classification_text").on('change', function() {
-        $(".select_type_pj").each(function(){            
-            setTypePJ($(this))
-        });
-        
-  });
-  
+
+
+ 
+ 
   var type_pj = $type_pj_list;
   var type_pj_default = $type_pj_default;
   var type_pj_matiere1 = $type_pj_list_matiere1;
+  var type_pj_liste_par_nature = $type_pj_list_par_nature
+  var actes_type_par_nature = $actes_type_par_nature;
+  
+  var selector_onchange =  "#nature_code, #classification_text";
  
+  if (actes_type_par_nature){
+      selector_onchange = "#nature_code";      
+  }
+  
+  $(selector_onchange).on('change', function() {
+		$(".select_type_pj").each(function(){				   
+				setTypePJ($(this))					            
+		});        
+  });        
+
+
 });
 
 $(document).ready(function (){

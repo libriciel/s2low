@@ -12,6 +12,34 @@ class ActesTypePJSQL extends SQL {
 		return $this->queryOneCol($sql);
 	}
 
+	public function getListByNature(){
+		$result = [];
+		foreach($this->getAll() as $type){
+			$result[$type['nature_id']][$type['code']] =   "{$type['libelle']} ({$type['code']})";
+		}
+		foreach($result as $nature => $typologie_list){
+
+			$to_add = [];
+			foreach ($typologie_list as $code => $libelle){
+				if (substr($code,0,3)=='99_'){
+					unset($result[$nature][$code]);
+					$to_add[$code] = $libelle;
+				}
+			}
+			asort($result[$nature]);
+			$result[$nature] = array_reverse($result[$nature]);
+			foreach(array_reverse($to_add) as $code => $libelle){
+				$result[$nature][$code] = $libelle;
+			}
+			$result[$nature] = array_reverse($result[$nature]);
+
+		}
+		return $result;
+	}
+
+	/**
+	 * Ca devrait s'appeller getByNatureAndClassification...
+	 */
     public function getAllByNature(){
         $result = array();
         foreach($this->getAll() as $type){

@@ -6,7 +6,7 @@
       "type": "package",
       "package": {
         "name": "libriciel/tdt-lib-actes",
-        "version": "0.0.30",
+        "version": "0.0.31",
         "dist": {
           "type": "tar",
           "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.30"
@@ -29,7 +29,8 @@
     "mtdowling/supervisor-event": "^1.0",
     "pda/pheanstalk": "^3.1",
     "symfony/process": "^3.4",
-    "php-imap/php-imap": "^3.0"
+    "php-imap/php-imap": "^3.0",
+    "ext-fileinfo": "^1.0"
   },
 
   "require-dev": {

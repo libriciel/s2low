@@ -2,6 +2,11 @@
 
 ## 4.0.1 
 
+### Ajouts
+
+- La constante ACTES_TYPE_PAR_NATURE permet d'utiliser la nouvelle notice de typologie des actes (typologie par nature, plus de filtre par classification, supression de 99_AU)
+- La constante ACTES_TYPE_PJ_IS_MANDATORY évolue pour implémenter la nouvelle notice 
+
 ### Corrections
 
 - Il était possible d'intégrer des SIREN non numériques. #484 

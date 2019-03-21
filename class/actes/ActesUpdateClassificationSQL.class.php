@@ -11,10 +11,10 @@ class ActesUpdateClassificationSQL extends SQL{
         $this->authoritySQL = $authoritySQL;
     }
 
-    public function updateClassification($siren,$fichier_xml){
+    public function updateClassification($siren, $xml_content){
         try {
             $this->queryOne("BEGIN");
-            $this->updateClassificationThrow($siren,$fichier_xml);
+            $this->updateClassificationThrow($siren,$xml_content);
             $this->queryOne("COMMIT");
         } catch(Exception $e){
             $this->query("ROLLBACK");
