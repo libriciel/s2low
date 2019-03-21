@@ -235,6 +235,14 @@ if (isset ($actePDFFile) || $batchMode) {
 		$acteFileName = $actePDFFile["name"];
   	}
 
+	if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)){
+        Helpers :: returnAndExit(
+            1,
+            "Erreur lors de la réception du fichier $acteFileName : typologie absente"  ,
+            WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+        );
+    }
+
   	if (empty($type_acte)){
       $correspondance_nature_type = array(
           '1'=> '99_DE',
@@ -281,13 +289,21 @@ if (isset ($acteAttachments)) {
 	
 	
 	if (! $uploader->verifOKAll("acte_attachments")){
-		Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+		Helpers :: returnAndExit(1, "Erreur lors de la réception du fichier : " .$uploader->getLastError() , WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 	}
 
 	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
 		if (! strlen($acteAttachments["tmp_name"][$i])){
 			continue;
 		}
+
+        if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_pj[$i])){
+            Helpers :: returnAndExit(
+                1,
+                "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente"  ,
+                WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+            );
+        }
 
 		if ( empty($type_pj[$i])){
 		    //Type par defaut des annexes
