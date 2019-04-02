@@ -153,5 +153,13 @@ class PostgreSQLDifferenceTest extends PHPUnit_Framework_TestCase {
 	}
 
 
+	public function testWithPublicNamespace(){
+		$db_def_cible = $this->getS2lowDefinition();
+		$db_def_actual = $db_def_cible;
+		$db_def_actual['index']['actes_transactions_workflow_date_idx']['indexdef'] = 'CREATE INDEX actes_transactions_workflow_date_idx ON public.actes_transactions_workflow USING btree (date)';
+		$diff = $this->postgreSQLDifference->getDifference($db_def_actual,$db_def_cible);
+		$this->assertEmpty($diff);
+	}
+
 
 }

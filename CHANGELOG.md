@@ -1,5 +1,10 @@
 # Change Log
 
+## 4.0.2
+
+- HOTFIX : correction du script de migration de base de données sur certain index récalcitrants
+
+
 ## 4.0.1 - 2019-04-02
 
 ### Ajouts

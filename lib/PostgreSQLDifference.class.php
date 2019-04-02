@@ -162,6 +162,15 @@ class PostgreSQLDifference {
 	}
 
 	private function isIndexEqual($index1,$index2){
+
+		if ($index1 == $index2){
+			return true;
+		}
+
+		//Des fois, il ajoute le schéma avant le nom de la table... Constaté une fois sur un PostgreSQL 10 sur Ubuntu 18.04
+		$index1 = preg_replace("#ON\s*public\.#i","ON ",$index1);
+		$index2 = preg_replace("#ON\s*public\.#i","ON ",$index2);
+
 		return $index1 == $index2;
 	}
 
