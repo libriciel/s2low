@@ -85,7 +85,7 @@ function add_attachment_field() {
   newfield.className="actes_files_form row";
   
   	html = "<div class=\"form-group \">";
-	html += "         <label class=\"col-md-offset-1 col-md-4  control-label\">Type de la pièce jointe n°" + field_nb+ " </label>";
+	html += "         <label class=\"col-md-3  control-label\">Type de la pièce jointe n°" + field_nb+ " </label>";
 	html += "          <div class=\"col-md-3\"><select class=\"select_type_pj\" name=\"type_pj[]\">";
 	html += "$option_pj";
 
@@ -93,7 +93,7 @@ function add_attachment_field() {
 	html += "       </div><br/>";
   
   html += '        <div class="form-group">';
-  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-4 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
+  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-3 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
   html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
   html += '       \\x3C/div>';
 html += '    \\x3C/div>';
@@ -230,7 +230,7 @@ $html .= "   <div class=\"row-legend\">\n";
 $html .= "   <legend>Fichier PDF contenant la réponse :</legend></div>\n";
 $html .= "     <div class=\"actes_files_form\">\n";
 $html .= "       <div class=\"form-group \">\n";
-$html .= "         <label class=\"col-md-offset-1 col-md-3  control-label\">Type de pièce jointe</label>";
+$html .= "         <label class=\"col-md-3  control-label\">Type de pièce jointe</label>";
 $html .= "          <div class=\"col-md-3\"><select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\">";
 
 foreach($type_pj_list as $code_pj => $libelle_pj){
@@ -240,7 +240,7 @@ foreach($type_pj_list as $code_pj => $libelle_pj){
 $html .="</select></div>";
 $html .= "       </div><br/>";
 $html .= "       <div class=\"form-group\">\n";  
-$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-3  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
+$html .= "         <label for=\"acte_pdf_file\" class=\" col-md-3  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
 $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
 $html .= "       </div>\n";
 $html .= "   </fieldset>\n";
