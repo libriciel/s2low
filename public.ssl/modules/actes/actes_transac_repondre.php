@@ -60,6 +60,17 @@ $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"".WEBSITE_SSL
 $doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
+
+
+$actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
+$type_pj_list = $actesTypePJSQL->getListByNature()[$trans->get('nature_code')];
+
+
+$option_pj = "";
+foreach($type_pj_list as $code_pj => $libelle_pj){
+	$option_pj.= "<option value='$code_pj'>$libelle_pj</option>";
+}
+
 $js =<<<EOJS
 <script type="text/javascript">
 //<![CDATA[
@@ -72,15 +83,19 @@ function add_attachment_field() {
   field = document.getElementById("attachments_fields");
   newfield=document.createElement("div");
   newfield.className="actes_files_form row";
-  html = '        <div class="form-group">';
-  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-7 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
+  
+  	html = "<div class=\"form-group \">";
+	html += "         <label class=\"col-md-offset-1 col-md-4  control-label\">Type de la pièce jointe n°" + field_nb+ " </label>";
+	html += "          <div class=\"col-md-3\"><select class=\"select_type_pj\" name=\"type_pj[]\">";
+	html += "$option_pj";
+
+	html +="</select></div>";
+	html += "       </div><br/>";
+  
+  html += '        <div class="form-group">';
+  html += '         <label for="acte_attachments_' + field_nb + '" class="col-md-offset-1 col-md-4 control-label">Pièce jointe n°' + field_nb + ' (.pdf, .png ou .jpg)\\x3C/label>';
   html += '         <div class="col-md-3"><input type="file" id="acte_attachments_' + field_nb + '" name="acte_attachments[]" size="40" maxlength="255" />\\x3C/div>';
   html += '       \\x3C/div>';
-EOJS;
-
-
-
-$js .=<<<EOJS
 html += '    \\x3C/div>';
 html += '    \\x3C/div>';
 html += '    \\x3C/div>';
@@ -151,6 +166,10 @@ function hide_bloc(bloc_id){
 	document.getElementById(bloc_id).style.visibility=document.getElementById(bloc_id).style.visibility=="hidden"?"visible":"hidden";;
 }  
 
+
+
+
+
 //]]>
 </script>
 EOJS;
@@ -210,8 +229,18 @@ $html .= "   <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
 $html .= "   <legend>Fichier PDF contenant la réponse :</legend></div>\n";
 $html .= "     <div class=\"actes_files_form\">\n";
+$html .= "       <div class=\"form-group \">\n";
+$html .= "         <label class=\"col-md-offset-1 col-md-3  control-label\">Type de pièce jointe</label>";
+$html .= "          <div class=\"col-md-3\"><select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\">";
+
+foreach($type_pj_list as $code_pj => $libelle_pj){
+	$html.= "<option value='$code_pj'>$libelle_pj</option>";
+}
+
+$html .="</select></div>";
+$html .= "       </div><br/>";
 $html .= "       <div class=\"form-group\">\n";  
-$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-7  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
+$html .= "         <label for=\"acte_pdf_file\" class=\"col-md-offset-1 col-md-3  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
 $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
 $html .= "       </div>\n";
 $html .= "   </fieldset>\n";

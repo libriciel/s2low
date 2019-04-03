@@ -2,7 +2,10 @@
 
 ## 4.0.2
 
+## Correction
+
 - HOTFIX : correction du script de migration de base de données sur certain index récalcitrants
+- Oublie du typage des réponses aux réponses des préfectures (Courrier simple, lettre d'observations et demande de pièces complémentaires) #492
 
 
 ## 4.0.1 - 2019-04-02
