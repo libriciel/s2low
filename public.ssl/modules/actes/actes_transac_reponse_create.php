@@ -55,6 +55,30 @@ $related_trans = new ActesTransaction($related_id);
 $related_trans->init();
 
 
+$type_acte = Helpers::getVarFromPost('type_acte',true);
+$type_pj = Helpers::getVarFromPost('type_pj',true);
+
+if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)){
+	Helpers :: returnAndExit(
+		1,
+		"Erreur lors de la réception du fichier : typologie absente"  ,
+		WEBSITE_SSL . "/modules/actes/actes_transac_reponse.php?id=$related_id"
+	);
+}
+
+if (empty($type_acte)) {
+	$correspondance_nature_type = array(
+		'1' => '99_DE',
+		'2' => '99_AR',
+		'3' => '99_AI',
+		'4' => '99_DC',
+		'5' => '99_BU',
+		'6' => '99_AU',
+	);
+	$type_acte = $correspondance_nature_type[$nature_code];
+}
+
+
 
 
 $type_transaction = $related_trans->get("type");
@@ -142,8 +166,8 @@ if (isset ($actePDFFile) ) {
  		 sortir_atrc( "Envoi de fichier illégal.",$api);    	
     }
 
-  $dest_name = $trans->getStdFileName($env);
-  if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath)) {
+  $dest_name = $trans->getStdFileName($env,true,$type_acte);
+  if (!$trans->addActeFile($acteFileName, $dest_name, $acteFilePath,true,$type_acte)) {
     $errorMsg = "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
     $fileImportError = true;
   } else {
@@ -176,8 +200,21 @@ if (isset ($acteAttachments)) {
         Helpers::putInSession("attachment_sign_file" . ($i + 1), $acteAttachmentsSign["name"][$i]);
         }*/
 
-        $dest_name = $trans->getStdFileName($env);
-        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i])) {
+		  if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_pj[$i])){
+			  Helpers :: returnAndExit(
+				  1,
+				  "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente"  ,
+				  WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+			  );
+		  }
+
+		  if ( empty($type_pj[$i])){
+			  //Type par defaut des annexes
+			  $type_pj[$i] = '99_AU';
+		  }
+
+        $dest_name = $trans->getStdFileName($env,true,$type_pj[$i]);
+        if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i],true,$type_pj[$i])) {
           $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
           $fileImportError = true;
         } else {

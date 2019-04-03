@@ -131,7 +131,7 @@ $(function(){
      } else {
             selector
                  .append($("<option></option>")
-                            .attr("valie","")
+                            .attr("value","")
                             .text("Veuillez sélectionner la nature de l'acte")); 
      }
   }
