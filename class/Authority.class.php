@@ -325,10 +325,10 @@ class Authority extends DataObject {
    * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
    * \return tableau des collectivités
   */
-  public function getAuthoritiesList($cond = "") {
+  public function getAuthoritiesList($cond = "",$count=null) {
 	if (! $this->pagerInit('authorities.id, authorities.name, authorities.siren, authorities.authority_group_id, authorities.agreement, authorities.email, authorities.broadcast_email, authorities.authority_type_id, authority_types.description AS type_name, authorities.address, authorities.postal_code, authorities.city, authorities.telephone, authorities.fax',
 						 'authorities LEFT JOIN authority_types ON authorities.authority_type_id=authority_types.id',
-						 $cond,'authorities.name',null,null,"ASC")) {
+						 $cond,'authorities.name',$count,null,"ASC")) {
 	  return false;
 	}
 

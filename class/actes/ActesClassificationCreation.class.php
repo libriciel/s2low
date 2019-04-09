@@ -38,15 +38,22 @@ class ActesClassificationCreation {
 	}
 
 
-	public function sendToAllAuthorities(){
+	public function sendToAllAuthorities($department=null){
 		$this->unsetFrequencyRestriction();
 
 		$authority = new Authority();
-		$authorities = $authority->getAllAuthorities();
+		if($department != null && is_int($department)){
+		    if($department < 100){
+		        $department = "0$department";
+		    }
+		    $authorities = $authority->getAuthoritiesList("WHERE department='$department'",10000);
+		}else{
+		    $authorities = $authority->getAllAuthorities();
+		}
 
 		/** @var Authority $authority */
 		foreach ($authorities as $authority){
-			echo $authority['name'] . ":";
+		    echo $authority['name'] . " - id ".$authority['id']." :";
 			if (! $authority['siren']){
 				echo "[PASS]\n";
 				continue;
