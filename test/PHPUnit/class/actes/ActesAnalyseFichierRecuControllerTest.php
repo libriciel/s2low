@@ -288,15 +288,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
 		$this->assertEquals("2017-07-25", substr($info['decision_date'], 0, 10));
 
-
-		/*print_r($enveloppe_info);
-
-
-		$actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
-		$all_files = $actesIncludedFileSQL->getAll($transaction_id);
-		print_r($all_files);*/
-
-
 		$actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
 
 		$path = $actesRetriever->getPath($enveloppe_info['file_path']);
@@ -322,6 +313,26 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 			$all_files_in_tar_gz
 		);
 
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testMessageMultiCanal() {
+		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+		$this->mockGetBySirenAndNumeroInterne($transaction_id);
+		mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+		$this->copyDirectoryToAnalysePath(__DIR__ . "/fixtures/mail-suite-multicanal/");
+		$actesAnalyseFichierRecuController = $this->getObjectInstancier()->get("ActesAnalyseFichierRecuController");
+		$actesAnalyseFichierRecuController->analyseAll();
+		$this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
+		$all_log = $this->logger->getAllLog();
+		$this->assertRegExp("#Message de réponse à un multicanal#",$all_log[4]);
+		$this->assertRegExp("#Suppression du répertoire#",$all_log[5]);
+
+		$actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['last_status_id']);
 	}
 
 }

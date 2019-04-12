@@ -1,5 +1,9 @@
 # Change Log
 
+## 4.0.3
+
+- Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490 
+
 ## 4.0.2 - 2019-04-09
 
 ## Correction

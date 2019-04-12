@@ -30,8 +30,10 @@ if ($argc == 2
 }elseif($argc == 2
         &&
         ((int)$argv[1] > 0) && ((int)$argv[1] < 1000)
-){
+) {
 
 
-$actesClassificationCreation = new ActesClassificationCreation();
-$actesClassificationCreation->sendToAllAuthorities($departement);
+	$actesClassificationCreation = new ActesClassificationCreation();
+	$actesClassificationCreation->sendToAllAuthorities($departement);
+
+}
