@@ -97,16 +97,9 @@ class ActesAnalyseFichierRecuController {
             $this->log("Suppression du répertoire $rep_path");
             $tmpDir->delete($rep_path);
         } catch (Exception $e){
-        	if ($this->isMulticanalResponse($rep_path)){
-				$this->log("Message de réponse à un multicanal");
-				$tmpDir = new TmpFolder();
-				$this->log("Suppression du répertoire $rep_path");
-				$tmpDir->delete($rep_path);
-			} else {
-				$this->log("Echec du traitement de $rep_path : " . $e->getMessage());
-				$this->log("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
-				rename($rep_path, $this->actes_response_error_path . "/" . $file);
-			}
+			$this->log("Echec du traitement de $rep_path : " . $e->getMessage());
+			$this->log("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
+			rename($rep_path, $this->actes_response_error_path . "/" . $file);
         }
     }
 
@@ -137,6 +130,10 @@ class ActesAnalyseFichierRecuController {
         try {
             $archiveData = $archive->getArchiveDataFromFolder($rep_path);
         } catch(Exception $e){
+			if ($this->isMulticanalResponse($rep_path)){
+				$this->log("Message de réponse à un multicanal");
+				return;
+			}
             throw new Exception(utf8_decode($e->getMessage()));
         }
 
