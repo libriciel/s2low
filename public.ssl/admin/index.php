@@ -48,9 +48,7 @@ foreach($actes_status as $status_id => $status_libelle){
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
-//$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
-$nb_actes_transmis_4hours_before= "??";
-
+$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
 
 $actes_nb_en_attente_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
 
