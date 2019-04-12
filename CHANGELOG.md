@@ -2,7 +2,15 @@
 
 ## 4.0.3
 
+## Correction
+
 - Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490 
+
+## Ajout
+
+- Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
+- Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
+
 
 ## 4.0.2 - 2019-04-09
 

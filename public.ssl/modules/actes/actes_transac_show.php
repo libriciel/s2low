@@ -54,6 +54,7 @@ $envelope->init();
 $owner = new User($envelope->get("user_id"));
 $owner->init();
 
+
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
@@ -73,13 +74,15 @@ $workflow = $trans->fetchWorkflow();
 $transactionTypes = $trans->get("transactionTypes") ;
 $transStatus = $trans->getCurrentStatus();
 
+$authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+$authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
+
 $doc = new HTMLLayout();
 
 
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"".WEBSITE_SSL."/custom/styles/date-picker.css\" />");
 $doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
 $doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-
 
 
 $doc->setTitle("Tedetis : visualisation d'une transaction");
@@ -100,7 +103,20 @@ if ($trans->get("type_reponse")){
 	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
 }
 
-$html .= $doc->getHTMLArrayline("Dossier suivi par", get_hecho($owner->get("givenname") . " " . $owner->get("name")));
+if ($me->isSuper()){
+    $link_authority = WEBSITE_SSL."admin/authorities/admin_authority_edit.php?id={$authority_info['id']}";
+    $authority_td = "<a href='$link_authority'>".get_hecho($authority_info['name'])."</a>";
+
+    $link_user = WEBSITE_SSL."/admin/users/admin_user_edit.php?id=".$owner->getId();
+    $user_td = "<a href='$link_user'>".get_hecho($owner->get("givenname") . " " . $owner->get("name"))."</a>";
+} else {
+	$authority_td = get_hecho($authority_info['name']);
+	$user_td = get_hecho($owner->get("givenname") . " " . $owner->get("name"));
+}
+
+$html .= $doc->getHTMLArrayline("Collectivité",$authority_td);
+$html .= $doc->getHTMLArrayline("Dossier suivi par", $user_td);
+
 
 // Contenu différent en fonction du type de transaction
 switch ($trans->get("type")) {
