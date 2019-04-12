@@ -56,7 +56,6 @@ class HeliosController extends Controller {
 	}
 
 	public function import($user_id){
-
 		/** @var RgsConnexion $rgsConnexion */
 		$rgsConnexion = $this->getObjectInstancier()->{'RgsConnexion'};
 		if (! $rgsConnexion->isRgsConnexion()){

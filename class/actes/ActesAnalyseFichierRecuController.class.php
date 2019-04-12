@@ -97,11 +97,33 @@ class ActesAnalyseFichierRecuController {
             $this->log("Suppression du répertoire $rep_path");
             $tmpDir->delete($rep_path);
         } catch (Exception $e){
-            $this->log("Echec du traitement de $rep_path : " . $e->getMessage());
-            $this->log("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
-            rename($rep_path,$this->actes_response_error_path."/".$file);
+        	if ($this->isMulticanalResponse($rep_path)){
+				$this->log("Message de réponse à un multicanal");
+				$tmpDir = new TmpFolder();
+				$this->log("Suppression du répertoire $rep_path");
+				$tmpDir->delete($rep_path);
+			} else {
+				$this->log("Echec du traitement de $rep_path : " . $e->getMessage());
+				$this->log("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
+				rename($rep_path, $this->actes_response_error_path . "/" . $file);
+			}
         }
     }
+
+    private function isMulticanalResponse($rep_path){
+		$message_body = $rep_path."/message_body.html";
+		if (! file_exists($message_body)){
+			return false;
+		}
+		$expected_content = "Notre service de contrôle de légalité a identifié qu'il s'agit d'un acte dont la transmission est effectuée en multi canal.";
+		if (! preg_match(
+			"#$expected_content#",
+			utf8_decode(file_get_contents($message_body)))
+		){
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * @param $rep_path
