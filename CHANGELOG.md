@@ -5,6 +5,7 @@
 ## Correction
 
 - Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490 
+- Réintroduction de la possibilité de déclencher manuellement une notification #494
 
 ## Ajout
 
