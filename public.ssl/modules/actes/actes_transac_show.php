@@ -429,9 +429,10 @@ if (count($courrier) != 0){
 if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permission->canWrite($me,$owner) ) {
   $actionHtml = "";
 
+
   // Formulaire de notification a posteriori
   // Affichés quand la transaction a été acquittée par le MIAT et non notifiée
-  if ($trans->get("type") == 1 && $transStatus == 4 && $trans->get("broadcasted") == 'f') {
+  if ($trans->get("type") == 1 && $transStatus == 4 && ! $trans->get("broadcasted")) {
     // adresses emails de diffusion
 
 
