@@ -5,8 +5,9 @@ class UserSQL extends SQL {
 	const IDENT_METHOD_NONE = 0;
 	const IDENT_METHOD_CERT_ONLY = 1;
 	const IDENT_METHOD_LOGIN = 2 ;
-	const IDENT_METHOD_RGS_2_ETOILES = 3;
 
+	/** @deprecated 4.0.3 */
+	const IDENT_METHOD_RGS_2_ETOILES = 3;
 
 	const STATUS_DESACTIVE = 0;
 	const STATUS_ACTIVE = 1;
@@ -97,8 +98,7 @@ class UserSQL extends SQL {
 	public function getIdentificatonMethodeList(){
 		return array(
 			self::IDENT_METHOD_CERT_ONLY=>'Certificat à usage individuel',
-			self::IDENT_METHOD_LOGIN => 'Certificat partagé et login/mot de passe',
-			self::IDENT_METHOD_RGS_2_ETOILES => "Certificat partagé et certificat  complémentaire (API uniquement)"
+			self::IDENT_METHOD_LOGIN => 'Certificat partagé et login/mot de passe'
 		);
 	}
 
