@@ -3,6 +3,8 @@
 
 class HeliosEnvoiControlerTest extends S2lowTestCase {
 
+    private $last_string;
+
 	private $testStreamUrl;
 
 	/** @var  HeliosController */
@@ -55,6 +57,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$id_t = $this->heliosController->importFile(8,$pes_aller,"pes_aller.xml");
 		ob_start();
 		$this->heliosEnvoiControler->validateAllTransactions();
+		$this->last_string = ob_get_contents();
 		ob_end_clean();
 		return $id_t;
 	}
@@ -152,6 +155,21 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$authoritySQL->updateDoNotVerifyNomFicUnicity(1,true);
 		$this->sendSamePESAllerFailed();
 	}
+
+    /**
+     * @throws Exception
+     */
+    public function testWhenPESAllerIsEmpty(){
+        $id_t = $this->validatePesAller("pes_aller_empty.xml");
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getInfo($id_t);
+        $this->assertEquals(-1,$info['last_status_id']);
+        $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(
+            "Transaction $id_t : ce fichier ne contient ni bordereau, ni PJ, ni marché",
+            $last_status_info['message']
+        );
+    }
 
 
 }

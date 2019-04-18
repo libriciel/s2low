@@ -12,6 +12,11 @@
 - Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
 - Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
 
+## Evolution
+
+- les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et 
+génère une erreur #496
+
 
 ## 4.0.2 - 2019-04-09
 
