@@ -49,6 +49,7 @@ class HeliosEnvoiControler {
 			return;
 		}
 
+
 		libxml_use_internal_errors(true);
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
         $sigtermHandler = new SigTermHandler();
@@ -97,6 +98,12 @@ class HeliosEnvoiControler {
 				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 				continue;
 			}
+
+            if ($this->isPESEmpty($pes_xml)){
+                $message = "Transaction $transaction_id : ce fichier ne contient ni bordereau, ni PJ, ni marché";
+                $this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+                continue;
+            }
 
 			$info_from_pes_aller = $this->extratInfoFromPESAller($pes_xml);
 
@@ -310,5 +317,21 @@ class HeliosEnvoiControler {
 		$info['id_post'] = strval($pes_xml->EnTetePES->IdPost['V']);
 		return $info;
 	}
+
+
+    /**
+     * Les fichiers qui ne contiennent ni bordereau, ni PJ, ni marché ne généère pas d'acquittement
+     * et donc ne sont jamais ni acquitter ni en erreur
+     * @param SimpleXMLElement $pes_xml
+     * @return bool
+     */
+	public function isPESEmpty(SimpleXMLElement $pes_xml) : bool{
+	    $r = [];
+        foreach($pes_xml->children() as $child){
+            $r[] = $child->getName();
+        }
+        $r = array_diff($r,['Enveloppe','EnTetePES']);
+        return ! boolval($r);
+    }
 	
 }
