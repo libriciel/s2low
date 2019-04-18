@@ -17,6 +17,11 @@
 - les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et 
 génère une erreur #496
 
+## Dépréciation
+
+- La méthode d'authentification avec certificat utilisateur + certificat RGS** est déprécié et il n'est plus possible 
+de la sélectionner lors de la création ou de la modification d'un utilisateur. #491
+
 
 ## 4.0.2 - 2019-04-09
 
