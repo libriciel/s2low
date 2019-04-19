@@ -258,8 +258,7 @@ $html .= " <tbody>\n";
             foreach ($workflow as  $stage) {
 
             	if ($stage['status_id'] == 4){
-
-            		if (preg_match("/\.pdf$/i",$file["posted_filename"])) {
+            		if ($file["mimetype"]=="application/pdf") {
 
 						$name="tampon_date";
 						$date = date("Y-m-d");
