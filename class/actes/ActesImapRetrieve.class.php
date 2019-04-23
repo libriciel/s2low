@@ -40,7 +40,12 @@ class ActesImapRetrieve {
         $this->log("Il y a ".count($mailsIds)." messages dans la boite au lettres");
         $sigtermHandler = new SigTermHandler();
         foreach($mailsIds as $mail_id){
-            $this->saveMail($mailbox,$mail_id);
+            try {
+                $this->saveMail($mailbox, $mail_id);
+            } catch (Exception $e){
+                $this->log("Erreur lors de la sauvegarde de $mail_id");
+                continue;
+            }
             $this->log("Suppression du message : $mail_id");
 			$mailbox->deleteMail($mail_id);
             if ($sigtermHandler->isSigtermCalled()){
