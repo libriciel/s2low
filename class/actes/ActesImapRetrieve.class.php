@@ -1,5 +1,7 @@
 <?php
 
+use PhpImap\Mailbox;
+
 class ActesImapRetrieve {
 
     private $actesImapProperties;
@@ -42,6 +44,8 @@ class ActesImapRetrieve {
         foreach($mailsIds as $mail_id){
             try {
                 $this->saveMail($mailbox, $mail_id);
+            } catch (UnrecoverableException $e){
+                throw $e;
             } catch (Exception $e){
                 $this->log("Erreur lors de la sauvegarde de $mail_id");
                 continue;
@@ -60,24 +64,27 @@ class ActesImapRetrieve {
     }
 
 	/**
-	 * @param \PhpImap\Mailbox $mailbox
+	 * @param Mailbox $mailbox
 	 * @param $mail_id
 	 * @throws Exception
+     * @throws UnrecoverableException
 	 */
-    private function saveMail(PhpImap\Mailbox $mailbox,$mail_id){
+    private function saveMail(Mailbox $mailbox,$mail_id){
         $this->log("Récupération du message : $mail_id");
 		$tmp_file = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
 
         if (! mkdir( $tmp_file)){
             $exception_message = "Impossible de créer le répertoire $tmp_file";
             $this->log($exception_message);
-            throw new Exception($exception_message);
+            throw new UnrecoverableException($exception_message);
         }
 
         $message_body_path = $tmp_file."/message_body.html";
         $this->log("Sauvegarde du contenu du message HTML $message_body_path");
 
-		$incomingMail = $mailbox->getMail($mail_id);
+
+        $incomingMail = $mailbox->getMail($mail_id);
+
         file_put_contents($message_body_path,$incomingMail->textHtml);
 
 
@@ -98,7 +105,7 @@ class ActesImapRetrieve {
 		$this->log("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
 
         if (! file_exists($this->actes_response_tmp_local_path)){
-        	throw new Exception("{$this->actes_response_tmp_local_path} n'existe pas");
+        	throw new UnrecoverableException("{$this->actes_response_tmp_local_path} n'existe pas");
 		}
 
         // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
@@ -106,7 +113,7 @@ class ActesImapRetrieve {
 
 		exec($command,$output,$return_var);
         if ($return_var != 0){
-        	throw new Exception("Impossible de déplacer $tmp_file ");
+        	throw new UnrecoverableException("Impossible de déplacer $tmp_file ");
 		}
     }
 

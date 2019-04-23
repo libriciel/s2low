@@ -38,7 +38,7 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
             $this->getImapMailBoxFactory(),
 			$logger
         );
-        $this->setExpectedException("Exception","n'existe pas");
+        $this->setExpectedException(UnrecoverableException::class,"n'existe pas");
         $actesImapRetrieve->retrieve();
     }
 
