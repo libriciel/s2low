@@ -89,7 +89,11 @@ if (isset($id)) {
 	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), $module->get("name"), $me)) {
 	  $msg .= "\nErreur de journalisation.";
 	}
-	
+
+      $workerScript = $objectInstancier->get(WorkerScript::class);
+      $worker = $objectInstancier->get(ActesEnvoiFichierWorker::class);
+      $workerScript->rebuildQueue($worker);
+
 	$_SESSION["error"] = nl2br($msg);
     header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
     exit();
@@ -108,4 +112,3 @@ if (isset($id)) {
   header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
   exit();
 }
-?>
