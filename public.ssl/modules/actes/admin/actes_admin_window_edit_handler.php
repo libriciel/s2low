@@ -154,8 +154,11 @@ if (! $zeWin->save()) {
 
   $_SESSION["error"] = nl2br($msg);
   Helpers::purgeTempSession();
+
+    $workerScript = $objectInstancier->get(WorkerScript::class);
+    $worker = $objectInstancier->get(ActesEnvoiFichierWorker::class);
+    $workerScript->rebuildQueue($worker);
+
   header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $zeWin->getId());
   exit();
 }
-
-?>

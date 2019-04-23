@@ -104,9 +104,10 @@ class ActesTransmissionWindow extends DataObject {
   /**
    * \brief Méthode d'enregistrement d'une entité dans la base de données
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+   * \param $return_rather_than_exec n'est pas utilisé, on l'a juste mis pour éviter une notice...
    * \return true si succès, false sinon
    */
-  public function save($validate = true) {
+  public function save($validate = true,$return_rather_than_exec = false) {
 	$new = false;
 	if ($this->isNew()) {
 	  $new = true;

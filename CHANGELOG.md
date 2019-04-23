@@ -7,6 +7,7 @@
 - Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490 
 - Réintroduction de la possibilité de déclencher manuellement une notification #494
 - Il est possible de télécharger le document tamponné si celui-ci est un effectivement un fichier PDF (was : se termine par .pdf) #485
+- Toutes les enveloppes non-envoyées à cause de la pause d'une fenetre sont remises dans la queue benstalked une fois la fenêtre supprimée. #479
 
 ## Ajout
 
