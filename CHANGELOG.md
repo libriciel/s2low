@@ -10,6 +10,7 @@
 - Toutes les enveloppes non-envoyées à cause de la pause d'une fenetre sont remises dans la queue benstalked une fois la fenêtre supprimée. #479
 - Suppression du bouton "Annuler" sur la signature étant donné que ce bouton n'a pas de sens dans ce contexte #472 
 - Les dates de recherche de mail sécurisé sautait en cas de nouvelle recherche #447
+- Il n'est plus possible pour un admin de groupe de passer une transaction PES Retour à l'état lu #445
 
 ## Ajout
 

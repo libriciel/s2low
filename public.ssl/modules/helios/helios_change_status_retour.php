@@ -25,7 +25,7 @@ if (!$me->authenticate()) {
 $nomUSer = $me->get("name");
 $userId = $me->getId();
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+if (!$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGroupAdminOrSuper()) {
   $_SESSION["error"] = "Accès refusé";
   header("Location: " . WEBSITE_SSL);
   echo $_SESSION["error"];
