@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="send_date_from" class="col-md-2 control-label">Date d'envoi à partir du </label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php $SendDateFrom; ?>"/>
+                        <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php echo $SendDateFrom; ?>"/>
                         <script type="text/javascript">
                         //<![CDATA[
                             obj_send_date_from=new DatePicker('send_date_from', 'fr');
@@ -50,7 +50,7 @@
                     </div>
                     <label for="send_date_to" class="col-md-2 control-label">Date d'envoi jusqu'au</label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_to" name="SendDateTo" type="hidden" value="<?php $SendDateTo; ?>"/>
+                        <input id="send_date_to" name="SendDateTo" type="hidden" value="<?php echo $SendDateTo; ?>"/>
                         <script type="text/javascript">
                         //<![CDATA[
                             obj_send_date_to=new DatePicker('send_date_to', 'fr');
