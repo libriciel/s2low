@@ -2,6 +2,9 @@
 
 class AdminGroupController extends Controller {
 
+	/**
+	 * @throws RedirectException
+	 */
 	public function doEditAction(){
 		$id = $this->getRecuperateurPost()->getInt('id');
 		$this->verifSuperAdmin();
@@ -11,8 +14,7 @@ class AdminGroupController extends Controller {
 
 		$name = str_replace('\'','_',$name);
 
-		/** @var GroupSQL $groupeSQL */
-		$groupSQL = $this->getObjectInstancier()->get('GroupSQL');
+		$groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
 
 		if ($groupSQL->groupNameAlreadyExists($id,$name)){
 			$this->setMessage("Le nom de ce groupe est déjà utilisé");
@@ -21,16 +23,11 @@ class AdminGroupController extends Controller {
 
 		$id = $groupSQL->edit($id,$name,$status);
 
-		/** @var AuthorityGroupSirenSQL $authorityGroupSirenSQL */
-		$authorityGroupSirenSQL = $this->getObjectInstancier()->get('AuthorityGroupSirenSQL');
+		$authorityGroupSirenSQL = $this->getObjectInstancier()->get(AuthorityGroupSirenSQL::class);
 
-		/** @var Siren $theSiren */
-		$theSiren  = $this->getObjectInstancier()->get('Siren');
+		$theSiren  = $this->getObjectInstancier()->get(Siren::class);
 
-		/** @var FileUploaderNG $fileUploaderNG */
-		$fileUploaderNG = $this->getObjectInstancier()->get('FileUploaderNG');
-
-
+		$fileUploaderNG = $this->getObjectInstancier()->get(FileUploaderNG::class);
 
 
 		$file_content = $fileUploaderNG->getFileContent('siren_file');
@@ -39,6 +36,7 @@ class AdminGroupController extends Controller {
             $this->redirect("/admin/groups/admin_group_edit.php?id=$id");
         }
 		foreach (preg_split('/\n|\r\n?/',$file_content) as $siren) {
+			$siren = preg_replace('/\s+/', '', $siren);
 			if ($theSiren->isValid($siren)) {
 				$authorityGroupSirenSQL->add($id, $siren);
 			}

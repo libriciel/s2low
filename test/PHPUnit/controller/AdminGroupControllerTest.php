@@ -18,7 +18,7 @@ class AdminGroupControllerTest extends S2lowTestCase {
 		try {
 			$this->adminGroupController->doEditAction();
 		} catch (Exception $e){
-
+			/* Nothing to do */
 		}
 
 		$groupeSQL = new GroupSQL($this->getSQLQuery());
@@ -32,7 +32,11 @@ class AdminGroupControllerTest extends S2lowTestCase {
 		$testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
 		$tmp_file = $testStreamUrl."/test.text";
 
-		file_put_contents($tmp_file,"493587273\n");
+		$authorityGroupSirenSQL = new AuthorityGroupSirenSQL($this->getSQLQuery());
+
+		$this->assertFalse($authorityGroupSirenSQL->exist(1,491011698));
+
+		file_put_contents($tmp_file,"493587273\n491 011 698\n");
 
 		$_FILES['siren_file'] = array(
 			'name'=>'bar',
@@ -41,16 +45,26 @@ class AdminGroupControllerTest extends S2lowTestCase {
 			'tmp_name'=>$tmp_file,
 			'error'=>UPLOAD_ERR_OK
 		);
-		$_POST['id'] = 1;
-		$this->setExpectedExceptionRegExp("Exception","#^Redirect to .* with message : $#");
-		$this->adminGroupController->doEditAction();
 
-		$authorityGroupSirenSQL = new AuthorityGroupSirenSQL($this->getSQLQuery());
-		$this->assertTrue($authorityGroupSirenSQL->exist(1,493587273));
+		$this->getObjectInstancier()->get(Environnement::class)->post()->set('id',1);
+
+		try {
+
+			$this->adminGroupController->doEditAction();
+			$this->assertFalse(true);
+		} catch (Exception $e){
+			$this->assertRegExp("#^Redirect to .* with message : $#",$e->getMessage());
+		}
+
+		$this->assertEquals('493587273',$authorityGroupSirenSQL->exist(1,493587273)['siren']);
+		$this->assertEquals('491011698',$authorityGroupSirenSQL->exist(1,491011698)['siren']);
 	}
 
 	public function testDoEditActionAdminGroupe(){
-		$this->setExpectedExceptionRegExp("Exception","#^Message : Le certificat n'est pas valide : aucun compte trouvé$#");
+		$this->setExpectedExceptionRegExp(
+			Exception::class,
+			"#^Message : Le certificat n'est pas valide : aucun compte trouvé$#"
+		);
 		$this->adminGroupController->doEditAction();
 	}
 

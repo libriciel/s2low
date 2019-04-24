@@ -18,6 +18,7 @@
 
 - les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et 
 génère une erreur #496
+- Les SIREN du fichier d'import peuvent maintenant contenir des espaces (n'importe où) #475 
 
 ## Dépréciation
 
