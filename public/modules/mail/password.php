@@ -8,6 +8,8 @@ $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 $mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
 
+$error_message = $_SESSION['last_error']??"";
+unset($_SESSION["last_error"]);
 
 $doc->DisplayHead();
 ?>
@@ -20,6 +22,13 @@ $doc->DisplayHead();
     <div class="alert alert-info">
         <p>Vous avez besoin d'un mot de passe pour voir le contenu du mail.</p>
     </div>
+
+    <?php if($error_message) : ?>
+        <div class="alert alert-danger">
+            <strong><?php echo $error_message?></strong>
+        </div>
+    <?php endif; ?>
+
     <div id="filtering-area" >
 
         <form name="mailpsw" action="index.php?mail_emis_id=<?php echo $mail_emis_id;?>" method="POST" class="form-horizontal">

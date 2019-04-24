@@ -113,7 +113,7 @@
 				'name="Signature i-Parapheur" width="' + config.width + '" height="0">' +
 				'<param name="permissions" value="all-permissions"/>' +
 				'<param name="codebase_lookup" value="false" />' +
-				'<param name="display_cancel" value="true" />' +
+				'<param name="display_cancel" value="false" />' +
 				'<param name="cancel_mode" value="javascript"/>' +
 				'<param name="hash_count" value="' + config.signatureInformations.length + '"/>';
 
@@ -203,7 +203,7 @@
 				certSelector += '</tbody></table>';
 			}
 
-			certSelector += '<span style="float:right;"><button class="btn btn-warning" id="libersign-cancel">Annuler</button>';
+			certSelector += '<span style="float:right;">';
 			certSelector += '<button class="btn btn-primary" id="libersign-confirm" disabled>Confirmer</button></span>';
 			certSelector += '<span style="display:none;" class="libersign-nofav text-warning"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Certificat favori introuvable</span></div>';
 

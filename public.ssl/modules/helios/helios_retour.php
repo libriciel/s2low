@@ -237,7 +237,7 @@ if (count($envelops) > 0) {
 	      $html .= " <td>" . Helpers::getDateFromBDDDate($envelope["date"], true)."</td>\n";
 	      $html .= " <td>" . $etat[$envelope["status"]]."</td>\n";
 	      $html .= " <td> ";
-	      if ($envelope["status"] == 0 && !$me->isSuper())
+	      if ($envelope["status"] == 0 && !$me->isGroupAdminOrSuper())
 	      	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_change_status_retour.php?id=" .$retour_id. "\" title=\"passer à l'état lu\" class=\"icon\"> <img alt=\"ok\" src=\"../../custom/images/icone_ok.gif\"> </a> ";
 	      $html .= "</td>\n";
 	      $html .= "</tr>\n";

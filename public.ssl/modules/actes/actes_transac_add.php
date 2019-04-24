@@ -87,12 +87,21 @@ $js =<<<EOJS
 var progress_bar = new Image();
 progress_bar.src = "/custom/images/progress_bar.gif";
 
-function hide_bloc(bloc_id){
-	document.getElementById(bloc_id).style.visibility=document.getElementById(bloc_id).style.visibility=="hidden"?"visible":"hidden";;
-}  
-
 $(function(){
   
+    $("#show_broadcast_email").click(function(){
+         $("#broadcast_email").toggle();   	
+    });
+    
+    $("#removeField").click(function(){
+        var actes_pj = $(".actes_pj");
+        actes_pj.last().remove();
+        if (actes_pj.length === 0){
+            $("#removeField").hide();
+        }
+        return false;       
+    }).hide();
+    
   $("#addField").click(function(){
       var field_nb = $(".actes_pj").length + 1 ;
       var html = $(
@@ -113,6 +122,7 @@ $(function(){
       );
       
       $("#attachments_fields").append(html);
+      $("#removeField").show();
       
       setTypePJ($("#actes_attachments_type_"+field_nb));
       
@@ -383,6 +393,7 @@ $html .= "  <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
 $html .= "  <legend>Pièces jointes supplémentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter une pièce jointe</a></legend></div>\n";
 $html .= "   <div id=\"attachments_fields\"></div>\n";
+$html .= " 		<a href='#' id='removeField'>Supprimer la dernière pièce jointe</a>";
 $html .= " </fieldset>\n";  
 $html .= "</div>\n";
 
@@ -404,7 +415,7 @@ if ($defaultbroadcast_email != NULL) {
 $broadcast_email = ACTES_COMMON_BROADCAST_EMAILS . "," . $org->get("broadcast_email");
 $broadcast_email = explode(",", $broadcast_email);
 
-$html .= "     <div class=\"form-group\"><label for=\"show_broadcast_email\" class=\"control-label\">Diffusion automatique de la notification : </label><input id=\"show_broadcast_email\" type=\"checkbox\" checked=\"checked\" name=\"show_broadcast_email\" onclick=\"hide_bloc('broadcast_email');\"/></div>\n";
+$html .= "     <div class=\"form-group\"><label for=\"show_broadcast_email\" class=\"control-label\">Diffusion automatique de la notification : </label><input id=\"show_broadcast_email\" type=\"checkbox\" checked=\"checked\" name=\"show_broadcast_email\"/></div>\n";
 $html .= "     <div id=\"broadcast_email\" style=\"visibility:visible\">\n";
 $html .= "     <div class=\"form-group\"><label for=\"send_sources\" class=\"control-label\">Emission des documents sources : </label><input id=\"send_sources\" type=\"checkbox\" name=\"send_sources\" checked='checked' /></div>\n";
 

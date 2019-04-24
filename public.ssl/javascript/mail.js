@@ -121,12 +121,8 @@ function checkFormCreateMail() {
     divElement.className= "form-group";
     divElement.innerHTML="<label class='form-label col-md-2' for='file"+FileNumber+"'>Fichier "+FileNumber+"</label>";
     divElement.innerHTML+="<input type='file' class='col-md-4' name='uploadFile"+FileNumber+"' id='file"+FileNumber+"'>";
-    divElement.innerHTML+="<input class='btn btn-warning col-md-1 col-md-offset-1 btn-sm' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>"; 
+    divElement.innerHTML+="<input class='btn btn-warning' type='button' value='Supprimer'  name='Delete"+FileNumber+"' id='delete"+FileNumber+"' onClick='javascript:DeleteFile("+FileNumber+")'>";
     var parentElement = document.getElementById("file").parentNode.parentNode;
-    /*on commente pour être compatible avec IE > 10
-     * console.log(parentElement);
-    console.log(parentElement.parentNode);  
-    console.log(parentElement.nextSibling);*/
     parentElement.parentNode.insertBefore(divElement, parentElement.nextSibling);
     FileNumber++;
   }
@@ -148,7 +144,5 @@ function checkFormCreateMail() {
   function DeleteFile(id)
   {
     var trnode=document.getElementById("file"+id);
-    trnode.parentNode.remove();    
-//    trnode=document.getElementById("delete"+id);
-//    trnode.parentNode.removeChild(trnode); 
+    trnode.parentNode.remove();
   }

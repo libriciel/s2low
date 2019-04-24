@@ -18,6 +18,7 @@ if (!$detail){
 	exit;
 }
 
-$mailList->delete($id);
+MailPeer::DeleteMailTransation($id);
+
 
 echo "OK: Transaction $id supprimé";

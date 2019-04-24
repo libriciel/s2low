@@ -8,16 +8,26 @@
 - Réintroduction de la possibilité de déclencher manuellement une notification #494
 - Il est possible de télécharger le document tamponné si celui-ci est un effectivement un fichier PDF (was : se termine par .pdf) #485
 - Toutes les enveloppes non-envoyées à cause de la pause d'une fenetre sont remises dans la queue benstalked une fois la fenêtre supprimée. #479
+- Suppression du bouton "Annuler" sur la signature étant donné que ce bouton n'a pas de sens dans ce contexte #472 
+- Les dates de recherche de mail sécurisé sautait en cas de nouvelle recherche #447
+- Il n'est plus possible pour un admin de groupe de passer une transaction PES Retour à l'état lu #445
 
 ## Ajout
 
 - Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
 - Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
+- Ajout d'une boîte de confirmation lors de la supression des mails sécurisés. #456
+- Journalisation de la supression de mail sécurisé #434 
 
 ## Evolution
 
 - les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et 
 génère une erreur #496
+- Les SIREN du fichier d'import peuvent maintenant contenir des espaces (n'importe où) #475 
+- Possibilité de supprimer la dernière pièce jointe sur le formulaire de création d'un acte #474
+- Lors de la création d'une enveloppe de classification, l'utilisateur est redirigé vers la transaction contenant cette demande #466
+- Affichage d'un message d'erreur lorsqu'on saisie un mauvais mot de passe sur le mail sécurisé #454
+- Légère modification esthétique dans la création d'un mail sécurisé #449
 
 ## Dépréciation
 

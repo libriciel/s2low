@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="send_date_from" class="col-md-2 control-label">Date d'envoi à partir du </label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php $SendDateFrom; ?>"/>
+                        <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php echo $SendDateFrom; ?>"/>
                         <script type="text/javascript">
                         //<![CDATA[
                             obj_send_date_from=new DatePicker('send_date_from', 'fr');
@@ -50,7 +50,7 @@
                     </div>
                     <label for="send_date_to" class="col-md-2 control-label">Date d'envoi jusqu'au</label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_to" name="SendDateTo" type="hidden" value="<?php $SendDateTo; ?>"/>
+                        <input id="send_date_to" name="SendDateTo" type="hidden" value="<?php echo $SendDateTo; ?>"/>
                         <script type="text/javascript">
                         //<![CDATA[
                             obj_send_date_to=new DatePicker('send_date_to', 'fr');
@@ -87,7 +87,7 @@
                 <a href="#tedetis" onclick="javascript:hide_all();" title="Replier toutes les emails" class="btn btn-default">Tout replier</a>
             </div>
 
-            <form action="index.php?command=list" method="post">
+            <form action="index.php?command=list" method="post" onsubmit="return confirm('Êtes-vous certain de vouloir supprimer ces emails ?');">
                 <dl>
             <?php 
             $i=0; // le numéro des éléments dans la liste commence par 1 donc dans la fichier de javascript le i commence aussi par 1 

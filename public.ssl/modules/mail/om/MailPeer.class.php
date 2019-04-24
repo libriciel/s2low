@@ -74,7 +74,8 @@ class MailPeer {
   	else 
   		return false;  	
   }
-  
+
+
   //FIXME fonction catastrophique...
 	public static function GetMailEmis($trans_id) {
   		
@@ -205,8 +206,18 @@ class MailPeer {
    * \ : mail_errors
    * @param integer $transId
    */
-  public static function DeleteMailTransation($transId)
-  {
+  public static function DeleteMailTransation($transId) {
+
+
+  		//Note EP : bon, j'ai fais avec les moyens du bord en sachant qu'on ne devrait plus utilisé ce module...
+	  global $module;
+	  global $me;
+
+
+	  $mailTransaction=new mail_transaction($transId);
+	  $mailTransaction->init();
+	  $objet = $mailTransaction->getObjet();
+
   	$message=array();
   	$db =DatabasePool::getInstance();
   	
@@ -233,8 +244,10 @@ class MailPeer {
   	$sql="delete FROM mail_transaction WHERE id=".$transId;		
     if (! $db->exec($sql)) {
   		$message[]="Erreur lors de la suppression de mail_transaction";
-    }	
-	return $message;
+    }
+	  Log :: newEntry(LOG_ISSUER_NAME, "Suppression du mail {$objet} (id=$transId)" , 1, false, 'USER', $module->get("name"), $me);
+
+	  return $message;
   }
 }
   
