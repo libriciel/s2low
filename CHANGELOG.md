@@ -24,6 +24,7 @@ génère une erreur #496
 - Possibilité de supprimer la dernière pièce jointe sur le formulaire de création d'un acte #474
 - Lors de la création d'une enveloppe de classification, l'utilisateur est redirigé vers la transaction contenant cette demande #466
 - Affichage d'un message d'erreur lorsqu'on saisie un mauvais mot de passe sur le mail sécurisé #454
+- Légère modification esthétique dans la création d'un mail sécurisé #449
 
 ## Dépréciation
 
