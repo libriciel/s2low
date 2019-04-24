@@ -8,6 +8,7 @@
 - Réintroduction de la possibilité de déclencher manuellement une notification #494
 - Il est possible de télécharger le document tamponné si celui-ci est un effectivement un fichier PDF (was : se termine par .pdf) #485
 - Toutes les enveloppes non-envoyées à cause de la pause d'une fenetre sont remises dans la queue benstalked une fois la fenêtre supprimée. #479
+- Suppression du bouton "Annuler" sur la signature étant donné que ce bouton n'a pas de sens dans ce contexte #472 
 
 ## Ajout
 
