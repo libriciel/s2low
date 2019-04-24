@@ -21,6 +21,7 @@
 génère une erreur #496
 - Les SIREN du fichier d'import peuvent maintenant contenir des espaces (n'importe où) #475 
 - Possibilité de supprimer la dernière pièce jointe sur le formulaire de création d'un acte #474
+- Lors de la création d'une enveloppe de classification, l'utilisateur est redirigé vers la transaction contenant cette demande #466
 
 ## Dépréciation
 

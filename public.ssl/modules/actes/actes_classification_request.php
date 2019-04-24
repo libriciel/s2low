@@ -36,5 +36,5 @@ if (! ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY){
 $result = $classificationCreation->createEnveloppe($myAuthority,$me);
 
 
-
-Helpers::returnAndExit( ! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php",$classificationCreation->getLastTransactionId());
+$transaction_id = $classificationCreation->getLastTransactionId();
+Helpers::returnAndExit( ! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$transaction_id",$transaction_id);
