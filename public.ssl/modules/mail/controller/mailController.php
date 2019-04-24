@@ -2,9 +2,10 @@
 
 require_once ( dirname(__FILE__) . "/../om/MailPeer.class.php");
 require_once ( dirname(__FILE__) . "/../om/mail_transaction.class.php");
+require_once ( dirname(__FILE__) . "/../lib/MailList.class.php");
 
 class mailController {
-	
+
   private $MailMessageEmis=array ();
   private $MailAnnuaireArray=array();
   
@@ -81,8 +82,9 @@ class mailController {
      //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
      if ($deleteId!=null)
      {
-     	foreach ($deleteId as $transId)
-     		$deleteMessage=MailPeer::DeleteMailTransation($transId);
+     	foreach ($deleteId as $transId) {
+			MailPeer::DeleteMailTransation($transId);
+		}
      }
      //----delete fini
      
