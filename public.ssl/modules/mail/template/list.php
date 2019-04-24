@@ -87,7 +87,7 @@
                 <a href="#tedetis" onclick="javascript:hide_all();" title="Replier toutes les emails" class="btn btn-default">Tout replier</a>
             </div>
 
-            <form action="index.php?command=list" method="post">
+            <form action="index.php?command=list" method="post" onsubmit="return confirm('Êtes-vous certain de vouloir supprimer ces emails ?');">
                 <dl>
             <?php 
             $i=0; // le numéro des éléments dans la liste commence par 1 donc dans la fichier de javascript le i commence aussi par 1 

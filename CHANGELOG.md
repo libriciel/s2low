@@ -14,6 +14,7 @@
 
 - Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
 - Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
+- Ajout d'une boîte de confirmation lors de la supression des mails sécurisés. #456
 
 ## Evolution
 
