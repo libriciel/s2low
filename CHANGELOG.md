@@ -11,6 +11,7 @@
 - Suppression du bouton "Annuler" sur la signature étant donné que ce bouton n'a pas de sens dans ce contexte #472 
 - Les dates de recherche de mail sécurisé sautait en cas de nouvelle recherche #447
 - Il n'est plus possible pour un admin de groupe de passer une transaction PES Retour à l'état lu #445
+- Il est possible que la DGFip dépose des fichier PES Retour dont la taille est supérieur à 150Mo, ces fichiers ne sont pas analysables par s2low [HOTFIX]
 
 ## Ajout
 

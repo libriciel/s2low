@@ -3,6 +3,7 @@
 class HeliosAnalyseFichierRecu {
 	
 	const ID = "Helios Analyse Fichier Réception";
+	const MAX_FILE_SIZE = 150 * 1024 * 1024;
 	
 	private $heliosTransactionsSQL;
 	private $authoritySQL;
@@ -108,6 +109,12 @@ class HeliosAnalyseFichierRecu {
 			}
 			return;
 		}
+
+		$file_size = filesize($file_path);
+		if ($file_size > self::MAX_FILE_SIZE ){
+			throw new Exception(" La taille du fichier $file_path ($file_size octets) dépasse la taille maximale (".self::MAX_FILE_SIZE." octets) !");
+		}
+
 
 		libxml_clear_errors();
 		$xml = simplexml_load_file($file_path);
