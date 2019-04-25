@@ -2,6 +2,8 @@
 
 class S2lowLogger {
 
+	const MESSAGE = 'message';
+
 	private $logger;
 
 	public function __construct(Monolog\Logger $logger) {

@@ -3,19 +3,16 @@
 class ActesScriptHelper {
 
     private $actesTransactionsSQL;
-    private $logger;
     private $actesEnvelopeSQL;
     private $actes_appli_trigramme;
     private $actesRetriever;
 
     public function __construct(
-        Logger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
         ActesRetriever $actesRetriever
     ) {
-        $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actes_appli_trigramme = $actes_appli_trigramme;

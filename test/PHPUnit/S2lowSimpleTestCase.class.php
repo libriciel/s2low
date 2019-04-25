@@ -17,4 +17,9 @@ class S2lowSimpleTestCase extends PHPUnit_Framework_TestCase {
         return ObjectInstancierFactory::getObjetInstancier();
     }
 
+
+	public function getLogRecords(){
+		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+		return $testHandler->getRecords();
+	}
 }

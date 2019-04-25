@@ -1,42 +1,46 @@
 <?php
 
-class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
+class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
 	/**
 	 * @throws Exception
 	 */
     public function testRetrieve() {
-		$logger = $this->getLogger();
+
+    	$s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
+
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS(),
             $this->getImapMailBoxFactory(),
-            $logger
+			$s2lowLogger
         );
         $actesImapRetrieve->retrieve();
 
-        $logs = $logger->getAllLog();
-        $this->assertRegExp("#Connection au serveur IMAP#", $logs[1]);
-        $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2]);
-        $this->assertRegExp("#Récupération du message : 13#", $logs[3]);
+        $logs = $this->getLogRecords();
 
-        $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4]);
-        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5]);
-		$this->assertRegExp("#Déplacement du répertoire#", $logs[6]);
-        $this->assertRegExp("#Suppression du message : 13#", $logs[7]);
+        $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+
+        $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+		$this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
     }
 
 	/**
 	 * @throws Exception
 	 */
     public function testRetrieveDirectoryCreationFailed() {
-		$logger = $this->getLogger();
+		$s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
 
-        $actesImapRetrieve = new ActesImapRetrieve(
+
+		$actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS()."/foo/bar",
             $this->getImapMailBoxFactory(),
-			$logger
+			$s2lowLogger
         );
         $this->setExpectedException(UnrecoverableException::class,"n'existe pas");
         $actesImapRetrieve->retrieve();
@@ -50,11 +54,6 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
     	return $tmp;
     }
 
-    private function getLogger(){
-        $logger = new Logger();
-        $logger->setLogType(Logger::TYPE_MEMORY);
-        return $logger;
-    }
 
     private function getImapProperties(){
         return new ActesImapProperties();
@@ -68,7 +67,7 @@ class ActesImapRetrieveTest extends PHPUnit_Framework_TestCase {
 		$attachments->filePath = __FILE__;
 
         $incomingMail = $this->getMockBuilder('PhpImap\IncomingMail')->disableOriginalConstructor()->getMock();
-		$incomingMail->textHtml = "mon texte html";
+		$incomingMail->{'textHtml'} = "mon texte html";
 		$incomingMail->expects($this->any())->method('getAttachments')->willReturn([$attachments]);
 
 

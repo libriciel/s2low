@@ -4,6 +4,8 @@ use \Libriciel\LibActes\FichierXML\MessageMetierDemandePieceComplementaire;
 use \Libriciel\LibActes\FichierXML\MessageMetierARDemandePieceComplementaire;
 use \Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use \Libriciel\LibActes\FichierXML\MessageMetierARLettreObservations;
+use \Libriciel\LibActes\ArchiveData;
+use \Libriciel\LibActes\Archive;
 
 class ActesEnvoiAR {
 
@@ -17,7 +19,7 @@ class ActesEnvoiAR {
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
-        Logger $logger,
+        S2lowLogger $logger,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
         ActesFileSender $actesFileSender,
@@ -33,39 +35,52 @@ class ActesEnvoiAR {
         $this->actesRetriever = $actesRetriever;
     }
 
+	/**
+	 * @return bool
+	 * @throws Exception
+	 */
     public function sendAllAR(){
         $sigtermHandler = new SigTermHandler();
-        $this->log("Lancement du script");
+        $this->logger->info("Lancement du script");
         $transaction_ids = $this->actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_DOCUMENT_RECU);
-        $this->log("Envoie de ".count($transaction_ids)." enveloppes de transaction à l'état DOCUMENT RECU");
+		$this->logger->info("Envoie de ".count($transaction_ids)." enveloppes de transaction à l'état DOCUMENT RECU");
         foreach($transaction_ids as $transaction_id){
             $this->envoiAR($transaction_id['id']);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
         }
-        $this->log("Fin du script");
+		$this->logger->info("Fin du script");
         return true;
     }
 
+	/**
+	 * @param $transaction_id
+	 * @throws Exception
+	 */
     private function envoiAR($transaction_id){
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
         try {
             $this->envoiARThrow($transaction_id,$tmp_folder);
         } catch (Exception $e){
-            $this->log("Erreur lors de l'envoi de l'AR de la transaction $transaction_id : ".$e->getMessage());
+			$this->logger->error("Erreur lors de l'envoi de l'AR de la transaction $transaction_id : ".$e->getMessage());
         }
         $tmpFolder->delete($tmp_folder);
     }
 
+	/**
+	 * @param $transaction_id
+	 * @param $tmp_folder
+	 * @throws Exception
+	 */
     private function envoiARThrow($transaction_id,$tmp_folder){
-        $this->log("Envoi de l'AR pour la transaction $transaction_id");
+		$this->logger->info("Envoi de l'AR pour la transaction $transaction_id");
         $transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
 
         $envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info['envelope_id']);
 
-        $archive = new \Libriciel\LibActes\Archive();
+        $archive = new Archive();
 
         $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
 
@@ -94,7 +109,7 @@ class ActesEnvoiAR {
         $messageMetierAR->numero_interne = $transaction_info['number'];
         $messageMetierAR->code_nature_numerique = $transaction_info['nature_code'];
 
-        $archiveDataReponse = new \Libriciel\LibActes\ArchiveData();
+        $archiveDataReponse = new ArchiveData();
         $archiveDataReponse->date_generation = date("Ymd");
         $archiveDataReponse->numero_sequentiel = $this->actesEnvelopeSerialSQL->getNext($transaction_info['authority_id']);
         $archiveDataReponse->id_tdt = ACTES_APPLI_TRIGRAMME;
@@ -119,10 +134,6 @@ class ActesEnvoiAR {
             ActesStatusSQL::STATUS_ACQUITTEMENT_ENVOYE,
             "Acquittement envoyé"
         );
-    }
-
-    private function log($message){
-        $this->logger->log("actes-envoi-ar",$message);
     }
 
 }

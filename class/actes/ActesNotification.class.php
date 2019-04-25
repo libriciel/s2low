@@ -21,7 +21,7 @@ class ActesNotification {
             AuthoritySQL $authoritySQL,
             ActesEnvelopeSQL $actesEnveloppeSQL,
             MailerFactory $mailerFactory,
-            Logger $logger,
+            S2lowLogger $logger,
             $actes_appli_trigramme,
             ActesRetriever $actesRetriever
     ){
@@ -35,17 +35,25 @@ class ActesNotification {
         $this->actesRetriever = $actesRetriever;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function sendAutomaticNotification(){
         $sigtermHandler = new SigTermHandler();
         foreach($this->actesTransactionsSQL->getTransactionToAutoBroadcast() as $transaction_id){
-            $this->log("Notification de la transaction $transaction_id");
+            $this->logger->info("Notification de la transaction $transaction_id");
             $this->sendNotificationManuel($transaction_id);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
         }
 	}
-	
+
+	/**
+	 * @param $transactionId
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function sendNotificationManuel($transactionId){
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
@@ -62,7 +70,12 @@ class ActesNotification {
         }
 		return true;
 	}
-	
+
+	/**
+	 * @param array $transaction_info
+	 * @param $tmp_folder
+	 * @throws Exception
+	 */
 	private function sendNotification(array $transaction_info,$tmp_folder){
         $authority_info = $this->authoritySQL->getInfo($transaction_info['authority_id']);
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
@@ -76,7 +89,7 @@ class ActesNotification {
 		$fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
 
 
-		if ($transaction_info['auto_broadcasted'] == false){
+		if (! $transaction_info['auto_broadcasted']){
             //envoie du mail au proprietaire de l'acte
             $this->sendMail($transaction_info,$envelope_info['email'],true,$authority_info['new_notification'],$fichiers_tamponnees);
             //envoie du mail a toutes les adresses renseignees dans defaut
@@ -103,7 +116,7 @@ class ActesNotification {
 
 		$err = $mailer->addRecipient($emails);
         if (! $err){
-            $this->log("$emails invalide !");
+			$this->logger->info("$emails invalide !");
         }
 
         if($withFile && ! $add_url_recup){
@@ -213,7 +226,7 @@ Archive disponible sur :<?php echo $transaction_info['archive_url']?>
 	private function tamponnerTGZ($filePath,$transactionInfo,$tmp_folder){
 
 		$command = "tar xzf $filePath --directory $tmp_folder 2>&1";
-		$this->log("Executing comand : $command");
+		$this->logger->debug("Executing comand : $command");
 		exec($command, $output, $return_var);
 		if ($return_var != 0) {
 			throw new Exception("Erreur ($return_var) lors de la décompression de l'archive $filePath : " . implode("\n", $output));
@@ -232,7 +245,4 @@ Archive disponible sur :<?php echo $transaction_info['archive_url']?>
 		return $result;
 	}
 
-    private function log($message){
-        $this->logger->log("actes-notification",$message);
-    }
 }

@@ -11,11 +11,9 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
         $this->getObjectInstancier()->set("actes_appli_trigramme","SLO");
-        $logger = $this->getObjectInstancier()->get("Logger");
-        $logger->setLogType(Logger::TYPE_MEMORY);
 
-        $actesFileSender = $this->getMockBuilder('ActesFileSender')->disableOriginalConstructor()->getMock();
-        $this->getObjectInstancier()->set('ActesFileSender',$actesFileSender);
+        $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
+        $this->getObjectInstancier()->set(ActesFileSender::class,$actesFileSender);
     }
 
     protected function tearDown() {

@@ -5,21 +5,25 @@ declare(ticks = 1);
 
 require_once( __DIR__ . "/../init/init.php");
 
+$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
+$s2lowLogger->setName("actes-reception-fichier");
+$s2lowLogger->enableStdOut(true);
+
+
 $start = time();
-echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
 $min_exec_time = 10;
 
-
-
-$actesImapRetrieve = $objectInstancier->get(ActesImapRetrieve::class);
-
-$actesImapRetrieve->retrieve();
-
+try {
+	$actesImapRetrieve = $objectInstancier->get(ActesImapRetrieve::class);
+	$actesImapRetrieve->retrieve();
+} catch (Exception $e){
+	$s2lowLogger->critical($e->getMessage());
+	$s2lowLogger->critical($e->getTraceAsString());
+}
 
 $stop = time();
-echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
 $sleep = $min_exec_time - ($stop -$start);
 if ($sleep > 0){
-    echo "Arret du script : $sleep \n";
+	$s2lowLogger->info( "Arret du script : $sleep ");
     sleep($sleep);
 }

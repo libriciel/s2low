@@ -9,7 +9,7 @@ class ActesRetriever {
     public function __construct(
     	$actes_files_upload_root,
 		OpenStackSwiftWrapper $openStackSwiftWrapper,
-		Monolog\Logger $logger
+		S2lowLogger $logger
 	) {
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;

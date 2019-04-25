@@ -2,10 +2,10 @@
 
 class ActesNotificationsTest extends S2lowTestCase {
 
+	/**
+	 * @throws Exception
+	 */
     public function testNotify(){
-        $logger = $this->getObjectInstancier()->get("Logger");
-        $logger->setLogType(Logger::TYPE_MEMORY);
-
         $mailer = $this->getMockBuilder("Mailer")->getMock();
         $mailer->expects($this->exactly(3))
             ->method('addRecipient')
@@ -39,7 +39,7 @@ class ActesNotificationsTest extends S2lowTestCase {
         $actesNotification = $this->getObjectInstancier()->get('ActesNotification');
 
         $actesNotification->sendAutomaticNotification();
-        $this->assertRegExp("#Notification de la transaction $transaction_id#",$logger->getAllLog()[0]);
+        $this->assertRegExp("#Notification de la transaction $transaction_id#",$this->getLogRecords()[0]['message']);
 
         $tmpFolder->delete($tmp_folder);
     }
@@ -53,8 +53,6 @@ class ActesNotificationsTest extends S2lowTestCase {
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
         $actesTransactionsSQL->updateStatus($transaction_id,4,"test");
-
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
         return $transaction_id;
     }
