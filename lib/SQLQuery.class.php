@@ -80,7 +80,7 @@ class SQLQuery {
 			$pdoStatement->execute($param);
 		} catch (Exception $e) {
 			throw new Exception(
-			    $e->getMessage() . " - ". $pdoStatement->queryString . "|" .implode(",",$param)
+			    $e->getMessage() . " - ". $pdoStatement->queryString
             );
 		}
 		$result = array();

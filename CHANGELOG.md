@@ -21,6 +21,8 @@
 - Journalisation de la supression de mail sécurisé #434 
 - Ajout du script script/actes/actes-export.php permettant d'exporter les enveloppes et leur acquittement
 - Ajout du script script/helios/helios-export.php permettant d'exporter les PES Aller et leur PES Acquit
+- Ajout des statistiques d'envoi SAE Actes
+- Automatiser les versements sur le SAE en fonction d'un identifiant de transaction minimum et maximum #499
 
 
 ## Evolution

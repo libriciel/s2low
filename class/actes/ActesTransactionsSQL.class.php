@@ -328,21 +328,33 @@ class ActesTransactionsSQL extends SQL{
 		$this->query($sql,$transaction_id,$authority_id);
 	}
 
-	public function getTransactionToArchive($nb_days = 62){
+	public function getTransactionToArchive($nb_days = 62, $authority_id=0){
 		$date=date('Y-m-d',strtotime("- $nb_days DAY"));
 
 		$sql = "SELECT at.id FROM actes_transactions AS at ".
 			" JOIN actes_transactions_workflow AS atw ON (atw.transaction_id = at.id AND atw.status_id= 4) ".
 			" JOIN authorities ON authorities.id=at.authority_id ".
 			" JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
+            " AND at.id >= authority_pastell_config.transaction_id_min " .
 			" WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='t' ".
 			" AND at.type='1' ".
 			" AND at.last_status_id IN (4,5) ".
 			" AND atw.date > '2008-06-01' ".
-			" AND atw.date < ? " .
-			" ORDER BY at.id ";
+			" AND atw.date < ? ";
 
-		return $this->queryOneCol($sql,$date);
+            //" AND at.id <= authority_pastell_config.transaction_id_max"
+        ;
+
+		$data[] = $date;
+
+		if ($authority_id){
+		    $sql .= "AND at.authority_id=? ";
+		    $data[] = $authority_id;
+        }
+
+		$sql.=	" ORDER BY at.id ";
+
+		return $this->queryOneCol($sql,$data);
 	}
 
 	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){

@@ -51,6 +51,8 @@ class AdminSAEController extends Controller {
         $pastellProperties->actes_action = $this->getRecuperateurPost()->get('actes_action');
         $pastellProperties->actes_destination = $this->getRecuperateurPost()->get('actes_destination');
         $pastellProperties->actes_send_auto = $this->getRecuperateurPost()->get('actes_send_auto');
+        $pastellProperties->actes_transaction_id_min = $this->getRecuperateurPost()->getInt('actes_transaction_id_min');
+        $pastellProperties->actes_transaction_id_max = $this->getRecuperateurPost()->getInt('actes_transaction_id_max');
 
         $pastellProperties->helios_flux_id = $this->getRecuperateurPost()->get('helios_flux_id');
         $pastellProperties->helios_action = $this->getRecuperateurPost()->get('helios_action');
@@ -61,6 +63,39 @@ class AdminSAEController extends Controller {
         $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->editProperties($id,$pastellProperties);
         $this->setErrorMessage("Les informations ont été mises à jour");
         $this->redirect("/admin/authorities/admin_authority_sae.php?id=$id");
+    }
+
+    public function statistiquesAction(){
+        $id = $this->getRecuperateurGet()->getInt('id');
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+        $this->{'actes_nb_en_retard'} =
+            count($actesTransactionsSQL->getTransactionToArchive(
+                ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
+                $id
+            ));
+        $this->{'actes_nb_en_attente_sae_4h'} =
+            $actesTransactionsSQL->getNbByStatusAndAuthority(
+                ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+                $id
+            );
+        $this->{'actes_nb_envoye_sae_4h'} =
+            $actesTransactionsSQL->getNbByStatusAndAuthority(
+                ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+                $id
+            );
+        $this->{'actes_erreur_lors_de_larchivage'} =
+            $actesTransactionsSQL->getNbByStatusAndAuthority(
+                ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
+                $id
+            );
+        $this->{'actes_erreur_lors_de_lenvoi_sae'} =
+            $actesTransactionsSQL->getNbByStatusAndAuthority(
+                ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+                $id
+            );
+        $this->{'authority_id'} = $id;
+        $this->title = "SAE - Statistiques sur une collectivité";
     }
 
 }
