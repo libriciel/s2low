@@ -147,7 +147,8 @@ class HeliosAnalyseFichierRecu {
 		libxml_clear_errors();
 
 		if ($errors && $validate_xsd){
-			print_r($errors);
+			$this->s2lowLogger->error("Erreur lors de la validation du schéma XML");
+			$this->s2lowLogger->error(json_encode($errors));
 			$root_name= "validation_error";
 		}
 

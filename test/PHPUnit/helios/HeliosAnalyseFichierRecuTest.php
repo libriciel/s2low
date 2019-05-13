@@ -72,34 +72,54 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	}
 
 	public function testAnalysePesRetourNonAbonne(){
-		$this->expectOutputRegex("#La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT#");
+		//$this->expectOutputRegex("#La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT#");
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"[ERREUR] La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ",
+			$logs_records[4]['message']
+		);
+
 	}
 
 	public function testAnalyseDeplacementErreurImpossible(){
 		copy(__DIR__."/fixtures/pes_retour_nonabonne.xml", $this->helios_responses_error_path."/pes_retour_nonabonne.xml");
-		$this->expectOutputRegex("#Le fichier pes_retour_nonabonne.xml existe#");
+
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertTrue(file_exists($this->helios_responses_error_path."/pes_retour_nonabonne.xml"));
         $this->assertTrue(file_exists($this->helios_responses_error_path."/pes_retour_nonabonne.xml.1"));
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"[WARNING] Le fichier pes_retour_nonabonne.xml existe déjà dans le répertoire des fichiers en erreur : renommé en *.1",
+			$logs_records[5]['message']
+		);
 	}
 
 	public function testAnalysePesRetourDoubleSire(){
 		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySireSQL->add(1,"12345678900035");
 		$authoritySireSQL->add(2,"12345678900035");
-		$this->expectOutputRegex('#Le SIRET 12345678900035 est associé à plusieurs collectivités#');
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"[ERREUR] Le SIRET 12345678900035 est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué",
+			$logs_records[4]['message']
+		);
 	}
 
 	public function testOcre(){
 		$filename = "toto.ocre";
 		file_put_contents($this->helios_ftp_response_tmp_local_path."/$filename","test");
-		$this->expectOutputRegex("#Traitement de vfs://test/helios_ftp_response_tmp_local_path/toto.ocre#");
+		//$this->expectOutputRegex("#Traitement de vfs://test/helios_ftp_response_tmp_local_path/toto.ocre#");
 		$this->analyse();
 		$this->assertTrue(file_exists($this->helios_ocre."/".$filename));
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"Traitement de vfs://test/helios_ftp_response_tmp_local_path/toto.ocre",
+			$logs_records[2]['message']
+		);
 	}
 
 	public function testPesAcquitNotFound(){
@@ -108,19 +128,27 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 			$this->helios_ftp_response_tmp_local_path."/$filename",
 			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
 			);
-		$this->expectOutputRegex("#L'identificant NomFic .* n'est associ#");
 		$this->analyse();
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"[ERREUR] L'identificant NomFic pescg291201703030412001 n'est associé à aucune transaction dans la base de données",
+			$logs_records[4]['message']
+		);
 	}
 
 	public function testPesAcquit(){
-		$this->createPESAller();
+		$transaction_id = $this->createPESAller();
 		$filename = "pes_acquit.xml";
 		file_put_contents(
 			$this->helios_ftp_response_tmp_local_path."/$filename",
 			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
 		);
-		$this->expectOutputRegex("#information disponible#");
 		$this->analyse();
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"Transaction $transaction_id : information disponible",
+			$logs_records[5]['message']
+		);
 	}
 
 	private function createPESAller(){
@@ -139,14 +167,15 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		return $transaction_id;
 	}
 
-	private function recupPESAcquit($expectOutputRegex){
+	private function recupPESAcquit($expectedLastLogMessage){
 		$filename = "pes_acquit.xml";
 		file_put_contents(
 			$this->helios_ftp_response_tmp_local_path."/$filename",
 			file_get_contents(__DIR__."/fixtures/pes_acquit.xml")
 		);
-		$this->expectOutputRegex($expectOutputRegex);
 		$this->analyse();
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals($expectedLastLogMessage,$logs_records[5]['message']);
 	}
 
 	/**
@@ -159,7 +188,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE transaction_id=?";
 		$this->getSQLQuery()->query($sql,"1970-01-01",$transaction_id_1);
 
-		$this->recupPESAcquit("#Transaction {$transaction_id_2} : information disponible#");
+		$this->recupPESAcquit("Transaction {$transaction_id_2} : information disponible");
 	}
 
 	/**
@@ -172,14 +201,14 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$sql = "UPDATE helios_transactions_workflow SET date=? WHERE transaction_id=?";
 		$this->getSQLQuery()->query($sql,"1970-01-01",$transaction_id_2);
 
-		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
+		$this->recupPESAcquit("Transaction {$transaction_id_1} : information disponible");
 	}
 
 	public function testPesAcquitDeuxPESUnTransmis(){
 		$transaction_id_1 = $this->createPESAller();
 		$transaction_id_2 = $this->createPESAller();
 		$this->heliosTransactionSQL->updateStatus($transaction_id_1,HeliosTransactionsSQL::ACQUITTER,"test");
-		$this->recupPESAcquit("#Transaction {$transaction_id_2} : information disponible#");
+		$this->recupPESAcquit("Transaction {$transaction_id_2} : information disponible");
 	}
 
 	public function testPesAcquitDeuxPESUnTransmisDeux(){
@@ -191,7 +220,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
             "test"
         );
 
-		$this->recupPESAcquit("#Transaction {$transaction_id_1} : information disponible#");
+		$this->recupPESAcquit("Transaction {$transaction_id_1} : information disponible");
 	}
 
 	/**
@@ -204,13 +233,20 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 			$this->helios_ftp_response_tmp_local_path."/$filename",
 			file_get_contents(__DIR__."/fixtures/pes_acquit_not_valid.xml")
 		);
-		$this->expectOutputRegex("#Transaction {$transaction_id} : erreur#");
+
 		$this->getHeliosAnalyseFichierReponse()->analyseOneFile(
 			$this->helios_ftp_response_tmp_local_path."/$filename",
 			$this->helios_response_root,
 			$this->helios_ocre,
 			HELIOS_XSD_PATH
 		);
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"Transaction $transaction_id : erreur retournée par Helios",
+			$logs_records[4]['message']
+		);
+
+
 	}
 
 	public function testMalformaedAcquitWithoutCodCol(){
@@ -220,13 +256,18 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
             $this->helios_ftp_response_tmp_local_path."/$filename",
             file_get_contents(__DIR__."/fixtures/pes_acquit_not_valid_without_cod_col.xml")
         );
-        $this->expectOutputRegex("#Transaction {$transaction_id} : erreur#");
         $this->getHeliosAnalyseFichierReponse()->analyseOneFile(
             $this->helios_ftp_response_tmp_local_path."/$filename",
             $this->helios_response_root,
             $this->helios_ocre,
             HELIOS_XSD_PATH
         );
+		$logs_records = $this->getLogRecords();
+		$this->assertEquals(
+			"Transaction $transaction_id : erreur retournée par Helios",
+			$logs_records[4]['message']
+		);
+
     }
 
 }
