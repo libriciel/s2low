@@ -26,8 +26,8 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	}
 
 	public function testAnalyseVide(){
-		$this->expectOutputRegex('#Aucun fichier Ã  analyser#');
 		$this->analyse();
+		$this->assertEquals("Aucun fichier à analyser",$this->getLogRecords()[1]['message']);
 	}
 
 	private function analyse(){
@@ -45,14 +45,20 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
 		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$schema_pes_path = HELIOS_XSD_PATH;
-		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $authoritySiretSQL, $schema_pes_path,"noreply@sigmalis.com","noreply@sigmalis.com");
+		$s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
+		return new HeliosAnalyseFichierRecu($heliosTransactionsSQL, $authoritySQL, $heliosRetourSQL, $authoritySiretSQL, $schema_pes_path,"noreply@sigmalis.com","noreply@sigmalis.com",$s2lowLogger);
 	}
 
 	public function testAnalysePesRetour(){
 		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySireSQL->add(1,"12345678900035");
-		$this->expectOutputRegex('#Traitement de vfs://test/helios_ftp_response_tmp_local_path/pes_retour.xml#');
+
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
+		$this->assertEquals(
+			'Traitement de vfs://test/helios_ftp_response_tmp_local_path/pes_retour.xml',
+			$this->getLogRecords()[2]['message']
+		);
+
 		$this->assertTrue(file_exists($this->helios_response_root."/pes_retour.xml"));
 		$heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
 		$info = $heliosRetourSQL->getInfoFromFilename(1, "pes_retour.xml");
@@ -66,7 +72,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	}
 
 	public function testAnalysePesRetourNonAbonne(){
-		$this->expectOutputRegex("#La collectivitÃ© 66920145100015 n'est pas abonnÃ©e Ã  l'application ComptabilitÃ© Publique du TdT#");
+		$this->expectOutputRegex("#La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT#");
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
 	}
@@ -83,7 +89,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$authoritySireSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySireSQL->add(1,"12345678900035");
 		$authoritySireSQL->add(2,"12345678900035");
-		$this->expectOutputRegex('#Le SIRET 12345678900035 est associÃ© Ã  plusieurs collectivitÃ©s#');
+		$this->expectOutputRegex('#Le SIRET 12345678900035 est associé à plusieurs collectivités#');
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
 	}

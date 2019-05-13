@@ -6,8 +6,12 @@ class S2lowLogger {
 
 	private $logger;
 
-	public function __construct(Monolog\Logger $logger) {
+	private $log_level;
+
+
+	public function __construct(Monolog\Logger $logger, $log_level = Monolog\Logger::INFO) {
 		$this->logger = $logger;
+		$this->log_level = $log_level;
 	}
 
 	public function debug($message,array $context=[]){
@@ -47,7 +51,7 @@ class S2lowLogger {
 			return;
 		}
 		try {
-			$handler = new  Monolog\Handler\StreamHandler('php://stdout');
+			$handler = new  Monolog\Handler\StreamHandler('php://stdout',$this->log_level);
 			$this->logger->pushHandler($handler);
 		} catch (Exception $e){
 			$message =  "Impossible de créer un streamHandler sur sdtout : " . $e->getMessage();

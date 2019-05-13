@@ -137,6 +137,10 @@ $objectInstancier->set('antivirus_command',ANTIVIRUS_COMMAND);
 $objectInstancier->set('openssl_path',OPENSSL_PATH);
 $objectInstancier->set('extended_validca_path',EXTENDED_VALIDCA_PATH);
 
+$objectInstancier->set('email_admin_technique',EMAIL_ADMIN_TECHNIQUE);
+$objectInstancier->set('tdt_from_email',TDT_FROM_EMAIL);
+$objectInstancier->set('log_level',LOG_LEVEL);
+
 
 $frontController = new FrontController($objectInstancier);
 
