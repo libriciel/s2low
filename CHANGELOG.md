@@ -19,6 +19,9 @@
 - Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
 - Ajout d'une boîte de confirmation lors de la supression des mails sécurisés. #456
 - Journalisation de la supression de mail sécurisé #434 
+- Ajout du script script/actes/actes-export.php permettant d'exporter les enveloppes et leur acquittement
+- Ajout du script script/helios/helios-export.php permettant d'exporter les PES Aller et leur PES Acquit
+
 
 ## Evolution
 

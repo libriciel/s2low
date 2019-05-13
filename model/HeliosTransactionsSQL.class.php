@@ -19,6 +19,8 @@ class HeliosTransactionsSQL extends SQL {
 	
 	const SEND_WARNING_AFTER_SECOND = 172800;
 
+	const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
+
 	public function create($filename,$sha1,$user_id,$authority_id,$file_size,$siren){
 		$sql = "INSERT INTO helios_transactions(user_id, filename, file_size, siren, sha1, submission_date, authority_id) ".
 				" VALUES (?,?,?,?,?,now(),?) RETURNING ID;";
@@ -241,5 +243,10 @@ class HeliosTransactionsSQL extends SQL {
         $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC";
         return $this->query($sql);
     }
+
+    public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){
+		$sql = "SELECT id,sha1,filename,acquit_filename FROM helios_transactions WHERE authority_id=? AND id >= ? AND id<=? ORDER BY id";
+		return $this->query($sql,$authority_id,$min_transaction_id,$max_trasaction_id);
+	}
 
 }
