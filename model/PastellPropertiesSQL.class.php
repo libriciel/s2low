@@ -21,16 +21,20 @@ class PastellPropertiesSQL extends SQL {
             $pastellProperties->actes_action = $actes_info['action'];
             $pastellProperties->actes_send_auto = $actes_info['is_auto'];
             $pastellProperties->actes_destination = $actes_info['destination'];
+            $pastellProperties->actes_transaction_id_min = $actes_info['transaction_id_min'];
+            $pastellProperties->actes_transaction_id_max = $actes_info['transaction_id_max'];
         }
 
         $actes_module_id = $this->getModuleId(ModuleSQL::HELIOS_MODULE_NAME);
         $sql= "SELECT * FROM authority_pastell_config WHERE authority_id=? AND module_id=?";
         $helios_info = $this->queryOne($sql,$authority_id,$actes_module_id);
-        if ($actes_info) {
+        if ($helios_info) {
             $pastellProperties->helios_flux_id = $helios_info['id_flux'];
             $pastellProperties->helios_action = $helios_info['action'];
             $pastellProperties->helios_send_auto = $helios_info['is_auto'];
             $pastellProperties->helios_destination = $helios_info['destination'];
+            $pastellProperties->helios_transaction_id_min = $helios_info['transaction_id_min'];
+            $pastellProperties->helios_transaction_id_max = $helios_info['transaction_id_max'];
         }
 
 
@@ -60,10 +64,10 @@ class PastellPropertiesSQL extends SQL {
         $actes_module_id = $this->getModuleId(ModuleSQL::ACTES_MODULE_NAME);
 
         if ($authority_pastell_config_id){
-            $sql = "UPDATE authority_pastell_config SET " .
-                " authority_id=?, module_id=?, id_flux=?,action=?,is_auto=?,destination=? " .
-                " WHERE id=?";
 
+            $sql = "UPDATE authority_pastell_config SET " .
+                " authority_id=?, module_id=?, id_flux=?,action=?,is_auto=?,destination=?,transaction_id_min=?,transaction_id_max=? " .
+                " WHERE id=?";
             $this->queryOne(
                 $sql,
                 $authority_id,
@@ -72,11 +76,13 @@ class PastellPropertiesSQL extends SQL {
                 $pastellProperties->actes_action,
                 $pastellProperties->actes_send_auto?'t':'f',
                 $pastellProperties->actes_destination,
+                $pastellProperties->actes_transaction_id_min,
+                $pastellProperties->actes_transaction_id_max,
                 $authority_pastell_config_id
             );
         } else {
-            $sql = "INSERT INTO authority_pastell_config(authority_id, module_id, id_flux, action, is_auto,destination) " .
-                " VALUES (?,?,?,?,?,?)";
+            $sql = "INSERT INTO authority_pastell_config(authority_id, module_id, id_flux, action, is_auto,destination,transaction_id_min,transaction_id_max) " .
+                " VALUES (?,?,?,?,?,?,?,?)";
            $this->query(
                 $sql,
                 $authority_id,
@@ -84,7 +90,9 @@ class PastellPropertiesSQL extends SQL {
                 $pastellProperties->actes_flux_id,
                 $pastellProperties->actes_action,
                 $pastellProperties->actes_send_auto?'t':'f',
-                $pastellProperties->actes_destination
+                $pastellProperties->actes_destination,
+               $pastellProperties->actes_transaction_id_min,
+               $pastellProperties->actes_transaction_id_max
             );
         }
 
@@ -99,7 +107,7 @@ class PastellPropertiesSQL extends SQL {
 
         if ($authority_pastell_config_id){
             $sql = "UPDATE authority_pastell_config SET " .
-                " authority_id=?, module_id=?, id_flux=?,action=?,is_auto=?,destination=? " .
+                " authority_id=?, module_id=?, id_flux=?,action=?,is_auto=?,destination=?,transaction_id_min=?,transaction_id_max=? " .
                 " WHERE id=?";
 
             $this->queryOne(
@@ -110,11 +118,13 @@ class PastellPropertiesSQL extends SQL {
                 $pastellProperties->helios_action,
                 $pastellProperties->helios_send_auto?'t':'f',
                 $pastellProperties->helios_destination,
+                $pastellProperties->helios_transaction_id_min,
+                $pastellProperties->helios_transaction_id_max,
                 $authority_pastell_config_id
             );
         } else {
-            $sql = "INSERT INTO authority_pastell_config(authority_id, module_id, id_flux, action, is_auto,destination) " .
-                " VALUES (?,?,?,?,?,?)";
+            $sql = "INSERT INTO authority_pastell_config(authority_id, module_id, id_flux, action, is_auto,destination,transaction_id_min,transaction_id_max) " .
+                " VALUES (?,?,?,?,?,?,?,?)";
             $this->query(
                 $sql,
                 $authority_id,
@@ -122,7 +132,9 @@ class PastellPropertiesSQL extends SQL {
                 $pastellProperties->helios_flux_id,
                 $pastellProperties->helios_action,
                 $pastellProperties->helios_send_auto?'t':'f',
-                $pastellProperties->helios_destination
+                $pastellProperties->helios_destination,
+                $pastellProperties->helios_transaction_id_min,
+                $pastellProperties->helios_transaction_id_max
             );
         }
     }

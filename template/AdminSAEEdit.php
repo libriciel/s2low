@@ -85,6 +85,9 @@
             />
         </div>
     </div>
+
+
+
     <!--
     <div class="form-group">
         <label class="col-md-4 label-form" for="actes_destination">Destination&nbsp;: </label>
@@ -113,6 +116,30 @@
                     name="actes_send_auto"
                     id="actes_send_auto"
                 <?php echo $pastellProperties->actes_send_auto?"checked='checked'":""?>
+            />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 label-form" for="actes_transaction_id_min">#ID minimum pour l'automatisation&nbsp;(inclu, min=0) : </label>
+        <div class="col-md-6">
+            <input class="form-control"
+                   type="text" size="30"
+                   name="actes_transaction_id_min"
+                   id="actes_transaction_id_min"
+                   value="<?php echo get_hecho($pastellProperties->actes_transaction_id_min) ?>"
+            />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 label-form" for="actes_transaction_id_max">#ID maximum pour l'automatisation&nbsp;(inclu, max=2147483647): </label>
+        <div class="col-md-6">
+            <input class="form-control"
+                   type="text" size="30"
+                   name="actes_transaction_id_max"
+                   id="actes_transaction_id_max"
+                   value="<?php echo get_hecho($pastellProperties->actes_transaction_id_max) ?>"
             />
         </div>
     </div>
@@ -183,4 +210,6 @@
 <div id="actions-area">
     <h2>Actions</h2>
     <a class="btn btn-primary" href="admin_authority_sae_test_connexion.php?id=<?php echo $id?>" class="bouton">Tester la connexion</a>
+    <br/><br/>
+    <a class="btn btn-primary" href="admin_authority_sae_statistiques.php?id=<?php echo $id?>" class="bouton">Statistiques d'envoi</a>
 </div>

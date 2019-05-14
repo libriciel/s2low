@@ -1034,6 +1034,18 @@
                 "character_maximum_length": 16,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "transaction_id_min": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "transaction_id_max": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "2147483647"
             }
         },
         "authority_siret": {
@@ -3347,20 +3359,6 @@
                 ]
             }
         },
-        "actes_type_pj": {
-            "actes_type_pj_nature_id_fk": {
-                "conname": "actes_type_pj_nature_id_fk",
-                "contype": "f",
-                "conrelname": "actes_type_pj",
-                "conkey": [
-                    "nature_id"
-                ],
-                "confrelname": "actes_natures",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
         "authority_pastell_config": {
             "authorities_pastell_config_pkey": {
                 "conname": "authorities_pastell_config_pkey",
@@ -3371,6 +3369,18 @@
                 ],
                 "confrelname": null,
                 "confkey": []
+            },
+            "authority_pastell_config_authority_id_fk": {
+                "conname": "authority_pastell_config_authority_id_fk",
+                "contype": "f",
+                "conrelname": "authority_pastell_config",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
             },
             "authority_pastell_config_module_id_fk": {
                 "conname": "authority_pastell_config_module_id_fk",
@@ -3383,15 +3393,17 @@
                 "confkey": [
                     "id"
                 ]
-            },
-            "authority_pastell_config_authority_id_fk": {
-                "conname": "authority_pastell_config_authority_id_fk",
+            }
+        },
+        "actes_type_pj": {
+            "actes_type_pj_nature_id_fk": {
+                "conname": "actes_type_pj_nature_id_fk",
                 "contype": "f",
-                "conrelname": "authority_pastell_config",
+                "conrelname": "actes_type_pj",
                 "conkey": [
-                    "authority_id"
+                    "nature_id"
                 ],
-                "confrelname": "authorities",
+                "confrelname": "actes_natures",
                 "confkey": [
                     "id"
                 ]
@@ -3503,13 +3515,13 @@
             "tablename": "logs_request",
             "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
         },
-        "modules_name_idx": {
-            "tablename": "modules",
-            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
-        },
         "acc_ai": {
             "tablename": "actes_classification_codes",
             "indexdef": "CREATE INDEX acc_ai ON actes_classification_codes USING btree (authority_id)"
+        },
+        "modules_name_idx": {
+            "tablename": "modules",
+            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
         "u_authority_id": {
             "tablename": "users",
