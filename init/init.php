@@ -93,6 +93,7 @@ $objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAI
 
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
+$objectInstancier->set("schema_pes_path",HELIOS_XSD_PATH);
 
 $objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
