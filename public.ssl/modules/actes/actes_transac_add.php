@@ -95,8 +95,9 @@ $(function(){
     
     $("#removeField").click(function(){
         var actes_pj = $(".actes_pj");
-        actes_pj.last().remove();
-        if (actes_pj.length === 0){
+        actes_pj.last().remove();   
+        /* on recalcule pas le selecteur, mais on teste bien que actes_pj est vide */
+        if (actes_pj.length === 1){ 
             $("#removeField").hide();
         }
         return false;       
