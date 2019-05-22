@@ -30,7 +30,7 @@ if (! $mailTransaction->init()) {
 	exit;
 }
 
-if (! $mailTransaction->isPasswordOK($password)){
+if ($password && ! $mailTransaction->isPasswordOK($password)){
 	$_SESSION['last_error'] = "Mot de passe incorrect";
 	header("Location: password.php?mail_emis_id=".$mail_emis_id);
 	exit;
