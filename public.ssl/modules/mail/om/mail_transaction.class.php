@@ -87,6 +87,7 @@ class mail_transaction extends DataObject {
 	}
 	
 	public function isPasswordOK($password){
+
 		if (! $this->getPassword()){
 			return true;
 		}
