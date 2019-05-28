@@ -55,7 +55,7 @@ services:
             - ${BEANSTALKD_PORT:-10003}:8080
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.1.0
+        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.1.1
         networks:
           - dgfip
           - dgcl
