@@ -18,15 +18,15 @@ class ScriptSleeping {
 
     public function debut($script_name){
         $this->start = time();
-        $this->logger->info($script_name,"Début du script");
+        $this->logger->info("Debut du script $script_name");
         $this->script_name = $script_name;
     }
 
     public function fin(){
-        $this->logger->info($this->script_name,"Fin du script");
+        $this->logger->info("Fin du script {$this->script_name}");
         $sleep = $this->min_execution_time - (time() -$this->start);
         if ($sleep > 0){
-            $this->logger->info($this->script_name,"Arret du script : $sleep");
+            $this->logger->info("{$this->script_name} Arret du script : $sleep");
             sleep($sleep);
         }
     }
