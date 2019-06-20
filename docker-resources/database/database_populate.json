@@ -2873,6 +2873,12 @@
             "authority_department_id": "201",
             "code": "6",
             "name": "SAIM - Subdivision administrative des \u00eeles Marquises"
+        },
+        {
+            "id": "1033",
+            "authority_department_id": "176",
+            "code": "9",
+            "name": "SGAR"
         }
     ],
     "helios_status": [
