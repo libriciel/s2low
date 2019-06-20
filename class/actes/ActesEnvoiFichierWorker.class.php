@@ -52,7 +52,11 @@ class ActesEnvoiFichierWorker implements IWorker {
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
 		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
-            $this->work($enveloppe_id);
+        	try {
+				$this->work($enveloppe_id);
+			} catch (RecoverableException $e){
+        		/** Nothing to do */
+			}
             if ($sigtermHandler->isSigtermCalled()){
                 break;
             }
@@ -61,6 +65,11 @@ class ActesEnvoiFichierWorker implements IWorker {
         return true;
     }
 
+	/**
+	 * @param $enveloppe_id
+	 * @return bool
+	 * @throws RecoverableException
+	 */
     public function work($enveloppe_id){
 
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
@@ -84,15 +93,16 @@ class ActesEnvoiFichierWorker implements IWorker {
 
         if (! $this->actesTransmissionWindowsSQL->canSend($envelope_info['file_size'])) {
 			$this->logger->notice("[$envelope_libelle] Impossible d'envoyer la transaction : la fenêtre est pleine");
-            return false;
+			return false;
         }
         try {
             $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
             $this->actesFileSender->send($archive_path);
         } catch(Exception $e){
             $message = utf8_decode( $e->getMessage());
-			$this->logger->error("[$envelope_libelle] Impossible d'envoyer l'archive : $message");
-            return false;
+            $message = "[$envelope_libelle] Impossible d'envoyer l'archive : $message";
+			$this->logger->error($message);
+			throw new RecoverableException($message,$e->getCode(),$e);
         }
 		$this->logger->info("[$envelope_libelle] L'archive a été envoyé");
 

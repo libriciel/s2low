@@ -24,6 +24,7 @@ interface IWorker {
 
 	/**
 	 * Le vrai travail avec les data
+	 * @throws RecoverableException
 	 * @param $data
 	 * @return bool
 	 */

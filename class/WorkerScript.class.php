@@ -151,7 +151,11 @@ class WorkerScript {
 				throw new WorkerScriptException("SIGTERM reçu");
 			}
 			$data = $IWorker->getData($id);
-			$IWorker->work($data);
+			try {
+				$IWorker->work($data);
+			} catch (RecoverableException $e){
+				/* Nothing to do*/
+			}
 		}
 	}
 }

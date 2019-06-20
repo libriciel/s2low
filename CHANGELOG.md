@@ -6,6 +6,10 @@
 
 - Ajout de l'arrondissement 9 pour le département 75 (SGAR) #503
 
+## Correction
+
+- Le rebuild-queue n'est plus nécessaire en cas de défaillance des serveurs de la DGCL #501
+
 ## 4.0.3 - 2019-06-03
 
 ## Correction
