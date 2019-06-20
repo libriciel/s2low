@@ -14,7 +14,7 @@ class HeliosExport {
 		S2lowLogger $s2lowLogger,
 		AuthoritySQL $authoritySQL,
 		HeliosTransactionsSQL $heliosTransactionsSQL,
-		PESAllerRetriever $pesAllerRetriever,
+		PesAllerRetriever $pesAllerRetriever,
 		$helios_responses_root
 	) {
 		$this->s2lowLogger = $s2lowLogger;
@@ -111,7 +111,7 @@ class HeliosExport {
 		$directory_name = $transaction_info['id'];
 
 		$filesystem = new Filesystem();
-		$filesystem->mkdir($directory_name);
+		$filesystem->mkdir($output_directory."/".$directory_name);
 
 		$pes_aller_path = $this->pesAllerRetriever->getPath($transaction_info['sha1']);
 		$pes_aller_destination = $output_directory."/$directory_name/{$transaction_info['filename']}";

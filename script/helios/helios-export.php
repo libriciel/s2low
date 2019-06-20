@@ -25,7 +25,7 @@ if (count($argv)<3){
 $authority_id = $argv[1];
 $output_directory = $argv[2];
 $min_transaction_id = $argv[3]??0;
-$max_transaction_id = $argv[3]??HeliosTransactionsSQL::MAX_ID;
+$max_transaction_id = $argv[4]??HeliosTransactionsSQL::MAX_ID;
 
 $heliosExport = $objectInstancier->get(HeliosExport::class);
 
