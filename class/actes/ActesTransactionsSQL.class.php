@@ -360,12 +360,17 @@ class ActesTransactionsSQL extends SQL{
 		return $this->queryOneCol($sql,$data);
 	}
 
-	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,$is_auto='t'){
+	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,$is_auto = true){
         $sql = "SELECT at.id FROM actes_transactions AS at ".
             " JOIN authorities ON authorities.id=at.authority_id ".
             " JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
-            " WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='$is_auto' ".
-            " AND at.last_status_id = ?  ".
+            " WHERE authority_pastell_config.module_id = 1 ";
+
+			if ($is_auto) {
+				$sql .= " AND authority_pastell_config.is_auto='t' " ;
+			}
+
+			$sql .= " AND at.last_status_id = ?  ".
             " ORDER BY at.id ";
 
         return $this->queryOneCol(
