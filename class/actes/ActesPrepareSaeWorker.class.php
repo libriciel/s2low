@@ -8,16 +8,16 @@ class ActesPrepareSaeWorker implements IWorker {
 
 	private $actesTransactionsSQL;
 	private $s2lowLogger;
-	private $actesArchiveControler;
+	private $actesPrepareEnvoiSAE;
 
 	public function __construct(
 		ActesTransactionsSQL $actesTransactionsSQL,
 		S2lowLogger $s2lowLogger,
-		ActesArchiveControler $actesArchiveControler
+		ActesPrepareEnvoiSAE $actesPrepareEnvoiSAE
 	) {
 		$this->actesTransactionsSQL = $actesTransactionsSQL;
 		$this->s2lowLogger = $s2lowLogger;
-		$this->actesArchiveControler = $actesArchiveControler;
+		$this->actesPrepareEnvoiSAE = $actesPrepareEnvoiSAE;
 	}
 
 	public function getQueueName(){
@@ -38,7 +38,7 @@ class ActesPrepareSaeWorker implements IWorker {
 	 */
 	public function work($transaction_id){
 		$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
-		$this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(
+		$this->actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA(
 			$transaction_info['user_id'],
 			$transaction_id
 		);

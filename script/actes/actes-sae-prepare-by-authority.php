@@ -37,18 +37,18 @@ echo "$nb_transaction vont être traité\n";
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
-$actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
+$actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 
 
 foreach($transaction_id_list as $transaction_id){
 	$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 	echo "Traitement de $transaction_id - {$transaction_info['unique_id']}: ";
 
-	$r = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id,false);
+	$r = $actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id,false);
 	if ($r){
 		echo "OK";
 	} else {
-		echo "Echec - ".$actesArchiveControler->getLastError();
+		echo "Echec - ".$actesPrepareEnvoiSAE->getLastError();
 	}
 
 	echo "\n";

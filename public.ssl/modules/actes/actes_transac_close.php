@@ -41,7 +41,7 @@ if ($status == "valid") {
 	$new_status_id = 6;
 } elseif ($status == "sae"){
 	$new_status_id = 19;
-    $actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
+    $actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 } else {
 	Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
 }
@@ -96,13 +96,13 @@ foreach ($liste_id as $id) {
     }
     
     if ($new_status_id == 19) {
-    	$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($me->getId(),$id);
+    	$result = $actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA($me->getId(),$id);
 		if ($result){
 			$msg = "Programmation de l'envoi de la transaction $id à Pastell\n";
 	    	$severity = 1;
 	      	$status = 0;	
 		} else {
-			$msg= "Erreur lors de l'envoi de la transaction $id à Pastell : " . $actesArchiveControler->getLastError();
+			$msg= "Erreur lors de l'envoi de la transaction $id à Pastell : " . $actesPrepareEnvoiSAE->getLastError();
 			$severity = 3;
 			$status = 1;
 		}

@@ -5,11 +5,11 @@ require_once( __DIR__ . "/../../../init/init-www-actes.php");
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$actesArchiveControler = $objectInstancier->get(ActesArchiveControler::class);
-$result = $actesArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
+$actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
+$result = $actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA($connexion->getId(),$id);
 
 if (! $result){
-	$_SESSION['error'] = "Erreur: " . $actesArchiveControler->getLastError();
+	$_SESSION['error'] = "Erreur: " . $actesPrepareEnvoiSAE->getLastError();
 	header("Location: actes_transac_show.php?id=$id");
 	exit;
 }

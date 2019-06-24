@@ -11,24 +11,18 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	/** @var  ActesArchiveControler */
 	private $actesArchiveControler;
 
+	/** @var ActesPrepareEnvoiSAE */
+	private $actesPrepareEnvoiSAE;
+
 
 	protected function setUp(){
 		parent::setUp();
 		$this->transaction_id = $this->createTransaction(1);
 		$this->actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
+		$this->actesPrepareEnvoiSAE = $this->getObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
 	}
 
-	public function testSetArchiveEnAttenteEnvoiSEABadState(){
-		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$this->transaction_id);
-		$this->assertFalse($result);
-		$this->assertEquals("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».",$this->actesArchiveControler->getLastError());
-	}
 
-	public function testSetArchiveEnAttenteEnvoiSAE(){
-		$transaction_id = $this->createTransaction(4);
-		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
-		$this->assertNotFalse($result);
-	}
 
 	private function createTransaction($status){
 		$sql="INSERT INTO actes_envelopes(user_id) VALUES(1) returning ID";
@@ -63,25 +57,6 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		return $transaction_id;
 	}
 
-	public function testSetArchiveEnAttenteEnvoiSAEPastellNotConfigured(){
-		$transaction_id = $this->createTransaction(4);
-		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-
-        $pastellProperties = new PastellProperties();
-
-		$authoritySQL->updateSAE(1,$pastellProperties);
-
-		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
-		$this->assertFalse($result);
-		$this->assertEquals("La collectivité n'a pas de Pastell configuré",$this->actesArchiveControler->getLastError());
-	}
-
-	public function testAccesRefuse(){
-		$transaction_id = $this->createTransaction(4);
-		$result = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(5,$transaction_id);
-		$this->assertFalse($result);
-		$this->assertEquals("Accès interdit",$this->actesArchiveControler->getLastError());
-	}
 
 	/**
 	 * @throws Exception
@@ -102,7 +77,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 	private function setTransactionEnattente(){
 		$transaction_id = $this->createTransaction(4);
-		$this->last_transaction_workflow_id = $this->actesArchiveControler->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
+		$this->last_transaction_workflow_id = $this->actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
 		return $transaction_id;
 	}
 
