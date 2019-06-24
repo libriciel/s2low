@@ -33,7 +33,8 @@ class ActesVerifSaeWorker implements IWorker {
 
 	public function getAllId(){
         return $this->actesTransactionsSQL->getTransactionToSendSAE(
-            ActesStatusSQL::STATUS_ENVOYE_AU_SAE
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+			'f'
         );
 	}
 

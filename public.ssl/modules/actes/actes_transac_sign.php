@@ -31,7 +31,7 @@ if (!$module->isActive() || ! $me->checkDroit($module->get("name"),'CS')) {
 $nb_signature = Helpers::getVarFromPost("nb_signature");
 if ($nb_signature == 0){
 	$_SESSION["error"] = "Les signatures n'ont pas pu être récupérées";
-	header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$id");
+	header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$transaction_id");
 }
 
 $actesSignature = $objectInstancier->get(ActesSignature::class);

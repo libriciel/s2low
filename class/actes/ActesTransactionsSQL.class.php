@@ -4,6 +4,7 @@ class ActesTransactionsSQL extends SQL{
 	const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
 	const AUTHORITY_ID = 'authority_id';
+	const ENVELOPE_ID = 'envelope_id';
 
 	public function getInfo($id){
 		$sql = "SELECT * FROM actes_transactions WHERE id=?";
@@ -359,11 +360,11 @@ class ActesTransactionsSQL extends SQL{
 		return $this->queryOneCol($sql,$data);
 	}
 
-	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
+	public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,$is_auto='t'){
         $sql = "SELECT at.id FROM actes_transactions AS at ".
             " JOIN authorities ON authorities.id=at.authority_id ".
             " JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
-            " WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='t' ".
+            " WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='$is_auto' ".
             " AND at.last_status_id = ?  ".
             " ORDER BY at.id ";
 

@@ -14,7 +14,7 @@ foreach($all as $line){
 	print_r($line);
 	$message = "La transaction {$line['id']} est de nouveau à l'état posté.";
 	$heliosTransactionSQL->updateStatus($line['id'],HeliosTransactionsSQL::POSTE,$message);
-	$heliosTransactionSQL->setNomFic($id,NULL);
+	$heliosTransactionSQL->setNomFic($transaction_id,NULL);
 	echo "$message\n";
 	exit;
 }

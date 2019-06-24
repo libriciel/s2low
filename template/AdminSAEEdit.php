@@ -3,12 +3,12 @@
 ?>
 <h1>Configuration de la connexion SAE</h1>
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $id ?>'>« revenir au formulaire standard</a><br/>
+	<a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $transaction_id ?>'>« revenir au formulaire standard</a><br/>
 </p>
 <h2>Modification des propriétés SAE (Pastell) de <?php echo $authorityInfo['name']?></h2>
 
 <form class="form form-horizontal" action='admin_authority_sae_controler.php' method='post'>
-	<input type='hidden' name='id' value='<?php echo $id ?>' />
+	<input type='hidden' name='id' value='<?php echo $transaction_id ?>' />
 
     <div class="form-group">
         <label class="col-md-4 label-form" for="pastell_url">URL Pastell&nbsp;: </label>
@@ -209,7 +209,7 @@
 
 <div id="actions-area">
     <h2>Actions</h2>
-    <a class="btn btn-primary" href="admin_authority_sae_test_connexion.php?id=<?php echo $id?>" class="bouton">Tester la connexion</a>
+    <a class="btn btn-primary" href="admin_authority_sae_test_connexion.php?id=<?php echo $transaction_id?>" class="bouton">Tester la connexion</a>
     <br/><br/>
-    <a class="btn btn-primary" href="admin_authority_sae_statistiques.php?id=<?php echo $id?>" class="bouton">Statistiques d'envoi</a>
+    <a class="btn btn-primary" href="admin_authority_sae_statistiques.php?id=<?php echo $transaction_id?>" class="bouton">Statistiques d'envoi</a>
 </div>

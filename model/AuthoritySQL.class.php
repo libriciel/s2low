@@ -165,10 +165,14 @@ class AuthoritySQL extends SQL {
 		return $this->queryOne($sql,$data);
 	}
 
+	/**
+	 * @param $authority_id
+	 * @throws UnrecoverableException
+	 */
 	public function verifHasPastell($authority_id){
 		$authorityInfo = $this->getInfo($authority_id);
 		if (! $authorityInfo['pastell_url'] ){
-			throw new Exception("La collectivité n'a pas de Pastell configuré");
+			throw new UnrecoverableException("La collectivité n'a pas de Pastell configuré");
 		}
 	}
 

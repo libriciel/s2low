@@ -20,6 +20,7 @@ require_once(__DIR__."/../../init/init.php");
 require_once(__DIR__."/S2lowTestCase.class.php");
 require_once(__DIR__."/S2lowSimpleTestCase.class.php");
 require_once(__DIR__."/ActesUtilitiesTestTrait.php");
+require_once(__DIR__."/PastellConfigurationTestTrait.php");
 
 /* Uniquement pour la mise à jour de la base de test...*/
 $sqlQuery = new SQLQuery(DB_DATABASE_TEST);

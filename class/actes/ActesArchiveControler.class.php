@@ -5,8 +5,6 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class
 
 class ActesArchiveControler {
 
-	private $sqlQuery;
-
 	/** @var  PastellWrapperFactory */
 	private $pastellWrapperFactory;
 
@@ -24,35 +22,33 @@ class ActesArchiveControler {
 	/** @var S2lowLogger */
 	private $logger;
 
-	/** @var WorkerScript */
-	private $workerScript;
+	private $actesEnvelopeSQL;
 
 	public function __construct(
-	    SQLQuery $sqlQuery,
         ActesRetriever $actesRetriever,
 		PastellPropertiesSQL $pastellPropertiesSQL,
 		S2lowLogger $logger,
-		WorkerScript $workerScript,
-		PastellWrapperFactory $pastellWrapperFactory
+		PastellWrapperFactory $pastellWrapperFactory,
+		AuthoritySQL $authoritySQL,
+		ActesTransactionsSQL $actesTransactionsSQL,
+		ActesEnvelopeSQL $actesEnvelopeSQL
     ){
-		$this->sqlQuery = $sqlQuery;
 		$this->pastellWrapperFactory = $pastellWrapperFactory;
-		$this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
+		$this->actesTransactionsSQL = $actesTransactionsSQL;
+		$this->authoritySQL = $authoritySQL;
 		$this->actesRetriever = $actesRetriever;
 		$this->pastellPropetiesSQL = $pastellPropertiesSQL;
 		$this->logger = $logger;
-		$this->workerScript = $workerScript;
+		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
 	}
 
 	public function getAllTransactionIdToSend($authority_id = 0){
-		$actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
 
 		if (! $authority_id){
-            return $actesTransactionsSQL->getTransactionToSendSAE();
+            return $this->actesTransactionsSQL->getTransactionToSendSAE();
         }
 
-		$info_list = $actesTransactionsSQL->getArchiveFStatus(
+		$info_list = $this->actesTransactionsSQL->getArchiveFStatus(
 			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
 			$authority_id
 		);
@@ -65,41 +61,288 @@ class ActesArchiveControler {
 
 
 	/**
-	 * @param $id
+	 * @param int $transaction_id
 	 * @throws Exception
 	 */
-	public function sendArchive($id){
+	public function sendArchive(int $transaction_id){
+
+		$this->logger->info("Envoi de La transaction $transaction_id sur le SAE");
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+
+		if (! $this->isTransactionInGoodStatus($transaction_id)){
+			return;
+		}
+
+
 		$id_d = false;
 		$tmpFolder = new TmpFolder();
 		$tmp_folder = $tmpFolder->create();
 		try {
-			$this->logger->info("Envoi de La transaction $id sur le SAE");
-			$id_d = $this->createPastellDocument($id);
-			if ($id_d) {
-				$this->sendArchiveThrow($id, $id_d, $tmp_folder);
-				$this->logger->info("La transaction $id a été envoyé sur le SAE (id_d pastell : $id_d)");
-			}
+
+			$this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
+
+			$actesFileForArchive = $this->prepareTransfert($transaction_id,$tmp_folder);
+
+			$id_d = $this->createPastellDocument($transaction_id);
+			$this->sendFilesToPastell($transaction_id,$id_d,$actesFileForArchive);
+			$this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
+
 		} catch (RecoverableException $e){
-			$this->logger->error("Une erreur récupérable est survenu : ".$e->getMessage().". La transaction sera retenter.");
+			$this->logger->error("Une erreur récupérable est survenue : ".$e->getMessage().". La transaction sera retentée.");
 			if ($id_d){
-				$this->deletePastellDocument($id,$id_d);
+				$this->deletePastellDocument($transaction_id,$id_d);
 				$this->logger->error("L'identifiant du document sur Pastell était : $id_d, le document a été supprimé sur Pastell");
 			}
 		} catch (Exception $e){
-			$message = "Impossible d'envoyer la transaction $id : " . $e->getMessage();
+			$message = "Impossible d'envoyer la transaction $transaction_id : " . $e->getMessage();
 			if ($id_d){
-				$this->deletePastellDocument($id,$id_d);
+				$this->deletePastellDocument($transaction_id,$id_d);
 				$message .=  " - id_d=$id_d";
 			}
 			$this->logger->error($message);
 			$this->actesTransactionsSQL->updateStatus(
-				$id,
+				$transaction_id,
 				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
 				$message
 			);
 		}
 		$tmpFolder->delete($tmp_folder);
 	}
+
+	/**
+	 * @param $transaction_id
+	 * @param $tmp_folder
+	 * @return ActesFilesForSAE
+	 * @throws RecoverableException
+	 * @throws UnrecoverableException
+	 */
+	private function prepareTransfert($transaction_id,$tmp_folder){
+
+		$actesFilesForSAE = new ActesFilesForSAE();
+
+		$actesFile = $this->actesTransactionsSQL->getAllFile($transaction_id);
+
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+
+
+		$actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
+		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+
+		if (! $enveloppe_path){
+			throw new RecoverableException("Impossible de récupérer l'enveloppe {$actesEnvelopeInfo['file_path']}");
+		}
+
+		$tgzExtractor = new TGZExtractor($tmp_folder);
+		$tgzExtractor->extract($enveloppe_path,$actesFile[1]['filename']);
+
+		$acte_filename = $actesFile[0]['filename'];
+
+		$actesFilesForSAE->actes_filepath = $tmp_folder."/".$actesFile[1]['filename'];
+		$actesFilesForSAE->actes_filename = $actesFile[1]['posted_filename'];
+
+
+
+		if ($actesFile[1]['signature']){
+			$signature_file_path = $tmp_folder."/signature.pk7";
+			file_put_contents($signature_file_path, $actesFile[1]['signature']);
+			$actesFilesForSAE->signature_filepath = $signature_file_path;
+		}
+
+		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
+		$path_parts = pathinfo($pdftampone);
+		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
+			$actesFilesForSAE->actes_tamponnees_filepath = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$transactionsInfo['id']);
+			$actesFilesForSAE->actes_tamponnees_filename = "acte_tampone.".$path_parts['extension'];
+		}
+
+		$date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
+		$actesFilesForSAE->date_postage = date("d/m/Y",strtotime($date_postage['date']));
+		//passer les paramètre
+		$pdf=new ActesPdf();
+
+		//construire le fichier pdf.
+		$pdf->create_pdf($transaction_id);
+		$pdf->output($tmp_folder."/bordereau_acquit","F");
+		$actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
+
+		array_shift($actesFile);
+		array_shift($actesFile);
+
+		foreach($actesFile as $file){
+			$tgzExtractor->extract($enveloppe_path,$file['filename']);
+			$actesFilesForSAE->annexe = ['filename'=>$tmp_folder.'/'.$file['filename'],'filepath'=> $file['posted_filename'] ];
+		}
+
+		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
+
+		if (! $actesTransactionsStatusInfo['flux_retour']){
+			throw new UnrecoverableException("L'AR acte n'est pas disponible");
+		}
+
+		file_put_contents($tmp_folder."/AR-{$acte_filename}", $actesTransactionsStatusInfo['flux_retour']);
+		$actesFilesForSAE->aractes_filepath =$tmp_folder."/AR-{$acte_filename}";
+
+
+		$orig_acte_transaction_id = $transactionsInfo['id'];
+
+		file_put_contents($tmp_folder."/empty", "");
+
+		$relatedTransaction = $this->actesTransactionsSQL->getRelatedTransaction($transaction_id);
+		$echange_prefecture_type = array();
+		$echange_prefecture = array();
+		$echange_prefecture_ar = array();
+		foreach($relatedTransaction as $transaction){
+
+			$actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transaction['envelope_id']);
+			$actesFile = $this->actesTransactionsSQL->getAllFile($transaction['id']);
+			$file_to_send = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+			if ($transaction['related_transaction_id'] == $orig_acte_transaction_id){
+				//Transaction aller
+				$echange_prefecture_type[] = $transaction['type'].'A';
+				$filename = $actesFile[0]['filename'];
+				$posted_filename = $actesFile[0]['posted_filename'];
+				array_shift ($actesFile);
+				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],8);
+			} else {
+				//Transaction retour
+				$echange_prefecture_type[] = $transaction['type'].'R';
+
+				$filename = $actesFile[1]['filename'];
+				$posted_filename = $actesFile[1]['posted_filename'];
+				array_shift ($actesFile);
+				array_shift ($actesFile);
+				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],11);
+			}
+			$tgzExtractor->extract($file_to_send,$filename);
+			$echange_prefecture[] = array($tmp_folder."/".$filename,$posted_filename);
+
+			if ($status_info && $status_info['flux_retour']){
+				$ar_name = "AR-".$status_info['transaction_id'].".xml";
+				file_put_contents($tmp_folder."/$ar_name", $status_info['flux_retour']);
+				$echange_prefecture_ar[] = array($tmp_folder."/$ar_name",$ar_name);
+			} else {
+				$echange_prefecture_ar[] = array($tmp_folder."/empty",'empty');
+			}
+
+			foreach($actesFile as $annexe){
+				$tgzExtractor->extract($file_to_send."/".$annexe['filename'],$annexe['filename']);
+				$echange_prefecture_type[] = $transaction['type'].'RB';
+				$echange_prefecture[] = array($file_to_send."/".$annexe['filename'],$annexe['posted_filename']);
+				$echange_prefecture_ar[] = array($tmp_folder."/empty",'empty');
+			}
+		}
+
+		$actesFilesForSAE->echange_prefecture=[$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar];
+		return $actesFilesForSAE;
+	}
+
+	/**
+	 * @param $transaction_id
+	 * @param $id_d
+	 * @param ActesFilesForSAE $actesFilesForSAE
+	 * @throws Exception
+	 */
+	private function sendFilesToPastell($transaction_id,$id_d,ActesFilesForSAE $actesFilesForSAE){
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
+
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
+		$pastell->postActes(
+			$id_d,
+			$actesFilesForSAE->actes_filepath,
+			$actesFilesForSAE->actes_filename
+		);
+		$this->logger->debug("postage de l'actes id_d : $id_d");
+
+		if ($actesFilesForSAE->signature_filepath){
+			$pastell->postSignature($id_d, $actesFilesForSAE->signature_filepath);
+		}
+
+
+		$pastell->postFile(
+			$id_d,
+			"acte_tamponne",
+			$actesFilesForSAE->actes_tamponnees_filepath,
+			$actesFilesForSAE->actes_tamponnees_filename
+		);
+
+		$pastell->setDatePostage($id_d,$actesFilesForSAE->date_postage);
+
+		$pastell->postFile($id_d,"bordereau",$actesFilesForSAE->bordereau_filepath,"bordereau_acquittement.pdf");
+
+		foreach($actesFilesForSAE->annexe as $annexe){
+			$pastell->postAnnexe($id_d, $annexe['filepath'], $annexe['filename']);
+		}
+
+		$pastell->postARActes($id_d,$actesFilesForSAE->aractes_filepath);
+
+		$pastell->postRelatedTransaction(
+			$id_d,
+			$actesFilesForSAE->echange_prefecture[0],
+			$actesFilesForSAE->echange_prefecture[1],
+			$actesFilesForSAE->echange_prefecture[2]
+		);
+
+		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
+		if (! $result){
+			throw new UnrecoverableException($pastell->getLastError());
+		}
+		$this->actesTransactionsSQL->updateStatus($transaction_id,12,"Envoie de la transaction $transaction_id à Pastell");
+		$this->actesTransactionsSQL->setSAETransferIdentifier($transaction_id,$id_d);
+	}
+
+	/**
+	 * @param int $transaction_id
+	 * @return bool
+	 * @throws Exception
+	 */
+	private function isTransactionInGoodStatus(int $transaction_id){
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+		if($transactionsInfo['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
+			$this->logger->error(sprintf(
+				"La transaction %d à envoyer au SAE n'est pas dans le bon status ! %d trouvé",
+				$transaction_id,
+				$transactionsInfo['last_status_id']
+			));
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param $id
+	 * @return bool
+	 * @throws Exception
+	 */
+	private function createPastellDocument($id){
+		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
+		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
+		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+
+		$id_d = $pastell->createActes($transactionsInfo);
+
+		if (! $id_d){
+			throw new UnrecoverableException("Erreur pastell : ". $pastell->getLastError());
+		}
+		$this->logger->debug("Création du document sur Pastell id_d=$id_d");
+
+		return $id_d;
+	}
+
+	public function tamponerActe($tmpfolder,$fileorig,$transactionId){
+		$pdftkise=$tmpfolder."/tampon_".$fileorig;
+
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+
+		$acteTamponne = $objectInstancier->get(ActeTamponne::class);
+		$tampon_content = $acteTamponne->tamponnerPDF($tmpfolder."/".$fileorig,$transactionId);
+
+		file_put_contents($pdftkise,$tampon_content);
+		return $pdftkise;
+	}
+
 
 	private function deletePastellDocument($transaction_id, $id_d){
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
@@ -114,189 +357,6 @@ class ActesArchiveControler {
 		}
 		return true;
 	}
-
-	/**
-	 * @param $id
-	 * @return bool
-	 * @throws Exception
-	 */
-	private function createPastellDocument($id){
-		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
-		if($transactionsInfo['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
-			$this->logger->error("La transaction $id à envoyer au SAE n'est pas dans le bon status ! {$transactionsInfo['last_status_id']} trouvé");
-			return false;
-		}
-
-		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
-
-		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
-		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
-
-		$id_d = $pastell->createActes($transactionsInfo);
-
-		if (! $id_d){
-			throw new Exception("Erreur pastell : ". $pastell->getLastError());
-		}
-		$this->logger->debug("Création du document sur Pastell id_d=$id_d");
-
-		return $id_d;
-	}
-
-	/**
-	 * @param $id
-	 * @param $id_d
-	 * @param $tmp_folder
-	 * @throws Exception
-	 * @throws RecoverableException
-	 */
-	private function sendArchiveThrow($id,$id_d,$tmp_folder){
-
-		$transactionsInfo = $this->actesTransactionsSQL->getInfo($id);
-		$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
-
-		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transactionsInfo['authority_id']);
-
-		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
-
-
-		$this->logger->debug("Envoi de la transaction $id sur Pastell {$pastellProperties->url} id_e={$pastellProperties->id_e}");
-
-
-		$actesFile = $this->actesTransactionsSQL->getAllFile($id);
-		
-		$actesEnvelopeSQL = new ActesEnvelopeSQL($this->sqlQuery);
-		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
-		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
-		if (! $enveloppe_path){
-			throw new RecoverableException("Impossible de récupéré l'enveloppe {$actesEnvelopeInfo['file_path']}");
-		}
-
-		$tgzExtractor = new TGZExtractor($tmp_folder);
-		$tgzExtractor->extract($enveloppe_path,$actesFile[1]['filename']);
-		
-		$acte_filename = $actesFile[0]['filename'];
-		
-		$pastell->postActes($id_d,$tmp_folder."/".$actesFile[1]['filename'],$actesFile[1]['posted_filename']);
-		$this->logger->debug("postage de l'actes id_d : $id_d");
-		if ($actesFile[1]['signature']){
-			$signature_file_path = $tmp_folder."/signature.pk7";
-			file_put_contents($signature_file_path, $actesFile[1]['signature']);
-			$pastell->postSignature($id_d, $signature_file_path);
-		}
-		
-		
-		$pdftampone = $tmp_folder."/".$actesFile[1]['filename'];
-		$path_parts = pathinfo($pdftampone);
-		if ($path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'PDF'){
-			$pdftampone = $this->tamponerActe($tmp_folder,$actesFile[1]['filename'],$transactionsInfo['id']);
-		}
-		$pastell->postFile($id_d,"acte_tamponne",$pdftampone,"acte_tampone.".$path_parts['extension']);
-
-		$datepostage = $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
-		$pastell->setDatePostage($id_d,date("d/m/Y",strtotime($datepostage['date'])));
-
-		//passer les paramètre
-		$pdf=new ActesPdf();
-
-		//construire le fichier pdf.
-		$pdf->create_pdf($id);
-		$pdf->output($tmp_folder."/bordereau_acquit","F");
-		$pastell->postFile($id_d,"bordereau",$tmp_folder."/bordereau_acquit.pdf","bordereau_acquittement.pdf");
-		
-		array_shift($actesFile);
-		array_shift($actesFile);
-		
-		foreach($actesFile as $file){
-			$tgzExtractor->extract($enveloppe_path,$file['filename']);
-			$pastell->postAnnexe($id_d, $tmp_folder.'/'.$file['filename'], $file['posted_filename']);
-		}
-		
-		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($id,4);
-
-		if (! $actesTransactionsStatusInfo['flux_retour']){
-			throw new Exception("L'AR acte n'est pas disponible");
-		}
-		
-		file_put_contents($tmp_folder."/AR-{$acte_filename}", $actesTransactionsStatusInfo['flux_retour']);
-		$pastell->postARActes($id_d,$tmp_folder."/AR-{$acte_filename}");
-		
-		
-		$orig_acte_transaction_id = $transactionsInfo['id'];
-		
-		file_put_contents($tmp_folder."/empty", "");
-	
-		$relatedTransaction = $this->actesTransactionsSQL->getRelatedTransaction($id);
-		$echange_prefecture_type = array();
-		$echange_prefecture = array();
-		$echange_prefecture_ar = array();
-		foreach($relatedTransaction as $transaction){
-			
-			$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transaction['envelope_id']);
-			$actesFile = $this->actesTransactionsSQL->getAllFile($transaction['id']);
-            $file_to_send = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
-			if ($transaction['related_transaction_id'] == $orig_acte_transaction_id){
-				//Transaction aller
-				$echange_prefecture_type[] = $transaction['type'].'A';
-				$filename = $actesFile[0]['filename'];
-				$posted_filename = $actesFile[0]['posted_filename'];
-				array_shift ($actesFile);
-				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],8);
-			} else {
-				//Transaction retour
-				$echange_prefecture_type[] = $transaction['type'].'R';
-				
-				$filename = $actesFile[1]['filename'];
-				$posted_filename = $actesFile[1]['posted_filename'];
-				array_shift ($actesFile);
-				array_shift ($actesFile);
-				$status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'],11);
-			}
-			$tgzExtractor->extract($file_to_send,$filename);
-			$echange_prefecture[] = array($tmp_folder."/".$filename,$posted_filename);
-			
-			if ($status_info && $status_info['flux_retour']){
-				$ar_name = "AR-".$status_info['transaction_id'].".xml";
-				file_put_contents($tmp_folder."/$ar_name", $status_info['flux_retour']);
-				$echange_prefecture_ar[] = array($tmp_folder."/$ar_name",$ar_name);
-			} else {
-				$echange_prefecture_ar[] = array($tmp_folder."/empty",'empty');
-			}
-			
-			foreach($actesFile as $annexe){
-				$tgzExtractor->extract($file_to_send."/".$annexe['filename'],$annexe['filename']);
-				$echange_prefecture_type[] = $transaction['type'].'RB';
-				$echange_prefecture[] = array($file_to_send."/".$annexe['filename'],$annexe['posted_filename']);
-				$echange_prefecture_ar[] = array($tmp_folder."/empty",'empty');
-			}
-		}
-		
-		$pastell->postRelatedTransaction($id_d,$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar);
-
-
-		$this->logger->debug("Envoi au SAE : $id_d");
-
-		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
-		if (! $result){
-			throw new Exception($pastell->getLastError());
-		}
-		$this->actesTransactionsSQL->updateStatus($id,12,"Envoie de la transaction $id à Pastell");
-		$this->actesTransactionsSQL->setSAETransferIdentifier($id,$id_d);
-	}
-
-
-	public function tamponerActe($tmpfolder,$fileorig,$transactionId){
-		$pdftkise=$tmpfolder."/tampon_".$fileorig;
-
-        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-
-		$acteTamponne = $objectInstancier->get("ActeTamponne");
-		$tampon_content = $acteTamponne->tamponnerPDF($tmpfolder."/".$fileorig,$transactionId);
-
-		file_put_contents($pdftkise,$tampon_content);
-		return $pdftkise;
-	}
-
-
 
 
 }
