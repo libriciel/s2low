@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<actes:ARActe xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" actes:IDActe="001-000000000-20170130-TEST42-DE" actes:DateReception="2017-06-16">
+  <actes:ActeRecu actes:Date="2017-01-30" actes:NumeroInterne="TEST42" actes:CodeNatureActe="1">
+    <actes:CodeMatiere1 actes:CodeMatiere="1"/>
+    <actes:CodeMatiere2 actes:CodeMatiere="3"/>
+    <actes:CodeMatiere3 actes:CodeMatiere="4"/>
+    <actes:Objet>test de t&#xE9;l&#xE9;transmission</actes:Objet>
+    <actes:ClassificationDateVersion>2014-01-02</actes:ClassificationDateVersion>
+    <actes:Document>
+      <actes:NomFichier>001-000000000-20170130-TEST42-DE-1-1_1.pdf</actes:NomFichier>
+    </actes:Document>
+    <actes:Annexes actes:Nombre="2">
+      <actes:Annexe>
+        <actes:NomFichier>001-000000000-20170130-TEST42-DE-1-1_2.png</actes:NomFichier>
+      </actes:Annexe>
+      <actes:Annexe>
+        <actes:NomFichier>001-000000000-20170130-TEST42-DE-1-1_3.pdf</actes:NomFichier>
+      </actes:Annexe>
+    </actes:Annexes>
+  </actes:ActeRecu>
+  <actes:ClassificationDateVersionEnCours>2014-01-02</actes:ClassificationDateVersionEnCours>
+</actes:ARActe>

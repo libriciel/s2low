@@ -3,6 +3,8 @@ class ActesTransactionsSQL extends SQL{
 
 	const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
+	const AUTHORITY_ID = 'authority_id';
+
 	public function getInfo($id){
 		$sql = "SELECT * FROM actes_transactions WHERE id=?";
 		return $this->queryOne($sql,$id);
@@ -14,7 +16,7 @@ class ActesTransactionsSQL extends SQL{
 	}
 
 	public function getLastStatusInfo($id){
-		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date DESC LIMIT 1";
+		$sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date DESC,id DESC LIMIT 1";
 		return $this->queryOne($sql,$id);
 	}
 

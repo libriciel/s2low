@@ -6,7 +6,6 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class
 class ActesArchiveControler {
 
 	private $sqlQuery;
-	private $lastError;
 
 	/** @var  PastellWrapperFactory */
 	private $pastellWrapperFactory;
@@ -50,20 +49,27 @@ class ActesArchiveControler {
 		return $this->lastError;
 	}
 
-	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id,$put_in_job_queue = true){
+	/**
+	 * @param $user_id
+	 * @param $transaction_id
+	 * @param bool $put_in_job_queue
+	 * @return array|bool|mixed
+	 */
+	public function setArchiveEnAttenteEnvoiSEA($user_id, $transaction_id, $put_in_job_queue = true)
+	{
 		try {
 			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
-			$this->logger->info("Préparation de l'envou au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
+			$this->logger->info("Préparation de l'envoie au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
 
 			$user = new User($user_id);
 			$user->init();
-			$this->isAllowToSendArchive($user_id,$transactionsInfo);
+			$this->isAllowToSendArchive($user_id, $transactionsInfo);
 
-			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14,20)) && $transactionsInfo['type'] != 1) {
-				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».");
+			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14, 20)) || $transactionsInfo['type'] != 1) {
+				throw new UnrecoverableException("Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».");
 			}
-			$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
-		} catch (Exception $e){
+			$this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
+		} catch (Exception $e) {
 			$this->logger->error($e->getMessage());
 			$this->lastError = $e->getMessage();
 			return false;
@@ -75,10 +81,10 @@ class ActesArchiveControler {
 		);
 
 		if ($put_in_job_queue) {
-            $this->workerScript->putJobByClassName(
-                ActesEnvoiSaeWorker::class, $transaction_id
-            );
-        }
+			$this->workerScript->putJobByClassName(
+				ActesEnvoiSaeWorker::class, $transaction_id
+			);
+		}
 		$this->logger->info("Préparation de l'envoi SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : OK");
 		return $actes_transaction_workflow_id;
 	}
@@ -87,33 +93,34 @@ class ActesArchiveControler {
 	 * @param $user_id
 	 * @param $transactionsInfo
 	 * @return bool
-	 * @throws Exception
+	 * @throws UnrecoverableException
 	 */
 	private function isAllowToSendArchive($user_id,$transactionsInfo){
 		if (! $transactionsInfo){
-			throw new Exception("Impossible de d'envoyer la transaction");
+			throw new UnrecoverableException("Impossible de d'envoyer la transaction");
 		}
 		if ($transactionsInfo['user_id'] == $user_id){
 			return true;
 		}
-		$transactionsInfo['authority_id'];
-		$userSQL = new UserSQL($this->sqlQuery);
-		$user_info = $userSQL->getInfo($user_id);
+		$transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID];
+		$this->userSQL = new UserSQL($this->sqlQuery);
+		$user_info = $this->userSQL->getInfo($user_id);
 
 		if ($user_info['role'] == 'SADM'){
 			return true;
 		}
 
 		if ($user_info['role'] != 'ADM'){
-			throw new Exception("Accès interdit");
+			throw new UnrecoverableException("Accès interdit");
 		}
 
-		if ($user_info['authority_id'] == $transactionsInfo['authority_id']){
+		if ($user_info[ActesTransactionsSQL::AUTHORITY_ID] == $transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]){
 			return true;
 		}
 
-		throw new Exception("Accès interdit");
+		throw new UnrecoverableException("Accès interdit");
 	}
+
 
 
 	public function getAllTransactionIdToSend($authority_id = 0){
@@ -150,6 +157,12 @@ class ActesArchiveControler {
 				$this->sendArchiveThrow($id, $id_d, $tmp_folder);
 				$this->logger->info("La transaction $id a été envoyé sur le SAE (id_d pastell : $id_d)");
 			}
+		} catch (RecoverableException $e){
+			$this->logger->error("Une erreur récupérable est survenu : ".$e->getMessage().". La transaction sera retenter.");
+			if ($id_d){
+				$this->deletePastellDocument($id,$id_d);
+				$this->logger->error("L'identifiant du document sur Pastell était : $id_d, le document a été supprimé sur Pastell");
+			}
 		} catch (Exception $e){
 			$message = "Impossible d'envoyer la transaction $id : " . $e->getMessage();
 			if ($id_d){
@@ -165,7 +178,6 @@ class ActesArchiveControler {
 		}
 		$tmpFolder->delete($tmp_folder);
 	}
-
 
 	private function deletePastellDocument($transaction_id, $id_d){
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
@@ -213,6 +225,7 @@ class ActesArchiveControler {
 	 * @param $id_d
 	 * @param $tmp_folder
 	 * @throws Exception
+	 * @throws RecoverableException
 	 */
 	private function sendArchiveThrow($id,$id_d,$tmp_folder){
 
@@ -232,9 +245,10 @@ class ActesArchiveControler {
 		$actesEnvelopeSQL = new ActesEnvelopeSQL($this->sqlQuery);
 		$actesEnvelopeInfo = $actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
 		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+		if (! $enveloppe_path){
+			throw new RecoverableException("Impossible de récupéré l'enveloppe {$actesEnvelopeInfo['file_path']}");
+		}
 
-
-		
 		$tgzExtractor = new TGZExtractor($tmp_folder);
 		$tgzExtractor->extract($enveloppe_path,$actesFile[1]['filename']);
 		
@@ -261,7 +275,7 @@ class ActesArchiveControler {
 
 		//passer les paramètre
 		$pdf=new ActesPdf();
-		
+
 		//construire le fichier pdf.
 		$pdf->create_pdf($id);
 		$pdf->output($tmp_folder."/bordereau_acquit","F");
@@ -348,7 +362,6 @@ class ActesArchiveControler {
 	}
 
 
-	
 	public function tamponerActe($tmpfolder,$fileorig,$transactionId){
 		$pdftkise=$tmpfolder."/tampon_".$fileorig;
 
