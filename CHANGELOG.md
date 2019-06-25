@@ -5,6 +5,8 @@
 ## Ajout
 
 - Ajout de l'arrondissement 9 pour le département 75 (SGAR) #503
+- Ajout de bouton sur les transactions actes et helios permettant d'envoyer et de vérifier les données sur le SAE (pour le superadmin)
+- Ajout de statistiques pour l'envoi au SAE (helios)
 
 ## Correction
 
