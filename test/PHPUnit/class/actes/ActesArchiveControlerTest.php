@@ -140,15 +140,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		return $transaction_id;
 	}
 
-	private function mockPastellFactory($createActesReturn = "xyzt",$getLastErrorReturn=false){
-		$pastell = $this->getMockBuilder('PastellWrapper')->disableOriginalConstructor()->getMock();
-		$pastell->expects($this->any())->method('createActes')->willReturn($createActesReturn);
-		$pastell->expects($this->any())->method('getLastError')->willReturn($getLastErrorReturn);
-		$pastell->expects($this->any())->method('sendSAE')->willReturn(true);
-		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->disableOriginalConstructor()->getMock();
-		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
-		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$pastellFactory);
-	}
+
 
 	private function mockActesTamponne(){
 		$acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd5e8f6510bc361b3c25ef6228ff83db",
+    "content-hash": "3d1e6f36bfa4cb4fb00e81bbf77df38a",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -747,12 +747,12 @@
             "version": "v1.6.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikey179/vfsStream.git",
+                "url": "https://github.com/bovigo/vfsStream.git",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+                "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
                 "shasum": ""
             },
@@ -1371,6 +1371,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
@@ -1861,7 +1862,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-fileinfo": "^1.0"
+        "ext-fileinfo": "^1.0",
+        "ext-simplexml": "^7.2"
     },
     "platform-dev": []
 }
