@@ -42,24 +42,38 @@ class HeliosVerificationSAE {
 	 */
 	public function verifArchiveThrow(int $transaction_id){
 
-		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+		$transaction_info = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
-		$this->logger->info("Vérification de la transaction {$transactionInfo['id']} ");
+		$this->logger->info("Vérification de la transaction {$transaction_info['id']} ");
 
-		$this->authoritySQL->verifHasPastell($transactionInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
+		$this->authoritySQL->verifHasPastell($transaction_info[HeliosTransactionsSQL::AUTHORITY_ID]);
 
 		$pastellProperties = $this->pastellPropertiesSQL->getPastellProperties(
-			$transactionInfo[HeliosTransactionsSQL::AUTHORITY_ID]
+			$transaction_info[HeliosTransactionsSQL::AUTHORITY_ID]
 		);
 
 		$pastellWrapper = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
-		$sae_transfert_identifier = $transactionInfo['sae_transfer_identifier'];
+		$sae_transfert_identifier = $transaction_info['sae_transfer_identifier'];
 
-		$info = $pastellWrapper->getInfo($sae_transfert_identifier);
-		if(!$info){
+		$pastell_transaction_info = $pastellWrapper->getInfo($sae_transfert_identifier);
+		if(!$pastell_transaction_info){
 			throw new RecoverableException($pastellWrapper->getLastError());
 		}
+
+		if (in_array($pastell_transaction_info['last_action']['action'],['verif-sae-erreur','validation-sae-erreur','erreur-envoie-sae','fatal-error'])){
+			$msg = "La transaction {$transaction_info['id']} a été refusé par le SAE : (état {$pastell_transaction_info['last_action']['action']})";
+
+			$this->heliosTransactionsSQL->updateStatus(
+				$transaction_info['id'],
+				HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+				$msg
+			);
+			$this->logger->info($msg);
+			$pastellWrapper->delete($transaction_info['sae_transfer_identifier']);
+			return true;
+		}
+
 		try {
 			$reply_sae = $pastellWrapper->getFile($sae_transfert_identifier, 'reply_sae');
 		} catch (Exception $e){
@@ -78,13 +92,13 @@ class HeliosVerificationSAE {
 
 		if ($nodeName == 'ArchiveTransferAcceptance' ||
 			($nodeName == 'ArchiveTransferReply' && (strval($xml->{'ReplyCode'}) == '000'))){
-			$url = $info['data']['url_archive'];
-			$msg = "La transaction {$transactionInfo['id']} a été acceptée par le SAE : \n$xml_message";
-			$this->heliosTransactionsSQL->updateStatus($transactionInfo['id'],10,$msg);
-			$this->heliosTransactionsSQL->setArchiveURL($transactionInfo['id'],$url);
+			$url = $pastell_transaction_info['data']['url_archive'];
+			$msg = "La transaction {$transaction_info['id']} a été acceptée par le SAE : \n$xml_message";
+			$this->heliosTransactionsSQL->updateStatus($transaction_info['id'],10,$msg);
+			$this->heliosTransactionsSQL->setArchiveURL($transaction_info['id'],$url);
 		} else {
-			$msg = "La transaction {$transactionInfo['id']} a été refusé par le SAE: \n$xml_message";
-			$this->heliosTransactionsSQL->updateStatus($transactionInfo['id'],11,$msg);
+			$msg = "La transaction {$transaction_info['id']} a été refusé par le SAE: \n$xml_message";
+			$this->heliosTransactionsSQL->updateStatus($transaction_info['id'],11,$msg);
 		}
 
 		$this->logger->info("$msg");

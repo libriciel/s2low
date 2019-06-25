@@ -66,39 +66,51 @@ class HeliosEnvoiSAE {
 	 * @throws Exception
 	 */
 	public function sendArchiveThrow(int $transaction_id) : bool {
-		$transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+		try {
+			$transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
-		$this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
+			$this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 
-		$pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
-		$pes_acquit_filepath = HELIOS_RESPONSES_ROOT . "/".  $transactionsInfo['acquit_filename'];
+			$pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
+			$pes_acquit_filepath = HELIOS_RESPONSES_ROOT . "/" . $transactionsInfo['acquit_filename'];
 
-		$pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
+			$pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 
-		$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+			$pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
-		$id_d = $pastell->createHelios($transactionsInfo);
-		
-		if (! $id_d){
-			throw new UnrecoverableException($pastell->getLastError());
-		}
+			$id_d = $pastell->createHelios($transactionsInfo);
 
-		$pastell->postFile($id_d,'fichier_pes',$pes_aller_filepath,$transactionsInfo['complete_name']);
-		$pastell->postFile($id_d,'fichier_reponse',$pes_acquit_filepath,$transactionsInfo['acquit_filename']);
-		
-		$result = $pastell->sendSAE($id_d,$pastellProperties->helios_action);
+			if (!$id_d) {
+				throw new UnrecoverableException($pastell->getLastError());
+			}
 
-		if (! $result){
-			throw new UnrecoverableException(
-				"Impossible d'envoyer la transaction sur as@lae : " . $pastell->getLastError()
+			$pastell->postFile($id_d, 'fichier_pes', $pes_aller_filepath, $transactionsInfo['complete_name']);
+			$pastell->postFile($id_d, 'fichier_reponse', $pes_acquit_filepath, $transactionsInfo['acquit_filename']);
+
+			$result = $pastell->sendSAE($id_d, $pastellProperties->helios_action);
+
+			if (!$result) {
+				throw new UnrecoverableException(
+					"Impossible d'envoyer la transaction sur as@lae : " . $pastell->getLastError()
+				);
+			}
+			$this->heliosTransactionsSQL->updateStatus(
+				$transaction_id,
+				HeliosStatusSQL::ENVOYER_AU_SAE,
+				"Envoie de la transaction $transaction_id à Pastell"
 			);
+			$this->heliosTransactionsSQL->setSAETransferIdentifier($transaction_id, $id_d);
+		} catch (Exception $e) {
+			if ($id_d){
+				try {
+					$pastell->delete($id_d);
+				} catch (Exception $e){
+					/** Nothing to do */
+				}
+			}
+			throw $e;
 		}
-		$this->heliosTransactionsSQL->updateStatus(
-			$transaction_id,
-			HeliosStatusSQL::ENVOYER_AU_SAE ,
-			"Envoie de la transaction $transaction_id à Pastell"
-		);
-		$this->heliosTransactionsSQL->setSAETransferIdentifier($transaction_id,$id_d);
+
 		return true;
 	}
 
