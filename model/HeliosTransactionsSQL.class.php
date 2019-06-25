@@ -19,6 +19,8 @@ class HeliosTransactionsSQL extends SQL {
 	
 	const SEND_WARNING_AFTER_SECOND = 172800;
 
+	const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
+
 	const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
 	const AUTHORITY_ID='authority_id';
@@ -35,8 +37,12 @@ class HeliosTransactionsSQL extends SQL {
 	}
 
 	public function updateStatus($transaction_id,$status_id,$message){
-	    $date = date("Y-m-d H:i:s");
-	    $sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
+	    if (strlen($message) > self::WORKFLOW_MESSAGE_MAX_LENGTH){
+			$message =  substr($message,0,self::WORKFLOW_MESSAGE_MAX_LENGTH);
+		}
+		$date = date("Y-m-d H:i:s");
+
+		$sql = "INSERT INTO helios_transactions_workflow (transaction_id, status_id, date, message) " .
 	    		" VALUES( ? , ? , ? , ? ) RETURNING ID ";
   		$id = $this->queryOne($sql,$transaction_id,$status_id,$date,$message);
   		$sql = "UPDATE helios_transactions SET last_status_id=? " .

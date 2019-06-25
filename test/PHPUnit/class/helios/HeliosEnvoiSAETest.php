@@ -49,4 +49,18 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 		$this->assertLogMessage("1 transactions à envoyer...",2);
 		$this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell",4);
 	}
+
+	public function testWhenErrorMessageIsTooLong(){
+		$error_message = str_repeat('X',1024);
+		$this->mockPastellFactory(false,$error_message);
+		$transaction_id = $this->setTransactionEnattente();
+		$this->assertFalse(
+			$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+		);
+		$this->assertLogMessage(
+			"Le document n'a pas pu être envoyé sur Pastell : $error_message",
+			1
+		);
+
+	}
 }

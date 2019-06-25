@@ -11,6 +11,7 @@
 ## Correction
 
 - Le rebuild-queue n'est plus nécessaire en cas de défaillance des serveurs de la DGCL #501
+- le script de récupération des ar du sae échouait si le message d'erreur du SAE dépassait 512 octets #498
 
 ## 4.0.3 - 2019-06-03
 
