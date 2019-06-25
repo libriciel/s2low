@@ -96,4 +96,32 @@ class HeliosPrepareEnvoiSAE {
 		throw new UnrecoverableException("Accès interdit");
 	}
 
+	public function setArchiveEnAttenteEnvoiSEAManuellement(
+		int $authority_id,
+		$nb_days = HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER
+	){
+		$this->logger->info("Début du script");
+		$transaction_id_list = $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
+			$nb_days,
+			$authority_id,
+			false,
+			[
+				HeliosStatusSQL::INFORMATION_DISPONIBLE,
+				HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE
+			]
+		);
+
+		$this->logger->info(sprintf(
+			"%d transaction(s) vont être traité(s)",
+			count($transaction_id_list)
+		));
+
+		foreach($transaction_id_list as $transaction_id){
+			$transaction_info = $this->heliosTransactionsSQL->getInfo($transaction_id);
+			$this->logger->info( "Traitement de $transaction_id - {$transaction_info['id']}");
+			$this->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id);
+		}
+		$this->logger->info("Fin du script");
+	}
+
 }

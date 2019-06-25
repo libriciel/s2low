@@ -2,6 +2,9 @@
 
 class HeliosTransactionSQLTest extends S2lowTestCase {
 
+	use HeliosUtilitiesTestTrait;
+	use PastellConfigurationTestTrait;
+
 	const FILENAME = "pes_aller.xml";
 
 	/**
@@ -158,6 +161,20 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 	public function testgetAllTransactionToSendInCloud(){
 	    $info = $this->heliosTransactionSQL->getAllTransactionToSendInCloud();
 	    $this->assertEquals($this->transaction_id,$info[0]['id']);
+	}
+
+	public function testGetTransactionToArchive(){
+		$this->configurePastell();
+		$transaction_id = $this->createTransaction();
+		$this->heliosTransactionSQL->updateStatus(
+			$transaction_id,
+			HeliosStatusSQL::INFORMATION_DISPONIBLE,
+			"test"
+		);
+		$this->assertEquals(
+			[$transaction_id],
+			$this->heliosTransactionSQL->getTransactionToPrepareToSAE(-1)
+		);
 	}
 
 }

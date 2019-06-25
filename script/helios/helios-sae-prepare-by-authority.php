@@ -3,59 +3,40 @@
 
 require_once(__DIR__ . "/../../init/init.php");
 
-if (empty($argv[1])) {
-	echo "Usage : {$argv[0]} authority_id\n";
-	echo "\tEnvoi à l'archivage toutes les transactions PES d'une collectivité\n";
-	echo "\tLes transactions sont à l'état 'Information disponible' ou 'Erreur lors de l'envoi au SAE' (20)\n";
-	exit;
+$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
+$s2lowLogger->enableStdOut();
+
+$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
+$authority_id = intval($argv[1]??0);
+
+if (! $authority_id) {
+	$s2lowLogger->info("Usage : {$argv[0]} authority_id");
+	$s2lowLogger->info("\tEnvoi à l'archivage toutes les transactions PES d'une collectivité");
+	$s2lowLogger->info("\tLes transactions sont à l'état 'Information disponible' ou 'Erreur lors de l'envoi au SAE' (20)");
+	exit(-1);
 }
+$s2lowLogger->info("Début du script");
 
-
-$authority_id = $argv[1];
-$date=date('Y-m-d',strtotime(date('Y-m-d').'- 15 DAY'));
-
-$sql = "SELECT  helios_transactions.id as id ".
-	"FROM helios_transactions ".
-	"WHERE authority_id=? ".
-	"AND last_status_id IN (?,?) ".
-	"AND submission_date < ? ";
-
-
-$transaction_id_list = $sqlQuery->queryOneCol(
-	$sql,
+$transaction_id_list = $heliosTransactionsSQL->getTransactionToPrepareToSAE(
+	HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
 	$authority_id,
-	HeliosStatusSQL::INFORMATION_DISPONIBLE,
-	HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-	$date
+	false,
+	[
+		HeliosStatusSQL::INFORMATION_DISPONIBLE,
+		HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE
+	]
 );
 
-if (! $transaction_id_list){
-	echo "Aucune transaction trouvée\n";
-	exit;
-}
+$s2lowLogger->info(sprintf(
+	"%d transaction(s) vont être traité(s)",
+	count($transaction_id_list)
+));
 
-
-$nb_transaction = count($transaction_id_list);
-
-echo "$nb_transaction vont être traité\n";
-
-
-$heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
 $heliosArchiveControler = $objectInstancier->get(HeliosPrepareEnvoiSAE::class);
-
 foreach($transaction_id_list as $transaction_id){
 	$transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
-	echo "Traitement de $transaction_id - {$transaction_info['id']}: ";
-
-	$r = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id);
-	if ($r){
-		echo "OK";
-	} else {
-		echo "Echec - ".$heliosArchiveControler->getLastError();
-	}
-
-	echo "\n";
+	$s2lowLogger->info( "Traitement de $transaction_id - {$transaction_info['id']}");
+	$heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($transaction_info['user_id'],$transaction_id);
 }
 
-echo "Fin du script\n";
-
+$s2lowLogger->info("Fin du script");

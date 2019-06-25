@@ -251,4 +251,36 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->query($sql,$authority_id,$min_transaction_id,$max_trasaction_id);
 	}
 
+	public function getTransactionToPrepareToSAE($nb_days = 15, $authority_id = 0,$is_auto = true,array $status=[HeliosStatusSQL::INFORMATION_DISPONIBLE]){
+
+		$status_list = implode(",",$status);
+
+		$date=date('Y-m-d',strtotime("-$nb_days days"));
+		$sql = "SELECT helios_transactions.id FROM helios_transactions ".
+			" JOIN helios_transactions_workflow " .
+			" ON (helios_transactions.id = helios_transactions_workflow.transaction_id AND helios_transactions_workflow.status_id IN ($status_list)) ".
+			" JOIN authorities ON authorities.id=helios_transactions.authority_id ".
+			" JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
+			" AND helios_transactions.id >= authority_pastell_config.transaction_id_min " .
+			" AND helios_transactions.id <= authority_pastell_config.transaction_id_max " .
+			" WHERE authority_pastell_config.module_id = 2 ".
+			" AND helios_transactions.last_status_id IN ($status_list)".
+			" AND helios_transactions_workflow.date <= ? ";
+
+		$data = [
+			$date
+		];
+
+		if ($authority_id){
+			$sql .= "AND helios_transactions.authority_id=? ";
+			$data[] = $authority_id;
+		}
+		if ($is_auto){
+			$sql .= "AND authority_pastell_config.is_auto='t'";
+		}
+
+		$sql.=	" ORDER BY helios_transactions.id ";
+		return $this->queryOneCol($sql,$data);
+	}
+
 }

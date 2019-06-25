@@ -4,7 +4,7 @@ class ActesPrepareSaeWorker implements IWorker {
 
 	const QUEUE_NAME = 'actes-prepare-sae';
 
-	const NB_DAYS_ARCHIVE_AFTER = 1;
+	const NB_DAYS_ARCHIVE_AFTER = 62;
 
 	private $actesTransactionsSQL;
 	private $s2lowLogger;
@@ -29,7 +29,9 @@ class ActesPrepareSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		return $this->actesTransactionsSQL->getTransactionToArchive(self::NB_DAYS_ARCHIVE_AFTER);
+		return $this->actesTransactionsSQL->getTransactionToArchive(
+			self::NB_DAYS_ARCHIVE_AFTER
+		);
 	}
 
 	/**

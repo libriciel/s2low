@@ -62,4 +62,20 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase {
 		);
 		$this->assertLogMessage("Accès interdit");
 	}
+
+	public function testsetArchiveEnAttenteEnvoiSEAManuellement(){
+		$this->configurePastell();
+		$transaction_id = $this->createTransaction();
+		$this->getHeliosTransactionSQL()->updateStatus(
+			$transaction_id,
+			HeliosStatusSQL::INFORMATION_DISPONIBLE,
+			"n'importe quoi"
+		);
+
+		$this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEAManuellement(1,-1);
+		$this->assertLogMessage(
+			"La transaction $transaction_id passe en attente de transmission au SAE",
+			3
+		);
+	}
 }
