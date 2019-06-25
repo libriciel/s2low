@@ -3,6 +3,7 @@
 class ActesPrepareEnvoiSAETest extends S2lowTestCase {
 
 	use ActesUtilitiesTestTrait;
+	use PastellConfigurationTestTrait;
 
 	/**
 	 * @return ActesPrepareEnvoiSAE
@@ -28,6 +29,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testSetArchiveEnAttenteEnvoiSAE(){
+		$this->configurePastell();
 		$transaction_id = $this->createTransaction(4);
 		$result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
 		$this->assertNotFalse($result);

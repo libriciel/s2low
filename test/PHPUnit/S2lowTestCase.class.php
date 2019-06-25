@@ -180,4 +180,11 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
 		return $testHandler->getRecords();
 	}
+
+	public function assertLogMessage($expected_message,$num_log = 0){
+		$this->assertEquals(
+			$expected_message,
+			$this->getLogRecords()[$num_log]['message']
+		);
+	}
 }

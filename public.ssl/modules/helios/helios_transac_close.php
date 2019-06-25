@@ -3,8 +3,7 @@ require_once( __DIR__ . "/../../../init/init-www-helios.php");
 
 $liste_id = Helpers::getVarFromPost("liste_id");
 
-/** @var HeliosArchiveControler $heliosArchiveControler */
-$heliosArchiveControler = $objectInstancier->get("HeliosArchiveControler");
+$heliosArchiveControler = $objectInstancier->get(HeliosPrepareEnvoiSAE::class);
 
 $msg = "";
     

@@ -14,6 +14,8 @@ class UserSQL extends SQL {
 
 	const CERTIFICATE_FINGERPRINT_HASH_ALG = 'sha1';
 
+	const AUTHORITY_ID = 'authority_id';
+
 	public function getPrettyName($name,$givenname,$login){
 		return $name?"$givenname $name":$login;
 	}

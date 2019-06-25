@@ -4,7 +4,7 @@ require_once( __DIR__."/../../init/init.php");
 
 if (empty($argv[1])){
 	echo "Usage : {$argv[0]} authority_id\n";
-	echo "\tEnvoi à l'archivage toutes les transactions d'une collectivité\n";
+	echo "\tEnvoi à l'archivage toutes les transactions actes d'une collectivité\n";
 	echo "\tLes transactions sont à l'état 'Acquittement reçu' ou 'Validé' et il s'agit uniquement des envois d'actes (pas des réponses de la préfectures)\n";
 	exit;
 }

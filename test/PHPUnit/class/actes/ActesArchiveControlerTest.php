@@ -9,7 +9,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	use PastellConfigurationTestTrait;
 
 	/**
-	 * @return ActesArchiveControler|mixed
+	 * @return ActesArchiveControler
 	 */
 	private function getActesArchivesControler() {
 		return $this->getObjectInstancier()->get(ActesArchiveControler::class);
@@ -116,7 +116,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	private function createTransactionEnAttenteEnvoiSAE(){
-
+		$this->configurePastell();
 		$transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE,__DIR__."/fixtures/abc-TACT--000000000--20170803-16.tar.gz");
 		$actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
 		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);

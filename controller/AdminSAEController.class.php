@@ -58,9 +58,12 @@ class AdminSAEController extends Controller {
         $pastellProperties->helios_action = $this->getRecuperateurPost()->get('helios_action');
         $pastellProperties->helios_destination = $this->getRecuperateurPost()->get('helios_destination');
         $pastellProperties->helios_send_auto = $this->getRecuperateurPost()->get('helios_send_auto');
+		$pastellProperties->helios_transaction_id_min = $this->getRecuperateurPost()->getInt('helios_transaction_id_min');
+		$pastellProperties->helios_transaction_id_max = $this->getRecuperateurPost()->getInt('helios_transaction_id_max');
 
 
-        $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->editProperties($id,$pastellProperties);
+
+		$this->getObjectInstancier()->get(PastellPropertiesSQL::class)->editProperties($id,$pastellProperties);
         $this->setErrorMessage("Les informations ont été mises à jour");
         $this->redirect("/admin/authorities/admin_authority_sae.php?id=$id");
     }

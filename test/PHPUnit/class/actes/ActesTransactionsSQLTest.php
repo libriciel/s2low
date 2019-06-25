@@ -3,6 +3,7 @@
 class ActesTransactionsSQLTest extends S2lowTestCase {
 
 	use ActesUtilitiesTestTrait;
+	use PastellConfigurationTestTrait;
 
     /**
      * @return ActesTransactionsSQL
@@ -11,7 +12,11 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
         return $this->getObjectInstancier()->get("ActesTransactionsSQL");
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testGetLastArchiveFromStatus(){
+		$this->configurePastell();
         $transaction_id =$this->createTransaction('14');
         $this->getActesTransactionsSQL()->updateStatus($transaction_id,12,"test");
 
@@ -23,11 +28,17 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testGetNbByStatus(){
         $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->assertEquals(1,$this->getActesTransactionsSQL()->getNbByStatus(ActesStatusSQL::STATUS_POSTE));
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testCreateRelatedTransaction(){
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $transaction_info = $this->getActesTransactionsSQL()->getInfo($transaction_id);
@@ -43,14 +54,18 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testGuessUniqueId(){
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-
         $unique_id = $this->getActesTransactionsSQL()->guessUniqueId($transaction_id);
-
         $this->assertEquals("034-000000000-20170701-20170728C-AI",$unique_id);
     }
 
+	/**
+	 * @throws Exception
+	 */
     public function testUpdateStatus(){
 		$transaction_id =$this->createTransaction('14');
 		$this->getActesTransactionsSQL()->updateStatus($transaction_id,1,"foo");
@@ -58,6 +73,9 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 		$this->assertEquals("foo",$info['message']);
 	}
 
+	/**
+	 * @throws Exception
+	 */
     public function testUpdateStatusTooLong(){
 		$transaction_id =$this->createTransaction('14');
 		$message = str_repeat("1234567890",53);
@@ -66,6 +84,9 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 		$this->assertEquals(512,strlen($info['message']));
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function testgetByStatusSinceDate(){
 		$transaction_id =$this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
 		$this->assertEmpty(

@@ -4,7 +4,6 @@ class HeliosArchiveControler {
 	const PASSER_EN_ERREUR_APRES_NB_SECOND = 86400;
 
 	private $sqlQuery;
-	private $lastError;
 
 	/** @var HeliosTransactionsSQL  */
 	private $heliosTransactionsSQL;
@@ -24,62 +23,6 @@ class HeliosArchiveControler {
 		$this->authoritySQL = new AuthoritySQL($this->sqlQuery);
 		$this->pastellWrapperFactory = $pastellWrapperFactory;
 		$this->pesAllerRetriever = $pesAllerRetriever;
-	}
-
-
-	public function getLastError(){
-		return $this->lastError;
-	}
-	
-	public function setArchiveEnAttenteEnvoiSEA($user_id,$id){
-		try {
-			$transactionsInfo = $this->heliosTransactionsSQL->getInfo($id);
-			$user = new User($user_id);
-			$user->init();
-			$this->isAllowToSendArchive($user_id,$transactionsInfo);
-
-			if (!in_array($transactionsInfo['last_status_id'], array(8,4, 6, 11,20))) {
-				throw new Exception("Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé ».");
-			}
-			$this->authoritySQL->verifHasPastell($transactionsInfo['authority_id']);
-		} catch (Exception $e){
-			$this->lastError = $e->getMessage();
-			return false;
-		}
-		$id = $this->heliosTransactionsSQL->updateStatus($id,HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,"En attente de l'envoi au SAE");
-		return $id;
-	}
-
-	/**
-	 * @param $user_id
-	 * @param $transactionsInfo
-	 * @return bool
-	 * @throws Exception
-	 */
-	private function isAllowToSendArchive($user_id,$transactionsInfo){
-		if (! $transactionsInfo){
-			throw new Exception("Impossible de d'envoyer la transaction");
-		}
-		if ($transactionsInfo['user_id'] == $user_id){
-			return true;
-		}
-		$transactionsInfo['authority_id'];
-		$userSQL = new UserSQL($this->sqlQuery);
-		$user_info = $userSQL->getInfo($user_id);
-
-		if ($user_info['role'] == 'SADM'){
-			return true;
-		}
-
-		if ($user_info['role'] != 'ADM'){
-			throw new Exception("Accès interdit");
-		}
-
-		if ($user_info['authority_id'] == $transactionsInfo['authority_id']){
-			return true;
-		}
-
-		throw new Exception("Accès interdit");
 	}
 
 	public function sendAllArchive($authority_id = 0){

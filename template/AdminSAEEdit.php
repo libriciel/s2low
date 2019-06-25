@@ -86,28 +86,6 @@
         </div>
     </div>
 
-
-
-    <!--
-    <div class="form-group">
-        <label class="col-md-4 label-form" for="actes_destination">Destination&nbsp;: </label>
-        <div class="col-md-6">
-            <select class="form-control"
-                    name="actes_destination"
-                    id="actes_destination"
-            >
-                <?php foreach(array('SAE','GED') as $destination) : ?>
-                    <option
-                            value="<?php echo $destination?>"
-                        <?php echo $pastellProperties->actes_destination==$destination?"selected='selected'":""?>
-                    >
-                        <?php echo $destination ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
-    -->
     <div class="form-group">
         <label class="col-md-4 label-form" for="actes_send_auto">Automatiser l'envoi&nbsp;: </label>
         <div class="col-md-6">
@@ -169,25 +147,7 @@
             />
         </div>
     </div>
-    <!--
-    <div class="form-group">
-        <label class="col-md-4 label-form" for="helios_destination">Destination&nbsp;: </label>
-        <div class="col-md-6">
-            <select class="form-control"
-                   name="helios_destination"
-                   id="helios_destination"
-            >
-                <?php foreach(array('SAE','GED') as $destination) : ?>
-                    <option
-                            value="<?php echo $destination?>"
-                            <?php echo $pastellProperties->helios_destination==$destination?"selected='selected'":""?>
-                    >
-                        <?php echo $destination ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
+
     <div class="form-group">
         <label class="col-md-4 label-form" for="helios_send_auto">Automatiser l'envoi&nbsp;: </label>
         <div class="col-md-6">
@@ -199,7 +159,30 @@
             />
         </div>
     </div>
--->
+
+    <div class="form-group">
+        <label class="col-md-4 label-form" for="helios_transaction_id_min">#ID minimum pour l'automatisation&nbsp;(inclu, min=0) : </label>
+        <div class="col-md-6">
+            <input class="form-control"
+                   type="text" size="30"
+                   name="helios_transaction_id_min"
+                   id="helios_transaction_id_min"
+                   value="<?php echo get_hecho($pastellProperties->helios_transaction_id_min) ?>"
+            />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-4 label-form" for="helios_transaction_id_max">#ID maximum pour l'automatisation&nbsp;(inclu, max=2147483647): </label>
+        <div class="col-md-6">
+            <input class="form-control"
+                   type="text" size="30"
+                   name="helios_transaction_id_max"
+                   id="helios_transaction_id_max"
+                   value="<?php echo get_hecho($pastellProperties->helios_transaction_id_max) ?>"
+            />
+        </div>
+    </div>
 
 
     <div class="form-group">

@@ -13,7 +13,6 @@ trait ActesUtilitiesTestTrait
 		return $this->getObjectInstancier()->get(ActesAPIController::class);
 	}
 
-
 	/**
 	 * @param $status
 	 * @param string $archive_path
@@ -27,14 +26,14 @@ trait ActesUtilitiesTestTrait
 		$sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,type) VALUES (?,?,?,?,?,?,?,?) returning ID;";
 		$transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,"2017-07-01","20170728C",3,1);
 
-		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
+		/*$authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $pastellProperties = new PastellProperties();
         $pastellProperties->url = "test";
         $pastellProperties->login = "login";
         $pastellProperties->password = "password";
         $pastellProperties->id_e = 42;
 
-		$authoritySQL->updateSAE(1,$pastellProperties);
+		$authoritySQL->updateSAE(1,$pastellProperties);*/
 
 
 		$actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);

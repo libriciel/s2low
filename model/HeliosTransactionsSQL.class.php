@@ -21,6 +21,8 @@ class HeliosTransactionsSQL extends SQL {
 
 	const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
+	const AUTHORITY_ID='authority_id';
+
 	public function create($filename,$sha1,$user_id,$authority_id,$file_size,$siren){
 		$sql = "INSERT INTO helios_transactions(user_id, filename, file_size, siren, sha1, submission_date, authority_id) ".
 				" VALUES (?,?,?,?,?,now(),?) RETURNING ID;";
