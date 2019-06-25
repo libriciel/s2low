@@ -67,26 +67,14 @@ class ActesArchiveControler {
 	public function sendArchive(int $transaction_id){
 
 		$this->logger->info("Envoi de La transaction $transaction_id sur le SAE");
-		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
-
 		if (! $this->isTransactionInGoodStatus($transaction_id)){
 			return;
 		}
 
-
 		$id_d = false;
-		$tmpFolder = new TmpFolder();
-		$tmp_folder = $tmpFolder->create();
+
 		try {
-
-			$this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
-
-			$actesFileForArchive = $this->prepareTransfert($transaction_id,$tmp_folder);
-
-			$id_d = $this->createPastellDocument($transaction_id);
-			$this->sendFilesToPastell($transaction_id,$id_d,$actesFileForArchive);
-			$this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
-
+			$this->sendArchiveThrow($transaction_id);
 		} catch (RecoverableException $e){
 			$this->logger->error("Une erreur récupérable est survenue : ".$e->getMessage().". La transaction sera retentée.");
 			if ($id_d){
@@ -106,8 +94,31 @@ class ActesArchiveControler {
 				$message
 			);
 		}
-		$tmpFolder->delete($tmp_folder);
 	}
+
+	/**
+	 * @param int $transaction_id
+	 * @throws RecoverableException
+	 * @throws Exception
+	 */
+	public function sendArchiveThrow(int $transaction_id){
+		$tmpFolder = new TmpFolder();
+		$tmp_folder = $tmpFolder->create();
+		try {
+			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
+
+			$this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
+
+			$actesFileForArchive = $this->prepareTransfert($transaction_id, $tmp_folder);
+
+			$id_d = $this->createPastellDocument($transaction_id);
+			$this->sendFilesToPastell($transaction_id, $id_d, $actesFileForArchive);
+			$this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
+		} finally {
+			$tmpFolder->delete($tmp_folder);
+		}
+	}
+
 
 	/**
 	 * @param $transaction_id
@@ -168,9 +179,10 @@ class ActesArchiveControler {
 		array_shift($actesFile);
 		array_shift($actesFile);
 
+		$actesFilesForSAE->annexe = [];
 		foreach($actesFile as $file){
 			$tgzExtractor->extract($enveloppe_path,$file['filename']);
-			$actesFilesForSAE->annexe = ['filename'=>$tmp_folder.'/'.$file['filename'],'filepath'=> $file['posted_filename'] ];
+			$actesFilesForSAE->annexe[] = ['filename'=>$file['posted_filename'],'filepath'=> $tmp_folder.'/'.$file['filename'] ];
 		}
 
 		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
@@ -271,6 +283,7 @@ class ActesArchiveControler {
 		$pastell->setDatePostage($id_d,$actesFilesForSAE->date_postage);
 
 		$pastell->postFile($id_d,"bordereau",$actesFilesForSAE->bordereau_filepath,"bordereau_acquittement.pdf");
+
 
 		foreach($actesFilesForSAE->annexe as $annexe){
 			$pastell->postAnnexe($id_d, $annexe['filepath'], $annexe['filename']);

@@ -534,6 +534,27 @@ if (!$trans->hasPendingCancelTrans()) {
      }//fin if type == 1 , status = 4 ou 14, transaction canvalidate et configuration pour le sae
 }//fin if qui verifie qu'il n'y a pas d'annulation en cours
 
+
+if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
+    $actionHtml .= "<div class=\"action\">\n";
+    $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n";
+    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+    $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
+    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyé au SAE\" /> (Attention, peut-être long)\n";
+    $actionHtml .= "</div>\n</form>\n";
+    $actionHtml .= "</div>\n";
+}
+
+if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
+	$actionHtml .= "<div class=\"action\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_verif_sae.php\" method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur le SAE\" /> \n";
+	$actionHtml .= "</div>\n</form>\n";
+	$actionHtml .= "</div>\n";
+}
+
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
