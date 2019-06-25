@@ -6,11 +6,13 @@ class HeliosSAEController extends Controller {
 	 * @throws RedirectException
 	 */
 	public function verificationAction(){
+		$this->verifSuperAdmin();
+
 		$transaction_id = $this->getRecuperateurPost()->get('transaction_id');
 
 		try {
 			$this->getObjectInstancier()->get(HeliosVerificationSAE::class)->verifArchiveThrow($transaction_id);
-			$message = "La transaction a été accepté par le SAE";
+			$message = "La transaction a été traité par le SAE";
 		} catch (Exception $e){
 			$message =  $e->getMessage();
 		}
@@ -18,4 +20,25 @@ class HeliosSAEController extends Controller {
 		$this->setMessage($message);
 		$this->redirect("/modules/helios/helios_transac_show.php?id=$transaction_id");
 	}
+
+	/**
+	 * @throws RedirectException
+	 */
+	public function sendSAEAction(){
+		$this->verifSuperAdmin();
+
+		$transaction_id = $this->getRecuperateurPost()->get('transaction_id');
+
+		try {
+			$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchiveThrow($transaction_id);
+			$message = "La transaction a été envoyé sur le SAE";
+		} catch (Exception $e){
+			$message =  $e->getMessage();
+		}
+
+		$this->setMessage($message);
+		$this->redirect("/modules/helios/helios_transac_show.php?id=$transaction_id");
+	}
+
+
 }

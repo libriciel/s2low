@@ -65,7 +65,7 @@ class HeliosEnvoiSAE {
 	 * @return bool
 	 * @throws Exception
 	 */
-	private function sendArchiveThrow(int $transaction_id) : bool {
+	public function sendArchiveThrow(int $transaction_id) : bool {
 		$transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
 		$this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
