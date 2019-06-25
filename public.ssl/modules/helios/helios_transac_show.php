@@ -168,6 +168,14 @@ if (in_array($currentStatusId,array(8,4,11,20))) {
 }
 
 
+if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
+	$actionHtml .= "<div class=\"action\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_verif_sae.php\"  method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur Pastell\" />\n";
+	$actionHtml .= "</div>\n</form>\n";
+}
 
 if ($me->isSuper()) {
 

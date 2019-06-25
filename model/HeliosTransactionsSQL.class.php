@@ -295,4 +295,11 @@ class HeliosTransactionsSQL extends SQL {
 		return $this->queryOneCol($sql,$data);
 	}
 
+	public function getNbByStatusAndAuthority($status_id,$authority_id){
+		$sql = "SELECT count(*) FROM helios_transactions " .
+			" WHERE last_status_id=? AND authority_id = ?";
+		return $this->queryOne($sql,$status_id,$authority_id);
+	}
+
+
 }

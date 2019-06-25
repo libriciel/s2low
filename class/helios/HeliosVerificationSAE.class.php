@@ -34,11 +34,13 @@ class HeliosVerificationSAE {
 	}
 
 	/**
-	 * @param $transactionInfo
+	 * @param int $transaction_id
 	 * @return bool
+	 * @throws RecoverableException
+	 * @throws UnrecoverableException
 	 * @throws Exception
 	 */
-	private function verifArchiveThrow($transaction_id){
+	public function verifArchiveThrow(int $transaction_id){
 
 		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 

@@ -70,33 +70,58 @@ class AdminSAEController extends Controller {
 
     public function statistiquesAction(){
         $id = $this->getRecuperateurGet()->getInt('id');
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
-        $this->{'actes_nb_en_retard'} =
-            count($actesTransactionsSQL->getTransactionToArchive(
-                ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
+		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+		$this->{'actes_nb_en_retard'} =
+			count($actesTransactionsSQL->getTransactionToArchive(
+				ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
+				$id
+			));
+		$this->{'actes_nb_en_attente_sae_4h'} =
+			$actesTransactionsSQL->getNbByStatusAndAuthority(
+				ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+				$id
+			);
+		$this->{'actes_nb_envoye_sae_4h'} =
+			$actesTransactionsSQL->getNbByStatusAndAuthority(
+				ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+				$id
+			);
+		$this->{'actes_erreur_lors_de_larchivage'} =
+			$actesTransactionsSQL->getNbByStatusAndAuthority(
+				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
+				$id
+			);
+		$this->{'actes_erreur_lors_de_lenvoi_sae'} =
+			$actesTransactionsSQL->getNbByStatusAndAuthority(
+				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+				$id
+			);
+
+        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+
+        $this->{'helios_nb_en_retard'} =
+            count($heliosTransactionsSQL->getTransactionToPrepareToSAE(
+                HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
                 $id
             ));
-        $this->{'actes_nb_en_attente_sae_4h'} =
-            $actesTransactionsSQL->getNbByStatusAndAuthority(
-                ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+        $this->{'helios_nb_en_attente_sae_4h'} =
+            $heliosTransactionsSQL->getNbByStatusAndAuthority(
+                HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
                 $id
             );
-        $this->{'actes_nb_envoye_sae_4h'} =
-            $actesTransactionsSQL->getNbByStatusAndAuthority(
-                ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+        $this->{'helios_nb_envoye_sae_4h'} =
+            $heliosTransactionsSQL->getNbByStatusAndAuthority(
+				HeliosStatusSQL::ENVOYER_AU_SAE,
                 $id
             );
-        $this->{'actes_erreur_lors_de_larchivage'} =
-            $actesTransactionsSQL->getNbByStatusAndAuthority(
-                ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
+        $this->{'helios_erreur_lors_de_lenvoi_sae'} =
+            $heliosTransactionsSQL->getNbByStatusAndAuthority(
+				HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
                 $id
             );
-        $this->{'actes_erreur_lors_de_lenvoi_sae'} =
-            $actesTransactionsSQL->getNbByStatusAndAuthority(
-                ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-                $id
-            );
+
         $this->{'authority_id'} = $id;
         $this->title = "SAE - Statistiques sur une collectivité";
     }
