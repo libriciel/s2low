@@ -2,6 +2,10 @@
 
 ## 4.0.4
 
+## Evolution
+
+- Les stastiques d'envoi au SAE passent sur une page dédiée
+
 ## Ajout
 
 - Ajout de l'arrondissement 9 pour le département 75 (SGAR) #503
