@@ -72,6 +72,7 @@ class AdminSAEController extends Controller {
         $id = $this->getRecuperateurGet()->getInt('id');
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+		$actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
 
 		$this->{'actes_nb_en_retard'} =
 			count($actesTransactionsSQL->getTransactionToArchive(
@@ -83,6 +84,10 @@ class AdminSAEController extends Controller {
 				ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
 				$id
 			);
+
+        $this->{'acte_nb_en_attente_auto'} =
+            $actesArchiveControler->getAllTransactionIdToSend();
+
 		$this->{'actes_nb_envoye_sae_4h'} =
 			$actesTransactionsSQL->getNbByStatusAndAuthority(
 				ActesStatusSQL::STATUS_ENVOYE_AU_SAE,

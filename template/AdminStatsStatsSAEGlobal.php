@@ -4,7 +4,7 @@
 
 <table class="data-table table table-striped ">
     <tr class="<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>">
-        <td>Actes en attente de transmission au SAE depuis</td>
+        <td>Actes en attente de transmission au SAE</td>
         <td><span class="label label-<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_en_attente_sae_4h ?></span></td>
         <td>
             <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ?>" class="icon">
@@ -12,6 +12,12 @@
             </a>
         </td>
     </tr>
+    <tr class="<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>">
+        <td>Actes en attente de transmission au SAE (mode automatique)</td>
+        <td><span class="label label-<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>"><?php echo $actes_nb_en_attente_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
     <tr class="<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>">
         <td>Actes envoyé au SAE </td>
         <td><span class="label label-<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_envoye_sae_4h ?></span></td>
@@ -22,6 +28,13 @@
         </td>
     </tr>
 
+    <tr class="<?php echo $actes_nb_envoye_auto?"danger":"success" ?>">
+        <td>Actes envoyé au SAE (mode automatique) </td>
+        <td><span class="label label-<?php echo $actes_nb_envoye_auto?"danger":"success" ?>"><?php echo $actes_nb_envoye_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+
     <tr class="<?php echo $actes_erreur_lors_de_lenvoi_sae?"danger":"success" ?>">
         <td>Actes erreur lors de l'envoi au SAE</td>
         <td><span class="label label-<?php echo $actes_erreur_lors_de_lenvoi_sae?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_lenvoi_sae ?></span></td>
@@ -31,6 +44,7 @@
             </a>
         </td>
     </tr>
+
     <tr class="<?php echo $actes_erreur_lors_de_larchivage?"danger":"success" ?>">
         <td>Actes erreur lors de l'archivage</td>
         <td><span class="label label-<?php echo $actes_erreur_lors_de_larchivage?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_larchivage ?></span></td>

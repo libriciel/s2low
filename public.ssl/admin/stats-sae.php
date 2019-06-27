@@ -3,4 +3,4 @@
 
 require_once(__DIR__ . "/../../init/init.php");
 
-$frontController->go("AdminStats", "statsSAE");
+$frontController->go("AdminStats", "statsSAEGlobal");
