@@ -311,6 +311,12 @@ class ActesTransactionsSQL extends SQL{
         return $this->queryOne($sql,$status_id,$authority_id);
     }
 
+    public function getIdByStatusAndAuthority($status_id,$authority_id){
+        $sql = "SELECT id FROM actes_transactions " .
+            " WHERE last_status_id=? AND authority_id = ? ORDER BY actes_transactions.id DESC ";
+        return $this->queryOneCol($sql,$status_id,$authority_id);
+    }
+
     public function getListByStatusAndAuthority($status_id,$authority_id,$offset,$limit){
         $offset = intval($offset);
         $limit = intval($limit);

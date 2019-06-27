@@ -3,6 +3,15 @@
 <h2>@ctes</h2>
 
 <table class="data-table table table-striped ">
+
+
+
+    <tr class="<?php echo $actes_nb_en_retard?"danger":"success" ?>">
+        <td>Actes en retard pour la de transmission au SAE (mode automatique)</td>
+        <td><span class="label label-<?php echo $actes_nb_en_retard?"danger":"success" ?>"><?php echo $actes_nb_en_retard ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
     <tr class="<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>">
         <td>Actes en attente de transmission au SAE</td>
         <td><span class="label label-<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_en_attente_sae_4h ?></span></td>

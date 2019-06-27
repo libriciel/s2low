@@ -63,7 +63,7 @@
 
     <h3>Actes</h3>
     <div class="form-group">
-        <label class="col-md-4 label-form" for="actes_flux_id">Identifiant du flux à créer&nbsp;: </label>
+        <label class="col-md-4 label-form" for="actes_flux_id">Identifiant du flux à créer&nbsp;(actes-generique par défaut): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -75,7 +75,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 label-form" for="actes_action">Action à déclencher&nbsp;: </label>
+        <label class="col-md-4 label-form" for="actes_action">Action à déclencher&nbsp;: (send-archive par défaut)</label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -125,7 +125,7 @@
 
     <h3>Hélios</h3>
     <div class="form-group">
-        <label class="col-md-4 label-form" for="helios_flux_id">Identifiant du flux à créer&nbsp;: </label>
+        <label class="col-md-4 label-form" for="helios_flux_id">Identifiant du flux à créer&nbsp;(helios-generique): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -137,7 +137,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 label-form" for="helios_action">Action à déclencher&nbsp;: </label>
+        <label class="col-md-4 label-form" for="helios_action">Action à déclencher&nbsp;(send-archive par défaut): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"

@@ -13,6 +13,11 @@ class AdminStatsController extends Controller {
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
+
+        $this->{'actes_nb_en_retard'} = count($actesTransactionsSQL->getTransactionToArchive(
+            ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER
+        ));
+
         $this->actes_nb_en_attente_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
         $this->actes_nb_en_attente_auto = count($actesArchiveControler->getAllTransactionIdToSend());
 

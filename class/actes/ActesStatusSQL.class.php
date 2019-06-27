@@ -16,12 +16,17 @@ class ActesStatusSQL {
     const STATUS_ACQUITTEMENT_ENVOYE = 8;
 
 	const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
+
 	const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
 
 	const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
 
 	const STATUS_ENVOYE_AU_SAE = 12;
 	const STATUS_ARCHIVE_PAR_LE_SAE = 13;
+
+    /** @var int
+     * @deprecated use STATUS_ERREUR_LORS_DE_L_ENVOI_SAE instead
+     */
 	const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
 
 	const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
@@ -38,5 +43,18 @@ class ActesStatusSQL {
 		}
 		return $result;
 	}
+
+	public static function getStatusLibelle($status_id){
+	    $status_libelle_list = [
+	        19 => "En attente de transmission au SAE",
+	        20 => "Erreur lors de l'envoi au SAE",
+            12 => "Envoyé au SAE",
+            13 => "Archivé par le SAE",
+            14 => "Erreur lors de l'archivage",
+        ];
+
+	    return $status_libelle_list[$status_id]??$status_id;
+
+    }
 
 }

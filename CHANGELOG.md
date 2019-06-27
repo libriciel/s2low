@@ -4,7 +4,8 @@
 
 ## Evolution
 
-- Les stastiques d'envoi au SAE passent sur une page dédiée
+- Les statistiques d'envois au SAE passent sur une page dédiée
+- Ajout de bouton permettant de modifier l'état des transactions envoyé au SAE en cas d'erreur
 
 ## Ajout
 

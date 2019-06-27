@@ -144,9 +144,10 @@ switch ($trans->get("type")) {
     }
     $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
     if ($trans->get("sae_transfer_identifier")) {
-        $html .= $doc->getHTMLArrayline("Identifiant Pastell (archivage)", get_hecho($trans->get("sae_transfer_identifier")));
+        $url_pastell = preg_replace("#(/api/?)$#","",$authority_info['pastell_url']);
+        $url_pastell = "$url_pastell/Document/detail?id_e={$authority_info['pastell_id_e']}&id_d=".$trans->get("sae_transfer_identifier");
+        $html .= $doc->getHTMLArrayline("URL sur Pastell (archivage)","<a href='$url_pastell' target='_blank'>$url_pastell</a>");
     }
-
 
     if ($trans->get("broadcasted") == 't')
       $notification = "Notifiée à " . $trans->get("broadcast_emails");
@@ -547,13 +548,29 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISS
 
 if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
 	$actionHtml .= "<div class=\"action\">\n";
-	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_verif_sae.php\" method=\"post\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
 	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur le SAE\" /> \n";
 	$actionHtml .= "</div>\n</form>\n";
 	$actionHtml .= "</div>\n";
 }
+if ($me->isSuper()) {
+    $actesSAEController = $objectInstancier->get(ActesSAEController::class);
+    $status_cible_list = $actesSAEController->getActionPossible($transStatus);
+    foreach ($status_cible_list as $new_status_id) {
+        $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
+        $actionHtml .= "<div class=\"action\">\n";
+        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+        $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+        $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
+        $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
+        $actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+        $actionHtml .= "</div>\n</form>\n";
+        $actionHtml .= "</div>\n";
+    }
+}
+
 
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
@@ -629,14 +646,6 @@ if ($me->isSuper()) {
 		$actionHtml .= "</div></form>\n";
 	}
 
-	if ($transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
-		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_send_sae.php\"  method=\"post\">\n";
-		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Forcer l'envoi synchrone au SAE :</label>\n";
-		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-		$actionHtml .= "<input type=\"submit\" value=\"Forcer l'envoi au SAE\" class=\"btn btn-warning\" />\n";
-		$actionHtml .= "</div></form>\n";
-
-	}
 
 
 }
