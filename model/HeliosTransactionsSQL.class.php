@@ -273,15 +273,17 @@ class HeliosTransactionsSQL extends SQL {
 
 		$status_list = implode(",",$status);
 
+		$module_id = $this->queryOne("SELECT id FROM modules WHERE name=?","helios");
+
 		$date=date('Y-m-d',strtotime("-$nb_days days"));
 		$sql = "SELECT helios_transactions.id FROM helios_transactions ".
 			" JOIN helios_transactions_workflow " .
-			" ON (helios_transactions.id = helios_transactions_workflow.transaction_id AND helios_transactions_workflow.status_id IN ($status_list)) ".
+			" ON (helios_transactions.id = helios_transactions_workflow.transaction_id AND helios_transactions_workflow.status_id = 8) ".
 			" JOIN authorities ON authorities.id=helios_transactions.authority_id ".
 			" JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
 			" AND helios_transactions.id >= authority_pastell_config.transaction_id_min " .
 			" AND helios_transactions.id <= authority_pastell_config.transaction_id_max " .
-			" WHERE authority_pastell_config.module_id = 2 ".
+			" WHERE authority_pastell_config.module_id = $module_id ".
 			" AND helios_transactions.last_status_id IN ($status_list)".
 			" AND helios_transactions_workflow.date <= ? ";
 
@@ -300,6 +302,7 @@ class HeliosTransactionsSQL extends SQL {
 		$sql.=	" ORDER BY helios_transactions.id ";
 		return $this->queryOneCol($sql,$data);
 	}
+
 
 	public function getNbByStatusAndAuthority($status_id,$authority_id){
 		$sql = "SELECT count(*) FROM helios_transactions " .

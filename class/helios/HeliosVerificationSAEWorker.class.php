@@ -24,8 +24,12 @@ class HeliosVerificationSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		$date = date("Y-m-d",strtotime("-60 days"));
-		return $this->heliosTransactionsSQL->getIdFromStatusWithSAE(9,$date);
+		return $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
+			HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
+			0,
+			true,
+			[HeliosStatusSQL::ENVOYER_AU_SAE]
+		);
 	}
 
 	/**

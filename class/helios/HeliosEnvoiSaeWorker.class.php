@@ -5,14 +5,14 @@ class HeliosEnvoiSaeWorker implements IWorker {
 	const QUEUE_NAME = 'helios-envoi-sae';
 
 	private $heliosArchiveControler;
-	private $heliosTransactionSQL;
+	private $heliosTransactionsSQL;
 
 	public function __construct(
 		HeliosEnvoiSAE $heliosArchiveControler,
 		HeliosTransactionsSQL $heliosTransactionsSQL
 	) {
 		$this->heliosArchiveControler = $heliosArchiveControler;
-		$this->heliosTransactionSQL = $heliosTransactionsSQL;
+		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 	}
 
 	public function getQueueName(){
@@ -24,8 +24,11 @@ class HeliosEnvoiSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		return $this->heliosTransactionSQL->getIdsByStatus(
-			HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE
+		return $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
+			HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
+			0,
+			true,
+			[HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE]
 		);
 	}
 

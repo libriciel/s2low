@@ -364,7 +364,6 @@ class ActesTransactionsSQL extends SQL{
         }
 
 		$sql.=	" ORDER BY at.id ";
-
 		return $this->queryOneCol($sql,$data);
 	}
 
