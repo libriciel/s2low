@@ -60,6 +60,22 @@ if ( ! $permission->canView($me,$owner)){
 	exit ();
 }
 
+$authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+$authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
+
+
+if ($me->isSuper()){
+	$link_authority = WEBSITE_SSL."admin/authorities/admin_authority_edit.php?id={$authority_info['id']}";
+	$authority_td = "<a href='$link_authority'>".get_hecho($authority_info['name'])."</a>";
+
+	$link_user = WEBSITE_SSL."/admin/users/admin_user_edit.php?id=".$owner->getId();
+	$user_td = "<a href='$link_user'>".get_hecho($owner->get("givenname") . " " . $owner->get("name"))."</a>";
+} else {
+	$authority_td = get_hecho($authority_info['name']);
+	$user_td = get_hecho($owner->get("givenname") . " " . $owner->get("name"));
+}
+
+
 $doc = new HTMLLayout();
 
 $doc->setTitle("Helios : visualisation de transactions pour un fichier");
@@ -96,8 +112,16 @@ $html .= $doc->getHTMLArrayline("Date de postage" ,Helpers :: getDateFromBDDDate
 $html .= $doc->getHTMLArrayline("État actuel" ,$currentStatus);
 $html .= $doc->getHTMLArrayline("Taille (octets)" ,$trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1" ,$trans->get("sha1"));
-$html .= $doc->getHTMLArrayline("Suivie par" ,$userInfo->getPrettyName());
-$html .= $doc->getHTMLArrayline("Collectivité" ,$authorityInfo->get("name"));
+$html .= $doc->getHTMLArrayline("Suivie par" ,$user_td);
+$html .= $doc->getHTMLArrayline("Collectivité" ,$authority_td);
+
+
+if ($trans->get("sae_transfer_identifier")) {
+	$url_pastell = preg_replace("#(/api/?)$#","",$authority_info['pastell_url']);
+	$url_pastell = "$url_pastell/Document/detail?id_e={$authority_info['pastell_id_e']}&id_d=".$trans->get("sae_transfer_identifier");
+	$html .= $doc->getHTMLArrayline("URL sur Pastell (archivage)","<a href='$url_pastell' target='_blank'>$url_pastell</a>");
+}
+
 $arch_url = $trans->get("archive_url");
 
 if (!empty ($arch_url)) {
@@ -186,6 +210,20 @@ if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
 	$actionHtml .= "</div>\n</form>\n";
 }
 
+$heliosSAEController = $objectInstancier->get(HeliosSAEController::class);
+$status_cible_list = $heliosSAEController->getActionPossible($currentStatusId);
+foreach ($status_cible_list as $new_status_id) {
+	$libelle_status = HeliosStatusSQL::getStatusLibelle($new_status_id);
+	$actionHtml .= "<div class=\"action\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+	$actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
+	$actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+	$actionHtml .= "</div>\n</form>\n";
+	$actionHtml .= "</div>\n";
+}
+
 if ($me->isSuper()) {
 
 	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
@@ -224,6 +262,7 @@ if ($me->isSuper()) {
 		ob_end_clean();
 
 	}
+
 }
 
 

@@ -118,7 +118,13 @@ class HeliosTransaction extends DataObject {
 		  "descr"=>"",
 		  "type"=>"isString",
 		  "mandatory"=>false,
-	  )
+	  ),
+	  "sae_transfer_identifier" => array(
+		  "descr" => "",
+		  "type" => "isString",
+		  "maxlength" => 256,
+		  "mandatory" => false
+	  ),
   );
 
   /**

@@ -24,11 +24,7 @@ class ActesStatusSQL {
 	const STATUS_ENVOYE_AU_SAE = 12;
 	const STATUS_ARCHIVE_PAR_LE_SAE = 13;
 
-    /** @var int
-     * @deprecated use STATUS_ERREUR_LORS_DE_L_ENVOI_SAE instead
-     */
 	const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
-
 	const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
 
 	public function __construct(SQLQuery $sqlQuery){

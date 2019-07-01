@@ -337,7 +337,7 @@ class ActesTransactionsSQL extends SQL{
 		$this->query($sql,$transaction_id,$authority_id);
 	}
 
-	public function getTransactionToArchive($nb_days = 62, $authority_id=0){
+	public function getTransactionToArchive($nb_days = 62, $authority_id=0,$is_auto = true){
 		$date=date('Y-m-d',strtotime("- $nb_days DAY"));
 
 		$sql = "SELECT at.id FROM actes_transactions AS at ".
@@ -345,16 +345,18 @@ class ActesTransactionsSQL extends SQL{
 			" JOIN authorities ON authorities.id=at.authority_id ".
 			" JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id ".
             " AND at.id >= authority_pastell_config.transaction_id_min " .
-			" WHERE authority_pastell_config.module_id = 1 AND authority_pastell_config.is_auto='t' ".
+			" AND at.id <= authority_pastell_config.transaction_id_max" .
+			" WHERE authority_pastell_config.module_id = 1 " .
 			" AND at.type='1' ".
 			" AND at.last_status_id IN (4,5) ".
 			" AND atw.date > '2008-06-01' ".
 			" AND atw.date < ? ";
 
-            //" AND at.id <= authority_pastell_config.transaction_id_max"
-        ;
-
 		$data[] = $date;
+
+		if ($is_auto){
+			$sql .= " AND authority_pastell_config.is_auto='t' ";
+		}
 
 		if ($authority_id){
 		    $sql .= "AND at.authority_id=? ";

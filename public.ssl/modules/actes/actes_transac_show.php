@@ -555,6 +555,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
 	$actionHtml .= "</div>\n</form>\n";
 	$actionHtml .= "</div>\n";
 }
+
 if ($me->isSuper()) {
     $actesSAEController = $objectInstancier->get(ActesSAEController::class);
     $status_cible_list = $actesSAEController->getActionPossible($transStatus);
