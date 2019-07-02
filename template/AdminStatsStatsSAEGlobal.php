@@ -1,16 +1,78 @@
 <h1>Statistiques d'envoi au SAE</h1>
 
-<h2>@ctes</h2>
+
+<h2>@ctes - Mode automatique</h2>
+
 
 <table class="data-table table table-striped ">
 
 
-
     <tr class="<?php echo $actes_nb_en_retard?"danger":"success" ?>">
-        <td>Actes en retard pour la de transmission au SAE (mode automatique)</td>
+        <td>Actes en retard pour la de transmission au SAE </td>
         <td><span class="label label-<?php echo $actes_nb_en_retard?"danger":"success" ?>"><?php echo $actes_nb_en_retard ?></span></td>
         <td>&nbsp;</td>
     </tr>
+
+    <tr class="<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>">
+        <td>Actes en attente de transmission au SAE </td>
+        <td><span class="label label-<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>"><?php echo $actes_nb_en_attente_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+
+    <tr class="<?php echo $actes_nb_envoye_auto?"danger":"success" ?>">
+        <td>Actes en attente d'acceptation par le SAE  </td>
+        <td><span class="label label-<?php echo $actes_nb_envoye_auto?"danger":"success" ?>"><?php echo $actes_nb_envoye_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+
+    <tr class="<?php echo $actes_erreur_lors_de_lenvoi_sae_auto?"danger":"success" ?>">
+        <td>Actes erreur lors de l'envoi au SAE</td>
+        <td><span class="label label-<?php echo $actes_erreur_lors_de_lenvoi_sae_auto?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_lenvoi_sae_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="<?php echo $actes_erreur_lors_de_larchivage_auto?"danger":"success" ?>">
+        <td>Actes erreur lors de l'archivage</td>
+        <td><span class="label label-<?php echo $actes_erreur_lors_de_larchivage_auto?"danger":"success" ?>"><?php echo $actes_erreur_lors_de_larchivage_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+</table>
+
+
+<h2>Helios - Mode automatique</h2>
+
+<table class="data-table table table-striped ">
+    <tr class="<?php echo $helios_nb_en_retard?"danger":"success" ?>">
+        <td>PES ALLER en retard</td>
+        <td><span class="label label-<?php echo $helios_nb_en_retard?"danger":"success" ?>"><?php echo $helios_nb_en_retard ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr class="<?php echo $helios_nb_en_attente_sae_auto?"danger":"success" ?>">
+        <td>PES ALLER en attente de transmission au SAE</td>
+        <td><span class="label label-<?php echo $helios_nb_en_attente_sae_auto?"danger":"success" ?>"><?php echo $helios_nb_en_attente_sae_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr class="<?php echo $helios_nb_envoye_sae_auto?"danger":"success" ?>">
+        <td>PES ALLER en attente d'acceptation par le SAE </td>
+        <td><span class="label label-<?php echo $helios_nb_envoye_sae_auto?"danger":"success" ?>"><?php echo $helios_nb_envoye_sae_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr class="<?php echo $helios_erreur_lors_de_larchivage_auto?"danger":"success" ?>">
+        <td>PES ALLER en erreur lors de l'envoi au SAE</td>
+        <td><span class="label label-<?php echo $helios_erreur_lors_de_larchivage_auto?"danger":"success" ?>"><?php echo $helios_erreur_lors_de_larchivage_auto ?></span></td>
+        <td>&nbsp;</td>
+    </tr>
+
+</table>
+
+
+<h2>@ctes - Basé sur l'état</h2>
+
+<table class="data-table table table-striped ">
 
     <tr class="<?php echo $actes_nb_en_attente_sae_4h?"danger":"success" ?>">
         <td>Actes en attente de transmission au SAE</td>
@@ -21,14 +83,9 @@
             </a>
         </td>
     </tr>
-    <tr class="<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>">
-        <td>Actes en attente de transmission au SAE (mode automatique)</td>
-        <td><span class="label label-<?php echo $actes_nb_en_attente_auto?"danger":"success" ?>"><?php echo $actes_nb_en_attente_auto ?></span></td>
-        <td>&nbsp;</td>
-    </tr>
 
     <tr class="<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>">
-        <td>Actes envoyé au SAE </td>
+        <td>Actes en attente d'acceptation par le SAE</td>
         <td><span class="label label-<?php echo $actes_nb_envoye_sae_4h?"danger":"success" ?>"><?php echo $actes_nb_envoye_sae_4h ?></span></td>
         <td>
             <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_ENVOYE_AU_SAE ?>" class="icon">
@@ -36,13 +93,6 @@
             </a>
         </td>
     </tr>
-
-    <tr class="<?php echo $actes_nb_envoye_auto?"danger":"success" ?>">
-        <td>Actes envoyé au SAE (mode automatique) </td>
-        <td><span class="label label-<?php echo $actes_nb_envoye_auto?"danger":"success" ?>"><?php echo $actes_nb_envoye_auto ?></span></td>
-        <td>&nbsp;</td>
-    </tr>
-
 
     <tr class="<?php echo $actes_erreur_lors_de_lenvoi_sae?"danger":"success" ?>">
         <td>Actes erreur lors de l'envoi au SAE</td>
@@ -67,7 +117,8 @@
 </table>
 
 
-<h2>PES</h2>
+
+<h2>Helios - Basé sur l'état</h2>
 
 <table class="data-table table table-striped ">
     <tr class="<?php echo $helios_nb_en_attente_sae_4h?"danger":"success" ?>">
@@ -80,7 +131,7 @@
         </td>
     </tr>
     <tr class="<?php echo $helios_nb_envoye_sae_4h?"danger":"success" ?>">
-        <td>PES ALLER envoyés au SAE </td>
+        <td>PES ALLER en attente d'acceptation par le SAE </td>
         <td><span class="label label-<?php echo $helios_nb_envoye_sae_4h?"danger":"success" ?>"><?php echo $helios_nb_envoye_sae_4h ?></span></td>
         <td>
             <a href="/modules/helios/index.php?status=<?php echo HeliosStatusSQL::ENVOYER_AU_SAE ?>" class="icon">

@@ -63,7 +63,8 @@ class ActesSAEController extends Controller {
             ],
             ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE => [
                 ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
-                ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE
+                ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE,
+				ActesStatusSQL::STATUS_ENVOYE_AU_SAE
             ]
         ];
         return $all_status[$status]??[];
