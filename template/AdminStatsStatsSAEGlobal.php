@@ -42,6 +42,9 @@
 </table>
 
 
+<a href="/admin/stats-sae-actes.php" class="btn btn-primary">Détail</a>
+
+
 <h2>Helios - Mode automatique</h2>
 
 <table class="data-table table table-striped ">
@@ -68,6 +71,8 @@
     </tr>
 
 </table>
+
+<a href="/admin/stats-sae-helios.php" class="btn btn-primary">Détail</a>
 
 
 <h2>@ctes - Basé sur l'état</h2>

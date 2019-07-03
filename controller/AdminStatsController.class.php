@@ -74,7 +74,27 @@ class AdminStatsController extends Controller {
         $this->helios_nb_en_attente_sae_4h = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
         $this->helios_nb_envoye_sae_4h = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::ENVOYER_AU_SAE);
         $this->helios_erreur_lors_de_larchivage = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
-
     }
+
+    public function SAEActesAction(){
+		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+		$this->{'status_list'} = [
+			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+			ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+			ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+			ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
+		];
+		$this->{'info_list'} = $actesTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->{'status_list'});
+	}
+
+	public function SAEHeliosAction(){
+		$heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+		$this->{'status_list'} = [
+			HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+			HeliosStatusSQL::ENVOYER_AU_SAE,
+			HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+		];
+		$this->{'info_list'} = $heliosTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->{'status_list'});
+	}
 
 }

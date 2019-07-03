@@ -393,4 +393,29 @@ class ActesTransactionsSQL extends SQL{
 		return $this->query($sql,$authority_id,$min_transaction_id,$max_transaction_id);
 	}
 
+	public function getNbTransactionGroupBySAEStatusForModeAuto(array $status_list)  {
+
+		$module_id = $this->queryOne(
+			"SELECT id FROM modules WHERE name=?",
+			ModuleSQL::ACTES_MODULE_NAME
+		);
+		$sql = "SELECT authority_pastell_config.authority_id,authorities.name,last_status_id,count(last_status_id) FROM authority_pastell_config " .
+			" JOIN actes_transactions ON actes_transactions.authority_id=authority_pastell_config.authority_id " .
+			" JOIN authorities ON authority_pastell_config.authority_id=authorities.id ".
+			" WHERE is_auto=true and module_id=$module_id AND last_status_id IN (".implode(',',$status_list).") " .
+			" GROUP BY authority_pastell_config.authority_id,authorities.name,last_status_id" .
+			" ORDER BY authorities.name";
+		foreach($this->query($sql) as $line){
+			if (empty($result[$line['authority_id']])){
+				$result[$line['authority_id']] = [
+					'name' => $line['name'],
+					'status'=> []
+				];
+			}
+			$result[$line['authority_id']]['status'][$line['last_status_id']] = $line['count'];
+		}
+
+		return $result;
+	}
+
 }

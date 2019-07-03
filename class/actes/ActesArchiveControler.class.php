@@ -272,13 +272,14 @@ class ActesArchiveControler {
 			$pastell->postSignature($id_d, $actesFilesForSAE->signature_filepath);
 		}
 
-
-		$pastell->postFile(
-			$id_d,
-			"acte_tamponne",
-			$actesFilesForSAE->actes_tamponnees_filepath,
-			$actesFilesForSAE->actes_tamponnees_filename
-		);
+		if ($actesFilesForSAE->actes_tamponnees_filename && $actesFilesForSAE->actes_tamponnees_filepath) {
+			$pastell->postFile(
+				$id_d,
+				"acte_tamponne",
+				$actesFilesForSAE->actes_tamponnees_filepath,
+				$actesFilesForSAE->actes_tamponnees_filename
+			);
+		}
 
 		$pastell->setDatePostage($id_d,$actesFilesForSAE->date_postage);
 
