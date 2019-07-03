@@ -13,4 +13,26 @@ class ActesFilesForSAE {
 	public $aractes_filepath;
 	public $echange_prefecture;
 
+
+	public function renameSameFilename(){
+		$all_filename[$this->actes_filename] = 1;
+		foreach($this->annexe as $num_annexe => $annexe){
+			$annexe_filename = $annexe['filename'];
+			if (isset($all_filename[$annexe_filename])){
+				$path_info = pathinfo($annexe_filename);
+				$this->annexe[$num_annexe]['filename'] = sprintf(
+					"%s_%d" ,
+					$path_info['filename'],
+					$all_filename[$annexe_filename]
+				);
+				if (isset($path_info['extension'])){
+					$this->annexe[$num_annexe]['filename'].=".{$path_info['extension']}";
+				}
+			} else {
+				$all_filename[$annexe_filename] = 0;
+			}
+			$all_filename[$annexe_filename]++;
+		}
+	}
+
 }

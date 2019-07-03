@@ -245,6 +245,7 @@ class ActesArchiveControler {
 		}
 
 		$actesFilesForSAE->echange_prefecture=[$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar];
+		$actesFilesForSAE->renameSameFilename();
 		return $actesFilesForSAE;
 	}
 
