@@ -72,6 +72,11 @@ class HeliosEnvoiSAE {
 			$this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 
 			$pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
+
+			if (! $pes_aller_filepath){
+				throw new RecoverableException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
+			}
+
 			$pes_acquit_filepath = HELIOS_RESPONSES_ROOT . "/" . $transactionsInfo['acquit_filename'];
 
 			$pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
