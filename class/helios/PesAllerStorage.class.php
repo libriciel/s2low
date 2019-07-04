@@ -1,5 +1,7 @@
 <?php
 
+use \Symfony\Component\Filesystem\Filesystem;
+
 class PesAllerStorage {
 
     const CONTAINER_NAME = "pes_aller";
@@ -62,6 +64,27 @@ class PesAllerStorage {
         return true;
     }
 
+    public function deleteIfIsInCloud($sha1){
+    	try {
+			$file = $this->helios_files_upload_root . "/" . $sha1;
+			if (!$this->openStackSwiftWrapper->fileExistsOnCloud(
+				self::CONTAINER_NAME,
+				$sha1
+			)) {
+				$this->logger->info("PES ALLER $sha1 not existing on cloud : not deleted");
+				return false;
+			}
+			$this->logger->info("Deleting PES ALLER : $file");
+
+			$filesystem = new Filesystem();
+			$filesystem->remove($file);
+			return true;
+		}catch (Exception $e){
+    		$this->logger->alert("Problème lors de la supression du PES ALLER $file : " . $e->getMessage());
+    		return false;
+		}
+	}
+
 	/**
 	 * @param int $no_access_during_nb_days
 	 * @throws Exception
@@ -70,7 +93,7 @@ class PesAllerStorage {
         $sigtermHandler = new SigTermHandler();
         $dh = opendir($this->helios_files_upload_root);
         if (! $dh) {
-            throw new Exception("Impossible d'ouvrir " . $this->helios_files_upload_root);
+            throw new UnrecoverableException("Impossible d'ouvrir " . $this->helios_files_upload_root);
         }
 
         while (($file = readdir($dh)) !== false) {

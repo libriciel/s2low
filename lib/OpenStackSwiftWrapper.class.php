@@ -64,10 +64,11 @@ class OpenStackSwiftWrapper {
     	if (! $filepath_on_cloud){
     		$filepath_on_cloud = basename($filepath_local);
 		}
+
+
         if ($this->fileSystem->exists($filepath_local)){
             return $filepath_local;
-        };
-
+        }
 
         $dirname_local = dirname($filepath_local);
 

@@ -10,6 +10,7 @@ class HeliosEnvoiSAE {
 	private $logger;
 	private $authoritySQL;
 	private $pastellPropertiesSQL;
+	private $pesAllerStorage;
 
 	public function __construct(
         PesAllerRetriever $pesAllerRetriever,
@@ -17,7 +18,8 @@ class HeliosEnvoiSAE {
 		Logger $logger,
 		AuthoritySQL $authoritySQL,
 		HeliosTransactionsSQL $heliosTransactionsSQL,
-		PastellPropertiesSQL $pastellPropertiesSQL
+		PastellPropertiesSQL $pastellPropertiesSQL,
+		PesAllerStorage $pesAllerStorage
     ){
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 		$this->authoritySQL = $authoritySQL;
@@ -25,6 +27,7 @@ class HeliosEnvoiSAE {
 		$this->pesAllerRetriever = $pesAllerRetriever;
 		$this->logger = $logger;
 		$this->pastellPropertiesSQL = $pastellPropertiesSQL;
+		$this->pesAllerStorage = $pesAllerStorage;
 	}
 
 	public function sendAllArchive($authority_id = 0){
@@ -106,7 +109,7 @@ class HeliosEnvoiSAE {
 			);
 			$this->heliosTransactionsSQL->setSAETransferIdentifier($transaction_id, $id_d);
 		} catch (Exception $e) {
-			if ($id_d){
+			if (! empty($id_d)){
 				try {
 					$pastell->delete($id_d);
 				} catch (Exception $e){
@@ -115,6 +118,10 @@ class HeliosEnvoiSAE {
 			}
 			throw $e;
 		}
+
+
+		$this->pesAllerStorage->deleteIfIsInCloud($transactionsInfo['sha1']);
+
 
 		return true;
 	}

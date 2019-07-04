@@ -24,6 +24,8 @@ class ActesArchiveControler {
 
 	private $actesEnvelopeSQL;
 
+	private $actesEnvelopeStorage;
+
 	public function __construct(
         ActesRetriever $actesRetriever,
 		PastellPropertiesSQL $pastellPropertiesSQL,
@@ -31,7 +33,8 @@ class ActesArchiveControler {
 		PastellWrapperFactory $pastellWrapperFactory,
 		AuthoritySQL $authoritySQL,
 		ActesTransactionsSQL $actesTransactionsSQL,
-		ActesEnvelopeSQL $actesEnvelopeSQL
+		ActesEnvelopeSQL $actesEnvelopeSQL,
+		ActesEnvelopeStorage $actesEnvelopeStorage
     ){
 		$this->pastellWrapperFactory = $pastellWrapperFactory;
 		$this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -40,6 +43,7 @@ class ActesArchiveControler {
 		$this->pastellPropetiesSQL = $pastellPropertiesSQL;
 		$this->logger = $logger;
 		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
+		$this->actesEnvelopeStorage = $actesEnvelopeStorage;
 	}
 
 	public function getAllTransactionIdToSend($authority_id = 0){
@@ -114,6 +118,10 @@ class ActesArchiveControler {
 			$id_d = $this->createPastellDocument($transaction_id);
 			$this->sendFilesToPastell($transaction_id, $id_d, $actesFileForArchive);
 			$this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
+
+			$actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
+			$this->actesEnvelopeStorage->deleteIfIsInCloud($actesEnvelopeInfo['file_path']);
+
 		} finally {
 			$tmpFolder->delete($tmp_folder);
 		}

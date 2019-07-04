@@ -20,7 +20,7 @@ class PesAllerRetriever {
 
     public function getPath($pes_sha1){
         try {
-            $result = $this->openStackSwiftWrapper->retrieveFile(
+        	$result = $this->openStackSwiftWrapper->retrieveFile(
                 PesAllerStorage::CONTAINER_NAME,
                 $this->helios_files_upload_root . "/" . $pes_sha1
             );

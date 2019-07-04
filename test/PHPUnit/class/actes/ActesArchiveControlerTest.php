@@ -49,6 +49,16 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	public function testSendArchiveCasNominal(){
 		$this->mockPastellFactory();
 		$this->mockActesTamponne();
+
+		$actesEnvelopeStorage = $this->getMockBuilder(ActesEnvelopeStorage::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$actesEnvelopeStorage
+			->expects($this->any())
+			->method("deleteIfIsInCloud")
+			->willReturn(false);
+		$this->getObjectInstancier()->set(ActesEnvelopeStorage::class,$actesEnvelopeStorage);
+
 		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
 		$transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
@@ -57,6 +67,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 		$this->getActesArchivesControler()->sendArchive($transaction_id);
 		$last_status_info = $actesTransactionsSQL->getLastStatusInfo($transaction_id);
+
 		$this->assertEquals(ActesStatusSQL::STATUS_ENVOYE_AU_SAE,$last_status_info['status_id']);
 
 		$log_record = $this->getLogRecords();

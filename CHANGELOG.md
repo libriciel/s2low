@@ -6,6 +6,7 @@
 
 - Les statistiques d'envois au SAE passent sur une page dédiée
 - Ajout de bouton permettant de modifier l'état des transactions envoyé au SAE en cas d'erreur
+- Les fichiers PES ALLER et actes sont supprimé dès qu'on les a envoyé sur le SAE (s'ils existente sur le cloud)
 
 ## Ajout
 

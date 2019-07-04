@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Filesystem\Filesystem;
+
 class ActesEnvelopeStorage {
 
 	const CONTAINER_NAME = 'acte_envelope';
@@ -76,7 +78,28 @@ class ActesEnvelopeStorage {
 		return true;
 	}
 
+	public function deleteIfIsInCloud($actes_envelope_file_path){
+		try {
+			$file = $this->actes_files_upload_root . "/" . $actes_envelope_file_path;
+			if (!$this->openStackSwiftWrapper->fileExistsOnCloud(
+				self::CONTAINER_NAME,
+				$actes_envelope_file_path
+			)) {
+				$this->logger->info("Actes $actes_envelope_file_path not existing on cloud : not deleted");
+				return false;
+			}
+			$this->logger->info("Deleting Actes : $actes_envelope_file_path");
 
+			$filesystem = new Filesystem();
+			$filesystem->remove($file);
+			return true;
+		}catch (Exception $e){
+			$this->logger->alert(
+				"Problème lors de la supression de l'acte $actes_envelope_file_path : " . $e->getMessage()
+			);
+			return false;
+		}
+	}
 	/**
 	 * @param $min_date
 	 * @param $max_date
