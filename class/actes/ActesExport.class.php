@@ -9,19 +9,28 @@ class ActesExport {
 	private $actesTransactionsSQL;
 	private $actesRetriever;
 	private $actesIncludedFileSQL;
+	private $actesTamponne;
+
+	private $tamponner_fichier = false;
 
 	public function __construct(
 		S2lowLogger $s2lowLogger,
 		AuthoritySQL $authoritySQL,
 		ActesTransactionsSQL $actesTransactionsSQL,
 		ActesRetriever $actesRetriever,
-		ActesIncludedFileSQL $actesIncludedFileSQL
+		ActesIncludedFileSQL $actesIncludedFileSQL,
+		ActeTamponne $acteTamponne
 	) {
 		$this->s2lowLogger = $s2lowLogger;
 		$this->authoritySQL = $authoritySQL;
 		$this->actesTransactionsSQL = $actesTransactionsSQL;
 		$this->actesRetriever = $actesRetriever;
 		$this->actesIncludedFileSQL = $actesIncludedFileSQL;
+		$this->actesTamponne = $acteTamponne;
+	}
+
+	public function setTamponnerFichier(bool $tamponner_fichier){
+		$this->tamponner_fichier = $tamponner_fichier;
 	}
 
 	/**
@@ -67,6 +76,9 @@ class ActesExport {
 			$this->exportOneTransaction($transaction_info,$output_directory);
 		}
 	}
+
+
+
 
 	/**
 	 * @param int $authority_id
@@ -126,7 +138,16 @@ class ActesExport {
 			$file_name = $file_name['filename'];
 			$tgzExctactor->extract($actes_path,$file_name);
 			$destination_path = $directory."/".$file_name;
-			$filesystem->copy($tmp_folder."/$file_name",$destination_path);
+			if ($this->tamponner_fichier && pathinfo($tmp_folder."/$file_name",PATHINFO_EXTENSION) == 'pdf'){
+				$file_string = $this->actesTamponne->tamponnerPDF(
+					$tmp_folder."/$file_name",
+					$transaction_info['id']
+				);
+				$this->s2lowLogger->debug("[TAMPON OK] $file_name");
+				$filesystem->dumpFile($destination_path,$file_string);
+			} else {
+				$filesystem->copy($tmp_folder."/$file_name",$destination_path);
+			}
 			$this->s2lowLogger->debug("[COPIE OK] $file_name -> $destination_path");
 		}
 

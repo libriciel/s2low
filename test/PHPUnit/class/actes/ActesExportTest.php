@@ -7,6 +7,12 @@ class ActesExportTest extends S2lowTestCase {
 	const ENVELOPPE_TEST_PATH = __DIR__."/fixtures/abc-TACT--000000000--20170803-16.tar.gz";
 	const XML_TEST = "<test></test>";
 
+	private function getActesExport(){
+		$acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();
+		$this->getObjectInstancier()->set(ActeTamponne::class,$acteTamponne);
+		return $this->getObjectInstancier()->get(ActesExport::class);
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -45,7 +51,8 @@ class ActesExportTest extends S2lowTestCase {
 			"034-000000000-20170801-20170803E-AI-1-1_1.pdf"
 		);
 
-		$actesExport = $this->getObjectInstancier()->get(ActesExport::class);
+
+		$actesExport = $this->getActesExport();
 
 		$tmpFolder = new TmpFolder();
 		$tmp_folder = $tmpFolder->create();
@@ -73,19 +80,19 @@ class ActesExportTest extends S2lowTestCase {
 	}
 
 	/**
-	 * @throws UnrecoverableException
+	 * @throws Exception
 	 */
 	public function testExportWhenAuthorityDoesNotExists(){
-		$actesExport = $this->getObjectInstancier()->get(ActesExport::class);
+		$actesExport = $this->getActesExport();
 		$this->setExpectedException(UnrecoverableException::class,"La collectivité 42 n'existe pas");
 		$actesExport->export(42, "/tmp/");
 	}
 
 	/**
-	 * @throws UnrecoverableException
+	 * @throws Exception
 	 */
 	public function testExportWhenOutputDirectoryDoesNotExists(){
-		$actesExport = $this->getObjectInstancier()->get(ActesExport::class);
+		$actesExport = $this->getActesExport();
 		$this->setExpectedException(
 			UnrecoverableException::class,
 			"Le répertoire /42/ n'existe pas ou n'est pas accessible en écriture"
@@ -94,10 +101,10 @@ class ActesExportTest extends S2lowTestCase {
 	}
 
 	/**
-	 * @throws UnrecoverableException
+	 * @throws Exception
 	 */
 	public function testExportWhenThereIsNoTransactions(){
-		$actesExport = $this->getObjectInstancier()->get(ActesExport::class);
+		$actesExport = $this->getActesExport();
 		$actesExport->export(1, "/tmp/",0,0);
 		$log_records = $this->getLogRecords();
 		$this->assertEquals("Aucune transaction ne correspond aux critères",$log_records[2]['message']);
