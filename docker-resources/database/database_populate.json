@@ -2949,6 +2949,10 @@
         {
             "id": "13",
             "name": "En attente d'\u00eatre sign\u00e9"
+        },
+        {
+            "id": "21",
+            "name": "D\u00e9truite"
         }
     ]
 }
