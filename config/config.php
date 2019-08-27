@@ -30,7 +30,7 @@ if (!defined("EMAIL_ADMIN_TECHNIQUE")){
 }
 
 if(!defined("WEBSITE_TITLE")){
-        define('WEBSITE_TITLE', "Tiers de téléransmission multiprotocoles");
+        define('WEBSITE_TITLE', "Tiers de tï¿½lï¿½ransmission multiprotocoles");
 }
 
 if(!defined('WEBSITE')){
@@ -45,9 +45,9 @@ if(!defined('WEBMASTER')){
         define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
 }
 
-// Adresse du From des emails émis
+// Adresse du From des emails ï¿½mis
 if(!defined('TDT_FROM_EMAIL')){
-        define('TDT_FROM_EMAIL', "Tiers de télétransmission <tedetis@s2low.docker.libriciel.fr>");
+        define('TDT_FROM_EMAIL', "Tiers de tï¿½lï¿½transmission <tedetis@s2low.docker.libriciel.fr>");
 }
 
 if (!defined('LOG_FILE')){
@@ -59,7 +59,7 @@ if (!defined('LOG_LEVEL')){
 }
 
 
-// Paramètres base de données
+// Paramï¿½tres base de donnï¿½es
 if(!defined('DB_HOST')){
         define('DB_HOST', "db");
 }
@@ -82,7 +82,7 @@ if(!defined('DB_CLIENT_ENCODING')){
 
 
 /**
- * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
+ * Active le mode beanstakld : les jobs sont envoyï¿½s sur le serveur beanstakld
  *
  */
 if(!defined("MODE_BEANSTALKD")){
@@ -98,7 +98,7 @@ if (!defined("BEANSTAKLD_PORT")){
 }
 
 
-//Définition de la connexion à la base de données pour les tests unitaires et les tests de validation
+//Dï¿½finition de la connexion ï¿½ la base de donnï¿½es pour les tests unitaires et les tests de validation
 if(!defined('DB_HOST_TEST')){
 	define('DB_HOST_TEST', "dbtest");
 }
@@ -369,7 +369,7 @@ if(!defined('ACTES_RESPONSE_ERROR_PATH')){
 // Liste des adresses de destinataires des notification commune ï¿½coutes les collectivitï¿½s de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){
 	define('ACTES_COMMON_BROADCAST_EMAILS', 'defaut@s2low.docker.libriciel.fr');
-} 
+}
 
 // Restreindre ou non plusieurs demandes de classification par jour par collectivitï¿½ (1 par jour si restreint)
 if(!defined('ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY')){
@@ -392,20 +392,20 @@ if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')){
 	define('ACTES_DONT_VALID_SIGNING_CERTIFICATE',false);
 }
 
-//Le type de PJ est obligatoire, peut-être à partir du 08/06/2019
+//Le type de PJ est obligatoire, peut-ï¿½tre ï¿½ partir du 08/06/2019
 if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")){
 
-	//ACTES_TYPE_PJ_IS_MANDATORY == false => on vérifie que le code existe, si le code n'est pas fourni, on envoi quand même
-	//ACTES_TYPE_PJ_IS_MANDATORY == true => on vérifie que le code existe et qu'il correspond à la nature données, on bloque si pas de code
+	//ACTES_TYPE_PJ_IS_MANDATORY == false => on vï¿½rifie que le code existe, si le code n'est pas fourni, on envoi quand mï¿½me
+	//ACTES_TYPE_PJ_IS_MANDATORY == true => on vï¿½rifie que le code existe et qu'il correspond ï¿½ la nature donnï¿½es, on bloque si pas de code
 
 	define("ACTES_TYPE_PJ_IS_MANDATORY",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
 
 //L'ancienne notice permettait le choix en fonction de la nature et de la classification
-//la nouvelle notice à compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
+//la nouvelle notice ï¿½ compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
 if (! defined("ACTES_TYPE_PAR_NATURE")){
 
-	//ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systématiquement
+	//ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systï¿½matiquement
 	//ACTES_TYPE_PAR_NATURE == true => on filtre uniquement par nature
 
 	define("ACTES_TYPE_PAR_NATURE",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
@@ -429,7 +429,7 @@ if(!defined('HELIOS_RESPONSES_ROOT')){
 	define('HELIOS_RESPONSES_ROOT', '/data/tdt-workspace/helios/response/');
 }
 
-// Repertoire de stockage des reponses en erreur 
+// Repertoire de stockage des reponses en erreur
 if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
 	define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
 }
@@ -507,7 +507,7 @@ if(!defined('HELIOS_GENERATED_FILE_PERMISSION')){
 }
 
 if (!defined('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE')){
-	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rôle invalide à configurer');
+	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rï¿½le invalide ï¿½ configurer');
 }
 
 if (! defined('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME')){
@@ -586,13 +586,13 @@ if(!defined('IMAP_SERVER')){
 }
 
 if(!defined('MAIL_MESSAGE')){
-	define('MAIL_MESSAGE',"Vous avez reçu un courrier recommandé par S2LOW");
+	define('MAIL_MESSAGE',"Vous avez reï¿½u un courrier recommandï¿½ par S2LOW");
 }
 
 if(!defined('MAIL_TEXT')){
 	define('MAIL_TEXT',"Bonjour,
-    
-Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
+
+Un courrier recommandï¿½ avec d'ï¿½ventuelles piï¿½ces jointes vous a ï¿½tï¿½ transmis par la plateforme sï¿½curisï¿½e de l'Adullact. Nous vous proposons de cliquer sur le lien suivant pour accï¿½der au courrier recommandï¿½ et confirmer la rï¿½ception : accï¿½s au courrier recommandï¿½.");
 }
 /*************************
  * Paramï¿½tre module DIA
@@ -655,9 +655,26 @@ if (! defined("PDF_STAMP_URL")){
     define("PDF_STAMP_URL","http://pdf-stamp:8080");
 }
 
+# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des actes
+# lors de l'utilisation du script purge-transactions.php
+if (! defined("ACTES_RETENTION_FICHIERS_NB_JOURS")){
+    define("ACTES_RETENTION_FICHIERS_NB_JOURS",3650000);
+}
+
+# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des PES_ALLER
+# lors de l'utilisation du script purge-transactions.php
+if (! defined("HELIOS_RETENTION_FICHIERS_NB_JOURS")){
+    define("HELIOS_RETENTION_FICHIERS_NB_JOURS",3650000);
+}
+
+# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des PES_RETOUR
+# lors de l'utilisation du script purge-transactions.php
+if (! defined("HELIOS_RETENTION_RETOURS_NB_JOURS")){
+    define("HELIOS_RETENTION_RETOURS_NB_JOURS",3650000);
+}
+
 //Ceci doit toujours etre la fin du fichier
 require_once('config-static.php');
 //Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php ï¿½ la place de init.php
 //on fait en sorte que config.php charge init.php et rï¿½ciproquement
 require_once(__DIR__."/../init/init.php");
-
