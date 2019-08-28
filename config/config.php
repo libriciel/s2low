@@ -30,7 +30,7 @@ if (!defined("EMAIL_ADMIN_TECHNIQUE")){
 }
 
 if(!defined("WEBSITE_TITLE")){
-        define('WEBSITE_TITLE', "Tiers de t�l�ransmission multiprotocoles");
+        define('WEBSITE_TITLE', "Tiers de téléransmission multiprotocoles");
 }
 
 if(!defined('WEBSITE')){
@@ -47,7 +47,7 @@ if(!defined('WEBMASTER')){
 
 // Adresse du From des emails émis
 if(!defined('TDT_FROM_EMAIL')){
-        define('TDT_FROM_EMAIL', "Tiers de t�l�transmission <tedetis@s2low.docker.libriciel.fr>");
+        define('TDT_FROM_EMAIL', "Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>");
 }
 
 if (!defined('LOG_FILE')){

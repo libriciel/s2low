@@ -88,7 +88,7 @@ foreach ($purge_list as $data) {
     } else {
         $msg = "Demande de purge des fichiers";
         $blScript->traceln("Actes ($index/$count_max) - $msg - id $tid, envelope $envelope_id");
-        $actesTransactionsSQL->updateStatus($tid, ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE, $msg);
+        $actesTransactionsSQL->updateStatus($tid, ActesStatusSQL::STATUS_DETRUITE, $msg);
     }
 }
 
@@ -125,6 +125,6 @@ foreach ($purge_list as $data) {
     } else {
         $msg = "Demande de purge des fichiers";
         $blScript->traceln("Helios ($index/$count_max) - $msg - id $tid");
-        $heliosTransactionsSQL->updateStatus($tid, HeliosTransactionsSQL::ACCEPTE_SAE, $msg);
+        $heliosTransactionsSQL->updateStatus($tid, HeliosStatusSQL::DETRUITE, $msg);
     }
 }
