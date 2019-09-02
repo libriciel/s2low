@@ -1,5 +1,10 @@
 # Change Log
 
+## 4.1.1
+
+## Correction
+- Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
+
 ## 4.1.0 - 2019-07-08
 
 *Cette version contient principalement des améliorations sur les versements SAE.*
