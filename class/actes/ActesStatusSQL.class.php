@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class ActesStatusSQL {
 
@@ -27,10 +27,12 @@ class ActesStatusSQL {
 	const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
 	const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
 
+  const STATUS_DETRUITE = 16;
+
 	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 	}
-	
+
 	public function getAllStatus(){
 		$sql = "SELECT id, name FROM actes_status ORDER BY id";
 		$result = array();
@@ -44,8 +46,8 @@ class ActesStatusSQL {
 	    $status_libelle_list = [
 	        19 => "En attente de transmission au SAE",
 	        20 => "Erreur lors de l'envoi au SAE",
-            12 => "Envoyé au SAE",
-            13 => "Archivé par le SAE",
+            12 => "EnvoyÃ© au SAE",
+            13 => "ArchivÃ© par le SAE",
             14 => "Erreur lors de l'archivage",
         ];
 
