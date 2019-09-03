@@ -10,8 +10,8 @@ ini_set("error_reporting", E_ALL & ~E_STRICT);
 
 date_default_timezone_set("Europe/Paris");
 
-//Attention, changement de la locale LC_TIME : ne pas la redÃ©finir dans le fichier LocalSettings !!!
-//Cette locale est cohÃ©rente avec le code de S2low
+//Attention, changement de la locale LC_TIME : ne pas la redéfinir dans le fichier LocalSettings !!!
+//Cette locale est cohérente avec le code de S2low
 setlocale(LC_TIME, "fr_FR.UTF-8");
 
 if ( ! defined("OPERATEUR_DE_TELETRANSMISSION")) {
@@ -23,14 +23,14 @@ if(!defined("EMAIL_ADMIN")){
         define("EMAIL_ADMIN","noreply@s2low.docker.libriciel.fr");
 }
 
-// Adresse email sur laquelle seront reÃ§u les alertes critiques du systÃ¨me nÃ©cessitant une intervention immÃ©diate
-// PossibilitÃ© de mettre plusieurs emails sÃ©parÃ©s par des virgules
+// Adresse email sur laquelle seront reçu les alertes critiques du système nécessitant une intervention immédiate
+// Possibilité de mettre plusieurs emails séparés par des virgules
 if (!defined("EMAIL_ADMIN_TECHNIQUE")){
 	define("EMAIL_ADMIN_TECHNIQUE","noreply@noreplyaaaaa.aaaa");
 }
 
 if(!defined("WEBSITE_TITLE")){
-        define('WEBSITE_TITLE', "Tiers de tÃ©lÃ©ransmission multiprotocoles");
+        define('WEBSITE_TITLE', "Tiers de téléransmission multiprotocoles");
 }
 
 if(!defined('WEBSITE')){
@@ -45,9 +45,9 @@ if(!defined('WEBMASTER')){
         define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
 }
 
-// Adresse du From des emails Ã©mis
+// Adresse du From des emails émis
 if(!defined('TDT_FROM_EMAIL')){
-        define('TDT_FROM_EMAIL', "Tiers de tÃ©lÃ©transmission <s2low@s2low.docker.libriciel.fr>");
+        define('TDT_FROM_EMAIL', "Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>");
 }
 
 if (!defined('LOG_FILE')){
@@ -59,7 +59,7 @@ if (!defined('LOG_LEVEL')){
 }
 
 
-// ParamÃ¨tres base de donnÃ©es
+// Paramètres base de données
 if(!defined('DB_HOST')){
         define('DB_HOST', "db");
 }
@@ -82,7 +82,7 @@ if(!defined('DB_CLIENT_ENCODING')){
 
 
 /**
- * Active le mode beanstakld : les jobs sont envoyÃ©s sur le serveur beanstakld
+ * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
  *
  */
 if(!defined("MODE_BEANSTALKD")){
@@ -98,7 +98,7 @@ if (!defined("BEANSTAKLD_PORT")){
 }
 
 
-//Dï¿½finition de la connexion Ã  la base de donnÃ©es pour les tests unitaires et les tests de validation
+//D?finition de la connexion à la base de données pour les tests unitaires et les tests de validation
 if(!defined('DB_HOST_TEST')){
 	define('DB_HOST_TEST', "dbtest");
 }
@@ -119,7 +119,7 @@ if (! defined('PHP_UNIT_AUTOLOADER')) {
 	define("PHP_UNIT_AUTOLOADER", "../pastell/ext/composer/vendor/autoload.php");
 }
 
-// Nombre d'Ã©lÃ©ment affichÃ©s par dÃ©faut par page dans les listes
+// Nombre d'élément affichés par défaut par page dans les listes
 if(!defined('DEFAULT_ITEMS_PER_PAGE')){
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
@@ -131,7 +131,7 @@ if(!defined("MODE")){
 }
 
 
-// Permission des fichiers et rÃ©pertoires gÃ©nÃ©rÃ©s
+// Permission des fichiers et répertoires générés
 if (MODE == "dev"){
 	define('GENERATED_DIRS_PERMS', 0777);
 	define('GENERATED_FILES_PERMS', 0666);
@@ -140,7 +140,7 @@ if (MODE == "dev"){
 	define('GENERATED_FILES_PERMS', 0660);
 }
 
-// Emplacement certificat/clef privÃ©e pour l'horodatage des logs
+// Emplacement certificat/clef privée pour l'horodatage des logs
 if(!defined('TIMESTAMPING_CERT')){
         define('TIMESTAMPING_CERT', '/etc/s2low/ssl/tedetis_timestamp_cert.pem');
 }
@@ -164,7 +164,7 @@ if(!defined("OPENSIGN_WSDL")){
         define("OPENSIGN_WSDL","http://horodatage.services.adullact.org/opensign.wsdl");
 }
 
-//AutoritÃ© de certification qui a signÃ© le certificat de l'horodateur (obligatoire Ã  cause d'une limitation d'openssl)
+//Autorité de certification qui a signé le certificat de l'horodateur (obligatoire à cause d'une limitation d'openssl)
 if(!defined("OPENSIGN_CA")){
         define("OPENSIGN_CA",__DIR__."/../data-exemple/root_ca.crt");
 }
@@ -174,12 +174,12 @@ if(!defined("OPENSIGN_CRT")){
         define("OPENSIGN_CRT",__DIR__."/../data-exemple/ts.crt");
 }
 
-//Temps en seconde avant de considÃ©rer l'horodateur en timeout
+//Temps en seconde avant de considérer l'horodateur en timeout
 if(!defined("OPENSIGN_TIMEOUT")){
         define("OPENSIGN_TIMEOUT",2);
 }
 
-// Constantes gÃ©nÃ©rales
+// Constantes générales
 if(!defined('TRACE_FILE_PATH')){
 	define('TRACE_FILE_PATH','/data/log/slow.log');
 }
@@ -197,7 +197,7 @@ if(!defined("VERIFICATION_SIREN")){
 	define("VERIFICATION_SIREN",true);
 }
 
-//ParamÃ¨tre pour l'outil de signature Libersign
+//Paramètre pour l'outil de signature Libersign
 
 if(!defined("LIBERSIGN_URL")){
         define("LIBERSIGN_URL",WEBSITE_SSL."/libersign/");
@@ -215,32 +215,32 @@ if (! defined("LIBERSIGN_INSTALLER")){
     define("LIBERSIGN_INSTALLER","https://libersign.libriciel.fr/make.sh");
 }
 
-//ParamÃ¨tre outils pour donner la forme canonique d'un document XML (C14N)
+//Paramètre outils pour donner la forme canonique d'un document XML (C14N)
 if (!defined("XML_STARLET_PATH")){
 	define("XML_STARLET_PATH","/usr/bin/xmlstarlet");
 }
 
-//ParamÃ¨tre outils de signature XML
+//Paramètre outils de signature XML
 if (!defined("XMLSEC1_PATH")){
 	define("XMLSEC1_PATH","/usr/bin/xmlsec1");
 }
 
-//Emplacement d'un rÃ©pertoire contenant le "hasher" des autoritÃ©s de certification RGS
+//Emplacement d'un répertoire contenant le "hasher" des autorités de certification RGS
 //voir "man c_rehash" pour le "hasher"
-//Ce rÃ©pertoire ne doit contenir que des certificats RGS et sert Ã  signer et tÃ©lÃ©transmettre des flux Actes
+//Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
 if (! defined("RGS_VALIDCA_PATH")){
 	define("RGS_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 }
 
-//Emplacement des certificats permettant la connexion Ã  la plateforme ainsi que la signature et la tÃ©lÃ©transmission
+//Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
 //des flux PES
 if (! defined("EXTENDED_VALIDCA_PATH")){
 	define("EXTENDED_VALIDCA_PATH","/etc/s2low/ssl/validca/");
 }
 
 
-//Permet de dÃ©finir le nombre de mois pendant lequelle un enregistrement est gardÃ© dans la table logs avant
-//d'Ãªtre dÃ©posÃ© dans la table logs_historique
+//Permet de définir le nombre de mois pendant lequelle un enregistrement est gardé dans la table logs avant
+//d'être déposé dans la table logs_historique
 if (! defined("KEEP_NB_MONTHS_IN_LOGS")){
 	define("KEEP_NB_MONTHS_IN_LOGS",6);
 }
@@ -251,12 +251,12 @@ if (!defined("EXPORT_LOGS_DIRECTORY")){
 
 
 ///////////////////////////////////
-///// ParamÃ¨tres module Actes /////
+///// Paramètres module Actes /////
 ///////////////////////////////////
 
 if (!defined("ACTES_MINISTERE_ACRONYME")){
     //MISILL, MIAT, MIOCT, puis MIOCTI entre 2002 et 2012
-    //MI - MinistÃ¨re de l'intÃ©rieur - depuis le 16/05/2012
+    //MI - Ministère de l'intérieur - depuis le 16/05/2012
     define('ACTES_MINISTERE_ACRONYME','MI');
 }
 
@@ -310,12 +310,12 @@ if (!defined('ACTES_IMAP_PASSWORD')){
     define('ACTES_IMAP_PASSWORD','password');
 }
 
-// Nom de l'application vis Ã  vis du MIAT
+// Nom de l'application vis à vis du MIAT
 if(!defined('ACTES_APPLI_NAME')){
         define('ACTES_APPLI_NAME', 'TACT');
 }
 
-// Trigramme de l'application pour la gÃ©nÃ©ration des noms d'archive .tar.gz
+// Trigramme de l'application pour la génération des noms d'archive .tar.gz
 if(!defined('ACTES_APPLI_TRIGRAMME')){
         define('ACTES_APPLI_TRIGRAMME', 'abc');
 }
@@ -325,7 +325,7 @@ if(!defined('ACTES_APPLI_QUADRIGRAMME')){
 }
 
 
-// Taille maximum autorisÃ©e des archives (en octets)
+// Taille maximum autorisée des archives (en octets)
 if(!defined('ACTES_ARCHIVE_MAX_SIZE')){
         define('ACTES_ARCHIVE_MAX_SIZE', 150 * 1024 * 1024);
 }
@@ -340,49 +340,49 @@ if(!defined('ANTIVIRUS_TMP_PATH')){
         define('ANTIVIRUS_TMP_PATH','/tmp/');
 }
 
-// Adresse Ã©letronique du TdT pour le retour des messages du MIAT
+// Adresse életronique du TdT pour le retour des messages du MIAT
 if(!defined('ACTES_TDT_MAIL_ADDRESS')){
         define('ACTES_TDT_MAIL_ADDRESS', 's2low@s2low.docker.libriciel.fr');
 }
 
-// RÃ©pertoire de stockage des fichiers envoyÃ©s par les utilisateurs (archives .tar.gz)
+// Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
 if(!defined('ACTES_FILES_UPLOAD_ROOT')){
         define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads');
 }
 
-// RÃ©pertoire de stockage des fichiers constituant les lots
+// Répertoire de stockage des fichiers constituant les lots
 if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
         define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
 }
 
-// RÃ©pertoire temporaire de stockage des rÃ©ponses du ministÃ¨re par mail
+// Répertoire temporaire de stockage des réponses du ministère par mail
 if(!defined('ACTES_RESPONSE_TMP_LOCAL_PATH')){
     define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
 }
 
-// RÃ©pertoire temporaire de stockage des rÃ©ponses en erreur du ministÃ¨re
+// Répertoire temporaire de stockage des réponses en erreur du ministère
 if(!defined('ACTES_RESPONSE_ERROR_PATH')){
     define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
 }
 
 
-// Liste des adresses de destinataires des notification commune Ã©coutes les collectivitÃ©s de l'instance
+// Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if(!defined('ACTES_COMMON_BROADCAST_EMAILS')){
 	define('ACTES_COMMON_BROADCAST_EMAILS', 'defaut@s2low.docker.libriciel.fr');
 }
 
-// Restreindre ou non plusieurs demandes de classification par jour par collectivitÃ© (1 par jour si restreint)
+// Restreindre ou non plusieurs demandes de classification par jour par collectivité (1 par jour si restreint)
 if(!defined('ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY')){
 	define('ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY', false);
 }
 
-// Message indiquant que le plugin d upload du traitement par lot est en mode dÃ©gradÃ©
+// Message indiquant que le plugin d upload du traitement par lot est en mode dégradé
 if(!defined('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE')){
-	define('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE', "La version de votre navigateur ne permet pas d'utiliser les fonctionnalitÃ©s de sÃ©lection multiple de fichiers de maniÃ¨re optimum.<br />Vous devez choisir vos fichiers un par un.");
+	define('ACTES_BATCH_UPLOAD_PLUGIN_FALLBACK_MESSAGE', "La version de votre navigateur ne permet pas d'utiliser les fonctionnalités de sélection multiple de fichiers de manière optimum.<br />Vous devez choisir vos fichiers un par un.");
 }
 
 
-//Permet sur un site de formation ou de dÃ©monstration de ne pas attendre la durÃ©e lÃ©gale de deux mois avant de valider une transaction ACTE.
+//Permet sur un site de formation ou de démonstration de ne pas attendre la durée légale de deux mois avant de valider une transaction ACTE.
 if (!defined('ACTES_ALWAYS_CAN_VALIDATE')){
 	define('ACTES_ALWAYS_CAN_VALIDATE',false);
 }
@@ -392,20 +392,20 @@ if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')){
 	define('ACTES_DONT_VALID_SIGNING_CERTIFICATE',false);
 }
 
-//Le type de PJ est obligatoire, peut-Ãªtre Ã  partir du 08/06/2019
+//Le type de PJ est obligatoire, peut-être à partir du 08/06/2019
 if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")){
 
-	//ACTES_TYPE_PJ_IS_MANDATORY == false => on vÃ©rifie que le code existe, si le code n'est pas fourni, on envoi quand mÃªme
-	//ACTES_TYPE_PJ_IS_MANDATORY == true => on vÃ©rifie que le code existe et qu'il correspond Ã  la nature donnÃ©es, on bloque si pas de code
+	//ACTES_TYPE_PJ_IS_MANDATORY == false => on vérifie que le code existe, si le code n'est pas fourni, on envoi quand même
+	//ACTES_TYPE_PJ_IS_MANDATORY == true => on vérifie que le code existe et qu'il correspond à la nature données, on bloque si pas de code
 
 	define("ACTES_TYPE_PJ_IS_MANDATORY",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
 
 //L'ancienne notice permettait le choix en fonction de la nature et de la classification
-//la nouvelle notice Ã  compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
+//la nouvelle notice à compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
 if (! defined("ACTES_TYPE_PAR_NATURE")){
 
-	//ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systÃ©matiquement
+	//ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systématiquement
 	//ACTES_TYPE_PAR_NATURE == true => on filtre uniquement par nature
 
 	define("ACTES_TYPE_PAR_NATURE",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
@@ -414,13 +414,13 @@ if (! defined("ACTES_TYPE_PAR_NATURE")){
 
 
 ////////////////////////////////////
-///// ParamÃ¨tres module Helios /////
+///// Paramètres module Helios /////
 ////////////////////////////////////
 if(!defined('HELIOS_FILES_ROOT')){
 	define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
 }
 
-// RÃ©pertoire de stockage des fichiers envoyÃ©s par les utilisateurs
+// Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('HELIOS_FILES_UPLOAD_ROOT')){
 	define('HELIOS_FILES_UPLOAD_ROOT', '/data/tdt-workspace/helios/sending/');
 }
@@ -435,14 +435,14 @@ if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
 }
 
 
-// Repertoire de stockage des fichiers temporaires Ã  envoyer au FTP
+// Repertoire de stockage des fichiers temporaires à envoyer au FTP
 if(!defined('HELIOS_FILES_UPLOAD_TMP')){
 	define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
 }
 
 
 
-//Pour le script d'analyse des enveloppe Helios Ã  envoyer
+//Pour le script d'analyse des enveloppe Helios à envoyer
 if(!defined('HELIOS_VALIDATION_UPSTART_TOUCH_FILE')){
 	define('HELIOS_VALIDATION_UPSTART_TOUCH_FILE','/tmp/helios-validation-upstart');
 }
@@ -455,7 +455,7 @@ if(!defined('HELIOS_COUNTER_FILE')){
 if(!defined("HELIOS_ZIP_BEFORE_SEND")){
 	define("HELIOS_ZIP_BEFORE_SEND",false);
 }
-//Mettre "" pour la production, mettre un rÃ©pertoire de destination pour un serveur de test
+//Mettre "" pour la production, mettre un répertoire de destination pour un serveur de test
 //Faire terminer la destination par un /
 if(!defined("HELIOS_SENDING_DESTINATION")){
 	define("HELIOS_SENDING_DESTINATION","/entree/");
@@ -465,7 +465,7 @@ if(!defined("HELIOS_SENDING_MODE_DEMO")){
 	define("HELIOS_SENDING_MODE_DEMO",true);
 }
 
-//Pour le script de rÃ©cupÃ©ration des enveloppe Helios
+//Pour le script de récupération des enveloppe Helios
 if(!defined('HELIOS_FTP_SERVER')){
 	define('HELIOS_FTP_SERVER','ftp');
 }
@@ -507,7 +507,7 @@ if(!defined('HELIOS_GENERATED_FILE_PERMISSION')){
 }
 
 if (!defined('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE')){
-	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','RÃ´le invalide Ã  configurer');
+	define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE','Rôle invalide à configurer');
 }
 
 if (! defined('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME')){
@@ -547,24 +547,24 @@ if (!defined("HELIOS_OCRE_PASSWORD")){
 }
 
 if ( ! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")){
-	//Permet de faire sauter la vÃ©rication de l'unicitÃ© du NomFic dans les PES_Aller
-	//Il faut mettre cette constante Ã  faux et explicitement cochÃ© une case sur l'autoritÃ© sur la console
+	//Permet de faire sauter la vérication de l'unicité du NomFic dans les PES_Aller
+	//Il faut mettre cette constante à faux et explicitement coché une case sur l'autorité sur la console
 	define("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY", false);
 }
 
 
 ////////////////////////////////////////
-///// ParamÃ¨tres module Etat Civil /////
+///// Paramètres module Etat Civil /////
 ////////////////////////////////////////
-// RÃ©pertoire de stockage des fichiers envoyÃ©s par les utilisateurs
+// Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
 	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/uploads/etat_civil');
 }
 
 ///////////////////////////////////
-///// ParamÃ¨tres module Mail  /////
+///// Paramètres module Mail  /////
 ///////////////////////////////////
-// RÃ©pertoire de stockage des fichiers envoyÃ©s par les utilisateurs
+// Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('MAIL_FILES_UPLOAD_ROOT')){
 	define('MAIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/mail/');
 }
@@ -586,29 +586,29 @@ if(!defined('IMAP_SERVER')){
 }
 
 if(!defined('MAIL_MESSAGE')){
-	define('MAIL_MESSAGE',"Vous avez reÃ§u un courrier recommandÃ© par S2LOW");
+	define('MAIL_MESSAGE',"Vous avez reçu un courrier recommandé par S2LOW");
 }
 
 if(!defined('MAIL_TEXT')){
 	define('MAIL_TEXT',"Bonjour,
 
-Un courrier recommandÃ© avec d'Ã©ventuelles piÃ¨ces jointes vous a Ã©tÃ© transmis par la plateforme sÃ©curisÃ©e de l'ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accÃ©der au courrier recommandÃ© et confirmer la rÃ©ception : accÃ©s au courrier recommandÃ©.");
+Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
 }
 /*************************
- * ParamÃ¨tre module DIA
+ * Paramètre module DIA
  */
 
-//RÃ©pertoire pour les DIA utilisÃ© dans SÂ²low
+//Répertoire pour les DIA utilisé dans S²low
 if(!defined("DIA_UPLOAD_PATH")){
 	define("DIA_UPLOAD_PATH","/data/tdt-workspace/dia/upload");
 }
 
-//RÃ©pertoire pour les DIA reÃ§u via PEC/PRESTO
+//Répertoire pour les DIA reçu via PEC/PRESTO
 if(!defined("DIA_DELIVERY_PATH")){
 	define("DIA_DELIVERY_PATH","/data/tdt-workspace/dia/delivery");
 }
 
-//RÃ©pertoire pour les envois vers PEC/PRESTO
+//Répertoire pour les envois vers PEC/PRESTO
 if(!defined("DIA_TO_PRESTO")){
 	define("DIA_TO_PRESTO","/data/tdt-workspace/dia/to-presto");
 }
@@ -655,19 +655,19 @@ if (! defined("PDF_STAMP_URL")){
     define("PDF_STAMP_URL","http://pdf-stamp:8080");
 }
 
-# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des actes
+# Macro permettant de définir le nombre de jours de rétention des actes
 # lors de l'utilisation du script purge-transactions.php
 if (! defined("ACTES_RETENTION_FICHIERS_NB_JOURS")){
     define("ACTES_RETENTION_FICHIERS_NB_JOURS",3650000);
 }
 
-# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des PES_ALLER
+# Macro permettant de définir le nombre de jours de rétention des PES_ALLER
 # lors de l'utilisation du script purge-transactions.php
 if (! defined("HELIOS_RETENTION_FICHIERS_NB_JOURS")){
     define("HELIOS_RETENTION_FICHIERS_NB_JOURS",3650000);
 }
 
-# Macro permettant de dÃ©finir le nombre de jours de rÃ©tention des PES_RETOUR
+# Macro permettant de définir le nombre de jours de rétention des PES_RETOUR
 # lors de l'utilisation du script purge-transactions.php
 if (! defined("HELIOS_RETENTION_RETOURS_NB_JOURS")){
     define("HELIOS_RETENTION_RETOURS_NB_JOURS",3650000);
@@ -675,6 +675,6 @@ if (! defined("HELIOS_RETENTION_RETOURS_NB_JOURS")){
 
 //Ceci doit toujours etre la fin du fichier
 require_once('config-static.php');
-//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php Ã  la place de init.php
-//on fait en sorte que config.php charge init.php et rÃ©ciproquement
+//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
+//on fait en sorte que config.php charge init.php et réciproquement
 require_once(__DIR__."/../init/init.php");
