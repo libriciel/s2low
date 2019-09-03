@@ -223,7 +223,10 @@ $html .= "  <label for=\"type_envoie\" class=\"control-label\"> Nature de l'envo
 $html .=  $doc->getHTMLSelect("type_envoie",$typeReponse[$trans->get("type")], 
 		Helpers :: getFromSession("type_envoie")) . "\n";
 $html .= " </div>";
+} else {
+	$html .= "<input type='hidden' name='type_envoie' value='1'/>";
 }
+
 $html .= " <div class=\"form-group\">\n";    
 $html .= "   <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
