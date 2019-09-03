@@ -2,6 +2,8 @@
 
 class HeliosEnvoiSaeWorker implements IWorker {
 
+	const MAX_TRANSACTION_TO_SEND = 100;
+
 	const QUEUE_NAME = 'helios-envoi-sae';
 
 	private $heliosArchiveControler;
@@ -23,13 +25,22 @@ class HeliosEnvoiSaeWorker implements IWorker {
 		return $id;
 	}
 
+	/**
+	 * On envoie que les 100 premiers id car sinon, il est possible que le script de récup sur le cloud plante (suite à l'expiration du ticket)
+	 *
+	 * @return 0|array|int[]
+	 */
 	public function getAllId(){
-		return $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
+		return array_slice(
+			$this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
 			HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
 			0,
 			true,
 			[HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE]
-		);
+			),
+			0,
+			self::MAX_TRANSACTION_TO_SEND
+			);
 	}
 
 	/**
