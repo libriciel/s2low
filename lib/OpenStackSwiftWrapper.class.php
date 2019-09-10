@@ -95,8 +95,12 @@ class OpenStackSwiftWrapper {
 
 
     public function fileExistsOnCloud($container_name,$filename){
-        $container = $this->getContainer($container_name);
-        return $container->objectExists($filename);
+    	try {
+			$container = $this->getContainer($container_name);
+			return $container->objectExists($filename);
+		} catch (Exception $e){
+    		return false;
+		}
     }
 
     private function getContainer($container_name){
