@@ -647,6 +647,11 @@ if (! defined("OPENSTACK_SWIFT_CONTAINER_PREFIX")) {
     define("OPENSTACK_SWIFT_CONTAINER_PREFIX", "s2low_dev_");
 }
 
+
+
+
+## Configuration connecteur DOCKER
+
 if (! defined("PADES_VALID_URL")){
     define("PADES_VALID_URL","http://pades-valid:8080");
 }

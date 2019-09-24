@@ -4,12 +4,14 @@ class OpenStackFactoryTest extends PHPUnit_Framework_TestCase {
 
     public function testGetInstance(){
 
-        $openStackFactory = new OpenStackFactory(
-            "a",
-            "b",
-            "c",
-            "d"
-            );
+    	$openStackConfig = new OpenStackConfig();
+
+    	$openStackConfig->openstack_authentication_url_v2 = "a";
+		$openStackConfig->openstack_username = "b";
+		$openStackConfig->openstack_password = "c";
+		$openStackConfig->openstack_tenant = "d";
+
+        $openStackFactory = new OpenStackFactory($openStackConfig);
 
         $openStack = $openStackFactory->getInstance();
         $this->assertInstanceOf("\OpenCloud\OpenStack",$openStack);

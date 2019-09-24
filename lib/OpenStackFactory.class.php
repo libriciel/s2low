@@ -4,35 +4,29 @@ use \OpenCloud\OpenStack;
 
 class OpenStackFactory {
 
-    private $openstack_authentication_url_v2;
-    private $openstack_username;
-    private $openstack_password;
-    private $openstack_tenant;
+    private $openStackConfig;
 
     public function __construct(
-        $openstack_authentication_url_v2,
-        $openstack_username,
-        $openstack_password,
-        $openstack_tenant
+		OpenStackConfig $openStackConfig
     ){
-        $this->openstack_authentication_url_v2 = $openstack_authentication_url_v2;
-        $this->openstack_username = $openstack_username;
-        $this->openstack_password = $openstack_password;
-        $this->openstack_tenant = $openstack_tenant;
+        $this->openStackConfig = $openStackConfig;
     }
-
 
 	/**
 	 * @return OpenStack
 	 */
     public function getInstance(){
         return new OpenStack(
-            $this->openstack_authentication_url_v2,
+			$this->openStackConfig->openstack_authentication_url_v2,
             array(
-                'username'=> $this->openstack_username,
-                'password'=> $this->openstack_password,
-                'tenantName'  => $this->openstack_tenant
+                'username'=> $this->openStackConfig->openstack_username,
+                'password'=> $this->openStackConfig->openstack_password,
+                'tenantName'  => $this->openStackConfig->openstack_tenant
             )
         );
     }
+
+
+
+
 }

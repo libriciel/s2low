@@ -84,10 +84,13 @@ $objectInstancier->set("website",WEBSITE);
 $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
 
-$objectInstancier->set("openstack_authentication_url_v2",OPENSTACK_AUTHENTICATION_URL_V2);
-$objectInstancier->set("openstack_username",OPENSTACK_USERNAME);
-$objectInstancier->set("openstack_password",OPENSTACK_PASSWORD);
-$objectInstancier->set("openstack_tenant",OPENSTACK_TENANT);
+$openStackConfig = new OpenStackConfig();
+$openStackConfig->openstack_authentication_url_v2  = OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfig->openstack_username = OPENSTACK_USERNAME;
+$openStackConfig->openstack_password = OPENSTACK_PASSWORD;
+$openStackConfig->openstack_tenant = OPENSTACK_TENANT;
+
+$objectInstancier->set(OpenStackConfig::class,$openStackConfig);
 $objectInstancier->set("openstack_region",OPENSTACK_REGION);
 $objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAINER_PREFIX);
 
