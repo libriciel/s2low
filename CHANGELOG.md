@@ -5,6 +5,7 @@
 
 ## Evolution
 - Mise à jour du schéma XSD PES v2 en version 5.11
+- Amélioration du script de récupération des classification #535
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents

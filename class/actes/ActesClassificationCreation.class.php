@@ -55,9 +55,19 @@ class ActesClassificationCreation {
 		foreach ($authorities as $authority){
 		    echo $authority['name'] . " - id ".$authority['id']." :";
 			if (! $authority['siren']){
-				echo "[PASS]\n";
+				echo "[PASS] siren absent\n";
 				continue;
 			}
+
+			$authorityObject = new Authority($authority['id']);
+			if (! $authorityObject->isActive()) {
+				echo "[PASS] collectivité inactive\n";
+				continue;
+            }
+            if (! $authorityObject->getModulePermByName('actes')) {
+				echo "[PASS] module actes inactif\n";
+				continue;
+            }
 
 			$result = $this->createEnveloppe(new Authority($authority['id']));
 			if ($result){
