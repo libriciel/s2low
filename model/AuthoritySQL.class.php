@@ -186,4 +186,9 @@ class AuthoritySQL extends SQL {
 		$this->query($sql,$helios_do_not_verify_nom_fic_unicity?1:0,$authority_id);
 	}
 
+	public function create($name,$siren){
+		$sql = "INSERT INTO authorities (name,siren) VALUES (?,?) RETURNING id";
+		return $this->queryOne($sql,$name,$siren);
+	}
+
 }
