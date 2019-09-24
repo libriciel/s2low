@@ -255,7 +255,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	}
 
 
-	public function testSaveWithIncorectType(){
+	public function testSaveWithIncorectTypologie(){
 		$actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
 
 		$envelope_id = $actesEnvelopeSQL->create(1,"000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
@@ -296,5 +296,6 @@ class ActesTransactionTest extends S2lowTestCase {
 		);
 
 	}
+
 
 }

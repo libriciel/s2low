@@ -1128,7 +1128,7 @@ class ActesTransaction extends DataObject {
 
     $new_name = $dest_name;
 
-    if ($code_pj && strlen($code_pj) !=5){
+    if ($code_pj && ! preg_match("#^[A-Z0-9_]{5}$#",$code_pj)){
     	$this->errorMsg = "Le code de la PJ doit faire 5 caractères";
     	return false;
 	}
