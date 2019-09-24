@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunDepense.xsd" />
+  <xs:complexType name="TBlocBordereau">
+    <xs:sequence>
+      <xs:element name="Exer" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice de rattachement budgétaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdBord" type="cm:Base_Num7">
+        <xs:annotation>
+          <xs:documentation>Identifiant du bordereau récapitulatif des mandats. Il est supérieur ou égal à 1.
+Le numéro de bordereau est unique par exercice et par type de bordereau pour un budget collectivité. Un contrôle de séquentialité du numéro est effectué. Si le numéro est déjà dans Hélios rejet du bordereau pour cause de doublon.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteBordEm" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date à laquelle le bordereau de mandat est émis par l'ordonnateur.
+Elle est obligatoire dans les PES dépense Aller et le format doit être respecté.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypBord" type="TTypBordAller">
+        <xs:annotation>
+          <xs:documentation>Type de bordereau.
+Seules les valeurs 01 et 02 et 03 sont possibles.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbrPce" type="cm:Base_Num5">
+        <xs:annotation>
+          <xs:documentation>Nombre total de pièces véhiculées par le bordereau.
+Il est supérieur ou égal à 1 sinon rejet du  flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtCumulAnnuel" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cumul annuel du bordereau. Il est strictement supérieur à 0.
+Obligatoire si dématérialisation avec InfoDematerialisee =1 ou True. Si la balise est absente ou égale à 0 rejet du bordereau ou des PPEM constituant le bordereau.
+Information nécessaire à l'autoportabilité de l'objet.
+L'information peut être présente et doit être mise à disposition pour affichage dans Hélios même si absence de signature fonctionnelle.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBordHT" type="cm:Base_MontantPositif">
+        <xs:annotation>
+          <xs:documentation>Montant HT du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBordTVA" type="cm:Base_Montant_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA du bordereau.
+Zone à remplir si TVA.
+Si un montant est saisi, supérieur à 0,00, au moins une Ligne de Piece du Bordereau doit comporter une balise MtTVA servie avec un  montant  supérieur à 0,00. Sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

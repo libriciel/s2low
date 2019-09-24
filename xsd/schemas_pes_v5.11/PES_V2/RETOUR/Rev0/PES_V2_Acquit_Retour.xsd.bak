@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller/ack" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller/ack" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+	<xs:include schemaLocation="../CommunAck_Retour.xsd" />
+	<xs:element name="PES_ACQUIT_RETOUR" type="TPES_ACQUIT_RETOUR" />
+	<xs:complexType name="TPES_ACQUIT_RETOUR">
+		<xs:sequence>
+			<xs:element name="Enveloppe" type="cm:TEnveloppe">
+				<xs:annotation>
+					<xs:documentation>Description de l'enveloppe</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EnTetePES" type="cm:TEnTetePES">
+				<xs:annotation>
+					<xs:documentation>Description de l'en-tête du PES Acquit Retour</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ACQUIT_RETOUR" type="TACQUIT_RETOUR">
+				<xs:annotation>
+					<xs:documentation>Description de l'Acquit Retour</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TACQUIT_RETOUR">
+		<xs:sequence>
+			<xs:element name="EnTeteAcquit_Retour" type="TEnTeteAcquit_Retour" />
+			<xs:element name="ElementACQUIT_RETOUR" type="TElementACQUIT_RETOUR" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TEnTeteAcquit_Retour">
+		<xs:sequence>
+			<xs:element name="IdVer" type="cm:Base_Num2">
+					<xs:annotation>
+						<xs:documentation>Version de l'Acquit (2)</xs:documentation>
+					</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TElementACQUIT_RETOUR">
+		<xs:sequence>
+			<xs:element name="DomaineAckRetour" type="TDomaineAckRetour">
+				<xs:annotation>
+					<xs:documentation>Domaine. Voir codification.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomFichierRetour" type="cm:Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Reprend le nom du fichier d'origine, transmis par hélios</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TypRestit" type="TTypRestit">
+				<xs:annotation>
+					<xs:documentation>Type de restitution. Voir codification</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DateAcquit" type="cm:Base_Date">
+				<xs:annotation>
+					<xs:documentation>Date d'émission de l'acquit</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

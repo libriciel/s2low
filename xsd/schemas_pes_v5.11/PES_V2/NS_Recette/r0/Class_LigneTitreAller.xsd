@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunRecette.xsd" />
+  <xs:complexType name="TBlocLignePiece">
+    <xs:sequence>
+      <xs:element name="InfoLignePiece" type="TInfoLignePiece">
+        <xs:annotation>
+          <xs:documentation>Identification de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice minOccurs="0">
+        <xs:element name="InfoPrelevement" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Ce bloc peut être utilisé lorsque les prélèvements sont remis aux organismes bancaires par l'ordonnateur (NatPrel 02)
+Pour un titre ORMC : les données de chaque ligne de ce titre doivent être identiques (hormis le montant). La somme des montants de prélèvement des lignes d'un titre ORMC correspond au montant du prélèvement de l'article de rôle dans Hélios.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="TInfoPrelevement" />
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InfoPrelevementSEPA" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Pour les prélèvements au format SEPA.
+Pour un titre ORMC : les données de chaque ligne de ce titre doivent être identiques (hormis le montant). La somme des montants de prélèvement des lignes d'un titre ORMC correspond au montant du prélèvement de l'article de rôle dans Hélios.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="TInfoPrelevementSEPA" />
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="InfoAssure" type="TInfoAssure" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Informations spécifiques aux nomenclatures « Hospitalières »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Rattachements éventuels à d'autres pièces (annulation …)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiants complémentaires : régie, n° d'inventaire, n° emprunt, marché…)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoLignePiece">
+    <xs:sequence>
+      <xs:element name="IdLigne" type="cm:Base_Num6">
+        <xs:annotation>
+          <xs:documentation>N° de ligne de pièce : Numéro permettant de subdiviser le titre lorsqu'il concerne plusieurs débiteurs (titres collectifs) ou plusieurs imputations (titres à imputation multiple). Dans le cas général des titres individuels n'ayant qu'une imputation budgétaire le n° de ligne est mis à 1.
+Cette valeur est forcément supérieure ou égale à 1 sinon rejet du bordereau.
+Pour les titres ORMC :
+- Le numéro de ligne correspond au numéro de sous-article de rôle dans Hélios.
+- Le titre ORMC doit être un titre mono débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjLignePce" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet de la ligne de pièce.
+Zone libre.
+Pour les titres ORMC :
+- La zone ObjLignePce correspondra à l'ObjetPiece du sous-article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodProdLoc" type="cm:Base_Alphanum4">
+        <xs:annotation>
+          <xs:documentation>Code produit local : Information destinée à identifier la nature du produit chez l'ordonnateur.
+Le CodProdLoc est soit défini localement soit correspond aux codes produit nationaux. Il est associé dans Hélios à un Code produit national. Utilisation dans toute nomenclature.
+Pour les titres ORMC :
+- Pour les lignes qui comportent un code produit géré par un budget collectivité bénéficiaire autre que le budget collectivité gestionnaire, les zones IdCollBen, CodCollBen, CodBudBen sont à compléter. Ce code produit local figure dans une Convention RMC (Rôle multi collectivités) active dans Hélios sur le budget collectivité gestionnaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinGeo" type="cm:Base_Alphanum9_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Finess géographique.
+Zone facultative concernant uniquement les hôpitaux. Cette donnée permet d'afficher le Finess géographique.
+Elle reste purement facultative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodEtGeo" type="cm:Base_Alphanum3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code établissement géographique.
+Cette zone concerne uniquement les nomenclatures M21 et M22. Et reste purement facultative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nature" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Pour les titres ORMC : proposition de valorisation  à 588.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Fonction" type="cm:Base_Num10_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte fonction. Zone concernant seulement les collectivités utilisant les instructions M14, M52, M57 et M71.
+Si valorisation sur des nomenclatures autres, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Operation" type="cm:Base_Alphanum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Opération. Zone concernant seulement les collectivités utilisant l'instruction M14, M4x, M52, M57, M61 et M71.
+Balise utilisée dans le cadre des opérations d'ordre ou d'équipement pour les collectivités à budget voté par nature ou nature avec référence fonctionnelle.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TxTva" type="cm:Base_Taux" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Taux de TVA. A servir si MtTVA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Majo" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Zone permettant de savoir si la ligne de titre est majorable ou non. (Valeurs: 0=non majorable, 1=majorable. Par défaut servie à 0).
+Toute autre valeur aboutit à rejet du bordereau.
+Si Majo valorisée à 1 ou TRUE, Bloc RattachPiece doit être ouvert et la valeur de NatPceOrig doit être égale à 05 sinon rejet du bordereau.
+Pour les titres ORMC :
+- La zone Majo correspondra au booléen EstMajorable du sous-article de rôle dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteMajo" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de majoration de la ligne de pièce. Si Majo à 1, cette date doit être valorisée sinon rejet du bordereau et Bloc RattachPiece doit avoir une NatPceOrig=05 sinon rejet du bordereau.
+Sinon la balise ne doit pas être dans le bordereau. Si elle est présente et Majo valorisée à 0 rejet du bordereau.
+Pour les titres ORMC :
+- La zone DteMajo correspondra à la date de majoration du sous-article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TxMajo" type="cm:Base_Taux" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Taux de majoration de la ligne de pièce.
+Si Majo à 1 ce taux doit être servi sinon rejet du bordereau et bloc RattachPiece doit avoir une NatPceOrig=05.
+Sinon la balise ne doit pas être dans le bordereau. Si elle est présente et Majo valorisée à 0 rejet du bordereau.
+Pour les titres ORMC :
+- La zone TxMajo correspondra au Taux de Majoration du sous-article de rôle dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteTiers" type="cm:Base_Num12" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte de tiers</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TvaIntraCom" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Information permettant de déterminer si la ligne de pièce comporte de la TVA intra-communautaire.
+(Valeurs : 0=pas de Tva intra-communautaire, 1= Tva intra-communautaire. Par défaut sur 0).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT ou TTC si TVA non remplie.
+Pas de valeur à vide ou 0,00 sinon rejet du bordereau.
+Pour les titres ORMC :
+- La zone MtHT correspond au MontantHT du sous-article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA.
+Le montant ne peut être négatif ou égal à 0. Soit la balise est absente soit elle est valorisée avec un montant supérieur à 0.
+Si cette balise est valorisée, la balise MtBordTVA doit aussi être présente et avoir un montant différent de 0.
+Pour les titres ORMC :
+- La zone MtTVA correspond au MontantTVA du sous-article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtNonMajo" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de l'assiette non majorable.
+Pour les titres ORMC :
+- La zone MtNonMajo correspondra au MontantNonMajo du sous-article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoCollBen" type="TInfoCollBen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc exploité uniquement dans le cadre d'un titre ORMC. A renseigner  si CodProdLoc concerne un budget collectivité bénéficiaire différent du budget collectivité gestionnaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée à l'objet, référence unique de la PJ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoPrelevement">
+    <xs:annotation>
+      <xs:documentation>Ce bloc peut être utilisé lorsque les prélèvements sont remis aux organismes bancaires par l'ordonnateur (NatPrel 02)
+Pour un titre ORMC : les données de chaque ligne de ce titre doivent être identiques (hormis le montant). La somme des montants de prélèvement des lignes d'un titre ORMC correspond au montant du prélèvement de l'article de rôle dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatPrel" type="TNatPrel">
+        <xs:annotation>
+          <xs:documentation>Mode de prélèvement :
+- Pour tout fichier remis aux organismes bancaire par l'ordonnateur, c'est le bloc InfoPrelevement qui doit être utilisé
+- Pour tout fichier remis aux organismes bancaire par le Trésor, c'est le bloc InfoPrelevementSEPA qui doit être utilisé. La présence de références bancaires est obligatoire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PerPrel" type="TPerPrel">
+        <xs:annotation>
+          <xs:documentation>Périodicité du prélèvement
+A privilégier l'usage de la valeur 07 Unique, cette valeur correspond à la notion de prélèvement unique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePrel" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de prélèvement. Date d'échéance correspond à date de règlement interbancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPrel" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant du prélèvement. Zone de contrôle.
+Montant strictement positif.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoPrelevementSEPA">
+    <xs:annotation>
+      <xs:documentation>Pour les prélèvements au format SEPA.
+Pour un titre ORMC : les données de chaque ligne de ce titre doivent être identiques (hormis le montant). La somme des montants de prélèvement des lignes d'un titre ORMC correspond au montant du prélèvement de l'article de rôle dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatPrel" type="TNatPrel">
+        <xs:annotation>
+          <xs:documentation>Mode de prélèvement.
+Pour tout prélèvement à émettre par le Trésor, la présence de références bancaires est obligatoire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PerPrel" type="TPerPrel">
+        <xs:annotation>
+          <xs:documentation>Périodicité du prélèvement.
+A privilégier l'usage de la valeur 07 Unique, cette valeur correspondre à la notion de prélèvement unique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePrel" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de prélèvement. Date d'échéance correspondant à date de règlement interbancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPrel" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant du prélèvement. Zone de contrôle.
+Montant strictement positif.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SequencePres" type="TSequencePres">
+        <xs:annotation>
+          <xs:documentation>Séquence de présentation .</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignMandat" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature du mandat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefUniMdt" type="cm:Base_Texte35SEPA">
+        <xs:annotation>
+          <xs:documentation>Référence Unique du Mandat (RUM).
+Caractères autorisés : abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ0123456789/-?().,:'+Espace</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibPrel" type="cm:Base_Texte140SEPA" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du prélèvement : Zone libre.
+Caractères autorisés : abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ0123456789/-?().,:'+Espace</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AncienRUM" type="cm:Base_Texte35SEPA" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ancienne référence unique du mandat
+Caractères autorisés : abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ0123456789/-?().,:'+Espace</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AncienICS" type="cm:Base_Alphanum13" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ancien ICS ou Ancien NNE
+Si la balise est présente, elle doit contenir une valeur de 6 caractères (ancien NNE) ou 13 caractères (ancien ICS). Si ce n'est pas le cas, rejet du bordereau.
+Si la balise contient 13 caractères, la structure de l'ICS doit être respectée. Si ce n'est pas le cas, rejet du bordereau.
+Si la balise contient 6 caractères, alors elle ne doit contenir que des chiffres (et tous les chiffres sont significatifs). Si ce n'est pas le cas, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AncienTiersCreancier" type="cm:Base_Texte70SEPA" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ancien nom du créancier figurant sur le mandat de prélèvement.
+Caractères autorisés : abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMOPQRSTUVWXYZ0123456789/-?().,:'+Espace</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AncienneBanque" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ancienne banque (valeur 0 ou 1).
+La valeur 1 signifie un changement de banque du débiteur.
+Si non présent considéré à « 0 » (false).
+Ancienne banque et Ancien IBAN sont exclusif l'un de l'autre</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AncienIBAN" type="cm:Base_Texte34IBAN" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ancien Numéro de compte bancaire du débiteur
+Ancienne banque et Ancien IBAN sont exclusif l'un de l'autre</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TitCpteDiff" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Doit être renseigné à 1 (true) si titulaire du compte bancaire est différent du débiteur
+Si non présent considéré à 0 (false).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoAssure">
+    <xs:sequence>
+      <xs:element name="CodAssDeb" type="TCodAssDeb">
+        <xs:annotation>
+          <xs:documentation>Code égalité assuré / débiteur. Si l'assuré est le débiteur du titre hospitalier alors le code est égal à 1. Si l'assuré n'est pas le débiteur du titre hospitalier alors le code est égal à 2. Dans les autres cas, le code est égal à 3. Zone concernant uniquement les instructions M21 et M22.
+Si usage dans autre nomenclature que M21ou M22 , rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodAyantDroit" type="TCodAyantDroit" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code permettant de déterminer la nature de l'ayant droit. Zone concernant uniquement les instructions M21et M22.
+Si utilisation dans nomenclature autre que M21 M22, rejet du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRattachPiece">
+    <xs:sequence>
+      <xs:element name="NatPceOrig" type="TNatPceOrig">
+        <xs:annotation>
+          <xs:documentation>Nature de la pièce d'origine à rattacher.
+Pour 02 02 06 ou 01 02 09 ou 02 02 10 01 14 01, bloc RattachPiece complet et obligatoire, valeur possible 01 ou 02.
+Valeur 03 possible avec le seul TypPce 05 sinon rejet du bordereau.
+Valeur NatPceOrig 05, le seul triplet possible est TypBord 01, TypPce 09, NatPce 01 ; sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExerRat" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Exercice de rattachement : Exercice d'origine du titre à annuler ou à réduire, ou de la pièce à émarger. En cas d'annulation en cours d'exercice, cet exercice est identique à celui indiqué dans la zone EXER.
+Si 02 02 06 ExerRat= Exer du flux.
+Si 01 02 09 ExerRat différent Exer du flux ou égal à Exer du flux - N.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPceOrig" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>N° de la pièce d'origine : Numéro d'origine du titre à annuler ou à réduire (annulation en cours d'exercice) ou n° d'origine du mandat à annuler ou à réduire (annulation sur exercice clos), ou n° de la pièce (d'encaissement ou liste).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdLigneOrig" type="cm:Base_Num6_NonVide" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de ligne de pièce : Numéro de ligne du titre d'origine à annuler ou à réduire, ou n° de ligne de la pièce.
+Si NatPceOrig = 01 ou 02 IdLigneOrig supérieur ou égal à 1 sinon rejet du bordereau.
+Si NatPceOrig= 03 ou 05 IdLigneOrig avec valeur à zéro ou balise absente du bloc.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLiensIdent">
+    <xs:sequence>
+      <xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de convention : Cette zone permet de faire le lien entre une ligne de pièce et une fiche convention.
+Exemple : Convention sur titre en plusieurs années, convention de partenariat (autorisation de poursuite).
+Balise obligatoire dans le cadre d'un triplet 01 10 01 ou 01 10 02 sinon rejet du bordereau.
+Le numéro à valoriser est le numéro de convention attribué par Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de marché : Cette zone permet de faire le lien entre une ligne de pièce et une fiche marché existant dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdCaution" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° caution : Cette zone permet de faire le lien entre une ligne de pièce et une fiche caution existant dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'emprunt ordonnateur: Cette zone permet de faire le lien entre une ligne de pièce et une fiche emprunt existant dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'inventaire : Cette zone permet de faire le lien entre une ligne de pièce et une fiche inventaire existant dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de régie : Cette zone permet de faire le lien entre une ligne de pièce et une fiche régie existant dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoCollBen">
+    <xs:annotation>
+      <xs:documentation>Bloc exploité uniquement dans le cadre d'un titre ORMC. A renseigner  si CodProdLoc concerne un budget collectivité bénéficiaire différent du budget collectivité gestionnaire.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdCollBen" type="cm:Base_Num14_Light">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de la collectivité bénéficiaire du produit (SIRET).
+La zone IdCollBen correspond à l'Immatriculation Beneficiaire du sous-article de rôle. Ce SIRET correspond à celui associé au code produit local et de la Convention RMC concernée sur le budget collectivité gestionnaire dans Hélios).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodCollBen" type="cm:Base_Alphanum3">
+        <xs:annotation>
+          <xs:documentation>Identification de la collectivité ou du budget collectivité bénéficiaire du produit.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodBudBen" type="cm:Base_Alphanum2_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identification du budget collectivité bénéficiaire du produit.
+Si non valorisé , le système intègre dans Hélios la valeur « 00 ».</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

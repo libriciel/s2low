@@ -29,4 +29,5 @@ define('MAIL_HTML', MAIL_SITEROOT . '/html');
 //define("HELIOS_XSD_PATH",__DIR__."/../xsd/Schemas_PES_v491_18042016/");
 //define("HELIOS_XSD_PATH",__DIR__."/../xsd/Schemas_PES 5.3/");
 //define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_5.5_301017/");
-define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_v5.7_072018/");
+//define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_v5.7_072018/");
+define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_v5.11/");

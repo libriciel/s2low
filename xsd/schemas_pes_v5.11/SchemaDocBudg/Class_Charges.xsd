@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" 
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" 
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" 
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TCharges">
+		<xs:sequence>
+			<xs:element name="CHARGE" type="TCharge" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TCharge">
+		<xs:sequence>
+			<xs:element name="Exer" type="Base_Annee">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Exercice</z:libelle>
+						<z:description>Exercice</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NatDepTransf" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Nature de la dépense transférée</z:libelle>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DureeEtal" type="Base_Num4">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Durée de l'étalement</z:libelle>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelib" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Date de la délibération</z:libelle>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtDepTransf" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Montant dépense transférée au 481</z:libelle>
+						<z:description>Montant de la dépense transférée au 481</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtAmort" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Montant déjà amorti</z:libelle>
+						<z:description>Montant amorti au titre des exercices précédents</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtDotAmort" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Montant dotation amortissements</z:libelle>
+						<z:description>Montant de la dotation aux amortissements de l'exercice</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Commentaire</z:libelle>
+						<z:description>Champ libre a disposition des éditeurs</z:description>
+					</xs:documentation>
+					<xs:appinfo>
+						<z:property code="display" value="false"/>
+					</xs:appinfo>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

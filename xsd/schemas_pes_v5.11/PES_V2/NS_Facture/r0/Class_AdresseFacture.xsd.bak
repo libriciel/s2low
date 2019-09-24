@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TAdresseFacture">
+    <xs:annotation>
+      <xs:documentation>Adresse du Tiers.
+Obligatoire pour les Tiers du PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.
+Ce bloc est commun aux blocs
+- PES_Facture Emetteur
+- PES_Facture FactureIndiv Tiers
+- PES_Facture FactureIndiv Debiteur
+- PES_Facture FactureIndiv Destinataire</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TypAdr" type="TTypAdr">
+        <xs:annotation>
+          <xs:documentation>Type d'adresse.
+Par défaut à valoriser à 1.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr1" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément distribution : norme postale.
+- Contrainte pour le bloc parent Tiers : PES_Facture ASAP : Adr1 ne doit pas être renseignée si TypeTiers = 25. Si renseignée, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr2" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers: Norme postale.
+(Numéro de voie, voie)
+- Contrainte pour le bloc parent Emetteur : Obligatoire pour un PES_Facture ASAP. Sinon, rejet du PES_Facture ASAP.
+- Contrainte pour le bloc parent Tiers : PES_Facture ASAP :
+  + Adr2 ne doit pas être renseignée si TypeTiers = 25. Si renseignée, rejet du PESFacture ASAP.
+  + Adr2 est obligatoire si TypeTiers=26. A défaut.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : Adr 2 obligatoire. A défaut, rejet du PES_Facture ASAP.
+- Contrainte pour le bloc parent Destinataire: PES_Facture ASAP : Adr 2 obligatoire. A défaut, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr3" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lieu dit ou complément d'adresse: Norme postale.
+- Contrainte pour le bloc parent Tiers : PESFacture ASAP : pour TypeTiers = 25, à renseigner de l'éventuel TSA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CP" type="cm:Base_Texte5">
+        <xs:annotation>
+          <xs:documentation>Code postal : Norme postale.
+Ou Numéro de CEDEX : Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ville" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Localité de destination : Norme postale.
+Ou Libellé CEDEX : Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodRes" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>0 pour résident en France 1 pour non résident.
+- Contrainte pour le bloc parent Emetteur : Pour un PES_Facture ASAP, seule valeur autorisée = 0. Sinon, rejet du PES_Facture ASAP.
+- Contrainte pour le bloc parent Tiers : Pour un PES_Facture ASAP, seule valeur autorisée = 0. Sinon, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodPays" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence Insee du pays Référence Insee du pays Obligatoire pour un tiers non résident.
+- Contrainte pour le bloc parent Emetteur : Non repris sur l'édition ASAP.
+- Contrainte pour le bloc parent Tiers : Non repris sur l'édition ASAP.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : CodPays obligatoire si CodRes = 1 ; à défaut, rejet du PESFacture ASAP.La balise CodPays est obligatoirement non valorisée ou valorisée à 100 si CodRes est à 0, sinon rejet du PESFacture ASAP.
+- Contrainte pour le bloc parent Destinataire: PES_Facture ASAP : CodPays obligatoire si CodRes = 1 ; à défaut, rejet du PESFacture ASAP.La balise CodPays est obligatoirement non valorisée ou valorisée à 100 si CodRes est à 0, sinon rejet du PESFacture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTypAdr">
+    <xs:annotation>
+      <xs:documentation>Type d'adresse.
+Par défaut, à valoriser à 1.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0">
+            <xs:annotation>
+              <xs:documentation>Non précisé.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Principal.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Secondaire.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
+

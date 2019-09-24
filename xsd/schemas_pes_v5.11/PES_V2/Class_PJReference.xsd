@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="CommunPES.xsd" />
+  <xs:complexType name="TPJReference">
+    <xs:sequence>
+      <xs:element name="Support" type="TSupport">
+        <xs:annotation>
+          <xs:documentation>Précise la forme de l'élément référencé.
+
+Si absence en PJ Ref rejet du flux complet .
+Les valeurs 02 ou 03 interdisent d'avoir un bloc PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdUnique" type="Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identifiant unique de la pièce pour la CEPL quel que soit le domaine, l'objet comptable, l'exercice et le budget concerné.
+Si absence en PJ Ref rejet du flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomPJ" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom de la PJ sur 100 caractères maximum – optionnel, destiné à préciser le référencement de PJ non électronique (i.e. qui ne sont pas "en ligne").</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypePJ" type="TPJ" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de la pièce référencée.
+Servie obligatoirement si la balise code Edition (recette aller) est valorisée à « 06 »  (Avis des sommes à payer ORMC hors CPP). Le titre doit porter à minima la référence d’une PJ de type « 010 » (Facture ASAP ORMC hors CPP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TSupport">
+    <xs:annotation>
+      <xs:documentation>Type de support.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Support électronique.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Support papier.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Support cdrom/dvdrom.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

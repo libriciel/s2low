@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunRecette.xsd" />
+  <xs:complexType name="TBlocPiece">
+    <xs:annotation>
+      <xs:documentation>Informations pièce.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d'identification du service de l'ordonnateur émettant le bordereau. Pour un TypPce Titre ORMC (15),, le code service n'est pas servi, car il est de niveau ligne pièce ( sous article de rôle) dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Critère d'affectation : Zone libre permettant à l'ordonnateur de déterminer l'affectation du dossier dans les services du comptable.
+Les critères d'affectation résultent d'une convention entre l'ordonnateur et le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num8">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce : Numéro du titre de recette.
+Cette valeur doit être strictement supérieure à 0, à défaut, rejet du flux.
+Pour un TypPce Titre ORMC (15), IdPce correspond au numéro de l'article de rôle. Le titre ORMC doit être mono-débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Informations destinées à déterminer le type de pièce transmis par l'ordonnateur. Le type de pièce doit être compatible avec le type de bordereau (cf annexe 2).
+Le type de pièce : « Demande d'émission de titre » n'est utilisé qu'en retour d'information (du comptable vers l'ordonnateur). Il est utilisé pour transmettre des demandes d'émission de titres lors d'un encaissement avant émission de titre.
+Le TyPce 08 et le TypPce 13 ne sont pas possibles. Ces valeurs aboutissent au rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatPce" type="TNatPce">
+        <xs:annotation>
+          <xs:documentation>Nature du titre.
+La NatPce est possible et définie en association avec TypBord, TypPce et doit être conforme à la grille triplet de recette. Toute autre combinaison aboutit à un rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRol" type="cm:Base_Num7" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant du numéro (Idbord) du bordereau ORMC concerné ( N° de rôle dans Hélios). Cette zone concerne uniquement la nature de titre " titre récapitulatif avec rôle ". Elle permet le rapprochement d'un rôle et d'un titre récapitulatif avec rôle .
+IdRol n'est possible qu'avec le triplet de recette 01 06 01. Toute présence de cette balise avec un autre triplet aboutit au rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteAsp" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'envoi de l'avis des sommes à payer.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Edition" type="TEdition" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Balise nécessaire pour déterminer le type de traitement de l'Avis des Sommes A Payer ( PJ 006 type facture09) et l'Avis des Sommes à Payer Patient à éditer (PJ 006 type facture 10) par les services de la DGFIP.
+Si valorisée à 01(ASAP à éditer) ou 05(ASAP Patient à éditer), le titre doit être mono débiteur, doit respecter les types et natures de pièces autorisés (cf annexe 2) et une référence de PJ doit être présente pour ce titre.
+Si la valeur Edition 05 est servie pour un titre alors ce titre doit obligatoirement présenter un tiers de type 06 "malade".
+Si ces règles ne sont pas respectées, rejet du bordereau.
+
+Sans valorisation de cette balise, l'ASAP ne sera pas consultable par le comptable et ne fera l'objet d'aucun traitement par les services de la DGFIP.
+Si valorisation à 04 ( Sans traitement DGIP), l'ASAP sera consultable par le comptable, mais ne fera l'objet d'aucun traitement par les services de la DGFIP.
+
+Quelle que soit la valorisation de cette balise, le PES facture ASAP doit respecter les régles pour ce type de facture, sinon la PJ est rejetée.
+Point d'attention sur les règles à respecter pour éviter un rejet de niveau de pièce, par le comptable, dans l'application Hélios :
+La valeur Edition 01 ou 02 ou 04 ou 05 n'est pas autorisée pour un titre ORMC (TypPce 15).
+La valeur Edition 03 n'est pas autorisée pour un titre différent de titre ORMC (TypPce 15).
+Si la valeur Edition 02 est servie pour un titre alors ce titre doit être mono débiteur, doit respecter les types et natures de pièces autorisés (idem annexe 2), doit avoir la balise NatIdTiers servie à 01 Siret et un IdTiers valide, doit avoir une référence PJ se rapportant à une PJ de type 006 PES Facture avec un type de facture 09 ASAP , doit avoir un NumeroFacture valorisé dans le BlocPiece.
+Si la valeur Edition 03 est servie pour un titre ORMC alors ce titre doit avoir la balise NatIdTiers servie à 01 Siret et un IdTiers valide, doit avoir une référence PJ se rapportant à une PJ de type 007 PES Facture ORMC, doit avoir un NumeroFacture valorisé dans le BlocPiece. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjPce" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet de la pièce. Zone libre.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DebFact" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de début de la période de facturation. Cette zone concerne uniquement les hôpitaux.
+La valorisation de cette balise en dehors d'une nomenclature M21 ou M22 aboutira à un rejet du bordereau. Elle reste facultative pour les M21 et M22.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinFact" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de fin de la période de facturation. Cette zone concerne uniquement les hôpitaux.
+La valorisation de cette balise en dehors d'une nomenclature M21 ou M22 aboutira à un rejet du bordereau. Elle est facultative même pour les M21 M22.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumDette" type="cm:Base_Num15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de dette attribué au débiteur par l'ordonnateur, ce numéro correspond au NumeroFacture de l'article de rôle dans Hélios.
+Balise exploitée uniquement pour les titres de type ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Per" type="cm:Base_Num1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Période : complément au n° de dette attribué au débiteur par l'ordonnateur. Correspond à la Période de l'article de rôle dans Hélios.
+Balise exploitée uniquement pour les titres de type ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle1" type="cm:Base_Num1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l'article de rôle. Cette clé d'identification est calculée selon le modulo 11 ( sur le code collectivité + le code nature + 2 dernier chiffres de l'exercice + la période + le numéro de dette).
+Balise exploitée uniquement pour les titres de type ORMC.
+Pour le mode de calcul se référer à l'ANNEXE_TECHNIQUE_PES_SEPA_ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle2" type="cm:Base_Alphanum1_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l'article de rôle. Clé calculée selon le modulo 23 ( sur les deux derniers chiffres de l'exercice + la période + 00 + le numéro de dette).
+Balise exploitée uniquement pour les titres de type ORMC.
+Pour le mode de calcul se référer à l'ANNEXE_TECHNIQUE_PES_SEPA_ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée à l'objet, référence unique de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroFacture" type="cm:Base_NumFactureCPP20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la Facture pour CPP (Edition 02 ou 03).
+Les caractères spéciaux suivants sont autorisés :
+- espace (" ")
+- tiret ("-")
+- signe "+"
+- tiret bas (underscore : "_")
+- barre oblique (slash : "/")</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroMarche" type="cm:Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de marché pour CPP (Edition 02 ou 03).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroEngagement" type="cm:Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro d'engagement pour CPP (Edition 02 ou 03).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeService" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code du service débiteur  pour CPP (Edition 02 ou 03).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomService" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom du service débiteur  pour CPP (Edition 02 ou 03).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

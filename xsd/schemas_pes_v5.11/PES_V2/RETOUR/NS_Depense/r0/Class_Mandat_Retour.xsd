@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunDepense_Retour.xsd" />
+  <xs:complexType name="TInfoPiece">
+    <xs:sequence>
+      <xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d'identification du service de l'ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce ;Pour le contexte « Type de bordereau = 04 Bordereau de régularisation » cette balise renvoie :
+ - soit l'Identifiant de l'ordre de paiement payé nécessitant la régularisation par l'ordonnateur (via un mandat émis après paiement de nature FONCTIONNEMENT ou INVESTISSEMENT ou INVENTAIRE ou EMPRUNT ou REGIE ou AUTRE),
+ - soit l'identifiant du mandat de type « ordre de paiement de pénalités de retard » nécessitant une régularisation par l'ordonnateur via un titre ordinaire de fonctionnement.
+Dans ces deux cas, l'identifiant de la pièce devra être repris par l'ordonnateur lors de l'émission de la pièce de régularisation (IdPceOrig).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Type de pièce.Pour le contexte « Type de bordereau = 04 Bordereau de régularisation » cette balise renvoie :
+ - soit au type de pièce 12 « Demande d'émission de mandat » utilisé pour transmettre des demandes d'émission de mandats lors d'un paiement avant émission de mandat,
+ - soit au type de pièce 14 « Demande d'émission de titre » utilisé pour transmettre des demandes d'émission de titre lors de la prise en charge des pénalités de retard pour un  mandat sur marché.
+
+Note : dans le cas d'un TypPiece = 12 ou 14 dans un flux retour, la valeur de la balise IdPiece transmise devra être reprise dans le flux ALLER de régularisation émis par l'ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatPce" type="TNatPce">
+        <xs:annotation>
+          <xs:documentation>Nature de la pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Obj" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zone libre décrivant l'objet de la pièce : elle est sélectionnée comme nécessaire à l'information de l'ordonnateur sur les pièces que le comptable lui transmet pour régularisation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePcePec" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de prise en charge de la pièce.
+Remarque :
+ - Un mandat vérifiant DtePcePec et DtePceRej renseignées est un mandat qui a été rejeté suite à annulation de prise en charge dans Hélios ; dans ce cas, le mandat ne pourra pas être ré-émis par l'ordonnateur avec le même identifiant de pièce (IdPce).
+ - Un mandat vérifiant DtePcePec non renseignée et DtePceRej renseignée est un mandat qui a été rejeté en Visa Dépense depuis la bannette dans Hélios ; dans ce cas, après correction par l'ordonnateur le mandat pourra être ré-émis par l'ordonnateur avec le même identifiant de pièce (IdPce).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatPce" type="TEtatPce">
+        <xs:annotation>
+          <xs:documentation>Information retour sur l'état de la pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObsEtat" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Observation sur l'état de la pièce  : codification des motifs (si codification, il est possible de transmettre une pluralité de motifs).
+Remarque : En cas de pluralité, si le contenu contient une liste énumérée finie de code motif, il conviendra de définir un caractère séparateur (« - » le tiret  par exemple)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Commentaire" type="cm:Base_Texte400" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Commentaire saisi par le Comptable lors du visa.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePceRej" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date du rejet du mandat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePceInst" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de la mise en instance du mandat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

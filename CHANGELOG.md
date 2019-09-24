@@ -1,6 +1,10 @@
 # Change Log
 
+
 ## 4.1.1
+
+## Evolution
+- Mise à jour du schéma XSD PES v2 en version 5.11
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents

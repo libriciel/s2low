@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TOpeComptesTiers">
+		<xs:sequence>
+			<xs:element name="TIERS" type="TTiers" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTiers">
+		<xs:sequence>
+			<xs:element name="CodOper" type="Base_ChaineNum10">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Code Opération</z:libelle>
+						<z:description>Ce champ ne doit contenir que des chiffres, et il peut débuter par des '0'. Valeur discriminante requise</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibOper" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Libelle de l'opération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelib" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de la délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodRD" type="ATCodRD">
+				<xs:annotation>
+					<xs:documentation>Sens</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodChapitre" type="Base_Texte30">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Code Chapitre</z:libelle>
+						<z:description><![CDATA[<html>Le chapitre permet de compléter la mention 45.1<br/>pour les dépenses et 45.2 pour les recettes</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodOperR" type="ATCodOperR" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type d'opération en recette</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NatTrav" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nature des travaux</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TypOpDep" type="TTypOpDep" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type d'opération en dépense</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRealCumulPrec" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Réalisations cumulées avant l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCredOuv" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Crédits ouverts sur l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRealExer" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Réalisations sur l'exercice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RAR" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Restes à réaliser</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtCumulReal" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Cumul des réalisations</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

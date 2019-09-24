@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TOrganismesGroup">
+		<xs:sequence>
+			<xs:element name="ORGANISME_GROUP" type="TOrganismeGroup" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TOrganismeGroup">
+		<xs:sequence>
+			<xs:element name="CodNatOrgGroup" type="ATCodNatOrgGroup">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Nature de l'organisme de regroupement</z:libelle>
+						<z:description>Le code 01 est réservé à la M14 et M4x, le code 02 est réservé à la M71, le code 03 à la M52 et le 09 pour toutes les normes</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NomOrgGroup" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Nom de l'organisme de regroupement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtAdhGroup" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date d'adhésion au groupement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CodModFinanc" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Mode de financement</z:libelle>
+						<z:description>Mode de participation en M52 et M71</z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtFinancOrgGroup" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant du financement de l'organisme de regroupement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunRecette.xsd" />
+  <xs:complexType name="TRecouvrement">
+    <xs:sequence>
+      <xs:element name="TypFlux" type="TTypFlux">
+        <xs:annotation>
+          <xs:documentation>Type de flux. Cette zone permet d'indiquer l'origine (information aller) ou la destination (information retour) du recouvrement.
+- Information retour : Informations des recouvrements à destination de l'ordonnateur (code 01) 
+- Information aller : Information d'encaissement en provenance d'un centre d'encaissement( code 02).Le code 02 est uniquement à usage interne et n'a pas à être utilisé par les ordonnateurs.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModRegl" type="TModRegl">
+        <xs:annotation>
+          <xs:documentation>Code indiquant le moyen de règlement utilisé par le débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteReco" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date du recouvrement chez le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEncaissement" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Identifiant métier de l'encaissement.
+Cet identifiant concerne un encaissement portant sur une ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtReco" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant de l'encaissement réalisé au niveau de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

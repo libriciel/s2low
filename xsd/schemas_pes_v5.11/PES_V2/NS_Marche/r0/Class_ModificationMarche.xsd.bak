@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_OperateurEconomique.xsd" />
+  <xs:complexType name="TModificationsMarche">
+    <xs:annotation>
+      <xs:documentation>Bloc des modifications intervenues sur le marché</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ModificationMontantDuree" type="TModificationMontantDuree" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc de modification du montant(s) et/ou de la durée du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModificationTitulaire" type="TModificationTitulaire" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc de modification du titulaire du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DeclarationSousTraitancePaiementDirect" type="TDeclarationSousTraitancePaiementDirect" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc de déclaration d'une sous-traitance en paiement direct pour le marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModificationSousTraitancePaiementDirect" type="TModificationSousTraitancePaiementDirect" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc de modification d'une sous-traitance en paiement direct pour le marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TModificationMontantDuree">
+    <xs:annotation>
+      <xs:documentation>Bloc ModificationsMarche recense les modifications intervenues sur le marché</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ObjetModification" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Description synthétique de la modification apportée au marché (ex : Augmentation de la durée du marché, diminution de % € du montant HT notifié du marché, augmentation de % € du montant HT estimé suite à modification sur la tranche affermie % .</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroActe" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro de modification.
+Valeur : de 01 à 99</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignatureModification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de notification par l'acheteur de la modification apportée au marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DatePublicationDonneesModification" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de publication des données incluant la modification apportée au marché initial.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="DureeEnMois" type="cm:Base_Num3_Light">
+            <xs:annotation>
+              <xs:documentation>Durée de la modification : nouvelle durée en mois actualisée du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DeltaDureeEnMois" type="cm:Base_Entier3_Relatif">
+            <xs:annotation>
+              <xs:documentation>Delta de la durée de la modification. 
+Il s'agit d'une durée signée. Selon le signe, ce delta s'ajoute ou se retranche à la précédente durée en mois du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence />
+      </xs:choice>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="MontantHTNotifie" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Montant HT notifié de la modification : nouveau montant HT notifié actualisé du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DeltaMontantHTNotifie" type="cm:Base_Montant_Relatif">
+            <xs:annotation>
+              <xs:documentation>Delta du montant HT notifié de la modification. 
+Il s'agit d'un montant signé. Selon le signe, ce delta s'ajoute ou se retranche au précédent montant HT notifié du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence />
+      </xs:choice>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="MontantHTEstime" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Montant HT estimé actualisé du marché (ex : pour un marché à tranches vérifiant MontantHTEstime &gt; MontantHTNotifie, une modification portant sur une augmentation du montant HT notifié d'une tranche affermie peut induire une revalorisation du montant HT estimé du marché).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DeltaMontantHTEstime" type="cm:Base_Montant_Relatif">
+            <xs:annotation>
+              <xs:documentation>Delta du montant HT estimé de la modification. 
+Il s'agit d'un montant signé. Selon le signe, ce delta s'ajoute ou se retranche au précédent montant HT estimé du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TModificationTitulaire">
+    <xs:sequence>
+      <xs:element name="ObjetModification" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Description synthétique de la modification apportée au marché (ex : Modification du marché : nouveau titulaire %NomRaisonSociale en remplacement de l'ancien titulaire%NomRaisonSociale).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroActe" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro de la modification.
+Valeur : de 01 à 99</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignatureModification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature par l'acheteur de la modification apportée au marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DatePublicationDonneesModification" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de publication des données incluant la modification apportée au marché initial.
+Par défaut : date d'émission du flux de modification par l'ordonnateur vers Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Titulaires" type="TTitulairesLight">
+        <xs:annotation>
+          <xs:documentation>Liste des titulaires : cette liste comprend tous les « titulaire/co-traitants » participant toujours au marché après un changement de titulaire (avenant de transfert).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeGroupement" type="TTypeGroupement" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de groupement</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbEntreprisesGroupees" type="cm:Base_Num2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>En cas de groupement, nombre d'entreprises groupées.
+Le nombre d'entreprises groupées &gt; 0 si et seulement le Type de Groupement = 02 « Groupement solidaire » ou 03 « Groupement conjoint », sinon rejet du Marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDeclarationSousTraitancePaiementDirect">
+    <xs:sequence>
+      <xs:element name="ObjetModification" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Description synthétique de la modification apportée au marché (ex : acte spécial : nouveau sous-traitant %NomRaisonSociale à paiement direct).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroActeSousTraitance" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro d'acte spécial.
+Valeur : de 01 à 99</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignatureModification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature par l'acheteur de la modification apportée au marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SousTraitantPaiementDirect" type="TSousTraitantPaiementDirectLight">
+        <xs:annotation>
+          <xs:documentation>Informations synthétiques relatives au sous-traitant faisant l'objet d'une déclaration de sous-traitance (acte spécial).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantHTNotifie" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT notifié au sous-traitant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+     <xs:choice>
+      <xs:element name="FormePrix" type="TFormePrix" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Forme du prix du marché public applicable au sous-traitant en paiement direct.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VariationPrix" type="TVariationPrix" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Variation du prix du marché public applicable au sous-traitant en paiement direct.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+     </xs:choice>
+      <xs:element name="DureeEnMois" type="cm:Base_Num3_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Durée exprimée en mois de la sous-traitance.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TModificationSousTraitancePaiementDirect">
+    <xs:sequence>
+      <xs:element name="ObjetModification" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Description synthétique de la modification apportée au marché (ex : modification sur acte spécial : sous-traitant %NomRaisonSociale : réduction du montant HT notifié).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroActe" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro de modification sur acte spécial.
+Valeur : de 01 à 99</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroActeSousTraitance" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro d'acte spécial.
+Valeur : de 01 à 99</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignatureModification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature par l'acheteur de la modification apportée au marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SousTraitantPaiementDirect" type="TSousTraitantPaiementDirectLight">
+        <xs:annotation>
+          <xs:documentation>Informations synthétiques relatives au sous-traitant faisant l'objet d'une modification de sous-traitance (modification sur acte spécial).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DeltaMontantHTNotifie" type="cm:Base_Montant_Relatif">
+        <xs:annotation>
+          <xs:documentation>Delta du montant HT notifié au sous-traitant. 
+Il s'agit d'un montant signé. Selon le signe, ce delta s'ajoute ou se retranche au précédent montant HT notifié du sous-traitant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeEnMois" type="cm:Base_Num3_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Durée en mois actualisée de la sous-traitance.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 (http://www.altova.com) by fauritte (BULL SAS) -->
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:z="odm:enrichissement"
+	xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire"
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TEtabs_Services">
+		<xs:sequence>
+			<xs:element name="ETAB_SERVICE" type="TEtab_Service" minOccurs="1" maxOccurs="unbounded"
+			/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TEtab_Service">
+		<xs:sequence>
+			<xs:element name="CodNatEtab" type="ATCodNatEtab">
+				<xs:annotation>
+					<xs:documentation>Nature établissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibCatEtab" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Catégorie d'établissement / service</z:libelle>
+						<z:description><![CDATA[<html>Cette donnée n'est pas codifiée.<br/>Exemples de valeurs : 
+							<ul><li>CCAS</li>
+							<li>CE</li>
+							<li>Régies personnalisées</li>
+							<li>Régie à seule autonomie financière</li>
+							<li>Lotissement</li>
+							<li>Service social et médico-social</li>
+							<li>etc...</li></ul></html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibEtab" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Intitulé / objet de l'établissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SiretEtab" type="Base_Siret" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>N° SIRET de l'établissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtCreatEtab" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de création de l'établissement</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumDelibEtab" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro de délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDelibEtab" type="Base_Date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Date de délibération</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibNatActivEtab" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Nature de l'activité</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IndicTVAEtab" type="Base_Booleen" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Etablissement soumis à la TVA</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

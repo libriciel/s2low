@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TAcheteurs">
+    <xs:annotation>
+      <xs:documentation>Acheteurs du marché public.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Acheteur" type="TAcheteur" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Les éléments d'identification de l'acheteur ainsi que le montant HT estimé du marché affecté à cet acheteur.
+Dans le cas d'un marché notifié pour un groupement d'achat, tous les membres du groupement d'achat doivent être référencés dans la liste d'acheteurs.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TAcheteur">
+    <xs:annotation>
+      <xs:documentation>Acheteur du marché public</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdAcheteur" type="cm:Base_Num14_14_Light">
+        <xs:annotation>
+          <xs:documentation>SIRET de l'acheteur (Siret du budget collectivité).
+Valeur constituée de 14 chiffres [0-9] et pouvant commencer par 0.
+Le SIRET doit correspondre à un budget collectivité actif dans Hélios, sinon rejet du Marché.
+Un SIRET donné ne peut figurer qu'une seule fois dans la liste des acheteurs du marché, sinon rejet du Marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomAcheteur" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom d'un acheteur (ex : membre d'un groupement de commandes), soit Libellé du budget collectivité dans le SPL.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantHTEstime" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Part du montant estimé du marché pour l'acheteur.
+La somme des montants HT estimés des acheteurs doit correspondre au montant HT estimé du marché, sinon rejet du Marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

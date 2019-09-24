@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified" xmlns:z="odm:enrichissement">
+	<xs:include schemaLocation="CommunAnnexe.xsd"/>
+	<xs:complexType name="TTresoreries">
+		<xs:sequence>
+			<xs:element name="TRESORERIE" type="TTresorerie" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TTresorerie">
+		<xs:sequence>
+			<xs:element name="CodArticle" type="ATCodArticleTresorerie">
+				<xs:annotation>
+					<xs:documentation>Article</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LibOrgaPret" type="Base_Texte100">
+				<xs:annotation>
+					<xs:documentation>Organisme prêteur (nature de la trésorerie)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DtDec" type="Base_Date">
+				<xs:annotation>
+					<xs:documentation>
+						<z:libelle>Date de la décision</z:libelle>
+						<z:description><![CDATA[<html>Date de la délibération de l'assemblée<br/>autorisant la ligne de trésorerie ou la<br/>date de la décision du maire de réaliser la<br/>ligne de trésorerie sur la base d'un montant<br/>maximum autorisé par l'organe délibérant<br/>(article L 2122-22 du CGCT)</html>]]></z:description>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtMaxAutori" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant maximum autorisé</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtTirage" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant des tirages</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRemb" type="Base_Montant">
+				<xs:annotation>
+					<xs:documentation>Montant des remboursements - Tirage</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRestDu" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant restant dû au 01/01 (BP), à la date de vote (BS) et au 31/12 (CA) </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IntManda" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Intérêts mandatés</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumContrat" type="Base_Texte30" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Numéro de contrat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MtRembInt" type="Base_Montant" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Montant des remboursements - Intérêts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Champ_Editeur" type="Base_Texte100" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Commentaire</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

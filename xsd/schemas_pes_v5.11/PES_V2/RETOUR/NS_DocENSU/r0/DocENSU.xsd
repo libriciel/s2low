@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://ensu.dgfip.finances.gouv.fr/document" xmlns="http://ensu.dgfip.finances.gouv.fr/document">
+  <xs:element name="ENSUDocuments">
+    <xs:annotation>
+      <xs:documentation>L'ENSUDocuments est un schéma de transport des Documents du SPL à destination des usagers.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EnTete"/>
+        <xs:element ref="ENSUDocument"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EnTete">
+    <xs:annotation>
+      <xs:documentation>Contient les informations de l'en-tête</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Version" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Identifiant de la version</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DateEmissionFlux" type="xs:date">
+          <xs:annotation>
+            <xs:documentation>Date d'emission du flux au format aaaa-mm-jj</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IdOrigine">
+          <xs:annotation>
+            <xs:documentation>Application source. HEL pour HELIOS</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:length value="3"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CdDoc">
+          <xs:annotation>
+            <xs:documentation>Code de l'édition.Exemples : FC14 ASAP Titres en PDF, FC15 ASAP Patient en PDF, FC16 pour l'ASAP ORMC</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="4"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="NomFlux">
+          <xs:annotation>
+            <xs:documentation>Nom du flux SLOG_HEL_CodeEdition_aammjj_numseq.xml</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ENSUDocument">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Document" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="Compteur" type="xs:positiveInteger">
+        <xs:annotation>
+          <xs:documentation>Nombre de Documents présents dans le flux</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Document">
+    <xs:annotation>
+      <xs:documentation>Contient les éléments relatifs à un Document</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="IdUnique" type="xs:integer">
+          <xs:annotation>
+            <xs:documentation>Identifiant Unique du document sur 28 positions</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IdentifiantNational">
+          <xs:annotation>
+            <xs:documentation>Identifiant national du Budget Collectivité
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:integer">
+              <xs:pattern value="([0-9]{1,10})"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element ref="Editique"/>
+        <xs:element ref="Metier"/>
+        <xs:element ref="PJ"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Editique">
+    <xs:annotation>
+      <xs:documentation>Métadonnées pour l'éditique</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NbPages">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>Nombre de pages du document PDF en PJ</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:integer">
+              <xs:minExclusive value="0"/>
+              <xs:maxInclusive value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="TypeRV">
+          <xs:annotation>
+            <xs:documentation>R pour Recto, RV pour Recto-verso.Pour HELIOS : RV</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="R"/>
+              <xs:enumeration value="RV"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Adresse">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Ligne1">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ligne2">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ligne3">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ligne4" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ligne5" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ligne6" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="38"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Pays" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="70"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="EnveloppeRetour" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation>1 : avec enveloppe retour 0 : sans enveloppe retour</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Metier">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="IdUsagerPart1" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>NFP si le Tiers Hélios a été reconnu par les référentiels DGFIP</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:length value="13"/>
+              <xs:pattern value="[0-9]{13}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="IdUsagerPart2" minOccurs="0">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>NFP du Tiers solidaire</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+              <xs:length value="13"/>
+              <xs:pattern value="[0-9]{13}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="IdUsagerPro" minOccurs="0">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>SIREN de l'Usager PRO</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+              <xs:length value="9"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="NIC" minOccurs="0">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>NIC de l'Usager PRO</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+              <xs:length value="5"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CdCodique">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>Codique du poste Comptable</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+              <xs:length value="6"/>
+              <xs:pattern value="(02[A-B][0-9]{3}|[0-9]{6})"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="IdMetier" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Identifiant métier</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="IdDebiteur" minOccurs="0">
+          <xs:simpleType>
+            <xs:annotation>
+              <xs:documentation>Identifiant du débiteur</xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:string">
+              <xs:length value="12"/>
+              <xs:pattern value="[0-9]{12}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Montant">
+          <xs:annotation>
+            <xs:documentation>Montant du document</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:decimal">
+              <xs:totalDigits value="16"/>
+              <xs:minExclusive value="0"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="DLP" type="xs:date" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Date limite de paiement</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DtAffich" type="xs:date" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Date d'affichage dans l'ENSU PRES pour les SATD.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="LibColloc">
+          <xs:annotation>
+            <xs:documentation>Libelle Collectivité</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="32"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="LibObj">
+          <xs:annotation>
+            <xs:documentation>Objet du document</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="160"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PJ">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Contenu">
+          <xs:annotation>
+            <xs:documentation>Stockage du fichier PDF : document, ou document fusionné avec sa PJ complémentaire. Fichier compressé avec Gzip puis converti en Base64.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:base64Binary">
+                <xs:attribute name="MIMEType" type="xs:token" use="required">
+                  <xs:annotation>
+                    <xs:documentation>Par exemple : 'application/zip'</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NomPJ">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
