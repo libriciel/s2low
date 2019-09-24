@@ -1128,6 +1128,11 @@ class ActesTransaction extends DataObject {
 
     $new_name = $dest_name;
 
+    if ($code_pj && strlen($code_pj) !=5){
+    	$this->errorMsg = "Le code de la PJ doit faire 5 caractères";
+    	return false;
+	}
+
     if ($type == "acte") {
       if ( ! $import) {
         $new_name .= ".$ext";
