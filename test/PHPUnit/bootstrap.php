@@ -22,6 +22,7 @@ require_once(__DIR__."/S2lowSimpleTestCase.class.php");
 require_once(__DIR__."/ActesUtilitiesTestTrait.php");
 require_once(__DIR__."/PastellConfigurationTestTrait.php");
 require_once(__DIR__."/HeliosUtilitiesTestTrait.php");
+require_once(__DIR__."/RgsConnexionTestTrait.php");
 
 /* Uniquement pour la mise à jour de la base de test...*/
 $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
