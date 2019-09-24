@@ -7,6 +7,16 @@ class ActesPostWithoutSignatureController extends Controller {
 	 */
 	public function postAction(){
 		$this->verifUser();
+
+		$rgsConnexion = $this->getObjectInstancier()->get(RgsConnexion::class);
+
+		if ( ! $rgsConnexion->isRgsConnexion()){
+			$this->redirect(
+				"/modules/actes",
+				"La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}"
+			);
+		}
+
 		$transaction_id = $this->getRecuperateurPost()->getInt('id');
 		$actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 		$transaction_info = $actesTransactionSQL->getInfo($transaction_id);
