@@ -55,8 +55,6 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             ->method("objectStoreService")
             ->willReturn($service);
 
-
-
         $openStackFactory =
             $this->getMockBuilder("OpenStackFactory")
                 ->disableOriginalConstructor()
@@ -67,11 +65,10 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             ->method("getInstance")
             ->willReturn($openStack);
 
+
         /** @var OpenStackFactory $openStackFactory */
         $this->openStackSwiftWrapper = new OpenStackSwiftWrapper(
             $openStackFactory,
-            "b",
-            "c",
 			$logger
         );
 

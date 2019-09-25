@@ -1,31 +1,27 @@
 <?php
 
+use \Symfony\Component\Filesystem\Filesystem;
+
 class OpenStackSwiftWrapper {
 
-    const OPENSTACK_SERVICE = 'swift';
+	const OPENSTACK_SERVICE = 'swift';
 
-    private $openstack_region;
-    private $openstack_swift_container_prefix;
-
-    /** @var OpenStackFactory  */
+	/** @var OpenStackFactory  */
     private $openStackFactory;
 
-    private $cache_container = array();
 
-    private $fileSystem;
+	private $cache_container = array();
+
+	private $fileSystem;
 
     private $logger;
 
     public function __construct(
         OpenStackFactory $openStackFactory,
-        $openstack_region,
-        $openstack_swift_container_prefix,
 		Monolog\Logger $logger
     ){
         $this->openStackFactory = $openStackFactory;
-        $this->openstack_region = $openstack_region;
-        $this->openstack_swift_container_prefix = $openstack_swift_container_prefix;
-		$this->fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $this->fileSystem = new Filesystem();
 		$this->logger = $logger;
 	}
 
@@ -52,12 +48,12 @@ class OpenStackSwiftWrapper {
 		$this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
     }
 
-
 	/**
 	 * Récupère et copie le fichier depuis OpenStack vers le système de fichier local
 	 * @param string $container_name Le nom du container au sens swift
 	 * @param string $filepath_local Le chemin local du fichier à récupérer
 	 * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
+	 * @throws Exception
 	 * @return mixed
 	 */
     public function retrieveFile($container_name, $filepath_local,$filepath_on_cloud = ''){
@@ -76,7 +72,7 @@ class OpenStackSwiftWrapper {
 			$this->fileSystem->mkdir($dirname_local);
 		}
 
-        $container = $this->getContainer($container_name);
+		$container = $this->getContainer($container_name);
 
         $objectContent = $container->getObject($filepath_on_cloud)->getContent();
         $objectContent->rewind();
@@ -86,13 +82,17 @@ class OpenStackSwiftWrapper {
         return $filepath_local;
     }
 
+	/**
+	 * @param $container_name
+	 * @param $filepath
+	 * @throws UnrecoverableException
+	 */
     public function deleteFile($container_name,$filepath){
         $filename = basename($filepath);
-        $container = $this->getContainer($container_name);
+		$container = $this->getContainer($container_name);
         $container->deleteObject($filename);
 		$this->logger->info("Delete [$container_name]$filepath");
     }
-
 
     public function fileExistsOnCloud($container_name,$filename){
     	try {
@@ -103,34 +103,40 @@ class OpenStackSwiftWrapper {
 		}
     }
 
-    private function getContainer($container_name){
-        if (isset($this->cache_container[$container_name])){
-            return $this->cache_container[$container_name];
-        }
-        $container_full_name = $this->openstack_swift_container_prefix . $container_name;
+	/**
+	 * @param $container_name
+	 * @return bool|mixed|\OpenCloud\ObjectStore\Resource\Container
+	 * @throws UnrecoverableException
+	 */
+	public function getContainer($container_name){
+		if (isset($this->cache_container[$container_name])){
+			return $this->cache_container[$container_name];
+		}
+		$container_full_name = $this->openStackFactory->getOpenStackSwiftPrefix($container_name) . $container_name;
 
-        $openStack = $this->openStackFactory->getInstance();
+		$openStack = $this->openStackFactory->getInstance($container_name);
 
-        $openStack->authenticate();
+		$openStack->authenticate();
 
-        $service = $openStack->objectStoreService(
-            self::OPENSTACK_SERVICE,
-            $this->openstack_region
-        );
+		$service = $openStack->objectStoreService(
+			self::OPENSTACK_SERVICE,
+			$this->openStackFactory->getOpenStackRegion($container_name)
+		);
 
-        try {
-            $container = $service->getContainer(
-                $container_full_name
-            );
-        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e){
-            if ($e->getResponse()->getStatusCode() != 404){
-                throw $e;
-            }
-            $container = $service->createContainer(
-                $container_full_name
-            );
-        }
-        $this->cache_container[$container_name] = $container;
-        return $container;
-    }
+		try {
+			$container = $service->getContainer(
+				$container_full_name
+			);
+		} catch(Guzzle\Http\Exception\ClientErrorResponseException $e){
+			if ($e->getResponse()->getStatusCode() != 404){
+				throw $e;
+			}
+			$container = $service->createContainer(
+				$container_full_name
+			);
+		}
+		$this->cache_container[$container_name] = $container;
+		return $container;
+	}
+
 }

@@ -84,12 +84,30 @@ $objectInstancier->set("website",WEBSITE);
 $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
 
-$objectInstancier->set("openstack_authentication_url_v2",OPENSTACK_AUTHENTICATION_URL_V2);
-$objectInstancier->set("openstack_username",OPENSTACK_USERNAME);
-$objectInstancier->set("openstack_password",OPENSTACK_PASSWORD);
-$objectInstancier->set("openstack_tenant",OPENSTACK_TENANT);
-$objectInstancier->set("openstack_region",OPENSTACK_REGION);
-$objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAINER_PREFIX);
+$openStackConfigActes = new OpenStackConfig();
+$openStackConfigActes->openstack_authentication_url_v2  = ACTES_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
+$openStackConfigActes->openstack_password = ACTES_OPENSTACK_PASSWORD;
+$openStackConfigActes->openstack_tenant = ACTES_OPENSTACK_TENANT;
+$openStackConfigActes->openstack_region = ACTES_OPENSTACK_REGION;
+$openStackConfigActes->openstack_swift_container_prefix = ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+
+
+$openStackConfigHelios = new OpenStackConfig();
+$openStackConfigHelios->openstack_authentication_url_v2  = HELIOS_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHelios->openstack_username = HELIOS_OPENSTACK_USERNAME;
+$openStackConfigHelios->openstack_password = HELIOS_OPENSTACK_PASSWORD;
+$openStackConfigHelios->openstack_tenant = HELIOS_OPENSTACK_TENANT;
+$openStackConfigHelios->openstack_region = HELIOS_OPENSTACK_REGION;
+$openStackConfigHelios->openstack_swift_container_prefix = HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+
+$openStackFactory = new OpenStackFactory();
+$openStackFactory->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
+$openStackFactory->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
+
+$objectInstancier->set(OpenStackFactory::class,$openStackFactory);
+
+
 
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
