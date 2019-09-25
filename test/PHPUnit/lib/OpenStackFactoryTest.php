@@ -2,6 +2,9 @@
 
 class OpenStackFactoryTest extends PHPUnit_Framework_TestCase {
 
+	/**
+	 * @throws UnrecoverableException
+	 */
     public function testGetInstance(){
 
     	$openStackConfig = new OpenStackConfig();
@@ -11,9 +14,10 @@ class OpenStackFactoryTest extends PHPUnit_Framework_TestCase {
 		$openStackConfig->openstack_password = "c";
 		$openStackConfig->openstack_tenant = "d";
 
-        $openStackFactory = new OpenStackFactory($openStackConfig);
+        $openStackFactory = new OpenStackFactory();
+        $openStackFactory->addConfiguration("actes",$openStackConfig);
 
-        $openStack = $openStackFactory->getInstance();
+        $openStack = $openStackFactory->getInstance("actes");
         $this->assertInstanceOf("\OpenCloud\OpenStack",$openStack);
         $this->assertEquals("a",$openStack->getAuthUrl());
     }

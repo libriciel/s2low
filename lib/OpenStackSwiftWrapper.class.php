@@ -53,6 +53,7 @@ class OpenStackSwiftWrapper {
 	 * @param string $container_name Le nom du container au sens swift
 	 * @param string $filepath_local Le chemin local du fichier à récupérer
 	 * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
+	 * @throws Exception
 	 * @return mixed
 	 */
     public function retrieveFile($container_name, $filepath_local,$filepath_on_cloud = ''){
@@ -81,6 +82,11 @@ class OpenStackSwiftWrapper {
         return $filepath_local;
     }
 
+	/**
+	 * @param $container_name
+	 * @param $filepath
+	 * @throws UnrecoverableException
+	 */
     public function deleteFile($container_name,$filepath){
         $filename = basename($filepath);
 		$container = $this->getContainer($container_name);
@@ -97,19 +103,24 @@ class OpenStackSwiftWrapper {
 		}
     }
 
+	/**
+	 * @param $container_name
+	 * @return bool|mixed|\OpenCloud\ObjectStore\Resource\Container
+	 * @throws UnrecoverableException
+	 */
 	public function getContainer($container_name){
 		if (isset($this->cache_container[$container_name])){
 			return $this->cache_container[$container_name];
 		}
-		$container_full_name = $this->openStackFactory->getOpenStackSwiftPrefix() . $container_name;
+		$container_full_name = $this->openStackFactory->getOpenStackSwiftPrefix($container_name) . $container_name;
 
-		$openStack = $this->openStackFactory->getInstance();
+		$openStack = $this->openStackFactory->getInstance($container_name);
 
 		$openStack->authenticate();
 
 		$service = $openStack->objectStoreService(
 			self::OPENSTACK_SERVICE,
-			$this->openStackFactory->getOpenStackRegion()
+			$this->openStackFactory->getOpenStackRegion($container_name)
 		);
 
 		try {

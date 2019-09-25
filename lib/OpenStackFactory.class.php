@@ -6,32 +6,62 @@ class OpenStackFactory {
 
 	private $openStackConfig;
 
-	public function __construct(
-		OpenStackConfig $openStackConfig
-    ){
-        $this->openStackConfig = $openStackConfig;
-    }
+	/**
+	 * @param string $configuration_id
+	 * @param OpenStackConfig $openStackConfig
+	 */
+	public function addConfiguration(string $configuration_id,OpenStackConfig $openStackConfig){
+		$this->openStackConfig[$configuration_id] = $openStackConfig;
+	}
 
 	/**
+	 * @param string $configuration_id
 	 * @return OpenStack
+	 * @throws UnrecoverableException
 	 */
-    public function getInstance(){
+    public function getInstance(string $configuration_id){
+
+		$openStackConfiguration = $this->getOpenStackConfiguration($configuration_id);
         return new OpenStack(
-			$this->openStackConfig->openstack_authentication_url_v2,
+			$openStackConfiguration->openstack_authentication_url_v2,
             array(
-                'username'=> $this->openStackConfig->openstack_username,
-                'password'=> $this->openStackConfig->openstack_password,
-                'tenantName'  => $this->openStackConfig->openstack_tenant
+                'username'=> $openStackConfiguration->openstack_username,
+                'password'=> $openStackConfiguration->openstack_password,
+                'tenantName'  => $openStackConfiguration->openstack_tenant
             )
         );
     }
 
-    public function getOpenStackRegion(){
-    	return $this->openStackConfig->openstack_region;
+	/**
+	 * @param string $configuration_id
+	 * @return OpenStackConfig
+	 * @throws UnrecoverableException
+	 */
+    private function getOpenStackConfiguration(string $configuration_id) : OpenStackConfig {
+		if (empty($this->openStackConfig[$configuration_id])){
+			throw new UnrecoverableException(
+				"Impossible de trouver la configuration Openstack pour $configuration_id"
+			);
+		}
+		return $this->openStackConfig[$configuration_id];
 	}
 
-	public function getOpenStackSwiftPrefix(){
-		return $this->openStackConfig->openstack_swift_container_prefix;
+	/**
+	 * @param string $configuration_id
+	 * @return mixed
+	 * @throws UnrecoverableException
+	 */
+    public function getOpenStackRegion(string $configuration_id)  {
+    	return $this->getOpenStackConfiguration($configuration_id)->openstack_region;
+	}
+
+	/**
+	 * @param string $configuration_id
+	 * @return mixed
+	 * @throws UnrecoverableException
+	 */
+	public function getOpenStackSwiftPrefix(string $configuration_id) {
+		return $this->getOpenStackConfiguration($configuration_id)->openstack_swift_container_prefix;
 	}
 
 
