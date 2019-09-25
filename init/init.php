@@ -89,10 +89,13 @@ $openStackConfig->openstack_authentication_url_v2  = OPENSTACK_AUTHENTICATION_UR
 $openStackConfig->openstack_username = OPENSTACK_USERNAME;
 $openStackConfig->openstack_password = OPENSTACK_PASSWORD;
 $openStackConfig->openstack_tenant = OPENSTACK_TENANT;
-
+$openStackConfig->openstack_region = OPENSTACK_REGION;
+$openStackConfig->openstack_swift_container_prefix = OPENSTACK_SWIFT_CONTAINER_PREFIX;
 $objectInstancier->set(OpenStackConfig::class,$openStackConfig);
-$objectInstancier->set("openstack_region",OPENSTACK_REGION);
-$objectInstancier->set("openstack_swift_container_prefix",OPENSTACK_SWIFT_CONTAINER_PREFIX);
+
+$objectInstancier->set(OpenStackFactory::class,new OpenStackFactory($openStackConfig));
+
+
 
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);

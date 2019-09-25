@@ -71,16 +71,10 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 
 		$openStackSwiftWrapper = new OpenStackSwiftWrapper(
 			$openStackFactory,
-			"b",
-			"c",
 			$this->getObjectInstancier()->get('Monolog\Logger')
 		);
 
-
-
-		$this->getObjectInstancier()->set("OpenStackSwiftWrapper",$openStackSwiftWrapper);
-
-
+		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
 	}
 
 	/**

@@ -4,9 +4,9 @@ use \OpenCloud\OpenStack;
 
 class OpenStackFactory {
 
-    private $openStackConfig;
+	private $openStackConfig;
 
-    public function __construct(
+	public function __construct(
 		OpenStackConfig $openStackConfig
     ){
         $this->openStackConfig = $openStackConfig;
@@ -26,7 +26,13 @@ class OpenStackFactory {
         );
     }
 
+    public function getOpenStackRegion(){
+    	return $this->openStackConfig->openstack_region;
+	}
 
+	public function getOpenStackSwiftPrefix(){
+		return $this->openStackConfig->openstack_swift_container_prefix;
+	}
 
 
 }
