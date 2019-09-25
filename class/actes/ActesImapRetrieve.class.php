@@ -81,9 +81,11 @@ class ActesImapRetrieve {
 
         $incomingMail = $mailbox->getMail($mail_id);
 
-        file_put_contents($message_body_path,$incomingMail->textHtml);
+        $nb_octets = file_put_contents($message_body_path,$incomingMail->textHtml);
 
-
+        if (! $nb_octets){
+        	throw new RecoverableException("Impossible d'enregistrer ou de lire le contenu du mail (message_body)");
+		}
 
 		foreach ($incomingMail->getAttachments() as $attachment) {
 
