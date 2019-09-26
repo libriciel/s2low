@@ -58,3 +58,14 @@ services:
             - ${BEANSTALKD_CONSOLE_PORT}:2080
         links:
             - beanstalkd:beanstalkd
+
+    php-redis-admin:
+        image: faktiva/php-redis-admin
+        environment:
+            - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
+        ports:
+            - "${PHP_REDIS_PORT:-8005}:80"
+        depends_on:
+            - redis
+        networks:
+            - services
