@@ -24,6 +24,10 @@ class ActesEnvelopeStorage {
 		$this->logger = $logger;
 	}
 
+	public function getAllEnveloppeIdToStore(){
+		return $this->actesEnvelopeSQL->getAllEnvelopepIdToSendInCloud();
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -37,6 +41,16 @@ class ActesEnvelopeStorage {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * @param $transaction_id
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function storeNextFileById($envelope_id){
+		$envelope_info = $this->actesEnvelopeSQL->getInfo($envelope_id);
+		return $this->storeNextFile($envelope_info);
 	}
 
 	/**

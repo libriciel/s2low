@@ -437,8 +437,11 @@ $zeBatch->incNextSuffix();
 $actesTrantransactionSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 $info_actes = $actesTrantransactionSQL->getInfo($trans->getId());
 
+
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class,$env->getId());
+
 if ( $info_actes['last_status_id'] == ActesStatusSQL::STATUS_POSTE) {
-	$workerScript = $objectInstancier->get(WorkerScript::class);
 	$workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 }
 
