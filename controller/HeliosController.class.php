@@ -51,6 +51,11 @@ class HeliosController extends Controller {
 			Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
 		}
 
+
+		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
+		$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id_transaction);
+
+
 		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
 		Helpers :: returnAndExit(0,$msg, WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
 	}

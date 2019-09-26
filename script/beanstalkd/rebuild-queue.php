@@ -6,7 +6,8 @@ $all = [
 	ActesAntivirusWorker::class,
 	ActesAnalyseFichierAEnvoyerWorker::class,
 	ActesEnvoiFichierWorker::class,
-	ActesEnvoiSaeWorker::class
+	ActesEnvoiSaeWorker::class,
+	HeliosStorePESAllerWorker::class
 ];
 
 

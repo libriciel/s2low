@@ -264,6 +264,11 @@ class HeliosTransactionsSQL extends SQL {
         return $this->query($sql);
     }
 
+	public function getAllTransactionIdToSendInCloud(){
+		$sql = "SELECT id FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC";
+		return $this->queryOneCol($sql);
+	}
+
     public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){
 		$sql = "SELECT id,sha1,filename,acquit_filename FROM helios_transactions WHERE authority_id=? AND id >= ? AND id<=? ORDER BY id";
 		return $this->query($sql,$authority_id,$min_transaction_id,$max_trasaction_id);
