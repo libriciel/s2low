@@ -208,9 +208,8 @@ foreach ($transacs as $trans) {
 }
 
 
-
-
 $workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class,$env->getId());
 $workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 
 

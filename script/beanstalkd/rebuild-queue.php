@@ -7,6 +7,7 @@ $all = [
 	ActesAnalyseFichierAEnvoyerWorker::class,
 	ActesEnvoiFichierWorker::class,
 	ActesEnvoiSaeWorker::class,
+	ActesStoreEnveloppeWorker::class,
 	HeliosStorePESAllerWorker::class
 ];
 

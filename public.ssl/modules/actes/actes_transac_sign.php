@@ -51,7 +51,15 @@ try{
 		$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
+		$actesEnvelopeSQL = $objectInstancier->get(ActesEnvelopeSQL::class);
+		$actesEnvelopeSQL->setTransactionInCloudRemove($transaction_info['envelope_id']);
+
 		$workerScript = $objectInstancier->get(WorkerScript::class);
+		$workerScript->putJobByClassName(
+			ActesStoreEnveloppeWorker::class,
+			$transaction_info['envelope_id']
+		);
+
 		$workerScript->putJobByClassName(
 			ActesAnalyseFichierAEnvoyerWorker::class,
 			$transaction_info['envelope_id']
