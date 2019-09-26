@@ -25,6 +25,7 @@ class PesAllerStorage {
     }
 
 	/**
+	 * @deprecated
 	 * @throws Exception
 	 */
     public function storeAll(){
@@ -37,6 +38,21 @@ class PesAllerStorage {
             }
         }
     }
+
+    public function getAllTransactionIdToStore(){
+    	return $this->heliosTransactionsSQL->getAllTransactionIdToSendInCloud();
+	}
+
+
+	/**
+	 * @param $transaction_id
+	 * @return bool
+	 * @throws Exception
+	 */
+	public function storeNextFileById($transaction_id){
+    	$transaction_info = $this->heliosTransactionsSQL->getInfo($transaction_id);
+    	return $this->storeNextFile($transaction_info);
+	}
 
 	/**
 	 * @param $transaction_info

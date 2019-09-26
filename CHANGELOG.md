@@ -7,6 +7,7 @@
 - Mise à jour du schéma XSD PES v2 en version 5.11
 - Amélioration du script de récupération des classification #535
 - Possibilité de dissocier les configuration cloud actes et PES (création de constante ACTES_OPENSTACK* et HELIOS_OPENSTACK*, rétrocompatible avec l'existant) #534
+- L'envoi des PES dans le cloud passe maintenant par beanstalked
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents

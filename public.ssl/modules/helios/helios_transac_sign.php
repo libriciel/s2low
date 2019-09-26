@@ -106,6 +106,10 @@ for($i=1;$i<=$nb_signature;$i++) {
 	}
 
 	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
+
+	$workerScript = $objectInstancier->get(WorkerScript::class);
+	$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id);
+
 }
 	
 if ($nb_signature>1){	

@@ -60,6 +60,7 @@ if (!$htw->save(true)) {
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $heliosTransactionSQL->setLastStatusId($id);
 
+
 $msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
 	$msg .= "\nErreur de journalisation.";
