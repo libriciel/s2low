@@ -40,8 +40,8 @@ class ActesEnvoiAR {
 	 * @throws Exception
 	 */
     public function sendAllAR(){
-        $sigtermHandler = new SigTermHandler();
-        $this->logger->info("Lancement du script");
+		$sigtermHandler = SigTermHandler::getInstance();
+		$this->logger->info("Lancement du script");
         $transaction_ids = $this->actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_DOCUMENT_RECU);
 		$this->logger->info("Envoie de ".count($transaction_ids)." enveloppes de transaction à l'état DOCUMENT RECU");
         foreach($transaction_ids as $transaction_id){

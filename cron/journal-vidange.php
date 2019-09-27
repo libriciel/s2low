@@ -1,6 +1,4 @@
 <?php
-declare(ticks = 1);
-
 require_once(dirname(__FILE__)."/../config/config.php");
 
 /** @var LogsController $logsController */

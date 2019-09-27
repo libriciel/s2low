@@ -44,7 +44,6 @@ class ActesTransactionsSQL extends SQL{
 
   		$id = $this->queryOne($sql,$transaction_id,$status_id,$date,$message,$flux_retour);
 
-
     	$sql = "UPDATE actes_transactions SET last_status_id=? " .
     			" WHERE id=?";
 

@@ -1,7 +1,4 @@
 <?php
-
-declare(ticks = 1);
-
 require_once(__DIR__ . "/../init/init.php");
 
 $objectInstancier->set("Monolog\Logger",$logger->withName('ACTES-GRAND-MENAGE'));

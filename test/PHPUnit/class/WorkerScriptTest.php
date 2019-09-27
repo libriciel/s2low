@@ -22,11 +22,11 @@ class WorkerScriptTest extends S2lowTestCase {
 
 
 	public function testScriptTerm(){
-		$sigTermHandler = $this->getMockBuilder(SigTermHandler::class)->getMock();
+		$sigTermHandler = $this->getMockBuilder(SigTermHandler::class)->disableOriginalConstructor()->getMock();
 		$sigTermHandler->expects($this->any())->method('isSigtermCalled')->willReturn(true);
 
 		$sigTermHandlerFactory = $this->getMockBuilder(SigTermHandlerFactory::class)->getMock();
-		$sigTermHandlerFactory->expects($this->any())->method('getNewInstance')->willReturn($sigTermHandler);
+		$sigTermHandlerFactory->expects($this->any())->method('getInstance')->willReturn($sigTermHandler);
 		$this->getObjectInstancier()->set(SigTermHandlerFactory::class,$sigTermHandlerFactory);
 
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);

@@ -43,4 +43,12 @@ class HeliosPrepareSaeWorker implements IWorker {
 			$transaction_id
 		);
 	}
+
+	public function getMutexName($data) {
+		return sprintf("%s-%s",self::QUEUE_NAME,$data);
+	}
+
+	public function isDataValid($data) {
+		return true;
+	}
 }

@@ -62,6 +62,10 @@ define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-noreply@locahost}");
 
 define('MODE_BEANSTALKD',true);
 
+define("MODE_REDIS",true);
+define("REDIS_SERVER","${REDIS_SERVER:-redis}");
+define("REDIS_PORT","${REDIS_PORT:-6379}");
+
 define('ACTES_ALWAYS_CAN_VALIDATE',${ACTES_ALWAYS_CAN_VALIDATE:-false});
 
 define("ACTES_TYPE_PAR_NATURE",${ACTES_TYPE_PAR_NATURE:-true});

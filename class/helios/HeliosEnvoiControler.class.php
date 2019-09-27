@@ -52,7 +52,7 @@ class HeliosEnvoiControler {
 
 		libxml_use_internal_errors(true);
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($transaction_id_list as $transaction_id){
             if ($sigtermHandler->isSigtermCalled()){
                 break;

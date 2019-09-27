@@ -56,7 +56,7 @@ class HeliosAnalyseFichierRecu {
 		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvés");
 
 		$erreur_list = array();
-		$sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($file_list as $file){
 			try {
 				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root,$ocre_file_path);

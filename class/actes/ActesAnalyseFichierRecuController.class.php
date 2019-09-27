@@ -73,8 +73,8 @@ class ActesAnalyseFichierRecuController {
             return true;
         }
 		$this->s2lowLogger->info("Traitement de ".count($file_list)." répertoire trouvés");
-        $sigtermHandler = new SigTermHandler();
-        foreach($file_list as $file){
+		$sigtermHandler = SigTermHandler::getInstance();
+		foreach($file_list as $file){
            $this->analyseOneFileMoveIfError($file);
             if ($sigtermHandler->isSigtermCalled()){
                 break;

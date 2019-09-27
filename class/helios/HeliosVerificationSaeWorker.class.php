@@ -40,4 +40,12 @@ class HeliosVerificationSaeWorker implements IWorker {
 	public function work($data){
 		$this->heliosVerificationSAE->verifArchive($data);
 	}
+
+	public function getMutexName($data) {
+		return sprintf("%s-%s",self::QUEUE_NAME,$data);
+	}
+
+	public function isDataValid($data) {
+		return true;
+	}
 }

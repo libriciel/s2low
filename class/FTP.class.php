@@ -24,7 +24,7 @@ class FTP {
      * @throws Exception
      */
 	public function recupAll($remote_path,$local_path){
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		$ftp = ftp_connect($this->host,$this->port);
 		
 		if (!$ftp){

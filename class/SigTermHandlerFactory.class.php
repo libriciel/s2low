@@ -2,7 +2,7 @@
 
 class SigTermHandlerFactory {
 
-	public function getNewInstance(){
-		return new SigTermHandler();
+	public function getInstance(){
+		return SigTermHandler::getInstance();
 	}
 }

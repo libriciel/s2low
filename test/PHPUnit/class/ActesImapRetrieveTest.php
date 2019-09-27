@@ -13,7 +13,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
             $this->getImapProperties(),
             $this->getVFS(),
             $this->getImapMailBoxFactory(),
-			$s2lowLogger
+			$s2lowLogger,
+			SigTermHandler::getInstance()
         );
         $actesImapRetrieve->retrieve();
 
@@ -40,7 +41,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
             $this->getImapProperties(),
             $this->getVFS()."/foo/bar",
             $this->getImapMailBoxFactory(),
-			$s2lowLogger
+			$s2lowLogger,
+			SigTermHandler::getInstance()
         );
         $this->setExpectedException(UnrecoverableException::class,"n'existe pas");
         $actesImapRetrieve->retrieve();
