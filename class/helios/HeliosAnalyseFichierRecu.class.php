@@ -62,24 +62,10 @@ class HeliosAnalyseFichierRecu {
 
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
 
-		$this->getAllDirectory($helios_ftp_response_tmp_local_path);
-
-		$this->s2lowLogger->info("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
-
-		$file_list = scandir($helios_ftp_response_tmp_local_path);
-
-		if ($file_list === false){
-			$this->s2lowLogger->critical("[ECHEC] Erreur lors de la lecture du répertoire  $helios_ftp_response_tmp_local_path");
+		$file_list = $this->getAllDirectory($helios_ftp_response_tmp_local_path);
+		if (! $file_list){
 			return;
 		}
-
-		$file_list = array_diff($file_list, array('..', '.'));
-
-		if (!$file_list){
-			$this->s2lowLogger->info("Aucun fichier à analyser");
-			return;
-		}
-		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvés");
 
 		$erreur_list = array();
 		$sigtermHandler = SigTermHandler::getInstance();
