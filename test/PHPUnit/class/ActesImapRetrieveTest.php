@@ -6,7 +6,6 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 	 * @throws Exception
 	 */
     public function testRetrieve() {
-
     	$s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
 
         $actesImapRetrieve = new ActesImapRetrieve(
@@ -14,7 +13,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
             $this->getVFS(),
             $this->getImapMailBoxFactory(),
 			$s2lowLogger,
-			SigTermHandler::getInstance()
+			SigTermHandler::getInstance(),
+			$this->getWorkerScript()
         );
         $actesImapRetrieve->retrieve();
 
@@ -31,6 +31,16 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
     }
 
 	/**
+	 * @return WorkerScript
+	 */
+    private function getWorkerScript(){
+		$workerScript = $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock();
+		$workerScript->expects($this->any())->method('putJobByClassName')->willReturn(true);
+		/** @var WorkerScript $workerScript */
+		return $workerScript;
+	}
+
+	/**
 	 * @throws Exception
 	 */
     public function testRetrieveDirectoryCreationFailed() {
@@ -42,7 +52,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
             $this->getVFS()."/foo/bar",
             $this->getImapMailBoxFactory(),
 			$s2lowLogger,
-			SigTermHandler::getInstance()
+			SigTermHandler::getInstance(),
+			$this->getWorkerScript()
         );
         $this->setExpectedException(UnrecoverableException::class,"n'existe pas");
         $actesImapRetrieve->retrieve();

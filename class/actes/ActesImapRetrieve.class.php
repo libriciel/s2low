@@ -9,19 +9,22 @@ class ActesImapRetrieve {
     private $logger;
     private $imapMailBoxFactory;
     private $sigTermHandler;
+    private $workerScript;
 
     public function __construct(
         ActesImapProperties $actesImapProperties,
         $actes_response_tmp_local_path,
 		ImapMailBoxFactory $imapMailBoxFactory,
         S2lowLogger $s2lowLogger,
-		SigTermHandler $sigTermHandler
+		SigTermHandler $sigTermHandler,
+		WorkerScript $workerScript
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
         $this->imapMailBoxFactory = $imapMailBoxFactory;
         $this->logger = $s2lowLogger;
         $this->sigTermHandler = $sigTermHandler;
+        $this->workerScript = $workerScript;
     }
 
     /**
@@ -116,6 +119,11 @@ class ActesImapRetrieve {
         if ($return_var != 0){
         	throw new UnrecoverableException("Impossible de déplacer $tmp_file ");
 		}
+
+		$this->workerScript->putJobByClassName(
+			ActesAnalyseFichierRecuWorker::class,
+			basename($tmp_file)
+		);
     }
 
     //Je vois vraiment pas pourquoi on doit faire ça
