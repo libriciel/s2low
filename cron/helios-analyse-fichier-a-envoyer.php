@@ -11,7 +11,6 @@ $heliosEnvoiControler = $objectInstancier->get("HeliosEnvoiControler");
 $heliosEnvoiControler->setDoNotVerifyNomFicUnicity(HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY);
 $heliosEnvoiControler->validateAllTransactions();
 
-touch(HELIOS_VALIDATION_UPSTART_TOUCH_FILE);
 $stop = time();
 echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
 $sleep = $min_exec_time - ($stop -$start);

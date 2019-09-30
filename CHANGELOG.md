@@ -18,6 +18,9 @@
 - Le script d'envoi des PES au SAE se limite au 100 premier PES afin d'éviter que le jeton de cloudwatt n'expire.
 
 
+## Retrait
+- la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée
+
 ## 4.1.0 - 2019-07-08
 
 *Cette version contient principalement des améliorations sur les versements SAE.*
