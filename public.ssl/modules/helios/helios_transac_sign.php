@@ -109,6 +109,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 
 	$workerScript = $objectInstancier->get(WorkerScript::class);
 	$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id);
+	$workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class,$id);
 
 }
 	

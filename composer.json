@@ -34,7 +34,8 @@
     "ext-SimpleXML": "^7.2",
     "malkusch/lock": "^2.1",
     "ext-redis": "^5.0",
-    "ext-pcntl": "^7.2"
+    "ext-pcntl": "^7.2",
+    "ext-libxml": "^7.2"
   },
 
   "require-dev": {

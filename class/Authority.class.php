@@ -337,7 +337,7 @@ class Authority extends DataObject {
   
   
   public function getAllAuthorities(){
-  	return $this->db->fetchAll("SELECT id,name,siren FROM authorities");
+  	return $this->db->fetchAll("SELECT id,name,siren FROM authorities ORDER BY id");
   }
   
 

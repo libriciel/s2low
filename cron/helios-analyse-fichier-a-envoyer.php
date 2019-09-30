@@ -2,19 +2,8 @@
 <?php
 require_once( __DIR__ . "/../init/init.php");
 
-$start = time();
-echo "Debut ".date("Y-m-d H:i:s",$start)." \n";
-$min_exec_time = 10;
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->scriptByClassName(HeliosAnalyseFichierAEnvoyerWorker::class);
 
-/** @var HeliosEnvoiControler $heliosEnvoiControler */
-$heliosEnvoiControler = $objectInstancier->get("HeliosEnvoiControler");
-$heliosEnvoiControler->setDoNotVerifyNomFicUnicity(HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY);
-$heliosEnvoiControler->validateAllTransactions();
 
-$stop = time();
-echo "Fin ".date("Y-m-d H:i:s",$stop)." \n";
-$sleep = $min_exec_time - ($stop -$start);
-if ($sleep > 0){
-	echo "Arret du script : $sleep \n";
-	sleep($sleep);
-}
+

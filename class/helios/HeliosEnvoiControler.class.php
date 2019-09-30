@@ -38,6 +38,107 @@ class HeliosEnvoiControler {
 		$this->do_not_verify_nom_fic_unicity = $do_not_verify_nom_fic_unicity;
 	}
 
+
+	public function validateOneTransaction($transaction_id){
+		libxml_use_internal_errors(true);
+		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+
+		$message =  "Transaction $transaction_id en cours de traitement";
+		$this->updateStatus($transaction_id,HeliosTransactionsSQL::EN_TRAITEMENT,$message,$transactionInfo['user_id']);
+
+		$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+
+		$pes_content = file_get_contents($file_path);
+		if (! $pes_content){
+			$message = "Transaction $transaction_id : le fichier est introuvable";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		if (!$this->antivirus->checkArchiveSanity($file_path)) {
+			$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		//Pas de validation des fichier PES_Aller - Il ne s'agit pas d'une exigence.
+		/*$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
+		if (! $heliosPESValidation->validate($pes_content)){
+			print_r($heliosPESValidation->getLastError());
+			$message = "Transaction $transaction_id : la transaction ne respecte pas le schéma PES_Aller";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			continue;
+		}*/
+
+		if (! $this->isInIso8859($pes_content)){
+			$message = "Transaction $transaction_id : ce fichier n'est pas encodé en ISO-8859-1";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);
+		if (!$pes_xml){
+			$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		if ($this->isPESEmpty($pes_xml)){
+			$message = "Transaction $transaction_id : ce fichier ne contient ni bordereau, ni PJ, ni marché";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		$info_from_pes_aller = $this->extratInfoFromPESAller($pes_xml);
+
+		$nom_fic = $info_from_pes_aller['nom_fic'];
+		if (! $nom_fic){
+			$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+		$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), EXTENDED_VALIDCA_PATH);
+		$heliosSignatureTechnique = new HeliosSignatureTechnique(
+			$this->heliosTransactionsSQL,
+			$this->helios_files_upload_root,
+			$xadesSignature,
+			HELIOS_ENABLE_SIGNATURE_TECHNIQUE,
+			$this->pesAllerRetriever
+		);
+		$xadesSignatureProperties = new XadesSignatureProperties();
+		$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
+		$xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
+		$xadesSignatureProperties->postalCode = HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE;
+		$xadesSignatureProperties->city = HELIOS_SIGNATURE_PLATEFORME_CITY;
+
+		try {
+			$heliosSignatureTechnique->sign($transaction_id, HELIOS_PLATEFORME_CERTIFICATE_P12, HELIOS_PLATEFORME_CERTIFICATE_PASSWORD, $xadesSignatureProperties);
+		} catch (UnrecoverableHeliosSignatureTechniqueException $exception){
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$exception->getMessage(),$transactionInfo['user_id']);
+			return;
+		} catch (RecoverableHeliosSignatureTechniqueException $exception){
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::POSTE,$exception->getMessage(),$transactionInfo['user_id']);
+			return;
+		}
+		$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
+
+		if (! $this->verifNomFicUnicity($authorityInfo,$info_from_pes_aller)){
+			$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+		$this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id,$info_from_pes_aller);
+
+
+		$siret = $pes_xml->EnTetePES->IdColl['V'];
+		$authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
+		$authoritySiret->add($transactionInfo['authority_id'],$siret);
+
+		$message = "Transaction $transaction_id dans la file d'attente";
+		$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
+		libxml_use_internal_errors(false);
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -49,111 +150,14 @@ class HeliosEnvoiControler {
 			return;
 		}
 
-
-		libxml_use_internal_errors(true);
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
 		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($transaction_id_list as $transaction_id){
-            if ($sigtermHandler->isSigtermCalled()){
-                break;
-            }
-			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
-		
-			$message =  "Transaction $transaction_id en cours de traitement";
-			$this->updateStatus($transaction_id,HeliosTransactionsSQL::EN_TRAITEMENT,$message,$transactionInfo['user_id']);
-			
-			$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
-
-			$pes_content = file_get_contents($file_path);
-			if (! $pes_content){
-				$message = "Transaction $transaction_id : le fichier est introuvable";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
+			if ($sigtermHandler->isSigtermCalled()){
+				break;
 			}
-
-			if (!$this->antivirus->checkArchiveSanity($file_path)) {
-				$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-
-			//Pas de validation des fichier PES_Aller - Il ne s'agit pas d'une exigence.
-			/*$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
-			if (! $heliosPESValidation->validate($pes_content)){
-				print_r($heliosPESValidation->getLastError());
-				$message = "Transaction $transaction_id : la transaction ne respecte pas le schéma PES_Aller";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}*/
-
-			if (! $this->isInIso8859($pes_content)){
-				$message = "Transaction $transaction_id : ce fichier n'est pas encodé en ISO-8859-1";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-
-			$pes_xml = simplexml_load_string($pes_content, 'SimpleXMLElement', LIBXML_PARSEHUGE);
-			if (!$pes_xml){
-				$message = "Transaction $transaction_id : ce fichier n'est pas en XML";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-
-            if ($this->isPESEmpty($pes_xml)){
-                $message = "Transaction $transaction_id : ce fichier ne contient ni bordereau, ni PJ, ni marché";
-                $this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-                continue;
-            }
-
-			$info_from_pes_aller = $this->extratInfoFromPESAller($pes_xml);
-
-			$nom_fic = $info_from_pes_aller['nom_fic'];
-			if (! $nom_fic){
-				$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-			$xadesSignature = new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), EXTENDED_VALIDCA_PATH);
-			$heliosSignatureTechnique = new HeliosSignatureTechnique(
-			    $this->heliosTransactionsSQL,
-                $this->helios_files_upload_root,
-                $xadesSignature,
-                HELIOS_ENABLE_SIGNATURE_TECHNIQUE,
-                $this->pesAllerRetriever
-            );
-			$xadesSignatureProperties = new XadesSignatureProperties();
-			$xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
-			$xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
-			$xadesSignatureProperties->postalCode = HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE;
-			$xadesSignatureProperties->city = HELIOS_SIGNATURE_PLATEFORME_CITY;
-
-			try {
-				$heliosSignatureTechnique->sign($transaction_id, HELIOS_PLATEFORME_CERTIFICATE_P12, HELIOS_PLATEFORME_CERTIFICATE_PASSWORD, $xadesSignatureProperties);
-			} catch (UnrecoverableHeliosSignatureTechniqueException $exception){
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$exception->getMessage(),$transactionInfo['user_id']);
-				continue;
-			} catch (RecoverableHeliosSignatureTechniqueException $exception){
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::POSTE,$exception->getMessage(),$transactionInfo['user_id']);
-				continue;
-			}
-			$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
-
-			if (! $this->verifNomFicUnicity($authorityInfo,$info_from_pes_aller)){
-				$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-			$this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id,$info_from_pes_aller);
-
-
-			$siret = $pes_xml->EnTetePES->IdColl['V'];
-			$authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
-			$authoritySiret->add($transactionInfo['authority_id'],$siret);
-
-			$message = "Transaction $transaction_id dans la file d'attente";
-			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
+			$this->validateOneTransaction($transaction_id);
 		}
-		libxml_use_internal_errors(false);
 	}
 
 	private function isInIso8859($pes_content){
