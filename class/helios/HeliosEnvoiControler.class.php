@@ -16,13 +16,15 @@ class HeliosEnvoiControler {
 	private $helios_files_upload_root;
 
 	private $antivirus;
+
+	private $workerScript;
 	
 	public function __construct(
 	    SQLQuery $sqlQuery,
         PesAllerRetriever $pesAllerRetriever,
         $helios_files_upload_root,
-		Antivirus $antivirus
-
+		Antivirus $antivirus,
+		WorkerScript $workerScript
     ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -32,6 +34,8 @@ class HeliosEnvoiControler {
 		$this->pesAllerRetriever = $pesAllerRetriever;
 		$this->helios_files_upload_root = $helios_files_upload_root;
 		$this->antivirus = $antivirus;
+		$this->workerScript = $workerScript;
+
 	}
 
 	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
@@ -136,6 +140,8 @@ class HeliosEnvoiControler {
 
 		$message = "Transaction $transaction_id dans la file d'attente";
 		$this->updateStatus($transaction_id,HeliosTransactionsSQL::ATTENTE,$message,$transactionInfo['user_id']);
+
+		$this->workerScript->putJobByClassName(HeliosEnvoiWorker::class,$transaction_id);
 		libxml_use_internal_errors(false);
 	}
 
@@ -183,15 +189,111 @@ class HeliosEnvoiControler {
 		$this->heliosTransactionsSQL->updateStatus($transaction_id,$status_id,$message);
 		Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $user_id);
 	}
-	
+
+	public function sendOneTransaction($transaction_id){
+		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
+
+		echo "Préparation de l'envoi de la transaction $transaction_id\n";
+		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+
+		if (! $this->heliosTransmissionWindowsSQL->canSend($transactionInfo['file_size'])){
+			echo "La fenêtre d'envoie est pleine \n";
+			if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)){
+				$message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
+				Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $transactionInfo['user_id']);
+				echo $message."\n";
+				mail(EMAIL_ADMIN,"Transaction Helios bloqué",$message,"From: ".TDT_FROM_EMAIL);
+				$this->heliosTransactionsSQL->setSendWarning($transaction_id);
+			}
+			return;
+		}
+
+		$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
+
+		$completeName = $this->createCompleteName($transactionInfo['siren']);
+		$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
+		echo "Nom du fichier à envoyer : $completeName\n";
+
+		$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+
+		$file_path_with_complete_name = $file_sending_repository."/".$completeName;
+		if (! copy($file_path, $file_path_with_complete_name)){
+			echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
+			return;
+		}
+		if (HELIOS_ZIP_BEFORE_SEND){
+			$file_to_send = $file_sending_repository."/".$transactionInfo['sha1'].".zip";
+			$zipArchive = new ZipArchive();
+			if (! $zipArchive->open($file_to_send,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)){
+				echo "Transaction $transaction_id: Impossible d'ouvrir $file_to_send";
+				return;
+			}
+			$zipArchive->addFile($file_path_with_complete_name,$completeName);
+			$zipArchive->close();
+		} else {
+			$file_to_send = $file_path_with_complete_name;
+		}
+
+		$sha1_file = sha1_file($file_path);
+		if ($sha1_file != $transactionInfo['sha1']){
+			$message = "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme\n";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			return;
+		}
+
+		$pesAller = new PesAller();
+		try {
+			$p_msg = $pesAller->getP_MSG($file_path);
+		} catch (Exception $e){
+			$message = "Transaction $transaction_id : ".$e->getMessage();
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			if (HELIOS_ZIP_BEFORE_SEND){
+				unlink($file_to_send);
+			}
+			unlink($file_path_with_complete_name);
+			return;
+		}
+
+		if (! $authorityInfo["helios_ftp_dest"]){
+			$message = "Transaction $transaction_id : les propriétés Helios FTP ne sont pas configurées correctement";
+			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
+			unlink($file_path_with_complete_name);
+			return;
+		}
+
+		try {
+			$ftp = new FTPFileSender();
+			$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN,HELIOS_FTP_PASSWORD);
+			$ftp->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
+			$ftp->sendRawCommand("site P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
+			$ftp->sendRawCommand("site P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
+			$ftp->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
+			$ftp->sendFile(HELIOS_SENDING_DESTINATION,$file_to_send);
+			$ftp->disconnect();
+		} catch (Exception $e){
+			echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
+			unlink($file_path_with_complete_name);
+			return;
+		}
+
+		$message = "Transaction $transaction_id transmise au serveur.";
+		$this->updateStatus($transaction_id,HeliosTransactionsSQL::TRANSMIS,$message,$transactionInfo['user_id']);
+
+		$this->heliosTransmissionWindowsSQL->addFile($transactionInfo['file_size']);
+
+		if (HELIOS_ZIP_BEFORE_SEND){
+			unlink($file_to_send);
+		}
+		unlink($file_path_with_complete_name);
+	}
+
+
 	//nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
 	//idColl : numéro siret de la collectivité,
 	//date : date d'envoi à Helios sous la forme AAMMJJ,
 	//numOrdr : numéro d'ordre d'envoi sur 3 chiffres.
-
 	public function sendAllTransactions(){
 
-		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 
 		$transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
 
@@ -200,98 +302,8 @@ class HeliosEnvoiControler {
 		echo "Il y a ".count($transaction_id_list)." transactions à envoyer\n";
 
 		foreach($transaction_id_list as $transaction_id){
-			echo "Préparation de l'envoi de la transaction $transaction_id\n";
-			$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+			$this->sendOneTransaction($transaction_id);
 
-			if (! $this->heliosTransmissionWindowsSQL->canSend($transactionInfo['file_size'])){
-				echo "La fenêtre d'envoie est pleine \n";
-				if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)){
-					$message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
-					Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $transactionInfo['user_id']);
-					echo $message."\n";
-					mail(EMAIL_ADMIN,"Transaction Helios bloqué",$message,"From: ".TDT_FROM_EMAIL);
-					$this->heliosTransactionsSQL->setSendWarning($transaction_id);
-				}
-				continue;
-			}
-
-			$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
-
-			$completeName = $this->createCompleteName($transactionInfo['siren']);
-			$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
-			echo "Nom du fichier à envoyer : $completeName\n";
-
-            $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
-
-			$file_path_with_complete_name = $file_sending_repository."/".$completeName;
-			if (! copy($file_path, $file_path_with_complete_name)){
-				echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
-				continue;
-			}
-			if (HELIOS_ZIP_BEFORE_SEND){
-				$file_to_send = $file_sending_repository."/".$transactionInfo['sha1'].".zip";
-				$zipArchive = new ZipArchive();
-				if (! $zipArchive->open($file_to_send,ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)){
-					echo "Transaction $transaction_id: Impossible d'ouvrir $file_to_send";
-					continue;
-				}
-				$zipArchive->addFile($file_path_with_complete_name,$completeName);
-				$zipArchive->close();
-			} else {
-				$file_to_send = $file_path_with_complete_name;
-			}
-
-			$sha1_file = sha1_file($file_path);
-			if ($sha1_file != $transactionInfo['sha1']){
-				$message = "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme\n";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				continue;
-			}
-
-			$pesAller = new PesAller();
-			try {
-				$p_msg = $pesAller->getP_MSG($file_path);
-			} catch (Exception $e){
-				$message = "Transaction $transaction_id : ".$e->getMessage();
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				if (HELIOS_ZIP_BEFORE_SEND){
-					unlink($file_to_send);
-				}
-				unlink($file_path_with_complete_name);
-				continue;
-			}
-
-			if (! $authorityInfo["helios_ftp_dest"]){
-				$message = "Transaction $transaction_id : les propriétés Helios FTP ne sont pas configurées correctement";
-				$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
-				unlink($file_path_with_complete_name);
-				continue;
-			}
-			
-			try {
-				$ftp = new FTPFileSender();
-				$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN,HELIOS_FTP_PASSWORD);
-				$ftp->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
-				$ftp->sendRawCommand("site P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
-				$ftp->sendRawCommand("site P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
-				$ftp->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
-				$ftp->sendFile(HELIOS_SENDING_DESTINATION,$file_to_send);
-				$ftp->disconnect();
-			} catch (Exception $e){
-				echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
-				unlink($file_path_with_complete_name);
-				continue;
-			}
-
-			$message = "Transaction $transaction_id transmise au serveur.";
-			$this->updateStatus($transaction_id,HeliosTransactionsSQL::TRANSMIS,$message,$transactionInfo['user_id']);
-
-			$this->heliosTransmissionWindowsSQL->addFile($transactionInfo['file_size']);
-
-			if (HELIOS_ZIP_BEFORE_SEND){
-				unlink($file_to_send);
-			}
-			unlink($file_path_with_complete_name);
 			$nb_file_send++;
 		}
 

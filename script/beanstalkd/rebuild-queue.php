@@ -11,6 +11,7 @@ $all = [
 	ActesEnvoiSaeWorker::class,
 	ActesStoreEnveloppeWorker::class,
 	HeliosAnalyseFichierAEnvoyerWorker::class,
+	HeliosEnvoiWorker::class,
 	HeliosStorePESAllerWorker::class
 ];
 

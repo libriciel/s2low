@@ -1,18 +1,16 @@
 <?php
 
-class HeliosAnalyseFichierAEnvoyerWorker implements IWorker {
+class HeliosEnvoiWorker implements IWorker {
 
-	const QUEUE_NAME = 'helios-analyse-fichier-a-envoyer';
+	const QUEUE_NAME = 'helios-envoi';
 
 
 	private $heliosEnvoiControler;
 	private $heliosTransactionsSQL;
-	private $workerScript;
 
 	public function __construct(
 		HeliosEnvoiControler $heliosEnvoiControler,
-		HeliosTransactionsSQL $heliosTransactionsSQL,
-		WorkerScript $workerScript
+		HeliosTransactionsSQL $heliosTransactionsSQL
 	) {
 		$this->heliosEnvoiControler = $heliosEnvoiControler;
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
@@ -31,7 +29,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker {
 	 * @throws Exception
 	 */
 	public function getAllId(){
-		return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
+		return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
 	}
 
 	/**
@@ -40,7 +38,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker {
 	 * @throws Exception
 	 */
 	public function work($data){
-		$this->heliosEnvoiControler->validateOneTransaction($data);
+		$this->heliosEnvoiControler->sendOneTransaction($data);
 	}
 
 	public function getMutexName($data) {
@@ -49,7 +47,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker {
 
 	public function isDataValid($data) {
 		$status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
-		return $status_id == HeliosStatusSQL::POSTE;
+		return $status_id == HeliosStatusSQL::ATTENTE;
 	}
 
 
