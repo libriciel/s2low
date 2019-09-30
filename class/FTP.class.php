@@ -6,12 +6,16 @@ class FTP {
 	private $login;
 	private $password;
 	private $delete;
+
+	/** @var WorkerScript */
+	private $workerScript;
 	
-	public function setConnexionInfo($host,$port,$login,$password){
+	public function setConnexionInfo($host,$port,$login,$password, WorkerScript $workerScript = null){
 		$this->host = $host;
 		$this->port = $port;
 		$this->login = $login;
 		$this->password = $password;
+		$this->workerScript = $workerScript;
 	}
 	
 	public function setDeleteFileAfterDownload(){
@@ -82,6 +86,10 @@ class FTP {
 			if ($this->delete){
 				ftp_delete($ftp, $file);
 			}
+			if ($this->workerScript){
+				$this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class,$file);
+			}
+
             if ($sigtermHandler->isSigtermCalled()){
                 ftp_close($ftp);
                 break;
