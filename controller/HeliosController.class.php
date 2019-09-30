@@ -52,8 +52,6 @@ class HeliosController extends Controller {
 		}
 
 
-		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-		$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id_transaction);
 
 
 		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
@@ -138,6 +136,12 @@ class HeliosController extends Controller {
 
 		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
 		Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false,$user_id);
+
+		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
+		$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id_transaction);
+		if ($state == HeliosTransactionsSQL::POSTE) {
+			$workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id_transaction);
+		}
 		return $id_transaction;
 	}
 

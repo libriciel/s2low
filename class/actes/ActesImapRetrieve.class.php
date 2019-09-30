@@ -8,17 +8,23 @@ class ActesImapRetrieve {
     private $actes_response_tmp_local_path;
     private $logger;
     private $imapMailBoxFactory;
+    private $sigTermHandler;
+    private $workerScript;
 
     public function __construct(
         ActesImapProperties $actesImapProperties,
         $actes_response_tmp_local_path,
 		ImapMailBoxFactory $imapMailBoxFactory,
-        S2lowLogger $s2lowLogger
+        S2lowLogger $s2lowLogger,
+		SigTermHandler $sigTermHandler,
+		WorkerScript $workerScript
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
         $this->imapMailBoxFactory = $imapMailBoxFactory;
         $this->logger = $s2lowLogger;
+        $this->sigTermHandler = $sigTermHandler;
+        $this->workerScript = $workerScript;
     }
 
     /**
@@ -36,7 +42,7 @@ class ActesImapRetrieve {
 		$mailsIds = $mailbox->searchMailbox('ALL');
 
 		$this->logger->info("Il y a ".count($mailsIds)." messages dans la boite au lettres");
-        $sigtermHandler = new SigTermHandler();
+
         foreach($mailsIds as $mail_id){
             try {
                 $this->saveMail($mailbox, $mail_id);
@@ -48,7 +54,7 @@ class ActesImapRetrieve {
             }
 			$this->logger->info("Suppression du message : $mail_id");
 			$mailbox->deleteMail($mail_id);
-            if ($sigtermHandler->isSigtermCalled()){
+            if ($this->sigTermHandler->isSigtermCalled()){
                 break;
             }
         }
@@ -113,6 +119,11 @@ class ActesImapRetrieve {
         if ($return_var != 0){
         	throw new UnrecoverableException("Impossible de déplacer $tmp_file ");
 		}
+
+		$this->workerScript->putJobByClassName(
+			ActesAnalyseFichierRecuWorker::class,
+			basename($tmp_file)
+		);
     }
 
     //Je vois vraiment pas pourquoi on doit faire ça

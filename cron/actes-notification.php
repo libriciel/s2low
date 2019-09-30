@@ -1,6 +1,4 @@
 <?php
-declare(ticks = 1);
-
 require_once( __DIR__ . "/../init/init.php");
 
 require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');

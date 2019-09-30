@@ -47,8 +47,8 @@ class ActesEnvoiFichierWorker implements IWorker {
 
 
     public function sendAllEnvelopes(){
-        $sigtermHandler = new SigTermHandler();
-        $this->logger->debug("Lancement du script");
+		$sigtermHandler = SigTermHandler::getInstance();
+		$this->logger->debug("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
 		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
@@ -116,5 +116,13 @@ class ActesEnvoiFichierWorker implements IWorker {
 
         return true;
     }
+
+	public function getMutexName($data) {
+		return sprintf("actes-transaction-%s",$data);
+    }
+
+	public function isDataValid($data) {
+		return true;
+	}
 
 }

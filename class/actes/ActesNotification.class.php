@@ -39,7 +39,7 @@ class ActesNotification {
 	 * @throws Exception
 	 */
 	public function sendAutomaticNotification(){
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
         foreach($this->actesTransactionsSQL->getTransactionToAutoBroadcast() as $transaction_id){
             $this->logger->info("Notification de la transaction $transaction_id");
             $this->sendNotificationManuel($transaction_id);

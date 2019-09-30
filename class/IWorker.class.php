@@ -30,4 +30,18 @@ interface IWorker {
 	 */
 	public function work($data);
 
+
+	/**
+	 * @param $data
+	 * @return string|false le nom du verrou exlusif à utiliser pour la section critique "work", false si work n'est pas une section critique
+	 */
+	public function getMutexName($data);
+
+	/**
+	 * @param $data
+	 * @return boolean indique si les données sont encore valide (i.e la transaction dans le bon état par exemple), si false, on sort le travail de la file
+	 */
+	public function isDataValid($data);
+
+
 }

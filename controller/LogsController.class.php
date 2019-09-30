@@ -175,7 +175,7 @@ class LogsController extends Controller {
 	public function doRequest(){
 		$all_request = $this->getLogsRequestSQL()->getAllByState(LogsRequestData::STATE_ASKING);
 		echo count($all_request)." requêtes en attente...";
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($all_request as $request) {
 
 			echo "Traitement de la requête {$request['id']}\n";

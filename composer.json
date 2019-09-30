@@ -31,7 +31,11 @@
     "symfony/process": "^3.4",
     "php-imap/php-imap": "^3.0",
     "ext-fileinfo": "^1.0",
-    "ext-SimpleXML": "^7.2"
+    "ext-SimpleXML": "^7.2",
+    "malkusch/lock": "^2.1",
+    "ext-redis": "^5.0",
+    "ext-pcntl": "^7.2",
+    "ext-libxml": "^7.2"
   },
 
   "require-dev": {

@@ -59,22 +59,14 @@ class ActesAnalyseFichierRecuController {
         $this->s2lowLogger->info("Début du script");
 		$this->s2lowLogger->info("Analyse du répertoire : {$this->actes_response_tmp_local_path}");
 
-        $file_list = @ scandir($this->actes_response_tmp_local_path);
-
-        if ($file_list === false){
-            $message = "Erreur lors de la lecture du répertoire  $this->actes_response_tmp_local_path";
-			$this->s2lowLogger->error($message);
-            throw new Exception($message);
-        }
-        $file_list = array_diff($file_list, array('..', '.'));
+		$file_list = $this->getAllDirectory();
 
         if (!$file_list){
 			$this->s2lowLogger->info("Aucun répertoire à analyser");
             return true;
         }
-		$this->s2lowLogger->info("Traitement de ".count($file_list)." répertoire trouvés");
-        $sigtermHandler = new SigTermHandler();
-        foreach($file_list as $file){
+		$sigtermHandler = SigTermHandler::getInstance();
+		foreach($file_list as $file){
            $this->analyseOneFileMoveIfError($file);
             if ($sigtermHandler->isSigtermCalled()){
                 break;
@@ -85,7 +77,21 @@ class ActesAnalyseFichierRecuController {
         return true;
     }
 
-    private function analyseOneFileMoveIfError($file){
+    public function getAllDirectory(){
+		$file_list = @ scandir($this->actes_response_tmp_local_path);
+
+		if ($file_list === false){
+			$message = "Erreur lors de la lecture du répertoire  $this->actes_response_tmp_local_path";
+			$this->s2lowLogger->error($message);
+			throw new Exception($message);
+		}
+		$file_list = array_diff($file_list, array('..', '.'));
+		$this->s2lowLogger->info("Traitement de ".count($file_list)." répertoire trouvés");
+		return $file_list;
+	}
+
+
+    public function analyseOneFileMoveIfError($file){
         $rep_path = $this->actes_response_tmp_local_path."/".$file;
         try {
             $this->analyseOneFile($rep_path);

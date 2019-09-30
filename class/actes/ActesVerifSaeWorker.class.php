@@ -126,4 +126,12 @@ class ActesVerifSaeWorker implements IWorker {
 		return utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
 	}
 
+	public function getMutexName($data) {
+		return sprintf("actes-transaction-%s",$data);
+	}
+
+	public function isDataValid($data) {
+		return true;
+	}
+
 }

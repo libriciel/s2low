@@ -42,7 +42,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
         $logs = $this->getLogRecords();
-        $this->assertEquals("Aucun répertoire à analyser",$logs[2][S2lowLogger::MESSAGE]);
+        $this->assertEquals("Traitement de 0 répertoire trouvés",$logs[2][S2lowLogger::MESSAGE]);
     }
 
 	/**

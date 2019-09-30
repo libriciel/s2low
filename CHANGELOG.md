@@ -1,19 +1,25 @@
 # Change Log
 
 
-## 4.1.1
+## 4.2.0
 
 ## Evolution
 - Mise à jour du schéma XSD PES v2 en version 5.11
 - Amélioration du script de récupération des classification #535
 - Possibilité de dissocier les configuration cloud actes et PES (création de constante ACTES_OPENSTACK* et HELIOS_OPENSTACK*, rétrocompatible avec l'existant) #534
 - L'envoi des PES et des actes dans le cloud passe maintenant par beanstalked #508
+- Refactoring des file de traitement (ajout de sections critiques synchronisés avec Redis)
+- Ajout des constantes : MODE_REDIS, REDIS_SERVER et REDIS_PORT (gestion du cache Redis utiliser comme gestionnaire de verrou)
+- Refactoring des catch des signaux SIGTERM pour la terminaison propre des files de traitement
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
 - L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait en compte les messages 2-2)
 - Le script d'envoi des PES au SAE se limite au 100 premier PES afin d'éviter que le jeton de cloudwatt n'expire.
 
+
+## Retrait
+- la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée
 
 ## 4.1.0 - 2019-07-08
 

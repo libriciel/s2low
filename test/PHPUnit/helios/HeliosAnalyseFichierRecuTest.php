@@ -54,6 +54,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$authoritySireSQL->add(1,"12345678900035");
 
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
+		//print_r($this->getLogRecords());
 		$this->assertEquals(
 			'Traitement de vfs://test/helios_ftp_response_tmp_local_path/pes_retour.xml',
 			$this->getLogRecords()[2]['message']

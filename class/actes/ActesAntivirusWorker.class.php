@@ -42,6 +42,20 @@ class ActesAntivirusWorker implements IWorker {
 		return $id;
 	}
 
+	public function getMutexName($data) {
+		return sprintf("actes-transaction-%s",$data);
+	}
+
+	public function isDataValid($data) {
+		$transaction_id = $data;
+		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
+		if ($transaction_info['antivirus_check']){
+			$this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * @param $data
 	 * @return bool

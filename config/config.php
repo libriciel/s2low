@@ -86,6 +86,9 @@ if(!defined('DB_CLIENT_ENCODING')){
  *
  */
 if(!defined("MODE_BEANSTALKD")){
+	/**
+	 * @deprecated v4.2 => le mode BEANSTALKED est **obligatoire** à partir de la version 5.0.0 de s2low
+	 */
 	define("MODE_BEANSTALKD",false);
 }
 
@@ -96,6 +99,27 @@ if (!defined("BEANSTAKLD_SERVER")){
 if (!defined("BEANSTAKLD_PORT")){
 	define("BEANSTAKLD_PORT","11300");
 }
+
+
+/**
+ * Redis : le mode redis permet de faire un lock propre sur les files de traitement
+ */
+if(!defined("MODE_REDIS")){
+	/**
+	 * @deprecated v4.2 => le mode REDIS est **obligatoire** à partir de la version 5.0.0 de s2low
+	 */
+	define("MODE_REDIS",false);
+}
+
+if (!defined("REDIS_SERVER")){
+	define("REDIS_SERVER","redis");
+}
+
+if (!defined("REDIS_PORT")){
+	define("REDIS_PORT","6379");
+}
+
+
 
 
 //D?finition de la connexion à la base de données pour les tests unitaires et les tests de validation
@@ -439,14 +463,6 @@ if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
 if(!defined('HELIOS_FILES_UPLOAD_TMP')){
 	define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
 }
-
-
-
-//Pour le script d'analyse des enveloppe Helios à envoyer
-if(!defined('HELIOS_VALIDATION_UPSTART_TOUCH_FILE')){
-	define('HELIOS_VALIDATION_UPSTART_TOUCH_FILE','/tmp/helios-validation-upstart');
-}
-
 
 if(!defined('HELIOS_COUNTER_FILE')){
 	define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");

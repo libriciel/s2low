@@ -31,7 +31,7 @@ class HeliosEnvoiSAE {
 	}
 
 	public function sendAllArchive($authority_id = 0){
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		$this->logger->info("Début de l'envoi");
 		$info_list = $this->heliosTransactionsSQL->getIdsByStatus(
 			HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,

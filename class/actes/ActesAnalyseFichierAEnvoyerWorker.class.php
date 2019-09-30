@@ -120,11 +120,13 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
         $tmpFolder->delete($tmp_dir);
 		$this->logger->info("[$envelope_libelle] L'archive est valide !");
+
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             "Accepté par le TdT : validation OK"
         );
+
 		$this->workerScript->putJobByClassName(ActesEnvoiFichierWorker::class,$enveloppe_id);
         return true;
     }
@@ -203,6 +205,22 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 		}
 		$this->logger->debug("validate certificate off");
 		return false;
+	}
+
+	public function getMutexName($data) {
+		return sprintf("actes-transaction-%s",$data);
+	}
+
+	public function isDataValid($data) {
+    	$enveloppe_id = $data;
+		$result = false;
+		$transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
+		foreach ($transaction_ids as $transaction_id){
+			$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
+			/* bof... */
+			$result = $result || ($transaction_info['last_status_id'] == ActesStatusSQL::STATUS_POSTE);
+		}
+		return $result;
 	}
 
 }

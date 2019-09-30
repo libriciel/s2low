@@ -30,7 +30,7 @@ class PesAllerStorage {
 	 */
     public function storeAll(){
         $result = $this->heliosTransactionsSQL->getAllTransactionToSendInCloud();
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
         foreach($result as $transaction_info){
             $this->storeNextFile($transaction_info);
             if ($sigtermHandler->isSigtermCalled()){
@@ -106,7 +106,7 @@ class PesAllerStorage {
 	 * @throws Exception
 	 */
     public function menageLocal($no_access_during_nb_days = 9999){
-        $sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
         $dh = opendir($this->helios_files_upload_root);
         if (! $dh) {
             throw new UnrecoverableException("Impossible d'ouvrir " . $this->helios_files_upload_root);

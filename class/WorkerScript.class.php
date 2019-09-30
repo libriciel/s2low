@@ -1,5 +1,7 @@
 <?php
 
+use \Pheanstalk\PheanstalkInterface;
+
 class WorkerScript {
 
 	const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
@@ -7,6 +9,7 @@ class WorkerScript {
 
 	private $s2lowLogger;
 	private $beanstalkdWrapper;
+	private $redisMutexWrapper;
 	private $sigTermHandlerFactory;
 
 	private $min_execution_time_in_seconds;
@@ -22,13 +25,15 @@ class WorkerScript {
 		BeanstalkdWrapper $beanstalkdWrapper,
 		S2lowLogger $s2lowLogger,
 		SigTermHandlerFactory $sigTermHandlerFactory,
-		ObjectInstancier $objectInstancier
+		ObjectInstancier $objectInstancier,
+		RedisMutexWrapper $redisMutexWrapper
 	){
 		$this->s2lowLogger = $s2lowLogger;
 		$this->beanstalkdWrapper = $beanstalkdWrapper;
 		$this->sigTermHandlerFactory = $sigTermHandlerFactory;
 		$this->setMinExecutionTimeInSeconds(self::MIN_EXECUTION_TIME_IN_SECONDS);
 		$this->objectInstancier = $objectInstancier;
+		$this->redisMutexWrapper = $redisMutexWrapper;
 	}
 
 
@@ -56,7 +61,7 @@ class WorkerScript {
 	}
 
 	public function script(IWorker $IWorker, $force_old_school_script = false){
-		$this->sigTermHandler = $this->sigTermHandlerFactory->getNewInstance();
+		$this->sigTermHandler = $this->sigTermHandlerFactory->getInstance();
 		if ($this->beanstalkdWrapper->isModeBeanstalked() && ! $force_old_school_script){
 			return $this->beanstalkdWorker($IWorker);
 		} else {
@@ -77,21 +82,31 @@ class WorkerScript {
 	}
 
 	private function beanstalkdWorker(IWorker $IWorker){
+
+		if ($IWorker instanceof IWorkerAlwaysLaunch){
+			$this->s2lowLogger->debug("Initialisation avec un job");
+			$this->rebuildQueue($IWorker);
+		}
+
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
 		$this->s2lowLogger->info("Démarrage en mode beanstalkd");
+
+		$this->sigTermHandler->setExitOnSignal(true);
+
 		while($job = $queue->reserve()){
-			if ($this->sigTermHandler->isSigtermCalled()){
-				return true;
-			}
+			$this->sigTermHandler->setExitOnSignal(false);
 			$data = "undefined";
 			try {
 				$data = $job->getData();
 				$this->s2lowLogger->info("Travail en cours",[$data]);
-
-				//TODO Doit être synchronisé !
-				$IWorker->work($data);
-				//TODO Fin de la synchronisation
-
+				if ($this->redisMutexWrapper->isRedisMode()){
+					$mutex = $this->redisMutexWrapper->getMutex($IWorker->getMutexName($data));
+					$mutex->synchronized(function() use ($IWorker,$data){
+						$this->syncrhonizedWork($IWorker, $data);
+					});
+				} else {
+					$this->syncrhonizedWork($IWorker,$data);
+				}
 				$queue->delete($job);
 
 			} catch (Exception $e){
@@ -101,16 +116,37 @@ class WorkerScript {
 				);
 				$queue->release(
 					$job,
-					\Pheanstalk\PheanstalkInterface::DEFAULT_PRIORITY,
+					PheanstalkInterface::DEFAULT_PRIORITY,
 					self::QUEUE_DELAY_RETRY_IN_SECONDS
 				);
 				continue;
 			}
 			if ($this->sigTermHandler->isSigtermCalled()){
+				$this->s2lowLogger->info("Exit on signal (after traitement)" . $this->sigTermHandler->getLastSigNo());
 				return true;
 			}
+			if ($IWorker instanceof IWorkerAlwaysLaunch){
+				$this->s2lowLogger->debug("renvoi du job");
+				$this->beanstalkdWrapper->put($IWorker->getQueueName(),1,1);
+			}
+			$this->sigTermHandler->setExitOnSignal(true);
 		}
 		return true;
+	}
+
+	/**
+	 * @param IWorker $IWorker
+	 * @param $data
+	 * @throws RecoverableException
+	 */
+	private function syncrhonizedWork(IWorker $IWorker, $data){
+		$this->s2lowLogger->debug("Entree section critique");
+		if ($IWorker->isDataValid($data)){
+			$IWorker->work($data);
+		} else {
+			$this->s2lowLogger->info("Le travail n'est plus à faire, abandon",[$data]);
+		}
+		$this->s2lowLogger->debug("Sortie section critique");
 	}
 
 	private function oldSchoolScript(IWorker $IWorker){
@@ -152,7 +188,11 @@ class WorkerScript {
 			}
 			$data = $IWorker->getData($id);
 			try {
-				$IWorker->work($data);
+				if ($IWorker->isDataValid($data)){
+					$IWorker->work($data);
+				} else {
+					$this->s2lowLogger->info("Le travail n'est plus à faire, abandon",[$data]);
+				}
 			} catch (RecoverableException $e){
 				/* Nothing to do*/
 			}

@@ -1,6 +1,4 @@
 <?php
-declare(ticks = 1);
-
 require_once(__DIR__ . "/../init/init.php");
 
 // supprime les fichier de plus de nb jours avec nb passé en parametre
@@ -32,7 +30,7 @@ $sql = "SELECT id,sha1,filename,submission_date FROM helios_transactions WHERE i
 $sqlQuery->prepareAndExecute($sql,$submission_date);
 
 echo "Il y a un certain nombre de PES ALLER à analyser\n";
-$sigtermHandler = new SigTermHandler();
+$sigtermHandler = SigTermHandler::getInstance();
 while($sqlQuery->hasMoreResult()){
     $pes = $sqlQuery->fetch();
     echo "Analyse du fichier {$pes['sha1']} - {$pes['id']} - {$pes['submission_date']}\n";

@@ -33,7 +33,7 @@ class ActesEnvelopeStorage {
 	 */
 	public function storeAll(){
 		$sqlQuery = $this->actesEnvelopeSQL->getAllTransactionToSendInCloudHandle();
-		$sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		while($sqlQuery->hasMoreResult()){
 			$transaction_info = $sqlQuery->fetch();
 			$this->storeNextFile($transaction_info);
@@ -125,7 +125,7 @@ class ActesEnvelopeStorage {
 
 		$sqlQuery = $this->actesEnvelopeSQL->getOlderTransactionHandle($min_date,$max_date);
 
-		$sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		while($sqlQuery->hasMoreResult()){
 			$actes_envelope = $sqlQuery->fetch();
 

@@ -1,5 +1,4 @@
 <?php
-declare(ticks = 1);
 
 /*
  * Ce script permet d'envoyer une demande de classification pour TOUTES les collectivites utilisant le module actes.

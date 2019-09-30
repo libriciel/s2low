@@ -1,6 +1,4 @@
 <?php
-declare(ticks = 1);
-
 require_once( __DIR__ . "/../init/init.php");
 
 throw new Exception("Script désactivé pour le moment. Avec le stockage objet, on peut se poser la question du ménage...");
@@ -13,7 +11,7 @@ $allEnvelopes = $actesTransactionsSQL->getEnvelopeToDelete();
 $actesEnvelope = new ActesFiles(ACTES_FILES_UPLOAD_ROOT);
 
 echo count($allEnvelopes). " transactions trouvées dans l'état <archivé par le SAE>\n";
-$sigtermHandler = new SigTermHandler();
+$sigtermHandler = SigTermHandler::getInstance();
 foreach($allEnvelopes as $envelopeInfo){
 	$actesEnvelope->deleteFiles($envelopeInfo['file_path']);
 	

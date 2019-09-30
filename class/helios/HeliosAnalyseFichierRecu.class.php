@@ -32,10 +32,9 @@ class HeliosAnalyseFichierRecu {
 		$this->authoritySiretSQL = $authoritySiretSQL;
 		$this->email_from = $tdt_from_email;
 		$this->s2lowLogger = $s2lowLogger;
-
 	}
-	
-	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path,$ocre_file_path){
+
+	public function getAllDirectory($helios_ftp_response_tmp_local_path){
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
 
 		$this->s2lowLogger->info("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
@@ -46,7 +45,7 @@ class HeliosAnalyseFichierRecu {
 			$this->s2lowLogger->critical("[ECHEC] Erreur lors de la lecture du répertoire  $helios_ftp_response_tmp_local_path");
 			return;
 		}
-		;
+
 		$file_list = array_diff($file_list, array('..', '.'));
 
 		if (!$file_list){
@@ -54,9 +53,22 @@ class HeliosAnalyseFichierRecu {
 			return;
 		}
 		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvés");
+		return $file_list;
+	}
+
+	
+	public function analyse($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path,$ocre_file_path){
+
+
+		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
+
+		$file_list = $this->getAllDirectory($helios_ftp_response_tmp_local_path);
+		if (! $file_list){
+			return;
+		}
 
 		$erreur_list = array();
-		$sigtermHandler = new SigTermHandler();
+		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($file_list as $file){
 			try {
 				$this->analyseOneFile($helios_ftp_response_tmp_local_path.$file,$helios_response_root,$ocre_file_path);
@@ -88,6 +100,48 @@ class HeliosAnalyseFichierRecu {
                 } while (file_exists($file_num));
 				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe déjà dans le répertoire des fichiers en erreur : renommé en *.$i");
                 rename($helios_responses_error_path."/".$file,$file_num);
+			}
+			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
+		}
+	}
+
+	/**
+	 * @param $helios_ftp_response_tmp_local_path
+	 * @param $helios_response_root
+	 * @param $helios_responses_error_path
+	 * @param $ocre_file_path
+	 * @param $filename
+	 * @throws Exception
+	 */
+	public function analyseOneFileForWorker($helios_ftp_response_tmp_local_path, $helios_response_root,$helios_responses_error_path,$ocre_file_path,$filename){
+		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
+
+		$erreur_list = [];
+		try {
+			$this->analyseOneFile($helios_ftp_response_tmp_local_path . $filename, $helios_response_root, $ocre_file_path);
+		} catch (Exception $e){
+			$this->s2lowLogger->error("[ERREUR] ". $e->getMessage());
+			$erreur_list[$filename] = $e->getMessage();
+		}
+		if ($erreur_list){
+			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de récupération des fichier PES_Acquit/PES_Retour";
+			$msg = "";
+			foreach($erreur_list as $file => $message){
+				$msg.= "Fichier : $file => $message\n";
+			}
+			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
+			$this->sendMailToAdmin($subject, $msg);
+		}
+
+		foreach($erreur_list as $file => $message){
+			if (file_exists($helios_responses_error_path."/".$file)){
+				$i = 0;
+				do {
+					$i++;
+					$file_num = "$helios_responses_error_path/$file.$i";
+				} while (file_exists($file_num));
+				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe déjà dans le répertoire des fichiers en erreur : renommé en *.$i");
+				rename($helios_responses_error_path."/".$file,$file_num);
 			}
 			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
 		}

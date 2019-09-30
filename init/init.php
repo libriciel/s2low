@@ -161,6 +161,12 @@ $objectInstancier->set('email_admin_technique',EMAIL_ADMIN_TECHNIQUE);
 $objectInstancier->set('tdt_from_email',TDT_FROM_EMAIL);
 $objectInstancier->set('log_level',LOG_LEVEL);
 
+$objectInstancier->set('redis_mode',MODE_REDIS);
+$objectInstancier->set('redis_server',REDIS_SERVER);
+$objectInstancier->set('redis_port',REDIS_PORT);
+
+$objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
+
 
 $frontController = new FrontController($objectInstancier);
 
