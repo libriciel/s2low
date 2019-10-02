@@ -3,5 +3,9 @@
 require_once( __DIR__ . "/../init/init.php");
 
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->scriptByClassName(ActesStoreEnveloppeWorker::class);
+$workerScript->scriptByClassName(
+        ActesStoreEnveloppeWorker::class,
+        true,
+        true
+);
 
