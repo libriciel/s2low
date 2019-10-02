@@ -26,6 +26,15 @@ if ( ! function_exists('s2low_autoload')) {
 spl_autoload_register('s2low_autoload');
 
 
+if (! function_exists('pcntl_async_signals')){
+	function pcntl_async_signals($on) {}
+}
+
+if (! function_exists('pcntl_signal')){
+	function pcntl_signal ($signo, $handler, $restart_syscalls = true) {}
+}
+
+
 require_once(__DIR__."/../config/config.php");
 
 //A cause du chargement d'objet à partir de la session ... BEURK !
