@@ -43,14 +43,14 @@ class HeliosAnalyseFichierRecu {
 
 		if ($file_list === false){
 			$this->s2lowLogger->critical("[ECHEC] Erreur lors de la lecture du répertoire  $helios_ftp_response_tmp_local_path");
-			return;
+			return [];
 		}
 
 		$file_list = array_diff($file_list, array('..', '.'));
 
 		if (!$file_list){
 			$this->s2lowLogger->info("Aucun fichier à analyser");
-			return;
+			return [];
 		}
 		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvés");
 		return $file_list;

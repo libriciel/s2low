@@ -12,7 +12,7 @@ $all = [
 	HeliosAnalyseFichierAEnvoyerWorker::class,
 	HeliosEnvoiWorker::class,
 	HeliosReceptionWorker::class,
-	HeliosAnalyseFichierRecu::class,
+	HeliosAnalyseFichierRecuWorker::class,
 ];
 
 
