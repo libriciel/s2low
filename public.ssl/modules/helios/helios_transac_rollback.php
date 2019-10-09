@@ -14,7 +14,7 @@ $transactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 $transactionInfo = $transactionSQL->getInfo($id);
 
-$message = "La transaction $id est de nouveau à l'état posté.";
+$message = "La transaction $id est de nouveau ï¿½ l'ï¿½tat postï¿½.";
 
 $transactionSQL->updateStatus($id,HeliosTransactionsSQL::POSTE,$message);
 $transactionSQL->setInfoFromPESAller($id,array(
@@ -23,5 +23,11 @@ $transactionSQL->setInfoFromPESAller($id,array(
 	'cod_bud' => NULL,
 	'id_post' => NULL
 ));
+
+
+$workerScript = $objectInstancier->get(WorkerScript::class);
+$workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class,$id);
+
+
 $_SESSION['error'] = $message;
 header("Location: helios_transac_show.php?id=$id");
