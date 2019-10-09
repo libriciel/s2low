@@ -1,8 +1,9 @@
 <?php
-require_once(__DIR__ . "/../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 // supprime les fichier de plus de nb jours avec nb passé en parametre
 // mettre la chaine de caractère ok en second parametre pour faire la suppression
+// Attention, une fois qu'on a passé ce script, il ne sert plus à rien, il vaut mieux passer par helios-menage.php qui fonctionne avec beanstalked
 
 $openStackSwiftWrapper = $objectInstancier->get('OpenStackSwiftWrapper');
 

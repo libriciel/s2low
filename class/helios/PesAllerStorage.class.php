@@ -105,7 +105,7 @@ class PesAllerStorage {
 	 * @param int $no_access_during_nb_days
 	 * @throws Exception
 	 */
-    public function menageLocal($no_access_during_nb_days = 9999){
+    public function menageLocal($no_access_during_nb_days = 9999, $do = true){
 		$sigtermHandler = SigTermHandler::getInstance();
         $dh = opendir($this->helios_files_upload_root);
         if (! $dh) {
@@ -120,7 +120,8 @@ class PesAllerStorage {
                 continue;
             }
             if ($this->isRecentlyCreated($file,$no_access_during_nb_days)){
-                continue;
+				$this->logger->debug("File $file too young to die : not deleted");
+				continue;
             }
             if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
                 self::CONTAINER_NAME,
@@ -130,15 +131,19 @@ class PesAllerStorage {
                 continue;
             }
 			$this->logger->info("Deleting file : $file");
-            unlink($this->helios_files_upload_root."/".$file);
+            if ($do) {
+				unlink($this->helios_files_upload_root . "/" . $file);
+			}
         }
         closedir($dh);
     }
 
     private function isRecentlyCreated($filename, $no_access_during_nb_days = 9999){
-        $last_access_time = filectime($this->helios_files_upload_root."/".$filename);
+        $last_access_time = filemtime($this->helios_files_upload_root."/".$filename);
         $nb_seconds_without_access = time() - $last_access_time;
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
+        $this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
+		//$this->logger->debug("Nombre de jour d'attente : " . round($no_access_during_nb_seconds/60/60/24));
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
     }
 
