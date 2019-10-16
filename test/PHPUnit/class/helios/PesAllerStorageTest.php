@@ -2,6 +2,8 @@
 
 class PesAllerStorageTest extends S2lowTestCase {
 
+	use HeliosUtilitiesTestTrait;
+
 	const SHA1_EXEMPLE = "ab3321d34d3fb32b52332befa534c9854fff677b";
 
 	/**
@@ -46,6 +48,23 @@ class PesAllerStorageTest extends S2lowTestCase {
 		$this->assertFileExists($pes_aller_path);
 		$this->getObjectInstancier()->get(PesAllerStorage::class)->deleteIfIsInCloud(self::SHA1_EXEMPLE);
 		$this->assertFileExists($pes_aller_path);
+	}
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function testStoreNotAvailable(){
+		$transaction_id = $this->createTransaction();
+		$heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+
+		$transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
+
+		$pesAllerStorage = $this->getObjectInstancier()->get(PesAllerStorage::class);
+		$pesAllerStorage->storeNextFile($transaction_info);
+
+		$transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
+		$this->assertTrue($transaction_info['not_available']);
 	}
 
 }

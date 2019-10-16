@@ -1390,6 +1390,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "NO",
                 "column_default": "false"
+            },
+            "not_available": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "helios_transactions_workflow": {
@@ -3439,19 +3445,19 @@
         },
         "ae_id_is_in_cloud": {
             "tablename": "actes_envelopes",
-            "indexdef": "CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id)"
+            "indexdef": "CREATE UNIQUE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, not_available, id)"
         },
         "actes_envelopes_submission_date_id": {
             "tablename": "actes_envelopes",
             "indexdef": "CREATE UNIQUE INDEX actes_envelopes_submission_date_id ON actes_envelopes USING btree (submission_date, id)"
         },
+        "ht_to_send_in_cloud": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE UNIQUE INDEX ht_to_send_in_cloud ON helios_transactions USING btree (is_in_cloud, not_available, id)"
+        },
         "helios_transactions_authority_id_last_status_id_idx": {
             "tablename": "helios_transactions",
             "indexdef": "CREATE INDEX helios_transactions_authority_id_last_status_id_idx ON helios_transactions USING btree (authority_id, last_status_id)"
-        },
-        "ht_id_is_in_cloud": {
-            "tablename": "helios_transactions",
-            "indexdef": "CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id)"
         },
         "xml_nomfic_index": {
             "tablename": "helios_transactions",

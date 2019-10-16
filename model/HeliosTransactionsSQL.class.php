@@ -260,13 +260,18 @@ class HeliosTransactionsSQL extends SQL {
     }
 
     public function getAllTransactionToSendInCloud(){
-        $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC";
+        $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE AND not_available=FALSE ORDER BY id ASC";
         return $this->query($sql);
     }
 
 	public function getAllTransactionIdToSendInCloud(){
-		$sql = "SELECT id FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC";
+		$sql = "SELECT id FROM helios_transactions WHERE is_in_cloud=FALSE AND not_available=FALSE ORDER BY id ASC";
 		return $this->queryOneCol($sql);
+	}
+
+	public function setTransactionNotAvailable($transaction_id){
+		$sql = "UPDATE helios_transactions SET not_available=? WHERE id=?";
+		$this->query($sql,true,$transaction_id);
 	}
 
     public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){

@@ -14,7 +14,7 @@
 - Ajout des constantes : MODE_REDIS, REDIS_SERVER et REDIS_PORT (gestion du cache Redis utiliser comme gestionnaire de verrou)
 - Refactoring des catch des signaux SIGTERM pour la terminaison propre des files de traitement
 - Refactoring du ménage des fichiers helios (si c'est sur le cloud, on ne garde que 15 jours de fichiers)
-- Les fichiers actes non-disponible ne font plus partie de la boucle d'envoi au cloud
+- Les fichiers actes/helios non-disponible ne font plus partie de la boucle d'envoi au cloud
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents

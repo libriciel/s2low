@@ -71,7 +71,7 @@ class ActesEnvelopeSQL extends SQL
 	}
 
 	public function getAllTransactionToSendInCloudHandle(){
-		$sql = "SELECT id,file_path FROM actes_envelopes WHERE is_in_cloud=FALSE ORDER BY id ASC";
+		$sql = "SELECT id,file_path FROM actes_envelopes WHERE is_in_cloud=FALSE AND not_available=FALSE ORDER BY id ASC";
 		$this->getSQLQuery()->prepareAndExecute($sql);
 		return $this->getSQLQuery();
 	}

@@ -163,6 +163,15 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 	    $this->assertEquals($this->transaction_id,$info[0]['id']);
 	}
 
+
+	public function testgetAllTransactionToSendInCloudNotAvailable(){
+		$this->heliosTransactionSQL->setTransactionNotAvailable($this->transaction_id);
+		$info = $this->heliosTransactionSQL->getAllTransactionToSendInCloud();
+		$this->assertEmpty($info);
+		$info = $this->heliosTransactionSQL->getAllTransactionIdToSendInCloud();
+		$this->assertEmpty($info);
+	}
+
 	public function testGetTransactionToArchive(){
 		$this->configurePastell();
 		$transaction_id = $this->createTransaction();

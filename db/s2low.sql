@@ -311,7 +311,8 @@ CREATE TABLE helios_transactions (
     xml_cod_col character(3),
     xml_id_post character varying(7),
     xml_cod_bud character(2),
-    is_in_cloud boolean DEFAULT false NOT NULL
+    is_in_cloud boolean DEFAULT false NOT NULL,
+    not_available boolean DEFAULT false NOT NULL
 );
 CREATE TABLE helios_transactions_workflow (
     id integer DEFAULT nextval('helios_transactions_workflow_id_seq'::regclass) NOT NULL,
@@ -499,8 +500,9 @@ CREATE INDEX helios_transactions_workflow_status_id_idx ON helios_transactions_w
 CREATE INDEX helios_transactions_workflow_transaction_id_idx ON helios_transactions_workflow USING btree (transaction_id);
 CREATE INDEX mail_message_emis_mail_transaction_id ON mail_message_emis USING btree (mail_transaction_id);
 CREATE INDEX mt_ui ON mail_transaction USING btree (user_id);
-CREATE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, id);
+CREATE UNIQUE INDEX ae_id_is_in_cloud ON actes_envelopes USING btree (is_in_cloud, not_available, id);
 CREATE UNIQUE INDEX actes_envelopes_submission_date_id ON actes_envelopes USING btree (submission_date, id);
+CREATE UNIQUE INDEX ht_to_send_in_cloud ON helios_transactions USING btree (is_in_cloud, not_available, id);
 CREATE INDEX helios_transactions_authority_id_last_status_id_idx ON helios_transactions USING btree (authority_id, last_status_id);
 CREATE UNIQUE INDEX ht_id_is_in_cloud ON helios_transactions USING btree (is_in_cloud, id);
 CREATE INDEX xml_nomfic_index ON helios_transactions USING btree (xml_nomfic);

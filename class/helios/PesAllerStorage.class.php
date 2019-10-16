@@ -66,6 +66,11 @@ class PesAllerStorage {
             "{$transaction_info['sha1']}"
         );
         if ( ! file_exists($this->helios_files_upload_root."/".$transaction_info['sha1'])){
+			$this->logger->error(
+				"Unable to store {$transaction_info['sha1']} in cloud : file did not exist ! ",
+				$transaction_info
+			);
+			$this->heliosTransactionsSQL->setTransactionNotAvailable($transaction_info['id']);
             return true;
         }
         $this->logger->info("Storing file ".$this->helios_files_upload_root."/".$transaction_info['sha1']);
