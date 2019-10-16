@@ -77,27 +77,6 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public function teststoreAllFileNotFoundInFileSystem(){
-		$actesEnvelopeStorage = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
-		$actesEnvelopeStorage->create(1, "000000000/abc-EACT--210703385--20170612-2.tar.gz");
-
-		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
-
-		$actesEnvelopeStorage->storeAll();
-
-
-		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		//print_r($testHandler->getRecords());
-		//Donc non en fait suite bug en prod...
-		/*$this->assertEquals(
-			"Unable to store 000000000/abc-EACT--210703385--20170612-2.tar.gz in cloud : file did not exist ! ",
-			$testHandler->getRecords()[1]['message']
-			);*/
-	}
-
 
 	/**
 	 * @throws Exception
@@ -179,9 +158,50 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$this->getObjectInstancier()->get(ActesEnvelopeStorage::class)->deleteIfIsInCloud($filename);
 		$this->assertFileNotExists($actes_files_upload_root."/$filename");
 		$this->assertLogMessage("Deleting Actes : $filename");
-
 	}
 
+	/**
+	 * @throws Exception
+	 */
+	public function testEnveloppeNotAvailable(){
+		$actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+		$filename = "s2low-phpunit-acte-envelope-storage-test".mt_rand(0,mt_getrandmax());
+
+		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
+		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
+
+		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+
+		$actesEnvelopeStorage->storeNextFile($envelope_info);
+
+		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
+		$this->assertTrue($envelope_info['not_available']);
+		$this->assertFalse($envelope_info['is_in_cloud']);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testEnveloppeAvailable(){
+		$actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+		$filename = "s2low-phpunit-acte-envelope-storage-test".mt_rand(0,mt_getrandmax());
+		$actes_files_upload_root =  $this->getObjectInstancier()->get('actes_files_upload_root');
+		file_put_contents($actes_files_upload_root."/$filename","foo");
+
+		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
+		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
+
+		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+
+		$actesEnvelopeStorage->storeNextFile($envelope_info);
+
+		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
+		$this->assertFalse($envelope_info['not_available']);
+		$this->assertTrue($envelope_info['is_in_cloud']);
+
+	}
 
 
 }

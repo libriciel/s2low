@@ -129,4 +129,15 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
     	$this->assertInstanceOf(SQLQuery::class,$sqlQuery);
 	}
 
+	public function testGetAllEnvelopepIdToSendInCloud(){
+		$filename = "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz";
+		$id_envelope  = $this->getActesEnvelopeSQL()->create(
+			1,$filename
+		);
+		$this->assertEquals([$id_envelope],$this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud());
+		$this->getActesEnvelopeSQL()->setEnveloppeNotAvailable($id_envelope);
+		$this->assertEmpty($this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud());
+	}
+
 }
+

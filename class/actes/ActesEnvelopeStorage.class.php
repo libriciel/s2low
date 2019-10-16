@@ -68,15 +68,17 @@ class ActesEnvelopeStorage {
 				"Unable to store envelope #{$envelope_info['id']} in cloud : file_path not set ! ",
 				$envelope_info
 			);
+			$this->actesEnvelopeSQL->setEnveloppeNotAvailable($envelope_info['id']);
 			return false;
 		}
 		if ( ! file_exists($this->actes_files_upload_root."/".$envelope_info['file_path'])){
 			// FIXME : Les transactions de type 7 sont perdus et ne seront jamais dans le cloud...
 			// L'algorithme de récupération des transactions à envoyer dans le cloud est donc pas parfaitement opérant
-			/*$this->logger->error(
-				"Unable to store {$transaction_info['file_path']} in cloud : file did not exist ! ",
-				$transaction_info
-			);*/
+			$this->logger->error(
+				"Unable to store {$envelope_info['file_path']} in cloud : file did not exist ! ",
+				$envelope_info
+			);
+			$this->actesEnvelopeSQL->setEnveloppeNotAvailable($envelope_info['id']);
 			return false;
 		}
 		$this->logger->info("Storing file ".$this->actes_files_upload_root."/".$envelope_info['file_path']);

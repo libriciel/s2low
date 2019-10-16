@@ -92,7 +92,8 @@ CREATE TABLE actes_envelopes (
     file_size integer,
     return_mail character varying(1024),
     warning_sent character(1) DEFAULT NULL::bpchar,
-    is_in_cloud boolean DEFAULT false NOT NULL
+    is_in_cloud boolean DEFAULT false NOT NULL,
+    not_available boolean DEFAULT false NOT NULL
 );
 CREATE TABLE actes_envelope_serials (
     id integer DEFAULT nextval('actes_envelope_serials_id_seq'::regclass) NOT NULL,

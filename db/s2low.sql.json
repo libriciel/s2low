@@ -296,6 +296,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "NO",
                 "column_default": "false"
+            },
+            "not_available": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "actes_envelope_serials": {

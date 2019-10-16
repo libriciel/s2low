@@ -77,8 +77,13 @@ class ActesEnvelopeSQL extends SQL
 	}
 
 	public function getAllEnvelopepIdToSendInCloud(){
-		$sql = "SELECT id FROM actes_envelopes WHERE is_in_cloud=FALSE ORDER BY id ASC";
+		$sql = "SELECT id FROM actes_envelopes WHERE is_in_cloud=FALSE AND not_available=FALSE ORDER BY id";
 		return $this->queryOneCol($sql);
+	}
+
+	public function setEnveloppeNotAvailable($envelope_id){
+    	$sql = "UPDATE actes_envelopes SET not_available=? WHERE id=?";
+    	$this->query($sql,true,$envelope_id);
 	}
 
 	public function getOlderTransactionHandle($min_date,$max_date){

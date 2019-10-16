@@ -143,7 +143,6 @@ class PesAllerStorage {
         $nb_seconds_without_access = time() - $last_access_time;
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         $this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
-		//$this->logger->debug("Nombre de jour d'attente : " . round($no_access_during_nb_seconds/60/60/24));
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
     }
 
