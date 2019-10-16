@@ -27,22 +27,7 @@ class ActesEnvelopeStorage {
 	public function getAllEnveloppeIdToStore(){
 		return $this->actesEnvelopeSQL->getAllEnvelopepIdToSendInCloud();
 	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function storeAll(){
-		$sqlQuery = $this->actesEnvelopeSQL->getAllTransactionToSendInCloudHandle();
-		$sigtermHandler = SigTermHandler::getInstance();
-		while($sqlQuery->hasMoreResult()){
-			$transaction_info = $sqlQuery->fetch();
-			$this->storeNextFile($transaction_info);
-			if ($sigtermHandler->isSigtermCalled()){
-				break;
-			}
-		}
-	}
-
+	
 	/**
 	 * @param $transaction_id
 	 * @return bool
@@ -50,15 +35,6 @@ class ActesEnvelopeStorage {
 	 */
 	public function storeNextFileById($envelope_id){
 		$envelope_info = $this->actesEnvelopeSQL->getInfo($envelope_id);
-		return $this->storeNextFile($envelope_info);
-	}
-
-	/**
-	 * @param $envelope_info
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function storeNextFile($envelope_info){
 		$this->logger->debug(
 			"Storing envelope {$envelope_info['id']} - ".
 			"file {$envelope_info['file_path']}"

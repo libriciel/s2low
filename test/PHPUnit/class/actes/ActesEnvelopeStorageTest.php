@@ -78,31 +78,6 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 	}
 
 
-	/**
-	 * @throws Exception
-	 */
-	public function teststoreAllFile(){
-
-		$actesEnvelopeStorage = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
-
-		$filename = "s2low-phpunit-acte-envelope-storage-test".mt_rand(0,mt_getrandmax());
-
-		$actes_files_upload_root =  $this->getObjectInstancier()->get('actes_files_upload_root');
-		file_put_contents($actes_files_upload_root."/$filename","foo");
-
-		$actesEnvelopeStorage->create(1, $filename);
-
-		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
-
-		$actesEnvelopeStorage->storeAll();
-
-		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		$this->assertEquals(
-			"Storing file $actes_files_upload_root/$filename",
-			$testHandler->getRecords()[1]['message']
-		);
-	}
-
 	public function testGrandMenage(){
 		$actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
 
@@ -169,11 +144,10 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$filename = "s2low-phpunit-acte-envelope-storage-test".mt_rand(0,mt_getrandmax());
 
 		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
-		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
 
 		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
 
-		$actesEnvelopeStorage->storeNextFile($envelope_info);
+		$actesEnvelopeStorage->storeNextFileById($envelope_id);
 
 		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
 		$this->assertTrue($envelope_info['not_available']);
@@ -191,11 +165,10 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		file_put_contents($actes_files_upload_root."/$filename","foo");
 
 		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
-		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
 
 		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
 
-		$actesEnvelopeStorage->storeNextFile($envelope_info);
+		$actesEnvelopeStorage->storeNextFileById($envelope_id);
 
 		$envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
 		$this->assertFalse($envelope_info['not_available']);

@@ -87,10 +87,8 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
 			1,$filename
 		);
 
-		$sqlQuery = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle();
-		$all = $sqlQuery->fetch();
-		$this->assertEquals($id_envelope,$all['id']);
-		$this->assertEquals($filename,$all['file_path']);
+		$result = $this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud();
+		$this->assertEquals([$id_envelope],$result);
 	}
 
 	public function testGetNextTransactionToSendInCloud(){
@@ -108,19 +106,17 @@ class ActesEnvelopeSQLTest extends S2lowTestCase {
 		$id_envelope  = $this->getActesEnvelopeSQL()->create(
 			1,$filename
 		);
-		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->fetch();
+		$result = $this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud();
+		$this->assertEquals([$id_envelope],$result);
 
-		$this->assertEquals($id_envelope,$all['id']);
-		$this->assertEquals($filename,$all['file_path']);
 		$this->getActesEnvelopeSQL()->setTransactionInCloud($id_envelope);
-		$this->assertFalse(
-			$this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->hasMoreResult()
+		$this->assertEmpty(
+			$this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud()
 		);
 
 		$this->getActesEnvelopeSQL()->setTransactionInCloudRemove($id_envelope);
-		$all = $this->getActesEnvelopeSQL()->getAllTransactionToSendInCloudHandle()->fetch();
-		$this->assertEquals($id_envelope,$all['id']);
-		$this->assertEquals($filename,$all['file_path']);
+		$result = $this->getActesEnvelopeSQL()->getAllEnvelopepIdToSendInCloud();
+		$this->assertEquals([$id_envelope],$result);
 	}
 
 
