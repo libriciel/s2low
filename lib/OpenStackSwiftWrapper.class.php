@@ -41,7 +41,7 @@ class OpenStackSwiftWrapper {
         $fileData = fopen($filepath_local, 'r+');
         if (! $fileData){
 			$error = error_get_last();
-			throw new Exception("Unable to retrieve $filepath_local : $error");
+			throw new CloudStorageException("Unable to retrieve $filepath_local : $error");
 		}
 		$this->logger->info("Upload $filepath_local to [$container_name]$filename_on_cloud");
         $container->uploadObject($filename_on_cloud, $fileData);

@@ -35,6 +35,14 @@ if (! function_exists('pcntl_signal')){
 }
 
 
+if (! defined("SIGTERM")){
+	define('SIGTERM',15);
+}
+
+if (! defined("SIGINT")){
+	define('SIGINT',2);
+}
+
 require_once(__DIR__."/../config/config.php");
 
 //A cause du chargement d'objet à partir de la session ... BEURK !
