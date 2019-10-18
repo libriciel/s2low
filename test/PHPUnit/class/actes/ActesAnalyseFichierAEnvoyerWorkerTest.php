@@ -11,13 +11,13 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-    protected function setUp(){
+    protected function setUp() : void {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
 
         $padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
-        $padesValid->expects($this->any())->method("validate")->willReturn(true);
+        $padesValid->method("validate")->willReturn(true);
         $this->getObjectInstancier()->set('PadesValid',$padesValid);
 	}
 
@@ -25,7 +25,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
     	return  $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
 	}
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
     }
@@ -190,7 +190,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	public function testValidateAllOnePadesFailedRecoverable(){
 
 		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
-		$padesValid->expects($this->any())->method("validate")->willThrowException(new RecoverableException("erreur de test"));
+		$padesValid->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
 		$this->setExpectedException(RecoverableException::class,"erreur de test");
@@ -210,7 +210,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 	public function testValidateAllOnePadesFailedNotRecoverable(){
 
 		$padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
-		$padesValid->expects($this->any())->method("validate")->willThrowException(new Exception("erreur de test"));
+		$padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
 		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");

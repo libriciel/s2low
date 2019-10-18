@@ -12,7 +12,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
     private $actes_ministere_acronyme;
 
-    protected function setUp(){
+    protected function setUp() : void {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
@@ -28,7 +28,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
     }
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
         $this->tmpFolder->delete($this->tmp_dir2);
@@ -68,7 +68,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
             ->setConstructorArgs(array($this->getSQLQuery()))
             ->setMethods(array('getBySirenAndNumeroInterne'))
             ->getMock();
-        $actesTransactionsSQL->expects($this->any())->method('getBySirenAndNumeroInterne')->willReturn($transaction_id);
+        $actesTransactionsSQL->method('getBySirenAndNumeroInterne')->willReturn($transaction_id);
         $this->getObjectInstancier()->set(ActesTransactionsSQL::class,$actesTransactionsSQL);
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
         return $actesTransactionsSQL;

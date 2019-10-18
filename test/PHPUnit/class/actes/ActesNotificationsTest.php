@@ -7,11 +7,11 @@ class ActesNotificationsTest extends S2lowTestCase {
 	 */
     public function testNotify(){
         $mailer = $this->getMockBuilder("Mailer")->getMock();
-        $mailer->expects($this->exactly(3))
+        $mailer
             ->method('addRecipient')
             ->withConsecutive(['eric@sigmalis.com'],['toto@toto.fr'],['foo@foo.fr'])
             ->willReturn(true);
-        $mailer->expects($this->exactly(6))
+        $mailer
             ->method('addFile')
             ->withConsecutive(
                 [$this->matchesRegularExpression('#034-000000000-20170801-20170803E-AI-1-1_0.xml$#')],
@@ -24,7 +24,7 @@ class ActesNotificationsTest extends S2lowTestCase {
             ->willReturn(true);
 
         $mailerFactory = $this->getMockBuilder("MailerFactory")->getMock();
-        $mailerFactory->expects($this->any())->method("getInstance")->willReturn($mailer);
+        $mailerFactory->method("getInstance")->willReturn($mailer);
         $this->getObjectInstancier()->set("MailerFactory",$mailerFactory);
 
         $transaction_id = $this->createTransaction(4);

@@ -1,6 +1,8 @@
 <?php
 
-abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
+use \PHPUnit\Framework\TestCase;
+
+abstract class S2lowTestCase extends TestCase {
 	/**
 	 * @var SQLQuery
 	 */
@@ -15,7 +17,7 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
         $this->getConnection();
 
@@ -190,5 +192,15 @@ abstract class S2lowTestCase extends PHPUnit_Framework_TestCase {
 			$expected_message,
 			$this->getLogRecords()[$num_log]['message']
 		);
+	}
+
+	/** @deprecated  */
+	public function setExpectedException($e,string $message){
+		$this->expectException($e);
+		$this->expectExceptionMessage($message);
+	}
+	/** @deprecated  */
+	public function noAssertion(){
+		$this->assertTrue(true);
 	}
 }

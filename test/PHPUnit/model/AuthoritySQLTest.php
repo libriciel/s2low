@@ -7,7 +7,7 @@ class AuthoritySQLTest extends S2lowTestCase {
 	 */
 	private $authoritySQL;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$this->authoritySQL = new AuthoritySQL($this->getSQLQuery());
 	}
@@ -34,6 +34,7 @@ class AuthoritySQLTest extends S2lowTestCase {
 
 	public function testGetSAEProperties(){
 		$this->authoritySQL->getSAEProperties();
+		$this->noAssertion();
 	}
 
 	public function testGetSAEPropertiesType(){

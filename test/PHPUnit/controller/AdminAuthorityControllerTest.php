@@ -9,7 +9,7 @@ class AdminAuthorityControllerTest extends S2lowTestCase {
      */
     public function testDownloadConventionAction(){
         $actesConvention = $this->getMockBuilder("ActesConventions")->disableOriginalConstructor()->getMock();
-        $actesConvention->expects($this->any())->method("getConventionFilepath")->willReturn(
+        $actesConvention->method("getConventionFilepath")->willReturn(
             __DIR__."/../class/fixtures/vide.pdf"
         );
 

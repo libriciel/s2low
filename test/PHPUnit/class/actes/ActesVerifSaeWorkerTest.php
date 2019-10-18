@@ -21,7 +21,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function($a){
 				if ($a == self::FAKE_PASTELL_URL."/detail-document.php"){
@@ -41,7 +41,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 
@@ -83,7 +83,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function($a){
 				if ($a == self::FAKE_PASTELL_URL."/detail-document.php"){
@@ -99,7 +99,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 
@@ -137,7 +137,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function($a){
 				if ($a == self::FAKE_PASTELL_URL."/detail-document.php"){
@@ -157,7 +157,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 
@@ -195,7 +195,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function($a){
 				if ($a == self::FAKE_PASTELL_URL."/detail-document.php"){
@@ -212,7 +212,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 
@@ -245,7 +245,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function(){
 				return 'Pastell ne répond pas... ou mal';
@@ -255,7 +255,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 

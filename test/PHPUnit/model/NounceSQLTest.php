@@ -4,7 +4,7 @@ class NounceSQLTest extends S2lowTestCase {
 	/** @var  NounceSQL */
 	private $nounceSQL;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->nounceSQL = $this->getObjectInstancier()->{'NounceSQL'};
 	}

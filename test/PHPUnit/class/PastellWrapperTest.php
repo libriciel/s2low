@@ -115,7 +115,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellProperties->login = "toto";
 
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
-		$this->equalTo(42,
+		$this->assertEquals(42,
 			$pastellWrapper->createActes([
 				'nature_code'=> 4,
 				'number'=>12,
@@ -124,6 +124,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 				'classification'=>'3.1'
 			])
 		);
+
 	}
 
 	/**
@@ -162,7 +163,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellProperties->login = "toto";
 
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
-		$this->equalTo(42,
+		$this->assertEquals(42,
 			$pastellWrapper->createHelios([
 				'filename'=>'test',
 				'id'=>12,
@@ -251,7 +252,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 	private function getCurlWrapperFactory($return_list_entite,$return_create_document = '{"id_d":42}',$recuperation_fichier="data"){
 		$curlWrapper = $this->getMockBuilder(CurlWrapper::class)->getMock();
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method("get")
 			->will(
 				$this->returnCallback(function($in) use($return_list_entite,$return_create_document,$recuperation_fichier){
@@ -278,13 +279,13 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 				}
 				));
 
-		$curlWrapper->expects($this->any())
+		$curlWrapper
 			->method('getLastError')
 			->willReturn("curl_mock_last_error");
 
 		$curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)->getMock();
 
-		$curlWrapperFactory->expects($this->any())
+		$curlWrapperFactory
 			->method('getNewInstance')
 			->willReturn($curlWrapper);
 		/**

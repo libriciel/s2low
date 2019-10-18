@@ -7,7 +7,7 @@ class SimpleXMLWrapperTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $simpleXMLWrapper;
 
-	public function setUp(){
+	public function setUp() : void {
 		$this->simpleXMLWrapper = new SimpleXMLWrapper();
 	}
 

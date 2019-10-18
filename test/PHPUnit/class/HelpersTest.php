@@ -1,13 +1,20 @@
 <?php
 
-class HelpersTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+class HelpersTest extends TestCase {
 
-	public function setUp(){
+	public function setUp():void{
 		parent::setUp();
 		$_POST = array();
 		$_GET = array();
 		$_REQUEST = array();
 		$_SESSION = array();
+	}
+
+	/** @deprecated  */
+	public function setExpectedException(string $e,string $message){
+		$this->expectException($e);
+		$this->expectExceptionMessage($message);
 	}
 
 	public function testGetVarFromPost(){

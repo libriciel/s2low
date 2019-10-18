@@ -54,7 +54,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$actesEnvelopeStorage
-			->expects($this->any())
+
 			->method("deleteIfIsInCloud")
 			->willReturn(false);
 		$this->getObjectInstancier()->set(ActesEnvelopeStorage::class,$actesEnvelopeStorage);
@@ -155,7 +155,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 	private function mockActesTamponne(){
 		$acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();
-		$acteTamponne->expects($this->any())->method('tamponnerPDF')->willReturn(
+		$acteTamponne->method('tamponnerPDF')->willReturn(
 			file_get_contents(__DIR__."/fixtures/convention-exemple.pdf")
 		);
 		$this->getObjectInstancier()->set(ActeTamponne::class,$acteTamponne);
@@ -166,7 +166,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$actesRetriever = $this->getMockBuilder(ActesRetriever::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$actesRetriever->expects($this->any())->method('getPath')->willReturn(false);
+		$actesRetriever->method('getPath')->willReturn(false);
 		$this->getObjectInstancier()->set(ActesRetriever::class,$actesRetriever);
 	}
 

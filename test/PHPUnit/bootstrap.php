@@ -37,3 +37,17 @@ $objectInstancier->set('SQLQuery',$sqlQuery);
 $postgreSQLControler = $objectInstancier->get('PostgreSQLController');
 
 $postgreSQLControler->alterDatabase(function($message){echo $message . "\n";});
+
+
+/** @deprecated  */
+class PHPUnit_Framework_TestCase extends \PHPUnit\Framework\TestCase{
+
+	public function setExpectedException( $e,string $message){
+		$this->expectException($e);
+		$this->expectExceptionMessage($message);
+	}
+	public function noAssertion(){
+		$this->assertTrue(true);
+	}
+
+}

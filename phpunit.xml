@@ -4,8 +4,6 @@
             <directory>test/PHPUnit</directory>
         </testsuite>
     </testsuites>
-    <logging>
-    </logging>
     <filter>
         <whitelist>
             <directory suffix=".php">class</directory>

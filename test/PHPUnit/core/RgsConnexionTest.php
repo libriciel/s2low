@@ -7,7 +7,7 @@ class RgsConnexionTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $rgsConnexion;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$this->rgsConnexion = new RgsConnexion();
 	}

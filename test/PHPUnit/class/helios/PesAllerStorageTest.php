@@ -22,7 +22,7 @@ class PesAllerStorageTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$openStackSwiftWrapper
-			->expects($this->any())
+
 			->method("fileExistsOnCloud")
 			->willReturn($fileExistsOnCloud);
 		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);

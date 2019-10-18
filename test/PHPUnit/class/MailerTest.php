@@ -1,6 +1,7 @@
 <?php
 
-class MailerTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+class MailerTest extends TestCase {
 
 
 

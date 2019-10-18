@@ -7,7 +7,7 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $x509Certificate;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$_SERVER['SSL_CLIENT_VERIFY'] = false;
 		$this->x509Certificate = new X509Certificate();

@@ -4,7 +4,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 	private $transaction_id;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
         $this->transaction_id = $this->importFile(__DIR__."/../../helios/fixtures/pes_aller_ok.xml");
 	}
@@ -130,6 +130,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 			"robert_petitpoids",
 			$this->getXadesSignatureProperties()
 		);
+		$this->assertTrue(true);
 	}
 
 

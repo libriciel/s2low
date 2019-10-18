@@ -35,7 +35,7 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 	 */
     private function getWorkerScript(){
 		$workerScript = $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock();
-		$workerScript->expects($this->any())->method('putJobByClassName')->willReturn(true);
+		$workerScript->method('putJobByClassName')->willReturn(true);
 		/** @var WorkerScript $workerScript */
 		return $workerScript;
 	}
@@ -55,7 +55,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 			SigTermHandler::getInstance(),
 			$this->getWorkerScript()
         );
-        $this->setExpectedException(UnrecoverableException::class,"n'existe pas");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("n'existe pas");
         $actesImapRetrieve->retrieve();
     }
 
@@ -81,16 +82,16 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $incomingMail = $this->getMockBuilder('PhpImap\IncomingMail')->disableOriginalConstructor()->getMock();
 		$incomingMail->{'textHtml'} = "mon texte html";
-		$incomingMail->expects($this->any())->method('getAttachments')->willReturn([$attachments]);
+		$incomingMail->method('getAttachments')->willReturn([$attachments]);
 
 
         $mailBox = $this->getMockBuilder('PhpImap\Mailbox')->disableOriginalConstructor()->getMock();
-		$mailBox->expects($this->any())->method('searchMailbox')->willReturn([13]);
-		$mailBox->expects($this->any())->method('getMail')->willReturn($incomingMail);
+		$mailBox->method('searchMailbox')->willReturn([13]);
+		$mailBox->method('getMail')->willReturn($incomingMail);
 
 
 		$imapMailBoxFactory = $this->getMockBuilder(ImapMailBoxFactory::class)->getMock();
-		$imapMailBoxFactory->expects($this->any())->method('getInstance')->willReturn($mailBox);
+		$imapMailBoxFactory->method('getInstance')->willReturn($mailBox);
         /** @var ImapMailBoxFactory $imapMailBoxFactory */
         return $imapMailBoxFactory;
     }

@@ -14,7 +14,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 
 	private $transaction_id;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$this->transaction_id = $this->heliosTransactionSQL->create(self::FILENAME,"aaa",8,1,42,123456789);

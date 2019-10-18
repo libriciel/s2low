@@ -7,7 +7,7 @@ class DataObjectTest extends S2lowTestCase {
 	 */
 	private $user;
 
-	public function setUp(){
+	public function setUp() : void{
 		parent::setUp();
 		$this->user = new User();
 		$this->user->setId(1);

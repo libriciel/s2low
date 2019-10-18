@@ -5,7 +5,7 @@ class PostgreSQLDifferenceTest extends PHPUnit_Framework_TestCase {
 	/** @var  PostgreSQLDifference */
 	private $postgreSQLDifference;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->postgreSQLDifference = new PostgreSQLDifference();
 	}

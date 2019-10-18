@@ -5,7 +5,7 @@ class AdminGroupControllerTest extends S2lowTestCase {
 	/** @var  AdminGroupController */
 	protected $adminGroupController;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->adminGroupController = new AdminGroupController($this->getObjectInstancier());
 	}
@@ -61,10 +61,11 @@ class AdminGroupControllerTest extends S2lowTestCase {
 	}
 
 	public function testDoEditActionAdminGroupe(){
-		$this->setExpectedExceptionRegExp(
-			Exception::class,
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageMatches(
 			"#^Message : Le certificat n'est pas valide : aucun compte trouvé$#"
 		);
+
 		$this->adminGroupController->doEditAction();
 	}
 

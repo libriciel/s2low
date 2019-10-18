@@ -19,7 +19,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 
 		$this->tmpFolder = new TmpFolder();
@@ -31,7 +31,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$this->heliosEnvoiControler = $this->getObjectInstancier()->get("HeliosEnvoiControler");
 	}
 
-	protected function tearDown() {
+	protected function tearDown() : void {
 		$this->tmpFolder->delete($this->testStreamUrl);
 		parent::tearDown();
 	}

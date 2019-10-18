@@ -10,7 +10,7 @@ class PKCS12Test extends PHPUnit_Framework_TestCase {
 	private $p12_password;
 	private $certificate_name;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$this->pkcs12 = new PKCS12();
 		$this->p12_file_path = __DIR__."/fixtures/robert_petitpoids.p12";

@@ -10,7 +10,7 @@ class MessageAdminSQLTest extends S2lowTestCase {
 	private $messageAdminSQL;
 	private $message_id;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->messageAdminSQL = new MessageAdminSQL($this->getSQLQuery());
 		$this->message_id = $this->messageAdminSQL->edit(0,"titre",self::MESSAGE_TEST,1,MessageAdmin::NIVEAU_DANGER);
