@@ -15,6 +15,7 @@
 - Refactoring des catch des signaux SIGTERM pour la terminaison propre des files de traitement
 - Refactoring du ménage des fichiers helios (si c'est sur le cloud, on ne garde que 15 jours de fichiers)
 - Les fichiers actes/helios non-disponible ne font plus partie de la boucle d'envoi au cloud
+- Envoi des fichier PES Acquit dans le cloud
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents

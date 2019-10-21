@@ -388,6 +388,7 @@ class HeliosTransaction extends DataObject {
 
 
   public function sendAcquit($filename) {
+
     if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null) {
       $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";
       echo "<br>helios Tansaction_class: sendAcquit " . $this->errorMsg;

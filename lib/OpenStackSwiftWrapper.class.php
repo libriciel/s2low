@@ -78,7 +78,7 @@ class OpenStackSwiftWrapper {
         $objectContent->rewind();
         $stream = $objectContent->getStream();
 		$this->fileSystem->dumpFile($filepath_local,$stream);
-		$this->logger->info("Retrieve [$container_name]$filepath_on_cloud to $filepath_local");
+		$this->logger->info("Retrieve [$container_name] $filepath_on_cloud to $filepath_local");
         return $filepath_local;
     }
 

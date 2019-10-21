@@ -35,28 +35,34 @@ class CloudStorage {
 
 		if (! $file_path_on_disk){
 			$this->logger->error(
-				"Unable to store object #{$object_id} in cloud : file_path_on_disk not found ! "
+				"Unable to store object #{$object_id} in cloud : file_path_on_disk not found !"
 			);
 			$this->iCloudStorable->setNotAvailable($object_id);
 			return false;
 		}
 
 		if (! $file_path_on_cloud){
-			$error_message = "Unable to store object #{$object_id} in cloud : file_path_on_cloud not found ?!? ";
-			$this->logger->alert($error_message);
-			throw new CloudStorageException($error_message);
+			$error_message = "Unable to store object #{$object_id} in cloud : file_path_on_cloud not found ?!?";
+			$this->logger->error($error_message);
+			$this->iCloudStorable->setNotAvailable($object_id);
+			return false;
 		}
 
 		if ( ! file_exists($file_path_on_disk)){
 			$this->logger->error(
-				"Unable to store #$object_id in cloud : file $file_path_on_disk did not exist ! "
+				"Unable to store object #$object_id in cloud : file $file_path_on_disk did not exist !"
 			);
 			$this->iCloudStorable->setNotAvailable($object_id);
 			return false;
 		}
 
 		$this->logger->info(
-			"Storing object #$object_id - filepath (on disk): $file_path_on_disk - filepath (on cloud) : $file_path_on_cloud"
+			sprintf(
+				"Storing object #%s - filepath (on disk): %s - filepath (on cloud) : %s",
+				$object_id,
+				$file_path_on_disk,
+				$file_path_on_cloud
+			)
 		);
 
 
@@ -82,7 +88,9 @@ class CloudStorage {
 				$this->iCloudStorable->getContainerName(),
 				$file_path_on_cloud
 			)) {
-				$this->logger->info("Object #$object_id not existing on cloud : not deleted ($file_path_on_cloud not found)");
+				$this->logger->info(
+					"Object #$object_id not existing on cloud : not deleted ($file_path_on_cloud not found)"
+				);
 				return false;
 			}
 			$this->logger->info("Deleting object #$object_id : $file_path_on_disk");
@@ -92,7 +100,12 @@ class CloudStorage {
 			return true;
 		}catch (Exception $e){
 			$this->logger->alert(
-				"Problème lors de la supression de l'objet #$object_id $file_path_on_disk : " . $e->getMessage()
+				sprintf(
+					"Problème lors de la supression de l'objet #%s %s : %s",
+					$object_id,
+					$file_path_on_disk,
+					$e->getMessage()
+				)
 			);
 			return false;
 		}
@@ -109,6 +122,7 @@ class CloudStorage {
 		$finder = $this->iCloudStorable->getFinder();
 
 		foreach($finder as $file) {
+
 			if ($sigtermHandler->isSigtermCalled()){
 				break;
 			}
@@ -119,15 +133,15 @@ class CloudStorage {
 			}
 			if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
 				$this->iCloudStorable->getContainerName(),
-				$this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getPath())
+				$this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath())
 			)){
 				$this->logger->info("File {$file->getFilename()} not existing on cloud : not deleted");
 				continue;
 			}
-			$this->logger->info("Deleting file : {$file->getPath()}");
+			$this->logger->info("Deleting file : {$file->getRealPath()}");
 			if ($do) {
 				$filesystem = new Filesystem();
-				$filesystem->remove($file->getPath());
+				$filesystem->remove($file->getRealPath());
 			}
 		}
 	}
@@ -136,8 +150,41 @@ class CloudStorage {
 		$last_access_time = $file->getMTime();
 		$nb_seconds_without_access = time() - $last_access_time;
 		$no_access_during_nb_seconds = $no_access_during_nb_days*86400;
-		$this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
+		$this->logger->debug(
+			"Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24)
+		);
 		return ($nb_seconds_without_access < $no_access_during_nb_seconds);
 	}
 
+
+	public function getPath(int $object_id) : string {
+
+		$file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
+		if (! $file_path_on_disk){
+			return false;
+		}
+		if (file_exists($file_path_on_disk)){
+			return $file_path_on_disk;
+		}
+
+		$file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+
+		try {
+			$this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
+
+			$result = $this->openStackSwiftWrapper->retrieveFile(
+				$this->iCloudStorable->getContainerName(),
+				$file_path_on_disk,
+				$file_path_on_cloud
+			);
+		} catch (Exception $e){
+			$this->logger->error(
+				"Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
+				$e->getTrace()
+			);
+			return false;
+		}
+
+		return $result;
+	}
 }

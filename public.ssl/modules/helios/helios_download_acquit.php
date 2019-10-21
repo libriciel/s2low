@@ -75,6 +75,9 @@ $ownerId = $entity->getUserForId($transaction_id);
 $owner = new User($ownerId);
 $owner->init();
 
+$pesAcquitCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
+$path = $pesAcquitCloudStorage->getPath($transaction_id);
+
 
 if (!$entity->sendAcquit(trim($filename))) {
   $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();

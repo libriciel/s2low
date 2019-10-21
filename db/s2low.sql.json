@@ -1396,6 +1396,18 @@
                 "character_maximum_length": null,
                 "is_nullable": "NO",
                 "column_default": "false"
+            },
+            "pes_acquit_is_in_cloud": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
+            },
+            "pes_acquit_not_available": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "helios_transactions_workflow": {
@@ -3450,6 +3462,10 @@
         "actes_envelopes_submission_date_id": {
             "tablename": "actes_envelopes",
             "indexdef": "CREATE UNIQUE INDEX actes_envelopes_submission_date_id ON actes_envelopes USING btree (submission_date, id)"
+        },
+        "ht_pes_aquit_in_cloud": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE UNIQUE INDEX ht_pes_aquit_in_cloud ON helios_transactions USING btree (pes_acquit_is_in_cloud, pes_acquit_not_available, id)"
         },
         "ht_to_send_in_cloud": {
             "tablename": "helios_transactions",
