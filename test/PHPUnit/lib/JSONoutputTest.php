@@ -7,7 +7,7 @@ class JSONoutputTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $jsonOutput;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$this->jsonOutput = new JSONoutput();
 	}

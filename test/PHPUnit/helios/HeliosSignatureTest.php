@@ -24,7 +24,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 	
 	public function testGetInfoForSignatureNoIDAtAll(){
 		$helios_signature = new HeliosSignature();
-		$this->setExpectedException("Exception");
+		$this->expectException("Exception");
 		$info = $helios_signature->getInfoForSignature(__DIR__."/fixtures/pes_aller_no_id_at_all.xml");
 	}
 	
@@ -38,7 +38,7 @@ class HeliosSignatureTest extends PHPUnit_Framework_TestCase {
 	
 	public function testGetInfoForSignatureNoRecetteNoDepense(){
 		$helios_signature = new HeliosSignature();
-		$this->setExpectedException("Exception");
+		$this->expectException("Exception");
 		$info = $helios_signature->getInfoForSignature(__DIR__."/fixtures/pes_aller_no_recette_no_depense.xml");
 	}
 	

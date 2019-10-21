@@ -13,7 +13,7 @@ class GroupSQLTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->groupeSQL = new GroupSQL($this->getSQLQuery());
 	}
@@ -70,6 +70,7 @@ class GroupSQLTest extends S2lowTestCase {
 		$this->getSQLQuery()->query("DELETE FROM authorities");
 		$this->getSQLQuery()->query("DELETE FROM authority_groups");
 		$this->groupeSQL->getGroupsIdName();
+		$this->noAssertion();
 	}
 
 }

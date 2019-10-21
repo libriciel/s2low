@@ -16,7 +16,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->actesTransaction = new ActesTransaction();
 		$this->actesTransaction->set("destDir","toto");
@@ -33,9 +33,9 @@ class ActesTransactionTest extends S2lowTestCase {
 		$error_msg = $this->actesTransaction->getErrorMsg();
 		$number_error = "Le champ Numéro de l'acte ne peut contenir que des chiffres, des lettres en majuscules et _";
 		if ($valide){
-			$this->assertNotContains($number_error, $error_msg);
+			$this->assertStringNotContainsString($number_error, $error_msg);
 		} else {
-			$this->assertContains($number_error, $error_msg);
+			$this->assertStringContainsString($number_error, $error_msg);
 		}
 	}
 

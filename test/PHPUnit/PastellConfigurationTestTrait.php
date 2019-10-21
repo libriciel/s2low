@@ -16,12 +16,12 @@ trait PastellConfigurationTestTrait {
 
 	protected function mockPastellFactory($id_d = "xyzt",$getLastErrorReturn=false){
 		$pastell = $this->getMockBuilder('PastellWrapper')->disableOriginalConstructor()->getMock();
-		$pastell->expects($this->any())->method('createActes')->willReturn($id_d);
-		$pastell->expects($this->any())->method('createHelios')->willReturn($id_d);
-		$pastell->expects($this->any())->method('getLastError')->willReturn($getLastErrorReturn);
-		$pastell->expects($this->any())->method('sendSAE')->willReturn(true);
+		$pastell->method('createActes')->willReturn($id_d);
+		$pastell->method('createHelios')->willReturn($id_d);
+		$pastell->method('getLastError')->willReturn($getLastErrorReturn);
+		$pastell->method('sendSAE')->willReturn(true);
 		$pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->disableOriginalConstructor()->getMock();
-		$pastellFactory->expects($this->any())->method('getNewInstance')->willReturn($pastell);
+		$pastellFactory->method('getNewInstance')->willReturn($pastell);
 		$this->getObjectInstancier()->set(PastellWrapperFactory::class,$pastellFactory);
 	}
 

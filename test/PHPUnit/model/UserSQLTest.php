@@ -7,7 +7,7 @@ class UserSQLTest extends S2lowTestCase {
 	 */
 	private $userSQL;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->userSQL = new UserSQL($this->getSQLQuery());
 	}

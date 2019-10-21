@@ -6,7 +6,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
     private $tmpFolder;
     private $tmp_dir;
 
-    protected function setUp(){
+    protected function setUp() : void {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
@@ -16,7 +16,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $this->getObjectInstancier()->set(ActesFileSender::class,$actesFileSender);
     }
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
     }
@@ -92,7 +92,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         /** @var PHPUnit_Framework_MockObject_MockObject $actesFileSender */
         $actesFileSender = $this->getObjectInstancier()->get('ActesFileSender');
 
-        $actesFileSender->expects($this->any())->method("send")->willThrowException(new Exception("Erreur du mock"));
+        $actesFileSender->method("send")->willThrowException(new Exception("Erreur du mock"));
 
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();

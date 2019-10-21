@@ -9,7 +9,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	private $adminUserController;
 	private $testStreamUrl;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$_FILES = array();
 		$_POST = array();
@@ -41,6 +41,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testDoEdit(){
 		$this->setDataOk();
 		$this->adminUserController->doEditAction();
+		$this->assertTrue(true);
 	}
 
 	public function testDoEditFailed(){
@@ -142,6 +143,8 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
 		$this->adminUserController->doEditAction();
+		$this->noAssertion();
+
 	}
 
 	public function testCloneSameCertificate(){
@@ -165,6 +168,7 @@ class AdminUserControllerTest extends S2lowTestCase {
         $this->getObjectInstancier()->get("Environnement")->post()->set('password2','eey3fo4A');
         $this->getObjectInstancier()->get("Environnement")->post()->set('id',6);
 		$this->adminUserController->doEditAction();
+		$this->noAssertion();
 	}
 
 	public function testCreateDifferentAuthorities(){
@@ -172,6 +176,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->setAdminCol2Authentication();
         $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',1);
 		$this->adminUserController->doEditAction();
+		$this->noAssertion();
 	}
 
 	public function testSetLogin(){
@@ -189,6 +194,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->setAdminGroupAuthentication();
         $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',2);
         $this->adminUserController->doEditAction();
+		$this->noAssertion();
 	}
 
 	public function testForceRole(){

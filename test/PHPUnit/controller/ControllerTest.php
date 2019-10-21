@@ -7,7 +7,7 @@ class ControllerTest extends S2lowTestCase {
 	 */
 	private $controller;
 	
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->controller = new Controller($this->getObjectInstancier()); 
 	}
@@ -45,6 +45,7 @@ class ControllerTest extends S2lowTestCase {
 	public function testVerifAdmin(){
 		$this->setSuperAdminAuthentication();
 		$this->controller->verifAdmin();
+		$this->noAssertion();
 	}
 
 	public function testVerifNotConnected(){
@@ -112,11 +113,13 @@ class ControllerTest extends S2lowTestCase {
 	public function testVerifGroupAdmin(){
 		$this->setAdminGroupAuthentication();
 		$this->controller->verifGroupAdmin(2);
+		$this->noAssertion();
 	}
 
 	public function testVerifGroupAdminSuperAdmin(){
 		$this->setSuperAdminAuthentication();
 		$this->controller->verifGroupAdmin(2);
+		$this->noAssertion();
 	}
 
 	public function testVerifGroupAdminNotAuthorized(){
@@ -127,11 +130,13 @@ class ControllerTest extends S2lowTestCase {
 
 	public function testSetMessage(){
 		$this->controller->setMessage("test");
+		$this->noAssertion();
 	}
 
 	public function testVerifSuperAdmin(){
 		$this->setSuperAdminAuthentication();
 		$this->controller->verifSuperAdmin();
+		$this->noAssertion();
 	}
 
 	public function testVerifSuperAdminFailed(){
@@ -143,6 +148,7 @@ class ControllerTest extends S2lowTestCase {
 	public function testVerifAdminAdminGroupOK(){
 		$this->setAdminGroupAuthentication();
 		$this->controller->verifAdmin(2);
+		$this->noAssertion();
 	}
 
 	public function testVerifAdminAdminGroupFailed(){
@@ -154,6 +160,7 @@ class ControllerTest extends S2lowTestCase {
 	public function testVerifAdminOK(){
 		$this->setAdminCol2Authentication();
 		$this->controller->verifAdmin(2);
+		$this->noAssertion();
 	}
 
 	public function testVerifAdminFail(){

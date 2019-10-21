@@ -8,7 +8,7 @@ class RgsCertificateTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $rgsCertificate;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$validca_path = __DIR__."/fixtures/test";
 		$this->rgsCertificate = new RgsCertificate(OPENSSL_PATH,$validca_path);

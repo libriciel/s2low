@@ -35,6 +35,14 @@ if (! function_exists('pcntl_signal')){
 }
 
 
+if (! defined("SIGTERM")){
+	define('SIGTERM',15);
+}
+
+if (! defined("SIGINT")){
+	define('SIGINT',2);
+}
+
 require_once(__DIR__."/../config/config.php");
 
 //A cause du chargement d'objet à partir de la session ... BEURK !
@@ -110,9 +118,20 @@ $openStackConfigHelios->openstack_tenant = HELIOS_OPENSTACK_TENANT;
 $openStackConfigHelios->openstack_region = HELIOS_OPENSTACK_REGION;
 $openStackConfigHelios->openstack_swift_container_prefix = HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
+
+$openStackConfigHeliosAcquit = new OpenStackConfig();
+$openStackConfigHeliosAcquit->openstack_authentication_url_v2  = HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHeliosAcquit->openstack_username = HELIOS_ACQUIT_OPENSTACK_USERNAME;
+$openStackConfigHeliosAcquit->openstack_password = HELIOS_ACQUIT_OPENSTACK_PASSWORD;
+$openStackConfigHeliosAcquit->openstack_tenant = HELIOS_ACQUIT_OPENSTACK_TENANT;
+$openStackConfigHeliosAcquit->openstack_region = HELIOS_ACQUIT_OPENSTACK_REGION;
+$openStackConfigHeliosAcquit->openstack_swift_container_prefix = HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+
+
 $openStackFactory = new OpenStackFactory();
 $openStackFactory->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
 $openStackFactory->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
+$openStackFactory->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
 
 $objectInstancier->set(OpenStackFactory::class,$openStackFactory);
 

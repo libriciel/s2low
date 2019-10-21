@@ -8,7 +8,7 @@ class XSDValidationTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $xsdValidation;
 
-	public function setUp(){
+	public function setUp() : void {
 		$this->xsdValidation = new XSDValidation(__DIR__."/fixtures/test.xsd");
 	}
 

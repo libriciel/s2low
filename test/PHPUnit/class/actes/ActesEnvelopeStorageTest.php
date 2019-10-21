@@ -5,7 +5,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		$content =
 			$this->getMockBuilder(\Guzzle\Http\EntityBody::class)
@@ -18,7 +18,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 				->getMock();
 
 		$dataObject
-			->expects($this->any())
+
 			->method("getContent")
 			->willReturn($content);
 
@@ -28,12 +28,12 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 				->getMock();
 
 		$container
-			->expects($this->any())
+
 			->method("getObject")
 			->willReturn($dataObject);
 
 		$container
-			->expects($this->any())
+
 			->method("objectExists")
 			->willReturn(true);
 
@@ -43,7 +43,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 				->getMock();
 
 		$service
-			->expects($this->any())
+
 			->method("getContainer")
 			->willReturn($container);
 
@@ -53,7 +53,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 				->getMock();
 
 		$openStack
-			->expects($this->any())
+
 			->method("objectStoreService")
 			->willReturn($service);
 
@@ -64,7 +64,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 				->getMock();
 
 		$openStackFactory
-			->expects($this->any())
+
 			->method("getInstance")
 			->willReturn($openStack);
 		/** @var OpenStackFactory $openStackFactory */

@@ -2,7 +2,7 @@
 
 class AntivirusTest extends S2lowSimpleTestCase {
 
-    protected function setUp() {
+    protected function setUp() : void {
         parent::setUp();
         $this->getObjectInstancier()->set('antivirus_command','ls');
     }
@@ -37,7 +37,7 @@ class AntivirusTest extends S2lowSimpleTestCase {
         $this->assertFalse(
             $this->getAntivirus()->checkArchiveSanity(__DIR__."/fixtures/classification.xml")
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "aaa :  toto FOUND",
             $this->getAntivirus()->getLastError()
         );
@@ -47,10 +47,10 @@ class AntivirusTest extends S2lowSimpleTestCase {
         $shellCommand = $this->getMockBuilder(ShellCommand::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $shellCommand->expects($this->any())
+        $shellCommand
             ->method('exec')
             ->willReturn($return);
-        $shellCommand->expects($this->any())
+        $shellCommand
             ->method('getLastOutput')
             ->willReturn("/aaa: toto FOUND");
         $this->getObjectInstancier()->set(ShellCommand::class,$shellCommand);

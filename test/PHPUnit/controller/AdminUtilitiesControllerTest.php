@@ -5,6 +5,7 @@ class AdminUtilitiesControllerTest extends S2lowTestCase {
 	public function testIndex(){
 		$this->setSuperAdminAuthentication();
 		$this->getObjectInstancier()->get(AdminUtilitiesController::class)->indexAction();
+		$this->noAssertion();
 	}
 
 	/**
@@ -13,10 +14,10 @@ class AdminUtilitiesControllerTest extends S2lowTestCase {
 	public function testdoSendAction(){
 
 		$mailer = $this->getMockBuilder("Mailer")->getMock();
-		$mailer->expects($this->any())->method('sendMail')->willReturn(true);
+		$mailer->method('sendMail')->willReturn(true);
 
 		$mailerFactory = $this->getMockBuilder("MailerFactory")->getMock();
-		$mailerFactory->expects($this->any())->method("getInstance")->willReturn($mailer);
+		$mailerFactory->method("getInstance")->willReturn($mailer);
 		$this->getObjectInstancier()->set("MailerFactory",$mailerFactory);
 
 		$this->setSuperAdminAuthentication();

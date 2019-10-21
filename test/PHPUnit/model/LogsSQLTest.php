@@ -7,7 +7,7 @@ class LogsSQLTest extends S2lowTestCase {
 	 */
 	private $logsSQL;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		Log::newEntry("test","message de test",1,false,"USER","actes",false,6);
 		$this->logsSQL = new LogsSQL($this->getSQLQuery());

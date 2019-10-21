@@ -2,7 +2,7 @@
 
 class ActesClassificationCodesSQLTest extends S2lowTestCase {
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->getSQLQuery()->query(

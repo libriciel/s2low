@@ -8,7 +8,7 @@ class LuhnKeyTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $luhnKey;
 	
-	public function setUp(){
+	public function setUp() : void {
 		$this->luhnKey = new LuhnKey();
 	}
 	

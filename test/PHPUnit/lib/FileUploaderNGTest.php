@@ -9,7 +9,7 @@ class FileUploaderNGTest extends PHPUnit_Framework_TestCase {
 
 	private $tmp_file;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->fileUploader = new FileUploaderNG();
 		org\bovigo\vfs\vfsStream::setup('test');

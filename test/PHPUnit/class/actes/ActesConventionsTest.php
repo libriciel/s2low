@@ -7,7 +7,7 @@ class ActesConventionsTest extends S2lowTestCase {
     /** @var  ActesConventions */
     private $actesConventions;
 
-    protected function setUp() {
+    protected function setUp() : void {
         parent::setUp();
         $tmpFolder = new TmpFolder();
         $this->actes_files_upload_root = $tmpFolder->create();
@@ -19,7 +19,7 @@ class ActesConventionsTest extends S2lowTestCase {
         $this->actesConventions = $this->getObjectInstancier()->get("ActesConventions");
     }
 
-    protected function tearDown() {
+    protected function tearDown() : void {
         parent::tearDown();
         $tmpFolder = new TmpFolder();
         $tmpFolder->delete($this->actes_files_upload_root);

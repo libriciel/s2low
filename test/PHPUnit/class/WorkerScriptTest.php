@@ -13,7 +13,7 @@ class WorkerScriptTest extends S2lowTestCase {
 
 	public function testScript(){
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
-		$IWorker->expects($this->any())->method("getAllId")->willReturn([1]);
+		$IWorker->method("getAllId")->willReturn([1]);
 		/** @var IWorker $IWorker */
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
 		$this->getObjectInstancier()->set('MockWorker',$IWorker);
@@ -23,14 +23,14 @@ class WorkerScriptTest extends S2lowTestCase {
 
 	public function testScriptTerm(){
 		$sigTermHandler = $this->getMockBuilder(SigTermHandler::class)->disableOriginalConstructor()->getMock();
-		$sigTermHandler->expects($this->any())->method('isSigtermCalled')->willReturn(true);
+		$sigTermHandler->method('isSigtermCalled')->willReturn(true);
 
 		$sigTermHandlerFactory = $this->getMockBuilder(SigTermHandlerFactory::class)->getMock();
-		$sigTermHandlerFactory->expects($this->any())->method('getInstance')->willReturn($sigTermHandler);
+		$sigTermHandlerFactory->method('getInstance')->willReturn($sigTermHandler);
 		$this->getObjectInstancier()->set(SigTermHandlerFactory::class,$sigTermHandlerFactory);
 
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
-		$IWorker->expects($this->any())->method("getAllId")->willReturn([1]);
+		$IWorker->method("getAllId")->willReturn([1]);
 		/** @var IWorker $IWorker */
 
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
@@ -41,7 +41,7 @@ class WorkerScriptTest extends S2lowTestCase {
 
 	public function testScriptFailed(){
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
-		$IWorker->expects($this->any())
+		$IWorker
 			->method("getAllId")
 			->willThrowException(new Exception("foo"));
 		/** @var IWorker $IWorker */
@@ -54,7 +54,7 @@ class WorkerScriptTest extends S2lowTestCase {
 
 	public function testRebuildQueue(){
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
-		$IWorker->expects($this->any())->method("getAllId")->willReturn([1]);
+		$IWorker->method("getAllId")->willReturn([1]);
 		/** @var IWorker $IWorker */
 
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
@@ -77,7 +77,7 @@ class WorkerScriptTest extends S2lowTestCase {
 		$job = $this->getMockBuilder("Pheanstalk\Job")
 			->disableOriginalConstructor()
 			->getMock();
-		$job->expects($this->any())
+		$job
 			->method('getData')
 			->willThrowException(new Exception("foo"));
 
@@ -90,18 +90,18 @@ class WorkerScriptTest extends S2lowTestCase {
 		$queue = $this->getMockBuilder("\Pheanstalk\Pheanstalk")
 			->disableOriginalConstructor()
 			->getMock();
-		$queue->expects($this->at(0))->method('reserve')->willReturn($job);
+		$queue->method('reserve')->will($this->onConsecutiveCalls($job,false));
 
 		$beanstalkdWrapper = $this->getMockBuilder(BeanstalkdWrapper::class)
 			->disableOriginalConstructor()
 			->getMock();
 
-		$beanstalkdWrapper->expects($this->any())->method('isModeBeanstalked')->willReturn(true);
-		$beanstalkdWrapper->expects($this->any())->method('getQueue')->willReturn($queue);
+		$beanstalkdWrapper->method('isModeBeanstalked')->willReturn(true);
+		$beanstalkdWrapper->method('getQueue')->willReturn($queue);
 
 		$this->getObjectInstancier()->set(BeanstalkdWrapper::class,$beanstalkdWrapper);
 		$IWorker = $this->getMockForAbstractClass(IWorker::class);
-		$IWorker->expects($this->any())->method("getData")->willReturn([1]);
+		$IWorker->method("getData")->willReturn([1]);
 		/** @var IWorker $IWorker */
 
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);

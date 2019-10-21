@@ -9,7 +9,7 @@ class AuthoritySiretTest extends S2lowTestCase {
 	 */
 	private $authoritySiret;
 	
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 	}

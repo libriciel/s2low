@@ -5,16 +5,16 @@ class PadesValidTest extends S2lowTestCase {
     /** @var  PadesValid */
     private $padesValid;
 
-    protected function setUp(){
+    protected function setUp() : void {
 
     }
 
     private function getCurlWrapperFactory($return_string){
         $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
-        $curlWrapper->expects($this->any())->method("get")->willReturn($return_string);
+        $curlWrapper->method("get")->willReturn($return_string);
 
         $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
-        $curlWrapperFactory->expects($this->any())->method("getNewInstance")->willReturn($curlWrapper);
+        $curlWrapperFactory->method("getNewInstance")->willReturn($curlWrapper);
         /** @var CurlWrapperFactory $curlWrapperFactory */
         return $curlWrapperFactory;
     }
@@ -28,9 +28,9 @@ class PadesValidTest extends S2lowTestCase {
         $verifyPKCS7Signature = $this->getMockBuilder('VerifyPKCS7Signature')->disableOriginalConstructor()->getMock();
 
 		if ($checkCertificateThrowAnException) {
-			$verifyPKCS7Signature->expects($this->any())->method("checkCertificate")->willThrowException(new Exception("problème"));
+			$verifyPKCS7Signature->method("checkCertificate")->willThrowException(new Exception("problème"));
 		} else {
-			$verifyPKCS7Signature->expects($this->any())->method("checkCertificate")->willReturn(true);
+			$verifyPKCS7Signature->method("checkCertificate")->willReturn(true);
 		}
 
 		/** @var VerifyPKCS7Signature $verifyPKCS7Signature */

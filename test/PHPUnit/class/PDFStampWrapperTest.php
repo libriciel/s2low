@@ -4,9 +4,9 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
 
     private function getCurlWrapperFactory($return_string){
         $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
-        $curlWrapper->expects($this->any())->method("get")->willReturn($return_string);
+        $curlWrapper->method("get")->willReturn($return_string);
         $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
-        $curlWrapperFactory->expects($this->any())->method("getNewInstance")->willReturn($curlWrapper);
+        $curlWrapperFactory->method("getNewInstance")->willReturn($curlWrapper);
         /** @var CurlWrapperFactory $curlWrapperFactory */
         return $curlWrapperFactory;
     }

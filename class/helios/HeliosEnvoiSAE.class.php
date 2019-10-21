@@ -11,6 +11,7 @@ class HeliosEnvoiSAE {
 	private $authoritySQL;
 	private $pastellPropertiesSQL;
 	private $pesAllerStorage;
+	private $cloudStorageFactory;
 
 	public function __construct(
         PesAllerRetriever $pesAllerRetriever,
@@ -19,7 +20,8 @@ class HeliosEnvoiSAE {
 		AuthoritySQL $authoritySQL,
 		HeliosTransactionsSQL $heliosTransactionsSQL,
 		PastellPropertiesSQL $pastellPropertiesSQL,
-		PesAllerStorage $pesAllerStorage
+		PesAllerStorage $pesAllerStorage,
+		CloudStorageFactory $cloudStorageFactory
     ){
 		$this->heliosTransactionsSQL = $heliosTransactionsSQL;
 		$this->authoritySQL = $authoritySQL;
@@ -28,6 +30,7 @@ class HeliosEnvoiSAE {
 		$this->logger = $logger;
 		$this->pastellPropertiesSQL = $pastellPropertiesSQL;
 		$this->pesAllerStorage = $pesAllerStorage;
+		$this->cloudStorageFactory = $cloudStorageFactory;
 	}
 
 	public function sendAllArchive($authority_id = 0){
@@ -80,7 +83,8 @@ class HeliosEnvoiSAE {
 				throw new RecoverableException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
 			}
 
-			$pes_acquit_filepath = HELIOS_RESPONSES_ROOT . "/" . $transactionsInfo['acquit_filename'];
+			$pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
+			$pes_acquit_filepath = $pesAcquitCloudStorage->getPath($transaction_id);
 
 			$pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 

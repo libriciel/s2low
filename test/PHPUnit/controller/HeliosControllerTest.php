@@ -10,7 +10,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	private $testStreamUrl;
 
 
-    protected function setUp(){
+    protected function setUp() : void {
         parent::setUp();
 
         org\bovigo\vfs\vfsStream::setup("test");
@@ -29,7 +29,7 @@ class HeliosControllerTest extends S2lowTestCase {
         );
 
         $rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
-        $rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(true);
+        $rgsConnexion->method('isRgsConnexion')->willReturn(true);
 
         $this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
         $this->getObjectInstancier()->set("helios_files_upload_root",$this->testStreamUrl);
@@ -44,8 +44,9 @@ class HeliosControllerTest extends S2lowTestCase {
 	 * @runInSeparateProcess
 	 */
 	public function testImportAction(){
-		$this->setExpectedException("Exception");
+		$this->expectException(Exception::class);
 		$this->heliosController->importAction();
+
 	}
 
 	/**
@@ -259,7 +260,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	 */
 	public function testGetPostPESRetourWithoutRGS(){
 		$rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
-		$rgsConnexion->expects($this->any())->method('isRgsConnexion')->willReturn(false);
+		$rgsConnexion->method('isRgsConnexion')->willReturn(false);
 
 		$this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
 		$this->expectOutputRegex("#<message>Votre certificat n'est pas RGS et ne vous permet donc pas de#");

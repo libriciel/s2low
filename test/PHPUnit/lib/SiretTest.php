@@ -7,7 +7,7 @@ class SiretTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $siret;
 	
-	public function setUp(){
+	public function setUp() : void {
 		$this->siret = new Siret(new LuhnKey(),new Siren(new LuhnKey()));
 	}
 	

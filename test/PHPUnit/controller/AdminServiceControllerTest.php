@@ -7,7 +7,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	/** @var AdminServiceController */
 	private $adminServiceController;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->setSuperAdminAuthentication();
 		$this->adminServiceController = $this->getObjectInstancier()->get(AdminServiceController::class);
@@ -25,7 +25,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	 * @throws RedirectException
 	 */
 	public function testAdd(){
-		$this->setExpectedException("Exception");
+		$this->setExpectedException("Exception",'Exit !');
 		$this->expectOutputRegex('#Le service a #');
 		$this->addService();
 	}
@@ -36,7 +36,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	public function testAlreadyExists(){
 		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
 		$serviceUser->add(self::NOM_SERVICE,1);
-		$this->setExpectedException("Exception");
+		$this->setExpectedException("Exception",'Exit !');
 		$this->expectOutputRegex('#Ce service existe#');
 		$this->addService();
 	}

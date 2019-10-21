@@ -12,7 +12,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->tmpFolder = new TmpFolder();
 		$this->tmp_dir = $this->tmpFolder->create();
@@ -24,7 +24,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		);
 	}
 
-	protected function tearDown() {
+	protected function tearDown() : void {
 		$this->tmpFolder->delete($this->tmp_dir);
 		parent::tearDown();
 	}
@@ -36,7 +36,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$antivirus = $this->getMockBuilder(Antivirus::class)
             ->disableOriginalConstructor()
             ->getMock();
-		$antivirus->expects($this->any())
+		$antivirus
 			->method("checkArchiveSanity")
 			->willReturn(true);
 		$this->getObjectInstancier()->set(Antivirus::class,$antivirus);
@@ -51,7 +51,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$antivirus = $this->getMockBuilder(Antivirus::class)
             ->disableOriginalConstructor()
             ->getMock();
-		$antivirus->expects($this->any())
+		$antivirus
 			->method("checkArchiveSanity")
 			->willReturn(false);
 
@@ -68,7 +68,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$antivirus = $this->getMockBuilder(Antivirus::class)
             ->disableOriginalConstructor()
             ->getMock();
-		$antivirus->expects($this->any())
+		$antivirus
 			->method("checkArchiveSanity")
 			->willThrowException(new Exception("testing"));
 

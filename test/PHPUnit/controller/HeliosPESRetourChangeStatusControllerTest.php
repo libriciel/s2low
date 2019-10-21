@@ -37,7 +37,7 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase {
 		$this->assertEquals(0,$info['status']);
 
 		$heliosPESRetourChangeStatusController = $this->getObjectInstancier()->get(HeliosPESRetourChangeStatusController::class);
-		$this->setExpectedException(Exception::class);
+		$this->expectException(Exception::class);
 		$this->expectOutputRegex("#KO#");
 		$heliosPESRetourChangeStatusController->changeStatusAction();
 	}

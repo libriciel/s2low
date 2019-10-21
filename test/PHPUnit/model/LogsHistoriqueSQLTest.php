@@ -7,7 +7,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase {
 
 	private $last_month;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->last_month = date("Y-m-d",strtotime("-2 month"));
 		$today = date("Y-m-d");

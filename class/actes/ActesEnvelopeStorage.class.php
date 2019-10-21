@@ -27,7 +27,7 @@ class ActesEnvelopeStorage {
 	public function getAllEnveloppeIdToStore(){
 		return $this->actesEnvelopeSQL->getAllEnvelopepIdToSendInCloud();
 	}
-	
+
 	/**
 	 * @param $transaction_id
 	 * @return bool

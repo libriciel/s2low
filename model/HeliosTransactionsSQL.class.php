@@ -274,6 +274,21 @@ class HeliosTransactionsSQL extends SQL {
 		$this->query($sql,true,$transaction_id);
 	}
 
+	public function getAllIdPESAcquitToSendInCloud(){
+		$sql = "SELECT id FROM helios_transactions WHERE pes_acquit_is_in_cloud=FALSE AND pes_acquit_not_available=FALSE ORDER BY id";
+		return $this->queryOneCol($sql);
+	}
+
+	public function setPesAcquitNotAvailable($transaction_id){
+		$sql = "UPDATE helios_transactions SET pes_acquit_not_available=? WHERE id=?";
+		$this->query($sql,true,$transaction_id);
+	}
+
+	public function setPesAcquitInCloud($id){
+		$sql = "UPDATE helios_transactions SET pes_acquit_is_in_cloud=TRUE WHERE id=?";
+		$this->query($sql,$id);
+	}
+
     public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){
 		$sql = "SELECT id,sha1,filename,acquit_filename FROM helios_transactions WHERE authority_id=? AND id >= ? AND id<=? ORDER BY id";
 		return $this->query($sql,$authority_id,$min_transaction_id,$max_trasaction_id);

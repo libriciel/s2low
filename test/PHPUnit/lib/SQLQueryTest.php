@@ -7,7 +7,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $sqlQuery;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		$this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
 		$this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
 		$this->sqlQuery->setCredential(DB_USER_TEST,DB_PASSWORD_TEST);
@@ -31,6 +31,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 
 	public function testDisconnect(){
 		$this->sqlQuery->disconnect();
+		$this->noAssertion();
 	}
 
 	public function testDisconnectAndReconnect(){
@@ -42,6 +43,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase {
 
 	public function testSleep() {
 		$this->sqlQuery->sleep(0);
+		$this->noAssertion();
 	}
 
 	public function testQueryOne(){

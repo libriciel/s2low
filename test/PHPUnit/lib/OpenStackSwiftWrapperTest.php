@@ -5,7 +5,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
     /** @var  OpenStackSwiftWrapper */
     private $openStackSwiftWrapper;
 
-    public function setUp(){
+    public function setUp() : void {
 
     	$logger = new Monolog\Logger("PHPUNIT");
     	$logger->pushHandler(new Monolog\Handler\NullHandler());
@@ -21,7 +21,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
 				->getMock();
 
     	$dataObject
-			->expects($this->any())
+
 			->method("getContent")
 			->willReturn($content);
 
@@ -31,7 +31,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
                 ->getMock();
 
 		$container
-			->expects($this->any())
+
 			->method("getObject")
 			->willReturn($dataObject);
 
@@ -41,7 +41,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
                 ->getMock();
 
         $service
-            ->expects($this->any())
+
             ->method("getContainer")
             ->willReturn($container);
 
@@ -51,7 +51,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
                 ->getMock();
 
         $openStack
-            ->expects($this->any())
+
             ->method("objectStoreService")
             ->willReturn($service);
 
@@ -61,7 +61,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
                 ->getMock();
 
         $openStackFactory
-            ->expects($this->any())
+
             ->method("getInstance")
             ->willReturn($openStack);
 
@@ -82,6 +82,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             "container_test",
             __DIR__."/fixtures/test.xml"
         );
+		$this->noAssertion();
     }
 
     public function testDeleteFile(){
@@ -89,6 +90,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
             "container_test",
             __DIR__."/fixtures/test.xml"
         );
+        $this->noAssertion();
     }
 
     public function testRetrieveFileLocal(){
@@ -108,7 +110,7 @@ class OpenStackSwiftWrapperTest extends PHPUnit_Framework_TestCase {
 			"test",
 			"/tmp/toto"
 		);
-
+		$this->noAssertion();
 	}
 
 

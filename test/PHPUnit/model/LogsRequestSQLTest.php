@@ -10,7 +10,7 @@ class LogsRequestSQLTest extends S2lowTestCase {
 
 	private $logs_request_id;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->logsRequestData = new LogsRequestData();
 		$this->logsRequestData->user_id_demandeur = 1;

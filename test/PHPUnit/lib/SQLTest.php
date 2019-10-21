@@ -7,7 +7,7 @@ class SQLTest extends S2lowTestCase {
 	 */
 	private $sqlSQL;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->sqlSQL = $this->getMockForAbstractClass('SQL',array($this->getSQLQuery()));
 	}

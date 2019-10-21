@@ -19,7 +19,7 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$pesAllerStorage
-			->expects($this->any())
+
 			->method("storeNextFileById")
 			->willReturn(true);
 		$this->getObjectInstancier()->set(PesAllerStorage::class,$pesAllerStorage);
@@ -29,6 +29,7 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase {
 		$heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
 
 		$heliosStorePESAllerWorker->work($transaction_id);
+		$this->assertTrue(true);
 
 	}
 

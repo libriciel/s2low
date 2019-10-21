@@ -11,7 +11,7 @@ class ActesNameArchiveTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $actesNameArchive;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->actesNameArchive = new ActesNameArchive(self::TRIGRAMME,self::QUADRIGRAMME);
 	}

@@ -6,7 +6,7 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
     private $actesUpdateClassificationSQL;
     private $classification_xml;
 
-    protected function setUp() {
+    protected function setUp() : void {
         parent::setUp();
         $this->actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
         $this->classification_xml = file_get_contents(__DIR__."/../fixtures/classification.xml");

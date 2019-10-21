@@ -6,6 +6,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
         $adminController->_actionBefore("Mock", "mock");
+		$this->assertTrue(true);
 	}
 
 	public function testAuthoritySiretAction(){

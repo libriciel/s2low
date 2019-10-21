@@ -8,7 +8,7 @@ class TransactionSQLTest extends S2lowTestCase {
 	/** @var TransactionSQL */
 	private $transactionSQL;
 
-	protected function setUp() {
+	protected function setUp() : void {
 		parent::setUp();
 		$this->transaction_id = $this->createTransaction(4);
 		$this->transactionSQL = $this->getObjectInstancier()->get(TransactionSQL::class);

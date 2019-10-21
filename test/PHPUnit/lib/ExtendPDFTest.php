@@ -7,7 +7,7 @@ class ExtendPdfTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $extendPDF;
 
-	protected function setUp(){
+	protected function setUp() : void {
 		parent::setUp();
 		$this->extendPDF = new ExtendPdf();
 	}
@@ -23,6 +23,7 @@ class ExtendPdfTest extends PHPUnit_Framework_TestCase {
 		$this->extendPDF->SetMyAligns(array(1,2,3));
 		$this->extendPDF->setMyBorder("TBRL");
 		$this->extendPDF->Footer();
+		$this->noAssertion();
 
 	}
 

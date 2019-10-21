@@ -10,7 +10,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	/** @var  HeliosTransactionsSQL */
 	private $heliosTransactionSQL;
 
-	public function setUp(){
+	public function setUp() : void {
 		parent::setUp();
 		org\bovigo\vfs\vfsStream::setup('test');
 		$testStreamUrl = org\bovigo\vfs\vfsStream::url('test');

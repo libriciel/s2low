@@ -43,7 +43,6 @@ class PesAllerStorage {
     	return $this->heliosTransactionsSQL->getAllTransactionIdToSendInCloud();
 	}
 
-
 	/**
 	 * @param $transaction_id
 	 * @return bool
@@ -111,6 +110,7 @@ class PesAllerStorage {
 	 * @throws Exception
 	 */
     public function menageLocal($no_access_during_nb_days = 9999, $do = true){
+
 		$sigtermHandler = SigTermHandler::getInstance();
         $dh = opendir($this->helios_files_upload_root);
         if (! $dh) {
