@@ -65,12 +65,23 @@ class CloudStorage {
 			)
 		);
 
-
 		$this->openStackSwiftWrapper->sendFile(
 			$this->iCloudStorable->getContainerName(),
 			$file_path_on_disk,
 			$file_path_on_cloud
 		);
+
+
+		$this->logger->info("Check file : {$file_path_on_cloud}");
+		$check=$this->openStackSwiftWrapper->fileExistsOnCloud(
+			$this->iCloudStorable->getContainerName(),
+			$file_path_on_cloud
+		);
+		$this->logger->info("File present ? [{$check}]");
+		if (! $check){
+			$this->logger->error("File {$file_path_on_disk} not present on cloud after sending ! ");
+			return false;
+		}
 
 		$this->iCloudStorable->setInCloud($object_id);
 

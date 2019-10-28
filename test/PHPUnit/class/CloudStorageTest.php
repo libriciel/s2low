@@ -74,7 +74,7 @@ class CloudStorageTest extends S2lowTestCase {
 			$this->getCloudStorage($this->getICloudStorable($file_to_send))
 				->storeObject(42)
 		);
-		$this->assertLogMessage("Stored object [OK] : 42",1);
+		$this->assertLogMessage("Stored object [OK] : 42",3);
 	}
 
 	/**
