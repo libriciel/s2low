@@ -3383,20 +3383,6 @@
                 ]
             }
         },
-        "actes_type_pj": {
-            "actes_type_pj_nature_id_fk": {
-                "conname": "actes_type_pj_nature_id_fk",
-                "contype": "f",
-                "conrelname": "actes_type_pj",
-                "conkey": [
-                    "nature_id"
-                ],
-                "confrelname": "actes_natures",
-                "confkey": [
-                    "id"
-                ]
-            }
-        },
         "authority_pastell_config": {
             "authorities_pastell_config_pkey": {
                 "conname": "authorities_pastell_config_pkey",
@@ -3407,6 +3393,18 @@
                 ],
                 "confrelname": null,
                 "confkey": []
+            },
+            "authority_pastell_config_authority_id_fk": {
+                "conname": "authority_pastell_config_authority_id_fk",
+                "contype": "f",
+                "conrelname": "authority_pastell_config",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
             },
             "authority_pastell_config_module_id_fk": {
                 "conname": "authority_pastell_config_module_id_fk",
@@ -3419,15 +3417,17 @@
                 "confkey": [
                     "id"
                 ]
-            },
-            "authority_pastell_config_authority_id_fk": {
-                "conname": "authority_pastell_config_authority_id_fk",
+            }
+        },
+        "actes_type_pj": {
+            "actes_type_pj_nature_id_fk": {
+                "conname": "actes_type_pj_nature_id_fk",
                 "contype": "f",
-                "conrelname": "authority_pastell_config",
+                "conrelname": "actes_type_pj",
                 "conkey": [
-                    "authority_id"
+                    "nature_id"
                 ],
-                "confrelname": "authorities",
+                "confrelname": "actes_natures",
                 "confkey": [
                     "id"
                 ]
@@ -3463,13 +3463,17 @@
             "tablename": "actes_envelopes",
             "indexdef": "CREATE UNIQUE INDEX actes_envelopes_submission_date_id ON actes_envelopes USING btree (submission_date, id)"
         },
-        "ht_pes_aquit_in_cloud": {
+        "ht_user_id": {
             "tablename": "helios_transactions",
-            "indexdef": "CREATE UNIQUE INDEX ht_pes_aquit_in_cloud ON helios_transactions USING btree (pes_acquit_is_in_cloud, pes_acquit_not_available, id)"
+            "indexdef": "CREATE INDEX ht_user_id ON helios_transactions USING btree (user_id, id DESC)"
         },
         "ht_to_send_in_cloud": {
             "tablename": "helios_transactions",
             "indexdef": "CREATE UNIQUE INDEX ht_to_send_in_cloud ON helios_transactions USING btree (is_in_cloud, not_available, id)"
+        },
+        "ht_pes_aquit_in_cloud": {
+            "tablename": "helios_transactions",
+            "indexdef": "CREATE UNIQUE INDEX ht_pes_aquit_in_cloud ON helios_transactions USING btree (pes_acquit_is_in_cloud, pes_acquit_not_available, id)"
         },
         "helios_transactions_authority_id_last_status_id_idx": {
             "tablename": "helios_transactions",
@@ -3547,13 +3551,13 @@
             "tablename": "logs_request",
             "indexdef": "CREATE INDEX logs_request_state_idx ON logs_request USING btree (state)"
         },
-        "modules_name_idx": {
-            "tablename": "modules",
-            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
-        },
         "acc_ai": {
             "tablename": "actes_classification_codes",
             "indexdef": "CREATE INDEX acc_ai ON actes_classification_codes USING btree (authority_id)"
+        },
+        "modules_name_idx": {
+            "tablename": "modules",
+            "indexdef": "CREATE UNIQUE INDEX modules_name_idx ON modules USING btree (name)"
         },
         "u_authority_id": {
             "tablename": "users",
