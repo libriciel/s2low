@@ -19,7 +19,7 @@ class PDFStampWrapper {
 
 
     public function getLogoPath(){
-        return __DIR__."/../public.ssl/custom/images/s2low-stamp.png";
+        return __DIR__."/../public.ssl/custom/images/".IMAGE_FOR_STAMP;
     }
 
     /**

@@ -50,6 +50,11 @@ if(!defined('TDT_FROM_EMAIL')){
         define('TDT_FROM_EMAIL', "Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>");
 }
 
+// Image utilisee pour le tampon des actes
+if(!defined('IMAGE_FOR_STAMP')){
+        define('IMAGE_FOR_STAMP', "s2low-stamp.png");
+}
+
 if (!defined('LOG_FILE')){
 	define('LOG_FILE','/data/log/s2low.log');
 }
