@@ -52,7 +52,7 @@ if(!defined('TDT_FROM_EMAIL')){
 
 // Image utilisee pour le tampon des actes
 if(!defined('IMAGE_FOR_STAMP')){
-        define('IMAGE_FOR_STAMP', "s2low-stamp.png");
+        define('IMAGE_FOR_STAMP', "/public.ssl/custom/images/s2low-stamp.png");
 }
 
 if (!defined('LOG_FILE')){

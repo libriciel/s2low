@@ -175,6 +175,7 @@ $objectInstancier->set('actes_type_pj_is_mandatory',ACTES_TYPE_PJ_IS_MANDATORY);
 
 $objectInstancier->set('pades_valid_url',PADES_VALID_URL);
 $objectInstancier->set('pdf_stamp_url',PDF_STAMP_URL);
+$objectInstancier->set('image_for_stamp',IMAGE_FOR_STAMP);
 
 $objectInstancier->set('rgs_validca_path',RGS_VALIDCA_PATH);
 
