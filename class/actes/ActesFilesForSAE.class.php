@@ -12,6 +12,7 @@ class ActesFilesForSAE {
 	public $annexe = [];
 	public $aractes_filepath;
 	public $echange_prefecture;
+	public $type_pj;
 
 
 	public function renameSameFilename(){

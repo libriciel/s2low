@@ -1723,6 +1723,7 @@ class ActesTransaction extends DataObject {
 	 * @throws Exception
 	 */
 	public function canValidate(){
+
 		if (ACTES_ALWAYS_CAN_VALIDATE){
 			return true;
 		}
