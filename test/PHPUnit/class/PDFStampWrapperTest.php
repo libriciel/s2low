@@ -15,7 +15,7 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
      * @throws Exception
      */
     public function testStamp(){
-        $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/","/public.ssl/custom/images/s2low-stamp.png");
+        $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/","/var/www/s2low/public.ssl/custom/images/s2low-stamp.png");
         $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory("test"));
         $pdfStampData = new PDFStampData();
         $pdfStampData->identifiant_unique = "toto";
