@@ -11,7 +11,7 @@ class PDFStampWrapper {
 
     public function __construct($pdf_stamp_url, $image_for_stamp) {
         $this->pdf_stamp_url = $pdf_stamp_url;
-        $this->image_for_stamp = SITEROOT.$image_for_stamp;
+        $this->image_for_stamp = $image_for_stamp;
         $this->setCurlWrapperFactory(new CurlWrapperFactory());
     }
 

@@ -16,6 +16,7 @@
 - Refactoring du mÃ©nage des fichiers helios (si c'est sur le cloud, on ne garde que 15 jours de fichiers)
 - Les fichiers actes/helios non-disponible ne font plus partie de la boucle d'envoi au cloud
 - Envoi des fichier PES Acquit dans le cloud
+- La constante IMAGE_FOR_STAMP a été ajoutée. Elle permet de configurer l'image utilisée pour les tampons. #522
 
 ## Correction
 - Les noms de fichiers envoyÃ© au SAE ne doivent pas Ãªtre Ã©gaux sans tenir compte des accents
