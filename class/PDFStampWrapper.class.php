@@ -4,22 +4,19 @@
 class PDFStampWrapper {
 
     private $pdf_stamp_url;
+    private $image_for_stamp;
 
     /** @var CurlWrapperFactory */
     private $curlWrapperFactory;
 
-    public function __construct($pdf_stamp_url) {
+    public function __construct($pdf_stamp_url, $image_for_stamp) {
         $this->pdf_stamp_url = $pdf_stamp_url;
+        $this->image_for_stamp = $image_for_stamp;
         $this->setCurlWrapperFactory(new CurlWrapperFactory());
     }
 
     public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
         $this->curlWrapperFactory = $curlWrapperFactory;
-    }
-
-
-    public function getLogoPath(){
-        return __DIR__."/../public.ssl/custom/images/s2low-stamp.png";
     }
 
     /**
@@ -56,7 +53,7 @@ class PDFStampWrapper {
                     'title' => 'Affiché le',
                     'value' => $date_affichage,
                     'logo' => array(
-                        'data' =>  base64_encode(file_get_contents($this->getLogoPath())),
+                        'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),
                         "width" =>  60,
                         "marginRight" =>  30
                     )

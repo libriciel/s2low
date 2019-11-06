@@ -8,7 +8,7 @@ class ActeTamponneTest extends S2lowTestCase {
 		$actesTransactionsSQL->method('getInfo')->willReturn($transactionInfo);
 
 		/** @var  ActesTransactionsSQL $actesTransactionsSQL */
-		$acteTamponne = new ActeTamponne($actesTransactionsSQL,new PDFStampWrapper(""), $this->getObjectInstancier()->get(S2lowLogger::class));
+		$acteTamponne = new ActeTamponne($actesTransactionsSQL,new PDFStampWrapper("",__DIR__."/../../../../public.ssl/custom/images/s2low-stamp.png"), $this->getObjectInstancier()->get(S2lowLogger::class));
 
 		$acteTamponne->tamponnerPDF(__DIR__."/../fixtures/vide.pdf","12");
 		$this->assertEquals("Impossible de tamponné l'acte 12 : Erreur de connexion au serveur : <url> malformed ",
