@@ -75,7 +75,21 @@ class ActesTypePJSQL extends SQL {
     public function getLibelle($code){
         $sql = "SELECT libelle FROM actes_type_pj WHERE code=? LIMIT 1";
         return $this->queryOne($sql,$code);
-
     }
+
+    public function getDefaultType($nature_code){
+		$correspondance_nature_type = array(
+			'1'=> '99_DE',
+			'2' => '99_AR',
+			'3' => '99_AI',
+			'4' => '99_DC',
+			'5' => '99_BU',
+			'6' => '99_AU',
+		);
+		if (empty($correspondance_nature_type[$nature_code])){
+			return "99_AU";
+		}
+		return $correspondance_nature_type[$nature_code];
+	}
 
 }

@@ -34,7 +34,7 @@ class PastellWrapper {
 	 * @return bool|mixed
 	 * @throws Exception
 	 */
-	private function callAPI($url,array $postData = array(),$postFile = array()){
+	private function callAPI($url,array $postData = array(),$postFile = array(),$http_verb = ""){
 
 		if (! $url){
 			$this->s2lowLogger->alert("Pastell n'est pas configuré !");
@@ -50,6 +50,10 @@ class PastellWrapper {
 		}
 		foreach($postFile as $field => $file_info){
 			$curl_wrapper->addPostFile($field, $file_info[0],$file_info[1]);
+		}
+
+		if ($http_verb == 'PATCH'){
+			$curl_wrapper->setPatch();
 		}
 
 		$this->s2lowLogger->debug("Pastell request: ".$this->pastellProperties->url."/".$url." with post data :".json_encode($postData));
@@ -234,6 +238,27 @@ class PastellWrapper {
 			$info['echange_prefecture_type_'.$i] = $type;
 		}
 		return $this->callAPI("modif-document.php",$info);
+	}
+
+	/**
+	 * @param string $id_d
+	 * @param string $field
+	 * @param array $metadata
+	 * @return bool|mixed
+	 * @throws Exception
+	 */
+	public function modifExternalData(string $id_d, string $field, array $metadata){
+		return $this->callAPI(
+			sprintf(
+				"/v2/Entite/%s/document/%s/externalData/%s",
+				$this->pastellProperties->id_e,
+				$id_d,
+				$field
+			),
+			$metadata,
+			[],
+			"PATCH"
+		);
 	}
 
 	/**

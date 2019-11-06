@@ -541,7 +541,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISS
     $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
-    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyé au SAE\" /> (Attention, peut-être long)\n";
+    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer au SAE\" /> (Attention, peut-être long)\n";
     $actionHtml .= "</div>\n</form>\n";
     $actionHtml .= "</div>\n";
 }

@@ -10,6 +10,8 @@ class CurlWrapper {
 	private $postFileProperties;
 	private $last_output;
 	private $lastHttpCode;
+
+	private $patch;
 	
 	public function __construct(){
 		$this->curlHandle = curl_init();
@@ -64,6 +66,11 @@ class CurlWrapper {
 		$this->setProperties( CURLOPT_SSLCERT, $clientCertificate);
 		$this->setProperties( CURLOPT_SSLKEY, $clientKey);
 		$this->setProperties( CURLOPT_SSLKEYPASSWD,$clientKeyPassword );
+	}
+
+	public function setPatch(){
+		$this->patch = true;
+		$this->setProperties(CURLOPT_CUSTOMREQUEST,"PATCH");
 	}
 	
 	public function get($url){
@@ -161,6 +168,10 @@ class CurlWrapper {
 				$post[$name] = new CURLFile($filePath, null, $fileName);
 			}
 		}
+		if ($this->patch){
+			$post = http_build_query($post);
+		}
+
 		@ curl_setopt($this->curlHandle, CURLOPT_POSTFIELDS, $post);
 	}
 	

@@ -26,6 +26,8 @@ class ActesArchiveControler {
 
 	private $actesEnvelopeStorage;
 
+	private $actesTypePJSQL;
+
 	public function __construct(
         ActesRetriever $actesRetriever,
 		PastellPropertiesSQL $pastellPropertiesSQL,
@@ -34,7 +36,8 @@ class ActesArchiveControler {
 		AuthoritySQL $authoritySQL,
 		ActesTransactionsSQL $actesTransactionsSQL,
 		ActesEnvelopeSQL $actesEnvelopeSQL,
-		ActesEnvelopeStorage $actesEnvelopeStorage
+		ActesEnvelopeStorage $actesEnvelopeStorage,
+		ActesTypePJSQL $actesTypePJSQL
     ){
 		$this->pastellWrapperFactory = $pastellWrapperFactory;
 		$this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -44,6 +47,7 @@ class ActesArchiveControler {
 		$this->logger = $logger;
 		$this->actesEnvelopeSQL = $actesEnvelopeSQL;
 		$this->actesEnvelopeStorage = $actesEnvelopeStorage;
+		$this->actesTypePJSQL = $actesTypePJSQL;
 	}
 
 	public function getAllTransactionIdToSend($authority_id = 0){
@@ -143,7 +147,6 @@ class ActesArchiveControler {
 
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 
-
 		$actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
 		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
 
@@ -158,7 +161,7 @@ class ActesArchiveControler {
 
 		$actesFilesForSAE->actes_filepath = $tmp_folder."/".$actesFile[1]['filename'];
 		$actesFilesForSAE->actes_filename = $actesFile[1]['posted_filename'];
-
+		$actesFilesForSAE->type_pj = $actesFile[1]['code_pj'];
 
 
 		if ($actesFile[1]['signature']){
@@ -190,7 +193,7 @@ class ActesArchiveControler {
 		$actesFilesForSAE->annexe = [];
 		foreach($actesFile as $file){
 			$tgzExtractor->extract($enveloppe_path,$file['filename']);
-			$actesFilesForSAE->annexe[] = ['filename'=>$file['posted_filename'],'filepath'=> $tmp_folder.'/'.$file['filename'] ];
+			$actesFilesForSAE->annexe[] = ['filename'=>$file['posted_filename'],'filepath'=> $tmp_folder.'/'.$file['filename'],'type_pj' =>$file['code_pj']];
 		}
 
 		$actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
@@ -254,6 +257,7 @@ class ActesArchiveControler {
 
 		$actesFilesForSAE->echange_prefecture=[$echange_prefecture_type,$echange_prefecture,$echange_prefecture_ar];
 		$actesFilesForSAE->renameSameFilename();
+
 		return $actesFilesForSAE;
 	}
 
@@ -307,6 +311,16 @@ class ActesArchiveControler {
 			$actesFilesForSAE->echange_prefecture[1],
 			$actesFilesForSAE->echange_prefecture[2]
 		);
+
+		$default_type =$this->actesTypePJSQL->getDefaultType($transactionsInfo['nature_code']);
+
+		$typologie = [$actesFilesForSAE->type_pj?:$default_type];
+		foreach($actesFilesForSAE->annexe as $annexe){
+			$typologie[] = $annexe['type_pj']?:$default_type;
+		}
+
+		$pastell->modifExternalData($id_d,'type_piece', ['type_pj'=>$typologie]);
+
 
 		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
 		if (! $result){
