@@ -8,7 +8,7 @@ require_once(SITEROOT . "/class/Trace.class.php");
 	TIMESTAMPING_PRIV_KEY_PASS => le fichier contenant le mot de passe
 **/
 /**
-openssl smime -binary -sign -in gros  -inkey /etc/tedetis/ssl/tedetis_timestamp_priv_key.pem   -signer /etc/tedetis/ssl/tedetis_timestamp_cert.pem -passin pass:toto -binary -outform DER | openssl smime -pk7out -inform DER | openssl smime -inform PEM -verify -content gros -CAfile /etc/tedetis/ssl/tedetis_timestamp_cert.pem > /dev/null
+openssl smime -binary -sign -in gros  -inkey /etc/s2low/ssl/s2low_timestamp_priv_key.pem   -signer /etc/tedetis/ssl/s2low_timestamp_cert.pem -passin pass:toto -binary -outform DER | openssl smime -pk7out -inform DER | openssl smime -inform PEM -verify -content gros -CAfile /etc/s2low/ssl/s2low_timestamp_cert.pem > /dev/null
 */
 
 class Parapheur {

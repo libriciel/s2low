@@ -90,7 +90,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		;
 		$xadesSignature->sign(
 			__DIR__."/fixtures/test.xml",
-			__DIR__."/../fixtures/timestamp_certificates/tedetis_timestamp_cert.pem.p12",
+			__DIR__."/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem.p12",
 			"",
 			$testStreamUrl."/signed.xml",
 			$this->getXadesSignatureProperties())
