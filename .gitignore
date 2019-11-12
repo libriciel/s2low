@@ -13,3 +13,4 @@ ext/standalone/HTMLPurifier/DefinitionCache
 /build/
 .scannerwork
 /coverage-reports/
+.phpunit.result.cache

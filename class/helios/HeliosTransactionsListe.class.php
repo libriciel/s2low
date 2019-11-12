@@ -14,11 +14,13 @@ class HeliosTransactionsListe {
 	private $sortWay;
 	
 	
-	public function __construct($sqlQuery){
+	public function __construct(SQLQuery $sqlQuery){
 		$this->sqlQuery = $sqlQuery;
 		$this->limit = 10;
 		$this->offset = 0;
 		$this->filter = array();
+		$this->order = 'helios_transactions.id';
+		$this->sortWay = 'DESC';
 		$this->value = array();
 	}
 	
@@ -41,7 +43,7 @@ class HeliosTransactionsListe {
 	public function setDateMinSubmission($date){
 		if (! $date)  {
 			return;
-		};
+		}
 		$this->filter[] = "(SELECT date " .
 				" FROM helios_transactions_workflow atw " .
 				" WHERE helios_transactions.id = atw.transaction_id " .
@@ -135,7 +137,11 @@ class HeliosTransactionsListe {
 		$this->getWhere() ;
 		return $this->sqlQuery->queryOne($sql,$this->value);
 	}
-	
+
+	/**
+	 * @return array
+	 * @throws Exception
+	 */
 	public function getAll(){
 		$sql = "SELECT helios_transactions.id,  helios_transactions.last_status_id, helios_transactions.user_id, helios_transactions.xml_nomfic, helios_transactions.filename, submission_date,".
 				" authorities.name as authority_name, " .
@@ -144,18 +150,17 @@ class HeliosTransactionsListe {
 				" FROM helios_transactions " .
 				" JOIN users ON helios_transactions.user_id=users.id " .
 				" JOIN authorities ON helios_transactions.authority_id=authorities.id " .
-				$this->getWhere() .
-				" ORDER BY $this->order $this->sortWay " .
-				" LIMIT $this->limit OFFSET $this->offset";
-	
+				" WHERE helios_transactions.id IN ( SELECT id FROM helios_transactions ".
+					$this->getWhere().
+					" ORDER BY $this->order $this->sortWay " .
+					" LIMIT $this->limit OFFSET $this->offset )".
+			" ORDER BY $this->order $this->sortWay " ;
+
 		$result = $this->sqlQuery->query($sql,$this->value);
 
 		$sql = "SELECT message FROM helios_transactions_workflow WHERE transaction_id=? AND status_id=? ORDER BY id DESC limit 1";
 		foreach($result as $i => $line){
 			$result[$i]['message'] = $this->sqlQuery->queryOne($sql,$line['id'],$line['last_status_id']);
-			/*$result[$i]['type_str'] = self::$transactionTypes[$line['type']];
-			$result[$i]['current_status'] = $line['last_status_id'];
-			$result[$i]['current_status_name'] = self::$status[$line['last_status_id']];*/
 		}
 		return $result;
 	}
