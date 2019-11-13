@@ -34,6 +34,8 @@ DELETE FROM authority_groups;
 DELETE FROM modules;
 DELETE FROM logs;
 
+DELETE FROM mail_transaction;
+
 
 INSERT INTO actes_natures VALUES (3, 'AI', 'Arretes individuelles');
 INSERT INTO actes_natures VALUES (1, 'DE', 'Deliberations');
