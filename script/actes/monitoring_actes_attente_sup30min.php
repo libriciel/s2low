@@ -12,13 +12,14 @@ $subject="Transaction actes a l etat en attente";
 
 $retour=0;
 $message="OK";
-$limit=10;
 $last_status="2";
+$interval="10";
+
 $timestamp=time()-(30*60);
 
-$sql_alert_Last_reception="SELECT NOW()-MAX(date) > INTERVAL '10 minutes' FROM actes_transactions_workflow WHERE status_id =3";
+$sql_alert_Last_transmission= "SELECT NOW()-MAX(date) > INTERVAL '" . $interval . " minutes' FROM actes_transactions_workflow WHERE status_id =3";
 
-$alert_last_transmission=$sqlQuery->queryOne($sql_alert_Last_reception);
+$alert_last_transmission=$sqlQuery->queryOne($sql_alert_Last_transmission);
 
 $sql="SELECT count(*) ".
     "FROM actes_envelopes INNER JOIN actes_transactions ON actes_envelopes.id = actes_transactions.envelope_id ".
@@ -31,7 +32,7 @@ $nb_transac=$sqlQuery->queryOne($sql);
 if(($nb_transac > 0) && $alert_last_transmission) {
     $message = "CRITICAL";
     $retour = 2;
-    mail($email, $subject, "ATTENTION : Aucun message transmis depuis 10 minutes.\n $nb_transac transactions a etat en attente sur S2LOW depuis plus de 30 minutes. La limite est a $limit actes a etat en attente.");
+    mail($email, $subject, "ATTENTION : Aucun message transmis depuis $interval minutes.\n $nb_transac transactions a etat en attente sur S2LOW depuis plus de 30 minutes.");
 }
 
 echo "$message - $nb_transac etat en attente de plus de 30 min\n";
