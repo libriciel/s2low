@@ -4,8 +4,20 @@
  */
 
 require_once ( __DIR__."/../../init/init.php");
-$idtransaction = 1;
-$status = 16;
+
+if(!(count($argv)==3)){
+    echo "Nombre de paramètres incorrects.\nUsage : php actes-change-status-transaction.php idtransation status\n";
+    return 1;
+}
+
+$idtransaction = (int) $argv[1]; #1;
+$status = (int) $argv[2]; #16;
+
+if(!(strval($idtransaction) == $argv[1] ) || !(strval($status) == $argv[2]) ){
+    echo "Les paramètres doivent être des entiers\n";
+    return 1;
+}
+
 $message = "Changement de statut realise manuellement par l'administrateur";
 $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 
