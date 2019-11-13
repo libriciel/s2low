@@ -18,6 +18,7 @@
 - Envoi des fichier PES Acquit dans le cloud
 - Renommage des fichiers du certificat d'horodatage de tedetis_timestamp_XXX en s2low_timestamp_XXX  
 - La constante IMAGE_FOR_STAMP a été ajoutée. Elle permet de configurer l'image utilisée pour les tampons. #522
+- Création de groupes supervisor  #524
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
