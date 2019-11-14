@@ -5,13 +5,14 @@
 
 require_once ( __DIR__."/../../init/init.php");
 
-if(!(count($argv)==3)){
-    echo "Nombre de paramètres incorrects.\nUsage : php actes-change-status-transaction.php idtransation status\n";
+$nbParams = count($argv) - 1;
+if(!($nbParams==2)){
+    echo "Nombre de paramètres incorrect. ($nbParams fourni(s), 2 attendus)\nUsage : php actes-change-status-transaction.php idtransation status\n";
     return 1;
 }
 
-$idtransaction = (int) $argv[1]; #1;
-$status = (int) $argv[2]; #16;
+$idtransaction = (int) $argv[1];
+$status = (int) $argv[2];
 
 if(!(strval($idtransaction) == $argv[1] ) || !(strval($status) == $argv[2]) ){
     echo "Les paramètres doivent être des entiers\n";
