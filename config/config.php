@@ -274,8 +274,11 @@ if (! defined("KEEP_NB_MONTHS_IN_LOGS")){
 	define("KEEP_NB_MONTHS_IN_LOGS",6);
 }
 
+if (!defined("WORKSPACE_DIRECTORY")){
+    define("WORKSPACE_DIRECTORY","/data/tdt-workspace/");
+}
 if (!defined("EXPORT_LOGS_DIRECTORY")){
-	define("EXPORT_LOGS_DIRECTORY","/data/tdt-workspace/logs-export/");
+	define("EXPORT_LOGS_DIRECTORY",WORKSPACE_DIRECTORY."logs-export/");
 }
 
 
@@ -376,22 +379,22 @@ if(!defined('ACTES_TDT_MAIL_ADDRESS')){
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
 if(!defined('ACTES_FILES_UPLOAD_ROOT')){
-        define('ACTES_FILES_UPLOAD_ROOT', '/data/tdt-workspace/actes/uploads');
+        define('ACTES_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY.'actes/uploads');
 }
 
 // Répertoire de stockage des fichiers constituant les lots
 if(!defined('ACTES_BATCHES_UPLOAD_ROOT')){
-        define('ACTES_BATCHES_UPLOAD_ROOT', '/data/tdt-workspace/actes/batchs');
+        define('ACTES_BATCHES_UPLOAD_ROOT', WORKSPACE_DIRECTORY.'actes/batchs');
 }
 
 // Répertoire temporaire de stockage des réponses du ministère par mail
 if(!defined('ACTES_RESPONSE_TMP_LOCAL_PATH')){
-    define('ACTES_RESPONSE_TMP_LOCAL_PATH', '/data/tdt-workspace/actes/response_tmp');
+    define('ACTES_RESPONSE_TMP_LOCAL_PATH', WORKSPACE_DIRECTORY.'actes/response_tmp');
 }
 
 // Répertoire temporaire de stockage des réponses en erreur du ministère
 if(!defined('ACTES_RESPONSE_ERROR_PATH')){
-    define('ACTES_RESPONSE_ERROR_PATH', '/data/tdt-workspace/actes/response_error');
+    define('ACTES_RESPONSE_ERROR_PATH', WORKSPACE_DIRECTORY.'actes/response_error');
 }
 
 
@@ -446,31 +449,31 @@ if (! defined("ACTES_TYPE_PAR_NATURE")){
 ///// Paramètres module Helios /////
 ////////////////////////////////////
 if(!defined('HELIOS_FILES_ROOT')){
-	define('HELIOS_FILES_ROOT', '/data/tdt-workspace/helios/');
+	define('HELIOS_FILES_ROOT', WORKSPACE_DIRECTORY.'helios/');
 }
 
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('HELIOS_FILES_UPLOAD_ROOT')){
-	define('HELIOS_FILES_UPLOAD_ROOT', '/data/tdt-workspace/helios/sending/');
+	define('HELIOS_FILES_UPLOAD_ROOT', HELIOS_FILES_ROOT.'sending/');
 }
 // Repertoire de stockage des reponses
 if(!defined('HELIOS_RESPONSES_ROOT')){
-	define('HELIOS_RESPONSES_ROOT', '/data/tdt-workspace/helios/response/');
+	define('HELIOS_RESPONSES_ROOT', HELIOS_FILES_ROOT.'response/');
 }
 
 // Repertoire de stockage des reponses en erreur
 if(!defined('HELIOS_RESPONSES_ERROR_PATH')){
-	define('HELIOS_RESPONSES_ERROR_PATH', '/data/tdt-workspace/helios/response_error/');
+	define('HELIOS_RESPONSES_ERROR_PATH', HELIOS_FILES_ROOT.'response_error/');
 }
 
 
 // Repertoire de stockage des fichiers temporaires à envoyer au FTP
 if(!defined('HELIOS_FILES_UPLOAD_TMP')){
-	define('HELIOS_FILES_UPLOAD_TMP', '/data/tdt-workspace/helios/sending-tmp/');
+	define('HELIOS_FILES_UPLOAD_TMP', HELIOS_FILES_ROOT.'sending-tmp/');
 }
 
 if(!defined('HELIOS_COUNTER_FILE')){
-	define('HELIOS_COUNTER_FILE',"/data/tdt-workspace/helios/counter.txt");
+	define('HELIOS_COUNTER_FILE',HELIOS_FILES_ROOT."counter.txt");
 }
 
 if(!defined("HELIOS_ZIP_BEFORE_SEND")){
@@ -512,7 +515,7 @@ if(!defined('HELIOS_FTP_RESPONSE_SERVER_PATH')){
 }
 
 if(!defined('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH')){
-	define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH','/data/tdt-workspace/helios/response_tmp/');
+	define('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH',HELIOS_FILES_ROOT.'response_tmp/');
 }
 
 if(!defined('HELIOS_UPSTART_TOUCH_FILE')){
@@ -556,7 +559,7 @@ if (!defined("HELIOS_ENABLE_SIGNATURE_TECHNIQUE")){
 }
 
 if (!defined("HELIOS_OCRE_FILE_PATH")){
-	define("HELIOS_OCRE_FILE_PATH","/data/tdt-workspace/helios/ocre/");
+	define("HELIOS_OCRE_FILE_PATH",HELIOS_FILES_ROOT."ocre/");
 }
 
 if (!defined("HELIOS_OCRE_EXPORT_URL")){
@@ -579,7 +582,7 @@ if ( ! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")){
 ////////////////////////////////////////
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
-	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/uploads/etat_civil');
+	define('ETAT_CIVIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY.'uploads/etat_civil');
 }
 
 ///////////////////////////////////
@@ -587,7 +590,7 @@ if(!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')){
 ///////////////////////////////////
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if(!defined('MAIL_FILES_UPLOAD_ROOT')){
-	define('MAIL_FILES_UPLOAD_ROOT', '/data/tdt-workspace/mail/');
+	define('MAIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY.'mail/');
 }
 
 if(!defined('MAIL_TEDETIS_FROM')){
@@ -621,17 +624,17 @@ Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par
 
 //Répertoire pour les DIA utilisé dans S²low
 if(!defined("DIA_UPLOAD_PATH")){
-	define("DIA_UPLOAD_PATH","/data/tdt-workspace/dia/upload");
+	define("DIA_UPLOAD_PATH",WORKSPACE_DIRECTORY."dia/upload");
 }
 
 //Répertoire pour les DIA reçu via PEC/PRESTO
 if(!defined("DIA_DELIVERY_PATH")){
-	define("DIA_DELIVERY_PATH","/data/tdt-workspace/dia/delivery");
+	define("DIA_DELIVERY_PATH",WORKSPACE_DIRECTORY."dia/delivery");
 }
 
 //Répertoire pour les envois vers PEC/PRESTO
 if(!defined("DIA_TO_PRESTO")){
-	define("DIA_TO_PRESTO","/data/tdt-workspace/dia/to-presto");
+	define("DIA_TO_PRESTO",WORKSPACE_DIRECTORY."dia/to-presto");
 }
 
 if(!defined("DIA_UPSTART_TOUCH_FILE")){
