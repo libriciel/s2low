@@ -35,4 +35,9 @@ class MailTransactionSQL extends SQL {
 		return boolval($this->queryOne($sql,$fn_download));
 	}
 
+	public function getIdFromFnDownload($fn_download){
+		$sql = "SELECT id FROM mail_transaction WHERE fn_download=? ";
+		return $this->queryOne($sql,$fn_download);
+	}
+
 }

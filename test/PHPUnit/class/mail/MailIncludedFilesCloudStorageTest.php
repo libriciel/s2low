@@ -2,18 +2,10 @@
 
 class MailIncludedFilesCloudStorageTest extends S2lowTestCase {
 
-	const FN_DOWNLOAD_PAYLOAD = "fn_download_test";
+	use MailsecUtilitiesTestTrait;
 
 	private function getMailIncludedFilesCloudStorage(){
 		return $this->getObjectInstancier()->get(MailIncludedFilesCloudStorage::class);
-	}
-
-	private function createMailTransaction() : int {
-		return $this->getSQLQuery()->queryOne(
-			"INSERT INTO mail_transaction(user_id,objet,message,date_envoi,fn_download,status) " .
-			" VALUES (?,?,?,now(),?,?) RETURNING id",
-			1,"test","message",self::FN_DOWNLOAD_PAYLOAD,"aucune confirmation"
-		);
 	}
 
 	public function testGetContainerName(){
@@ -35,7 +27,7 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase {
 		$this->getObjectInstancier()->set('mail_files_upload_root',sys_get_temp_dir());
 		$mail_transaction_id = $this->createMailTransaction();
 		$this->assertEquals(
-			sys_get_temp_dir()."/".self::FN_DOWNLOAD_PAYLOAD."/mail.zip",
+			$this->getArchivePath(sys_get_temp_dir()),
 			$this->getMailIncludedFilesCloudStorage()->getFilePathOnDisk($mail_transaction_id)
 		);
 	}
@@ -51,9 +43,9 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase {
 
 	public function testGetFilePathOnCloudWithFileOnDiskPath(){
 		$this->assertEquals(
-			"/tmp/".self::FN_DOWNLOAD_PAYLOAD,
+			$this->fn_download_payload,
 			$this->getMailIncludedFilesCloudStorage()->getFilePathOnCloudWithFileOnDiskPath(
-				"/tmp/".self::FN_DOWNLOAD_PAYLOAD."/mail.zip"
+				$this->getArchivePath()
 			)
 		);
 	}
@@ -81,14 +73,17 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase {
 	public function testFind(){
 		$tmpFolder = new TmpFolder();
 		$mail_files_upload_root = $tmpFolder->create();
-		mkdir($mail_files_upload_root."/".self::FN_DOWNLOAD_PAYLOAD);
-		file_put_contents($mail_files_upload_root."/".self::FN_DOWNLOAD_PAYLOAD."/mail.zip","test");
+		mkdir($mail_files_upload_root."/".$this->fn_download_payload);
+		file_put_contents(
+			$this->getArchivePath($mail_files_upload_root),
+			"test"
+		);
 		$this->getObjectInstancier()->set('mail_files_upload_root',$mail_files_upload_root);
 		$this->createMailTransaction();
 		$finder = $this->getMailIncludedFilesCloudStorage()->getFinder();
 		$this->assertEquals(1,$finder->count());
 		$this->assertEquals(
-		"$mail_files_upload_root/".self::FN_DOWNLOAD_PAYLOAD."/mail.zip",
+			$this->getArchivePath($mail_files_upload_root),
 			array_keys(iterator_to_array($finder->getIterator()))[0]
 		);
 	}

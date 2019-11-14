@@ -205,7 +205,7 @@ class CloudStorageTest extends S2lowTestCase {
 		$this->assertFileNotExists($file_to_send);
 		$this->assertNbJourDerniereModif();
 		$this->assertLogMessage(
-			"Deleting file : $file_to_send",1
+			"Deleting file : $file_to_send",2
 		);
 	}
 
@@ -226,7 +226,7 @@ class CloudStorageTest extends S2lowTestCase {
 		$this->assertFileExists($file_to_send);
 		$this->assertNbJourDerniereModif();
 		$this->assertLogMessage(
-			"File foo.txt not existing on cloud : not deleted",1
+			"File foo.txt not existing on cloud : not deleted",2
 		);
 	}
 

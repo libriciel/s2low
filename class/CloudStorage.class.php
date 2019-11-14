@@ -142,6 +142,8 @@ class CloudStorage {
 				$this->logger->debug("File {$file->getFilename()} too young to die : not deleted");
 				continue;
 			}
+			$this->logger->debug("File path on cloud : " . $this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath()));
+
 			if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
 				$this->iCloudStorable->getContainerName(),
 				$this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath())

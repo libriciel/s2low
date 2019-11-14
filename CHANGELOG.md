@@ -20,6 +20,7 @@
 - La constante IMAGE_FOR_STAMP a été ajoutée. Elle permet de configurer l'image utilisée pour les tampons. #522
 - Création de groupes supervisor  #524
 - Le mail d'alerte sur le nombre d'actes en "En attente de transmission" n'est désormais envoyé que si aucun acte n'a été transmis dans les 10 dernières minutes. #495
+- Les mails sécurisés peuvent être envoyé dans le cloud #550
 - La constante WORKSPACE_DIRECTORY a été ajoutée. #523
 
 ## Correction

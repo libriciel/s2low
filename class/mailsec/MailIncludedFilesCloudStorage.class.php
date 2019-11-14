@@ -39,7 +39,7 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 
 	public function getFilePathOnCloudWithFileOnDiskPath(string $file_on_disk_path): string
 	{
-		return dirname($file_on_disk_path);
+		return basename(dirname($file_on_disk_path));
 	}
 
 	public function setNotAvailable(int $object_id): void
