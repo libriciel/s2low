@@ -76,11 +76,17 @@ class HeliosController extends Controller {
 
 
 		$file_size = $_FILES['enveloppe']['size'];
+
 		if ($file_size > $this->helios_max_upload_size) {
 			$message = "Taille de fichier supérieure à la limite autorisée (".
 				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
 			throw new Exception($message);
 		}
+
+		if($file_size == 0) {
+		    $message = "Fichier vide";
+            throw new Exception($message);
+        }
 
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
