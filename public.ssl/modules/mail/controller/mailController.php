@@ -418,6 +418,10 @@ class mailController {
 			$this->logError();
 	      return false;
 	    }
+		foreach ($mailIncludedFiles as $mailIncludeFile)
+		{
+			unlink($newdir.$mailIncludeFile->getFileName());
+		}
   	}
   	else 
   	{

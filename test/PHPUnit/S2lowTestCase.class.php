@@ -67,8 +67,6 @@ abstract class S2lowTestCase extends TestCase {
 		$this->getObjectInstancier()->set('redis_server','localhost');
 		$this->getObjectInstancier()->set('redis_port','');
 
-
-
 		$get = array();
         $post = array();
         $request = array();

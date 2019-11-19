@@ -108,7 +108,17 @@
     </table>
     <?php 
     if ($mailIncludeFileArray)
-    { ?>		
+    {
+
+        //C'est super dégeulasse...
+		/** @var CloudStorage $cloudStorage */
+		$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+			->get(CloudStorageFactory::class)
+			->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+		$mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+
+
+		?>
             <h2>Pièces jointes&nbsp;:</h2>
             <table class="transactions_list table table-bordered table-striped">
                 <thead>
@@ -131,7 +141,7 @@
             <?php }?>
                     <tr>
                         <td>&lt;Télécharger tous les fichiers&gt;</td>
-                        <td><?php echo filesize(MAIL_FILES_UPLOAD_ROOT.$fndownload.'/mail.zip'); ?></td>
+                        <td><?php echo filesize($mailzip_filepath); ?></td>
                         <td>zip</td>
                         <td><a href="template/download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
                     </tr>

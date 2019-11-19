@@ -128,10 +128,20 @@ $openStackConfigHeliosAcquit->openstack_region = HELIOS_ACQUIT_OPENSTACK_REGION;
 $openStackConfigHeliosAcquit->openstack_swift_container_prefix = HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
 
+$openStackConfigMailsec = new OpenStackConfig();
+$openStackConfigMailsec->openstack_authentication_url_v2  = MAILSEC_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigMailsec->openstack_username = MAILSEC_OPENSTACK_USERNAME;
+$openStackConfigMailsec->openstack_password = MAILSEC_OPENSTACK_PASSWORD;
+$openStackConfigMailsec->openstack_tenant = MAILSEC_OPENSTACK_TENANT;
+$openStackConfigMailsec->openstack_region = MAILSEC_OPENSTACK_REGION;
+$openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+
+
 $openStackFactory = new OpenStackFactory();
 $openStackFactory->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
 $openStackFactory->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
 $openStackFactory->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
+$openStackFactory->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME,$openStackConfigMailsec);
 
 $objectInstancier->set(OpenStackFactory::class,$openStackFactory);
 
@@ -172,6 +182,9 @@ $objectInstancier->set('ActesImapProperties',$actesImapProperties);
 $objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
 $objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
 $objectInstancier->set('actes_type_pj_is_mandatory',ACTES_TYPE_PJ_IS_MANDATORY);
+
+
+$objectInstancier->set('mail_files_upload_root',MAIL_FILES_UPLOAD_ROOT);
 
 $objectInstancier->set('pades_valid_url',PADES_VALID_URL);
 $objectInstancier->set('pdf_stamp_url',PDF_STAMP_URL);

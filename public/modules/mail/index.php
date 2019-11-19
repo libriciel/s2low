@@ -50,6 +50,11 @@ $mailIncludeFileArray=MailPeer::GetIncludeFiles($mail_id);
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
+/** @var CloudStorage $cloudStorage */
+$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+	->get(CloudStorageFactory::class)
+	->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+$mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 $doc->DisplayHead();
 
@@ -117,7 +122,7 @@ $doc->DisplayHead();
 		<?php endforeach; ?>
                                 <tr>
                                     <td class="align_left">&lt;Télécharger tous les fichiers&gt; </td>
-                                    <td><?php echo filesize(MAIL_FILES_UPLOAD_ROOT.$fndownload.'/mail.zip'); ?></td>
+                                    <td><?php echo filesize($mailzip_filepath); ?></td>
                                     <td class="force_maj">zip</td>
                                     <td><a href="download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
                                 </tr>

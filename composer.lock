@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23a0c14b5e8f7a7a21a3ab4f44956202",
+    "content-hash": "9465695657675e059c64077c1ded7629",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -2446,7 +2446,8 @@
         "ext-simplexml": "^7.2",
         "ext-redis": "^5.0",
         "ext-pcntl": "^7.2",
-        "ext-libxml": "^7.2"
+        "ext-libxml": "^7.2",
+        "ext-zip": "^1.15"
     },
     "platform-dev": []
 }
