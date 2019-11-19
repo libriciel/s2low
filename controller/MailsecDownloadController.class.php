@@ -54,6 +54,7 @@ class MailsecDownloadController extends Controller {
 		if ($filename != self::DEFAULT_ARCHIVE_NAME && $tmp_folder){
 			$tmpFolder->delete($tmp_folder);
 		}
+		exit_wrapper();
 		return true;
 	}
 
