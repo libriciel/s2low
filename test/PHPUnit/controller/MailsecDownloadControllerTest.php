@@ -30,7 +30,9 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
 		$this->getObjectInstancier()->get(Environnement::class)->get()->set('root',$this->fn_download_payload);
 
 		ob_start();
-		$mailsecDownloadController->downloadAction();
+		try {
+			$mailsecDownloadController->downloadAction();
+		} catch (Exception $e){ /* Nothing to do */}
 		$contents = ob_get_contents();
 		ob_end_clean();
 		$this->assertStringContainsString("test",$contents);
@@ -60,7 +62,9 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
 		$this->getObjectInstancier()->get(Environnement::class)->get()->set('root',$this->fn_download_payload);
 
 		ob_start();
-		$mailsecDownloadController->downloadAction();
+		try {
+			$mailsecDownloadController->downloadAction();
+		} catch (Exception $e){ /* Nothing to do */}
 		$contents = ob_get_contents();
 		ob_end_clean();
 
