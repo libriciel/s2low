@@ -23,7 +23,8 @@
 - Les mails sécurisés peuvent être envoyé dans le cloud #550
 - La constante WORKSPACE_DIRECTORY a été ajoutée. #523
 - Un message d'erreur empêche d'uploader un PES aller vide #547
-
+- Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
+ 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
 - L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait en compte les messages 2-2)
