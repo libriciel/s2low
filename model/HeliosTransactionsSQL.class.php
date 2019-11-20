@@ -111,7 +111,7 @@ class HeliosTransactionsSQL extends SQL {
 		$sql = "SELECT status_id " .
 				" FROM helios_transactions_workflow " .
 				" WHERE transaction_id=? " .
-				" ORDER BY date DESC LIMIT 1";
+				" ORDER BY date DESC, id DESC LIMIT 1";
 		return $this->queryOne($sql,$id);
 	}
 
