@@ -107,33 +107,32 @@ class ActesNotification {
 		}
 	}
 
-	private function sendMail($transactionInfo,$emails,$withFile,$add_url_recup,array $fichiers_tamponnees){
-		if (! $emails){
+	private function sendMail($transactionInfo, $email, $withFile, $add_url_recup, array $fichiers_tamponnees){
+		if (! $email){
 			return;
 		}
 
 		$mailer = $this->mailerFactory->getInstance();
 
-		$err = $mailer->addRecipient($emails);
+		$err = $mailer->addRecipient($email);
         if (! $err){
-			$this->logger->info("$emails invalide !");
-        }
-
-        if($withFile && ! $add_url_recup){
-            foreach($fichiers_tamponnees as $fichier){
-                $mailer->addFile($fichier);
-            }
+			$this->logger->info("$email invalide !");
         }
 
         $status_info = $this->actesTransactionsSQL->getStatusInfo($transactionInfo['id'],4);
         if ($status_info) {
             $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
-            $mailer->addStringAsFile($ar_actes_filename, $status_info['flux_retour']);
+            $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
             $pdf = new ActesPdf();
             $pdf->addEmailNotificationField();
             $pdf->create_pdf($transactionInfo['id']);
             $monpdf = $pdf->output("bordereau_acquittement", "S");
             $mailer->addStringAsFile("bordereau_acquittement.pdf", $monpdf);
+            if($withFile && ! $add_url_recup ){
+                foreach($fichiers_tamponnees as $fichier){
+                    $mailer->addFile($fichier);
+                }
+            }
         }
 
         $mailContent = $this->getMailContent($transactionInfo,$add_url_recup);
@@ -151,7 +150,7 @@ class ActesNotification {
                 $this->actes_appli_trigramme,
                 $transactionInfo['unique_id'],
                 $transactionInfo['id'],
-                $emails,
+                $email,
                 $authority_info['siren'],
                 $transactionInfo['type']
             );
