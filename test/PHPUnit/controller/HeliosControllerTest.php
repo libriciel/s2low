@@ -158,8 +158,7 @@ class HeliosControllerTest extends S2lowTestCase {
             'error' => UPLOAD_ERR_OK
         );
 
-        $this->expectedError("Fichier vide");
-        //$this->expectOutputRegex("#Fichier vide>#");
+        $this->expectedError("Le fichier présenté est vide (0 octet)");
         $this->importAPI();
     }
 

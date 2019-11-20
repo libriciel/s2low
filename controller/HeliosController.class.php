@@ -84,7 +84,7 @@ class HeliosController extends Controller {
 		}
 
 		if($file_size == 0) {
-		    $message = "Fichier vide";
+		    $message = "Le fichier présenté est vide (0 octet)";
             throw new Exception($message);
         }
 
