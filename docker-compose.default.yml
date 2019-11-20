@@ -7,7 +7,6 @@ services:
           - dgcl
           - dgfip
           - services
-          - cloud
         environment:
             PUBLISH_SIMULATEUR: "true"
         ports:
@@ -24,39 +23,27 @@ services:
             - POSTGRES_DB=s2lowdb
 
     db_test:
-        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        build:
+            context: ./docker-resources/
+            dockerfile: Dockerfile-postgres
         environment:
             - POSTGRES_USER=s2lowtestuser
             - POSTGRES_PASSWORD=s2lowtestpassword
             - POSTGRES_DB=s2lowdbtest
-
     clamav:
         image: mkodockx/docker-clamav
         networks:
           - services
 
     pades-valid:
-        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.3.2
+        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.1.1
         networks:
           - services
 
     pdf-stamp:
-        image: gitlab.libriciel.fr:4567/outils/pdf-stamp:2.2.1
+        image: gitlab.libriciel.fr:4567/outils/pdf-stamp:1.3.0
         networks:
           - services
-
-    redis:
-        image: redis:3.2
-        restart: always
-        command: redis-server --appendonly yes
-        networks:
-            - services
-
-    beanstalkd:
-        image: schickling/beanstalkd
-        restart: always
-        networks:
-            - services
 
     ftp:
         image: mcreations/ftp
@@ -121,7 +108,6 @@ networks:
   dgcl:
   dgfip:
   services:
-  cloud:
 
 volumes:
   dgfip:
