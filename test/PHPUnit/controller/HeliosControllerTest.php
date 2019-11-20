@@ -143,6 +143,25 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->importAPI();
 	}
 
+    /**
+     * @preserveGlobalState disabled
+     * @runInSeparateProcess
+     */
+    public function testEmptyFile(){
+        $tmp_file = $this->testStreamUrl."/empty_file.xml";
+        file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/empty_file.xml"));
+
+        $_FILES['enveloppe'] = array(
+            'name'=>'empty_file.xml',
+            'tmp_name'=>$tmp_file,
+            'size'=>filesize($tmp_file),
+            'error' => UPLOAD_ERR_OK
+        );
+
+        $this->expectedError("Le fichier présenté est vide (0 octet)");
+        $this->importAPI();
+    }
+
 	/**
 	 * @preserveGlobalState disabled
 	 * @runInSeparateProcess

@@ -22,6 +22,7 @@
 - Le mail d'alerte sur le nombre d'actes en "En attente de transmission" n'est désormais envoyé que si aucun acte n'a été transmis dans les 10 dernières minutes. #495
 - Les mails sécurisés peuvent être envoyé dans le cloud #550
 - La constante WORKSPACE_DIRECTORY a été ajoutée. #523
+- Un message d'erreur empêche d'uploader un PES aller vide #547
 
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
