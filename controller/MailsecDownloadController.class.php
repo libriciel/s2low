@@ -35,8 +35,9 @@ class MailsecDownloadController extends Controller {
 			$tmp_folder = $tmpFolder->create();
 			$zipArchive = new ZipArchive();
 			$zipArchive->open($filepath);
-			$zipArchive->extractTo($tmp_folder,$filename);
-			$filepath = $tmp_folder."/".$filename;
+            $filenameInZip = iconv('IBM437','UTF-8',$filename);
+            $zipArchive->extractTo($tmp_folder,$filenameInZip);
+			$filepath = $tmp_folder."/".$filenameInZip;
 		}
 
 		$finfo = finfo_open(FILEINFO_MIME_TYPE|FILEINFO_MIME_ENCODING);
