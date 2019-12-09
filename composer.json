@@ -56,7 +56,8 @@
     "phpunit/php-timer": "^2.1",
     "phpunit/php-file-iterator": "^2.0",
     "doctrine/instantiator": "^1.2",
-    "phpunit/php-token-stream": "^3.1"
+    "phpunit/php-token-stream": "^3.1",
+    "ext-iconv": "*"
   },
   "scripts": {
     "test": "phpunit",
