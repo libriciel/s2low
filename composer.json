@@ -37,7 +37,8 @@
     "ext-pcntl": "^7.2",
     "ext-libxml": "^7.2",
     "symfony/finder": "^4.3",
-    "ext-zip": "^1.15"
+    "ext-zip": "^1.15",
+    "ext-iconv": "*"
   },
 
   "require-dev": {
