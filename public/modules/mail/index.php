@@ -54,7 +54,10 @@ $doc->setTitle(WEBSITE_TITLE);
 $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
 	->get(CloudStorageFactory::class)
 	->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-$mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+
+if($fndownload) {
+    $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+}
 
 $doc->DisplayHead();
 
