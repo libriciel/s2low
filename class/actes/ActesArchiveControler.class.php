@@ -319,7 +319,13 @@ class ActesArchiveControler {
 			$typologie[] = $annexe['type_pj']?:$default_type;
 		}
 
-		$pastell->modifExternalData($id_d,'type_piece', ['type_pj'=>$typologie]);
+		try {
+            $pastell->modifExternalData($id_d, 'type_piece', ['type_pj' => $typologie]);
+        }
+		catch (Exception $e){
+		    // Le champ n'est pas obligatoire, et ne peut être posté en v2 s'il n'y a pas de Tdt dans le flux
+            // actes-generiques utilisé.
+        }
 
 
 		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
