@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9465695657675e059c64077c1ded7629",
+    "content-hash": "1884ffa3e15018f47b58f4c8118c0783",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -875,7 +875,7 @@
             "time": "2019-03-17T17:37:11+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.6.5",
             "source": {
                 "type": "git",
@@ -2447,7 +2447,10 @@
         "ext-redis": "^5.0",
         "ext-pcntl": "^7.2",
         "ext-libxml": "^7.2",
-        "ext-zip": "^1.15"
+        "ext-zip": "^1.15",
+        "ext-iconv": "*"
     },
-    "platform-dev": []
+    "platform-dev": {
+        "ext-iconv": "*"
+    }
 }
