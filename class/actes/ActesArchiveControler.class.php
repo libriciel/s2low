@@ -319,7 +319,17 @@ class ActesArchiveControler {
 			$typologie[] = $annexe['type_pj']?:$default_type;
 		}
 
-		$pastell->modifExternalData($id_d,'type_piece', ['type_pj'=>$typologie]);
+		try {
+            $pastell->modifExternalData($id_d, 'type_piece', ['type_pj' => $typologie]);
+        }
+		catch (Exception $e){
+		    if(! ($e->getMessage()==="Erreur HTTP : Code 400")){
+		        throw $e;
+            }
+		    // Le champ n'est pas obligatoire. Si côté Pastell n'y a pas de Tdt dans le flux actes-generiques utilisé,
+            // ou si la classification est absente, Pastell renvoie une erreur 400.
+            $this->logger->warning("Le type des pièces jointes n'a pu être enregistré (Message Pastell :{$e->getMessage()})");
+        }
 
 
 		$result = $pastell->sendSAE($id_d,$pastellProperties->actes_action);
