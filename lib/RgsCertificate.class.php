@@ -19,18 +19,26 @@ class RgsCertificate {
 		return $this->last_message;
 	}
 
-	public function isRgsCertificate($x509_pem_certificate){
-		$tmp_file = "/tmp/s2low-lib-rgscertificate-".mt_rand(0,mt_getrandmax()).".pem";
-		file_put_contents($tmp_file,$x509_pem_certificate);
+	public function isRgsCertificate($x509_pem_certificate,$clientCertChain){
+        $indice = mt_rand(0, mt_getrandmax());
+        $tmp_cert = "/tmp/s2low-lib-rgscertificate-". $indice .".pem";
+		file_put_contents($tmp_cert,$x509_pem_certificate);
+
+		$tmp_chain = "/tmp/s2low-lib-certchain-". $indice .".pem";
+        file_put_contents($tmp_chain,$clientCertChain);
+
 
 		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
-		$command = "cat $tmp_file | {$this->openssl_path} verify -verbose -CApath {$this->validca_path} 2>&1";
+		$command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} -untrusted {$tmp_chain} {$tmp_cert} 2>&1";
+
 		exec($command,$output,$return_var);
-		unlink($tmp_file);
+		unlink($tmp_cert);
+		unlink($tmp_chain);
+
 
 		$output = implode("\n",$output);
 
-		if (preg_match("#stdin: OK#",$output)){
+		if (preg_match("#{$tmp_cert}: OK#",$output)){
 			$result = true;
 		} else {
 			$result = false;
