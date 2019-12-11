@@ -275,7 +275,7 @@ class mailController {
 	   
 		//HACK
 		if (empty($_POST) && empty($_FILES)){
-			$this->lastError = "le fichier ".$file['name']." est trop gros (".ini_get('upload_max_filesize')." maximum)" ;
+			$this->lastError = "Les pièces jointes sont trop volumineuses (80 Mo maximum)" ;
 	       	return false;
 		}
 
