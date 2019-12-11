@@ -32,7 +32,8 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 		$adminUtilitiesCertificateController = $this->getObjectInstancier()->get(AdminUtilitiesCertificateController::class);
 		$adminUtilitiesCertificateController->setFiles([
 			'certificat'=> [
-				'tmp_name' => __DIR__.'/fixtures/user_test.pem'
+				'tmp_name' => __DIR__.'/fixtures/contact@example.org.pem',
+                'tmp_chaine' => __DIR__.'/fixtures/ca_users_chaine.pem'
 			]
 		]);
 		try {
@@ -41,7 +42,7 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 
 		$result = $environnement->session()->get(AdminUtilitiesCertificateController::SESSION_KEY);
 
-		$this->assertEquals('/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles', $result['certificate_info']['name']);
+		$this->assertEquals('/C=FR/ST=Herault/L=Montpellier/O=Libriciel/OU=Demonstration/CN=s2low_certiftest/emailAddress=contact@example.org', $result['certificate_info']['name']);
 		$this->assertEquals(1, $result['nb_users']);
 
 	}
@@ -77,7 +78,8 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 		$adminUtilitiesCertificateController = $this->getObjectInstancier()->get(AdminUtilitiesCertificateController::class);
 		$adminUtilitiesCertificateController->setFiles([
 			'certificat'=> [
-				'tmp_name' => __DIR__.'/fixtures/user1.pem'
+                'tmp_name' => __DIR__.'/fixtures/contact@example.org.pem',
+                'tmp_chaine' => __DIR__.'/fixtures/ca_users_chaine.pem'
 			]
 		]);
 		try {
