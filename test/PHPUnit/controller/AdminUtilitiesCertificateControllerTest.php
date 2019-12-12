@@ -78,7 +78,7 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase {
 		$adminUtilitiesCertificateController = $this->getObjectInstancier()->get(AdminUtilitiesCertificateController::class);
 		$adminUtilitiesCertificateController->setFiles([
 			'certificat'=> [
-                'tmp_name' => __DIR__.'/fixtures/contact@example.org.pem',
+                'tmp_name' => __DIR__.'/fixtures/contactSansUser@example.org.pem',
                 'tmp_chaine' => __DIR__.'/fixtures/ca_users_chaine.pem'
 			]
 		]);
