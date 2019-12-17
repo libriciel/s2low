@@ -14,11 +14,11 @@ function printStatus(array $actesStatuts){
     return $message;
 }
 
-function checkChange($transaction_id,$actesTransactions,$actesStatuts,$status_id){
+function checkChange($transaction_id,$status_id,$actesTransactions,$actesStatuts){
     $ancienStatut = $actesStatuts[$actesTransactions->getlaststatusforid($transaction_id)];
     $nouveauStatut=$actesStatuts[$status_id];
 
-    echo "La transaction $transaction_id passera de $ancienStatut à $nouveauStatut\n";
+    echo "La transaction $transaction_id passera de \"$ancienStatut\" à \"$nouveauStatut\"\n";
     echo "Etes-vous sûr de vouloir continuer ? Tapez O pour continuer : ";
 
     $stdin = fopen('php://stdin', 'r');
@@ -60,8 +60,14 @@ if(!array_key_exists($status_id,$actesStatuts)){
 
 $actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 
-if(checkChange($transaction_id,$actesTransactions,$transaction_id,$actesStatuts,$status_id)){
-    $actesTransactions->updateStatus($transaction_id,$status_id,"Modification manuelle du status");
+if(!$actesTransactions->getInfo($transaction_id)){
+    $s2LowLogger->error("transaction_id incorrect : aucune transaction trouvée");
+    exit(-4);
+}
+
+
+if(checkChange($transaction_id,$status_id,$actesTransactions,$actesStatuts)){
+    $actesTransactions->updateStatus($transaction_id,$status_id,"Modification manuelle du statut");
     $s2LowLogger->info("Modification de la transaction $transaction_id : status $status_id");
 }
 
