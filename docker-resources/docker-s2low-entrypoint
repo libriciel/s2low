@@ -55,14 +55,7 @@ fi
 /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 # Ajout des ACs du ministère
-cd /etc/s2low/ssl/
-wget https://ressources.libriciel.fr/s2low/certificat-mi-chaine.pem
-wget https://ressources.libriciel.fr/s2low/ac-racine-mi.pem
-wget https://ressources.libriciel.fr/s2low/serveur-1e.pem
-cd /etc/ssl/certs/
-ln -s /etc/s2low/ssl/ac-racine-mi.pem
-ln -s /etc/s2low/ssl/serveur-1e.pem
-c_rehash
+/usr/local/bin/recup_ac_ministere /etc/s2low/ssl/ /etc/ssl/certs/
 
 
 #On attend que la base de données soit accessible avant de l'initialiser
