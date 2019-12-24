@@ -55,7 +55,7 @@ fi
 /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 # Ajout des ACs du ministère
-/usr/local/bin/recup_ac_ministere /etc/s2low/ssl/ /etc/ssl/certs/
+/usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
 
 
 #On attend que la base de données soit accessible avant de l'initialiser
