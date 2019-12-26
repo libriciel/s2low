@@ -2,20 +2,22 @@
 
 if [ -z "$1" ] || [ -z "$2" ];
 then
+	echo "Erreur : nombre de paramètre incorrect (2 attendus)";
 	echo "Syntaxe : ./recup_ac_ministere.sh CertPath CAPath";
+	echo "Télécharge les autorités de certification du ministère de l'intérieur (@ctes) dans CertPath et crée un lien symbolique dans CAPath";
 	exit 1;
 fi
 
 
 if [[ $1 != /* ]] || [[ $1 != /* ]];
 then
-	echo "Les répertoires doivent être absolus";
+	echo "Erreur : Les chemins des répertoires doivent être absolus";
 	exit 2;
 fi
 
 if [ ! -d "$1" ] || [ ! -d "$2" ];
 then
-	echo "Les deux répertoires doivent exister";
+	echo "Erreur : Les deux répertoires doivent exister";
 	exit 3;
 fi
 
