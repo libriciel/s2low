@@ -124,7 +124,10 @@ RUN mkdir -p /etc/apache2/ssl/ && \
 #Mise en ce place du systeme de recuperation des CRL et AC
 #TODO voir comment gérer la récupération du validca
 ADD ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
+ADD ./docker-resources/certificate/recup_ac_ministere.sh /usr/local/bin/recup_ac_ministere.sh
 RUN chmod +x /usr/local/bin/recup_crl.sh
+RUN chmod +x /usr/local/bin/recup_ac_ministere.sh
+
 RUN	/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
 # Pour libersign
