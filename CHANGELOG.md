@@ -24,6 +24,7 @@
 - La constante WORKSPACE_DIRECTORY a été ajoutée. #523
 - Un message d'erreur empêche d'uploader un PES aller vide #547
 - Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
+- Ajout d'un script permettant de changer le statut d'une transaction actes
  
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
