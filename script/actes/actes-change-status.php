@@ -14,7 +14,7 @@ function printStatus(array $actesStatuts){
     return $message;
 }
 
-function checkChange($transaction_id,$status_id,$actesTransactions,$actesStatuts){
+function checkChange($transaction_id,$status_id,ActesTransactionsSQL $actesTransactions,$actesStatuts){
     $ancienStatut = $actesStatuts[$actesTransactions->getlaststatusforid($transaction_id)];
     $nouveauStatut=$actesStatuts[$status_id];
 
