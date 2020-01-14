@@ -13,6 +13,16 @@ class RgsConnexion {
 		$this->setServerGlobal($_SERVER);
 	}
 
+	public function getClientCertChain(){
+	    $i=0;
+	    $clientCertChain='';
+	    while(isset($this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i])){
+	        $clientCertChain .=$this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i];
+	        $clientCertChain .="\n";
+	        $i++;
+        }
+        return $clientCertChain;
+    }
 	public function setOpenSSLPath($openssl_path){
 		$this->openssl_path = $openssl_path;
 	}
@@ -41,7 +51,7 @@ class RgsConnexion {
 		}
 
 		$rgsCertificate = new RgsCertificate($this->openssl_path,$this->rgs_validca_path);
-		$result = $rgsCertificate->isRgsCertificate($this->server_global['SSL_CLIENT_CERT']);
+		$result = $rgsCertificate->isRgsCertificate($this->server_global['SSL_CLIENT_CERT'],$this->getClientCertChain());
 		if (! $result){
 			$this->last_message = $rgsCertificate->getLastMessage();
 		}

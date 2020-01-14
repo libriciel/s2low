@@ -1,8 +1,15 @@
 <?php
 
-class RgsConnexionTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-	/**
+class RgsConnexionTest extends TestCase {
+    private const SSL_CLIENT_VERIFY = 'SSL_CLIENT_VERIFY';
+    private const SUCCESS = "SUCCESS";
+    private const SSL_CLIENT_CERT = 'SSL_CLIENT_CERT';
+    private const SSL_CLIENT_CERT_CHAIN_0 = 'SSL_CLIENT_CERT_CHAIN_0';
+    private const SSL_CLIENT_CERT_CHAIN_1 = 'SSL_CLIENT_CERT_CHAIN_1';
+
+    /**
 	 * @var RgsConnexion
 	 */
 	private $rgsConnexion;
@@ -17,24 +24,56 @@ class RgsConnexionTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testIsRgsConnexionNotVerify(){
-		$server['SSL_CLIENT_VERIFY'] = "ERROR";
+		$server[self::SSL_CLIENT_VERIFY] = "ERROR";
 		$this->rgsConnexion->setServerGlobal($server);
 		$this->assertFalse($this->rgsConnexion->isRgsConnexion());
 	}
 
 	public function testIsRgsConnexionBadCertif(){
-		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$server['SSL_CLIENT_CERT'] = "rogue certificate";
+		$server[self::SSL_CLIENT_VERIFY] = self::SUCCESS;
+		$server[self::SSL_CLIENT_CERT] = "rogue certificate";
 		$this->rgsConnexion->setServerGlobal($server);
 		$this->assertFalse($this->rgsConnexion->isRgsConnexion());
 		$this->assertRegExp("#unable to load certificat#",$this->rgsConnexion->getLastMessage());
 	}
 
 	public function testIsRgsConnexionOK(){
-		$server['SSL_CLIENT_VERIFY'] = "SUCCESS";
-		$server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__."/../lib/fixtures/test/MyClient1.pem");
+		$server[self::SSL_CLIENT_VERIFY] = self::SUCCESS;
+		$server[self::SSL_CLIENT_CERT] = file_get_contents(__DIR__."/../controller/fixtures/contact@example.org.pem");
+		$server[self::SSL_CLIENT_CERT_CHAIN_0] = file_get_contents(__DIR__."/../controller/fixtures/ca_users_chaine.pem");
 		$this->rgsConnexion->setServerGlobal($server);
-		$this->rgsConnexion->setRgsValidCaPath(__DIR__."/../lib/fixtures/test/");
+		$this->rgsConnexion->setRgsValidCaPath(__DIR__."/../controller/fixtures/validca");
 		$this->assertTrue($this->rgsConnexion->isRgsConnexion());
+	}
+
+	public function testIsRgsConnexionAutosignedRoot(){
+        $server[self::SSL_CLIENT_VERIFY] = self::SUCCESS;
+        $server[self::SSL_CLIENT_CERT] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/testS2low.pem");
+        $server[self::SSL_CLIENT_CERT_CHAIN_0] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/ca.cert.pem");
+        $server[self::SSL_CLIENT_CERT_CHAIN_1] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/intermediate.cert.pem");
+        $this->rgsConnexion->setServerGlobal($server);
+        $this->rgsConnexion->setRgsValidCaPath(__DIR__."/../controller/fixtures/validca");
+        $this->assertFalse($this->rgsConnexion->isRgsConnexion());
+    }
+
+    public function testIsRgsConnexionAutosignedRootInCA(){
+        $server[self::SSL_CLIENT_VERIFY] = self::SUCCESS;
+        $server[self::SSL_CLIENT_CERT] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/testS2low.pem");
+        $server[self::SSL_CLIENT_CERT_CHAIN_0] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/ca.cert.pem");
+        $server[self::SSL_CLIENT_CERT_CHAIN_1] = file_get_contents(__DIR__."/fixtures/CertAutosignedRoot/intermediate.cert.pem");
+        $this->rgsConnexion->setServerGlobal($server);
+        $this->rgsConnexion->setRgsValidCaPath(__DIR__."/fixtures/CertAutosignedRoot/CA/");
+        $this->assertTrue($this->rgsConnexion->isRgsConnexion());
+    }
+
+    public function testGetClientCertChain(){
+        $server[self::SSL_CLIENT_CERT_CHAIN_0] = "a";
+        $server[self::SSL_CLIENT_CERT_CHAIN_1] = "b";
+        $server['SSL_CLIENT_CERT_CHAIN_2'] = "c";
+        $server['SSL_CLIENT_CERT_CHAIN_3'] = "d";
+        $server['SSL_CLIENT_CERT_CHAIN_4'] = "e";
+        $this->rgsConnexion->setServerGlobal($server);
+        $expected="a\nb\nc\nd\ne\n";
+        $this->assertEquals($expected,$this->rgsConnexion->getClientCertChain());
 	}
 }
