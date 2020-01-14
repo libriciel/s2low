@@ -13,16 +13,11 @@ class RgsConnexion {
 		$this->setServerGlobal($_SERVER);
 	}
 
-	private function getClientCertChain(){
+	public function getClientCertChain(){
 	    $i=0;
 	    $clientCertChain='';
-	    while(1){
-	        if(isset($this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i])){
-	            $clientCertChain .=$this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i];
-            }
-	        else{
-	            break;
-            }
+	    while(isset($this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i])){
+	        $clientCertChain .=$this->server_global['SSL_CLIENT_CERT_CHAIN_'.$i];
 	        $clientCertChain .="\n";
 	        $i++;
         }

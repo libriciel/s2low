@@ -19,30 +19,36 @@ class RgsCertificate {
 		return $this->last_message;
 	}
 
-	public function isRgsCertificate($x509_pem_certificate,$clientCertChain =null){
-        $indice = mt_rand(0, mt_getrandmax());
-        $tmp_cert = "/tmp/s2low-lib-rgscertificate-". $indice .".pem";
+    /**
+     * @param string $x509_pem_certificate string contenant le certificat à tester
+     * @param string|null $clientCertChain string contenant les certificats intermédiaire et racine
+     * @return bool
+     * @throws Exception
+     */
+
+	public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain =null){
+        $tmpFolder = new TmpFolder();
+        $tmp_folder = $tmpFolder->create();
+
+        $tmp_cert = "$tmp_folder/s2low-lib-rgscertificate.pem";
 		file_put_contents($tmp_cert,$x509_pem_certificate);
 
 		if(!is_null($clientCertChain)) {
-            $tmp_chain = "/tmp/s2low-lib-certchain-" . $indice . ".pem";
+            $tmp_chain = "$tmp_folder/s2low-lib-certchain.pem";
             file_put_contents($tmp_chain, $clientCertChain);
 
-            $command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} -untrusted {$tmp_chain} {$tmp_cert} 2>&1";
+            $command = "{$this->openssl_path} verify -verbose -untrusted {$tmp_chain} -CApath {$this->validca_path} {$tmp_cert} 2>&1";
+            // Explication de la commande sur https://stackoverflow.com/a/26520714/1694298
         }
 		else {
             $command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} {$tmp_cert} 2>&1";
         }
 
-
 		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
 
 		exec($command,$output,$return_var);
-		unlink($tmp_cert);
-		if(isset($tmp_chain)) {
-            unlink($tmp_chain);
-        }
 
+		$tmpFolder->delete($tmp_folder);
 
 		$output = implode("\n",$output);
 
