@@ -33,4 +33,24 @@ class HeliosRetourSQL extends SQL {
 		$this->query($sql,$status, $id);
 	}
 
+    public function getAllIdPESRetourToSendInCloud(){
+        $sql = "SELECT id FROM helios_retour WHERE is_in_cloud=FALSE ORDER BY id";
+        return $this->queryOneCol($sql);
+    }
+
+    public function getFilename($helios_retour_id){
+        $sql = "SELECT filename FROM helios_retour WHERE id=?";
+        return $this->queryOne($sql,$helios_retour_id);
+    }
+
+    public function setPesRetourNotAvailable(int $helios_retour_id){
+        $sql = "UPDATE helios_retour SET not_available=? WHERE id=?";
+        $this->query($sql,true,$helios_retour_id);
+    }
+
+    public function setPesRetourInCloud(int $helios_retour_id): void
+    {
+        $sql = "UPDATE helios_retour SET is_in_cloud=TRUE WHERE id=?";
+        $this->query($sql,$helios_retour_id);
+    }
 }

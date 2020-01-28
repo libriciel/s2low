@@ -75,8 +75,15 @@ $ownerId = $entity->getUserForId($transaction_id);
 $owner = new User($ownerId);
 $owner->init();
 
-$pesAcquitCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
-$path = $pesAcquitCloudStorage->getPath($transaction_id);
+try {
+    $pesAcquitCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
+    $path = $pesAcquitCloudStorage->getPath($transaction_id);
+}
+catch (Exception $e){
+    $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();
+    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    exit ();
+}
 
 
 if (!$entity->sendAcquit(trim($filename))) {

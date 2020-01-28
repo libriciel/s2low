@@ -52,9 +52,14 @@ $entity->init();
 
 $filename=$entity->get("filename");
 
-
-if (!$entity->sendfile($filename)) {
-  $_SESSION["error"] = "Erreur d'envoi du fichier " . HELIOS_RESPONSES_ROOT.$filename . " : " . $entity->getErrorMsg();
-  //header("Location: " . WEBSITE_SSL);
-  exit ();
+try {
+    $pesRetourCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESRetourCloudStorage::class);
+    $filepath = $pesRetourCloudStorage->getPath($retourId);
+} catch (Exception $e){
+    $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : ". $e->getMessage();
+    header("Location: " . WEBSITE_SSL . "/modules/helios/helios_retour.php");
+    exit ();
 }
+
+Helpers::sendFileToBrowser($filepath,$filename, "text/xml");
+

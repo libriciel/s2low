@@ -127,6 +127,13 @@ $openStackConfigHeliosAcquit->openstack_tenant = HELIOS_ACQUIT_OPENSTACK_TENANT;
 $openStackConfigHeliosAcquit->openstack_region = HELIOS_ACQUIT_OPENSTACK_REGION;
 $openStackConfigHeliosAcquit->openstack_swift_container_prefix = HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
+$openStackConfigHeliosRetour = new OpenStackConfig();
+$openStackConfigHeliosRetour->openstack_authentication_url_v2  = HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHeliosRetour->openstack_username = HELIOS_RETOUR_OPENSTACK_USERNAME;
+$openStackConfigHeliosRetour->openstack_password = HELIOS_RETOUR_OPENSTACK_PASSWORD;
+$openStackConfigHeliosRetour->openstack_tenant = HELIOS_RETOUR_OPENSTACK_TENANT;
+$openStackConfigHeliosRetour->openstack_region = HELIOS_RETOUR_OPENSTACK_REGION;
+$openStackConfigHeliosRetour->openstack_swift_container_prefix = HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
 $openStackConfigMailsec = new OpenStackConfig();
 $openStackConfigMailsec->openstack_authentication_url_v2  = MAILSEC_OPENSTACK_AUTHENTICATION_URL_V2;
@@ -141,6 +148,7 @@ $openStackFactory = new OpenStackFactory();
 $openStackFactory->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
 $openStackFactory->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
 $openStackFactory->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
+$openStackFactory->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME,$openStackConfigHeliosRetour);
 $openStackFactory->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME,$openStackConfigMailsec);
 
 $objectInstancier->set(OpenStackFactory::class,$openStackFactory);
@@ -150,6 +158,9 @@ $objectInstancier->set(OpenStackFactory::class,$openStackFactory);
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
 $objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
 $objectInstancier->set("schema_pes_path",HELIOS_XSD_PATH);
+
+$objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
+
 
 $objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
 $objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
