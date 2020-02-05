@@ -33,9 +33,11 @@ class RgsCertificate {
         $tmp_cert = "$tmp_folder/s2low-lib-rgscertificate.pem";
 		file_put_contents($tmp_cert,$x509_pem_certificate);
 
-		if(!is_null($clientCertChain)) {
+		if($clientCertChain) {
+
             $tmp_chain = "$tmp_folder/s2low-lib-certchain.pem";
             file_put_contents($tmp_chain, $clientCertChain);
+
 
             $command = "{$this->openssl_path} verify -verbose -untrusted {$tmp_chain} -CApath {$this->validca_path} {$tmp_cert} 2>&1";
             // Explication de la commande sur https://stackoverflow.com/a/26520714/1694298
