@@ -3,8 +3,9 @@
 class ActesEnvoiSaeWorker implements IWorker {
 
 	const QUEUE_NAME = 'actes-envoi-sae';
+    private const MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE = 100;
 
-	private $actesArchiveControler;
+    private $actesArchiveControler;
 
 	public function __construct(
 		ActesArchiveControler $actesArchiveControler
@@ -21,7 +22,7 @@ class ActesEnvoiSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		return $this->actesArchiveControler->getAllTransactionIdToSend();
+		return $this->actesArchiveControler->getAllTransactionIdToSend(null, self::MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE);
 	}
 
 	/**

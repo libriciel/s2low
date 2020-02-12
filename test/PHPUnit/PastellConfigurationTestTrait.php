@@ -2,16 +2,16 @@
 
 trait PastellConfigurationTestTrait {
 
-	protected function configurePastell(){
+	protected function configurePastell($authority_id=1){
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$pastellProperties = new PastellProperties();
 		$pastellProperties->url = "FakeURL";
 		$pastellProperties->id_e = 12;
 		$pastellProperties->actes_send_auto = true;
 		$pastellProperties->helios_send_auto = true;
-		$authoritySQL->updateSAE(1,$pastellProperties);
+		$authoritySQL->updateSAE($authority_id,$pastellProperties);
 		$pastellPropertiesSQL  = new PastellPropertiesSQL($this->getSQLQuery());
-		$pastellPropertiesSQL->editProperties(1,$pastellProperties);
+		$pastellPropertiesSQL->editProperties($authority_id,$pastellProperties);
 	}
 
 	protected function mockPastellFactory($id_d = "xyzt",$getLastErrorReturn=false){

@@ -50,9 +50,12 @@ class ActesArchiveControler {
 		$this->actesTypePJSQL = $actesTypePJSQL;
 	}
 
-	public function getAllTransactionIdToSend($authority_id = 0){
+	public function getAllTransactionIdToSend($authority_id = 0,$limit=0){
 
 		if (! $authority_id){
+		    if($limit > 0 ){
+		        return $this->actesTransactionsSQL->getTransactionToSendSAEWithLimit($limit);
+            }
             return $this->actesTransactionsSQL->getTransactionToSendSAE();
         }
 

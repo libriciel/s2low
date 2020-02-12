@@ -5,11 +5,22 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 	use ActesUtilitiesTestTrait;
 	use PastellConfigurationTestTrait;
 
+    private const NOFILE = "nofile";
+    private const ENVOYABLE = "Envoyable";
+    private const NON_ENVOYABLE = "Non Envoyable";
+
     /**
      * @return ActesTransactionsSQL
      */
     private function getActesTransactionsSQL(){
-        return $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    /**
+     * @return ActesEnvelopeSQL
+     */
+    private function getEnveloppeSQL(){
+        return $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
     }
 
 	/**
@@ -102,4 +113,164 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 			);
 	}
 
+
+    private function assertArrayContains($arrayHaystack,$arrayNeedle,$number){
+        $numberFindings = 0;
+        foreach ($arrayNeedle as $needle){
+            if(in_array($needle,$arrayHaystack)){
+                $numberFindings++;
+            }
+        }
+        $this->assertEquals($number,$numberFindings);
+    }
+
+    private function assertArrayContainsNone($arrayHaystack,$arrayNeedle){
+	    $contains = false;
+        foreach ($arrayNeedle as $needle){
+            if(in_array($needle,$arrayHaystack)){
+                $contains = true;
+            }
+        }
+        $this->assertEquals(false,$contains);
+    }
+
+    /**
+     * @param array $transactions
+     * @return array
+     */
+    private function initAutorites(array $transactions){
+        $autorites= array_unique (array_map( function ($u) {return $u[0]; }, $transactions));
+
+        foreach ($autorites as $autorite){
+            $this->configurePastell($autorite);
+        }
+    }
+
+    /**
+     * @param array $transactions
+     * @return array
+     */
+    private function initDatabase(array $transactions): array
+    {
+        $transactionsIdParAutoriteEnvoyable = [];
+        foreach ($transactions as $transaction)
+        {
+            list($autorite, $envoyable, $statut) = $transaction;
+                $enveloppe_id = $this->getEnveloppeSQL()->create("1", self::NOFILE);
+                $transactionsIdParAutoriteEnvoyable[$autorite][$envoyable][] =  $this->getActesTransactionsSQL()->create($enveloppe_id, $statut, 1, $autorite);
+        }
+        return $transactionsIdParAutoriteEnvoyable;
+    }
+
+    /**
+     * @param $transactions
+     * @param $limit
+     * @param $attendu
+     * @dataProvider provider
+     * @throws Exception
+     *
+     * Ce test vérifie :
+     *  -> que le nombre de transactions par autorite correspond bien à ce qui est attendu
+     *  -> qu'aucune transaction non envoyable n'est envoyée
+     */
+    
+    public function testNombreTransactionsAEnvoyer($transactions, $limit, $attendu){
+
+        $this->initAutorites($transactions);
+
+        $transactionsIdParAutoriteEnvoyable = $this->initDatabase($transactions);
+
+        $idsTransactionsAEnvoyer = $this->getActesTransactionsSQL()->getTransactionToSendSAEWithLimit($limit);
+
+        foreach ($transactionsIdParAutoriteEnvoyable as $autorite=>$transactionsIdParEnvoyable) {
+            if(isset($transactionsIdParEnvoyable[self::NON_ENVOYABLE])) {
+                $this->assertArrayContainsNone($idsTransactionsAEnvoyer,$transactionsIdParEnvoyable[self::NON_ENVOYABLE]);
+            }
+            if(isset($transactionsIdParEnvoyable[self::ENVOYABLE])) {
+                $this->assertArrayContains($idsTransactionsAEnvoyer,$transactionsIdParEnvoyable[self::ENVOYABLE],$attendu[$autorite]);
+            }
+        }
+    }
+
+    /**
+     * @return array
+     * structure de l'array :
+     *  [ [ array $transactions , int $limit, array $attendu ] ]
+     * $transactions renseigne les transactions à créer en base de données :
+     *    [ int autorite, const envoyable, const status ]
+     * $limite donne le nombre limite par autorité de transactions en cours de transmission au SAE simultanément
+     * $attendu a la forme
+     * [ autorite => int nbTransactions ]
+     *  avec nbTransactions le nombre de transactions à transmettre
+     */
+    public function provider(){
+        return [
+            // TEST 1
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                ],
+                4,
+                ["1"=>4]
+            ],
+            // TEST 2
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
+                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
+                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                ],
+                4,
+                ["1"=>1]
+            ],
+            // testSAEDifferentsEtatsAvecLimite
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
+                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
+                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                ],
+                3,
+                ["1"=>0]
+            ],
+            // testSAEDeuxAutoritesAvecLimite
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                ],
+                1,
+                ["1"=>1,"2"=>1]
+            ],
+            // testSAEDeuxAutoritesAvecLimite2
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                ],
+                2,
+                ["1"=>2,"2"=>2]
+            ],
+            // testSAEDeuxAutorites3
+            [
+                [
+                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ],
+                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 2, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                ],
+                2,
+                ["1"=>1,"2"=>1]
+            ]
+        ];
+    }
 }
