@@ -29,7 +29,12 @@ class MailsecDownloadController extends Controller {
 			->get(CloudStorageFactory::class)
 			->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
 
-		$filepath = $cloudStorage->getPath($mail_id);
+        try{
+            $filepath = $cloudStorage->getPath($mail_id);
+        }
+        catch (Exception $exception){
+            $this->redirectToErrorPage();
+        }
 
 		if ($filename != self::DEFAULT_ARCHIVE_NAME){
 			$tmp_folder = $tmpFolder->create();

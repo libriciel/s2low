@@ -195,7 +195,7 @@ class CloudStorage {
 				"Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
 				$e->getTrace()
 			);
-			return false;
+			throw new Exception($e);
 		}
 
 		return $result;

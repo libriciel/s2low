@@ -67,7 +67,7 @@ class HeliosExport {
 
 
 		foreach($transactions_list as $transaction_info){
-			$this->exportOneTransaction($transaction_info,$output_directory);
+		    $this->exportOneTransaction($transaction_info,$output_directory);
 		}
 	}
 

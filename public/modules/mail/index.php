@@ -56,7 +56,13 @@ $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
 	->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
 
 if($fndownload) {
-    $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+    try {
+        $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+        $filesize = filesize($mailzip_filepath);
+    }
+    catch (Exception $e){
+        $filesize = "Fichier non disponible";
+    }
 }
 
 $doc->DisplayHead();
@@ -125,7 +131,7 @@ $doc->DisplayHead();
 		<?php endforeach; ?>
                                 <tr>
                                     <td class="align_left">&lt;Télécharger tous les fichiers&gt; </td>
-                                    <td><?php echo filesize($mailzip_filepath); ?></td>
+                                    <td><?php echo $filesize; ?></td>
                                     <td class="force_maj">zip</td>
                                     <td><a href="download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
                                 </tr>
