@@ -32,6 +32,7 @@
 - Le script d'envoi des PES au SAE se limite au 100 premier PES afin d'éviter que le jeton de cloudwatt n'expire.
 - Envoi de la typologie vers Pastell afin de pouvoir envoyer des actes vers un Pastel V3 #546 
 - Dans certains cas très rares, les transactions Helios n'était pas envoyées #551
+- Suppression d'un warning lors de l'utilisation de admin_user_edit_handler #583
 
 ## Retrait
 - la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée

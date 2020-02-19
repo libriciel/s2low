@@ -38,6 +38,18 @@ class AdminUserControllerTest extends S2lowTestCase {
 
 	}
 
+	public function testWithoutCertificatesIn_FILE(){
+        $this->setSuperAdminAuthentication();
+        $message = "";
+        try{
+            $this->adminUserController->doEditAction();
+        }
+        catch (Exception $e){
+            $message = $e->getMessage();
+        }
+        $this->assertNotRegExp("/Undefined index: /",$message);
+    }
+
 	public function testDoEdit(){
 		$this->setDataOk();
 		$this->adminUserController->doEditAction();

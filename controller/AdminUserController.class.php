@@ -162,9 +162,9 @@ class AdminUserController extends Controller {
         $auth_method = $this->getEnvironnement()->post()->get('auth_method');
         Helpers::putInSession("auth_method", $auth_method);
 
+        $certificate = $_FILES['certificate'] ?? [];
 
-		$certificate = $_FILES["certificate"];
-		$certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'];
+        $certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'] ?? [];
 
 		$me = new User();
 
