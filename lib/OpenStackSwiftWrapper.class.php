@@ -41,7 +41,12 @@ class OpenStackSwiftWrapper {
 		}
 
         $container = $this->getContainer($container_name);
-        $fileData = fopen($filepath_local, 'r+');
+    	try {
+            $fileData = fopen($filepath_local, 'r+');
+        }
+        catch(Exception $e){
+            throw new CloudStorageException("Unable to retrieve $filepath_local : ".$e->getMessage());
+        }
         if (! $fileData){
 			$error = error_get_last();
 			throw new CloudStorageException("Unable to retrieve $filepath_local : $error");
@@ -77,6 +82,8 @@ class OpenStackSwiftWrapper {
 
         $stream = $container->getObject($filepath_on_cloud)->download();
         $this->fileSystem->dumpFile($filepath_local,$stream);
+
+        $this->logger->info("Retrieve [$container_name] $filepath_on_cloud to $filepath_local");
     }
 
 	/**
@@ -91,7 +98,6 @@ class OpenStackSwiftWrapper {
         if (!$this->fileSystem->exists($filepath_local)){
             $this->retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud = '');
         }
-		$this->logger->info("Retrieve [$container_name] $filepath_on_cloud to $filepath_local");
         return $filepath_local;
     }
 

@@ -18,8 +18,14 @@ class OpenStackFactoryTest extends PHPUnit_Framework_TestCase {
         $openStackFactory->addConfiguration("actes",$openStackConfig);
 
         $openStack = $openStackFactory->getInstance("actes");
-        $this->assertInstanceOf("\OpenCloud\OpenStack",$openStack);
-        $this->assertEquals("a",$openStack->getAuthUrl());
+
+        //Hack sale pour récupérer la propriété privée authUrl
+        //réalisé pour préserver la couverture de test lors du passage de  rackspace/php-opencloud vers
+        // php-opencloud/openstack
+        $openStackOpenStackbuilder = ((array)$openStack)["\000OpenStack\OpenStack\000builder"];
+        $openStackAuthUrl = ((array)$openStackOpenStackbuilder)["\000OpenStack\Common\Service\Builder\000globalOptions"]["authUrl"];
+        $this->assertInstanceOf("\OpenStack\OpenStack",$openStack);
+        $this->assertEquals("a",$openStackAuthUrl);
     }
 
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c368248e2bca446208ba56b4426e96d",
+    "content-hash": "c46f65a28c5c3f49e6df3ef4176967b7",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -1781,63 +1781,6 @@
                 "xunit"
             ],
             "time": "2019-10-07T12:57:41+00:00"
-        },
-        {
-            "name": "phpunit/phpunit-mock-objects",
-            "version": "6.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "f9756fd4f43f014cb2dca98deeaaa8ce5500a36e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/f9756fd4f43f014cb2dca98deeaaa8ce5500a36e",
-                "reference": "f9756fd4f43f014cb2dca98deeaaa8ce5500a36e",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/instantiator": "^1.0.5",
-                "php": "^7.1",
-                "phpunit/php-text-template": "^1.2.1",
-                "sebastian/exporter": "^3.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^7.0"
-            },
-            "suggest": {
-                "ext-soap": "*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "6.1-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
-                }
-            ],
-            "description": "Mock Object library for PHPUnit",
-            "homepage": "https://github.com/sebastianbergmann/phpunit-mock-objects/",
-            "keywords": [
-                "mock",
-                "xunit"
-            ],
-            "abandoned": true,
-            "time": "2018-05-29T13:54:20+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
