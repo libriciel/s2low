@@ -166,7 +166,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
      * @param $transactions
      * @param $limit
      * @param $attendu
-     * @dataProvider provider
+     * @dataProvider providerForNombreTransactionsAEnvoyer
      * @throws Exception
      *
      * Ce test vérifie :
@@ -203,7 +203,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
      * [ autorite => int nbTransactions ]
      *  avec nbTransactions le nombre de transactions à transmettre
      */
-    public function provider(){
+    public function providerForNombreTransactionsAEnvoyer(){
         return [
             // TEST 1
             [

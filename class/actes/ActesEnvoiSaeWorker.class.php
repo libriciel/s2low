@@ -22,7 +22,7 @@ class ActesEnvoiSaeWorker implements IWorker {
 	}
 
 	public function getAllId(){
-		return $this->actesArchiveControler->getAllTransactionIdToSend(null, self::MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE);
+		return $this->actesArchiveControler->getAllTransactionIdToSend(self::MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE);
 	}
 
 	/**
