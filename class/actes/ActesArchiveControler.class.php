@@ -50,21 +50,16 @@ class ActesArchiveControler {
 		$this->actesTypePJSQL = $actesTypePJSQL;
 	}
 
-	public function getAllTransactionIdToSend($authority_id = 0){
+    /**
+     * @param int $limit
+     * @return array
+     */
 
-		if (! $authority_id){
-            return $this->actesTransactionsSQL->getTransactionToSendSAE();
-        }
-
-		$info_list = $this->actesTransactionsSQL->getArchiveFStatus(
-			ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
-			$authority_id
-		);
-		$transaction_id_list = [];
-		foreach($info_list as $info) {
-			$transaction_id_list[] = $info['id'];
-		}
-		return $transaction_id_list;
+    public function getAllTransactionIdToSend($limit=0){
+	    if($limit > 0 ){
+	        return $this->actesTransactionsSQL->getTransactionToSendSAEWithLimit($limit);
+	    }
+        return $this->actesTransactionsSQL->getTransactionToSendSAE();
 	}
 
 

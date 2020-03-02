@@ -91,17 +91,6 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	/**
 	 * @throws Exception
 	 */
-	public function testgetAllTransactionIdToSendForOneAuthority(){
-		$this->configurePastell();
-		$transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
-		$all = $this->getActesArchivesControler()->getAllTransactionIdToSend(1);
-		$this->assertEquals([$transaction_id],$all);
-	}
-
-
-	/**
-	 * @throws Exception
-	 */
 	public function testSendArchiveWhenActesRetrieverFailed(){
 		$this->mockPastellFactory();
 		$this->mockActesRetriever();
