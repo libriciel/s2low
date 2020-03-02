@@ -1,5 +1,8 @@
 FROM php:7.2-apache-stretch
 
+#Suppression des repos buster présents dans l'image
+RUN rm /etc/apt/sources.list.d/buster.list && rm /etc/apt/preferences.d/argon2-buster
+
 RUN apt-get update && \
     apt-get install -y \
         clamdscan \
