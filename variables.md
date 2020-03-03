@@ -21,7 +21,7 @@
 |`POSTGRES_DB_TEST`|`s2lowdbtest`|Nom de la base de données de tests|`DB_DATABASE_TEST`|
 |`POSTGRES_USER_TEST`|`s2lowusertest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_USER_TEST`|
 |`POSTGRES_PASSWORD_TEST`|`s2lowpasswordtest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_PASSWORD_TEST`|
-|`OPENSTACK_AUTHENTICATION_URL_V3`|`https://identity.fr1.cloudwatt.com/v2.0`|URL de l'API Openstack pour le stockage objet des PESv2|
+|`OPENSTACK_AUTHENTICATION_URL_V3`|`https://auth.cloud.ovh.net/v3`|URL de l'API Openstack pour le stockage objet des PESv2|
 |`OPENSTACK_USERNAME`||Indique le nom de l'utilisateur pour les API Openstack `OPENSTACK_AUTHENTICATION_URL_V3`|
 |`OPENSTACK_PASSWORD`||Mot de passe de l'utilisateur `OPENSTACK_USERNAME`|
 |`OPENSTACK_TENANT`|`0750189044_S2LOWDEV`|Tenant dans lequel seront stockés les objets|

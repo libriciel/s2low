@@ -648,7 +648,7 @@ if (! defined("TESTING_ENVIRONNEMENT")) {
 ## Configuration OpenStack (facultative)
 
 if (! defined("OPENSTACK_AUTHENTICATION_URL_V3")) {
-    define("OPENSTACK_AUTHENTICATION_URL_V3", 'https://identity.fr1.cloudwatt.com/v2.0');
+    define("OPENSTACK_AUTHENTICATION_URL_V3", 'https://auth.cloud.ovh.net/v3');
 }
 
 if (! defined("OPENSTACK_USERNAME")) {
