@@ -96,7 +96,7 @@ class OpenStackSwiftWrapper {
 	 */
     public function retrieveFile($container_name, $filepath_local,$filepath_on_cloud = ''){
         if (!$this->fileSystem->exists($filepath_local)){
-            $this->retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud = '');
+            $this->retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud);
         }
         return $filepath_local;
     }

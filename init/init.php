@@ -102,7 +102,7 @@ $objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low
 $objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
 
 $openStackConfigActes = new OpenStackConfig();
-$openStackConfigActes->openstack_authentication_url_v2  = ACTES_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigActes->openstack_authentication_url_v3  = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
 $openStackConfigActes->openstack_password = ACTES_OPENSTACK_PASSWORD;
 $openStackConfigActes->openstack_tenant = ACTES_OPENSTACK_TENANT;
@@ -111,7 +111,7 @@ $openStackConfigActes->openstack_swift_container_prefix = ACTES_OPENSTACK_SWIFT_
 
 
 $openStackConfigHelios = new OpenStackConfig();
-$openStackConfigHelios->openstack_authentication_url_v2  = HELIOS_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHelios->openstack_authentication_url_v3  = HELIOS_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigHelios->openstack_username = HELIOS_OPENSTACK_USERNAME;
 $openStackConfigHelios->openstack_password = HELIOS_OPENSTACK_PASSWORD;
 $openStackConfigHelios->openstack_tenant = HELIOS_OPENSTACK_TENANT;
@@ -120,7 +120,7 @@ $openStackConfigHelios->openstack_swift_container_prefix = HELIOS_OPENSTACK_SWIF
 
 
 $openStackConfigHeliosAcquit = new OpenStackConfig();
-$openStackConfigHeliosAcquit->openstack_authentication_url_v2  = HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHeliosAcquit->openstack_authentication_url_v3  = HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigHeliosAcquit->openstack_username = HELIOS_ACQUIT_OPENSTACK_USERNAME;
 $openStackConfigHeliosAcquit->openstack_password = HELIOS_ACQUIT_OPENSTACK_PASSWORD;
 $openStackConfigHeliosAcquit->openstack_tenant = HELIOS_ACQUIT_OPENSTACK_TENANT;
@@ -128,7 +128,7 @@ $openStackConfigHeliosAcquit->openstack_region = HELIOS_ACQUIT_OPENSTACK_REGION;
 $openStackConfigHeliosAcquit->openstack_swift_container_prefix = HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
 $openStackConfigHeliosRetour = new OpenStackConfig();
-$openStackConfigHeliosRetour->openstack_authentication_url_v2  = HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigHeliosRetour->openstack_authentication_url_v3  = HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigHeliosRetour->openstack_username = HELIOS_RETOUR_OPENSTACK_USERNAME;
 $openStackConfigHeliosRetour->openstack_password = HELIOS_RETOUR_OPENSTACK_PASSWORD;
 $openStackConfigHeliosRetour->openstack_tenant = HELIOS_RETOUR_OPENSTACK_TENANT;
@@ -136,7 +136,7 @@ $openStackConfigHeliosRetour->openstack_region = HELIOS_RETOUR_OPENSTACK_REGION;
 $openStackConfigHeliosRetour->openstack_swift_container_prefix = HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
 $openStackConfigMailsec = new OpenStackConfig();
-$openStackConfigMailsec->openstack_authentication_url_v2  = MAILSEC_OPENSTACK_AUTHENTICATION_URL_V2;
+$openStackConfigMailsec->openstack_authentication_url_v3  = MAILSEC_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigMailsec->openstack_username = MAILSEC_OPENSTACK_USERNAME;
 $openStackConfigMailsec->openstack_password = MAILSEC_OPENSTACK_PASSWORD;
 $openStackConfigMailsec->openstack_tenant = MAILSEC_OPENSTACK_TENANT;

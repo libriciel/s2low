@@ -27,7 +27,7 @@ class OpenStackFactory {
                 'username'=> $openStackConfiguration->openstack_username,
                 'password'=> $openStackConfiguration->openstack_password,
                 'tenantName'  => $openStackConfiguration->openstack_tenant,
-                'authUrl' => $openStackConfiguration->openstack_authentication_url_v2
+                'authUrl' => $openStackConfiguration->openstack_authentication_url_v3
             )
         );
     }

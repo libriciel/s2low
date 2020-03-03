@@ -18,7 +18,7 @@ class ActesRetriever {
 
     public function getPath($acte_path){
 		try {
-			$result = $this->openStackSwiftWrapper->retrieveFile(
+		    $result = $this->openStackSwiftWrapper->retrieveFile(
 				ActesEnvelopeStorage::CONTAINER_NAME,
 				$this->actes_files_upload_root . "/" . $acte_path,
 				$acte_path
