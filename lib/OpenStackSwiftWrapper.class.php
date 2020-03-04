@@ -139,8 +139,9 @@ class OpenStackSwiftWrapper {
         $service = $this->getService($container_name);
 
 		if(!$service->containerExists($container_full_name)){
-		    $service->createContainer(array (
-                "name"=>$container_full_name ));
+		    $service->createContainer([
+                "name"=>$container_full_name
+            ]);
         }
 		$container = $service->getContainer(
 				$container_full_name
