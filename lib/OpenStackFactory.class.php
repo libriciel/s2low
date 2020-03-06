@@ -1,6 +1,6 @@
 <?php
 
-use \OpenCloud\OpenStack;
+use \OpenStack\OpenStack;
 
 class OpenStackFactory {
 
@@ -23,11 +23,11 @@ class OpenStackFactory {
 
 		$openStackConfiguration = $this->getOpenStackConfiguration($configuration_id);
         return new OpenStack(
-			$openStackConfiguration->openstack_authentication_url_v2,
             array(
                 'username'=> $openStackConfiguration->openstack_username,
                 'password'=> $openStackConfiguration->openstack_password,
-                'tenantName'  => $openStackConfiguration->openstack_tenant
+                'tenantName'  => $openStackConfiguration->openstack_tenant,
+                'authUrl' => $openStackConfiguration->openstack_authentication_url_v3
             )
         );
     }
@@ -38,7 +38,7 @@ class OpenStackFactory {
 	 * @throws UnrecoverableException
 	 */
     private function getOpenStackConfiguration(string $configuration_id) : OpenStackConfig {
-		if (empty($this->openStackConfig[$configuration_id])){
+        if (empty($this->openStackConfig[$configuration_id])){
 			throw new UnrecoverableException(
 				"Impossible de trouver la configuration Openstack pour $configuration_id"
 			);
@@ -51,18 +51,29 @@ class OpenStackFactory {
 	 * @return mixed
 	 * @throws UnrecoverableException
 	 */
-    public function getOpenStackRegion(string $configuration_id)  {
-    	return $this->getOpenStackConfiguration($configuration_id)->openstack_region;
-	}
-
-	/**
-	 * @param string $configuration_id
-	 * @return mixed
-	 * @throws UnrecoverableException
-	 */
 	public function getOpenStackSwiftPrefix(string $configuration_id) {
 		return $this->getOpenStackConfiguration($configuration_id)->openstack_swift_container_prefix;
 	}
 
+    /**
+     * @param string $configuration_id
+     * @return array
+     * @throws UnrecoverableException
+     */
 
+	public function getOpenStackParameters(string $configuration_id){
+        if (empty($this->openStackConfig[$configuration_id])){
+            throw new UnrecoverableException(
+                "Impossible de trouver la configuration Openstack pour $configuration_id"
+            );
+        }
+        return [
+                "region" => $this->openStackConfig[$configuration_id]->openstack_region,
+                "user" => [
+                    'name'=> $this->openStackConfig[$configuration_id]->openstack_username,
+                    'password'=> $this->openStackConfig[$configuration_id]->openstack_password,
+                    'domain'=> ['name'=>'Default']
+                ]
+        ];
+    }
 }
