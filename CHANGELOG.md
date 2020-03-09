@@ -1,7 +1,7 @@
 # Change Log
 
 
-## 4.2.0
+## 4.2.0 - 2020-03-09
 
 *Cette version nécessite une modification de la base de données*
 
