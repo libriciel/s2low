@@ -2,80 +2,77 @@
 
 
 
-class OpenStackContainersManagerTest extends PHPUnit_Framework_TestCase {
+class OpenStackContainersManagerTest extends S2lowTestCase {
+
+    private const EXECUTE = "execute";
+    private const GET_CONTAINER_WRAPPER = "getContainerWrapper";
+    private const ACTES = "actes";
+    private const FUNCTION1 = "function";
+    private const OPTIONS = "options";
+
+    private $openStackContainerWrapperMock;
+    private $openStackContainerWrapperFactoryMock;
+    private $openStackConfig;
+
+    public function setUp(): void {
+        $this->openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->openStackContainerWrapperFactoryMock =
+            $this->getMockBuilder(OpenStackContainerWrapperFactory::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+        $this->openStackConfig = new OpenStackConfig();
+        $this->openStackConfig->openstack_authentication_url_v3 = "a";
+        $this->openStackConfig->openstack_username = "b";
+        $this->openStackConfig->openstack_password = "c";
+        $this->openStackConfig->openstack_tenant = "d";
+    }
 
     /**
      * @throws UnrecoverableException
      */
 
     public function testExecuteOnUnavailableContainer(){
-        $openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->openStackContainerWrapperMock->expects($this->never())
+            ->method(self::EXECUTE);
 
-        $openStackContainerWrapperMock->expects($this->never())
-            ->method("execute");
-
-        $openStackContainerWrapperFactoryMock =
-            $this->getMockBuilder(OpenStackContainerWrapperFactory::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $openStackContainerWrapperFactoryMock
+        $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
-            ->method("getContainerWrapper")
-            ->willReturn($openStackContainerWrapperMock);
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
 
-        $openStackContainerManager = new OpenStackContainersManager($openStackContainerWrapperFactoryMock);
-
-        $openStackConfig = new OpenStackConfig();
-        $openStackConfig->openstack_authentication_url_v3 = "a";
-        $openStackConfig->openstack_username = "b";
-        $openStackConfig->openstack_password = "c";
-        $openStackConfig->openstack_tenant = "d";
-
-        $openStackContainerManager->addConfiguration("actes",$openStackConfig);
+        $openStackContainerManager = new OpenStackContainersManager($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
 
         $this->expectException(UnrecoverableException::class);
         $this->expectExceptionMessage("Impossible de trouver la configuration Openstack pour UnavailableContainer");
 
-        $openStackContainerManager->execute("UnavailableContainer","function","options");
+        $openStackContainerManager->execute("UnavailableContainer", self::FUNCTION1, self::OPTIONS);
     }
 
 	/**
 	 * @throws UnrecoverableException
 	 */
     public function testExecute(){
-		$openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+		$this->openStackContainerWrapperMock->expects($this->once())
+            ->method(self::EXECUTE)
+            ->with($this->equalTo(self::FUNCTION1),
+                $this->equalTo(self::OPTIONS))
+            ->willReturn(true);
 
-		$openStackContainerWrapperMock->expects($this->once())
-            ->method("execute")
-            ->with($this->equalTo("function"),
-                $this->equalTo("options"));
-
-		$openStackContainerWrapperFactoryMock =
-            $this->getMockBuilder(OpenStackContainerWrapperFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-		$openStackContainerWrapperFactoryMock
+		$this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
-            ->method("getContainerWrapper")
-            ->willReturn($openStackContainerWrapperMock);
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
 
-        $openStackContainerManager = new OpenStackContainersManager($openStackContainerWrapperFactoryMock);
+        $openStackContainerManager = new OpenStackContainersManager($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
 
-        $openStackConfig = new OpenStackConfig();
-        $openStackConfig->openstack_authentication_url_v3 = "a";
-        $openStackConfig->openstack_username = "b";
-        $openStackConfig->openstack_password = "c";
-        $openStackConfig->openstack_tenant = "d";
-
-        $openStackContainerManager->addConfiguration("actes",$openStackConfig);
-
-        $openStackContainerManager->execute("actes","function","options");
+        $result = $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
+        $this->assertEquals(true,$result);
     }
 
     /**
@@ -83,39 +80,53 @@ class OpenStackContainersManagerTest extends PHPUnit_Framework_TestCase {
      */
 
     public function testExecuteTwice(){
-        $openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $openStackContainerWrapperMock->expects($this->once())
-            ->method("execute")
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(0))
+            ->method(self::EXECUTE)
             ->willThrowException(new Exception());
 
-        $openStackContainerWrapperMock->expects($this->once())
-            ->method("execute")
-            ->with($this->equalTo("function"),
-                $this->equalTo("options"));
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(1))
+            ->method("resetConnection");
 
-        $openStackContainerWrapperFactoryMock =
-            $this->getMockBuilder(OpenStackContainerWrapperFactory::class)
-                ->disableOriginalConstructor()
-                ->getMock();
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(2))
+            ->method(self::EXECUTE)
+            ->with($this->equalTo(self::FUNCTION1),
+                $this->equalTo(self::OPTIONS));
+            //->willReturn(true);
 
-        $openStackContainerWrapperFactoryMock
+        $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
-            ->method("getContainerWrapper")
-            ->willReturn($openStackContainerWrapperMock);
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
 
-        $openStackContainerManager = new OpenStackContainersManager($openStackContainerWrapperFactoryMock);
+        $openStackContainerManager = new OpenStackContainersManager($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+        $result = $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
+        //$this->assertEquals(true,$result);
+    }
 
-        $openStackConfig = new OpenStackConfig();
-        $openStackConfig->openstack_authentication_url_v3 = "a";
-        $openStackConfig->openstack_username = "b";
-        $openStackConfig->openstack_password = "c";
-        $openStackConfig->openstack_tenant = "d";
+    /**
+     * @throws UnrecoverableException
+     */
 
-        $openStackContainerManager->addConfiguration("actes",$openStackConfig);
+    public function testExecuteFailsUntilTheEnd(){
+        $this->openStackContainerWrapperMock->expects($this->exactly(OpenStackContainersManager::NUMBER_OF_ATTEMPTS))
+            ->method(self::EXECUTE)
+            ->willThrowException(new BadMethodCallException("Exception de test"));
 
-        $openStackContainerManager->execute("actes","function","options");
+        $this->openStackContainerWrapperFactoryMock
+            ->expects($this->once())
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
+
+        $openStackContainerManager = new OpenStackContainersManager($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Exception de test");
+
+        $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
     }
 }

@@ -45,37 +45,6 @@ class OpenStackSwiftWrapperTest extends TestCase {
 
         $this->logger = new Monolog\Logger("PHPUNIT");
         $this->logger->pushHandler(new Monolog\Handler\NullHandler());
-/*
-        $this->content =
-            $this->getMockBuilder(Stream::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $this->dataObject =
-            $this->getMockBuilder(StorageObject::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $this->container =
-            $this->getMockBuilder(Container::class)
-                ->disableOriginalConstructor()
-                //->setMethods(['createObject','getObject'])
-                ->getMock();
-
-        $this->service =
-            $this->getMockBuilder(Service::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $this->openStack =
-            $this->getMockBuilder(OpenStack::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $this->openStackFactory =
-            $this->getMockBuilder(OpenStackContainersManager::class)
-                ->disableOriginalConstructor()
-                ->getMock();*/
     }
 
     public function tearDown(): void
@@ -83,46 +52,6 @@ class OpenStackSwiftWrapperTest extends TestCase {
         if(file_exists(self::ABSENT_FILE_PATH)){
             unlink(self::ABSENT_FILE_PATH);
         }
-    }
-
-    public function linkMocks(){
-        $this->dataObject
-            ->method("download")
-            ->willReturn($this->content);
-
-
-        $this->container
-            ->method(self::GET_OBJECT)
-            ->willReturn($this->dataObject);
-
-        $this->service
-            ->method("getContainer")
-            ->willReturn($this->container);
-
-        $this->openStack
-            ->method("objectStoreV1")
-            ->willReturn($this->service);
-
-
-        $this->openStackFactory
-            ->method("getInstance")
-            ->willReturn($this->openStack);
-
-        $this->openStackFactory
-            ->method("getOpenStackParameters")
-            ->willReturn([
-                "region" => "region",
-                "user" => [
-                    'name'=> "name",
-                    'password'=> "password",
-                    'domain'=> ['name'=>'Default']
-                ]]);
-
-        /** @var OpenStackContainersManager $openStackFactory */
-        $this->openStackSwiftWrapper = new OpenStackSwiftWrapper(
-            $this->openStackFactory,
-            $this->logger
-        );
     }
 
 	/**
