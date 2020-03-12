@@ -158,6 +158,27 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         return $data['transaction_id'];
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testValidateEmptyFile(){
+        $data = $this->createOneTransaction(null);
+
+        try{
+            $this->getActesAnalysFichierAEnvoyerWorker()->work($data['envelope_id']);
+        }
+        catch (Exception $e){
+            $this->assertEquals(get_class($e), RecoverableException::class);
+        }
+
+        $transaction_id = $data["transaction_id"];
+        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_POSTE, $transaction_info['last_status_id']);
+        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_POSTE, $transaction_info['status_id']);
+    }
+
 	/**
 	 * @param $archivepath
 	 * @param bool $is_marche_public

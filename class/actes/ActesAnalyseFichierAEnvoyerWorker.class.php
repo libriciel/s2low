@@ -70,6 +70,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
         $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
 
+        if(!$archive_path){
+            $this->logger->error("[$envelope_libelle] Non trouvee en local ou sur le Cloud");
+            throw new RecoverableException("[$envelope_libelle] Non trouvee en local ou sur le Cloud");
+        }
+
 		$this->logger->debug("[$envelope_libelle] Emplacement de l'archive :  $archive_path");
 
 		$this->logger->debug("id_tdt : {$this->actes_appli_trigramme}, id_appli : {$this->actes_appli_quadrigramme}");
