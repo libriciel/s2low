@@ -34,7 +34,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
     private $service;
     /** @var MockObject  */
     private $openStack;
-    /** @var MockObject|OpenStackFactory $openStackFactory  */
+    /** @var MockObject|OpenStackContainersManager $openStackFactory  */
     private $openStackFactory;
 
     public function setUp() : void {
@@ -45,7 +45,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
 
         $this->logger = new Monolog\Logger("PHPUNIT");
         $this->logger->pushHandler(new Monolog\Handler\NullHandler());
-
+/*
         $this->content =
             $this->getMockBuilder(Stream::class)
                 ->disableOriginalConstructor()
@@ -73,9 +73,9 @@ class OpenStackSwiftWrapperTest extends TestCase {
                 ->getMock();
 
         $this->openStackFactory =
-            $this->getMockBuilder(OpenStackFactory::class)
+            $this->getMockBuilder(OpenStackContainersManager::class)
                 ->disableOriginalConstructor()
-                ->getMock();
+                ->getMock();*/
     }
 
     public function tearDown(): void
@@ -118,7 +118,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
                     'domain'=> ['name'=>'Default']
                 ]]);
 
-        /** @var OpenStackFactory $openStackFactory */
+        /** @var OpenStackContainersManager $openStackFactory */
         $this->openStackSwiftWrapper = new OpenStackSwiftWrapper(
             $this->openStackFactory,
             $this->logger
@@ -130,19 +130,30 @@ class OpenStackSwiftWrapperTest extends TestCase {
 	 */
     public function testSendFile(){
 
-        $this->container
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $containerManagerMock
             ->expects($this->once())
-            ->method(self::CREATE_OBJECT)
-            ->with($this->callback(
-                function($args){
-                    return $args['stream']->getMetadata("uri") ==  OpenStackSwiftWrapperTest::EXISTING_FILE_PATH
-                        && $args["name"] = OpenStackSwiftWrapperTest::EXISTING_FILE_NAME;
+            ->method("execute")
+            ->with($this->equalTo(self::CONTAINER_TEST),
+                $this->equalTo("createObject"),
+                $this->callback(
+                    function($options){
+                        return $options['stream']->getMetadata("uri") === OpenStackSwiftWrapperTest::EXISTING_FILE_PATH
+                        && $options["name"] === OpenStackSwiftWrapperTest::EXISTING_FILE_NAME;
                 }
             ));
 
-        $this->linkMocks();
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
 
-        $this->openStackSwiftWrapper->sendFile(
+        $openStackSwiftWrapper->sendFile(
             self::CONTAINER_TEST,
             self::EXISTING_FILE_PATH
         );
@@ -153,19 +164,30 @@ class OpenStackSwiftWrapperTest extends TestCase {
      */
     public function testSendFileWithDifferentName(){
 
-        $this->container
-            ->expects($this->once())
-            ->method(self::CREATE_OBJECT)
-            ->with($this->callback(
-                function($args){
-                    return $args['stream']->getMetadata("uri") === OpenStackSwiftWrapperTest::EXISTING_FILE_PATH
-                        && $args["name"] === OpenStackSwiftWrapperTest::ABSENT_FILE_NAME;
-                }
-            ));
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->linkMocks();
 
-        $this->openStackSwiftWrapper->sendFile(
+        $containerManagerMock->expects($this->once())
+        ->method("execute")
+        ->with(
+            $this->equalTo(self::CONTAINER_TEST),
+            $this->equalTo("createObject"),
+            $this->callback(function ($options){
+            return (
+                $options['stream']->getMetadata("uri") === OpenStackSwiftWrapperTest::EXISTING_FILE_PATH
+                && $options["name"] === OpenStackSwiftWrapperTest::ABSENT_FILE_NAME
+            );
+        }));
+
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
+
+        $openStackSwiftWrapper->sendFile(
             self::CONTAINER_TEST,
             self::EXISTING_FILE_PATH,
             self::ABSENT_FILE_NAME
@@ -177,15 +199,23 @@ class OpenStackSwiftWrapperTest extends TestCase {
      */
     public function testSendNonexistentFile(){
 
-        $this->container
-            ->expects($this->never())
-            ->method(self::CREATE_OBJECT);
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->linkMocks();
+
+        $containerManagerMock->expects($this->never())
+            ->method("execute");
 
         $this->expectException(CloudStorageException::class);
 
-        $this->openStackSwiftWrapper->sendFile(
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
+
+        $openStackSwiftWrapper->sendFile(
             self::CONTAINER_TEST,
             self::ABSENT_FILE_PATH
         );
@@ -199,20 +229,25 @@ class OpenStackSwiftWrapperTest extends TestCase {
 
     public function testDeleteFile(){
 
-        $this->openStackFactory
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $containerManagerMock
             ->expects($this->once())
-            ->method("getInstance")
-            ->with(self::CONTAINER_TEST)
-            ->willReturn($this->openStack);
+            ->method("execute")
+            ->with(
+                $this->equalTo(self::CONTAINER_TEST),
+                $this->equalTo("delete"),
+                $this->equalTo(self::ABSENT_FILE_NAME));
 
-        $this->container
-            ->expects($this->once())
-            ->method(self::GET_OBJECT)
-            ->with(self::ABSENT_FILE_NAME);
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
 
-        $this->linkMocks();
-
-        $this->openStackSwiftWrapper->deleteFile(
+        $openStackSwiftWrapper->deleteFile(
             self::CONTAINER_TEST,
             self::ABSENT_FILE_PATH
         );
@@ -223,17 +258,26 @@ class OpenStackSwiftWrapperTest extends TestCase {
      */
 
     public function testRetrieveFileLocal(){
-        $this->container
-            ->expects($this->never())
-            ->method(self::GET_OBJECT);
 
-        $this->linkMocks();
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $containerManagerMock
+            ->expects($this->never())
+            ->method("execute");
+
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
 
         $filepath = self::EXISTING_FILE_PATH;
 
         $this->assertEquals(
             $filepath,
-            $this->openStackSwiftWrapper->retrieveFile(
+            $openStackSwiftWrapper->retrieveFile(
                 self::CONTAINER_TEST,
                 $filepath
             )
@@ -246,15 +290,25 @@ class OpenStackSwiftWrapperTest extends TestCase {
 
     public function testRetrieveFile(){
 
-        $this->container
+        $containerManagerMock = $this->getMockBuilder(OpenStackContainersManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $containerManagerMock
             ->expects($this->once())
-            ->method(self::GET_OBJECT)
-            ->with(self::ABSENT_FILE_NAME)
-            ->willReturn($this->dataObject);
+            ->method("execute")
+            ->with($this->equalTo(self::CONTAINER_TEST),
+                    $this->equalTo("download"),
+                    $this->equalTo(self::ABSENT_FILE_NAME)
+            );
 
-        $this->linkMocks();
+        /** @var OpenStackContainersManager $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $containerManagerMock,
+            $this->logger
+        );
 
-		$this->openStackSwiftWrapper->retrieveFile(
+		$openStackSwiftWrapper->retrieveFile(
             self::CONTAINER_TEST,
 			self::ABSENT_FILE_PATH
 		);
