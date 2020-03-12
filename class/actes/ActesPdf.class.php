@@ -4,6 +4,12 @@ require_once __DIR__."/../../public.ssl/modules/actes/class/ActesTransaction.cla
 
 class ActesPdf {
 
+    const TEXTE_NOIR = [56, 55, 55];
+    const TEXTE_BLEU = [52, 60, 142];
+    const BLEU_HEADER = [196, 229, 238];
+    const BLEU_CLAIR_BACK = [225, 241, 247];
+    const BLEU_FONCE_BACK = [245, 250, 251];
+
 	/**
 	 * @var ExtendPDF
 	 */
@@ -22,6 +28,10 @@ class ActesPdf {
   	public function addEmailNotificationField(){
   		$this->addEmailNotificationField = true;
   	}
+
+  	public function setTextColor(array $colors){
+	    $this->pdf->SetTextColor($colors[0],$colors[1],$colors[2]);
+    }
   	
 	public function create_pdf($transaction_id) {
         $trans = new ActesTransaction();
@@ -43,7 +53,9 @@ class ActesPdf {
 		//fini de la traitment de les requêtes.
 		//créer un objet pdf.
 		$this->pdf=new ExtendPdf();
-		
+        $this->pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
+        $this->pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
+
 		//ajouter une page de pdf
 		$this->pdf->AddPage();
 		
@@ -51,15 +63,21 @@ class ActesPdf {
 		$this->set_head();
 		
 		//ajouter cllectivité et utilisateur.
-		$this->pdf->SetFont('Arial','B',12);
-		$this->pdf->SetTextColor(94,106,23);
-		$this->pdf->Cell(40,10,"Collectivité :",0,0,'R');
-		$this->pdf->Cell(40,10,$author->get("name"),0,1,'L');
-		$this->pdf->Cell(40,10,"Utilisateur :",0,0,'R');
-		$this->pdf->Cell(40,10,$this->user->get("name")." ".$this->user->get("givenname"),0,1,'L');
+		$this->pdf->SetFont('Ubuntu','R',12);
+		$this->setTextColor(self::TEXTE_BLEU);
+
+
+		$texteCollectivite = "Collectivité : ".$author->get("name");
+		$texteUtilisateur = "Utilisateur : ".$this->user->get("name")." ".$this->user->get("givenname");
+
+        $this->pdf->Ln();
+        $this->pdf->Cell(40,10,$texteCollectivite,0,0,'L');
+        $this->pdf->Ln();
+        $this->pdf->Cell(40,10,$texteUtilisateur,0,0,'L');
+        $this->pdf->Ln();
 	
 		// imprimé la table de  transaction
-		$this->pdf->SetTextColor(40,36,94);
+		$this->setTextColor(self::TEXTE_NOIR);
 		$this->trans_table($this->actesTransaction);
 		$this->pdf->Cell(40,10,"",0,1);
 		
@@ -92,18 +110,14 @@ class ActesPdf {
   */
 	protected function set_head()
 	{
-		$title="BORDEREAU D'ACQUITTEMENT DE TRANSACTION";
         $this->pdf->Image($this->img, 10, 10, 190, 26);
 
 		$this->pdf->Ln(40);
-		$this->pdf->SetFont('Arial','B',16);
+		$this->pdf->SetFont('Ubuntu','R',16);
+        $this->setTextColor(self::TEXTE_NOIR);
+
 		$this->pdf->Cell(20);
-		//$this->pdf->SetFillColor(140,207,247);
-		
-		$x=$this->pdf->GetX();
-		$y=$this->pdf->GetY();
-		$this->pdf->SetFillColor(192);
-		$this->pdf->RoundedRect($x-2, $y-1, 150, 8, 3, 'DF', '13');
+        $title="Bordereau d'acquittement de transaction";
 		$this->pdf->Cell(140,6,$title,0,1);
 		$this->pdf->Ln(7);
 	}
@@ -141,27 +155,40 @@ class ActesPdf {
       		
       	$arch_url = $trans->get("archive_url");
 		if (empty($arch_url))
-			$arch_url= "Non définie";	
-			
-		//obtenir tous les info et commencer de les ajouter dans tableau
-		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(60);
-		$this->pdf->Cell(40,10,"Paramètre de la transaction :",0,1);
-		$this->pdf->SetFont('Arial','i',10);
-		$this->pdf->SetMyWidths(array(10,70,80));
-		$this->pdf->SetMyAligns(array('0','L','L'));
-		$this->pdf->SetMyBorder(array('0','BT','BT'));
-		$this->pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254)));
-		$this->pdf->myRow(array("","Type de transaction:",$transactionTypes[$trans->get("type")]));
-		$this->pdf->myRow(array("","Nature de l'acte:",$nature_description));
-		$this->pdf->myRow(array("","Numéro de l'acte:",$trans->get("number")));
-		$this->pdf->myRow(array("","Date de la décision:",$trans->get("decision_date")));
-		$this->pdf->myRow(array("","Objet:",$trans->get("subject")));
-        $this->pdf->myRow(array("","Documents papiers complémentaires:",$trans->getDocumentPapier()?"OUI":"NON"));
-        $this->pdf->myRow(array("","Classification matières/sous-matières:",$classifcation));
-		$this->pdf->myRow(array("","Identifiant unique:",$trans->get("unique_id")));
-		$this->pdf->myRow(array("","URL d'archivage:",$arch_url));
-		$this->pdf->myRow(array("","Notification:",$notification));
+			$arch_url= "Non définie";
+
+		$contenuTableau =[
+		["Type de transaction:",$transactionTypes[$trans->get("type")]],
+		["Nature de l'acte:",$nature_description],
+		["Numéro de l'acte:",$trans->get("number")],
+		["Date de la décision:",$trans->get("decision_date")],
+		["Objet:",$trans->get("subject")],
+        ["Documents papiers complémentaires:",$trans->getDocumentPapier()?"OUI":"NON"],
+        ["Classification matières/sous-matières:",$classifcation],
+		["Identifiant unique:",$trans->get("unique_id")],
+		["URL d'archivage:",$arch_url],
+		["Notification:",$notification]
+		];
+
+        //obtenir tous les info et commencer de les ajouter dans tableau
+        $this->pdf->SetFont('Ubuntu','B',12);
+        $this->pdf->Cell(40,10,"Paramètre de la transaction :",0,1);
+        $this->pdf->SetFont('Ubuntu','R',10);
+
+
+        $this->pdf->SetMyWidths(array(10,70,80));
+        $this->pdf->SetMyAligns(array('0','L','L'));
+        $this->pdf->SetMyBorder(array('0','0','0'));
+
+        $colorIndex=0;
+        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+
+		foreach ($contenuTableau as $ligne){
+		    $color = $colorArray[$colorIndex];
+            $this->pdf->setMyFillcolor(array($color,$color,$color));
+            $this->pdf->myRow(array("",$ligne[0],$ligne[1]));
+            $colorIndex = ($colorIndex +1) %2;
+        }
 	}
 
 	public function fichier_table(ActesTransaction $trans)
@@ -170,37 +197,44 @@ class ActesPdf {
 		$files = $trans->fetchFilesList();
 		
 		//obtenir tous les info et commencer de les ajouter dans tableau
-		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(69);
+		$this->pdf->SetFont('Ubuntu','B',12);
 		$this->pdf->Cell(40,10,"Fichier contenus dans l'archive :",0,1);
 
 		$this->pdf->SetMyWidths(array(2,100,40,50));
-		$this->pdf->SetMyAligns(array('C','C','C','C'));
-		$this->pdf->SetMyBorder(array('0','R','RL','L'));
-		$this->pdf->SetFont('Arial','B',10);
-		$this->pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
+		$this->pdf->SetMyAligns(array('C','L','C','C'));
+		$this->pdf->SetMyBorder(array('0','0','0','0'));
+
+		$this->pdf->SetFont('Ubuntu','B',10);
+		$this->pdf->setMyFillcolor(array(array(255,255,255),self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
 		$this->pdf->myRow(array("","Fichier","Type de fichier","Taille du fichier"));
-		$this->pdf->SetFont('Arial','i',10);
-		$this->pdf->SetMyBorder(array('R','1','1','1'));
-		$this->pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
+
+		$this->pdf->SetFont('Ubuntu','R',10);
+		$this->pdf->SetMyBorder(array('0','0','0','0'));
+
+        $colorIndex=0;
+        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+
 		foreach ($files as $file)
 		{
+		    $color = $colorArray[$colorIndex];
+            $this->pdf->setMyFillcolor(array(array(255,255,255),$color,$color,$color));
 			// c'est pas dans tous les cas on as de fichier posted ou fichier normal.
 			if ($file["posted_filename"])
 			{
-				$this->pdf->SetMyBorder(array('R','LTR','LTR','LTR'));
 				$this->pdf->myRow(array("","nom de original:","","" ));
-				$this->pdf->SetMyBorder(array('R','LBR','LBR','LBR'));			
 				$this->pdf->myRow(array("",$file["posted_filename"],$file["mimetype"],$file["size"] ));
+                $colorIndex = ($colorIndex + 1) %2;
 			}
+            $color = $colorArray[$colorIndex];
+            $this->pdf->setMyFillcolor(array(array(255,255,255),$color,$color,$color));
+
 			if ($file["name"])
 			{
-				$this->pdf->SetMyBorder(array('R','LTR','LTR','LTR'));
 				$this->pdf->myRow(array("","nom de métier:\n","",""));
-				$this->pdf->SetMyBorder(array('R','LBR','LBR','LBR'));	
 				$this->pdf->myRow(array("",$file["name"],$file["mimetype"],$file["size"]));
+                $colorIndex = ($colorIndex + 1) %2;
 			}
-		}	
+		}
 	}
 
 	public function cycle_table(ActesTransaction $trans)
@@ -209,31 +243,30 @@ class ActesPdf {
 		$workflow = $trans->fetchWorkflow();
 		$status = ActesTransaction :: getStatusList();
 		
-		$this->pdf->SetFont('Arial','',12);
-		$this->myRectangle(65);
+		$this->pdf->SetFont('Ubuntu','B',12);
 		$this->pdf->Cell(40,10,"Cycle de vie de la transaction :",0,1);
-		$this->pdf->SetMyWidths(array(10,50,60,60));
-		$this->pdf->SetMyAligns(array('C','C','C','C'));
-		$this->pdf->SetMyBorder(array('0','R','RL','L'));
-		$this->pdf->SetFont('Arial','B',10);
-		$this->pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
-		$this->pdf->myRow(array("","Etat","Date", "Message"));
-		$this->pdf->SetFont('Arial','i',10);
-		$this->pdf->SetMyBorder(array('R','1','1','1'));
-		$this->pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
-		foreach ($workflow as $stage) 
-		{
-			$this->pdf->myRow(array("",$status[$stage["status_id"]],Helpers :: getDateFromBDDDate($stage["date"], true),$stage["message"]));
-		}
-	}
 
-	protected function 	myRectangle($w,$h=6)
-	{
-		$x=$this->pdf->GetX();
-		$y=$this->pdf->GetY();
-		$this->pdf->SetFillColor(192);
-		
-		// pour changer le style, voir le commentaire de la fonction rounderect ExtendPdf::RoundeRect()
-		$this->pdf->RoundedRect($x-2, $y+2, $w, $h, 3, 'DF', '13');
+		$this->pdf->SetMyWidths(array(10,50,60,60));
+		$this->pdf->SetMyAligns(array('C','L','C','C'));
+		$this->pdf->SetMyBorder(array('0','0','0','0'));
+		$this->pdf->SetFont('Ubuntu','B',10);
+
+		$this->pdf->setMyFillcolor(array(array(255,255,255),self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
+		$this->pdf->myRow(array("","Etat","Date", "Message"));
+		$this->pdf->SetFont('Ubuntu','R',10);
+		$this->pdf->SetMyBorder(array('0','0','0','0'));
+
+        $colorIndex=0;
+        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+
+		foreach ($workflow as $stage)
+		{
+            $color = $colorArray[$colorIndex];
+            $this->pdf->setMyFillcolor(array(array(255,255,255),$color,$color,$color));
+
+			$this->pdf->myRow(array("",$status[$stage["status_id"]],Helpers :: getDateFromBDDDate($stage["date"], true),$stage["message"]));
+
+            $colorIndex = ($colorIndex + 1) %2;
+		}
 	}
 }

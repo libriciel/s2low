@@ -8,7 +8,8 @@ class ExtendPdf extends FPDF {
 	public $aligns;
 	public $fillcolor;
 	public $border;
-	
+	public $border;
+
   /**
   * \brief Initialiser l'entête du fichier pdf.
   * \param pas de paramètre.
