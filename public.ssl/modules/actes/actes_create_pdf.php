@@ -63,7 +63,8 @@ if ( ! $permission->canView($me,$owner)){
 }
 //passer les paramètre
 $pdf=new ActesPdf();
-	
+
+$data = new DataActesPdf($id);
 //construire le fichier pdf.
 $pdf->create_pdf($id);
 

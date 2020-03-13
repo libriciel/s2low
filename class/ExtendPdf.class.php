@@ -8,7 +8,6 @@ class ExtendPdf extends FPDF {
 	public $aligns;
 	public $fillcolor;
 	public $border;
-	public $border;
 
   /**
   * \brief Initialiser l'entête du fichier pdf.
@@ -62,7 +61,11 @@ class ExtendPdf extends FPDF {
 	    //Set the array of column alignments
 	    $this->aligns=$a;
 	}
-	
+
+    public function convertPixelsToMM($pixels){
+        return $pixels*25.4/72;
+    }
+
 	/**
   * @brief Initialiser border du chaque multicell.
   * @param $border =array =>la border de chaque multicell.
@@ -92,7 +95,7 @@ class ExtendPdf extends FPDF {
 	    $nb=0;
 	    for($i=0;$i<count($data);$i++)
 	        $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
-	    $h=5*$nb;
+	    $h=$nb*5;
 	    //Issue a page break first if needed
 	    $this->CheckPageBreak($h);
 	    //Draw the cells of the row
@@ -112,12 +115,12 @@ class ExtendPdf extends FPDF {
 	        $x=$this->GetX();
 	        $y=$this->GetY();
 	        //Draw the border
-	        $this->Rect($x,$y,$w,$h);
+            $this->SetFillColor($fc[0],$fc[1],$fc[2]);
+	        $this->Rect($x,$y,$w,$h,"F");
 	        //Print the text
-	        $this->SetFillColor($fc[0],$fc[1],$fc[2]);
 	        //default on fill cette cell avec le fillcolor, fillcolor default =255.
 	        //$this->MultiCell($w,5,$fc[0].'-'.$fc[1].'-'.$fc[2],$b,$a,1);
-	       	$this->MultiCell($w,5,$data[$i],$b,$a,1);
+	       	$this->MultiCell($w,5,$data[$i],$b,$a,true);
 	      	
 	        //Put the position to the right of the cell
 	        $this->SetXY($x+$w,$y);
