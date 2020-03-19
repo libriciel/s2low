@@ -138,6 +138,10 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         $openStackContainerWrapper->execute("createObject",["Options"]);
     }
 
+    /**
+     * @throws \OpenStack\Common\Error\BadResponseError
+     */
+
     public function testResetConnexion(){
         $this->openStackMock->expects($this->exactly(2))
             ->method("identityV3")

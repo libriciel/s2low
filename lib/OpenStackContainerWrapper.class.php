@@ -11,7 +11,7 @@ class OpenStackContainerWrapper{
     /** @var string  */
     private $containerFullName;
     /** @var array  */
-    private $parametres;
+    private $generate_token_options;
     /** @var OpenStack */
     private $openStack;
     /** @var Token */
@@ -20,9 +20,9 @@ class OpenStackContainerWrapper{
     private $container;
 
 
-    public function __construct( string $containerFullName, array $parametres, $openStack){
+    public function __construct(string $containerFullName, array $generate_token_options, OpenStack $openStack){
         $this->containerFullName = $containerFullName;
-        $this->parametres = $parametres;
+        $this->generate_token_options = $generate_token_options;
         $this->openStack = $openStack;
     }
 
@@ -42,10 +42,7 @@ class OpenStackContainerWrapper{
      */
 
     private function hasValidToken(){
-        if(isset($this->token) && !$this->token->hasExpired()){
-            return true;
-        }
-        return false;
+        return (isset($this->token) && !$this->token->hasExpired());
     }
 
     public function resetConnection(){
@@ -54,8 +51,8 @@ class OpenStackContainerWrapper{
     }
 
     private function updateConnection(){
-        $this->token =$this->openStack->identityV3()->generateToken($this->parametres);
-        $parametresWithToken = $this->parametres;
+        $this->token =$this->openStack->identityV3()->generateToken($this->generate_token_options);
+        $parametresWithToken = $this->generate_token_options;
         $parametresWithToken["cachedToken"]=$this->token->export();
 
         $this->container = $this->openStack
