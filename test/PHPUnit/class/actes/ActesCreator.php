@@ -16,8 +16,7 @@ class ActesCreator {
 	public function createTransaction($status,$archive_path,$tmp_dir){
 	    if(is_null($archive_path)){
 	        $archive_name = uniqid(rand(), true);
-        }
-	    else{
+        } else{
             $archive_name = basename($archive_path);
             copy($archive_path,$tmp_dir."/$archive_name");
         }

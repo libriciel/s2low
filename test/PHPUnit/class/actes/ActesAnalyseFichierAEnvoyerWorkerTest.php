@@ -172,7 +172,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         }
 
         $transaction_id = $data["transaction_id"];
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_POSTE, $transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
