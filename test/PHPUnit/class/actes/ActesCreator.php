@@ -14,9 +14,12 @@ class ActesCreator {
 	}
 
 	public function createTransaction($status,$archive_path,$tmp_dir){
-		$archive_name = basename($archive_path);
-
-		copy($archive_path,$tmp_dir."/$archive_name");
+	    if(is_null($archive_path)){
+	        $archive_name = uniqid(rand(), true);
+        } else{
+            $archive_name = basename($archive_path);
+            copy($archive_path,$tmp_dir."/$archive_name");
+        }
 
 		$this->last_envelope_id = $this->actesEnvelopeSQL->create(1,basename($tmp_dir)."/$archive_name");
 

@@ -34,6 +34,7 @@
 - Envoi de la typologie vers Pastell afin de pouvoir envoyer des actes vers un Pastel V3 #546 
 - Dans certains cas très rares, les transactions Helios n'était pas envoyées #551
 - Suppression d'un warning lors de l'utilisation de admin_user_edit_handler #583
+- Actes :  gestion des cas ou l'enveloppe n'est trouvee ni en local ni dans le cloud #569
 
 ## Retrait
 - la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée
