@@ -19,6 +19,8 @@ class OpenStackContainerWrapper{
     /** @var Container */
     private $container;
 
+    const NUMBER_OF_ATTEMPTS = 5;
+
 
     public function __construct(string $containerFullName, array $generate_token_options, OpenStack $openStack){
         $this->containerFullName = $containerFullName;
@@ -67,22 +69,58 @@ class OpenStackContainerWrapper{
      * @throws BadResponseError
      */
 
-    public function execute($function,$options){
-        if($function === "createObject"){
-            $result = $this->getContainer()->createObject($options);
-        }
-        elseif ($function === "download"){
-            $result = $this->getContainer()->getObject($options)->download();
-        }
-        elseif ($function === "delete"){
-            $result = $this->getContainer()->getObject($options)->delete();
-        }
-        elseif ($function === "objectExists"){
-            $result = $this->getContainer()->objectExists($options);
-        }
-        else{
-            throw new UnexpectedValueException("OpenStackContainerWrapper->execute() : Unknown function ".$function);
-        }
-        return $result;
+    private function createObjectCommand($container,$options){
+        return $container->createObject($options);
+    }
+
+    private function downloadCommand($container,$options){
+        return $container->getObject($options)->download();
+    }
+
+    private function deleteCommand($container,$options){
+        return $container->getObject($options)->delete();
+    }
+
+    private function objectExistsCommand($container,$options){
+        return $container->objectExists($options);
+    }
+
+    public function createObject($options){
+        $this->executeCommand('createObjectCommand',$options);
+    }
+
+    public function download($options){
+        $this->executeCommand('downloadCommand',$options);
+    }
+
+    public function delete($options){
+        $this->executeCommand('deleteCommand',$options);
+    }
+
+    public function objectExists($options){
+        $this->executeCommand('objectExistsCommand',$options);
+    }
+
+    /**
+     * @param $function
+     * @param $options
+     * @return mixed
+     * @throws Exception
+     */
+
+    private function executeCommand($function, $options){
+        $attempts = 0;
+        do{
+            try{
+                return $this->$function($this->getContainer(),$options);
+            } catch (Exception $e){
+                if($attempts>0){        //No need to wait if it's only a token problem
+                    sleep(1);
+                }
+                $attempts++;
+                $this->resetConnection();
+            }
+        } while($attempts < self::NUMBER_OF_ATTEMPTS);
+        throw $e;
     }
 }

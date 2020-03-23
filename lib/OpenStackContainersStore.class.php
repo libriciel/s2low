@@ -1,9 +1,7 @@
 <?php
 
 
-class OpenStackContainersManager {
-
-    const NUMBER_OF_ATTEMPTS = 5;
+class OpenStackContainersStore {
 
 	/** @var OpenStackContainerWrapper[] */
 	private $containerWrappers;
@@ -42,34 +40,8 @@ class OpenStackContainersManager {
      * @throws UnrecoverableException
      */
 
-	private function getContainerWrapper($containerName){
+	public function getContainerWrapper($containerName){
         $this->checkContainerAvailability($containerName);
         return $this->containerWrappers[$containerName];
-    }
-
-    /**
-     * @param $containerName
-     * @param $function
-     * @param $options
-     * @return bool|object|\OpenStack\ObjectStore\v1\Models\StorageObject|\Psr\Http\Message\StreamInterface|void
-     * @throws UnrecoverableException
-     * @throws Exception
-     */
-
-    public function execute($containerName,$function,$options){
-	    $this->checkContainerAvailability($containerName);
-	    $attempts = 0;
-	    do{
-	        try{
-	            return $this->getContainerWrapper($containerName)->execute($function,$options);
-            } catch (Exception $e){
-	            if($attempts>0){        //No need to wait if it's only a token problem
-                    sleep(1);
-                }
-	            $attempts++;
-                $this->containerWrappers[$containerName]->resetConnection();
-            }
-        } while($attempts < self::NUMBER_OF_ATTEMPTS);
-        throw $e;
     }
 }

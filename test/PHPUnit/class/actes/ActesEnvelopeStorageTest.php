@@ -25,7 +25,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$this->dateTomorrow = date("Y-m-d",strtotime("tomorrow"));
 
 		$openStackContainersManager =
-			$this->getMockBuilder(OpenStackContainersManager::class)
+			$this->getMockBuilder(OpenStackContainersStore::class)
 				->disableOriginalConstructor()
 				->getMock();
 

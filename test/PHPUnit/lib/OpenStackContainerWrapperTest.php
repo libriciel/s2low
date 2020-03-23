@@ -69,21 +69,6 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         return $openStoreV1Mock;
     }
 
-    /**
-     * @throws \OpenStack\Common\Error\BadResponseError
-     */
-    public function testExecuteUnknownFunction(){
-
-        $openStackContainerWrapper = new OpenStackContainerWrapper(
-            "ContainerName",
-            ['options'],
-            $this->openStackMock);
-
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage("OpenStackContainerWrapper->execute() : Unknown function function");
-        $openStackContainerWrapper->execute("function","Options");
-    }
-
     public function testExecuteKnownFunction(){
         $this->openStackMock->expects($this->once())
             ->method("identityV3")
@@ -98,7 +83,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->parametres,
             $this->openStackMock);
 
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
     }
 
     public function testExecuteFunctionOnContainerWithOutdatedToken(){
@@ -125,17 +110,17 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         // Première connexion : le token est périmé mais le getContainer renvoie
         // quand même un container
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
         // Deuxième connexion : le token périmé est détecté. Nouvelle connexion
         // à identityV3 et objectStoreV1
         // Première éxécution de createObject sur la deuxième instance de
         // $containerMock
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
         //Troisième connexion : le token en ok. Aucun appel à identityV3
         // et objectStoreV1
         // Deuxième éxécution de createObject sur la deuxième instance de
         // $containerMock
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
     }
 
     /**
@@ -165,16 +150,94 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->openStackMock);
 
         // Première connexion : premier appel à identityV3 et objectStoreV1
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
         $openStackContainerWrapper->resetConnection();
         // Deuxième connexion : deuxième appel à identityV3 et objectStoreV1
         // Première éxécution de createObject sur la deuxième instance de
         // $containerMock
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
         //Troisième connexion : le token en ok. Aucun appel à identityV3
         // et objectStoreV1
         // Deuxième éxécution de createObject sur la deuxième instance de
         // $containerMock
-        $openStackContainerWrapper->execute("createObject",["Options"]);
+        $openStackContainerWrapper->createObject(["Options"]);
+    }
+
+
+    /**
+     * @throws UnrecoverableException
+     */
+    public function testExecute(){
+        $this->openStackContainerWrapperMock->expects($this->once())
+            ->method(self::EXECUTE)
+            ->with($this->equalTo(self::FUNCTION1),
+                $this->equalTo(self::OPTIONS))
+            ->willReturn(true);
+
+        $this->openStackContainerWrapperFactoryMock
+            ->expects($this->once())
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
+
+        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+
+        $result = $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
+        $this->assertEquals(true,$result);
+    }
+
+    /**
+     * @throws UnrecoverableException
+     */
+
+    public function testExecuteTwice(){
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(0))
+            ->method(self::EXECUTE)
+            ->willThrowException(new Exception());
+
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(1))
+            ->method("resetConnection");
+
+        $this->openStackContainerWrapperMock
+            ->expects($this->at(2))
+            ->method(self::EXECUTE)
+            ->with($this->equalTo(self::FUNCTION1),
+                $this->equalTo(self::OPTIONS));
+        //->willReturn(true);
+
+        $this->openStackContainerWrapperFactoryMock
+            ->expects($this->once())
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
+
+        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+        $result = $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
+        //$this->assertEquals(true,$result);
+    }
+
+    /**
+     * @throws UnrecoverableException
+     */
+
+    public function testExecuteFailsUntilTheEnd(){
+        $this->openStackContainerWrapperMock->expects($this->exactly(OpenStackContainersStore::NUMBER_OF_ATTEMPTS))
+            ->method(self::EXECUTE)
+            ->willThrowException(new BadMethodCallException("Exception de test"));
+
+        $this->openStackContainerWrapperFactoryMock
+            ->expects($this->once())
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
+
+        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Exception de test");
+
+        $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
     }
 }
