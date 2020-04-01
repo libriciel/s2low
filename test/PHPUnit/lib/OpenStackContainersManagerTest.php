@@ -36,8 +36,6 @@ class OpenStackContainersManagerTest extends S2lowTestCase {
      */
 
     public function testExecuteOnUnavailableContainer(){
-        $this->openStackContainerWrapperMock->expects($this->never())
-            ->method(self::EXECUTE);
 
         $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
@@ -50,7 +48,21 @@ class OpenStackContainersManagerTest extends S2lowTestCase {
         $this->expectException(UnrecoverableException::class);
         $this->expectExceptionMessage("Impossible de trouver la configuration Openstack pour UnavailableContainer");
 
-        $openStackContainerManager->execute("UnavailableContainer", self::FUNCTION1, self::OPTIONS);
+        $openStackContainerManager->getContainerWrapper("UnavailableContainer");
+    }
+
+    public function testExecuteOnAvailableContainer(){
+
+        $this->openStackContainerWrapperFactoryMock
+            ->expects($this->once())
+            ->method(self::GET_CONTAINER_WRAPPER)
+            ->willReturn($this->openStackContainerWrapperMock);
+
+        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+
+        $this->assertEquals($openStackContainerManager->getContainerWrapper(self::ACTES),
+            $this->openStackContainerWrapperMock);
     }
 
 }

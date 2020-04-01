@@ -23,9 +23,6 @@ class OpenStackContainerWrapper{
 
 
     public function __construct(string $containerFullName, array $generate_token_options, OpenStack $openStack){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
-
         $this->containerFullName = $containerFullName;
         $this->generate_token_options = $generate_token_options;
         $this->openStack = $openStack;
@@ -36,8 +33,6 @@ class OpenStackContainerWrapper{
      */
 
     private function getContainer(){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         //echo "getContainer\n";
         //echo 'isset($this->container)';
         //var_dump(isset($this->container));
@@ -54,8 +49,6 @@ class OpenStackContainerWrapper{
      */
 
     private function hasValidToken(){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         //echo "hasValidToken";
         //echo 'isset($this->token)';
         //var_dump(isset($this->token));
@@ -68,15 +61,11 @@ class OpenStackContainerWrapper{
     }
 
     public function resetConnection(){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         $this->token = null;
         $this->container = null;
     }
 
     private function updateConnection(){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         //echo "updateConnection------------------------------------------------------------------------\n";
         $this->token =$this->openStack->identityV3()->generateToken($this->generate_token_options);
         //echo "1---------------------------------------------------------------------------------------\n";
@@ -103,50 +92,34 @@ class OpenStackContainerWrapper{
      */
 
     private function createObjectCommand(Container $container,$options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($options);
         return $container->createObject($options);
     }
 
     private function downloadCommand(Container $container,$options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         return $container->getObject($options)->download();
     }
 
     private function deleteCommand(Container $container,$options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         return $container->getObject($options)->delete();
     }
 
     private function objectExistsCommand(Container $container,$options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         return $container->objectExists($options);
     }
 
     public function createObject($options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         $this->executeCommand('createObjectCommand',$options);
     }
 
     public function download($options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         $this->executeCommand('downloadCommand',$options);
     }
 
     public function delete($options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         $this->executeCommand('deleteCommand',$options);
     }
 
     public function objectExists($options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($this->token);
         $this->executeCommand('objectExistsCommand',$options);
     }
 
@@ -158,16 +131,11 @@ class OpenStackContainerWrapper{
      */
 
     private function executeCommand($function, $options){
-        echo __FUNCTION__."--------------------------\n";
-        var_dump($function);
-        var_dump($options);
         $attempts = 0;
         do{
             try{
                 return $this->$function($this->getContainer(),$options);
             } catch (Exception $e){
-                var_dump($e->getMessage());
-                die();
                 if($attempts>0){        //No need to wait if it's only a token problem
                     sleep(1);
                 }

@@ -9,17 +9,17 @@ class OpenStackSwiftWrapper {
 	const OPENSTACK_SERVICE = 'swift';
 
 	/** @var OpenStackContainersStore  */
-    private $openStackContainersManager;
+    private $openStackContainersStore;
 
 	private $fileSystem;
 
     private $logger;
 
     public function __construct(
-        OpenStackContainersStore $OpenStackContainersManager,
+        OpenStackContainersStore $openStackContainersStore,
         Monolog\Logger $logger
     ){
-        $this->openStackContainersManager = $OpenStackContainersManager;
+        $this->openStackContainersStore = $openStackContainersStore;
         $this->fileSystem = new Filesystem();
 		$this->logger = $logger;
 	}
@@ -53,7 +53,7 @@ class OpenStackSwiftWrapper {
             'stream'=>$stream
         ];
 
-        $containerWrapper = $this->openStackContainersManager->getContainerWrapper($container_name);
+        $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
         $containerWrapper->createObject($fileProperties);
 
 		$this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
@@ -76,7 +76,7 @@ class OpenStackSwiftWrapper {
             $this->fileSystem->mkdir($dirname_local);
         }
 
-        $containerWrapper = $this->openStackContainersManager->getContainerWrapper($container_name);
+        $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
         $stream = $containerWrapper->download($filepath_on_cloud);
 
         $this->fileSystem->dumpFile($filepath_local,$stream);
@@ -108,8 +108,8 @@ class OpenStackSwiftWrapper {
 
     public function deleteFile($container_name,$filepath){
         $filename = basename($filepath);
-		$containerWrapper = $this->openStackContainersManager->getContainerWrapper($container_name);
-        $containerWrapper->deleteFile($filename);
+		$containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
+        $containerWrapper->delete($filename);
 		$this->logger->info("Delete [$container_name]$filepath");
     }
 
@@ -121,7 +121,7 @@ class OpenStackSwiftWrapper {
 
     public function fileExistsOnCloud($container_name,$filename){
     	try {
-            $containerWrapper = $this->openStackContainersManager->getContainerWrapper($container_name);
+            $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
 			return $containerWrapper->objectExists($filename);
 		} catch (Exception $e){
     		return false;

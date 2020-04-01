@@ -220,7 +220,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws UnrecoverableException
      */
 
-    public function testExecuteTwice(){
+  /*  public function testExecuteTwice(){
 
         /*$this->openStackContainerWrapperMock
             ->expects($this->at(0))
@@ -247,28 +247,44 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
         $result = $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
         //$this->assertEquals(true,$result);*/
-    }
+    //}
 
     /**
      * @throws UnrecoverableException
      */
 
     public function testExecuteFailsUntilTheEnd(){
-        $this->openStackContainerWrapperMock->expects($this->exactly(OpenStackContainersStore::NUMBER_OF_ATTEMPTS))
-            ->method(self::EXECUTE)
-            ->willThrowException(new BadMethodCallException("Exception de test"));
 
-        $this->openStackContainerWrapperFactoryMock
-            ->expects($this->once())
-            ->method(self::GET_CONTAINER_WRAPPER)
-            ->willReturn($this->openStackContainerWrapperMock);
+        $this->openStackMock->expects($this->exactly(5))
+            ->method("identityV3")
+            ->will(
+                $this->onConsecutiveCalls(
+                    $this->getIdentityService(true),
+                    $this->getIdentityService(true),
+                    $this->getIdentityService(true),
+                    $this->getIdentityService(true),
+                    $this->getIdentityService(true)
+                ));
 
-        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
-        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+        $this->openStackMock->expects($this->exactly(5))
+            ->method("objectStoreV1")
+            ->will(
+                $this->onConsecutiveCalls(
+                    $this->throwException(new BadMethodCallException("Exception1")),
+                    $this->throwException(new BadMethodCallException("Exception2")),
+                    $this->throwException(new BadMethodCallException("Exception3")),
+                    $this->throwException(new BadMethodCallException("Exception4")),
+                    $this->throwException(new BadMethodCallException("Exception5"))
+                ));
+
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            "ContainerName",
+            $this->parametres,
+            $this->openStackMock);
 
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage("Exception de test");
+        $this->expectExceptionMessage("Exception5");
 
-        $openStackContainerManager->execute(self::ACTES, self::FUNCTION1, self::OPTIONS);
+        $openStackContainerWrapper->objectExists("ObjetTest");
     }
 }
