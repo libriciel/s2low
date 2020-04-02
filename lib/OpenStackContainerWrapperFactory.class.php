@@ -20,6 +20,8 @@ class OpenStackContainerWrapperFactory
 
         $openStack = new OpenStack($parametres);
 
-        return new OpenStackContainerWrapper($containerFullName,$parametres,$openStack);
+        $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,$parametres,$openStack);
+
+        return new OpenStackContainerWrapper($openStackContainerFetcher);
     }
 }

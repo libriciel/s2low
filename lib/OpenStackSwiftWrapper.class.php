@@ -64,6 +64,7 @@ class OpenStackSwiftWrapper {
      * @param $filepath_local
      * @param string $filepath_on_cloud
      * @throws UnrecoverableException
+     * @throws Exception
      */
 
     private function retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud = ''){
@@ -104,6 +105,7 @@ class OpenStackSwiftWrapper {
      * @param $container_name
      * @param $filepath
      * @throws UnrecoverableException
+     * @throws Exception
      */
 
     public function deleteFile($container_name,$filepath){

@@ -1,16 +1,16 @@
 <?php
 
 
+use PHPUnit\Framework\MockObject\MockObject;
 
 class OpenStackContainersManagerTest extends S2lowTestCase {
 
-    private const EXECUTE = "execute";
     private const GET_CONTAINER_WRAPPER = "getContainerWrapper";
     private const ACTES = "actes";
-    private const FUNCTION1 = "function";
-    private const OPTIONS = "options";
 
+    /** @var MockObject | OpenStackContainerWrapper  */
     private $openStackContainerWrapperMock;
+    /** @var MockObject | OpenStackContainerWrapperFactory */
     private $openStackContainerWrapperFactoryMock;
     private $openStackConfig;
 
@@ -50,6 +50,10 @@ class OpenStackContainersManagerTest extends S2lowTestCase {
 
         $openStackContainerManager->getContainerWrapper("UnavailableContainer");
     }
+
+    /**
+     * @throws UnrecoverableException
+     */
 
     public function testExecuteOnAvailableContainer(){
 
