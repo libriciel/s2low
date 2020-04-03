@@ -1,12 +1,5 @@
 <?php
 
-use GuzzleHttp\Psr7\Stream;
-use OpenStack\ObjectStore\v1\Models\Container;
-use OpenStack\ObjectStore\v1\Models\StorageObject;
-use OpenStack\ObjectStore\v1\Service;
-use OpenStack\OpenStack;
-use PHPUnit\Framework\MockObject\MockObject;
-
 class ActesEnvelopeStorageTest extends S2lowTestCase {
     private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = "s2low-phpunit-acte-envelope-storage-test";
     private const ACTES_FILES_UPLOAD_ROOT = 'actes_files_upload_root';
@@ -25,7 +18,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$this->dateTomorrow = date("Y-m-d",strtotime("tomorrow"));
 
 		$openStackContainersManager =
-			$this->getMockBuilder(OpenStackContainersStore::class)
+			$this->getMockBuilder(OpenStackContainerStore::class)
 				->disableOriginalConstructor()
 				->getMock();
 

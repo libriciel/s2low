@@ -8,7 +8,7 @@ class OpenStackSwiftWrapper {
 
 	const OPENSTACK_SERVICE = 'swift';
 
-	/** @var OpenStackContainersStore  */
+	/** @var OpenStackContainerStore  */
     private $openStackContainersStore;
 
 	private $fileSystem;
@@ -16,7 +16,7 @@ class OpenStackSwiftWrapper {
     private $logger;
 
     public function __construct(
-        OpenStackContainersStore $openStackContainersStore,
+        OpenStackContainerStore $openStackContainersStore,
         Monolog\Logger $logger
     ){
         $this->openStackContainersStore = $openStackContainersStore;

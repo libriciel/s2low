@@ -9,7 +9,7 @@ class OpenStackContainerFetcher{
     /** @var OpenStack */
     private $openStack;
 
-    public function __construct($containerFullName,$generate_token_options,$openStack)
+    public function __construct(string $containerFullName,array $generate_token_options,OpenStack $openStack)
     {
         $this->containerFullName = $containerFullName;
         $this->generate_token_options = $generate_token_options;

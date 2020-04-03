@@ -1,7 +1,7 @@
 <?php
 
 
-class OpenStackContainersStore {
+class OpenStackContainerStore {
 
 	/** @var OpenStackContainerWrapper[] */
 	private $containerWrappers;

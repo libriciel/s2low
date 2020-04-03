@@ -3,7 +3,7 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OpenStackContainersManagerTest extends S2lowTestCase {
+class OpenStackContainerStoreTest extends S2lowTestCase {
 
     private const GET_CONTAINER_WRAPPER = "getContainerWrapper";
     private const ACTES = "actes";
@@ -42,7 +42,7 @@ class OpenStackContainersManagerTest extends S2lowTestCase {
             ->method(self::GET_CONTAINER_WRAPPER)
             ->willReturn($this->openStackContainerWrapperMock);
 
-        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager = new OpenStackContainerStore($this->openStackContainerWrapperFactoryMock);
         $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
 
         $this->expectException(UnrecoverableException::class);
@@ -62,7 +62,7 @@ class OpenStackContainersManagerTest extends S2lowTestCase {
             ->method(self::GET_CONTAINER_WRAPPER)
             ->willReturn($this->openStackContainerWrapperMock);
 
-        $openStackContainerManager = new OpenStackContainersStore($this->openStackContainerWrapperFactoryMock);
+        $openStackContainerManager = new OpenStackContainerStore($this->openStackContainerWrapperFactoryMock);
         $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
 
         $this->assertEquals($openStackContainerManager->getContainerWrapper(self::ACTES),
