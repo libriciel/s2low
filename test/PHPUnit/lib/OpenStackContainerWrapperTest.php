@@ -180,7 +180,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
 
         // Première connexion : le token est périmé mais le getNewTokenAndContainer renvoie
         // quand même un container
@@ -222,7 +222,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
 
         // Première connexion : premier appel à identityV3 et objectStoreV1
         $openStackContainerWrapper->createObject(["options1"]);
@@ -255,7 +255,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
 
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage("Exception5");

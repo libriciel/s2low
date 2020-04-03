@@ -13,10 +13,14 @@ class OpenStackContainerWrapper{
     /** @var OpenStackContainerFetcher */
     private $openStackContainerFetcher;
 
+    /** @var int  */
+    private $timeBetweenAttempts;
+
     const NUMBER_OF_ATTEMPTS = 5;
 
 
-    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher){
+    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher,int $timeBetweenAttempts=1){
+        $this->timeBetweenAttempts=$timeBetweenAttempts;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
     }
 
@@ -117,7 +121,7 @@ class OpenStackContainerWrapper{
                 return $function($this->getContainer(),$options);
             } catch (Exception $e){
                 if($attempts>0){        //No need to wait if it's only a token problem
-                    sleep(1);
+                    sleep($this->timeBetweenAttempts);
                 }
                 $attempts++;
                 $this->resetConnection();
