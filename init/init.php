@@ -144,15 +144,15 @@ $openStackConfigMailsec->openstack_region = MAILSEC_OPENSTACK_REGION;
 $openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
 $openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory();
-$openStackContainersManager = new OpenStackContainerStore($openStackContainerWrapperFactory);
+$openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
-$openStackContainersManager->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
-$openStackContainersManager->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
-$openStackContainersManager->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
-$openStackContainersManager->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME,$openStackConfigHeliosRetour);
-$openStackContainersManager->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME,$openStackConfigMailsec);
+$openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
+$openStackContainerStore->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
+$openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
+$openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME,$openStackConfigHeliosRetour);
+$openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME,$openStackConfigMailsec);
 
-$objectInstancier->set(OpenStackContainerStore::class,$openStackContainersManager);
+$objectInstancier->set(OpenStackContainerStore::class,$openStackContainerStore);
 
 
 $objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);

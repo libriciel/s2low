@@ -26,6 +26,7 @@
 - Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
 - Ajout d'un script permettant de changer le statut d'une transaction actes
 - OpenStack : Passage de l'Identity API v2.0 à l'Identity API v3.0.  Toutes les constantes *_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par *_OPENSTACK_AUTHENTICATION_URL_V3 #574
+- Openstack : tentative de reconnexion lors d'une erreur #591
  
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
