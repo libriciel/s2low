@@ -1,12 +1,5 @@
 <?php
 
-use GuzzleHttp\Psr7\Stream;
-use OpenStack\ObjectStore\v1\Models\Container;
-use OpenStack\ObjectStore\v1\Models\StorageObject;
-use OpenStack\ObjectStore\v1\Service;
-use OpenStack\OpenStack;
-use PHPUnit\Framework\MockObject\MockObject;
-
 class ActesEnvelopeStorageTest extends S2lowTestCase {
     private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = "s2low-phpunit-acte-envelope-storage-test";
     private const ACTES_FILES_UPLOAD_ROOT = 'actes_files_upload_root';
@@ -24,82 +17,29 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 
 		$this->dateTomorrow = date("Y-m-d",strtotime("tomorrow"));
 
-		$content =
-			$this->getMockBuilder(Stream::class)
+		$openStackContainersManager =
+			$this->getMockBuilder(OpenStackContainerStore::class)
 				->disableOriginalConstructor()
 				->getMock();
 
-		$dataObject =
-			$this->getMockBuilder(StorageObject::class)
-				->disableOriginalConstructor()
-				->getMock();
+		$openStackContainersManager->expects($this->never())
+            ->method($this->anything());
 
-		$dataObject
+		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-			->method("download")
-			->willReturn($content);
+        $openStackSwiftWrapper
+            ->expects($this->never())
+            ->method("retrieveFile");
 
-		$container =
-			$this->getMockBuilder(Container::class)
-				->disableOriginalConstructor()
-				->getMock();
+        $openStackSwiftWrapper
+            ->expects($this->never())
+            ->method("deleteFile");
 
-		$container
-
-			->method("getObject")
-			->willReturn($dataObject);
-
-		$container
-
-			->method("objectExists")
-			->willReturn(true);
-
-		$service =
-			$this->getMockBuilder(Service::class)
-				->disableOriginalConstructor()
-				->getMock();
-
-		$service
-
-			->method("getContainer")
-			->willReturn($container);
-
-		$openStack =
-			$this->getMockBuilder(OpenStack::class)
-				->disableOriginalConstructor()
-				->getMock();
-
-		$openStack
-
-			->method("objectStoreV1")
-			->willReturn($service);
-
-
-		$openStackFactory =
-			$this->getMockBuilder(OpenStackFactory::class)
-				->disableOriginalConstructor()
-				->getMock();
-
-		$openStackFactory
-
-			->method("getInstance")
-			->willReturn($openStack);
-		/** @var MockObject|OpenStackFactory $openStackFactory */
-
-        $openStackFactory
-            ->method("getOpenStackParameters")
-            ->willReturn([
-                "region" => "region",
-                "user" => [
-                    'name'=> "name",
-                    'password'=> "password",
-                    'domain'=> ['name'=>'Default']
-                ]]);
-
-		$openStackSwiftWrapper = new OpenStackSwiftWrapper(
-			$openStackFactory,
-			$this->getObjectInstancier()->get('Monolog\Logger')
-		);
+		$openStackSwiftWrapper
+            ->method("fileExistsOnCloud")
+            ->willReturn(true);
 
 		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
 	}

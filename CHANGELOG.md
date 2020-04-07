@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.2.1 - 
+
+## Evolution
+- Openstack : tentative de reconnexion lors d'une erreur #591
+
+## Correction
+
+## Retrait
+
 
 ## 4.2.0 - 2020-03-09
 

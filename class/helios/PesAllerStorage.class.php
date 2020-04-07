@@ -85,7 +85,7 @@ class PesAllerStorage {
     }
 
     public function deleteIfIsInCloud($sha1){
-    	try {
+        try {
 			$file = $this->helios_files_upload_root . "/" . $sha1;
 			if (!$this->openStackSwiftWrapper->fileExistsOnCloud(
 				self::CONTAINER_NAME,
