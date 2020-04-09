@@ -124,8 +124,10 @@ class ActesNotification {
             $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
             $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
 
-            $data = new DataActesPdf($transactionInfo['id']);
-            $data->setAddEmailNotificationField(true);
+            $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+            $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
+
+            $data = $extractDataForBordereauPDF->extract($transactionInfo['id'],true);
 
             $pdf = new ActesPdf();
 

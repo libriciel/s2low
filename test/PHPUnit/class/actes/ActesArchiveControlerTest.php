@@ -54,7 +54,6 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$actesEnvelopeStorage
-
 			->method("deleteIfIsInCloud")
 			->willReturn(false);
 		$this->getObjectInstancier()->set(ActesEnvelopeStorage::class,$actesEnvelopeStorage);

@@ -8,8 +8,10 @@ class ActesPdfTest extends S2lowTestCase {
     public function testCreatePdf(){
         $transaction_id = $this->createTransaction(4);
 
-        $data = new DataActesPdf($transaction_id);
-        $data->setAddEmailNotificationField(true);
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
+
+        $data = $extractDataForBordereauPDF->extract($transaction_id,true);
 
         $pdf=new ActesPdf();
         $pdf->create_pdf($data);

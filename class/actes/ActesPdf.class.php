@@ -15,7 +15,7 @@ class ActesPdf {
     const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
     const TAILLE_POLICE_TABLEAU = 12;
 
-    /** @var DataActesPdf */
+    /** @var DataForBordereauPDF **/
     private $data;
 
 	/**
@@ -27,10 +27,6 @@ class ActesPdf {
 	
 	public function __construct() {
         $this->img = SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg";
-  	}
-
-  	public function addEmailNotificationField(){
-	    $this->data->setAddEmailNotificationField(true);
   	}
 
   	public function setTextColor(array $colors){
@@ -48,7 +44,7 @@ class ActesPdf {
         $this->pdf->AddPage();
     }
 
-    public function initData(DataActesPdf $data){
+    public function initData(DataForBordereauPDF $data){
 	    $this->data = $data;
         $this->initPage();
     }
@@ -82,9 +78,9 @@ class ActesPdf {
         $this->pdf->Ln();
     }
 
-	public function create_pdf($transaction_id) {
+	public function create_pdf($data) {
 
-        $this->initData($transaction_id);
+        $this->initData($data);
 		//définir l'entête de page.
 		$this->set_head();
 

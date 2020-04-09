@@ -62,7 +62,10 @@ if ( ! $permission->canView($me,$owner)){
 	exit ();
 }
 //passer les paramètre
-$data = new DataActesPdf($id);
+$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+$extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
+
+$data = $extractDataForBordereauPDF->extract($id);
 
 $pdf=new ActesPdf();
 

@@ -220,6 +220,5 @@ $objectInstancier->set('redis_port',REDIS_PORT);
 
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
-
 $frontController = new FrontController($objectInstancier);
 
