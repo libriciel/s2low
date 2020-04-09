@@ -67,7 +67,7 @@ $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF:
 
 $data = $extractDataForBordereauPDF->extract($id);
 
-$pdf=new ActesPdf();
+$pdf=new ActesPdfLegacy();
 
 //construire le fichier pdf.
 $pdf->create_pdf($data);
