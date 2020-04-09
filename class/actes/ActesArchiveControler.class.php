@@ -174,11 +174,13 @@ class ActesArchiveControler {
 
 		$date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
 		$actesFilesForSAE->date_postage = date("d/m/Y",strtotime($date_postage['date']));
+        $data = new DataActesPdf($transaction_id);
+
 		//passer les paramètre
 		$pdf=new ActesPdf();
 
 		//construire le fichier pdf.
-		$pdf->create_pdf($transaction_id);
+		$pdf->create_pdf($data);
 		$pdf->output($tmp_folder."/bordereau_acquit","F");
 		$actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
 

@@ -123,9 +123,13 @@ class ActesNotification {
         if ($status_info) {
             $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
             $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
+
+            $data = new DataActesPdf($transactionInfo['id']);
+            $data->setAddEmailNotificationField(true);
+
             $pdf = new ActesPdf();
-            $pdf->addEmailNotificationField();
-            $pdf->create_pdf($transactionInfo['id']);
+
+            $pdf->create_pdf($data);
             $monpdf = $pdf->output("bordereau_acquittement", "S");
             $mailer->addStringAsFile("bordereau_acquittement.pdf", $monpdf);
             if($withFile && ! $add_url_recup ){

@@ -48,8 +48,8 @@ class ActesPdf {
         $this->pdf->AddPage();
     }
 
-    public function initData($transaction_id){
-	    $this->data = new DataActesPdf($transaction_id);
+    public function initData(DataActesPdf $data){
+	    $this->data = $data;
         $this->initPage();
     }
 
@@ -83,6 +83,7 @@ class ActesPdf {
     }
 
 	public function create_pdf($transaction_id) {
+
         $this->initData($transaction_id);
 		//définir l'entête de page.
 		$this->set_head();
@@ -200,17 +201,19 @@ class ActesPdf {
         $colorIndex=0;
         $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
 
-        foreach ($fichier_table as $groupeFichier){
-            $color = $colorArray[$colorIndex];
-            $this->pdf->setMyFillcolor(array($color,$color,$color));
-            foreach ($groupeFichier as $fileData){
-                $this->pdf->SetFont('Ubuntu','R',$taillePolice-2);
-                $this->pdf->myRow(array($fileData[0],"","" ));
-                $this->pdf->SetFont('Ubuntu','R',$taillePolice);
-                $this->pdf->myRow(array($fileData[1],$fileData[2],$fileData[3] ));
+        if(!is_null($fichier_table)){
+            foreach ($fichier_table as $groupeFichier){
+                $color = $colorArray[$colorIndex];
+                $this->pdf->setMyFillcolor(array($color,$color,$color));
+                foreach ($groupeFichier as $fileData){
+                    $this->pdf->SetFont('Ubuntu','R',$taillePolice-2);
+                    $this->pdf->myRow(array($fileData[0],"","" ));
+                    $this->pdf->SetFont('Ubuntu','R',$taillePolice);
+                    $this->pdf->myRow(array($fileData[1],$fileData[2],$fileData[3] ));
 
+                }
+                $colorIndex = ($colorIndex + 1) %2;
             }
-            $colorIndex = ($colorIndex + 1) %2;
         }
 	}
 

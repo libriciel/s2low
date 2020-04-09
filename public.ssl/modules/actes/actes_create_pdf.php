@@ -62,10 +62,11 @@ if ( ! $permission->canView($me,$owner)){
 	exit ();
 }
 //passer les paramètre
+$data = new DataActesPdf($id);
+
 $pdf=new ActesPdf();
 
-$data = new DataActesPdf($id);
 //construire le fichier pdf.
-$pdf->create_pdf($id);
+$pdf->create_pdf($data);
 
 $pdf->output("acquittement");

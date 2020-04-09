@@ -8,9 +8,11 @@ class ActesPdfTest extends S2lowTestCase {
     public function testCreatePdf(){
         $transaction_id = $this->createTransaction(4);
 
+        $data = new DataActesPdf($transaction_id);
+        $data->setAddEmailNotificationField(true);
+
         $pdf=new ActesPdf();
-        $pdf->addEmailNotificationField();
-        $pdf->create_pdf($transaction_id);
+        $pdf->create_pdf($data);
         $this->assertNotEmpty($pdf->output("test_pdf",'S'));
     }
 
