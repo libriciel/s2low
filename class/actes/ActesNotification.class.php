@@ -125,14 +125,10 @@ class ActesNotification {
             $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
 
             $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-            $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
 
-            $data = $extractDataForBordereauPDF->extract($transactionInfo['id'],true);
+            $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+            $monpdf = $bordereauPdfGenerator->generate($transactionInfo['id'],"bordereau_acquittement",true,"S");
 
-            $pdf = new ActesPdf();
-
-            $pdf->create_pdf($data);
-            $monpdf = $pdf->output("bordereau_acquittement", "S");
             $mailer->addStringAsFile("bordereau_acquittement.pdf", $monpdf);
             if($withFile && ! $add_url_recup ){
                 foreach($fichiers_tamponnees as $fichier){

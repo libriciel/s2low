@@ -22,6 +22,8 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->mockActesTamponne();
 		$this->mockPastellFactory(0,"Erreur renvoyé par le mock");
 
+		$this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf());
+
 		$transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
 		$this->getActesArchivesControler()->sendArchive($transaction_id);
 		$this->assertEquals(
@@ -49,6 +51,8 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	public function testSendArchiveCasNominal(){
 		$this->mockPastellFactory();
 		$this->mockActesTamponne();
+
+        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf());
 
 		$actesEnvelopeStorage = $this->getMockBuilder(ActesEnvelopeStorage::class)
 			->disableOriginalConstructor()

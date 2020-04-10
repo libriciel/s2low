@@ -6,6 +6,8 @@ class ActesNotificationsTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
     public function testNotify(){
+        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf());
+
         $mailer = $this->getMockBuilder("Mailer")->getMock();
         $mailer
             ->method('addRecipient')

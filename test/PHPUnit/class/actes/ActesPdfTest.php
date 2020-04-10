@@ -6,16 +6,15 @@ require_once(__DIR__."/../../../../public.ssl/modules/actes/class/ActesTransacti
 class ActesPdfTest extends S2lowTestCase {
 
     public function testCreatePdf(){
+        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf());
+
         $transaction_id = $this->createTransaction(4);
 
         $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
 
-        $data = $extractDataForBordereauPDF->extract($transaction_id,true);
+        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
 
-        $pdf=new ActesPdf();
-        $pdf->create_pdf($data);
-        $this->assertNotEmpty($pdf->output("test_pdf",'S'));
+        $this->assertNotEmpty($bordereauPdfGenerator->generate($transaction_id,"test_pdf",true,"S"));
     }
 
 
