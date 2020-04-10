@@ -1,12 +1,10 @@
 <?php 
 
 require_once __DIR__."/../../public.ssl/modules/actes/class/ActesTransaction.class.php";
+require_once __DIR__ . "/IActesPdf.php";
 
-class ActesPdfLegacy {
-
-    /** @var DataForBordereauPDF **/
-    private $data;
-
+class ActesPdfLegacy implements IActesPdf
+{
 	/**
 	 * @var ExtendPDF
 	 */
@@ -19,7 +17,7 @@ class ActesPdfLegacy {
   	}
 
 
-    public function initPage(){
+    private function initPage(){
         //fini de la traitment de les requêtes.
         //créer un objet pdf.
         $this->pdf=new ExtendPdf();
@@ -30,12 +28,7 @@ class ActesPdfLegacy {
         $this->pdf->AddPage();
     }
 
-    public function initData(DataForBordereauPDF $data){
-	    $this->data = $data;
-        $this->initPage();
-    }
-
-    public function printInfosCollectivite(string $texteCollectivite, string $texteUtilisateur){
+    private function printInfosCollectivite(string $texteCollectivite, string $texteUtilisateur){
         $this->pdf->SetFont('Arial','B',12);
         $this->pdf->SetTextColor(94,106,23);
         $this->pdf->Cell(40,10,"Collectivité :",0,0,'R');
@@ -44,47 +37,52 @@ class ActesPdfLegacy {
         $this->pdf->Cell(40,10,$texteUtilisateur,0,1,'L');
     }
 
-	public function create_pdf($data) {
+    /**
+     * @param DataForBordereauPDF $data
+     * @param string $title le nom du fichier SANS l'extension PDF
+     * @param string $out - voir la fonction FPDF Output
+     * @return string
+     */
 
-        $this->initData($data);
+	public function create_pdf(DataForBordereauPDF $data,string $title, string $out ="I") {
+
+        $this->initPage();
 		//définir l'entête de page.
 		$this->set_head();
 
 		$this->printInfosCollectivite(
-		    $this->data->getTexteCollectivite(),
-            $this->data->getTexteUtilisateur());
+		    $data->getTexteCollectivite(),
+            $data->getTexteUtilisateur());
 		// imprimé la table de  transaction
 
         $this->pdf->SetTextColor(40,36,94);
         $this->writeTitreParagraphe("Paramètre de la transaction :");
-		$this->trans_table($this->data->getContenuTableau());
+		$this->trans_table($data->getContenuTableau());
         $this->pdf->Cell(40,10,"",0,1);
 
         //$this->writeTitreParagraphe("Fichiers contenus dans l'archive :");
 		// imprimé la talbe de Fichier calcule dans l'archivage
         $this->writeTitreParagraphe("Fichier contenus dans l'archive :");
-		$this->fichier_table($this->data->getFichierTable());
+		$this->fichier_table($data->getFichierTable());
 
         //$this->writeTitreParagraphe("Cycle de vie de la transaction :");
 		//imprimé la table de cycle
         $this->pdf->Cell(40,10,"",0,1);
         $this->writeTitreParagraphe("Cycle de vie de la transaction :");
-		$this->cycle_table($this->data->getCycleTable());
+		$this->cycle_table($data->getCycleTable());
         $this->pdf->Cell(40,10,"",0,1);
 		
 		// imprimé la notification de la transaction:
 		$this->pdf->SetFont('Arial','',12);
 		$this->pdf->Cell(40,10,"",0,1);
+
+        return $this->pdf->Output($title.".pdf",$out);
 	}
 
-	/**
-	 * @param string $title le nom du fichier SANS l'extension PDF
-	 * @param string $out - voir la fonction FPDF Output
-	 * @return string
-	 */
-	public function output($title,$out = "I"){
-		return $this->pdf->Output($title.".pdf",$out);
-	}
+    /**
+     * @param $titre
+     * @return string
+     */
 
     private function writeTitreParagraphe($titre){
         $this->pdf->SetFont('Arial','',12);
@@ -96,7 +94,7 @@ class ActesPdfLegacy {
   * \param aucun.
   * 
   */
-	protected function set_head()
+	private function set_head()
 	{
         $title="BORDEREAU D'ACQUITTEMENT DE TRANSACTION";
         $this->pdf->Image($this->img, 10, 10, 190, 26);
@@ -115,7 +113,7 @@ class ActesPdfLegacy {
 
 	}
 
-	protected function trans_table( array $contenuTableau)
+	private function trans_table( array $contenuTableau)
 	{
         //obtenir tous les info et commencer de les ajouter dans tableau
         $this->pdf->SetFont('Arial','i',10);
@@ -128,7 +126,7 @@ class ActesPdfLegacy {
         }
 	}
 
-	public function fichier_table($fichier_table)
+	private function fichier_table($fichier_table)
 	{
         //obtenir tous les info et commencer de les ajouter dans tableau
         $this->pdf->SetMyWidths(array(2,100,40,50));
@@ -152,7 +150,7 @@ class ActesPdfLegacy {
         }
 	}
 
-	public function cycle_table($textes)
+	private function cycle_table($textes)
 	{
         $this->pdf->SetMyWidths(array(10,50,60,60));
         $this->pdf->SetMyAligns(array('C','C','C','C'));
@@ -168,7 +166,7 @@ class ActesPdfLegacy {
             $this->pdf->myRow(array("",$texte[0],$texte[1],$texte[2]));
         }
 	}
-    protected function 	myRectangle($w,$h=6)
+    private function 	myRectangle($w,$h=6)
     {
         $x=$this->pdf->GetX();
         $y=$this->pdf->GetY();
@@ -177,5 +175,4 @@ class ActesPdfLegacy {
         // pour changer le style, voir le commentaire de la fonction rounderect ExtendPdf::RoundeRect()
         $this->pdf->RoundedRect($x-2, $y+2, $w, $h, 3, 'DF', '13');
     }
-
 }

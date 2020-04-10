@@ -176,17 +176,11 @@ class ActesArchiveControler {
 		$actesFilesForSAE->date_postage = date("d/m/Y",strtotime($date_postage['date']));
 
         $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
+        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
 
-        $data = $extractDataForBordereauPDF->extract($transaction_id);
+        $actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
 
-		//passer les paramètre
-		$pdf=new ActesPdf();
-
-		//construire le fichier pdf.
-        $pdf->create_pdf($data);
-		$pdf->output($tmp_folder."/bordereau_acquit","F");
-		$actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
+        $bordereauPdfGenerator->generate($transaction_id,$actesFilesForSAE->bordereau_filepath,false,"F");
 
 		array_shift($actesFile);
 		array_shift($actesFile);

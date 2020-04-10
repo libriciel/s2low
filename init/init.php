@@ -220,5 +220,18 @@ $objectInstancier->set('redis_port',REDIS_PORT);
 
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
+if(true){
+    try{
+        $value = new ActesPdf();
+        $objectInstancier->set(IActesPdf::class, $value);
+    }
+    catch (Exception $exception){
+        var_dump($e->getMessage());
+    }
+}
+else{
+    $objectInstancier->set(IActesPdf::class, new ActesPdfLegacy());
+}
+
 $frontController = new FrontController($objectInstancier);
 

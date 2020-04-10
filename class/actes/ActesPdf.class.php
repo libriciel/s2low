@@ -1,8 +1,9 @@
 <?php 
 
 require_once __DIR__."/../../public.ssl/modules/actes/class/ActesTransaction.class.php";
+require_once __DIR__ . "/IActesPdf.php";
 
-class ActesPdf {
+class ActesPdf implements IActesPdf {
 
     const TEXTE_NOIR = [56, 55, 55];
     const TEXTE_BLEU = [52, 60, 142];
@@ -14,9 +15,6 @@ class ActesPdf {
     const TAILLE_POLICE_COLLECTIVITE = 14;
     const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
     const TAILLE_POLICE_TABLEAU = 12;
-
-    /** @var DataForBordereauPDF **/
-    private $data;
 
 	/**
 	 * @var ExtendPDF
@@ -44,10 +42,6 @@ class ActesPdf {
         $this->pdf->AddPage();
     }
 
-    public function initData(DataForBordereauPDF $data){
-	    $this->data = $data;
-        $this->initPage();
-    }
 
     public function printInfosCollectivite(string $texteCollectivite, string $texteUtilisateur){
         $taillePoliceInfosCollectivite = 14;
@@ -78,42 +72,42 @@ class ActesPdf {
         $this->pdf->Ln();
     }
 
-	public function create_pdf($data) {
+    /**
+     * @param DataForBordereauPDF $data
+     * @param string $title le nom du fichier SANS l'extension PDF
+     * @param string $out - voir la fonction FPDF Output
+     * @return string
+     */
 
-        $this->initData($data);
+	public function create_pdf(DataForBordereauPDF $data,string $title, string $out ="I") {
+
+        $this->initPage();
 		//définir l'entête de page.
 		$this->set_head();
 
 		$this->printInfosCollectivite(
-		    $this->data->getTexteCollectivite(),
-            $this->data->getTexteUtilisateur());
+		    $data->getTexteCollectivite(),
+            $data->getTexteUtilisateur());
 		// imprimé la table de  transaction
 
         $this->writeTitreParagraphe("Paramètre de la transaction :");
 		$this->trans_table(
-		    $this->data->getContenuTableau());
+		    $data->getContenuTableau());
 
 
         $this->writeTitreParagraphe("Fichiers contenus dans l'archive :");
 		// imprimé la talbe de Fichier calcule dans l'archivage
-		$this->fichier_table($this->data->getFichierTable());
+		$this->fichier_table($data->getFichierTable());
 
         $this->writeTitreParagraphe("Cycle de vie de la transaction :");
 		//imprimé la table de cycle
-		$this->cycle_table($this->data->getCycleTable());
+		$this->cycle_table($data->getCycleTable());
 		
 		// imprimé la notification de la transaction:
 		$this->pdf->SetFont('Arial','',12);
 		$this->pdf->Cell(40,10,"",0,1);
-	}
 
-	/**
-	 * @param string $title le nom du fichier SANS l'extension PDF
-	 * @param string $out - voir la fonction FPDF Output
-	 * @return string
-	 */
-	public function output($title,$out = "I"){
-		return $this->pdf->Output($title.".pdf",$out);
+        return $this->pdf->Output($title.".pdf",$out);
 	}
 
     private function writeTitreParagraphe($titre){

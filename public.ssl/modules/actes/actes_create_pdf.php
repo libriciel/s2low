@@ -61,15 +61,8 @@ if ( ! $permission->canView($me,$owner)){
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
+
 //passer les paramètre
 $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-$extractDataForBordereauPDF = $objectInstancier->get(ExtractDataForBordereauPDF::class);
-
-$data = $extractDataForBordereauPDF->extract($id);
-
-$pdf=new ActesPdfLegacy();
-
-//construire le fichier pdf.
-$pdf->create_pdf($data);
-
-$pdf->output("acquittement");
+$bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+$bordereauPdfGenerator->generate($id,"acquittement",false);
