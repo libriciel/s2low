@@ -3,11 +3,15 @@
 ## 4.2.1 - 
 
 ## Evolution
+
 - Openstack : tentative de reconnexion lors d'une erreur #591
 
 ## Correction
 
+- un bug empechait l'envoi correcte des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
+
 ## Retrait
+
 
 
 ## 4.2.0 - 2020-03-09
