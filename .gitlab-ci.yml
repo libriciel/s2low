@@ -37,6 +37,7 @@ unit_test:
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
+        DONT_RETRIEVE_VALIDCA: "true"
     script:
         - cd /var/www/s2low/
         - composer test-cover
