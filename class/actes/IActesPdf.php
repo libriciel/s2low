@@ -2,11 +2,20 @@
 
 interface IActesPdf
 {
+    public function initPage(ExtendPdf $pdf);
+
+    public function printInfosCollectivite(ExtendPdf $pdf, string $texteCollectivite, string $texteUtilisateur);
+
     /**
-     * @param DataForBordereauPDF $data
-     * @param string $title le nom du fichier SANS l'extension PDF
-     * @param string $out - voir la fonction FPDF Output
-     * @return string
+     * \brief ajouter l'entête de pdf
+     * \param aucun.
+     * @param ExtendPdf $pdf
      */
-    public function create_pdf(DataForBordereauPDF $data, string $title, string $out = "I");
+    public function set_head(ExtendPdf $pdf);
+
+    public function trans_table(ExtendPdf $pdf, array $contenuTableau);
+
+    public function fichier_table(ExtendPdf $pdf, $fichier_table);
+
+    public function cycle_table(ExtendPdf $pdf, array $textes);
 }

@@ -6,7 +6,7 @@ require_once(__DIR__."/../../../../public.ssl/modules/actes/class/ActesTransacti
 class ActesPdfTest extends S2lowTestCase {
 
     public function testCreatePdf(){
-        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf());
+        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
 
         $transaction_id = $this->createTransaction(4);
 

@@ -222,7 +222,7 @@ $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
 if(true){
     try{
-        $value = new ActesPdf();
+        $value = new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
         $objectInstancier->set(IActesPdf::class, $value);
     }
     catch (Exception $exception){
@@ -230,7 +230,7 @@ if(true){
     }
 }
 else{
-    $objectInstancier->set(IActesPdf::class, new ActesPdfLegacy());
+    $objectInstancier->set(IActesPdf::class, new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
 }
 
 $frontController = new FrontController($objectInstancier);

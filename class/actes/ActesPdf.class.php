@@ -3,7 +3,8 @@
 require_once __DIR__."/../../public.ssl/modules/actes/class/ActesTransaction.class.php";
 require_once __DIR__ . "/IActesPdf.php";
 
-class ActesPdf implements IActesPdf {
+class ActesPdf implements IActesPdf
+{
 
     const TEXTE_NOIR = [56, 55, 55];
     const TEXTE_BLEU = [52, 60, 142];
@@ -16,177 +17,134 @@ class ActesPdf implements IActesPdf {
     const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
     const TAILLE_POLICE_TABLEAU = 12;
 
-	/**
-	 * @var ExtendPDF
-	 */
-	private $pdf;
-	
 	private $img;
 	
-	public function __construct() {
-        $this->img = SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg";
+	public function __construct(string $img) {
+        $this->img = $img;
   	}
 
-  	public function setTextColor(array $colors){
-	    $this->pdf->SetTextColor($colors[0],$colors[1],$colors[2]);
+  	private function setTextColor(ExtendPdf $pdf,array $colors){
+	    $pdf->SetTextColor($colors[0],$colors[1],$colors[2]);
     }
 
-    public function initPage(){
+    public function initPage(ExtendPdf $pdf){
         //fini de la traitment de les requêtes.
         //créer un objet pdf.
-        $this->pdf=new ExtendPdf();
-        $this->pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
-        $this->pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
+        $pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
+        $pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
 
         //ajouter une page de pdf
-        $this->pdf->AddPage();
+        $pdf->AddPage();
     }
 
 
-    public function printInfosCollectivite(string $texteCollectivite, string $texteUtilisateur){
+    public function printInfosCollectivite(ExtendPdf $pdf,string $texteCollectivite, string $texteUtilisateur){
         $taillePoliceInfosCollectivite = 14;
-        $tailleCellInfosCollectivite = $this->pdf->convertPixelsToMM($taillePoliceInfosCollectivite+2);
+        $tailleCellInfosCollectivite = $pdf->convertPixelsToMM($taillePoliceInfosCollectivite+2);
 
         //ajouter collectivité et utilisateur.
-        $this->pdf->SetFont('Ubuntu','R',$taillePoliceInfosCollectivite);
-        $this->setTextColor(self::TEXTE_BLEU);
+        $pdf->SetFont('Ubuntu','R',$taillePoliceInfosCollectivite);
+        $this->setTextColor($pdf,self::TEXTE_BLEU);
 
 
         //Save the current position
-        $x=$this->pdf->GetX();
-        $y=$this->pdf->GetY();
+        $x=$pdf->GetX();
+        $y=$pdf->GetY();
 
-        $this->pdf->SetLineWidth(0.5);
-        $this->pdf->SetDrawColor(self::TEXTE_BLEU[0],self::TEXTE_BLEU[1],self::TEXTE_BLEU[2]);
-        $this->pdf->Line(
+        $pdf->SetLineWidth(0.5);
+        $pdf->SetDrawColor(self::TEXTE_BLEU[0],self::TEXTE_BLEU[1],self::TEXTE_BLEU[2]);
+        $pdf->Line(
             $x,
-            $y + $this->pdf->convertPixelsToMM(2),
+            $y + $pdf->convertPixelsToMM(2),
             $x,
-            $y+2*$tailleCellInfosCollectivite - $this->pdf->convertPixelsToMM(4)
+            $y+2*$tailleCellInfosCollectivite - $pdf->convertPixelsToMM(4)
     );
-        $this->pdf->SetLineWidth(0);
+        $pdf->SetLineWidth(0);
 
-        $this->pdf->Cell(40,$tailleCellInfosCollectivite,$texteCollectivite,0,0,'L');
-        $this->pdf->Ln();
-        $this->pdf->Cell(40,$tailleCellInfosCollectivite,$texteUtilisateur,0,0,'L');
-        $this->pdf->Ln();
+        $pdf->Cell(40,$tailleCellInfosCollectivite,$texteCollectivite,0,0,'L');
+        $pdf->Ln();
+        $pdf->Cell(40,$tailleCellInfosCollectivite,$texteUtilisateur,0,0,'L');
+        $pdf->Ln();
+    }
+
+    private function writeTitreParagraphe(ExtendPdf $pdf, string $titre){
+        $this->setTextColor($pdf,self::TEXTE_NOIR);
+        //obtenir tous les info et commencer de les ajouter dans tableau
+        $hauteurAvantTitreParagraphe = $pdf->convertPixelsToMM(25);
+        $hauteurApresTitreParagraphe = $pdf->convertPixelsToMM(9);
+
+        $taillePolice = self::TAILLE_POLICE_TITRE_PARAGRAPHE;
+        $hauteurCellPolice = $pdf->convertPixelsToMM($taillePolice)+4;
+
+        $pdf->Ln($hauteurAvantTitreParagraphe);
+
+        $pdf->SetFont('Ubuntu','B',$taillePolice);
+        $pdf->Cell(40,$hauteurCellPolice, $titre,0,1);
+
+        $pdf->Ln($hauteurApresTitreParagraphe);
     }
 
     /**
-     * @param DataForBordereauPDF $data
-     * @param string $title le nom du fichier SANS l'extension PDF
-     * @param string $out - voir la fonction FPDF Output
-     * @return string
+     * \brief ajouter l'entête de pdf
+     * \param aucun.
+     * @param ExtendPdf $pdf
      */
-
-	public function create_pdf(DataForBordereauPDF $data,string $title, string $out ="I") {
-
-        $this->initPage();
-		//définir l'entête de page.
-		$this->set_head();
-
-		$this->printInfosCollectivite(
-		    $data->getTexteCollectivite(),
-            $data->getTexteUtilisateur());
-		// imprimé la table de  transaction
-
-        $this->writeTitreParagraphe("Paramètre de la transaction :");
-		$this->trans_table(
-		    $data->getContenuTableau());
-
-
-        $this->writeTitreParagraphe("Fichiers contenus dans l'archive :");
-		// imprimé la talbe de Fichier calcule dans l'archivage
-		$this->fichier_table($data->getFichierTable());
-
-        $this->writeTitreParagraphe("Cycle de vie de la transaction :");
-		//imprimé la table de cycle
-		$this->cycle_table($data->getCycleTable());
-		
-		// imprimé la notification de la transaction:
-		$this->pdf->SetFont('Arial','',12);
-		$this->pdf->Cell(40,10,"",0,1);
-
-        return $this->pdf->Output($title.".pdf",$out);
-	}
-
-    private function writeTitreParagraphe($titre){
-        $this->setTextColor(self::TEXTE_NOIR);
-        //obtenir tous les info et commencer de les ajouter dans tableau
-        $hauteurAvantTitreParagraphe = $this->pdf->convertPixelsToMM(25);
-        $hauteurApresTitreParagraphe = $this->pdf->convertPixelsToMM(9);
-
-        $taillePolice = self::TAILLE_POLICE_TITRE_PARAGRAPHE;
-        $hauteurCellPolice = $this->pdf->convertPixelsToMM($taillePolice)+4;
-
-        $this->pdf->Ln($hauteurAvantTitreParagraphe);
-
-        $this->pdf->SetFont('Ubuntu','B',$taillePolice);
-        $this->pdf->Cell(40,$hauteurCellPolice, $titre,0,1);
-
-        $this->pdf->Ln($hauteurApresTitreParagraphe);
-    }
-	/**
-  * \brief ajouter l'entête de pdf
-  * \param aucun.
-  * 
-  */
-	protected function set_head()
+	public function set_head(ExtendPdf $pdf)
 	{
-        $this->pdf->Image($this->img, 10, 10, 190, 26);
-        $this->pdf->Ln(26);
+        $pdf->Image($this->img, 10, 10, 190, 26);
+        $pdf->Ln(26);
 
-        $distanceBandeauTitre = $this->pdf->convertPixelsToMM(20);
+        $distanceBandeauTitre = $pdf->convertPixelsToMM(20);
         $taillePoliceTitre=self::TAILLE_POLICE_TITRE;
-        $hauteurBandeauTitre = $this->pdf->convertPixelsToMM($taillePoliceTitre+4);
-        $espaceApresTitre = $this->pdf->convertPixelsToMM(25);
+        $hauteurBandeauTitre = $pdf->convertPixelsToMM($taillePoliceTitre+4);
+        $espaceApresTitre = $pdf->convertPixelsToMM(25);
 
-        $this->pdf->Ln($distanceBandeauTitre);
-		$this->pdf->SetFont('Ubuntu','R',$taillePoliceTitre);
-        $this->setTextColor(self::TEXTE_NOIR);
+        $pdf->Ln($distanceBandeauTitre);
+		$pdf->SetFont('Ubuntu','R',$taillePoliceTitre);
+        $this->setTextColor($pdf,self::TEXTE_NOIR);
 
         $title="Bordereau d'acquittement de transaction";
-		$this->pdf->Cell(190,$hauteurBandeauTitre,$title,0,1,'C');
-		$this->pdf->Ln($espaceApresTitre);
+		$pdf->Cell(190,$hauteurBandeauTitre,$title,0,1,'C');
+		$pdf->Ln($espaceApresTitre);
 	}
 
-	protected function trans_table( array $contenuTableau)
+	public function trans_table(ExtendPdf $pdf, array $contenuTableau)
 	{
-
+        $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :");
 	    $taillePolice = self::TAILLE_POLICE_TABLEAU;
-	    $tailleCellTableau=$this->pdf->convertPixelsToMM(12)+2;
 
-        $this->pdf->SetMyWidths(array(80,110));
-        $this->pdf->SetMyAligns(array('L','L'));
-        $this->pdf->SetMyBorder(array('0','0'));
+        $pdf->SetMyWidths(array(80,110));
+        $pdf->SetMyAligns(array('L','L'));
+        $pdf->SetMyBorder(array('0','0'));
 
-        $this->pdf->SetFont('Ubuntu','R',$taillePolice);
+        $pdf->SetFont('Ubuntu','R',$taillePolice);
 
         $colorIndex=0;
         $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
 
         foreach ($contenuTableau as $ligne){
 		    $color = $colorArray[$colorIndex];
-            $this->pdf->setMyFillcolor(array($color,$color));
-            $this->pdf->myRow(array($ligne[0],$ligne[1]));
+            $pdf->setMyFillcolor(array($color,$color));
+            $pdf->myRow(array($ligne[0],$ligne[1]));
             $colorIndex = ($colorIndex +1) %2;
         }
 	}
 
-	public function fichier_table($fichier_table)
+	public function fichier_table(ExtendPdf $pdf, $fichier_table)
 	{
+        $this->writeTitreParagraphe($pdf,"Fichiers contenus dans l'archive :");
         $taillePolice = self::TAILLE_POLICE_TABLEAU;
 
-        $this->pdf->SetMyWidths(array(120,35,35));
-        $this->pdf->SetMyAligns(array('L','C','C'));
-        $this->pdf->SetMyBorder(array('0','0','0'));
+        $pdf->SetMyWidths(array(120,35,35));
+        $pdf->SetMyAligns(array('L','C','C'));
+        $pdf->SetMyBorder(array('0','0','0'));
 
-        $this->pdf->SetFont('Ubuntu','B',$taillePolice);
-        $this->pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
-        $this->pdf->myRow(array("Fichier","Type","Taille (Ko)"));
+        $pdf->SetFont('Ubuntu','B',$taillePolice);
+        $pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
+        $pdf->myRow(array("Fichier","Type","Taille (Ko)"));
 
-        $this->pdf->SetFont('Ubuntu','R',$taillePolice);
-        $this->pdf->SetMyBorder(array('0','0','0'));
+        $pdf->SetFont('Ubuntu','R',$taillePolice);
+        $pdf->SetMyBorder(array('0','0','0'));
 
         $colorIndex=0;
         $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
@@ -194,12 +152,12 @@ class ActesPdf implements IActesPdf {
         if(!is_null($fichier_table)){
             foreach ($fichier_table as $groupeFichier){
                 $color = $colorArray[$colorIndex];
-                $this->pdf->setMyFillcolor(array($color,$color,$color));
+                $pdf->setMyFillcolor(array($color,$color,$color));
                 foreach ($groupeFichier as $fileData){
-                    $this->pdf->SetFont('Ubuntu','R',$taillePolice-2);
-                    $this->pdf->myRow(array($fileData[0],"","" ));
-                    $this->pdf->SetFont('Ubuntu','R',$taillePolice);
-                    $this->pdf->myRow(array($fileData[1],$fileData[2],$fileData[3] ));
+                    $pdf->SetFont('Ubuntu','R',$taillePolice-2);
+                    $pdf->myRow(array($fileData[0],"","" ));
+                    $pdf->SetFont('Ubuntu','R',$taillePolice);
+                    $pdf->myRow(array($fileData[1],$fileData[2],$fileData[3] ));
 
                 }
                 $colorIndex = ($colorIndex + 1) %2;
@@ -207,28 +165,29 @@ class ActesPdf implements IActesPdf {
         }
 	}
 
-	public function cycle_table($textes)
+	public function cycle_table(ExtendPdf $pdf, array $textes)
 	{
+        $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :");
 
         $taillePolice = self::TAILLE_POLICE_TABLEAU;
 
-		$this->pdf->SetMyWidths(array(55,65,70));
-		$this->pdf->SetMyAligns(array('L','L','L'));
-		$this->pdf->SetMyBorder(array('0','0','0'));
-		$this->pdf->SetFont('Ubuntu','B',$taillePolice);
+		$pdf->SetMyWidths(array(55,65,70));
+		$pdf->SetMyAligns(array('L','L','L'));
+		$pdf->SetMyBorder(array('0','0','0'));
+		$pdf->SetFont('Ubuntu','B',$taillePolice);
 
-		$this->pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
-		$this->pdf->myRow(array("Etat","Date", "Message"));
-		$this->pdf->SetFont('Ubuntu','R',$taillePolice);
-		$this->pdf->SetMyBorder(array('0','0','0'));
+		$pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
+		$pdf->myRow(array("Etat","Date", "Message"));
+		$pdf->SetFont('Ubuntu','R',$taillePolice);
+		$pdf->SetMyBorder(array('0','0','0'));
 
         $colorIndex=0;
         $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
 
 		foreach ($textes as $texte){
             $color = $colorArray[$colorIndex];
-            $this->pdf->setMyFillcolor(array($color,$color,$color));
-			$this->pdf->myRow(array($texte[0],$texte[1],$texte[2]));
+            $pdf->setMyFillcolor(array($color,$color,$color));
+			$pdf->myRow(array($texte[0],$texte[1],$texte[2]));
             $colorIndex = ($colorIndex + 1) %2;
 		}
 	}
