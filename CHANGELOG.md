@@ -1,3 +1,9 @@
+# 4.2.2
+
+## Evolution
+
+- Amélioration de la construction du docker
+
 # 4.2.1 - 2020-04-14
 
 ## Evolution
