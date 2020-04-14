@@ -90,7 +90,7 @@ class ExtendPdf extends FPDF {
 	* @brief contruir le table ligne par ligne
 	* @param $data =array =>l'info qui va remplir dans les multicell.
 	*/
-	public function myRow($data) {
+	public function myRow($data,$legacy=false) {
 	    //Calculate the height of the row
 	    $nb=0;
 	    for($i=0;$i<count($data);$i++)
@@ -114,13 +114,19 @@ class ExtendPdf extends FPDF {
 	        //Save the current position
 	        $x=$this->GetX();
 	        $y=$this->GetY();
-	        //Draw the border
-            $this->SetFillColor($fc[0],$fc[1],$fc[2]);
-	        $this->Rect($x,$y,$w,$h,"F");
-	        //Print the text
-	        //default on fill cette cell avec le fillcolor, fillcolor default =255.
-	        //$this->MultiCell($w,5,$fc[0].'-'.$fc[1].'-'.$fc[2],$b,$a,1);
-	       	$this->MultiCell($w,5,$data[$i],$b,$a,true);
+	        if(!$legacy){
+                //Draw the border
+                $this->SetFillColor($fc[0],$fc[1],$fc[2]);
+                $this->Rect($x,$y,$w,$h,"F");
+            }
+	        else{
+                $this->Rect($x,$y,$w,$h);
+                $this->SetFillColor($fc[0],$fc[1],$fc[2]);
+            }
+            //Print the text
+            //default on fill cette cell avec le fillcolor, fillcolor default =255.
+            //$this->MultiCell($w,5,$fc[0].'-'.$fc[1].'-'.$fc[2],$b,$a,1);
+            $this->MultiCell($w,5,$data[$i],$b,$a,true);
 	      	
 	        //Put the position to the right of the cell
 	        $this->SetXY($x+$w,$y);

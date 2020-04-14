@@ -17,7 +17,6 @@ class ActesPdfLegacy implements IActesPdf
     public function initPage(ExtendPdf $pdf){
         //fini de la traitment de les requêtes.
         //créer un objet pdf.
-        $pdf=new ExtendPdf();
         $pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
         $pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
 
@@ -80,7 +79,7 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->SetMyBorder(array('0','BT','BT'));
         $pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254)));
         foreach ($contenuTableau as $ligne){
-            $pdf->myRow(array("",$ligne[0],$ligne[1]));
+            $pdf->myRow(array("",$ligne[0],$ligne[1]),true);
         }
         $pdf->Cell(40,10,"",0,1);
 	}
@@ -94,7 +93,7 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->SetMyBorder(array('0','R','RL','L'));
         $pdf->SetFont('Arial','B',10);
         $pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
-        $pdf->myRow(array("","Fichier","Type de fichier","Taille du fichier"));
+        $pdf->myRow(array("","Fichier","Type de fichier","Taille du fichier"),true);
         $pdf->SetFont('Arial','i',10);
         $pdf->SetMyBorder(array('R','1','1','1'));
         $pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
@@ -103,9 +102,9 @@ class ActesPdfLegacy implements IActesPdf
             foreach ($groupeFichier as $fileData)
                 {
                     $pdf->SetMyBorder(array('R','LTR','LTR','LTR'));
-                    $pdf->myRow(array("",$fileData[0],"","" ));
+                    $pdf->myRow(array("",$fileData[0],"","" ),true);
                     $pdf->SetMyBorder(array('R','LBR','LBR','LBR'));
-                    $pdf->myRow(array("",$fileData[1],$fileData[2],$fileData[3]));
+                    $pdf->myRow(array("",$fileData[1],$fileData[2],$fileData[3]),true);
                 }
         }
 	}
@@ -119,16 +118,17 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->SetMyBorder(array('0','R','RL','L'));
         $pdf->SetFont('Arial','B',10);
         $pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
-        $pdf->myRow(array("","Etat","Date", "Message"));
+        $pdf->myRow(array("","Etat","Date", "Message"),true);
         $pdf->SetFont('Arial','i',10);
         $pdf->SetMyBorder(array('R','1','1','1'));
         $pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
         foreach ($textes as $texte)
         {
-            $pdf->myRow(array("",$texte[0],$texte[1],$texte[2]));
+            $pdf->myRow(array("",$texte[0],$texte[1],$texte[2]),true);
         }
         $pdf->Cell(40,10,"",0,1);
 	}
+
     private function myRectangle(ExtendPdf $pdf, $w,$h=6)
     {
         $x=$pdf->GetX();
