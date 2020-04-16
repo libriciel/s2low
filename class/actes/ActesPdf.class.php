@@ -39,11 +39,10 @@ class ActesPdf implements IActesPdf
 
 
     public function printInfosCollectivite(ExtendPdf $pdf,string $texteCollectivite, string $texteUtilisateur){
-        $taillePoliceInfosCollectivite = 14;
-        $tailleCellInfosCollectivite = $pdf->convertPixelsToMM($taillePoliceInfosCollectivite+2);
+        $tailleCellInfosCollectivite = $pdf->convertPixelsToMM(self::TAILLE_POLICE_COLLECTIVITE+2);
 
         //ajouter collectivité et utilisateur.
-        $pdf->SetFont('Ubuntu','R',$taillePoliceInfosCollectivite);
+        $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_COLLECTIVITE);
         $this->setTextColor($pdf,self::TEXTE_BLEU);
 
 
