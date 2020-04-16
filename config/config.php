@@ -443,6 +443,10 @@ if (! defined("ACTES_TYPE_PAR_NATURE")){
 	define("ACTES_TYPE_PAR_NATURE",false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
 
+//Permet d'utiliser le modèle de bordereau à l'ancienne
+if(!defined("USE_LEGACY_BORDEREAU_MODEL")){
+    define("USE_LEGACY_BORDEREAU_MODEL",true);
+}
 
 
 ////////////////////////////////////

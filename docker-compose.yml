@@ -57,6 +57,8 @@ services:
             IMAP_LOGIN: ${IMAP_LOGIN}
             IMAP_PASS: ${IMAP_PASS}
             MAILNAME: ${MAILNAME}
+
+            USE_LEGACY_BORDEREAU_MODEL: ${USE_LEGACY_BORDEREAU_MODEL}
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
