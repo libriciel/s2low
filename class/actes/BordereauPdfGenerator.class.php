@@ -24,19 +24,16 @@ class BordereauPdfGenerator
 
         $pdf=new ExtendPdf();
 
-        $this->create_pdf($pdf,$data,$output,$out);
+        $this->create_pdf($pdf,$data);
         return $pdf->Output($output.".pdf",$out);
     }
 
     /**
      * @param ExtendPdf $pdf
      * @param DataForBordereauPDF $data
-     * @param string $title le nom du fichier SANS l'extension PDF
-     * @param string $out - voir la fonction FPDF Output
-     * @return string
      */
 
-    public function create_pdf(ExtendPdf $pdf, DataForBordereauPDF $data,string $title, string $out ="I") {
+    public function create_pdf(ExtendPdf $pdf, DataForBordereauPDF $data) {
 
         $this->actesPdf->initPage($pdf);
         //définir l'entête de page.

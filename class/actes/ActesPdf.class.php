@@ -61,9 +61,9 @@ class ActesPdf implements IActesPdf
     );
         $pdf->SetLineWidth(0);
 
-        $pdf->Cell(40,$tailleCellInfosCollectivite,$texteCollectivite,0,0,'L');
+        $pdf->Cell(40,$tailleCellInfosCollectivite,"Collectivité : ".$texteCollectivite,0,0,'L');
         $pdf->Ln();
-        $pdf->Cell(40,$tailleCellInfosCollectivite,$texteUtilisateur,0,0,'L');
+        $pdf->Cell(40,$tailleCellInfosCollectivite,"Utilisateur : ".$texteUtilisateur,0,0,'L');
         $pdf->Ln();
     }
 

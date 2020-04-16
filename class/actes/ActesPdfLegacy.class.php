@@ -36,11 +36,12 @@ class ActesPdfLegacy implements IActesPdf
     /**
      * @param ExtendPdf $pdf
      * @param $titre
+     * @param int $w
      */
 
-    private function writeTitreParagraphe(ExtendPdf $pdf, $titre){
+    private function writeTitreParagraphe(ExtendPdf $pdf,string $titre,int $w){
         $pdf->SetFont('Arial','',12);
-        $this->myRectangle($pdf,60);
+        $this->myRectangle($pdf,$w);
         $pdf->Cell(40,10,$titre,0,1);
     }
 
@@ -71,7 +72,7 @@ class ActesPdfLegacy implements IActesPdf
 	public function trans_table(ExtendPdf $pdf, array $contenuTableau)
 	{
         $pdf->SetTextColor(40,36,94);
-        $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :");
+        $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :",60);
         //obtenir tous les info et commencer de les ajouter dans tableau
         $pdf->SetFont('Arial','i',10);
         $pdf->SetMyWidths(array(10,70,80));
@@ -86,25 +87,26 @@ class ActesPdfLegacy implements IActesPdf
 
 	public function fichier_table(ExtendPdf $pdf, $fichier_table)
 	{
-        $this->writeTitreParagraphe($pdf,"Fichier contenus dans l'archive :");
+        $this->writeTitreParagraphe($pdf,"Fichier contenus dans l'archive :",69);
         //obtenir tous les info et commencer de les ajouter dans tableau
-        $pdf->SetMyWidths(array(2,100,40,50));
-        $pdf->SetMyAligns(array('C','C','C','C'));
-        $pdf->SetMyBorder(array('0','R','RL','L'));
-        $pdf->SetFont('Arial','B',10);
-        $pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
-        $pdf->myRow(array("","Fichier","Type de fichier","Taille du fichier"),true);
-        $pdf->SetFont('Arial','i',10);
-        $pdf->SetMyBorder(array('R','1','1','1'));
-        $pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
+
+        $this->setUpTable(
+            $pdf,
+            array(2, 100, 40, 50),
+            array("", "Fichier", "Type de fichier", "Taille du fichier")
+            );
+
         foreach ($fichier_table as $groupeFichier)
         {
+            $typeFichier=$groupeFichier[0][2];
+            $tailleFichier=$groupeFichier[0][3];
             foreach ($groupeFichier as $fileData)
                 {
                     $pdf->SetMyBorder(array('R','LTR','LTR','LTR'));
                     $pdf->myRow(array("",$fileData[0],"","" ),true);
                     $pdf->SetMyBorder(array('R','LBR','LBR','LBR'));
-                    $pdf->myRow(array("",$fileData[1],$fileData[2],$fileData[3]),true);
+                    // Pour le fichier métier, on affiche la taille et le type du fichier original...
+                    $pdf->myRow(array("",$fileData[1],$typeFichier,$tailleFichier),true);
                 }
         }
 	}
@@ -112,16 +114,13 @@ class ActesPdfLegacy implements IActesPdf
 	public function cycle_table(ExtendPdf $pdf, $textes)
 	{
         $pdf->Cell(40,10,"",0,1);
-        $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :");
-        $pdf->SetMyWidths(array(10,50,60,60));
-        $pdf->SetMyAligns(array('C','C','C','C'));
-        $pdf->SetMyBorder(array('0','R','RL','L'));
-        $pdf->SetFont('Arial','B',10);
-        $pdf->setMyFillcolor(array(array(255,255,255),array(200,220,255),array(200,220,255),array(200,220,255)));
-        $pdf->myRow(array("","Etat","Date", "Message"),true);
-        $pdf->SetFont('Arial','i',10);
-        $pdf->SetMyBorder(array('R','1','1','1'));
-        $pdf->setMyFillcolor(array(array(255,255,255),array(216,252,254),array(216,252,254),array(216,252,254)));
+        $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :",65);
+
+        $this->setUpTable($pdf,
+            array(10, 50, 60, 60),
+            array("", "Etat", "Date", "Message")
+        );
+
         foreach ($textes as $texte)
         {
             $pdf->myRow(array("",$texte[0],$texte[1],$texte[2]),true);
@@ -137,5 +136,23 @@ class ActesPdfLegacy implements IActesPdf
 
         // pour changer le style, voir le commentaire de la fonction rounderect ExtendPdf::RoundeRect()
         $pdf->RoundedRect($x-2, $y+2, $w, $h, 3, 'DF', '13');
+    }
+
+    /**
+     * @param ExtendPdf $pdf
+     * @param array $columnsWidths
+     * @param array $columnsTitles
+     */
+    private function setUpTable(ExtendPdf $pdf, array $columnsWidths, array $columnsTitles): void
+    {
+        $pdf->SetMyWidths($columnsWidths);
+        $pdf->SetMyAligns(array('C', 'C', 'C', 'C'));
+        $pdf->SetMyBorder(array('0', 'R', 'RL', 'L'));
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->setMyFillcolor(array(array(255, 255, 255), array(200, 220, 255), array(200, 220, 255), array(200, 220, 255)));
+        $pdf->myRow($columnsTitles, true);
+        $pdf->SetFont('Arial', 'i', 10);
+        $pdf->SetMyBorder(array('R', '1', '1', '1'));
+        $pdf->setMyFillcolor(array(array(255, 255, 255), array(216, 252, 254), array(216, 252, 254), array(216, 252, 254)));
     }
 }

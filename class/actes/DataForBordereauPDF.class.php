@@ -56,12 +56,12 @@ class DataForBordereauPDF
 
     public function setTexteCollectivite( string $nameCollectivite)
     {
-        $this->texteCollectivite = "Collectivité : ".$nameCollectivite;
+        $this->texteCollectivite = $nameCollectivite;
     }
 
     public function setTexteUtilisateur($userName, $userGivenName)
     {
-        $this->texteUtilisateur = "Utilisateur : ".$userName." ".$userGivenName;
+        $this->texteUtilisateur = $userName." ".$userGivenName;
     }
 
     public function setContenuTableau(array $initDataTable)
