@@ -50,13 +50,14 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
 
 fi
 
-# Mise à jour du validca
-# TODO faut pas mettre ça ici... plutot dans un worker ou le cron
-/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
+if [ -z "$DONT_RETRIEVE_VALIDCA" ] ; then
+  # Mise à jour du validca
+  # TODO faut pas mettre ça ici... plutot dans un worker ou le cron
+  /usr/local/bin/recup_crl.sh /etc/s2low/ssl/
 
-# Ajout des ACs du ministère
-/usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
-
+  # Ajout des ACs du ministère
+  /usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
+fi
 
 #On attend que la base de données soit accessible avant de l'initialiser
 if [ ! ${POSTGRES_HOST} ] ; then
