@@ -96,18 +96,22 @@ class ActesPdfLegacy implements IActesPdf
             array("", "Fichier", "Type de fichier", "Taille du fichier")
             );
 
-        foreach ($fichier_table as $groupeFichier)
+        foreach ($fichier_table as $file)
         {
-            $typeFichier=$groupeFichier[0][2];
-            $tailleFichier=$groupeFichier[0][3];
-            foreach ($groupeFichier as $fileData)
-                {
-                    $pdf->SetMyBorder(array('R','LTR','LTR','LTR'));
-                    $pdf->myRow(array("",$fileData[0],"","" ),true);
-                    $pdf->SetMyBorder(array('R','LBR','LBR','LBR'));
-                    // Pour le fichier métier, on affiche la taille et le type du fichier original...
-                    $pdf->myRow(array("",$fileData[1],$typeFichier,$tailleFichier),true);
-                }
+            if ($file["posted_filename"])
+            {
+                $this->addCellToTable($pdf,
+                    "Nom original :",
+                    $file["posted_filename"], $file["filetype"], $file["filesize"]
+                );
+            }
+            if ($file["filename"])
+            {
+                $this->addCellToTable($pdf,
+                    "Nom métier:",
+                    $file["filename"], $file["filetype"], $file["filesize"]
+                );
+            }
         }
 	}
 
@@ -154,5 +158,21 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->SetFont('Arial', 'i', 10);
         $pdf->SetMyBorder(array('R', '1', '1', '1'));
         $pdf->setMyFillcolor(array(array(255, 255, 255), array(216, 252, 254), array(216, 252, 254), array(216, 252, 254)));
+    }
+
+    /**
+     * @param ExtendPdf $pdf
+     * @param string $typeNom
+     * @param $posted_filename
+     * @param $filetype
+     * @param $filesize
+     */
+    public function addCellToTable(ExtendPdf $pdf, string $typeNom, $posted_filename, $filetype, $filesize): void
+    {
+        $pdf->SetMyBorder(array('R', 'LTR', 'LTR', 'LTR'));
+        $pdf->myRow(array("", $typeNom, "", ""), true);
+        $pdf->SetMyBorder(array('R', 'LBR', 'LBR', 'LBR'));
+        // Pour le fichier métier, on affiche la taille et le type du fichier original...
+        $pdf->myRow(array("", $posted_filename, $filetype, $filesize), true);
     }
 }

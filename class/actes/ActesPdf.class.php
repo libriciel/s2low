@@ -149,20 +149,38 @@ class ActesPdf implements IActesPdf
         $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
 
         if(!is_null($fichier_table)){
-            foreach ($fichier_table as $groupeFichier){
+            foreach ($fichier_table as $file){
                 $color = $colorArray[$colorIndex];
                 $pdf->setMyFillcolor(array($color,$color,$color));
-                foreach ($groupeFichier as $fileData){
-                    $pdf->SetFont('Ubuntu','R',$taillePolice-2);
-                    $pdf->myRow(array($fileData[0],"","" ));
-                    $pdf->SetFont('Ubuntu','R',$taillePolice);
-                    $pdf->myRow(array($fileData[1],$fileData[2],$fileData[3] ));
-
+                if ($file["posted_filename"] && $file["filename"])
+                {
+                    $this->addCellToTable($pdf,
+                        "Nom original :",
+                        $file["posted_filename"],
+                        $file["filetype"],$file["filesize"]);
+                    $this->addCellToTable($pdf,
+                        "Nom métier:",
+                        $file["filename"],
+                        '', '');
+                }
+                if (!$file["posted_filename"] && $file["filename"])
+                {
+                    $this->addCellToTable($pdf,
+                        "Nom métier:",
+                        $file["filename"],
+                        $file["filetype"], $file["filesize"]);
                 }
                 $colorIndex = ($colorIndex + 1) %2;
             }
         }
 	}
+
+	public function addCellToTable(ExtendPdf $pdf, string $typeNom, $posted_filename, $filetype, $filesize){
+        $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_TABLEAU-2);
+        $pdf->myRow(array($typeNom,"","" ));
+        $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_TABLEAU);
+        $pdf->myRow(array($posted_filename,$filetype,$filesize ));
+    }
 
 	public function cycleTable(ExtendPdf $pdf, array $textes)
 	{

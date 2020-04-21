@@ -84,32 +84,10 @@ class DataForBordereauPDF
 
     public function setIncludedFiles(array $files)
     {
-        $filesTemp = [];
-        foreach ($files as $file) {
-            $fileTemp=[];
-            $written = false;
-            if ($file["posted_filename"])
-            {
-
-                $fileTemp[]=["Nom original :",$file["posted_filename"],$file["filetype"],$file["filesize"]];
-                $written = true;
-
-            }
-            if ($file["filename"])
-            {
-                list($size,$mimetype) = ['',''];
-                if(!$written){
-                    $size = $file["filesize"];
-                    $mimetype = $file["filetype"];
-                }
-                $fileTemp[]=["Nom métier:",$file["filename"], $mimetype, $size];
-            }
-            $filesTemp[]= $fileTemp;
-        }
-        $this->fichier_table = $filesTemp;
+        $this->fichier_table = $files;
     }
 
-    public function setCycleTable($workflow,$status)
+    public function setCycleVieTransaction($workflow, $status)
     {
         //traiter des requêtes
         $cycle_table=[];
@@ -137,36 +115,35 @@ class DataForBordereauPDF
         return "Non notifiée";
     }
 
-    public function setDonneesTransaction(array $transaction, array $transactionComplement){
-        $this->texteCollectivite = $transaction[0]["authority_name"];
-        $this->texteUtilisateur = $transaction[0]["name"]." ".$transaction[0]["givenname"];
+    public function setClassification($classification,$classificationString){
+        $this->classification = $classification;
 
-        //traiter des requêtes
-        if(isset($transaction[0]["nature_descr"])){
-            $this->nature_description = $transaction[0]["nature_descr"];
-        } else {
-            $this->nature_description = "n/a";
+        if ($classificationString) {
+            $this->classification .= " - $classificationString";
         }
+    }
+
+    public function setDonneesTransaction(array $transactionComplement){
+        $this->texteCollectivite = $transactionComplement["authority_name"];
+        $this->texteUtilisateur = $transactionComplement["name"]." ".$transactionComplement["givenname"];
+
+        $this->nature_description = $transactionComplement["nature_descr"] ?? "n/a";
 
         $this->broadcasted = $transactionComplement["broadcasted"];
         $this->broadcastEmails = $transactionComplement["broadcast_emails"];
 
-        $this->classification = $transactionComplement["classification"];
-        $classification_string = $transactionComplement["classification_string"];
+        $this->setClassification(
+            $transactionComplement["classification"],
+            $transactionComplement["classification_string"]
+        );
 
-        if ($classification_string) {
-            $this->classification .= " - $classification_string";
-        }
+        $this->arch_url = $transactionComplement["archive_url"] ? : "Non définie";;
 
-        $this->arch_url = $transaction[0]["archive_url"];
-        if (empty($arch_url))
-            $this->arch_url= "Non définie";
+        $this->typeDeTransaction = $transactionComplement["type_str"];
 
-        $this->typeDeTransaction = $transaction[0]["type_str"];
-
-        $this->numeroActe = $transaction[0]["number"];
+        $this->numeroActe = $transactionComplement["number"];
         $this->dateDecision = $transactionComplement["decision_date"];
-        $this->objet = $transaction[0]["subject"];
+        $this->objet = $transactionComplement["subject"];
         $this->presenceDocPapier = $transactionComplement["document_papier"]?"OUI":"NON";
         $this->idUnique = $transactionComplement["unique_id"];
     }

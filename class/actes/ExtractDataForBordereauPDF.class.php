@@ -3,7 +3,6 @@
 
 class ExtractDataForBordereauPDF{
 
-
     /**
      * @var TransactionSQL
      */
@@ -34,11 +33,9 @@ class ExtractDataForBordereauPDF{
     public function extract($transactionId,$addEmailNotificationField=false){
         $data = new DataForBordereauPDF();
 
-        $this->transactionSQL->setTransmissionId($transactionId);
-        $transaction = $this->transactionSQL->getAll();
-        $transactionComplement = $this->transactionSQL->getComplement($transactionId);
+        $transactionComplement = $this->transactionSQL->getDonneesTransaction($transactionId);
 
-        $data->setDonneesTransaction($transaction, $transactionComplement);
+        $data->setDonneesTransaction($transactionComplement);
         $data->setAddEmailNotificationField($addEmailNotificationField);
 
         $includedFiles = $this->actesIncludedFileSQL->getAll($transactionId);
@@ -46,9 +43,8 @@ class ExtractDataForBordereauPDF{
 
         $workflow = $this->transactionSQL->fetchWorkflow($transactionId);
         $status = $this->actesStatusSQL->getAllStatus();
-        $data->setCycleTable($workflow,$status);
+        $data->setCycleVieTransaction($workflow,$status);
 
-        //$data->setCycleVieTransaction($workflow,$status);
         return $data;
     }
 }

@@ -195,14 +195,6 @@ class TransactionSQL {
 						" AND atw.status_id =  4 LIMIT 1 ) <= ? ";
 		$this->value[] = $date;
 	}
-
-	public function setTransmissionId($transmissionId){
-        if (!$transmissionId){
-            return;
-        }
-        $this->filter[] = "id = ?";
-        $this->value[] = "$transmissionId";
-    }
 	
 	public function getAll(){
 		$sql = 	"SELECT ".
@@ -283,9 +275,25 @@ class TransactionSQL {
 		$this->sqlQuery->query($sql,$id);
 	}
 	
-	public function getComplement($id){
-	    $sql = "SELECT decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails FROM actes_transactions WHERE id = ?";
-        return $this->sqlQuery->queryOne($sql,$id);
+	public function getDonneesTransaction($id){
+	    //$sql = "SELECT decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails FROM actes_transactions WHERE id = ?";
+        $sql = "SELECT ".
+            " users.name, users.givenname," .
+            " authorities.name as authority_name, " .
+            " type, number, subject,archive_url,nature_descr,decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails".
+            " FROM actes_transactions " .
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " JOIN users ON actes_envelopes.user_id=users.id " .
+            " JOIN authorities ON users.authority_id=authorities.id " .
+            " WHERE actes_transactions.id = ?";
+        try {
+            $result = $this->sqlQuery->query($sql, $id)[0];
+            $result['type_str'] = self::$transactionTypes[$result['type']];
+            return $result;
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            die();
+        }
     }
 
     /**
