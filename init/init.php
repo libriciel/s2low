@@ -225,8 +225,7 @@ if(USE_LEGACY_BORDEREAU_MODEL) {
         IActesPdf::class,
         new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
     );
-}
-else{
+} else {
     $objectInstancier->set(
         IActesPdf::class,
         new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")

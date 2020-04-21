@@ -10,9 +10,7 @@ class ActesPdfTest extends S2lowTestCase {
 
         $transaction_id = $this->createTransaction(4);
 
-        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-
-        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+        $bordereauPdfGenerator = $this->getObjectInstancier()->get(BordereauPdfGenerator::class);
 
         $this->assertNotEmpty($bordereauPdfGenerator->generate($transaction_id,"test_pdf",true,"S"));
     }
