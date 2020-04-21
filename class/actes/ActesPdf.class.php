@@ -88,7 +88,7 @@ class ActesPdf implements IActesPdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */
-	public function set_head(ExtendPdf $pdf)
+	public function setHead(ExtendPdf $pdf)
 	{
         $pdf->Image($this->img, 10, 10, 190, 26);
         $pdf->Ln(26);
@@ -107,7 +107,7 @@ class ActesPdf implements IActesPdf
 		$pdf->Ln($espaceApresTitre);
 	}
 
-	public function trans_table(ExtendPdf $pdf, array $contenuTableau)
+	public function transTable(ExtendPdf $pdf, array $contenuTableau)
 	{
         $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :");
 	    $taillePolice = self::TAILLE_POLICE_TABLEAU;
@@ -129,7 +129,7 @@ class ActesPdf implements IActesPdf
         }
 	}
 
-	public function fichier_table(ExtendPdf $pdf, $fichier_table)
+	public function fichierTable(ExtendPdf $pdf, $fichier_table)
 	{
         $this->writeTitreParagraphe($pdf,"Fichiers contenus dans l'archive :");
         $taillePolice = self::TAILLE_POLICE_TABLEAU;
@@ -164,7 +164,7 @@ class ActesPdf implements IActesPdf
         }
 	}
 
-	public function cycle_table(ExtendPdf $pdf, array $textes)
+	public function cycleTable(ExtendPdf $pdf, array $textes)
 	{
         $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :");
 

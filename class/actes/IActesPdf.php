@@ -11,11 +11,11 @@ interface IActesPdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */
-    public function set_head(ExtendPdf $pdf);
+    public function setHead(ExtendPdf $pdf);
 
-    public function trans_table(ExtendPdf $pdf, array $contenuTableau);
+    public function transTable(ExtendPdf $pdf, array $contenuTableau);
 
-    public function fichier_table(ExtendPdf $pdf, $fichier_table);
+    public function fichierTable(ExtendPdf $pdf, $fichier_table);
 
-    public function cycle_table(ExtendPdf $pdf, array $textes);
+    public function cycleTable(ExtendPdf $pdf, array $textes);
 }

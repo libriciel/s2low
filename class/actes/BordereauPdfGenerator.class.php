@@ -37,7 +37,7 @@ class BordereauPdfGenerator
 
         $this->actesPdf->initPage($pdf);
         //définir l'entête de page.
-        $this->actesPdf->set_head($pdf);
+        $this->actesPdf->setHead($pdf);
 
         $this->actesPdf->printInfosCollectivite(
             $pdf,
@@ -45,19 +45,19 @@ class BordereauPdfGenerator
             $data->getTexteUtilisateur());
         // imprimé la table de  transaction
 
-        $this->actesPdf->trans_table(
+        $this->actesPdf->transTable(
             $pdf,
             $data->getContenuTableau());
 
         //$this->writeTitreParagraphe("Fichiers contenus dans l'archive :");
         // imprimé la talbe de Fichier calcule dans l'archivage
-        $this->actesPdf->fichier_table(
+        $this->actesPdf->fichierTable(
             $pdf,
             $data->getFichierTable());
 
         //$this->writeTitreParagraphe("Cycle de vie de la transaction :");
         //imprimé la table de cycle
-        $this->actesPdf->cycle_table(
+        $this->actesPdf->cycleTable(
             $pdf,
             $data->getCycleTable());
 

@@ -50,7 +50,7 @@ class ActesPdfLegacy implements IActesPdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */
-	public function set_head(ExtendPdf $pdf)
+	public function setHead(ExtendPdf $pdf)
 	{
         $title="BORDEREAU D'ACQUITTEMENT DE TRANSACTION";
         $pdf->Image($this->img, 10, 10, 190, 26);
@@ -69,7 +69,7 @@ class ActesPdfLegacy implements IActesPdf
 
 	}
 
-	public function trans_table(ExtendPdf $pdf, array $contenuTableau)
+	public function transTable(ExtendPdf $pdf, array $contenuTableau)
 	{
         $pdf->SetTextColor(40,36,94);
         $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :",60);
@@ -85,7 +85,7 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->Cell(40,10,"",0,1);
 	}
 
-	public function fichier_table(ExtendPdf $pdf, $fichier_table)
+	public function fichierTable(ExtendPdf $pdf, $fichier_table)
 	{
         $this->writeTitreParagraphe($pdf,"Fichier contenus dans l'archive :",69);
         //obtenir tous les info et commencer de les ajouter dans tableau
@@ -111,7 +111,7 @@ class ActesPdfLegacy implements IActesPdf
         }
 	}
 
-	public function cycle_table(ExtendPdf $pdf, $textes)
+	public function cycleTable(ExtendPdf $pdf, $textes)
 	{
         $pdf->Cell(40,10,"",0,1);
         $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :",65);
