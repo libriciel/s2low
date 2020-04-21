@@ -3,95 +3,93 @@
 
 class ExtractDataForBordereauPDF{
 
-    /**
-     * @var ActesTransactionFactory
-     */
-    private $actesTransactionFactory;
-    /**
-     * @var UserFactory
-     */
-    private $userFactory;
-    /**
-     * @var AuthorityFactory
-     */
-    private $authorityFactory;
 
-    public function __construct(ActesTransactionFactory $actesTransactionFactory, UserFactory $userFactory, AuthorityFactory $authorityFactory)
+    /**
+     * @var TransactionSQL
+     */
+    private $transactionSQL;
+    /**
+     * @var ActesIncludedFileSQL
+     */
+    private $actesIncludedFileSQL;
+    /**
+     * @var ActesStatusSQL
+     */
+    private $actesStatusSQL;
+
+    public function __construct(TransactionSQL $transactionSQL, ActesIncludedFileSQL $actesIncludedFileSQL, ActesStatusSQL $actesStatusSQL)
     {
-        $this->actesTransactionFactory = $actesTransactionFactory;
-        $this->userFactory = $userFactory;
-        $this->authorityFactory = $authorityFactory;
+        $this->transactionSQL = $transactionSQL;
+        $this->actesIncludedFileSQL = $actesIncludedFileSQL;
+        $this->actesStatusSQL = $actesStatusSQL;
     }
 
     public function extract($transactionId,$addEmailNotificationField=false){
 
+        $this->transactionSQL->setTransmissionId($transactionId);
+        $transaction = $this->transactionSQL->getAll();
+        $transactionComplement = $this->transactionSQL->getComplement($transactionId);
+        $workflow = $this->transactionSQL->fetchWorkflow($transactionId);
+        $status = $this->actesStatusSQL->getAllStatus();
+        $includedFiles = $this->actesIncludedFileSQL->getAll($transactionId);
+
         $data = new DataForBordereauPDF();
 
-        $transaction = $this->actesTransactionFactory->get($transactionId);
-        $user = $this->userFactory->getUserByEnvelopeId($transaction->get("envelope_id"));
-        $author = $this->authorityFactory->get($user->get("authority_id"));
-
-        $data->setTexteCollectivite($author->get("name"));
-        $data->setTexteUtilisateur($user->get("name"),$user->get("givenname"));
-
-        $data->setContenuTableau($this->initDataTable($transaction, $addEmailNotificationField));
-
-        $data->setFichierTable($this->initDatafichier_table($transaction));
-
-        $data->setCycleTable($this->initcycle_table($transaction));
+        $data->setTexteCollectivite($transaction[0]["authority_name"]);
+        $data->setTexteUtilisateur($transaction[0]["name"],$transaction[0]["givenname"]);
+        $data->setContenuTableau($this->initDataTable($transaction, $transactionComplement, $addEmailNotificationField));
+        $data->setFichierTable($this->initDatafichier_table($includedFiles));
+        $data->setCycleTable($this->initcycle_table($workflow,$status));
 
         return $data;
     }
 
-    private function getNotifieA(ActesTransaction $trans, bool $addEmailNotificationField){
-        if ($trans->get("broadcasted") == 't' ) {
-            return "Notifiée à " . $trans->get("broadcast_emails");
+    private function getNotifieA(array $transactionComplement,bool $addEmailNotificationField){
+        if ($transactionComplement["broadcasted"] == 't' ) {
+            return "Notifiée à " . $transactionComplement["broadcast_emails"];
         }
-        if ($addEmailNotificationField && $trans->get("broadcast_emails")){
-            return "Notifiée à " . $trans->get("broadcast_emails");
+        if ($addEmailNotificationField && $transactionComplement["broadcast_emails"]){
+            return "Notifiée à " . $transactionComplement["broadcast_emails"];
         }
         return "Non notifiée";
     }
 
-    public function initDataTable(ActesTransaction $transaction, bool $addEmailNotificationField){
+    public function initDataTable(array $transaction, array $transactionComplement, bool $addEmailNotificationField){
         //traiter des requêtes
-        $transactionTypes = $transaction->get("transactionTypes");
-        $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
-
-        if(isset($transNatures[$transaction->get("nature_code")])){
-            $nature_description = $transNatures[$transaction->get("nature_code")];
+        if(isset($transaction[0]["nature_descr"])){
+            $nature_description = $transaction[0]["nature_descr"];
         } else {
             $nature_description = "n/a";
         }
 
-        $notification = $this->getNotifieA($transaction, $addEmailNotificationField);
+        $notification = $this->getNotifieA($transactionComplement,$addEmailNotificationField);
 
-        $classification = $transaction->get("classification") ;
-        $classification_string = $transaction->get('classification_string');
+        $classification = $transactionComplement["classification"];
+        $classification_string = $transactionComplement["classification_string"];
+
         if ($classification_string) {
             $classification .= " - $classification_string";
         }
 
-        $arch_url = $transaction->get("archive_url");
+        $arch_url = $transaction[0]["archive_url"];
         if (empty($arch_url))
             $arch_url= "Non définie";
 
         return [
-            ["Type de transaction:",$transactionTypes[$transaction->get("type")]],
+            ["Type de transaction:",$transaction[0]["type_str"]],
             ["Nature de l'acte:",$nature_description],
-            ["Numéro de l'acte:",$transaction->get("number")],
-            ["Date de la décision:",$transaction->get("decision_date")],
-            ["Objet:",$transaction->get("subject")],
-            ["Documents papiers complémentaires:",$transaction->getDocumentPapier()?"OUI":"NON"],
+            ["Numéro de l'acte:",$transaction[0]["number"]],
+            ["Date de la décision:",$transactionComplement["decision_date"]],
+            ["Objet:",$transaction[0]["subject"]],
+            ["Documents papiers complémentaires:",$transactionComplement["document_papier"]?"OUI":"NON"],
             ["Classification matières/sous-matières:",$classification],
-            ["Identifiant unique:",$transaction->get("unique_id")],
+            ["Identifiant unique:",$transactionComplement["unique_id"]],
             ["URL d'archivage:",$arch_url],
             ["Notification:",$notification]
         ];
     }
 
-    public function initDatafichier_table(ActesTransaction $transaction ){
-        $files = $transaction->fetchFilesList();
+    public function initDatafichier_table($files){
         $filesTemp = [];
         foreach ($files as $file) {
             $fileTemp=[];
@@ -99,29 +97,26 @@ class ExtractDataForBordereauPDF{
             if ($file["posted_filename"])
             {
 
-                $fileTemp[]=["Nom original :",$file["posted_filename"],$file["mimetype"],$file["size"]];
+                $fileTemp[]=["Nom original :",$file["posted_filename"],$file["filetype"],$file["filesize"]];
                 $written = true;
 
             }
-            if ($file["name"])
+            if ($file["filename"])
             {
                 list($size,$mimetype) = ['',''];
                 if(!$written){
-                    $size = $file["size"];
-                    $mimetype = $file["mimetype"];
+                    $size = $file["filesize"];
+                    $mimetype = $file["filetype"];
                 }
-                $fileTemp[]=["Nom métier:",$file["name"], $mimetype, $size];
+                $fileTemp[]=["Nom métier:",$file["filename"], $mimetype, $size];
             }
             $filesTemp[]= $fileTemp;
         }
         return $filesTemp;
     }
 
-    public function initcycle_table(ActesTransaction $transaction){
+    public function initcycle_table(array $workflow,array $status){
         //traiter des requêtes
-        $workflow = $transaction->fetchWorkflow();
-        $status = $transaction->getStatusList();
-
         $cycle_table=[];
 		foreach ($workflow as $stage) {
             $cycle_table[] = [

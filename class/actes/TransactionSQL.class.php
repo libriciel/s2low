@@ -158,7 +158,6 @@ class TransactionSQL {
 		//$this->value[] = "$objet"; FIX #378
 	}
 	
-	
 	public function setDateMinSubmission($date){
 		if (! $date)  {
 			return;
@@ -196,6 +195,14 @@ class TransactionSQL {
 						" AND atw.status_id =  4 LIMIT 1 ) <= ? ";
 		$this->value[] = $date;
 	}
+
+	public function setTransmissionId($transmissionId){
+        if (!$transmissionId){
+            return;
+        }
+        $this->filter[] = "id = ?";
+        $this->value[] = "$transmissionId";
+    }
 	
 	public function getAll(){
 		$sql = 	"SELECT ".
@@ -276,6 +283,20 @@ class TransactionSQL {
 		$this->sqlQuery->query($sql,$id);
 	}
 	
-	
-	
+	public function getComplement($id){
+	    $sql = "SELECT decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails FROM actes_transactions WHERE id = ?";
+        return $this->sqlQuery->queryOne($sql,$id);
+    }
+
+    /**
+     * \brief Méthode de récupération du cycle de vie de cette transaction
+     * \return Un tableau contenant le workflow de la transaction
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function fetchWorkflow(int $id) {
+        $sql = "SELECT id, status_id, date, message FROM actes_transactions_workflow WHERE transaction_id= ? ORDER BY date, id ASC";
+        return $this->sqlQuery->query($sql,$id);
+    }
 }
