@@ -112,17 +112,51 @@ class OpenStackContainerWrapper{
      * @param $options
      * @return mixed
      * @throws Exception
+     * @throws Throwable
      */
 
     private function executeCommand( $function, $options){
         $attempts = 0;
         do{
+            $tokenProblem = false;
             try{
                 return $function($this->getContainer(),$options);
-            } catch (Exception $e){
-                if($attempts>0){        //No need to wait if it's only a token problem
+            } catch (Throwable $e){
+                echo "-----------------------------------------------------------------------\n";
+                var_dump($e->getMessage());
+                echo get_class($e);
+                die();
+                echo "-----------------------------------------------------------------------\n";
+                $retour=[];
+                if($e->getMessage() === "cURL error 6: Could not resolve host: autherreur.cloud.ovh.net (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)"){
+                    echo "premier message\n";
+                }
+                if($e instanceof \OpenStack\Common\Error\BadResponseError){
+                    preg_match('/The remote server returned a \"(?<ErrorCode>[0-9][0-9][0-9]) (?<Message>.*)\" error for the following transaction:/',
+                        $e->getMessage(),
+                        $matches
+                    );
+                    var_dump($matches['ErrorCode']);
+                    if($matches['ErrorCode'] === "401"){
+                        $tokenProblem = true;
+                        echo "401\n";
+                        die();
+                    }
+                    else{
+                        $message = $e->getMessage();
+                        // TODO : Le message contient le fichier : le tronquer ici plutot que dans WorkerScriptClass ?
+                        throw new PausingQueueException($message);
+                    }
+                }
+                echo "-----------------------------------------------------------------------\n";
+                var_dump($e->getMessage());
+                echo get_class($e);
+                die();
+                echo "-----------------------------------------------------------------------\n";
+                if(!$tokenProblem){        //No need to wait if it's only a token problem
                     sleep($this->timeBetweenAttempts);
                 }
+                //TODO : est-il nécessaire de gérer les attempts en dehors de beanstalk ?
                 $attempts++;
                 $this->resetConnection();
             }

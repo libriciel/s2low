@@ -114,6 +114,12 @@ class WorkerScript {
 					$e->getMessage(),
 					[$data,$e->getTraceAsString()]
 				);
+				if($e instanceof PausingQueueException){
+				    //TODO : vérifier si c'est bien correct
+                    $seconds = 100;
+                    $this->s2lowLogger->info("Pausing queue for $seconds seconds");
+                    sleep($seconds);
+                }
 				$queue->release(
 					$job,
 					PheanstalkInterface::DEFAULT_PRIORITY,
@@ -163,7 +169,7 @@ class WorkerScript {
             $message = $e->getMessage();
             $lgMax= 1000;
             if(strlen($message) > $lgMax){
-                mb_strimwidth($message, 0, $lgMax, "(...)");
+                $message = substr($message, 0, $lgMax)."...";
             }
             $this->s2lowLogger->critical(
 				"Erreur lors de l'execution du script : " . $message,[$e->getTraceAsString()]
