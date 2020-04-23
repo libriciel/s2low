@@ -95,7 +95,11 @@ class ExtendPdf extends FPDF {
 	    $nb=0;
 	    for($i=0;$i<count($data);$i++)
 	        $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
-	    $h=$nb*5;
+        $rowHeight = 5;
+        if(!$legacy){
+            $rowHeight=7;
+        }
+        $h=$nb* $rowHeight;
 	    //Issue a page break first if needed
 	    $this->CheckPageBreak($h);
 	    //Draw the cells of the row
@@ -126,7 +130,7 @@ class ExtendPdf extends FPDF {
             //Print the text
             //default on fill cette cell avec le fillcolor, fillcolor default =255.
             //$this->MultiCell($w,5,$fc[0].'-'.$fc[1].'-'.$fc[2],$b,$a,1);
-            $this->MultiCell($w,5,$data[$i],$b,$a,true);
+            $this->MultiCell($w, $rowHeight,$data[$i],$b,$a,true);
 	      	
 	        //Put the position to the right of the cell
 	        $this->SetXY($x+$w,$y);

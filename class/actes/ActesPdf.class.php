@@ -12,14 +12,24 @@ class ActesPdf implements IActesPdf
     const BLEU_FONCE_BACK = [225, 241, 247];
     const BLEU_CLAIR_BACK = [245, 250, 251];
 
+    const COLOR_ARRAY=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+
     const TAILLE_POLICE_TITRE = 18;
     const TAILLE_POLICE_COLLECTIVITE = 14;
     const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
     const TAILLE_POLICE_TABLEAU = 12;
 
 	private $img;
-	
-	public function __construct(string $img) {
+    /**
+     * @var array
+     */
+    private $colorArray;
+    /**
+     * @var int
+     */
+    private $colorIndex;
+
+    public function __construct(string $img) {
         $this->img = $img;
   	}
 
@@ -109,69 +119,42 @@ class ActesPdf implements IActesPdf
 
 	public function transTable(ExtendPdf $pdf, array $contenuTableau)
 	{
-        $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :");
-	    $taillePolice = self::TAILLE_POLICE_TABLEAU;
+        $this->writeTitreParagraphe($pdf,"Paramètres de la transaction :");
 
-        $pdf->SetMyWidths(array(80,110));
-        $pdf->SetMyAligns(array('L','L'));
-        $pdf->SetMyBorder(array('0','0'));
-
-        $pdf->SetFont('Ubuntu','R',$taillePolice);
-
-        $colorIndex=0;
-        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+	    $this->setUpTable($pdf,[80,110],['L','L']);
 
         foreach ($contenuTableau as $ligne){
-		    $color = $colorArray[$colorIndex];
-            $pdf->setMyFillcolor(array($color,$color));
             $pdf->myRow(array($ligne[0],$ligne[1]));
-            $colorIndex = ($colorIndex +1) %2;
+            $this->switchColor($pdf);
         }
 	}
 
 	public function fichierTable(ExtendPdf $pdf, $fichier_table)
 	{
         $this->writeTitreParagraphe($pdf,"Fichiers contenus dans l'archive :");
-        $taillePolice = self::TAILLE_POLICE_TABLEAU;
 
-        $pdf->SetMyWidths(array(120,35,35));
-        $pdf->SetMyAligns(array('L','C','C'));
-        $pdf->SetMyBorder(array('0','0','0'));
+        $this->setUpTable($pdf, [120, 35, 35], ['L', 'C', 'C'], ["Fichier", "Type", "Taille (Ko)"]);
 
-        $pdf->SetFont('Ubuntu','B',$taillePolice);
-        $pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
-        $pdf->myRow(array("Fichier","Type","Taille (Ko)"));
-
-        $pdf->SetFont('Ubuntu','R',$taillePolice);
-        $pdf->SetMyBorder(array('0','0','0'));
-
-        $colorIndex=0;
-        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
-
-        if(!is_null($fichier_table)){
-            foreach ($fichier_table as $file){
-                $color = $colorArray[$colorIndex];
-                $pdf->setMyFillcolor(array($color,$color,$color));
-                if ($file["posted_filename"] && $file["filename"])
-                {
-                    $this->addCellToTable($pdf,
+        foreach ($fichier_table as $file){
+            if ($file["posted_filename"] && $file["filename"])
+            {
+                $this->addCellToTable($pdf,
                         "Nom original :",
                         $file["posted_filename"],
                         $file["filetype"],$file["filesize"]);
-                    $this->addCellToTable($pdf,
+                $this->addCellToTable($pdf,
                         "Nom métier:",
                         $file["filename"],
                         '', '');
-                }
-                if (!$file["posted_filename"] && $file["filename"])
-                {
-                    $this->addCellToTable($pdf,
+            }
+            if (!$file["posted_filename"] && $file["filename"])
+            {
+                $this->addCellToTable($pdf,
                         "Nom métier:",
                         $file["filename"],
                         $file["filetype"], $file["filesize"]);
-                }
-                $colorIndex = ($colorIndex + 1) %2;
             }
+            $this->switchColor($pdf);
         }
 	}
 
@@ -186,26 +169,50 @@ class ActesPdf implements IActesPdf
 	{
         $this->writeTitreParagraphe($pdf,"Cycle de vie de la transaction :");
 
-        $taillePolice = self::TAILLE_POLICE_TABLEAU;
-
-		$pdf->SetMyWidths(array(55,65,70));
-		$pdf->SetMyAligns(array('L','L','L'));
-		$pdf->SetMyBorder(array('0','0','0'));
-		$pdf->SetFont('Ubuntu','B',$taillePolice);
-
-		$pdf->setMyFillcolor(array(self::BLEU_HEADER,self::BLEU_HEADER,self::BLEU_HEADER));
-		$pdf->myRow(array("Etat","Date", "Message"));
-		$pdf->SetFont('Ubuntu','R',$taillePolice);
-		$pdf->SetMyBorder(array('0','0','0'));
-
-        $colorIndex=0;
-        $colorArray=[self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+        $this->setUpTable($pdf,
+            array(55, 65, 70),
+            array('L', 'L', 'L'),
+            array("Etat", "Date", "Message"));
 
 		foreach ($textes as $texte){
-            $color = $colorArray[$colorIndex];
-            $pdf->setMyFillcolor(array($color,$color,$color));
 			$pdf->myRow(array($texte[0],$texte[1],$texte[2]));
-            $colorIndex = ($colorIndex + 1) %2;
+            $this->switchColor($pdf);
 		}
 	}
+
+    /**
+     * @param ExtendPdf $pdf
+     * @param array $w
+     * @param array $a
+     * @param array $titles
+     */
+    public function setUpTable(ExtendPdf $pdf, array $w, array $a, array $titles =null): void
+    {
+        $taillePolice = self::TAILLE_POLICE_TABLEAU;
+
+        $this->colorIndex=0;
+
+        $pdf->SetMyWidths($w);
+        $pdf->SetMyAligns($a);
+        $borders = array_fill(0,count($w),0);
+        $pdf->SetMyBorder($borders);
+
+        if(!is_null($titles)){
+            $pdf->SetFont('Ubuntu', 'B', $taillePolice);
+            $pdf->setMyFillcolor(array(self::BLEU_HEADER, self::BLEU_HEADER, self::BLEU_HEADER));
+            $pdf->myRow($titles);
+        }
+
+        $pdf->SetFont('Ubuntu', 'R', $taillePolice);
+        $pdf->SetMyBorder(array('0', '0', '0'));
+
+        $color = $this::COLOR_ARRAY[$this->colorIndex];
+        $pdf->setMyFillcolor(array($color,$color,$color));
+    }
+
+    private function switchColor($pdf){
+        $this->colorIndex = ($this->colorIndex + 1) %2;
+        $color = $this::COLOR_ARRAY[$this->colorIndex];
+        $pdf->setMyFillcolor(array($color,$color,$color));
+    }
 }

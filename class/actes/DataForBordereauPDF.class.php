@@ -53,16 +53,16 @@ class DataForBordereauPDF
     public function getContenuTableau()
     {
         return [
-            ["Type de transaction:",$this->typeDeTransaction],
-            ["Nature de l'acte:",$this->nature_description],
-            ["Numéro de l'acte:",$this->numeroActe],
-            ["Date de la décision:",$this->dateDecision],
-            ["Objet:",$this->objet],
-            ["Documents papiers complémentaires:",$this->presenceDocPapier],
-            ["Classification matières/sous-matières:",$this->classification],
-            ["Identifiant unique:",$this->idUnique],
-            ["URL d'archivage:",$this->arch_url],
-            ["Notification:",$this->getNotifieA()]
+            ["Type de transaction :",$this->typeDeTransaction],
+            ["Nature de l'acte :",$this->nature_description],
+            ["Numéro de l'acte :",$this->numeroActe],
+            ["Date de la décision :",$this->dateDecision],
+            ["Objet :",$this->objet],
+            ["Documents papiers complémentaires :",$this->presenceDocPapier],
+            ["Classification matières/sous-matières :",$this->classification],
+            ["Identifiant unique :",$this->idUnique],
+            ["URL d'archivage :",$this->arch_url],
+            ["Notification :",$this->getNotifieA()]
         ];
     }
 

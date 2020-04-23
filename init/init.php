@@ -220,7 +220,7 @@ $objectInstancier->set('redis_port',REDIS_PORT);
 
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
-if(!USE_LEGACY_BORDEREAU_MODEL) {
+if(USE_LEGACY_BORDEREAU_MODEL) {
     $objectInstancier->set(
         IActesPdf::class,
         new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")

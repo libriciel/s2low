@@ -108,7 +108,7 @@ class ActesPdfLegacy implements IActesPdf
             if ($file["filename"])
             {
                 $this->addCellToTable($pdf,
-                    "Nom métier:",
+                    "Nom métier :",
                     $file["filename"], $file["filetype"], $file["filesize"]
                 );
             }
@@ -147,14 +147,18 @@ class ActesPdfLegacy implements IActesPdf
      * @param array $columnsWidths
      * @param array $columnsTitles
      */
-    private function setUpTable(ExtendPdf $pdf, array $columnsWidths, array $columnsTitles): void
+    private function setUpTable(ExtendPdf $pdf, array $columnsWidths, array $columnsTitles=null): void
     {
         $pdf->SetMyWidths($columnsWidths);
         $pdf->SetMyAligns(array('C', 'C', 'C', 'C'));
-        $pdf->SetMyBorder(array('0', 'R', 'RL', 'L'));
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->setMyFillcolor(array(array(255, 255, 255), array(200, 220, 255), array(200, 220, 255), array(200, 220, 255)));
-        $pdf->myRow($columnsTitles, true);
+
+        if(!is_null($columnsTitles)){
+            $pdf->SetMyBorder(array('0', 'R', 'RL', 'L'));
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->setMyFillcolor(array(array(255, 255, 255), array(200, 220, 255), array(200, 220, 255), array(200, 220, 255)));
+            $pdf->myRow($columnsTitles, true);
+        }
+
         $pdf->SetFont('Arial', 'i', 10);
         $pdf->SetMyBorder(array('R', '1', '1', '1'));
         $pdf->setMyFillcolor(array(array(255, 255, 255), array(216, 252, 254), array(216, 252, 254), array(216, 252, 254)));
@@ -167,7 +171,11 @@ class ActesPdfLegacy implements IActesPdf
      * @param $filetype
      * @param $filesize
      */
-    public function addCellToTable(ExtendPdf $pdf, string $typeNom, $posted_filename, $filetype, $filesize): void
+    public function addCellToTable(ExtendPdf $pdf,
+                                   string $typeNom,
+                                   string $posted_filename,
+                                   string $filetype,
+                                   string $filesize): void
     {
         $pdf->SetMyBorder(array('R', 'LTR', 'LTR', 'LTR'));
         $pdf->myRow(array("", $typeNom, "", ""), true);
