@@ -39,7 +39,8 @@
     "ext-zip": "^1.15",
     "ext-iconv": "*",
     "php-opencloud/openstack": "^3.0",
-    "ext-ftp": "*"
+    "ext-ftp": "*",
+    "ext-mbstring": "*"
   },
 
   "require-dev": {

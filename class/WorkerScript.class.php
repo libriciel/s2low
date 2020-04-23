@@ -160,8 +160,13 @@ class WorkerScript {
 			$this->s2lowLogger->notice($e->getMessage());
 			return true;
 		} catch (Exception $e){
-			$this->s2lowLogger->critical(
-				"Erreur lors de l'execution du script : " . $e->getMessage(),[$e->getTraceAsString()]
+            $message = $e->getMessage();
+            $lgMax= 1000;
+            if(strlen($message) > $lgMax){
+                mb_strimwidth($message, 0, $lgMax, "(...)");
+            }
+            $this->s2lowLogger->critical(
+				"Erreur lors de l'execution du script : " . $message,[$e->getTraceAsString()]
 			);
 			return false;
 		}
