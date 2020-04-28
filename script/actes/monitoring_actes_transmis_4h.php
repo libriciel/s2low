@@ -29,12 +29,10 @@ $sql="SELECT count(actes_envelopes.id) ".
 
 $nb_transac=$sqlQuery->queryOne($sql);
 
-#echo "$nb_transac \n";
-
-
 if($argc == 2){
-    if($argv[1] == "telegraf")
+    if($argv[1] == "telegraf") {
         echo "actes_transaction,status=transmislimit,application=s2low nb_transac=$nb_transac";
+    }
     exit;
 }
 elseif($nb_transac > $limit){

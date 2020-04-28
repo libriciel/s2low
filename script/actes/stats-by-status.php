@@ -16,6 +16,10 @@ if($argc < 2){
 }
 
 $status_id=(int) $argv[1];
+if(!strval($status_id) == $argv[1]){
+  echo "Le statut doit etre un entier";
+  exit(-2);
+}
 
 if(!array_key_exists($status_id,$actesStatuts)){
     echo "le statut doit etre un statut connu";
