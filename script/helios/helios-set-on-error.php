@@ -19,7 +19,7 @@ $dateForRequest = date('Y-m-d', strtotime("-$nbJours days"));
 
 $sql = "SELECT helios_transactions.id,helios_transactions.submission_date,filename,message FROM helios_transactions " .
     " JOIN helios_transactions_workflow ON helios_transactions_workflow.transaction_id=helios_transactions.id ".
-    " WHERE last_status_id=? AND helios_transactions.submission_date < ? AND status_id=? order by submission_date";
+    " WHERE last_status_id=? AND helios_transactions_workflow.date < ? AND status_id=? order by submission_date";
 
 $all = $sqlQuery->query($sql,HeliosTransactionsSQL::TRANSMIS,$dateForRequest,HeliosTransactionsSQL::TRANSMIS);
 
@@ -30,7 +30,7 @@ $i=0;
 foreach($all as $line){
     print_r($line);
     echo "Transaction {$line['id']} est soumise depuis {$line['submission_date']}\n";
-    $message = "Passage de la transaction {$line['id']} a erreur";
+    $message = "Passage de la transaction {$line['id']} a erreur via le script helios-set-on-error";
     $heliosTransactionSQL->updateStatus($line['id'],HeliosTransactionsSQL::ERREUR,$message);
     echo "$message\n";
     $i++;
