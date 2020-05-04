@@ -24,6 +24,7 @@ $sql = "SELECT helios_transactions.id,helios_transactions.submission_date,filena
 $all = $sqlQuery->query($sql,HeliosTransactionsSQL::TRANSMIS,$dateForRequest,HeliosTransactionsSQL::TRANSMIS);
 
 echo "transmis depuis $dateForRequest :\n";
+count($all);
 
 $i=0;
 
