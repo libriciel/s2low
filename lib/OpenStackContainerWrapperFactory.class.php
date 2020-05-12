@@ -4,6 +4,16 @@ use OpenStack\OpenStack;
 
 class OpenStackContainerWrapperFactory
 {
+    /**
+     * @var \Monolog\Logger
+     */
+    private $logger;
+
+    public function __construct(\Monolog\Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function getContainerWrapper(string $containerName, OpenStackConfig $configuration){
 
         $containerFullName = $configuration->openstack_swift_container_prefix.$containerName;
@@ -20,8 +30,8 @@ class OpenStackContainerWrapperFactory
 
         $openStack = new OpenStack($parametres);
 
-        $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,$parametres,$openStack);
+        $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,$parametres,$openStack,$this->logger);
 
-        return new OpenStackContainerWrapper($openStackContainerFetcher);
+        return new OpenStackContainerWrapper($openStackContainerFetcher, $this->logger);
     }
 }

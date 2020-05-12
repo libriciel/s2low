@@ -53,7 +53,8 @@ class OpenStackContainerFetcherTest extends TestCase{
 
         $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,
             $generate_token_options,
-            $openStackMock
+            $openStackMock,
+            new \Monolog\Logger("test")
         );
 
         $this->assertEquals(

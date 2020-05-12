@@ -1,5 +1,6 @@
 <?php
 
+use Monolog\Logger;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -60,7 +61,9 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,
+            new Logger("test")
+        );
 
         $this->assertEquals(
             $openStackContainerWrapper->$method($options),
@@ -97,7 +100,9 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->returnValue([$this->getTokenMock(),$containerMock])
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,
+            new Logger("test")
+        );
 
         $this->assertEquals(
             $openStackContainerWrapper->download("options"),
@@ -125,7 +130,10 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->returnValue([$this->getTokenMock(),$containerMock])
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            new Logger("test")
+        );
 
         $this->assertEquals(
              $openStackContainerWrapper->objectExists($options),
@@ -158,7 +166,10 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->returnValue([$this->getTokenMock(),$containerMock])
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock);
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            new Logger("test")
+        );
 
         $this->assertEquals(
             $openStackContainerWrapper->delete($options),
@@ -180,7 +191,11 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            new Logger("test"),
+            0
+        );
 
         // Première connexion : le token est périmé mais le getNewTokenAndContainer renvoie
         // quand même un container
@@ -222,7 +237,11 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            new Logger("test"),
+            0
+        );
 
         // Première connexion : premier appel à identityV3 et objectStoreV1
         $openStackContainerWrapper->createObject(["options1"]);
@@ -255,10 +274,25 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             )
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,0);
+        /** @var Logger|MockObject $logger */
+        $logger = $this->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage("Exception5");
+        $logger->expects($this->exactly(5))
+            ->method("error");
+
+        $logger->expects($this->exactly(5))
+            ->method("info");
+
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            $logger,
+            0
+        );
+
+        $this->expectException(PausingQueueException::class);
+        $this->expectExceptionMessage("[Openstack] Nombre de tentatives dépassé");
 
         $openStackContainerWrapper->objectExists("ObjetTest");
     }

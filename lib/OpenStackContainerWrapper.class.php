@@ -1,5 +1,6 @@
 <?php
 
+use Monolog\Logger;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -17,9 +18,14 @@ class OpenStackContainerWrapper{
     private $timeBetweenAttempts;
 
     const NUMBER_OF_ATTEMPTS = 5;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
 
-    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher,int $timeBetweenAttempts=1){
+    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher, Logger $logger, int $timeBetweenAttempts=1){
+        $this->logger = $logger;
         $this->timeBetweenAttempts=$timeBetweenAttempts;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
     }
@@ -40,11 +46,16 @@ class OpenStackContainerWrapper{
      */
 
     private function hasValidToken(){
-        return (isset($this->token) && !$this->token->hasExpired());
+        $hasValidToken = isset($this->token) && !$this->token->hasExpired();
+        if(!$hasValidToken){
+            $this->logger->info("[Openstack] Token expiré");
+        }
+        return ($hasValidToken);
     }
 
 
     public function resetConnection(){
+        $this->logger->info( "[Openstack] Reset Connection");
         list($this->token,$this->container) = [null,null];
     }
 
@@ -52,6 +63,7 @@ class OpenStackContainerWrapper{
      * @param $options
      * @return StorageObject
      * @throws Exception
+     * @throws Throwable
      */
 
     public function createObject($options){
@@ -67,6 +79,7 @@ class OpenStackContainerWrapper{
      * @param $options
      * @return StreamInterface
      * @throws Exception
+     * @throws Throwable
      */
     public function download($options){
         return $this->executeCommand(
@@ -81,6 +94,7 @@ class OpenStackContainerWrapper{
      * @param $options
      * @return mixed
      * @throws Exception
+     * @throws Throwable
      */
 
     public function delete($options){
@@ -96,6 +110,7 @@ class OpenStackContainerWrapper{
      * @param $options
      * @return bool
      * @throws Exception
+     * @throws Throwable
      */
 
     public function objectExists($options){
@@ -118,42 +133,16 @@ class OpenStackContainerWrapper{
     private function executeCommand( $function, $options){
         $attempts = 0;
         do{
-            $tokenProblem = false;
+            $doNotWaitBeforeRetry = false;
             try{
                 return $function($this->getContainer(),$options);
             } catch (Throwable $e){
-                echo "-----------------------------------------------------------------------\n";
-                var_dump($e->getMessage());
-                echo get_class($e);
-                die();
-                echo "-----------------------------------------------------------------------\n";
-                $retour=[];
-                if($e->getMessage() === "cURL error 6: Could not resolve host: autherreur.cloud.ovh.net (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)"){
-                    echo "premier message\n";
-                }
-                if($e instanceof \OpenStack\Common\Error\BadResponseError){
-                    preg_match('/The remote server returned a \"(?<ErrorCode>[0-9][0-9][0-9]) (?<Message>.*)\" error for the following transaction:/',
-                        $e->getMessage(),
-                        $matches
-                    );
-                    var_dump($matches['ErrorCode']);
-                    if($matches['ErrorCode'] === "401"){
-                        $tokenProblem = true;
-                        echo "401\n";
-                        die();
-                    }
-                    else{
-                        $message = $e->getMessage();
-                        // TODO : Le message contient le fichier : le tronquer ici plutot que dans WorkerScriptClass ?
-                        throw new PausingQueueException($message);
-                    }
-                }
-                echo "-----------------------------------------------------------------------\n";
-                var_dump($e->getMessage());
-                echo get_class($e);
-                die();
-                echo "-----------------------------------------------------------------------\n";
-                if(!$tokenProblem){        //No need to wait if it's only a token problem
+                list($message, $doNotWaitBeforeRetry) = $this->processThrowable($e);
+                $this->logger->error(
+                    "[Openstack][$attempts] $message"
+                );
+
+                if(!$doNotWaitBeforeRetry){        //No need to wait if it's only a token problem
                     sleep($this->timeBetweenAttempts);
                 }
                 //TODO : est-il nécessaire de gérer les attempts en dehors de beanstalk ?
@@ -161,6 +150,35 @@ class OpenStackContainerWrapper{
                 $this->resetConnection();
             }
         } while($attempts < self::NUMBER_OF_ATTEMPTS);
-        throw $e;
+        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
+    }
+
+    /**
+     * @param $e
+     * @return array
+     */
+    private function processThrowable($e): array
+    {
+        $doNotWaitBeforeRetry = false;
+
+        if ($e instanceof \GuzzleHttp\Exception\ConnectException) {
+            // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
+            $message = "Erreur Guzzle : " . $e->getMessage();
+        } elseif ($e instanceof \OpenStack\Common\Error\BadResponseError) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === "401") {
+                // Erreur d'authentification : on se réauthentifie
+                $doNotWaitBeforeRetry = true;
+                $message = "Erreur d'authentification";
+            } else {
+                // Pour tout autre type d'erreur, on met la queue en pause
+                $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
+            }
+        } else {
+            $ExceptionClass = get_class($e);
+            $messageThrowable = $e->getMessage();
+            $message = "Erreur $ExceptionClass : $messageThrowable";
+        }
+        return array($message, $doNotWaitBeforeRetry);
     }
 }
