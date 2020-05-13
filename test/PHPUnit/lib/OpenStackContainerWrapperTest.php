@@ -329,7 +329,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
                 $this->throwException($secondException),
                 $this->throwException($thirdException),
                 $this->throwException($FourthException),
-                $this->returnValue(null)
+                $this->returnValue([$this->getTokenMock(),$this->getContainerMock()])
             )
         );
 
@@ -338,7 +338,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        $logger->expects($this->exactly(5))
+        $logger->expects($this->exactly(4))
             ->method("error");
 
         $logger->expects($this->at(0))
@@ -357,7 +357,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             ->method("error")
             ->with("[Openstack][3] Erreur Exception : Fourth Exception");
 
-        $logger->expects($this->exactly(5))
+        $logger->expects($this->exactly(4))
             ->method("info");
 
         $openStackContainerWrapper = new OpenStackContainerWrapper(
@@ -365,9 +365,6 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $logger,
             0
         );
-
-        $this->expectException(PausingQueueException::class);
-        $this->expectExceptionMessage("[Openstack] Nombre de tentatives dépassé");
 
         $openStackContainerWrapper->objectExists("ObjetTest");
     }
