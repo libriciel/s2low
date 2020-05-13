@@ -1,6 +1,8 @@
 <?php
 
+use GuzzleHttp\Exception\ConnectException;
 use Monolog\Logger;
+use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -281,6 +283,79 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $logger->expects($this->exactly(5))
             ->method("error");
+
+        $logger->expects($this->exactly(5))
+            ->method("info");
+
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
+            $logger,
+            0
+        );
+
+        $this->expectException(PausingQueueException::class);
+        $this->expectExceptionMessage("[Openstack] Nombre de tentatives dépassé");
+
+        $openStackContainerWrapper->objectExists("ObjetTest");
+    }
+
+    /**
+     * @throws Exception
+     */
+
+    public function testEachPossibleException(){
+
+        $request = new \GuzzleHttp\Psr7\Request("method","uri");
+        $firstException = new ConnectException("First Exception", $request);
+
+        $secondException = new BadResponseError("Second Exception",
+            401
+        );
+        $response2 = new \GuzzleHttp\Psr7\Response(401,[]);
+        $secondException->setResponse($response2);
+
+        $thirdException = new BadResponseError("Third Exception",
+            500
+        );
+        $response3 = new \GuzzleHttp\Psr7\Response(500,[]);
+        $thirdException->setResponse($response3);
+
+        $FourthException = new Exception("Fourth Exception");
+
+        $openStackContainerFetcherMock = $this->getOpenStackContainerFetcherMock(
+            $this->exactly(5),
+            $this->onConsecutiveCalls(
+                $this->throwException($firstException),
+                $this->throwException($secondException),
+                $this->throwException($thirdException),
+                $this->throwException($FourthException),
+                $this->returnValue(null)
+            )
+        );
+
+        /** @var Logger|MockObject $logger */
+        $logger = $this->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $logger->expects($this->exactly(5))
+            ->method("error");
+
+        $logger->expects($this->at(0))
+            ->method("error")
+            ->with("[Openstack][0] Erreur Guzzle : First Exception");
+
+        $logger->expects($this->at(2))
+            ->method("error")
+            ->with("[Openstack][1] Erreur d'authentification");
+
+        $logger->expects($this->at(4))
+            ->method("error")
+            ->with("[Openstack][2] Erreur 500 : Internal Server Error");
+
+        $logger->expects($this->at(6))
+            ->method("error")
+            ->with("[Openstack][3] Erreur Exception : Fourth Exception");
 
         $logger->expects($this->exactly(5))
             ->method("info");

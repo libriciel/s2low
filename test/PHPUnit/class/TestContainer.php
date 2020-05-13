@@ -9,7 +9,7 @@ use Monolog\Logger;
 //include (__DIR__.'/../../../lib/OpenStackSwiftWrapper.class.php');
 
 $openStackConfigActes = new OpenStackConfig();
-$openStackConfigActes->openstack_authentication_url_v3  = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
+$openStackConfigActes->openstack_authentication_url_v3  = "pouet";//ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
 $openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
 $openStackConfigActes->openstack_password = ACTES_OPENSTACK_PASSWORD;
 $openStackConfigActes->openstack_tenant = ACTES_OPENSTACK_TENANT;
@@ -27,7 +27,7 @@ $wrapper = new OpenStackSwiftWrapper($openStackContainerStore,$logger);
 while(true){
     try{
         $wrapper->sendFile('temp',
-            'TestContainer2.php',
+            'TestContainer.php',
             "test");
         $wrapper->deleteFile('temp',"test");
     }

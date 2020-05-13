@@ -40,7 +40,8 @@
     "ext-iconv": "*",
     "php-opencloud/openstack": "^3.0",
     "ext-ftp": "*",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-openssl": "*"
   },
 
   "require-dev": {

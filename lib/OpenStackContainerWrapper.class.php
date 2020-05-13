@@ -166,7 +166,7 @@ class OpenStackContainerWrapper{
             $message = "Erreur Guzzle : " . $e->getMessage();
         } elseif ($e instanceof \OpenStack\Common\Error\BadResponseError) {
             $statusCode = $e->getResponse()->getStatusCode();
-            if ($statusCode === "401") {
+            if ($statusCode === 401) {
                 // Erreur d'authentification : on se réauthentifie
                 $doNotWaitBeforeRetry = true;
                 $message = "Erreur d'authentification";
