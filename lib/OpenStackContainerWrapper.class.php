@@ -18,6 +18,7 @@ class OpenStackContainerWrapper{
     private $timeBetweenAttempts;
 
     const NUMBER_OF_ATTEMPTS = 5;
+    private const timeToWait = 100;
     /**
      * @var Logger
      */
@@ -126,59 +127,54 @@ class OpenStackContainerWrapper{
      * @param $function
      * @param $options
      * @return mixed
-     * @throws Exception
-     * @throws Throwable
+     * @throws PausingQueueException
      */
 
     private function executeCommand( $function, $options){
         $attempts = 0;
         do{
+            $message = "";
             $doNotWaitBeforeRetry = false;
             try{
                 return $function($this->getContainer(),$options);
-            } catch (Throwable $e){
-                list($message, $doNotWaitBeforeRetry) = $this->processThrowable($e);
-                $this->logger->error(
-                    "[Openstack][$attempts] $message"
-                );
-
-                if(!$doNotWaitBeforeRetry){        //No need to wait if it's only a token problem
-                    sleep($this->timeBetweenAttempts);
+            } catch (\GuzzleHttp\Exception\ConnectException $e){
+                $doNotWaitBeforeRetry = false;
+                // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
+                $message = "Erreur Guzzle : " . $e->getMessage();
+            } catch( \OpenStack\Common\Error\BadResponseError $e) {
+                $statusCode = $e->getResponse()->getStatusCode();
+                if ($statusCode === 401) {
+                    // Erreur d'authentification : on se réauthentifie
+                    $doNotWaitBeforeRetry = true;
+                    $message = "Erreur d'authentification";
+                } else {
+                    // Pour tout autre type d'erreur, on met la queue en pause
+                    $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
                 }
-                //TODO : est-il nécessaire de gérer les attempts en dehors de beanstalk ?
-                $attempts++;
-                $this->resetConnection();
+            } catch (Exception $e) {
+                $ExceptionClass = get_class($e);
+                $messageThrowable = $e->getMessage();
+                $message = "Erreur $ExceptionClass : $messageThrowable";
             }
+            $message = $this->shorten($message);
+            $this->logger->error(
+        "[Openstack][$attempts] $message"
+            );
+
+            if(!$doNotWaitBeforeRetry){        //No need to wait if it's only a token problem
+                sleep($this->timeBetweenAttempts);
+            }
+            $attempts++;
+            $this->resetConnection();
         } while($attempts < self::NUMBER_OF_ATTEMPTS);
-        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
+        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé", self::timeToWait);
     }
 
-    /**
-     * @param $e
-     * @return array
-     */
-    private function processThrowable($e): array
-    {
-        $doNotWaitBeforeRetry = false;
-
-        if ($e instanceof \GuzzleHttp\Exception\ConnectException) {
-            // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
-            $message = "Erreur Guzzle : " . $e->getMessage();
-        } elseif ($e instanceof \OpenStack\Common\Error\BadResponseError) {
-            $statusCode = $e->getResponse()->getStatusCode();
-            if ($statusCode === 401) {
-                // Erreur d'authentification : on se réauthentifie
-                $doNotWaitBeforeRetry = true;
-                $message = "Erreur d'authentification";
-            } else {
-                // Pour tout autre type d'erreur, on met la queue en pause
-                $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
-            }
-        } else {
-            $ExceptionClass = get_class($e);
-            $messageThrowable = $e->getMessage();
-            $message = "Erreur $ExceptionClass : $messageThrowable";
+    private function shorten($message){
+        $lgMax= 1000;
+        if(strlen($message) > $lgMax){
+            $message = substr($message, 0, $lgMax)."...";
         }
-        return array($message, $doNotWaitBeforeRetry);
+        return $message;
     }
 }

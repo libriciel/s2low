@@ -115,8 +115,7 @@ class WorkerScript {
 					[$data,$e->getTraceAsString()]
 				);
 				if($e instanceof PausingQueueException){
-				    //TODO : vérifier si c'est bien correct
-                    $seconds = 100;
+                    $seconds = $e->getTimeToWait();
                     $this->s2lowLogger->info("Pausing queue for $seconds seconds");
                     sleep($seconds);
                 }
@@ -165,12 +164,12 @@ class WorkerScript {
 		} catch (WorkerScriptException $e){
 			$this->s2lowLogger->notice($e->getMessage());
 			return true;
-		} catch (Exception $e){
+		} catch(PausingQueueException $e){
+		    $seconds = $e->getTimeToWait();
+            $this->s2lowLogger->info("Pausing queue for $seconds seconds");
+            sleep($seconds);
+        } catch (Exception $e){
             $message = $e->getMessage();
-            $lgMax= 1000;
-            if(strlen($message) > $lgMax){
-                $message = substr($message, 0, $lgMax)."...";
-            }
             $this->s2lowLogger->critical(
 				"Erreur lors de l'execution du script : " . $message,[$e->getTraceAsString()]
 			);
