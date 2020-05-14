@@ -24,7 +24,7 @@ interface IWorker {
 
 	/**
 	 * Le vrai travail avec les data
-	 * @throws RecoverableException
+	 * @throws RecoverableException | CloudStorageException | PausingQueueException | UnrecoverableException
 	 * @param $data
 	 * @return bool
 	 */

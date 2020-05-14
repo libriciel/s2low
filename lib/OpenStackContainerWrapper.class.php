@@ -1,6 +1,7 @@
 <?php
 
 use Monolog\Logger;
+use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -33,6 +34,7 @@ class OpenStackContainerWrapper{
 
     /**
      * @return Container
+     * @throws Exception
      */
 
     private function getContainer(){
@@ -63,8 +65,7 @@ class OpenStackContainerWrapper{
     /**
      * @param $options
      * @return StorageObject
-     * @throws Exception
-     * @throws Throwable
+     * @throws PausingQueueException
      */
 
     public function createObject($options){
@@ -79,9 +80,9 @@ class OpenStackContainerWrapper{
     /**
      * @param $options
      * @return StreamInterface
-     * @throws Exception
-     * @throws Throwable
+     * @throws PausingQueueException
      */
+
     public function download($options){
         return $this->executeCommand(
             function (Container $container,$options){
@@ -94,14 +95,14 @@ class OpenStackContainerWrapper{
     /**
      * @param $options
      * @return mixed
-     * @throws Exception
-     * @throws Throwable
+     * @throws PausingQueueException
      */
 
     public function delete($options){
         return $this->executeCommand(
             function (Container $container,$options){
-                return $container->getObject($options)->delete();
+                $container->getObject($options)->delete();
+                return true;
             },
             $options
         );
@@ -110,8 +111,7 @@ class OpenStackContainerWrapper{
     /**
      * @param $options
      * @return bool
-     * @throws Exception
-     * @throws Throwable
+     * @throws PausingQueueException
      */
 
     public function objectExists($options){
@@ -130,7 +130,7 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    private function executeCommand( $function, $options){
+    private function executeCommand( callable $function, $options){
         $attempts = 0;
         do{
             $message = "";
@@ -141,7 +141,7 @@ class OpenStackContainerWrapper{
                 $doNotWaitBeforeRetry = false;
                 // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
                 $message = "Erreur Guzzle : " . $e->getMessage();
-            } catch( \OpenStack\Common\Error\BadResponseError $e) {
+            } catch( BadResponseError $e) {
                 $statusCode = $e->getResponse()->getStatusCode();
                 if ($statusCode === 401) {
                     // Erreur d'authentification : on se réauthentifie

@@ -24,11 +24,12 @@ class CloudStorage {
 		return $this->iCloudStorable->getAllObjectIdToStore();
 	}
 
-	/**
-	 * @param int $object_id
-	 * @return bool
-	 * @throws Exception
-	 */
+    /**
+     * @param int $object_id
+     * @return bool
+     * @throws CloudStorageException | PausingQueueException | UnrecoverableException
+     */
+
 	public function storeObject(int $object_id){
 		$file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
 		$file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);

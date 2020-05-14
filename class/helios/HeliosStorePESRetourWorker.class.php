@@ -39,11 +39,12 @@ class HeliosStorePESRetourWorker implements IWorker {
 		return $this->getCloudStorage()->getAllObjectIdToStore();
 	}
 
-	/**
-	 * @param $data
-	 * @return void
-	 * @throws Exception
-	 */
+    /**
+     * @param $data
+     * @return void
+     * @throws CloudStorageException | PausingQueueException | UnrecoverableException
+     */
+
 	public function work($data){
 		$this->getCloudStorage()->storeObject($data);
 	}
