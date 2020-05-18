@@ -139,11 +139,14 @@ class WorkerScript {
 		return true;
 	}
 
-	/**
-	 * @param IWorker $IWorker
-	 * @param $data
-	 * @throws RecoverableException
-	 */
+    /**
+     * @param IWorker $IWorker
+     * @param $data
+     * @throws CloudStorageException
+     * @throws PausingQueueException
+     * @throws RecoverableException
+     * @throws UnrecoverableException
+     */
 	private function syncrhonizedWork(IWorker $IWorker, $data){
 		$this->s2lowLogger->debug("Entree section critique");
 		if ($IWorker->isDataValid($data)){
