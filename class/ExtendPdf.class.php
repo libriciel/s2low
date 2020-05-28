@@ -8,24 +8,34 @@ class ExtendPdf extends FPDF {
 	public $aligns;
 	public $fillcolor;
 	public $border;
+    /**
+     * @var bool
+     */
+    private $legacy;
 
+    public function __construct($legacy =true, $orientation='P', $unit='mm', $size='A4'){
+        $this->legacy = $legacy;
+        parent::__construct($orientation, $unit, $size);
+    }
   /**
   * \brief Initialiser l'entête du fichier pdf.
   * \param pas de paramètre.
   * 
   */
 	public function Header() {
-		//Select Arial bold 15
-		$this->SetFont('Arial','',6);
-		//Move to the right
-		$this->SetXY(2, 3);
-		$this->Cell(120);
+	    if($this->legacy){
+            //Select Arial bold 15
+            $this->SetFont('Arial','',6);
+            //Move to the right
+            $this->SetXY(2, 3);
+            $this->Cell(120);
 
-		//Framed title
-		$this->Cell(30,6,OPERATEUR_DE_TELETRANSMISSION);
-		//Line break
-		$this->Ln(6);
-		  $this->Line(10, 6, 120, 6);
+            //Framed title
+            $this->Cell(30,6,OPERATEUR_DE_TELETRANSMISSION);
+            //Line break
+            $this->Ln(6);
+            $this->Line(10, 6, 120, 6);
+        }
 	}
 	
   /**
@@ -86,18 +96,20 @@ class ExtendPdf extends FPDF {
 		$this->fillcolor=$fillcolor;
 	}
 
-	/**
-	* @brief contruir le table ligne par ligne
-	* @param $data =array =>l'info qui va remplir dans les multicell.
-	*/
-	public function myRow($data,$legacy=false) {
+    /**
+     * @brief contruire le table ligne par ligne
+     * @param $data =array =>l'info qui va remplir dans les multicell.
+     * @param bool $legacy
+     * @param array $fonts
+     */
+	public function myRow($data,$legacy=false,array $fonts=[]) {
 	    //Calculate the height of the row
 	    $nb=0;
 	    for($i=0;$i<count($data);$i++)
 	        $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
         $rowHeight = 5;
         if(!$legacy){
-            $rowHeight=7;
+            $rowHeight=6;
         }
         $h=$nb* $rowHeight;
 	    //Issue a page break first if needed
@@ -130,10 +142,20 @@ class ExtendPdf extends FPDF {
             //Print the text
             //default on fill cette cell avec le fillcolor, fillcolor default =255.
             //$this->MultiCell($w,5,$fc[0].'-'.$fc[1].'-'.$fc[2],$b,$a,1);
+            $changeFont = isset($fonts[$i]["family"]) && isset($fonts[$i]["style"]) && isset($fonts[$i]["size"]);
+            if($changeFont){
+                $defaultFontFamily=$this->FontFamily;
+                $defaultFontStyle= $this->FontStyle;
+                $defaultFontSizePt = $this->FontSizePt;
+                $this->SetFont($fonts[$i]["family"],$fonts[$i]["style"],$fonts[$i]["size"]);
+            }
             $this->MultiCell($w, $rowHeight,$data[$i],$b,$a,true);
 	      	
 	        //Put the position to the right of the cell
 	        $this->SetXY($x+$w,$y);
+	        if($changeFont){
+                $this->SetFont($defaultFontFamily,$defaultFontStyle,$defaultFontSizePt);
+            }
 	    }
 	    //Go to the next line
 	    $this->Ln($h);

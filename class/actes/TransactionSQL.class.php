@@ -280,7 +280,7 @@ class TransactionSQL {
         $sql = "SELECT ".
             " users.name, users.givenname," .
             " authorities.name as authority_name, " .
-            " type, number, subject,archive_url,nature_descr,decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails".
+            " type, number, subject,archive_url,nature_descr, nature_code,decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails".
             " FROM actes_transactions " .
             " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
             " JOIN users ON actes_envelopes.user_id=users.id " .

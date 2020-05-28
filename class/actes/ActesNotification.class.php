@@ -14,8 +14,12 @@ class ActesNotification {
     private $actes_appli_trigramme;
 
     private $actesRetriever;
+    /**
+     * @var BordereauPdfGenerator
+     */
+    private $bordereauPdfGenerator;
 
-	public function __construct(
+    public function __construct(
 	        ActesTransactionsSQL $actesTransactionsSQL,
             ActeTamponne $acteTamponne,
             AuthoritySQL $authoritySQL,
@@ -23,7 +27,8 @@ class ActesNotification {
             MailerFactory $mailerFactory,
             S2lowLogger $logger,
             $actes_appli_trigramme,
-            ActesRetriever $actesRetriever
+            ActesRetriever $actesRetriever,
+            BordereauPdfGenerator $bordereauPdfGenerator
     ){
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->acteTamponne = $acteTamponne;
@@ -33,6 +38,7 @@ class ActesNotification {
         $this->logger = $logger;
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actesRetriever = $actesRetriever;
+        $this->bordereauPdfGenerator = $bordereauPdfGenerator;
 	}
 
 	/**
@@ -124,12 +130,10 @@ class ActesNotification {
             $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
             $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
 
-            $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+            $bordereauPdf = $this->bordereauPdfGenerator
+                ->generate($transactionInfo['id'],"bordereau_acquittement",true,"S");
 
-            $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
-            $monpdf = $bordereauPdfGenerator->generate($transactionInfo['id'],"bordereau_acquittement",true,"S");
-
-            $mailer->addStringAsFile("bordereau_acquittement.pdf", $monpdf);
+            $mailer->addStringAsFile("bordereau_acquittement.pdf", $bordereauPdf);
             if($withFile && ! $add_url_recup ){
                 foreach($fichiers_tamponnees as $fichier){
                     $mailer->addFile($fichier);

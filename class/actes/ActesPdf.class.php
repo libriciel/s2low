@@ -17,7 +17,7 @@ class ActesPdf implements IActesPdf
     const TAILLE_POLICE_TITRE = 18;
     const TAILLE_POLICE_COLLECTIVITE = 14;
     const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
-    const TAILLE_POLICE_TABLEAU = 12;
+    const TAILLE_POLICE_TABLEAU = 11;
 
 	private $img;
     /**
@@ -49,6 +49,7 @@ class ActesPdf implements IActesPdf
 
 
     public function printInfosCollectivite(ExtendPdf $pdf,string $texteCollectivite, string $texteUtilisateur){
+        $pdf->Ln(4);
         $tailleCellInfosCollectivite = $pdf->convertPixelsToMM(self::TAILLE_POLICE_COLLECTIVITE+2);
 
         //ajouter collectivité et utilisateur.
@@ -73,14 +74,14 @@ class ActesPdf implements IActesPdf
         $pdf->Cell(40,$tailleCellInfosCollectivite,"Collectivité : ".$texteCollectivite,0,0,'L');
         $pdf->Ln();
         $pdf->Cell(40,$tailleCellInfosCollectivite,"Utilisateur : ".$texteUtilisateur,0,0,'L');
-        $pdf->Ln();
+        $pdf->Ln(16);
     }
 
     private function writeTitreParagraphe(ExtendPdf $pdf, string $titre){
         $this->setTextColor($pdf,self::TEXTE_NOIR);
         //obtenir tous les info et commencer de les ajouter dans tableau
-        $hauteurAvantTitreParagraphe = $pdf->convertPixelsToMM(25);
-        $hauteurApresTitreParagraphe = $pdf->convertPixelsToMM(9);
+        $hauteurAvantTitreParagraphe = $pdf->convertPixelsToMM(6);
+        $hauteurApresTitreParagraphe = $pdf->convertPixelsToMM(6);
 
         $taillePolice = self::TAILLE_POLICE_TITRE_PARAGRAPHE;
         $hauteurCellPolice = $pdf->convertPixelsToMM($taillePolice)+4;
@@ -100,13 +101,14 @@ class ActesPdf implements IActesPdf
      */
 	public function setHead(ExtendPdf $pdf)
 	{
+	    $pdf->SetAutoPageBreak(true,9);
         $pdf->Image($this->img, 10, 10, 190, 26);
         $pdf->Ln(26);
 
-        $distanceBandeauTitre = $pdf->convertPixelsToMM(20);
+        $distanceBandeauTitre = $pdf->convertPixelsToMM(10);
         $taillePoliceTitre=self::TAILLE_POLICE_TITRE;
-        $hauteurBandeauTitre = $pdf->convertPixelsToMM($taillePoliceTitre+4);
-        $espaceApresTitre = $pdf->convertPixelsToMM(25);
+        $hauteurBandeauTitre = $pdf->convertPixelsToMM($taillePoliceTitre+2);
+        $espaceApresTitre = $pdf->convertPixelsToMM(10);
 
         $pdf->Ln($distanceBandeauTitre);
 		$pdf->SetFont('Ubuntu','R',$taillePoliceTitre);
@@ -123,44 +125,58 @@ class ActesPdf implements IActesPdf
 
 	    $this->setUpTable($pdf,[80,110],['L','L']);
 
-        foreach ($contenuTableau as $ligne){
-            $pdf->myRow(array($ligne[0],$ligne[1]));
+        foreach ([2,4] as $index) {
+            $pdf->myRow(
+                array($contenuTableau[$index][0],$contenuTableau[$index][1]),
+                false,
+                [
+                    [],
+                    [
+                        "family"=>"Ubuntu",
+                        "style"=>"B",
+                        "size"=>self::TAILLE_POLICE_TABLEAU,
+                    ]
+                ]
+            );
             $this->switchColor($pdf);
         }
+        foreach ([0,3,1,5,6,7,8,9] as $index) {
+            $pdf->myRow(array($contenuTableau[$index][0],$contenuTableau[$index][1]));
+            $this->switchColor($pdf);
+	    }
 	}
 
 	public function fichierTable(ExtendPdf $pdf, $fichier_table)
 	{
         $this->writeTitreParagraphe($pdf,"Fichiers contenus dans l'archive :");
 
-        $this->setUpTable($pdf, [120, 35, 35], ['L', 'C', 'C'], ["Fichier", "Type", "Taille (Ko)"]);
+        $this->setUpTable($pdf, [130, 30, 30], ['L', 'C', 'C'], ["Fichier", "Type", "Taille"]);
 
         foreach ($fichier_table as $file){
-            if ($file["posted_filename"] && $file["filename"])
+            $pdf->myRow(
+                [$file["typeDocument"],$file["filetype"],$this->renderFileSize($file["filesize"])],
+            false,
+                [[
+                    "family"=>"Ubuntu",
+                    "style"=>"B",
+                    "size"=>self::TAILLE_POLICE_TABLEAU,
+                ],[],[]]
+            );
+            if ($file["posted_filename"])
             {
-                $this->addCellToTable($pdf,
-                        "Nom original :",
-                        $file["posted_filename"],
-                        $file["filetype"],$file["filesize"]);
-                $this->addCellToTable($pdf,
-                        "Nom métier:",
-                        $file["filename"],
-                        '', '');
+                $pdf->myRow(["   Nom original : ".$file["posted_filename"],"",""]);
             }
-            if (!$file["posted_filename"] && $file["filename"])
+            if ($file["filename"])
             {
-                $this->addCellToTable($pdf,
-                        "Nom métier:",
-                        $file["filename"],
-                        $file["filetype"], $file["filesize"]);
+                $pdf->myRow(["   Nom métier : ".$file["filename"],'','']);
             }
             $this->switchColor($pdf);
         }
 	}
 
-	public function addCellToTable(ExtendPdf $pdf, string $typeNom, $posted_filename, $filetype, $filesize){
+	public function addCellToTable(ExtendPdf $pdf, string $typeNom, $posted_filename, $filetype, $filesize,$filetype2){
         $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_TABLEAU-2);
-        $pdf->myRow(array($typeNom,"","" ));
+        $pdf->myRow(array($typeNom,$filetype2,"" ));
         $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_TABLEAU);
         $pdf->myRow(array($posted_filename,$filetype,$filesize ));
     }
@@ -214,5 +230,15 @@ class ActesPdf implements IActesPdf
         $this->colorIndex = ($this->colorIndex + 1) %2;
         $color = $this::COLOR_ARRAY[$this->colorIndex];
         $pdf->setMyFillcolor(array($color,$color,$color));
+    }
+
+    private function renderFileSize($size){
+        if($size<1000){
+            return "$size o";
+        }
+        if($size<1000000){
+            return round($size/1000,1)." Ko";
+        }
+        return round($size/1000000,1)." Mo";
     }
 }

@@ -66,6 +66,7 @@ class DataForBordereauPDF
         ];
     }
 
+
     /**
      * @return mixed
      */
