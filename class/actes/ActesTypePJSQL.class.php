@@ -92,4 +92,18 @@ class ActesTypePJSQL extends SQL {
 		return $correspondance_nature_type[$nature_code];
 	}
 
+    /**
+     * @param $codePj
+     * @param $natureCode
+     * @return string
+     */
+    public function getTypeDocument(string $codePj, string $natureCode): string
+    {
+        $typeDocument = "Annexe";
+        if ($codePj === $this->getDefaultType($natureCode)) {
+            $typeDocument = "Document principal";
+        }
+        return $typeDocument;
+    }
+
 }

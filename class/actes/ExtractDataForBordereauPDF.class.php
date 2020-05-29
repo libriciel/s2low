@@ -15,6 +15,10 @@ class ExtractDataForBordereauPDF{
      * @var ActesStatusSQL
      */
     private $actesStatusSQL;
+    /**
+     * @var ActesTypePJSQL
+     */
+    private $actesTypePJSQL;
 
     public function __construct(TransactionSQL $transactionSQL,
                                 ActesIncludedFileSQL $actesIncludedFileSQL,
@@ -38,23 +42,20 @@ class ExtractDataForBordereauPDF{
         $data = new DataForBordereauPDF();
 
         $transactionComplement = $this->transactionSQL->getDonneesTransaction($transactionId);
-        //var_dump($transactionComplement);
-        //die();
         $data->setDonneesTransaction($transactionComplement);
         $data->setAddEmailNotificationField($addEmailNotificationField);
 
         $includedFiles = $this->actesIncludedFileSQL->getAll($transactionId);
 
         foreach($includedFiles as $index => $file){
-            $includedFiles[$index]["typeDocument"]='Enveloppe métier';   //TODO : vérifier
+            $includedFiles[$index]["typeDocument"]='Enveloppe métier';
 
             if($file['code_pj']){
                 $libelle = $this->actesTypePJSQL->getLibelle($file['code_pj'])?:$file['code_pj'];
-                $typeDocument = "Annexe";
-                if($file['code_pj'] === $this->actesTypePJSQL->getDefaultType($transactionComplement["nature_code"])){
-                    $typeDocument = "Document principal";
-                }
-            $includedFiles[$index]["typeDocument"]="$typeDocument ($libelle)";
+                $typeDocument = $this->actesTypePJSQL->getTypeDocument(
+                    $file["code_pj"],
+                    $transactionComplement["nature_code"]);
+                $includedFiles[$index]["typeDocument"]="$typeDocument ($libelle)";
             }
         }
         $data->setIncludedFiles($includedFiles);
