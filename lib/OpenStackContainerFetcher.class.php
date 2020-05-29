@@ -2,6 +2,7 @@
 
 use Monolog\Logger;
 use OpenStack\OpenStack;
+use Psr\Log\LoggerInterface;
 
 class OpenStackContainerFetcher{
     /** @var string  */
@@ -16,7 +17,7 @@ class OpenStackContainerFetcher{
     public function __construct(string $containerFullName,
                                 array $generate_token_options,
                                 OpenStack $openStack,
-                                Logger $logger)
+                                LoggerInterface $logger)
     {
         $this->containerFullName = $containerFullName;
         $this->generate_token_options = $generate_token_options;

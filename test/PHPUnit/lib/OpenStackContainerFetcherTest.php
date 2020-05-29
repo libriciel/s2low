@@ -4,15 +4,22 @@ use OpenStack\Identity\v3\Models\Token;
 use OpenStack\Identity\v3\Service;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\OpenStack;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class OpenStackContainerFetcherTest extends TestCase{
+
+    /**
+     * @throws Exception
+     */
 
     public function testgetNewTokenAndContainer(){
 
         $containerFullName="containerFullName";
         $generate_token_options = ["option"=>"option"];
 
+        /** @var MockObject | OpenStack $openStackMock */
         $openStackMock = $this->getMockBuilder(OpenStack::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -54,7 +61,7 @@ class OpenStackContainerFetcherTest extends TestCase{
         $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,
             $generate_token_options,
             $openStackMock,
-            new \Monolog\Logger("test")
+            new NullLogger()
         );
 
         $this->assertEquals(

@@ -1,5 +1,6 @@
 <?php
 
+use GuzzleHttp\Exception\ConnectException;
 use Monolog\Logger;
 use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
@@ -26,7 +27,7 @@ class OpenStackContainerWrapper{
     private $logger;
 
 
-    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher, Logger $logger, int $timeBetweenAttempts=1){
+    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher, \Psr\Log\LoggerInterface $logger, int $timeBetweenAttempts=1){
         $this->logger = $logger;
         $this->timeBetweenAttempts=$timeBetweenAttempts;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
@@ -137,7 +138,7 @@ class OpenStackContainerWrapper{
             $doNotWaitBeforeRetry = false;
             try{
                 return $function($this->getContainer(),$options);
-            } catch (\GuzzleHttp\Exception\ConnectException $e){
+            } catch (ConnectException $e){
                 $doNotWaitBeforeRetry = false;
                 // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
                 $message = "Erreur Guzzle : " . $e->getMessage();

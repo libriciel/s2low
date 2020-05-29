@@ -1,6 +1,8 @@
 <?php
 
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Monolog\Logger;
 use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
@@ -8,6 +10,7 @@ use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\NullLogger;
 
 class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
@@ -103,7 +106,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         );
 
         $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,
-            new Logger("test")
+            new NullLogger()
         );
 
         $this->assertEquals(
@@ -134,7 +137,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $openStackContainerWrapper = new OpenStackContainerWrapper(
             $openStackContainerFetcherMock,
-            new Logger("test")
+            new NullLogger()
         );
 
         $this->assertEquals(
@@ -170,12 +173,12 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $openStackContainerWrapper = new OpenStackContainerWrapper(
             $openStackContainerFetcherMock,
-            new Logger("test")
+            new NullLogger()
         );
 
         $this->assertEquals(
-            $openStackContainerWrapper->delete($options),
-           true
+            true,
+            $openStackContainerWrapper->delete($options)
         );
     }
 
@@ -195,7 +198,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $openStackContainerWrapper = new OpenStackContainerWrapper(
             $openStackContainerFetcherMock,
-            new Logger("test"),
+            new NullLogger(),
             0
         );
 
@@ -241,7 +244,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $openStackContainerWrapper = new OpenStackContainerWrapper(
             $openStackContainerFetcherMock,
-            new Logger("test"),
+            new NullLogger(),
             0
         );
 
@@ -305,19 +308,19 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
     public function testEachPossibleException(){
 
-        $request = new \GuzzleHttp\Psr7\Request("method","uri");
+        $request = new Request("method","uri");
         $firstException = new ConnectException("First Exception", $request);
 
         $secondException = new BadResponseError("Second Exception",
             401
         );
-        $response2 = new \GuzzleHttp\Psr7\Response(401,[]);
+        $response2 = new Response(401,[]);
         $secondException->setResponse($response2);
 
         $thirdException = new BadResponseError("Third Exception",
             500
         );
-        $response3 = new \GuzzleHttp\Psr7\Response(500,[]);
+        $response3 = new Response(500,[]);
         $thirdException->setResponse($response3);
 
         $FourthException = new Exception("Fourth Exception");
