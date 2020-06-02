@@ -135,18 +135,18 @@ class OpenStackContainerWrapper{
         $attempts = 0;
         do{
             $message = "";
-            $doNotWaitBeforeRetry = false;
+            $waitBeforeRetry = true;
             try{
                 return $function($this->getContainer(),$options);
             } catch (ConnectException $e){
-                $doNotWaitBeforeRetry = false;
+                $waitBeforeRetry = true;
                 // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
                 $message = "Erreur Guzzle : " . $e->getMessage();
             } catch( BadResponseError $e) {
                 $statusCode = $e->getResponse()->getStatusCode();
                 if ($statusCode === 401) {
                     // Erreur d'authentification : on se réauthentifie
-                    $doNotWaitBeforeRetry = true;
+                    $waitBeforeRetry = false;
                     $message = "Erreur d'authentification";
                 } else {
                     // Pour tout autre type d'erreur, on met la queue en pause
@@ -162,7 +162,7 @@ class OpenStackContainerWrapper{
         "[Openstack][$attempts] $message"
             );
 
-            if(!$doNotWaitBeforeRetry){        //No need to wait if it's only a token problem
+            if($waitBeforeRetry){        //No need to wait if it's only a token problem
                 sleep($this->timeBetweenAttempts);
             }
             $attempts++;
