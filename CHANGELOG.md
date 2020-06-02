@@ -3,13 +3,14 @@
 ## Evolution
 
 - Amélioration de la construction du docker
+- Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
 
 # 4.2.1 - 2020-04-14
 
 ## Evolution
 
 - Openstack : tentative de reconnexion lors d'une erreur #591
-- Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
+
 
 ## Correction
 
