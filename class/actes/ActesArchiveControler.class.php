@@ -174,13 +174,13 @@ class ActesArchiveControler {
 
 		$date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'],1);
 		$actesFilesForSAE->date_postage = date("d/m/Y",strtotime($date_postage['date']));
-		//passer les paramètre
-		$pdf=new ActesPdf();
 
-		//construire le fichier pdf.
-		$pdf->create_pdf($transaction_id);
-		$pdf->output($tmp_folder."/bordereau_acquit","F");
-		$actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+
+        $actesFilesForSAE->bordereau_filepath = $tmp_folder."/bordereau_acquit.pdf";
+
+        $bordereauPdfGenerator->generate($transaction_id,$actesFilesForSAE->bordereau_filepath,false,"F");
 
 		array_shift($actesFile);
 		array_shift($actesFile);

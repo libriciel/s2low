@@ -61,10 +61,7 @@ if ( ! $permission->canView($me,$owner)){
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
-//passer les paramètre
-$pdf=new ActesPdf();
-	
-//construire le fichier pdf.
-$pdf->create_pdf($id);
 
-$pdf->output("acquittement");
+//passer les paramètre
+$bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+$bordereauPdfGenerator->generate($id,"acquittement",false);

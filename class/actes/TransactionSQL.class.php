@@ -158,7 +158,6 @@ class TransactionSQL {
 		//$this->value[] = "$objet"; FIX #378
 	}
 	
-	
 	public function setDateMinSubmission($date){
 		if (! $date)  {
 			return;
@@ -276,6 +275,36 @@ class TransactionSQL {
 		$this->sqlQuery->query($sql,$id);
 	}
 	
-	
-	
+	public function getDonneesTransaction($id){
+	    //$sql = "SELECT decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails FROM actes_transactions WHERE id = ?";
+        $sql = "SELECT ".
+            " users.name, users.givenname," .
+            " authorities.name as authority_name, " .
+            " type, number, subject,archive_url,nature_descr, nature_code,decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails".
+            " FROM actes_transactions " .
+            " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
+            " JOIN users ON actes_envelopes.user_id=users.id " .
+            " JOIN authorities ON users.authority_id=authorities.id " .
+            " WHERE actes_transactions.id = ?";
+        try {
+            $result = $this->sqlQuery->query($sql, $id)[0];
+            $result['type_str'] = self::$transactionTypes[$result['type']];
+            return $result;
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+            die();
+        }
+    }
+
+    /**
+     * \brief Méthode de récupération du cycle de vie de cette transaction
+     * \return Un tableau contenant le workflow de la transaction
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function fetchWorkflow(int $id) {
+        $sql = "SELECT id, status_id, date, message FROM actes_transactions_workflow WHERE transaction_id= ? ORDER BY date, id ASC";
+        return $this->sqlQuery->query($sql,$id);
+    }
 }

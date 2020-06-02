@@ -22,6 +22,8 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->mockActesTamponne();
 		$this->mockPastellFactory(0,"Erreur renvoyé par le mock");
 
+		$this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
+
 		$transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
 		$this->getActesArchivesControler()->sendArchive($transaction_id);
 		$this->assertEquals(
@@ -50,11 +52,12 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$this->mockPastellFactory();
 		$this->mockActesTamponne();
 
+        $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
+
 		$actesEnvelopeStorage = $this->getMockBuilder(ActesEnvelopeStorage::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$actesEnvelopeStorage
-
 			->method("deleteIfIsInCloud")
 			->willReturn(false);
 		$this->getObjectInstancier()->set(ActesEnvelopeStorage::class,$actesEnvelopeStorage);
