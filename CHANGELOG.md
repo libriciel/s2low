@@ -4,6 +4,7 @@
 
 - Amélioration de la construction du docker
 - Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
+- Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
 
 ## Correction
 

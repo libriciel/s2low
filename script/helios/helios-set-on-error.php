@@ -4,15 +4,31 @@ require_once __DIR__."/../../init/init.php";
 
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
-if($argc < 2){
-    $nbJours=30;
+$nbJours=30;
+$help = false;
+$test = false;
+
+foreach (array_slice($argv,1, $argc) as $argument){
+    if($argument === "-t"){
+        $test = true;
+    } else if(strval((int) $argument)=== $argument){
+        $nbJours=(int) $argument;
+    } else{
+        $help = true;
+    }
 }
 
-$nbJours = (int) $argv[1];
-
-if( !(strval($nbJours) === $argv[1])){
-    echo "{$argv[1]} n'est pas un entier\n";
+if($help){
+    echo "Usage :  {$argv[0]} [-t ] [nbJours]\n";
+    echo "{$argv[0]} : permet de passer à l'état erreur toutes les transactions helios à l'état \"Transmis\" \n";
+    echo "depuis plus de nbJours\n";
+    echo "-t : mode test (ne réalise pas la transaction)\n";
+    echo "nbJours : entier spécifiant le nombre de jours à prendre en compte\n";
     exit(-1);
+}
+
+if($test){
+    echo "Mode test\n";
 }
 
 $dateForRequest = date('Y-m-d', strtotime("-$nbJours days"));
@@ -23,8 +39,8 @@ $sql = "SELECT helios_transactions.id,helios_transactions.submission_date,filena
 
 $all = $sqlQuery->query($sql,HeliosTransactionsSQL::TRANSMIS,$dateForRequest,HeliosTransactionsSQL::TRANSMIS);
 
-echo "transmis depuis $dateForRequest :\n";
-count($all);
+$nbTransactions = count($all);
+echo "$nbTransactions transaction(s) transmise(s) depuis $nbJours jour(s), soit le $dateForRequest\n";
 
 $i=0;
 
@@ -36,4 +52,6 @@ foreach($all as $line){
     echo "$message\n";
     $i++;
 }
-echo "$i transaction(s) traité(s)\n";
+
+$action = $test?"à traiter":"traitée(s)";
+echo "$i transaction(s) $action\n";
