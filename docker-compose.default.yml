@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
     web:
-        image: gitlab.libriciel.fr:4567/s2low/s2low:4.1.0
+        image: gitlab.libriciel.fr:4567/libriciel/pole-plate-formes/s2low/s2low:4.1.0
         networks:
           - dgcl
           - dgfip
@@ -77,7 +77,7 @@ services:
             - NOPASS=true
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/s2low/simulateur-helios:1.1.1
+        image: gitlab.libriciel.fr:4567/libriciel/pole-plate-formes/s2low/projets-annexes/simulateur-helios:1.1.1
         networks:
           - dgfip
           - dgcl
