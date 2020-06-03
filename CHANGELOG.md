@@ -5,6 +5,10 @@
 - Amélioration de la construction du docker
 - Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
 
+## Correction
+
+- Permettre la récupération dans le cloud des fichiers comportant deux // #628
+
 # 4.2.1 - 2020-04-14
 
 ## Evolution
@@ -15,7 +19,6 @@
 ## Correction
 
 - Un bug empechait l'envoi correcte des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
-- Permettre la récupération dans le cloud des fichiers comportant deux // #628
 
 
 # 4.2.0 - 2020-03-09
