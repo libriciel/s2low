@@ -20,10 +20,6 @@ class OpenStackSwiftWrapperTest extends TestCase {
             unlink(self::ABSENT_FILE_PATH);
         }
 
-        if(file_exists("slash")){
-            unlink("slash");
-        }
-
         $this->logger = new Monolog\Logger("PHPUNIT");
         $this->logger->pushHandler(new Monolog\Handler\NullHandler());
     }
@@ -292,5 +288,9 @@ class OpenStackSwiftWrapperTest extends TestCase {
             "slash",
             "//trop///de////double//////slash"
         );
+
+        if(file_exists("slash")){
+            unlink("slash");
+        }
     }
 }
