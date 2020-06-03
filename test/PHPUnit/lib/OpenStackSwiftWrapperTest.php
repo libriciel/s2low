@@ -20,6 +20,10 @@ class OpenStackSwiftWrapperTest extends TestCase {
             unlink(self::ABSENT_FILE_PATH);
         }
 
+        if(file_exists("slash")){
+            unlink("slash");
+        }
+
         $this->logger = new Monolog\Logger("PHPUNIT");
         $this->logger->pushHandler(new Monolog\Handler\NullHandler());
     }
@@ -254,4 +258,39 @@ class OpenStackSwiftWrapperTest extends TestCase {
 			self::ABSENT_FILE_PATH
 		);
 	}
+
+    public function testRetrieveFileWithDoubleSlash(){
+
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->once())
+            ->method('download')
+            ->with("/trop/de/double/slash");
+
+        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $openStackContainersStore
+            ->expects($this->once())
+            ->method("getContainerWrapper")
+            ->with($this->equalTo(self::CONTAINER_TEST))
+            ->willReturn($openStackSwiftWrapper);
+
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $openStackContainersStore,
+            $this->logger
+        );
+
+        $openStackSwiftWrapper->retrieveFile(
+            self::CONTAINER_TEST,
+            "slash",
+            "//trop///de////double//////slash"
+        );
+    }
 }
