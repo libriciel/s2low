@@ -71,6 +71,10 @@ class OpenStackSwiftWrapper {
         if (! $filepath_on_cloud){
             $filepath_on_cloud = basename($filepath_local);
         }
+
+        #La récupération sur OpenStack est perturbée par les doubles // ...
+        $filepath_on_cloud = preg_replace('#/+#','/',$filepath_on_cloud);
+
         $dirname_local = dirname($filepath_local);
 
         if (! $this->fileSystem->exists($dirname_local)){
