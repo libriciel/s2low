@@ -8,10 +8,9 @@ class PausingQueueException extends Exception{
      */
     private $timeToWait;
 
-    public function __construct($message = "", int $timeToWait, $code = 0, Throwable $previous = null)
+    public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->timeToWait = $timeToWait;
     }
 
     public function getTimeToWait(){

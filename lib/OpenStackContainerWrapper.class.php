@@ -16,6 +16,8 @@ class OpenStackContainerWrapper{
     /** @var OpenStackContainerFetcher */
     private $openStackContainerFetcher;
 
+    private
+
     /** @var int  */
     private $timeBetweenAttempts;
 
@@ -25,9 +27,19 @@ class OpenStackContainerWrapper{
      * @var Logger
      */
     private $logger;
+    /**
+     * @var OpenStackStateManager
+     */
+    private $openStackStateManager;
 
 
-    public function __construct(OpenStackContainerFetcher $openStackContainerFetcher, \Psr\Log\LoggerInterface $logger, int $timeBetweenAttempts=1){
+    public function __construct(
+        OpenStackContainerFetcher $openStackContainerFetcher,
+        \Psr\Log\LoggerInterface $logger,
+        OpenStackStateManager $openStackStateManager,
+        int $timeBetweenAttempts=1
+    ){
+        $this->openStackStateManager = $openStackStateManager;
         $this->logger = $logger;
         $this->timeBetweenAttempts=$timeBetweenAttempts;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
@@ -134,48 +146,23 @@ class OpenStackContainerWrapper{
     private function executeCommand( callable $function, $options){
         $attempts = 0;
         do{
-            $message = "";
-            $waitBeforeRetry = true;
-            try{
-                return $function($this->getContainer(),$options);
-            } catch (ConnectException $e){
-                $waitBeforeRetry = true;
-                // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
-                $message = "Erreur Guzzle : " . $e->getMessage();
-            } catch( BadResponseError $e) {
-                $statusCode = $e->getResponse()->getStatusCode();
-                if ($statusCode === 401) {
-                    // Erreur d'authentification : on se réauthentifie
-                    $waitBeforeRetry = false;
-                    $message = "Erreur d'authentification";
-                } else {
-                    // Pour tout autre type d'erreur, on met la queue en pause
-                    $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
-                }
-            } catch (Exception $e) {
-                $ExceptionClass = get_class($e);
-                $messageThrowable = $e->getMessage();
-                $message = "Erreur $ExceptionClass : $messageThrowable";
+            if($this->openStackStateManager->isResetNeeded()){
+                $this->resetConnection();
             }
-            $message = $this->shorten($message);
-            $this->logger->error(
-        "[Openstack][$attempts] $message"
-            );
+            try{
+                $result = $function($this->getContainer(), $options);
+                $this->openStackStateManager->declareSuccess();
+                return $result;
+            } catch (Exception $e) {
+                $this->openStackStateManager->declareException($e);
+            }
+
 
             if($waitBeforeRetry){        //No need to wait if it's only a token problem
                 sleep($this->timeBetweenAttempts);
             }
             $attempts++;
-            $this->resetConnection();
         } while($attempts < self::NUMBER_OF_ATTEMPTS);
-        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé", self::timeToWait);
-    }
-
-    private function shorten($message){
-        $lgMax= 1000;
-        if(strlen($message) > $lgMax){
-            $message = substr($message, 0, $lgMax)."...";
-        }
-        return $message;
+        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
     }
 }
