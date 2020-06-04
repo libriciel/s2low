@@ -1,8 +1,6 @@
 <?php
 
-use GuzzleHttp\Exception\ConnectException;
 use Monolog\Logger;
-use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -15,14 +13,6 @@ class OpenStackContainerWrapper{
     private $container;
     /** @var OpenStackContainerFetcher */
     private $openStackContainerFetcher;
-
-    private
-
-    /** @var int  */
-    private $timeBetweenAttempts;
-
-    const NUMBER_OF_ATTEMPTS = 5;
-    private const timeToWait = 100;
     /**
      * @var Logger
      */
@@ -36,12 +26,10 @@ class OpenStackContainerWrapper{
     public function __construct(
         OpenStackContainerFetcher $openStackContainerFetcher,
         \Psr\Log\LoggerInterface $logger,
-        OpenStackStateManager $openStackStateManager,
-        int $timeBetweenAttempts=1
+        OpenStackStateManager $openStackStateManager
     ){
         $this->openStackStateManager = $openStackStateManager;
         $this->logger = $logger;
-        $this->timeBetweenAttempts=$timeBetweenAttempts;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
     }
 
@@ -144,25 +132,15 @@ class OpenStackContainerWrapper{
      */
 
     private function executeCommand( callable $function, $options){
-        $attempts = 0;
-        do{
-            if($this->openStackStateManager->isResetNeeded()){
-                $this->resetConnection();
-            }
-            try{
-                $result = $function($this->getContainer(), $options);
-                $this->openStackStateManager->declareSuccess();
-                return $result;
-            } catch (Exception $e) {
-                $this->openStackStateManager->declareException($e);
-            }
-
-
-            if($waitBeforeRetry){        //No need to wait if it's only a token problem
-                sleep($this->timeBetweenAttempts);
-            }
-            $attempts++;
-        } while($attempts < self::NUMBER_OF_ATTEMPTS);
-        throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
+        if($this->openStackStateManager->isResetNeeded()){
+            $this->resetConnection();
+        }
+        try{
+            $result = $function($this->getContainer(), $options);
+            $this->openStackStateManager->declareSuccess();
+            return $result;
+        } catch (Exception $e) {
+            $this->openStackStateManager->declareException($e);
+        }
     }
 }

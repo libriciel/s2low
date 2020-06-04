@@ -1,5 +1,9 @@
 <?php
 
+use GuzzleHttp\Exception\ConnectException;
+use OpenStack\Common\Error\BadResponseError;
+
+
 class OpenStackStateManager{
 
     /**
@@ -9,7 +13,8 @@ class OpenStackStateManager{
 
     private $unsuccessfullConsecutiveAttempts = 0;
 
-    private $needToReconnect = false;
+
+    private $messages = [];
 
     public function __construct(\Psr\Log\LoggerInterface $logger)
     {
@@ -17,39 +22,24 @@ class OpenStackStateManager{
     }
 
     public function isResetNeeded(){
-        return $this->needToReconnect;
+        return $this->unsuccessfullConsecutiveAttempts>0;
     }
 
     public function declareSuccess(){
         $this->unsuccessfullConsecutiveAttempts = 0;
+        $this->messages = [];
     }
 
     public function declareException(Exception $e){
         $this->unsuccessfullConsecutiveAttempts ++;
-        $ExceptionClass = get_class($e);
-        if($ExceptionClass === \GuzzleHttp\Exception\ConnectException::class){
-            // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
-            $message = "Erreur Guzzle : " . $e->getMessage();
-        }
-        elseif ($ExceptionClass === BadResponseError::class) {
-            $statusCode = $e->getResponse()->getStatusCode();
-            if ($statusCode === 401) {
-                // Erreur d'authentification : on se réauthentifie
-                $waitBeforeRetry = false;
-                $message = "Erreur d'authentification";
-            } else {
-                // Pour tout autre type d'erreur, on met la queue en pause
-                $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
-            }
-        } else{
-            $messageThrowable = $e->getMessage();
-            $message = "Erreur $ExceptionClass : $messageThrowable";
-        }
-
-        $message = $this->shorten($message);
+        $message = $this->processException($e);
         $this->logger->error(
             "[Openstack][$this->unsuccessfullConsecutiveAttempts] $message"
         );
+        if($this->unsuccessfullConsecutiveAttempts > 5){
+            throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
+        }
+
     }
 
     private function shorten($message){
@@ -57,6 +47,32 @@ class OpenStackStateManager{
         if(strlen($message) > $lgMax){
             $message = substr($message, 0, $lgMax)."...";
         }
+        return $message;
+    }
+
+    /**
+     * @param Exception $e
+     * @return string
+     */
+    private function processException(Exception $e): string
+    {
+        $ExceptionClass = get_class($e);
+        if ($ExceptionClass === ConnectException::class) {
+            // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
+            $message = "Erreur Guzzle : " . $e->getMessage();
+        } elseif ($ExceptionClass === BadResponseError::class) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 401) {
+                // Erreur d'authentification : on se réauthentifie
+                $message = "Erreur d'authentification";
+            } else {
+                $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();
+            }
+        } else {
+            $messageThrowable = $e->getMessage();
+            $message = "Erreur $ExceptionClass : $messageThrowable";
+        }
+        $message = $this->shorten($message);
         return $message;
     }
 }
