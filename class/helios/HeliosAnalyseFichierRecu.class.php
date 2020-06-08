@@ -207,16 +207,30 @@ class HeliosAnalyseFichierRecu {
 		}
 
 		switch($root_name){
-			case 'pes_acquit': $this->traitementAck($basename,$xml); break;
-			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
-			case 'pes_retour' : $this->traitementPESRetour($basename,$xml); break;
-			case 'validation_error'  : $this->traitementErreur($basename,$xml); break;
+			case 'pes_acquit': $toDo = $this->traitementAck($root_name,$xml); break;
+			case 'pes_nonacquit': $toDo = $this->traitementNack($root_name,$xml); break;
+			case 'pes_retour' : $toDo = $this->traitementPESRetour($root_name,$xml); break;
+			case 'validation_error'  : $toDo = $this->traitementErreur($root_name,$basename,$xml); break;
 			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
 		}
 
-		if (! rename($file_path,$helios_response_root."/".$basename)){
+		/*if (! rename($file_path,$helios_response_root."/".$basename)){
 			throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
-		}
+		}*/
+        if (rename($file_path,$helios_response_root."/".$basename)){
+            if(in_array($toDo["type"],["pes_acquit","pes_nonacquit","validation_error"])){
+                $this->heliosTransactionsSQL->updateStatus(
+                    $toDo["helios_transaction_id"],
+                    $toDo["status_id"],
+                    $toDo["message"]
+                );
+                $this->s2lowLogger->info($toDo["message"]);
+                $this->heliosTransactionsSQL->setAcquitFilename($toDo["helios_transaction_id"], $basename);
+            }
+            if(in_array($toDo["type"],["pes_retour"])){
+                $this->heliosRetourSQL->add($toDo["authority_id"], $toDo["siret"], $basename);
+            }
+        }
 	}
 
 	/**
@@ -224,21 +238,21 @@ class HeliosAnalyseFichierRecu {
 	 * @param SimpleXMLElement $xml
 	 * @throws Exception
 	 */
-	private function traitementErreur($basename,SimpleXMLElement $xml){
+	private function traitementErreur($root_name,$basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml,false);
 
 		if (! $helios_transaction_id){
 			throw new Exception("Le fichier $basename n'est pas valide et aucun NomFic n'a peu être extrait");
 		}
-
 		$message = "Transaction $helios_transaction_id : erreur retournée par Helios";
-		$this->heliosTransactionsSQL->updateStatus(
-			$helios_transaction_id,
-			HeliosTransactionsSQL::ERREUR,
-			$message
-		);
-		$this->s2lowLogger->info($message);
-		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
+        $status_id = HeliosTransactionsSQL::ERREUR;
+
+        return [
+            "type"=>$root_name,
+            "helios_transaction_id"=>$helios_transaction_id,
+            "message"=>$message,
+            "status_id"=>$status_id
+        ];
 	}
 
 	/**
@@ -246,21 +260,25 @@ class HeliosAnalyseFichierRecu {
 	 * @param SimpleXMLElement $xml
 	 * @throws Exception
 	 */
-	private function traitementAck($basename,SimpleXMLElement $xml){
+	private function traitementAck($root_name,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
 		$this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 
 		if (count($xml->ACQUIT) == 0){
 			$message = "Transaction $helios_transaction_id acceptee";
-			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
+            $status_id = HeliosTransactionsSQL::ACQUITTER;
 		} else {
 			$message = "Transaction $helios_transaction_id : information disponible";
-			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
+            $status_id = HeliosTransactionsSQL::INFORMATION_DISPONIBLE;
 		}
-		$this->s2lowLogger->info($message);
-		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 
+        return [
+            "type"=>$root_name,
+            "helios_transaction_id"=>$helios_transaction_id,
+            "message"=>$message,
+            "status_id"=>$status_id
+        ];
 	}
 
 	/**
@@ -334,16 +352,20 @@ class HeliosAnalyseFichierRecu {
 	 * @param SimpleXMLElement $xml
 	 * @throws Exception
 	 */
-	private function traitementNack($basename,SimpleXMLElement $xml){
+	private function traitementNack($root_name,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
 		$this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 
 		$message = "Transaction $helios_transaction_id refusée";
-		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message);
+        $status_id = HeliosTransactionsSQL::REFUSER;
 
-		$this->s2lowLogger->info($message);
-		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
+        return [
+            "type"=>$root_name,
+            "helios_transaction_id"=>$helios_transaction_id,
+            "message"=>$message,
+            "status_id"=>$status_id
+        ];
 	}
 
 	/**
@@ -351,7 +373,7 @@ class HeliosAnalyseFichierRecu {
 	 * @param SimpleXMLElement $xml
 	 * @throws Exception
 	 */
-	private function traitementPESRetour($basename,SimpleXMLElement $xml){
+	private function traitementPESRetour($root_name,SimpleXMLElement $xml){
 		$siret = strval($xml->EnTetePES->IdColl['V']);
 
 		$authority_list = $this->authoritySiretSQL->authorityList($siret);
@@ -364,7 +386,11 @@ class HeliosAnalyseFichierRecu {
 		}
 		$authority_id = $authority_list[0]['authority_id'];
 
-		$this->heliosRetourSQL->add($authority_id, $siret, $basename);
+		return[
+		    "type"=>$root_name,
+            "authority_id" => $authority_id,
+            "siret"=>$siret
+        ];
 	}
 	
 	private function sendMailToAdmin($subject,$msg){
