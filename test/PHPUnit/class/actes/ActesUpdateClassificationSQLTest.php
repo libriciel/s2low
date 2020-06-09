@@ -48,5 +48,56 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         $this->actesUpdateClassificationSQL->updateClassification("123456789",file_get_contents(__DIR__."/../fixtures/test-archive-MISILCL/TACT--SPREF0011-000000000-20170721-4.xml"));
     }
 
+    public function testRollback(){
+
+        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $transaction_id = $heliosTransactionSQL->create("toto",
+            "xxx",
+            8,
+            1,
+            42,
+            "123");
+
+        $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, "test");
+        $heliosTransactionSQL->begin();
+        $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, "test");
+        $this->assertEquals(
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+            $heliosTransactionSQL->getLatestStatusId($transaction_id)
+        );
+        $heliosTransactionSQL->rollback();
+        $this->assertEquals(
+            HeliosTransactionsSQL::TRANSMIS,
+            $heliosTransactionSQL->getLatestStatusId($transaction_id)
+        );
+    }
+
+    public function testCommit(){
+        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $transaction_id = $heliosTransactionSQL->create("toto",
+            "xxx",
+            8,
+            1,
+            42,
+            "123");
+
+        $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, "test");
+        $heliosTransactionSQL->begin();
+        $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, "test");
+        $this->assertEquals(
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+            $heliosTransactionSQL->getLatestStatusId($transaction_id)
+        );
+        $heliosTransactionSQL->commit();
+        $this->assertEquals(
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+            $heliosTransactionSQL->getLatestStatusId($transaction_id)
+        );
+        $heliosTransactionSQL->rollback();
+        $this->assertEquals(
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+            $heliosTransactionSQL->getLatestStatusId($transaction_id)
+        );
+    }
 
 }
