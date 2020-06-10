@@ -5,6 +5,7 @@ use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 
 class OpenStackContainerWrapper{
     /** @var Token */
@@ -25,7 +26,7 @@ class OpenStackContainerWrapper{
 
     public function __construct(
         OpenStackContainerFetcher $openStackContainerFetcher,
-        \Psr\Log\LoggerInterface $logger,
+        LoggerInterface $logger,
         OpenStackStateManager $openStackStateManager
     ){
         $this->openStackStateManager = $openStackStateManager;
@@ -39,8 +40,12 @@ class OpenStackContainerWrapper{
      */
 
     private function getContainer(){
+        if($this->openStackStateManager->isResetNeeded()){
+            $this->resetConnection();
+        }
         if((!isset($this->container)) || (!$this->hasValidToken())){
-            list($this->token,$this->container) = $this->openStackContainerFetcher->getNewTokenAndContainer();
+            $array = $this->openStackContainerFetcher->getNewTokenAndContainer();
+            list($this->token,$this->container) = $array;
         }
         return $this->container;
     }
@@ -132,9 +137,6 @@ class OpenStackContainerWrapper{
      */
 
     private function executeCommand( callable $function, $options){
-        if($this->openStackStateManager->isResetNeeded()){
-            $this->resetConnection();
-        }
         try{
             $result = $function($this->getContainer(), $options);
             $this->openStackStateManager->declareSuccess();
@@ -142,5 +144,6 @@ class OpenStackContainerWrapper{
         } catch (Exception $e) {
             $this->openStackStateManager->declareException($e);
         }
+        return false;
     }
 }

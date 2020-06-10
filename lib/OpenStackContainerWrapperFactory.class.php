@@ -32,6 +32,11 @@ class OpenStackContainerWrapperFactory
 
         $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,$parametres,$openStack,$this->logger);
 
-        return new OpenStackContainerWrapper($openStackContainerFetcher, $this->logger);
+        return new OpenStackContainerWrapper(
+            $openStackContainerFetcher,
+            $this->logger,
+        new OpenStackStateManager(
+            $this->logger
+        ));
     }
 }

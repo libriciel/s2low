@@ -5,10 +5,9 @@ use OpenStack\Common\Error\BadResponseError;
 
 
 class OpenStackStateManager{
+    public const MAX_CONSECUTIVE_ATTEMPTS = 5;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
+
     private $logger;
 
     private $unsuccessfullConsecutiveAttempts = 0;
@@ -36,7 +35,7 @@ class OpenStackStateManager{
         $this->logger->error(
             "[Openstack][$this->unsuccessfullConsecutiveAttempts] $message"
         );
-        if($this->unsuccessfullConsecutiveAttempts > 5){
+        if($this->unsuccessfullConsecutiveAttempts > self::MAX_CONSECUTIVE_ATTEMPTS){
             throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
         }
 
