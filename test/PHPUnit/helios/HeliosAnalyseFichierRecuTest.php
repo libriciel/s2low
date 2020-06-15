@@ -90,7 +90,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         //print_r($this->getLogRecords()[4]['formatted']);
         $this->assertRegExp(
             '#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/pes_retour.xml annulé : déplacement impossible#i',
-            $this->getLogRecords()[4]['formatted']
+            $this->getLogRecords()[5]['formatted']
         );
         $this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
         $this->assertTrue(file_exists($this->helios_ftp_response_tmp_local_path."/pes_retour.xml"));
@@ -197,7 +197,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         $logs_records = $this->getLogRecords();
         $this->assertRegExp(
             "#Traitement.*/helios_ftp_response_tmp_local_path/pes_acquit.xml annulé : déplacement impossible#i",
-            $logs_records[6]['message']
+            $logs_records[7]['message']
         );
         $this->assertFalse(file_exists($this->helios_response_root."/pes_acquit.xml"));
         $this->assertTrue(file_exists($this->helios_ftp_response_tmp_local_path."/pes_acquit.xml"));
@@ -327,7 +327,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         $logs_records = $this->getLogRecords();
         $this->assertRegExp(
         "#Trai.*/helios_ftp_response_tmp_local_path//pes_acquit_not_valid.xml annulé : déplacement impossible#i",
-            $logs_records[5]['message']
+            $logs_records[6]['message']
         );
 
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
