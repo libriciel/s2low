@@ -218,8 +218,10 @@ class HeliosAnalyseFichierRecu {
 
 		try{
             $renameSuccess = rename($file_path, $helios_response_root . "/" . $basename);
-        } catch (Exception $e){
-
+        } catch (Exception $e) {
+            $this->s2lowLogger->error(
+                "Erreur lors du rename de $file_path en $helios_response_root / $basename : ".$e->getMessage()
+            );
         }
         if (!$renameSuccess){
             $this->s2lowLogger->error("Traitement de $file_path annulé : déplacement impossible");
