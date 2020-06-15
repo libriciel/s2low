@@ -1,3 +1,8 @@
+# 4.2.3
+
+## Correction
+- Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
+
 # 4.2.2 - 2020-06-11
 
 ## Evolution

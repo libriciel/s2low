@@ -206,6 +206,7 @@ class HeliosAnalyseFichierRecu {
 			$root_name= "validation_error";
 		}
 
+		$this->heliosTransactionsSQL->begin();
 		switch($root_name){
 			case 'pes_acquit': $this->traitementAck($basename,$xml); break;
 			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
@@ -213,10 +214,22 @@ class HeliosAnalyseFichierRecu {
 			case 'validation_error'  : $this->traitementErreur($basename,$xml); break;
 			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
 		}
+        $renameSuccess = false;
 
-		if (! rename($file_path,$helios_response_root."/".$basename)){
-			throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
+		try{
+            $renameSuccess = rename($file_path, $helios_response_root . "/" . $basename);
+        } catch (Exception $e) {
+            $this->s2lowLogger->error(
+                "Erreur lors du rename de $file_path en $helios_response_root / $basename : ".$e->getMessage()
+            );
+        }
+        if (!$renameSuccess){
+            $this->s2lowLogger->error("Traitement de $file_path annulé : déplacement impossible");
+		    $this->heliosTransactionsSQL->rollback();
 		}
+        else{
+            $this->heliosTransactionsSQL->commit();
+        }
 	}
 
 	/**
@@ -237,8 +250,9 @@ class HeliosAnalyseFichierRecu {
 			HeliosTransactionsSQL::ERREUR,
 			$message
 		);
-		$this->s2lowLogger->info($message);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
+
+        $this->s2lowLogger->info($message);
 	}
 
 	/**
@@ -254,6 +268,7 @@ class HeliosAnalyseFichierRecu {
 		if (count($xml->ACQUIT) == 0){
 			$message = "Transaction $helios_transaction_id acceptee";
 			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
+
 		} else {
 			$message = "Transaction $helios_transaction_id : information disponible";
 			$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
@@ -340,10 +355,10 @@ class HeliosAnalyseFichierRecu {
 		$this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 
 		$message = "Transaction $helios_transaction_id refusée";
-		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message);
+		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message,true);
+		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 
 		$this->s2lowLogger->info($message);
-		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 	}
 
 	/**
