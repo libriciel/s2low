@@ -51,6 +51,4 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker {
 		$status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
 		return $status_id == HeliosStatusSQL::POSTE;
 	}
-
-
 }

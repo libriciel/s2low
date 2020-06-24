@@ -7,13 +7,17 @@ class HeliosReceptionWorker implements IWorker,IWorkerAlwaysLaunch {
 
 	private $workerScript;
 	private $s2lowLogger;
+	/** @var FilesOnFtp  */
+    private $ftpFileGetter;
 
-	public function __construct(
-		S2lowLogger $s2lowLogger,
-		WorkerScript $workerScript
+    public function __construct(
+        S2lowLogger $s2lowLogger,
+        WorkerScript $workerScript,
+        FilesOnFtp $FTPFileGetter
 	) {
 		$this->s2lowLogger = $s2lowLogger;
 		$this->workerScript = $workerScript;
+		$this->ftpFileGetter = $FTPFileGetter;
 	}
 
 	public function getQueueName(){
@@ -34,16 +38,19 @@ class HeliosReceptionWorker implements IWorker,IWorkerAlwaysLaunch {
 	 * @throws Exception
 	 */
 	public function work($data){
-
-		$ftp = new FTP();
-		$ftp->setConnexionInfo(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN, HELIOS_FTP_PASSWORD,$this->workerScript);
-		if (HELIOS_SENDING_MODE_DEMO){
-			$ftp->setDeleteFileAfterDownload();
-		}
+        $sigtermHandler = SigTermHandler::getInstance();
 		try {
 			$this->s2lowLogger->info("Début de la récupération");
-			/* Reception des fichiers*/
-			$ftp->recupAll(HELIOS_FTP_RESPONSE_SERVER_PATH, HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
+            $this->ftpFileGetter->retrieveNames();
+            /* Reception des fichiers*/
+            foreach ($this->ftpFileGetter as $file){
+                if ($this->workerScript){
+                    $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class,$file);
+                }
+                if ($sigtermHandler->isSigtermCalled()){
+                    $this->ftpFileGetter->finTraitement();
+                }
+            }
 			$this->s2lowLogger->info("Recuperation terminee");
 		} catch (Exception $e){
 			$this->s2lowLogger->info("Probleme lors de la recuperation des enveloppes : " . $e->getMessage() );

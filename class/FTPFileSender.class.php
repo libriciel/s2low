@@ -1,55 +1,28 @@
 <?php
 class FTPFileSender {
-	
-	
-	private $ftp_handler;
-	
-	
-	public function connect($host,$port,$login,$password){
-		$this->ftp_handler = ftp_connect($host,$port);
-		
-		if (!$this->ftp_handler){
-			throw new Exception("Impossible de se connecter au serveur {$host}:{$port}");
-		}
-		
-		if ($login){
-			if (! ftp_login($this->ftp_handler,$login,$password)){
-				throw new Exception("Impossible de se connecter avec le login {$login}");
-			}
-		}
-	}
-	
-	/**
-	 * Permet de switcher en mode passif 
-	 * @param boolean $is_pasv
-	 */
-	public function setPassiveMode($is_pasv){
-		ftp_pasv ($this->ftp_handler,$is_pasv);
-	}
-	
-	public function sendRawCommand($command,$mode_demo=false){
-		$result = ftp_raw($this->ftp_handler, $command);
-		if ($mode_demo){
-			return ;
-		}
-		if (!$result || ! preg_match("#^200#",$result[0])){
-			$message =  "[FAILED] Send FTP raw command\n$command\n********** RESULT *******\n";
-			$message .= implode("\n",$result)."\n";
-			$message .=  "******** END RESULT ************\n";
-			throw new Exception($message);
-		}
-	}
-	
-	public function sendFile($directory_destination,$file_path){
-		$result = ftp_put($this->ftp_handler,$directory_destination.basename($file_path),$file_path,FTP_BINARY);
-		if (! $result){
-			throw new Exception("Erreur lors de l'envoi du fichier ".basename($file_path) ." vers le serveur FTP");
-		}
-	}
-	
-	public function disconnect(){
-		ftp_close($this->ftp_handler);
-	}
-	
-	
+
+    /** @var FTPConnection  */
+    private $FTPConnection;
+
+    public function __construct(FTPConnection $ftptemp)
+    {
+        $this->FTPConnection = $ftptemp;
+    }
+
+    /**
+     * @param bool $p_dest
+     * @param string $p_msg
+     * @param string $file_to_send
+     * @throws Exception
+     */
+    public function sendFile(string $p_dest, string $p_msg, string $file_to_send): void
+    {
+        $this->FTPConnection->connect();
+        $this->FTPConnection->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
+        $command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
+        echo "$command\n";
+        $this->FTPConnection->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
+        $this->FTPConnection->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_to_send);
+        $this->FTPConnection->disconnect();
+    }
 }

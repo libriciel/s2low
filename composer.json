@@ -38,7 +38,8 @@
     "symfony/finder": "^4.3",
     "ext-zip": "^1.15",
     "ext-iconv": "*",
-    "php-opencloud/openstack": "^3.0"
+    "php-opencloud/openstack": "^3.0",
+    "ext-ftp": "*"
   },
 
   "require-dev": {
