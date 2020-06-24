@@ -263,6 +263,56 @@ class OpenStackSwiftWrapperTest extends TestCase {
             ->getMock();
 
         $openStackSwiftWrapper->expects($this->once())
+            ->method('objectExists')
+            ->with("//trop///de////double//////slash")
+            ->willReturn(true);
+
+        $openStackSwiftWrapper->expects($this->once())
+            ->method('download')
+            ->with("//trop///de////double//////slash");
+
+        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $openStackContainersStore
+            ->expects($this->once())
+            ->method("getContainerWrapper")
+            ->with($this->equalTo(self::CONTAINER_TEST))
+            ->willReturn($openStackSwiftWrapper);
+
+
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $openStackContainersStore,
+            $this->logger
+        );
+
+        $openStackSwiftWrapper->retrieveFile(
+            self::CONTAINER_TEST,
+            "slash",
+            "//trop///de////double//////slash"
+        );
+
+        if(file_exists("slash")){
+            unlink("slash");
+        }
+    }
+
+    public function testRetrieveFileWithDoubleSlashStoredWithoutDoubleSlash(){
+
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->exactly(2))
+            ->method('objectExists')
+            ->withConsecutive(["//trop///de////double//////slash"],["/trop/de/double/slash"])
+            ->will($this->onConsecutiveCalls(false,true));
+
+        $openStackSwiftWrapper->expects($this->once())
             ->method('download')
             ->with("/trop/de/double/slash");
 
@@ -278,6 +328,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
             ->with($this->equalTo(self::CONTAINER_TEST))
             ->willReturn($openStackSwiftWrapper);
 
+
         $openStackSwiftWrapper = new OpenStackSwiftWrapper(
             $openStackContainersStore,
             $this->logger
@@ -288,6 +339,57 @@ class OpenStackSwiftWrapperTest extends TestCase {
             "slash",
             "//trop///de////double//////slash"
         );
+
+        if(file_exists("slash")){
+            unlink("slash");
+        }
+    }
+
+    public function testRetrieveAbsentFileWithDoubleSlash(){
+
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->exactly(2))
+            ->method('objectExists')
+            ->withConsecutive(["//trop///de////double//////slash"],["/trop/de/double/slash"])
+            ->will($this->onConsecutiveCalls(false,false));
+
+        $openStackSwiftWrapper->expects($this->never())
+            ->method('download');
+
+        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $openStackContainersStore
+            ->expects($this->once())
+            ->method("getContainerWrapper")
+            ->with($this->equalTo(self::CONTAINER_TEST))
+            ->willReturn($openStackSwiftWrapper);
+
+
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $openStackContainersStore,
+            $this->logger
+        );
+
+        $exceptionThrown = false;
+        try{
+            $openStackSwiftWrapper->retrieveFile(
+                self::CONTAINER_TEST,
+                "slash",
+                "//trop///de////double//////slash"
+            );
+        }   catch (Exception $e){
+            $this->assertEquals($e->getMessage(), "/trop/de/double/slash non trouvé dans container_test");
+        }
+
+        $this->assertEquals($exceptionThrown,true);
 
         if(file_exists("slash")){
             unlink("slash");
