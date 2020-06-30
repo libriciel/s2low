@@ -3,6 +3,10 @@
 ## Correction
 - Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
 
+## Ajout
+
+- Ajout du script script/postrgrsql/add-column-not-null-with-default.php permettant l'ajout de colonne non null à chaud
+
 # 4.2.2 - 2020-06-11
 
 ## Evolution
