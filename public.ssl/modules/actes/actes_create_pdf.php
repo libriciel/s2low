@@ -64,4 +64,4 @@ if ( ! $permission->canView($me,$owner)){
 
 //passer les paramètre
 $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
-$bordereauPdfGenerator->generate($id,"acquittement",false);
+$bordereauPdfGenerator->generate($id,"acquittement.pdf",false);

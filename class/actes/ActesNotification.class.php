@@ -131,7 +131,7 @@ class ActesNotification {
             $mailer->addStringAsFile( $ar_actes_filename, $status_info['flux_retour']);
 
             $bordereauPdf = $this->bordereauPdfGenerator
-                ->generate($transactionInfo['id'],"bordereau_acquittement",true,"S");
+                ->generate($transactionInfo['id'],"bordereau_acquittement.pdf",true,"S");
 
             $mailer->addStringAsFile("bordereau_acquittement.pdf", $bordereauPdf);
             if($withFile && ! $add_url_recup ){
