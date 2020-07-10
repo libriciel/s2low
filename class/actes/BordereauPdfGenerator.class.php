@@ -19,6 +19,7 @@ class BordereauPdfGenerator
         $this->extractDataForBordereauPDF= $extractDataForBordereauPDF;
         $this->actesPdf = $actesPdf;
     }
+
     public function generate($transactionId,$output,$addEmailNotificationField,$out="I"){
         $data = $this->extractDataForBordereauPDF->extract($transactionId,$addEmailNotificationField);
 
@@ -27,7 +28,7 @@ class BordereauPdfGenerator
         $pdf=new ExtendPdf($legacy);
 
         $this->create_pdf($pdf,$data);
-        return $pdf->Output($output.".pdf",$out);
+        return $pdf->Output($output,$out);
     }
 
     /**

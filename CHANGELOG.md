@@ -2,6 +2,8 @@
 
 ## Correction
 - Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
+- Les versements actes SAE n'était plus assurés (problème sur le bordereau) #639
+
 
 # 4.2.2 - 2020-06-11
 
