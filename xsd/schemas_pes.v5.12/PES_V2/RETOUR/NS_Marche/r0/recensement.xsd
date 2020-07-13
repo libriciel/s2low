@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://data.gouv.fr/marches/recensement" xmlns="http://data.gouv.fr/marches/recensement">
+	<xs:element name="fiches" type="Tfiches"/>
+	<xs:complexType name="Tfiches">
+		<xs:sequence>
+			<xs:element name="fiche" type="Tfiche" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Tfiche">
+		<xs:sequence>
+			<xs:element name="siret_acheteur" type="Tsiret">
+				<xs:annotation>
+					<xs:documentation>Le SIRET de l'acheteur doit vérifier l'algorithme de validation INSEE</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annee_contrat" type="Tannee_num2">
+				<xs:annotation>
+					<xs:documentation>Année rattachée à l'identifiant du contrat, à l'appréciation de l'acheteur sous la forme 20AA</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ident_interne_contrat" type="Tstring10">
+				<xs:annotation>
+					<xs:documentation>Identifiant interne du contrat à l'appréciation de l'acheteur</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_avenant" type="Tnum2">
+				<xs:annotation>
+					<xs:documentation>Numéro de l'avenant au contrat initial spécifique à l'avenant ou à l'avenant sur acte spécial. Dans les autres cas, servie avec 00</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_acte_special" type="Tnum2">
+				<xs:annotation>
+					<xs:documentation>Numéro de l'acte spécial spécifique à l'acte spécial. Dans les autres cas, servie avec 00</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mois_notif" type="Tmois">
+				<xs:annotation>
+					<xs:documentation>Mois de la notification du marché au format MM</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annee_notif" type="Tannee">
+				<xs:annotation>
+					<xs:documentation>Année de notification du marché au format AAAA</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="montant_ht" type="Tmontant_ht">
+				<xs:annotation>
+					<xs:documentation>Montant HT du contrat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mode_exec" type="Tmode_exec_vide">
+				<xs:annotation>
+					<xs:documentation>Mode exécution du contrat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nat_juridique" type="Tnat_juridique_vide">
+				<xs:annotation>
+					<xs:documentation>Nature de l'acte juridique</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="type_avenant" type="Ttype_avenant_vide">
+				<xs:annotation>
+					<xs:documentation>Type d'avenant</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cpv_principal" type="Tcpv_vide">
+				<xs:annotation>
+					<xs:documentation>code CPV principal : code CPV 2008 conforme disponible à l'adresse : https://simap.ted.europa.eu/fr/web/simap/cpv</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cpv_sec1" type="Tcpv_vide">
+				<xs:annotation>
+					<xs:documentation>code CPV secondaire 1 : code CPV 2008 conforme disponible à l'adresse : https://simap.ted.europa.eu/fr/web/simap/cpv</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cpv_sec2" type="Tcpv_vide">
+				<xs:annotation>
+					<xs:documentation>code CPV secondaire 2 : code CPV 2008 conforme disponible à l'adresse : https://simap.ted.europa.eu/fr/web/simap/cpv</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="cpv_sec3" type="Tcpv_vide">
+				<xs:annotation>
+					<xs:documentation>code CPV secondaire 3 : code CPV 2008 conforme disponible à l'adresse : https://simap.ted.europa.eu/fr/web/simap/cpv</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="procedure" type="Tprocedure_vide">
+				<xs:annotation>
+					<xs:documentation>Procédure du marché</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="duree_contrat" type="Tnum3Duree">
+				<xs:annotation>
+					<xs:documentation>nouvelle durée du contrat en mois (entier). En présence d'un avenant sans incidence sur la durée, renseigné à 0</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="forme_prix" type="Tforme_prix_vide">
+				<xs:annotation>
+					<xs:documentation>Forme de prix du contrat.
+- Pour une fiche de recensement du marché : « FormePrix » du contrat initial
+- Pour la création d'une fiche de recensement de sous-traitance créée lors du contrat initial ou postérieurement : « FormePrix  » du sous-traitant si renseigné sinon « FormePrix  » du contrat initial</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_siret_prestataire" type="Tsiret_prestataire">
+				<xs:annotation>
+					<xs:documentation>Le SIRET  du titulaire doit vérifier l'algorithme de validation INSEE ou code pays ONU si titulaire étranger.
+Cette balise est remplie : 
+- par l'identifiant SIRET du titulaire ou du sous traitant (si le type d'identifiant est SIRET).
+- Sinon, si l'opérateur ne dispose pas de SIRET mais dispose d'un  Code Pays  différent du code France, la balise est remplie par 11 caractères vides suivis de la valeur du code pays transcodifiée au format ISO-Alpha 3 (Exemple THA pour la Thailande).
+- Sinon, la balise est renseignée par le SIRET fictif suivant :  00000002600005
+
+En cas d'avenant de transfert (changement de titulaire): le num_siret_prestataire est renseigné par le numéro SIRET du nouveau titulaire selon les mêmes modalités précisées ci dessus.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_siren_cotit1" type="Tsiren_vide">
+				<xs:annotation>
+					<xs:documentation>Le SIREN d'un co-titulaire doit vérifier l'algorithme de validation INSEE ou code pays ONU si co-titulaire1 étranger.
+Cette balise est remplie :
+- par les 9 premiers caractères de l'identifiant SIRET du co traitant 1 (si le type d'identifiant est un SIRET ) .
+- Sinon, si l'opérateur ne dispose pas de SIRET mais dispose d'un  Code Pays  différent du code France, la balise est remplie par 6 caractères vides suivis de la valeur du code pays transcodifiée au format ISO-Alpha 3 (Exemple THA pour la Thailande).
+- Sinon, la balise est renseignée par le SIREN fictif suivant :  000000026</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_siren_cotit2" type="Tsiren_vide">
+				<xs:annotation>
+					<xs:documentation>Le SIREN d'un co-titulaire doit vérifier l'algorithme de validation INSEE ou code pays ONU si co-titulaire2 étranger</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="num_siren_cotit3" type="Tsiren_vide">
+				<xs:annotation>
+					<xs:documentation>Le SIREN d'un co-titulaire doit vérifier l'algorithme de validation INSEE ou code pays ONU si co-titulaire3 étranger</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nombre_cotit" type="Tnum2Cotit_vide">
+				<xs:annotation>
+					<xs:documentation>Nombre de co-titulaires.
+Si pas de co-titulaire alors valeur attendue = 0  sinon valeur attendue supérieure ou égale à 2</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sous_trait_declaree" type="Toui_non_vide">
+				<xs:annotation>
+					<xs:documentation>Indicateur de sous traitance.
+Dans le cadre d'un contrat initial ou d'un accord cadre, si un sous traitant est déclaré alors la valeur est 1, en l'absence de sous traitant , la valeur est 0.
+Dans tous les autres types d 'évènement, aucune valeur est servie.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="carte_achat" type="Toui_non_vide">
+				<xs:annotation>
+					<xs:documentation>Indicateur de carte achat</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="clause_sociale" type="Toui_non_vide">
+				<xs:annotation>
+					<xs:documentation>Indicateur de clause sociale</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nb_prop_recues" type="Tnum3_vide">
+				<xs:annotation>
+					<xs:documentation>Nombre de propositions reçues</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nb_prop_demat_recues" type="Tnum3_vide">
+				<xs:annotation>
+					<xs:documentation>Nombre de propositions dématérialisées reçues</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="clause_enviro" type="Toui_non_vide">
+				<xs:annotation>
+					<xs:documentation>Indicateur de la clause environnementale</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ident_accord_cadre" type="Tstring18_vide">
+				<xs:annotation>
+					<xs:documentation>Indentifiant de l'accord cadre</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="type_grp_entreprise" type="Ttype_grp_entreprise_vide">
+				<xs:annotation>
+					<xs:documentation>Type de groupement d'entreprises</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="type_avance" type="Ttype_avance_vide">
+				<xs:annotation>
+					<xs:documentation>Type d'avance</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="valeur_avance" type="Ttaux_vide">
+				<xs:annotation>
+					<xs:documentation>Pourcentage de l'avance</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ccag_reference" type="Tccag_reference_vide">
+				<xs:annotation>
+					<xs:documentation>CCAG de Référence</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen1" type="Tstring150_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre un identifiant d’un  titulaire/mandataire/sous-traitant qui n’a pas de Siret  Valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen2" type="Tstring150_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre un identifiant du co-titulaire1qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen3" type="Tstring150_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre un identifiant du co-titulaire2 qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen4" type="Tstring150_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre un identifiant du co-titulaire3 qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen5" type="TnumCodique">
+				<xs:annotation>
+					<xs:documentation>Numéro codique du service comptable DGFIP transmetteur</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="chaine_gen6" type="Tbalise_vide"/>
+			<xs:element name="chaine_gen7" type="Tbalise_vide"/>
+			<xs:element name="chaine_gen8" type="Tbalise_vide"/>
+			<xs:element name="chaine_gen9" type="Tbalise_vide"/>
+			<xs:element name="chaine_gen10" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen1" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen2" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen3" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen4" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen5" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen6" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen7" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen8" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen9" type="Tbalise_vide"/>
+			<xs:element name="numerique_gen10" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen1" type="Toui_non">
+				<xs:annotation>
+					<xs:documentation>Caractère correctif de l'enregistrement.
+Flag booléen pour indiquer si la transmission relève d’une erreur matérielle</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="oui_non_nsp_gen2" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen3" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen4" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen5" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen6" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen7" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen8" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen9" type="Tbalise_vide"/>
+			<xs:element name="oui_non_nsp_gen10" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen1" type="Ttype_identifiant_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre le [type d’Identifiant] d’un titulaire/mandataire/sous-traitant qui n’a pas de Siret valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="liste_ref_gen2" type="Ttype_identifiant_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre le [type d’Identifiant] du co-titulaire1 qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="liste_ref_gen3" type="Ttype_identifiant_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre le [type d’Identifiant] du co-titulaire2 qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="liste_ref_gen4" type="Ttype_identifiant_vide">
+				<xs:annotation>
+					<xs:documentation>Doit servir pour transmettre le [type d’Identifiant] du co-titulaire3 qui n’a pas de Siren valide et code ONU non applicable</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="liste_ref_gen5" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen6" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen7" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen8" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen9" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen10" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen11" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen12" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen13" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen14" type="Tbalise_vide"/>
+			<xs:element name="liste_ref_gen15" type="Tbalise_vide"/>
+			<xs:element name="date_gen1" type="Tdate">
+				<xs:annotation>
+					<xs:documentation>Date de constitution du flux pour transmission sous la forme jj/mm/aaaa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="date_gen2" type="Tdate_vide">
+				<xs:annotation>
+					<xs:documentation>Date de constitution du flux corrigé pour transmission sous la forme jj/mm/aaaa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="date_gen3" type="Tbalise_vide"/>
+			<xs:element name="date_gen4" type="Tbalise_vide"/>
+			<xs:element name="date_gen5" type="Tbalise_vide"/>
+			<xs:element name="date_gen6" type="Tbalise_vide"/>
+			<xs:element name="date_gen7" type="Tbalise_vide"/>
+			<xs:element name="date_gen8" type="Tbalise_vide"/>
+			<xs:element name="date_gen9" type="Tbalise_vide"/>
+			<xs:element name="date_gen10" type="Tbalise_vide"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Tdate">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(0[1-9]|[1-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/(19|20)[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tdate_vide">
+		<xs:union memberTypes="Tdate Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tcpv">
+		<xs:restriction base="xs:string">
+			<xs:length value="8"/>
+			<xs:pattern value="([0-9]{8})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tcpv_vide">
+		<xs:union memberTypes="Tcpv Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tccag_reference">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="T">
+				<xs:annotation>
+					<xs:documentation>CCAG travaux</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FCS">
+				<xs:annotation>
+					<xs:documentation>CCAG fournitures courantes et prestations de services</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MI">
+				<xs:annotation>
+					<xs:documentation>CCAG marchés publics industriels</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PI">
+				<xs:annotation>
+					<xs:documentation>CCAG prestations intellectuelles</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TIC">
+				<xs:annotation>
+					<xs:documentation>CCAG techniques de l'information et de la communication</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="A">
+				<xs:annotation>
+					<xs:documentation>Aucun CCAG visé</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tccag_reference_vide">
+		<xs:union memberTypes="Tccag_reference Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_identifiant">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="01">
+				<xs:annotation>
+					<xs:documentation>SIRET</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="05">
+				<xs:annotation>
+					<xs:documentation>TVA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="07">
+				<xs:annotation>
+					<xs:documentation>TAHITI</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="08">
+				<xs:annotation>
+					<xs:documentation>RIDET</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>FRWF</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation>IREP</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<!--<xs:enumeration value="12">
+				<xs:annotation>
+					<xs:documentation>UE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>-->
+			<xs:enumeration value="06">
+				<xs:annotation>
+					<xs:documentation>HORS-UE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_identifiant_vide">
+		<xs:union memberTypes="Ttype_identifiant Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tforme_prix">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>prix fermes</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>prix fermes actualisables</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>prix révisables</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tforme_prix_vide">
+		<xs:union memberTypes="Tforme_prix Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_grp_entreprise">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="C">
+				<xs:annotation>
+					<xs:documentation>Conjoint</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="S">
+				<xs:annotation>
+					<xs:documentation>Solidaire</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="">
+				<xs:annotation>
+					<xs:documentation>Aucun groupement</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_grp_entreprise_vide">
+		<xs:union memberTypes="Ttype_grp_entreprise Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_avenant">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>avenant sans incidence financière</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>avenant augmentant le montant initial</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>avenant diminuant le montant initial</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_avenant_vide">
+		<xs:union memberTypes="Ttype_avenant Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_avance">
+		<xs:restriction base="xs:string">
+			<!--<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Montant</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>-->
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Pourcentage</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="">
+				<xs:annotation>
+					<xs:documentation>Aucune avance</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ttype_avance_vide">
+		<xs:union memberTypes="Ttype_avance Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tstring10">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tstring18">
+		<xs:restriction base="xs:string">
+			<xs:length value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tstring18_vide">
+		<xs:union memberTypes="Tstring18 Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tstring150">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="150"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tstring150_vide">
+		<xs:union memberTypes="Tstring150 Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum2">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+			<xs:pattern value="([0-9]{2})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum2_vide">
+		<xs:union memberTypes="Tnum2 Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum2Cotit">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum2Cotit_vide">
+		<xs:union memberTypes="Tnum2Cotit Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum3Duree">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:pattern value="([0-9]{1,3})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum3">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tnum3_vide">
+		<xs:union memberTypes="Tnum3 Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="TnumCodique">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="7"/>
+			<xs:minLength value="6"/>
+			<xs:pattern value="(02[A-B][0-9]{3,4}|[0-9]{6,7})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TnumCodique_vide">
+		<xs:union memberTypes="TnumCodique Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tsiret">
+		<xs:restriction base="xs:string">
+			<xs:length value="14"/>
+			<xs:pattern value="([0-9]{14})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tsiret_prestataire">
+		<xs:restriction base="xs:string">
+			<xs:length value="14"/>
+			<xs:pattern value="([ ]{11}[A-Z]{3}|[0-9]{14})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tsiren">
+		<xs:restriction base="xs:string">
+			<xs:length value="9"/>
+			<xs:pattern value="([ ]{6}[A-Z]{3}|[0-9]{9})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tsiren_vide">
+		<xs:union memberTypes="Tsiren Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tbalise_vide">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Toui_non">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>non</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>oui</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Toui_non_vide">
+		<xs:union memberTypes="Toui_non Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tnat_juridique">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>contrat initial</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>contrat complémentaire</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>accord cadre</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>marché subséquent</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>contrat de partenariat</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>autre</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tnat_juridique_vide">
+		<xs:union memberTypes="Tnat_juridique Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tmontant_ht">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="11"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tannee">
+		<xs:restriction base="xs:gYear">
+			<xs:minInclusive value="2000"/>
+			<xs:maxExclusive value="2100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tannee_num2">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+			<xs:pattern value="[0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tmois">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+			<xs:pattern value="(0[1-9]|1[0-2])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tmode_exec">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>ordinaire</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>à bons de commande</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>à tranches</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>à tranches et bons de commande</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>autre</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>À phase</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tmode_exec_vide">
+		<xs:union memberTypes="Tmode_exec Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Ttaux">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Ttaux_vide">
+		<xs:union memberTypes="Ttaux Tbalise_vide"/>
+	</xs:simpleType>
+	<xs:simpleType name="Tprocedure">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>procédure adaptée</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>appel d'offres ouvert</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>appel d'offres restreint</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>procédure concurrentielle avec négociation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>procédure négociée avec mise en concurrence préalable</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>marché négocié sans publicité ni mise en concurrence préalable</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>dialogue compétitif</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>concours</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>système d'acquisition dynamique</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>autre</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Tprocedure_vide">
+		<xs:union memberTypes="Tprocedure Tbalise_vide"/>
+	</xs:simpleType>
+</xs:schema>

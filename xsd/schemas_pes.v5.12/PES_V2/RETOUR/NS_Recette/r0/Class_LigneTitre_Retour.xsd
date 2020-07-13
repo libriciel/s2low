@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunRecette_Retour.xsd" />
+  <xs:complexType name="TBlocLignePiece">
+    <xs:sequence>
+      <xs:element name="InfoLignePiece" type="TInfoLignePiece">
+        <xs:annotation>
+          <xs:documentation>Identification de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoRecouvrement" type="TInfoRecouvrement" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc émargement recouvrement</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoEcheancier" type="TInfoEcheancier" minOccurs="0" />
+      <xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0" />
+      <xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiants complémentaires : régie, n° d'inventaire, n° emprunt, marché…)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoSuspPour" type="TInfoSuspPour" minOccurs="0" />
+      <xs:element name="InfoContentieux" type="TInfoContentieux" minOccurs="0" />
+      <xs:element name="InfoAmiableContentieux" type="TInfoAmiableContentieux" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoLignePiece">
+    <xs:annotation>
+      <xs:documentation>Bloc restitué pour les retours détaillés</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdLigne" type="cm:Base_Num6">
+        <xs:annotation>
+          <xs:documentation>Numéro de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodProdLoc" type="cm:Base_Alphanum4" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code produit local : Information destinée à identifier la nature du produit chez l'ordonnateur. 
+Non renseigner pour les lignes de pièces à régulariser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinGeo" type="cm:Base_Alphanum9" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Finess géographique.
+Zone facultative concernant uniquement les hôpitaux. Cette donnée permet d'affiner le Finess juridique.
+Elle reste purement facultative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeEtGeo" type="cm:Base_Texte3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code établissement géographique. 
+Cette zone concerne uniquement les hôpitaux. Elle reste purement facultative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatLigPce" type="TEtatLigPce">
+        <xs:annotation>
+          <xs:documentation>Information retour sur l'état de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObsEtat" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Observation sur l'état de la ligne de pièce : codification des motifs (si codification, il est possible de transmettre une pluralité de motifs).
+Remarque :En cas de pluralité, si le contenu contient une liste énumérée finie de code motif, il conviendra de définir un caractère séparateur (« - » le tiret par exemple)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Commentaire" type="cm:Base_Texte400" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Commentaire saisi par le Comptable lors du visa.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteTiers" type="cm:Base_Texte12" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte de tiers et financier transmis uniquement pour les pièces à régulariser. Ce compte doit être repris par l'ordonnateur lors de l'émission du titre de recette correspondant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoCollBen" type="TInfoCollBen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc restitué dans le cadre des titres ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoCollBen">
+    <xs:annotation>
+      <xs:documentation>Bloc valorisé pour les titres ORMC correspondant à un produit référencé dans une convention sur rôle multi collectivité, avec un budget bénéficiaire et un SIRET associé.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdCollBen" type="cm:Base_Num14">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de la collectivité bénéficiaire du produit (SIRET)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodCollBen" type="cm:Base_Alphanum3">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la collectivité bénéficiaire du produit</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodBudBen" type="cm:Base_Alphanum2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant du budget collectivité bénéficiaire du produit</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoRecouvrement">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc  Recouvrement lié aux émargements/encaissements.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NbrReco" type="cm:Base_Num4">
+        <xs:annotation>
+          <xs:documentation>Nombre total des encaissements ou des émargements effectués sur la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtRecoTot" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant total des émargements ou des encaissements effectués sur la lignes de pièce recouvrements effectués sur la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoEcheancier">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc échéancier.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DteDerPai" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date du dernier paiement enregistré sur une pièce de l'échéancier.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbrePaiRest" type="cm:Base_Num4">
+        <xs:annotation>
+          <xs:documentation>Nombre de paiements restants: nombre d'échéances non soldées de l'échéancier.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRattachPiece">
+    <xs:annotation>
+      <xs:documentation>Identifiants de rattachement à un mandat d'ANV</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatPceOrig" type="TNatPceOrig">
+        <xs:annotation>
+          <xs:documentation>Nature de la  pièce d'origine à rattacher, pour le PES retour Recette cette balise correspondrait à la nature du mandat d'admission en non valeur. ( 02)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExerRat" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Exercice de rattachement : Exercice d'origine du mandat d'admission en non valeur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPceOrig" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>N° de la pièce d'origine : Numéro du mandat d'admission en non valeur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdLigneOrig" type="cm:Base_Num6" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de ligne de pièce : Numéro de ligne du mandat d'admission en non valeur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteRattach" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de prise en charge du mandat d'admission en non valeur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLiensIdent">
+    <xs:annotation>
+      <xs:documentation>Identifiants complémentaires : N°régie, n° d'inventaire, n° emprunt, N°marché, Convention</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de convention : Cette zone permet de faire le lien entre une ligne de pièce et une fiche convention.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypConv" type="TTypConv" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de convention : Cette zone permet d'identifier la nature de la convention</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjConv" type="cm:Base_Texte255" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet de convention : Cette zone permet de connaître la finalité de la convention.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de marché: cet identifiant permet de déterminer les marchés contractés et suivis par la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'emprunt ordonnateur : Cette zone permet de faire le lien entre une ligne de pièce et une fiche emprunt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'inventaire : Cette zone permet de faire le lien entre une ligne de pièce et une fiche inventaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de régie ordonnateur: Cette zone permet de faire le lien entre une ligne de pièce et une fiche régie.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoSuspPour">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc d'information sur les suspensions de poursuites.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeSuspPour" type="TCodeSuspPour">
+        <xs:annotation>
+          <xs:documentation>Code indiquant le motif de la suspension des poursuites par le comptable</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteSuspPour" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date à laquelle les poursuites ont été suspendues par le comptable</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteRepPour" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date à laquelle les poursuites sont reprises par le comptable, suite à suspension de poursuites.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoContentieux">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc d'information sur les sommes concernées par le contentieux. Ce bloc est renvoyé dès qu'un acte existe pour la ligne de pièce considérée.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MtCtxTot" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant total des prises en charge incluant les frais de poursuites sur la ligne de pièce (principal + majoration + frais)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SldPrinc" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Reste à recouvrer sur le principal</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SldFrais" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Reste à recouvrer sur les frais</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoAmiableContentieux">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc d'information sur les procédures amiables et contentieuses. Seul l'acte et l'étape courants sont renvoyés.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="EtapePce" type="TEtapePce">
+        <xs:annotation>
+          <xs:documentation>Acte courant.</xs:documentation>
+        </xs:annotation>      
+      </xs:element>
+      <xs:element name="DteEtapePce" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de l'acte.</xs:documentation>
+        </xs:annotation>
+            </xs:element>
+      <xs:element name="IdAct" type="cm:Base_Texte15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant métier de l'acte courant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodActu" type="TCodActu" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code actualité porté par l'acte courant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteActu" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de saisie du code actualité porté par l'acte courant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtFrais" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant des frais de l'acte</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteEnvoi" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'envoi de l'acte</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

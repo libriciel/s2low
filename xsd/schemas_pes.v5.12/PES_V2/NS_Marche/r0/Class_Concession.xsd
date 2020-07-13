@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:include schemaLocation="Class_DonneeExecution.xsd" />
+  <xs:include schemaLocation="Class_LieuExecution.xsd" />
+  <xs:include schemaLocation="Class_Concessionnaire.xsd" />
+  <xs:include schemaLocation="Class_ModificationConcession.xsd" />
+  <xs:complexType name="TConcessions">
+    <xs:annotation>
+      <xs:documentation>Concession</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Concession" type="TConcession" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc concession</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TIdentifiantConcession">
+    <xs:annotation>
+      <xs:documentation>Bloc IdentifianConcession :  Identifiant du contrat de concession +  N° de séquence d'envoi  +  caractère correctif de l'enregistrement « erreur matérielle »</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdContrat" type="cm:Base_Texte5_14">
+        <xs:annotation>
+          <xs:documentation>Identifiant du contrat de concession.
+Ce numéro se décompose en 4 caractères pour l'année (année de notification du contrat de concession) et 10 caractères pour la référence du contrat.
+Valeur alphanumérique dont le nombre de caractères est compris entre 5 et 14.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroOrdreModification" type="cm:Base_NumOrdre2_Light">
+        <xs:annotation>
+          <xs:documentation>Numéro d'ordre de la modification (deux caractères, 00 si pas de modification (contrat initial), 01 si première modification, etc.)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SequenceEnvoi" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Numéro de séquence d'envoi (entier naturel compris entre 1 et 999) pour un contrat de concession donné (IdContrat) sur l'autorité concédante concernée (cf. bloc &lt;EnTetePES&gt;).
+A servir dès la notification du contrat initial et à chaque modification ou correctif erreur matérielle (cf. caractereCorrectifEnregistrement=1).
+Le contrat de concession initial doit être envoyé sur la séquence 1.
+Toute correction ou modification sur le même contrat de séquence d'envoi N &gt; 1 ne doit être émise qu'après réception chez l'ordonnateur de l'acquittement sur l'enregistrement précédent de séquence d'envoi N-1.
+En cas de rupture de séquence (le numéro de séquence de l'enregistrement ne correspond pas au dernier numéro de séquence sur la même concession intégrée dans Hélios +1, le numéro de séquence de l'enregistrement &lt;&gt; 1 alors que la concession n'existe pas dans Hélios, le numéro de séquence de l'enregistrement = 1 alors que l'enregistrement est « correctif erreur matérielle »), la concession sera rejetée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaractereCorrectifEnregistrement" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Valeurs :
+- 1 = l'enregistrement est correctif,
+- 0 = l'enregistrement n'est pas correctif.
+Valeur par défaut : 0.
+Correctif erreur matérielle sur contrat initial ou modification
+Tout flux correctif de SequenceEnvoi = N annule et remplace le flux de SequenceEnvoi = N-1 sur le même contrat.
+Un flux correctif ne peut être utilisé que sur un contrat initial non suivi de modification ou sur le flux de dernière modification ou sur le flux correctif qui le précède.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TConcession">
+    <xs:annotation>
+      <xs:documentation>Contrat de concession</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdentifiantConcession" type="TIdentifiantConcession">
+        <xs:annotation>
+          <xs:documentation>Bloc IdentifiantConcession :  Identifiant du  contrat de concession +  N° de séquence d'envoi  + caractère correctif de l'enregistrement « erreur matérielle »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="URLProfilAcheteur" type="cm:Base_Texte500_Light">
+        <xs:annotation>
+          <xs:documentation>URL du profil d'acheteur correspondant à l'autorité concédante,</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Concessionnaires" type="TConcessionnaires">
+        <xs:annotation>
+          <xs:documentation>Concessionnaires du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatureConcession" type="TNatureConcession">
+        <xs:annotation>
+          <xs:documentation>Nature du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Objet" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Objet principal du contrat de concession. Zone libre limitée à 256 caractères.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProcedureConcession" type="TProcedureConcession">
+        <xs:annotation>
+          <xs:documentation>Procédure de passation du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LieuExecution" type="TLieuExecution">
+        <xs:annotation>
+          <xs:documentation>Lieu  d'exécution des prestations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeMoisInitiale" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Durée initiale exprimée en mois pour un contrat de concession (balise non modifiable).
+Valeur minimum : 1.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValeurGlobale" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Valeur globale attribuée à un contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantSubventionPublique" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant en euros des subventions ou de tout autre avantage financier octroyés par des tiers pour l'exploitation de la concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignature" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DatePublicationDonnees" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de publication du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateDebutExecution" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date début d'exécution du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DonneesExecution" type="TDonneesExecution" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Données d'exécution d'un contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModificationsConcession" type="TModificationsConcession" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Blocs ModificationsConcession recense les modifications intervenues sur le contrat depuis le dernier flux envoyé
+Ce bloc ne doit pas être présent au premier envoi ou en cas de correction d'un premier envoi.
+Dans le cas d'un flux correctif du flux de modifications précédentes s'il est absent ceci signifie que l'ensemble des modifications précédentes sont annulées.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
