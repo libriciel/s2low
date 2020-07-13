@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DGFIP (D° GLE DES FINANCES PUBLIQUES) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/facture/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/facture/r0/aller" elementFormDefault="unqualified">
+  <!-- Directives d'inclusion -->
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_FacturePESIndiv.xsd" />
+  <xs:include schemaLocation="Class_RepartitionParNature.xsd" />
+  <xs:include schemaLocation="Class_TiersEmetteur.xsd" />
+  <xs:include schemaLocation="Class_TiersFacture.xsd" />
+  <xs:include schemaLocation="Class_Nomenclature.xsd" />
+  <xs:include schemaLocation="CommunsFacture.xsd" />
+  <xs:complexType name="TPESFacture">
+    <xs:annotation>
+      <xs:documentation>PES_Facture encapsulé dans un PESPJ pour la transmission à destination de la DGFIP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdVer" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>Numéro de version - Mettre à « 2 ».
+Si le numéro de version est erroné, rejet de l'ensemble du PESFacture.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Annee" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Exercice.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumSequence" type="cm:Base_Num4" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>En cas d'émission périodique, indique le numéro de la séquence.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeFact" type="TTypeFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de Facturation.
+Le TypeFact ASAP=09 est nécessaire et obligatoire pour permettre l'édition centralisée des ASAP.
+Le TypeFact ASAP=10 est nécessaire et obligatoire pour permettre l'édition centralisée des ASAP de type Patients.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Date" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date d'émission de la facture ou de l'état de facturation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Emetteur" type="TTiersEmetteur">
+        <xs:annotation>
+          <xs:documentation>Ce bloc définit l'émetteur de la facture.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Tiers" type="TTiersFacture" minOccurs="0" maxOccurs="12">
+        <xs:annotation>
+          <xs:documentation>Les tiers communs à l'ensemble de la facture ; utilisés dans le cadre du PES_Facture typé ASAP.
+Pour un PES_Facture ASAP, bloc Tiers Obligatoire pour le Centre des Finances Publiques et le Centre d'encaissement. 
+Présence obligatoire d'un et un seul TypeTiers = 25 (centre d'encaissement) et d'un et un seul TypeTiers = 26 (Centre des Finances Publiques). A défaut, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+        <!-- il n'y a que 13 types de tiers -->
+      </xs:element>
+      <xs:element name="FactureIndiv" type="TFacturePESIndiv" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Ce bloc définit les données individuelles de facturation. Un PES_Facture peut contenir de 1 à n factures individuelles.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nomenclatures" type="TNomenclatureFacture">
+        <xs:annotation>
+          <xs:documentation>Nomenclatures utilisées (Paramétrage du progiciel).
+En cas d'évolution des nomenclatures, les anciens codes doivent être précisés (de façon incrémentale).
+Non repris sur l'édition de l'ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RepartitionParNature" type="TRepartitionParNature" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Répartition des dépenses par Nature (et budget le cas échéant).
+Ne pas renseigner pour un PES_Facture ASAP, non repris sur l'édition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TNomenclatureFacture">
+    <xs:annotation>
+      <xs:documentation>Nomenclatures utilisées (Paramétrage du progiciel).
+En cas d'évolution des nomenclatures, les anciens codes doivent être précisés (de façon incrémentale).
+Non repris sur l'édition de l'ASAP (PES_Facture ASAP).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NomenclatureProduit" type="TNomenclature" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nomenclature des rubriques de Facturation (nécessaire en cas d'état de facturation collectif).
+Non repris sur l'édition ASAP ; ne pas renseigner dans le cadre d'un PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomenclatureNature" type="TNomenclature" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nomenclature des Code Natures (catégorisation préalable à l'imputation budgétaire).
+Non repris sur l'édition ASAP ; ne pas renseigner dans le cadre d'un PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomenclatureBudget" type="TNomenclature" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nomenclature des Budgets.
+Non repris sur l'édition ASAP ; ne pas renseigner dans le cadre d'un PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRepartitionParNature">
+    <xs:annotation>
+      <xs:documentation>Répartition des dépenses par Nature (et budget le cas échéant).
+Ne pas renseigner pour un PES_Facture ASAP, non repris sur l'édition.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Repartition" type="TLigneRepartition" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc LigneRepartition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:complexType name="TGarantie">
+    <xs:annotation>
+      <xs:documentation>Définition de la garantie sur le marché</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TypeGarantie" type="TTypeGarantie">
+        <xs:annotation>
+          <xs:documentation>Type de garantie applicable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TauxGarantie" type="cm:Base_Taux" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Taux de retenue de la garantie</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantGarantie" type="cm:Base_MontantPositif" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de la garantie ou montant de la caution</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateReceptionGarantie" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>date de réception de la garantie du contractant</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

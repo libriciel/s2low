@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:include schemaLocation="CommunPES.xsd" />
+  <xs:complexType name="TEnTetePES">
+    <xs:annotation>
+      <xs:documentation>En-Tête du PES</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DteStr" type="Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date d'émission de la structure.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPost" type="Base_TexteCodique7">
+        <xs:annotation>
+          <xs:documentation>Identification permanente du poste comptable (numéro codique). Le codique doit être sur 6 à 7 chiffres ou il doit commercer par 02A, 02B suivi de 3 à 4 chiffres. Les lettres doivent être en majuscule.
+Le poste doit exister dans Hélios.
+Valorisation erronée = rejet du flux</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibellePoste" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libelle «court» du poste.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdColl" type="Base_Num14_Light">
+        <xs:annotation>
+          <xs:documentation>Identification numérique permanente du budget collectivité / Identifiant national Siret.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinJur" type="Base_Alphanum20_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Finess juridique. Obligatoire dans le contexte M21 et M22.
+Obligatoire si M21 ou M22 (doit correspondre à celui du BC dans Hélios). Interdit pour les autres nomenclatures (si présent pour une autre nomenclature= rejet du flux).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodCol" type="Base_CodeCol3">
+        <xs:annotation>
+          <xs:documentation>Code collectivité. : identification de la collectivité ou du budget collectivité.
+Le budget doit exister dans le poste et ne doit être ni inactif , ni dissous.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodBud" type="Base_CodeBud2">
+        <xs:annotation>
+          <xs:documentation>Code budget.
+Le budget doit exister dans le poste et ne doit être ni inactif , ni dissous.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibelleColBud" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du budget collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

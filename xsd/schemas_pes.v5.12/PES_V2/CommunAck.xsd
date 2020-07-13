@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- Regles de codifications communes au PES -->
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TDomaineAck">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0">
+            <xs:annotation>
+              <xs:documentation>Technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Signature technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Signature globale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3">
+            <xs:annotation>
+              <xs:documentation>Signature Bordereau</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="4">
+            <xs:annotation>
+              <xs:documentation>PJ</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5">
+            <xs:annotation>
+              <xs:documentation>Dépense</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="6">
+            <xs:annotation>
+              <xs:documentation>Recette</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="7">
+            <xs:annotation>
+              <xs:documentation>Rôle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="8">
+            <xs:annotation>
+              <xs:documentation>Budget</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="9">
+            <xs:annotation>
+              <xs:documentation>Etat Actif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Etat Passif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Facture</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Paramétrage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNumAnoAck">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ERREUR_CONNECTION_IMPOSSIBLE_A_LA_BASE" />
+          <xs:enumeration value="ERREUR_ENCODING" />
+          <xs:enumeration value="ERREUR_FLUX_VIDE" />
+          <xs:enumeration value="ERREUR_SCHEMA_INCOMPLET" />
+          <xs:enumeration value="ERREUR_CODIFICATION" />
+          <xs:enumeration value="ERREUR_CODIQUE" />
+          <xs:enumeration value="ERREUR_SIRET" />
+          <xs:enumeration value="ERREUR_CODE_COLLECTIVITE_BUDGET" />
+          <xs:enumeration value="ERREUR_VERSION_PES" />
+          <xs:enumeration value="ERREUR_VERSION_PJ" />
+          <xs:enumeration value="ERREUR_SIGNATURE_INVALIDE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_ILLISIBLE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_INCOMPLETE" />
+          <xs:enumeration value="ERREUR_DOUBLON_BORDEREAU" />
+          <xs:enumeration value="ERREUR_DOUBLON_PIECE" />
+          <xs:enumeration value="ERREUR_DOUBLON_LIGNE" />
+          <xs:enumeration value="ERREUR_DOUBLON_PJ" />
+          <xs:enumeration value="ERREUR_PES_PARAM" />
+          <xs:enumeration value="ERREUR_PES_SIGNATURE" />
+          <xs:enumeration value="ERREUR_PES_PARAM_SIGNATURE" />
+          <xs:enumeration value="ERREUR_CERTIFICAT" />
+          <xs:enumeration value="ERREUR_TIMEOUT" />
+          <xs:enumeration value="ERREUR_TAILLE_BORDEREAUX" />
+          <xs:enumeration value="ERREUR_TAILLE_PIECE" />
+          <xs:enumeration value="ERREUR_TAILLE_LIGNE" />
+          <xs:enumeration value="ERREUR_PJ_SIGNEE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_EXTERNE" />
+          <xs:enumeration value="ERREUR_AUTRE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INVALIDE" />
+          <xs:enumeration value="ERREUR_MONTANT_TVA_ZERO_NEGATIF" />
+          <xs:enumeration value="ERREUR_PJ" />
+          <xs:enumeration value="ERREUR_CUMUL_MONTANTS" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INVALIDE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_ILLISIBLE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INCOMPLETE" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,1356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="Base_Alphanum1">
+		<xs:attribute name="V" type="V_Alphanum1" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum1">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="1"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum1_Light">
+		<xs:attribute name="V" type="V_Alphanum1_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum1_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+			</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum2">
+		<xs:attribute name="V" type="V_Alphanum2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum2">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="2"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum2_Light">
+		<xs:attribute name="V" type="V_Alphanum2_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum2_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum3">
+		<xs:attribute name="V" type="V_Alphanum3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="3"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum4">
+		<xs:attribute name="V" type="V_Alphanum4" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum4">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="4"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum5">
+		<xs:attribute name="V" type="V_Alphanum5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum5">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="5"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum5_Light">
+		<xs:attribute name="V" type="V_Alphanum5_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum5_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="5"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>		
+	<xs:complexType name="Base_Alphanum6">
+		<xs:attribute name="V" type="V_Alphanum6" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum6">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="6"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum9_Light">
+		<xs:attribute name="V" type="V_Alphanum9_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum9_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="9"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum10">
+		<xs:attribute name="V" type="V_Alphanum10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum10">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="10"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum11">
+		<xs:attribute name="V" type="V_Alphanum11" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum11">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="11"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum12">
+		<xs:attribute name="V" type="V_Alphanum12" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum12">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="12"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum13">
+		<xs:attribute name="V" type="V_Alphanum13" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum13">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="13"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum14">
+		<xs:attribute name="V" type="V_Alphanum14" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum14">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="14"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum15">
+		<xs:attribute name="V" type="V_Alphanum15" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum15">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="15"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum16">
+		<xs:attribute name="V" type="V_Alphanum16" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum16">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum17">
+		<xs:attribute name="V" type="V_Alphanum17" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum17">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="17"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:complexType name="Base_Alphanum18">
+		<xs:attribute name="V" type="V_Alphanum18" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum18">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="18"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum20">
+		<xs:attribute name="V" type="V_Alphanum20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum20">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum20_Light">
+		<xs:attribute name="V" type="V_Alphanum20_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum20_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum25">
+		<xs:attribute name="V" type="V_Alphanum25" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum25">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="25"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum30">
+		<xs:attribute name="V" type="V_Alphanum30" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum30">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="30"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum34">
+		<xs:attribute name="V" type="V_Alphanum34" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum34">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="34"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Alphanum35">
+		<xs:attribute name="V" type="V_Alphanum35" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum35">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="35"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum50">
+		<xs:attribute name="V" type="V_Alphanum50" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum50">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="50"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum50_Light">
+		<xs:attribute name="V" type="V_Alphanum50_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum50_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum70">
+		<xs:attribute name="V" type="V_Alphanum70" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum70">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="70"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum80">
+		<xs:attribute name="V" type="V_Alphanum80" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum80">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="80"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum100">
+		<xs:attribute name="V" type="V_Alphanum100" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum100">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="100"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum140">
+		<xs:attribute name="V" type="V_Alphanum140" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum140">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="140"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum250">
+		<xs:attribute name="V" type="V_Alphanum250" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum250">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="250"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num1">
+		<xs:attribute name="V" type="V_Num1" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num1">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="1"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num1_Light">
+		<xs:attribute name="V" type="V_Num1_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num1_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="1"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num2">
+		<xs:attribute name="V" type="V_Num2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num2">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="2"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num2_Light">
+		<xs:attribute name="V" type="V_Num2_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num2_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="2"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_NumOrdre2_Light">
+		<xs:attribute name="V" type="V_NumOrdre2_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_NumOrdre2_Light">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num2_2Light">
+		<xs:attribute name="V" type="V_Num2_2Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num2_2Light">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+			<xs:pattern value="(0[1-9]*|[1-9][0-9]*)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num3">
+		<xs:attribute name="V" type="V_Num3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num3">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num3_Light">
+		<xs:attribute name="V" type="V_Num3_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num3_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--<xs:complexType name="Base_Entier3_NonNul">
+		<xs:attribute name="V" type="V_Entier3_NonNul" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Entier3_NonNul">
+		<xs:union memberTypes="V_Entier3_Positif V_Entier3_Negatif"/>
+	</xs:simpleType>
+	<xs:simpleType name="V_Entier3_Positif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:fractionDigits value="0"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_Entier3_Negatif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:fractionDigits value="0"/>
+			<xs:maxExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>-->
+	<xs:complexType name="Base_Entier3_Relatif">
+		<xs:attribute name="V" type="V_Entier3_Relatif" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Entier3_Relatif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num4">
+		<xs:attribute name="V" type="V_Num4" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num4">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num4_Light">
+		<xs:attribute name="V" type="V_Num4_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num4_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="4"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num5">
+		<xs:attribute name="V" type="V_Num5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num5">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num5_Light">
+		<xs:attribute name="V" type="V_Num5_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num5_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="5"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Num6">
+		<xs:attribute name="V" type="V_Num6" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num6">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="6"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num6_Light">
+		<xs:attribute name="V" type="V_Num6_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num6_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="6"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num7">
+		<xs:attribute name="V" type="V_Num7" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num7">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="7"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num7_Light">
+		<xs:attribute name="V" type="V_Num7_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num7_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="7"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num8">
+		<xs:attribute name="V" type="V_Num8" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num8">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="8"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num9">
+		<xs:attribute name="V" type="V_Num9" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num9">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="9"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num9_Light">
+		<xs:attribute name="V" type="V_Num9_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num9_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="9"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num10">
+		<xs:attribute name="V" type="V_Num10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num10">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="10"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num10_Light">
+		<xs:attribute name="V" type="V_Num10_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num10_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="10"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num12">
+		<xs:attribute name="V" type="V_Num12" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num12">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num13">
+		<xs:attribute name="V" type="V_Num13" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num13">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="13"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num13_Light">
+		<xs:attribute name="V" type="V_Num13_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num13_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="13"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num14">
+		<xs:attribute name="V" type="V_Num14" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num14">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num14_Light">
+		<xs:attribute name="V" type="V_Num14_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num14_Light">
+		<xs:restriction base="xs:string">
+	      <xs:maxLength value="14"/>
+		  <xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num15">
+		<xs:attribute name="V" type="V_Num15" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num15">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="15"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num16">
+		<xs:attribute name="V" type="V_Num16" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num16">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="16"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num17">
+		<xs:attribute name="V" type="V_Num17" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num17">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num20">
+		<xs:attribute name="V" type="V_Num20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num20">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="20"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num20_Light">
+		<xs:attribute name="V" type="V_Num20_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num20_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num25">
+		<xs:attribute name="V" type="V_Num25" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num25">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="25"/>
+			<xs:minExclusive value="0"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte2">
+		<xs:attribute name="V" type="V_Texte2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte2">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="2"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte3">
+		<xs:attribute name="V" type="V_Texte3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="3"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte5">
+		<xs:attribute name="V" type="V_Texte5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte5">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="5"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte6">
+		<xs:attribute name="V" type="V_Texte6" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte6">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="6"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_TexteCodique7">
+		<xs:attribute name="V" type="V_TexteCodique7" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_TexteCodique7">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="7"/>
+			<xs:minLength value="6"/>
+			<xs:pattern value="(02[A-B][0-9]{3,4}|[0-9]{6,7})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte10">
+		<xs:attribute name="V" type="V_Texte10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte10">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="10"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte11">
+		<xs:attribute name="V" type="V_Texte11" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte11">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="11"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte11BIC">
+		<xs:attribute name="V" type="V_Texte11BIC" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte11BIC">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="11"/>
+			<xs:minLength value="8"/>
+			<xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte12">
+		<xs:attribute name="V" type="V_Texte12" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte12">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="12"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte14">
+		<xs:attribute name="V" type="V_Texte14" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte14">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="14"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte15">
+		<xs:attribute name="V" type="V_Texte15" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte15">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="15"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte16">
+		<xs:attribute name="V" type="V_Texte16" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte16">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte18_Light">
+		<xs:attribute name="V" type="V_Texte18_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte18_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte20">
+		<xs:attribute name="V" type="V_Texte20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte20">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte20_Light">
+		<xs:attribute name="V" type="V_Texte20_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte20_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte24">
+		<xs:attribute name="V" type="V_Texte24" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte24">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="24"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte25">
+		<xs:attribute name="V" type="V_Texte25" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte25">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="25"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte27">
+		<xs:attribute name="V" type="V_Texte27" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte27">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="27"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Texte30">
+		<xs:attribute name="V" type="V_Texte30" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte30">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="30"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte32">
+		<xs:attribute name="V" type="V_Texte32" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte32">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="32"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte34">
+		<xs:attribute name="V" type="V_Texte34" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte34">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="34"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Texte34IBAN">
+		<xs:attribute name="V" type="V_Texte34IBAN" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte34IBAN">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="34"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Texte35">
+		<xs:attribute name="V" type="V_Texte35" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte35">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="35"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte38">
+		<xs:attribute name="V" type="V_Texte38" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte38">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="38"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte50">
+		<xs:attribute name="V" type="V_Texte50" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte50">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="50"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte64">
+		<xs:attribute name="V" type="V_Texte64" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte64">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="64"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte70">
+		<xs:attribute name="V" type="V_Texte70" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte70">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="70"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Texte100">
+		<xs:attribute name="V" type="V_Texte100" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte100">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="100"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte100_Light">
+		<xs:attribute name="V" type="V_Texte100_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte100_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte140">
+		<xs:attribute name="V" type="V_Texte140" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte140">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="140"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte160">
+		<xs:attribute name="V" type="V_Texte160" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte160">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="160"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte160_Light">
+		<xs:attribute name="V" type="V_Texte160_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte160_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="160"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte200">
+		<xs:attribute name="V" type="V_Texte200" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte200">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="200"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte250">
+		<xs:attribute name="V" type="V_Texte250" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte250">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="250"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte256">
+		<xs:attribute name="V" type="V_Texte256" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte256">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="256"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte420">
+		<xs:attribute name="V" type="V_Texte420" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte420">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="420"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte500">
+		<xs:attribute name="V" type="V_Texte500" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte500">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="500"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte500_Light">
+		<xs:attribute name="V" type="V_Texte500_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte500_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Annee">
+		<xs:attribute name="V" type="V_Annee" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Annee">
+		<xs:restriction base="xs:gYear"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Booleen">
+		<xs:attribute name="V" type="V_Booleen" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Booleen">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Date">
+		<xs:attribute name="V" type="V_Date" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Date">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Montant">
+		<xs:attribute name="V" type="V_Montant" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--	<xs:complexType name="Base_Montant_NonNul">
+		<xs:attribute name="V" type="V_Montant_NonNul" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant_NonNul">
+		<xs:union memberTypes="V_Montant_Positif V_Montant_Negatif"/>
+	</xs:simpleType>
+	<xs:simpleType name="V_Montant_Positif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_Montant_Negatif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+			<xs:maxExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>-->
+	<xs:complexType name="Base_Montant_Relatif">
+		<xs:attribute name="V" type="V_Montant_Relatif" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant_Relatif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Montant_Light">
+		<xs:attribute name="V" type="V_Montant_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant_Light">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Taux">
+		<xs:attribute name="V" type="V_Taux" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Taux">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Taux_Hight">
+		<xs:attribute name="V" type="V_Taux_Hight" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Taux_Hight">
+		<xs:restriction base="xs:decimal">
+			<xs:maxExclusive value="100.00"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_BaseString">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^ \.]|n[^c]|[^n]c|[^n][^c]|...+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_BaseAlphanum">
+		<xs:restriction base="V_BaseString">
+		    <xs:pattern value=".*[^0]+.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte5_Longueur5">
+		<xs:attribute name="V" type="V_Texte5_Longueur5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte5_Longueur5">
+		<xs:restriction base="V_BaseAlphanum">
+		    <xs:maxLength value="5"/>
+			<xs:minLength value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte9_100">
+		<xs:attribute name="V" type="V_Texte9_100" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte9_100">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:minLength value="9"/>
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte9_18">
+		<xs:attribute name="V" type="V_Texte9_18" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte9_18">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:minLength value="9"/>
+			<xs:maxLength value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte5_14">
+		<xs:attribute name="V" type="V_Texte5_14" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte5_14">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:minLength value="5"/>
+			<xs:maxLength value="14"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num4_Texte1_10">
+		<xs:attribute name="V" type="V_Num4_Texte1_10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num4_Texte1_10">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:minLength value="5"/>
+			<xs:maxLength value="14"/>
+			<xs:pattern value="(20[0-4]{1}[0-9]{1}|2050).*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_MontantPositif">
+		<xs:attribute name="V" type="V_MontantPositif" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_MontantPositif">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num6_NonVide">
+		<xs:attribute name="V" type="V_Num6_NonVide" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num6_NonVide">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="6"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_NomPJ">
+		<xs:attribute name="V" type="V_Base_NomPJ" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Base_NomPJ">
+		<xs:restriction base="V_BaseString">
+			<xs:maxLength value="100"/>
+			<xs:pattern value=".+\.[A-Za-z0-9]{2,4}"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:complexType name="Base_Texte140SEPA">
+		<xs:attribute name="V" type="V_Texte140SEPA" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte140SEPA">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="140"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z/?:()\., \-+']*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte70SEPA">
+		<xs:attribute name="V" type="V_Texte70SEPA" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte70SEPA">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="70"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z/?:()\., \-+']*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte35SEPA">
+		<xs:attribute name="V" type="V_Texte35SEPA" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte35SEPA">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="35"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z/?:()\., \-+']*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Taux_Light">
+		<xs:attribute name="V" type="V_Taux_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Taux_Light">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="2"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num60TalonOptique">
+		<xs:attribute name="V" type="V_Num60TalonOptique" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num60TalonOptique">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="60"/>
+			<xs:pattern value="[0-9A-Z\s]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num8_Num1">
+		<xs:attribute name="V" type="V_Base_Num8_Num1" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Base_Num8_Num1">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{8,8}(\-[0-9])?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num14_14_Light">
+		<xs:attribute name="V" type="V_Num14_14_Light" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num14_14_Light">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="14"/>
+			<xs:minLength value="14"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Decimal14_4">
+		<xs:attribute name="V" type="V_Decimal14_4" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Decimal14_4">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="4"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_DateMoisAnnee">
+		<xs:attribute name="V" type="V_DateMoisAnnee" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_DateMoisAnnee">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(0[1-9]|1[0-2])\-[0-9]{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Quantite">
+		<xs:attribute name="V" type="V_Quantite" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Quantite">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="6"/>
+			<xs:fractionDigits value="4"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_NumFactureCPP20">
+		<xs:attribute name="V" type="V_NumFactureCPP20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_NumFactureCPP20">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[ \-/_+0-9a-zA-Z]*"/>
+			<xs:whiteSpace value="preserve"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte_CodeInseePays_5">
+		<xs:attribute name="V" type="V_Texte_CodeInseePays_5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte_CodeInseePays_5">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:length value="5"/>
+			<xs:pattern value="99[1-5][0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte_CodePays_3">
+		<xs:attribute name="V" type="V_Texte_CodePays_3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte_CodePays_3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:length value="3"/>
+			<xs:pattern value="[1-5][0-9]{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte_CodeDepartement_2_3">
+		<xs:attribute name="V" type="V_Texte_CodeDepartement_2_3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte_CodeDepartement_2_3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="3"/>
+			<xs:minLength value="2"/>
+			<xs:pattern value="2[A-B]|[0-8][0-9]|9[0-5]|97[1-8]|98[6-7]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte_CodeCommune_2_3">
+		<xs:attribute name="V" type="V_Texte_CodeCommune_2_3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte_CodeCommune_2_3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="3"/>
+			<xs:minLength value="2"/>
+			<xs:pattern value="[0-9]{2,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte2_3">
+		<xs:attribute name="V" type="V_Texte2_3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte2_3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte_Libelle_Naissance_70">
+		<xs:attribute name="V" type="V_Texte_Libelle_Naissance_70" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte_Libelle_Naissance_70">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="70"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[A-Z 0-9'\-Œ\(\)]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_IdentifiantPJ20">
+		<xs:attribute name="V" type="V_IdentifiantPJ20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_IdentifiantPJ20">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[0-9a-zA-Z/_]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:complexType name="Base_CodeBud2">
+		<xs:attribute name="V" type="V_CodeBud2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_CodeBud2">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+			<xs:pattern value="[0-9A-Z][0-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_CodeCol3">
+		<xs:attribute name="V" type="V_CodeCol3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_CodeCol3">
+		<xs:restriction base="V_BaseAlphanum">
+			<xs:length value="3"/>
+			<xs:pattern value="[0-9]{3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

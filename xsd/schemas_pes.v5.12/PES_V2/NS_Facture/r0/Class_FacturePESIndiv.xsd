@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_TiersFacture.xsd" />
+  <xs:complexType name="TTalonOptique2Lignes">
+    <xs:annotation>
+      <xs:documentation>Talon Optique pour paiement via centre d'encaissement.
+Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP + respect de la norme HEL.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Ligne1" type="cm:Base_Num60TalonOptique">
+        <xs:annotation>
+          <xs:documentation>Première ligne du talon optique calculée et fournie par ordonnateur.
+Chiffres de 0 à 9 autorisés et espaces autorisés . Lettres uniquement MAJUSCULES autorisées.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ligne2" type="cm:Base_Num60TalonOptique">
+        <xs:annotation>
+          <xs:documentation>Deuxième ligne du talon optique calculée et fournie par ordonnateur.
+Chiffres de 0 à 9 autorisés et espaces autorisés . Lettres uniquement MAJUSCULES autorisées.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRefTitre">
+    <xs:annotation>
+      <xs:documentation>Référence au titre lié à l'avis des sommes à payer.
+Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Exercice" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>L'exercice du titre auquel se rattache la facture de recette ASAP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumBordereau" type="cm:Base_Num7">
+        <xs:annotation>
+          <xs:documentation>Le numéro du bordereau de titre</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumTitre" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>Le numéro de titre auquel se rattache la facture de recette ASAP
+Un même numéro (et même exercice) ne doit pas figurer sur plusieurs factures individuelles du même flux PES Facture, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumLigne" type="cm:Base_Num6">
+        <xs:annotation>
+          <xs:documentation>A valoriser obligatoirement à 1.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLigneFacture">
+    <xs:annotation>
+      <xs:documentation>Détail de chaque ligne de facture.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Date" type="cm:Base_Date">
+          <xs:annotation>
+            <xs:documentation>Dates de réalisation de la prestation</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:sequence>
+          <xs:element name="DateDebut" type="cm:Base_Date">
+            <xs:annotation>
+              <xs:documentation>Date du début de la prestation</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DateFin" type="cm:Base_Date">
+            <xs:annotation>
+              <xs:documentation>Date de la fin de la prestation</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="CodeProduit" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code du produit.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeNature" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code Nature.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Libelle" type="cm:Base_Texte200">
+        <xs:annotation>
+          <xs:documentation>Libellé détaillé du produit.
+PES_Facture ASAP : la zone Libellé est à renseigner de l'objet de la ligne de facture ;
+Si la ligne de facture concerne une remise, indiquer « remise » dans cette zone libellé afin d'informer le débiteur (pas de contrôle sur le contenu de cette zone).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Unite" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nature de l'unité d'œuvre.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="Quantite" type="cm:Base_Quantite">
+            <xs:annotation>
+              <xs:documentation>Quantité d'unités.
+La taille maximum autorisée est 6 chiffres (hors virgule), à défaut rejet du PES_Facture ASAP.
+Jusqu'à 4 décimales significatives possibles</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Unite1" type="cm:Base_Texte5" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Unité de mesure de la valeur indiquée dans Quantite
+PES_Facture ASAP : si la balise est renseignée, Quantite doit être valorisé, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Quantite2" type="cm:Base_Quantite" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Quantité 2 d'unités.
+La taille maximum autorisée est 6 chiffres (hors virgule), à défaut rejet du PES_Facture ASAP.
+Jusqu'à 4 décimales significatives possibles</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Unite2" type="cm:Base_Texte5" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Unité de mesure de la valeur indiquée dans Quantite2
+PES_Facture ASAP : si la balise est renseignée, Quantite2 doit être valorisé, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MtUnitaire" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Prix de chaque Unité.
+PES_Facture ASAP : si la balise est renseignée, le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="MtBase" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Base de calcul du prix.
+PES_Facture ASAP : si la balise est renseignée, le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="MtRemise" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Montant de la Remise TTC.
+La remise doit apparaître sur une ligne de facture spécifique.
+Le montant de la remise apparaît en positif.
+PES_Facture ASAP : si la balise est valorisée, le montant doit être strictement positif sinon rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="Taux" type="cm:Base_Taux" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant_Light">
+        <xs:annotation>
+          <xs:documentation>Montant HT de la Ligne.
+PES_Facture ASAP : le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TauxTVA" type="cm:Base_Taux_Light">
+        <xs:annotation>
+          <xs:documentation>Taux de TVA appliqué à cette ligne.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant_Light">
+        <xs:annotation>
+          <xs:documentation>Montant de la TVA appliquée à la ligne.
+PES_Facture ASAP : le montant doit être positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTTC" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant TTC de la prestation de cette ligne.
+PES_Facture ASAP : le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ordre" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Numéro d'ordre de la ligne de prestation.
+Cette balise permet de déterminer l'ordre d'affichage des lignes de facture sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrdreEdition" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro d'ordre dans l'affichage de la facture.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Commentaire" type="cm:Base_Texte100" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Commentaire dans l'ordre d'affichage de la prestation.
+Il est possible de valoriser une ou plusieurs balises Commentaire.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDetailTVA">
+    <xs:annotation>
+      <xs:documentation>Détail de la TVA.
+Ne pas renseigner pour un PES_Facture ASAP ; non repris sur l'édition.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TauxTVA" type="cm:Base_Taux_Light">
+        <xs:annotation>
+          <xs:documentation>Taux TVA applicable.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBaseHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant de la base d'application de taux de TVA.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant_Light">
+        <xs:annotation>
+          <xs:documentation>Montant de la TVA correspondant au taux mentionné.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTotalAPayer">
+    <xs:annotation>
+      <xs:documentation>Montant total à payer</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MtTotalHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant Total HT de la facture.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTotalTVA" type="cm:Base_Montant_Light">
+        <xs:annotation>
+          <xs:documentation>Montant total de la TVA applicable à la facture.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTotalTTC" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant total de la prestation TTC.
+PES_Facture ASAP : le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TFacturePESIndiv">
+    <xs:annotation>
+      <xs:documentation>Ce bloc définit les données individuelles de facturation. Un PES_Facture peut contenir de 1 à n factures individuelles.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DateEmission" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date d'émission de la facture.
+Pour PES_Facture ASAP, à renseigner de la date d'émission du titre de recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateReglement" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date limite de paiement.
+Ne pas renseigner pour un PES_Facture ASAP ; non repris sur l'édition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroFacture" type="cm:Base_Texte50">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la Facture.
+Non repris sur l'édition ASAP _ non utilisé pour CPP facture inter collectivités (PES_Facture ASAP). Il sera indiqué en référence en cas de rejet.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Debiteur" type="TTiersFacture">
+        <xs:annotation>
+          <xs:documentation>Information sur le Débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Destinataire" type="TTiersFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Information sur le Destinataire. A renseigner uniquement si destinataire différent du débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Objet" type="cm:Base_Texte160">
+        <xs:annotation>
+          <xs:documentation>Objet de la Facture
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:sequence>
+          <xs:annotation>
+            <xs:documentation>SOIT la valorisation des blocs LigneFacture, DetailTVA, TotalAPayer. Obligatoire si  TypeFacture différent de 10 (ASAP Patients), sinon rejet du flux</xs:documentation>
+          </xs:annotation>
+          <xs:element name="LigneFacture" type="TLigneFacture" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Détail de chaque ligne de facture.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DetailTVA" type="TDetailTVA" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Détail de la TVA.
+Pour un PES_Facture ASAP : non repris sur l'édition ; ne pas renseigner pour un PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="TotalAPayer" type="TTotalAPayer">
+            <xs:annotation>
+              <xs:documentation>Montant total à payer.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:annotation>
+            <xs:documentation>SOIT la valorisation des blocs DossierPatient et LigneFacturePatient. Obligatoire si TypeFacture=10, sinon rejet du flux.</xs:documentation>
+          </xs:annotation>
+          <xs:element name="DossierPatient" type="TDossierPatient">
+            <xs:annotation>
+              <xs:documentation>Détail des informations sur les tiers de la facture.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="LigneFacturePatient" type="TLigneFacturePatient">
+            <xs:annotation>
+              <xs:documentation>Détail de la facture.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <!-- REF TITRE -->
+      <xs:element name="RefTitre" type="TRefTitre" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence au titre lié à l'avis des sommes à payer.
+Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TalonOptique2Lignes" type="TTalonOptique2Lignes" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Talon Optique pour paiement via centre d'encaissement.
+Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP + respect de la norme HEL.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModalitesReglement" type="cm:Base_Texte250">
+        <xs:annotation>
+          <xs:documentation>Description des modalités de règlement.
+Pour le PES_Facture ASAP : il s'agit de la description des modalités de prélèvement, pour assurer le prélèvement automatique des dettes à venir. Mention reprise au verso de l'édition.
+Exemple : « Démarche non prévue par la collectivité », ou « Prendre contact avec le service de … ».</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModalitesContestation" type="cm:Base_Texte420" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Dans le cadre du PESFacture typé ASAP : Zone de texte libre permettant de renseigner les modalités de contestation de la dette (mention du tribunal compétent et du lieu notamment).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModeRecouvrement" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Obligatoire dans le cadre du PES facture typé ASAP, sinon rejet du PES_Facture ASAP.
+PES_Facture ASAP :
+Si Edition avec TIP : 0 ou False.
+Si Edition sans TIP (avec Talon) : 1 ou True.
+Si edition avec TIP, alors la balise MtTotalTTC doit être inférieure ou égale à 150 000,00 euros, à défaut rejet du PES_Facture ASAP.
+Si Pes_Facture_ASAP_Patient, le code 1 ou True est obligatoire; à défaut rejet du flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TexteGenerateur" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Champ à renseigner en matière de facture de recette associé à un titre.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ConditionsGen" type="cm:Base_Texte250">
+        <xs:annotation>
+          <xs:documentation>Conditions Générales de Facturation.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RepartitionBudget" type="TRepartitionBudget" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Répartition du budget.
+Non repris sur l'édition ASAP ; ne pas renseigner dans le cadre d'un PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDossierPatient">
+    <xs:annotation>
+      <xs:documentation>Dossier du patient
+Ne renseigner que pour le TypeFacture=10, sinon rejet du flux</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Beneficiaire" type="TBeneficiaire">
+        <xs:annotation>
+          <xs:documentation>Identification du tiers bénéficiaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Assure" type="TAssure" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identification du tiers assuré</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtabSoins" type="TEtabSoins">
+        <xs:annotation>
+          <xs:documentation>Informations sur l'établissement ayant effectué les soins.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBeneficiaire">
+    <xs:annotation>
+      <xs:documentation>Information sur le bénéficiaire.
+A renseigner pour le TypeFacture=10, à défaut rejet du flux.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumDossier" type="cm:Base_Alphanum20">
+        <xs:annotation>
+          <xs:documentation>Correspond au numéro d'entrée du malade.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumPatient" type="cm:Base_Alphanum20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Correspond à l'IPP (Identifiant Permanent Patient).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomBeneficiaire" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom du malade</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrenomBeneficiaire" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prénom du malade</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteNaissanceBeneficiaire" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de naissance du malade</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NIRBeneficiaire" type="cm:Base_Alphanum15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>NIR du malade</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeRisque" type="cm:Base_Alphanum2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code risque attribué par l'ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TAssure">
+    <xs:annotation>
+      <xs:documentation>Information sur l'assuré.
+A renseigner pour le TypeFacture=10</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NomAssure" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'assuré</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrenomAssure" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prénom de l'assuré</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NIRAssure" type="cm:Base_Alphanum15">
+        <xs:annotation>
+          <xs:documentation>NIR de l'assuré</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEtabSoins">
+    <xs:annotation>
+      <xs:documentation>Informations spécifiques liées à l'établissement prestataire des soins reprises uniquement sur l'édition ASAP Patients (TypeFacture=10)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NomEtabSoins" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'établissement de soins</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinJurEtabSoins" type="cm:Base_Texte20">
+        <xs:annotation>
+          <xs:documentation>Finess juridique de l'établissement de soins</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinGeoEtabSoins" type="cm:Base_Alphanum20">
+        <xs:annotation>
+          <xs:documentation>Finess géographique de l'établissement de soins</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SiretEtabSoins" type="cm:Base_Num14">
+        <xs:annotation>
+          <xs:documentation>Siret de l'établissement de soins</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLigneFacturePatient">
+    <xs:annotation>
+      <xs:documentation>Détail de la ligne de facture.
+A renseigner que TypeFacture=10, sinon rejet du flux</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DateDebut" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date du début de la prestation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateFin" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de la fin de la prestation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibellePresta" type="cm:Base_Texte200">
+        <xs:annotation>
+          <xs:documentation>Détail de la prestation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPecSecu" type="cm:Base_MontantPositif" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de la prise en charge de la part de la sécurité sociale.
+Le montant doit être strictement positif</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPecCompl" type="cm:Base_MontantPositif" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de la prise en charge de la part de la complémentaire santé ou mutuelle.
+Le montant doit être strictement positif</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtRestantDu" type="cm:Base_MontantPositif">
+        <xs:annotation>
+          <xs:documentation>Montant restant à la charge du débiteur.
+Le montant doit être strictement positif</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CommentaireHop" type="cm:Base_Texte140" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Commentaires de l'ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRepartitionBudget">
+    <xs:annotation>
+      <xs:documentation>Répartition du budget.
+Non repris sur l'édition ASAP ; ne pas renseigner dans le cadre d'un PES_Facture ASAP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeBudget" type="cm:Base_Texte24">
+        <xs:annotation>
+          <xs:documentation>Code du budget de comptabilisation.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="Taux" type="cm:Base_Taux">
+          <xs:annotation>
+            <xs:documentation>(si répartition au prorata).
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Mt" type="cm:Base_Montant">
+          <xs:annotation>
+            <xs:documentation>(si répartition forfaitaire).
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

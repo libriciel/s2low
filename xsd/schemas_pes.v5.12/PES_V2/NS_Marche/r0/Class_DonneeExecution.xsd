@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TDonneesExecution">
+    <xs:annotation>
+      <xs:documentation>Données d'exécution d'un contrat de concession.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DonneeAnnuelle" type="TDonneeAnnuelle" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Données d'exécution d'un contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDonneeAnnuelle">
+    <xs:annotation>
+      <xs:documentation>Principaux tarifs à la charge des usagers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DatePublicationDonneesExecution" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date à laquelle les données d'exécution ont été publiées.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DepensesInvestissement" type="cm:Base_MontantPositif">
+        <xs:annotation>
+          <xs:documentation>Montant des dépenses d'investissement réalisées par le concessionnaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Tarifs" type="TTarifs">
+        <xs:annotation>
+          <xs:documentation>Principaux tarifs à la charge des usagers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTarifs">
+    <xs:annotation>
+      <xs:documentation>Tarif à la charge des usagers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Tarif" type="TTarif" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Principaux tarifs à la charge des usagers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTarif">
+    <xs:annotation>
+      <xs:documentation>Tarif à la charge des usagers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IntituleTarif" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Intitulé du tarif.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantTarif" type="cm:Base_MontantPositif">
+        <xs:annotation>
+          <xs:documentation>Montant du tarif.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

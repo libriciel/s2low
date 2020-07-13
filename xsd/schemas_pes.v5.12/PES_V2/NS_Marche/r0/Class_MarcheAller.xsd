@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Partage CPD (D° GLE DES FINANCES PUBLIQUES) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:include schemaLocation="Class_Acheteur.xsd" />
+  <xs:include schemaLocation="Class_ConditionsExecution.xsd" />
+  <xs:include schemaLocation="Class_LieuExecution.xsd" />
+  <xs:include schemaLocation="Class_OperateurEconomique.xsd" />
+  <xs:include schemaLocation="Class_ModificationMarche.xsd" />
+  <xs:include schemaLocation="Class_VentilationMontant.xsd" />
+  <xs:include schemaLocation="Class_PJRef.xsd" />
+  <xs:complexType name="TMarches">
+    <xs:annotation>
+      <xs:documentation>Marché Public</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Marche" type="TMarche" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bloc Marche, correspond au marché actualisé</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TIdentifiantMarche">
+    <xs:annotation>
+      <xs:documentation>Bloc IdentifianMarche :  Identifiant du marché +  N° de séquence d'envoi + Correctif erreur matérielle</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdContrat" type="cm:Base_Num4_Texte1_10">
+        <xs:annotation>
+          <xs:documentation>Identifiant du marché public.
+Ce numéro se décompose en 4 caractères pour l'année (année de notification du marché public) et 10 caractères pour la référence du marché.
+Valeur alphanumérique dont le nombre de caractères est compris entre 5 et 14.
+Dans le cadre des groupements d'achat, cet identifiant du marché doit être le même pour tous les budgets collectivités membres du groupement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumeroOrdreModification" type="cm:Base_NumOrdre2_Light">
+        <xs:annotation>
+          <xs:documentation>Numéro d'ordre de la modification (deux caractères, 00 si pas de modification (contrat initial), 01 si première modification, etc.).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SequenceEnvoi" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Numéro de séquence d'envoi (entier naturel compris entre 1 et 999) 
+Il ne doit pas y avoir de rupture sur cette séquence.
+Le marché initial doit être envoyé sur la séquence 1.
+Toute correction ou modification sur le même marché doit être émise avec une séquence d'envoi N &gt; 1 seulement après réception chez l'ordonnateur de l'acquittement sur l'enregistrement précédent de séquence d'envoi N-1.
+En cas de rupture de séquence (le numéro de séquence de l'enregistrement ne correspond pas au dernier numéro de séquence sur le même marché intégré dans Hélios +1, le numéro de séquence de l'enregistrement &lt;&gt; 1 alors que le marché n'existe pas dans Hélios, le numéro de séquence de l'enregistrement = 1 alors que l'enregistrement est « correctif erreur matérielle »), le Marché sera rejeté.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaractereCorrectifEnregistrement" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Correctif erreur matérielle.
+Valeurs : 
+- 1 = l'enregistrement est correctif, 
+- 0 = l'enregistrement n'est pas correctif.
+Valeur par défaut : 0.
+
+Tout flux correctif de SequenceEnvoi = N annule et remplace le flux de SequenceEnvoi = N-1 sur le même contrat.
+Un flux correctif ne peut être utilisé que sur un contrat initial non suivi de modification ou sur le flux de dernière modification ou sur le flux correctif qui le précède.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TMarche">
+    <xs:annotation>
+      <xs:documentation>Bloc Marche, correspond au contrat initial notifié (soit un marché sans modification) ou à un marché actualisé ou marché modifié comportant n &gt;=1  modification(s). Sont actualisés : les opérateurs économiques, les montants et durée portés par le marché, les « ventilations titulaires » et les « ventilations sous-traitants ».</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdentifiantMarche" type="TIdentifiantMarche">
+        <xs:annotation>
+          <xs:documentation>Bloc IdentifiantMarche :  Identifiant du marché +  N° de séquence d'envoi  + Correctif erreur matérielle</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="URLProfilAcheteur" type="cm:Base_Texte500_Light">
+        <xs:annotation>
+          <xs:documentation>URL du profil d'acheteur correspondant au pouvoir adjudicateur notifiant le marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Acheteurs" type="TAcheteurs">
+        <xs:annotation>
+          <xs:documentation>Acheteurs du marché public</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatureMarche" type="TNatureMarche">
+        <xs:annotation>
+          <xs:documentation>Nature du marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Objet" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Objet principal du marché public. Zone libre limitée à 256 caractères.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeCPV" type="cm:Base_Num8_Num1">
+        <xs:annotation>
+          <xs:documentation>Code principal du Vocabulaire commun pour les marchés publics (CPV).
+Format : 8 chiffres + '-' + 1 chiffre (c de contrôle).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProcedureMarche" type="TProcedureMarche">
+        <xs:annotation>
+          <xs:documentation>Procédure de passation du marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LieuExecution" type="TLieuExecution">
+        <xs:annotation>
+          <xs:documentation>Lieu principal  d'exécution des prestations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeEnMois" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Durée exprimée en mois pour l'exécution des prestations correspondant au montant notifié (valeur arrondie à l'entier supérieur, exemple 1 pour 2 semaines) pour un marché public.
+Valeur minimum : 1.
+Pour les marchés prorogeables avec tacite reconduction, la durée totale doit être considérée.
+Pour un flux de modification impactant la durée, la dureeEnMois doit être la durée du marché actualisée avec la modification présentée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeEnMoisMaximumPossible" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Durée maximum possible exprimée en mois (valeur arrondie à l'entier supérieur, exemple 1 pour 2 semaines).
+Valeur minimum : 1.
+La durée inclut toutes les tranches et toutes les possibilités de reconductions éventuelles prévues au marché. C'est la durée pendant laquelle les prestations prévues peuvent contractuellement être exécutées. Quant aux marchés de travaux, la durée doit correspondre aux prestations correspondant à chaque contrat (ou lot) recensé et non à la durée totale d'une opération.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateDebutExecution" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date du début de l'exécution des prestations (ex : date ordre de service pour un marché public).
+A renseigner si l'information est connue à la notification du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantHTNotifie" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT du marché qui a été notifié (par exemple montant de la tranche ferme). Il ne comprend pas les éventuels montants prévisionnels (montant des tranches optionnelles).
+Pour les marchés prorogeables avec tacite reconduction, le montant notifié correspond au montant total. A défaut un montant estimé doit être privilégié.
+Pour un flux de modification impactant le montant HT notifie, le MontantHTNotifie doit être le montant HT notifié du marché actualisé avec le cas échéant la modification présentée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaractereEstimatifMontantNotifie" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Valeur 1 : le montant est estimatif.
+Valeur 0: le montant est ferme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantTVANotifie" type="cm:Base_MontantPositif" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de la TVA du marché correspondant au montant notifié du marché (supérieur ou égal à zéro).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantHTEstime" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant estimé HT sur toute la durée du contrat, toutes tranches cumulées, toutes reconductions possibles incluses.
+Pour les marchés à tranches : montant HT total qui comprend le montant de la tranche ferme et celles des tranches optionnelles.
+Pour un accord-cadre : montant prévisionnel HT, estimation du total des marchés subséquents ou des bons de commande prévisibles.
+Le montant HT estimé, s'il est renseigné, doit être supérieur ou égal au montant HT notifié du marché, sinon rejet du Marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignature" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de la Signature du marché public</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomSignataireAcheteur" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom du représentant du Pouvoir Adjudicateur.
+Si cette balise est renseignée, elle doit impérativement contenir le nom (sans le prénom) de la personne physique qui représente le Pouvoir Adjudicateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefActeDelegationSignature" type="cm:Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence de l'acte de délégation de signature accordée à la personne physique représentant le pouvoir adjudicateur du marché.
+Cette information devrait être portée dans l'une des PJ pièces contractuelles du marché. Mais elle pourrait correspondre à une référence d'Acte portée par un document papier.
+Cette information est nécessaire au contrôle de légalité externe du comptable qui lui impose de s'assurer de la compétence du signataire côté pouvoir adjudicateur,</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateDebutMarche" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de début du marché public.
+La date de début du marché peut être antérieure à la date de début d'exécution (date d'effet du marché) (notamment pour les marchés à bons de commande), et être mentionnée dans l'acte d'engagement. La date de début du marché peut être différente de la date de prise d'effet . Date du début de l'exécution du contrat des prestations (étant donné que la date de début d'exécution du contrat est la date d'effet du contrat qui est la date de notification sauf stipulation contractuelle contraire (ex : date ordre de service pour un marché public). A renseigner si l'information est connue à la notification du marché.
+DateNotification &lt;= DateDebutMarche &lt;= DateDebutExecution.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Reconductibilite" type="TReconductibilite">
+        <xs:annotation>
+          <xs:documentation>Modalités de reconduction du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Penalite" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Pénalités de retard.
+Valeurs :
+- 0 = aucune pénalité prévue ;
+- 1 = pénalités de retard prévues au contrat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DelaiGarantie" type="cm:Base_Num2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Délai de garantie. Ce délai est exprimé en mois. Si le bloc Garantie dans le sous bloc "ConditionsExexcutionTitulaire" est servi alors la balise "délaiGarantie" devient obligatoire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateNotification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de notification du marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DatePublicationDonnees" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de publication des données du contrat initial.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Operateurs" type="TOperateurs" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Opérateur(s) économique(s) intervenant sur le marché public [sont donc exclus les anciens titulaires/co-traitants/sous-traitants].
+Si la nature du marché diffère de la valeur '04' Accord Cadre Avec Marché Subséquent Ou Mixte : présence obligatoire de ce bloc, sinon rejet du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ConditionsExecution" type="TConditionsExecution">
+        <xs:annotation>
+          <xs:documentation>Conditions d'exécution du marché public</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRefs" type="TPJRefs" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Liste des Références PJ correspondant aux pièces contractuelles du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VentilationsAcheteurs" type="TVentilationsAcheteurs" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Ventilation du marché par acheteurs. Si la nature du marché a une valeur différente de 04 "Accord Cadre Avec Marché Subséquent Ou Mixte", présence obligatoire de ce bloc, sinon rejet du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModificationsMarche" type="TModificationsMarche" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Modifications destinées à la publication nationale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
