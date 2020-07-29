@@ -1,6 +1,10 @@
 <?php
 
+
 /**
+ *
+ * @deprecated 4.2.4 use helios-purge-transaction.php instead
+ *
  * Outil de purge des transactions.
  *
  * Les transactions candidates à la pure sont
@@ -94,6 +98,9 @@ foreach ($purge_list as $data) {
 
 ////################# HELIOS
 
+
+//"SELECT count(*) FROM helios_transactions_workflow WHERE date<'2020-05-28' AND status_id=8";
+
 $sql = "SELECT t.id";
 $sql .= " FROM helios_transactions t, helios_transactions_workflow tw";
 $sql .= " WHERE (tw.transaction_id = t.id)";
@@ -125,6 +132,6 @@ foreach ($purge_list as $data) {
     } else {
         $msg = "Demande de purge des fichiers";
         $blScript->traceln("Helios ($index/$count_max) - $msg - id $tid");
-        $heliosTransactionsSQL->updateStatus($tid, HeliosStatusSQL::DETRUITE, $msg);
+        $heliosTransactionsSQL->updateStatus($tid, HeliosStatusSQL::ADETRUIRE, $msg);
     }
 }

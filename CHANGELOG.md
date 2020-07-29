@@ -1,3 +1,9 @@
+# 4.2.4 
+
+## Correction
+
+- Correction bug particulier pour les purges 
+
 # 4.2.3 - 2020-07-13
 
 ## Correction

@@ -10,7 +10,10 @@ class HeliosStatusSQL {
 	const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
 	const ENVOYER_AU_SAE = 9;
 	const ACCEPTER_PAR_LE_SAE = 10;
-	const DETRUITE = 21;
+
+    const ADETRUIRE = 21;
+    const DETRUITE = 22;
+
 
 
 	static public function getStatusLibelle($status_id){
