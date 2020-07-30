@@ -14,6 +14,10 @@
 
 - Passage au schéma PES version 5.12
 
+## Ajout
+
+- Ajout du script script/postrgrsql/add-column-not-null-with-default.php permettant l'ajout de colonne non null à chaud
+
 # 4.2.2 - 2020-06-11
 
 ## Evolution
