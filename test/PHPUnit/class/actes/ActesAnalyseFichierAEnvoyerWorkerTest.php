@@ -243,25 +243,57 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOnePadesFailedNotRecoverable()
     {
 
-        $padesValid = $this->getMockBuilder("PadesValid")->disableOriginalConstructor()->getMock();
-        $padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
-        $this->getObjectInstancier()->set('PadesValid', $padesValid);
+		$padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+		$padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
+		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
-        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['last_status_id']);
-        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['status_id']);
-        $this->assertEquals(
-            "Enveloppe invalide : Problème sur 99_DE-045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
-            $transaction_info['message']
-        );
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
-        $liste = $logsSQL->getLastLog();
-        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#", $liste['message']);
-    }
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Enveloppe invalide : Problème sur 045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
+			$transaction_info['message']
+		);
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllOneNoChekingCertificate(){
+		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-6.tar.gz",true);
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
+		$this->assertEquals(
+			"Accept� par le TdT : validation OK",
+			$transaction_info['message']
+		);
+
+		$liste = $logsSQL->getLastLog();
+		$this->assertRegExp("#Transaction.*[0-9]* : passage � l'�tat en attente#",$liste['message']);
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateAllNoChekingCertificateGlobale(){
+		$this->getObjectInstancier()->set("actes_dont_valid_signing_certificate",true);
+		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+	}
 
     /**
      * @throws Exception
@@ -283,51 +315,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 
         $liste = $logsSQL->getLastLog();
         $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état en attente#", $liste['message']);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testValidateAllNoChekingCertificateGlobale()
-    {
-        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", true);
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
-        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
-    }
-
-
-    /**
-     * @throws Exception
-     */
-    public function testValidateAllOneWithTypologieKOTypologieChecked()
-    {
-
-        $actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
-
-        $actesUpdateClassificationSQL->updateClassification(
-            "123456789",
-            file_get_contents(__DIR__ . "/../../class/actes/fixtures/classification-exemple.xml")
-        );
-
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
-        $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
-
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/bad/abc-TACT--000000000--20181024-4.tar.gz");
-
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
-        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['last_status_id']);
-        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['status_id']);
-        $this->assertEquals(
-            "Enveloppe invalide : La typologie 99_AU n'est pas permise sur le fichier 99_AU-002-000000000-20181001-201810241655-CC-1-1_2.pdf pour la nature 4",
-            $transaction_info['message']
-        );
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
-        $liste = $logsSQL->getLastLog();
-        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#", $liste['message']);
     }
 
     /**

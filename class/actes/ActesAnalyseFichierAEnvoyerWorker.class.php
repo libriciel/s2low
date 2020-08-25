@@ -179,7 +179,13 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->pdfValidator->check($filepath);
         try {
-            $this->padesValid->validate($filepath, $must_validate_certificate);
+            $rgsCertificate = new RgsCertificate(OPENSSL_PATH,RGS_VALIDCA_PATH);
+
+            if ($rgsCertificate->isRgsCertificate(file_get_contents($filepath))){
+                $this->padesValid->validate($filepath);
+            } else {
+                $this->padesValid->validateWithoutCertificateChecking($filepath);
+            }
         } catch (RecoverableException $e) {
             throw $e;
         } catch (Exception $e) {
