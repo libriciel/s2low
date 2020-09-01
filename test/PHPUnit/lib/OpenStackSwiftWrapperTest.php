@@ -386,6 +386,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
                 "//trop///de////double//////slash"
             );
         }   catch (Exception $e){
+            $exceptionThrown = true;
             $this->assertEquals($e->getMessage(), "/trop/de/double/slash non trouvé dans container_test");
         }
 

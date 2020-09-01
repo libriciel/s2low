@@ -79,7 +79,6 @@ class OpenStackSwiftWrapper {
         }
 
         $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
-
         if(preg_match('#//+#',$filepath_on_cloud) && ! $containerWrapper->objectExists($filepath_on_cloud)){
             $filepath_on_cloud = preg_replace('#/+#','/',$filepath_on_cloud);
             if(!$containerWrapper->objectExists($filepath_on_cloud)){
