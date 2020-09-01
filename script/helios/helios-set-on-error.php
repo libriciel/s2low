@@ -48,8 +48,10 @@ foreach($all as $line){
     print_r($line);
     echo "Transaction {$line['id']} est soumise depuis {$line['submission_date']}\n";
     $message = "Passage de la transaction {$line['id']} a erreur via le script helios-set-on-error";
-    $heliosTransactionSQL->updateStatus($line['id'],HeliosTransactionsSQL::ERREUR,$message);
     echo "$message\n";
+    if(!$test){
+        $heliosTransactionSQL->updateStatus($line['id'],HeliosTransactionsSQL::ERREUR,$message);
+    }
     $i++;
 }
 
