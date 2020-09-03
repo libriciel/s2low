@@ -18,16 +18,16 @@ class HeliosEnvoiControler {
 	private $antivirus;
 
 	private $workerScript;
-	/** @var FTPFileSender  */
-    private $FTPFileSender;
+	/** @var FTPHeliosSender  */
+    private $FTPHeliosSender;
 
     public function __construct(
-	    SQLQuery $sqlQuery,
+        SQLQuery $sqlQuery,
         PesAllerRetriever $pesAllerRetriever,
         $helios_files_upload_root,
-		Antivirus $antivirus,
-		WorkerScript $workerScript,
-        FTPFileSender $FTPFileSender
+        Antivirus $antivirus,
+        WorkerScript $workerScript,
+        FTPHeliosSender $FTPHeliosSender
     ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -38,7 +38,7 @@ class HeliosEnvoiControler {
 		$this->helios_files_upload_root = $helios_files_upload_root;
 		$this->antivirus = $antivirus;
 		$this->workerScript = $workerScript;
-        $this->FTPFileSender = $FTPFileSender;
+        $this->FTPHeliosSender = $FTPHeliosSender;
 	}
 
 	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
@@ -265,7 +265,7 @@ class HeliosEnvoiControler {
 		}
 
 		try {
-            $this->FTPFileSender->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
+            $this->FTPHeliosSender->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
         } catch (Exception $e){
 			echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
 			unlink($file_path_with_complete_name);

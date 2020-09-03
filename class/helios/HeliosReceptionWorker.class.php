@@ -7,17 +7,17 @@ class HeliosReceptionWorker implements IWorker,IWorkerAlwaysLaunch {
 
 	private $workerScript;
 	private $s2lowLogger;
-	/** @var FilesOnFtp  */
+	/** @var FTPHeliosReceiver  */
     private $ftpFileGetter;
 
     public function __construct(
         S2lowLogger $s2lowLogger,
         WorkerScript $workerScript,
-        FilesOnFtp $FTPFileGetter
+        FTPHeliosReceiver $FTPHeliosReceiver
 	) {
 		$this->s2lowLogger = $s2lowLogger;
 		$this->workerScript = $workerScript;
-		$this->ftpFileGetter = $FTPFileGetter;
+		$this->ftpFileGetter = $FTPHeliosReceiver;
 	}
 
 	public function getQueueName(){

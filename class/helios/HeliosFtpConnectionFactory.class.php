@@ -8,6 +8,6 @@ public function __construct(){
 
 }
 public function get(){
-    return new FTPConnection();
+    return new FTPService();
 }
 }

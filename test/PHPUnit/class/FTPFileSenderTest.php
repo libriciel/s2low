@@ -8,7 +8,7 @@ class FTPFileSenderTest extends S2lowTestCase {
     }
 
     public function testBasic(){
-        $a = $this->getObjectInstancier()->get(FTPFileSender::class);
+        $a = $this->getObjectInstancier()->get(FTPHeliosSender::class);
         $this->assertTrue(isset($a));
     }
 
@@ -18,7 +18,7 @@ class FTPFileSenderTest extends S2lowTestCase {
     }
 
     public function testBasic3(){
-        $a = $this->getObjectInstancier()->get(FTPConnection::class);
+        $a = $this->getObjectInstancier()->get(FTPService::class);
         $this->assertTrue(isset($a));
     }
 }

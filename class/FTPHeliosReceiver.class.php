@@ -1,18 +1,18 @@
 <?php
-class FilesOnFtp implements Iterator {
+class FTPHeliosReceiver implements Iterator {
     
 	 /**
-     * @var FTPConnection
+     * @var FTPService
      */
-    private $FTPConnection;
+    private $FTPService;
     private $remotePath;
     private $localPath;
     private $filesToProcess = [];
     private $index = 0;
 
-    public function __construct(FTPConnection $FTPConnection)
+    public function __construct(FTPService $FTPService)
     {
-        $this->FTPConnection = $FTPConnection;
+        $this->FTPService = $FTPService;
         $this->remotePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
         $this->localPath = HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH;
     }
@@ -53,12 +53,12 @@ class FilesOnFtp implements Iterator {
     }
 
     public function retrieveNames(){
-        $this->FTPConnection->connect();
+        $this->FTPService->connect();
 
         $this->remote_path = "retrait";                                       //TODO : utiliser correctement la constante
         echo "Remote_path : $this->remote_path\n";
 
-        $all_file = $this->FTPConnection->getFiles($this->remote_path);
+        $all_file = $this->FTPService->getFileNames($this->remote_path);
         $this->filesToProcess = [];
 
         foreach ($all_file as $file){
@@ -75,12 +75,12 @@ class FilesOnFtp implements Iterator {
      */
     private function recupOneFile($file, $i): void
     {
-        $ftp_get_result = $this->FTPConnection->retrieveFile($file, $this->localPath);
+        $ftp_get_result = $this->FTPService->retrieveFile($file, $this->localPath);
         echo $i . " : " . $file . " récupéré : " . ($ftp_get_result ? "SUCCES" : "ECHEC") . "\n";
     }
 
     public function finTraitement()
     {
-        $this->FTPConnection->disconnect();
+        $this->FTPService->disconnect();
     }
 }

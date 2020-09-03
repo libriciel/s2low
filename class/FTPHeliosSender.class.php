@@ -1,10 +1,10 @@
 <?php
-class FTPFileSender {
+class FTPHeliosSender {
 
-    /** @var FTPConnection  */
+    /** @var FTPService  */
     private $FTPConnection;
 
-    public function __construct(FTPConnection $ftptemp)
+    public function __construct(FTPService $ftptemp)
     {
         $this->FTPConnection = $ftptemp;
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-class FTPConnection
+class FTPService
 {
     private $host;
     private $port;
@@ -65,7 +65,7 @@ class FTPConnection
      * @return array|false
      * @throws Exception
      */
-    public function getFiles(string $remote_path)
+    public function getFileNames(string $remote_path)
     {
         $this->ftpServiceWrapper->pasv($this->ftp, true);                                         //TODO: vérifier que le passif est identique que pour l'envoi
 
