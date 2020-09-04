@@ -79,7 +79,7 @@ class FTPService
             throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");
         }
 
-        echo "Il y a " . count($all_file) . " fichiers en attente...\n";
+        echo "Il y a " . count($all_file) . " fichiers en attente dans le repertoire distant $remote_path...\n";
 
         return $all_file;
     }

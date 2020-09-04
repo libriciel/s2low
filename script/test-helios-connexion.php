@@ -9,23 +9,38 @@ $port = HELIOS_FTP_PORT;
 $login = HELIOS_FTP_LOGIN;
 $password = HELIOS_FTP_PASSWORD;
 
-$ftp = ftp_ssl_connect($host,$port);
+$authoritySQL = $objectInstancier->get(AuthoritySQL::class);
+$authorityInfo = $authoritySQL->getInfo(2);
+$p_dest = $authorityInfo["helios_ftp_dest"];
 
-if (!$ftp){
-throw new Exception("Impossible de se connecter au serveur {$host}:{$port}");
-}
+$file_path = __DIR__."/../test/PHPUnit/helios/fixtures/pes_acquit.xml";
 
-try{
-if ($login){
-$ftp_login = ftp_login($ftp, $login, $password);
-var_dump($ftp_login);
-if (!$ftp_login){
- echo "Impossible de se connecter avec le login {$login}:{$password}";
-}
-}
-} catch (Exception $e){
-echo $e->getMessage();
-die();
-}
+$pesAller = new PesAller();
+$p_msg = $pesAller->getP_MSG($file_path);
+var_dump($authorityInfo);
 
-ftp_close($ftp);
+
+$ftpService = new FTPService(
+    new FtpServiceWrapper(),
+    $host,
+    $port,
+    $login,
+    $password
+);
+
+$ftpService->connect();
+
+// WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
+//var_dump($ftpService->getFileNames("/depot"));
+
+$ftpService->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
+$command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
+echo "$command\n";
+$ftpService->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
+$ftpService->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_path);
+
+var_dump($ftpService->getFileNames("/depot"));
+
+var_dump($ftpService->getFileNames("/retrait"));
+
+$ftpService->disconnect();

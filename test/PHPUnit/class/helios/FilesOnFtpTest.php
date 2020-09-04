@@ -7,7 +7,7 @@ class FilesOnFtpTest extends S2lowTestCase {
 
         /** @var FTPService | MockObject */
         $ftpTemp = $this->getMockBuilder(FTPService::class)->disableOriginalConstructor()->getMock();
-        $ftpTemp->method('getFiles')->willReturn([]);
+        $ftpTemp->method('getFileNames')->willReturn([]);
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
         $ftpTemp->expects($this->never())->method('retrieveFile');
@@ -24,7 +24,7 @@ class FilesOnFtpTest extends S2lowTestCase {
     public function testThreeFiles(){
         /** @var FTPService | MockObject */
         $ftpTemp = $this->getMockBuilder(FTPService::class)->disableOriginalConstructor()->getMock();
-        $ftpTemp->method('getFiles')->willReturn(["Test1","Test2","Test3"]);
+        $ftpTemp->method('getFileNames')->willReturn(["Test1","Test2","Test3"]);
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
         $ftpTemp->expects($this->exactly(3))->method('retrieveFile');
@@ -43,7 +43,7 @@ class FilesOnFtpTest extends S2lowTestCase {
     public function testThreeFilesOnePesAller(){
         /** @var FTPService | MockObject */
         $ftpTemp = $this->getMockBuilder(FTPService::class)->disableOriginalConstructor()->getMock();
-        $ftpTemp->method('getFiles')->willReturn(["Test1","PESALR2_Test2","Test3"]);
+        $ftpTemp->method('getFileNames')->willReturn(["Test1","PESALR2_Test2","Test3"]);
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
         $files = new FTPHeliosReceiver($ftpTemp);
