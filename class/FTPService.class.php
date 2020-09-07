@@ -11,7 +11,7 @@ class FTPService
      * @var false|resource
      */
     private $ftp;
-    private $baseFtpDirectory;
+    private $currentDirectorySyntax;
     private $ftpServiceWrapper;
 
     public function __construct(FtpServiceWrapper $ftpServiceWrapper, $helios_ftp_server,$helios_ftp_port,$helios_ftp_login,$helios_ftp_password)
@@ -25,9 +25,9 @@ class FTPService
 
         //Attention, sur un serveur normal, c'est . par contre sur le site de la DGFip , c'est ./
         if (HELIOS_SENDING_MODE_DEMO) {                     //TODO : rajouter dans le config
-            $this->baseFtpDirectory = ".";
+            $this->currentDirectorySyntax = ".";
         } else {
-            $this->baseFtpDirectory = "./";
+            $this->currentDirectorySyntax = "./";
         }
 
         if (HELIOS_SENDING_MODE_DEMO){
@@ -73,7 +73,7 @@ class FTPService
             throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
         }
 
-        $all_file = $this->ftpServiceWrapper->nlist($this->ftp, $this->baseFtpDirectory);
+        $all_file = $this->ftpServiceWrapper->nlist($this->ftp, $this->currentDirectorySyntax);
 
         if ($all_file === false) {
             throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");

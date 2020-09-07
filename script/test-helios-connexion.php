@@ -17,7 +17,6 @@ $file_path = __DIR__."/../test/PHPUnit/helios/fixtures/pes_acquit.xml";
 
 $pesAller = new PesAller();
 $p_msg = $pesAller->getP_MSG($file_path);
-var_dump($authorityInfo);
 
 
 $ftpService = new FTPService(
@@ -28,16 +27,30 @@ $ftpService = new FTPService(
     $password
 );
 
+if ( !in_array( $argc,[1,2]) || ($argc == 2 && $argv[1] != "testUpload") ){
+    echo "Erreur : ".$argv[1]."\n";
+    exit(-1);
+}
+
+$testUpload=false;
+
+if ($argc == 2 && $argv[1] == "testUpload" ){
+    echo "test Upload actif\n";
+    $testUpload=true;
+}
+
 $ftpService->connect();
 
 // WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
 //var_dump($ftpService->getFileNames("/depot"));
 
-$ftpService->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
-$command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
-echo "$command\n";
-$ftpService->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
-$ftpService->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_path);
+if($testUpload){
+    $ftpService->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
+    $command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
+    echo "$command\n";
+    $ftpService->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
+    $ftpService->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_path);
+}
 
 var_dump($ftpService->getFileNames("/depot"));
 
