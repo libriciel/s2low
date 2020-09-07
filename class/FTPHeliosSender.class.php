@@ -27,9 +27,9 @@ class FTPHeliosSender {
             echo "$command\n";
             $this->FTPConnection->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
         } else {
-            $ftp->sendRawCommand("site P_DEST {$p_dest}",HELIOS_SENDING_MODE_DEMO);
-            $ftp->sendRawCommand("site P_APPLI {$this->pAppli}",HELIOS_SENDING_MODE_DEMO);  // TODO : self::P_APPLI=THELPES2 const ??
-            $ftp->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
+            $this->FTPConnection->sendRawCommand("site P_DEST {$p_dest}",HELIOS_SENDING_MODE_DEMO);
+            $this->FTPConnection->sendRawCommand("site P_APPLI {$this->pAppli}",HELIOS_SENDING_MODE_DEMO);  // TODO : self::P_APPLI=THELPES2 const ??
+            $this->FTPConnection->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
 
         }
         $this->FTPConnection->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_to_send);
