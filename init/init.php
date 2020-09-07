@@ -220,6 +220,8 @@ $objectInstancier->set('redis_port',REDIS_PORT);
 
 $objectInstancier->set('helios_ftp_server',HELIOS_FTP_SERVER);
 $objectInstancier->set('helios_ftp_passive_mode',HELIOS_FTP_PASSIVE_MODE);
+$objectInstancier->set('helios_ftp_pst_mode',HELIOS_FTP_PST_MODE);
+$objectInstancier->set('helios_ftp_p_appli',HELIOS_FTP_P_APPLI);
 $objectInstancier->set('helios_ftp_port',HELIOS_FTP_PORT);
 $objectInstancier->set('helios_ftp_login',HELIOS_FTP_LOGIN);
 $objectInstancier->set('helios_ftp_password',HELIOS_FTP_PASSWORD);
