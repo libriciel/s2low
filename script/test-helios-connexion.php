@@ -8,6 +8,8 @@ $host = HELIOS_FTP_SERVER;
 $port = HELIOS_FTP_PORT;
 $login = HELIOS_FTP_LOGIN;
 $password = HELIOS_FTP_PASSWORD;
+$remoteSendPath = HELIOS_SENDING_DESTINATION;
+$remoteRetrievePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
 
 $authoritySQL = $objectInstancier->get(AuthoritySQL::class);
 $authorityInfo = $authoritySQL->getInfo(2);
@@ -52,8 +54,8 @@ if($testUpload){
     $ftpService->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_path);
 }
 
-var_dump($ftpService->getFileNames("/depot"));
+var_dump($ftpService->getFileNames($remoteSendPath));
 
-var_dump($ftpService->getFileNames("/retrait"));
+var_dump($ftpService->getFileNames($remoteRetrievePath));
 
 $ftpService->disconnect();

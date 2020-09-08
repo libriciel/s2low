@@ -225,6 +225,8 @@ $objectInstancier->set('helios_ftp_p_appli',HELIOS_FTP_P_APPLI);
 $objectInstancier->set('helios_ftp_port',HELIOS_FTP_PORT);
 $objectInstancier->set('helios_ftp_login',HELIOS_FTP_LOGIN);
 $objectInstancier->set('helios_ftp_password',HELIOS_FTP_PASSWORD);
+$objectInstancier->set('helios_ftp_response_server_path',HELIOS_FTP_RESPONSE_SERVER_PATH);
+$objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
 
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 

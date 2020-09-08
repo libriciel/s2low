@@ -10,11 +10,11 @@ class FTPHeliosReceiver implements Iterator {
     private $filesToProcess = [];
     private $index = 0;
 
-    public function __construct(FTPService $FTPService)
+    public function __construct(FTPService $FTPService, $helios_ftp_response_server_path, $helios_ftp_response_tmp_local_path)
     {
         $this->FTPService = $FTPService;
-        $this->remotePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
-        $this->localPath = HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH;
+        $this->remotePath = $helios_ftp_response_server_path;
+        $this->localPath = $helios_ftp_response_tmp_local_path;
     }
 
     public function current(){
@@ -55,10 +55,9 @@ class FTPHeliosReceiver implements Iterator {
     public function retrieveNames(){
         $this->FTPService->connect();
 
-        $this->remote_path = "retrait";                                       //TODO : utiliser correctement la constante
-        echo "Remote_path : $this->remote_path\n";
+        echo "Remote_path : $this->remotePath\n";
 
-        $all_file = $this->FTPService->getFileNames($this->remote_path);
+        $all_file = $this->FTPService->getFileNames($this->remotePath);
         $this->filesToProcess = [];
 
         foreach ($all_file as $file){
