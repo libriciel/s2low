@@ -11,7 +11,10 @@ class FilesOnFtpTest extends S2lowTestCase {
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
         $ftpTemp->expects($this->never())->method('retrieveFile');
-        $files = new FTPHeliosReceiver($ftpTemp);
+        $files = new FTPHeliosReceiver($ftpTemp,
+            "helios_ftp_response_server_path",
+            "helios_ftp_response_tmp_local_path
+        ");
         $files->retrieveNames();
 
         $filesOnFtp = [];
@@ -28,7 +31,10 @@ class FilesOnFtpTest extends S2lowTestCase {
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
         $ftpTemp->expects($this->exactly(3))->method('retrieveFile');
-        $files = new FTPHeliosReceiver($ftpTemp);
+        $files = new FTPHeliosReceiver($ftpTemp,
+            "helios_ftp_response_server_path",
+            "helios_ftp_response_tmp_local_path
+        ");
         $files->retrieveNames();
 
         $filesOnFtp = [];
@@ -46,7 +52,10 @@ class FilesOnFtpTest extends S2lowTestCase {
         $ftpTemp->method('getFileNames')->willReturn(["Test1","PESALR2_Test2","Test3"]);
         $ftpTemp->expects($this->once())->method('connect');
         $ftpTemp->expects($this->once())->method('disconnect');
-        $files = new FTPHeliosReceiver($ftpTemp);
+        $files = new FTPHeliosReceiver($ftpTemp,
+            "helios_ftp_response_server_path",
+            "helios_ftp_response_tmp_local_path
+        ");
         $files->retrieveNames();
 
         $filesOnFtp = [];
