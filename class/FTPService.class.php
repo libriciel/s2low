@@ -13,29 +13,32 @@ class FTPService
     private $ftp;
     private $currentDirectorySyntax;
     private $ftpServiceWrapper;
+    private $modeDemo;
 
-    public function __construct(FtpServiceWrapper $ftpServiceWrapper, $helios_ftp_server,$helios_ftp_port,$helios_ftp_login,$helios_ftp_password)
+    public function __construct(
+        FtpServiceWrapper $ftpServiceWrapper,
+        $helios_ftp_server,
+        $helios_ftp_port,
+        $helios_ftp_login,
+        $helios_ftp_password,
+        $helios_sending_mode_demo)
     {
         $this->ftpServiceWrapper = $ftpServiceWrapper;
         $this->host = $helios_ftp_server;
         $this->port = $helios_ftp_port;
         $this->login = $helios_ftp_login;
         $this->password = $helios_ftp_password;
+        $this->modeDemo = $helios_sending_mode_demo;
 
 
         //Attention, sur un serveur normal, c'est . par contre sur le site de la DGFip , c'est ./
-        if (HELIOS_SENDING_MODE_DEMO) {                     //TODO : rajouter dans le config
+        if ($this->modeDemo) {                     //TODO : vérifier que la config marche et est pertinente
             $this->currentDirectorySyntax = ".";
-        } else {
-            $this->currentDirectorySyntax = "./";
-        }
-
-        if (HELIOS_SENDING_MODE_DEMO){
             $this->delete = true;
         } else {
+            $this->currentDirectorySyntax = "./";
             $this->delete = false;
         }
-
     }
     /**
      * @return void
@@ -141,9 +144,9 @@ class FTPService
         $this->ftpServiceWrapper->pasv ($this->ftp,$is_pasv);
     }
 
-    public function sendRawCommand($command,$mode_demo=false){
+    public function sendRawCommand($command){
         $result = $this->ftpServiceWrapper->raw($this->ftp, $command);
-        if ($mode_demo){
+        if ($this->modeDemo){
             return ;
         }
         if (!$result || ! preg_match("#^200#",$result[0])){
