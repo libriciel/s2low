@@ -11,14 +11,12 @@ class FTPHeliosSender {
         FTPService $ftptemp,
         $helios_ftp_pst_mode,
         $helios_ftp_p_appli,
-        $helios_sending_destination,
-        $helios_ftp_passive_mode
+        $helios_sending_destination
     ) {
         $this->FTPConnection = $ftptemp;
         $this->isPstMode = $helios_ftp_pst_mode;
         $this->pAppli = $helios_ftp_p_appli;
         $this->destinationDirectory = $helios_sending_destination;
-        $this->isPassiveMode = $helios_ftp_passive_mode;
     }
 
     /**
@@ -30,7 +28,6 @@ class FTPHeliosSender {
     public function sendFile(string $p_dest, string $p_msg, string $file_to_send): void
     {
         $this->FTPConnection->connect();
-        $this->FTPConnection->setPassiveMode($this->isPassiveMode);
         $this->configureFileProperties($p_dest, $p_msg);
         $this->FTPConnection->sendOneFile($this->destinationDirectory, $file_to_send);
         $this->FTPConnection->disconnect();

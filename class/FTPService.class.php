@@ -3,6 +3,7 @@
 
 class FTPService
 {
+    private const TIMEOUT = 1;
     private $host;
     private $port;
     private $login;
@@ -14,6 +15,7 @@ class FTPService
     private $currentDirectorySyntax;
     private $ftpServiceWrapper;
     private $modeDemo;
+    private $isPassiveMode;
 
     public function __construct(
         FtpServiceWrapper $ftpServiceWrapper,
@@ -21,7 +23,9 @@ class FTPService
         $helios_ftp_port,
         $helios_ftp_login,
         $helios_ftp_password,
-        $helios_sending_mode_demo)
+        $helios_sending_mode_demo,
+        $helios_ftp_passive_mode
+    )
     {
         $this->ftpServiceWrapper = $ftpServiceWrapper;
         $this->host = $helios_ftp_server;
@@ -29,6 +33,7 @@ class FTPService
         $this->login = $helios_ftp_login;
         $this->password = $helios_ftp_password;
         $this->modeDemo = $helios_sending_mode_demo;
+        $this->isPassiveMode = $helios_ftp_passive_mode;
 
 
         //Attention, sur un serveur normal, c'est . par contre sur le site de la DGFip , c'est ./
@@ -40,6 +45,7 @@ class FTPService
             $this->delete = false;
         }
     }
+
     /**
      * @return void
      * @throws Exception
@@ -48,7 +54,7 @@ class FTPService
     {
         echo "Connection à ftps://" . $this->login . ":" . $this->password . "@" . $this->host . ":" . $this->port . "\n";
 
-        $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port,1);       //TODO : rajouter constante
+        $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port, self::TIMEOUT);
 
         if (!$this->ftp) {
             throw new Exception("Impossible de se connecter au serveur {$this->host}:{$this->port}");
@@ -61,6 +67,8 @@ class FTPService
             }
         }
         echo "Loggé\n";
+
+        $this->setPassiveMode($this->isPassiveMode);
     }
 
     /**
@@ -108,7 +116,7 @@ class FTPService
             throw new Exception("Impossible de déplacer le fichier $tmp_file vers $local_path/$file");
         }
 
-        if ($this->delete) {                                    //TODO : add delete
+        if ($this->delete) {
             $this->ftpServiceWrapper->delete($this->ftp, $file);
         }
         return $ftp_get_result;

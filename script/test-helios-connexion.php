@@ -27,7 +27,8 @@ $ftpService = new FTPService(
     $port,
     $login,
     $password,
-    false
+    false,
+    true
 );
 
 if ( !in_array( $argc,[1,2]) || ($argc == 2 && $argv[1] != "testUpload") ){
