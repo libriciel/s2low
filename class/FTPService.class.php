@@ -52,7 +52,9 @@ class FTPService
      */
     public function connect()
     {
-        echo "Connection à ftps://" . $this->login . ":" . $this->password . "@" . $this->host . ":" . $this->port . "\n";
+        $mode = $this->isPassiveMode ? "Passif" : "Actif";
+        $demo = $this->modeDemo ? "[MODE DEMO]":"";
+        echo "Connection à ftps://{$this->login}: {$this->password}@{$this->host }:{$this->port} (mode $mode) $demo";
 
         $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port, self::TIMEOUT);
 

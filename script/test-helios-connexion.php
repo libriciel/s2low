@@ -2,14 +2,14 @@
 
 require_once(__DIR__ . "/../init/init.php");
 
-$remote_path = "retrait";
-
 $host = HELIOS_FTP_SERVER;
 $port = HELIOS_FTP_PORT;
 $login = HELIOS_FTP_LOGIN;
 $password = HELIOS_FTP_PASSWORD;
 $remoteSendPath = HELIOS_SENDING_DESTINATION;
 $remoteRetrievePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
+$helios_sending_mode_demo = HELIOS_SENDING_MODE_DEMO;
+$helios_ftp_passive_mode = HELIOS_FTP_PASSIVE_MODE;
 
 $authoritySQL = $objectInstancier->get(AuthoritySQL::class);
 $authorityInfo = $authoritySQL->getInfo(2);
@@ -27,8 +27,8 @@ $ftpService = new FTPService(
     $port,
     $login,
     $password,
-    false,
-    true
+    $helios_sending_mode_demo,
+    $helios_ftp_passive_mode
 );
 
 if ( !in_array( $argc,[1,2]) || ($argc == 2 && $argv[1] != "testUpload") ){
@@ -52,8 +52,8 @@ if($testUpload){
     $ftpService->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
     $command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
     echo "$command\n";
-    $ftpService->sendRawCommand($command, false/*HELIOS_SENDING_MODE_DEMO*/);
-    $ftpService->sendOneFile("depot/"/*HELIOS_SENDING_DESTINATION*/, $file_path);
+    $ftpService->sendRawCommand($command);
+    $ftpService->sendOneFile($remoteSendPath, $file_path);
 }
 
 var_dump($ftpService->getFileNames($remoteSendPath));
