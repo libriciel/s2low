@@ -360,7 +360,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
         $openStackSwiftWrapper->expects($this->never())
             ->method('download');
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject $openStackContainersStore */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -378,19 +378,14 @@ class OpenStackSwiftWrapperTest extends TestCase {
             $this->logger
         );
 
-        $exceptionThrown = false;
-        try{
-            $openStackSwiftWrapper->retrieveFile(
+        $this->expectException(CloudStorageException::class);
+        $this->expectExceptionMessage("/trop/de/double/slash non trouvé dans container_test");
+
+        $openStackSwiftWrapper->retrieveFile(
                 self::CONTAINER_TEST,
                 "slash",
                 "//trop///de////double//////slash"
-            );
-        }   catch (Exception $e){
-            $exceptionThrown = true;
-            $this->assertEquals($e->getMessage(), "/trop/de/double/slash non trouvé dans container_test");
-        }
-
-        $this->assertEquals($exceptionThrown,true);
+        );
 
         if(file_exists("slash")){
             unlink("slash");
