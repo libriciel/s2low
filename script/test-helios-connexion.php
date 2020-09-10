@@ -10,6 +10,7 @@ $remoteSendPath = HELIOS_SENDING_DESTINATION;
 $remoteRetrievePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
 $helios_sending_mode_demo = HELIOS_SENDING_MODE_DEMO;
 $helios_ftp_passive_mode = HELIOS_FTP_PASSIVE_MODE;
+$helios_ftp_pst_mode = HELIOS_FTP_PST_MODE;
 
 $authoritySQL = $objectInstancier->get(AuthoritySQL::class);
 $authorityInfo = $authoritySQL->getInfo(2);
@@ -28,7 +29,8 @@ $ftpService = new FTPService(
     $login,
     $password,
     $helios_sending_mode_demo,
-    $helios_ftp_passive_mode
+    $helios_ftp_passive_mode,
+    $helios_ftp_pst_mode
 );
 
 if ( !in_array( $argc,[1,2]) || ($argc == 2 && $argv[1] != "testUpload") ){
@@ -43,7 +45,7 @@ if ($argc == 2 && $argv[1] == "testUpload" ){
     $testUpload=true;
 }
 
-$ftpService->connect();
+$ftpService->connect(false);
 
 // WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
 //var_dump($ftpService->getFileNames("/depot"));

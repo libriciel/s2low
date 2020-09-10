@@ -1,6 +1,11 @@
 <?php
 
 class FtpServiceWrapper{
+
+    public function connect($host,$port,$timeout){
+        return ftp_connect($host, $port,$timeout);
+    }
+
     public function sslConnect($host,$port,$timeout){
         return ftp_ssl_connect($host, $port,$timeout);
     }
