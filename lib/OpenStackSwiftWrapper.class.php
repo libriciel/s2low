@@ -68,20 +68,24 @@ class OpenStackSwiftWrapper {
      */
 
     private function retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud = ''){
-        if (! $filepath_on_cloud){
-            $filepath_on_cloud = basename($filepath_local);
-        }
-
-        #La récupération sur OpenStack est perturbée par les doubles // ...
-        $filepath_on_cloud = preg_replace('#/+#','/',$filepath_on_cloud);
-
         $dirname_local = dirname($filepath_local);
 
         if (! $this->fileSystem->exists($dirname_local)){
             $this->fileSystem->mkdir($dirname_local);
         }
 
+        if (! $filepath_on_cloud){
+            $filepath_on_cloud = basename($filepath_local);
+        }
+
         $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
+        if(preg_match('#//+#',$filepath_on_cloud) && ! $containerWrapper->objectExists($filepath_on_cloud)){
+            $filepath_on_cloud = preg_replace('#/+#','/',$filepath_on_cloud);
+            if(!$containerWrapper->objectExists($filepath_on_cloud)){
+                throw new CloudStorageException("$filepath_on_cloud non trouvé dans $container_name");
+            }
+        }
+
         $stream = $containerWrapper->download($filepath_on_cloud);
 
         $this->fileSystem->dumpFile($filepath_local,$stream);
