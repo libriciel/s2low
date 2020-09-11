@@ -16,8 +16,7 @@ class FTPHeliosSenderClassTest extends S2lowTestCase {
             $ftpService,
             true,
             "p_appli",
-            "destination",
-            false
+            "destination"
         );
 
         $ftpHeliosSender->sendFile("p_dest","p_msg","file_tosend");
@@ -38,8 +37,7 @@ class FTPHeliosSenderClassTest extends S2lowTestCase {
             $ftpService,
             false,
             "p_appli",
-            "destination",
-            true
+            "destination"
         );
 
         $ftpHeliosSender->sendFile("p_dest","p_msg","file_tosend");

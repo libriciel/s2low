@@ -45,7 +45,7 @@ if ($argc == 2 && $argv[1] == "testUpload" ){
     $testUpload=true;
 }
 
-$ftpService->connect(false);
+$ftpService->connect();
 
 // WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
 //var_dump($ftpService->getFileNames("/depot"));

@@ -88,8 +88,6 @@ class FTPService
      */
     public function getFileNames(string $remote_path)
     {
-        $this->ftpServiceWrapper->pasv($this->ftp, true);                                         //TODO: vérifier que le passif est identique que pour l'envoi
-
         if (!$this->ftpServiceWrapper->chdir($this->ftp, $remote_path)) {
             throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
         }
