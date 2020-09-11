@@ -139,7 +139,7 @@ class FTPService
         $tmp_file = sys_get_temp_dir() . "/s2low_helios_ftp_retrieve_" . mt_rand(0, mt_getrandmax());
 
         if (disk_free_space($localPath) < 1000000 || disk_free_space(dirname($tmp_file)) < 1000000) {
-            throw new Exception("Il ne reste pas assez d'espace sur le disque !");
+            throw new Exception("Il ne reste pas assez d'espace sur le disque pour créer le fichier dans $localPath !");
         }
         return $tmp_file;
     }
