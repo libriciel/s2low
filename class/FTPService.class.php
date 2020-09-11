@@ -57,7 +57,7 @@ class FTPService
         $mode = $this->isPassiveMode ? "Passif" : "Actif";
         $demo = $this->modeDemo ? "[MODE DEMO]":"";
         $protocol = $this->isPstMode ? "ftps" : "ftp";
-        echo "Connection à $protocol://{$this->login}: {$this->password}@{$this->host }:{$this->port} (mode $mode) $demo\n";
+        echo "Connection à $protocol://{$this->login}:{$this->password}@{$this->host }:{$this->port} (mode $mode) $demo\n";
 
         if($this->isPstMode){
             $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port, self::TIMEOUT);
