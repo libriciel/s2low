@@ -12,6 +12,9 @@
 |`HELIOS_FTP_PORT`|`21`|Spécifie le port du serveur FTP||
 |`HELIOS_FTP_PASSIVE_MODE`|`false`|Permet d'indiquer si l'on doit être en mode passif sur le serveur FTP||
 |`HELIOS_FTP_LOGIN`|`helios`|Nom de l'utilisateur sur le serveur FTP||
+|`HELIOS_SENDING_MODE_DEMO`|true|Utilise le mode démo (= mode simulateur)||
+|`HELIOS_FTP_PST_MODE`|false|Utilise le protocole PassTrans||
+|`HELIOS_FTP_P_APPLI`|`THELPES2`|identifiant CFT des flux HELIOS||
 |`HELIOS_FTP_PASSWORD`|`helios`|Mot de passe associé à l'utilisteur FTP|
 |`HELIOS_SENDING_DESTINATION`|`/entree/`|On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT||
 |`HELIOS_FTP_RESPONSE_SERVER_PATH`|`/sortie/`|On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE||
