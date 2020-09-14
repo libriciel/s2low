@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__ . "/ActesCreator.php";
+use PHPUnit\Framework\MockObject\MockObject;
+
+require_once __DIR__."/ActesCreator.php";
 
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {
@@ -244,9 +246,11 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     {
 	    /** @var \PHPUnit\Framework\MockObject\MockObject | RgsCertificate $rgsCertificate */
         $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        /** @var MockObject | RgsCertificate $rgsCertificate */
 	    $rgsCertificate = $this->getMockBuilder(RgsCertificate::class)->disableOriginalConstructor()->getMock();
 
-	    $padesValid->expects($this->once())->method("validate")->willReturn(false);
+	    $padesValid->expects($this->once())->method("validate")->willThrowException(
+	        new Exception("erreur de test"));
 	    $rgsCertificate->expects($this->once())->method("isRgsCertificate")->willReturn(true);
 
 	    $actesAnalyseFichierAEnvoyerWorker = new ActesAnalyseFichierAEnvoyerWorker(
@@ -256,7 +260,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $this->getObjectInstancier()->get("actes_appli_trigramme"),
 		$this->getObjectInstancier()->get("actes_appli_quadrigramme"),
         $this->getObjectInstancier()->get(ActesScriptHelper::class),
-        $this->getObjectInstancier()->get(PadesValid::class),
+        $padesValid,
 		$this->getObjectInstancier()->get(WorkerScript::class),
 		$this->getObjectInstancier()->get("actes_dont_valid_signing_certificate"),
 		$this->getObjectInstancier()->get("actes_type_pj_is_mandatory"),
@@ -268,8 +272,8 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 		$padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
-		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
         $data = $this->createOneTransaction(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $transaction_id = $data['transaction_id'];
         $actesAnalyseFichierAEnvoyerWorker->work($data['envelope_id']);
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
