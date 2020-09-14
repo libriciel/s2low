@@ -207,6 +207,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 ## Correction
 
 - Correction bug particulier pour les purges 
+- Désactivation de la vérification pour les signatures non RGS #622
 
 ## Evolution
 - Ajout de la variable d'environnement HELIOS_FTP_PASSTRANS_MODE permettant d'utiliser le protocole PassTrans #623
