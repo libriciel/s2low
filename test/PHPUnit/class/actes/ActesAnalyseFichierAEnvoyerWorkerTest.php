@@ -242,12 +242,35 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOnePadesFailedNotRecoverable()
     {
+	    /** @var \PHPUnit\Framework\MockObject\MockObject | RgsCertificate $rgsCertificate */
+        $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+	    $rgsCertificate = $this->getMockBuilder(RgsCertificate::class)->disableOriginalConstructor()->getMock();
+
+	    $padesValid->expects($this->once())->method("validate")->willReturn(false);
+	    $rgsCertificate->expects($this->once())->method("isRgsCertificate")->willReturn(true);
+
+	    $actesAnalyseFichierAEnvoyerWorker = new ActesAnalyseFichierAEnvoyerWorker(
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+        $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+        $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+        $this->getObjectInstancier()->get("actes_appli_trigramme"),
+		$this->getObjectInstancier()->get("actes_appli_quadrigramme"),
+        $this->getObjectInstancier()->get(ActesScriptHelper::class),
+        $this->getObjectInstancier()->get(PadesValid::class),
+		$this->getObjectInstancier()->get(WorkerScript::class),
+		$this->getObjectInstancier()->get("actes_dont_valid_signing_certificate"),
+		$this->getObjectInstancier()->get("actes_type_pj_is_mandatory"),
+		$this->getObjectInstancier()->get(ActesTypePJSQL::class),
+            $rgsCertificate
+        );
 
 		$padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
 		$padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
 		$this->getObjectInstancier()->set('PadesValid',$padesValid);
 
 		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $data = $this->createOneTransaction(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $actesAnalyseFichierAEnvoyerWorker->work($data['envelope_id']);
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -261,27 +284,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
 		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function testValidateAllOneNoChekingCertificate(){
-		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
-		$transaction_id = $this->validateAll(__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-6.tar.gz",true);
-		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
-		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-
-		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
-		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
-		$this->assertEquals(
-			"Accept� par le TdT : validation OK",
-			$transaction_info['message']
-		);
-
-		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage � l'�tat en attente#",$liste['message']);
 	}
 
 	/**

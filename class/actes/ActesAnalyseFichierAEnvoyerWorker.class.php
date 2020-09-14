@@ -19,6 +19,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $actesTypePJSQL;
     /** @var \S2low\Services\PdfValidator  */
     private $pdfValidator;
+	private $actes_type_pj_is_mandatory;
+	/** @var RgsCertificate $rgsCertificate */
+    private $rgsCertificate;
 
     public function __construct(
         S2lowLogger $logger,
@@ -31,7 +34,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         WorkerScript $workerScript,
         $actes_dont_valid_signing_certificate,
         ActesTypePJSQL $actesTypePJSQL,
-        PdfValidator $pdfValidator
+        PdfValidator $pdfValidator,
+        RgsCertificate $rgsCertificate
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -44,6 +48,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->pdfValidator = $pdfValidator;
+        $this->rgsCertificate = $rgsCertificate;
     }
 
     public function getQueueName()
@@ -87,9 +92,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->logger->debug("id_tdt : {$this->actes_appli_trigramme}, id_appli : {$this->actes_appli_quadrigramme}");
 
-
-        $must_validate_certificate = $this->mustValidateCertificate($transaction_ids);
-
         $archive = new ArchiveValidator(
             $this->actes_appli_trigramme,
             $this->actes_appli_quadrigramme,
@@ -112,7 +114,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             } catch (Exception $e) {
                 throw new Exception($e->getMessage(), $e->getCode(), $e);
             }
-            $this->validatePades($archive_path, $tmp_dir, $must_validate_certificate);
+            $this->validatePades($archive_path, $tmp_dir);
         } catch (RecoverableException $e) {
             $tmpFolder->delete($tmp_dir);
             $this->logger->error("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : " . $e->getMessage());
@@ -144,7 +146,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
      * @throws RecoverableException
      * @throws Exception
      */
-    private function validatePades($archive_filepath, $tmp_dir, $must_validate_certificate)
+    private function validatePades($archive_filepath, $tmp_dir)
     {
         $archive = new \Libriciel\LibActes\Archive();
 
@@ -152,12 +154,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         foreach ($archiveData->fichierXML as $fichierXML) {
             foreach ($fichierXML->getFileList() as $filekey) {
-                if (is_array($fichierXML->$filekey)) {
-                    foreach ($fichierXML->$filekey as $i => $filepath) {
-                        $this->validatePADESOneFile($filepath, $must_validate_certificate);
-                    }
-                } else {
-                    $this->validatePADESOneFile($fichierXML->$filekey, $must_validate_certificate);
+                $filesPaths = is_array($fichierXML->$filekey) ? $fichierXML->$filekey : [$fichierXML->$filekey];
+                foreach ($filesPaths as $i => $filepath) {
+                    $this->validatePADESOneFile($filepath);
                 }
             }
         }
@@ -168,7 +167,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
      * @param $must_validate_certificate
      * @throws \RecoverableException
      */
-    private function validatePADESOneFile($filepath, $must_validate_certificate)
+    private function validatePADESOneFile($filepath)
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filepath);
@@ -176,21 +175,18 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         if ($mime_type != 'application/pdf') {
             return;
         }
-
-        $this->pdfValidator->check($filepath);
         try {
-            $rgsCertificate = new RgsCertificate(OPENSSL_PATH,RGS_VALIDCA_PATH);
+        	if ($this->rgsCertificate->isRgsCertificate(file_get_contents($filepath))){
+				$this->padesValid->validate($filepath);
+        	} else {
+				$this->padesValid->validateWithoutCertificateChecking($filepath);
+        	}
 
-            if ($rgsCertificate->isRgsCertificate(file_get_contents($filepath))){
-                $this->padesValid->validate($filepath);
-            } else {
-                $this->padesValid->validateWithoutCertificateChecking($filepath);
-            }
-        } catch (RecoverableException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception("Problème sur " . basename($filepath) . " : " . $e->getMessage(), $e->getCode(), $e);
-        }
+		} catch(RecoverableException $e){
+        	throw $e;
+		} catch (Exception $e){
+        	throw new Exception("Probl�me sur ".basename($filepath)." : " . $e->getMessage(),$e->getCode(),$e);
+		}
     }
 
     /**
