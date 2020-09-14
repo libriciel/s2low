@@ -92,11 +92,12 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->logger->debug("id_tdt : {$this->actes_appli_trigramme}, id_appli : {$this->actes_appli_quadrigramme}");
 
-        $archive = new ArchiveValidator(
-            $this->actes_appli_trigramme,
-            $this->actes_appli_quadrigramme,
-            true
-        );
+        $archive = new \Libriciel\LibActes\ArchiveValidator(
+        	$this->actes_appli_trigramme,
+			$this->actes_appli_quadrigramme,
+			$this->actes_type_pj_is_mandatory
+		);
+
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
 
