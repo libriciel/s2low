@@ -25,7 +25,7 @@ class FTPService
         $helios_ftp_password,
         $helios_sending_mode_demo,
         $helios_ftp_passive_mode,
-        $helios_ftp_pst_mode
+        $helios_ftp_passtrans_mode
     )
     {
         $this->ftpServiceWrapper = $ftpServiceWrapper;
@@ -35,7 +35,7 @@ class FTPService
         $this->password = $helios_ftp_password;
         $this->modeDemo = $helios_sending_mode_demo;
         $this->isPassiveMode = $helios_ftp_passive_mode;
-        $this->isPstMode = $helios_ftp_pst_mode;
+        $this->isPstMode = $helios_ftp_passtrans_mode;
 
 
         //Attention, sur un serveur normal, c'est . par contre sur le site de la DGFip , c'est ./

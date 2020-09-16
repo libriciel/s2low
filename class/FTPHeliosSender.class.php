@@ -9,12 +9,12 @@ class FTPHeliosSender {
 
     public function __construct(
         FTPService $ftptemp,
-        $helios_ftp_pst_mode,
+        $helios_ftp_passtrans_mode,
         $helios_ftp_p_appli,
         $helios_sending_destination
     ) {
         $this->FTPConnection = $ftptemp;
-        $this->isPstMode = $helios_ftp_pst_mode;
+        $this->isPstMode = $helios_ftp_passtrans_mode;
         $this->pAppli = $helios_ftp_p_appli;
         $this->destinationDirectory = $helios_sending_destination;
     }
