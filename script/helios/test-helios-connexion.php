@@ -16,7 +16,7 @@ $authoritySQL = $objectInstancier->get(AuthoritySQL::class);
 $authorityInfo = $authoritySQL->getInfo(2);
 $p_dest = $authorityInfo["helios_ftp_dest"];
 
-$file_path = __DIR__."/../test/PHPUnit/helios/fixtures/pes_acquit.xml";
+$file_path = __DIR__ . "/../test/PHPUnit/helios/fixtures/pes_acquit.xml";
 
 $pesAller = new PesAller();
 $p_msg = $pesAller->getP_MSG($file_path);
