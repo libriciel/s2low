@@ -1,4 +1,4 @@
-# 4.2.4 
+# 4.3.0 - 2020-09-16
 
 ## Correction
 
@@ -6,6 +6,7 @@
 
 ## Evolution
 - Ajout de la variable d'environnement HELIOS_FTP_PASSTRANS_MODE permettant d'utiliser le protocole PassTrans #623
+- Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
 
 # 4.2.3 - 2020-07-13
 
@@ -27,7 +28,6 @@
 
 - Amélioration de la construction du docker
 - Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
-- Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
 
 ## Correction
 
