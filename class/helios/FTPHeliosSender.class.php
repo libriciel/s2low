@@ -5,7 +5,6 @@ class FTPHeliosSender {
     private $isPstMode;
     private $pAppli;
     private $destinationDirectory;
-    private $isPassiveMode;
 
     public function __construct(
         FTPService $ftptemp,
