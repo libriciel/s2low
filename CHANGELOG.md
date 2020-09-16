@@ -5,7 +5,7 @@
 - Correction bug particulier pour les purges 
 
 ## Evolution
-- Ajout d'une variable d'environnement permettant d'utiliser le protocole PassTrans #623
+- Ajout de la variable d'environnement HELIOS_FTP_PASSTRANS_MODE permettant d'utiliser le protocole PassTrans #623
 
 # 4.2.3 - 2020-07-13
 
