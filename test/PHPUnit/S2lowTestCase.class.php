@@ -79,6 +79,12 @@ abstract class S2lowTestCase extends TestCase {
 		$testHandler = new Monolog\Handler\TestHandler();
 		$this->getObjectInstancier()->set("Monolog\Handler\TestHandler",$testHandler);
 		$this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
+
+        $this->getObjectInstancier()->set('helios_ftp_server','server');
+        $this->getObjectInstancier()->set('helios_ftp_passive_mode','HELIOS_FTP_PASSIVE_MODE');
+        $this->getObjectInstancier()->set('helios_ftp_port','HELIOS_FTP_PORT');
+        $this->getObjectInstancier()->set('helios_ftp_login','HELIOS_FTP_LOGIN');
+        $this->getObjectInstancier()->set('helios_ftp_password','HELIOS_FTP_PASSWORD');
 	}
 
 	public function getConnection() {

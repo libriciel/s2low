@@ -218,6 +218,18 @@ $objectInstancier->set('redis_mode',MODE_REDIS);
 $objectInstancier->set('redis_server',REDIS_SERVER);
 $objectInstancier->set('redis_port',REDIS_PORT);
 
+$objectInstancier->set('helios_ftp_server',HELIOS_FTP_SERVER);
+$objectInstancier->set('helios_ftp_passive_mode',HELIOS_FTP_PASSIVE_MODE);
+$objectInstancier->set('helios_ftp_passtrans_mode',HELIOS_FTP_PASSTRANS_MODE);
+$objectInstancier->set('helios_ftp_p_appli',HELIOS_FTP_P_APPLI);
+$objectInstancier->set('helios_ftp_port',HELIOS_FTP_PORT);
+$objectInstancier->set('helios_ftp_login',HELIOS_FTP_LOGIN);
+$objectInstancier->set('helios_ftp_password',HELIOS_FTP_PASSWORD);
+$objectInstancier->set('helios_ftp_response_server_path',HELIOS_FTP_RESPONSE_SERVER_PATH);
+$objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
+$objectInstancier->set('helios_sending_destination', HELIOS_SENDING_DESTINATION);
+$objectInstancier->set('$helios_sending_mode_demo', HELIOS_SENDING_MODE_DEMO);
+
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
 if(USE_LEGACY_BORDEREAU_MODEL) {

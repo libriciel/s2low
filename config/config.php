@@ -502,8 +502,16 @@ if (!defined('HELIOS_FTP_PASSIVE_MODE')){
 	define('HELIOS_FTP_PASSIVE_MODE',false);
 }
 
+if (!defined('HELIOS_FTP_PASSTRANS_MODE')){
+    define('HELIOS_FTP_PASSTRANS_MODE',false);
+}
+
 if(!defined('HELIOS_FTP_PORT')){
 	define('HELIOS_FTP_PORT','21');
+}
+
+if(!defined('HELIOS_FTP_P_APPLI')){
+    define('HELIOS_FTP_P_APPLI','GHELPES2');
 }
 
 if(!defined('HELIOS_FTP_LOGIN')){

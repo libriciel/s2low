@@ -5,7 +5,7 @@ require_once( __DIR__."/../../init/init.php");
 
 
 try {
-    $ftp = new FTPFileSender();
+    $ftp = new FTPHeliosSender();
     $ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN,HELIOS_FTP_PASSWORD);
     $ftp->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
     $ftp->disconnect();

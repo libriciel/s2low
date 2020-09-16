@@ -18,13 +18,16 @@ class HeliosEnvoiControler {
 	private $antivirus;
 
 	private $workerScript;
-	
-	public function __construct(
-	    SQLQuery $sqlQuery,
+	/** @var FTPHeliosSender  */
+    private $FTPHeliosSender;
+
+    public function __construct(
+        SQLQuery $sqlQuery,
         PesAllerRetriever $pesAllerRetriever,
         $helios_files_upload_root,
-		Antivirus $antivirus,
-		WorkerScript $workerScript
+        Antivirus $antivirus,
+        WorkerScript $workerScript,
+        FTPHeliosSender $FTPHeliosSender
     ){
 		$this->sqlQuery = $sqlQuery;
 		$this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -35,7 +38,7 @@ class HeliosEnvoiControler {
 		$this->helios_files_upload_root = $helios_files_upload_root;
 		$this->antivirus = $antivirus;
 		$this->workerScript = $workerScript;
-
+        $this->FTPHeliosSender = $FTPHeliosSender;
 	}
 
 	public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity){
@@ -262,15 +265,8 @@ class HeliosEnvoiControler {
 		}
 
 		try {
-			$ftp = new FTPFileSender();
-			$ftp->connect(HELIOS_FTP_SERVER, HELIOS_FTP_PORT, HELIOS_FTP_LOGIN,HELIOS_FTP_PASSWORD);
-			$ftp->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
-			$ftp->sendRawCommand("site P_DEST {$authorityInfo["helios_ftp_dest"]}",HELIOS_SENDING_MODE_DEMO);
-			$ftp->sendRawCommand("site P_APPLI ".self::P_APPLI,HELIOS_SENDING_MODE_DEMO);
-			$ftp->sendRawCommand("site P_MSG $p_msg",HELIOS_SENDING_MODE_DEMO);
-			$ftp->sendFile(HELIOS_SENDING_DESTINATION,$file_to_send);
-			$ftp->disconnect();
-		} catch (Exception $e){
+            $this->FTPHeliosSender->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
+        } catch (Exception $e){
 			echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : ".$e->getMessage()."\n";
 			unlink($file_path_with_complete_name);
 			return;
@@ -349,5 +345,4 @@ class HeliosEnvoiControler {
         $r = array_diff($r,['Enveloppe','EnTetePES']);
         return ! boolval($r);
     }
-	
 }
