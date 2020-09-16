@@ -3,7 +3,7 @@
 
 class FTPService
 {
-    private const TIMEOUT = 1;
+    private const TIMEOUT = 90;
     private $host;
     private $port;
     private $login;
@@ -16,8 +16,10 @@ class FTPService
     private $ftpServiceWrapper;
     private $modeDemo;
     private $isPassiveMode;
+    private $logger;
 
     public function __construct(
+        S2lowLogger $s2lowLogger,
         FtpServiceWrapper $ftpServiceWrapper,
         $helios_ftp_server,
         $helios_ftp_port,
@@ -28,6 +30,7 @@ class FTPService
         $helios_ftp_passtrans_mode
     )
     {
+        $this->logger = $s2lowLogger;
         $this->ftpServiceWrapper = $ftpServiceWrapper;
         $this->host = $helios_ftp_server;
         $this->port = $helios_ftp_port;
@@ -57,7 +60,7 @@ class FTPService
         $mode = $this->isPassiveMode ? "Passif" : "Actif";
         $demo = $this->modeDemo ? "[MODE DEMO]":"";
         $protocol = $this->isPstMode ? "ftps" : "ftp";
-        echo "Connection à $protocol://{$this->login}:{$this->password}@{$this->host }:{$this->port} (mode $mode) $demo\n";
+        $this->logger->info("Connection à $protocol://{$this->login}:{$this->password}@{$this->host }:{$this->port} (mode $mode) $demo");
 
         if($this->isPstMode){
             $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port, self::TIMEOUT);
@@ -69,14 +72,14 @@ class FTPService
         if (!$this->ftp) {
             throw new Exception("Impossible de se connecter au serveur {$this->host}:{$this->port}");
         }
-        echo "Connecté\n";
+        $this->logger->info("Connecté");
         if ($this->login) {
             $ftp_login = $this->ftpServiceWrapper->login($this->ftp, $this->login, $this->password);
             if (!$ftp_login) {
                 throw new Exception("Impossible de se connecter avec le login {$this->login}");
             }
         }
-        echo "Loggé\n";
+        $this->logger->info("Loggé");
 
         $this->setPassiveMode($this->isPassiveMode);
     }
@@ -98,7 +101,7 @@ class FTPService
             throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");
         }
 
-        echo "Il y a " . count($all_file) . " fichiers en attente dans le repertoire distant $remote_path...\n";
+        $this->logger->info("Il y a " . count($all_file) . " fichiers en attente dans le repertoire distant $remote_path...");
 
         return $all_file;
     }
