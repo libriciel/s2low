@@ -1,3 +1,10 @@
+# 4.3.1 - 2020-09-29
+
+
+## Correction
+- Correction typo dans le init.php pour la variable helios_sending_mode_demo
+
+
 # 4.3.0 - 2020-09-16
 
 ## Correction
