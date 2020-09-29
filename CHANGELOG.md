@@ -1,3 +1,8 @@
+# 4.3.2 -
+
+# Evolution
+- limitation de la taille et du nombre des messages d'erreur lors d'une erreur d'envoi sur le cloud #615
+
 # 4.3.1 - 2020-09-29
 
 
