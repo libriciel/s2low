@@ -123,4 +123,38 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
         ];
     }
+
+    public function testCheckCertificateAutosigneDateOk(){
+        /** @var  $openSslWrapper OpenSslWrapper | \PHPUnit\Framework\MockObject\MockObject */
+        $openSslWrapper = $this->getMockBuilder(OpenSslWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openSslWrapper->method("verifyCertificate")->willReturn(["a",[],0,"d"]);
+
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$openSslWrapper);
+
+        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a","b"));
+
+    }
+
+    public function testCheckCertificateAutosigneDateKo(){
+        $this->assertTrue(true);
+    }
+
+    public function testCheckCertificateRGSDateOk(){
+        $this->assertTrue(true);
+    }
+
+    public function testCheckCertificateRGSDateKO(){
+        $this->assertTrue(true);
+    }
+
+    public function testCheckCertificateNoValidCertChainDateOk(){
+        $this->assertTrue(true);
+    }
+
+    public function testCheckCertificateNoValidCertChainDateKo(){
+        $this->assertTrue(true);
+    }
 }
