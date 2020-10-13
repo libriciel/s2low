@@ -124,37 +124,111 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         ];
     }
 
-    public function testCheckCertificateAutosigneDateOk(){
-        /** @var  $openSslWrapper OpenSslWrapper | \PHPUnit\Framework\MockObject\MockObject */
-        $openSslWrapper = $this->getMockBuilder(OpenSslWrapper::class)
+    /** @var  $openSslWrapper OpenSslWrapper | MockObject */
+    private  $openSslWrapper;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        /** @var  $openSslWrapper OpenSslWrapper | MockObject */
+        $this->openSslWrapper = $this->getMockBuilder(OpenSslWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
+    }
 
-        $openSslWrapper->method("verifyCertificate")->willReturn(["a",[],0,"d"]);
+    public function testCheckCertificateAutosigneDateOk(){
 
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$openSslWrapper);
+        $cmd = "test";
+        $out = [ "CN = example.com",
+                "error 18 at 0 depth lookup: self signed certificate",
+                "CN = example.com",
+                "error 3 at 0 depth lookup: unable to get certificate CRL",
+                "error example.crt: verification failed"];
 
-        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a","b"));
+        $ret = 2;
+
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+
+        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
 
     }
 
     public function testCheckCertificateAutosigneDateKo(){
-        $this->assertTrue(true);
+        $cmd = "test";
+        $out = [ "CN = example.com",
+                "error 18 at 0 depth lookup: self signed certificate",
+                "CN = example.com",
+                "error 3 at 0 depth lookup: unable to get certificate CRL",
+                "error example.crt: verification failed"];
+        $ret = 2;
+
+        $this->expectException(Exception::class);
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        $verifyPKCS7Signature->checkCertificate("a");
+        //$this->expectExceptionMessage();
+        //$this->assertTrue(false);
     }
 
     public function testCheckCertificateRGSDateOk(){
-        $this->assertTrue(true);
+        $cmd = "test";
+        $out = [ "fullchain.pem: OK" ];
+        $ret = 0;
+
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
     }
 
     public function testCheckCertificateRGSDateKO(){
-        $this->assertTrue(true);
+        $cmd = "test";
+        $out = [ "C = FR, ST = HERAULT, L = MONTPELLIER, O = LIBRICIEL, OU = CA_POUR_TEST, CN = DOCKER CA, emailAddress = test@localhost",
+                "error 10 at 1 depth lookup: certificate has expired",
+                "C = FR, ST = HERAULT, L = MONTPELLIER, O = LIBRICIEL, OU = CERTIFICAT_POUR_TESTS, CN = test.fr, emailAddress = test@localhost",
+                "error 10 at 0 depth lookup: certificate has expired",
+                "error fullchain.pem: verification failed"];
+        $ret = 2;
+
+        $this->expectException(Exception::class);
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        $verifyPKCS7Signature->checkCertificate("a");
     }
 
     public function testCheckCertificateNoValidCertChainDateOk(){
-        $this->assertTrue(true);
+        $cmd = "truc";
+        $out = ["C = FR, ST = HERAULT, L = MONTPELLIER, O = LIBRICIEL, OU = CERTIFICAT_POUR_TESTS, CN = test.fr, emailAddress = test@localhost",
+                "error 20 at 0 depth lookup: unable to get local issuer certificate",
+                "error fullchain.pem: verification failed"];
+        $ret = 2;
+
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
     }
 
     public function testCheckCertificateNoValidCertChainDateKo(){
-        $this->assertTrue(true);
+        $cmd = "truc";
+        $out = [ "C = FR, ST = HERAULT, L = MONTPELLIER, O = LIBRICIEL, OU = CERTIFICAT_POUR_TESTS, CN = test.fr, emailAddress = test@localhost",
+                "error 20 at 0 depth lookup: unable to get local issuer certificate",
+                "error fullchain.pem: verification failed"];
+        $ret = 2;
+
+        $this->expectException(Exception::class);
+        $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
+        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        $verifyPKCS7Signature->checkCertificate("a");
+    }
+
+    public function testCheckCertificateRGSDateOkCRLOk(){
+        //TODO
+        $this->assertTrue(false);
+    }
+
+    public function testCheckCertificateRGSCRLKO(){
+        //TODO
+        $this->assertTrue(false);
     }
 }
