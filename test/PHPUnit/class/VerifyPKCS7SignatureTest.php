@@ -224,6 +224,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testCheckCertificateRGSDateOkCRLOk(){
         //TODO
+        // Doc : https://jamielinux.com/docs/openssl-certificate-authority/certificate-revocation-lists.html
         $this->assertTrue(false);
     }
 
