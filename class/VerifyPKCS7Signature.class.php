@@ -87,15 +87,38 @@ class VerifyPKCS7Signature {
             $this->authorized_ca_path
         );
 
-        if ($ret != 0) {            # ??? Le retour peut-il �tre = 0 quand il y a une erreur ????
+        /*if ($ret != 0) {            # ??? Le retour peut-il être = 0 quand il y a une erreur ????
 			throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+		}*/
+
+        $nonBlockingVerifyErrors = [2,  # unable to get issuer certificate
+                                    3,  # unable to get certificate CRL
+                                    18, # self signed certificate
+                                    19, # self signed certificate in certificate chain
+                                    20, # unable to get local issuer certificate
+                                    21, # unable to verify the first certificate
+                                    ];
+
+        $nonBlockingErrorThrown = false;
+        foreach ($out as $line) {
+		    if(preg_match("/error ([0123456789]+) at ([0123456789])+ depth lookup:(.*)/",$line,$matches)){
+                var_dump($matches);
+		        if(!in_array($matches[1],$nonBlockingVerifyErrors)){
+                    throw new Exception("Erreur #{$matches[1]} lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+                } else {
+                    $nonBlockingErrorThrown = true;
+                }
+            }
+			/*if (stripos($line, 'certificate revoked') !== false) {      # Pourquoi pourrait-on arriver ici ?
+				throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+			}*/
 		}
 
-		foreach ($out as $line) {
-			if (stripos($line, 'certificate revoked') !== false) {      # Pourquoi pourrait-on arriver ici ?
-				throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
-			}
-		}
+        if($nonBlockingErrorThrown){
+            if(!$this->openSslWrapper->isDateValid($certificate_path)){
+                throw new Exception("Erreur lors de la verification du certificat (commande : ) (result: )");   //TODO : modify
+            }
+        }
 
 		return true;
 	}

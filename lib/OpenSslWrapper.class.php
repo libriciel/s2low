@@ -17,4 +17,15 @@ class OpenSslWrapper
         $result = implode("\n", $out);
         return array($verifyCmd, $out, $ret, $result);
     }
+
+    public function isDateValid($certificate_path)
+    {
+        $x509_data = openssl_x509_parse(file_get_contents("example.crt"));
+        $validFrom = date_create_from_format('ymdHise', $x509_data['validFrom'])->format('c');
+        $validTo = date_create_from_format('ymdHise', $x509_data['validTo'])->format('c');
+
+        $today = getdate();
+
+        return ( $validFrom < $today ) && ( $today < $validTo );
+    }
 }
