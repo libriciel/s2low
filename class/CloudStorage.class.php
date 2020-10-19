@@ -66,11 +66,13 @@ class CloudStorage {
 			)
 		);
 
-		$this->openStackSwiftWrapper->sendFile(
+		if(!$this->openStackSwiftWrapper->sendFile(
 			$this->iCloudStorable->getContainerName(),
 			$file_path_on_disk,
 			$file_path_on_cloud
-		);
+		)){
+		    return false;
+        }
 
 
 		$this->logger->info("Check file : {$file_path_on_cloud}");
