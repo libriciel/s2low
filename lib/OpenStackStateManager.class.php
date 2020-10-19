@@ -38,7 +38,6 @@ class OpenStackStateManager{
         if($this->unsuccessfullConsecutiveAttempts > self::MAX_CONSECUTIVE_ATTEMPTS){
             throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
         }
-
     }
 
     private function shorten($message){

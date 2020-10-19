@@ -54,9 +54,12 @@ class OpenStackSwiftWrapper {
         ];
 
         $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
-        $containerWrapper->createObject($fileProperties);
 
-		$this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
+        if($containerWrapper->createObject($fileProperties)){
+            $this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
+            return true;
+        }
+        return false;
     }
 
     /**

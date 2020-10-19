@@ -48,7 +48,8 @@ class OpenStackSwiftWrapperTest extends TestCase {
                     return $args['stream']->getMetadata("uri") ==  OpenStackSwiftWrapperTest::EXISTING_FILE_PATH
                         && $args["name"] = OpenStackSwiftWrapperTest::EXISTING_FILE_NAME;
                 }
-            ));
+            ))
+            ->willReturn(true);
 
         /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
@@ -68,9 +69,10 @@ class OpenStackSwiftWrapperTest extends TestCase {
             $this->logger
         );
 
-        $openStackSwiftWrapper->sendFile(
+        $this->assertTrue($openStackSwiftWrapper->sendFile(
             self::CONTAINER_TEST,
             self::EXISTING_FILE_PATH
+            )
         );
     }
 
@@ -390,5 +392,40 @@ class OpenStackSwiftWrapperTest extends TestCase {
         if(file_exists("slash")){
             unlink("slash");
         }
+    }
+
+    public function testErrorCreateObject(){
+
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->once())
+            ->method('createObject')
+            ->willReturn(false);
+
+        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $openStackContainersStore
+            ->expects($this->once())
+            ->method("getContainerWrapper")
+            ->with($this->equalTo(self::CONTAINER_TEST))
+            ->willReturn($openStackSwiftWrapper);
+
+        /** @var OpenStackContainerStore $openStackFactory */
+        $openStackSwiftWrapper = new OpenStackSwiftWrapper(
+            $openStackContainersStore,
+            $this->logger
+        );
+
+        $this->assertFalse($openStackSwiftWrapper->sendFile(
+            self::CONTAINER_TEST,
+            self::EXISTING_FILE_PATH
+        ));
     }
 }
