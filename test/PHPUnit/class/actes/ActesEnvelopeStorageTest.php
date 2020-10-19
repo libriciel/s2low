@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 class ActesEnvelopeStorageTest extends S2lowTestCase {
     private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = "s2low-phpunit-acte-envelope-storage-test";
     private const ACTES_FILES_UPLOAD_ROOT = 'actes_files_upload_root';
@@ -132,8 +134,20 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		file_put_contents($actes_files_upload_root."/$filename","foo");
 
 		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
+		
+        /** @var $openStackSwiftWrapper OpenStackSwiftWrapper | MockObject */
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-		$actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+        $openStackSwiftWrapper->method("sendFile")->willReturn(true);
+
+        $actesEnvelopeStorage = new ActesEnvelopeStorage(
+            $actes_files_upload_root,
+            $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+            $openStackSwiftWrapper,
+            $this->getObjectInstancier()->get(Monolog\Logger::class)
+        );
 
 		$actesEnvelopeStorage->storeNextFileById($envelope_id);
 
@@ -141,4 +155,34 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		$this->assertFalse($envelope_info['not_available']);
 		$this->assertTrue($envelope_info['is_in_cloud']);
 	}
+
+    public function testErrorSendingFile(){
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST .mt_rand(0,mt_getrandmax());
+        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        file_put_contents($actes_files_upload_root."/$filename","foo");
+
+        $envelope_id = $actesEnvelopeSQL->create(1, $filename);
+
+        /** @var $openStackSwiftWrapper OpenStackSwiftWrapper | MockObject */
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->method("sendFile")->willReturn(false);
+
+        $actesEnvelopeStorage = new ActesEnvelopeStorage(
+            $actes_files_upload_root,
+            $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+		    $openStackSwiftWrapper,
+		    $this->getObjectInstancier()->get(Monolog\Logger::class)
+        );
+
+        $this->assertFalse($actesEnvelopeStorage->storeNextFileById($envelope_id));
+
+        $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
+        $this->assertFalse($envelope_info['not_available']);
+        $this->assertFalse($envelope_info['is_in_cloud']);
+    }
 }
