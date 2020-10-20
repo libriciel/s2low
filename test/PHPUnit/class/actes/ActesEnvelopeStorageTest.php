@@ -134,7 +134,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 		file_put_contents($actes_files_upload_root."/$filename","foo");
 
 		$envelope_id = $actesEnvelopeSQL->create(1, $filename);
-		
+
         /** @var $openStackSwiftWrapper OpenStackSwiftWrapper | MockObject */
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
             ->disableOriginalConstructor()

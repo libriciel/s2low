@@ -67,4 +67,53 @@ class PesAllerStorageTest extends S2lowTestCase {
 		$this->assertTrue($transaction_info['not_available']);
 	}
 
+	public function testStoreSuccess(){
+        $transaction_id = $this->createTransaction();
+        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+
+        $transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
+
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->method("sendFile")->willReturn(true);
+
+        $pesAllerStorage = new PesAllerStorage(
+            $this->getObjectInstancier()->get('helios_files_upload_root'),
+            $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
+            $openStackSwiftWrapper,
+            $this->getObjectInstancier()->get(Monolog\Logger::class)
+        );
+
+        $this->assertTrue($pesAllerStorage->storeNextFile($transaction_info));
+    }
+
+    public function testStoreFailure(){
+        $transaction_id = $this->createTransaction();
+        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+
+        $transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
+
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->method("sendFile")->willReturn(false);
+
+        $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
+        file_put_contents($helios_files_upload_root."/".$transaction_info['sha1'],"test");
+
+        $pesAllerStorage = new PesAllerStorage(
+            $helios_files_upload_root,
+            $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
+            $openStackSwiftWrapper,
+            $this->getObjectInstancier()->get(Monolog\Logger::class)
+        );
+
+        $this->assertFalse($pesAllerStorage->storeNextFile($transaction_info));
+
+        unlink($helios_files_upload_root."/".$transaction_info['sha1']);
+    }
+
 }
