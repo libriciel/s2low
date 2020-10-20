@@ -79,6 +79,9 @@ class PesAllerStorageTest extends S2lowTestCase {
 
         $openStackSwiftWrapper->method("sendFile")->willReturn(true);
 
+        $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
+        file_put_contents($helios_files_upload_root."/".$transaction_info['sha1'],"test");
+
         $pesAllerStorage = new PesAllerStorage(
             $this->getObjectInstancier()->get('helios_files_upload_root'),
             $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
@@ -87,6 +90,8 @@ class PesAllerStorageTest extends S2lowTestCase {
         );
 
         $this->assertTrue($pesAllerStorage->storeNextFile($transaction_info));
+
+        unlink($helios_files_upload_root."/".$transaction_info['sha1']);
     }
 
     public function testStoreFailure(){
