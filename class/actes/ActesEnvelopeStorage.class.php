@@ -62,7 +62,6 @@ class ActesEnvelopeStorage {
 			$this->actes_files_upload_root."/".$envelope_info['file_path'],
 			$envelope_info['file_path']
 		)){
-		    echo "oupsie...";
 		    return false;
         }
 
