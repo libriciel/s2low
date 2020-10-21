@@ -1,5 +1,7 @@
 <?php
 
+use Monolog\Handler\HandlerInterface;
+
 class S2lowLogger {
 
 	const MESSAGE = 'message';
@@ -59,6 +61,10 @@ class S2lowLogger {
 			$this->critical($message,[$e]);
 		}
 	}
+
+	public function addHandler(HandlerInterface $handler){
+        $this->logger->pushHandler($handler);
+    }
 
 	private $name;
 

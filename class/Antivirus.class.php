@@ -31,9 +31,8 @@ class Antivirus {
         $this->filesystem->copy($path,$new_file);
         $this->filesystem->chmod($new_file,0644);
 
-        $ret = $this->shellCommand->exec($this->antivirus_command." ".$new_file);
+        $ret = $this->shellCommand->exec([$this->antivirus_command,$new_file]);
         $output = $this->shellCommand->getLastOutput();
-        //$error = $this->shellCommand->getLastError();
 
         $tmpFolder->delete($tmp_dir);
 
@@ -66,9 +65,7 @@ class Antivirus {
 	 * @throws Exception
 	 */
 	public function isAlive(){
-        $ret = $this->shellCommand->exec(
-            $this->antivirus_command. " ". __FILE__
-        );
+        $ret = $this->shellCommand->exec([$this->antivirus_command, __FILE__]);
 		if ($ret !== 0){
 	        $output = $this->shellCommand->getLastOutput();
             throw new Exception("Problème avec l'antivirus : $output");

@@ -230,6 +230,11 @@ $objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE
 $objectInstancier->set('helios_sending_destination', HELIOS_SENDING_DESTINATION);
 $objectInstancier->set('helios_sending_mode_demo', HELIOS_SENDING_MODE_DEMO);
 
+$objectInstancier->set('old_timestamp_token_directory',OLD_TIMESTAMP_TOKEN_DIRECTORY);
+
+$objectInstancier->set('timestamp_token_retention_nb_days',TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
+
+
 $objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
 
 if(USE_LEGACY_BORDEREAU_MODEL) {
