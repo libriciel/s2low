@@ -35,7 +35,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $this
             ->setName('log:timestamp-token-extract-and-delete')
             ->setDescription(
-                "Extract the timestamp token oldest than $timestamp_token_retention_nb_days days from the database, save it to $old_timestamp_token_directory and delete it from database"
+                "Extract the timestamp token oldest than $timestamp_token_retention_nb_days days from the database (table logs_historique), save it to $old_timestamp_token_directory and delete it from database"
             )
             ->addOption(
                 "limit",
@@ -73,7 +73,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         ;
     }
 
-    private function askIfNeeded($input,$io): bool
+    private function askIfNeeded(InputInterface $input, SymfonyStyle $io): bool
     {
         if ($input->getOption('dry-run')){
             $io->writeln("Dry run mode : halt");
@@ -101,7 +101,15 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $limit = (int)$input->getOption('limit');
 
         if ($input->getOption('nb-days')) {
-            $this->logTimestampTokenGarbage->setTimestampTokenRetentionNbDays((int)$input->getOption('nb-days'));
+            $this->logTimestampTokenGarbage->setTimestampTokenRetentionNbDays(
+                (int)$input->getOption('nb-days')
+            );
+        }
+
+        if ($input->getOption('directory')){
+            $this->logTimestampTokenGarbage->setOldTimestampTokenDirectory(
+                $input->getOption('directory')
+            );
         }
 
         $info = $this->logTimestampTokenGarbage->getInfo($limit);
@@ -124,4 +132,3 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         return 0;
     }
 }
-

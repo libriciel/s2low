@@ -2,7 +2,6 @@
 <?php
 require_once(__DIR__."/../init/init.php");
 
-
 use S2low\Helpers\ClassHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;

@@ -2,7 +2,7 @@
 
 namespace S2low\Services;
 
-use LogsSQL;
+use LogsHistoriqueSQL;
 use S2lowLogger;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -10,25 +10,25 @@ class LogTimestampTokenGarbage
 {
     private $old_timestamp_token_directory;
     private $timestamp_token_retention_nb_days;
-    private $logSQL;
+    private $logsHistoriqueSQL;
     private $s2lowLogger;
 
     public function __construct(
         string $old_timestamp_token_directory,
         int $timestamp_token_retention_nb_days,
-        LogsSQL $logsSQL,
+        LogsHistoriqueSQL $logsHistoriqueSQL,
         S2lowLogger $s2lowLogger
     )
     {
         $this->timestamp_token_retention_nb_days = $timestamp_token_retention_nb_days;
         $this->old_timestamp_token_directory = $old_timestamp_token_directory;
-        $this->logSQL = $logsSQL;
+        $this->logsHistoriqueSQL = $logsHistoriqueSQL;
         $this->s2lowLogger = $s2lowLogger;
     }
 
     public function getInfo(int $limit =0){
 
-        $sqlQuery = $this->logSQL->getLogOlderThanNbDaysWithTimestamp(
+        $sqlQuery = $this->logsHistoriqueSQL->getLogOlderThanNbDaysWithTimestamp(
             $this->timestamp_token_retention_nb_days,
             $limit
         );
@@ -56,7 +56,7 @@ class LogTimestampTokenGarbage
 
     public function extractAndDelete(int $limit = 0): void
     {
-        $sqlQuery = $this->logSQL->getLogOlderThanNbDaysWithTimestamp(
+        $sqlQuery = $this->logsHistoriqueSQL->getLogOlderThanNbDaysWithTimestamp(
             $this->timestamp_token_retention_nb_days,
             $limit
         );
@@ -65,7 +65,7 @@ class LogTimestampTokenGarbage
             $nb_result++;
             $log_info = $sqlQuery->fetch();
             $this->saveTimestamp($log_info['id'],$log_info['date'],$log_info['timestamp']);
-            $this->logSQL->deleteTimestamp($log_info['id']);
+            $this->logsHistoriqueSQL->deleteTimestamp($log_info['id']);
         }
         $this->s2lowLogger->notice("$nb_result line(s) has been processed");
     }
