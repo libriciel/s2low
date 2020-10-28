@@ -57,11 +57,13 @@ class ActesEnvelopeStorage {
 		}
 		$this->logger->info("Storing file ".$this->actes_files_upload_root."/".$envelope_info['file_path']);
 
-		$this->openStackSwiftWrapper->sendFile(
+		if(!$this->openStackSwiftWrapper->sendFile(
 			self::CONTAINER_NAME,
 			$this->actes_files_upload_root."/".$envelope_info['file_path'],
 			$envelope_info['file_path']
-		);
+		)){
+		    return false;
+        }
 
 		$this->actesEnvelopeSQL->setTransactionInCloud($envelope_info['id']);
 		$this->logger->info("Stored file : {$envelope_info['file_path']}");

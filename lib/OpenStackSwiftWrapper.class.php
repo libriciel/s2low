@@ -24,13 +24,13 @@ class OpenStackSwiftWrapper {
 		$this->logger = $logger;
 	}
 
-	/**
-	 * Envoi un fichier dans les nuages
-	 * @param string $container_name Le nom du container au sens swift
-	 * @param string $filepath_local Le chemin local du fichier à envoyer dans les nuages
-	 * @param string $filename_on_cloud Si présent l'emplacement sur le nuage, sinon, on prend le nom du fichier qu'on met directement sur le container
-	 * @throws Exception
-	 */
+    /**
+     * Envoi un fichier dans les nuages
+     * @param string $container_name Le nom du container au sens swift
+     * @param string $filepath_local Le chemin local du fichier à envoyer dans les nuages
+     * @param string $filename_on_cloud Si présent l'emplacement sur le nuage, sinon, on prend le nom du fichier qu'on met directement sur le container
+     * @throws CloudStorageException|UnrecoverableException|PausingQueueException
+     */
     public function sendFile($container_name,$filepath_local,$filename_on_cloud = ''){
     	if (! $filename_on_cloud){
 			$filename_on_cloud = basename($filepath_local);
@@ -54,17 +54,19 @@ class OpenStackSwiftWrapper {
         ];
 
         $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
-        $containerWrapper->createObject($fileProperties);
 
-		$this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
+        if($containerWrapper->createObject($fileProperties)){
+            $this->logger->info("Uploaded $filepath_local to [$container_name]$filename_on_cloud");
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param $container_name
      * @param $filepath_local
      * @param string $filepath_on_cloud
-     * @throws UnrecoverableException
-     * @throws Exception
+     * @throws UnrecoverableException|PausingQueueException
      */
 
     private function retrieveFileFromCloud($container_name, $filepath_local,$filepath_on_cloud = ''){
@@ -99,7 +101,7 @@ class OpenStackSwiftWrapper {
      * @param $filepath_local : Le chemin local du fichier à récupérer
      * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
      * @return mixed
-     * @throws UnrecoverableException
+     * @throws UnrecoverableException|PausingQueueException
      */
 
     public function retrieveFile($container_name, $filepath_local,$filepath_on_cloud = ''){
@@ -112,8 +114,7 @@ class OpenStackSwiftWrapper {
     /**
      * @param $container_name
      * @param $filepath
-     * @throws UnrecoverableException
-     * @throws Exception
+     * @throws UnrecoverableException|PausingQueueException
      */
 
     public function deleteFile($container_name,$filepath){

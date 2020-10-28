@@ -74,10 +74,12 @@ class PesAllerStorage {
         }
         $this->logger->info("Storing file ".$this->helios_files_upload_root."/".$transaction_info['sha1']);
 
-        $this->openStackSwiftWrapper->sendFile(
+        if(!$this->openStackSwiftWrapper->sendFile(
             self::CONTAINER_NAME,
             $this->helios_files_upload_root."/".$transaction_info['sha1']
-            );
+            )){
+            return false;
+        }
         
         $this->heliosTransactionsSQL->setTransactionInCloud($transaction_info['id']);
         $this->logger->info("Stored file : {$transaction_info['sha1']}");

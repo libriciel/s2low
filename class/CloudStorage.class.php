@@ -24,11 +24,12 @@ class CloudStorage {
 		return $this->iCloudStorable->getAllObjectIdToStore();
 	}
 
-	/**
-	 * @param int $object_id
-	 * @return bool
-	 * @throws Exception
-	 */
+    /**
+     * @param int $object_id
+     * @return bool
+     * @throws CloudStorageException | PausingQueueException | UnrecoverableException
+     */
+
 	public function storeObject(int $object_id){
 		$file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
 		$file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
@@ -65,11 +66,13 @@ class CloudStorage {
 			)
 		);
 
-		$this->openStackSwiftWrapper->sendFile(
+		if(!$this->openStackSwiftWrapper->sendFile(
 			$this->iCloudStorable->getContainerName(),
 			$file_path_on_disk,
 			$file_path_on_cloud
-		);
+		)){
+		    return false;
+        }
 
 
 		$this->logger->info("Check file : {$file_path_on_cloud}");

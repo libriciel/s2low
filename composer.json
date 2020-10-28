@@ -39,7 +39,9 @@
     "ext-zip": "^1.15",
     "ext-iconv": "*",
     "php-opencloud/openstack": "^3.0",
-    "ext-ftp": "*"
+    "ext-ftp": "*",
+    "ext-mbstring": "*",
+    "ext-openssl": "*"
   },
 
   "require-dev": {
@@ -57,8 +59,7 @@
     "phpunit/php-timer": "^2.1",
     "phpunit/php-file-iterator": "^2.0",
     "doctrine/instantiator": "^1.2",
-    "phpunit/php-token-stream": "^3.1",
-    "ext-iconv": "*"
+    "phpunit/php-token-stream": "^3.1"
   },
   "scripts": {
     "test": "phpunit",

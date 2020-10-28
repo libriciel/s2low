@@ -143,7 +143,7 @@ $openStackConfigMailsec->openstack_tenant = MAILSEC_OPENSTACK_TENANT;
 $openStackConfigMailsec->openstack_region = MAILSEC_OPENSTACK_REGION;
 $openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
-$openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory();
+$openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory($logger);
 $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
 $openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);

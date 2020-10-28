@@ -114,6 +114,11 @@ class WorkerScript {
 					$e->getMessage(),
 					[$data,$e->getTraceAsString()]
 				);
+				if($e instanceof PausingQueueException){
+                    $seconds = $e->getTimeToWait();
+                    $this->s2lowLogger->info("Pausing queue for $seconds seconds");
+                    sleep($seconds);
+                }
 				$queue->release(
 					$job,
 					PheanstalkInterface::DEFAULT_PRIORITY,
@@ -134,11 +139,14 @@ class WorkerScript {
 		return true;
 	}
 
-	/**
-	 * @param IWorker $IWorker
-	 * @param $data
-	 * @throws RecoverableException
-	 */
+    /**
+     * @param IWorker $IWorker
+     * @param $data
+     * @throws CloudStorageException
+     * @throws PausingQueueException
+     * @throws RecoverableException
+     * @throws UnrecoverableException
+     */
 	private function syncrhonizedWork(IWorker $IWorker, $data){
 		$this->s2lowLogger->debug("Entree section critique");
 		if ($IWorker->isDataValid($data)){
@@ -159,9 +167,14 @@ class WorkerScript {
 		} catch (WorkerScriptException $e){
 			$this->s2lowLogger->notice($e->getMessage());
 			return true;
-		} catch (Exception $e){
-			$this->s2lowLogger->critical(
-				"Erreur lors de l'execution du script : " . $e->getMessage(),[$e->getTraceAsString()]
+		} catch(PausingQueueException $e){
+		    $seconds = $e->getTimeToWait();
+            $this->s2lowLogger->info("Pausing queue for $seconds seconds");
+            sleep($seconds);
+        } catch (Exception $e){
+            $message = $e->getMessage();
+            $this->s2lowLogger->critical(
+				"Erreur lors de l'execution du script : " . $message,[$e->getTraceAsString()]
 			);
 			return false;
 		}

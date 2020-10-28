@@ -32,11 +32,11 @@ class CloudStorageTest extends S2lowTestCase {
 		return $cloudStorageFactory->getInstance($iCloudStorable);
 	}
 
-	private function setOpenStackSwiftWrapper($fileExistsOnCloud = true){
+	private function setOpenStackSwiftWrapper($fileExistsOnCloud = true,$sendFile = true){
 		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$openStackSwiftWrapper->method('sendFile')->willReturn(true);
+		$openStackSwiftWrapper->method('sendFile')->willReturn($sendFile);
 		$openStackSwiftWrapper->method('fileExistsOnCloud')->willReturn($fileExistsOnCloud);
 		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
 		return $openStackSwiftWrapper;
@@ -229,5 +229,14 @@ class CloudStorageTest extends S2lowTestCase {
 			"File foo.txt not existing on cloud : not deleted",2
 		);
 	}
+
+	public function testErrorWhileCreatingFile(){
+        $this->setOpenStackSwiftWrapper(false,false);
+        $file_to_send = $this->createFile();
+        $this->assertFalse(
+            $this->getCloudStorage($this->getICloudStorable($file_to_send))
+                ->storeObject(42)
+        );
+    }
 
 }
