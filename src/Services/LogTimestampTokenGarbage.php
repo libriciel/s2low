@@ -51,7 +51,7 @@ class LogTimestampTokenGarbage
             }
         }
 
-        return ['nb-days'=>$this->timestamp_token_retention_nb_days,'limit'=>$limit,'nb_result'=>$nb_result,'min_date'=>$min_data,'max_date'=>$max_data];
+        return ['older-than'=>$this->timestamp_token_retention_nb_days,'limit'=>$limit,'nb_result'=>$nb_result,'min_date'=>$min_data,'max_date'=>$max_data];
     }
 
     public function extractAndDelete(int $limit = 0): void

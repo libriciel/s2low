@@ -18,6 +18,8 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
     private $logTimestampTokenGarbage;
     private $s2lowLogger;
 
+    private const OLDER_THAN = "older-than";
+
     public function __construct(
         LogTimestampTokenGarbage $logTimestampTokenGarbage,
         S2lowLogger $s2lowLogger
@@ -52,8 +54,8 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
                 $old_timestamp_token_directory
             )
             ->addOption(
-                "nb-days",
-                "t",
+                self::OLDER_THAN,
+                "o",
                 InputOption::VALUE_REQUIRED,
                 "Override default oldest date in days",
                 $timestamp_token_retention_nb_days
@@ -100,9 +102,9 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $this->s2lowLogger->addHandler($consoleHandler);
         $limit = (int)$input->getOption('limit');
 
-        if ($input->getOption('nb-days')) {
+        if ($input->getOption(self::OLDER_THAN)) {
             $this->logTimestampTokenGarbage->setTimestampTokenRetentionNbDays(
-                (int)$input->getOption('nb-days')
+                (int)$input->getOption(self::OLDER_THAN)
             );
         }
 

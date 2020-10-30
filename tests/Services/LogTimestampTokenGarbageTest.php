@@ -58,7 +58,7 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
         $logTimestampTokenGarbage = $this->getObjectInstancier()->get(LogTimestampTokenGarbage::class);
         $info = $logTimestampTokenGarbage->getInfo(1);
         $this->assertEquals(array (
-            'nb-days' => 10,
+            'older-than' => 10,
             'limit' => 1,
             'nb_result' => 1,
             'min_date' =>
