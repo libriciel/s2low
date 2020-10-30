@@ -7,9 +7,8 @@ class S2lowLogger {
 	const MESSAGE = 'message';
 
 	private $logger;
-
 	private $log_level;
-
+    private $name;
 
 	public function __construct(Monolog\Logger $logger, $log_level = Monolog\Logger::INFO) {
 		$this->logger = $logger;
@@ -65,8 +64,6 @@ class S2lowLogger {
 	public function addHandler(HandlerInterface $handler){
         $this->logger->pushHandler($handler);
     }
-
-	private $name;
 
 	public function setName($name) {
 		$this->name = $name;
