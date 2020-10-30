@@ -35,7 +35,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $this
             ->setName('log:timestamp-token-extract-and-delete')
             ->setDescription(
-                "Extract the timestamp token oldest than $timestamp_token_retention_nb_days days from the database (table logs_historique), save it to $old_timestamp_token_directory and delete it from database"
+                "Extract the timestamp token oldest than $timestamp_token_retention_nb_days days (by default) from the database (table logs_historique), save it to $old_timestamp_token_directory (by default) and delete it from database"
             )
             ->addOption(
                 "limit",
