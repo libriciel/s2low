@@ -3,6 +3,10 @@
 # Evolution
 - limitation de la taille et du nombre des messages d'erreur lors d'une erreur d'envoi sur le cloud #615
 
+## Ajout
+
+- Script bin/console log:timestamp-token-extract-and-delete qui permet de suprimer les timestamps de la table logs_historique après les avoir sauvegardés dans un répertoire 
+
 # 4.3.1 - 2020-09-29
 
 

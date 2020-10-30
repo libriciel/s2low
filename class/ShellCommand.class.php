@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\Process\Process;
+
 class ShellCommand {
 
 	private $s2lowLogger;
@@ -14,21 +16,25 @@ class ShellCommand {
 		$this->s2lowLogger = $s2lowLogger;
 	}
 
-	public function exec($command){
-		$this->s2lowLogger->debug("Execution de la commande : $command");
-		$process = new \Symfony\Component\Process\Process($command);
+	public function exec(array $command){
+		$process = new Process($command);
+		$command_line = $process->getCommandLine();
+        $this->s2lowLogger->debug("Execution de la commande : $command_line");
+
 		$ret = $process->run();
 		$this->last_command = $process->getCommandLine();
 		$this->last_output = $process->getOutput();
 		$this->last_error = $process->getErrorOutput();
+
 		$this->s2lowLogger->debug(
-			"Résultat de l'éxecution de la commande : $command",
+			"Résultat de l'éxecution de la commande : $command_line",
             [
                 'ret'=>$ret,
                 'output'=>$this->last_output,
                 'error' => $this->last_error
             ]
 		);
+
 		return $ret;
 	}
 

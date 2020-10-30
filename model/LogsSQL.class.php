@@ -105,7 +105,8 @@ class LogsSQL extends SQL {
      * @param $message
      * @param $timestamp
      */
-	public function addLog($date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp){
+	public function addLog($date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp): int
+    {
 		$sql = "SELECT authority_id,authority_group_id FROM users WHERE id=?";
 		$line = $this->queryOne($sql,$user_id);
 		if ($line){
@@ -115,8 +116,8 @@ class LogsSQL extends SQL {
 			$authority_id = false;
 			$authority_group_id = false;
 		}
-		$sql = "INSERT INTO logs(date,severity,module,issuer,user_id,visibility,message,timestamp,authority_id,authority_group_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
-		$this->query($sql,$date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp,$authority_id,$authority_group_id);
+		$sql = "INSERT INTO logs(date,severity,module,issuer,user_id,visibility,message,timestamp,authority_id,authority_group_id) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING id";
+		return $this->queryOne($sql,$date,$severity,$module,$issuer,$user_id,$visibility,$message,$timestamp,$authority_id,$authority_group_id);
 	}
 
 	public function getMinDate(){
@@ -128,5 +129,6 @@ class LogsSQL extends SQL {
 	    $sql = "SELECT * FROM logs ORDER BY date DESC LIMIT 1";
 	    return $this->queryOne($sql);
     }
+
 
 }

@@ -1,5 +1,5 @@
 {
-  "name": "S2low/S2low",
+  "name": "s2low/s2low",
   "version": "2.6.7",
   "repositories": [
     {
@@ -20,14 +20,13 @@
       }
     }
   ],
-
   "require": {
     "libriciel/tdt-lib-actes": "*",
     "symfony/filesystem": "^3.4",
     "monolog/monolog": "^1.23",
     "mtdowling/supervisor-event": "^1.0",
     "pda/pheanstalk": "^3.1",
-    "symfony/process": "^3.4",
+    "symfony/process": "^5.1",
     "php-imap/php-imap": "^3.0",
     "ext-fileinfo": "^1.0",
     "ext-SimpleXML": "^7.2",
@@ -40,6 +39,8 @@
     "ext-iconv": "*",
     "php-opencloud/openstack": "^3.0",
     "ext-ftp": "*",
+    "symfony/console": "^5.1",
+    "symfony/monolog-bridge": "^5.1",
     "ext-mbstring": "*",
     "ext-openssl": "*"
   },
@@ -47,7 +48,7 @@
   "require-dev": {
     "phpunit/phpunit": "^8.4",
     "phpunit/php-code-coverage": "^7.0",
-    "mikey179/vfsStream": "^1.5",
+    "mikey179/vfsstream": "^1.5",
     "sebastian/version": "^2.0",
     "sebastian/global-state": "^3.0",
     "sebastian/recursion-context": "^3.0",
@@ -64,6 +65,15 @@
   "scripts": {
     "test": "phpunit",
     "test-cover": "phpunit --coverage-text --colors=never"
+  },
+  "autoload": {
+    "psr-4": {
+      "S2low\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "S2low\\Tests\\": "tests/"
+    }
   }
-
 }

@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+require_once(__DIR__."/../init/init.php");
+
+use S2low\Helpers\ClassHelper;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+
+$application = new Application();
+
+$all_command = ClassHelper::findRecursive("S2low\Command");
+foreach($all_command as $commandClassName) {
+    /** @var Command $commandClass */
+    $commandClass = $objectInstancier->get($commandClassName);
+    $application->add($commandClass);
+}
+
+$application->run();
