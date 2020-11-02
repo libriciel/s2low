@@ -13,11 +13,18 @@ class AdminServiceControllerTest extends S2lowTestCase {
 		$this->adminServiceController = $this->getObjectInstancier()->get(AdminServiceController::class);
 	}
 
+	private function createService($name = self::NOM_SERVICE): int
+    {
+        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        return $serviceUserSQL->add($name,1);
+    }
+
 	/**
 	 * @throws RedirectException
 	 */
 	public function testAddFailed(){
-		$this->setExpectedException(Exception::class,"Le nom du service est obligatoire");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le nom du service est obligatoire");
 		$this->adminServiceController->addAction();
 	}
 
@@ -25,8 +32,9 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	 * @throws RedirectException
 	 */
 	public function testAdd(){
-		$this->setExpectedException("Exception",'Exit !');
-		$this->expectOutputRegex('#Le service a #');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Exit !');
+        $this->expectOutputRegex('#Le service a #');
 		$this->addService();
 	}
 
@@ -34,9 +42,9 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	 * @throws RedirectException
 	 */
 	public function testAlreadyExists(){
-		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
-		$serviceUser->add(self::NOM_SERVICE,1);
-		$this->setExpectedException("Exception",'Exit !');
+        $this->createService();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Exit !');
 		$this->expectOutputRegex('#Ce service existe#');
 		$this->addService();
 	}
@@ -52,24 +60,55 @@ class AdminServiceControllerTest extends S2lowTestCase {
 	}
 
 	public function testListService(){
-		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
-		$serviceUser->add(self::NOM_SERVICE,1);
+        $this->createService();
 		$this->getObjectInstancier()->get("Environnement")->get()->set('authority_id',1);
-		$this->setExpectedException(Exception::class,"exit() called");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("exit() called");
 		$this->expectOutputRegex("#\"name\":\"mon service\"#");
 		$this->adminServiceController->listAction();
 	}
 
 	public function testAddUserAction(){
-		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
-		$serviceUser->add(self::NOM_SERVICE,1);
-		$service_list = $serviceUser->getServiceUser(1);
-		$id_service = $service_list[0]['id'];
-
+        $service_id = $this->createService();
 		$this->getObjectInstancier()->get("Environnement")->post()->set('id_user',1);
-		$this->getObjectInstancier()->get("Environnement")->post()->set('id_service',$id_service);
-		$this->setExpectedException(RedirectException::class,"Redirect to");
+		$this->getObjectInstancier()->get("Environnement")->post()->set('id_service',$service_id);
+		$this->expectException(RedirectException::class);
+		$this->expectExceptionMessage("Redirect to");
 		$this->adminServiceController->addUserAction();
 	}
+
+	public function testDetail()
+    {
+        $service_id = $this->createService();
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id',$service_id);
+        $this->assertTrue($this->adminServiceController->detailAction());
+    }
+
+    public function testDetailWhenNoServiceIdProvided()
+    {
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Redirect to /admin/services/admin_services.php with message :");
+        $this->adminServiceController->detailAction();
+    }
+
+    public function testDetailWhenNoServiceIdDitNotExist()
+    {
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id',42);
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Redirect to /admin/services/admin_services.php with message :");
+        $this->adminServiceController->detailAction();
+    }
+
+    public function testAddParent()
+    {
+        $parent_id = $this->createService('parent');
+        $enfant_id = $this->createService('enfant');
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id',$parent_id);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('service_id',$enfant_id);
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Parent modifié");
+        $this->adminServiceController->addParentAction();
+    }
+
 
 }

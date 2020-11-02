@@ -1,5 +1,9 @@
-<?php 
+<?php
 
+/**
+ * Class ServiceUser
+ * @deprecated 4.3.3
+ */
 class ServiceUser {
 	
 	function __construct(Database $db) {
@@ -13,9 +17,9 @@ class ServiceUser {
 			return false;
 		}
 		
-		$sql = "INSERT INTO service_user(name,authority_id) VALUES ('".pg_escape_string($name)."',".pg_escape_string($authority_id).")";
-		$this->db->exec($sql);
-		return true;
+		$sql = "INSERT INTO service_user(name,authority_id) VALUES ('".pg_escape_string($name)."',".pg_escape_string($authority_id).") RETURNING id";
+		return $this->db->exec($sql);
+		//return true;
 	}
 	
 	function getServiceUser($authority_id ){
@@ -50,10 +54,13 @@ class ServiceUser {
 		}
 		return $result;
 	}
-	
-	function getInfo($id){
-		return $this->db->getOneLine("SELECT s1.*,s2.name as parent_name FROM service_user s1 LEFT JOIN service_user s2 ON s1.parent_id=s2.id where s1.id=".pg_escape_string($id));
-	}
+
+    public function getGroupe($id)
+    {
+        $sql = "SELECT s1.*,s2.name as parent_name FROM service_user s1 LEFT JOIN service_user s2 ON s1.parent_id=s2.id where s1.id=".pg_escape_string($id);
+        return $this->db->getOneLine($sql);
+    }
+
 	
 	function getListUser($id){
 		return $this->db->fetchAll("SELECT * FROM service_user_content JOIN users ON service_user_content.id_user=users.id WHERE id_service=".pg_escape_string($id));
