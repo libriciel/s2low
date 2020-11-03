@@ -77,6 +77,9 @@ class AdminServiceControllerTest extends S2lowTestCase {
 		$this->adminServiceController->addUserAction();
 	}
 
+    /**
+     * @throws RedirectException
+     */
 	public function testDetail()
     {
         $service_id = $this->createService();
@@ -137,6 +140,23 @@ class AdminServiceControllerTest extends S2lowTestCase {
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Il faut sélectionner un utilisateur à enlever du service");
         $this->adminServiceController->enleverUtilisateurAction();
+    }
 
+    public function testSupprimerService()
+    {
+        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        $service_id = $this->createService();
+        $this->assertNotEmpty($serviceUserSQL->getInfo($service_id));
+        try {
+            $this->getObjectInstancier()->get(Environnement::class)->post()->set('id',$service_id);
+            $this->adminServiceController->supprimerServiceAction();
+            $this->assertFalse(true);
+        } catch (RedirectException $e){
+            $this->assertEquals(
+                "Redirect to /admin/services/admin_services.php with message : Le service a été supprimé",
+                $e->getMessage()
+            );
+        }
+        $this->assertEmpty($serviceUserSQL->getInfo($service_id));
     }
 }

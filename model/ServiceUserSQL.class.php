@@ -22,4 +22,9 @@ class ServiceUserSQL extends SQL
         $sql = "DELETE FROM service_user_content WHERE id_service=? AND id_user=?";
         $this->query($sql,$id_service,$id_user);
     }
+
+    public function supprimerService(int $service_id): void{
+        $sql = "DELETE FROM service_user WHERE id=?";
+        $this->query($sql,$service_id);
+    }
 }
