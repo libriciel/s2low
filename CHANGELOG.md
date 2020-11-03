@@ -3,6 +3,7 @@
 # Correction
 
 - refactoring de la partie gestion des relations parent-enfant entre services #657
+- refactoring DataObject pour utilisation de requête préparé afin de combler des failles de sécurité potentielles
 
 # 4.3.2 - 2020-11-02
 

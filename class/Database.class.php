@@ -27,11 +27,11 @@ class Database {
 	 * @return QueryResult
 	 * @throws Exception
 	 */
-  	public function select($query) {
+  	public function select($query, array $parameters = []) {
 		$trace = Trace::getInstance();
 		$trace->log($query,Trace::$TRACE_DEBUG);
 		$pdoStatement = $this->sqlQuery->getPdo()->prepare($query);
-		$pdoStatement->execute();
+		$pdoStatement->execute($parameters);
 		return new QueryResult($pdoStatement);
 	}
 
