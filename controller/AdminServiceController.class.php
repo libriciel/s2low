@@ -124,4 +124,32 @@ class AdminServiceController extends Controller {
 
         $this->redirect("/admin/services/gestion-service-content.php?id=$id","Parent modifié");
     }
+
+    /**
+     * @throws RedirectException
+     */
+    public function enleverUtilisateurAction()
+    {
+        $id_service =   $this->getEnvironnement()->post()->getInt('id_service');
+        $id_users =   $this->getEnvironnement()->post()->getInt('id_user');
+
+        $this->verifServiceId($id_service);
+
+        if (! $id_users){
+            $this->redirect(
+                "/admin/services/gestion-service-content.php?id=$id_service",
+                'Il faut sélectionner un utilisateur à enlever du service'
+            );
+        }
+
+        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        foreach($id_users as $id_user){
+            $serviceUserSQL->enleverUser($id_service,intval($id_user));
+        }
+
+        $this->redirect(
+            "/admin/services/gestion-service-content.php?id=$id_service",
+        "L'utilisateur a été retiré du service"
+        );
+    }
 }

@@ -16,4 +16,10 @@ class ServiceUserSQL extends SQL
         $sql = "INSERT INTO service_user(name,authority_id) VALUES (?,?) RETURNING id";
         return $this->queryOne($sql,$name,$authority_id);
     }
+
+    public function enleverUser(int $id_service,int $id_user): void
+    {
+        $sql = "DELETE FROM service_user_content WHERE id_service=? AND id_user=?";
+        $this->query($sql,$id_service,$id_user);
+    }
 }
