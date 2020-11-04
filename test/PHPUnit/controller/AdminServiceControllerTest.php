@@ -77,6 +77,9 @@ class AdminServiceControllerTest extends S2lowTestCase {
 		$this->adminServiceController->addUserAction();
 	}
 
+    /**
+     * @throws RedirectException
+     */
 	public function testDetail()
     {
         $service_id = $this->createService();
@@ -110,5 +113,50 @@ class AdminServiceControllerTest extends S2lowTestCase {
         $this->adminServiceController->addParentAction();
     }
 
+    public function testEnleverUtilisateur()
+    {
+        $service_id = $this->createService();
+        $serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
+        $serviceUser->addUser(1,$service_id);
 
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_user',[1]);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service',$service_id);
+        try {
+            $this->adminServiceController->enleverUtilisateurAction();
+            $this->assertFalse(true);
+        } catch(RedirectException $e) {
+            $this->assertEquals(
+                "Redirect to /admin/services/gestion-service-content.php?id=$service_id with message : L'utilisateur a été retiré du service",
+                $e->getMessage()
+            );
+        }
+        $this->assertEmpty($serviceUser->getListUser($service_id));
+    }
+
+    public function testEnleverUtilisateurWhenNoUserIdProvided()
+    {
+        $service_id = $this->createService();
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service',$service_id);
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Il faut sélectionner un utilisateur à enlever du service");
+        $this->adminServiceController->enleverUtilisateurAction();
+    }
+
+    public function testSupprimerService()
+    {
+        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        $service_id = $this->createService();
+        $this->assertNotEmpty($serviceUserSQL->getInfo($service_id));
+        try {
+            $this->getObjectInstancier()->get(Environnement::class)->post()->set('id',$service_id);
+            $this->adminServiceController->supprimerServiceAction();
+            $this->assertFalse(true);
+        } catch (RedirectException $e){
+            $this->assertEquals(
+                "Redirect to /admin/services/admin_services.php with message : Le service a été supprimé",
+                $e->getMessage()
+            );
+        }
+        $this->assertEmpty($serviceUserSQL->getInfo($service_id));
+    }
 }

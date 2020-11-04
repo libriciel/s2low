@@ -8,7 +8,7 @@ class Recuperateur {
 	}
 	
 	public function getInt($name,$default = 0){
-		return intval($this->get($name,$default));
+        return $this->doSomethingOnValueOrArray('intval', $this->get($name, $default));
 	}
 	
 	public function get($name,$default = false){
@@ -16,11 +16,19 @@ class Recuperateur {
 			return $default;
 		}
 		$value = $this->tableauInput[$name];
-		return trim($value);
+        return $this->doSomethingOnValueOrArray("trim", $value);
 	}
 
 	public function set($key,$value){
 	    $this->tableauInput[$key] = $value;
+    }
+
+    private function doSomethingOnValueOrArray($something, $valueOrArray)
+    {
+        if (is_array($valueOrArray)) {
+            return array_map($something, $valueOrArray);
+        }
+        return $something($valueOrArray);
     }
 	
 }
