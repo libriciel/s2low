@@ -13,73 +13,42 @@ class VerifyPKCS7Signature {
 
 	public function verify($file_path,$signature){
 		try {
-			$signature_file = sys_get_temp_dir() . "/slow_signature_".mt_rand(0,mt_getrandmax());
-			$certificate_file = sys_get_temp_dir() . "/slow_certificate_".mt_rand(0,mt_getrandmax());
+			$signatureObject = new SignatureFromPKCS7();
+			$certificateObject = new CertificateFromPKCS7();
 
-			$this->verifyThrow($file_path,$signature,$signature_file,$certificate_file);
+			$this->verifyThrow($file_path,$signature,$signatureObject,$certificateObject);
 				
 		} catch(Exception $e){
-			throw $e;
+			throw $e;   #D'origine... Pourquoi le cleanup ne se fait pas ???
+            $this->cleanUpTempFiles($certificateObject, $signatureObject);
+            throw $e;
 		}
 
-		unlink($certificate_file);
-		unlink($signature_file);
+        $this->cleanUpTempFiles($certificateObject, $signatureObject);
 		return true;
 	}
 
-	private function verifyThrow($file_path,$signature,$signature_file,$certificate_file){
-		$result = file_put_contents($signature_file, $signature);
-		if ($result === false){
-			throw new Exception("Impossible d'�crire la signature dans $signature_file");
-		}
-
-		$certificate = $this->getCertificate($signature_file);
-
-
-		$result = file_put_contents($certificate_file, $certificate);
-		if ($result === false){
-			throw new Exception("Impossible d'�crire le certificat dans $certificate_file");
-		}
-
-		$this->checkCertificate($certificate_file);
-
-		$command ="openssl smime -in $signature_file -inform PEM -verify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
-		exec($command, $output, $return);
-		$output = implode("\n",$output);
-		if ($return != 0 ){
-			throw new Exception("La v�rification de la signature a �chou� (code $return):  (command : $command) (retour : $output)");
-		}
-	}
+	private function verifyThrow($file_path, $signature, $signatureObject, $certificateObject){
+        $signatureObject->setSignatureContent($signature);
+        $certificateObject->setCertificateContent($signatureObject->getCertificate());
+        $certificateObject->check();
+        $this->checkFileAndSignature($signatureObject, $file_path);
+    }
 
 	public function verifyCertificate($signature_content){
-		$signature_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
-		file_put_contents($signature_path,$signature_content);
-		$certificate = $this->getCertificate($signature_path);
-		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
-		file_put_contents($certificate_path, $certificate);
+        $signatureObject = new SignatureFromPKCS7();
+        $certificateObject = new CertificateFromPKCS7();
+
+        $signatureObject->setSignatureContent($signature_content);
+        $certificateObject->setCertificateContent($signatureObject->getCertificate());
 		try {
-			$this->checkCertificate($certificate_path);
+			$certificateObject->check();
+			#Heu... Il n'y a *rien* si �a foire ??
+            #V�rifier si le finally est lanc�
 		} finally {
-			unlink($signature_path);
-			unlink($certificate_path);
+			$this->cleanUpTempFiles($certificateObject, $signatureObject);
 		}
 	}
-
-	private function getCertificate($signatureFileName){
-		$extractCmd = "openssl pkcs7 -in " . $signatureFileName . " -print_certs | openssl x509";
-
-		exec($extractCmd, $output, $ret);
-
-		if ( $ret ) {
-			throw new Exception("Erreur d'extraction du certificat : echec de la commande $extractCmd");
-		}
-
-		$cert = implode("\n",$output);
-		$cert.="\n";
-
-		return $cert;
-	}
-
 
 	public function checkCertificate($certificate_path) {
         list($verifyCmd, $out, $ret, $result) = $this->openSslWrapper->verifyCertificate(
@@ -113,13 +82,36 @@ class VerifyPKCS7Signature {
 				throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
 			}*/
 		}
-
-        if($nonBlockingErrorThrown){
-            if(!$this->openSslWrapper->isDateValid($certificate_path)){
-                throw new Exception("Erreur lors de la verification du certificat (commande : ) (result: )");   //TODO : modify
-            }
-        }
-
-		return true;
+            //TODO V�rifier que ce n'est utilis� nulle part...'
 	}
+
+    /**
+     * @param $certificate_file
+     * @param $signature_file
+     */
+    private function cleanUpTempFiles($certificate_file, $signature_file): void
+    {
+        #TODO : Ne fonctionne pas correctement pour l'instant
+        if (file_exists($certificate_file)) {
+            unlink($certificate_file);
+        }
+        if (file_exists($signature_file)) {
+            unlink($signature_file);
+        }
+    }
+
+    /**
+     * @param $signatureObject
+     * @param $file_path
+     * @throws Exception
+     */
+    private function checkFileAndSignature($signatureObject, $file_path)
+    {
+        $command = "openssl smime -in {$signatureObject->getPathOnDisk()} -inform PEM -verify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
+        exec($command, $output, $return);
+        $output = implode("\n", $output);
+        if ($return != 0) {
+            throw new Exception("La v�rification de la signature a �chou� (code $return):  (command : $command) (retour : $output)");
+        }
+    }
 }

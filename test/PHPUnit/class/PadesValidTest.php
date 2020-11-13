@@ -88,6 +88,14 @@ class PadesValidTest extends S2lowTestCase
         return $padesValid;
     }
 
+    private function createPadeValid($checkCertificateThrowAnException = false){
+        $this->padesValid = new PadesValid("",
+            __DIR__."/../lib/fixtures/validca/",
+            $this->getObjectInstancier()->get(OpenSslWrapper::class)
+        );
+        $this->padesValid->setVerifyPKCS7Signature($this->getPKCS7Signature($checkCertificateThrowAnException));
+    }
+
     /**
      * @throws Exception
      */
@@ -157,6 +165,15 @@ class PadesValidTest extends S2lowTestCase
         );
     }
 
+    // TODO : check that test
+    /*public function testValidateSigned(){
+		$this->createPadeValid();
+        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
+            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
+        );
+        $this->assertTrue($this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf"));
+    }*/
+
     public function testValidateCertificateChecking()
     {
         $padesValid = $this->createPadesValidForValidation();
@@ -165,6 +182,7 @@ class PadesValidTest extends S2lowTestCase
             $padesValid->validate("/vers/un/fichier", true)
         );
     }
+
 
     public function testWithoutCertificateChecking()
     {
@@ -187,4 +205,42 @@ class PadesValidTest extends S2lowTestCase
 
         $padesValid->validate("/vers/un/fichier");
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateSignedNoCertificatCheking(){
+		$this->createPadeValid();
+		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
+			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
+		);
+		$this->assertTrue($this->padesValid->validateWithoutCertificateChecking(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf"));
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testValidateSignedBadCertificate(){
+		$this->createPadeValid(true);
+		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
+			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
+		);
+		$this->setExpectedException("Exception","Erreur");
+		$this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	// TODO : check that test
+	/*public function testValidateSignedBadCertificateNoCheckCertificate(){
+		$this->createPadeValid(false);
+		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
+			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
+		);
+		$this->assertTrue(
+			$this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf")
+		);
+	}*/
+
 }

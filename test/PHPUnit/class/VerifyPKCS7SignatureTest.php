@@ -150,9 +150,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
         $this->openSslWrapper->method("isDateValid")->willReturn(true);
 
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-
-        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $this->assertTrue($certificate->check());
 
     }
 
@@ -168,10 +167,12 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
         $this->openSslWrapper->method("isDateValid")->willReturn(false);
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-        $verifyPKCS7Signature->checkCertificate("a");
+        //$verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
+        //$verifyPKCS7Signature->checkCertificate("a");
         //$this->expectExceptionMessage();
         //$this->assertTrue(false);
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $certificate->check();
     }
 
     public function testCheckCertificateRGSDateOk(){
@@ -180,8 +181,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $ret = 0;
 
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $this->assertTrue($certificate->check());
     }
 
     public function testCheckCertificateRGSDateKO(){
@@ -195,8 +196,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-        $verifyPKCS7Signature->checkCertificate("a");
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $certificate->check();
     }
 
     public function testCheckCertificateNoValidCertChainDateOk(){
@@ -208,8 +209,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
         $this->openSslWrapper->method("isDateValid")->willReturn(true);
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-        $this->assertTrue($verifyPKCS7Signature->checkCertificate("a"));
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $this->assertTrue($certificate->check());
     }
 
     public function testCheckCertificateNoValidCertChainDateKo(){
@@ -222,8 +223,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->openSslWrapper->method("verifyCertificate")->willReturn([$cmd,$out,$ret,"d"]);
         $this->openSslWrapper->method("isDateValid")->willReturn(false);
-        $verifyPKCS7Signature = new VerifyPKCS7Signature("/a/b/c/",$this->openSslWrapper);
-        $verifyPKCS7Signature->checkCertificate("a");
+        $certificate = new CertificateFromPKCS7("/a/b/c/",$this->openSslWrapper);
+        $certificate->check("a");
     }
 
     /*public function testCheckCertificateRGSDateOkCRLOk(){
