@@ -27,17 +27,15 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/Erreur/");
-        $verificator->checkCertificate("$baseCertificatesDir/ok/fullchain.pem");
+        $verificator->checkCertificate("$baseCertificatesDir/dateOk/fullchain.pem");
     }
 
-    public function testVerifyACertificateWithNoRecognizedCA()                  #TODO : si la date est ok, le résultat devrait être ok
+    public function testVerifyACertificateWithNoRecognizedCA()   #NOUVEAU : si la date est ok, le résultat devrait être ok
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
-        $verificator->checkCertificate("$baseCertificatesDir/dateOk/fullchain.pem");
+        $this->assertTrue($verificator->checkCertificate("$baseCertificatesDir/dateOk/fullchain.pem"));
     }
 
     public function testVerifyAnExpiredCertificateWithNoRecognizedCA()
@@ -46,18 +44,16 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
+        $this->expectExceptionMessageMatches("/La date de vérification/");
         $verificator->checkCertificate("$baseCertificatesDir/dateKo/fullchain.pem");
     }
 
-    public function testVerifyAnAutosignedCertificate()                         #TODO : si la date est ok, le résultat devrait être ok
+    public function testVerifyAnAutosignedCertificate()            #NOUVEAU : si la date est ok, le résultat devrait être ok
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
-        $verificator->checkCertificate("$baseCertificatesDir/autosignedDateOk/cert.pem");
+        $this->assertTrue($verificator->checkCertificate("$baseCertificatesDir/autosignedDateOk/cert.pem"));
     }
 
     public function testVerifyAnExpiredAutosignedCertificate()
@@ -66,7 +62,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
+        $this->expectExceptionMessageMatches("/La date de vérification/");
         $verificator->checkCertificate("$baseCertificatesDir/autosignedDateKo/cert.pem");
     }
 
