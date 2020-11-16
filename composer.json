@@ -1,27 +1,7 @@
 {
   "name": "s2low/s2low",
-  "version": "2.6.7",
-  "repositories": [
-    {
-      "type": "package",
-      "package": {
-        "name": "libriciel/tdt-lib-actes",
-        "version": "0.0.32",
-        "dist": {
-          "type": "tar",
-          "url": "https://ressources.libriciel.fr/s2low/tdt-lib-actes-master.tar.gz?i=0.0.32"
-        },
-        "autoload": {
-          "psr-4": {
-            "Libriciel\\LibActes\\": "src"
-          },
-          "classmap": ["src/"]
-        }
-      }
-    }
-  ],
+  "version": "4.3.4",
   "require": {
-    "libriciel/tdt-lib-actes": "*",
     "symfony/filesystem": "^3.4",
     "monolog/monolog": "^1.23",
     "mtdowling/supervisor-event": "^1.0",
@@ -43,7 +23,8 @@
     "symfony/monolog-bridge": "^5.1",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "ext-json": "^1.6"
+    "ext-json": "^1.6",
+    "libriciel/tdt-lib-actes": "^1.1"
   },
 
   "require-dev": {

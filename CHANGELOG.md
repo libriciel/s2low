@@ -1,18 +1,26 @@
+# 4.3.4 
+
+## Evolution
+
+- mise à jour de la bibiliothèque tdt-lib-actes
+
 # 4.3.3 - 2020-11-06
 
-# Correction
+## Correction
 
 - refactoring de la gestion des services pour éviter des failles de sécurité potentielles #657
 - refactoring DataObject pour utilisation de requête préparé afin de combler des failles de sécurité potentielles
 
 # 4.3.2 - 2020-11-02
 
-# Evolution
+## Evolution
 - limitation de la taille et du nombre des messages d'erreur lors d'une erreur d'envoi sur le cloud #615
 
 ## Ajout
-
 - Script bin/console log:timestamp-token-extract-and-delete qui permet de suprimer les timestamps de la table logs_historique après les avoir sauvegardés dans un répertoire 
+
+## Correction
+- refactoring de la chaîne d'intégration continue
 
 # 4.3.1 - 2020-09-29
 
