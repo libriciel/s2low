@@ -28,9 +28,9 @@ class PadesValidTest extends S2lowTestCase {
         $verifyPKCS7Signature = $this->getMockBuilder('VerifyPKCS7Signature')->disableOriginalConstructor()->getMock();
 
 		if ($checkCertificateThrowAnException) {
-			$verifyPKCS7Signature->method("checkCertificate")->willThrowException(new Exception("problème"));
+			$verifyPKCS7Signature->method("checkCertificateWithoutCheckingCertificateChain")->willThrowException(new Exception("problème"));
 		} else {
-			$verifyPKCS7Signature->method("checkCertificate")->willReturn(true);
+			$verifyPKCS7Signature->method("checkCertificateWithoutCheckingCertificateChain")->willReturn(true);
 		}
 
 		/** @var VerifyPKCS7Signature $verifyPKCS7Signature */

@@ -3,6 +3,7 @@
 ## Evolution
 
 - mise à jour de la bibiliothèque tdt-lib-actes
+- permettre les signatures autosignées et non RGS #622
 
 # 4.3.3 - 2020-11-06
 
