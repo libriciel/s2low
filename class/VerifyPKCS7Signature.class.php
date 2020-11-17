@@ -27,7 +27,6 @@ class VerifyPKCS7Signature {
 			$this->verifyThrow($file_path,$signature,$signature_file,$certificate_file);
 				
 		} catch(Exception $e){
-			throw $e;
 				
 			if (file_exists($certificate_file)) {
 				unlink($certificate_file);
@@ -100,7 +99,6 @@ class VerifyPKCS7Signature {
 	public function checkCertificate($certificate_path) {
         $erreurs =  $this->analyseCertificate($certificate_path);
         if(!empty($erreurs)){
-            var_dump($erreurs);
             throw new Exception($erreurs[0]["message"]);
         }
         return true;
@@ -108,14 +106,7 @@ class VerifyPKCS7Signature {
 
 	public function checkCertificateWithoutCheckingCertificateChain($certificate_path){
         $erreurs =  $this->analyseCertificate($certificate_path);
-        /*$nonBlockingVerifyErrors = [
-            2,  # unable to get issuer certificate
-            3,  # unable to get certificate CRL
-            18, # self signed certificate
-            19, # self signed certificate in certificate chain
-            20, # unable to get local issuer certificate
-            21, # unable to verify the first certificate
-        ];*/
+
         foreach ($erreurs as $key=>$erreur){
             if(in_array($erreur["errorCode"],$this::CERTIFICATE_CHAIN_ERRORS)){
                 unset($erreurs[$key]);
@@ -123,7 +114,6 @@ class VerifyPKCS7Signature {
         }
         $erreursRearrangees=array_values($erreurs);
         if(!empty($erreursRearrangees)){
-            var_dump($erreursRearrangees);
             throw new Exception($erreursRearrangees[0]["message"]);
         }
         return true;
