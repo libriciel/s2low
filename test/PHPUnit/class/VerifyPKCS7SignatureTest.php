@@ -16,7 +16,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateKo/ac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
+        $this->expectExceptionMessageMatches("/certificate has expired/");
         $verificator->checkCertificate("$baseCertificatesDir/dateKo/fullchain.pem");
     }
 
@@ -26,7 +26,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Erreur/");
+        $this->expectExceptionMessageMatches("/certificate revoked/");
         $verificator->checkCertificate("$baseCertificatesDir/dateOk/fullchain.pem");
     }
 
@@ -44,7 +44,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/La date de vérification/");
+        $this->expectExceptionMessageMatches("/certificate has expired/");
         $verificator->checkCertificate("$baseCertificatesDir/dateKo/fullchain.pem");
     }
 
@@ -62,7 +62,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/La date de vérification/");
+        $this->expectExceptionMessageMatches("/certificate has expired/");
         $verificator->checkCertificate("$baseCertificatesDir/autosignedDateKo/cert.pem");
     }
 

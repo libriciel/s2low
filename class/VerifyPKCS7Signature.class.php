@@ -89,15 +89,13 @@ class VerifyPKCS7Signature {
 		$verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
 		exec($verifyCmd, $out, $ret);
 
-		$revoked = false;
-
 		$result = implode("\n",$out);
 
-		/*if ($ret != 0) {    // NOUVEAU : On ne peut pas s'arrêter pour toutes les erreurs ...
-			throw new Exception("Erreur #$ret lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
-		}*/
-
-        $nonBlockingVerifyErrors = [2,  # unable to get issuer certificate
+		# extracted from https://github.com/openssl
+        # Mise en correspondance de  openssl/crypto/x509/x509_txt.c
+        # et https://docs.huihoo.com/doxygen/openssl/1.0.1c/crypto_2x509_2x509__vfy_8h.html
+        $nonBlockingVerifyErrors = [
+            2,  # unable to get issuer certificate
             3,  # unable to get certificate CRL
             18, # self signed certificate
             19, # self signed certificate in certificate chain
@@ -105,18 +103,23 @@ class VerifyPKCS7Signature {
             21, # unable to verify the first certificate
         ];
 
+        $blockingKnownVerifyErrors = [
+            10=>"certificate has expired",
+            23=>"certificate revoked"
+        ];
+
 
         $nonBlockingErrorThrown = false;
         foreach ($out as $line) {
-            var_dump($line);
             if (preg_match("/error ([0123456789]+) at ([0123456789])+ depth lookup:(.*)/", $line, $matches)) {
-
-                echo "Erreur ! : ".$matches[1]." : ";
                 if (!in_array($matches[1], $nonBlockingVerifyErrors)) {
-                    echo "Exception\n";
-                    throw new Exception("Erreur #{$matches[1]} lors de la verification du certificat (commande : $verifyCmd) (result: $result)");
+                    if(in_array($matches[1], array_keys($blockingKnownVerifyErrors))){
+                        $message = $blockingKnownVerifyErrors[$matches[1]];
+                    } else {
+                        $message = "Erreur #{$matches[1]} lors de la verification du certificat (commande : $verifyCmd) (result: $result)";
+                    }
+                    throw new Exception($message);
                 } else {
-                    echo "Exception non bloquante\n";
                     $nonBlockingErrorThrown = true;
                 }
             }
@@ -125,34 +128,16 @@ class VerifyPKCS7Signature {
         if($nonBlockingErrorThrown){
             // La date n'est alors pas forcément vérifiée par openssl...
             // Copié - collé depuis PadesValid => REFACTO NECESSAIRE
-            $x509_info = openssl_x509_parse(file_get_contents($certificate_path));
+            $x509_info = openssl_x509_parse(file_get_contents($certificate_path));  #Moche
 
-            //var_dump($x509_info);
-            try{
-                $dateValidFrom = new DateTime(date(DATE_RFC2822,$x509_info['validFrom_time_t']));
-                $dateValidTo = new DateTime(date(DATE_RFC2822,$x509_info['validTo_time_t']));
-                $dateNow = new DateTime('NOW');
-            } catch (Exception $e){
-                var_dump($e->getMessage());
-            }
+            $dateValidFrom = new DateTime(date(DATE_RFC2822,$x509_info['validFrom_time_t']));
+            $dateValidTo = new DateTime(date(DATE_RFC2822,$x509_info['validTo_time_t']));
+            $dateNow = new DateTime('NOW');
 
-            $intervall = date_diff($dateValidFrom,$dateValidTo);
-
-            echo $intervall->format('%R%a days');
-
-            /*var_dump(date(DATE_RFC2822,$x509_info['validFrom_time_t']));
-            var_dump(date(DATE_RFC2822,$x509_info['validTo_time_t']));
-            var_dump(date(DATE_RFC2822,$x509_info['validFrom_time_t']) == date(DATE_RFC2822,$x509_info['validFrom_time_t']));
-            var_dump(date(DATE_RFC2822,$x509_info['validTo_time_t']) > date(DATE_RFC2822,$x509_info['validFrom_time_t']));*/
-
-            if ($dateNow < $dateValidFrom ||
-                $dateNow > $dateValidTo
-            ) {
-                throw new Exception("La date de vérification" .
-                    " n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
+            if ($dateNow < $dateValidFrom || $dateNow > $dateValidTo ) {
+                throw new Exception("certificate has expired");
             }
         }
-
 
             return true;
 	}
