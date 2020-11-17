@@ -86,12 +86,54 @@ class VerifyPKCS7Signature {
 
 
 	public function checkCertificate($certificate_path) {
-		$verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
-		exec($verifyCmd, $out, $ret);
+        $erreurs =  $this->analyseCertificate($certificate_path);
+        if(!empty($erreurs)){
+            var_dump($erreurs);
+            throw new Exception($erreurs[0]["message"]);
+        }
+        return true;
+    }
 
-		$result = implode("\n",$out);
+	public function checkCertificateWithoutCheckingCertificateChain($certificate_path){
+        $erreurs =  $this->analyseCertificate($certificate_path);
+        $nonBlockingVerifyErrors = [
+            2,  # unable to get issuer certificate
+            3,  # unable to get certificate CRL
+            18, # self signed certificate
+            19, # self signed certificate in certificate chain
+            20, # unable to get local issuer certificate
+            21, # unable to verify the first certificate
+        ];
+        foreach ($erreurs as $key=>$erreur){
+            if(in_array($erreur["errorCode"],$nonBlockingVerifyErrors)){
+                unset($erreurs[$key]);
+            }
+        }
+        $erreursRearrangees=array_values($erreurs);
+        if(!empty($erreursRearrangees)){
+            var_dump($erreursRearrangees);
+            throw new Exception($erreursRearrangees[0]["message"]);
+        }
+        return true;
+    }
 
-		# extracted from https://github.com/openssl
+    /**
+     * @param $certificate_path
+     * @param $out
+     * @param $ret
+     * @param $matches
+     * @return array
+     * @throws Exception
+     */
+    private function analyseCertificate($certificate_path): array
+    {
+        $erreurs = [];
+        $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
+        exec($verifyCmd, $out, $ret);
+
+        $result = implode("\n", $out);
+
+        # extracted from https://github.com/openssl
         # Mise en correspondance de  openssl/crypto/x509/x509_txt.c
         # et https://docs.huihoo.com/doxygen/openssl/1.0.1c/crypto_2x509_2x509__vfy_8h.html
         $nonBlockingVerifyErrors = [
@@ -104,16 +146,21 @@ class VerifyPKCS7Signature {
         ];
 
         $blockingKnownVerifyErrors = [
-            10=>"certificate has expired",
-            23=>"certificate revoked"
+            10 => "certificate has expired",
+            23 => "certificate revoked"
         ];
 
 
         $nonBlockingErrorThrown = false;
         foreach ($out as $line) {
             if (preg_match("/error ([0123456789]+) at ([0123456789])+ depth lookup:(.*)/", $line, $matches)) {
-                if (!in_array($matches[1], $nonBlockingVerifyErrors)) {
-                    if(in_array($matches[1], array_keys($blockingKnownVerifyErrors))){
+                $erreurs[]=[
+                    "errorCode"=>$matches[1],
+                    "depth"=>$matches[2],
+                    "message"=>$matches[3]
+                ];
+                /*if (!in_array($matches[1], $nonBlockingVerifyErrors)) {
+                    if (in_array($matches[1], array_keys($blockingKnownVerifyErrors))) {
                         $message = $blockingKnownVerifyErrors[$matches[1]];
                     } else {
                         $message = "Erreur #{$matches[1]} lors de la verification du certificat (commande : $verifyCmd) (result: $result)";
@@ -121,25 +168,38 @@ class VerifyPKCS7Signature {
                     throw new Exception($message);
                 } else {
                     $nonBlockingErrorThrown = true;
-                }
+                }*/
             }
         }
 
-        if($nonBlockingErrorThrown){
+        $blockingErrorDetected = false;
+
+        foreach ($erreurs as $erreur){
+            if(!in_array($erreur["errorCode"],$nonBlockingVerifyErrors)){
+                $blockingErrorDetected = true;
+            }
+        }
+
+        if (!$blockingErrorDetected) {
             // La date n'est alors pas forcément vérifiée par openssl...
             // Copié - collé depuis PadesValid => REFACTO NECESSAIRE
             $x509_info = openssl_x509_parse(file_get_contents($certificate_path));  #Moche
 
-            $dateValidFrom = new DateTime(date(DATE_RFC2822,$x509_info['validFrom_time_t']));
-            $dateValidTo = new DateTime(date(DATE_RFC2822,$x509_info['validTo_time_t']));
+            $dateValidFrom = new DateTime(date(DATE_RFC2822, $x509_info['validFrom_time_t']));
+            $dateValidTo = new DateTime(date(DATE_RFC2822, $x509_info['validTo_time_t']));
             $dateNow = new DateTime('NOW');
 
-            if ($dateNow < $dateValidFrom || $dateNow > $dateValidTo ) {
-                throw new Exception("certificate has expired");
+            if ($dateNow < $dateValidFrom || $dateNow > $dateValidTo) {
+                $erreurs[] = [
+                    "errorCode"=>10,
+                    "depth"=>0,
+                    "message"=>"certificate has expired"
+                ];
+                //throw new Exception("certificate has expired");
             }
         }
 
-            return true;
-	}
+        return $erreurs;
+    }
 
 }
