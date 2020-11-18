@@ -60,6 +60,34 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
         $actesImapRetrieve->retrieve();
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testRetrieveMailWithEmptyBody() {
+        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
+
+        $actesImapRetrieve = new ActesImapRetrieve(
+            $this->getImapProperties(),
+            $this->getVFS(),
+            $this->getImapMailBoxFactory(""),
+            $s2lowLogger,
+            SigTermHandler::getInstance(),
+            $this->getWorkerScript()
+        );
+        $actesImapRetrieve->retrieve();
+
+        $logs = $this->getLogRecords();
+
+        $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+
+        $this->assertRegExp("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
+    }
+
 
 
     public function getVFS(){
@@ -73,7 +101,7 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
         return new ActesImapProperties();
     }
 
-    private function getImapMailBoxFactory(){
+    private function getImapMailBoxFactory($mailHtmlText = "mon texte html"){
 
 
 		$attachments= new StdClass;
@@ -81,7 +109,7 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 		$attachments->filePath = __FILE__;
 
         $incomingMail = $this->getMockBuilder('PhpImap\IncomingMail')->disableOriginalConstructor()->getMock();
-		$incomingMail->{'textHtml'} = "mon texte html";
+        $incomingMail->{'textHtml'} = $mailHtmlText;
 		$incomingMail->method('getAttachments')->willReturn([$attachments]);
 
 

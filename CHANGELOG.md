@@ -2,8 +2,9 @@
 
 ## Evolution
 - mise à jour de pades-valid vers 1.4.7 #223
+- sauvegarde des mails dont le corps est vide #644
 
-# 4.3.4  - 2020-11-17
+# 4.3.4 - 2020-11-17
 
 ## Evolution
 

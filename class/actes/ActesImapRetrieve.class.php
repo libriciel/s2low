@@ -73,29 +73,33 @@ class ActesImapRetrieve {
 	 */
     private function saveMail(Mailbox $mailbox,$mail_id){
 		$this->logger->info("Récupération du message : $mail_id");
-		$tmp_file = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
+		$tmp_dir = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
 
-        if (! mkdir( $tmp_file)){
-            $exception_message = "Impossible de créer le répertoire $tmp_file";
+        if (! mkdir( $tmp_dir)){
+            $exception_message = "Impossible de créer le répertoire $tmp_dir";
 			$this->logger->info($exception_message);
             throw new UnrecoverableException($exception_message);
         }
 
-        $message_body_path = $tmp_file."/message_body.html";
-		$this->logger->info("Sauvegarde du contenu du message HTML $message_body_path");
-
-
         $incomingMail = $mailbox->getMail($mail_id);
+        $textHtml = $incomingMail->textHtml;
 
-        $nb_octets = file_put_contents($message_body_path,$incomingMail->textHtml);
+        if(empty($textHtml)){
+            $this->logger->info("Le corps du mail est vide, rien à sauvegarder");
+        } else {
+            $message_body_path = $tmp_dir."/message_body.html";
+            $this->logger->info("Sauvegarde du contenu du message HTML $message_body_path");
 
-        if (! $nb_octets){
-        	throw new RecoverableException("Impossible d'enregistrer ou de lire le contenu du mail (message_body)");
-		}
+            $nb_octets = file_put_contents($message_body_path, $textHtml);
+
+            if (! $nb_octets){
+                throw new RecoverableException("Impossible d'enregistrer ou de lire le contenu du mail (message_body)");
+            }
+        }
 
 		foreach ($incomingMail->getAttachments() as $attachment) {
 
-			$attachment_path = $tmp_file . "/" . $attachment->name;
+			$attachment_path = $tmp_dir . "/" . $attachment->name;
 			$this->logger->info("Sauvegarde de $attachment_path");
 
 			if (! copy($attachment->filePath,$attachment_path)){
@@ -106,23 +110,23 @@ class ActesImapRetrieve {
 		}
 
 
-		$this->logger->info("Déplacement du répertoire $tmp_file vers {$this->actes_response_tmp_local_path}");
+		$this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->actes_response_tmp_local_path}");
 
         if (! file_exists($this->actes_response_tmp_local_path)){
         	throw new UnrecoverableException("{$this->actes_response_tmp_local_path} n'existe pas");
 		}
 
         // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
-		$command = "mv $tmp_file {$this->actes_response_tmp_local_path}";
+		$command = "mv $tmp_dir {$this->actes_response_tmp_local_path}";
 
 		exec($command,$output,$return_var);
         if ($return_var != 0){
-        	throw new UnrecoverableException("Impossible de déplacer $tmp_file ");
+        	throw new UnrecoverableException("Impossible de déplacer $tmp_dir ");
 		}
 
 		$this->workerScript->putJobByClassName(
 			ActesAnalyseFichierRecuWorker::class,
-			basename($tmp_file)
+			basename($tmp_dir)
 		);
     }
 
