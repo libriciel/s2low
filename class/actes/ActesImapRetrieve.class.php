@@ -85,7 +85,7 @@ class ActesImapRetrieve {
         $textHtml = $incomingMail->textHtml;
 
         if(empty($textHtml)){
-            $this->logger->info("Le corps du mail est vide, rien à sauvegarder");
+            $this->logger->info("Le corps du mail est vide, il ne sera pas sauvegardé");
         } else {
             $message_body_path = $tmp_dir."/message_body.html";
             $this->logger->info("Sauvegarde du contenu du message HTML $message_body_path");
