@@ -148,7 +148,7 @@ services:
           - services
 
     pades-valid:
-        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.4.4
+        image: gitlab.libriciel.fr:4567/outils/pades-valid:1.4.7
         networks:
           - services
 
