@@ -8,9 +8,34 @@ use Symfony\Component\Process\Process;
 
 class CommandLauncher
 {
+    /**
+     * @throws RecoverableException
+     */
     public function launch(array $commmand, ICommandOutputTranslator $outputTranslator): string
     {
-        $process = new Process($commmand);
+        return $this->launchProcess(
+            new Process($commmand),
+            $outputTranslator
+        );
+    }
+
+    /**
+     * @throws RecoverableException
+     */
+    public function launchFromString(string $string, ICommandOutputTranslator $outputTranslator): string
+    {
+        return $this->launchProcess(
+            Process::fromShellCommandline($string),
+            $outputTranslator
+        );
+    }
+
+    /**
+     * @throws RecoverableException
+     * @throws Exception
+     */
+    private function launchProcess(Process $process, ICommandOutputTranslator $outputTranslator): string
+    {
         try {
             $process->run();
         } catch (Exception $exception) {

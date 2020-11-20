@@ -21,7 +21,11 @@ $signature =  $actesItems->Document->Signature . "\n";
 $verifyPKCS7Signature = new VerifyPKCS7Signature(
     "/etc/tedetis/ssl/validca/",
     new VerifyPemCertificateFactory(),
-    new PemCertificateFactory()
+    new PemCertificateFactory(),
+    new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+        "/etc/tedetis/ssl/validca/",
+        new \S2low\Services\ProcessCommand\CommandLauncher()
+    )
 );
 
-$verifyPKCS7Signature->verifyCertificate($signature);
+$verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
