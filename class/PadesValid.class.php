@@ -47,8 +47,8 @@ class PadesValid {
 		foreach($result->signatures as $signature){
 			$signature->pemCertificate = $this->getPERMCertificate($signature);
             $this->checkNecessaryFields($signature);
-            $x509_info = $this->parsePemCertificate($signature->pemCertificate);
-            $this->checkCertificateWasValidAtSignatureTime($x509_info, $signature);
+            $signature->x509_info = $this->parsePemCertificate($signature->pemCertificate);
+            $this->checkCertificateWasValidAtSignatureTime($signature->x509_info, $signature);
 		}
 		return true;
 	}
@@ -67,7 +67,10 @@ class PadesValid {
 		}
         foreach($result->signatures as $signature){
          	$signature->pemCertificate = $this->getPERMCertificate($signature);
-            $this->validSignature($signature);
+            $this->checkNecessaryFields($signature);
+            $signature->x509_info = $this->parsePemCertificate($signature->pemCertificate);
+            $this->checkCertificateWasValidAtSignatureTime($signature->x509_info, $signature);
+            $this->validateCertificateFomSignature($signature->pemCertificate);
         }
         return true;
     }
@@ -115,13 +118,9 @@ class PadesValid {
      * @return bool
      * @throws Exception
      */
-    private function validSignature($signature){
-        $this->checkNecessaryFields($signature);
-        $x509_info = $this->parsePemCertificate($signature->pemCertificate);
-    	$this->checkCertificateWasValidAtSignatureTime($x509_info, $signature);
-
+    private function validateCertificateFomSignature($certificateContent){
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
-        file_put_contents($certificate_path,$signature->pemCertificate);
+        file_put_contents($certificate_path,$certificateContent);
         try {
             $this->verifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain(
                 $certificate_path,
