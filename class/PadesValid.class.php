@@ -46,7 +46,9 @@ class PadesValid {
 		}
 		foreach($result->signatures as $signature){
 			$signature->pemCertificate = $this->getPERMCertificate($signature);
-			$this->validSignatureWithoutCertificateChecking($signature);
+            $this->checkNecessaryFields($signature);
+            $x509_info = $this->parsePemCertificate($signature->pemCertificate);
+            $this->checkCertificateWasValidAtSignatureTime($x509_info, $signature);
 		}
 		return true;
 	}
@@ -114,8 +116,10 @@ class PadesValid {
      * @throws Exception
      */
     private function validSignature($signature){
+        $this->checkNecessaryFields($signature);
+        $x509_info = $this->parsePemCertificate($signature->pemCertificate);
+    	$this->checkCertificateWasValidAtSignatureTime($x509_info, $signature);
 
-    	$this->validSignatureWithoutCertificateChecking($signature);
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
         file_put_contents($certificate_path,$signature->pemCertificate);
         try {
@@ -131,26 +135,36 @@ class PadesValid {
         return true;
     }
 
-	/**
-	 * @param $signature
-	 * @return bool
-	 * @throws Exception
-	 */
-    private function validSignatureWithoutCertificateChecking($signature){
-		if (empty($signature->valid) || ! $signature->valid){
-			throw new Exception("Au moins une signature n'est pas valide");
-		}
-		if(empty($signature->signingCert)){
-			throw new Exception("Impossible de récupérer le certificat de signature");
-		};
-		if (empty($signature->signatureDate)){
-			throw new Exception("Impossible de determiner la date de la signature");
-		}
+    private function checkNecessaryFields($signature){
+        if (empty($signature->valid) || ! $signature->valid){
+            throw new Exception("Au moins une signature n'est pas valide");
+        }
+        if(empty($signature->signingCert)){
+            throw new Exception("Impossible de récupérer le certificat de signature");
+        };
+        if (empty($signature->signatureDate)){
+            throw new Exception("Impossible de determiner la date de la signature");
+        }
+    }
+
+    private function parsePemCertificate($certificate){
+        $x509_info = openssl_x509_parse($certificate);
+
+        if(!$x509_info){
+            throw new Exception("Problème à l'ouverture du certificat : ".openssl_error_string());
+        }
+        return $x509_info;
+    }
 
 
-		$x509_info = openssl_x509_parse($signature->pemCertificate);
-
-		$signatureDate = $this->getTimestampFromSignature($signature);
+    /**
+     * @param $x509_info
+     * @param $signature
+     * @return void
+     * @throws \Exception
+     */
+    private function checkCertificateWasValidAtSignatureTime($x509_info, $signature){
+        $signatureDate = $this->getTimestampFromSignature($signature);
 
 		if ($signatureDate < $x509_info['validFrom_time_t'] ||
 			$signatureDate > $x509_info['validTo_time_t']
@@ -158,7 +172,6 @@ class PadesValid {
 			throw new Exception("La date de la signature {$signature->signatureDate}" .
 				" n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
 		}
-		return true;
 	}
 
 	private function getPERMCertificate($signature){
