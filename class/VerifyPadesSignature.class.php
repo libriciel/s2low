@@ -3,9 +3,16 @@
 
 class VerifyPadesSignature
 {
+    private $authorized_ca_path;
+    /** @var VerifyPKCS7Signature  */
+    private $tempVerifyPKCS7Signature;
+    /** @var VerifyPemCertificate  */
+    private $verifyPemCertificate;
+
     public function __construct($authorized_ca_path){
         $this->authorized_ca_path = $authorized_ca_path;
         $this->tempVerifyPKCS7Signature = new VerifyPKCS7Signature($authorized_ca_path);    //TODO : remove
+        $this->verifyPemCertificate = new VerifyPemCertificate($authorized_ca_path);        //TODO : use injection
     }
 
     public function setTempVerifyPKCS7Signature(VerifyPKCS7Signature $verifyPKCS7Signature){    //TODO : remove
@@ -18,9 +25,9 @@ class VerifyPadesSignature
      */
     public function validateSignatureWithoutCertificateChecking($signature): void
     {
-        $signature->pemCertificate = $this->addBeginAndEndToPemCertificate($signature->signingCert);
+        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
         $this->checkNecessaryFields($signature);
-        $signature->x509_info = $this->parsePemCertificate($signature->pemCertificate);
+        $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
         $this->checkCertificateWasValidAtSignatureTime($signature->x509_info, $signature);
     }
 
@@ -93,22 +100,5 @@ class VerifyPadesSignature
     private function getTimestampFromSignature($signature)
     {
         return floor($signature->signatureDate / 1000);
-    }
-
-    private function addBeginAndEndToPemCertificate($nakedCertificate){
-        $beginpem = "-----BEGIN CERTIFICATE-----\n";
-        $endpem = "\n-----END CERTIFICATE-----\n";
-
-        $signing_cert = implode("\n",str_split($nakedCertificate,78));
-        return $beginpem.$signing_cert.$endpem;
-    }
-
-    public function parsePemCertificate($certificate){
-        $x509_info = openssl_x509_parse($certificate);
-
-        if(!$x509_info){
-            throw new Exception("Problème à l'ouverture du certificat : ".openssl_error_string());
-        }
-        return $x509_info;
     }
 }
