@@ -171,4 +171,16 @@ class VerifyPemCertificateTest extends S2lowTestCase
             self::BASE_CERTIFICATES_DIR . "/autosignedDateKo/cert.pem"
         );
     }
+
+    #-------------------------------------------------------------------------------------------------------------------
+
+    public function testExceptionIsThrownWhenWrongCertificateIsParsed(){
+        $baseCertificatesDir =__DIR__."/fixtures/certificats";
+        $verificator = new VerifyPemCertificate("$baseCertificatesDir/dateOk/emptyac/");
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Problème à l'ouverture du certificat : ");
+        $verificator->parsePemCertificate("Pas un certificat");
+
+    }
 }

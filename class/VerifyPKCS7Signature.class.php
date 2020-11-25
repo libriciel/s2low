@@ -45,7 +45,7 @@ class VerifyPKCS7Signature {
 			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
 		}
 
-		$this->checkCertificateWithoutCheckingCertificateChain($certificate_file);
+		$this->verifyPemCertificate->checkCertificate($certificate_file);
 
 		# On ne va pas vérifier le certificat (option -noverify)
         # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
@@ -66,7 +66,7 @@ class VerifyPKCS7Signature {
 		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
 		file_put_contents($certificate_path, $certificate);
 		try {
-			$this->checkCertificateWithoutCheckingCertificateChain($certificate_path);
+			$this->verifyPemCertificate->checkCertificateWithoutCheckingCertificateChain($certificate_path);
 		} finally {
 			unlink($signature_path);
 			unlink($certificate_path);
@@ -87,13 +87,4 @@ class VerifyPKCS7Signature {
 
 		return $cert;
 	}
-
-
-	public function checkCertificate($certificate_path) {
-        return false;
-    }
-
-	public function checkCertificateWithoutCheckingCertificateChain($certificate_path){
-        return false;
-    }
 }
