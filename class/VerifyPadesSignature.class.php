@@ -4,19 +4,12 @@
 class VerifyPadesSignature
 {
     private $authorized_ca_path;
-    /** @var VerifyPKCS7Signature  */
-    private $tempVerifyPKCS7Signature;
     /** @var VerifyPemCertificate  */
     private $verifyPemCertificate;
 
     public function __construct($authorized_ca_path){
         $this->authorized_ca_path = $authorized_ca_path;
-        $this->tempVerifyPKCS7Signature = new VerifyPKCS7Signature($authorized_ca_path);    //TODO : remove
         $this->verifyPemCertificate = new VerifyPemCertificate($authorized_ca_path);        //TODO : use injection
-    }
-
-    public function setTempVerifyPKCS7Signature(VerifyPKCS7Signature $verifyPKCS7Signature){    //TODO : remove
-        $this->tempVerifyPKCS7Signature = $verifyPKCS7Signature;
     }
 
     /**
@@ -53,9 +46,9 @@ class VerifyPadesSignature
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
         file_put_contents($certificate_path,$certificateContent);
         try {
-            $this->tempVerifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain(
-                $certificate_path,
-                $signatureTimestamp
+            $this->verifyPemCertificate->checkCertificateWithoutCheckingCertificateChain(
+            $certificate_path,
+            $signatureTimestamp
             );
         } catch (Exception $e){
             unlink($certificate_path);
@@ -78,6 +71,7 @@ class VerifyPadesSignature
     }
 
     /**
+     * @param $x509_info
      * @param $signature
      * @return void
      * @throws Exception
