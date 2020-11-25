@@ -21,6 +21,7 @@ services:
             WEB_HTTP_PORT: ${WEB_HTTP_PORT}
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT}
             ACTES_ALWAYS_CAN_VALIDATE: "true"
+            XDEBUG_ON: ${XDEBUG_ON}
 
     db:
         environment:

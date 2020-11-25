@@ -20,8 +20,12 @@ class PadesValidTest extends S2lowTestCase {
     }
 
     private function createPadeValid($checkCertificateThrowAnException = false){
-		$this->padesValid = new PadesValid("",__DIR__."/../lib/fixtures/validca/");
-		$this->padesValid->setVerifyPKCS7Signature($this->getPKCS7Signature($checkCertificateThrowAnException));
+        $rgs_validca_path = __DIR__ . "/../lib/fixtures/validca/";
+        $this->padesValid = new PadesValid("", $rgs_validca_path);
+        //TODO : check and remove
+		$verifyPadesSignature = new VerifyPadesSignature($rgs_validca_path);
+		$verifyPadesSignature->setTempVerifyPKCS7Signature($this->getPKCS7Signature($checkCertificateThrowAnException));
+		$this->padesValid->setVerifyPadesSignature($verifyPadesSignature);
 	}
 
     public function getPKCS7Signature($checkCertificateThrowAnException = false){
