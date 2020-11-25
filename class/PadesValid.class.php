@@ -18,7 +18,7 @@ class PadesValid {
         $this->pades_valid_url = $pades_valid_url;
         $this->rgs_validca_path = $rgs_validca_path;
         $this->setCurlWrapperFactory(new CurlWrapperFactory());
-        $this->setVerifyPadesSignature(new VerifyPadesSignature($this->rgs_validca_path));
+        $this->setVerifyPadesSignature(new VerifyPadesSignature(new VerifyPemCertificate($this->rgs_validca_path)));
     }
 
     public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
@@ -38,32 +38,31 @@ class PadesValid {
 	 * @return bool|mixed
 	 * @throws Exception
 	 * @throws RecoverableException
+     * @deprecated
 	 */
+	//TODO A Supprimer
     public function validateWithoutCertificateChecking($filepath){
-		$result = $this->getPadesValidResult($filepath);
-		if ($result === false){
-			return false;
-		}
-		foreach($result->signatures as $signature){
-            $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
-        }
-		return true;
+		return $this->validate($filepath,false);
 	}
 
 
-	/**
-	 * @param $filepath
-	 * @return bool
-	 * @throws RecoverableException
-	 * @throws Exception
-	 */
-    public function validate($filepath){
+    /**
+     * @param $filepath
+     * @param bool $certificateChecking
+     * @return bool
+     * @throws RecoverableException
+     */
+    public function validate($filepath,$certificateChecking=true){
     	$result = $this->getPadesValidResult($filepath);
     	if ($result === false){
     		return false;
 		}
         foreach($result->signatures as $signature){
-            $this->verifyPadesSignature->validateSignature($signature);
+            if($certificateChecking){
+                $this->verifyPadesSignature->validateSignature($signature);
+            } else {
+                $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
+            }
         }
         return true;
     }

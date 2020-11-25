@@ -3,13 +3,11 @@
 
 class VerifyPadesSignature
 {
-    private $authorized_ca_path;
     /** @var VerifyPemCertificate  */
     private $verifyPemCertificate;
 
-    public function __construct($authorized_ca_path){
-        $this->authorized_ca_path = $authorized_ca_path;
-        $this->verifyPemCertificate = new VerifyPemCertificate($authorized_ca_path);        //TODO : use injection
+    public function __construct($verifyPemCertificate){
+        $this->verifyPemCertificate = $verifyPemCertificate;
     }
 
     /**
