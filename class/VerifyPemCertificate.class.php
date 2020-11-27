@@ -37,13 +37,9 @@ class VerifyPemCertificate
 
     /**
      * @param $certificate_path
-     * @param $out
-     * @param $ret
-     * @param $matches
      * @return array
-     * @throws Exception
      */
-    public function analyseCertificate($certificate_path, string $timestamp =null): array
+    private function launchOpenSslVerify($certificate_path, string $timestamp =null): array
     {
         $erreurs = [];
         $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
@@ -62,63 +58,54 @@ class VerifyPemCertificate
                 ];
             }
         }
-
-        $certificateChainErrorThrown = false;
-
-        foreach ($erreurs as $erreur){
-            if(!in_array($erreur["errorCode"],$this::CERTIFICATE_CHAIN_ERRORS)){
-                $certificateChainErrorThrown = true;
-            }
-        }
-
-        if (!$certificateChainErrorThrown) {
-            // La date n'est alors pas forcément vérifiée par openssl si une erreur liée à la chaine de certificats
-            //  a été détectée.
-            // Copié - collé depuis PadesValid => REFACTO NECESSAIRE
-            $x509_info = openssl_x509_parse(file_get_contents($certificate_path));  #Moche
-
-            $dateValidFrom = new DateTime(date(DATE_RFC2822, $x509_info['validFrom_time_t']));
-            $dateValidTo = new DateTime(date(DATE_RFC2822, $x509_info['validTo_time_t']));
-            $dateSignature = new DateTime("NOW");
-
-            if(!is_null($timestamp)){
-                $dateSignature->setTimestamp($timestamp);
-            }
-
-            if ($dateSignature < $dateValidFrom || $dateSignature > $dateValidTo) {
-                $erreurs[] = [
-                    "errorCode"=>10,
-                    "depth"=>0,
-                    "message"=>"La date de la signature ".$dateSignature->format("d-M-Y H:i:s") .
-                        " n'entre pas dans la date de validité du certificat ".
-                        $dateValidFrom->format("d-M-Y H:i:s")." - ".$dateValidTo->format("d-M-Y H:i:s")
-                ];
-            }
-        }
-
         return $erreurs;
     }
 
-    public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $timestamp =null){
-        $erreurs =  $this->analyseCertificate($certificate_path,$timestamp);
+    private function checkCertificateIsValidAtDate( $date, $dateValidFrom, $dateValidTo){
+        if ($date < $dateValidFrom || $date > $dateValidTo) {
+            throw new Exception("La date de la signature ".$date->format("d-M-Y H:i:s") .
+                        " n'entre pas dans la date de validité du certificat ".
+                        $dateValidFrom->format("d-M-Y H:i:s")." - ".$dateValidTo->format("d-M-Y H:i:s"));
+        }
+    }
 
-        foreach ($erreurs as $key=>$erreur){
-            if(in_array($erreur["errorCode"],$this::CERTIFICATE_CHAIN_ERRORS)){
-                unset($erreurs[$key]);
-            }
+    public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $timestamp =null){
+        return $this->checkCertificate($certificate_path, $timestamp,$this::CERTIFICATE_CHAIN_ERRORS);
+    }
+
+    public function checkCertificate($certificate_path, $timestamp = null, $filteredErrors = []): bool
+    {
+        $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
+
+        $this->checkForBlockingVerifyErrors($erreursVerifyOpenSsl, $filteredErrors);
+
+        $x509_info = $this->parsePemCertificate(file_get_contents($certificate_path));
+
+        $dateSignature = new DateTime("NOW");
+
+        if(!is_null($timestamp)){
+            $dateSignature->setTimestamp($timestamp);
         }
-        $erreursRearrangees=array_values($erreurs);
-        if(!empty($erreursRearrangees)){
-            throw new Exception($erreursRearrangees[0]["message"]);
-        }
+
+        $this->checkCertificateIsValidAtDate(
+            $dateSignature,
+            new DateTime(date(DATE_RFC2822, $x509_info['validFrom_time_t'])),
+            new DateTime(date(DATE_RFC2822, $x509_info['validTo_time_t'])));
+
         return true;
     }
 
-    public function checkCertificate($certificate_path) {
-        $erreurs =  $this->analyseCertificate($certificate_path);
-        if(!empty($erreurs)){
-            throw new Exception($erreurs[0]["message"]);
+    /**
+     * @param array $errors
+     * @param array $nonBlockingErrors
+     * @throws Exception
+     */
+    private function checkForBlockingVerifyErrors(array $errors, array $nonBlockingErrors): void
+    {
+        foreach ($errors as $key => $erreur) {
+            if (!in_array($erreur["errorCode"], $nonBlockingErrors)) {
+                throw new Exception($erreur["message"]);
+            }
         }
-        return true;
     }
 }

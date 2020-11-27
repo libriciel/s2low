@@ -105,7 +105,6 @@ class PadesValidTest extends S2lowTestCase {
             ->getMock();
 
         if(! is_null($exceptionMessage)){
-            echo "exception";
             $verifyPadesSignatureMock->expects(
                 $this->exactly($callRepartition[0])
             )->method('validateSignature')->willThrowException(
@@ -117,7 +116,6 @@ class PadesValidTest extends S2lowTestCase {
                 new Exception($exceptionMessage)
             );
         } else {
-            echo "no Exception";
             $verifyPadesSignatureMock->expects(
                 $this->exactly($callRepartition[0])
             )->method('validateSignature');
