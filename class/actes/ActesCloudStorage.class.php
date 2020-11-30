@@ -67,7 +67,7 @@ class ActesCloudStorage implements ICloudStorable {
 	public function getFinder(): Finder
 	{
 		$finder = new Finder();
-		$finder->in($this->actes_files_upload_root."/*/")->name("*.tar.gz");
+		$finder->in($this->actes_files_upload_root)->name("*.tar.gz");
 		return $finder;
 	}
 

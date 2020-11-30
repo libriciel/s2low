@@ -2,6 +2,7 @@
 
 ## Correction
 - refactoring du ménage des actes envoyés sur le cloud
+- correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargé, supression des répertoires de base #666
 
 ## Evolution
 - mise à jour de pades-valid vers 1.4.7 #223
