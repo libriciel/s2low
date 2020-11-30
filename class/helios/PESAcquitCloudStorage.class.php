@@ -68,7 +68,7 @@ class PESAcquitCloudStorage  implements ICloudStorable {
 		return $finder;
 	}
 
-    public function deleteFile(SplFileInfo $file): void
+    public function deleteFileOnDisk(SplFileInfo $file): void
     {
         $filesystem = new Filesystem();
         $filesystem->remove($file->getRealPath());

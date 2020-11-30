@@ -49,7 +49,7 @@ class ActesCloudStorage implements ICloudStorable {
 	{
 	    $actes_root = rtrim($this->actes_files_upload_root,"/");
 	    if (! preg_match("#$actes_root/(.*)#",$file_on_disk_path,$matches) || ! $matches[1]){
-	        throw new UnrecoverableException("Unable to find the path file on cloud with file path on disk : $file_on_disk_path");
+	        throw new UnrecoverableException("$file_on_disk_path doesn't match pattern $actes_root/(.*)");
         }
 		return $matches[1];
 	}
@@ -71,7 +71,7 @@ class ActesCloudStorage implements ICloudStorable {
 		return $finder;
 	}
 
-    public function deleteFile(SplFileInfo $file): void
+    public function deleteFileOnDisk(SplFileInfo $file): void
     {
         $filesystem = new Filesystem();
         $dirname = $file->getPath();
