@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 
 class ActesCloudStorage implements ICloudStorable {
@@ -39,9 +40,18 @@ class ActesCloudStorage implements ICloudStorable {
 		return $envelope_info['file_path'];
 	}
 
+    /**
+     * @param string $file_on_disk_path
+     * @return string
+     * @throws UnrecoverableException
+     */
 	public function getFilePathOnCloudWithFileOnDiskPath(string $file_on_disk_path): string
 	{
-		return $this->actes_files_upload_root."/".$file_on_disk_path;
+	    $actes_root = rtrim($this->actes_files_upload_root,"/");
+	    if (! preg_match("#$actes_root/(.*)#",$file_on_disk_path,$matches) || ! $matches[1]){
+	        throw new UnrecoverableException("Unable to find the path file on cloud with file path on disk : $file_on_disk_path");
+        }
+		return $matches[1];
 	}
 
 	public function setNotAvailable(int $object_id): void
@@ -57,7 +67,17 @@ class ActesCloudStorage implements ICloudStorable {
 	public function getFinder(): Finder
 	{
 		$finder = new Finder();
-		$finder->in($this->actes_files_upload_root."/*/*.tar.gz");
+		$finder->in($this->actes_files_upload_root."/*/")->name("*.tar.gz");
 		return $finder;
 	}
+
+    public function deleteFile(SplFileInfo $file): void
+    {
+        $filesystem = new Filesystem();
+        $dirname = $file->getPath();
+        $filesystem->remove($file->getRealPath());
+        if (count(scandir($dirname)) == 2){
+            rmdir($dirname);
+        }
+    }
 }

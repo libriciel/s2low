@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 
 class MailIncludedFilesCloudStorage implements ICloudStorable
@@ -58,4 +59,10 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 		$finder->in($this->mail_files_upload_root."/*")->name("mail.zip");
 		return $finder;
 	}
+
+    public function deleteFile(SplFileInfo $file): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($file->getRealPath());
+    }
 }

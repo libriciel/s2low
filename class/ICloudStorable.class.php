@@ -21,4 +21,6 @@ interface ICloudStorable {
 
 	public function getFinder() : Finder;
 
+    public function deleteFile(SplFileInfo $file): void;
+
 }
