@@ -156,8 +156,7 @@ class CloudStorage {
 			}
 			$this->logger->info("Deleting file : {$file->getRealPath()}");
 			if ($do) {
-				$filesystem = new Filesystem();
-				$filesystem->remove($file->getRealPath());
+			    $this->iCloudStorable->deleteFileOnDisk($file);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 
 class MailIncludedFilesCloudStorage implements ICloudStorable
@@ -55,7 +56,17 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 	public function getFinder(): Finder
 	{
 		$finder = new Finder();
-		$finder->in($this->mail_files_upload_root."/*")->name("mail.zip");
+		$finder->in($this->mail_files_upload_root)->name("mail.zip");
 		return $finder;
 	}
+
+    public function deleteFileOnDisk(SplFileInfo $file): void
+    {
+        $filesystem = new Filesystem();
+        $dirname = $file->getPath();
+        $filesystem->remove($file->getRealPath());
+        if (count(scandir($dirname)) == 2){
+            rmdir($dirname);
+        }
+    }
 }

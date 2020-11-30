@@ -202,7 +202,6 @@ class CloudStorageTest extends S2lowTestCase {
 		$iCloudStorable = $this->getICloudStorable($file_to_send,$file_to_send,$finder);
 
 		$this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-		$this->assertFileNotExists($file_to_send);
 		$this->assertNbJourDerniereModif();
 		$this->assertLogMessage(
 			"Deleting file : $file_to_send",2

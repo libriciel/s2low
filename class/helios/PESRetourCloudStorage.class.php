@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 
 class PESRetourCloudStorage  implements ICloudStorable {
@@ -66,4 +67,10 @@ class PESRetourCloudStorage  implements ICloudStorable {
 		$finder->in($this->helios_responses_root)->name("*.xml");
 		return $finder;
 	}
+
+    public function deleteFileOnDisk(SplFileInfo $file): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove($file->getRealPath());
+    }
 }
