@@ -56,9 +56,13 @@ class VerifyPKCS7Signature {
 			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
 		}
 
-		$this->checkCertificate($certificate_file);
+		$this->checkCertificateWithoutCheckingCertificateChain($certificate_file);
 
-		$command ="openssl smime -in $signature_file -inform PEM -verify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
+		# On ne va pas vérifier le certificat (option -noverify)
+        # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
+        # Au niveau de la date et de la chaine de certification, on va se reposer sur
+        # la fonction précédente
+		$command ="openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
 		exec($command, $output, $return);
 		$output = implode("\n",$output);
 		if ($return != 0 ){
