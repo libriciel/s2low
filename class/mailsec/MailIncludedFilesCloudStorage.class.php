@@ -69,4 +69,21 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
             rmdir($dirname);
         }
     }
+
+    public function getObjectIdByFilePath(string $filepath): int
+    {
+        return $this->mailTransactionSQL->getIdByFilename(
+            $this->getFilePathOnCloudWithFileOnDiskPath($filepath)
+        );
+    }
+
+    public function setAvailable(int $object_id, bool $available = true) : void
+    {
+        $this->mailTransactionSQL->setAvailable($object_id,$available);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        return $this->mailTransactionSQL->isAvailable($object_id);
+    }
 }

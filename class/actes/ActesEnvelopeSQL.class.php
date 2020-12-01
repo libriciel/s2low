@@ -87,5 +87,23 @@ class ActesEnvelopeSQL extends SQL
 		return $this->getSQLQuery();
 	}
 
+    public function getByFilepath(string $filepath)
+    {
+        $sql = "SELECT id FROM actes_envelopes WHERE file_path=?";
+        return $this->queryOne($sql,$filepath);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        $sql = "SELECT not_available FROM actes_envelopes WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
+    }
+
+    public function setAvailable(int $object_id, bool $available)
+    {
+        $sql = "UPDATE actes_envelopes SET not_available=? WHERE id=?";
+        $this->query($sql, ! $available,$object_id);
+    }
+
 
 }

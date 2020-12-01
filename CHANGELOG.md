@@ -1,8 +1,12 @@
 # 4.3.5
 
+**Cette version demande une modification de la base de données**
+
 ## Correction
 - refactoring du ménage des actes envoyés sur le cloud
 - correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargé, supression des répertoires de base #666
+- ajout de la colonne pes_retour:not_available afin de faire fonctionner le versement dans le cloud
+- correction lorsqu'un objet est incorrectement marqué comme non disponible sur le disque #665  
 - levée de certaines restrictions sur les certificats des signatures PKCS7 (chaine de confiance, purpose) #667
 
 ## Evolution

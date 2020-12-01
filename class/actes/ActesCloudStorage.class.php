@@ -80,4 +80,20 @@ class ActesCloudStorage implements ICloudStorable {
             rmdir($dirname);
         }
     }
+
+    public function getObjectIdByFilePath(string $filepath): int
+    {
+        $filepath = $this->getFilePathOnCloudWithFileOnDiskPath($filepath);
+        return $this->actesEnvelopeSQL->getByFilepath($filepath);
+    }
+
+    public function setAvailable(int $object_id, bool $available = true) : void
+    {
+        $this->actesEnvelopeSQL->setAvailable($object_id,$available);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        return $this->actesEnvelopeSQL->isAvailable($object_id);
+    }
 }

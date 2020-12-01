@@ -73,4 +73,21 @@ class PESAcquitCloudStorage  implements ICloudStorable {
         $filesystem = new Filesystem();
         $filesystem->remove($file->getRealPath());
     }
+
+    public function getObjectIdByFilePath(string $filepath): int
+    {
+        return $this->heliosTransactionsSQL->getByPesAcquitName(
+            $this->getFilePathOnCloudWithFileOnDiskPath($filepath)
+        );
+    }
+
+    public function setAvailable(int $object_id, bool $available = true) : void
+    {
+        $this->heliosTransactionsSQL->setPesAcquitAvailable($available,$available);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        $this->heliosTransactionsSQL->isPesAcquitAvailable($object_id);
+    }
 }

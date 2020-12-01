@@ -73,4 +73,21 @@ class PESRetourCloudStorage  implements ICloudStorable {
         $filesystem = new Filesystem();
         $filesystem->remove($file->getRealPath());
     }
+
+    public function getObjectIdByFilePath(string $filepath): int
+    {
+        return $this->heliosRetourSQL->getByFilename(
+            $this->getFilePathOnCloudWithFileOnDiskPath($filepath)
+        );
+    }
+
+    public function setAvailable(int $object_id, bool $available = true) : void
+    {
+        $this->heliosRetourSQL->setAvailable($object_id,$available);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        return $this->heliosRetourSQL->isAvailable($object_id);
+    }
 }
