@@ -83,11 +83,6 @@ class WorkerScript {
 
 	private function beanstalkdWorker(IWorker $IWorker){
 
-		if ($IWorker instanceof IWorkerAlwaysLaunch){
-			$this->s2lowLogger->debug("Initialisation avec un job");
-			$this->rebuildQueue($IWorker);
-		}
-
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
 		$this->s2lowLogger->info("Démarrage en mode beanstalkd");
 
@@ -129,10 +124,6 @@ class WorkerScript {
 			if ($this->sigTermHandler->isSigtermCalled()){
 				$this->s2lowLogger->info("Exit on signal (after traitement)" . $this->sigTermHandler->getLastSigNo());
 				return true;
-			}
-			if ($IWorker instanceof IWorkerAlwaysLaunch){
-				$this->s2lowLogger->debug("renvoi du job");
-				$this->beanstalkdWrapper->put($IWorker->getQueueName(),1,1);
 			}
 			$this->sigTermHandler->setExitOnSignal(true);
 		}

@@ -3,6 +3,7 @@
 require_once (__DIR__."/../config/config.php");
 
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->scriptByClassName(HeliosReceptionWorker::class);
+$workerScript->setMinExecutionTimeInSeconds(1);
+$workerScript->scriptByClassName(HeliosReceptionWorker::class,true,true);
 
 

@@ -6,12 +6,10 @@ $all = [
 	ActesAntivirusWorker::class,
 	ActesAnalyseFichierAEnvoyerWorker::class,
 	ActesEnvoiFichierWorker::class,
-	ActesReceptionFichierWorker::class,
 	ActesAnalyseFichierRecuWorker::class,
 	ActesEnvoiSaeWorker::class,
 	HeliosAnalyseFichierAEnvoyerWorker::class,
 	HeliosEnvoiWorker::class,
-	HeliosReceptionWorker::class,
 	HeliosAnalyseFichierRecuWorker::class,
 ];
 

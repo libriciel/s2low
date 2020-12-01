@@ -1,6 +1,6 @@
 <?php
 
-class HeliosMenageWorker implements IWorker,IWorkerAlwaysLaunch
+class HeliosMenageWorker implements IWorker
 {
 
 	const QUEUE_NAME = 'helios-menage';

@@ -1,6 +1,6 @@
 <?php
 
-class HeliosReceptionWorker implements IWorker,IWorkerAlwaysLaunch {
+class HeliosReceptionWorker implements IWorker {
 
 
 	const QUEUE_NAME = 'helios-reception-fichier';
