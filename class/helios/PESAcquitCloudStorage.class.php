@@ -83,7 +83,7 @@ class PESAcquitCloudStorage  implements ICloudStorable {
 
     public function setAvailable(int $object_id, bool $available = true) : void
     {
-        $this->heliosTransactionsSQL->setPesAcquitAvailable($available,$available);
+        $this->heliosTransactionsSQL->setPesAcquitAvailable($object_id,$available);
     }
 
     public function isAvailable(int $object_id): bool
