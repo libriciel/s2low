@@ -1,6 +1,6 @@
 <?php
 
-class ActesReceptionFichierWorker implements IWorker,IWorkerAlwaysLaunch {
+class ActesReceptionFichierWorker implements IWorker {
 
 
 	const QUEUE_NAME = 'actes-reception-fichier';

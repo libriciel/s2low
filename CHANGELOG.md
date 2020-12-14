@@ -8,6 +8,7 @@
 - ajout de la colonne pes_retour:not_available afin de faire fonctionner le versement dans le cloud
 - correction lorsqu'un objet est incorrectement marqué comme non disponible sur le disque #665  
 - levée de certaines restrictions sur les certificats des signatures PKCS7 (chaine de confiance, purpose) #667
+- retrait des script IWorkerAlwaysLaunch laissé au contrôle de supervisord
 
 ## Evolution
 - mise à jour de pades-valid vers 1.4.7 #223
