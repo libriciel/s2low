@@ -38,6 +38,7 @@ unit_test:
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
         DONT_RETRIEVE_VALIDCA: "true"
+        XDEBUG_MODE: coverage
     script:
         - cd /var/www/s2low/
         - composer test-cover
