@@ -23,4 +23,10 @@ interface ICloudStorable {
 
     public function deleteFileOnDisk(SplFileInfo $file): void;
 
+    public function getObjectIdByFilePath(string $filepath): int;
+
+    public function setAvailable(int $object_id, bool $available = true) : void;
+
+    public function isAvailable(int $object_id): bool;
+
 }

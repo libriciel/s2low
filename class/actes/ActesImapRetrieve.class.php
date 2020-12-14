@@ -49,7 +49,7 @@ class ActesImapRetrieve {
             } catch (UnrecoverableException $e){
                 throw $e;
             } catch (Exception $e){
-				$this->logger->error("Erreur lors de la sauvegarde de $mail_id");
+				$this->logger->error("Erreur lors de la sauvegarde de $mail_id : ". $e->getMessage());
                 continue;
             }
 			$this->logger->info("Suppression du message : $mail_id");

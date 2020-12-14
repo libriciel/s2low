@@ -186,4 +186,12 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 		);
 	}
 
+    public function testSetPesAcquitAvailable(){
+        $transaction_id = $this->createTransaction();
+        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $heliosTransactionsSQL->setPesAcquitAvailable($transaction_id,true);
+        $this->assertTrue($heliosTransactionsSQL->isPesAcquitAvailable($transaction_id));
+    }
+
+
 }

@@ -39,7 +39,7 @@ CSR_TEMP_PATH=/tmp/$$_csr.pem
 openssl req  \
         -new \
         -newkey rsa:4096 \
-        -days 3650 \
+        -days 825 \
         -nodes  \
         -subj "/C=FR/ST=HERAULT/L=MONTPELLIER/O=LIBRICIEL/OU=CERTIFICAT_AUTO_SIGNE/CN=${SITE_HOST_NAME}/emailAddress=test@localhost" \
         -keyout ${PRIVKEY_PATH} \
@@ -53,7 +53,7 @@ fi
 
 openssl x509 \
         -req \
-        -days 3650 \
+        -days 825 \
         -in ${CSR_TEMP_PATH} \
         -signkey ${PRIVKEY_PATH} \
         -out ${CERTIFICATE_PATH} \

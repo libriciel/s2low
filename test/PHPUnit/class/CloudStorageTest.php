@@ -20,6 +20,7 @@ class CloudStorageTest extends S2lowTestCase {
 		if ($finder){
 			$iCloudStorable->method("getFinder")->willReturn($finder);
 		}
+
 		return $iCloudStorable;
 	}
 
@@ -225,7 +226,7 @@ class CloudStorageTest extends S2lowTestCase {
 		$this->assertFileExists($file_to_send);
 		$this->assertNbJourDerniereModif();
 		$this->assertLogMessage(
-			"File foo.txt not existing on cloud : not deleted",2
+			"File $file_to_send not existing on cloud : not deleted",2
 		);
 	}
 
@@ -237,5 +238,34 @@ class CloudStorageTest extends S2lowTestCase {
                 ->storeObject(42)
         );
     }
+
+    public function testWhenObjectMarkedAsNotAvailable()
+    {
+        $this->setOpenStackSwiftWrapper(false,false);
+        $file_to_send = $this->createFile();
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
+        $iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
+        $iCloudStorable->method("isAvailable")->willReturn(false);
+        $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
+        $iCloudStorable->expects($this->once())->method("setAvailable")->with($this->equalTo(true));
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
+        $this->assertLogMessage("42 set to available",3);
+    }
+
+    public function testWhenObjectMarkedAsAvailable()
+    {
+        $this->setOpenStackSwiftWrapper(false,false);
+        $file_to_send = $this->createFile();
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
+        $iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
+        $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
+        $iCloudStorable->method("isAvailable")->willReturn(true);
+        $iCloudStorable->expects($this->never())->method("setAvailable");
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
+        $this->assertLogMessage("Object not yet in cloud",3);
+    }
+
 
 }

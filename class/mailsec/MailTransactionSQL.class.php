@@ -40,4 +40,22 @@ class MailTransactionSQL extends SQL {
 		return $this->queryOne($sql,$fn_download);
 	}
 
+    public function getIdByFilename(string $fn_download)
+    {
+        $sql = "SELECT id FROM mail_transaction WHERE fn_download=?";
+        return $this->queryOne($sql,$fn_download);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        $sql = "SELECT not_available FROM mail_transaction WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
+    }
+
+    public function setAvailable(int $object_id, bool $available)
+    {
+        $sql = "UPDATE mail_transaction SET not_available=? WHERE id=?";
+        $this->query($sql, intval(! $available),$object_id);
+    }
+
 }

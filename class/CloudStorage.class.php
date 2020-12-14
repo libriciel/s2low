@@ -92,6 +92,11 @@ class CloudStorage {
 		return true;
 	}
 
+    /**
+     * @deprecated ? on dirait que ca ne sert que dans les tests ?
+     * @param int $object_id
+     * @return bool
+     */
 	public function deleteIfIsInCloud(int $object_id){
 
 		$file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
@@ -151,7 +156,18 @@ class CloudStorage {
 				$this->iCloudStorable->getContainerName(),
 				$this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath())
 			)){
-				$this->logger->info("File {$file->getFilename()} not existing on cloud : not deleted");
+				$this->logger->info("File {$file->getRealPath()} not existing on cloud : not deleted");
+				$object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
+				if (! $object_id){
+				    $this->logger->notice("Unable to find object id for the file " . $file->getRealPath());
+				    continue;
+                }
+				if (! $this->iCloudStorable->isAvailable($object_id)){
+				    $this->iCloudStorable->setAvailable($object_id,true);
+				    $this->logger->info("$object_id set to available");
+                } else {
+				    $this->logger->notice("Object not yet in cloud");
+                }
 				continue;
 			}
 			$this->logger->info("Deleting file : {$file->getRealPath()}");

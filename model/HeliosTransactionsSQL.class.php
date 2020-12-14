@@ -369,4 +369,41 @@ class HeliosTransactionsSQL extends SQL {
 		return $result;
 	}
 
+    public function getIdBySHA1(string $sha1)
+    {
+        $sql = "select id from helios_transactions where sha1=?";
+        return $this->queryOne($sql,$sha1);
+    }
+
+    public function isTransactionAvailable(int $object_id): bool
+    {
+        $sql = "SELECT not_available FROM helios_transactions WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
+    }
+
+    public function setTransactionAvailable(int $object_id, bool $available)
+    {
+        $sql = "UPDATE helios_transactions SET not_available=? WHERE id=?";
+        $this->query($sql, intval(! $available),$object_id);
+    }
+
+    public function isPesAcquitAvailable(int $object_id): bool
+    {
+        $sql = "SELECT pes_acquit_not_available FROM helios_transactions WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
+    }
+
+    public function setPesAcquitAvailable(int $object_id, bool $available)
+    {
+        $sql = "UPDATE helios_transactions SET pes_acquit_not_available=? WHERE id=?";
+        $this->query($sql, intval(! $available),$object_id);
+    }
+
+    public function getByPesAcquitName(string $pes_aquit_filename)
+    {
+        $sql = "SELECT id FROM helios_transactions WHERE acquit_filename=?";
+        return $this->queryOne($sql,$pes_aquit_filename);
+    }
+
+
 }

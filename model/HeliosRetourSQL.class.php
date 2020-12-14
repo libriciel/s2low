@@ -53,4 +53,22 @@ class HeliosRetourSQL extends SQL {
         $sql = "UPDATE helios_retour SET is_in_cloud=TRUE WHERE id=?";
         $this->query($sql,$helios_retour_id);
     }
+
+    public function getByFilename(string $filename)
+    {
+        $sql = "SELECT id FROM helios_retour WHERE filename=?";
+        return $this->queryOne($sql,$filename);
+    }
+
+    public function isAvailable(int $object_id): bool
+    {
+        $sql = "SELECT not_available FROM helios_retour WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
+    }
+
+    public function setAvailable(int $object_id, bool $available)
+    {
+        $sql = "UPDATE helios_retour SET not_available=? WHERE id=?";
+        $this->query($sql, intval(! $available),$object_id);
+    }
 }
