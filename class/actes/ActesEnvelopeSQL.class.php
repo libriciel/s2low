@@ -102,7 +102,7 @@ class ActesEnvelopeSQL extends SQL
     public function setAvailable(int $object_id, bool $available)
     {
         $sql = "UPDATE actes_envelopes SET not_available=? WHERE id=?";
-        $this->query($sql, ! $available,$object_id);
+        $this->query($sql, intval(! $available),$object_id);
     }
 
 

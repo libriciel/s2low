@@ -384,7 +384,7 @@ class HeliosTransactionsSQL extends SQL {
     public function setTransactionAvailable(int $object_id, bool $available)
     {
         $sql = "UPDATE helios_transactions SET not_available=? WHERE id=?";
-        $this->query($sql, ! $available,$object_id);
+        $this->query($sql, intval(! $available),$object_id);
     }
 
     public function isPesAcquitAvailable(int $object_id): bool
@@ -396,7 +396,7 @@ class HeliosTransactionsSQL extends SQL {
     public function setPesAcquitAvailable(int $object_id, bool $available)
     {
         $sql = "UPDATE helios_transactions SET pes_acquit_not_available=? WHERE id=?";
-        $this->query($sql, ! $available,$object_id);
+        $this->query($sql, intval(! $available),$object_id);
     }
 
     public function getByPesAcquitName(string $pes_aquit_filename)

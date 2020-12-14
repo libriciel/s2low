@@ -3,5 +3,7 @@ basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
+extendedKeyUsage = serverAuth
+
 [alt_names]
-DNS.1 = %PASTELL_HOST_NAME%
+DNS.1 = %SITE_HOST_NAME%

@@ -69,6 +69,6 @@ class HeliosRetourSQL extends SQL {
     public function setAvailable(int $object_id, bool $available)
     {
         $sql = "UPDATE helios_retour SET not_available=? WHERE id=?";
-        $this->query($sql, ! $available,$object_id);
+        $this->query($sql, intval(! $available),$object_id);
     }
 }
