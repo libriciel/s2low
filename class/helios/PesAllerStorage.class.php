@@ -135,6 +135,16 @@ class PesAllerStorage {
                 $file
             )){
             	$this->logger->info("File $file not existing on cloud : not deleted");
+            	// Début hotfix : Trouver l'id ------------------------------------------------------------------------
+            	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
+            	if(! $id){
+                    $this->logger->info("No transaction id found for $file");
+                    continue;
+                }
+            	if($this->heliosTransactionsSQL->isTransactionAvailable($id)){
+                    $this->heliosTransactionsSQL->setTransactionAvailable($id);
+                }
+            	// Fin hotfix ------------------------------------------------------------------------------------------
                 continue;
             }
 			$this->logger->info("Deleting file : $file");
