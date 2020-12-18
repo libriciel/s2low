@@ -139,10 +139,16 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
+                    if($do && unlink($this->helios_files_upload_root . "/" .$file)){
+                        $this->logger->info("File $file : unlink OK");
+                        continue;
+                    }
+                    $this->logger->info("File $file : unlink KO");
                     continue;
                 }
-            	if($this->heliosTransactionsSQL->isTransactionAvailable($id)){
-                    $this->heliosTransactionsSQL->setTransactionAvailable($id);
+            	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
+                    $this->logger->info("$file [transaction $id] passé à pes_acquit_not_available = false");
+                    $this->heliosTransactionsSQL->setTransactionAvailable($id,true);
                 }
             	// Fin hotfix ------------------------------------------------------------------------------------------
                 continue;
