@@ -1,3 +1,10 @@
+# 4.3.6 -
+
+**Cette version demande une modification de la base de données**
+
+## Correction
+- ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
+
 # 4.3.5 - 2020-12-14
 
 **Cette version demande une modification de la base de données**
