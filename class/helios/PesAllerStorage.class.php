@@ -139,11 +139,11 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    if($do && unlink($this->helios_files_upload_root . "/" .$file)){
-                        $this->logger->info("File $file : unlink OK");
+                    if($do && rename($this->helios_files_upload_root . "/" .$file,"/data/tdt-workspace/mail/purgatoire/".$file)){
+                        $this->logger->info("File $file : rename OK");
                         continue;
                     }
-                    $this->logger->info("File $file : unlink KO");
+                    $this->logger->info("File $file : rename KO");
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
