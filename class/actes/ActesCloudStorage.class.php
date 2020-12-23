@@ -59,8 +59,9 @@ class ActesCloudStorage implements ICloudStorable {
 		$this->actesEnvelopeSQL->setEnveloppeNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $inCloud = true): void
 	{
+	    //TODO : autoriser le set de $inCloud à false
 		$this->actesEnvelopeSQL->setTransactionInCloud($object_id);
 	}
 
@@ -95,5 +96,11 @@ class ActesCloudStorage implements ICloudStorable {
     public function isAvailable(int $object_id): bool
     {
         return $this->actesEnvelopeSQL->isAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id): bool
+    {
+        // TODO: Implement isTransactionInCloud() method.
+        return false;
     }
 }

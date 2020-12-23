@@ -48,8 +48,9 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 		$this->mailTransactionSQL->setNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $inCloud = true): void
 	{
+        //TODO : autoriser le set de $inCloud à false
 		$this->mailTransactionSQL->setInCloud($object_id);
 	}
 
@@ -85,5 +86,11 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     public function isAvailable(int $object_id): bool
     {
         return $this->mailTransactionSQL->isAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id): bool
+    {
+        // TODO: Implement isTransactionInCloud() method.
+        return false;
     }
 }

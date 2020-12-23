@@ -294,9 +294,9 @@ class HeliosTransactionsSQL extends SQL {
 		$this->query($sql,true,$transaction_id);
 	}
 
-	public function setPesAcquitInCloud($id){
-		$sql = "UPDATE helios_transactions SET pes_acquit_is_in_cloud=TRUE WHERE id=?";
-		$this->query($sql,$id);
+	public function setPesAcquitInCloud($id, bool $inCloud = true){
+		$sql = "UPDATE helios_transactions SET pes_acquit_is_in_cloud=? WHERE id=?";
+		$this->query($sql, intval($inCloud), $id);
 	}
 
     public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){
@@ -411,5 +411,10 @@ class HeliosTransactionsSQL extends SQL {
         return $this->queryOne($sql,$pes_aquit_filename);
     }
 
+    public function isPesAcquitInCloud(int $object_id)
+    {
+        $sql = "SELECT pes_acquit_is_in_cloud FROM helios_transactions WHERE id=?";
+        return $this->queryOne($sql,$object_id);
+    }
 
 }

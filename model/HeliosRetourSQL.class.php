@@ -48,10 +48,10 @@ class HeliosRetourSQL extends SQL {
         $this->query($sql,true,$helios_retour_id);
     }
 
-    public function setPesRetourInCloud(int $helios_retour_id): void
+    public function setPesRetourInCloud(int $helios_retour_id, bool $inCloud = true): void
     {
-        $sql = "UPDATE helios_retour SET is_in_cloud=TRUE WHERE id=?";
-        $this->query($sql,$helios_retour_id);
+        $sql = "UPDATE helios_retour SET is_in_cloud=? WHERE id=?";
+        $this->query($sql,intval($inCloud),$helios_retour_id);
     }
 
     public function getByFilename(string $filename)
@@ -70,5 +70,11 @@ class HeliosRetourSQL extends SQL {
     {
         $sql = "UPDATE helios_retour SET not_available=? WHERE id=?";
         $this->query($sql, intval(! $available),$object_id);
+    }
+
+    public function isInCloud($object_id)
+    {
+        $sql = "SELECT is_in_cloud FROM helios_retour WHERE id=?";
+        return $this->queryOne($sql,$object_id);
     }
 }

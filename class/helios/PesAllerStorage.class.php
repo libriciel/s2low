@@ -147,7 +147,7 @@ class PesAllerStorage {
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
-                    $this->logger->info("$file [transaction $id] passé à pes_acquit_not_available = false");
+                    $this->logger->info("$file [transaction $id] passé à not_available = false");
                     $this->heliosTransactionsSQL->setTransactionAvailable($id,true);
                 }
                 if($this->heliosTransactionsSQL->isTransactionInCloud($id)){

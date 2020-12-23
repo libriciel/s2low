@@ -165,9 +165,12 @@ class CloudStorage {
 				if (! $this->iCloudStorable->isAvailable($object_id)){
 				    $this->iCloudStorable->setAvailable($object_id,true);
 				    $this->logger->info("$object_id set to available");
-                } else {
-				    $this->logger->notice("Object not yet in cloud");
                 }
+                if ($this->iCloudStorable->isTransactionInCloud($object_id)){
+                    $this->logger->info("$object_id set to not in cloud");
+                    $this->iCloudStorable->setInCloud($object_id,false);
+                }
+                $this->logger->notice("Object not yet in cloud");
 				continue;
 			}
 			$this->logger->info("Deleting file : {$file->getRealPath()}");
