@@ -375,6 +375,12 @@ class HeliosTransactionsSQL extends SQL {
         return $this->queryOne($sql,$sha1);
     }
 
+    public function isTransactionInCloud(int $object_id): bool
+    {
+        $sql = "SELECT is_in_cloud FROM helios_transactions WHERE id=?";
+        return  $this->queryOne($sql,$object_id);
+    }
+
     public function isTransactionAvailable(int $object_id): bool
     {
         $sql = "SELECT not_available FROM helios_transactions WHERE id=?";

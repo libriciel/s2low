@@ -139,7 +139,7 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    if($do && rename($this->helios_files_upload_root . "/" .$file,"/data/tdt-workspace/mail/purgatoire/".$file)){
+                    if($do && rename($this->helios_files_upload_root . "/" .$file,"/data/tdt-workspace/mail/helios_orphelins/".$file)){
                         $this->logger->info("File $file : rename OK");
                         continue;
                     }
@@ -149,6 +149,10 @@ class PesAllerStorage {
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
                     $this->logger->info("$file [transaction $id] passé à pes_acquit_not_available = false");
                     $this->heliosTransactionsSQL->setTransactionAvailable($id,true);
+                }
+                if($this->heliosTransactionsSQL->isTransactionInCloud($id)){
+                    $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
+                    $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
                 }
             	// Fin hotfix ------------------------------------------------------------------------------------------
                 continue;
