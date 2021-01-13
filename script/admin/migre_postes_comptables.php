@@ -32,7 +32,9 @@ function extractDataFromFile($nameFile, $date): array
     if (($handle = fopen($nameFile, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             try {
-                $collectivitesATraiter = traiteLigne($data, $date, $collectivitesATraiter);
+                if(isLigneATraiter($data[COL_DATE],$data[COL_CHT_SL],$date)){
+                    $collectivitesATraiter = traiteLigne($data[COL_SIREN],$data[COL_SL_SOURCE], $data[COL_SL_CIBLE], $collectivitesATraiter);
+                }
             }
             catch (Exception $e){
                 echo $e->getMessage() . "\n";
@@ -47,6 +49,12 @@ function extractDataFromFile($nameFile, $date): array
     return $collectivitesATraiter;
 }
 
+function isLigneATraiter($dateLigne,$changeSL,$date){
+    if ($dateLigne != $date || $changeSL != "OUI") {
+        return false;
+    }
+    return true;
+}
 /**
  * @param array $data
  * @param $date
@@ -54,36 +62,28 @@ function extractDataFromFile($nameFile, $date): array
  * @return array
  * @throws Exception
  */
-function traiteLigne(array $data, $date, array $collectivitesATraiter): array
+function traiteLigne($siren,$slSource,$slCible, array $collectivitesATraiter): array
 {
-    if ($data[COL_DATE] != $date || $data[COL_CHT_SL] != "OUI") {
-        return $collectivitesATraiter;
-    }
+    $message = $siren . " : " . $slSource . "=>" . $slCible;
 
-    $message = $data[COL_SIREN] . " : " . $data[COL_SL_SOURCE] . "=>" . $data[COL_SL_CIBLE];
-
-    if (
-        !isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_SOURCE]])
-        ||
-        !isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_CIBLE]])
-    ) {
+    if (!isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource]) || !isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible])) {
         $messageErreur = "SL inconnu";
         throw new Exception($message . " : KO : " . $messageErreur);
     }
 
-    if (in_array($data[COL_SIREN], array_keys($collectivitesATraiter))) {
+    if (in_array($siren, array_keys($collectivitesATraiter))) {
         if (
-            $collectivitesATraiter[$data[COL_SIREN]]["SlSource"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_SOURCE]]
+            $collectivitesATraiter[$siren]["SlSource"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource]
             ||
-            $collectivitesATraiter[$data[COL_SIREN]]["SlCible"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_CIBLE]]
+            $collectivitesATraiter[$siren]["SlCible"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible]
         ) {
             $messageErreur = "PB : fichier incohérent";
             throw new DomainException($message . " : KO : " . $messageErreur);
         }
         return $collectivitesATraiter;
     }
-    $collectivitesATraiter[$data[COL_SIREN]]["SlSource"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_SOURCE]];
-    $collectivitesATraiter[$data[COL_SIREN]]["SlCible"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$data[COL_SL_CIBLE]];
+    $collectivitesATraiter[$siren]["SlSource"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource];
+    $collectivitesATraiter[$siren]["SlCible"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible];
     return $collectivitesATraiter;
 }
 
