@@ -24,27 +24,63 @@ $execute = true; // TODO Récupérer depuis la ligne de commande
 //    $3 : dry run ou pas ( à rajouter)
 
 $colDate=2;
-$colSiret=8;
+$colSiren=9;
+$colLibelle=5;
+$colSlOrigine=3;
 $colSlCible=11;
+$colChangementSl=16;
 
 $row = 1;
 if (($handle = fopen($nameFile, "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
         if($data[$colDate] === $date){
-            echo "------------------------------------------------------------------------\n";
-            echo "Date : ".$data[$colDate] . "\n";
-            echo "Siret : ".$data[$colSiret] . "\n";
-            echo "SlCible : ".$data[$colSlCible] . "\n";
-            echo "FTPCible : ".$correspondancePosteComptableFTP[$data[$colSlCible]] . "\n";
+            //ECRIRE LA PARTIE GENERIQUE DU MESSAGE
+            $message = $data[$colLibelle]." ( ".$data[$colSiren]." ) : ".$data[$colSlOrigine]."=>".$data[$colSlCible];
 
-            $idAuthority= $sqlQuery->queryOne("SELECT id FROM authorities where dia_siret=?",(int) $data[$colSiret]);
+            //TESTER QUE LES FTPS SOURCES ET CIBLE EXISTENT BIEN
+            if(
+                !isset($correspondancePosteComptableFTP[$data[$colSlOrigine]])
+                ||
+                !isset($correspondancePosteComptableFTP[$data[$colSlCible]])
+            ){
+              $messageErreur = "SL inconnu";
+              echo $message." : ".$messageErreur."\n";
+              continue;
+            }
 
-            if($execute && !empty($idAuthority)){
-                $sqlQuery->query(
-                    "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
-                    $correspondancePosteComptableFTP[$data[$colSlCible]],
-                    (int) $idAuthority
-                );
+            //TESTER SI SL EST MODIFIE
+            if($data[$colChangementSl]!="OUI"){
+                $messageErreur = "Sl non modifié";
+                echo $message." : ".$messageErreur."\n";
+                continue;
+            }
+
+            //RECUPERER LA COLLECTIVITE PAR SON SIREN
+            $infoAuthority= $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where siren=?",(int) $data[$colSiren]);
+
+            //TESTER QUE LA COLLECTIVITE EXISTE BIEN
+            if(empty($infoAuthority)){
+                $messageErreur = "Collectivité inconnue";
+                echo $message." : ".$messageErreur."\n";
+                continue;
+            }
+
+            //TESTER QUE LE REPERTOIRE D'ORIGINE EST CORRECT
+            if($infoAuthority["helios_ftp_dest"] != $correspondancePosteComptableFTP[$data[$colSlOrigine]]) {
+                $messageErreur = "Le ftp_dest actuel ".$infoAuthority["helios_ftp_dest"]." ne correspond pas à celui spécifié ".$correspondancePosteComptableFTP[$data[$colSlOrigine]];
+                echo $message . " : " . $messageErreur."\n";
+                continue;
+            }
+             
+            // TOUT EST OK, ON EXECUTE SI NECESSAIRE
+            if($execute){
+                    $action = $infoAuthority["name"]." ( ".$infoAuthority["id"]." ) ".$infoAuthority["helios_ftp_dest"]."=>".$correspondancePosteComptableFTP[$data[$colSlCible]];
+                    echo $message." : ".$action."\n";
+                    $a=$sqlQuery->query(
+                        "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
+                        $correspondancePosteComptableFTP[$data[$colSlCible]],
+                        (int) $infoAuthority["id"]
+                    );
             }
         }
     }
