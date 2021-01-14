@@ -33,7 +33,7 @@ function extractDataFromFile($nameFile, $date): array
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             try {
                 if(isLigneATraiter($data[COL_DATE],$data[COL_CHT_SL],$date)){
-                    $collectivitesATraiter = traiteLigne($data[COL_SIREN],$data[COL_SL_SOURCE], $data[COL_SL_CIBLE], $collectivitesATraiter);
+                    $collectivitesATraiter = addCollectivité($data[COL_SIREN],$data[COL_SL_SOURCE], $data[COL_SL_CIBLE], $collectivitesATraiter);
                 }
             }
             catch (Exception $e){
@@ -62,7 +62,7 @@ function isLigneATraiter($dateLigne,$changeSL,$date){
  * @return array
  * @throws Exception
  */
-function traiteLigne($siren,$slSource,$slCible, array $collectivitesATraiter): array
+function addCollectivité($siren, $slSource, $slCible, array $collectivitesATraiter): array
 {
     $message = $siren . " : " . $slSource . "=>" . $slCible;
 
@@ -94,7 +94,7 @@ function traiteLigne($siren,$slSource,$slCible, array $collectivitesATraiter): a
  * @return array
  * @throws Exception
  */
-function getAuthority(object $sqlQuery, int $siren, string $message): array
+function getAuthorityInfosFromSiren(object $sqlQuery, int $siren, string $message): array
 {
     $infoAuthority = $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where siren=?", (int)$siren);
 
@@ -141,14 +141,20 @@ $execute = false;
 if(isset($argv[3])&&$argv[3]==="execute"){
     $execute = true;
 }
+if(!$execute){
+    echo "AUCUNE MODIFICATION NE SERA APPORTEE EN BDD\n";
+}
 
+echo "TRAITEMENT DU FICHIER-----------------------------------------------------------------------------------------\n";
 $collectivitesATraiter = extractDataFromFile($nameFile, $date);
+
+echo "TRAITEMENT DES COLLECTIVITES----------------------------------------------------------------------------------\n";
 
 foreach ($collectivitesATraiter as $siren=> $collectivite){
     try {
         $message = $siren . " : " . $collectivite["SlSource"] . "=>" . $collectivite["SlCible"];
 
-        $infoAuthority = getAuthority($sqlQuery, $siren, $message);
+        $infoAuthority = getAuthorityInfosFromSiren($sqlQuery, $siren, $message);
         checkSlSource($infoAuthority["helios_ftp_dest"], $collectivite["SlSource"], $message);
 
         $action = $infoAuthority["name"] . " ( " . $infoAuthority["id"] . " ) " . $infoAuthority["helios_ftp_dest"] . "=>" . $collectivite["SlCible"];
