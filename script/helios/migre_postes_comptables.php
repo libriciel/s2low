@@ -1,7 +1,11 @@
+#! /usr/bin/php
+
 <?php
 
+require_once( __DIR__."/../../init/init.php");
+
 //CONSTANTES------------------------------------------------------------------------------------------------------------
-const CORRESPONDANCEPOSTECOMPTABLEFTP = [
+const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
     "SL1V" => "VHPCE11",
     "SL2V" => "VHPCE21",
     "SL3V" => "VHPCE31",
@@ -13,12 +17,13 @@ const CORRESPONDANCEPOSTECOMPTABLEFTP = [
     "SL5M" => "MHPCE51"
 ];
 
-const COL_DATE = 2;
-const COL_SIREN = 9;
-const COL_SL_SOURCE = 3;
-const COL_SL_CIBLE = 11;
-const COL_CHT_SL = 16;
-require_once( __DIR__."/../../init/init.php");
+const COL = [
+        "DATE" => 2,
+        "SIREN" => 9,
+        "SL_SOURCE" => 3,
+        "SL_CIBLE" => 11,
+        "CHT_SL" => 16
+];
 
 //FONCTIONS-------------------------------------------------------------------------------------------------------------
 /**
@@ -29,15 +34,22 @@ require_once( __DIR__."/../../init/init.php");
 function extractDataFromFile($nameFile, $date): array
 {
     $collectivitesATraiter = [];
+    $row = 0;
     if (($handle = fopen($nameFile, "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+        while (($dataLigne = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            $row++;
+            if($row == 1){
+                continue;
+            }
+            $message = "ligne $row";                   //TODO : modifier pour avoir le numéro de ligne
             try {
-                if(isLigneATraiter($data[COL_DATE],$data[COL_CHT_SL],$date)){
-                    $collectivitesATraiter = addCollectivité($data[COL_SIREN],$data[COL_SL_SOURCE], $data[COL_SL_CIBLE], $collectivitesATraiter);
-                }
+                checkIfAllValuesAreDefined($dataLigne);
+                $message = $message . " : ". $dataLigne[COL["SIREN"]] . " : " . $dataLigne[COL["SL_SOURCE"]] . "=>" . $dataLigne[COL["SL_CIBLE"]];
+                checkIfLigneIsATraiter($dataLigne[COL["DATE"]],$dataLigne[COL["CHT_SL"]],$date);
+                $collectivitesATraiter = addCollectivite($dataLigne[COL["SIREN"]],$dataLigne[COL["SL_SOURCE"]], $dataLigne[COL["SL_CIBLE"]], $collectivitesATraiter);
             }
             catch (Exception $e){
-                echo $e->getMessage() . "\n";
+                echo $message." : ".$e->getMessage() . "\n";
                 if(is_a($e,DomainException::class)){
                     break;
                 }
@@ -49,11 +61,21 @@ function extractDataFromFile($nameFile, $date): array
     return $collectivitesATraiter;
 }
 
-function isLigneATraiter($dateLigne,$changeSL,$date){
-    if ($dateLigne != $date || $changeSL != "OUI") {
-        return false;
+function checkIfAllValuesAreDefined($dataLigne){
+    foreach (COL as $nomColonne=>$indiceColonne){
+        if(!isset($dataLigne[$indiceColonne])){
+            throw new Exception("Ligne mal définie rencontrée");            //TODO : rajouter le numéro de ligne
+        }
     }
-    return true;
+}
+
+function checkIfLigneIsATraiter($dateLigne, $changeSL, $date){
+    if ($dateLigne != $date ) {
+        throw new Exception("Autre date");
+    }
+    if($changeSL != "OUI"){
+       throw new Exception("SL inchangé");
+    }
 }
 /**
  * @param array $data
@@ -62,28 +84,25 @@ function isLigneATraiter($dateLigne,$changeSL,$date){
  * @return array
  * @throws Exception
  */
-function addCollectivité($siren, $slSource, $slCible, array $collectivitesATraiter): array
+function addCollectivite($siren, $slSource, $slCible, array $collectivitesATraiter): array
 {
-    $message = $siren . " : " . $slSource . "=>" . $slCible;
 
-    if (!isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource]) || !isset(CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible])) {
-        $messageErreur = "SL inconnu";
-        throw new Exception($message . " : KO : " . $messageErreur);
+    if (!isset(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource]) || !isset(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible])) {
+        throw new Exception("SL inconnu");
     }
 
     if (in_array($siren, array_keys($collectivitesATraiter))) {
         if (
-            $collectivitesATraiter[$siren]["SlSource"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource]
+            $collectivitesATraiter[$siren]["SlSource"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource]
             ||
-            $collectivitesATraiter[$siren]["SlCible"] != CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible]
+            $collectivitesATraiter[$siren]["SlCible"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible]
         ) {
-            $messageErreur = "PB : fichier incohérent";
-            throw new DomainException($message . " : KO : " . $messageErreur);
+            throw new DomainException("PB : fichier incohérent");
         }
         return $collectivitesATraiter;
     }
-    $collectivitesATraiter[$siren]["SlSource"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$slSource];
-    $collectivitesATraiter[$siren]["SlCible"] = CORRESPONDANCEPOSTECOMPTABLEFTP[$slCible];
+    $collectivitesATraiter[$siren]["SlSource"] = CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource];
+    $collectivitesATraiter[$siren]["SlCible"] = CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible];
     return $collectivitesATraiter;
 }
 
@@ -94,9 +113,9 @@ function addCollectivité($siren, $slSource, $slCible, array $collectivitesATrait
  * @return array
  * @throws Exception
  */
-function getAuthorityInfosFromSiren(object $sqlQuery, int $siren, string $message): array
+function getAuthorityInfosFromSiren(object $sqlQuery, $siren, string $message): array
 {
-    $infoAuthority = $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where siren=?", (int)$siren);
+    $infoAuthority = $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where siren=?", $siren);
 
     // TESTER QUE LA COLLECTIVITE EXISTE BIEN
     if (empty($infoAuthority)) {
@@ -123,7 +142,6 @@ function checkSlSource($helios_ftp_dest, $helios_ftp_dest_source, string $messag
 //PROGRAMME-------------------------------------------------------------------------------------------------------------
 // TRAITEMENT DES PARAMETRES
 if(!in_array($argc,[3,4])){
-    var_dump($argc);
     echo "Usage : ".$argv[0]." nomFichier date [confirmExecution]\n";
     echo "confirmExecution (optionnel) les modifs en BDD sont réalisée ssi ce paramètre vaut execute\n ";
     return -1;
@@ -135,6 +153,12 @@ if(!is_file($nameFile)){
     echo "$nameFile doit être un nom de fichier\n";
     return -2;
 }
+
+if(!is_readable($nameFile)){
+    echo "$nameFile n'est pas accessible en lecture\n";
+    return -3;
+}
+
 $date = $argv[2];
 
 $execute = false;
