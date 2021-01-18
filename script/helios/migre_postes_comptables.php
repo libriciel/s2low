@@ -20,6 +20,7 @@ const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
 const COL = [
         "DATE" => 2,
         "SIREN" => 9,
+        "SIRET" => 8,
         "SL_SOURCE" => 3,
         "SL_CIBLE" => 11,
         "CHT_SL" => 16
@@ -33,7 +34,7 @@ const COL = [
  */
 function extractDataFromFile($nameFile, $date): array
 {
-    $collectivitesATraiter = [];
+    $siretAtraiter = [];
     $row = 0;
     if (($handle = fopen($nameFile, "r")) !== FALSE) {
         while (($dataLigne = fgetcsv($handle, 1000, ";")) !== FALSE) {
@@ -41,12 +42,13 @@ function extractDataFromFile($nameFile, $date): array
             if($row == 1){
                 continue;
             }
-            $message = "ligne $row";                   //TODO : modifier pour avoir le numéro de ligne
+            $message = "ligne $row";
             try {
                 checkIfAllValuesAreDefined($dataLigne);
-                $message = $message . " : ". $dataLigne[COL["SIREN"]] . " : " . $dataLigne[COL["SL_SOURCE"]] . "=>" . $dataLigne[COL["SL_CIBLE"]];
+                $message = $message . " : ". $dataLigne[COL["SIRET"]] . " : " . $dataLigne[COL["SL_SOURCE"]] . "=>" . $dataLigne[COL["SL_CIBLE"]];
                 checkIfLigneIsATraiter($dataLigne[COL["DATE"]],$dataLigne[COL["CHT_SL"]],$date);
-                $collectivitesATraiter = addCollectivite($dataLigne[COL["SIREN"]],$dataLigne[COL["SL_SOURCE"]], $dataLigne[COL["SL_CIBLE"]], $collectivitesATraiter);
+                checkIfSiretIsAlreadyPresent($dataLigne[COL["SIRET"]], $siretAtraiter);
+                $siretAtraiter[$dataLigne[COL["SIRET"]]]=["SlSource"=>$dataLigne[COL["SL_SOURCE"]],"SlCible"=>$dataLigne[COL["SL_CIBLE"]]];
             }
             catch (Exception $e){
                 echo $message." : ".$e->getMessage() . "\n";
@@ -58,7 +60,7 @@ function extractDataFromFile($nameFile, $date): array
         }
         fclose($handle);
     }
-    return $collectivitesATraiter;
+    return $siretAtraiter;
 }
 
 function checkIfAllValuesAreDefined($dataLigne){
@@ -77,52 +79,32 @@ function checkIfLigneIsATraiter($dateLigne, $changeSL, $date){
        throw new Exception("SL inchangé");
     }
 }
-/**
- * @param array $data
- * @param $date
- * @param array $collectivitesATraiter
- * @return array
- * @throws Exception
- */
-function addCollectivite($siren, $slSource, $slCible, array $collectivitesATraiter): array
-{
 
-    if (!isset(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource]) || !isset(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible])) {
-        throw new Exception("SL inconnu");
+function checkIfSiretIsAlreadyPresent($siret,$array){
+    if(in_array($siret,array_keys($array))){
+        throw new DomainException("Fichier incohérent, SIRET $siret en double");
     }
-
-    if (in_array($siren, array_keys($collectivitesATraiter))) {
-        if (
-            $collectivitesATraiter[$siren]["SlSource"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource]
-            ||
-            $collectivitesATraiter[$siren]["SlCible"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible]
-        ) {
-            throw new DomainException("PB : fichier incohérent");
-        }
-        return $collectivitesATraiter;
-    }
-    $collectivitesATraiter[$siren]["SlSource"] = CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slSource];
-    $collectivitesATraiter[$siren]["SlCible"] = CORRESPONDANCE_POSTE_COMPTABLE_FTP[$slCible];
-    return $collectivitesATraiter;
 }
 
 /**
  * @param object $sqlQuery
- * @param int $siren
- * @param string $message
- * @return array
+ * @param int $siret
+ * @return int
  * @throws Exception
  */
-function getAuthorityInfosFromSiren(object $sqlQuery, $siren, string $message): array
+function getAuthorityIdFromSiret(object $sqlQuery, $siret): int
 {
-    $infoAuthority = $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where siren=?", $siren);
+    $infoAuthority = $sqlQuery->query("SELECT authority_id FROM authority_siret WHERE siret=? AND is_blocked=FALSE", $siret);
 
-    // TESTER QUE LA COLLECTIVITE EXISTE BIEN
-    if (empty($infoAuthority)) {
-        $messageErreur = "Collectivité inconnue";
-        throw new Exception($message . " : KO : " . $messageErreur);
+    if (! $infoAuthority){
+        throw new Exception("La collectivité $siret n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
     }
-    return $infoAuthority;
+
+    if (count($infoAuthority) > 1){
+        throw new Exception("Le SIRET $siret est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué");
+    }
+
+    return (int) $infoAuthority[0]['authority_id'];
 }
 
 /**
@@ -173,13 +155,79 @@ echo "TRAITEMENT DU FICHIER-----------------------------------------------------
 $collectivitesATraiter = extractDataFromFile($nameFile, $date);
 
 echo "TRAITEMENT DES COLLECTIVITES----------------------------------------------------------------------------------\n";
-
-foreach ($collectivitesATraiter as $siren=> $collectivite){
+$authorities = [];
+var_dump($collectivitesATraiter);
+foreach ($collectivitesATraiter as $siret=> $collectivite){
+    $message = $siret . " : " . $collectivite["SlSource"] . "=>" . $collectivite["SlCible"];
     try {
-        $message = $siren . " : " . $collectivite["SlSource"] . "=>" . $collectivite["SlCible"];
+        $idAuthority = getAuthorityIdFromSiret($sqlQuery, $siret);
+        if(!in_array($idAuthority,array_keys($authorities))){
+            $authorities[$idAuthority]=["sirets"=>[$siret],"SlSource"=>$collectivite["SlSource"],"SlCible"=>$collectivite["SlCible"]];
+        } else {
+            if($authorities[$idAuthority]["SlSource"] != $collectivite["SlSource"]
+                ||
+                $authorities[$idAuthority]["SlCible"] != $collectivite["SlCible"]
+            ){
+                throw new Exception("Fichier incohérent : deux collectivités dépendant de la même autorité ont des Sl différents");
+            }
+            $authorities[$idAuthority]["sirets"][]=$siret;
+        }
+    }
+    catch (Exception $e){
+        echo $message." : KO : ". $e->getMessage()."\n";
+    }
+}
+// 3) Tous les Sl_Cibles doivent être égaux.
 
-        $infoAuthority = getAuthorityInfosFromSiren($sqlQuery, $siren, $message);
-        checkSlSource($infoAuthority["helios_ftp_dest"], $collectivite["SlSource"], $message);
+$bddAuthorities = [];
+
+foreach ($authorities as $idAuthority=>$arraySiren){
+    $authority = $sqlQuery->queryOne("SELECT id,name,helios_ftp_dest FROM authorities where id=?", $idAuthority);
+    $resultsSirets = $sqlQuery->query("SELECT siret FROM authority_siret where authority_id=? AND is_blocked = FALSE", $idAuthority);
+    $sirets = [];
+    foreach ($resultsSirets as $siret){
+        $sirets[]=$siret["siret"];
+    }
+    $bddAuthorities[$authority["id"]]=[
+            "name"=>$authority["name"],
+        "helios_ftp_dest"=>$authority["helios_ftp_dest"],
+        "sirets"=>$sirets
+    ];
+}
+
+//VERIFICATION DES AUTORITES. IL FAUT QUE
+// 1) TOUS LES SIRETS D'UNE MËME AUTORITE SOIENT MIGRES
+// 2) Chaque Sl_Source d'un siret corresponde au helios_ftp_dest de l'autorité
+
+foreach($authorities as $id=>$authority){
+    $bddAuthoritie= $bddAuthorities[$id];
+    var_dump($bddAuthoritie);
+    if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
+        var_dump(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]);
+        throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+    }
+    if($bddAuthoritie["sirets"] != $authority["sirets"]){
+        var_dump($bddAuthoritie["sirets"]);
+        var_dump($authority["sirets"]);
+        throw new Exception("La liste des sirets de l'authorité $id ne correspond pas à l'ensemble des SIRETS présents");
+    }
+
+    $action = $bddAuthoritie["name"] . " ( " . $id . " ) " . $bddAuthoritie["helios_ftp_dest"] . "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]]; // TDO : check
+    echo $message . " : OK : " . $action . "\n";
+
+    if ($execute) {
+        $sqlQuery->query(
+            "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
+            $collectivite["SlCible"],
+            $id
+        );
+    }
+
+}
+
+
+
+/*        checkSlSource($infoAuthority["helios_ftp_dest"], $collectivite["SlSource"], $message);
 
         $action = $infoAuthority["name"] . " ( " . $infoAuthority["id"] . " ) " . $infoAuthority["helios_ftp_dest"] . "=>" . $collectivite["SlCible"];
         echo $message . " : OK : " . $action . "\n";
@@ -191,8 +239,4 @@ foreach ($collectivitesATraiter as $siren=> $collectivite){
                 (int)$infoAuthority["id"]
             );
         }
-    }
-    catch (Exception $e){
-        echo $e->getMessage()."\n";
-    }
-}
+*/
