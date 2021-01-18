@@ -19,7 +19,6 @@ const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
 
 const COL = [
         "DATE" => 2,
-        "SIREN" => 9,
         "SIRET" => 8,
         "SL_SOURCE" => 3,
         "SL_CIBLE" => 11,
@@ -53,7 +52,7 @@ function extractDataFromFile($nameFile, $date): array
             catch (Exception $e){
                 echo $message." : ".$e->getMessage() . "\n";
                 if(is_a($e,DomainException::class)){
-                    break;
+                    throw new Exception("Erreur Fatale");
                 }
                 continue;
             }
@@ -107,20 +106,6 @@ function getAuthorityIdFromSiret(object $sqlQuery, $siret): int
     return (int) $infoAuthority[0]['authority_id'];
 }
 
-/**
- * @param $helios_ftp_dest
- * @param $helios_ftp_dest_source
- * @param string $message
- * @throws Exception
- */
-function checkSlSource($helios_ftp_dest, $helios_ftp_dest_source, string $message): void
-{
-    if ($helios_ftp_dest != $helios_ftp_dest_source) {
-        $messageErreur = "Le ftp_dest actuel " . $helios_ftp_dest . " ne correspond pas à celui spécifié " . $helios_ftp_dest_source;
-        throw new Exception($message . " : KO : " . $messageErreur);
-    }
-}
-
 //PROGRAMME-------------------------------------------------------------------------------------------------------------
 // TRAITEMENT DES PARAMETRES
 if(!in_array($argc,[3,4])){
@@ -154,9 +139,8 @@ if(!$execute){
 echo "TRAITEMENT DU FICHIER-----------------------------------------------------------------------------------------\n";
 $collectivitesATraiter = extractDataFromFile($nameFile, $date);
 
-echo "TRAITEMENT DES COLLECTIVITES----------------------------------------------------------------------------------\n";
+echo "EXTRACTION DES AUTORITES CORRESPONDANT AUX SIRETS------------------------------------------------------------\n";
 $authorities = [];
-var_dump($collectivitesATraiter);
 foreach ($collectivitesATraiter as $siret=> $collectivite){
     $message = $siret . " : " . $collectivite["SlSource"] . "=>" . $collectivite["SlCible"];
     try {
@@ -168,13 +152,16 @@ foreach ($collectivitesATraiter as $siret=> $collectivite){
                 ||
                 $authorities[$idAuthority]["SlCible"] != $collectivite["SlCible"]
             ){
-                throw new Exception("Fichier incohérent : deux collectivités dépendant de la même autorité ont des Sl différents");
+                throw new DomainException("Fichier incohérent : deux collectivités dépendant de la même autorité ont des Sl différents");
             }
             $authorities[$idAuthority]["sirets"][]=$siret;
         }
     }
-    catch (Exception $e){
+    catch (Throwable $e){
         echo $message." : KO : ". $e->getMessage()."\n";
+        if(is_a($e,DomainException::class)){
+            throw new Exception("Erreur Fatale");
+        }
     }
 }
 // 3) Tous les Sl_Cibles doivent être égaux.
@@ -198,45 +185,60 @@ foreach ($authorities as $idAuthority=>$arraySiren){
 //VERIFICATION DES AUTORITES. IL FAUT QUE
 // 1) TOUS LES SIRETS D'UNE MËME AUTORITE SOIENT MIGRES
 // 2) Chaque Sl_Source d'un siret corresponde au helios_ftp_dest de l'autorité
-
-foreach($authorities as $id=>$authority){
-    $bddAuthoritie= $bddAuthorities[$id];
-    var_dump($bddAuthoritie);
-    if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
-        var_dump(CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]);
-        throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+echo "TRAITEMENT des autorites--------------------------------------------------------------------------------------\n";
+/**
+ * @param $sirets1
+ * @param $sirets2
+ * @return bool
+ */
+function areEquals($sirets1, $sirets2): bool
+{
+    if(count($sirets1) != $sirets2){
+        return false;
     }
-    if($bddAuthoritie["sirets"] != $authority["sirets"]){
-        var_dump($bddAuthoritie["sirets"]);
-        var_dump($authority["sirets"]);
-        throw new Exception("La liste des sirets de l'authorité $id ne correspond pas à l'ensemble des SIRETS présents");
+    foreach ($sirets1 as $siret){
+        if(!in_array($siret,$sirets2)){
+            return false;
+        }
     }
-
-    $action = $bddAuthoritie["name"] . " ( " . $id . " ) " . $bddAuthoritie["helios_ftp_dest"] . "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]]; // TDO : check
-    echo $message . " : OK : " . $action . "\n";
-
-    if ($execute) {
-        $sqlQuery->query(
-            "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
-            $collectivite["SlCible"],
-            $id
-        );
-    }
-
 }
 
+foreach($authorities as $id=> $authority){
+    $bddAuthoritie= $bddAuthorities[$id];
+    $action = $bddAuthoritie["name"] . " ( " . $id." , ".$bddAuthoritie["helios_ftp_dest"].") ".CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]. "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]];
+    try{
+        if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
+            throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+        }
+        if(areEquals($bddAuthoritie["sirets"], $authority["sirets"])){
+            throw new Exception("La liste en BDD des sirets de l'authorité $id [".implode(",",$bddAuthoritie["sirets"])."] ne correspond pas à l'ensemble des SIRETS présents dans le fichier [".implode(",",$authority["sirets"])."]");
+        }
+        if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
+            throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+        }
+        if($bddAuthoritie["sirets"] != $authority["sirets"]){
+            throw new Exception("La liste des sirets de l'authorité $id ne correspond pas à l'ensemble des SIRETS présents");
+        }
 
-
-/*        checkSlSource($infoAuthority["helios_ftp_dest"], $collectivite["SlSource"], $message);
-
-        $action = $infoAuthority["name"] . " ( " . $infoAuthority["id"] . " ) " . $infoAuthority["helios_ftp_dest"] . "=>" . $collectivite["SlCible"];
-        echo $message . " : OK : " . $action . "\n";
+        $action = $bddAuthoritie["name"] . " ( " . $id . " ) " . $bddAuthoritie["helios_ftp_dest"] . "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]]; // TDO : check
 
         if ($execute) {
             $sqlQuery->query(
                 "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
                 $collectivite["SlCible"],
-                (int)$infoAuthority["id"]
+                $id
             );
         }
-*/
+        echo $action . " : OK\n";
+
+        if ($execute) {
+            $sqlQuery->query(
+                "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
+                CORRESPONDANCE_POSTE_COMPTABLE_FTP[$collectivite["SlCible"]],
+                $id
+            );
+        }
+    } catch (Exception $e){
+        echo "$action : KO : ".$e->getMessage()."\n";
+    }
+}
