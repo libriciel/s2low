@@ -237,7 +237,7 @@ class HeliosTransactionsSQL extends SQL {
 	}
 
 	public function getNonAcquitte(){
-		$sql = "SELECT helios_transactions.id, helios_transactions.filename, xml_nomfic,helios_transactions.submission_date,helios_ftp_dest,xml_id_post,xml_cod_bud FROM helios_transactions " .
+		$sql = "SELECT helios_transactions.id, helios_transactions.filename, xml_nomfic,helios_transactions.submission_date,helios_ftp_dest,xml_id_post,xml_cod_bud,xml_cod_col FROM helios_transactions " .
 			" JOIN authorities ON authorities.id=helios_transactions.authority_id " .
 			" WHERE last_status_id=3 AND helios_transactions.submission_date < ? " .
 			" ORDER BY submission_date DESC ";

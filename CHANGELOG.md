@@ -8,6 +8,7 @@
 
 ## Evolution
 - création d'un groupe supervisor mailsec-menage contenant les scripts cloud des mails #245
+- Intéger la valeur du codcol dans le mail listant les transactions Helios restées à l'état transmis #675
 
 # 4.3.5 - 2020-12-14
 
