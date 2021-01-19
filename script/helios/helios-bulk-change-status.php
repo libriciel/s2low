@@ -41,10 +41,11 @@ $date_max =  $argv[4];
 
 $sql = "SELECT helios_transactions.id,authorities.name, helios_transactions.filename, helios_transactions.submission_date FROM helios_transactions " .
     " JOIN authorities ON authorities.id=helios_transactions.authority_id " .
-    " WHERE last_status_id=? AND helios_transactions.submission_date > ? AND helios_transactions.submission_date < ?" .
+    "JOIN helios_transactions_workflow ON helios_transactions_workflow.transaction_id = helios_transactions.id AND helios_transactions_workflow.status_id=helios_transactions.last_status_id".
+    " WHERE last_status_id=? AND helios_transactions.submission_date > ? AND helios_transactions.submission_date < ? AND helios_transactions_workflow.message LIKE 'Modification%'" .
     " ORDER BY submission_date DESC ";
 
-$transaction_info_list = $sqlQuery->query($sql,$status_from,$status_from,$date_min,$date_max);
+$transaction_info_list = $sqlQuery->query($sql,$status_from,$date_min,$date_max);
 
 if (count($transaction_info_list) < 1){
     echo "Aucune transaction ne correspond au critère\n";
