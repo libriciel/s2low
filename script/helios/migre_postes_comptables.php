@@ -216,9 +216,6 @@ foreach($authorities as $id=> $authority){
         if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
             throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
         }
-        if($bddAuthoritie["sirets"] != $authority["sirets"]){
-            throw new Exception("La liste des sirets de l'authorité $id ne correspond pas à l'ensemble des SIRETS présents");
-        }
 
         $action = $bddAuthoritie["name"] . " ( " . $id . " ) " . $bddAuthoritie["helios_ftp_dest"] . "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]]; // TDO : check
 
