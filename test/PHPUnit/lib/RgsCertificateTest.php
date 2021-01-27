@@ -39,9 +39,9 @@ class RgsCertificateTest extends TestCase {
      */
 
     public function testIsRgsConnexionAutosignedRoot(){
-        $x509_pem_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/testS2low.pem");
-        $x509_ca_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/ca.cert.pem");
-        $x509_intermediate_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/intermediate.cert.pem");
+        $x509_pem_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/test-s2low-demo-s2low.pem");
+        $x509_ca_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_RACINE_G1_CHAIN.pem");
+        $x509_intermediate_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
 
         $ca_path_without_root=__DIR__."/../controller/fixtures/validca";
 
@@ -53,9 +53,9 @@ class RgsCertificateTest extends TestCase {
      * @throws Exception
      */
     public function testIsRgsConnexionAutosignedRootInCA(){
-        $x509_pem_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/testS2low.pem");
-        $x509_ca_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/ca.cert.pem");
-        $x509_intermediate_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/intermediate.cert.pem");
+        $x509_pem_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/test-s2low-demo-s2low.pem");
+        $x509_ca_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_RACINE_G1_CHAIN.pem");
+        $x509_intermediate_certificate = file_get_contents(__DIR__."/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
 
         $ca_path_with_root=__DIR__."/../core/fixtures/CertAutosignedRoot/CA";
 
