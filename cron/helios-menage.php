@@ -3,6 +3,6 @@
 require_once( __DIR__."/../init/init.php");
 
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->setMinExecutionTimeInSeconds(1);
+$workerScript->setMinExecutionTimeInSeconds(10);
 $workerScript->scriptByClassName(HeliosMenageWorker::class,true,true);
 

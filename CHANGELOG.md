@@ -4,6 +4,7 @@
 
 ## Correction
 - ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
+- passage du temps minimum d'éxécution des WorkerScript de 1s vers 10s
 
 # 4.3.5 - 2020-12-14
 
