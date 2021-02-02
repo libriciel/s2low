@@ -410,11 +410,4 @@ class HeliosTransactionsSQL extends SQL {
         $sql = "SELECT id FROM helios_transactions WHERE acquit_filename=?";
         return $this->queryOne($sql,$pes_aquit_filename);
     }
-
-    public function isPesAcquitInCloud(int $object_id)
-    {
-        $sql = "SELECT pes_acquit_is_in_cloud FROM helios_transactions WHERE id=?";
-        return $this->queryOne($sql,$object_id);
-    }
-
 }
