@@ -25,10 +25,7 @@ interface ICloudStorable {
 
     public function getObjectIdByFilePath(string $filepath): int;
 
-    public function setAvailable(int $object_id, bool $available = true) : void;
+    public function setAvailable(int $object_id) : void;
 
     public function isAvailable(int $object_id): bool;
-
-    public function isTransactionInCloud(int $object_id): bool;
-
 }
