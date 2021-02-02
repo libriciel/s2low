@@ -10,18 +10,21 @@ class PesAllerStorage {
     private $heliosTransactionsSQL;
     private $openStackSwiftWrapper;
     private $logger;
+    private $repertoirePesAllerSansTransaction; // "/data/tdt-workspace/mail/helios_orphelins/"
 
 
     public function __construct(
         $helios_files_upload_root,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Monolog\Logger $logger
+        Monolog\Logger $logger,
+        $repertoirePesAllerSansTransaction
     ) {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
+        $this->repertoirePesAllerSansTransaction = $repertoirePesAllerSansTransaction;
     }
 
 	/**
@@ -135,11 +138,19 @@ class PesAllerStorage {
                 $file
             )){
             	$this->logger->info("File $file not existing on cloud : not deleted");
-            	// Début hotfix : Trouver l'id ------------------------------------------------------------------------
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    if($do && rename($this->helios_files_upload_root . "/" .$file,"/data/tdt-workspace/mail/helios_orphelins/".$file)){
+                    if(
+                        !is_null($this->repertoirePesAllerSansTransaction)
+                        &&
+                        $do
+                        &&
+                        rename(
+                            $this->helios_files_upload_root . "/" .$file,
+                            $this->repertoirePesAllerSansTransaction .$file
+                        )
+                    ){
                         $this->logger->info("File $file : rename OK");
                         continue;
                     }
@@ -154,7 +165,6 @@ class PesAllerStorage {
                     $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
                     $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
                 }
-            	// Fin hotfix ------------------------------------------------------------------------------------------
                 continue;
             }
 			$this->logger->info("Deleting file : $file");

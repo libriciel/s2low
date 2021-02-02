@@ -55,6 +55,8 @@ class PesAllerStorageTest extends S2lowTestCase {
 	 * @throws Exception
 	 */
 	public function testStoreNotAvailable(){
+
+	    $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction','');
 		$transaction_id = $this->createTransaction();
 		$heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
@@ -86,7 +88,8 @@ class PesAllerStorageTest extends S2lowTestCase {
             $this->getObjectInstancier()->get('helios_files_upload_root'),
             $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
             $openStackSwiftWrapper,
-            $this->getObjectInstancier()->get(Monolog\Logger::class)
+            $this->getObjectInstancier()->get(Monolog\Logger::class),
+            ''
         );
 
         $this->assertTrue($pesAllerStorage->storeNextFile($transaction_info));
@@ -113,7 +116,8 @@ class PesAllerStorageTest extends S2lowTestCase {
             $helios_files_upload_root,
             $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
             $openStackSwiftWrapper,
-            $this->getObjectInstancier()->get(Monolog\Logger::class)
+            $this->getObjectInstancier()->get(Monolog\Logger::class),
+            ''
         );
 
         $this->assertFalse($pesAllerStorage->storeNextFile($transaction_info));

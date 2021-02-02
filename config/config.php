@@ -480,6 +480,10 @@ if(!defined('HELIOS_COUNTER_FILE')){
 	define('HELIOS_COUNTER_FILE',HELIOS_FILES_ROOT."counter.txt");
 }
 
+if(!defined('HELIOS_PESALLER_SANSTRANSACTION')){
+    define('HELIOS_PESALLER_SANSTRANSACTION','');
+}
+
 if(!defined("HELIOS_ZIP_BEFORE_SEND")){
 	define("HELIOS_ZIP_BEFORE_SEND",false);
 }
