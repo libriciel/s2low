@@ -64,9 +64,7 @@ class PESRetourCloudStorage  implements ICloudStorable {
 	public function getFinder(): Finder
 	{
 		$finder = new Finder();
-		//HOTFIX--------------------------------------------------------------------------------------------------------
 		$finder->in($this->helios_responses_root)->name("PES2R*.xml");
-		//--------------------------------------------------------------------------------------------------------------
 		return $finder;
 	}
 
