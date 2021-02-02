@@ -86,10 +86,4 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     {
         return $this->mailTransactionSQL->isAvailable($object_id);
     }
-
-    public function isTransactionInCloud(int $object_id): bool
-    {
-        // TODO: Implement isTransactionInCloud() method.
-        return false;
-    }
 }

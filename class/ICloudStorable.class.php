@@ -28,4 +28,5 @@ interface ICloudStorable {
     public function setAvailable(int $object_id, bool $available) : void;
 
     public function isAvailable(int $object_id): bool;
+
 }
