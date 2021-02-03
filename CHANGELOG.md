@@ -2,14 +2,12 @@
 
 **Cette version demande une modification de la base de données**
 
-## Evolution
-- déplacement des PES Aller non liés à une transaction dans le répertoire HELIOS_PESALLER_SANSTRANSACTION
-
 ## Correction
 - ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
 - passage du temps minimum d'éxécution des WorkerScript de 1s vers 10s
 
 ## Evolution
+- déplacement des PES Aller non liés à une transaction dans le répertoire HELIOS_PESALLER_SANSTRANSACTION
 - création d'un groupe supervisor mailsec-menage contenant les scripts cloud des mails #245
 - Intéger la valeur du codcol dans le mail listant les transactions Helios restées à l'état transmis #675
 
