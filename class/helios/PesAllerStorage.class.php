@@ -195,10 +195,10 @@ class PesAllerStorage {
     }
 
     /**
-     * @param bool $file
+     * @param $file
      * @return bool|\Psr\Http\Message\ResponseInterface
      */
-    private function fileExistsOnCloud(bool $file)
+    private function fileExistsOnCloud($file)
     {
         return $this->openStackSwiftWrapper->fileExistsOnCloud(
             self::CONTAINER_NAME,
