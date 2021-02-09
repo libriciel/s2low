@@ -133,29 +133,16 @@ class PesAllerStorage {
 				$this->logger->debug("File $file too young to die : not deleted");
 				continue;
             }
-            if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
+            if ( $this->openStackSwiftWrapper->fileExistsOnCloud(
                 self::CONTAINER_NAME,
                 $file
             )){
-            	$this->logger->info("File $file not existing on cloud : not deleted");
-            	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
-            	if(! $id){
-                    $this->logger->info("$file No transaction id found");
-                    $this->moveToOrphelinsDirectory($file);
-                    continue;
-                }
-            	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
-                    $this->logger->info("$file [transaction $id] passé à not_available = false");
-                    $this->heliosTransactionsSQL->setTransactionAvailable($id,true);
-                }
-                if($this->heliosTransactionsSQL->isTransactionInCloud($id)){
-                    $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
-                    $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
-                }
+                $this->logger->info("Deleting file : $file");
+                unlink($this->helios_files_upload_root . "/" . $file);
                 continue;
             }
-			$this->logger->info("Deleting file : $file");
-			unlink($this->helios_files_upload_root . "/" . $file);
+            $this->logger->info("File $file not existing on cloud : not deleted");
+            $this->handleOlderFilesNotInCloud($file);
         }
         closedir($dh);
     }
@@ -186,6 +173,28 @@ class PesAllerStorage {
         ) {
             $this->logger->info("File $file : rename KO");
             return;
+        }
+    }
+
+    /**
+     * @param $file
+     */
+    private function handleOlderFilesNotInCloud($file): void
+    {
+        $id = $this->heliosTransactionsSQL->getIdBySHA1($file);
+        if (!$id) {
+            $this->logger->info("$file No transaction id found");
+            $this->moveToOrphelinsDirectory($file);
+            return;
+        }
+        if (!$this->heliosTransactionsSQL->isTransactionAvailable($id)) {
+            $this->logger->info("$file [transaction $id] passé à not_available = false");
+            $this->heliosTransactionsSQL->setTransactionAvailable($id, true);
+        }
+
+        if ($this->heliosTransactionsSQL->isTransactionInCloud($id)) {
+            $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
+            $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
         }
     }
 
