@@ -114,7 +114,7 @@ class PesAllerStorage {
 	 * @param int $no_access_during_nb_days
 	 * @throws Exception
 	 */
-    public function menageLocal($no_access_during_nb_days = 9999, $do = true){
+    public function menageLocal($no_access_during_nb_days = 9999){
 
 		$sigtermHandler = SigTermHandler::getInstance();
         $dh = opendir($this->helios_files_upload_root);
@@ -141,7 +141,18 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    $this->moveToRepertoirePesAllerSansTransaction($do, $file);
+                    if(
+                        !is_null($this->repertoirePesAllerSansTransaction)
+                        &&
+                        rename(
+                            $this->helios_files_upload_root . "/" .$file,
+                            $this->repertoirePesAllerSansTransaction .$file
+                        )
+                    ){
+                        $this->logger->info("File $file : rename OK");
+                        continue;
+                    }
+                    $this->logger->info("File $file : rename KO");
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
@@ -155,9 +166,7 @@ class PesAllerStorage {
                 continue;
             }
 			$this->logger->info("Deleting file : $file");
-            if ($do) {
-				unlink($this->helios_files_upload_root . "/" . $file);
-			}
+			unlink($this->helios_files_upload_root . "/" . $file);
         }
         closedir($dh);
     }
@@ -168,28 +177,6 @@ class PesAllerStorage {
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         $this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
-    }
-
-    /**
-     * @param bool $do
-     * @param bool $file
-     */
-    private function moveToRepertoirePesAllerSansTransaction(bool $do, bool $file): void
-    {
-        if (
-            !empty($this->repertoirePesAllerSansTransaction)
-            &&
-            $do
-            &&
-            rename(
-                $this->helios_files_upload_root . "/" . $file,
-                $this->repertoirePesAllerSansTransaction . $file
-            )
-        ) {
-            $this->logger->info("File $file : rename OK");
-        } else {
-            $this->logger->info("File $file : rename KO");
-        }
     }
 
 }

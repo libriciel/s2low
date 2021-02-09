@@ -37,7 +37,7 @@ class HeliosMenageWorker implements IWorker
 	 */
 	public function work($data)
 	{
-		$this->pesAllerStorage->menageLocal(15,true);
+		$this->pesAllerStorage->menageLocal(15);
 	}
 
 	public function getMutexName($data)
