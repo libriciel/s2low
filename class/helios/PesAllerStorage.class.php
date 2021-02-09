@@ -141,18 +141,21 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    if(
-                        !is_null($this->repertoirePesAllerSansTransaction)
-                        &&
-                        rename(
+                    if(is_null($this->repertoirePesAllerSansTransaction)){
+                        $this->logger->info(
+                            "File $file : destination directory $this->repertoirePesAllerSansTransaction not found"
+                        );
+                        continue;
+                    }
+                    if(!rename(
                             $this->helios_files_upload_root . "/" .$file,
                             $this->repertoirePesAllerSansTransaction .$file
                         )
                     ){
-                        $this->logger->info("File $file : rename OK");
+                        $this->logger->info("File $file : rename KO");
                         continue;
                     }
-                    $this->logger->info("File $file : rename KO");
+                    $this->logger->info("File $file : rename OK");
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
