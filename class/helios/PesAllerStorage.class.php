@@ -133,16 +133,13 @@ class PesAllerStorage {
 				$this->logger->debug("File $file too young to die : not deleted");
 				continue;
             }
-            if ( $this->openStackSwiftWrapper->fileExistsOnCloud(
-                self::CONTAINER_NAME,
-                $file
-            )){
-                $this->logger->info("Deleting file : $file");
-                unlink($this->helios_files_upload_root . "/" . $file);
+            if (!$this->fileExistsOnCloud($file)){
+            	$this->logger->info("File $file not existing on cloud : not deleted");
+                $this->handleOlderFileNotInCloud($file);
                 continue;
             }
-            $this->logger->info("File $file not existing on cloud : not deleted");
-            $this->handleOlderFilesNotInCloud($file);
+			$this->logger->info("Deleting file : $file");
+			unlink($this->helios_files_upload_root . "/" . $file);
         }
         closedir($dh);
     }
@@ -179,7 +176,7 @@ class PesAllerStorage {
     /**
      * @param $file
      */
-    private function handleOlderFilesNotInCloud($file): void
+    private function handleOlderFileNotInCloud($file): void
     {
         $id = $this->heliosTransactionsSQL->getIdBySHA1($file);
         if (!$id) {
@@ -191,11 +188,22 @@ class PesAllerStorage {
             $this->logger->info("$file [transaction $id] passé à not_available = false");
             $this->heliosTransactionsSQL->setTransactionAvailable($id, true);
         }
-
         if ($this->heliosTransactionsSQL->isTransactionInCloud($id)) {
             $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
             $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
         }
+    }
+
+    /**
+     * @param bool $file
+     * @return bool|\Psr\Http\Message\ResponseInterface
+     */
+    private function fileExistsOnCloud(bool $file)
+    {
+        return $this->openStackSwiftWrapper->fileExistsOnCloud(
+            self::CONTAINER_NAME,
+            $file
+        );
     }
 
 }
