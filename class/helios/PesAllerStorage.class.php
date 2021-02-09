@@ -140,22 +140,8 @@ class PesAllerStorage {
             	$this->logger->info("File $file not existing on cloud : not deleted");
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
-                    $this->logger->info("No transaction id found for $file");
-                    if(is_null($this->repertoirePesAllerSansTransaction)){
-                        $this->logger->info(
-                            "File $file : destination directory $this->repertoirePesAllerSansTransaction not found"
-                        );
-                        continue;
-                    }
-                    if(!rename(
-                            $this->helios_files_upload_root . "/" .$file,
-                            $this->repertoirePesAllerSansTransaction .$file
-                        )
-                    ){
-                        $this->logger->info("File $file : rename KO");
-                        continue;
-                    }
-                    $this->logger->info("File $file : rename OK");
+                    $this->logger->info("$file No transaction id found");
+                    $this->moveToOrphelinsDirectory($file);
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
@@ -180,6 +166,27 @@ class PesAllerStorage {
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         $this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
+    }
+
+    /**
+     * @param $file
+     */
+    private function moveToOrphelinsDirectory($file): void
+    {
+        if (is_null($this->repertoirePesAllerSansTransaction)) {
+            $this->logger->info(
+                "File $file : destination directory $this->repertoirePesAllerSansTransaction not found"
+            );
+            return;
+        }
+        if (!rename(
+            $this->helios_files_upload_root . "/" . $file,
+            $this->repertoirePesAllerSansTransaction . $file
+        )
+        ) {
+            $this->logger->info("File $file : rename KO");
+            return;
+        }
     }
 
 }
