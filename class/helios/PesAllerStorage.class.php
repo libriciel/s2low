@@ -165,7 +165,7 @@ class PesAllerStorage {
         }
         if (!rename(
             $this->helios_files_upload_root . "/" . $file,
-            $this->repertoirePesAllerSansTransaction . $file
+            $this->repertoirePesAllerSansTransaction . "/" . $file
         )
         ) {
             $this->logger->info("File $file : rename KO");
