@@ -141,20 +141,7 @@ class PesAllerStorage {
             	$id = $this->heliosTransactionsSQL->getIdBySHA1($file);
             	if(! $id){
                     $this->logger->info("No transaction id found for $file");
-                    if(
-                        !is_null($this->repertoirePesAllerSansTransaction)
-                        &&
-                        $do
-                        &&
-                        rename(
-                            $this->helios_files_upload_root . "/" .$file,
-                            $this->repertoirePesAllerSansTransaction .$file
-                        )
-                    ){
-                        $this->logger->info("File $file : rename OK");
-                        continue;
-                    }
-                    $this->logger->info("File $file : rename KO");
+                    $this->moveToRepertoirePesAllerSansTransaction($do, $file);
                     continue;
                 }
             	if(!$this->heliosTransactionsSQL->isTransactionAvailable($id)){
@@ -181,6 +168,28 @@ class PesAllerStorage {
         $no_access_during_nb_seconds = $no_access_during_nb_days*86400;
         $this->logger->debug("Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access/60/60/24));
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
+    }
+
+    /**
+     * @param bool $do
+     * @param bool $file
+     */
+    private function moveToRepertoirePesAllerSansTransaction(bool $do, bool $file): void
+    {
+        if (
+            !empty($this->repertoirePesAllerSansTransaction)
+            &&
+            $do
+            &&
+            rename(
+                $this->helios_files_upload_root . "/" . $file,
+                $this->repertoirePesAllerSansTransaction . $file
+            )
+        ) {
+            $this->logger->info("File $file : rename OK");
+        } else {
+            $this->logger->info("File $file : rename KO");
+        }
     }
 
 }
