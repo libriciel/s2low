@@ -64,7 +64,7 @@ class PESAcquitCloudStorage  implements ICloudStorable {
 	public function getFinder(): Finder
 	{
 		$finder = new Finder();
-		$finder->in($this->helios_responses_root)->name("*.xml");
+		$finder->in($this->helios_responses_root)->name("*ACK*.xml");
 		return $finder;
 	}
 
