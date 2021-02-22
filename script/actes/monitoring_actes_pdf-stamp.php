@@ -10,13 +10,13 @@
 //RETOURNE 2 si tout va mal
 require_once( __DIR__."/../../init/init.php");
 
-$email="s2low@libriciel.coop";
+$email=EMAIL_ADMIN_TECHNIQUE;
 $subject="Apposition du cartouche";
 $retour=0;
 $message="OK";
 
 $origfile_path=__DIR__."/../../test/TestPDF/pdf17o.pdf";
-$origfiletampone_path=__DIR__."/../../test/TestPDF/pdf17o_tampon.pdf";
+$origfiletampone_path=__DIR__."/../../test/TestPDF/pdf17o-tampon.pdf";
 $file_tampone="/tmp/pdf17o_tampon.pdf";
 $pdfStampData = new PDFStampData();
 $pdfStampData->envoi_prefecture_date = "2018-01-15 00:00:00";

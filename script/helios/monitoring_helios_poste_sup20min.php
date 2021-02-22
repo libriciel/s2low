@@ -7,7 +7,7 @@
 //RETOURNE 2 si le plus vieil acte à l'état posté à plus d'une heure
 require_once( __DIR__."/../../init/init.php");
 
-$email="s2low@libriciel.coop";
+$email=EMAIL_ADMIN_TECHNIQUE;
 $subject="Transaction HELIOS a l etat poste";
 
 $retour=0;

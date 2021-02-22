@@ -6,7 +6,7 @@
 //RETOURNE 2 si le nombre de transactions restant à notifier est supérieur à la limite
 require_once( __DIR__."/../../init/init.php");
 
-$email="s2low@libriciel.coop";
+$email=EMAIL_ADMIN_TECHNIQUE;
 $subject="Notification actes en attente";
 
 $retour=0;
