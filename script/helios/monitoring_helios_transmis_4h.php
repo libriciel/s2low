@@ -7,7 +7,7 @@
 //RETOURNE 2 si tout va mal
 require_once( __DIR__."/../../init/init.php");
 
-$email="s2low@libriciel.coop";
+$email=EMAIL_ADMIN_TECHNIQUE;
 $subject="Transaction helios a l etat transmis";
 
 $retour=0;

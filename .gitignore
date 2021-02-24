@@ -14,3 +14,4 @@ ext/standalone/HTMLPurifier/DefinitionCache
 .scannerwork
 /coverage-reports/
 .phpunit.result.cache
+.vscode
