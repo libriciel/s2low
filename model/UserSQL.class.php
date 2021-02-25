@@ -140,6 +140,12 @@ class UserSQL extends SQL {
 		return $this->query($sql,$data);
 	}
 
+	public function setPassword($userId,$passwordHash){
+	    $sql = "UPDATE users SET password = ? WHERE id = ?";
+	    $data = [$passwordHash,$userId];
+	    $this->query($sql,$data);
+    }
+
     public function getIdsFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile) {
         $sql = "SELECT id FROM users " .
             " WHERE certificate_hash=? " .

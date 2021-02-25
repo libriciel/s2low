@@ -9,15 +9,20 @@ class Authentification {
 
 	/** @var  Environnement */
 	private $environnement;
-	
-	public function __construct(
+
+	/** @var PasswordHandler */
+    private $passwordHandler;
+
+    public function __construct(
         Environnement $environnement,
 		UserSQL $userSQL,
+        PasswordHandler $passwordHandler,
 		NounceSQL $nounceSQL=null
 	){
 		$this->environnement = $environnement;
 		$this->userSQL = $userSQL;
 		$this->nounceSQL = $nounceSQL;
+		$this->passwordHandler = $passwordHandler;
 	}
 
 	/**
@@ -169,7 +174,11 @@ class Authentification {
             $ids = [];
 
             foreach ($idsAndPasswords as $idandPassword){
-                if(md5($connexion_info['password']) == $idandPassword["password"]){
+                if($this->passwordHandler->passwordMatchesHash(
+                    $connexion_info['password'],
+                    $idandPassword["password"],
+                    $idandPassword['id']
+                )){
                     $ids[]=$idandPassword["id"];
                 }
             }
@@ -182,5 +191,5 @@ class Authentification {
             $connexion_info['certificate_rgs_2_etoiles']
         );
     }
-
+    
 }
