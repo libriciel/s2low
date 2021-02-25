@@ -48,14 +48,10 @@ class Authentification {
 			return $id;
 		}
 
-		$id_list = $this->userSQL->getIdFromConnexionInfo(
-			$connexion_info['certificate_hash'],
-			$connexion_info['certificate_rgs_2_etoiles'],
-			$connexion_info['login'],
-			$connexion_info['password']
-		);
 
-		if (count($id_list) == 0){
+        $id_list = $this->getIdFromConnexionInfo($connexion_info);
+
+        if (count($id_list) == 0){
 			Helpers::returnAndExit(1, "Le certificat n'est pas valide : aucun compte trouvé",  WEBSITE);
 		}
 
@@ -157,5 +153,34 @@ class Authentification {
 			$authority_id
 		);
 	}
+
+    /**
+     * @param $connexion_info
+     * @return mixed
+     */
+    private function getIdFromConnexionInfo( $connexion_info)
+    {
+        if($connexion_info['login']){
+            $idsAndPasswords = $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
+                $connexion_info['certificate_hash'],
+                $connexion_info['certificate_rgs_2_etoiles'],
+                $connexion_info['login']
+            );
+            $ids = [];
+
+            foreach ($idsAndPasswords as $idandPassword){
+                if(md5($connexion_info['password']) == $idandPassword["password"]){
+                    $ids[]=$idandPassword["id"];
+                }
+            }
+
+            return $ids;
+
+        }
+        return $this->userSQL->getIdsFromConnexionInfo(
+            $connexion_info['certificate_hash'],
+            $connexion_info['certificate_rgs_2_etoiles']
+        );
+    }
 
 }
