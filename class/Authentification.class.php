@@ -13,16 +13,21 @@ class Authentification {
 	/** @var PasswordHandler */
     private $passwordHandler;
 
+    /** @var S2lowLogger  */
+    private $logger;
+
     public function __construct(
         Environnement $environnement,
 		UserSQL $userSQL,
         PasswordHandler $passwordHandler,
-		NounceSQL $nounceSQL=null
+		NounceSQL $nounceSQL=null,
+        S2lowLogger $logger
 	){
 		$this->environnement = $environnement;
 		$this->userSQL = $userSQL;
 		$this->nounceSQL = $nounceSQL;
 		$this->passwordHandler = $passwordHandler;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -30,11 +35,16 @@ class Authentification {
 	 * @throws Exception
 	 */
 	public function authenticate(){
+	    $this->logger->error("authenticate");
 		if ($this->environnement->session()->get('id_login')){
+            $this->logger->error("id_login defini");
 			$this->verifConnexion($this->environnement->session()->get('id_login'));
+            $this->logger->error("returnvalue : ".$this->environnement->session()->get('id_login'));
 			return $this->environnement->session()->get('id_login');
 		} else {
+            $this->logger->error("id_login defini");
             $this->environnement->session()->set('id_login',$this->detectConnexionID());
+            $this->logger->error("id_login set a : ".$this->detectConnexionID());
 		}
 		
 		return $this->environnement->session()->get('id_login');
@@ -74,11 +84,13 @@ class Authentification {
 	private function verifConnexion($user_id) {
 		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
+		    $this->logger->error("La connexion n'a pas pu être établie");
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
 		} // @codeCoverageIgnore
 		$list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
 
 		if (! in_array($user_id,$list_id)){
+            $this->logger->error("La connexion n'a pas pu être établie 2");
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
 		} // @codeCoverageIgnore
 	}

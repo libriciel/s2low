@@ -258,7 +258,7 @@ class User extends DataObject {
 		return true;
 	}
 
-	private function retrieveInfoFromClientCertificate(){
+	public function retrieveInfoFromClientCertificate(){
 		 // Ne marche pas avec apache-ssl
 		if ( ! isset($_SERVER['SSL_CLIENT_VERIFY']) || $_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;
