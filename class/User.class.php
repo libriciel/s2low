@@ -116,9 +116,9 @@ class User extends DataObject {
    * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
    * et initialiser les données de l'utilisateur.
   */
-	public function authenticate() {
+	public function authenticate($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
 		$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
-		$this->id = $authenfication->authenticate();
+		$this->id = $authenfication->authenticate($authentProcess);
 
 		// Utile si on veut vérifier qui n'est pas en TLSv1.2
 		/*
@@ -240,7 +240,7 @@ class User extends DataObject {
 		return $this->is_loggued;
 	}
 
-	public function login($login,$password){
+	/*public function login($login,$password){
 		$this->retrieveInfoFromClientCertificate();
 
 		$sql = "SELECT id FROM users WHERE certificate_hash='" . pg_escape_string($this->certificate_hash) . "'" .
@@ -256,7 +256,7 @@ class User extends DataObject {
 		$this->id = $row['id'];
 		$_SESSION['id_login'] = $this->id;
 		return true;
-	}
+	}*/
 
 	public function retrieveInfoFromClientCertificate(){
 		 // Ne marche pas avec apache-ssl

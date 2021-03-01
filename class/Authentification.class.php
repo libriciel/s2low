@@ -2,6 +2,9 @@
 
 class Authentification {
 
+    const AUTHENTIFICATION_BY_APACHE=1;
+    const AUTHENTIFICATION_BY_FORM=2;
+
 	private $userSQL;
 
 	/** @var NounceSQL */
@@ -34,7 +37,7 @@ class Authentification {
 	 * @return bool|mixed
 	 * @throws Exception
 	 */
-	public function authenticate(){
+	public function authenticate($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE){
 	    $this->logger->error("authenticate");
 		if ($this->environnement->session()->get('id_login')){
             $this->logger->error("id_login defini");
@@ -42,9 +45,9 @@ class Authentification {
             $this->logger->error("returnvalue : ".$this->environnement->session()->get('id_login'));
 			return $this->environnement->session()->get('id_login');
 		} else {
-            $this->logger->error("id_login defini");
-            $this->environnement->session()->set('id_login',$this->detectConnexionID());
-            $this->logger->error("id_login set a : ".$this->detectConnexionID());
+            $this->logger->error("id_login non defini");
+            $this->environnement->session()->set('id_login',$this->detectConnexionID($authentProcess));
+            $this->logger->error("id_login set a : ".$this->detectConnexionID($authentProcess));
 		}
 		
 		return $this->environnement->session()->get('id_login');
@@ -54,10 +57,10 @@ class Authentification {
 	 * @return array|bool|mixed
 	 * @throws Exception
 	 */
-	private function detectConnexionID() {
+	private function detectConnexionID($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
         //TODO Refactorer les Helper:redirect
 
-		$connexion_info = $this->getAllConnexionInfo();
+		$connexion_info = $this->getAllConnexionInfo($authentProcess);
 		$id = $this->getConnexionIdFromNounce($connexion_info);
 		if ($id){
 			return $id;
@@ -95,7 +98,7 @@ class Authentification {
 		} // @codeCoverageIgnore
 	}
 
-	public function getAllConnexionInfo() {
+	public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
 		//http://stackoverflow.com/a/18205049
 		if (function_exists('apache_request_headers')) {
 			$h = apache_request_headers();
@@ -112,8 +115,8 @@ class Authentification {
 					'SSL_CLIENT_I_DN'=>'issuer_dn',
 					'SSL_CLIENT_CERT'=>'ssl_client_cert',
 					'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'=>'certificate_rgs_2_etoiles',
-					'PHP_AUTH_USER'=>'login',
-					'PHP_AUTH_PW' => 'password',
+					//'PHP_AUTH_USER'=>'login',
+					//'PHP_AUTH_PW' => 'password',
 					'TESTING_CERTIFICATE_HASH' => 'certificate_hash',
 				) as $server_key => $result_key) {
 					
@@ -123,6 +126,36 @@ class Authentification {
 					$result[$result_key] = $this->environnement->server()->get($server_key);
 				}
 		}
+
+        if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
+            foreach(
+                array(
+                    'PHP_AUTH_USER'=>'login',
+                    'PHP_AUTH_PW' => 'password'
+                ) as $server_key => $result_key) {
+
+                if (! $this->environnement->server()->get($server_key)){
+                    $result[$result_key] = false;
+                } else {
+                    $result[$result_key] = $this->environnement->server()->get($server_key);
+                }
+            }
+        } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
+            foreach(
+                array(
+                    'login'=>'login',
+                    'password' => 'password'
+                ) as $server_key => $result_key) {
+
+                if (! $this->environnement->post()->get($server_key)){
+                    $result[$result_key] = false;
+                } else {
+                    $result[$result_key] = $this->environnement->post()->get($server_key);
+                }
+            }
+        } else {
+            return false;
+        }
 
 		if (! $result['ssl_client_verify']){
 			return false;

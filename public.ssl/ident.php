@@ -3,17 +3,17 @@
 require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-$login = Helpers::getVarFromPost("login");
-$password = Helpers::getVarFromPost("password");
+//$login = Helpers::getVarFromPost("login");
+//$password = Helpers::getVarFromPost("password");
 
 unset($_SESSION['error']);
 
 $me = new User();
 
-$environnment = $objectInstancier->get(Environnement::class);
+//$environnment = $objectInstancier->get(Environnement::class);
 
-$environnment->server()->set('PHP_AUTH_USER',$login);     //=>'login',
-$environnment->server()->set('PHP_AUTH_PW',$password);    // => 'password',
+//$environnment->server()->set('PHP_AUTH_USER',$login);     //=>'login',
+//$environnment->server()->set('PHP_AUTH_PW',$password);    // => 'password',
 
 //var_dump($environnment->server()->get('PHP_AUTH_USER'));
 /*if (! $me->login($login,md5($password))) {
@@ -22,16 +22,14 @@ $environnment->server()->set('PHP_AUTH_PW',$password);    // => 'password',
 	exit;
 }*/
 
-$me->retrieveInfoFromClientCertificate();               //TODO : CHECK IF NECESSARY
+//$me->retrieveInfoFromClientCertificate();               //TODO : CHECK IF NECESSARY
 
-if (! $me->authenticate()) {
+if (! $me->authenticate(Authentification::AUTHENTIFICATION_BY_FORM)) {
   $_SESSION["error"] = "Échec de l'authentification";
 }
 
 $_SESSION['id_login'] = $me->getId();
 
-$environnment->server()->set('PHP_AUTH_USER',null);     //TODO : CHECK IF NECESSARY
-$environnment->server()->set('PHP_AUTH_PW',null);       //TODO : CHECK IF NECESSARY
 
 // TODO : modifier controller/AdminUserController.class.php     216
 // TODO : modifier model/UserSQL.class.php				        143
