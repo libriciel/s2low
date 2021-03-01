@@ -24,13 +24,15 @@ class Authentification {
 		UserSQL $userSQL,
         PasswordHandler $passwordHandler,
 		NounceSQL $nounceSQL=null,
-        S2lowLogger $logger
+        S2lowLogger $logger,
+        HttpsConnexion $httpsConnexion
 	){
 		$this->environnement = $environnement;
 		$this->userSQL = $userSQL;
 		$this->nounceSQL = $nounceSQL;
 		$this->passwordHandler = $passwordHandler;
 		$this->logger = $logger;
+		$this->httpsConnexion = $httpsConnexion;
 	}
 
 	/**
@@ -40,16 +42,11 @@ class Authentification {
 	public function authenticate($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE){
 	    $this->logger->error("authenticate");
 		if ($this->environnement->session()->get('id_login')){
-            $this->logger->error("id_login defini");
 			$this->verifConnexion($this->environnement->session()->get('id_login'));
-            $this->logger->error("returnvalue : ".$this->environnement->session()->get('id_login'));
 			return $this->environnement->session()->get('id_login');
 		} else {
-            $this->logger->error("id_login non defini");
             $this->environnement->session()->set('id_login',$this->detectConnexionID($authentProcess));
-            $this->logger->error("id_login set a : ".$this->detectConnexionID($authentProcess));
 		}
-		
 		return $this->environnement->session()->get('id_login');
 	}
 
@@ -60,14 +57,13 @@ class Authentification {
 	private function detectConnexionID($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
         //TODO Refactorer les Helper:redirect
 
-		$connexion_info = $this->getAllConnexionInfo($authentProcess);
-		$id = $this->getConnexionIdFromNounce($connexion_info);
-		if ($id){
-			return $id;
-		}
+        if ($this->httpsConnexion->hasNonceParameters()){
+            if ($this->getConnexionIdFromNounce($this->httpsConnexion->getNonceParameters())){
+                return $this->getConnexionIdFromNounce($this->httpsConnexion->getNonceParameters());
+            }
+        }
 
-
-        $id_list = $this->getIdFromConnexionInfo($connexion_info);
+        $id_list = $this->getIdFromConnexionInfo($this->httpsConnexion->getAllConnexionInfo($authentProcess));
 
         if (count($id_list) == 0){
 			Helpers::returnAndExit(1, "Le certificat n'est pas valide : aucun compte trouvé",  WEBSITE);
@@ -85,113 +81,20 @@ class Authentification {
 	 * @throws Exception
 	 */
 	private function verifConnexion($user_id) {
-		$connexion_info = $this->getAllConnexionInfo();
+		$connexion_info = $this->httpsConnexion->getAllConnexionInfo();
 		if (! $connexion_info){
-		    $this->logger->error("La connexion n'a pas pu être établie");
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
 		} // @codeCoverageIgnore
 		$list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
 
 		if (! in_array($user_id,$list_id)){
-            $this->logger->error("La connexion n'a pas pu être établie 2");
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
 		} // @codeCoverageIgnore
 	}
 
-	public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
-		//http://stackoverflow.com/a/18205049
-		if (function_exists('apache_request_headers')) {
-			$h = apache_request_headers();
-			if (isset($h['org.s2low.forward-x509-identification'])) {
-				$this->environnement->server()->set('HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION',$h['org.s2low.forward-x509-identification']);
-			}
-		}
-
-		$result = array();
-		foreach(
-				array(
-					'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
-					'SSL_CLIENT_S_DN' => 'subject_dn',
-					'SSL_CLIENT_I_DN'=>'issuer_dn',
-					'SSL_CLIENT_CERT'=>'ssl_client_cert',
-					'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION'=>'certificate_rgs_2_etoiles',
-					//'PHP_AUTH_USER'=>'login',
-					//'PHP_AUTH_PW' => 'password',
-					'TESTING_CERTIFICATE_HASH' => 'certificate_hash',
-				) as $server_key => $result_key) {
-					
-				if (! $this->environnement->server()->get($server_key)){
-					$result[$result_key] = false;
-				} else {
-					$result[$result_key] = $this->environnement->server()->get($server_key);
-				}
-		}
-
-        if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
-            foreach(
-                array(
-                    'PHP_AUTH_USER'=>'login',
-                    'PHP_AUTH_PW' => 'password'
-                ) as $server_key => $result_key) {
-
-                if (! $this->environnement->server()->get($server_key)){
-                    $result[$result_key] = false;
-                } else {
-                    $result[$result_key] = $this->environnement->server()->get($server_key);
-                }
-            }
-        } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
-            foreach(
-                array(
-                    'login'=>'login',
-                    'password' => 'password'
-                ) as $server_key => $result_key) {
-
-                if (! $this->environnement->post()->get($server_key)){
-                    $result[$result_key] = false;
-                } else {
-                    $result[$result_key] = $this->environnement->post()->get($server_key);
-                }
-            }
-        } else {
-            return false;
-        }
-
-		if (! $result['ssl_client_verify']){
-			return false;
-		}
-
-		if ($result['ssl_client_cert']){
-			$x509 = new X509Certificate();
-			$info = $x509->getInfo($result['ssl_client_cert']);
-			if (! $info){
-				return false;
-			}
-			$result['issuer_dn'] = $info['issuer_name'];
-			$result['subject_dn'] = $info['subject_name'];
-			$result['certificate_hash'] = $info['certificate_hash'];
-		}
-		if ($result['certificate_rgs_2_etoiles']){
-			$result['certificate_rgs_2_etoiles'] = $this->der2pem(base64_decode($result['certificate_rgs_2_etoiles']));
-		}
-
-		return $result;
-	}
-	
-	private function der2pem($der_data) {
-		$pem = chunk_split(base64_encode($der_data), 64, "\n");
-		$pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
-		return $pem;
-	}
-
-	private function getConnexionIdFromNounce($connexion_info){
-		if (empty($this->environnement->get()->get('nounce'))){
-			return false;
-		}
-		$authority_id = $this->nounceSQL->verify(
-			$this->environnement->get()->get('login'),
-            $this->environnement->get()->get('nounce'),
-            $this->environnement->get()->get('hash')
+	private function getConnexionIdFromNounce($nonceParameters){
+        $authority_id = $this->nounceSQL->verify(
+			...$nonceParameters
 		);
 
 		if(! $authority_id){
@@ -199,7 +102,7 @@ class Authentification {
 		}
 
 		return $this->userSQL->getIdFromCertificateAndAuthority(
-			$connexion_info['certificate_hash'],
+		    $this->httpsConnexion->getCertificateHash(),
 			$authority_id
 		);
 	}
@@ -211,30 +114,47 @@ class Authentification {
     private function getIdFromConnexionInfo( $connexion_info)
     {
         if($connexion_info['login']){
-            $idsAndPasswords = $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
-                $connexion_info['certificate_hash'],
-                $connexion_info['certificate_rgs_2_etoiles'],
-                $connexion_info['login']
-            );
-            $ids = [];
-
-            foreach ($idsAndPasswords as $idandPassword){
-                if($this->passwordHandler->passwordMatchesHash(
-                    $connexion_info['password'],
-                    $idandPassword["password"],
-                    $idandPassword['id']
-                )){
-                    $ids[]=$idandPassword["id"];
-                }
-            }
-
-            return $ids;
-
+            return $this->getIdFromCertificateAndLogin($connexion_info);
         }
-        return $this->userSQL->getIdsFromConnexionInfo(
+        return $this->getIdFromCertificateOnly($connexion_info);
+    }
+
+    /**
+     * @param $connexion_info
+     * @return array
+     */
+    private function getIdFromCertificateAndLogin($connexion_info): array
+    {
+        $possibleUsersInDB = $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
+            $connexion_info['certificate_hash'],
+            $connexion_info['certificate_rgs_2_etoiles'],
+            $connexion_info['login']
+        );
+        $ids = [];
+
+        foreach ($possibleUsersInDB as $possibleUser) {
+            if ($this->passwordHandler->passwordMatchesHash(
+                $connexion_info['password'],
+                $possibleUser["password"],
+                $possibleUser['id']
+            )) {
+                $ids[] = $possibleUser["id"];
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param $connexion_info
+     * @return mixed
+     */
+    private function getIdFromCertificateOnly($connexion_info)
+    {
+        $idsFromConnexionInfo = $this->userSQL->getIdsFromConnexionInfo(
             $connexion_info['certificate_hash'],
             $connexion_info['certificate_rgs_2_etoiles']
         );
+        return $idsFromConnexionInfo;
     }
-    
 }

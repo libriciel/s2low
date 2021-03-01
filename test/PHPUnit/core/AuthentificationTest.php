@@ -211,7 +211,7 @@ class AuthentificationTest  extends S2lowTestCase {
 		]);
 
 		$authentification = $this->getObjectInstancier()->get("Authentification");
-		$info = $authentification->getAllConnexionInfo();
+		$info = $authentification->httpsConnexion->getAllConnexionInfo();
 
 		$this->assertEquals(array (
 			'ssl_client_verify' => 'SUCCESS',
