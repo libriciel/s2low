@@ -3,36 +3,25 @@
 
 class HttpsConnexion
 {
-    public function __construct(Environnement $environnement){
+    /** @var Environnement */
+    private $environnement;
+    /** @var X509Certificate  */
+    private $certificateHandler;
+
+    public function __construct(Environnement $environnement, X509Certificate $certificateHandler){
         $this->environnement = $environnement;
+        $this->certificateHandler=$certificateHandler;
     }
 
-    public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
-        //TODO : replacer dans la classe Authentification
-        if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
-            $credentials= $this->getCredentialsFromApache();
-        } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
-            $credentials=$this->getCredentialsFromGet();
-        } else {
-            return false;
-        }
-
-        $certificateInfos=$this->getCertificateInfo();
-
-        if(!$certificateInfos){
-            return false;
-        }
-
-        return array_merge($credentials, $certificateInfos);
-    }
-
-    private function der2pem($der_data) {
+    private function der2pem($der_data): string
+    {
         $pem = chunk_split(base64_encode($der_data), 64, "\n");
         $pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
         return $pem;
     }
 
-    private function getParameterList($correspondanceArray,$localisation){
+    private function getParameterList($correspondanceArray,$localisation): array
+    {
         $result = array();
         foreach ($correspondanceArray as $server_key => $result_key){
             if (!$this->environnement->server()->get($server_key)) {
@@ -44,10 +33,14 @@ class HttpsConnexion
         return $result;
     }
 
-    private function getCertificateInfo()
+    /**
+     * @return array|false
+     * @throws Exception
+     */
+    public function getCertificateInfo()
     {
         //http://stackoverflow.com/a/18205049
-        if (function_exists('apache_request_headers')) {
+        if (function_exists('apache_request_headers')) {    //TODO : tester
             $h = apache_request_headers();
             if (isset($h['org.s2low.forward-x509-identification'])) {
                 $this->environnement->server()->set('HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION', $h['org.s2low.forward-x509-identification']);
@@ -68,8 +61,7 @@ class HttpsConnexion
         }
 
         if ($result['ssl_client_cert']){
-            $x509 = new X509Certificate();
-            $info = $x509->getInfo($result['ssl_client_cert']);
+            $info = $this->certificateHandler->getInfo($result['ssl_client_cert']);
             if (! $info){
                 return false;
             }
@@ -84,10 +76,9 @@ class HttpsConnexion
     }
 
     /**
-     * @param array $result
      * @return array
      */
-    private function getCredentialsFromApache(): array
+    public function getCredentialsFromApache(): array
     {
         return $this->getParameterList([
                 'PHP_AUTH_USER' => 'login',
@@ -95,10 +86,9 @@ class HttpsConnexion
     }
 
     /**
-     * @param array $result
      * @return array
      */
-    private function getCredentialsFromGet(): array
+    public function getCredentialsFromGet(): array
     {
         return $this->getParameterList([
                 'login' => 'login',
@@ -115,11 +105,13 @@ class HttpsConnexion
             $this->environnement->get()->get('hash')];
     }
 
-    public function getCertificateHash(){
+    public function getCertificateHash() : string
+    {
         return $this->environnement->server()->get('TESTING_CERTIFICATE_HASH');
     }
 
-    public function hasNonceParameters(){
+    public function hasNonceParameters(): bool
+    {
         return !empty($this->environnement->get()->get('nounce'));
     }
 }

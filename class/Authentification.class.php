@@ -5,6 +5,7 @@ class Authentification {
     const AUTHENTIFICATION_BY_APACHE=1;
     const AUTHENTIFICATION_BY_FORM=2;
 
+    /** @var UserSQL  */
 	private $userSQL;
 
 	/** @var NounceSQL */
@@ -18,6 +19,9 @@ class Authentification {
 
     /** @var S2lowLogger  */
     private $logger;
+
+    /** @var HttpsConnexion  */
+    private $httpsConnexion;
 
     public function __construct(
         Environnement $environnement,
@@ -35,10 +39,11 @@ class Authentification {
 		$this->httpsConnexion = $httpsConnexion;
 	}
 
-	/**
-	 * @return bool|mixed
-	 * @throws Exception
-	 */
+    /**
+     * @param int $authentProcess
+     * @return bool|mixed
+     * @throws Exception
+     */
 	public function authenticate($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE){
 	    $this->logger->error("authenticate");
 		if ($this->environnement->session()->get('id_login')){
@@ -50,10 +55,12 @@ class Authentification {
 		return $this->environnement->session()->get('id_login');
 	}
 
-	/**
-	 * @return array|bool|mixed
-	 * @throws Exception
-	 */
+
+    /**
+     * @param int $authentProcess
+     * @return array|bool|mixed
+     * @throws Exception
+     */
 	private function detectConnexionID($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
         //TODO Refactorer les Helper:redirect
 
@@ -63,7 +70,7 @@ class Authentification {
             }
         }
 
-        $id_list = $this->getIdFromConnexionInfo($this->httpsConnexion->getAllConnexionInfo($authentProcess));
+        $id_list = $this->getIdFromConnexionInfo($this->getAllConnexionInfo($authentProcess));
 
         if (count($id_list) == 0){
 			Helpers::returnAndExit(1, "Le certificat n'est pas valide : aucun compte trouvé",  WEBSITE);
@@ -81,7 +88,7 @@ class Authentification {
 	 * @throws Exception
 	 */
 	private function verifConnexion($user_id) {
-		$connexion_info = $this->httpsConnexion->getAllConnexionInfo();
+		$connexion_info = $this->getAllConnexionInfo();
 		if (! $connexion_info){
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
 		} // @codeCoverageIgnore
@@ -91,6 +98,25 @@ class Authentification {
 			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
 		} // @codeCoverageIgnore
 	}
+
+    public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
+        //TODO : replacer dans la classe Authentification
+        if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
+            $credentials= $this->httpsConnexion->getCredentialsFromApache();
+        } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
+            $credentials=$this->httpsConnexion->getCredentialsFromGet();    //TODO : tester
+        } else {
+            return false;                                                   //TODO : tester
+        }
+
+        $certificateInfos=$this->httpsConnexion->getCertificateInfo();
+
+        if(!$certificateInfos){
+            return false;
+        }
+
+        return array_merge($credentials, $certificateInfos);
+    }
 
 	private function getConnexionIdFromNounce($nonceParameters){
         $authority_id = $this->nounceSQL->verify(
@@ -151,10 +177,9 @@ class Authentification {
      */
     private function getIdFromCertificateOnly($connexion_info)
     {
-        $idsFromConnexionInfo = $this->userSQL->getIdsFromConnexionInfo(
+        return $this->userSQL->getIdsFromConnexionInfo(
             $connexion_info['certificate_hash'],
             $connexion_info['certificate_rgs_2_etoiles']
         );
-        return $idsFromConnexionInfo;
     }
 }
