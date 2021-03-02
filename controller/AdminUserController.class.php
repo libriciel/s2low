@@ -213,7 +213,7 @@ class AdminUserController extends Controller {
 		$him->set("status", $status);
 		$him->set("login",$login);
 		if ($password){
-			$him->set("password",md5($password));
+			$him->set("password",password_hash($password,PASSWORD_DEFAULT));
 		}
 
 

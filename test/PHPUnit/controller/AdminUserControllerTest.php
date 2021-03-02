@@ -300,5 +300,12 @@ class AdminUserControllerTest extends S2lowTestCase {
 
     }
 
-
+    public function testPasswordIsOk(){
+        $this->setDataOk();
+        $this->getObjectInstancier()->get("Environnement")->post()->set('login','login');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password','password');
+        $this->getObjectInstancier()->get("Environnement")->post()->set('password2','password');
+        $this->adminUserController->doEditAction();
+        $this->assertTrue(true);
+    }
 }

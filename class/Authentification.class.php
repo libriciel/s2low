@@ -45,13 +45,11 @@ class Authentification {
      * @throws Exception
      */
 	public function authenticate($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE){
-	    $this->logger->error("authenticate");
 		if ($this->environnement->session()->get('id_login')){
 			$this->verifConnexion($this->environnement->session()->get('id_login'));
 			return $this->environnement->session()->get('id_login');
-		} else {
-            $this->environnement->session()->set('id_login',$this->detectConnexionID($authentProcess));
 		}
+        $this->environnement->session()->set('id_login',$this->detectConnexionID($authentProcess));
 		return $this->environnement->session()->get('id_login');
 	}
 
