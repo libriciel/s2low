@@ -24,7 +24,7 @@ class HttpsConnexion
     {
         $result = array();
         foreach ($correspondanceArray as $server_key => $result_key){
-            if (!$this->environnement->server()->get($server_key)) {
+            if (!$this->environnement->$localisation()->get($server_key)) {
                 $result[$result_key] = false;
             } else {
                 $result[$result_key] = $this->environnement->$localisation()->get($server_key);
@@ -40,7 +40,7 @@ class HttpsConnexion
     public function getCertificateInfo()
     {
         //http://stackoverflow.com/a/18205049
-        if (function_exists('apache_request_headers')) {    //TODO : tester
+        if (function_exists('apache_request_headers')) {    //TODO : tester quand on utilisera les namespace
             $h = apache_request_headers();
             if (isset($h['org.s2low.forward-x509-identification'])) {
                 $this->environnement->server()->set('HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION', $h['org.s2low.forward-x509-identification']);
@@ -88,11 +88,12 @@ class HttpsConnexion
     /**
      * @return array
      */
-    public function getCredentialsFromGet(): array
+    public function getCredentialsFromPost(): array
     {
-        return $this->getParameterList([
-                'login' => 'login',
-                'password' => 'password'],"get");
+        $parameterList = $this->getParameterList([
+            'login' => 'login',
+            'password' => 'password'], "post");
+        return $parameterList;
     }
 
     /**

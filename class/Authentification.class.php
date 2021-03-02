@@ -104,7 +104,7 @@ class Authentification {
         if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
             $credentials= $this->httpsConnexion->getCredentialsFromApache();
         } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
-            $credentials=$this->httpsConnexion->getCredentialsFromGet();    //TODO : tester
+            $credentials=$this->httpsConnexion->getCredentialsFromPost();    //TODO : tester
         } else {
             return false;                                                   //TODO : tester
         }

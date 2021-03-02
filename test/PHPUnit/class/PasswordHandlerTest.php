@@ -84,4 +84,19 @@ class PasswordHandlerTest extends S2lowTestCase{
             1
         );
     }
+
+    public function testBadPassword(){
+        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
+
+        $userSQL->expects($this->never())->method('setPassword');
+        $passwordHandler = new PasswordHandler($userSQL);
+
+        $this->assertFalse(
+            $passwordHandler->passwordMatchesHash(
+                "badPassword",
+                password_hash("password",PASSWORD_DEFAULT),
+                1
+            )
+        );
+    }
 }
