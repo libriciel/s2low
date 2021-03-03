@@ -98,13 +98,12 @@ class Authentification {
      * @throws Exception
      */
     public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
-        //TODO : replacer dans la classe Authentification
         if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
             $credentials= $this->httpsConnexion->getCredentialsFromApache();
         } elseif ($authentProcess==Authentification::AUTHENTIFICATION_BY_FORM){
-            $credentials=$this->httpsConnexion->getCredentialsFromPost();    //TODO : tester
+            $credentials=$this->httpsConnexion->getCredentialsFromPost();
         } else {
-            return false;                                                   //TODO : tester
+            return false;
         }
 
         $certificateInfos=$this->httpsConnexion->getCertificateInfo();
