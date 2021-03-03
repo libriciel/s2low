@@ -305,7 +305,25 @@ class AdminUserControllerTest extends S2lowTestCase {
         $this->getObjectInstancier()->get("Environnement")->post()->set('login','login');
         $this->getObjectInstancier()->get("Environnement")->post()->set('password','password');
         $this->getObjectInstancier()->get("Environnement")->post()->set('password2','password');
+
         $this->adminUserController->doEditAction();
-        $this->assertTrue(true);
+
+        $userSQL = $this->getObjectInstancier()->get('UserSQL');
+
+        $certificate_content = file_get_contents(__DIR__."/fixtures/user1.pem");
+
+        $x509 = new X509Certificate();
+        $certificate_hash = $x509->getBase64Hash(
+            $certificate_content,
+            UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG
+        );
+
+        $results4 = $userSQL->getIdsAndPasswordsFromConnexionInfo(
+            $certificate_hash,
+            $certificate_content,
+            "login"
+        );
+
+        $this->assertTrue(password_verify("password",$results4[0]["password"]));
     }
 }
