@@ -90,10 +90,9 @@ class HttpsConnexion
      */
     public function getCredentialsFromPost(): array
     {
-        $parameterList = $this->getParameterList([
+        return $this->getParameterList([
             'login' => 'login',
             'password' => 'password'], "post");
-        return $parameterList;
     }
 
     /**

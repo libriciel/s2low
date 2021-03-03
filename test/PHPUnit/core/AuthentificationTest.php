@@ -280,8 +280,6 @@ YNN6Z4fNWGHPgI7R6w==
         $environnement = $this->getMockBuilder(Environnement::class)->disableOriginalConstructor()->getMock();
         $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
         $passwordHandler = $this->getMockBuilder(PasswordHandler::class)->disableOriginalConstructor()->getMock();
-        $nounceSQL = $this->getMockBuilder(NounceSQL::class)->disableOriginalConstructor()->getMock();
-        $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $httpsConnexion = $this->getMockBuilder(HttpsConnexion::class)->disableOriginalConstructor()->getMock();
 
         $httpsConnexion->expects($this->once())->method('getCredentialsFromPost');
@@ -291,8 +289,6 @@ YNN6Z4fNWGHPgI7R6w==
             $environnement,
             $userSQL,
             $passwordHandler,
-            $nounceSQL,
-            $logger,
             $httpsConnexion
         );
 
@@ -304,8 +300,6 @@ YNN6Z4fNWGHPgI7R6w==
         $environnement = $this->getMockBuilder(Environnement::class)->disableOriginalConstructor()->getMock();
         $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
         $passwordHandler = $this->getMockBuilder(PasswordHandler::class)->disableOriginalConstructor()->getMock();
-        $nounceSQL = $this->getMockBuilder(NounceSQL::class)->disableOriginalConstructor()->getMock();
-        $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $httpsConnexion = $this->getMockBuilder(HttpsConnexion::class)->disableOriginalConstructor()->getMock();
 
         $httpsConnexion->expects($this->never())->method('getCredentialsFromPost');
@@ -315,8 +309,6 @@ YNN6Z4fNWGHPgI7R6w==
             $environnement,
             $userSQL,
             $passwordHandler,
-            $nounceSQL,
-            $logger,
             $httpsConnexion
         );
 
@@ -328,8 +320,6 @@ YNN6Z4fNWGHPgI7R6w==
         $environnement = $this->getMockBuilder(Environnement::class)->disableOriginalConstructor()->getMock();
         $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
         $passwordHandler = $this->getMockBuilder(PasswordHandler::class)->disableOriginalConstructor()->getMock();
-        $nounceSQL = $this->getMockBuilder(NounceSQL::class)->disableOriginalConstructor()->getMock();
-        $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $httpsConnexion = $this->getMockBuilder(HttpsConnexion::class)->disableOriginalConstructor()->getMock();
 
         $httpsConnexion->expects($this->never())->method('getCredentialsFromPost');
@@ -339,8 +329,6 @@ YNN6Z4fNWGHPgI7R6w==
             $environnement,
             $userSQL,
             $passwordHandler,
-            $nounceSQL,
-            $logger,
             $httpsConnexion
         );
 

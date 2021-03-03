@@ -17,9 +17,6 @@ class Authentification {
 	/** @var PasswordHandler */
     private $passwordHandler;
 
-    /** @var S2lowLogger  */
-    private $logger;
-
     /** @var HttpsConnexion  */
     private $httpsConnexion;
 
@@ -27,15 +24,13 @@ class Authentification {
         Environnement $environnement,
 		UserSQL $userSQL,
         PasswordHandler $passwordHandler,
-		NounceSQL $nounceSQL=null,
-        S2lowLogger $logger,
-        HttpsConnexion $httpsConnexion
+        HttpsConnexion $httpsConnexion,
+		NounceSQL $nounceSQL=null
 	){
 		$this->environnement = $environnement;
 		$this->userSQL = $userSQL;
 		$this->nounceSQL = $nounceSQL;
 		$this->passwordHandler = $passwordHandler;
-		$this->logger = $logger;
 		$this->httpsConnexion = $httpsConnexion;
 	}
 
@@ -97,6 +92,11 @@ class Authentification {
 		} // @codeCoverageIgnore
 	}
 
+    /**
+     * @param int $authentProcess
+     * @return array|false
+     * @throws Exception
+     */
     public function getAllConnexionInfo($authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
         //TODO : replacer dans la classe Authentification
         if($authentProcess==Authentification::AUTHENTIFICATION_BY_APACHE){
