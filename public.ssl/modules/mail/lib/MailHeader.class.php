@@ -4,30 +4,50 @@
 class MailHeader
 {
     private $subject;
-    public $from;
+    public $fromMail;
+    private $fromDescription;
+    private $replyToMail;
 
-    public function __construct($subject, $from)
+    public function __construct($subject, $fromMail, $fromDescription)
     {
         $this->setSubjet($subject);
-        $this->setFrom($from);
+        $this->setFromMail($fromMail);
+        $this->setFromDescription($fromDescription);
+        $this->setReplyToMail($fromMail);
     }
 
     public function setSubjet($subject){
         $this->subject = $subject;
     }
 
-    public function setFrom($from){
-        if ($from){
-            $this->from = $from;
+    public function setFromMail($fromMail){
+        if ($fromMail){
+            $this->fromMail = $fromMail;
         }
+    }
+
+    public function setFromDescription($fromDescription){
+        $this->fromDescription = $fromDescription;
+    }
+
+    public function setReplyToMail($replyToMail){
+        $this->replyToMail = $replyToMail;
+    }
+
+    public function getFromField(){
+        return "{$this->fromDescription} <{$this->fromMail}>";
+    }
+
+    public function getReplyToField(){
+        return $this->replyToMail;
     }
 
     public function getHeader(){
         return array(
-            'From'    => $this->from,
+            'From'    => $this->getFromField(),
             'Subject' => $this->subject,
-            'Reply-To' => $this->from,
-            'Return-path' => $this->from
+            'Reply-To' => $this->getReplyToField(),
+            'Return-path' => $this->getReplyToField()
         );
     }
 

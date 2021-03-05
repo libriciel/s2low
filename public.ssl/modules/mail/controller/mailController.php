@@ -369,12 +369,12 @@ class mailController {
 		//TODO : MAL
 		global $myAuthority;
 
-        $mailHeader = new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM);
+        $mailHeader = new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION);
 
 		$mailHeader->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
 	
 		if ($myAuthority->get('email_mail_securise')){
-			$mailHeader->setFrom($myAuthority->get('email_mail_securise'));
+			$mailHeader->setFromMail($myAuthority->get('email_mail_securise'));
 		}
 
         $mailUtil = new MailUtil($mailHeader);

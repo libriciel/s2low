@@ -133,7 +133,7 @@ class MailUtil {
    */    
 	public function sendMail($MailMessageEmis,$mailTransaction,$MailIncludeFiles,$send_password = false)
 	{
-	  	 $from = $this->mailHeader->from;
+	  	 $from = $this->mailHeader->fromMail;
 	  	 $from = "-f{$from}";  
 	  	 
 		
