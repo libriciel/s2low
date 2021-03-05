@@ -613,6 +613,10 @@ if(!defined('MAIL_TEDETIS_FROM')){
 	define('MAIL_TEDETIS_FROM','s2low-mailsec@s2low.docker.libriciel.fr');
 }
 
+if(!defined('MAIL_SECURE_DESCRIPTION')){
+    define('MAIL_SECURE_DESCRIPTION',"ne-pas-repondre");
+}
+
 if(!defined('IMAP_LOGIN')){
 	define('IMAP_LOGIN','s2low-mailsec@s2low.docker.libriciel.fr');
 }
