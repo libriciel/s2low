@@ -365,18 +365,19 @@ class mailController {
 	      }
 	   		}
    		 //----------------------
-
-
-		$mailUtil = new MailUtil();
 	
 		//TODO : MAL
 		global $myAuthority;
-	
-		$mailUtil->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
+
+        $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
+
+		$mailHeader->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
 	
 		if ($myAuthority->get('email_mail_securise')){
-			$mailUtil->setFrom($myAuthority->get('email_mail_securise'));
+			$mailHeader->setFrom($myAuthority->get('email_mail_securise'));
 		}
+
+        $mailUtil = new MailUtil($mailHeader);
 	
   	if (count($InputFileName)>0)
   	{

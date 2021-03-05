@@ -53,19 +53,19 @@
 
 require_once (SITEROOT . '/class/include.class.php');
 require_once (SITEROOT."/class/pearMail.class.php");
+require_once (__DIR__."/MailHeader.class.php");
 
 
 class MailUtil {
  	
 	public $errorMsg;
 	private $trace;
-	private $subject;
-	private $from;
-	
-	public function __construct(){
+	/** @var MailHeader|null  */
+    private $mailHeader;
+
+    public function __construct(MailHeader $mailHeader=null){
 		$this->trace = Trace::getInstance();
-		$this->setSubjet(MAIL_MESSAGE);
-		$this->setFrom(MAIL_TEDETIS_FROM);	
+		$this->mailHeader=$mailHeader;
 	}
 
  	/**
@@ -122,19 +122,6 @@ class MailUtil {
 		$zip->close();
 		return true;
  	}
-
-
- 
- 	
- 	public function setSubjet($subject){
- 		$this->subject = $subject; 		
- 	}
- 	
- 	public function setFrom($from){
- 		if ($from){
- 			$this->from = $from;
- 		}
- 	}
  	
  	/**
    * \brief   envoyer un mail avec des pièces joindures.
@@ -146,7 +133,7 @@ class MailUtil {
    */    
 	public function sendMail($MailMessageEmis,$mailTransaction,$MailIncludeFiles,$send_password = false)
 	{
-	  	 $from = $this->from;
+	  	 $from = $this->mailHeader->from;
 	  	 $from = "-f{$from}";  
 	  	 
 		
@@ -167,12 +154,7 @@ class MailUtil {
 ';
 		$html.= "<p>".nl2br($text)."</p>";
 
-		$hdrs = array(
-              	'From'    => $this->from,
-              	'Subject' => $this->subject,
-				'Reply-To' => $this->from,
-				'Return-path' => $this->from
-              );
+		$hdrs = $this->mailHeader->getHeader();
              
              
 		    	
