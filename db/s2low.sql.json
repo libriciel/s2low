@@ -910,6 +910,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": "false"
+            },
+            "descr_mail_securise": {
+                "data_type": "character varying",
+                "character_maximum_length": 256,
+                "is_nullable": "YES",
+                "column_default": null
             }
         },
         "authority_departments": {
