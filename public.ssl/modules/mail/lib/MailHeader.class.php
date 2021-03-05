@@ -6,10 +6,10 @@ class MailHeader
     private $subject;
     public $from;
 
-    public function __construct()
+    public function __construct($subject, $from)
     {
-        $this->setSubjet(MAIL_MESSAGE);
-        $this->setFrom(MAIL_TEDETIS_FROM);
+        $this->setSubjet($subject);
+        $this->setFrom($from);
     }
 
     public function setSubjet($subject){

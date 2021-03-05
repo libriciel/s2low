@@ -369,7 +369,7 @@ class mailController {
 		//TODO : MAL
 		global $myAuthority;
 
-        $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
+        $mailHeader = new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM);
 
 		$mailHeader->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
 	
