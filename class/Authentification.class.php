@@ -76,7 +76,7 @@ class Authentification {
         } catch (Exception $e){
             $redirect = WEBSITE;
             if($e->getMessage() ==="La connexion n'a pas pu être établie"){
-                $redirect.="/login.php";
+                $redirect=WEBSITE_SSL."/login.php";
             }
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
         }
