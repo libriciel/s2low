@@ -13,14 +13,14 @@ class HttpsConnexion
         $this->certificateHandler=$certificateHandler;
     }
 
-    private function der2pem($der_data): string
+    private function der2pem(string $der_data): string
     {
         $pem = chunk_split(base64_encode($der_data), 64, "\n");
         $pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
         return $pem;
     }
 
-    private function getParameterList($correspondanceArray,$localisation): array
+    private function getParameterList(array $correspondanceArray,string $localisation): array
     {
         $result = array();
         foreach ($correspondanceArray as $server_key => $result_key){

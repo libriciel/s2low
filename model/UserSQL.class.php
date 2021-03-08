@@ -140,13 +140,13 @@ class UserSQL extends SQL {
 		return $this->query($sql,$data);
 	}
 
-	public function setPassword($userId,$passwordHash){
+	public function setPassword(int $userId, string $passwordHash) :void {
 	    $sql = "UPDATE users SET password = ? WHERE id = ?";
 	    $data = [$passwordHash,$userId];
 	    $this->query($sql,$data);
     }
 
-    public function getIdsFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile) {
+    public function getIdsFromConnexionInfo(string $certificate_hash,string $certificate_rgs_2_etoile) : array {
         $sql = "SELECT id FROM users " .
             " WHERE certificate_hash=? " .
             " AND certificate_rgs_2_etoiles = ?  ORDER BY id ";

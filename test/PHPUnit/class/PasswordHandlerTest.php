@@ -1,102 +1,88 @@
 <?php
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 class PasswordHandlerTest extends S2lowTestCase{
-    public function testMD5password(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
-        $passwordHandler = new PasswordHandler($userSQL);
 
-        $this->assertTrue(
-            $passwordHandler->passwordMatchesHash(
-                "password",
-                md5("password"),
+    /**
+     * @var MockObject|UserSQL
+     */
+    private $userSQL;
+    /** @var PasswordHandler  */
+    private $passwordHandler;
+
+    protected function setUp() : void{
+        parent::setUp();
+        $this->userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
+        $this->passwordHandler = new PasswordHandler($this->userSQL);
+    }
+
+    /**
+     * @param $password
+     * @param $hash
+     * @param $match
+     * @dataProvider passwordValidationProvider
+     */
+    public function testPasswordValidation(
+        string $password,
+        string $hash,
+        bool $match
+    ){
+        $this->assertEquals(
+            $match,
+            $this->passwordHandler->passwordMatchesHash(
+                $password,
+                $hash,
                 1
             )
         );
     }
 
-    public function testWrongMD5password(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
-        $passwordHandler = new PasswordHandler($userSQL);
-
-        $this->assertFalse(
-            $passwordHandler->passwordMatchesHash(
-                "false_password",
-                md5("password"),
-                1
-            )
-        );
+    public function passwordValidationProvider(){
+        return [
+            ["password",md5("password"),true],
+            ["wrong_password",md5("password"),false],
+            ["password",password_hash("password", PASSWORD_DEFAULT), true],
+            ["wrong_password",password_hash("password", PASSWORD_DEFAULT), false]
+        ];
     }
+
 
     public function testMD5passwordIsChanged(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
 
-        $userSQL->expects($this->once())
+        $this->userSQL->expects($this->once())
             ->method('setPassword')
             ->with(
                 $this->equalTo(1),
                 $this->callback(function ($subject){
                 return password_verify("password",$subject);
             }));
-        $passwordHandler = new PasswordHandler($userSQL);
 
-        $passwordHandler->passwordMatchesHash(
+        $this->passwordHandler->passwordMatchesHash(
                 "password",
                 md5("password"),
                 1
             );
     }
 
-    public function testMD5passwordIsNotChangedOnWrongPassword(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
+    /**
+     * @dataProvider passwordNotChangedProvider
+     */
+    public function testMD5passwordIsNotChanged(string $password, string $hash){
+        $this->userSQL->expects($this->never())->method('setPassword');
 
-        $userSQL->expects($this->never())->method('setPassword');
-        $passwordHandler = new PasswordHandler($userSQL);
-
-        $passwordHandler->passwordMatchesHash(
-            "false_password",
-            md5("password"),
+        $this->passwordHandler->passwordMatchesHash(
+            $password,
+            $hash,
             1
         );
     }
 
-    public function testBcCryptPassword(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
-        $passwordHandler = new PasswordHandler($userSQL);
-
-        $this->assertTrue(
-            $passwordHandler->passwordMatchesHash(
-                "password",
-                password_hash("password", PASSWORD_DEFAULT),
-                1
-            )
-        );
-    }
-
-    public function testBcCryptPasswordIsNotChanged(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
-
-        $userSQL->expects($this->never())->method('setPassword');
-        $passwordHandler = new PasswordHandler($userSQL);
-
-        $passwordHandler->passwordMatchesHash(
-            "password",
-            password_hash("password", PASSWORD_DEFAULT),
-            1
-        );
-    }
-
-    public function testBadPassword(){
-        $userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
-
-        $userSQL->expects($this->never())->method('setPassword');
-        $passwordHandler = new PasswordHandler($userSQL);
-
-        $this->assertFalse(
-            $passwordHandler->passwordMatchesHash(
-                "badPassword",
-                password_hash("password",PASSWORD_DEFAULT),
-                1
-            )
-        );
+    public function passwordNotChangedProvider() : array{
+        return[
+            ["wrong_password",md5("password")],
+            ["password",password_hash("password", PASSWORD_DEFAULT)],
+            ["wrong_password",password_hash("password", PASSWORD_DEFAULT)]
+        ];
     }
 }

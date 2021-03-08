@@ -18,7 +18,7 @@ class AuthentificationTest  extends S2lowTestCase
      */
     public function testAuthenticate()
     {
-        $this->setExpectedException("Exception", "Message : Le certificat n'est pas valide");
+        $this->setExpectedException("Exception", "Message : Aucune information de certificat trouvée");
         $this->authenticateWith(false);
     }
 
@@ -282,8 +282,10 @@ YNN6Z4fNWGHPgI7R6w==
         $passwordHandler = $this->getMockBuilder(PasswordHandler::class)->disableOriginalConstructor()->getMock();
         $httpsConnexion = $this->getMockBuilder(HttpsConnexion::class)->disableOriginalConstructor()->getMock();
 
-        $httpsConnexion->expects($this->once())->method('getCredentialsFromPost');
+        $httpsConnexion->expects($this->once())->method('getCredentialsFromPost')->willReturn(['credentials']);
         $httpsConnexion->expects($this->never())->method('getCredentialsFromApache');
+
+        $httpsConnexion->expects($this->once())->method('getCertificateInfo')->willReturn(['certificate_infos']);
 
         $authentification = new Authentification(
             $environnement,
@@ -304,6 +306,8 @@ YNN6Z4fNWGHPgI7R6w==
 
         $httpsConnexion->expects($this->never())->method('getCredentialsFromPost');
         $httpsConnexion->expects($this->once())->method('getCredentialsFromApache');
+
+        $httpsConnexion->expects($this->once())->method('getCertificateInfo')->willReturn(['certificate_infos']);
 
         $authentification = new Authentification(
             $environnement,
@@ -332,6 +336,8 @@ YNN6Z4fNWGHPgI7R6w==
             $httpsConnexion
         );
 
-        $this->assertFalse($authentification->getAllConnexionInfo("Whatever"));
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Méthode d'authentification non reconnue");
+        $this->assertFalse($authentification->getAllConnexionInfo(984645));
     }
 }

@@ -2,12 +2,16 @@
 
 class PasswordHandler{
 
+    /** @var UserSQL  */
+    private $userSQL;
+
     public function __construct(UserSQL $userSQL)
     {
         $this->userSQL = $userSQL;
     }
 
-    public function passwordMatchesHash($password, $hash, $id){
+    public function passwordMatchesHash(string $password,string $hash,int $id) : bool
+    {
         if($this->passwordIsMd5Encoded($hash)){
             $passwordMatchesHash = $this->passwordMatchesMd5Hash($password, $hash);
             if($passwordMatchesHash) {
@@ -22,16 +26,16 @@ class PasswordHandler{
      * @param $hash
      * @return bool
      */
-    private function passwordIsMd5Encoded($hash): bool
+    private function passwordIsMd5Encoded(string $hash): bool
     {
-        return strlen($hash) == 32;
+        return strlen($hash) === 32;
     }
 
     /**
      * @param $id
      * @param $password
      */
-    private function updatePasswordHash($id, $password): void
+    private function updatePasswordHash(int $id, string $password): void
     {
         $this->userSQL->setPassword(
             $id,
@@ -44,8 +48,8 @@ class PasswordHandler{
      * @param $hash
      * @return bool
      */
-    private function passwordMatchesMd5Hash($password, $hash): bool
+    private function passwordMatchesMd5Hash(string $password, string $hash): bool
     {
-        return md5($password) == $hash;
+        return md5($password) === $hash;
     }
 }

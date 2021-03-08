@@ -49,7 +49,7 @@ class ControllerTest extends S2lowTestCase {
 	}
 
 	public function testVerifNotConnected(){
-		$this->setExpectedException("Exception","Message : Le certificat n'est pas valide");
+		$this->setExpectedException("Exception","Message : Aucune information de certificat trouvée");
 		$this->controller->verifAdmin();
 	}
 
