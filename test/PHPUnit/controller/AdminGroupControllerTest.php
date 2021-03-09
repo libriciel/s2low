@@ -63,7 +63,7 @@ class AdminGroupControllerTest extends S2lowTestCase {
 	public function testDoEditActionAdminGroupe(){
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageMatches(
-			"#^Message : Le certificat n'est pas valide : aucun compte trouvé$#"
+			"#^Message : Aucune information de certificat trouvée$#"
 		);
 
 		$this->adminGroupController->doEditAction();

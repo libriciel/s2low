@@ -81,7 +81,14 @@ class UserSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetIdFromConnexionInfo(){
-		$this->assertEquals(array(2), $this->userSQL->getIdFromConnexionInfo('hash_adullact', '', 'alice', 'alice'));
+		$this->assertEquals(
+		    [["id"=>2,"password"=>md5('alice')]],
+            $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
+                'hash_adullact',
+                '',
+                'alice'
+            )
+        );
 	}
 
 	public function testGetListIdFromConnexion(){

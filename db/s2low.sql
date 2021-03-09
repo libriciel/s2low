@@ -491,7 +491,7 @@ CREATE TABLE users (
     cert_serial character varying(100),
     authority_group_id integer,
     login character varying(128) DEFAULT NULL::character varying,
-    password character varying(128) DEFAULT NULL::character varying,
+    password character varying(255) DEFAULT NULL::character varying,
     certificate_rgs_2_etoiles text,
     certificate_hash character varying(64)
 );

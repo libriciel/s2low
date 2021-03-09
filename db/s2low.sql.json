@@ -2257,7 +2257,7 @@
             },
             "password": {
                 "data_type": "character varying",
-                "character_maximum_length": 128,
+                "character_maximum_length": 255,
                 "is_nullable": "YES",
                 "column_default": "NULL::character varying"
             },

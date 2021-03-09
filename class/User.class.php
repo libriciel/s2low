@@ -116,9 +116,9 @@ class User extends DataObject {
    * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
    * et initialiser les données de l'utilisateur.
   */
-	public function authenticate() {
+	public function authenticate(int $authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
 		$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
-		$this->id = $authenfication->authenticate();
+		$this->id = $authenfication->authenticate($authentProcess);
 
 		// Utile si on veut vérifier qui n'est pas en TLSv1.2
 		/*
@@ -240,25 +240,7 @@ class User extends DataObject {
 		return $this->is_loggued;
 	}
 
-	public function login($login,$password){
-		$this->retrieveInfoFromClientCertificate();
-
-		$sql = "SELECT id FROM users WHERE certificate_hash='" . pg_escape_string($this->certificate_hash) . "'" .
-                        " AND login='".pg_escape_string($login)."' AND password='".pg_escape_string($password)."'";
-
-	 	$result = $this->db->select($sql);
-		if ($result->isError() || $result->num_row() != 1){
-			$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
-			return false;
-		}
-
-   		$row = $result->get_next_row();
-		$this->id = $row['id'];
-		$_SESSION['id_login'] = $this->id;
-		return true;
-	}
-
-	private function retrieveInfoFromClientCertificate(){
+	public function retrieveInfoFromClientCertificate(){
 		 // Ne marche pas avec apache-ssl
 		if ( ! isset($_SERVER['SSL_CLIENT_VERIFY']) || $_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
 			return false;

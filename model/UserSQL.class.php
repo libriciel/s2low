@@ -130,22 +130,31 @@ class UserSQL extends SQL {
 		}
 	}
 
-	public function getIdFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login, $password) {
-		$sql = "SELECT id FROM users " .
+	public function getIdsAndPasswordsFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login) {
+		$sql = "SELECT id,password FROM users " .
 			" WHERE certificate_hash=? " .
-				" AND certificate_rgs_2_etoiles = ? ";
+				" AND certificate_rgs_2_etoiles = ?  AND login=?  ORDER BY id ";
 
-		$data = array($certificate_hash, $certificate_rgs_2_etoile);
+		$data = array($certificate_hash, $certificate_rgs_2_etoile,$login);
 
-		if ($login){
-			$sql .= " AND login=? AND password=?";
-			$data[] = $login;
-			$data[] = md5($password);
-		}
-		$sql .= " ORDER BY id ";
-
-		return $this->queryOneCol($sql,$data);
+		return $this->query($sql,$data);
 	}
+
+	public function setPassword(int $userId, string $passwordHash) :void {
+	    $sql = "UPDATE users SET password = ? WHERE id = ?";
+	    $data = [$passwordHash,$userId];
+	    $this->query($sql,$data);
+    }
+
+    public function getIdsFromConnexionInfo(string $certificate_hash,string $certificate_rgs_2_etoile) : array {
+        $sql = "SELECT id FROM users " .
+            " WHERE certificate_hash=? " .
+            " AND certificate_rgs_2_etoiles = ?  ORDER BY id ";
+
+        $data = array($certificate_hash, $certificate_rgs_2_etoile);
+
+        return $this->queryOneCol($sql,$data);
+    }
 
 	public function getListIdFromConnexion($certificate_hash, $certificate_rgs_2_etoile)
 	{

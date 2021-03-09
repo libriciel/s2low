@@ -1,10 +1,13 @@
 # 4.3.7 -
 
+**Cette version demande une modification de la base de données**
+
 ## Correction
 - les scripts de supervision notifient le mail EMAIL_TECHNIQUE #680
 
 ## Evolution
 - le script de supervision du service pades est compatible avec les codes retour Nagios #680
+- changement d'encodage du mot de passe
 
 # 4.3.6 - 2021 02 11
 
