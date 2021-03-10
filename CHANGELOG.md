@@ -5,6 +5,7 @@
 ## Correction
 - les scripts de supervision notifient le mail EMAIL_TECHNIQUE #680
 - permettre de traiter les messages liés à un acte même si le cloud n'est pas accessible #685
+- les actes dont l'archive est en erreur ne bloquent plus actes-notification.php #684
 
 ## Evolution
 - le script de supervision du service pades est compatible avec les codes retour Nagios #680
