@@ -24,7 +24,7 @@ mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 
 # Génération fichier ssmtp.conf
-/bin/bash /var/www/s2low/docker-resources/generate-ssmtp.conf.sh > /etc/ssmtp/ssmtp.conf
+/bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
 
 
 #TODO A mettre dans le dockerfile ?
