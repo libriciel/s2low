@@ -34,6 +34,10 @@ class MailHeader
         $this->replyToMail = $replyToMail;
     }
 
+    public function getFromEnveloppeAdressOption(){
+        return "-f{$this->fromMail}";
+    }
+
     public function getFromField(){
         return "{$this->fromDescription} <{$this->fromMail}>";
     }
