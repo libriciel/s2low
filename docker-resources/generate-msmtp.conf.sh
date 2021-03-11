@@ -8,8 +8,7 @@ tls             off
 tls_starttls    off
 host            ${SMTP_SERVER:-mailsec}
 port            ${SMTP_PORT:-25}
-from		        default@${SITE_HOST_NAME-default.fr}
-tls_trust_file  /etc/ssl/certs/ca-certificates.crt
+from		        msmtp@${SITE_HOST_NAME-default.fr}
 logfile         /var/log/msmtp.log
 
 EOF
