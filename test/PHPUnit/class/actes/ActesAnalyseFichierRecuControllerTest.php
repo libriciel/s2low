@@ -231,6 +231,57 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
 
 		$this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+
+        $this->cleanAnalysePath();
+    }
+
+    /**
+     * Après 15J, le repertoire risque d'être détruit...
+     * @throws Exception
+     */
+    public function testCourrierSimpleApres15J(){
+        $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-courrier-simple");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+        $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
+        $this->assertEquals(1,$enveloppe_info['user_id']);
+
+        $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+
+        $transaction_id = $actesTransactionSQL->getIdByEnvelopeId($enveloppe_info['id']);
+
+        $info = $actesTransactionSQL->getInfo($transaction_id);
+
+        $this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
+
+
+        $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+        $this->cleanAnalysePath();
+    }
+
+    /**
+     * Si on a un fichier à la place du répertoire correspondant à l'acte, on ne veut pas qu'il soit détruit mais
+     * qu'une exception soit lancée.
+     * @throws Exception
+     */
+    public function testCourrierSimpleApres15JFichierPenible(){
+        mkdir($this->actes_files_upload_root."/000000000/",0777,true);
+        file_put_contents($this->actes_files_upload_root."/000000000/20170725A","pouet",true);
+        $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
+        $this->copyDirectoryToAnalysePath( __DIR__."/../fixtures/test-courrier-simple");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
+
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $logs = $this->getLogRecords();
+        $this->assertRegExp("#un fichier existe dejà#",$logs[6][S2lowLogger::MESSAGE]);
+        unlink($this->actes_files_upload_root."/000000000/20170725A");
+        rmdir($this->actes_files_upload_root."/000000000/");
     }
 
 	/**
@@ -327,5 +378,12 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['last_status_id']);
 	}
+
+    private function cleanAnalysePath(): void
+    {
+        array_map('unlink', glob($this->actes_files_upload_root . "/000000000/20170725A/*"));
+        rmdir($this->actes_files_upload_root . "/000000000/20170725A/");
+        rmdir($this->actes_files_upload_root . "/000000000/");
+    }
 
 }

@@ -251,6 +251,13 @@ class ActesAnalyseFichierRecuController {
 
         $archive_folder = $this->actes_files_upload_root . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
 
+        if(is_file($archive_folder)){
+                throw new Exception("Impossible de créer $archive_folder : un fichier existe dejà");
+        }
+        if(!is_dir($archive_folder)){
+            mkdir($archive_folder,0755,true);
+        }
+
         $archiveData->id_tdt = ACTES_APPLI_TRIGRAMME;
 
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
