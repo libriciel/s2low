@@ -63,7 +63,7 @@ class MailUtil {
 	/** @var MailHeader|null  */
     private $mailHeader;
 
-    public function __construct(MailHeader $mailHeader=null){
+    public function __construct(IMailHeader $mailHeader=null){
 		$this->trace = Trace::getInstance();
 		$this->mailHeader=$mailHeader;
 	}

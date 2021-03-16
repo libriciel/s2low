@@ -16,7 +16,15 @@ class ObjectInstancier {
 		$this->set($name,$value);
 	}
 
-	public function get($name){
+	public function get($name,$dump=false){
+	    /*if($dump){
+            echo "<p>".var_dump($name)."</p>";
+            echo "<p>".var_dump(spl_object_id($this))."</p>";
+            echo "<p>".var_dump(array_keys($this->objects))."</p>";
+            echo "<p>".var_dump($this->objects[$name])."</p>";
+            echo "<p>".get_class($this->objects[$name])."</p>";
+            echo "<p>".print_r($this->objects)."</p>";
+        }*/
 		if (! isset($this->objects[$name])){
 			$this->objects[$name] =  $this->newInstance($name);
 		}
@@ -24,10 +32,15 @@ class ObjectInstancier {
 	}
 
 	public function unset_object($name){
+	    echo "<h1>UNSEEEEEEEEEEET</h1>";
 		unset($this->objects[$name]);
 	}
 
 	public function set($name,$value){
+	    echo "<h1>set $name</h1>";
+	    var_dump($name);
+	    var_dump($value)    ;
+	    echo "<br/>";
 		$this->objects[$name] = $value;
 	}
 

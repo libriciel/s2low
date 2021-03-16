@@ -7,10 +7,10 @@ class MailHeaderLegacyTest extends S2lowTestCase{
         $mailHeader = new MailHeaderLegacy("subject","from");
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"from");
-        $this->assertEquals($header['Subject'],"subject");
-        $this->assertEquals($header['Reply-To'],"from");
-        $this->assertEquals($header['Return-path'],"from");
+        $this->assertEquals("from",$header['From']);
+        $this->assertEquals("subject",$header['Subject']);
+        $this->assertEquals("from",$header['Reply-To']);
+        $this->assertEquals("from",$header['Return-path']);
     }
 
     public function testSetSubjet(){
@@ -18,10 +18,10 @@ class MailHeaderLegacyTest extends S2lowTestCase{
         $mailHeader->setSubjet("subjectModified");
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"from");
-        $this->assertEquals($header['Subject'],"subjectModified");
-        $this->assertEquals($header['Reply-To'],"from");
-        $this->assertEquals($header['Return-path'],"from");
+        $this->assertEquals("from",$header['From']);
+        $this->assertEquals("subjectModified",$header['Subject']);
+        $this->assertEquals("from",$header['Reply-To']);
+        $this->assertEquals("from",$header['Return-path']);
     }
 
     public function testSetFrom(){
@@ -29,9 +29,9 @@ class MailHeaderLegacyTest extends S2lowTestCase{
         $mailHeader->setFromMail('fromModified');
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"fromModified");
-        $this->assertEquals($header['Subject'],"subject");
-        $this->assertEquals($header['Reply-To'],"fromModified");
-        $this->assertEquals($header['Return-path'],"fromModified");
+        $this->assertEquals("fromModified",$header['From']);
+        $this->assertEquals("subject",$header['Subject']);
+        $this->assertEquals("fromModified",$header['Reply-To']);
+        $this->assertEquals("fromModified",$header['Return-path']);
     }
 }

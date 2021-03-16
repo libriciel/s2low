@@ -7,10 +7,10 @@ class MailHeaderTest extends S2lowTestCase{
         $mailHeader = new MailHeader("subject","fromM@il","description");
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"description <fromM@il>");
-        $this->assertEquals($header['Subject'],"subject");
-        $this->assertEquals($header['Reply-To'],"fromM@il");
-        $this->assertEquals($header['Return-path'],"fromM@il");
+        $this->assertEquals("description <fromM@il>",$header['From']);
+        $this->assertEquals("subject",$header['Subject']);
+        $this->assertEquals("fromM@il",$header['Reply-To']);
+        $this->assertEquals("fromM@il",$header['Return-path']);
     }
 
     public function testSetSubjet(){
@@ -18,10 +18,10 @@ class MailHeaderTest extends S2lowTestCase{
         $mailHeader->setSubjet("subjectModified");
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"description <fromM@il>");
-        $this->assertEquals($header['Subject'],"subjectModified");
-        $this->assertEquals($header['Reply-To'],"fromM@il");
-        $this->assertEquals($header['Return-path'],"fromM@il");
+        $this->assertEquals("description <fromM@il>",$header['From']);
+        $this->assertEquals("subjectModified",$header['Subject']);
+        $this->assertEquals("fromM@il",$header['Reply-To']);
+        $this->assertEquals("fromM@il",$header['Return-path']);
     }
 
     public function testSetFrom(){
@@ -29,10 +29,10 @@ class MailHeaderTest extends S2lowTestCase{
         $mailHeader->setFromMail('fromM@ilmodifi.ed');
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"description <fromM@ilmodifi.ed>");
-        $this->assertEquals($header['Subject'],"subject");
-        $this->assertEquals($header['Reply-To'],"fromM@il");
-        $this->assertEquals($header['Return-path'],"fromM@il");
+        $this->assertEquals("description <fromM@ilmodifi.ed>",$header['From']);
+        $this->assertEquals("subject",$header['Subject']);
+        $this->assertEquals("fromM@il",$header['Reply-To']);
+        $this->assertEquals("fromM@il",$header['Return-path']);
     }
 
     public function testSetReplyToMail(){
@@ -40,9 +40,9 @@ class MailHeaderTest extends S2lowTestCase{
         $mailHeader->setReplyToMail('replyToM@a.il');
         $header = $mailHeader->getHeader();
 
-        $this->assertEquals($header['From'],"description <fromM@il>");
-        $this->assertEquals($header['Subject'],"subject");
-        $this->assertEquals($header['Reply-To'],"replyToM@a.il");
-        $this->assertEquals($header['Return-path'],"replyToM@a.il");
+        $this->assertEquals("description <fromM@il>",$header['From']);
+        $this->assertEquals("subject",$header['Subject']);
+        $this->assertEquals("replyToM@a.il",$header['Reply-To']);
+        $this->assertEquals("replyToM@a.il",$header['Return-path']);
     }
 }
