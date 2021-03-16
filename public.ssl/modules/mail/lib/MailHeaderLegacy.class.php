@@ -3,14 +3,12 @@
 class MailHeaderLegacy{
     private $subject;
     public $fromMail;
-    private $fromDescription;
     private $replyToMail;
 
-    public function __construct($subject, $fromMail, $fromDescription)
+    public function __construct($subject, $fromMail)
     {
         $this->setSubjet($subject);
         $this->setFromMail($fromMail);
-        $this->setFromDescription($fromDescription);
         $this->setReplyToMail($fromMail);
     }
 
