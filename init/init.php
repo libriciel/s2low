@@ -9,8 +9,8 @@ set_include_path( 	get_include_path() . PATH_SEPARATOR .
 					__DIR__ . "/../class/" . PATH_SEPARATOR . 
 					__DIR__ . "/../class/actes"  . PATH_SEPARATOR . 
 					__DIR__ . "/../class/helios"  . PATH_SEPARATOR . 
-					__DIR__ . "/../class/mailsec". PATH_SEPARATOR
-
+					__DIR__ . "/../class/mailsec". PATH_SEPARATOR .
+                    __DIR__ . "/../public.ssl/modules/mail/lib". PATH_SEPARATOR
 					);
 					
 if ( ! function_exists('s2low_autoload')) {
@@ -247,6 +247,18 @@ if(USE_LEGACY_BORDEREAU_MODEL) {
         IActesPdf::class,
         new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
     );
+}
+
+if(USE_LEGACY_SECURE_MAIL_FIELDS){
+    $objectInstancier->set(
+        MailHeader::class,
+        new MailHeaderLegacy(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
+    );
+} else {
+    $objectInstancier->set(
+        MailHeader::class,
+        new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
+);
 }
 
 $frontController = new FrontController($objectInstancier);

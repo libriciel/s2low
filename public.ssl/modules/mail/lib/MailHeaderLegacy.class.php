@@ -1,8 +1,6 @@
 <?php
 
-
-class MailHeader
-{
+class MailHeaderLegacy{
     private $subject;
     public $fromMail;
     private $fromDescription;
@@ -39,19 +37,15 @@ class MailHeader
     }
 
     public function getFromField(){
-        return "{$this->fromDescription} <{$this->fromMail}>";
-    }
-
-    public function getReplyToField(){
-        return $this->replyToMail;
+        return $this->fromMail;
     }
 
     public function getHeader(){
         return array(
             'From'    => $this->getFromField(),
             'Subject' => $this->subject,
-            'Reply-To' => $this->getReplyToField(),
-            'Return-path' => $this->getReplyToField()
+            'Reply-To' => $this->getFromField(),
+            'Return-path' => $this->getFromField()
         );
     }
 }

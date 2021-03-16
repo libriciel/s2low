@@ -638,6 +638,10 @@ if(!defined('MAIL_TEXT')){
 
 Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
 }
+
+if(!defined('USE_LEGACY_SECURE_MAIL_FIELDS')){
+    define('USE_LEGACY_SECURE_MAIL_FIELDS',true);
+}
 /*************************
  * Paramètre module DIA
  */

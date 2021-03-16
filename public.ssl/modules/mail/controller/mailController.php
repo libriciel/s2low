@@ -369,8 +369,7 @@ class mailController {
 		//TODO : MAL
 		global $myAuthority;
 
-        $mailHeader = new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION);
-
+        $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(mailHeader::class);
 		$mailHeader->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
 	
 		if ($myAuthority->get('email_mail_securise')){
