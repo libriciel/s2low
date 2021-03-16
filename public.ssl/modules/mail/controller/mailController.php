@@ -369,22 +369,11 @@ class mailController {
 		//TODO : MAL
 		global $myAuthority;
 
-        //ObjectInstancierFactory::getObjetInstancier()->set(MailHeader::class,
-        //    new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,"gsfdgsfdgsdfgsdfg"));
-        //var_dump(ObjectInstancierFactory::getObjetInstancier()->get("timestamp_token_retention_nb_days",true));
-        //die();
+	    $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
 
-        if(USE_LEGACY_SECURE_MAIL_FIELDS){
-            $mailHeader = new MailHeaderLegacy(MAIL_MESSAGE,MAIL_TEDETIS_FROM);
-        } else {
-            $mailHeader = new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION);
-        }
-        //$mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(mailHeader::class,true);
-		$mailHeader->setSubjet("[".$myAuthority->get('name')."] ".MAIL_MESSAGE);
-	
-		if ($myAuthority->get('email_mail_securise')){
-			$mailHeader->setFromMail($myAuthority->get('email_mail_securise'));
-		}
+		$mailHeader->setAuthorityName($myAuthority->get('name'));
+		$mailHeader->setFromMail($myAuthority->get('email_mail_securise'));
+		$mailHeader->setFromDescription($myAuthority->get('descr_mail_securise'));
 
         $mailUtil = new MailUtil($mailHeader);
 	

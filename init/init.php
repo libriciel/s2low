@@ -249,17 +249,17 @@ if(USE_LEGACY_BORDEREAU_MODEL) {
     );
 }
 
-/*if(USE_LEGACY_SECURE_MAIL_FIELDS){
+if(USE_LEGACY_SECURE_MAIL_FIELDS){
     $objectInstancier->set(
         MailHeader::class,
-        new MailHeaderLegacy(MAIL_MESSAGE,MAIL_TEDETIS_FROM)
+        new MailHeaderLegacy(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
     );
 } else {
     $objectInstancier->set(
         MailHeader::class,
         new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
 );
-}*/
+}
 
 //$objectInstancier->get(MailHeader::class,true);
 
