@@ -304,6 +304,8 @@ $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Description pour le module de mail sécurisé:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"descr_mail_securise\" value=\"" . get_hecho($authority->get("descr_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
+$html .= " </div>\n";
+$html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
