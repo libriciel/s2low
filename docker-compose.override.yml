@@ -69,3 +69,10 @@ services:
             - redis
         networks:
             - services
+
+    maildev:
+        image: maildev/maildev
+        networks:
+            - services
+        ports:
+            - 1080:80
