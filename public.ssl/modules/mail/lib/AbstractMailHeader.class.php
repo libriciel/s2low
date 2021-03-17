@@ -8,8 +8,6 @@ abstract class AbstractMailHeader{
     /** @var string */
     protected $fromDescription;
     /** @var string */
-    protected $replyToMail;
-    /** @var string */
     protected $authorityName;
 
     public function __construct(string $subject,string $fromMail,string $fromDescription)
@@ -17,7 +15,6 @@ abstract class AbstractMailHeader{
         $this->setMessage($subject);
         $this->setFromMail($fromMail);
         $this->setFromDescription($fromDescription);
-        //$this->setReplyToMail($fromMail);
     }
 
 
@@ -31,24 +28,19 @@ abstract class AbstractMailHeader{
         $this->authorityName = $name;
     }
 
-    public function setFromMail(string $fromMail) : void
+    public function setFromMail(?string $fromMail) : void
     {
         if (!is_null($fromMail)){
             $this->fromMail = $fromMail;
         }
     }
 
-    public function setFromDescription(string $fromDescription) : void
+    public function setFromDescription(?string $fromDescription) : void
     {
         if(!is_null($fromDescription)){
             $this->fromDescription = $fromDescription;
         }
     }
-
-    /*public function setReplyToMail(string $replyToMail) : void
-    {
-        $this->replyToMail = $replyToMail;
-    }*/
 
     public function getFromEnveloppeAdressOption() : string
     {
