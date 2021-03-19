@@ -3,6 +3,7 @@
 abstract class AbstractMailHeader{
     /** @var string */
     protected $message;
+    protected $s2lowFromMail;
     /** @var string */
     protected $fromMail;
     /** @var string */
@@ -10,10 +11,11 @@ abstract class AbstractMailHeader{
     /** @var string */
     protected $authorityName;
 
-    public function __construct(string $subject,string $fromMail,string $fromDescription)
+    public function __construct(string $subject, string $s2lowFromMail, string $fromDescription)
     {
         $this->setMessage($subject);
-        $this->setFromMail($fromMail);
+        $this->setS2LowFromMail($s2lowFromMail);
+        $this->setFromMail($s2lowFromMail);
         $this->setFromDescription($fromDescription);
     }
 
@@ -26,6 +28,11 @@ abstract class AbstractMailHeader{
     public function setAuthorityName(string $name) : void
     {
         $this->authorityName = $name;
+    }
+
+    public function setS2LowFromMail(?string $s2lowFromMail) : void
+    {
+        $this->s2lowFromMail = $s2lowFromMail;
     }
 
     public function setFromMail(?string $fromMail) : void

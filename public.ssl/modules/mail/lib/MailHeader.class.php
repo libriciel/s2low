@@ -6,7 +6,7 @@ class MailHeader extends AbstractMailHeader implements IMailHeader
 
     private function getFromField() : string
     {
-        return "{$this->fromDescription} <{$this->fromMail}>";
+        return "{$this->fromDescription} <{$this->s2lowFromMail}>";
     }
 
     private function getFromMail(): string
