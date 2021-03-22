@@ -5,8 +5,8 @@ set -e -x
 # Debian stuff
 
 #Suppression des repos buster présents dans l'image
-#rm /etc/apt/sources.list.d/buster.list
-#rm /etc/apt/preferences.d/argon2-buster
+rm /etc/apt/sources.list.d/buster.list
+rm /etc/apt/preferences.d/argon2-buster
 
 # For certbot
 echo 'deb http://ftp.debian.org/debian stretch-backports main' >  /etc/apt/sources.list.d/stretch.backport.list
