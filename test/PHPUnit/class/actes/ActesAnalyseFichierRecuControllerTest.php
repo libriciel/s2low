@@ -279,7 +279,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController->analyseAll();
 
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#un fichier existe dejà#",$logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#un fichier de ce nom existe déjà#",$logs[6][S2lowLogger::MESSAGE]);
         unlink($this->actes_files_upload_root."/000000000/20170725A");
         rmdir($this->actes_files_upload_root."/000000000/");
     }
