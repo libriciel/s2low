@@ -211,7 +211,8 @@ CREATE TABLE authorities (
     pastell_login character varying(255),
     pastell_password character varying(255),
     pastell_id_e integer,
-    helios_do_not_verify_nom_fic_unicity boolean DEFAULT false
+    helios_do_not_verify_nom_fic_unicity boolean DEFAULT false,
+    descr_mail_securise character varying(256)
 );
 CREATE TABLE authority_departments (
     id integer DEFAULT nextval('authority_departments_id_seq'::regclass) NOT NULL,

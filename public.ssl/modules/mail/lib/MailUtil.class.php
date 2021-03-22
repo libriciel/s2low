@@ -51,21 +51,21 @@
  *
  */
 
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT."/class/pearMail.class.php");
+require_once SITEROOT . '/class/include.class.php';
+require_once SITEROOT."/class/pearMail.class.php";
+require_once __DIR__."/MailHeader.class.php";
 
 
 class MailUtil {
  	
 	public $errorMsg;
 	private $trace;
-	private $subject;
-	private $from;
-	
-	public function __construct(){
+	/** @var MailHeader|null  */
+    private $mailHeader;
+
+    public function __construct(?IMailHeader $mailHeader=null){
 		$this->trace = Trace::getInstance();
-		$this->setSubjet(MAIL_MESSAGE);
-		$this->setFrom(MAIL_TEDETIS_FROM);	
+		$this->mailHeader=$mailHeader;
 	}
 
  	/**
@@ -122,19 +122,6 @@ class MailUtil {
 		$zip->close();
 		return true;
  	}
-
-
- 
- 	
- 	public function setSubjet($subject){
- 		$this->subject = $subject; 		
- 	}
- 	
- 	public function setFrom($from){
- 		if ($from){
- 			$this->from = $from;
- 		}
- 	}
  	
  	/**
    * \brief   envoyer un mail avec des pièces joindures.
@@ -146,10 +133,6 @@ class MailUtil {
    */    
 	public function sendMail($MailMessageEmis,$mailTransaction,$MailIncludeFiles,$send_password = false)
 	{
-	  	 $from = $this->from;
-	  	 $from = "-f{$from}";  
-	  	 
-		
 		$text=MAIL_TEXT;
 		if ($mailTransaction->getPassword() ) {
 			$text.="\n\n";
@@ -159,7 +142,7 @@ class MailUtil {
 				$text.="Le document est protégé par un mot de passe";
 			}
 		}
-		
+
 
 		$html='<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
 <html>
@@ -167,23 +150,16 @@ class MailUtil {
 ';
 		$html.= "<p>".nl2br($text)."</p>";
 
-		$hdrs = array(
-              	'From'    => $this->from,
-              	'Subject' => $this->subject,
-				'Reply-To' => $this->from,
-				'Return-path' => $this->from
-              );
-             
-             
-		    	
+
+
 	  	foreach ($MailMessageEmis as $MailEmis )
    		{
 	    	if (defined('MAIL_DEBUG'))
 	    	{
-				echo "<p>mail file number =".$MailFileNumber;"</p>";	
+				echo "<p>mail file number =".$MailFileNumber;"</p>";
 				echo "$MailEmis->getEmail()";
-	    	}	
-	    	$htmlpart='';	
+	    	}
+	    	$htmlpart='';
 			$htmlpart.='
 <a href="'.WEBSITE.'/modules/mail/?command=show&mail_emis_id='.$MailEmis->getId().'" >Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
 <p>Information de sécurité : tous les documents ont été testés par l\'anti-virus CLAMAV.</p>
@@ -191,18 +167,19 @@ class MailUtil {
 ';
 
 	    	$htmlpart.='';
-			
+            $htmlBody = $html . $htmlpart;
+
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
 			$textpart.="\nInformation de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.\n";
 			
 			$crlf="\n";
 			$mime = new Mail_mime($crlf);
 			$mime->setTXTBody($text.$textpart);
-			$mime->setHTMLBody($html.$htmlpart);
+            $mime->setHTMLBody($htmlBody);
 			
 			//do not ever try to call these lines in reverse order
 			$body = $mime->get();
-			$hdrs = $mime->headers($hdrs);
+			$hdrs = $mime->headers($this->mailHeader->getHeader());
                         
                         $tomime = new Mail_mime($crlf);
                         $tohdrs = array('To' => $MailEmis->getEmail());
@@ -211,7 +188,7 @@ class MailUtil {
 			
 			$mail =new pearMail();
 			$mail->sep = $crlf;
-  			if (!$mail->send($to, $hdrs, $body,$from)) {
+  			if (!$mail->send($to, $hdrs, $body,$this->mailHeader->getFromEnveloppeAdressOption())) {
 	        		return false;
   			}
     	}	

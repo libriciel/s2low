@@ -52,6 +52,7 @@ class Authority extends DataObject {
 	  					"helios_ftp_password" =>array("descr" => "helios_ftp_password", "type" => "isString", "mandatory" =>false),
 	    				"helios_ftp_dest" =>array("descr" => "helios_ftp_dest", "type" => "isString", "mandatory" =>false),
 	  					"email_mail_securise" => array("descr" => "Email pour le module de mail sécurisé", "type" => "isEmail", "mandatory" =>false),
+                        "descr_mail_securise" => array("descr" => "Description pour le module de mail sécurisé", "type" => "isString", "mandatory" =>false),
 						"new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" =>false),
   						"dia_siret" => array( "descr" => "Numéro de SIRET de réception des DIA", "type" => "isString", "mandatory" => false, "unique" => true),
   						"sae_wsdl" => array("descr"=>'','type'=>'isString','mandatory'=>false,'unique'=>false),

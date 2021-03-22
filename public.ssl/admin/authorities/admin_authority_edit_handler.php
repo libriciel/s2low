@@ -47,6 +47,7 @@ $telephone = Helpers::getVarFromPost("telephone");
 $fax = Helpers::getVarFromPost("fax");
 $helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
+$descr_mail_securise = Helpers::getVarFromPost("descr_mail_securise");
 $helios_do_not_verify_nom_fic_unicity =
 	Helpers::getVarFromPost("helios_do_not_verify_nom_fic_unicity")==='t'?true:false;
 //$newmailnotif = Helpers::getVarFromPost("newnotif");
@@ -148,6 +149,7 @@ $authority->set("city", $city);
 $authority->set("telephone", $telephone);
 $authority->set("fax", $fax);
 $authority->set("email_mail_securise",$email_mail_securise);
+$authority->set("descr_mail_securise",$descr_mail_securise);
 $authority->set("new_notification",$newmailnotif);
 $authority->set("dia_siret",$dia_siret);
 

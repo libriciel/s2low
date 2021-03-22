@@ -613,6 +613,10 @@ if(!defined('MAIL_TEDETIS_FROM')){
 	define('MAIL_TEDETIS_FROM','s2low-mailsec@s2low.docker.libriciel.fr');
 }
 
+if(!defined('MAIL_SECURE_DESCRIPTION')){
+    define('MAIL_SECURE_DESCRIPTION',"ne-pas-repondre");
+}
+
 if(!defined('IMAP_LOGIN')){
 	define('IMAP_LOGIN','s2low-mailsec@s2low.docker.libriciel.fr');
 }
@@ -633,6 +637,10 @@ if(!defined('MAIL_TEXT')){
 	define('MAIL_TEXT',"Bonjour,
 
 Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
+}
+
+if(!defined('USE_LEGACY_SECURE_MAIL_FIELDS')){
+    define('USE_LEGACY_SECURE_MAIL_FIELDS',true);
 }
 /*************************
  * Paramètre module DIA

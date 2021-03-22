@@ -24,7 +24,7 @@ apt-get install -y \
     libpq-dev \
     locales \
     logrotate \
-    ssmtp \
+    msmtp \
     sudo \
     supervisor \
     xmlsec1 \

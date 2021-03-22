@@ -66,6 +66,7 @@ services:
             MAILNAME: ${MAILNAME}
 
             USE_LEGACY_BORDEREAU_MODEL: ${USE_LEGACY_BORDEREAU_MODEL-false}
+            USE_LEGACY_SECURE_MAIL_FIELDS: ${USE_LEGACY_SECURE_MAIL_FIELDS-true}
         volumes:
             - ${WORKSPACE_VOLUME}:/data/tdt-workspace
             - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
