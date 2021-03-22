@@ -261,7 +261,6 @@ if(USE_LEGACY_SECURE_MAIL_FIELDS){
 );
 }
 
-//$objectInstancier->get(MailHeader::class,true);
 
 $frontController = new FrontController($objectInstancier);
 

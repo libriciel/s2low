@@ -51,9 +51,9 @@
  *
  */
 
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT."/class/pearMail.class.php");
-require_once (__DIR__."/MailHeader.class.php");
+require_once SITEROOT . '/class/include.class.php';
+require_once SITEROOT."/class/pearMail.class.php";
+require_once __DIR__."/MailHeader.class.php";
 
 
 class MailUtil {
@@ -63,7 +63,7 @@ class MailUtil {
 	/** @var MailHeader|null  */
     private $mailHeader;
 
-    public function __construct(IMailHeader $mailHeader=null){
+    public function __construct(?IMailHeader $mailHeader=null){
 		$this->trace = Trace::getInstance();
 		$this->mailHeader=$mailHeader;
 	}

@@ -16,7 +16,7 @@ class ObjectInstancier {
 		$this->set($name,$value);
 	}
 
-	public function get($name,$dump=false){
+	public function get($name){
 		if (! isset($this->objects[$name])){
 			$this->objects[$name] =  $this->newInstance($name);
 		}
