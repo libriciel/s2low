@@ -92,4 +92,30 @@ class ActesNotificationsTest extends S2lowTestCase {
 
         $this->actesNotification->sendAutomaticNotification();
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testNotifyWithWrongZipWillnotAddFiles(){
+        copy(__DIR__."/fixtures/convention-exemple.pdf",$this->tmpFolderPath."/abc-TACT--000000000--20170803-16.tar.gz");
+        $this->mailer->expects($this->never())->method('addFile');
+
+        $this->actesNotification->sendAutomaticNotification();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testNotifyWithWrongZipWillLogErrors(){
+        copy(__DIR__."/fixtures/convention-exemple.pdf",$this->tmpFolderPath."/abc-TACT--000000000--20170803-16.tar.gz");
+        $this->mailer->expects($this->never())->method('addFile');
+
+        $this->actesNotification->sendAutomaticNotification();
+
+        $logRecords = $this->getLogRecords();
+        $this->assertRegExp(
+            "#Erreur lors de la décompression#",
+            $logRecords[2]["message"]
+        );
+    }
 }

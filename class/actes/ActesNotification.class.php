@@ -95,6 +95,8 @@ class ActesNotification {
 		try{
             $fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
         } catch (Exception $e){
+		    $this->logger->warning("[{$transaction_info['envelope_id']}] Erreur lors de la décompression");
+            $this->logger->warning("[{$transaction_info['envelope_id']}] {$e->getMessage()}");
 		    $fichiers_tamponnees = [];
         }
 
