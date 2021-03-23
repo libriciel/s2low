@@ -92,7 +92,13 @@ class ActesNotification {
 
 		$archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
 
-		$fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
+		try{
+            $fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
+        } catch (Exception $e){
+		    $this->logger->warning("[{$transaction_info['envelope_id']}] Erreur lors de la décompression");
+            $this->logger->warning("[{$transaction_info['envelope_id']}] {$e->getMessage()}");
+		    $fichiers_tamponnees = [];
+        }
 
 
 		if (! $transaction_info['auto_broadcasted']){
@@ -144,7 +150,6 @@ class ActesNotification {
         $mailContent = $this->getMailContent($transactionInfo,$add_url_recup);
 
         $authority_info = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
-
         $mailer->sendMail(
                 "[{$authority_info['name']}] Notification concernant l'acte " . $transactionInfo['number'] ,
                 $mailContent
