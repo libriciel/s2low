@@ -193,12 +193,38 @@ class AuthentificationTest  extends S2lowTestCase
         $nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
         $nounce = $nounceSQL->create("alice", "alice", 1);
 
-        $this->setServerAdullactCertificate();
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "adullact",
+            'SSL_CLIENT_I_DN' => "adullact",
+            'SSL_CLIENT_CERT' => "certificat"
+        ]);
+
         $this->getObjectInstancier()->get("Environnement")->get()->set('nounce', $nounce);
         $this->getObjectInstancier()->get("Environnement")->get()->set('login', 'alice');
         $this->getObjectInstancier()->get("Environnement")->get()->set('hash', hash("sha256", "alice:$nounce"));
 
-        $authentification = $this->getObjectInstancier()->get("Authentification");
+        $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
+
+        $certHandler->expects($this->atLeast(1))->method("getInfo")->willReturn([
+            'expiration_date' => "01/01/2020",
+            'issuer_name' => "issuer_name",
+            'subject_name' => "subject_name",
+            'certificate_hash' => "hash_adullact"
+        ]);
+
+        $environment = $this->getObjectInstancier()->get(Environnement::class);
+
+        $httpsConnexion = new HttpsConnexion($environment,$certHandler);
+
+        $authentification = new Authentification(
+            $environment,
+		$this->getObjectInstancier()->get(UserSQL::class),
+        $this->getObjectInstancier()->get(PasswordHandler::class),
+        $httpsConnexion,
+		$nounceSQL
+        );
+
         $this->assertEquals(2, $authentification->authenticate());
     }
 

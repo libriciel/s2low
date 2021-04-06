@@ -107,7 +107,7 @@ class HttpsConnexion
 
     public function getCertificateHash() : string
     {
-        return $this->environnement->server()->get('TESTING_CERTIFICATE_HASH');
+        return $this->getCertificateInfo()['certificate_hash'];
     }
 
     public function hasNonceParameters(): bool
