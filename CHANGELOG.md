@@ -1,3 +1,10 @@
+# 4.3.8 -
+
+## Correction
+- corriger l'identification par nounce #690
+
+## Evolution
+
 # 4.3.7 - 2021 03 23
 
 **Cette version demande une modification de la base de données**
