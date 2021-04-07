@@ -64,9 +64,15 @@ if (! $me->isSuper() && $mod) {
 
 if ($mod){
     if ($new_id){
-        $title = "Ajout d'un nouvel utilisateur (à partir de « {$him->get('givenname')} {$him->get('name')} »)";
+        $title = "Ajout d'un nouvel utilisateur (à partir de « "
+            .get_hecho($him->get('givenname'))
+            ." " .get_hecho($him->get('name'))
+            ." »)";
     } else {
-        $title = "Modification de l'utilisateur « {$him->get('givenname')} {$him->get('name')} »";
+        $title = "Modification de l'utilisateur « "
+            .get_hecho($him->get('givenname'))
+            ." ".get_hecho($him->get('name'))
+            ." »";
     }
 } else {
 	$title = "Ajout d'un nouvel utilisateur";
