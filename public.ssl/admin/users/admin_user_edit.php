@@ -28,6 +28,9 @@ $mod = false;
 $him = new User();
 
 if (isset($id) && ! empty($id)) {
+    if(!is_numeric($id)){
+        Helpers :: returnAndExit(1, "admin_user_edit.php : id doit être un entier, $id fourni", WEBSITE_SSL);
+    }
   $him->setId($id);
   if ($him->init()) {    
     $mod = true;
