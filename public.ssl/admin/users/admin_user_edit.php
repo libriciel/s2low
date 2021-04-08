@@ -29,7 +29,11 @@ $him = new User();
 
 if (isset($id) && ! empty($id)) {
     if(!is_numeric($id)){
-        Helpers :: returnAndExit(1, "admin_user_edit.php : id doit être un entier, $id fourni", WEBSITE_SSL);
+        Helpers :: returnAndExit(
+                1,
+                "admin_user_edit.php : id doit être un entier, $id fourni",
+                WEBSITE_SSL
+        );
     }
   $him->setId($id);
   if ($him->init()) {    
@@ -43,6 +47,13 @@ if (isset($id) && ! empty($id)) {
 
 $new_id = Helpers::getVarFromGet('new_id'); 
 if ($new_id){
+    if(!is_numeric($new_id)){
+        Helpers :: returnAndExit(
+                1,
+                "admin_user_edit.php : new_id doit être un entier, $new_id fourni",
+                WEBSITE_SSL
+        );
+    }
 	$him->setId($new_id);
 	$him->init();
 	$him->setId(null);
@@ -67,15 +78,17 @@ if (! $me->isSuper() && $mod) {
 
 if ($mod){
     if ($new_id){
-        $title = "Ajout d'un nouvel utilisateur (à partir de « "
-            .get_hecho($him->get('givenname'))
-            ." " .get_hecho($him->get('name'))
-            ." »)";
+        $title = sprintf(
+                "Ajout d'un nouvel utilisateur (à partir de « %s %s »)",
+                $him->get('givenname'),
+                $him->get('name')
+        );
     } else {
-        $title = "Modification de l'utilisateur « "
-            .get_hecho($him->get('givenname'))
-            ." ".get_hecho($him->get('name'))
-            ." »";
+        $title = sprintf(
+                "Modification de l'utilisateur « %s %s  »",
+                $him->get('givenname'),
+                $him->get('name')
+    );
     }
 } else {
 	$title = "Ajout d'un nouvel utilisateur";
@@ -187,7 +200,7 @@ $doc->openContent();
 
 ob_start();
 ?>
-<h1><?php echo($title)?></h1>
+<h1><?php hecho($title)?></h1>
 <p id="back-user-btn"><a class="btn btn-default" href="admin_users.php">Retour liste utilisateurs</a></p>
 
 <h2>Informations générales</h2>
