@@ -74,13 +74,16 @@ foreach($id_list as $id){
 	if($info['last_status_id'] != 17){
 		continue;
 	}
-	
+
 	$actesTransactionsSQL->updateStatus($id,1,$msg);
 
 	$workerScript = $objectInstancier->get(WorkerScript::class);
 	$workerScript->putJobByClassName(ActesAntivirusWorker::class,$id);
 
-	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$connexion->getId());	
+	$actesScriptHelper = $objectInstancier->get(ActesScriptHelper::class);
+    $msg4journal = $actesScriptHelper->getMessage($id,$msg);
+
+	Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false,$connexion->getId());
 }
 
 $return_ok = Helpers :: getVarFromGet("url_return");
