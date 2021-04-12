@@ -25,6 +25,23 @@ class ActesScriptHelper {
         return $this->actesRetriever->getPath($envelope_info['file_path']);
     }
 
+    public function getMessage($transactions_id, string $message)
+    {
+        $info = $this->actesTransactionsSQL->getInfo($transactions_id);
+        $envelope_info = $this->actesEnvelopeSQL->getInfo($info['envelope_id']);
+
+        return
+            sprintf(
+                "[%s] Transaction %s (%d) : %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                $this->actes_appli_trigramme,
+                $info['unique_id']?:$this->actesTransactionsSQL->guessUniqueId($transactions_id),
+                $transactions_id,
+                $message,
+                $envelope_info['siren'],
+                $info['type']
+            );
+    }
+
     public function updateStatus($transactions_ids,$status_id,$message,$flux_retour = ""){
         foreach($transactions_ids as $transactions_id) {
             $this->actesTransactionsSQL->updateStatus($transactions_id,$status_id,$message,$flux_retour);
