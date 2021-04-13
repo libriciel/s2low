@@ -438,4 +438,20 @@ class ActesTransactionsSQL extends SQL{
 		return $result;
 	}
 
+	public function getNbActesByAuthorityGroupIdBeetweenDate(
+	    int $authority_group_id,
+        string $min_date,
+        string $max_date
+    ): array
+    {
+        $sql = "SELECT authorities.name, COUNT(actes_transactions) As nb_transactions FROM authorities " .
+            " INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id " .
+            " WHERE  authorities.authority_group_id =  ? " .
+                " AND actes_transactions.decision_date >= ? " .
+                " AND actes_transactions.decision_date <= ? " .
+            " GROUP BY authorities.name " .
+            " ORDER BY authorities.name";
+        return $this->query($sql, $authority_group_id, $min_date, $max_date);
+    }
+
 }

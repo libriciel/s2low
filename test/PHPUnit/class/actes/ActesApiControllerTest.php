@@ -60,5 +60,17 @@ class ActesApiControllerTest extends S2lowTestCase {
 		$this->getActesAPIController()->listDocumentPrefectureAction();
 	}
 
+    public function testNbCreatedActesByAuthoritiesAndMonth()
+    {
+        $this->createTransaction(1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
 
+        $this->setAdminGroupAuthentication();
+        ob_start();
+        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonth();
+        $data = ob_get_contents();
+        ob_end_clean();
+        $this->assertEquals('[{"name":"Bourg-en-Bresse","nb_transactions":1}]', $data);
+    }
 }

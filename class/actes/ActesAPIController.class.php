@@ -81,5 +81,30 @@ class ActesAPIController extends Controller {
 		return true;
 	}
 
+	public function nbCreatedActesByAuthorityGroupIdAndMonth()
+    {
+        $this->verifAdmin();
+        $authority_id = intval($this->me->get("authority_id"));
+        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+        $authorityInfo = $authoritySQL->getInfo($authority_id);
+        $authotity_group_id = $authorityInfo['authority_group_id'];
+
+        $this->verifGroupAdmin($authotity_group_id);
+
+        $month = $this->getRecuperateurGet()->getInt('month',date("m", strtotime("last month")));
+        $year = $this->getRecuperateurGet()->getInt('year',date("Y", strtotime("last month")));
+
+        $min_date = "$year-$month-01";
+        $max_date = date("Y-m-t", strtotime($min_date));
+
+        $result = $this->getActesTransactionsSQL()->getNbActesByAuthorityGroupIdBeetweenDate(
+            $authotity_group_id,
+            $min_date,
+            $max_date
+        );
+        echo json_encode($result);
+        return true;
+    }
+
 
 }

@@ -1,5 +1,8 @@
 # 4.3.9
 
+## Évolution
+- Ajout d'une API de statistique actes pour les admins de groupe #610
+
 ## Correction
 
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
