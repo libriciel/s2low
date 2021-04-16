@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<!-- MàJ 28/10/2019 : coordination Hélios du 18/10 + mél CPD du 18/10 :
+     TNomEdition : CG97 pour CFU, CO69 pour balance générale des comptes, RG35 pour balance des valeurs inactives
+	 TETatC : EACE, état d'anomalies des contrôles d'édition
+     TMonnaie : remplacement CFA par CFP
+     TNatFonction : remplacement vote mixte par vote par nature avec référence fonctionnelle
+     TTypeBC : documentation budget principal, budget annexe et budget de rattachement
+     TTypeEdition : documentation Edition provisoire, Edition définitive
+     TTraitement : énumérations complémentaires (à documenter)
+     TNomEdition : suppression balance générale et balance VI, incluses dans CG97
+	 Reprise types utilisés dans l'en-tête + màj répartition types simples et complexes -->
+	<!-- MàJ 29/10/2019 : mél CPD du 29/10 :
+ 	 TETatC : ECCF_EB + ECCF_EP
+     TTraitement : CONCORDANCE_EB + COHERENCE_EP -->
+	<!-- MàJ 13/11/2019 : info CPD pour envoi fichier exemple a la DGCL :
+ 	 TETatC : ECCF_EB + ECCF_EP supprimé pour retour à ECCF
+     TTraitement : TITRE_ANOMALIE pour transmission des titres -->
+	<!-- MàJ 05/12/2019 : retour dév CCA :
+ 	 TNatFonc : valeur "NC manquante" -->	
+    <!-- MàJ 21/02/2020 : retours Hélios pour la balance :
+    TTraitement : valeur "BALANCE" -->
+    <!-- MàJ 24/02/2020 : retours Hélios pour la balance :
+    TTraitement : valeur "VALEUR_INACTIVE" -->
+    <!-- MàJ 06/03/2020 : préparation états comptables :
+    TSection et TCodRD : création type simple V_Section et V_CodRD
+    réorganisation formelle entre Commun_CFU et Simple_Type -->
+<xs:include schemaLocation="Simple_Type.xsd"/>
+	<xs:complexType name="TBudget">
+		<xs:attribute name="Siret" type="TSiret" use="required"/>
+		<xs:attribute name="IdNat" type="V_Entier" use="required"/>
+		<xs:attribute name="Libelle" type="V_Texte50" use="required"/>
+		<xs:attribute name="TypeBC" type="TTypeBC" use="required"/>
+		<xs:attribute name="CodeBC" type="TCodeBC" use="required"/>
+		<xs:attribute name="Finess" type="TFiness" use="optional"/>
+		<xs:attribute name="Population" type="V_Entier" use="optional"/>
+		<xs:attribute name="PlanCpte" type="V_Texte50" use="optional"/>
+		<xs:attribute name="TypeColl" type="V_Texte50" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TChapitre">
+		<xs:attribute name="V" type="V_Chapitre" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TCodRD">
+		<xs:attribute name="V" type="V_CodRD" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TEdition">
+		<xs:attribute name="NomEdition" type="TNomEdition" use="required"/>
+		<xs:attribute name="TypeEdition" type="TTypeEdition" use="required"/>
+		<xs:attribute name="DateEdition" type="V_Date" use="optional"/>
+		<xs:attribute name="DateArrete" type="V_Date" use="optional"/>
+		<xs:attribute name="Monnaie" type="TMonnaie" use="optional"/>
+		<xs:attribute name="Utilisateur" type="V_Texte50" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TGestion">
+		<xs:attribute name="NomComptable" type="xs:string" use="required"/>
+		<xs:attribute name="DateDebutGestion" type="V_Date" use="required"/>
+		<xs:attribute name="DateFinGestion" type="V_Date" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TNatFonc">
+		<xs:attribute name="V" type="V_NatFonc" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TNature">
+		<xs:attribute name="V" type="V_Nature" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TNatVote">
+		<xs:attribute name="V" type="V_NatVote" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TNomenclature">
+		<xs:attribute name="V" type="V_Nomenclature" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TNumRegle">
+		<xs:attribute name="V" type="V_NumRegle" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TSection">
+		<xs:attribute name="V" type="V_Section" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TTresorerie">
+		<xs:attribute name="LibellePoste" type="V_Texte100" use="required"/>
+		<xs:attribute name="Codique" type="TCodique" use="required"/>
+		<xs:attribute name="Dpt" type="V_Texte10" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TTypeOpe">
+		<xs:attribute name="V" type="V_TypeOpe" use="required"/>
+	</xs:complexType>
+	<!--                                -->
+	<!-- FORMAT DES DONNEES DE SOMMAIRE -->
+	<!--                                -->
+	<xs:complexType name="TSommaire">
+		<xs:sequence>
+			<xs:element name="LigneSommaire" type="TLigneSommaire" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TLigneSommaire">
+		<xs:attribute name="RefEtat" type="xs:string" use="required"/>
+		<xs:attribute name="Modele" type="xs:string"/>
+		<xs:attribute name="Etat" type="V_EtatC"/>
+		<xs:attribute name="NextEtat" type="xs:string"/>
+		<xs:attribute name="PreviousEtat" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="TSommairePlus">
+		<xs:sequence>
+			<xs:element name="LigneSommairePlus" type="TLigneSommairePlus" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="AutresDocumentsDematerialises" type="TAutresDocumentsDematerialises" minOccurs="0"/>
+			<xs:element name="DocumentBudgetaires" type="TDocumentBudgetaires" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TAutresDocumentsDematerialises">
+		<xs:sequence>
+			<xs:element name="DocumentOrmc" type="TDocumentOrmc" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TDocumentOrmc">
+		<xs:attribute name="NomListeOrmc" type="xs:string"/>
+		<xs:attribute name="Siret" type="TSiret"/>
+	</xs:complexType>
+	<xs:complexType name="TLigneSommairePlus">
+		<xs:attribute name="RefEtat" type="xs:string" use="required"/>
+		<xs:attribute name="Modele" type="xs:string"/>
+		<xs:attribute name="Etat" type="V_EtatC"/>
+	</xs:complexType>
+	<xs:complexType name="TDocumentBudgetaires">
+		<xs:sequence>
+			<xs:element name="DocumentBudgetaire" type="TDocumentBudgetaire" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TDocumentBudgetaire">
+		<xs:sequence>
+			<xs:element name="ElementDocumentBudgetaire" type="TElementDocumentBudgetaire" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Siret" type="TSiret"/>
+	</xs:complexType>
+	<xs:complexType name="TElementDocumentBudgetaire">
+		<xs:attribute name="Xsd" type="xs:string"/>
+		<xs:attribute name="Etat" type="V_EtatC"/>
+		<xs:attribute name="IdentifiantPJ" type="xs:string"/>
+		<xs:attribute name="LibelleDocument" type="xs:string"/>
+		<xs:attribute name="NumeroDecision" type="xs:string"/>
+	</xs:complexType>
+	<!--                                    -->
+	<!-- FORMAT DES DONNEES DE PRESENTATION -->
+	<!--                                    -->
+	<xs:complexType name="TEtatC">
+		<xs:attribute name="V" type="V_EtatC" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TFormat">
+		<xs:attribute name="V" type="V_Format" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="TTraitement">
+		<xs:attribute name="V" type="V_Traitement" use="required"/>
+	</xs:complexType>
+</xs:schema>

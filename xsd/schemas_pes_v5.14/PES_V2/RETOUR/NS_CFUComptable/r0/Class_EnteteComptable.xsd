@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:include schemaLocation="Simple_Type.xsd"/>
+    <xs:include schemaLocation="Commun_CFU.xsd"/>
+    <xs:include schemaLocation="Class_Infos.xsd"/> 
+    <!-- MàJ 20/02/2020 : Demande DGCL
+    Sortie du bloc Infos dans une xsd spécifique -->
+    <xs:complexType name="TEnteteComptable">
+        <xs:annotation>
+            <xs:documentation>Entete du CFU, du CCA et des etats comptables du CFU, y compris la balance générale et la balance des valeurs inactives</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Infos" type="TInfos"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

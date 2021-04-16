@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:complexType name="TConcessionnaires">
+    <xs:annotation>
+      <xs:documentation>Concessionnaires du contrat de concession.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Concessionnaire" type="TConcessionnaire" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Concessionnaires du contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TConcessionnaire">
+    <xs:annotation>
+      <xs:documentation>Tous les ans, l'autorité concédante publie les données d'exécution jusqu'à la fin du contrat de concession. Ces données ne sont transmises qu'à partir de la première année et non pas lors de la publication initiale des données faisant suite à la notification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatIdConcessionnaire" type="TNatIdTiersMarche">
+        <xs:annotation>
+          <xs:documentation>Type d'Identifiant national du concessionnaire :
+- 01 SIRET
+- 05 TVA,
+- 06 HORS UE
+- 07 TAHITI,
+- 08 RIDET,
+- 09 EN COURS IMMATRICULATION,
+- 10 FRWF,
+- 11 IREP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdConcessionnaire" type="cm:Base_Texte9_100">
+        <xs:annotation>
+          <xs:documentation>Identifiant national du concessionnaire de type :
+- numéro siret (SIREN+NIC), (identifiant français, 14 chiffres)
+- numéro de TVA intracommunautaire (numéro de TVA intracommunautaire, pour les entreprises de pays membres de l'Union européenne) au moins 9 caractères
+- HORS-UE (identifiants pour les entreprises de pays non membres de l'Union Européenne. Code pays ISO 3166 + 16 premiers caractères de la dénomination sociale. Ex. : BRDASILVAMOTORES)
+- Tahiti (identifiants pour Tahiti et la Polynésie française, 9 chiffres)
+- Ridet (identifiants pour la Nouvelle-Calédonie, 10 chiffres),
+- EN_COURS_IMMATRICULATION,
+- FRWF (identifiants pour Wallis-et-Futuna, " FRWF " + 14 premières lettres de la raison sociale. Ex. : FRWFDURANDCHAUFFAG),
+- IREP (personnes physiques françaises, 5 chiffres + LIEU DE NAISSANCE + NOM + PRENOM. Ex. : 18102VANNESDURANDMATHIEU), 80 caractères au maximum.
+
+Nb : la balise &lt;Idconcessionnaire&gt; est un alphanumérique de 9 à 80 caractères.
+Un concessionnaire ne doit figurer qu'une seule fois dans la liste des concessionnaires, sinon rejet de la concession. Pour les seuls identifiants de type SIRET des contrôles de validité sont effectués. La clé de l'identifiant doit être valide, sinon rejet de la concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DenominationSociale" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom du concessionnaire intervenant sur le contrat de concession.
+Raison sociale / Nom : Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

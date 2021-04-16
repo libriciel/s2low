@@ -25,5 +25,4 @@ define('MAIL_HTML', MAIL_SITEROOT . '/html');
 
 
 //Emplacement du schéma des PES V2
-//define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_v5.11/");
-define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes.v5.12/");
+define("HELIOS_XSD_PATH",__DIR__."/../xsd/schemas_pes_v5.14/");

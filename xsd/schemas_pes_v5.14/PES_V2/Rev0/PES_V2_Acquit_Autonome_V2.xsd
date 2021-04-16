@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour/v2" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour/v2" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="../CommunAck.xsd" />
+  <xs:element name="PES_ACQUIT" type="TPES_ACQUIT" />
+  <xs:complexType name="TPES_ACQUIT">
+    <xs:sequence>
+      <xs:element name="Enveloppe" type="cm:TEnveloppe">
+        <xs:annotation>
+          <xs:documentation>Description de l'enveloppe</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EnTetePES" type="cm:TEnTetePES">
+        <xs:annotation>
+          <xs:documentation>Description de l'entête du PES Acquit</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ACQUIT" type="TACQUIT">
+        <xs:annotation>
+          <xs:documentation>Description de l'Acquit</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TACQUIT">
+    <xs:sequence>
+      <xs:element name="EnTeteAcquit" type="TEnTeteAcquit" />
+      <xs:element name="ElementACQUIT" type="TElementACQUIT" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteAcquit">
+    <xs:sequence>
+      <xs:element name="IdVer" type="cm:Base_Num2_Light">
+        <xs:annotation>
+          <xs:documentation>Version de l'Acquit (2)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TElementACQUIT">
+    <xs:sequence>
+      <xs:element name="DomaineAck" type="TDomaineAck">
+        <xs:annotation>
+          <xs:documentation>Domaine. Voir codification.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatAck" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Permet de déterminer si le Ack pour l'élément concerné (Bordereau ou PJ ou marché ou contrat de concession) est OK (valeur 1), ou KO (valeur 0).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="NumBord" type="cm:Base_Num7_Light" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Numéro de bordereau transmis dans le fichier d'origine</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ExerciceBord" type="cm:Base_Num4_Light" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Exercice du bordereau</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:element name="IdMarche" type="cm:Base_Texte18_Light" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Identifiant du marché public ou du contrat de concession. Ce n° se décompose en 4 caractères pour l'année et 10 caractères pour la référence du marché ou du contrat de concession suivi d'un tiret et de la séquence d'envoi sur 3 caractères.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IdUnique" type="cm:Base_Alphanum50_Light" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Identifiant unique de la PJ.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="Erreur" type="TErreur" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="DetailPiece" type="TDetailPiece" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TErreur">
+    <xs:sequence>
+      <xs:element name="NumAnoAck" type="TNumAnoAck" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codification de l'anomalie</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibelleAnoAck" type="cm:Base_Texte500_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé de l'anomalie (voir guide pratique dédié)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDetailPiece">
+    <xs:sequence>
+      <xs:element name="NumPiece" type="cm:Base_Num13_Light">
+        <xs:annotation>
+          <xs:documentation>Numéro de la pièce concernée par l'erreur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Erreur" type="TErreur" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="DetailLigne" type="TDetailLigne" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDetailLigne">
+    <xs:sequence>
+      <xs:element name="NumLigne" type="cm:Base_Num13_Light">
+        <xs:annotation>
+          <xs:documentation>Numéro de la ligne de pièce concernée par l'erreur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Erreur" type="TErreur" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

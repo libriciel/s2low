@@ -4,6 +4,8 @@
 
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 
+## Evolution
+- Prise en compte de la version 5.14 du schema XSD Pes Aller #696
 # 4.3.8 - 2021 04 07
 
 ## Correction
