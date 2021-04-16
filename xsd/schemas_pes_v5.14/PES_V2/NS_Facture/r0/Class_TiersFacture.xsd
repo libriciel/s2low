@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_BancaireFacture.xsd" />
+  <xs:include schemaLocation="Class_AdresseFacture.xsd" />
+  <xs:complexType name="TTiersFacture">
+    <xs:annotation>
+      <xs:documentation>Information sur le Débiteur ou le destinataire</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InfoTiers" type="TInfoTiersFacture">
+        <xs:annotation>
+          <xs:documentation>Identification du tiers</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoSupplTiers" type="TInfoSupplTiersFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Informations pratiques sur le Centre des finances publiques (horaires, téléphone) TypTiers = 26.
+Ce bloc ne doit être utilisé que dans le cadre du PESFacture typé ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="TAdresseFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers
+Pour un PES_Facture ASAP : le bloc Adresse du Débiteur est obligatoire, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteBancaire" type="TBancaireFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte bancaire du tiers débiteur.
+Pour PES_Facture ASAP, il s'agit du compte bancaire repris sur le TIP de l'édition. Compte bancaire du tiers destinataire : ces informations ne sont pas valorisées par Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoTiersFacture">
+    <xs:annotation>
+      <xs:documentation>Identification du Tiers.
+Ce bloc est commun aux blocs :
+- PES_Facture Emetteur 
+- PES_Facture Tiers
+- PES_Facture FactureIndiv Debiteur
+- PES_Facture FactureIndiv Destinataire</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdTiers" type="cm:Base_Alphanum18" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant national du tiers : Identifiant stable et national d'une personne de type siret, siren, finess, NIR, TVAIntraCo, Hors UE,TAHITI, RIDET , FRWF ou EnCoursImm
+Pour un PES_Facture ASAP : cet identifiant n'est utilisé que s'il s'agit d'un SIRET (NatIdTiers = 02 ). Il est alors repris sur l'édition ASAP. Ceci n'est pas vrai s'il s'agit d'un ASAP CPP puisque dans ce cas c'est le SIRET du débiteur du titre qui est repris (ce SIRET étant obligatoire sur un titre CPP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatIdTiers" type="cm:TNatIdTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type d'identifiant.
+Pour un PES_Facture ASAP : ne pas renseigner ; non repris sur l'édition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteIdTiers" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour de l'identifiant stable par le comptable.
+Pour un PES_Facture ASAP : ne pas renseigner ; non repris sur l'édition.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence attribuée au tiers par l'ordonnateur : Zone destinée à recevoir une référence ou un identifiant, éventuellement géré par l'ordonnateur, autorisant le regroupement des pièces comptables.
+Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CatTiers" type="cm:TCatTiers">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la catégorie du tiers.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatJur" type="cm:TNatJur">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la nature juridique du tiers.
+Non repris sur l'édition ASAP (PES_Facture ASAP).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypTiers" type="cm:TTypTiersFacture">
+        <xs:annotation>
+          <xs:documentation>Type de tiers.
+- Contrainte pour le bloc parent Emetteur: Non repris sur l'édition ASAP (PES_Facture ASAP).
+- Contrainte pour le bloc parent Debiteur : Non repris sur l'édition ASAP (PES_Facture ASAP).
+- Contrainte pour le bloc parent Destinataire : Non repris sur l'édition ASAP (PES_Facture ASAP).
+- Contrainte pour le bloc parent Tiers :
+  + Si PES_Facture ASAP, les valeurs autorisées sont 25 ou 26. Toute autre valeur aboutit au rejet du PES_Facture ASAP.
+  + Si la valeur est 25, le Tiers est le Centre d'Encaissement.
+  + Si la valeur est 26, le Tiers est le Centre des Finances Publiques.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Etat civil du tiers : Zone destinée à recevoir de manière abrégée l'état civil (Mr, Mme,…).
+- Contrainte pour le bloc parent Tiers : Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nom" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Raison sociale / Nom : Norme postale.
+- Contrainte pour le bloc parent Tiers :
+  + Si TypeTiers = 25, alors Nom = CENTRE D'ENCAISSEMENT (en majuscules).
+  + Si Type Tiers = 26 (Centre des Finances Publiques), il s'agit de la dénomination du poste comptable (ex Trésorerie de xxx).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément de nom : Norme postale.
+- Contrainte pour le bloc parent Tiers : Si TypeTiers = 25,  alors ComplNom = DES FINANCES PUBLIQUES (en majuscules).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prénom.
+- Contrainte pour le bloc parent Emetteur: Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.
+- Contrainte pour le bloc parent Tiers : Pour un PES_Facture ASAP, ne pas renseigner. Non repris sur l'édition ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoSupplTiersFacture">
+    <xs:annotation>
+      <xs:documentation>Informations pratiques du Centre des finances publiques (horaires, téléphone).
+Ce bloc ne doit être utilisé que dans le cadre du PESFacture typé ASAP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumTel2" type="cm:Base_Texte20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de téléphone du Centre des finances publiques ou du service du Centre des finances publiques susceptible de renseigner le débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HorairesOuv2" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Horaires d'accueil du Centre des finances publiques.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdresseMelCFP" type="cm:Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse courriel du Centre des finances publiques</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PaiementTel" type="TPaiementTel" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Informations pratiques pour le paiement par téléphone du Centre des Finances publiques.
+Repris uniquement sur TypeFacture=10.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPaiementTel">
+    <xs:annotation>
+      <xs:documentation>Informations pratiques pour le paiement par téléphone du Centre des Finances publiques si celui-ci le propose.
+Repris uniquement sur TypeFacture=10.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ModalitesPaiTel" type="cm:Base_Texte27">
+        <xs:annotation>
+          <xs:documentation>Servir dans le cas des Centres des finances publiques bénéficiant d'un standard téléphonique de paiement par carte bancaire.
+Dans ce cas ModalitesPaiTel = ''- Payer par carte bancaire au :''.
+Repris uniquement sur les éditions ASAP Patients à éditer.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumTel3" type="cm:Base_Texte20">
+        <xs:annotation>
+          <xs:documentation>Numéro de téléphone du Centre des finances publiques dédié au paiement par carte bancaire.
+Repris uniquement sur les éditions ASAP Patients à éditer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HorairesOuv3" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Horaires d'accueil du standard dédié au paiement par carte bancaire du Centre des finances publiques.
+Repris uniquement sur les éditions ASAP Patients à éditer</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

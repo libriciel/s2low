@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:include schemaLocation="Simple_Type.xsd"/>
+	<xs:include schemaLocation="Class_LigneComptable.xsd"/>
+	<xs:complexType name="TBudgetComptable"> 
+		<xs:annotation>
+			<xs:documentation>Etats CFU du comptable par budget (1 si nomenclature non intégrée, n si nomenclature intégrée)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="LigneComptable" type="TLigneComptable" maxOccurs="unbounded"/>
+			<xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Balise supplémentaire quelconque, pour les besoins d'évolution</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+		<xs:attribute name="SIRET" type="TSiret" use="required"/>
+		<xs:attribute name="IdNat" type="xs:integer" use="optional"/>
+		<xs:attribute name="id" type="xs:string" use="optional">
+			<xs:annotation>
+					<xs:documentation>Identifiant de bloc à inclure dans la signature</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

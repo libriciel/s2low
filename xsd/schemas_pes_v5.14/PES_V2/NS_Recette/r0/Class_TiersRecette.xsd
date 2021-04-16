@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TInfoTiersRecette">
+    <xs:sequence>
+      <xs:element name="IdTiers" type="cm:Base_Texte9_18" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant national du tiers : Identifiant stable et national d'une personne de type siret, siren, finess, NIR, Hors UE,TAHITI, RIDET ou EnCoursImm.
+Cette balise doit être servie en fonction de NatIdTiers : 01= Siret, 02= Siren 03=Finess 04= NIR 05 = TVAIntraCo, 06= Hors UE, 07= TAHITI, 08= RIDET, 09= EnCoursImm ou 10=FRWF
+Pour les seuls identifiants de type SIRET, SIREN, FINESS et NIR, des contrôles de validité sont effectués. La clé de l'identifiant doit être valide, et les longueurs possibles sont 9 pour le Siren et le finess géo, 14 pour le Siret et 15 pour le Nir, sinon, rejet du bordereau.
+
+IdTiers ne peut être valorisée que si NatIdTiers est valorisé.
+Si valorisation NatIdTiers, IdTiers doit avoir la valeur correspondante, si balise vide= rejet du bordereau ou de l'ensemble des PPEM du bordereau.
+Le n° de sécurité sociale est uniquement possible lorsque le code égalité "assuré / débiteur" = O (oui) ou si le tiers est égal à "assuré". En outre, l'utilisation du n° de sécurité sociale est réservée au domaine hospitalier.et seulement en nomenclature M21 M22 sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteNaissance" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de naissance du Tiers :
+- A ne renseigner que pour les tiers « personne physique » CatTiers = 01 (aucune restriction sur la nature juridique du tiers), toute autre catégorie de tiers aboutira au rejet du bordereau dans le cadre du Guichet xml.
+- Pour les budgets collectivités assujettis à l'instruction M21 ou M22 et pour le type de tiers « TypTiers » = 06 Malade, cette date correspondra à la date de naissance du malade.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatIdTiers" type="cm:TNatIdTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type d'identifiant.
+NatIdTiers ne peut être valorisé que si IdTiers est valorisé.
+Valeurs possibles 01 02 03 04 05 06 07 08 09 10 toute autre valeur, rejet du bordereau qui comprend ce tiers. Par ailleurs, le tiers doit être en concordance avec IdTiers, sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteIdTiers" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour par le comptable de l'identifiant national du tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence locale attribuée au tiers par l'ordonnateur. Cette zone est destinée à recevoir une référence ou un identifiant, géré par l'ordonnateur, autorisant le regroupement des dettes d'un même débiteur.
+Elle pourra être celle du numéro d'entrée du Malade en M21 M22.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CatTiers" type="cm:TCatTiers">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la catégorie du tiers.
+Balise en cohérence avec NatJur. Seules les associations de la grille correspondance catégorie de tiers et nature juridique des tiers sont autorisées.
+Pour un titre dont l'édition est typée '05' (ASAP Patients à éditer) et si le TypTiers est typé '01' (Débiteur principal), alors CatTiers doit obligatoirement être valorisé à '01' , sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatJur" type="cm:TNatJur">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la nature juridique du tiers.
+Les couples CatTiers et NatJur sont décrits dans la grille Cat Nat des tiers et identiques à la dépense.
+Si les valeurs ne sont pas celles décrites dans la grille et les associations prévues dans la grille en annexe, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypTiers" type="cm:TTypTiersRecette">
+        <xs:annotation>
+          <xs:documentation>Type de tiers : Zone indiquant le type de tiers.
+Le code 05 « Employeur » est réservé au domaine hospitalier dans le cadre des accidents du travail.
+Valorisation dans toute autre nomenclature aboutit à rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Etat civil du tiers : Zone destinée à recevoir de manière abrégée l'état civil (Mr, Mme,…), la qualité (Cdt,...) du tiers.
+Obligatoire si Cat du tiers 01 sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.
+Liste des civiltés précisée et arrêtée, toute autre valeur aboutit à rejet du bordereau.
+La civilité de type Mademoiselle n'existe plus. En cas d'utilisation, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nom" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Raison sociale / Nom : Norme postale.
+L'absence aboutit à rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément de nom : Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prénom Obligatoire si Cat 01 personne physique absence pour un tiers personne physique aboutit à rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LieuNaissance" type="TLieuNaissance" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A ne renseigner que pour les tiers "Personne Physique" CatTiers=01, toute autre catégorie de tiers aboutira au rejet du bordereau dans le cadre du Guichet XML.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLieuNaissance">
+    <xs:sequence>
+      <xs:element name="NeEnFrance" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Zone permettant de déterminer si le tiers est né en France ou à l'étranger.
+Valeurs '0' = Né à l'étranger / Valeur '1' = Né en France
+Suivant la valeur utilisée, le bloc enfant MetropoleDomCom ou le bloc enfant Etranger sera éventuellement utilisé</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="MetropoleDomCom" type="TMetropoleDomCom">
+          <xs:annotation>
+            <xs:documentation>Bloc servi uniquement si la valeur de &lt;NeEnFrance&gt; = '1', sinon rejet du bordereau.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Etranger" type="TEtranger">
+          <xs:annotation>
+            <xs:documentation>Bloc servi uniquement si la valeur de &lt;NeEnFrance&gt; = '0' (né à l'étranger), sinon rejet du bordereau.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>      
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TMetropoleDomCom">
+    <xs:annotation>
+      <xs:documentation>Bloc servi uniquement si la valeur de &lt;NeEnFrance&gt; = '1', sinon rejet du bordereau.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeDeptDomCom" type="cm:Base_Texte_CodeDepartement_2_3">
+        <xs:annotation>
+          <xs:documentation>Code INSEE du département ou COM de naissance :
+- si naissance en métropole : XX dont 2A ou 2B et XX compris entre 01 (inclus) et 95 (inclus)
+- si naissance dans un DOM ou COM : XXX
+Si le code INSEE du département ou COM est inconnu, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeCommune" type="cm:Base_Texte_CodeCommune_2_3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code INSEE de la commune de naissance
+-si naissance en métropole : XXX
+-si naissance dans un DOM ou COM : XX
+Si le couple code département ou COM naissance – code INSEE de la commune est inconnu, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibelleCommune" type="cm:Base_Texte_Libelle_Naissance_70" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé de la commune de naissance si le tiers est né en métropole, dans un DOM ou dans un COM (En majuscules)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEtranger">
+    <xs:annotation>
+      <xs:documentation>Bloc servi uniquement si la valeur de &lt;NeEnFrance&gt; = '0' (né à l'étranger), sinon rejet du bordereau.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="CodePays" type="cm:Base_Texte_CodePays_3">
+          <xs:annotation>
+            <xs:documentation>Code du pays de naissance
+Si le code du pays est inconnu, rejet du bordereau (activé en 5.10)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="LibellePays" type="cm:Base_Texte_Libelle_Naissance_70">
+          <xs:annotation>
+            <xs:documentation>Libellé du pays de naissance (En majuscules)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

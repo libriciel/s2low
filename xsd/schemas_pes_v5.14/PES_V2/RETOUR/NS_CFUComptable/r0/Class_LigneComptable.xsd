@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<!-- MàJ 20/11/2019 : ET + mél MDD
+ 	 Intitulés 1, 2 et 3 passés à 200 car -->
+	<xs:include schemaLocation="Simple_Type.xsd"/>
+	<xs:include schemaLocation="Commun_CFU.xsd"/>
+	<xs:complexType name="TLigneComptable">
+		<xs:annotation>
+			<xs:documentation>Ligne de donnee pour les états CFU du comptable</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Etat" type="TEtatC">
+				<xs:annotation>
+					<xs:documentation>Etat comptable de rattachement de la ligne de données. Obligatoire pour le rattachement de la donnée à un état comptable.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NumOrdre" type="Base_Entier">
+				<xs:annotation>
+					<xs:documentation>Rang de la ligne de données dans l'état. Obligatoire pour l'affichage sur la maquette de l'état comptable.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:sequence>
+					<xs:annotation>
+						<xs:documentation>Ligne de donnees comptables</xs:documentation>
+					</xs:annotation>
+					<xs:element name="Intitule1" type="Base_Texte256" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Intitulé de la ligne de données dans l'état.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Intitule2" type="Base_Texte256" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Intitulé complémentaire de la ligne de données dans l'état.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:choice>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Ligne de detail pour l'execution budgetaire</xs:documentation>
+							</xs:annotation>
+							<xs:element name="Nature" type="TNature" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Codification article par nature</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Operation" type="Base_Texte10" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Numero de l'operation</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Chapitre" type="TChapitre" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Numero de chapitre par nature</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="CodeRD" type="TCodRD">
+								<xs:annotation>
+									<xs:documentation>Sens Depense (D) ou Recette (R)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Section" type="TSection">
+								<xs:annotation>
+									<xs:documentation>I pour Investissement, F pour fonctionnement</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtPrevisions" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant des previsions</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtEmissions" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant des emissions</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtAnnulations" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant des annulations</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtRealNettes" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant des realisations nettes</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtSoldePrevReal" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant du solde des previsions sur realisations</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Ligne de detail pour les bilans et les comptes de resultat</xs:documentation>
+							</xs:annotation>
+							<xs:element name="MtBrut" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant brut exercice N de la ligne de données. Optionnel : non pertinent pour tous les états (bilan uniquement), non fourni pour une ligne de titre (TIT), présent pour les autres types de lignes.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtAmo" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant des amortissements exercice N de la ligne de données. Optionnel : non pertinent pour tous les états (bilan uniquement), non fourni pour une ligne de titre (TIT), présent pour les autres types de lignes.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtNet" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant net exercice N de la ligne de données. Optionnel : non fourni pour une ligne de titre (TIT), présent pour les autres types de lignes.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="MtNet-1" type="Base_Montant" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Montant net exercice N-1 de la ligne de données. Optionnel : non pertinent pour tous les états (bilan uniquement), non fourni pour une ligne de titre (TIT), présent pour les autres types de lignes.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Variation" type="Base_Texte20" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Variation entre les exercices N et N-1 de la ligne de données. Optionnel : non pertinent pour tous les états (CR uniquement), non fourni pour une ligne de titre (TIT), présent pour les autres types de lignes.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Agregat" type="Base_Texte10" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Référence de l'agrégat dans Hélios pour la ligne de données. Optionnel : non pertinent pour tous les états ou pour toutes les données dans un état (lignes de détail ou de rubrique uniquement).</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+						<xs:sequence>
+							<xs:annotation>
+								<xs:documentation>Ligne de detail ECCF</xs:documentation>
+							</xs:annotation>
+							<xs:element name="Intitule3" type="Base_Texte256" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>3ème ligne pour l'ECCF en complément des intitulés 1 et 2 (vu avec Anne le 30/07/2019)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:choice>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="NoteBasTableau" type="Base_Texte120">
+						<xs:annotation>
+							<xs:documentation>Ligne de commentaire de bas de tableau d'un état.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+			<xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Balise supplémentaire quelconque, pour les besoins d'évolution</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+			<xs:element name="Format" type="TFormat" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Format à appliquer à la ligne dans la maquette.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ModeTraitement" type="TTraitement" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Type de traitement appliqué par Hélios, permettant de distinguer des types de lignes à des fins d'exploitation en recherche après import eXoMiLe.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:z="odm:enrichissement" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+  <xs:include schemaLocation="Class_LigneBudget.xsd" />
+  <xs:include schemaLocation="Class_PJReference.xsd" />
+<!--   <xs:include schemaLocation="CommunBudget.xsd" /> -->
+  <xs:include schemaLocation="CommunAnnexe.xsd" />
+<!--   <xs:include schemaLocation="Simple_Type.xsd" /> -->
+  <xs:include schemaLocation="Class_Annexes.xsd" />
+  <xs:complexType name="TBudget">
+    <xs:annotation>
+      <xs:documentation>Précision : les blocs Annexes et Informations générales, blocs enfants de Budget ne sont pas décrits car ils ne sont pas utilisés dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="EnTeteBudget" type="TEnTeteBudget" />
+      <xs:element name="BlocBudget" type="TBlocBudget">
+        <xs:annotation>
+          <xs:documentation>Ce bloc permet de déterminer le contenu du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InformationsGenerales" type="TInformationsGenerales">
+        <xs:annotation>
+          <xs:documentation>Non décrit car non utilisé dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LigneBudget" type="TLigneBudget" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Lignes du documents budgétaire : Nature, fonction, opération…</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Annexes" type="TAnnexes" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Non décrit car non utilisé dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteBudget">
+    <xs:sequence>
+      <xs:element name="LibelleEtab" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Libellé du Budget Collectivité</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEtab" type="Base_Siret" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la collectivité (SIRET).
+Doit contenir uniquement des chiffres ; taille minimum 9, maximum 14.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecifBudget" type="TSpecifBudget" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cette balise permet de présenter les spécificités budgétaires liées aux EPCI, ASA, AFR…</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodColl" type="Base_Alphanum3">
+        <xs:annotation>
+          <xs:documentation>Code collectivité : identification de la collectivité.
+Le budget collecitvité (CodColl + CodBud) doit exister dans Hélios à défaut rejet du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodInseeColl" type="Base_CogInsee" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code INSEE de la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodBud" type="Base_Alphanum2">
+        <xs:annotation>
+          <xs:documentation>Code Budget. 00 si budget principal.
+Le budget collecitvité (CodColl + CodBud) doit exister dans Hélios à défaut rejet du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nomenclature" type="TNomenclature">
+        <xs:annotation>
+          <xs:documentation>Définition de la nomenclature de la collectivité.
+Ce champs contient « norme »-« déclinaison de norme » (exemple : M14-M14 COM SUP500).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="TBlocBudget">
+    <xs:annotation>
+      <xs:documentation>Ce bloc permet de déterminer le contenu du document budgétaire.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Affect" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Critère d'affectation : Zone libre permettant  à l'ordonnateur de déterminer l'affectation du dossier dans les services du comptable. Les critères d'affectation résultent d'une convention entre l'ordonnateur et le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatDec" type="TNatDec">
+        <xs:annotation>
+          <xs:documentation>Nature de la décision.
+Seules les valeurs 01 Budget Primitif, 02 Décision Modificative, 03 Bugdet Supplémentaire ou 10 CFU sont autorisées.
+Toute autre valeur aboutit à rejet du document budgétaire.
+Le document budgétaire « CFU » est transmis à travers une PJ de type 012 CFU états ordonnateurs, les autres documents budgétaires le sont à travers une PJ 001 « Documents budgétaires».
+L'association d'une PJ de type 012 à une NatDec &lt;&gt; 10 CFU entraîne le rejet de la PJ.
+L'association d'une PJ de type 001 à une NatDec = 10 CFU entraîne le rejet de la PJ.
+Le Code Mouvement dans Hélios sera valorisé à « A substituer » dans le cas où le document est Budget Primitif ; il sera valorisé à « A cumuler » dans le cas où le document est Décision Modificative ou Budget Supplémentaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumDec" type="Base_Num10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de la décision. Il est obligatoire si le document budgétaire est Décision Modificative (NatDec = 02).
+Dans les autres cas, il est facultatif ; s'il n'est pas renseigné, il est valorisé à 1 dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Exer" type="Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice budgétaire concerné.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProjetBudget" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indique s'il s'agit d'un projet de budget.
+True s'il s'agit d'un projet de budget, False sinon.
+Attention : un projet de budget ne peut être intégré dans Hélios ; si la balise est renseigné à True, le document budgétaire sera rejeté.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pièce jointes éventuelles.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteDec" type="Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de la décision.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteDecEx" type="Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date du caractère exécutoire de la décision.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatVote" type="TNatVote" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Niveau de vote du budget : indique si le budget est voté au niveau du chapitre ou de l'article pour chaque section (fonctionnement et investissement). Balise non exploitée par Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatVoteInv" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nature de la vote du budget pour indiquer si le vote est au niveau du chapitre ou de l'article pour la section d'investissement. Balise non exploitée par Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatVoteFonc" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nature de la vote du budget pour indiquer si le vote est au niveau du chapitre ou de l'article pour la section de fonctionnement. Balise non exploitée par Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OpeEquip" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prise en compte des opérations d'équipement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VoteFormelChap" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Vote formel sur chacun des chapitres d'équipement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypProv" type="TTypProv" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de provisions.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefProv" type="Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence du délibéré relatif au provision.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BudgPrec" type="TBudgPrec">
+        <xs:annotation>
+          <xs:documentation>Budget précédent.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ReprRes" type="TReprRes">
+        <xs:annotation>
+          <xs:documentation>Budget avec ou sans reprise de résultat N-1.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatFonc" type="TNatFonc">
+        <xs:annotation>
+          <xs:documentation>Indication si le budget est voté par nature :1
+Fonction : 2
+Mixte :3.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PresentationSimplifiee" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>La collectivité opte explicitement pour une maquette simplifiée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DepFoncN2" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Résultat reporte N-2 en dépense.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RecFoncN2" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Résultat reporté N-2 en recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DepInvN2" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Solde d'investissement N-2 en dépense.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RecInvN2" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Solde d'investissement N-2 en recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodTypBud" type="ATCodTypBud">
+        <xs:annotation>
+          <xs:documentation>Type de budget : principal ou annexe.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEtabPal" type="Base_Num14" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant de l'établissement principal (si le budget concenrné est un budget annexe).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibelleEtabPal" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du budget principal (dans le cas où le budget concerné est un budget annexe).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" use="optional" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="TInformationsGenerales">
+    <xs:annotation>
+      <xs:documentation>Ce bloc n'est pas utilisé dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+      <!--<xs:element name="Information" type="TInformationGenerale" minOccurs="0" maxOccurs="unbounded"/> -->
+    </xs:sequence>
+    <xs:attribute name="id" use="optional" type="xs:string"/>
+  </xs:complexType>
+</xs:schema>

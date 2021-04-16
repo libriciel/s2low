@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DGFIP (D° GLE DES FINANCES PUBLIQUES) -->
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by FNC (MINISTERE DES FINANCES) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_TiersFacture.xsd" />
+  <xs:include schemaLocation="Class_BancaireFacture.xsd" />
+  <xs:include schemaLocation="Class_AdresseFacture.xsd" />
+  <xs:complexType name="TTiersEmetteur">
+    <xs:annotation>
+      <xs:documentation>Ce bloc définit l'émetteur de la facture.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="InfoTiers" type="TInfoTiersFacture">
+        <xs:annotation>
+          <xs:documentation>Identification du tiers émetteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="TAdresseFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers émetteur.
+Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CptBancaire" type="TBancaireFacture" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte Bancaire du Tiers émetteur.
+Ne pas renseigner pour un PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoTVAEmetteur" type="TInformationTvaEmetteur" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Informations concernant la TVA du Tiers l'émetteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoSuppl" type="TInfoSuppl" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Informations pratiques de la collectivité (horaires, téléphone, et informations nécessaires dans le cadre de TIPI).
+Ce bloc ne doit être utilisé que dans le cadre du PESFacture typé ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Signataire" type="TSignataire" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Signataire de l'avis des sommes à payer.
+A ne renseigner que dans le cadre du PES_Facture de type ASAP.
+Attention, ce bloc est Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInformationTvaEmetteur">
+    <xs:annotation>
+      <xs:documentation>Informations concernant la TVA du Tiers l'émetteur.
+Saisie du numéro de TVA intracommunautaire</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumTVA" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de TVA de l’émetteur de la facture</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Service" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d'identification du service de l'ordonnateur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoSuppl">
+    <xs:annotation>
+      <xs:documentation>Ce bloc ne doit être utilisé que dans le cadre du PESFactureTypéASAP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumTel" type="cm:Base_Texte20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de téléphone de la collectivité ou du service de la collectivité qui peut apporter tout éclaircissement au débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HorairesOuv" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Horaires d'ouverture des services de la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeTipi" type="cm:Base_Num7_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la collectivité au regard de TIPI.
+PES_Facture ASAP : cette balise fonctionne avec la balise AdrTipi ; si AdrTipi est renseignée, alors CodeTipi doit être renseigné. A défaut, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdresseMelEmetteur" type="cm:Base_Texte50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse courriel du service de la collectivité émettrice de la facture</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdrTipi" type="cm:Base_Texte200" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse internet de l'accès au portail de la Collectivité ou portail TIPI pour permettre le paiement par internet .
+PES_Facture ASAP : cette balise fonctionne avec la balise CodeTipi ; si CodeTipi est renseignée, alors AdrTipi doit être renseigné. A défaut, rejet du PES_Facture ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefBdf" type="cm:Base_Alphanum13" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Obligatoire pour un PESFacture ASAP , sinon rejet du  PesFacture ASAP.
+Si édition avec TIP ,référence Banque de France du budget collectivité  : ICS. La structure de l'ICS doit être respectée, à défaut rejet du PES_Facture ASAP.
+Si édition avec Talon, numéro émetteur associé au budget collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoCode2D" type="cm:Base_Texte64" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A ne servir que dans le cadre du Pes facture ASAP ;
+Informations nécessaires à la construction du code2D pour paiement de l'ASAP par smartphone.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TSignataire">
+    <xs:annotation>
+      <xs:documentation>Signataire de l'avis des sommes à payer.
+A ne renseigner que dans le cadre du PES_Facture de type ASAP.
+Attention, ce bloc est Obligatoire pour un PES_Facture ASAP, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Personne" type="TPersonneSignataire">
+        <xs:annotation>
+          <xs:documentation>La personne qui signe</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Role" type="cm:Base_Texte50">
+        <xs:annotation>
+          <xs:documentation>Rôle de la personne qui est autorisée à signer les ASAP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPersonneSignataire">
+    <xs:sequence>
+      <xs:element name="Nom" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom du signataire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Prénom du signataire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

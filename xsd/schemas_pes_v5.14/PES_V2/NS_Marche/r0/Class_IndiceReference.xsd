@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TIndicesReference">
+    <xs:sequence>
+      <xs:element name="IndiceReference" type="TIndiceReference" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Indice de référence</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TIndiceReference">
+    <xs:annotation>
+      <xs:documentation>Indice de référence</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Indice" type="cm:Base_Texte20_Light">
+        <xs:annotation>
+          <xs:documentation>Indice-index de référence.
+Exemples : ICHT-E, 3511153 , 205903, FSD 2.
+Valeur : Texte comportant au maximum 20 caractères.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MoisAnnee" type="cm:Base_DateMoisAnnee">
+        <xs:annotation>
+          <xs:documentation>Mois-Année de la valeur de l'indice de référence.
+Format:MM-AAAA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Valeur" type="cm:Base_Decimal14_4">
+        <xs:annotation>
+          <xs:documentation>Valeur de l'indice de référence.
+Exemple : 138,2 pour l'indice 35111403 au 09/2016, 1,8449 pour l'indice IM au 10/2016.
+Nombre positif avec au maximum 14 chiffres et 4 chiffres après la virgule.
+Valeur : nombre décimal (14,4).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FormuleRevPrix" type="cm:Base_Texte160_Light">
+        <xs:annotation>
+          <xs:documentation>Formule de révision des prix. La formule peut être exprimée par indice ou un ensemble d'indices.
+Exemple : En M0 : P0 = 0,38 S (alaires) + 0,34 A (ciers) + 0,28 D (ivers).
+En Mn : 0,38 S + 0,39 A + 0,27 D 
+P = P0 [0,125 + 0,85 BT51n/BT510]
+P = P0 [0,15 + 0,85 In /I 0]
+Valeur : Texte comportant au maximum 160 caractères.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
