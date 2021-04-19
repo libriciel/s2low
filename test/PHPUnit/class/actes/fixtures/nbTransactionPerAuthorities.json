@@ -1,0 +1,13 @@
+{
+  "result": "ok",
+  "message": "",
+  "authority_group_id": 1,
+  "min_date": "2017-7-01",
+  "max_date": "2017-07-31",
+  "nbTransactionPerAuthorities": [
+    {
+      "name": "Bourg-en-Bresse",
+      "nb_transactions": 1
+    }
+  ]
+}
