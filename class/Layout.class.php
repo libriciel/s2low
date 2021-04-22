@@ -375,7 +375,7 @@ class HTMLLayout extends Layout {
         }
         ?>
         <div class="alert alert-warning">
-            <strong><?php echo $_SESSION["error"]; ?></strong>
+            <strong><?php hecho($_SESSION["error"]); ?></strong>
         </div>
 
         <?php

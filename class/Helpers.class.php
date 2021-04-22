@@ -139,7 +139,7 @@ class Helpers {
 	  if ($apiMsg) {
 		echo $apiMsg . "\n";
 	  } elseif (! empty($msg)) {
-		echo $msg . "\n";
+		hecho($msg . "\n");
 	  }
 	} else {
 	  if ($redirect) {
