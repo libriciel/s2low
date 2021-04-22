@@ -1,13 +1,19 @@
 {
-  "result": "ok",
-  "message": "",
   "authority_group_id": 1,
-  "min_date": "2017-7-01",
   "max_date": "2017-07-31",
+  "message": "",
+  "min_date": "2017-7-01",
   "nbTransactionPerAuthorities": [
     {
+      "authority_id": 1,
       "name": "Bourg-en-Bresse",
       "nb_transactions": 1
+    },
+    {
+      "authority_id": 2,
+      "name": "Saint-Andre de Corcy",
+      "nb_transactions": 0
     }
-  ]
+  ],
+  "result": "ok"
 }
