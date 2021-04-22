@@ -29,6 +29,9 @@ class ActesApiControllerTest extends S2lowTestCase {
 		$this->getActesAPIController()->_actionAfter();
     }
 
+    /**
+     * @throws Exception
+     */
     public function testListDocumentPrefectureAction(){
 		$this->createRelatedTransaction();
 		$this->setUserAuthentification();
@@ -37,6 +40,10 @@ class ActesApiControllerTest extends S2lowTestCase {
 	}
 
 
+    /**
+     * @return false|mixed
+     * @throws Exception
+     */
 	private function createRelatedTransaction(){
 		$transaction_id = $this->createTransaction(4);
 		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
@@ -50,6 +57,9 @@ class ActesApiControllerTest extends S2lowTestCase {
 		return $actesTransactionsSQL->createRelatedTransaction($related_envelope_id,3,'2018-01-01',$transaction_id);
 	}
 
+    /**
+     * @throws Exception
+     */
 	public function testActionMarkAsRead(){
 		$transaction_id= $this->createRelatedTransaction();
 		$this->setUserAuthentification();
@@ -60,5 +70,67 @@ class ActesApiControllerTest extends S2lowTestCase {
 		$this->getActesAPIController()->listDocumentPrefectureAction();
 	}
 
+    /**
+     * @throws Exception
+     */
+    public function testNbCreatedActesByAuthoritiesAndMonth()
+    {
+        $this->createTransaction(1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
 
+        $this->setAdminGroupAuthentication();
+        ob_start();
+        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
+        $data = ob_get_contents();
+        ob_end_clean();
+        $this->assertJsonStringEqualsJsonFile(
+            __DIR__ . "/fixtures/nbTransactionPerAuthorities.json",
+            $data
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided()
+    {
+        $this->createTransaction(1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id','1');
+        $this->setSuperAdminAuthentication();
+
+        ob_start();
+        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
+        $data = ob_get_contents();
+        ob_end_clean();
+        $this->assertJsonStringEqualsJsonFile(
+            __DIR__ . "/fixtures/nbTransactionPerAuthorities.json",
+            $data
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testNbCreatedActesByAuthoritiesAndMonthNoGroupProvided()
+    {
+
+        $this->createTransaction(1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id','1');
+        $this->setAdminGroupAuthentication();
+        $sql = "UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1";
+        $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);
+        ob_start();
+        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
+        $data = ob_get_contents();
+        ob_end_clean();
+        $this->assertJsonStringEqualsJsonFile(
+            __DIR__ . "/fixtures/nbTransactionPerAuthoritiesFailed.json",
+            $data
+        );
+    }
 }
