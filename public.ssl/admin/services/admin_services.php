@@ -29,13 +29,6 @@ if ($authority_id){
             WEBSITE_SSL
         );
     }
-    if(!is_numeric($authority_id)){
-        Helpers::returnAndExit(
-            1,
-            "[admin_services.php] authority_id doit être un entier, $authority_id fourni",
-            WEBSITE_SSL
-        );
-    }
 	$groupes = $serviceUser->getServiceUser($authority_id);
 }
 
