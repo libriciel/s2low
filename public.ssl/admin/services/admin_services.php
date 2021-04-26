@@ -14,7 +14,28 @@ if (count($authorities)> 1){
 
 $groupes = array();
 
-if ($authority_id){	
+if ($authority_id){
+    if(!is_numeric($authority_id)){
+        Helpers::returnAndExit(
+                1,
+            "[admin_services.php] authority_id doit être un entier, $authority_id fourni",
+            WEBSITE_SSL
+        );
+    }
+    if(!array_key_exists($authority_id,$authorities)){
+        Helpers::returnAndExit(
+            1,
+            "[admin_services.php] authorities[$authority_id] n'existe pas",
+            WEBSITE_SSL
+        );
+    }
+    if(!is_numeric($authority_id)){
+        Helpers::returnAndExit(
+            1,
+            "[admin_services.php] authority_id doit être un entier, $authority_id fourni",
+            WEBSITE_SSL
+        );
+    }
 	$groupes = $serviceUser->getServiceUser($authority_id);
 }
 
