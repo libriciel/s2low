@@ -57,7 +57,7 @@
 <?php if ($serviceEnfant) : ?>
     <h2>Groupe enfant</h2>
     <?php foreach($serviceEnfant as $enfant): ?>
-        <a href='gestion-service-content.php?id=<?php echo $enfant['id']?>'><?php echo $enfant['name']?></a>&nbsp;
+        <a href='gestion-service-content.php?id=<?php echo $enfant['id']?>'><?php hecho($enfant['name'])?></a>&nbsp;
     <?php endforeach;?>
 <?php endif;?>
 
