@@ -302,7 +302,7 @@ class HTMLLayout extends Layout {
 
       $html .= (strcmp($key, $selectedValue) == 0) ? " selected=\"selected\"" : "";
       
-      $html .= ">" . $val . "</option>\n";
+      $html .= ">" . get_hecho($val) . "</option>\n";
     }
 
     $html .= "</select>\n";

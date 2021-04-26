@@ -36,7 +36,7 @@ ob_start();?>
 	<?php if ( ! $authority_id): ?>
 	<ul>
 	<?php foreach($authorities as $id=>$name): ?>
-		<li><a href='admin_services.php?authority_id=<?php echo $id?>'><?php echo $name?></a></li>
+		<li><a href='admin_services.php?authority_id=<?php echo $id?>'><?php hecho($name)?></a></li>
 	<?php endforeach;?>
 	</ul>
 	<?php else : ?>
@@ -46,7 +46,7 @@ ob_start();?>
 
 <?php if ($authority_id) : ?>
 <h2>Liste des services <?php if(count($authorities) > 1): ?>
-(<?php echo $authorities[$authority_id]?>)
+(<?php hecho($authorities[$authority_id])?>)
 <?php endif;?></h2>
 
 <form action='add-service-user.php' method='post' class="form-horizontal">
@@ -58,7 +58,7 @@ ob_start();?>
 
 <ul>
 <?php foreach($groupes as $info) : ?>
-<li><a href='gestion-service-content.php?id=<?php echo $info['id']?>'><?php echo $info['name']?></a> </li>
+<li><a href='gestion-service-content.php?id=<?php echo $info['id']?>'><?php hecho($info['name'])?></a> </li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>
