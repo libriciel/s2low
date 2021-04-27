@@ -11,6 +11,12 @@ $mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
 $error_message = $_SESSION['last_error']??"";
 unset($_SESSION["last_error"]);
 
+if(!is_numeric($mail_emis_id)){
+    $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
+    header("Location: error.php");
+    exit;
+}
+
 $doc->DisplayHead();
 ?>
     <div class="container">
