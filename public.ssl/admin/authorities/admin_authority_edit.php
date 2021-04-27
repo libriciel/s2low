@@ -24,6 +24,14 @@ $authority = new Authority();
 
 $modStr = "Ajout";
 if (isset($id)) {
+    if(!is_numeric($id)){
+        Helpers::returnAndExit(
+                1,
+            "[admin_authority_edit.php] id doit être un entier, $id fourni",
+            WEBSITE_SSL
+        );
+
+    }
   $authority->setId($id);
   if ($authority->init()) {
     $modStr = "Modification";

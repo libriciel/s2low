@@ -1,9 +1,9 @@
 
-<h1>Gestion du service <?php echo $groupe['name'];?></h1>
+<h1>Gestion du service <?php hecho($groupe['name']);?></h1>
 
 <p id="back-admin-services-btn"><a class="btn btn-default" href='admin_services.php?authority_id=<?php echo $groupe['authority_id']?>'>Revenir à l'affichage des services</a></p>
 
-<h2>Liste des utilisateurs de <?php echo $groupe['name']?></h2>
+<h2>Liste des utilisateurs de <?php hecho($groupe['name'])?></h2>
 <div>
 
     <?php if ($users) : ?>
@@ -22,7 +22,7 @@
         </form>
         <br/>
     <?php else : ?>
-        Aucun utilisateur n'est dans le groupe <em><?php echo $groupe['name']?></em>.
+        Aucun utilisateur n'est dans le groupe <em><?php hecho($groupe['name'])?></em>.
     <?php endif;?>
     <p>Pour ajouter un utilisateur dans un groupe, allez sur la page de <a href='<?php echo WEBSITE_SSL?>/admin/users/admin_users.php'> gestion des utilisateurs</a>.
 </div>
@@ -30,9 +30,9 @@
 <h2>Groupe parent</h2>
 <div>
     <?php if ($groupe['parent_id']) : ?>
-        Le groupe parent de <?php echo $groupe['name']?> est <a href='gestion-service-content.php?id=<?php echo $groupe['parent_id']?>'><?php echo $groupe['parent_name']?></a>
+        Le groupe parent de <?php hecho($groupe['name'])?> est <a href='gestion-service-content.php?id=<?php echo $groupe['parent_id']?>'><?php hecho($groupe['parent_name'])?></a>
     <?php else :?>
-        <?php echo $groupe['name']?> n'a pas de groupe parent.
+        <?php hecho($groupe['name'])?> n'a pas de groupe parent.
     <?php endif;?>
 </div>
 <br/><br/>
@@ -45,7 +45,7 @@
                 <option value='0'>(aucun)</option>
                 <?php foreach($all_groupes as $grp) : ?>
                     <option value='<?php echo $grp['id'] ?>' <?php if ($grp['id'] == $groupe['parent_id']) echo "selected='selected'"?>>
-                        <?php echo $grp['name']?></option>
+                        <?php hecho($grp['name'])?></option>
                 <?php endforeach;?>
             </select>
         </div>
@@ -57,7 +57,7 @@
 <?php if ($serviceEnfant) : ?>
     <h2>Groupe enfant</h2>
     <?php foreach($serviceEnfant as $enfant): ?>
-        <a href='gestion-service-content.php?id=<?php echo $enfant['id']?>'><?php echo $enfant['name']?></a>&nbsp;
+        <a href='gestion-service-content.php?id=<?php echo $enfant['id']?>'><?php hecho($enfant['name'])?></a>&nbsp;
     <?php endforeach;?>
 <?php endif;?>
 
