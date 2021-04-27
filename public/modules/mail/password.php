@@ -11,12 +11,6 @@ $mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
 $error_message = $_SESSION['last_error']??"";
 unset($_SESSION["last_error"]);
 
-if(!is_numeric($mail_emis_id)){
-    $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
-    header("Location: error.php");
-    exit;
-}
-
 $doc->DisplayHead();
 ?>
     <div class="container">
@@ -37,7 +31,7 @@ $doc->DisplayHead();
 
     <div id="filtering-area" >
 
-        <form name="mailpsw" action="index.php?mail_emis_id=<?php echo $mail_emis_id;?>" method="POST" class="form-horizontal">
+        <form name="mailpsw" action="index.php?mail_emis_id=<?php hecho($mail_emis_id);?>" method="POST" class="form-horizontal">
 
             <div class="form-group">
                 <label for="mdp" class="col-md-4 control-label">Mot de passe</label>
