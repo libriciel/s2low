@@ -14,6 +14,11 @@ class MailHeader extends AbstractMailHeader implements IMailHeader
         return $this->fromMail;
     }
 
+    public function getFromEnveloppeAdressOption() : string
+    {
+        return "-f{$this->s2lowFromMail}";
+    }
+
     public function getHeader() : array
     {
         return array(

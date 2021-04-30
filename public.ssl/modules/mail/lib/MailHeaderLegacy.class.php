@@ -7,6 +7,11 @@ class MailHeaderLegacy extends AbstractMailHeader Implements IMailHeader{
         return $this->fromMail;
     }
 
+    public function getFromEnveloppeAdressOption() : string
+    {
+        return "-f{$this->fromMail}";
+    }
+
     public function getHeader() : array
     {
         return array(
