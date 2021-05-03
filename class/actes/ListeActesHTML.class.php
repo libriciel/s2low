@@ -159,7 +159,7 @@ class ListeActesHTML {
 			<option value="">Choisissez</option>
 	    	<?php foreach ($data as $key => $val) : ?>
 				<option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
-					<?php echo $val?>
+					<?php hecho($val)?>
 	      		</option>
 	  		<?php endforeach;?>
 		</select>
