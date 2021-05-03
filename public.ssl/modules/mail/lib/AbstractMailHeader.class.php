@@ -49,11 +49,6 @@ abstract class AbstractMailHeader{
         }
     }
 
-    public function getFromEnveloppeAdressOption() : string
-    {
-        return "-f{$this->fromMail}";
-    }
-
     protected function getSubject() : string
     {
         if(!isset($this->authorityName)){

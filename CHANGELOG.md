@@ -4,7 +4,7 @@
 - Ajout d'une API de statistique actes pour les admins de groupe #610
 
 ## Correction
-
+- Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 
 ## Evolution

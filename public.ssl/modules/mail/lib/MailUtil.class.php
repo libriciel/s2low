@@ -167,7 +167,7 @@ class MailUtil {
 ';
 
 	    	$htmlpart.='';
-            $htmlBody = $html . $htmlpart;
+            $htmlBody = $html . $htmlpart."</body></html>";
 
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
 			$textpart.="\nInformation de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.\n";
