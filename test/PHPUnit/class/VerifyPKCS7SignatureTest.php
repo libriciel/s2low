@@ -20,6 +20,32 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator->checkCertificate("$baseCertificatesDir/dateKo/fullchain.pem");
     }
 
+    public function testVerifyJustBeforeItsCaExpires()
+    {
+        $baseCertificatesDir =__DIR__."/fixtures/certificats";
+        $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/ac/");
+
+        $this->assertTrue(
+            $verificator->checkCertificate(
+                "$baseCertificatesDir/dateOk/fullchain.pem",
+                mktime(14,00,55,06,11,2025)
+            )
+        );
+    }
+
+    public function testVerifyJustAfterItsCaExpires()
+    {
+        $baseCertificatesDir =__DIR__."/fixtures/certificats";
+        $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/ac/");
+
+        $this->assertTrue(
+            $verificator->checkCertificate(
+                "$baseCertificatesDir/dateOk/fullchain.pem",
+                mktime(14,00,57,06,11,2025)
+            )
+        );
+    }
+
     public function testVerifyARevokedCertificate()
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";

@@ -100,8 +100,8 @@ class VerifyPKCS7Signature {
 	}
 
 
-	public function checkCertificate($certificate_path) {
-        $erreurs =  $this->analyseCertificate($certificate_path);
+	public function checkCertificate($certificate_path, string $date =null) {
+        $erreurs =  $this->analyseCertificate($certificate_path,$date);
         if(!empty($erreurs)){
             throw new Exception($erreurs[0]["message"]);
         }
@@ -131,10 +131,15 @@ class VerifyPKCS7Signature {
      * @return array
      * @throws Exception
      */
-    private function analyseCertificate($certificate_path): array
+    private function analyseCertificate($certificate_path, string $date =null): array
     {
         $erreurs = [];
         $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
+
+        if($date){
+            $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -attime $date -crl_check $certificate_path 2>&1";
+        }
+
         exec($verifyCmd, $out, $ret);
 
         foreach ($out as $line) {
