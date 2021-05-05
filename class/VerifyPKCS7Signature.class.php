@@ -108,8 +108,8 @@ class VerifyPKCS7Signature {
         return true;
     }
 
-	public function checkCertificateWithoutCheckingCertificateChain($certificate_path){
-        $erreurs =  $this->analyseCertificate($certificate_path);
+	public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $date =null){
+        $erreurs =  $this->analyseCertificate($certificate_path,$date);
 
         foreach ($erreurs as $key=>$erreur){
             if(in_array($erreur["errorCode"],$this::CERTIFICATE_CHAIN_ERRORS)){

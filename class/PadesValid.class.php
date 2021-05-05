@@ -119,7 +119,10 @@ class PadesValid {
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
         file_put_contents($certificate_path,$signature->pemCertificate);
         try {
-            $this->verifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain($certificate_path);
+            $this->verifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain(
+                $certificate_path,
+                $signature->signatureDate / 1000
+            );
         } catch (Exception $e){
             unlink($certificate_path);
             throw $e;
