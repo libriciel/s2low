@@ -108,8 +108,8 @@ class VerifyPKCS7Signature {
         return true;
     }
 
-	public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $date =null){
-        $erreurs =  $this->analyseCertificate($certificate_path,$date);
+	public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $timestamp =null){
+        $erreurs =  $this->analyseCertificate($certificate_path,$timestamp);
 
         foreach ($erreurs as $key=>$erreur){
             if(in_array($erreur["errorCode"],$this::CERTIFICATE_CHAIN_ERRORS)){
@@ -131,13 +131,13 @@ class VerifyPKCS7Signature {
      * @return array
      * @throws Exception
      */
-    private function analyseCertificate($certificate_path, string $date =null): array
+    private function analyseCertificate($certificate_path, string $timestamp =null): array
     {
         $erreurs = [];
         $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
 
-        if($date){
-            $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -attime $date -crl_check $certificate_path 2>&1";
+        if($timestamp){
+            $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -attime $timestamp -crl_check $certificate_path 2>&1";
         }
 
         exec($verifyCmd, $out, $ret);
@@ -168,13 +168,19 @@ class VerifyPKCS7Signature {
 
             $dateValidFrom = new DateTime(date(DATE_RFC2822, $x509_info['validFrom_time_t']));
             $dateValidTo = new DateTime(date(DATE_RFC2822, $x509_info['validTo_time_t']));
-            $dateNow = new DateTime('NOW');
+            $dateSignature = new DateTime("NOW");
 
-            if ($dateNow < $dateValidFrom || $dateNow > $dateValidTo) {
+            if(!is_null($timestamp)){
+                $dateSignature->setTimestamp($timestamp);
+            }
+
+            if ($dateSignature < $dateValidFrom || $dateSignature > $dateValidTo) {
                 $erreurs[] = [
                     "errorCode"=>10,
                     "depth"=>0,
-                    "message"=>"certificate has expired"
+                    "message"=>"La date de la signature ".$dateSignature->format("d-M-Y H:i:s") .
+                        " n'entre pas dans la date de validité du certificat ".
+                        $dateValidFrom->format("d-M-Y H:i:s")." - ".$dateValidTo->format("d-M-Y H:i:s")
                 ];
             }
         }

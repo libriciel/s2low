@@ -121,7 +121,7 @@ class PadesValid {
         try {
             $this->verifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain(
                 $certificate_path,
-                $signature->signatureDate / 1000
+                $this->getTimestampFromSignature($signature)
             );
         } catch (Exception $e){
             unlink($certificate_path);
@@ -150,7 +150,7 @@ class PadesValid {
 
 		$x509_info = openssl_x509_parse($signature->pemCertificate);
 
-		$signatureDate = floor($signature->signatureDate / 1000);
+		$signatureDate = $this->getTimestampFromSignature($signature);
 
 		if ($signatureDate < $x509_info['validFrom_time_t'] ||
 			$signatureDate > $x509_info['validTo_time_t']
@@ -168,6 +168,15 @@ class PadesValid {
 		$signing_cert = implode("\n",str_split($signature->signingCert,78));
 		return $beginpem.$signing_cert.$endpem;
 	}
+
+    /**
+     * @param $signature
+     * @return false|float
+     */
+    private function getTimestampFromSignature($signature)
+    {
+        return floor($signature->signatureDate / 1000);
+    }
 
 
 }
