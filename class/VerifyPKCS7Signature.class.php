@@ -100,8 +100,8 @@ class VerifyPKCS7Signature {
 	}
 
 
-	public function checkCertificate($certificate_path, string $date =null) {
-        $erreurs =  $this->analyseCertificate($certificate_path,$date);
+	public function checkCertificate($certificate_path) {
+        $erreurs =  $this->analyseCertificate($certificate_path);
         if(!empty($erreurs)){
             throw new Exception($erreurs[0]["message"]);
         }

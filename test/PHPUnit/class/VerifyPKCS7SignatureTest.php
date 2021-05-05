@@ -20,15 +20,19 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $verificator->checkCertificate("$baseCertificatesDir/dateKo/fullchain.pem");
     }
 
+# Le point limitant de la date de validité de chaine de certification est le myCA.pem, avec
+# Not After : Jun 11 14:00:56 2025 GMT
+# En juin, heure d'été => GMT+02:00
+
     public function testVerifyJustBeforeItsCaExpires()
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/ac/");
 
         $this->assertTrue(
-            $verificator->checkCertificate(
+            $verificator->checkCertificateWithoutCheckingCertificateChain(
                 "$baseCertificatesDir/dateOk/fullchain.pem",
-                mktime(14,00,55,06,11,2025)
+                mktime(16,00,55,06,11,2025)
             )
         );
     }
@@ -38,11 +42,12 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
         $verificator = new VerifyPKCS7Signature("$baseCertificatesDir/dateOk/ac/");
 
-        $this->assertTrue(
-            $verificator->checkCertificate(
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/certificate has expired/");
+
+        $verificator->checkCertificateWithoutCheckingCertificateChain(
                 "$baseCertificatesDir/dateOk/fullchain.pem",
-                mktime(14,00,57,06,11,2025)
-            )
+                mktime(16,00,57,06,11,2025)
         );
     }
 
