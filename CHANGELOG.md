@@ -2,13 +2,13 @@
 
 ## Évolution
 - Ajout d'une API de statistique actes pour les admins de groupe #610
+- Prise en compte de la version 5.14 du schema XSD Pes Aller #696
+- Prise en compte de la date de la signature lors de la validation du certificat associé pour les actes #486
 
 ## Correction
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 
-## Evolution
-- Prise en compte de la version 5.14 du schema XSD Pes Aller #696
 # 4.3.8 - 2021 04 07
 
 ## Correction
