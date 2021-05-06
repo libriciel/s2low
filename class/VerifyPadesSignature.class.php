@@ -6,8 +6,11 @@ class VerifyPadesSignature
     /** @var VerifyPemCertificate  */
     private $verifyPemCertificate;
 
-    public function __construct($verifyPemCertificate){
-        $this->verifyPemCertificate = $verifyPemCertificate;
+    public function __construct(
+        $rgs_validca_path,
+        VerifyPemCertificateFactory $verifyPemCertificateFactory)
+    {
+        $this->verifyPemCertificate = $verifyPemCertificateFactory->get($rgs_validca_path);
     }
 
     /**

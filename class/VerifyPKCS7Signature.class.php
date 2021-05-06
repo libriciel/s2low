@@ -1,11 +1,8 @@
 <?php
 class VerifyPKCS7Signature {
 
-	private $authorized_ca_path;
-
-	public function __construct($authorized_ca_path){
-		$this->authorized_ca_path = $authorized_ca_path;
-        $this->verifyPemCertificate = new VerifyPemCertificate($authorized_ca_path);       //TODO : use injection
+	public function __construct($authorized_ca_path, VerifyPemCertificateFactory $verifyPemCertificateFactory){
+        $this->verifyPemCertificate = $verifyPemCertificateFactory->get($authorized_ca_path);
 	}
 
 	public function verify($file_path,$signature){

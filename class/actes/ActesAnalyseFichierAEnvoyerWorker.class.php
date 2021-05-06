@@ -160,11 +160,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         }
     }
 
-	/**
-	 * @param $filepath
-	 * @throws RecoverableException
-	 * @throws Exception
-	 */
+    /**
+     * @param $filepath
+     * @param $must_validate_certificate
+     * @throws \RecoverableException
+     */
     private function validatePADESOneFile($filepath, $must_validate_certificate){
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filepath);
@@ -173,12 +173,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
             return;
         }
         try {
-        	if ($must_validate_certificate){
-				$this->padesValid->validate($filepath);
-        	} else {
-				$this->padesValid->validateWithoutCertificateChecking($filepath);
-        	}
-
+            $this->padesValid->validate($filepath,$must_validate_certificate);
 		} catch(RecoverableException $e){
         	throw $e;
 		} catch (Exception $e){

@@ -3,7 +3,6 @@
 class PadesValid {
 
     private $pades_valid_url;
-    private $rgs_validca_path;
 
 
     /** @var  VerifyPadesSignature */
@@ -14,15 +13,13 @@ class PadesValid {
     /** @var CurlWrapperFactory */
     private $curlWrapperFactory;
 
-    public function __construct($pades_valid_url, $rgs_validca_path) {
+    public function __construct($pades_valid_url,
+                                CurlWrapperFactory $curlWrapperFactory,
+                                VerifyPadesSignature $verifyPadesSignature
+    ) {
         $this->pades_valid_url = $pades_valid_url;
-        $this->rgs_validca_path = $rgs_validca_path;
-        $this->setCurlWrapperFactory(new CurlWrapperFactory());
-        $this->setVerifyPadesSignature(new VerifyPadesSignature(new VerifyPemCertificate($this->rgs_validca_path)));
-    }
-
-    public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
         $this->curlWrapperFactory = $curlWrapperFactory;
+        $this->verifyPadesSignature = $verifyPadesSignature;
     }
 
     public function setVerifyPadesSignature(VerifyPadesSignature $verifyPadesSignature){
@@ -33,26 +30,15 @@ class PadesValid {
         return $this->last_result;
     }
 
-	/**
-	 * @param $filepath
-	 * @return bool|mixed
-	 * @throws Exception
-	 * @throws RecoverableException
-     * @deprecated
-	 */
-	//TODO A Supprimer
-    public function validateWithoutCertificateChecking($filepath){
-		return $this->validate($filepath,false);
-	}
-
-
     /**
      * @param $filepath
      * @param bool $certificateChecking
      * @return bool
      * @throws RecoverableException
+     * @throws \Exception
      */
-    public function validate($filepath,$certificateChecking=true){
+    public function validate(string $filepath, bool $certificateChecking=true) : bool
+    {
     	$result = $this->getPadesValidResult($filepath);
     	if ($result === false){
     		return false;
