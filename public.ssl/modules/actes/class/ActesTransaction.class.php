@@ -936,7 +936,10 @@ class ActesTransaction extends DataObject {
 
         if (isset ($actesItems->Document->Signature)) {
         	try {
-        		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH);
+        		$verifyPKCS7Signature = new VerifyPKCS7Signature(
+        		    RGS_VALIDCA_PATH,
+                    new VerifyPemCertificateFactory()
+                );
         		$verifyPKCS7Signature->verify($this->rootDir."/".$actePath, $actesItems->Document->Signature);
         	} catch(Exception $e){
         		$this->errorMsg = $e->getMessage();
