@@ -203,7 +203,9 @@ class XadesSignature {
 			$element = $element[0];
 			$name = $element->getName();
 
-            $signingTime = $this->xadesSignatureParser->extractSigningTime($xml,strval($id));
+			// On convertit le temps UMT du Xml à l'heure de Paris.
+            // Peut poser problème en outre mer ?
+            $signingTime = $this->xadesSignatureParser->extractXadesSigningTime($xml,strval($id));
 
 			if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
 				return false;
@@ -234,10 +236,8 @@ class XadesSignature {
 
 			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
 
-            $signingTimestamp = $this->xadesSignatureParser->extractSigningTimeTimestamp($xml,strval($id));
-
-            if($signingTimestamp){
-                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime $signingTime -crl_check $file ";
+            if(!is_null($signingTime)){
+                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime ".$signingTime->getTimestamp()." -crl_check $file ";
             }
 
 			exec($command,$output,$return_var);
@@ -253,11 +253,14 @@ class XadesSignature {
 		return true;
 	}
 
-	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,$verificationTime = null) {
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null) {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 		$command = "export SSL_CERT_DIR=/etc/s2low/ssl/validca && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
-        if($verificationTime){
-            $command = "export SSL_CERT_DIR=/etc/s2low/ssl/validca && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --verification-time \"$verificationTime\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        if(!is_null($verificationTime)){
+            $verificationTimeString=$verificationTime
+                ->setTimezone(new DateTimeZone('Europe/Paris'))
+                ->format("Y-m-d G:i:s");
+            $command = "export SSL_CERT_DIR=/etc/s2low/ssl/validca && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --verification-time \"".$verificationTimeString."\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
         }
 		exec($command,$output,$return_var);
 		$this->last_output = implode("\n",$output);
