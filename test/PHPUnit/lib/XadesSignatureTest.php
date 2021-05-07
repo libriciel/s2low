@@ -25,7 +25,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 			XMLSEC1_PATH,
 			new PKCS12(),
 			new X509Certificate(),
-			__DIR__ . "/fixtures/validca/"
+			__DIR__ . "/fixtures/validca/",
+            new XadesSignatureParser()
 		);
 		return $xadesSignature;
 	}

@@ -16,11 +16,12 @@ class XadesSignature {
 
 	private $last_output;
 
-	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path) {
+	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
 		$this->validca_path = $validca_path;
+		$this->xadesSignatureParser = $xadesSignatureParser;
 	}
 
 	public function getLastOutput(){
@@ -228,7 +229,14 @@ class XadesSignature {
 				continue;
 			}
 
+			$signingTimestamp = $this->xadesSignatureParser->extractSigningTime($xml,$id);          //TODO : vérifier id=ok (pas strval)
+
 			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
+
+            if($signingTimestamp){
+                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime $signingTimestamp -crl_check $file ";
+            }
+
 			exec($command,$output,$return_var);
 
 			$this->last_output = implode("\n",$output);
