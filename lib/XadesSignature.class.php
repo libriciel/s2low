@@ -202,7 +202,10 @@ class XadesSignature {
 			}
 			$element = $element[0];
 			$name = $element->getName();
-			if (!$this->verifyIntern($xml_file_signed, $name, $id)) {
+
+            $signingTime = $this->xadesSignatureParser->extractSigningTime($xml,strval($id));
+
+			if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
 				return false;
 			}
 
@@ -229,12 +232,12 @@ class XadesSignature {
 				continue;
 			}
 
-			$signingTimestamp = $this->xadesSignatureParser->extractSigningTime($xml,$id);          //TODO : vérifier id=ok (pas strval)
-
 			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
 
+            $signingTimestamp = $this->xadesSignatureParser->extractSigningTimeTimestamp($xml,strval($id));
+
             if($signingTimestamp){
-                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime $signingTimestamp -crl_check $file ";
+                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime $signingTime -crl_check $file ";
             }
 
 			exec($command,$output,$return_var);
@@ -250,9 +253,12 @@ class XadesSignature {
 		return true;
 	}
 
-	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id) {
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,$verificationTime = null) {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
-		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+		$command = "export SSL_CERT_DIR=/etc/s2low/ssl/validca && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        if($verificationTime){
+            $command = "export SSL_CERT_DIR=/etc/s2low/ssl/validca && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --verification-time \"$verificationTime\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        }
 		exec($command,$output,$return_var);
 		$this->last_output = implode("\n",$output);
 		return $return_var == 0;
