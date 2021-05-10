@@ -127,15 +127,4 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$xadesSignature->deleteSignature($file,$result);
 		$this->assertFalse($xadesSignature->isSigned($result));
 	}
-
-	// TODO : trouver un PES KO ajd mais ok dans le passé ?
-    // Ou wrapper les fonctions nécessaires pour le test...
-	/*public function testVerify(){
-        $xadesSignature = $this->getXadesSignature();
-	    $this->assertTrue($xadesSignature->verify(__DIR__.'/fixtures/signe_PESALR1-26850128500020-085014-20200526113248141.xml'));
-    }*/
-
-
-
-
 }
