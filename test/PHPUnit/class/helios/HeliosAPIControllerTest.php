@@ -17,7 +17,7 @@ class HeliosAPIControllerTest extends S2lowTestCase
      */
    private function createTransaction(){
        $transaction_id = $this->createTransactionTrait();
-       $sql = "UPDATE helios_transactions SET submission_date='2017-07-14' WHERE id=?";
+       $sql = "UPDATE helios_transactions SET submission_date='2017-07-31T00:00:01' WHERE id=?";
        $this->getSQLQuery()->query($sql,$transaction_id);
        return $transaction_id;
    }

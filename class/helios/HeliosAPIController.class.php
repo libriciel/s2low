@@ -24,7 +24,7 @@ class HeliosAPIController extends Controller {
         }
 
         if (! $authority_group_id){
-            echo json_encode(["result" => "ko","message"=> "Authorities is not in a group or no group_id provided"]);
+            echo json_encode(["result" => "ko","message"=> "Your authority is not in a group or no group_id provided"]);
             return false;
         }
 
@@ -39,7 +39,7 @@ class HeliosAPIController extends Controller {
         $nbTransactionPerAuthorities = $this->getHeliosTransactionsSQL()->getNbPesAllerByAuthorityGroupIdBetweenDate(
             $authority_group_id,
             $min_date,
-            $max_date
+            $max_date."T23:59:59"
         );
         $result = [
             "result" => "ok",
