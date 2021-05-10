@@ -127,4 +127,37 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$xadesSignature->deleteSignature($file,$result);
 		$this->assertFalse($xadesSignature->isSigned($result));
 	}
+    /** @dataProvider datesProvider */
+
+    public function testDateEffect(DateTime $dateTime, bool $expected)
+    {
+        $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $xadesSignatureParser->method("extractXadesSigningTime")
+            ->willReturn($dateTime);
+
+        $xadesSignature = new XadesSignature(
+            XMLSEC1_PATH,
+            new PKCS12(),
+            new X509Certificate(),
+            __DIR__ . "/fixtures/validca/",
+            $xadesSignatureParser
+        );
+
+        $this->assertEquals(
+            $expected,
+            $xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau.xml")
+        );
+    }
+
+    public function datesProvider(){
+        return [
+            // Date de vérification                  validité attendue
+            [new DateTime("2012-11-05T11:33:13Z"),false],    // Limite basse du certificat AC_ADULLACT_ROOT_G3
+            [new DateTime("2016-11-07T11:03:01Z"),true],     // Date de la signature
+            [new DateTime("2022-11-05T11:33:15Z"),false]     // Limite haute du certificat AC_ADULLACT_ROOT_G3
+        ];
+    }
 }
