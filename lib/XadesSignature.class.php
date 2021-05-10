@@ -15,8 +15,10 @@ class XadesSignature {
 	private $validca_path;
 
 	private $last_output;
+	/** @var \XadesSignatureParser  */
+    private $xadesSignatureParser;
 
-	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
+    public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;

@@ -22,7 +22,13 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
 	$pes_aller = HELIOS_FILES_UPLOAD_ROOT."/{$transaction_helios['sha1']}";
 	echo "Analyse du fichier : $pes_aller\n";
 
-	$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate(),EXTENDED_VALIDCA_PATH);
+	$xadesSignature = new XadesSignature(
+	    XMLSEC1_PATH,
+        new PKCS12(),
+        new X509Certificate(),
+        EXTENDED_VALIDCA_PATH,
+        new XadesSignatureParser()
+    );
 
 	if (! $xadesSignature->isSigned($pes_aller)){
 		echo "Le fichier n'est pas signé\n";

@@ -32,7 +32,12 @@ $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 $r = $heliosPESValidation->validate($pes_content);
 
 
-$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate(),EXTENDED_VALIDCA_PATH);
+$xadesSignature = new XadesSignature(
+        XMLSEC1_PATH,
+        new PKCS12(),
+        new X509Certificate(),
+        EXTENDED_VALIDCA_PATH,
+        new XadesSignatureParser());
 $verify_sign =  $xadesSignature->verify($filename);
 $xades_output = $xadesSignature->getLastOutput();
 
