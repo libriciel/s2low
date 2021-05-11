@@ -114,7 +114,7 @@ class ActesAPIController extends Controller {
         $nbTransactionPerAuthorities = $this->getActesTransactionsSQL()->getNbActesByAuthorityGroupIdBeetweenDate(
             $authority_group_id,
             $min_date,
-            $max_date
+            $max_date."T23:59:59"
         );
         $result = [
             "result" => "ok",
