@@ -19,8 +19,8 @@ class VerifyPadesSignature
      */
     public function validateSignatureWithoutCertificateChecking($signature): void
     {
-        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
         $this->checkNecessaryFields($signature);
+        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
         $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
         $this->checkCertificateWasValidAtSignatureTime($signature->x509_info, $signature);
     }
@@ -79,7 +79,6 @@ class VerifyPadesSignature
      */
     private function checkCertificateWasValidAtSignatureTime($x509_info, $signature){
         $signatureDate = $this->getTimestampFromSignature($signature);
-
         if ($signatureDate < $x509_info['validFrom_time_t'] ||
             $signatureDate > $x509_info['validTo_time_t']
         ) {

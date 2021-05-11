@@ -37,8 +37,6 @@ class PadesValidTest extends S2lowTestCase {
 
         $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
 
-        $padesValid->setVerifyPadesSignature($verifyPadesSignatureMock);
-
         return $padesValid;
     }
 
@@ -87,7 +85,6 @@ class PadesValidTest extends S2lowTestCase {
         }
 
         $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
-        $padesValid->setVerifyPadesSignature($verifyPadesSignatureMock);
 
         return $padesValid;
     }
@@ -104,12 +101,6 @@ class PadesValidTest extends S2lowTestCase {
         $lastHttpCode = "";
 
         $padesValid = $this->createPadesValidForExceptions($returnString, $lastHttpCode, $lastError, $lastOutput);
-
-        $verifyPadesSignatureMock = $this->getMockBuilder(VerifyPadesSignature::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $padesValid->setVerifyPadesSignature($verifyPadesSignatureMock);
 
         $this->assertFalse(
             $padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf")
