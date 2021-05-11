@@ -78,9 +78,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
     // checkCertificateWasValidAtSignatureTime
 
-    /**
-     * @doesNotPerformAssertions
-     */
     public function testCertificateWasValidOnSignature(){
         $this->verifyPemCertificate
             ->method("parsePemCertificate")
@@ -89,6 +86,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
                 "validTo_time_t"=>1502268601
             ]);
 
+        $this->expectNotToPerformAssertions();
         $this->verifyPadesSignature->validateSignature($this->getSignature());
     }
 
