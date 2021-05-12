@@ -103,7 +103,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("La date de la signature 1502268600000 n'entre pas dans la date de validité du certitficat 0 - 0");
-        $this->verifyPadesSignature->validateSignature($this->getSignature());
+        $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($this->getSignature());
     }
 
     // Check checkCertificateWithoutCheckingCertificateChain est

@@ -31,7 +31,9 @@ class VerifyPadesSignature
      */
     public function validateSignature($signature): void
     {
-        $this->validateSignatureWithoutCertificateChecking($signature);
+        $this->checkNecessaryFields($signature);
+        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
+        $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
         $this->validateCertificateFomSignature(
             $signature->pemCertificate,
             $this->getTimestampFromSignature($signature)
