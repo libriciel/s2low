@@ -22,7 +22,11 @@ class VerifyPadesSignature
         $this->checkNecessaryFields($signature);
         $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
         $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
-        $this->checkCertificateWasValidAtSignatureTime($signature->x509_info, $signature);
+        $this->verifyPemCertificate->checkCertificateIsValidAtDate(
+            $this->getTimestampFromSignature($signature),
+            $signature->x509_info['validFrom_time_t'],
+            $signature->x509_info['validTo_time_t']
+        );
     }
 
     /**
@@ -34,6 +38,11 @@ class VerifyPadesSignature
         $this->checkNecessaryFields($signature);
         $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
         $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
+        $this->verifyPemCertificate->checkCertificateIsValidAtDate(
+            $this->getTimestampFromSignature($signature),
+            $signature->x509_info['validFrom_time_t'],
+            $signature->x509_info['validTo_time_t']
+        );
         $this->validateCertificateFomSignature(
             $signature->pemCertificate,
             $this->getTimestampFromSignature($signature)
@@ -70,22 +79,6 @@ class VerifyPadesSignature
         };
         if (empty($signature->signatureDate)){
             throw new Exception("Impossible de determiner la date de la signature");
-        }
-    }
-
-    /**
-     * @param $x509_info
-     * @param $signature
-     * @return void
-     * @throws Exception
-     */
-    private function checkCertificateWasValidAtSignatureTime($x509_info, $signature){
-        $signatureDate = $this->getTimestampFromSignature($signature);
-        if ($signatureDate < $x509_info['validFrom_time_t'] ||
-            $signatureDate > $x509_info['validTo_time_t']
-        ) {
-            throw new Exception("La date de la signature {$signature->signatureDate}" .
-                " n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
         }
     }
 

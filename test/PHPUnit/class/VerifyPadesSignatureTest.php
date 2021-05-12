@@ -98,11 +98,14 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->method("parsePemCertificate")
             ->willReturn([
                 "validFrom_time_t"=>0,
-                "validTo_time_t"=>0
+                "validTo_time_t"=>1000000000000000000
             ]);
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("La date de la signature 1502268600000 n'entre pas dans la date de validité du certitficat 0 - 0");
+        $this->verifyPemCertificate
+            ->expects($this->once())
+            ->method('checkCertificateIsValidAtDate')
+            ->with(1502268600,0,1000000000000000000);
+
         $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($this->getSignature());
     }
 

@@ -61,7 +61,7 @@ class VerifyPemCertificate
         return $erreurs;
     }
 
-    private function checkCertificateIsValidAtDate( $date, $dateValidFrom, $dateValidTo){
+    public function checkCertificateIsValidAtDate( $date, $dateValidFrom, $dateValidTo){
         if ($date < $dateValidFrom || $date > $dateValidTo) {
             throw new Exception("La date de la signature ".$date->format("d-M-Y H:i:s") .
                         " n'entre pas dans la date de validité du certificat ".
