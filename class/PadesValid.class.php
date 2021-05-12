@@ -22,10 +22,6 @@ class PadesValid {
         $this->verifyPadesSignature = $verifyPadesSignature;
     }
 
-    public function setVerifyPadesSignature(VerifyPadesSignature $verifyPadesSignature){
-        $this->verifyPadesSignature = $verifyPadesSignature;
-    }
-
     public function getLastResult(){
         return $this->last_result;
     }
