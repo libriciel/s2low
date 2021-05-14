@@ -30,8 +30,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
+            $verificator->checkCertificate(
                 self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
                 mktime(16,00,55,06,11,2025)
             )
         );
@@ -44,8 +45,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate has expired/");
 
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
+        $verificator->checkCertificate(
             self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
             mktime(16,00,57,06,11,2025)
         );
     }
@@ -94,8 +96,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
+            $verificator->checkCertificate(
+                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
             )
         );
     }
@@ -106,8 +109,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate has expired/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem"
+        $verificator->checkCertificate(
+            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem",
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
     }
 
@@ -117,8 +121,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate revoked/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
+        $verificator->checkCertificate(
+            self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
     }
 
@@ -129,8 +134,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         );
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
+            $verificator->checkCertificate(
+                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
             )
         );
     }
@@ -141,8 +147,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem"
+        $verificator->checkCertificate(
+            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem",
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
     }
 
@@ -153,8 +160,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         );
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem"
+            $verificator->checkCertificate(
+                self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem",
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
             )
         );
     }
@@ -167,8 +175,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR . "/autosignedDateKo/cert.pem"
+        $verificator->checkCertificate(
+            self::BASE_CERTIFICATES_DIR . "/autosignedDateKo/cert.pem",
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
     }
 

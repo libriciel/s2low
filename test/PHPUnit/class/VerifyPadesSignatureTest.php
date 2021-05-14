@@ -185,7 +185,11 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->verifyPemCertificateMock
             ->expects($this->once())
-            ->method("checkCertificateWithoutCheckingCertificateChain");
+            ->method("checkCertificate")
+            ->with($this->stringContains(
+                "/s2low_valid_certifcate_"),
+                $this->equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
+            );
 
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
@@ -216,7 +220,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ]);
 
         $this->verifyPemCertificateMock
-            ->method("checkCertificateWithoutCheckingCertificateChain")
+            ->method("checkCertificate")
             ->willThrowException(new Exception("Exception de test LahgnjCM"));
 
         $this->expectException(Exception::class);

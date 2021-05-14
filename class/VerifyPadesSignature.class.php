@@ -58,8 +58,9 @@ class VerifyPadesSignature
         $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
         file_put_contents($certificate_path,$certificateContent);
         try {
-            $this->verifyPemCertificate->checkCertificateWithoutCheckingCertificateChain(
+            $this->verifyPemCertificate->checkCertificate(
             $certificate_path,
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
             $signatureTimestamp
             );
         } catch (Exception $e){

@@ -68,7 +68,10 @@ class VerifyPKCS7Signature {
 		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
 		file_put_contents($certificate_path, $certificate);
 		try {
-			$this->verifyPemCertificate->checkCertificateWithoutCheckingCertificateChain($certificate_path);
+			$this->verifyPemCertificate->checkCertificate(
+			    $certificate_path,
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
+            );
 		} finally {
 			unlink($signature_path);
 			unlink($certificate_path);
