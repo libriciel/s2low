@@ -48,7 +48,7 @@ class VerifyPKCS7Signature {
 		if ($result === false){
 			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
 		}
-		$this->verifyPemCertificate->checkCertificate($certificate_file);
+		$this->verifyPemCertificate->checkCertificateWithOpenSSL($certificate_file);
 		# On ne va pas vérifier le certificat (option -noverify)
         # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
@@ -68,7 +68,7 @@ class VerifyPKCS7Signature {
 		$certificate_path = "/tmp/s2low_verify_pkcs7_".mt_rand(0,getrandmax());
 		file_put_contents($certificate_path, $certificate);
 		try {
-			$this->verifyPemCertificate->checkCertificate(
+			$this->verifyPemCertificate->checkCertificateWithOpenSSL(
 			    $certificate_path,
                 VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
             );

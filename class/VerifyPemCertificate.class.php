@@ -69,11 +69,7 @@ class VerifyPemCertificate
         }
     }
 
-    public function checkCertificateWithoutCheckingCertificateChain($certificate_path, string $timestamp =null){
-        return $this->checkCertificate($certificate_path, $timestamp,$this::CERTIFICATE_CHAIN_ERRORS);
-    }
-
-    public function checkCertificate($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
+    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
     {
         $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
 
