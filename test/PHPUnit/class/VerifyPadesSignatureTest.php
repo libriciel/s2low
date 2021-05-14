@@ -14,6 +14,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     private $verifyPadesSignatureWithMock;
     /** @var \VerifyPadesSignature  */
     private $verifyPadesSignature;
+    /**
+     * @var \PemCertificate|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $pemCertificateMock;
 
     private function getSignature(
         bool $valid=true,
@@ -42,16 +46,29 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $verifyPemCertificateFactoryMock->method('get')->willReturn($this->verifyPemCertificateMock);
 
+        $this->pemCertificateMock = $this->getMockBuilder(PemCertificate::class)
+            ->disableOriginalConstructor()
+            ->getMock();    
+            
+        $pemCertificateFactoryMock = $this->getMockBuilder(PemCertificateFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pemCertificateFactoryMock->method('getFromMinimalString')
+            ->willReturn($this->pemCertificateMock);
+
         $this->verifyPadesSignatureWithMock = new VerifyPadesSignature(
             "pathToValidCA",
-            $verifyPemCertificateFactoryMock
+            $verifyPemCertificateFactoryMock,
+            $pemCertificateFactoryMock
         );
 
         $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 
         $this->verifyPadesSignature = new VerifyPadesSignature(
             __DIR__."/../lib/fixtures/validca/",
-            $verifyPemCertificateFactory
+            $verifyPemCertificateFactory,
+            new PemCertificateFactory()
         );
 
     }
@@ -141,13 +158,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     // checkCertificateWasValidAtSignatureTime
 
     public function testCertificateWasValidOnSignature(){
-        $this->verifyPemCertificateMock
-            ->method("parsePemCertificate")
-            ->willReturn([
-                "validFrom_time_t"=>1502268599,
-                "validTo_time_t"=>1502268601
-            ]);
-
         $this->expectNotToPerformAssertions();
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
@@ -156,18 +166,23 @@ class VerifyPadesSignatureTest extends S2lowTestCase
      * @throws Exception
      */
     public function testCertificateWasInvalidOnSignature(){
-        $this->verifyPemCertificateMock
-            ->method("parsePemCertificate")
-            ->willReturn([
-                "validFrom_time_t"=>0,
-                "validTo_time_t"=>1000000000000000000
-            ]);
-
-        $this->verifyPemCertificateMock
+        $this->pemCertificateMock
             ->expects($this->once())
             ->method('checkCertificateIsValidAtDate')
-            ->with(1502268600,0,1000000000000000000);
+            ->with(1502268600);
 
+        $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testCertificateDateInvalidGoesThrough(){
+        $this->pemCertificateMock
+            ->method('checkCertificateIsValidAtDate')
+            ->willThrowException(new Exception("CkSugdE3ETSh9xhQ"));
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("CkSugdE3ETSh9xhQ");
         $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
     }
 
@@ -176,13 +191,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     //  - pas appelé par validateSignatureWithoutCertificateChecking
 
     public function testcheckCertificateWithoutCheckingCertificateChainIsCalled(){
-        $this->verifyPemCertificateMock
-            ->method("parsePemCertificate")
-            ->willReturn([
-                "validFrom_time_t"=>1502268599,
-                "validTo_time_t"=>1502268601
-            ]);
-
         $this->verifyPemCertificateMock
             ->expects($this->once())
             ->method("checkCertificate")
@@ -194,17 +202,12 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
 
-    public function testcheckCertificateWithoutCheckingCertificateChainIsNotCalled(){
-        $this->verifyPemCertificateMock
-            ->method("parsePemCertificate")
-            ->willReturn([
-                "validFrom_time_t"=>1502268599,
-                "validTo_time_t"=>1502268601
-            ]);
+
+    public function testCheckCertificateWithOpenSSLIsNotCalled(){
 
         $this->verifyPemCertificateMock
             ->expects($this->never())
-            ->method("checkCertificateWithoutCheckingCertificateChain");
+            ->method("checkCertificateWithOpenSSL");
 
         $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
     }
@@ -212,13 +215,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     // Test que l'exception lancée par checkCertificateWithoutCheckingCertificateChain passe le cas échéant
 
     public function testcheckCertificateWithoutCheckingCertificateChainExceptionGoesThrough(){
-        $this->verifyPemCertificateMock
-            ->method("parsePemCertificate")
-            ->willReturn([
-                "validFrom_time_t"=>1502268599,
-                "validTo_time_t"=>1502268601
-            ]);
-
         $this->verifyPemCertificateMock
             ->method("checkCertificate")
             ->willThrowException(new Exception("Exception de test LahgnjCM"));

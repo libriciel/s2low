@@ -5,12 +5,17 @@ class VerifyPadesSignature
 {
     /** @var VerifyPemCertificate  */
     private $verifyPemCertificate;
+    /** @var \PemCertificateFactory  */
+    private $pemCertificateFactory;
 
     public function __construct(
         $rgs_validca_path,
-        VerifyPemCertificateFactory $verifyPemCertificateFactory)
+        VerifyPemCertificateFactory $verifyPemCertificateFactory,
+        PemCertificateFactory $pemCertificateFactory
+    )
     {
         $this->verifyPemCertificate = $verifyPemCertificateFactory->get($rgs_validca_path);
+        $this->pemCertificateFactory = $pemCertificateFactory;
     }
 
     /**
@@ -20,12 +25,10 @@ class VerifyPadesSignature
     public function validateSignatureWithoutCertificateChecking($signature): void
     {
         $this->checkNecessaryFields($signature);
-        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
-        $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
-        $this->verifyPemCertificate->checkCertificateIsValidAtDate(
-            $this->getTimestampFromSignature($signature),
-            $signature->x509_info['validFrom_time_t'],
-            $signature->x509_info['validTo_time_t']
+        $this->pemCertificateFactory
+            ->getFromMinimalString($signature->signingCert)
+            ->checkCertificateIsValidAtDate(
+                $this->getTimestampFromSignature($signature)
         );
     }
 
@@ -36,15 +39,12 @@ class VerifyPadesSignature
     public function validateSignature($signature): void
     {
         $this->checkNecessaryFields($signature);
-        $signature->pemCertificate = $this->verifyPemCertificate->addBeginAndEndToPemCertificate($signature->signingCert);
-        $signature->x509_info = $this->verifyPemCertificate->parsePemCertificate($signature->pemCertificate);
-        $this->verifyPemCertificate->checkCertificateIsValidAtDate(
-            $this->getTimestampFromSignature($signature),
-            $signature->x509_info['validFrom_time_t'],
-            $signature->x509_info['validTo_time_t']
+        $certificate = $this->pemCertificateFactory->getFromMinimalString($signature->signingCert);
+        $certificate->checkCertificateIsValidAtDate(
+            $this->getTimestampFromSignature($signature)
         );
         $this->validateCertificateFomSignature(
-            $signature->pemCertificate,
+            $certificate->getContent(),
             $this->getTimestampFromSignature($signature)
         );
     }
