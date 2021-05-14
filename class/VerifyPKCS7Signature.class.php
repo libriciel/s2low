@@ -1,8 +1,15 @@
 <?php
 class VerifyPKCS7Signature {
 
-	public function __construct($authorized_ca_path, VerifyPemCertificateFactory $verifyPemCertificateFactory){
+    /** @var \VerifyPemCertificate  */
+    private $verifyPemCertificate;
+    /** @var string */
+    private $authorized_ca_path;
+
+
+    public function __construct(string $authorized_ca_path, VerifyPemCertificateFactory $verifyPemCertificateFactory){
         $this->verifyPemCertificate = $verifyPemCertificateFactory->get($authorized_ca_path);
+        $this->authorized_ca_path = $authorized_ca_path;
 	}
 
 	public function verify($file_path,$signature){
@@ -41,9 +48,7 @@ class VerifyPKCS7Signature {
 		if ($result === false){
 			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
 		}
-
 		$this->verifyPemCertificate->checkCertificate($certificate_file);
-
 		# On ne va pas vérifier le certificat (option -noverify)
         # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
