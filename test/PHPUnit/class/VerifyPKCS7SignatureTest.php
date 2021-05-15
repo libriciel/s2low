@@ -2,17 +2,14 @@
 
 class verifyPKCS7SignatureTest extends S2lowTestCase
 {
-
     public function testRightFileWithSignature()
     {
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
-
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            $verifyPemCertificateFactory
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
         );
 
-        //$this->expectNotToPerformAssertions();
         $this->assertTrue(
             $verifyPKCS7Signature->verify(
                 __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
@@ -23,11 +20,10 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongFileWithSignature()
     {
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
-
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            $verifyPemCertificateFactory
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
         );
 
         $this->expectException(Exception::class);
@@ -40,11 +36,10 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testRightFileWithWrongAC()
     {
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
-
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/",
-            $verifyPemCertificateFactory
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
         );
 
         $this->expectException(Exception::class);

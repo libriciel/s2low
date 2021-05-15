@@ -166,10 +166,12 @@ class VerifyPadesSignatureTest extends S2lowTestCase
      * @throws Exception
      */
     public function testCertificateWasInvalidOnSignature(){
+        $date = new DateTime();
+        $date->setTimestamp(1502268600);
         $this->pemCertificateMock
             ->expects($this->once())
             ->method('checkCertificateIsValidAtDate')
-            ->with(1502268600);
+            ->with($date);
 
         $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
     }

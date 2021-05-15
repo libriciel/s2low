@@ -28,7 +28,7 @@ class VerifyPadesSignature
         $this->pemCertificateFactory
             ->getFromMinimalString($signature->signingCert)
             ->checkCertificateIsValidAtDate(
-                $this->getTimestampFromSignature($signature)
+                $this->getDateTimeFromSignature($signature)
         );
     }
 
@@ -41,7 +41,7 @@ class VerifyPadesSignature
         $this->checkNecessaryFields($signature);
         $certificate = $this->pemCertificateFactory->getFromMinimalString($signature->signingCert);
         $certificate->checkCertificateIsValidAtDate(
-            $this->getTimestampFromSignature($signature)
+            $this->getDateTimeFromSignature($signature)
         );
         $this->validateCertificateFomSignature(
             $certificate->getContent(),
@@ -81,6 +81,17 @@ class VerifyPadesSignature
         if (empty($signature->signatureDate)){
             throw new Exception("Impossible de determiner la date de la signature");
         }
+    }
+
+    /**
+     * @param $signature
+     * @return \DateTime
+     */
+    private function getDateTimeFromSignature($signature): DateTime
+    {
+        $date = new DateTime();
+        $date->setTimestamp($this->getTimestampFromSignature($signature));
+        return $date;
     }
 
     /**

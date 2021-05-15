@@ -18,25 +18,10 @@ class VerifyPemCertificate
     public function __construct($authorized_ca_path){
         $this->authorized_ca_path = $authorized_ca_path;
     }
-    public function addBeginAndEndToPemCertificate($nakedCertificate){
-        $beginpem = "-----BEGIN CERTIFICATE-----\n";
-        $endpem = "\n-----END CERTIFICATE-----\n";
-
-        $signing_cert = implode("\n",str_split($nakedCertificate,78));
-        return $beginpem.$signing_cert.$endpem;
-    }
-
-    public function parsePemCertificate($certificate){
-        $x509_info = openssl_x509_parse($certificate);
-
-        if(!$x509_info){
-            throw new Exception("Problème à l'ouverture du certificat : ".openssl_error_string());
-        }
-        return $x509_info;
-    }
 
     /**
      * @param $certificate_path
+     * @param string|null $timestamp
      * @return array
      */
     private function launchOpenSslVerify($certificate_path, string $timestamp =null): array
@@ -61,32 +46,13 @@ class VerifyPemCertificate
         return $erreurs;
     }
 
-    public function checkCertificateIsValidAtDate( $date, $dateValidFrom, $dateValidTo){
-        if ($date < $dateValidFrom || $date > $dateValidTo) {
-            throw new Exception("La date de la signature ".$date->format("d-M-Y H:i:s") .
-                        " n'entre pas dans la date de validité du certificat ".
-                        $dateValidFrom->format("d-M-Y H:i:s")." - ".$dateValidTo->format("d-M-Y H:i:s"));
-        }
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
     {
         $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
-
         $this->checkForBlockingVerifyErrors($erreursVerifyOpenSsl, $filteredErrors);
-
-        $x509_info = $this->parsePemCertificate(file_get_contents($certificate_path));
-
-        $dateSignature = new DateTime("NOW");
-
-        if(!is_null($timestamp)){
-            $dateSignature->setTimestamp($timestamp);
-        }
-
-        $this->checkCertificateIsValidAtDate(
-            $dateSignature,
-            new DateTime(date(DATE_RFC2822, $x509_info['validFrom_time_t'])),
-            new DateTime(date(DATE_RFC2822, $x509_info['validTo_time_t'])));
 
         return true;
     }
