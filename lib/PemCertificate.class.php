@@ -25,7 +25,6 @@ class PemCertificate{
         return $this->content;
     }
 
-    //TODO : check que la date est ok partout...
     public function checkCertificateIsValidAtDate(DateTime $date)
     {
         if ($date < $this->dateValidFrom || $date > $this->dateValidTo) {
