@@ -21,13 +21,16 @@ class VerifyPKCS7Signature {
     /**
      * @throws \Exception
      */
-    public function verify($file_path, $signature) : bool
+    public function verify($file_path, $signature, DateTime $dateTime =null) : bool
     {
+        if(is_null($dateTime)){
+            $dateTime=new DateTime();
+        }
 		try {
 			$signature_file = sys_get_temp_dir() . "/slow_signature_".mt_rand(0,mt_getrandmax());
 			$certificate_file = sys_get_temp_dir() . "/slow_certificate_".mt_rand(0,mt_getrandmax());
 
-			$this->verifyThrow($file_path,$signature,$signature_file,$certificate_file);
+			$this->verifyThrow($file_path,$signature,$signature_file,$certificate_file,$dateTime);
 				
 		} catch(Exception $e){
 				
@@ -48,7 +51,7 @@ class VerifyPKCS7Signature {
     /**
      * @throws \Exception
      */
-    private function verifyThrow($file_path, $signature, $signature_file, $certificate_file){
+    private function verifyThrow($file_path, $signature, $signature_file, $certificate_file,DateTime $dateTime){
 		$result = file_put_contents($signature_file, $signature);
 		if ($result === false){
 			throw new Exception("Impossible d'écrire la signature dans $signature_file");
@@ -61,8 +64,8 @@ class VerifyPKCS7Signature {
 		if ($result === false){
 			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
 		}
-        $this->pemCertificateFactory->getFromString($certificate)->checkCertificateIsValidAtDate(new DateTime());
-		$this->verifyPemCertificate->checkCertificateWithOpenSSL($certificate_file);
+        $this->pemCertificateFactory->getFromString($certificate)->checkCertificateIsValidAtDate($dateTime);
+		$this->verifyPemCertificate->checkCertificateWithOpenSSL($certificate_file,[],$dateTime->getTimestamp());
 		# On ne va pas vérifier le certificat (option -noverify)
         # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
@@ -96,7 +99,10 @@ class VerifyPKCS7Signature {
 		}
 	}
 
-	private function getCertificate(string $signatureFileName) : string
+    /**
+     * @throws \Exception
+     */
+    private function getCertificate(string $signatureFileName) : string
     {
 		$extractCmd = "openssl pkcs7 -in " . $signatureFileName . " -print_certs | openssl x509";
 
