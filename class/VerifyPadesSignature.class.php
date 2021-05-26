@@ -22,14 +22,15 @@ class VerifyPadesSignature
      * @param $signature
      * @throws Exception
      */
-    public function validateSignatureWithoutCertificateChecking($signature): void
+    public function validateSignatureWithoutCertificateChecking($signature): PemCertificate
     {
         $this->checkNecessaryFields($signature);
-        $this->pemCertificateFactory
-            ->getFromMinimalString($signature->signingCert)
-            ->checkCertificateIsValidAtDate(
+        $pemCertificate = $this->pemCertificateFactory
+            ->getFromMinimalString($signature->signingCert);
+        $pemCertificate->checkCertificateIsValidAtDate(
                 $this->getDateTimeFromSignature($signature)
         );
+        return $pemCertificate;
     }
 
     /**
@@ -38,13 +39,9 @@ class VerifyPadesSignature
      */
     public function validateSignature($signature): void
     {
-        $this->checkNecessaryFields($signature);
-        $certificate = $this->pemCertificateFactory->getFromMinimalString($signature->signingCert);
-        $certificate->checkCertificateIsValidAtDate(
-            $this->getDateTimeFromSignature($signature)
-        );
+        $pemCertificate = $this->validateSignatureWithoutCertificateChecking($signature);
         $this->validateCertificateFomSignature(
-            $certificate->getContent(),
+            $pemCertificate->getContent(),
             $this->getTimestampFromSignature($signature)
         );
     }
