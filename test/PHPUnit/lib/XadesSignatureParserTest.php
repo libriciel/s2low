@@ -64,4 +64,14 @@ class XadesSignatureParserTest extends TestCase {
             )
         );
     }
+
+    public function testWrongTarget(){
+        $xml_file_signed = __DIR__."/fixtures/signature_bordereau.xml";
+        $xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("SigningTime non trouvé pour NoTarget");
+        $this->XadesSignatureParser->extractRawSigningTime($xml,'NoTarget');
+
+    }
 }
