@@ -5,6 +5,7 @@
 - Prise en compte de la version 5.14 du schema XSD Pes Aller #696
 - Prise en compte de la date de la signature lors de la validation du certificat associé pour les actes #486
 - Ajout d'une API de statistique actes et les pes aller pour les admins de groupe #610
+- Prise en compte de la date pour la vérification des signatures Xades Pes aller #486
 
 ## Correction
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
