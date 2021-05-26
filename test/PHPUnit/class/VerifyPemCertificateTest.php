@@ -5,6 +5,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 {
     const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
 
+    /**
+     * @throws \Exception
+     */
     public function testVerifyAnOKCertificate()
     {
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
@@ -76,7 +79,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/self signed certificate/");      #TODO : adapter
+        $this->expectExceptionMessageMatches("/self signed certificate/");
         $this->assertTrue($verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem"));
     }
 
@@ -145,8 +148,6 @@ class VerifyPemCertificateTest extends S2lowTestCase
     {
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
-        //$this->expectException(Exception::class);
-        //$this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
         $this->expectNotToPerformAssertions();
         $verificator->checkCertificateWithOpenSSL(                              //Même si ce n'est pas ok, l'erreur
             self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem",   // n'apparait pas car Openssl verify
@@ -174,9 +175,6 @@ class VerifyPemCertificateTest extends S2lowTestCase
             self::BASE_CERTIFICATES_DIR . "/dateOk/emptyac/"
         );
 
-        //TODO : remove !!!
-        //$this->expectException(Exception::class);
-        //$this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
         $this->expectNotToPerformAssertions();              //Même si ce n'est pas ok, l'erreur n'apparait pas car
         $verificator->checkCertificateWithOpenSSL(          //Openssl verify s'arrête avant la vérification
             self::BASE_CERTIFICATES_DIR . "/autosignedDateKo/cert.pem",

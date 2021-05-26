@@ -14,9 +14,22 @@ class VerifyPemCertificate
         20, # unable to get local issuer certificate
         21, # unable to verify the first certificate
     );
+    /** @var string  */
+    private $authorized_ca_path;
 
-    public function __construct($authorized_ca_path){
+    public function __construct(string $authorized_ca_path){
         $this->authorized_ca_path = $authorized_ca_path;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
+    {
+        $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
+        $this->checkForBlockingVerifyErrors($erreursVerifyOpenSsl, $filteredErrors);
+
+        return true;
     }
 
     /**
@@ -47,24 +60,13 @@ class VerifyPemCertificate
     }
 
     /**
-     * @throws \Exception
-     */
-    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
-    {
-        $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
-        $this->checkForBlockingVerifyErrors($erreursVerifyOpenSsl, $filteredErrors);
-
-        return true;
-    }
-
-    /**
      * @param array $errors
      * @param array $nonBlockingErrors
      * @throws Exception
      */
     private function checkForBlockingVerifyErrors(array $errors, array $nonBlockingErrors): void
     {
-        foreach ($errors as $key => $erreur) {
+        foreach ($errors as $erreur) {
             if (!in_array($erreur["errorCode"], $nonBlockingErrors)) {
                 throw new Exception($erreur["message"]);
             }

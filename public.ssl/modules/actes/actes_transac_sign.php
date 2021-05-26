@@ -46,7 +46,8 @@ try{
 		$all_transaction_id[] = $transaction_id;
 		/** Vérifier la signature ici */
 		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH,
-            new VerifyPemCertificateFactory()
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
         );
 
 		$verifyPKCS7Signature->verifyCertificate($signature);

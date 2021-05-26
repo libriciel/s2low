@@ -13,7 +13,7 @@ class PemCertificateFactory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function parsePemCertificate(string $certificate): array
     {
@@ -26,7 +26,7 @@ class PemCertificateFactory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getFromString(string $content): PemCertificate
     {
@@ -37,7 +37,7 @@ class PemCertificateFactory
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getFromMinimalString(string $minimalContent): PemCertificate
     {

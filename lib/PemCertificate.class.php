@@ -3,17 +3,14 @@
 class PemCertificate{
     /** @var string */
     private $content;
-    /** @var array  */
-    private $x509;
-    /** @var \DateTime  */
+    /** @var DateTime  */
     private $dateValidFrom;
-    /** @var \DateTime  */
+    /** @var DateTime  */
     private $dateValidTo;
 
     public function __construct(string $content,array $x509)
     {
         $this->content = $content;
-        $this->x509 = $x509;
         $this->dateValidFrom = new DateTime();
         $this->dateValidFrom->setTimestamp($x509['validFrom_time_t']);
         $this->dateValidTo = new DateTime();
@@ -25,6 +22,9 @@ class PemCertificate{
         return $this->content;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function checkCertificateIsValidAtDate(DateTime $date)
     {
         if ($date < $this->dateValidFrom || $date > $this->dateValidTo) {
