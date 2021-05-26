@@ -3,69 +3,48 @@
 class PadesValid {
 
     private $pades_valid_url;
-    private $rgs_validca_path;
 
 
-    /** @var  VerifyPKCS7Signature */
-    private $verifyPKCS7Signature;
+    /** @var  VerifyPadesSignature */
+    private $verifyPadesSignature;
 
     private $last_result;
 
     /** @var CurlWrapperFactory */
     private $curlWrapperFactory;
 
-    public function __construct($pades_valid_url, $rgs_validca_path) {
+    public function __construct($pades_valid_url,
+                                CurlWrapperFactory $curlWrapperFactory,
+                                VerifyPadesSignature $verifyPadesSignature
+    ) {
         $this->pades_valid_url = $pades_valid_url;
-        $this->rgs_validca_path = $rgs_validca_path;
-        $this->setCurlWrapperFactory(new CurlWrapperFactory());
-        $this->setVerifyPKCS7Signature(new VerifyPKCS7Signature($this->rgs_validca_path));
-    }
-
-    public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory){
         $this->curlWrapperFactory = $curlWrapperFactory;
-    }
-
-    public function setVerifyPKCS7Signature(VerifyPKCS7Signature $verifyPKCS7Signature){
-        $this->verifyPKCS7Signature = $verifyPKCS7Signature;
+        $this->verifyPadesSignature = $verifyPadesSignature;
     }
 
     public function getLastResult(){
         return $this->last_result;
     }
 
-	/**
-	 * @param $filepath
-	 * @return bool|mixed
-	 * @throws Exception
-	 * @throws RecoverableException
-	 */
-    public function validateWithoutCertificateChecking($filepath){
-		$result = $this->getPadesValidResult($filepath);
-		if ($result === false){
-			return false;
-		}
-		foreach($result->signatures as $signature){
-			$signature->pemCertificate = $this->getPERMCertificate($signature);
-			$this->validSignatureWithoutCertificateChecking($signature);
-		}
-		return true;
-	}
-
-
-	/**
-	 * @param $filepath
-	 * @return bool
-	 * @throws RecoverableException
-	 * @throws Exception
-	 */
-    public function validate($filepath){
+    /**
+     * @param $filepath
+     * @param bool $certificateChecking
+     * @return bool
+     * @throws RecoverableException
+     * @throws \Exception
+     */
+    public function validate(string $filepath, bool $certificateChecking=true) : bool
+    {
     	$result = $this->getPadesValidResult($filepath);
     	if ($result === false){
     		return false;
 		}
         foreach($result->signatures as $signature){
-         	$signature->pemCertificate = $this->getPERMCertificate($signature);
-            $this->validSignature($signature);
+            if($certificateChecking){
+                $this->verifyPadesSignature->validateSignature($signature);
+            } else {
+                $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
+            }
         }
         return true;
     }
@@ -107,76 +86,4 @@ class PadesValid {
 		}
 		return $result;
 	}
-
-    /**
-     * @param $signature
-     * @return bool
-     * @throws Exception
-     */
-    private function validSignature($signature){
-
-    	$this->validSignatureWithoutCertificateChecking($signature);
-        $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
-        file_put_contents($certificate_path,$signature->pemCertificate);
-        try {
-            $this->verifyPKCS7Signature->checkCertificateWithoutCheckingCertificateChain(
-                $certificate_path,
-                $this->getTimestampFromSignature($signature)
-            );
-        } catch (Exception $e){
-            unlink($certificate_path);
-            throw $e;
-        }
-        unlink($certificate_path);
-        return true;
-    }
-
-	/**
-	 * @param $signature
-	 * @return bool
-	 * @throws Exception
-	 */
-    private function validSignatureWithoutCertificateChecking($signature){
-		if (empty($signature->valid) || ! $signature->valid){
-			throw new Exception("Au moins une signature n'est pas valide");
-		}
-		if(empty($signature->signingCert)){
-			throw new Exception("Impossible de récupérer le certificat de signature");
-		};
-		if (empty($signature->signatureDate)){
-			throw new Exception("Impossible de determiner la date de la signature");
-		}
-
-
-		$x509_info = openssl_x509_parse($signature->pemCertificate);
-
-		$signatureDate = $this->getTimestampFromSignature($signature);
-
-		if ($signatureDate < $x509_info['validFrom_time_t'] ||
-			$signatureDate > $x509_info['validTo_time_t']
-		) {
-			throw new Exception("La date de la signature {$signature->signatureDate}" .
-				" n'entre pas dans la date de validité du certitficat {$x509_info['validFrom_time_t']} - {$x509_info['validTo_time_t']}");
-		}
-		return true;
-	}
-
-	private function getPERMCertificate($signature){
-		$beginpem = "-----BEGIN CERTIFICATE-----\n";
-		$endpem = "\n-----END CERTIFICATE-----\n";
-
-		$signing_cert = implode("\n",str_split($signature->signingCert,78));
-		return $beginpem.$signing_cert.$endpem;
-	}
-
-    /**
-     * @param $signature
-     * @return false|float
-     */
-    private function getTimestampFromSignature($signature)
-    {
-        return floor($signature->signatureDate / 1000);
-    }
-
-
 }

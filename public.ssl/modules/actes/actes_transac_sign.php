@@ -45,7 +45,11 @@ try{
 		$transaction_id = $actesSignature->setSignature($signature_id, $signature);
 		$all_transaction_id[] = $transaction_id;
 		/** Vérifier la signature ici */
-		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH);
+		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH,
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
+
 		$verifyPKCS7Signature->verifyCertificate($signature);
 
 		$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);

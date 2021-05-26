@@ -16,5 +16,10 @@ $actesItems = $dom->children($namespaces["actes"]);
 $signature =  $actesItems->Document->Signature . "\n";
 
 
-$verifyPKCS7Signature = new VerifyPKCS7Signature("/etc/tedetis/ssl/validca/");
+$verifyPKCS7Signature = new VerifyPKCS7Signature(
+    "/etc/tedetis/ssl/validca/",
+    new VerifyPemCertificateFactory(),
+    new PemCertificateFactory()
+);
+
 $verifyPKCS7Signature->verifyCertificate($signature);

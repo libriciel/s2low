@@ -2,180 +2,131 @@
 
 class verifyPKCS7SignatureTest extends S2lowTestCase
 {
-    const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
-
-    public function testVerifyAnOKCertificate()
+    public function testRightFileWithSignature()
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
-
-        $this->assertTrue($verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"));
-    }
-
-    public function testVerifyAnExpiredCertificate()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate has expired/");
-        $verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem");
-    }
-
-# Le point limitant de la date de validité de chaine de certification est le myCA.pem, avec
-# Not After : Jun 11 14:00:56 2025 GMT
-# En juin, heure d'été => GMT+02:00
-
-    public function testVerifyJustBeforeItsCaExpires()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
-                mktime(16,00,55,06,11,2025)
+            $verifyPKCS7Signature->verify(
+                __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
             )
         );
     }
 
-    public function testVerifyJustAfterItsCaExpires()
+    public function testWrongFileWithSignature()
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate has expired/");
-
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
-                mktime(16,00,57,06,11,2025)
+        $this->expectExceptionMessage("La vérification de la signature a échoué");
+        $verifyPKCS7Signature->verify(
+            __DIR__ . "/fixtures/toto.txt",
+            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
         );
     }
 
-    public function testVerifyARevokedCertificate()
+    public function testRightFileWithWrongAC()
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . "/",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate revoked/");
-        $verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem");
+        $this->expectExceptionMessage(" unable to get local issuer certificate");
+        $verifyPKCS7Signature->verify(
+            __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
+        );
     }
 
-    public function testVerifyACertificateWithNoRecognizedCA()
+    // Test des dates du certificat
+    // fullchain.pem
+    //      notBefore=Jun 12 14:00:58 2020 GMT
+    //      notAfter=Jun 10 14:00:58 2030 GMT
+    // myCA.pem
+    //      notBefore=Jun 12 14:00:56 2020 GMT
+    //      notAfter=Jun 11 14:00:56 2025 GMT
+    // crl.pem
+    //      lastUpdate=Jan 26 15:00:58 2021 GMT
+    //      nextUpdate=Jan 24 15:00:58 2031 GMT
+
+    /**
+     * @dataProvider getWrongDate
+     */
+
+    public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/unable to get local issuer certificate/");      #TODO : adapter
-        $verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem");
+        $this->expectExceptionMessage($message);
+        $verifyPKCS7Signature->verify(
+            __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            $dateTime
+        );
     }
 
-    public function testVerifyAnExpiredCertificateWithNoRecognizedCA()
+    public function getWrongDate(): array
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/unable to get local issuer certificate/");
-        $verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem");
+        return [
+            [new DateTime("Jun 12 14:00:57 2020", new DateTimeZone("GMT")),
+                "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
+            ],
+            [new DateTime("Jun 12 14:00:58 2020", new DateTimeZone("GMT")),
+                " CRL is not yet valid"
+            ],
+            [new DateTime("Jan 26 15:00:57 2021", new DateTimeZone("GMT")),
+                " CRL is not yet valid"
+            ],
+            [new DateTime("Jun 10 14:00:59 2030", new DateTimeZone("GMT")),
+                "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
+            ]
+        ];
     }
 
-    public function testVerifyAnAutosignedCertificate()
+    /**
+     * @dataProvider getGoodDate
+     */
+
+    public function testGoodDateIsTakenIntoAccount(DateTime $dateTime)
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/self signed certificate/");      #TODO : adapter
-        $this->assertTrue($verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem"));
-    }
-
-    public function testVerifyAnExpiredAutosignedCertificate()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/self signed certificate/");
-        $verificator->checkCertificate(self::BASE_CERTIFICATES_DIR."/autosignedDateKo/cert.pem");
-    }
-
-    #--------WithoutCheckingCertificateChain----------------------------------------------------------------------------
-
-    public function testVerifyWithoutCheckingCertificateChainAnOKCertificate()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory()
+        );
 
         $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
+            $verifyPKCS7Signature->verify(
+                __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+                $dateTime
             )
         );
     }
 
-    public function testVerifyWithoutCheckingCertificateChainAnExpiredCertificate()
+    public function getGoodDate(): array
     {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate has expired/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem"
-        );
+        return [
+            [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validité crl
+            [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
+        ];
     }
 
-    public function testVerifyWithoutCheckingCertificateChainARevokedCertificate()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate revoked/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
-        );
-    }
-
-    public function testVerifyWithoutCheckingCertificateChainACertificateWithNoRecognizedCA()   #NOUVEAU : si la date est ok, le résultat devrait être ok
-    {
-        $verificator = new VerifyPKCS7Signature(
-            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
-        );
-
-        $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"
-            )
-        );
-    }
-
-    public function testVerifyWithoutCheckingCertificateChainAnExpiredCertificateWithNoRecognizedCA()
-    {
-        $verificator = new VerifyPKCS7Signature(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem"
-        );
-    }
-
-    public function testVerifyWithoutCheckingCertificateChainAnAutosignedCertificate()            #NOUVEAU : si la date est ok, le résultat devrait être ok
-    {
-        $verificator = new VerifyPKCS7Signature(
-            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
-        );
-
-        $this->assertTrue(
-            $verificator->checkCertificateWithoutCheckingCertificateChain(
-                self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem"
-            )
-        );
-    }
-
-    public function testVerifyWithoutCheckingCertificateChainAnExpiredAutosignedCertificate()
-    {
-        $verificator = new VerifyPKCS7Signature(
-            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
-        );
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
-        $verificator->checkCertificateWithoutCheckingCertificateChain(
-            self::BASE_CERTIFICATES_DIR."/autosignedDateKo/cert.pem"
-        );
-    }
 }

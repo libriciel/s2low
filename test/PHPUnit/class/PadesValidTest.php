@@ -2,107 +2,184 @@
 
 class PadesValidTest extends S2lowTestCase {
 
-    /** @var  PadesValid */
-    private $padesValid;
+    /**
+     * @param string $returnString
+     * @param string $lastHttpCode
+     * @param string $lastError
+     * @param string $lastOutput
+     * @return PadesValid
+     */
 
-    protected function setUp() : void {
+    private function createPadesValidForExceptions(string $returnString, string $lastHttpCode, string $lastError, string $lastOutput)
+    {
+        $curlWrapperMock = $this->getMockBuilder(CurlWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
+        $curlWrapperMock->method("get")
+            ->willReturn($returnString);
+        $curlWrapperMock->method("getLastHttpCode")
+            ->willReturn($lastHttpCode);
+        $curlWrapperMock->method("getLastError")
+            ->willReturn($lastError);
+        $curlWrapperMock->method("getLastOutput")
+            ->willReturn($lastOutput);
+
+        $curlWrapperFactoryMock = $this->getMockBuilder(CurlWrapperFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $curlWrapperFactoryMock->method("getNewInstance")
+            ->willReturn($curlWrapperMock);
+
+        $verifyPadesSignatureMock = $this->getMockBuilder(VerifyPadesSignature::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
+
+        return $padesValid;
     }
 
-    private function getCurlWrapperFactory($return_string){
-        $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
-        $curlWrapper->method("get")->willReturn($return_string);
+    private function createPadesValidForValidation(
+        array $callRepartition = [1,0],
+        string $exceptionMessage = null,
+        string $returnString = '{"signatures":["une signature"],"signed":true}'
+    )
+    {
 
-        $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
-        $curlWrapperFactory->method("getNewInstance")->willReturn($curlWrapper);
-        /** @var CurlWrapperFactory $curlWrapperFactory */
-        return $curlWrapperFactory;
-    }
+        $curlWrapperMock = $this->getMockBuilder(CurlWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-    private function createPadeValid($checkCertificateThrowAnException = false){
-		$this->padesValid = new PadesValid("",__DIR__."/../lib/fixtures/validca/");
-		$this->padesValid->setVerifyPKCS7Signature($this->getPKCS7Signature($checkCertificateThrowAnException));
-	}
+        $curlWrapperMock->method("get")
+            ->willReturn($returnString);
 
-    public function getPKCS7Signature($checkCertificateThrowAnException = false){
-        $verifyPKCS7Signature = $this->getMockBuilder('VerifyPKCS7Signature')->disableOriginalConstructor()->getMock();
+        $curlWrapperFactoryMock = $this->getMockBuilder(CurlWrapperFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $curlWrapperFactoryMock->method("getNewInstance")
+            ->willReturn($curlWrapperMock);
 
-		if ($checkCertificateThrowAnException) {
-			$verifyPKCS7Signature->method("checkCertificateWithoutCheckingCertificateChain")->willThrowException(new Exception("problème"));
-		} else {
-			$verifyPKCS7Signature->method("checkCertificateWithoutCheckingCertificateChain")->willReturn(true);
-		}
+        $verifyPadesSignatureMock = $this->getMockBuilder(VerifyPadesSignature::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-		/** @var VerifyPKCS7Signature $verifyPKCS7Signature */
-        return $verifyPKCS7Signature;
+        if(! is_null($exceptionMessage)){
+            $verifyPadesSignatureMock->expects(
+                $this->exactly($callRepartition[0])
+            )->method('validateSignature')->willThrowException(
+                new Exception($exceptionMessage)
+            );
+            $verifyPadesSignatureMock->expects(
+                $this->exactly($callRepartition[1])
+            )->method('validateSignatureWithoutCertificateChecking')->willThrowException(
+                new Exception($exceptionMessage)
+            );
+        } else {
+            $verifyPadesSignatureMock->expects(
+                $this->exactly($callRepartition[0])
+            )->method('validateSignature');
+            $verifyPadesSignatureMock->expects(
+                $this->exactly($callRepartition[1])
+            )->method('validateSignatureWithoutCertificateChecking');
+        }
+
+        $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
+
+        return $padesValid;
     }
 
     /**
      * @throws Exception
      */
     public function testValidateNotSigned(){
-    	$this->createPadeValid();
-        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory('{"signatures":[],"signed":false}'));
-        $this->assertFalse($this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf"));
+
+        $returnString = '{"signatures":[],"signed":false}';
+
+        $lastError = "";
+        $lastOutput = "";
+        $lastHttpCode = "";
+
+        $padesValid = $this->createPadesValidForExceptions($returnString, $lastHttpCode, $lastError, $lastOutput);
+
+        $this->assertFalse(
+            $padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf")
+        );
     }
 
     /**
-     * @throws Exception
+     * @dataProvider provider
+     * @throws RecoverableException
      */
-    public function testValidateSigned(){
-		$this->createPadeValid();
-        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
+    public function testgetPadesValidResultExceptions(
+                            $returnString,
+                            $lastError,
+                            $lastOutput,
+                            $lastHttpCode,
+                            $exceptionClass,
+                            $exceptionMessage
+    ){
+
+        $padesValid = $this->createPadesValidForExceptions(
+            $returnString,
+            $lastHttpCode,
+            $lastError,
+            $lastOutput
         );
-        $this->assertTrue($this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf"));
+
+        $this->expectException($exceptionClass);
+        $this->expectExceptionMessage($exceptionMessage);
+        $padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf");
+    }
+
+    public function provider(){
+        return[
+            ['{"signatures":[],"signed":true}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
+            ['{"signatures":[]}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
+            ['',"last error","last output","404",Exception::class,"last error last output"],
+            ['',"last error","last output","",RecoverableException::class,"last error last output"],
+            ["uzye","","","",Exception::class,"Impossible de décoder le message de pades-valid : "],
+
+
+        ];
     }
 
     /**
-     * @throws Exception
+     * @throws RecoverableException
      */
-    public function testNotValidateSigned(){
-		$this->createPadeValid();
-        $this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-alter.json"))
+    public function testvalidate(){
+        $padesValid = $this->createPadesValidForValidation();
+
+        $this->assertTrue(
+            $padesValid->validate("/vers/un/fichier")
         );
-        $this->setExpectedException("Exception","Au moins une signature n'est pas valide");
-        $this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_alter.pdf");
     }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testValidateSignedNoCertificatCheking(){
-		$this->createPadeValid();
-		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
-			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
-		);
-		$this->assertTrue($this->padesValid->validateWithoutCertificateChecking(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf"));
-	}
+    public function testValidateCertificateChecking(){
+        $padesValid = $this->createPadesValidForValidation();
 
-	/**
-	 * @throws Exception
-	 */
-	public function testValidateSignedBadCertificate(){
-		$this->createPadeValid(true);
-		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
-			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
-		);
-		$this->setExpectedException("Exception","problème");
-		$this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf");
-	}
+        $this->assertTrue(
+            $padesValid->validate("/vers/un/fichier",true)
+        );
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testValidateSignedBadCertificateNoCheckCertificate(){
-		$this->createPadeValid(false);
-		$this->padesValid->setCurlWrapperFactory($this->getCurlWrapperFactory(
-			file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json"))
-		);
-		$this->assertTrue(
-			$this->padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier_signe.pdf")
-		);
-	}
+    public function testWithoutCertificateChecking(){
+        $padesValid = $this->createPadesValidForValidation([0,1]);
 
+        $this->assertTrue(
+            $padesValid->validate("/vers/un/fichier",false)
+        );
+    }
+
+    public function testExceptionThrowGetsThrough(){
+        $padesValid = $this->createPadesValidForValidation(
+            [1,0],
+            "Une Exception"
+        );
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Une Exception");
+
+        $padesValid->validate("/vers/un/fichier");
+    }
 }
