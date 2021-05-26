@@ -18,7 +18,7 @@
             try{
                 return new DateTime(
                     $this->extractRawSigningTime($XMLElement,$target),
-                    new DateTimeZone('Europe/London')
+                    new DateTimeZone('UTC')
                 );
             } catch (Exception $exception) {
                 return null;
