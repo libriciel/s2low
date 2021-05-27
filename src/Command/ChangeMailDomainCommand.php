@@ -3,62 +3,58 @@
 
 namespace S2low\Command;
 
-use S2low\Services\LogTimestampTokenGarbage;
+use AuthoritySQL;
+use Exception;
 use S2lowLogger;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use User;
+use UserSQL;
 
-class ExtractAndDeleteTimestampTokenCommand extends Command
+
+class ChangeMailDomainCommand extends Command
 {
-    private $logTimestampTokenGarbage;
     private $s2lowLogger;
+    /**
+     * @var User
+     */
+    private $user;
+    /**
+     * @var UserSQL
+     */
+    private $userSQL;
+    /**
+     * @var AuthoritySQL
+     */
+    private $authoritySQL;
 
-    private const OLDER_THAN = "older-than";
 
     public function __construct(
-        LogTimestampTokenGarbage $logTimestampTokenGarbage,
-        S2lowLogger $s2lowLogger
+        S2lowLogger $s2lowLogger,
+        User $user,
+        UserSQL $userSQL,
+        AuthoritySQL $authoritySQL
     )
     {
-        $this->logTimestampTokenGarbage = $logTimestampTokenGarbage;
         $this->s2lowLogger = $s2lowLogger;
+        $this->user = $user;
+        $this->userSQL = $userSQL;
+        $this->authoritySQL = $authoritySQL;
         parent::__construct();
     }
 
     protected function configure()
     {
-        $old_timestamp_token_directory = $this->logTimestampTokenGarbage->getOldTimestampTokenDirectory();
-        $timestamp_token_retention_nb_days = $this->logTimestampTokenGarbage->getTimestampTokenRetentionNbDays();
         $this
-            ->setName('log:timestamp-token-extract-and-delete')
+            ->setName('admin:change-mail-domain-name-for-a-group')
             ->setDescription(
-                "Extract the timestamp token oldest than $timestamp_token_retention_nb_days days (by default) from the database (table logs_historique), save it to $old_timestamp_token_directory (by default) and delete it from database"
-            )
-            ->addOption(
-                "limit",
-                "l",
-                InputOption::VALUE_REQUIRED,
-                "Limit the number of processed lines (0 for no limit)",
-                0
-            )
-            ->addOption(
-                "directory",
-                "d",
-                InputOption::VALUE_REQUIRED,
-                "Override default repository",
-                $old_timestamp_token_directory
-            )
-            ->addOption(
-                self::OLDER_THAN,
-                "o",
-                InputOption::VALUE_REQUIRED,
-                "Override default oldest date in days",
-                $timestamp_token_retention_nb_days
+                "Changes the mail adress domain name for a given group"
             )
             ->addOption(
                 'dry-run',
@@ -72,20 +68,32 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
                 InputOption::VALUE_NONE,
                 "process without questions"
             )
-        ;
+            ->addArgument(
+                'group-id',
+                InputArgument::REQUIRED,
+                "The group_id which mail adresses will be modified"
+            )
+            ->addArgument(
+                'domain-name-to-replace',
+                InputArgument::REQUIRED,
+                "the domain name that will be replaced"
+            )
+            ->addArgument('target-domain-name',
+                InputArgument::REQUIRED,
+                "the domain name that will replace domain-name-to-replace");
     }
 
     private function askIfNeeded(InputInterface $input, SymfonyStyle $io): bool
     {
-        if ($input->getOption('dry-run')){
+        if ($input->getOption('dry-run')) {
             $io->writeln("Dry run mode : halt");
             $io->success('Pass');
             return false;
         }
-        if (! $input->getOption('force')){
+        if (!$input->getOption('force')) {
             $question = new ConfirmationQuestion("Are you sure ?", false);
             $response = $io->askQuestion($question);
-            if (! $response){
+            if (!$response) {
                 $this->s2lowLogger->notice("Operation canceled");
                 $io->success('Cancel');
                 return false;
@@ -94,43 +102,120 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         return true;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
         $consoleHandler = new ConsoleHandler($output);
         $this->s2lowLogger->addHandler($consoleHandler);
-        $limit = (int)$input->getOption('limit');
 
-        if ($input->getOption(self::OLDER_THAN)) {
-            $this->logTimestampTokenGarbage->setTimestampTokenRetentionNbDays(
-                (int)$input->getOption(self::OLDER_THAN)
+        try{
+            list($authorities, $usersToModify) = $this->getAuthoritiesAndUsersToModify(
+                (int)$input->getArgument('group-id'),
+                $input->getArgument('domain-name-to-replace')
             );
-        }
-
-        if ($input->getOption('directory')){
-            $this->logTimestampTokenGarbage->setOldTimestampTokenDirectory(
-                $input->getOption('directory')
-            );
-        }
-
-        $info = $this->logTimestampTokenGarbage->getInfo($limit);
-
-        $io->writeln("Found {$info['nb_result']} line(s)");
-        if ($info['nb_result'] === 0){
-            $io->success('Pass');
+        } catch (Exception $exception){
+            $io->error($exception->getMessage());
             return 0;
         }
 
-        $io->writeln("Line with min date : {$info['min_date']['date']} (id={$info['min_date']['id']})");
-        $io->writeln("Line with max date : {$info['max_date']['date']} (id={$info['max_date']['id']})");
+        $usersAndMails = $this->generateArrayWithNewMails(
+            $usersToModify,
+            $input->getArgument('domain-name-to-replace'),
+            $input->getArgument('target-domain-name')
+        );
+        $this->displayChangesBeforeValidation($io, $authorities, $usersAndMails, $usersToModify);
 
-        if (! $this->askIfNeeded($input,$io)){
+        if (!$this->askIfNeeded($input, $io)) {
             return 0;
         }
 
-        $this->logTimestampTokenGarbage->extractAndDelete($limit);
+        $this->updateMails($usersAndMails);
         $io->success('Done');
         return 0;
+    }
+
+    /**
+     * @param $domaineOrigine
+     * @param $domaineCible
+     * @param $email
+     * @return array|string|string[]|null
+     */
+    protected function getModifiedMail($domaineOrigine, $domaineCible, $email)
+    {
+        $new = preg_replace("#@$domaineOrigine#", "@$domaineCible", $email);
+        return $new;
+    }
+
+    /**
+     * @param int $group_id
+     * @param $existingMailDomain
+     * @return array
+     * @throws \Exception
+     */
+    protected function getAuthoritiesAndUsersToModify(int $group_id, $existingMailDomain): array
+    {
+        $authorities = $this->authoritySQL->getAllGroup($group_id);
+
+        if (count($authorities) === 0) {
+            throw new Exception("Aucune autorité liée au groupe $group_id, ou le groupe n'existe pas");
+        }
+
+        $usersToModify = $this->user->getUsersList(
+            "WHERE authorities.authority_group_id= $group_id AND users.email LIKE '%@$existingMailDomain'"
+        );
+
+        if (count($usersToModify) === 0) {
+            throw new Exception('Aucun utilisateur à modifier');
+        }
+        return array($authorities, $usersToModify);
+    }
+
+    /**
+     * @param $usersToModify
+     * @param $existingMailDomain
+     * @param $targetMailDomain
+     * @return array
+     */
+    protected function generateArrayWithNewMails($usersToModify, $existingMailDomain, $targetMailDomain): array
+    {
+        $tableToDisplay = [];
+        foreach ($usersToModify as $user) {
+            $tableToDisplay[] = [
+                $user["id"],
+                $user["email"],
+                $this->getModifiedMail($existingMailDomain, $targetMailDomain, $user["email"])
+            ];
+        }
+        return $tableToDisplay;
+    }
+
+    /**
+     * @param \Symfony\Component\Console\Style\SymfonyStyle $io
+     * @param $authorities
+     * @param array $usersAndMails
+     * @param $usersToModify
+     */
+    protected function displayChangesBeforeValidation(SymfonyStyle $io, $authorities, array $usersAndMails, $usersToModify): void
+    {
+        $io->note("Modified Authorities : " . implode($authorities, " ; "));
+        $io->table(
+            ["user.id", "user.email (original)", "user.email (target)"],
+            $usersAndMails
+        );
+        $io->writeln(count($usersToModify) . " users to modify");
+    }
+
+    /**
+     * @param array $usersAndMails
+     */
+    protected function updateMails(array $usersAndMails): void
+    {
+        foreach ($usersAndMails as $user) {
+            $this->userSQL->updateMail(
+                $user[0],
+                $user[2]
+            );
+        }
     }
 }
