@@ -181,7 +181,8 @@ class XadesSignature {
 
 	}
 
-	public function verify($xml_file_signed) {
+	public function verify($xml_file_signed): bool
+    {
 		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature']";
@@ -258,7 +259,8 @@ class XadesSignature {
 		return true;
 	}
 
-	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null) {
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null): bool
+    {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 		$verificationTimeParameter="";
 
@@ -266,10 +268,10 @@ class XadesSignature {
             $verificationTimeString=$verificationTime
                 ->setTimezone(new DateTimeZone('UTC'))
                 ->format("Y-m-d G:i:s");
-            $verificationTimeParameter = "--verification-time $verificationTimeString";
+            $verificationTimeParameter = "--verification-time \"$verificationTimeString\"";
         }
 
-        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath".$verificationTimeParameter." --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" ".$verificationTimeParameter." --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		$this->last_output = implode("\n",$output);
 		return $return_var == 0;
