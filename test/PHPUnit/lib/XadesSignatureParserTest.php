@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class XadesSignatureParserTest extends TestCase
 {
 
-    /** @var \XadesSignatureParser */
+    /** @var XadesSignatureParser */
     private $XadesSignatureParser;
 
     protected function setUp(): void
@@ -16,7 +16,7 @@ class XadesSignatureParserTest extends TestCase
 
     /**
      * @dataProvider fileProvider
-     * @throws \Exception
+     * @throws Exception
      */
     public function testExtractRawSigningTime(string $filepath, string $target, string $expected)
     {

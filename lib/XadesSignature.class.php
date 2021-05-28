@@ -242,7 +242,7 @@ class XadesSignature {
 
 			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
 
-            if(!is_null($signingTime)){
+            if($signingTime){
                 $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime ".$signingTime->getTimestamp()." -crl_check $file ";
             }
 
