@@ -12,7 +12,13 @@ $output = $argv[2];
 
 echo "Signature du fichier : $xml_file\n";
 
-$xadesSignature = new XadesSignature(XMLSEC1_PATH,new PKCS12(),new X509Certificate(),EXTENDED_VALIDCA_PATH);
+$xadesSignature = new XadesSignature(
+    XMLSEC1_PATH,
+    new PKCS12(),
+    new X509Certificate(),
+    EXTENDED_VALIDCA_PATH,
+    new XadesSignatureParser()
+);
 
 $xadesSignatureProperties = new XadesSignatureProperties();
 $xadesSignatureProperties->city = "Paris";

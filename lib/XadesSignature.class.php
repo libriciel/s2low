@@ -15,19 +15,27 @@ class XadesSignature {
 	private $validca_path;
 
 	private $last_output;
+	/** @var \XadesSignatureParser  */
+    private $xadesSignatureParser;
 
-	public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path) {
+    public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
 		$this->validca_path = $validca_path;
+		$this->xadesSignatureParser = $xadesSignatureParser;
 	}
 
 	public function getLastOutput(){
 		return $this->last_output;
 	}
 
-	public function sign($xml_file_to_sign,$p12_certificate_path,$p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
+    /**
+     * @throws \XadesSignatureNoIDException
+     * @throws \XadesSignatureHasSignatureException
+     * @throws \Exception
+     */
+    public function sign($xml_file_to_sign, $p12_certificate_path, $p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
 	    //throw new Exception("La signature technique n'est plus implémenté dans s2low");
 		$certificate_info = $this->getCertificateInfo($p12_certificate_path,$p12_password);
 
@@ -173,7 +181,8 @@ class XadesSignature {
 
 	}
 
-	public function verify($xml_file_signed) {
+	public function verify($xml_file_signed): bool
+    {
 		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature']";
@@ -201,7 +210,10 @@ class XadesSignature {
 			}
 			$element = $element[0];
 			$name = $element->getName();
-			if (!$this->verifyIntern($xml_file_signed, $name, $id)) {
+
+            $signingTime = $this->xadesSignatureParser->extractXadesSigningTime($xml,strval($id));
+
+			if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
 				return false;
 			}
 
@@ -222,13 +234,33 @@ class XadesSignature {
 
 			$file_r0 = $this->validca_path."/{$output[0]}.r0";
 
-
-			if (! file_exists($file_r0)){
-                unlink($file);
-				continue;
+			if (file_exists($file_r0)){
+                // 1) extraire le SN du certificat
+                // openssl x509 -noout -serial -in cert. pem
+                $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
+                exec($commandGetSerialNumber,$output,$return_var);
+                if($return_var !=0){
+                    return false;
+                }
+                $serialNumber = $output[0];
+                // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+                $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
+                // On ne vérifie pas
+                // 1) la date
+                // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+                exec($commandCheckSnInCRL,$output,$return_var);
+                if(!$return_var){
+                    return false;
+                }
 			}
+            $atTimeOption = " ";
+            if($signingTime){
+                $atTimeOption = " -attime " . $signingTime->getTimestamp()." ";
+            }
 
-			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
+
+            $command = OPENSSL_PATH . " verify -CApath ".$this->validca_path  . $atTimeOption.$file;
+
 			exec($command,$output,$return_var);
 
 			$this->last_output = implode("\n",$output);
@@ -242,9 +274,19 @@ class XadesSignature {
 		return true;
 	}
 
-	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id) {
+	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null): bool
+    {
 		$xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
-		$command = "export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+		$verificationTimeParameter="";
+
+		if($verificationTime){
+            $verificationTimeString=$verificationTime
+                ->setTimezone(new DateTimeZone('UTC'))
+                ->format("Y-m-d G:i:s");
+            $verificationTimeParameter = "--verification-time \"$verificationTimeString\"";
+        }
+
+        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" ".$verificationTimeParameter." --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
 		exec($command,$output,$return_var);
 		$this->last_output = implode("\n",$output);
 		return $return_var == 0;

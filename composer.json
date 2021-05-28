@@ -24,7 +24,8 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "ext-json": "^1.6",
-    "libriciel/tdt-lib-actes": "^1.1"
+    "libriciel/tdt-lib-actes": "^1.1",
+    "ext-dom": "*"
   },
 
   "require-dev": {

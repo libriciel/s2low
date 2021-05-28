@@ -57,7 +57,20 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	}
 
 	private function getXadesSignature(){
-		return new XadesSignature(XMLSEC1_PATH, new PKCS12(), new X509Certificate(), __DIR__ . "/../../lib/fixtures/validca/");
+        $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $xadesSignatureParser->method("extractXadesSigningTime")
+            ->willReturn(new DateTime("2019-01-01"));
+
+		return new XadesSignature(
+		    XMLSEC1_PATH,
+            new PKCS12(),
+            new X509Certificate(),
+            __DIR__ . "/../../lib/fixtures/validca_for_xades/",
+            $xadesSignatureParser
+        );
 	}
 
 	private function getXadesSignatureProperties(){
@@ -132,6 +145,4 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		);
 		$this->assertTrue(true);
 	}
-
-
 }
