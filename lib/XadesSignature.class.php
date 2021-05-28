@@ -234,17 +234,32 @@ class XadesSignature {
 
 			$file_r0 = $this->validca_path."/{$output[0]}.r0";
 
-
-			if (! file_exists($file_r0)){
-                unlink($file);
-				continue;
+			if (file_exists($file_r0)){
+                // 1) extraire le SN du certificat
+                // openssl x509 -noout -serial -in cert. pem
+                $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
+                exec($commandGetSerialNumber,$output,$return_var);
+                if($return_var !=0){
+                    return false;
+                }
+                $serialNumber = $output[0];
+                // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+                $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
+                // On ne vérifie pas
+                // 1) la date
+                // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+                exec($commandCheckSnInCRL,$output,$return_var);
+                if(!$return_var){
+                    return false;
+                }
 			}
-
-			$command = OPENSSL_PATH." verify -CApath ".$this->validca_path." -crl_check $file ";
-
+            $atTimeOption = " ";
             if($signingTime){
-                $command = OPENSSL_PATH." verify -CApath ".$this->validca_path."-attime ".$signingTime->getTimestamp()." -crl_check $file ";
+                $atTimeOption = " -attime " . $signingTime->getTimestamp()." ";
             }
+
+
+            $command = OPENSSL_PATH . " verify -CApath ".$this->validca_path  . $atTimeOption.$file;
 
 			exec($command,$output,$return_var);
 

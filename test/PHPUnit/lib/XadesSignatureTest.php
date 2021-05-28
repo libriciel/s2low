@@ -25,7 +25,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 			XMLSEC1_PATH,
 			new PKCS12(),
 			new X509Certificate(),
-			__DIR__ . "/fixtures/validca/",
+			__DIR__ . "/fixtures/validca_for_xades/",
             new XadesSignatureParser()
 		);
 		return $xadesSignature;
@@ -40,10 +40,36 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		return $xadesSignatureProperties;
 	}
 
-	public function testSign(){
-		$signed_file = $this->sign(__DIR__."/fixtures/test.xml");
-		$this->verify($signed_file);
+    /**
+     * @param $filename
+     * @throws XadesSignatureHasSignatureException
+     * @dataProvider filesProvider
+     */
+	public function testSign(string $filename){
+		$signed_file = $this->sign($filename);
+        $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $xadesSignatureParser->method("extractXadesSigningTime")
+            ->willReturn(new DateTime("2019-01-01"));
+
+        $xadesSignature = new XadesSignature(
+            XMLSEC1_PATH,
+            new PKCS12(),
+            new X509Certificate(),
+            __DIR__ . "/fixtures/validca_for_xades/",
+            $xadesSignatureParser
+        );
+		$this->assertTrue(
+		    $xadesSignature->verify($signed_file)
+        );
 	}
+
+	public function filesProvider(){
+	    yield "with minimal file" => [__DIR__."/fixtures/test.xml"];
+        yield "with PES file" => [__DIR__."/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml"];
+    }
 
 	private function verify($file_to_verify){
 		$xadesSignature = $this->getXadesSignature();
@@ -60,11 +86,6 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$xadesSignature = $this->getXadesSignature();
 		$this->setExpectedException("Exception","Impossible de lire le certificat PKCS#12");
 		$xadesSignature->sign(__DIR__."/fixtures/test.xml",__DIR__."/fixtures/robert_petitpoids.p12","bad password",$signed_file,$this->getXadesSignatureProperties());
-	}
-
-	public function testSignPES_Aller(){
-		$signed_file = $this->sign(__DIR__."/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml");
-		$this->verify($signed_file);
 	}
 
 	public function testTargetSignature(){
@@ -142,7 +163,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             XMLSEC1_PATH,
             new PKCS12(),
             new X509Certificate(),
-            __DIR__ . "/fixtures/validca/",
+            __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser
         );
 
