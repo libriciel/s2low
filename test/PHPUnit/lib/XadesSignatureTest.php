@@ -27,7 +27,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 			new X509Certificate(),
 			__DIR__ . "/fixtures/validca_for_xades/",
             new XadesSignatureParser(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
 		);
 		return $xadesSignature;
 	}
@@ -61,7 +62,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
         );
 		$this->assertTrue(
 		    $xadesSignature->verify($signed_file)
@@ -167,7 +169,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
         );
 
         $this->assertEquals(

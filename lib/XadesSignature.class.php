@@ -21,12 +21,17 @@ class XadesSignature {
      * @var \PemCertificateFactory
      */
     private $pemCertificateFactory;
+    /**
+     * @var \VerifyPemCertificate
+     */
+    private $verifyPemCertificate;
 
     public function __construct($xmlsec1_path,
                                 PKCS12 $pkcs12,
                                 X509Certificate $x509Certificate,
                                 $validca_path,XadesSignatureParser $xadesSignatureParser,
-                                PemCertificateFactory $pemCertificateFactory
+                                PemCertificateFactory $pemCertificateFactory,
+                                VerifyPemCertificate $verifyPemCertificate
     ) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
@@ -34,6 +39,7 @@ class XadesSignature {
 		$this->validca_path = $validca_path;
 		$this->xadesSignatureParser = $xadesSignatureParser;
 		$this->pemCertificateFactory = $pemCertificateFactory;
+		$this->verifyPemCertificate = $verifyPemCertificate;
 	}
 
 	public function getLastOutput(){
@@ -234,26 +240,25 @@ class XadesSignature {
 			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());
 			file_put_contents($file,$pemCertificate->getContent());
 
-            $crlProblem = $this->checkForCrlProblem($file);
-            if($crlProblem){
-			    return false;
-            }
-            $atTimeOption = " ";
+			$timeStamp=null;
             if($signingTime){
-                $atTimeOption = " -attime " . $signingTime->getTimestamp()." ";
+                $timeStamp = $signingTime->getTimestamp();
             }
 
-
-            $command = OPENSSL_PATH . " verify -CApath ".$this->validca_path  . $atTimeOption.$file;
-
-			exec($command,$output,$return_var);
-
-			$this->last_output = implode("\n",$output);
-			unlink($file);
-
-			if ($return_var != 0){
-				return false;
-			}
+            try{
+                $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+                    $file,
+                    [
+                        3,  //X509_V_ERR_UNABLE_TO_GET_CRL
+                        11,  //X509_V_ERR_CRL_NOT_YET_VALID
+                        12  //X509_V_ERR_CRL_HAS_EXPIRED
+                    ],
+                    $timeStamp
+                );
+            } catch (Exception $e){
+                echo $e->getMessage();
+                return false;
+            }
 		}
 
 		return true;
@@ -285,42 +290,6 @@ class XadesSignature {
 		}
 		$xml->asXML($xml_file_result);
 	}
-
-    /**
-     * @param string $file
-     * @return array
-     */
-    protected function checkForCrlProblem(string $file): bool
-    {
-        $crlProblem = false;
-        $command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
-        exec($command, $output, $return_var);
-
-
-        $file_r0 = $this->validca_path . "/{$output[0]}.r0";
-
-        if (file_exists($file_r0)) {
-            // 1) extraire le SN du certificat
-            // openssl x509 -noout -serial -in cert. pem
-            $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
-            exec($commandGetSerialNumber, $output, $return_var);
-            if ($return_var != 0) {
-                $crlProblem = true;
-            }
-            $serialNumber = $output[0];
-            // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
-            $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
-            // On ne vérifie pas
-            // 1) la date
-            // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-            exec($commandCheckSnInCRL, $output, $return_var);
-            if (!$return_var) {
-                $crlProblem = true;
-            }
-        }
-        return $crlProblem;
-    }
-
 }
 
 class XadesSignatureHasSignatureException extends Exception{}
