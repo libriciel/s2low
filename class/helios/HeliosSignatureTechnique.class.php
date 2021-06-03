@@ -35,9 +35,12 @@ class HeliosSignatureTechnique {
 		$file_signed = sys_get_temp_dir()."/".uniqid("pes_aller_signed");
 
 		if ($this->xadesSignature->isSigned($orig_pes_aller_path)){
-			if (! $this->xadesSignature->verify($orig_pes_aller_path)){
-				throw new UnrecoverableHeliosSignatureTechniqueException("La signature du fichier est invalide");
-			}
+		    try{
+                $this->xadesSignature->verify($orig_pes_aller_path);
+            } catch (Exception $exception){
+                throw new UnrecoverableHeliosSignatureTechniqueException(
+                    "La signature du fichier est invalide : ".$exception->getMessage());
+            }
 		}
 
 		if (! $this->enableSignatureTechnique){

@@ -22,7 +22,12 @@ $xadesSignature = new XadesSignature(
     new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
 );
 
-$verify =  $xadesSignature->verify($xml_file);
+$verify = true;
+try{
+    $xadesSignature->verify($xml_file);
+} catch (Exception $e){
+    $verify = false;
+}
 
 echo "Vérification : ".($verify?"OK":"FAIL")."\n";
 

@@ -197,7 +197,10 @@ class XadesSignature {
 
 	}
 
-	public function verify($xml_file_signed): bool
+    /**
+     * @throws \Exception
+     */
+    public function verify($xml_file_signed): void
     {
 		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
@@ -205,33 +208,28 @@ class XadesSignature {
 
 		$signatureNodeList = $xml->xpath($xpath);
 		if (!$signatureNodeList) {
-			return false;
+            throw new Exception("Impossible d'extraire les signatures");
 		}
 
 		foreach ($signatureNodeList as $signatureNode) {
 			$id = $signatureNode->attributes()->Id;
 			if (!$id) {
-
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
 			$node_id = ltrim($node_id, "#");
 			if (!$node_id) {
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$xpath = "//*[@Id='$node_id']";
 			$element = $xml->xpath($xpath);
 			if (count($element) != 1) {
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$element = $element[0];
 			$name = $element->getName();
 
             $signingTime = $this->xadesSignatureParser->extractXadesSigningTime($xml,strval($id));
-
-			if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
-				return false;
-			}
 
             $pemCertificate = $this->pemCertificateFactory->getFromMinimalString(
                 strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate)
@@ -245,24 +243,21 @@ class XadesSignature {
                 $timeStamp = $signingTime->getTimestamp();
             }
 
-            try{
-                $this->verifyPemCertificate->checkCertificateWithOpenSSL(
-                    $file,
-                    [
-                        3,  //X509_V_ERR_UNABLE_TO_GET_CRL
-                        11,  //X509_V_ERR_CRL_NOT_YET_VALID
-                        12  //X509_V_ERR_CRL_HAS_EXPIRED
-                    ],
-                    $timeStamp
-                );
-            } catch (Exception $e){
-                echo $e->getMessage();
-                return false;
+            $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+                $file,
+                [
+                    3,  //X509_V_ERR_UNABLE_TO_GET_CRL
+                    11,  //X509_V_ERR_CRL_NOT_YET_VALID
+                    12  //X509_V_ERR_CRL_HAS_EXPIRED
+                ],
+                $timeStamp
+            );
+
+            if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
+                throw new Exception("Impossible d'affirmer que la signature correspond au fichier");
             }
 		}
-
-		return true;
-	}
+    }
 
 	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null): bool
     {

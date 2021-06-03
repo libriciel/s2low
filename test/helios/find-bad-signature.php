@@ -37,7 +37,12 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
 		continue;
 	}
 
-	$verify =  $xadesSignature->verify($pes_aller);
+	$verify =  true;
+	try{
+	    $xadesSignature->verify($pes_aller);
+    } catch (Exception $exception){
+	    $verify = false;
+    }
 
 	echo "Vérification : ".($verify?"OK":"FAIL")."\n";
 
