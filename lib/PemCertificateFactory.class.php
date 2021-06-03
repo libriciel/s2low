@@ -8,8 +8,11 @@ class PemCertificateFactory
         $beginpem = "-----BEGIN CERTIFICATE-----\n";
         $endpem = "\n-----END CERTIFICATE-----\n";
 
-        $signing_cert = implode("\n",str_split($nakedCertificate,78));
-        return $beginpem.$signing_cert.$endpem;
+        if (strlen(explode("\n",$nakedCertificate)[0]) >= 64) {
+            $nakedCertificate = preg_replace('/\s+/', ' ', trim($nakedCertificate));
+            $nakedCertificate = rtrim(chunk_split($nakedCertificate, 64, "\n"));
+        }
+        return $beginpem.$nakedCertificate.$endpem;
     }
 
     /**

@@ -37,7 +37,8 @@ $xadesSignature = new XadesSignature(
         new PKCS12(),
         new X509Certificate(),
         EXTENDED_VALIDCA_PATH,
-        new XadesSignatureParser());
+        new XadesSignatureParser(),
+        new PemCertificateFactory());
 $verify_sign =  $xadesSignature->verify($filename);
 $xades_output = $xadesSignature->getLastOutput();
 

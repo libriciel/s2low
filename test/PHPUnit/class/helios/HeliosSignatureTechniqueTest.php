@@ -69,7 +69,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
             new PKCS12(),
             new X509Certificate(),
             __DIR__ . "/../../lib/fixtures/validca_for_xades/",
-            $xadesSignatureParser
+            $xadesSignatureParser,
+            new PemCertificateFactory()
         );
 	}
 

@@ -27,7 +27,8 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
         new PKCS12(),
         new X509Certificate(),
         EXTENDED_VALIDCA_PATH,
-        new XadesSignatureParser()
+        new XadesSignatureParser(),
+        new PemCertificateFactory()
     );
 
 	if (! $xadesSignature->isSigned($pes_aller)){

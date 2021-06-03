@@ -17,13 +17,23 @@ class XadesSignature {
 	private $last_output;
 	/** @var \XadesSignatureParser  */
     private $xadesSignatureParser;
+    /**
+     * @var \PemCertificateFactory
+     */
+    private $pemCertificateFactory;
 
-    public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
+    public function __construct($xmlsec1_path,
+                                PKCS12 $pkcs12,
+                                X509Certificate $x509Certificate,
+                                $validca_path,XadesSignatureParser $xadesSignatureParser,
+                                PemCertificateFactory $pemCertificateFactory
+    ) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
 		$this->validca_path = $validca_path;
 		$this->xadesSignatureParser = $xadesSignatureParser;
+		$this->pemCertificateFactory = $pemCertificateFactory;
 	}
 
 	public function getLastOutput(){
@@ -217,42 +227,17 @@ class XadesSignature {
 				return false;
 			}
 
-			$certif = strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate);
+            $pemCertificate = $this->pemCertificateFactory->getFromMinimalString(
+                strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate)
+            );
 
-			if (strlen(explode("\n",$certif)[0]) >= 64) {
-				$certif = preg_replace('/\s+/', ' ', trim($certif));
-				$certif = rtrim(chunk_split($certif, 64, "\n"));
-			}
-
-			$content = "-----BEGIN CERTIFICATE-----\n".$certif."\n-----END CERTIFICATE-----\n";
 			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());
-			file_put_contents($file,$content);
+			file_put_contents($file,$pemCertificate->getContent());
 
-			$command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
-			exec($command,$output,$return_var);
-
-
-			$file_r0 = $this->validca_path."/{$output[0]}.r0";
-
-			if (file_exists($file_r0)){
-                // 1) extraire le SN du certificat
-                // openssl x509 -noout -serial -in cert. pem
-                $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
-                exec($commandGetSerialNumber,$output,$return_var);
-                if($return_var !=0){
-                    return false;
-                }
-                $serialNumber = $output[0];
-                // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
-                $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
-                // On ne vérifie pas
-                // 1) la date
-                // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-                exec($commandCheckSnInCRL,$output,$return_var);
-                if(!$return_var){
-                    return false;
-                }
-			}
+            $crlProblem = $this->checkForCrlProblem($file);
+            if($crlProblem){
+			    return false;
+            }
             $atTimeOption = " ";
             if($signingTime){
                 $atTimeOption = " -attime " . $signingTime->getTimestamp()." ";
@@ -300,6 +285,41 @@ class XadesSignature {
 		}
 		$xml->asXML($xml_file_result);
 	}
+
+    /**
+     * @param string $file
+     * @return array
+     */
+    protected function checkForCrlProblem(string $file): bool
+    {
+        $crlProblem = false;
+        $command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
+        exec($command, $output, $return_var);
+
+
+        $file_r0 = $this->validca_path . "/{$output[0]}.r0";
+
+        if (file_exists($file_r0)) {
+            // 1) extraire le SN du certificat
+            // openssl x509 -noout -serial -in cert. pem
+            $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
+            exec($commandGetSerialNumber, $output, $return_var);
+            if ($return_var != 0) {
+                $crlProblem = true;
+            }
+            $serialNumber = $output[0];
+            // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+            $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
+            // On ne vérifie pas
+            // 1) la date
+            // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+            exec($commandCheckSnInCRL, $output, $return_var);
+            if (!$return_var) {
+                $crlProblem = true;
+            }
+        }
+        return $crlProblem;
+    }
 
 }
 
