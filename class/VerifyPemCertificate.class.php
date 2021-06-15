@@ -41,10 +41,10 @@ class VerifyPemCertificate
     private function launchOpenSslVerify($certificate_path, string $timestamp =null): array
     {
         $erreurs = [];
-        $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -crl_check $certificate_path 2>&1";
+        $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} $certificate_path 2>&1";
 
         if($timestamp){
-            $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -attime $timestamp -crl_check $certificate_path 2>&1";
+            $verifyCmd = "openssl verify -CApath {$this->authorized_ca_path} -attime $timestamp $certificate_path 2>&1";
         }
         exec($verifyCmd, $out, $ret);
 
