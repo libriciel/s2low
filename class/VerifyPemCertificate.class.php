@@ -81,7 +81,7 @@ class VerifyPemCertificate
      */
     protected function checkForCrlRevocation(string $file) : void
     {
-        $commandShowHash = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
+        $commandShowHash = OPENSSL_PATH . " x509 -issuer_hash -noout -in $file 2>/dev/null";
         exec($commandShowHash, $outputShowHash, $return_var);
 
         if ($return_var != 0) {
