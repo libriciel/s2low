@@ -81,26 +81,31 @@ class VerifyPemCertificate
      */
     protected function checkForCrlRevocation(string $file) : void
     {
-        $command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
-        exec($command, $output, $return_var);
+        $commandShowHash = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
+        exec($commandShowHash, $outputShowHash, $return_var);
 
-        $file_r0 = $this->authorized_ca_path . "/{$output[0]}.r0";
+        if ($return_var != 0) {
+            throw new Exception("Certificat non valide : impossible d'extraire le issuer hash");
+        }
+
+        $file_r0 = $this->authorized_ca_path . "/{$outputShowHash[0]}.r0";
 
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
             // openssl x509 -noout -serial -in cert. pem
             $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
-            exec($commandGetSerialNumber, $output, $return_var);
-            if ($return_var != 0) {
+            exec($commandGetSerialNumber, $outputGetSerialNumber, $return_var);
+            if ($return_var != 0 || !preg_match("#serial=(.*)#",$outputGetSerialNumber[0],$serialNumberMatches)) {
                 throw new Exception("Impossible d'extraire le SN du certificat");
             }
-            $serialNumber = $output[0];
+            $serialNumber = $serialNumberMatches[1];
+
             // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
             $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
             // On ne vérifie pas
             // 1) la date
             // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-            exec($commandCheckSnInCRL, $output, $return_var);
+            exec($commandCheckSnInCRL, $output3, $return_var);
             if (!$return_var) {
                 throw new Exception("Certificat révoqué");
             }
