@@ -27,7 +27,9 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
         new PKCS12(),
         new X509Certificate(),
         EXTENDED_VALIDCA_PATH,
-        new XadesSignatureParser()
+        new XadesSignatureParser(),
+        new PemCertificateFactory(),
+        new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
     );
 
 	if (! $xadesSignature->isSigned($pes_aller)){
@@ -35,7 +37,12 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
 		continue;
 	}
 
-	$verify =  $xadesSignature->verify($pes_aller);
+	$verify =  true;
+	try{
+	    $xadesSignature->verify($pes_aller);
+    } catch (Exception $exception){
+	    $verify = false;
+    }
 
 	echo "Vérification : ".($verify?"OK":"FAIL")."\n";
 

@@ -27,7 +27,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertTrue($info['signature_technique']);
 		$this->assertEquals($info['sha1'],sha1_file("/tmp/{$info['sha1']}"));
 		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
+		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
+		$this->assertTrue(true);    //Vérifie qu'aucune exception n'est lancée
 
 		$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 		$r = $heliosPESValidation->validate(file_get_contents("/tmp/{$info['sha1']}"));
@@ -69,7 +70,9 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
             new PKCS12(),
             new X509Certificate(),
             __DIR__ . "/../../lib/fixtures/validca_for_xades/",
-            $xadesSignatureParser
+            $xadesSignatureParser,
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/../../lib/fixtures/validca_for_xades/")
         );
 	}
 
@@ -105,7 +108,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 		$info = $heliosTransactionSQL->getInfo($transaction_id);
 		$this->assertTrue($info['signature_technique']);
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
+		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
+		$this->assertTrue(true); // vérifie qu'aucune exception n'est lancée
 	}
 
 	public function testDejaSigneBadSignature(){
@@ -132,7 +136,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		);
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$info = $heliosTransactionSQL->getInfo($transaction_id);
-		$this->assertTrue($this->getXadesSignature()->verify("/tmp/{$info['sha1']}"));
+		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
+		$this->assertTrue(true); //Vérifie qu'aucune exception n'est lancée
 	}
 
 	public function testSigneNoID(){

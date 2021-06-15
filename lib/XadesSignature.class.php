@@ -17,13 +17,29 @@ class XadesSignature {
 	private $last_output;
 	/** @var \XadesSignatureParser  */
     private $xadesSignatureParser;
+    /**
+     * @var \PemCertificateFactory
+     */
+    private $pemCertificateFactory;
+    /**
+     * @var \VerifyPemCertificate
+     */
+    private $verifyPemCertificate;
 
-    public function __construct($xmlsec1_path, PKCS12 $pkcs12, X509Certificate $x509Certificate, $validca_path,XadesSignatureParser $xadesSignatureParser) {
+    public function __construct($xmlsec1_path,
+                                PKCS12 $pkcs12,
+                                X509Certificate $x509Certificate,
+                                $validca_path,XadesSignatureParser $xadesSignatureParser,
+                                PemCertificateFactory $pemCertificateFactory,
+                                VerifyPemCertificate $verifyPemCertificate
+    ) {
 		$this->xmlsec1_path = $xmlsec1_path;
 		$this->pkcs12 = $pkcs12;
 		$this->x509Certificate = $x509Certificate;
 		$this->validca_path = $validca_path;
 		$this->xadesSignatureParser = $xadesSignatureParser;
+		$this->pemCertificateFactory = $pemCertificateFactory;
+		$this->verifyPemCertificate = $verifyPemCertificate;
 	}
 
 	public function getLastOutput(){
@@ -181,7 +197,10 @@ class XadesSignature {
 
 	}
 
-	public function verify($xml_file_signed): bool
+    /**
+     * @throws \Exception
+     */
+    public function verify($xml_file_signed): void
     {
 		$xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
@@ -189,90 +208,56 @@ class XadesSignature {
 
 		$signatureNodeList = $xml->xpath($xpath);
 		if (!$signatureNodeList) {
-			return false;
+            throw new Exception("Impossible d'extraire les signatures");
 		}
 
 		foreach ($signatureNodeList as $signatureNode) {
 			$id = $signatureNode->attributes()->Id;
 			if (!$id) {
-
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
 			$node_id = ltrim($node_id, "#");
 			if (!$node_id) {
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$xpath = "//*[@Id='$node_id']";
 			$element = $xml->xpath($xpath);
 			if (count($element) != 1) {
-				return false;
+                throw new Exception("Impossible d'extraire la signature");
 			}
 			$element = $element[0];
 			$name = $element->getName();
 
             $signingTime = $this->xadesSignatureParser->extractXadesSigningTime($xml,strval($id));
 
-			if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
-				return false;
-			}
+            $pemCertificate = $this->pemCertificateFactory->getFromMinimalString(
+                strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate)
+            );
 
-			$certif = strval($signatureNode->children(self::NS_DS_URI)->KeyInfo->X509Data->X509Certificate);
-
-			if (strlen(explode("\n",$certif)[0]) >= 64) {
-				$certif = preg_replace('/\s+/', ' ', trim($certif));
-				$certif = rtrim(chunk_split($certif, 64, "\n"));
-			}
-
-			$content = "-----BEGIN CERTIFICATE-----\n".$certif."\n-----END CERTIFICATE-----\n";
 			$file = "/tmp/s2low_xades_".mt_rand(0,getrandmax());
-			file_put_contents($file,$content);
+			file_put_contents($file,$pemCertificate->getContent());
 
-			$command = OPENSSL_PATH . " x509 -issuer_hash -noout -in " . $file;
-			exec($command,$output,$return_var);
-
-
-			$file_r0 = $this->validca_path."/{$output[0]}.r0";
-
-			if (file_exists($file_r0)){
-                // 1) extraire le SN du certificat
-                // openssl x509 -noout -serial -in cert. pem
-                $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
-                exec($commandGetSerialNumber,$output,$return_var);
-                if($return_var !=0){
-                    return false;
-                }
-                $serialNumber = $output[0];
-                // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
-                $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
-                // On ne vérifie pas
-                // 1) la date
-                // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-                exec($commandCheckSnInCRL,$output,$return_var);
-                if(!$return_var){
-                    return false;
-                }
-			}
-            $atTimeOption = " ";
+			$timeStamp=null;
             if($signingTime){
-                $atTimeOption = " -attime " . $signingTime->getTimestamp()." ";
+                $timeStamp = $signingTime->getTimestamp();
             }
 
+            $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+                $file,
+                [
+                    3,  //X509_V_ERR_UNABLE_TO_GET_CRL
+                    11,  //X509_V_ERR_CRL_NOT_YET_VALID
+                    12  //X509_V_ERR_CRL_HAS_EXPIRED
+                ],
+                $timeStamp
+            );
 
-            $command = OPENSSL_PATH . " verify -CApath ".$this->validca_path  . $atTimeOption.$file;
-
-			exec($command,$output,$return_var);
-
-			$this->last_output = implode("\n",$output);
-			unlink($file);
-
-			if ($return_var != 0){
-				return false;
-			}
+            if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
+                throw new Exception("Impossible d'affirmer que la signature correspond au fichier");
+            }
 		}
-
-		return true;
-	}
+    }
 
 	private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id,DateTime $verificationTime=null): bool
     {
@@ -300,7 +285,6 @@ class XadesSignature {
 		}
 		$xml->asXML($xml_file_result);
 	}
-
 }
 
 class XadesSignatureHasSignatureException extends Exception{}

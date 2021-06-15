@@ -17,10 +17,17 @@ $xadesSignature = new XadesSignature(
     new PKCS12(),
     new X509Certificate(),
     EXTENDED_VALIDCA_PATH,
-    new XadesSignatureParser()
+    new XadesSignatureParser(),
+    new PemCertificateFactory(),
+    new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
 );
 
-$verify =  $xadesSignature->verify($xml_file);
+$verify = true;
+try{
+    $xadesSignature->verify($xml_file);
+} catch (Exception $e){
+    $verify = false;
+}
 
 echo "Vérification : ".($verify?"OK":"FAIL")."\n";
 

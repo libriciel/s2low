@@ -61,8 +61,20 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = new VerifyPemCertificate("$baseCertificatesDir/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate revoked/");
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
         $verificator->checkCertificateWithOpenSSL("$baseCertificatesDir/dateOk/fullchain.pem");
+    }
+
+    public function testVerifyWrongCertificate()
+    {
+        $baseCertificatesDir =__DIR__."/fixtures/certificats";
+        $verificator = new VerifyPemCertificate("$baseCertificatesDir/dateOk/ac/");
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches(
+            "/Certificat non valide : impossible d'extraire le issuer hash/"
+        );
+        $verificator->checkCertificateWithOpenSSL(__DIR__."/fixtures/toto.txt");
     }
 
     public function testVerifyAnExpiredCertificateWithNoRecognizedCA()
@@ -123,7 +135,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/certificate revoked/");
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
         $verificator->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
             VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS

@@ -26,7 +26,9 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 			new PKCS12(),
 			new X509Certificate(),
 			__DIR__ . "/fixtures/validca_for_xades/",
-            new XadesSignatureParser()
+            new XadesSignatureParser(),
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
 		);
 		return $xadesSignature;
 	}
@@ -59,11 +61,12 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             new PKCS12(),
             new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
-            $xadesSignatureParser
+            $xadesSignatureParser,
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
         );
-		$this->assertTrue(
-		    $xadesSignature->verify($signed_file)
-        );
+		$xadesSignature->verify($signed_file); //Test no exception is thrown
+        $this->assertTrue(true);
 	}
 
 	public function filesProvider(){
@@ -73,7 +76,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	private function verify($file_to_verify){
 		$xadesSignature = $this->getXadesSignature();
-		$this->assertTrue($xadesSignature->verify($file_to_verify));
+        $xadesSignature->verify($file_to_verify);
+		$this->assertTrue(true); //test no exception is thrown;
 	}
 
 	public function testSignWithoutDocumentElementId(){
@@ -121,7 +125,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	public function testVerifyNOCA(){
 		$xadesSignature = $this->getXadesSignature();
-		$this->assertTrue($xadesSignature->verify(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml"));
+		$xadesSignature->verify(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
+		$this->assertTrue(true);    //Test no exception is thrown
 	}
 
 	public function testHasSignature(){
@@ -136,7 +141,9 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
 	public function testVerifSignatureNotGlobaleBad() {
 		$xadesSignature = $this->getXadesSignature();
-		$this->assertFalse($xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml"));
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage("Impossible d'affirmer que la signature correspond au fichier");
+		$xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml");
 	}
 
 	public function testDeleteSignature(){
@@ -164,12 +171,20 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             new PKCS12(),
             new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
-            $xadesSignatureParser
+            $xadesSignatureParser,
+            new PemCertificateFactory(),
+            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
         );
 
+        $verify = true;
+        try{
+            $xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau.xml");
+        } catch (Exception $e){
+            $verify =false;
+        }
         $this->assertEquals(
             $expected,
-            $xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau.xml")
+            $verify
         );
     }
 

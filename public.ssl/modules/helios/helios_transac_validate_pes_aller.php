@@ -37,8 +37,18 @@ $xadesSignature = new XadesSignature(
         new PKCS12(),
         new X509Certificate(),
         EXTENDED_VALIDCA_PATH,
-        new XadesSignatureParser());
-$verify_sign =  $xadesSignature->verify($filename);
+        new XadesSignatureParser(),
+        new PemCertificateFactory(),
+        new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
+);
+$verify_sign =  true;
+try{
+    $xadesSignature->verify($filename);
+} catch(Exception $exception){
+    $verify_sign = false;
+    $verify_sign_message = $exception->getMessage();
+}
+
 $xades_output = $xadesSignature->getLastOutput();
 
 $is_signed = $xadesSignature->isSigned($filename);
@@ -107,7 +117,7 @@ ob_start();
 <?php elseif($verify_sign): ?>
 	<div class="alert alert-success">La signature du fichier est valide !</div>
 <?php else : ?>
-	<div class="alert alert-danger">La signature du fichier n'est pas valide !</div>
+	<div class="alert alert-danger">La signature du fichier n'est pas valide : <?php echo $verify_sign_message?></div>
 <?php endif;?>
 
 <div>

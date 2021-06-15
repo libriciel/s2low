@@ -26,6 +26,7 @@ class VerifyPemCertificate
      */
     public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
     {
+        $this->checkForCrlRevocation($certificate_path);
         $erreursVerifyOpenSsl =  $this->launchOpenSslVerify($certificate_path,$timestamp);
         $this->checkForBlockingVerifyErrors($erreursVerifyOpenSsl, $filteredErrors);
 
@@ -69,6 +70,44 @@ class VerifyPemCertificate
         foreach ($errors as $erreur) {
             if (!in_array($erreur["errorCode"], $nonBlockingErrors)) {
                 throw new Exception($erreur["message"]);
+            }
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return void
+     * @throws \Exception
+     */
+    protected function checkForCrlRevocation(string $file) : void
+    {
+        $commandShowHash = OPENSSL_PATH . " x509 -issuer_hash -noout -in $file 2>/dev/null";
+        exec($commandShowHash, $outputShowHash, $return_var);
+
+        if ($return_var != 0) {
+            throw new Exception("Certificat non valide : impossible d'extraire le issuer hash");
+        }
+
+        $file_r0 = $this->authorized_ca_path . "/{$outputShowHash[0]}.r0";
+
+        if (file_exists($file_r0)) {
+            // 1) extraire le SN du certificat
+            // openssl x509 -noout -serial -in cert. pem
+            $commandGetSerialNumber = "openssl x509 -noout -serial -in $file";
+            exec($commandGetSerialNumber, $outputGetSerialNumber, $return_var);
+            if ($return_var != 0 || !preg_match("#serial=(.*)#",$outputGetSerialNumber[0],$serialNumberMatches)) {
+                throw new Exception("Impossible d'extraire le SN du certificat");
+            }
+            $serialNumber = $serialNumberMatches[1];
+
+            // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+            $commandCheckSnInCRL = "openssl crl -in $file_r0 -text -noout | grep $serialNumber";
+            // On ne vérifie pas
+            // 1) la date
+            // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+            exec($commandCheckSnInCRL, $output3, $return_var);
+            if (!$return_var) {
+                throw new Exception("Certificat révoqué");
             }
         }
     }

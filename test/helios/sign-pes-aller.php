@@ -17,7 +17,9 @@ $xadesSignature = new XadesSignature(
     new PKCS12(),
     new X509Certificate(),
     EXTENDED_VALIDCA_PATH,
-    new XadesSignatureParser()
+    new XadesSignatureParser(),
+    new PemCertificateFactory(),
+    new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
 );
 
 $xadesSignatureProperties = new XadesSignatureProperties();
