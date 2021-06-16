@@ -442,7 +442,7 @@ class Authority extends DataObject {
 	  while ($row = $result->get_next_row()) {
 		$types[] = array("code" => $row["id"], "description" => $row["description"], "type" => "parent");
 
-		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=" . pg_escape_string($row["id"]);
+		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=" . pg_escape_string($row["id"])."ORDER BY id";
 
 		$result2 = $db->select($sql);
 		if (! $result2->isError()) {
