@@ -57,6 +57,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
     // myCA.pem
     //      notBefore=Jun 12 14:00:56 2020 GMT
     //      notAfter=Jun 11 14:00:56 2025 GMT
+    // L'EXPIRATION DES CRLS N'EST PAS PRISE EN COMPTE !
     // crl.pem
     //      lastUpdate=Jan 26 15:00:58 2021 GMT
     //      nextUpdate=Jan 24 15:00:58 2031 GMT
@@ -87,12 +88,6 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         return [
             [new DateTime("Jun 12 14:00:57 2020", new DateTimeZone("GMT")),
                 "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
-            ],
-            [new DateTime("Jun 12 14:00:58 2020", new DateTimeZone("GMT")),
-                " CRL is not yet valid"
-            ],
-            [new DateTime("Jan 26 15:00:57 2021", new DateTimeZone("GMT")),
-                " CRL is not yet valid"
             ],
             [new DateTime("Jun 10 14:00:59 2030", new DateTimeZone("GMT")),
                 "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"

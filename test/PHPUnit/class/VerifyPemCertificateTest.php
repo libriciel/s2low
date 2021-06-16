@@ -187,8 +187,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
             self::BASE_CERTIFICATES_DIR . "/dateOk/emptyac/"
         );
 
-        $this->expectNotToPerformAssertions();              //Même si ce n'est pas ok, l'erreur n'apparait pas car
-        $verificator->checkCertificateWithOpenSSL(          //Openssl verify s'arrête avant la vérification
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(" certificate has expired");
+        $verificator->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR . "/autosignedDateKo/cert.pem",
             VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
