@@ -144,6 +144,51 @@
             "id": "55",
             "parent_type_id": "5",
             "description": "Autres"
+        },
+        {
+            "id": "6",
+            "parent_type_id": "",
+            "description": "Association syndicale"
+        },
+        {
+            "id": "61",
+            "parent_type_id": "6",
+            "description": "Association syndicale autoris\u00e9e"
+        },
+        {
+            "id": "62",
+            "parent_type_id": "6",
+            "description": "Association fonci\u00e8re urbaine autoris\u00e9e"
+        },
+        {
+            "id": "63",
+            "parent_type_id": "6",
+            "description": "Association fonci\u00e8re de remembrement"
+        },
+        {
+            "id": "7",
+            "parent_type_id": "",
+            "description": "Autre"
+        },
+        {
+            "id": "71",
+            "parent_type_id": "7",
+            "description": "Autre"
+        },
+        {
+            "id": "72",
+            "parent_type_id": "2",
+            "description": "Soci\u00e9t\u00e9 publique locale ou soci\u00e9t\u00e9 publique locale d'am\u00e9nagement"
+        },
+        {
+            "id": "73",
+            "parent_type_id": "7",
+            "description": "Soci\u00e9t\u00e9 d'\u00e9conomie mixte locale"
+        },
+        {
+            "id": "74",
+            "parent_type_id": "7",
+            "description": "Commission syndicale pour la gestion des biens indivis des communes"
         }
     ],
     "modules": [

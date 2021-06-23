@@ -7,6 +7,7 @@
 - Ajout d'une API de statistique actes et les pes aller pour les admins de groupe #610
 - Prise en compte de la date pour la vérification des signatures Xades Pes aller #486
 - Explicitation de l'erreur rencontrée lors de la vérification de la signature dans le cas Xades Pes aller #707
+- Ajout des nouveaux codes de nature de collectivité fournis par la DGCL #712
 
 ## Correction
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
