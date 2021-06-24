@@ -1,4 +1,4 @@
-# 4.3.9
+# 4.3.9 2021 06 24
 
 ## Évolution
 - Ajout d'une API de statistique actes pour les admins de groupe #610
@@ -13,6 +13,7 @@
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
+
 # 4.3.8 - 2021 04 07
 
 ## Correction
