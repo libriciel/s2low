@@ -10,7 +10,7 @@ $sql = "SELECT helios_transactions.id,helios_transactions.submission_date,filena
     " JOIN helios_transactions_workflow ON helios_transactions_workflow.transaction_id=helios_transactions.id ".
     " WHERE last_status_id=? AND helios_transactions.submission_date > ? AND helios_transactions.submission_date<? AND status_id=? order by submission_date";
 
-$all = $sqlQuery->query($sql,HeliosTransactionsSQL::POSTE,"2021-08-19","2021-08-20",HeliosTransactionsSQL::ERREUR);
+$all = $sqlQuery->query($sql,HeliosTransactionsSQL::ERREUR,"2021-08-19","2021-08-20",HeliosTransactionsSQL::ERREUR);
 
 $i=0;
 //print_r($all);
