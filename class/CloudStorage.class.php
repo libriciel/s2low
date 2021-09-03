@@ -141,8 +141,6 @@ class CloudStorage {
 		$finder = $this->iCloudStorable->getFinder();
 
 		foreach($finder as $file) {
-            echo "-----------------------------\n";
-            echo $file->getPath()."\n";
 
 			if ($sigtermHandler->isSigtermCalled()){
 				break;
