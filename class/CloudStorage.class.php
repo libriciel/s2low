@@ -230,8 +230,8 @@ class CloudStorage {
         $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
             ->getFilePathOnCloudWithFileOnDiskPath($filePath);
 
-        $TempFilePathOnCloudWithFileOnDiskPath = preg_replace(
-            "_/import/_",
+        $TempFilePathOnCloudWithFileOnDiskPath = str_replace(
+            "/import/",
             "/import//",
             $filePathOnCloudWithFileOnDiskPath
         );
