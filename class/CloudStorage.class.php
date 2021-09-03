@@ -141,6 +141,8 @@ class CloudStorage {
 		$finder = $this->iCloudStorable->getFinder();
 
 		foreach($finder as $file) {
+            echo "-----------------------------\n";
+            echo $file->getPath()."\n";
 
 			if ($sigtermHandler->isSigtermCalled()){
 				break;
@@ -152,17 +154,25 @@ class CloudStorage {
 			}
             $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
                 ->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
-
-            if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
-                $this->iCloudStorable->getContainerName(),
+            echo "a";
+            $TempFilePathOnCloudWithFileOnDiskPath = preg_replace(
+                "_/import/_",
+                "/import//",
                 $filePathOnCloudWithFileOnDiskPath
-            )){
-                $filePathOnCloudWithFileOnDiskPath = preg_replace(
-                    "_/import/_",
-                    "/import//",
-                    $filePathOnCloudWithFileOnDiskPath
-                );
+            );
+
+            if ((!$this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $filePathOnCloudWithFileOnDiskPath))
+                &&
+                ($this->openStackSwiftWrapper->fileExistsOnCloud(
+                    $this->iCloudStorable->getContainerName(),
+                    $TempFilePathOnCloudWithFileOnDiskPath))
+            ){
+                echo "b";
+                $filePathOnCloudWithFileOnDiskPath = $TempFilePathOnCloudWithFileOnDiskPath;
             }
+            echo "File path on cloud : " . $filePathOnCloudWithFileOnDiskPath;
 
             $this->logger->debug("File path on cloud : " . $filePathOnCloudWithFileOnDiskPath);
 
