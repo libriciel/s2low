@@ -152,27 +152,7 @@ class CloudStorage {
 				$this->logger->debug("File {$file->getFilename()} too young to die : not deleted");
 				continue;
 			}
-            $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
-                ->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
-            echo "a";
-            $TempFilePathOnCloudWithFileOnDiskPath = preg_replace(
-                "_/import/_",
-                "/import//",
-                $filePathOnCloudWithFileOnDiskPath
-            );
-
-            if ((!$this->openStackSwiftWrapper->fileExistsOnCloud(
-                $this->iCloudStorable->getContainerName(),
-                $filePathOnCloudWithFileOnDiskPath))
-                &&
-                ($this->openStackSwiftWrapper->fileExistsOnCloud(
-                    $this->iCloudStorable->getContainerName(),
-                    $TempFilePathOnCloudWithFileOnDiskPath))
-            ){
-                echo "b";
-                $filePathOnCloudWithFileOnDiskPath = $TempFilePathOnCloudWithFileOnDiskPath;
-            }
-            echo "File path on cloud : " . $filePathOnCloudWithFileOnDiskPath;
+            $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getPath());
 
             $this->logger->debug("File path on cloud : " . $filePathOnCloudWithFileOnDiskPath);
 
@@ -242,4 +222,32 @@ class CloudStorage {
 
 		return $result;
 	}
+
+    /**
+     * @param $file
+     * @return array|string|string[]|null
+     */
+    public function getFilePathOnCloudWithFileOnDiskPath($filePath)
+    {
+        $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
+            ->getFilePathOnCloudWithFileOnDiskPath($filePath);
+
+        $TempFilePathOnCloudWithFileOnDiskPath = preg_replace(
+            "_/import/_",
+            "/import//",
+            $filePathOnCloudWithFileOnDiskPath
+        );
+
+        if ((!$this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $filePathOnCloudWithFileOnDiskPath))
+            &&
+            ($this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $TempFilePathOnCloudWithFileOnDiskPath))
+        ) {
+            $filePathOnCloudWithFileOnDiskPath = $TempFilePathOnCloudWithFileOnDiskPath;
+        }
+        return $filePathOnCloudWithFileOnDiskPath;
+    }
 }

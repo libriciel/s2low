@@ -267,5 +267,15 @@ class CloudStorageTest extends S2lowTestCase {
         $this->assertLogMessage("Object not yet in cloud",3);
     }
 
+    public function testFileNotIncloud(){
+        return true;                        //TODO
+    }
 
+    public function testFileInCloudWithSamePath(){
+        return true;                        //TODO
+    }
+
+    public function testFileInCloudWithDoubleSlash(){
+        return true;                        //TODO
+    }
 }
