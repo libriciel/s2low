@@ -67,6 +67,10 @@ docker-php-ext-install \
     pgsql \
     zip
 
+# Fix specific problem with Debian/libcurl/let'encrypt  https://serverfault.com/a/1079226
+sed -i '/^mozilla\/DST_Root_CA_X3/s/^/!/' /etc/ca-certificates.conf && update-ca-certificates -f
+
+
 #Suite site pear down suite à attaque
 cd /tmp
 wget https://ressources.libriciel.fr/deploiement/m/mail-v1.4.1.tar.gz \
