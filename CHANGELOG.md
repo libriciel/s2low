@@ -1,3 +1,8 @@
+# 4.3.10
+
+## Correction
+- Correction de l'extraction des certificats comportant un saut de ligne en début ou fin depuis les flux helios #714
+
 # 4.3.9 2021 06 24
 
 ## Évolution

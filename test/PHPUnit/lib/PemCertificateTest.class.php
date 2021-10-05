@@ -27,4 +27,15 @@ class PemCertificateTest extends S2lowTestCase
         $this->expectNotToPerformAssertions();
         $certificate->checkCertificateIsValidAtDate(new DateTime());
     }
+
+    public function testAnOkMinimalCertificateWithLineBreaks()
+    {
+        $factory = new PemCertificateFactory();
+        $certificate = $factory->getFromMinimalString(
+            file_get_contents(self::BASE_CERTIFICATES_DIR."/dateOk/MinimalFullChainWithLineBreaks.pem")
+        );
+
+        $this->expectNotToPerformAssertions();
+        $certificate->checkCertificateIsValidAtDate(new DateTime());
+    }
 }
