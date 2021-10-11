@@ -25,7 +25,8 @@
     "ext-openssl": "*",
     "ext-json": "^1.6",
     "libriciel/tdt-lib-actes": "^1.1",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "erusev/parsedown": "^1.7"
   },
 
   "require-dev": {
