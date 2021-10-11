@@ -1,9 +1,9 @@
-# 4.3.10
+# 4.3.10 - 2021 10 11
 
 ## Correction
 - Correction de l'extraction des certificats comportant un saut de ligne en début ou fin depuis les flux helios #714
 
-# 4.3.9 2021 06 24
+# 4.3.9 - 2021 06 24
 
 ## Évolution
 - Ajout d'une API de statistique actes pour les admins de groupe #610
