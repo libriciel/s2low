@@ -177,7 +177,7 @@
 - Un message d'erreur empêche d'uploader un PES aller vide #547
 - Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
 - Ajout d'un script permettant de changer le statut d'une transaction actes
-- OpenStack : Passage de l'Identity API v2.0 à l'Identity API v3.0.  Toutes les constantes *_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par *_OPENSTACK_AUTHENTICATION_URL_V3 #574
+- OpenStack : Passage de l'Identity API # 2.0 à l'Identity API v3.0.  Toutes les constantes *_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par *_OPENSTACK_AUTHENTICATION_URL_V3 #574
  
 ## Correction
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
@@ -742,7 +742,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
 
 
-## [3.0.0-rc1] - 2017-09-18
+## 3.0.0-rc1 - 2017-09-18
 
 ## Ajouts
 
@@ -787,7 +787,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
 - Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle
 <num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml à la place de retour.xml ~Actes
-- Mise en place du nouveau schéma Actes V2.2 #177 ~Actes
+- Mise en place du nouveau schéma Actes # 2.2 #177 ~Actes
 - Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
@@ -817,14 +817,14 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
 - Suppression de la constante ACTES_ANTIVIRUS_COMMAND, utilisation de ANTIVIRUS_COMMAND à la place #220
 
-## [2.6.6] - 2017-10-02
+## 2.6.6 - 2017-10-02
 
 ## Corrections
 - Prise en compte des cas où les PES_ALLER ne sont plus sur le serveur
 
 
 
-## [2.6.5] - 2017-06-29
+## 2.6.5 - 2017-06-29
 
 ## Ajouts
 - Utilisation d'un stockage objet pour les PES Aller
@@ -836,20 +836,20 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide ~Helios
 - Correction de fautes d'orthographes
 
-## [2.6.4] - 2017-06-14
+## 2.6.4 - 2017-06-14
 
 ## Corrections
 
 - Correction d'un bug d'affichage empechant de répondre au message de type courrier simple ~Actes
 
-## [2.6.3] - 2017-06-09
+## 2.6.3 - 2017-06-09
 
 
 ## Évolutions
 
 - Mise à jour du schéma PES en version 5.3 ~Helios
 
-## [2.6.2] - 2017-06-08
+## 2.6.2 - 2017-06-08
 
 ## Ajouts
 - script de monitoring des fichiers Actes et Helios restés trop longtemps dans un certain état ~Actes ~Helios
@@ -863,7 +863,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 ## Corrections
 - correction de warning dans le code
 
-## [2.6.1] - 2017-05-23
+## 2.6.1 - 2017-05-23
 
 ## Ajouts
 - le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~Administration
@@ -873,12 +873,383 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 
 
-# [2.6.0] - 2017-04-13
+# 2.6.0 - 2017-04-13
 
 ## Evolutions
 - Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur
 (NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
-- Le script de migration (script/migration/v2.5-to-v2.6.php) permet  de mettre à jour la base de données.
+- Le script de migration (script/migration/# 2.5-to-# 2.6.php) permet  de mettre à jour la base de données.
+
+# 2.6.3 - 2017-06-09
+- Mise à jour du schéma PES en version 5.3 ;
+
+# 2.6.2 - 2017-06-08
+- Version n'apportant pas d'évolution fonctionnelle ;
+
+# 2.6.1 - 2017-05-23
+- Administration : permettre l'ajout d'un message d'information pour les utilisateurs ;
+
+# 2.6.0 - 2016-10-27
+- Module ACTES : ajout d'une API pour déclencher la télétransmission d'un acte via RGS** partagé avec un couple identifiant/mot de passe ;
+- Module ACTES : une date doit toujours être indiquée dans le demande de classification ;
+- Administration : affichage de l'identifiant de l'utilisateur dans la partie "Gestion des utilisateurs" ;
+
+# 2.5.1 - 2016-10-27
+- Administration : ajout du département de la Mayotte
+
+# 2.5.0 - 2016-10-01
+- Modules ACTES : prise en compte des nouveaux mails d'acquittement du MI ;
+- Modules ACTES : possibilité d'ajouter la date d'affichage dans le tampon apposé par S²LOW ;
+- Modules ACTES : le système de notification par défaut, introduit en version 1.3.2, est désormais le seul utilisable ;
+- Modules ACTES : enregistrement de l'intitulé de la classification au moment de la création de la transaction ;
+- Modules ACTES : API : en cas d'erreur le retour -1 est complété par la raison de l'erreur ;
+- Modules HELIOS : contrôle du bon paramétrage du module pour autoriser à télétransmettre ;
+- Administration : optimisation de l'accès au journal des événements ;
+- Administration : ajout d'une page d'administration des transactions HELIOS ;
+- Administration : contrôle renforcé sur les adresses mails ;
+
+# 2.4.1 - 2016-05-24
+- Modules HELIOS : correction sur certains fichiers acquitement rejetés à tort 
+- Modules HELIOS : surveillance des fichiers d'acquittement non-intégrés et acquittement non-reçus 
+- Modules HELIOS : correction liste sur FTP différent en fonction du serveur
+
+# 2.4.0 - 2016-05-16
+- Module ACTES/HELIOS : système de versement global des transactions sur une période donnée par collectivité ; 
+- Module ACTES : partie JAVA - interdiction des numéros de moins de deux caractères ; 
+- Module ACTES: correction de l'expression régulière chargée de vérifier les numéros d actes ; 
+- Module ACTES : interdiction de finir un numéro d actes autrement que par 0-9A-Z ; 
+- Module HELIOS : amélioration du système de canonisation des fichiers XML ; 
+- Module ACTES/HELIOS : système de versement passé en mode asynchrone ; 
+- Administration : ajout de l'API permettant de tester si le certificat d'authentifiation est de niveau RGS ; 
+- Récupération de fichier OCRE (orchestrateur uniquement) ; 
+- Optimisation de la consultation du journal des événements.
+
+# 2.3.2 - 2016-04-18
+- HELIOS : Modification du schéma XSD : passage à la version 491.
+
+#2.3.1 - 2016-01-27
+- HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ; 
+- HELIOS : on ne vérifie plus les schémas XSD ; 
+- ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ; 
+- HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER.
+
+# 2.3 - 2015-12-05
+- Ensemble des pages : les champs recherche sur les collectivités ont été changés en select2 ; 
+- Optimisation du journal des événements ; 
+- Administration : les personnes partageant un certificat sont affichées par ordre alphabétique ; 
+- Administration : amélioration du filtre de recherche sur la collectivité ; 
+- Administration : dans la fiche utilisateur on informe si la partie publique du certificat est issue d'une AC accréditée ; 
+- La liste des modules est fixe dans les menus ; 
+- Nouveau mécanisme de contrôle des certificats basé sur l'empreinte SHA1 ; 
+- Module ACTES/HELIOS : on ne peut plus télétransmettre si le certificat n'est pas un RGS ; 
+- Module ACTES : authentification par RGS* associée à un RGS** ; 
+- Module ACTES : nouvelle présentation du système d'authentification dans la fiche utilisateur ; 
+- Module ACTES : possibilité de verser par lot les actes à l'état validé ; 
+- Module ACTES : le trigramme et le quadrigramme sont désormais vérifiés par la partie PHP ; 
+- Module ACTES : l'administrateur de groupe ne voit plus les boutons Créer, Importer et Traitement par lot ; 
+- Module ACTES/HELIOS : S²LOW ordonne à Pastell de supprimer le document lorsque le versement s'est correctement déroulé ; 
+- Module HELIOS : ajout de la recherche sur la balise NomFic ; 
+- Module HELIOS : Notification aux administrateurs de la plate-forme lors d'un problème d'accès au FTP de la DGFiP ; 
+- Module HELIOS : Déplacement du fichier PES dans un dossier spécifique en cas d'erreur sur le fichier ; 
+- Module HELIOS : retour du bouton pour le versement par lot ; 
+- Module HELIOS : nouveau système de collecte des SIRET pour l'analyse des PES_RETOUR ; 
+- Module HELIOS : permettre de sélectionner plusieurs transactions ; 
+- Module HELIOS : les flux PES_ALLER sont signés techniquement par S²LOW, dans certains cas ; 
+- Module ACTES/HELIOS : changement d'id de transfert par identifiant Pastell ; 
+- Module HELIOS : l'analyse des fichiers par l'antivirus se fait, désormais, lors de l'analyse du PES ; 
+- Module HELIOS : versement des flux à l'état Refusé par le SAE ; 
+- Module ACTES : correction bug : il n'est plus possible de verser deux fois le même ACTES ; 
+- Module ACTES : correction bug : il n'est plus possible de créer un acte sans fournir le pdf principal ; 
+- Module ACTES : correction bug : création d'une transaction sans indiquer la nature ; 
+- Module HELIOS : correction bug : analyse des PES_ALLER lorsque la balise NomFic contient des accents ; 
+- Module Mails : correction bug ; sous IE, il n'était pas possible de saisir deux emails dans le même champ;
+
+# 2.2 - 2015-09-25
+- API : une nouvelle API permet de tester la connexion à la plate-forme S²LOW ;
+- Administration : l'authentification par certificat RGS* peut être couplée avec un RGS** ;
+- Administration : il ne peut plus y avoir d'espace dans l'adresse mail d'un utilisateur ;
+- Module HELIOS : le système d'analyse et de télétransmission des flux PES a été scindé en deux parties ;
+- Module HELIOS : les schémas PESv2 ont été mis à jour et récupéré sur Xemelios ;
+- Modules ACTES et HELIOS : le menu de sélection de la collectivité a été remplacé pour etre plus intuitif ;
+- Module HELIOS : les PES récupérés erronés sont déplacés dans un dossier spécifique ;
+- Module ACTES : mise en place de la macro ACTES_MAIL_BACKUP ;
+- Module ACTES : correction bug : si l'antivirus n'était pas lancé, les flux ne pouvaient pas être analysés et ils passaient en erreur ;
+
+# 2.1.01 - 2015-06-23
+- Module HELIOS : correction bug : la signature HELIOS introduisait un ID dans les bordereaux ;
+- Module ACTES : correction bug : les signatures des transactions n'étaient plus incluses dans le cadre de la soumission d'une enveloppe complète ;
+- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
+- Administration : correction bug : affichage de la date expiration du certificat ;
+- Module HELIOS : ajout de la macro HELIOS_FTP_PASSIVE_MODE ;
+- Module HELIOS : pour la signature en local, les PES sont signés au niveau bordereaux si ils ont des ID ;
+
+# 2.1 - 2015-06-08
+- Module HELIOS : correction bug : erreur d'import des fichiers dont les noms comportaient des caractères spéciaux ;
+- Module ACTES : correction bug : horodatage du nom de la personne déclenchant la télétransmission ;
+- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
+- Module HELIOS : changement du message pour l'état Posté ;
+- Module ACTES : optimisation du mécanisme de vérification des fichiers par l'antivirus ;
+- Optimisation de la base de données ;
+
+# 2.0 - 2015-05-05
+- Module HELIOS : prise en charge des XML complexes pour la signature ;
+- Module ACTES : correction bug : vérification que le fichier PDFTK existe ;
+- Module ACTES : correction bug : amélioration vérification des signatures lors de l'import des enveloppes ;
+- Module ACTES : correction bug : remise en place du versement par lot ;
+- Administration : correction bug : vérification du département et de l'arrodissement via les API ;
+- Administration : correction bug : seul le superadmin peut modifier le paramétrage SAE ;
+- Module ACTES : traitement par lot changement du bouton Envoyer par Créer le lot ;
+- Module ACTES : ajout de l'identifiant unique dans le tampon ajouté par S²LOW ;
+- Module ACTES : transmission de la signature électronique de l'acte lors du versement au SAE ;
+- Module ACTES : permettre à un administrateur de collectivité de verser au SAE ;
+- Module ACTES : transmission de l'acte tamponné lors du versement au SAE ;
+- Module ACTES : nouvelle API permettant de récupérer la liste des documents d'une transaction ;
+- Passage sous Postgres 9.4 ;
+- Passage sous Openssl 1.0 ;
+- Passage sous PHP5.5 ;
+
+# 15.01 2014-12-17
+ - Module MAILS : correction bug : si un destinataire est en double dans un même champ on obtient une page blanche ;
+ - Module MAILS : correction bug : lors de l'ajout d'un contact, le champ description n'était pas pris en compte ;
+ - Module MAILS : correction bug : le champ CCI n'était pas autocomplété ;
+ - Module HELIOS : correction bug : les commandes SITE n'étaient pas correctement envoyées ;
+ - Correction bug : suppression des \n dans les boites de dialogues ;
+ - Correction de fautes d'orthographe ;
+ - Correction bug : prise en compte du droit choississez dans l'affichage des modules autorisés ;
+ - Module ACTES : agrémentation des informations envoyées à Pastell dans le cadre du versement SEDA ;
+ - Module ACTES : ajout de l'identifiant unique dans le tampon ;
+ - Module HELIOS : sécurisation de l'API de mise à disposition des PES_ACQUIT/ACK/NACK ;
+ - Module HELIOS : amélioration de la regexp d'analyse des retours des commandes FTP ;
+ - Module HELIOS : ajout de la vérification de la taille du PES lors de l'import via API plus contrôle par l'antivirus avant d'accepter le dépot ;
+ - Module ACTES : nouvelle API permettant la télétransmission en préfecture via redirection d'URL ;
+ - Module MAILS : les commandes console sont commentées pour garder une compatibilité avec IE ; 
+ - Mise en place d'un fichier de configuration générique ;
+
+# 15 - 2014-08-05
+- Refonte globale de l'interface web pour être aux normes d'accessibilités ;
+- Passage sous Bootstrap v3 de l'interface web ;
+- Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;
+- Module ACTES : possibilité d'envoyer un PDF joint à un XML (acte budgétaire) ;
+- Module ACTES : lors d'une annulation,l'acte principal passe à l'état annulé et la transaction d'annulation passe à l'état acquitement reçu ;
+- Module HELIOS : optimisation du module ;
+- Module HELIOS : refonte du système d'envoi des flux PES pour passer de JAVA à PHP ;
+- Module HELIOS : ajout de la signature électronique du flux PES_ALLER;
+
+# 14.01 - 2014-01-14
+- Module ACTES : correction bug : versement SEDA via Pastell en HTTPS;
+
+# 14 - 2013-11-09
+- Module MAIL : correction bug : problème d'encodage des API ;
+- Administration : versement au SAE via Pastell;
+- Module ACTES : versement par lot au SAE ;
+- Module ACTES : ajout du nouvel état d'attente via les API pour que les actes puissent être validés par l'agent télétransmetteur ;
+- Module ACTES : ajout d'un statut permettant de temporiser l'envoi d'un acte après sont dépôt sur le TdT;
+- Module HELIOS : versement au SAE ;
+- Module DIA : ajout du module ;
+
+# 13.2 - 2013-05-06
+- Module ACTES : nouveau système de notification d'acquittement pour les agents télétransmetteur
+
+# 13.1 - 2013-01-15
+- Module ACTES : correction bug : la variable pdfgenerate n'était pas correctement réinitialisée. Cela entrainait une erreur sur le PDF joint aux notifications automatiques ;
+- Module ACTES : correction bug : il est possible de filtrer les actes sur l'état "Refus d'envoi" ;
+- Module ACTES : correction bug : l'état "en cours" prend en compte les transactions aux états "Document reçu" et "Acquittement envoyé";
+- Module HELIOS : correction bug : l'émission des flux PESv2 est beaucoup plus rapide et la servlet ne se bloque plus ;
+- Module HELIOS : correction bug : les administrateurs de groupes ne peuvent plus lister les transactions des collectivités n'appartenant pas à leur groupe ;
+- Module HELIOS : correction bug : la gestion des droits sur ce module a été revue pour ne plus dépendre du module ACTES ; 
+- Module MAIL: correction bug : protection renforcée sur l'insertion de code dans les champs Nom et adresse mail ;
+- Module ACTES : utilisation du logiciel pdfsam-console pour rendre les actes au format PDF tamponnables lorsque pdftk ne peut être utilisé ;
+- Module HELIOS : amélioration de la récupération des PES ACK/NACK en utilisant un script PHP en lieu et place d'une servlet JAVA car cette dernière se bloquait ;
+- Module MAIL : le navigateur web Mozilla Firefox ne remplit plus automatiquement le formulaire avec les login/mot de passe de l'agent ;
+- Administration : modification de l'API "Liste des collectivités". Il est possible de filtrer sur tout ou partie du SIREN ;
+
+# 13 - 2012-10-31
+- Module ACTES : correction bug : les PDFs optimisés sont pris en compte pour apposer le cartouche/tampon dans les mails de notifications ;
+- Module ACTES : correction bug : la supression des dossiers temporaires unzip doit être faite après avoir changé de répertoire courant pour éviter un NOTICE ;
+- Module ACTES : correction bug : les fichiers avec l'extension .PDF sont tamponnés ;
+- Module ACTES : correction bug : la position du cartouche est fixe sur les documents ;
+- Module ACTES : correction bug : l'orthographe du mot envoi a été corrigée sur différentes pages ;
+- Module ACTES : correction bug : le caractère : est en trop sur certaines pages ;
+- Module HELIOS : correction bug : la colonne suivi indique toujours le même nom ;
+- Module ACTES : le versement au SAE intègre les courriers Ministèriel lié à l'acte versé ;
+- Module ACTES : Le traitement par lot a été totalement revu et abandonne JAVA ;
+- Module ACTES : Les mails de notification de reception d'un courrier Ministèriel sont plus explicites ;
+- Module ACTES : Dans les détails d'une transaction, l'identifiant de transafert au SAE est indiqué ;
+- Module ACTES : correction bug : la validation ou le refus d'un acte n'est plus possible si une demande d'annulation est en cours;
+- Module HELIOS : Les API "graphique" ne sont plus présentes dans la page d'import ;
+- Module MAIL : Le corps du mail de notification envoyé aux destinataires a été reformulé suite aux demandes des collectivités ;
+- Module MAIL : Le nombre de carcatères autorisés dans le carnet d adresses pour les noms des contacts est passé à 100 ;
+- Module MAIL : Les champs "Nom" et "Adresse mail" sont protégés contre l'insertion de code ;
+- Admnistration : Le nombre de caractères autorisés dans le champ adresse électronique de diffusion d information est passé à 2000 ;
+- Administration : Modification de l'interface de paramétrage du connecteur SAE ;
+- Administration : De nouvelles API permettent la gestion des collectivités, des utilisateurs, des groupes ;
+
+# 12.2 - 2012-06-01
+- Module ACTES : les PDFs optimisés sont pris en comptes pour apposer le cartouche/tampon
+- Module ACTES : les adresses mails par défaut ne sont plus décochables
+- Module ACTES : le bouton versement SEDA s'affiche uniquement lorsque la collectivité est paramétrée
+- Module ACTES : augmentation du niveau de logs pour les mails de notification envoyés automatiquement
+- Module MAIL : la limite du nombre de caractères pour les adresses mails du carnet d'adresses est passée de 50 à 100.
+- Module ACTES : correction bug : la suppression des fichiers temporaires entrainait un warning dans les logs
+- Module ACTES : correction bug : lors de la réception d'un courrier Ministèriel, celui est désormais rattaché au propriétaire de l'acte concerné
+- Module MAIL : correction bug : les sujets des mails dépassant 74 caractères subissaient un problème d'encodage
+- Module HELIOS : correction bug : le mot list est remplacé par liste
+
+# 12.1 - 2012-03-20
+- Module ACTES et MAIL : correction bug : modification des entêtes des mails envoyés pour ne plus avoir de BAD HEADER
+- Module HELIOS : correction bug : en cas d erreur lors de la transmis d un flux, un message indiquant le problème est fourni
+- Module MAIL : correction bug : modification du code HTML pour ne plus être détecté à tort comme du SPAM
+- Administration : correction bug : les siren sont vérifiés lorsqu ils sont ajoutés via le formulaire
+- Administration : correction bug : problème d authentification avec des certificats dont les noms des AC comportent des accents
+- Module ACTES : prise en compte des retours du MIOCT dont la partie numéro dépasse 4 caractères
+- Module ACTES : ajout du statut classification mise à jour
+- Module ACTES : suppression des dossiers et fichiers temporaires
+- Module ACTES : les administrateurs de collectivités peuvent visualiser le détail des transactions
+- Module HELIOS : prise en compte des nouveaux PES ACK délivrés par le DGFiP
+- Module HELIOS : nouvelle méthode de récupération des flux mis à disposition par la DGFiP
+- Module HELIOS : prise en compte des fichiers vide présents sur les serveurs de la DGFiP
+- Module HELIOS : l administrateur de groupe peut lister les transactions par collectivité
+- Administration : modification des intitulés des champs SAE dans les paramètres des collectivités
+
+# 12 - 2011-11-16
+- Module ACTES : Correction bug : Informations complémentaires sur les réponses aux flux 3 et4
+- Module ACTES : Correction bug : Notifications à ne pas envoyer aux utilisateurs désactivés
+- Module ACTES : Correction bug : Notification automatiques bloquées
+- Module ACTES : Correction bug : Messages d erreurs eronnés lors de la création des actes
+- Module ACTES : Correction bug : Mails de notifications envoyés en double
+- Module ACTES : Correction bug : Les caractères Microsoft Word sont acceptés
+- Module ACTES : Correction bug : La limite du nombre d annexes dans les transactions est augmentée et peut être modifiée simplement
+- Module ACTES : Correction bug : L agent télétransmetteur est desormais notifié automatiquement
+- Module ACTES : Correction bug : Tous les caractères sont acceptés dans l objet
+- Module ACTES : Correction bug : La limite du nombre de fichiers dans le traitement par lot est augmentée et peut être modifiée simplement
+- Module ACTES : Correction bug : Dans le tampon l orthographe a été corrigée
+- Module MAIL : Correction bug : Les destinataires sont affichés par ordre alphabétique pour comparer plusieurs messages sur les mêmes listes
+- Module MAIL : Correction bug : Saisie des adresses avec la souris sur Microsoft Internet Explorer
+- Module MAIL : Correction bug : La macro TEXT est utilisée
+- Administration : Correction bug : Login unique pour l ensemble de la plateforme
+- Administration : Correction bug : Les certificats avec accents ne pouvaient pas être utilisés avec un login
+- Module ACTES : Intégration des ACTES BUDGETAIRES
+- Module ACTES : Connexion avec le SAE AS@LAE
+- Module ACTES : Création d une API pour récupérer l ACTES avec le tampon
+- Module ACTES : Amélioration des requêtes SQL
+- Module ACTES : Le nom de la collectivité est indiqué dans les mails de notifications
+- Module ACTES : Il est possible d effectuer des recherches sur l objet
+- Module HELIOS: La collectivité émétrice est indiquée dans le détail de la transaction et dans la liste des transactions
+- Module HELIOS: Le propriétaire de la transaction est indiqué dans le détail de celle-ci et dans la liste des transactions
+- Module MAIL : Il est possible de modifier un contact
+- Module MAIL : Le texte du mail reçu a été modifié pour ne plus être équivoque
+- Module MAIL : Via les API il est possible d envoyer un mail sécurisé sans le/les destinataires soient présents dans le carnet d adresses
+- Administration: La date d expiration du certificat de l utilisateur est indiquée
+- Administration: Les SIREN sont affichés par ordre croissant
+- Administration: Il possible d ajouter directement un SIREN dans un groupe
+- Administration: Les utilisateurs sont triés par ordre alphabétiques
+
+# 11 - 2012-11-16
+- Module ACTES : Intégration des flux ACTES 1.4
+- Module ACTES : Traitement par lot : les actes peuvent se situer dans des dossiers différents
+- Module ACTES : Les actes sont disponibles avec tampon indiquant la date d'envoi à la prefecture et de réception par celle-ci
+- Module ACTES : Le mail de notification d'accusé de réception inclu le bordereau d'acquitement
+- Module ACTES : La classification est mise à jour automatiquement
+- Module ACTES : Intégration des groupes/services
+- Module ACTES : Le bouton valider apparait au bout de 2 mois après l'acquitement
+- Module ACTES : Les recherches ne sont plus sensibles à la casse
+- Module ACTES : Les collectivités et groupes sont listés par ordre alphabétique
+- Module ACTES : Un même certificat peut être utilisé par plusieurs utilisateurs via un login/mot de passe
+- Module ACTES : Le descriptif du certificat apparait dans la fiche de l'utilisateur
+- Module ACTES : Les dates de décisions ne peuvent plus être dans le futur
+- Correction bug : les espaces entre les destinataires ne sont plus supprimés
+- Module MAIL : Correction bug : les espaces dans les noms des fichiers ne sont plus tronqués
+- Module MAIL : Correction bug : le nombre de destinataire n'est plus limité
+- Module MAIL : Les statuts des messages sont plus détaillés
+- Module MAIL : Chaque élément récupéré par un destinataire est horodaté
+- Module MAIL : Le jour et l'heure où un destinataire a pris connaissance du message sont indiqués et horodatés
+- Module MAIL : Nouvelle présentation des mails reçus
+- Module MAIL : La gestion du carnet d'adresses a été complètement revue.
+- Module MAIL : Il est possible de créer des contacts et de les placer dans un ou plusieurs groupes
+- Module MAIL : Import d'un carnet d'adresses
+- Module MAIL : Le mot de passe n'est plus indiqué par défaut dans le mail de notification
+- Module MAIL : Il est possible de stipuler l'adresse mail émettrice pour l'ensemble des utilisateurs de la collectivité
+- Module MAIL : Dans le sujet des mails expédiés apparaît entre crochets le nom de la collectivité
+- Module MAIL : Suppression des menus déroulant au profit d'une saisie semi-automatique
+- Module MAIL : Des « : » ont été ajoutés après « objet », « message » et « envoyé le »
+- Module MAIL : La taille de l'ensemble du mail est indiquée
+- Module MAIL : L'ensemble des pièces jointes n'est plus indiquée par « mail.zip » mais par « Tous les fichiers »
+- Module MAIL : Mise à jour de la documentation API
+
+# 10.8.3.7 - 2009-08-26
+- Hélios : corrections pour respecter l'API webservice
+
+# 10.8.3.6 - 2009-07-22
+- Hélios : rajout du SHA1 dans l'export CSV de fichiers reçus 
+
+# 10.8.3.5 2009-06-25
+- correction sur la verification de la taille de l'archive pour Actes
+- amélioration 297 : on affiche le numéro d'actes dans la liste des transactions en cours
+- amélioration 300 : verification de la validité du numéro SIREN
+
+# 10.8.3.3 - 2009-06-23
+- correction des bugs sur ACTES liés à une mauvaise configuration du serveur du MIOCT pour les collectivites Corses. (Bug 308)
+- correction sur Hélios de la methode de rappatriement du PES de rejet (Bug 302)
+- correction sur Hélios sur le PES ACK. On interrogeait pas le bon tag dans le XML. (Bug 301) 
+
+# 10.8.3.2 - 2009-06-15
+- modification de l'envoi des paramètres à l'applet de signature
+
+# (Servlet)10.8.3 - 2009-04-29
+- changement du mode de connexion utilisé pour le FTP vers la DGFIP 
+
+# 10.8.3.1 - 2009-03-19
+- modification du simulateur 
+
+# 10.8.3 - 2009-03-10
+- Servlet : corrigé la méthode de log
+- Module ACTES : Corrigé les bugs 265,267,268,269,274,275,276
+- Module HELIOS : Modifié la fonction pour se connecter au serveur FTP de la DGFIP
+- Module HELIOS : Corrigé le bug 271
+- Module Mail : Corrigé le bug 273
+
+# 10.8.1 - 2009-01-16
+- Module HELIOS : Création des APIs pour Helios
+- Module HELIOS : Modification du validateur XML
+
+# 10.8.0 - 2008-12-22
+- Module Helios  : Ajout du module Helios
+- Module ACTES : Mise à jour du module Acte et de son simulateur vers Acte 1.4(en test)
+
+# 10.7.1 - 2008-06-03
+- Module Mail  : Ajout du Module Mail
+- Module Admin : Corrigé des bugs Admin;(bug ID:209,196,146)
+- Module ACTES : Corrigé des bugs du module Actes;(bug ID:187,214, 218, 211, 194, 199,197, (219->190))
+
+## Limitations connues
+- Module Actes - Les noms de fichiers transmis ne peuvent contenir de caractères '.
+- Module Actes - L'objet ne peut pas contenir le caractère spécial &.
+- Module Actes - Un administrateur de groupe ne peut modifier son profil. Il ne peut créer que des utilisateurs de sa collectivité.
+
+# 10.4 - 2007-12-13
+- Module ACTES : Fin de la suppression des archives dont toutes les enveloppes sont acquittées.
+- Module ACTES : Ajout de la possibilité d'associer des pièces jointes lors de la création d'une transaction à partir d'un lot
+- Module ACTES : Gestion évoluée des mails de notification d'acquittement
+
+# 10.2 - 2007-02-16
+- Implémentation administration 3 niveaux, ajout d'un nouveau rôle « Administrateur de groupe »
+- Ajout d'une adresse de messagerie pour diffusion d'informations dans les collectivités
+- Module ACTES : ajout possibilité de télécharger les fichiers des transactions (archive totale ou fichiers indépendants) pendant la durée de vie de la transaction
+- Module ACTES : ajout validation/refus par lot des transactions
+- Module ACTES : ajout d'un attribut URL d'archivage pour les transactions de transmission d'acte
+- Module ACTES : ajout traitement par lot des transmissions d'actes
+- Module ACTES : ajout filtre sur dates de postage et d'accusé réception dans la liste des transactions
+- Module ACTES : correction import incorrect des classifications, affichage désordonné et bug javascript lors de la présence de guillemet double
+- Module ACTES : ajout possibilité de désactiver dans la configuration la limitation de une seule demande de classification par jour
+
+# 10.1 - 2006-10-27
+- Ajout possibilité de récupérer le fichier XML de la classification matières/sous-matières
+- Les deux premiers codes de classification matières/sous-matières sont obligatoires
+- Ajout authentification par login/password vers le ministère
+
+# 10 - 2006-10-01
+- Publication initiale
+- Support complet protocole Actes
 
 # Notes
 
@@ -889,10 +1260,10 @@ Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/
 
 [non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
 [3.0.0-rc1]: https://gitlab.libriciel.fr/s2low/s2low/tags/3.0.0-rc1
-[2.6.6]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.6
-[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.5
-[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.4
-[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.3
-[2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.2
-[2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/V2.6.1
-[2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/V2.6/
+[2.6.6]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.6
+[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.5
+[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.4
+[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.3
+[2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.2
+[2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.1
+[2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/# 2.6/

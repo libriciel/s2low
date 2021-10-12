@@ -1,6 +1,6 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
+ * S2low - Copyright 2006 Alternance-Soft
  * Contributeurs : Jérôme Schell, Aout 2006
  *                 Eric Pommateau, Tan Hao,  
  *                 Jean-Francois Mourgues
@@ -47,7 +47,7 @@
  * 
  *
  * Cette page affiche les notes de publication des différentes versions
- * de l'application TéDéTis.
+ * de l'application S2low.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -77,14 +77,14 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
-$html .= "<h1>Logiciel TéDéTIS - notes de publication</h1>\n<br/>";
+$html .= "<h1>Logiciel S2low - notes de publication</h1>\n<br/>";
 
 $Parsedown = new Parsedown();
 
 $html  .= $Parsedown->text(
     utf8_decode(
         file_get_contents(
-            __DIR__."/../CHANGELOG.md"
+            __DIR__."/../../CHANGELOG.md"
         )
     )
 );
