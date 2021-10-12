@@ -79,10 +79,6 @@ $doc->openContent();
 $html = "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
 $html .= "<h1>Logiciel TéDéTIS - notes de publication</h1>\n";
 
-
-$html .= "";
-
-
 $Parsedown = new Parsedown();
 
 $html  .= $Parsedown->text(
@@ -92,10 +88,6 @@ $html  .= $Parsedown->text(
         )
     )
 );
-// $html .= "<h2>V1.0.8.3 du </h2>";
-// $html .= "<ul>";
-// $html .= "<li>";
-// $html .= "</ul>";
 
 $doc->addBody($html);
 
