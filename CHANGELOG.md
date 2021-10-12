@@ -1,3 +1,8 @@
+# 4.3.11
+
+## Évolution
+- Remplacement des releases notes codées en dur par un affichage du Changelog #722
+- 
 # 4.3.10 - 2021 10 11
 
 ## Correction

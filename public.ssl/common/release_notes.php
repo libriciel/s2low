@@ -77,7 +77,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<p> On trouvera  aprËs la note de derniËre version la liste des limitations connues pour cette version</p>";
-$html .= "<h1>Logiciel TÈDÈTIS - notes de publication</h1>\n";
+$html .= "<h1>Logiciel TÈDÈTIS - notes de publication</h1>\n<br/>";
 
 $Parsedown = new Parsedown();
 
