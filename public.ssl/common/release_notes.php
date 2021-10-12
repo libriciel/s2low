@@ -86,8 +86,10 @@ $html .= "";
 $Parsedown = new Parsedown();
 
 $html  .= $Parsedown->text(
-    file_get_contents(
-        __DIR__."/../../CHANGELOG.md"
+    utf8_decode(
+        file_get_contents(
+            __DIR__."/../CHANGELOG.md"
+        )
     )
 );
 // $html .= "<h2>V1.0.8.3 du </h2>";
