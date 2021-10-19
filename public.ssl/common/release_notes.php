@@ -68,7 +68,7 @@ if (! $me->authenticate()) {
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Logiciel TéDéTIS : Notes de publication");
+$doc->setTitle("Logiciel S2low : Notes de publication");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -79,7 +79,7 @@ $doc->openContent();
 $html = "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
 $html .= "<h1>Logiciel S2low - notes de publication</h1>\n<br/>";
 
-$Parsedown = new Parsedown();
+$Parsedown = new ParsedownExtended(2);
 
 $html  .= $Parsedown->text(
     utf8_decode(
