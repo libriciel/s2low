@@ -16,14 +16,14 @@ class ParsedownExtended extends Parsedown
     {
         if (isset($Line['text'][1]))
         {
-            $level = $this->minimumLevel;
+            $level=1;
 
             while (isset($Line['text'][$level]) and $Line['text'][$level] === '#')
             {
                 $level ++;
             }
 
-            if ($level > 6)
+            if ($this->getHeaderLevel($level) > 6)
             {
                 return;
             }
@@ -32,7 +32,7 @@ class ParsedownExtended extends Parsedown
 
             $Block = array(
                 'element' => array(
-                    'name' => 'h' . min(6, $level),
+                    'name' => 'h' . min(6, $this->getHeaderLevel($level)),
                     'text' => $text,
                     'handler' => 'line',
                 ),
@@ -40,5 +40,9 @@ class ParsedownExtended extends Parsedown
 
             return $Block;
         }
+    }
+
+    private function getHeaderLevel(int $level){
+        return $level + $this->minimumLevel -1;
     }
 }
