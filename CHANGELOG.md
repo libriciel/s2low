@@ -3,12 +3,12 @@
 ## Évolution
 - Remplacement des releases notes codées en dur par un affichage du Changelog #722
 
-# 4.3.10 - 2021 10 11
+# 4.3.10 - 2021-10-11
 
 ## Correction
 - Correction de l'extraction des certificats comportant un saut de ligne en début ou fin depuis les flux helios #714
 
-# 4.3.9 - 2021 06 24
+# 4.3.9 - 2021-06-24
 
 ## Évolution
 - Ajout d'une API de statistique actes pour les admins de groupe #610
@@ -24,14 +24,14 @@
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
 
-# 4.3.8 - 2021 04 07
+# 4.3.8 - 2021-04-07
 
 ## Correction
 - corriger l'identification par nounce #690
 
 ## Evolution
 
-# 4.3.7 - 2021 03 23
+# 4.3.7 - 2021-03-23
 
 **Cette version demande une modification de la base de données**
 
@@ -44,7 +44,7 @@
 - le script de supervision du service pades est compatible avec les codes retour Nagios #680
 - changement d'encodage du mot de passe
 
-# 4.3.6 - 2021 02 11
+# 4.3.6 - 2021-02-11
 
 **Cette version demande une modification de la base de données**
 
@@ -1256,14 +1256,3 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 Toutes les modifications apportées au projet seront documentées dans ce fichier.
 
 Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) et adhère aux principes du [Semantic Versioning](http://semver.org/).
-
-
-[non publié]: https://gitlab.libriciel.fr/s2low/s2low/tree/master
-[3.0.0-rc1]: https://gitlab.libriciel.fr/s2low/s2low/tags/3.0.0-rc1
-[2.6.6]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.6
-[2.6.5]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.5
-[2.6.4]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.4
-[2.6.3]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.3
-[2.6.2]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.2
-[2.6.1]: https://gitlab.libriciel.fr/s2low/s2low/tags/# 2.6.1
-[2.6.0]: https://scm.adullact.net/anonscm/svn/s2low/TedetisPHP/tags/# 2.6/

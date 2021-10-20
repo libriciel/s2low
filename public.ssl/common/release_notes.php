@@ -68,7 +68,7 @@ if (! $me->authenticate()) {
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Logiciel S2low : Notes de publication");
+$doc->setTitle("Logiciel S²LOW : Notes de publication");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -77,7 +77,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<p> On trouvera  après la note de dernière version la liste des limitations connues pour cette version</p>";
-$html .= "<h1>Logiciel S2low - notes de publication</h1>\n<br/>";
+$html .= "<h1>Logiciel S²LOW - notes de publication</h1>\n<br/>";
 
 $Parsedown = new ParsedownExtended(2);
 
