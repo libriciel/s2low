@@ -93,7 +93,6 @@ class CloudStorage {
 	}
 
     /**
-     * @deprecated ? on dirait que ca ne sert que dans les tests ?
      * @param int $object_id
      * @return bool
      */
@@ -146,12 +145,10 @@ class CloudStorage {
 				break;
 			}
 			if ($this->isRecentlyCreated($file,$no_access_during_nb_days)){
-
 				$this->logger->debug("File {$file->getFilename()} too young to die : not deleted");
 				continue;
 			}
-            $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getPath());
-
+            $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
             $this->logger->debug("File path on cloud : " . $filePathOnCloudWithFileOnDiskPath);
 
             if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
@@ -159,18 +156,8 @@ class CloudStorage {
                 $filePathOnCloudWithFileOnDiskPath
             )){
 				$this->logger->info("File {$file->getRealPath()} not existing on cloud : not deleted");
-				$object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
-				if (! $object_id){
-				    $this->logger->notice("Unable to find object id for the file " . $file->getRealPath());
-				    continue;
-                }
-				if (! $this->iCloudStorable->isAvailable($object_id)){
-				    $this->iCloudStorable->setAvailable($object_id,true);
-				    $this->logger->info("$object_id set to available");
-                } else {
-				    $this->logger->notice("Object not yet in cloud");
-                }
-				continue;
+                $this->handlerOlderFileNotInCloud($file);
+                continue;
 			}
 			$this->logger->info("Deleting file : {$file->getRealPath()}");
 			if ($do) {
@@ -247,5 +234,25 @@ class CloudStorage {
             $filePathOnCloudWithFileOnDiskPath = $TempFilePathOnCloudWithFileOnDiskPath;
         }
         return $filePathOnCloudWithFileOnDiskPath;
+    }
+
+    /**
+     * @param mixed $file
+     */
+    protected function handlerOlderFileNotInCloud(SplFileInfo $file): void
+    {
+        $object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
+        if (!$object_id) {
+            $this->logger->notice("Unable to find object id for the file " . $file->getRealPath());
+            return;
+        }
+        if (!$this->iCloudStorable->isAvailable($object_id)) {
+            $this->iCloudStorable->setAvailable($object_id, true);
+            $this->logger->info("$object_id set to available");
+        }
+        if ($this->iCloudStorable->isTransactionInCloud($object_id)) {
+            $this->logger->info("$file [transaction $object_id] passé à is_in_cloud = false");
+            $this->iCloudStorable->setInCloud($object_id,false);
+        }
     }
 }

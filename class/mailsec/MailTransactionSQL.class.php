@@ -17,10 +17,10 @@ class MailTransactionSQL extends SQL {
 		$this->query($sql,true,$mail_transaction_id);
 	}
 
-	public function setInCloud(int $mail_transaction_id): void
+	public function setInCloud(int $mail_transaction_id, $inCloud = true): void
 	{
-		$sql = "UPDATE mail_transaction SET is_in_cloud=TRUE WHERE id=?";
-		$this->query($sql,$mail_transaction_id);
+		$sql = "UPDATE mail_transaction SET is_in_cloud=? WHERE id=?";
+		$this->query($sql, intval( $inCloud ), $mail_transaction_id);
 	}
 
 	public function fileExists(string $fn_download,string $filename){
@@ -56,6 +56,12 @@ class MailTransactionSQL extends SQL {
     {
         $sql = "UPDATE mail_transaction SET not_available=? WHERE id=?";
         $this->query($sql, intval(! $available),$object_id);
+    }
+
+    public function isInCloud(int $object_id)
+    {
+        $sql = "SELECT is_in_cloud FROM mail_transaction WHERE id=?";
+        return ! $this->queryOne($sql,$object_id);
     }
 
 }

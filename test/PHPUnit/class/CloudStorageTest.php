@@ -240,7 +240,7 @@ class CloudStorageTest extends S2lowTestCase {
         );
     }
 
-    public function testWhenObjectMarkedAsNotAvailable()
+    public function testWhenObjectMarkedAsNotAvailableAndNotInCloud()
     {
         $this->setOpenStackSwiftWrapper(false,false);
         $file_to_send = $this->createFile();
@@ -254,18 +254,32 @@ class CloudStorageTest extends S2lowTestCase {
         $this->assertLogMessage("42 set to available",3);
     }
 
-    public function testWhenObjectMarkedAsAvailable()
-    {
+    /** @dataProvider availabilityAndCloudProvider */
+    public function testAvailabilityAndInCloud(bool $isAvailable, bool $isTransactionInCloud, int $nbOfSetAvailableCalls, int $nbOfsetInCloudCalls, array $logs){
         $this->setOpenStackSwiftWrapper(false,false);
         $file_to_send = $this->createFile();
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
         $iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
         $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
-        $iCloudStorable->method("isAvailable")->willReturn(true);
-        $iCloudStorable->expects($this->never())->method("setAvailable");
+        $iCloudStorable->method("isAvailable")->willReturn($isAvailable);
+        $iCloudStorable->method("isTransactionInCloud")->willReturn($isTransactionInCloud);
+        $iCloudStorable->expects($this->exactly($nbOfSetAvailableCalls))->method("setAvailable");
+        $iCloudStorable->expects($this->exactly($nbOfsetInCloudCalls))->method("setInCloud");
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
-        $this->assertLogMessage("Object not yet in cloud",3);
+        foreach ($logs as $key=>$line){
+            $this->assertRegExpLogMessage($line,$key);
+        }
+    }
+
+    public function availabilityAndCloudProvider() : array
+    {
+        return [
+            [true, true, 0, 1, ["3"=>"#passé à is_in_cloud = false#"]],
+            [false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passé à is_in_cloud = false#"]],
+            [true, false, 0, 0,  []],
+            [false,false, 1, 0,["3"=>"#set to available#"]]
+        ];
     }
 
     public function testFileNotIncloud(){

@@ -56,9 +56,9 @@ class PESAcquitCloudStorage  implements ICloudStorable {
 		$this->heliosTransactionsSQL->setPesAcquitNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $isInCloud = true): void
 	{
-		$this->heliosTransactionsSQL->setPesAcquitInCloud($object_id);
+		$this->heliosTransactionsSQL->setPesAcquitInCloud($object_id, $isInCloud);
 	}
 
 	public function getFinder(): Finder
@@ -89,5 +89,10 @@ class PESAcquitCloudStorage  implements ICloudStorable {
     public function isAvailable(int $object_id): bool
     {
         return $this->heliosTransactionsSQL->isPesAcquitAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id) : bool
+    {
+        return $this->heliosTransactionsSQL->isPesAcquitInCloud($object_id);
     }
 }

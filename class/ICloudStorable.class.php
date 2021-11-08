@@ -17,7 +17,7 @@ interface ICloudStorable {
 
 	public function setNotAvailable(int $object_id) : void;
 
-	public function setInCloud(int $object_id) : void;
+	public function setInCloud(int $object_id, bool $inCloud = true) : void;
 
 	public function getFinder() : Finder;
 
@@ -28,5 +28,7 @@ interface ICloudStorable {
     public function setAvailable(int $object_id, bool $available) : void;
 
     public function isAvailable(int $object_id): bool;
+
+    public function isTransactionInCloud(int $object_id);
 
 }
