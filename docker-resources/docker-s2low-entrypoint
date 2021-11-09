@@ -51,9 +51,6 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
 fi
 
 if [ -z "$DONT_RETRIEVE_VALIDCA" ] ; then
-  # Mise à jour du validca
-  # TODO faut pas mettre ça ici... plutot dans un worker ou le cron
-  /usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl
 
   # Ajout des ACs du ministère
   /usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
