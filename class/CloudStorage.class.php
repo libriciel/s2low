@@ -150,12 +150,14 @@ class CloudStorage {
 				$this->logger->debug("File {$file->getFilename()} too young to die : not deleted");
 				continue;
 			}
-			$this->logger->debug("File path on cloud : " . $this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath()));
+            $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getPath());
 
-			if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
-				$this->iCloudStorable->getContainerName(),
-				$this->iCloudStorable->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath())
-			)){
+            $this->logger->debug("File path on cloud : " . $filePathOnCloudWithFileOnDiskPath);
+
+            if (! $this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $filePathOnCloudWithFileOnDiskPath
+            )){
 				$this->logger->info("File {$file->getRealPath()} not existing on cloud : not deleted");
 				$object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
 				if (! $object_id){
@@ -218,4 +220,32 @@ class CloudStorage {
 
 		return $result;
 	}
+
+    /**
+     * @param $file
+     * @return array|string|string[]|null
+     */
+    public function getFilePathOnCloudWithFileOnDiskPath($filePath)
+    {
+        $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
+            ->getFilePathOnCloudWithFileOnDiskPath($filePath);
+
+        $TempFilePathOnCloudWithFileOnDiskPath = str_replace(
+            "/import/",
+            "/import//",
+            $filePathOnCloudWithFileOnDiskPath
+        );
+
+        if ((!$this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $filePathOnCloudWithFileOnDiskPath))
+            &&
+            ($this->openStackSwiftWrapper->fileExistsOnCloud(
+                $this->iCloudStorable->getContainerName(),
+                $TempFilePathOnCloudWithFileOnDiskPath))
+        ) {
+            $filePathOnCloudWithFileOnDiskPath = $TempFilePathOnCloudWithFileOnDiskPath;
+        }
+        return $filePathOnCloudWithFileOnDiskPath;
+    }
 }

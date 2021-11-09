@@ -1,5 +1,6 @@
 <?php
 
+use Monolog\Logger;
 use \Symfony\Component\Finder\Finder;
 
 class CloudStorageTest extends S2lowTestCase {
@@ -267,5 +268,95 @@ class CloudStorageTest extends S2lowTestCase {
         $this->assertLogMessage("Object not yet in cloud",3);
     }
 
+    public function testFileNotIncloud(){
+        $filePathOnDisk = "/test/test/test.tar.gz";
 
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
+            ->willReturnArgument(0);
+
+		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->at(0))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
+        $openStackSwiftWrapper->expects($this->at(1))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
+
+		$logger = $this->getMockBuilder( Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+
+        $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
+
+        $this->assertEquals(
+            $filePathOnDisk,
+            $return
+        );
+    }
+
+    public function testFileInCloudWithSamePath(){
+        $filePathOnDisk = "/test/test/test.tar.gz";
+
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
+            ->willReturnArgument(0);
+
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->once())->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(true);
+
+        $logger = $this->getMockBuilder( Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+
+        $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
+
+        $this->assertEquals(
+            $filePathOnDisk,
+            $return
+        );
+    }
+
+    public function testFileInCloudWithDoubleSlash(){
+        $filePathOnDisk = "/test/import/test.tar.gz";
+
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
+            ->willReturnArgument(0);
+
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $openStackSwiftWrapper->expects($this->at(0))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
+        $openStackSwiftWrapper->expects($this->at(1))->method('fileExistsOnCloud')->with(null, "/test/import//test.tar.gz")->willReturn(true);
+
+        $logger = $this->getMockBuilder( Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+
+        $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
+
+        $this->assertEquals(
+            "/test/import//test.tar.gz",
+            $return
+        );
+    }
 }
