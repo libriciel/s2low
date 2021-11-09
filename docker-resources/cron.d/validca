@@ -1,1 +1,0 @@
-10  *   *   *   *   root  /usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl >> /data/log/recup_crl.log 2>&1
