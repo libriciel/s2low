@@ -4,7 +4,12 @@ class AcCertificatesRetrieverWorker implements IWorker
 {
 
     const QUEUE_NAME = 'certificates-retriever';
+    const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
 
+    public function __construct(S2lowLogger $logger)
+    {
+        $this->logger = $logger;
+    }
     /**
      * @inheritDoc
      */
@@ -34,7 +39,17 @@ class AcCertificatesRetrieverWorker implements IWorker
      */
     public function work($data)
     {
-        shell_exec("/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl");
+        $output=null;
+        $retval=null;
+        $this->logger->info(self::COMMAND);
+        $execResult = exec(self::COMMAND, $output, $retval);
+        $logger = "info";
+        if(!$execResult || $retval!=0){
+            $logger = "error";
+        }
+        foreach ($output as $outputLine){
+            $this->logger->$logger($outputLine);
+        }
     }
 
     /**
