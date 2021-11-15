@@ -28,12 +28,13 @@ chown -R www-data:www-data /data/tdt-workspace/
 
 #Mise en ce place du systeme de recuperation des CRL et AC
 #TODO voir comment gérer la récupération du validca
-cp ./docker-resources/certificate/recup_crl_v1.1.03.sh /usr/local/bin/recup_crl.sh
 cp ./docker-resources/certificate/recup_ac_ministere.sh /usr/local/bin/recup_ac_ministere.sh
-chmod +x /usr/local/bin/recup_crl.sh
+cp ./docker-resources/certificate/wait-for-certificates.sh /usr/local/bin/wait-for-certificates.sh
 chmod +x /usr/local/bin/recup_ac_ministere.sh
+chmod +x /usr/local/bin/wait-for-certificates.sh
 
-/usr/local/bin/recup_crl.sh /etc/s2low/ssl/
+/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl
+
 
 # Pour libersign
 mkdir -p /var/www/parapheur/libersign
