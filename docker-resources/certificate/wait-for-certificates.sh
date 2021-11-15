@@ -1,6 +1,6 @@
 #! /bin/bash
 
-maxWaitingCycles=12
+maxWaitingCycles=20
 waitingCycles=0
 
 until [ -n "$(ls -A /etc/s2low/ssl/validca/)" ]
@@ -11,7 +11,7 @@ do
   exit 1
   fi
 echo "$waitingCycles/$maxWaitingCycles /etc/s2low/ssl/validca empty : waiting for certificates to be retrieved...";
-sleep 5
+sleep 10
 ((waitingCycles+=1))
 done
 
