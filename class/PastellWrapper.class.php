@@ -44,7 +44,7 @@ class PastellWrapper {
 		$curl_wrapper = $this->curlWrapperFactory->getNewInstance();
 		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->pastellProperties->login, $this->pastellProperties->password);
-		$curl_wrapper->setTimeout(3,30);
+		$curl_wrapper->setTimeout(300,3600);
 
 		if ($http_verb != 'PATCH') {
             foreach ($postData as $name => $value) {
