@@ -59,9 +59,9 @@ class ActesCloudStorage implements ICloudStorable {
 		$this->actesEnvelopeSQL->setEnveloppeNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $is_in_cloud = true): void
 	{
-		$this->actesEnvelopeSQL->setTransactionInCloud($object_id);
+		$this->actesEnvelopeSQL->setTransactionInCloud($object_id, $is_in_cloud);
 	}
 
 	public function getFinder(): Finder
@@ -95,5 +95,10 @@ class ActesCloudStorage implements ICloudStorable {
     public function isAvailable(int $object_id): bool
     {
         return $this->actesEnvelopeSQL->isAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id) : bool
+    {
+        return $this->actesEnvelopeSQL->isInCloud($object_id);
     }
 }

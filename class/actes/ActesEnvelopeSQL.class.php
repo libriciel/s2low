@@ -60,9 +60,9 @@ class ActesEnvelopeSQL extends SQL
 		return $this->queryOne($sql);
 	}
 
-	public function setTransactionInCloud($id){
-		$sql = "UPDATE actes_envelopes SET is_in_cloud=TRUE WHERE id=?";
-		$this->query($sql,$id);
+	public function setTransactionInCloud($id, bool $isInCloud=true){
+		$sql = "UPDATE actes_envelopes SET is_in_cloud=? WHERE id=?";
+		$this->query($sql, intval( $isInCloud ) , $id);
 	}
 
 	public function setTransactionInCloudRemove($id){
@@ -103,6 +103,12 @@ class ActesEnvelopeSQL extends SQL
     {
         $sql = "UPDATE actes_envelopes SET not_available=? WHERE id=?";
         $this->query($sql, intval(! $available),$object_id);
+    }
+
+    public function isInCloud(int $object_id)
+    {
+        $sql = "SELECT is_in_cloud FROM actes_envelopes WHERE id=?";
+        return $this->queryOne($sql,$object_id);
     }
 
 

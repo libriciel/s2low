@@ -48,9 +48,9 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 		$this->mailTransactionSQL->setNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $inCloud = true): void
 	{
-		$this->mailTransactionSQL->setInCloud($object_id);
+		$this->mailTransactionSQL->setInCloud($object_id, $inCloud);
 	}
 
 	public function getFinder(): Finder
@@ -85,5 +85,10 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     public function isAvailable(int $object_id): bool
     {
         return $this->mailTransactionSQL->isAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id)
+    {
+        return $this->mailTransactionSQL->isInCloud($object_id);
     }
 }

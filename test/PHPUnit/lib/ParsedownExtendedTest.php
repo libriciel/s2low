@@ -5,7 +5,6 @@ class ParsedownExtendedTest extends \PHPUnit\Framework\TestCase
     public function testParsedown(){
         $parsedown = new ParsedownExtended(2);
         $html = $parsedown->text(file_get_contents(__DIR__."/fixtures/test.md"));
-        var_dump($html);
         $this->assertEquals(
             "<h2>h2</h2>
 <h3>h3</h3>

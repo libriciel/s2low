@@ -198,6 +198,13 @@ abstract class S2lowTestCase extends TestCase {
 		);
 	}
 
+    public function assertRegExpLogMessage($expected_message,$num_log = 0){
+        $this->assertRegExp(
+            $expected_message,
+            $this->getLogRecords()[$num_log]['message']
+        );
+    }
+
 	/** @deprecated  */
 	public function setExpectedException($e,string $message){
 		$this->expectException($e);

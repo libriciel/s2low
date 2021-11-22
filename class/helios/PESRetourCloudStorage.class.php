@@ -56,9 +56,9 @@ class PESRetourCloudStorage  implements ICloudStorable {
 		$this->heliosRetourSQL->setPesRetourNotAvailable($object_id);
 	}
 
-	public function setInCloud(int $object_id): void
+	public function setInCloud(int $object_id, bool $inCloud = true): void
 	{
-		$this->heliosRetourSQL->setPesRetourInCloud($object_id);
+		$this->heliosRetourSQL->setPesRetourInCloud($object_id, $inCloud);
 	}
 
 	public function getFinder(): Finder
@@ -89,5 +89,10 @@ class PESRetourCloudStorage  implements ICloudStorable {
     public function isAvailable(int $object_id): bool
     {
         return $this->heliosRetourSQL->isAvailable($object_id);
+    }
+
+    public function isTransactionInCloud(int $object_id) : bool
+    {
+        return $this->heliosRetourSQL->isInCloud($object_id);
     }
 }
