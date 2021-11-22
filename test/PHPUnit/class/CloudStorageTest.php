@@ -274,11 +274,14 @@ class CloudStorageTest extends S2lowTestCase {
 
     public function availabilityAndCloudProvider() : array
     {
+        // Si on arrive à la partie testée, le fichier a été trouvé sur le disque mais pas dans le cloud.
+        // S'il est marqué comme non available en BDD, il faut corriger : il est au moins sur le disque.
+        // S'il est marqué comme sur le cloud en BDD, il faut corriger : il n'y est pas.
         return [
-            [true, true, 0, 1, ["3"=>"#passé à is_in_cloud = false#"]],
-            [false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passé à is_in_cloud = false#"]],
-            [true, false, 0, 0,  []],
-            [false,false, 1, 0,["3"=>"#set to available#"]]
+            "withBothAvailableAndTransactionInCloud"=>[true, true, 0, 1, ["3"=>"#passé à is_in_cloud = false#"]],
+            "withNotAvailableAndTransactionInCloud"=>[false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passé à is_in_cloud = false#"]],
+            "withOnlyAvailable"=>[true, false, 0, 0,  []],
+            "withNotAvailableAndNotInCloud"=>[false,false, 1, 0,["3"=>"#set to available#"]]
         ];
     }
 
