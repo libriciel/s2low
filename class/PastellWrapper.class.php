@@ -297,7 +297,7 @@ class PastellWrapper {
 		$curl_wrapper = $this->curlWrapperFactory->getNewInstance();
 		$curl_wrapper->dontVerifySSLCACert();
 		$curl_wrapper->httpAuthentication($this->pastellProperties->login, $this->pastellProperties->password);
-        $curl_wrapper->setTimeout(3,30);
+        $curl_wrapper->setTimeout(300,3600);
 		$result = $curl_wrapper->get($this->pastellProperties->url."/".$url);
 		if (! $result){
 			throw new Exception($curl_wrapper->getLastError());
