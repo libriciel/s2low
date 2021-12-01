@@ -72,6 +72,11 @@ class CurlWrapper {
 		$this->patch = true;
 		$this->setProperties(CURLOPT_CUSTOMREQUEST,"PATCH");
 	}
+
+	public function setTimeout(int $connectTimeout, int $timeout){
+        $this->setProperties(CURLOPT_CONNECTTIMEOUT, $connectTimeout);
+        $this->setProperties(CURLOPT_TIMEOUT, $timeout); //timeout in seconds
+    }
 	
 	public function get($url){
 		$this->setProperties(CURLOPT_URL, $url);

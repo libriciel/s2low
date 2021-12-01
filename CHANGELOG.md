@@ -6,6 +6,7 @@
 
 ## Correction
 - Correction du répertoire de récupération des CRL dans le Docker #728
+- Ajout d'un timeout à l'envoi au SAE #713
 
 # 4.3.10 - 2021-10-11
 
@@ -28,7 +29,7 @@
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
 
-# 4.3.8 - 2021-04-07
+# 4.3.8 - 2021 04 07
 
 ## Correction
 - corriger l'identification par nounce #690
