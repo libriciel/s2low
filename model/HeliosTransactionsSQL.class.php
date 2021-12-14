@@ -296,7 +296,7 @@ class HeliosTransactionsSQL extends SQL {
 
 	public function setPesAcquitInCloud($id, bool $isInCloud){
 		$sql = "UPDATE helios_transactions SET pes_acquit_is_in_cloud=? WHERE id=?";
-		$this->query($sql, $isInCloud, $id);
+		$this->query($sql, intval( $isInCloud ), $id);
 	}
 
     public function getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id){
