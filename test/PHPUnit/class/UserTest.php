@@ -4,7 +4,7 @@ class UserTest  extends S2lowTestCase {
 
 	public function testGetIdFromCertData(){
 		$user = new User();
-		$ids = $user->getIdFromCertData('J8q8Uwz2niUtisKKvzSzRBbnMx4=');
+		$ids = $user->getIdFromCertData('Q1pUbEb5DK53BkYf0arDl/3zl5U=');
 		$this->assertEquals(1,$ids[0]);
 	}
 

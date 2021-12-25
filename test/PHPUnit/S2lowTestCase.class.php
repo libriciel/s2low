@@ -136,7 +136,7 @@ abstract class S2lowTestCase extends TestCase {
                 'SSL_CLIENT_VERIFY' => "SUCCESS",
                 'SSL_CLIENT_S_DN' => "test_subject",
                 'SSL_CLIENT_I_DN' => "test_issuer",
-                'TESTING_CERTIFICATE_HASH' => "J8q8Uwz2niUtisKKvzSzRBbnMx4=",
+                'TESTING_CERTIFICATE_HASH' => "Q1pUbEb5DK53BkYf0arDl/3zl5U=",
         ]);
     }
     
