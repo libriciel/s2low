@@ -52,7 +52,7 @@ class MenuHTML  {
 
 
                     <div id="menu-header">
-                        Bienvenue <?php echo $userInfo['pretty_name'] ?><br />
+                        Bienvenue <?php hecho($userInfo['pretty_name']) ?><br />
 
                         <?php if($nb_days_before_certificate_expires<self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
                             <div class="alert alert-danger message-admin">
