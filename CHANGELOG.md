@@ -1,3 +1,8 @@
+# 4.3.12
+
+## Correction
+- Correction d'une vulnérabilité #735
+
 # 4.3.11 - 2021-12-03
 
 ## Évolution

@@ -40,8 +40,12 @@ class Database {
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function exec($query) {
-		$this->sqlQuery->query($query);
+	public function exec($query,$params = []) {
+        if ( ! is_array($params)){
+            $params = func_get_args();
+            array_shift($params);
+        }
+		$this->sqlQuery->query($query,$params);
 		return true;
 	}
 
