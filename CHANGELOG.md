@@ -2,6 +2,7 @@
 
 ## Correction
 - Correction d'une vulnérabilité #735
+- Correction d'une vulnérabilité #736
 
 # 4.3.11 - 2021-12-03
 
