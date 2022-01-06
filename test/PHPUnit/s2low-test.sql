@@ -173,3 +173,5 @@ INSERT INTO users_perms VALUES (64395, 1, 1, 'RW');
 INSERT INTO users_perms VALUES (64396, 2, 8, 'RW');
 INSERT INTO users_perms VALUES (64397, 2, 9, 'RW');
 INSERT INTO users_perms VALUES (64398, 2, 6, 'RW');
+
+INSERT INTO mail_annuaire (authority_id,mail_address) VALUES (1,'test@groupemail.fr');
