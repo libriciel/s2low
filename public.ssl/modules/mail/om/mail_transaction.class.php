@@ -81,8 +81,8 @@ class mail_transaction extends DataObject {
 	}
 		
 	public function getFile($fileId){
-		$sql = "SELECT * FROM mail_included_file WHERE id=$fileId AND mail_transaction_id=".$this->getId();
-		$result = $this->db->select($sql);
+		$sql = "SELECT * FROM mail_included_file WHERE id=? AND mail_transaction_id= ?";
+		$result = $this->db->select($sql,[$fileId,$this->getId()]);
 		return $result->get_next_row();
 	}
 	
@@ -95,9 +95,9 @@ class mail_transaction extends DataObject {
 	}
 	
 	public function updateStatus(){	
-		$sql = "SELECT bool_and(ack) FROM mail_message_emis WHERE mail_transaction_id = ".$this->getId()." GROUP BY mail_transaction_id";
+		$sql = "SELECT bool_and(ack) FROM mail_message_emis WHERE mail_transaction_id =? GROUP BY mail_transaction_id";
 		
-		$all_confirme = $this->db->getOneValue($sql);
+		$all_confirme = $this->db->getOneValue($sql,[$this->getId()]);
 
 	  	$this->set("status",$all_confirme=='t'?self::STATUS_CONFIRMER:self::STATUS_CONFIRMER_PARTIELLEMENT);
 	  	$this->save(false);
@@ -119,8 +119,8 @@ class mail_transaction extends DataObject {
 							mail_message_emis::TYPE_MAIL_BCC => array(),
 							);
 		
-		$sql = "SELECT * FROM mail_message_emis WHERE mail_transaction_id =  " . $this->getId();
-		$result = $this->db->select($sql);
+		$sql = "SELECT * FROM mail_message_emis WHERE mail_transaction_id =  ?";
+		$result = $this->db->select($sql,[$this->getId()]);
 		
 		while ($info = $result->get_next_row()){
 			$this->arrayEmail[$info['type_envoi']][] = $info['email'];	

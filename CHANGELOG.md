@@ -5,12 +5,13 @@
 
 ## Correction
 - Corection d'une erreur sur helios-pes-acquit-menage #293
-- Correction d'une vulnérabilité #735
-- Correction d'une vulnérabilité #736
-- Correction d'une vulnérabilité #733
 - Correction d'une vulnérabilité #731
 - Correction d'une vulnérabilité #732
+- Correction d'une vulnérabilité #733
 - Correction d'une vulnérabilité #734
+- Correction d'une vulnérabilité #735
+- Correction d'une vulnérabilité #736
+- Correction d'une vulnérabilité #737
 - Correction de vulnérabilités XSS #744
 
 # 4.3.11 - 2021-12-03

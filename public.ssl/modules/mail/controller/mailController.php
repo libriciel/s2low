@@ -166,7 +166,12 @@ class mailController {
    global $doc;
    $error=$this->SaveError();
    //traitement des information
-   $trans_id=Helpers::getVarFromGet("trans_id");    
+      try{
+          $trans_id=Helpers::getIntFromGet("trans_id");
+      } catch (Exception $e) {
+          echo $e->getMessage();
+          return false;
+      }
    $mailTransaction=new mail_transaction($trans_id);
    $mailTransaction->init();   
    $fndownload=$mailTransaction->getFNDownload();   
@@ -524,11 +529,12 @@ class mailController {
   	if ($old_groupe_id) {
   		$groupe_id = $old_groupe_id;
   	} else {
-		$groupe_id = Helpers :: getVarFromGet("groupe_id");
-        if(!is_null($groupe_id) && !is_numeric($groupe_id)){
-            $_SESSION['last_error'] = "Le group_id fourni n'est pas valide.";
-            $groupe_id = null;
-        }
+          try{
+              $groupe_id = Helpers :: getIntFromGet("groupe_id",true);
+          } catch (Exception $e){
+              echo $e->getMessage();
+              return false;
+          }
   	}
   	
 	$mailAnnuaireArray=MailPeer::GetAnnuaire($me->get('authority_id'),$groupe_id);

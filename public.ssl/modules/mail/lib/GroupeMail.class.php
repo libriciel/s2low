@@ -60,9 +60,9 @@ class GroupeMail extends DataObject {
 	public function getGroupeByAuthorityId($authority_id){
 		$sql = "SELECT * " . 
 				" FROM mail_groupe ".
-				" WHERE authority_id=$authority_id ".
+				" WHERE authority_id=? ".
 				" ORDER BY mail_groupe.name";
-		$result = $this->db->select($sql);
+		$result = $this->db->select($sql,[$authority_id]);
 		
 		$tabResult= array();
 		
@@ -72,9 +72,9 @@ class GroupeMail extends DataObject {
 		}
 		$sql = 	"SELECT count(*) as nb,id_groupe FROM mail_user_groupe ".
 				" JOIN mail_groupe ON mail_user_groupe.id_groupe=mail_groupe.id ". 
-				" WHERE authority_id=$authority_id " .
+				" WHERE authority_id=? " .
 				" GROUP BY mail_user_groupe.id_groupe";
-		$result = $this->db->select($sql);
+		$result = $this->db->select($sql,[$authority_id]);
 		while ($ligne = $result->get_next_row()){
 			$tabResult[$ligne['id_groupe']]['nb_contact'] = $ligne['nb'];	
 		}
