@@ -525,6 +525,10 @@ class mailController {
   		$groupe_id = $old_groupe_id;
   	} else {
 		$groupe_id = Helpers :: getVarFromGet("groupe_id");
+        if(!is_null($groupe_id) && !is_numeric($groupe_id)){
+            $_SESSION['last_error'] = "Le group_id fourni n'est pas valide.";
+            $groupe_id = null;
+        }
   	}
   	
 	$mailAnnuaireArray=MailPeer::GetAnnuaire($me->get('authority_id'),$groupe_id);
@@ -532,8 +536,13 @@ class mailController {
 	$groupeArray = $groupe->getGroupeByAuthorityId($me->get('authority_id'));
 	$bd = DatabasePool::getInstance();
 	$annuaire = new Annuaire($bd,$me->get('authority_id'));
-	
-	if ($groupe_id){
+
+    if(!is_null($groupe_id) && !in_array($groupe_id,array_keys($groupeArray))){
+        $_SESSION['last_error'] = "Le group_id '$groupe_id' n'existe pas.";
+        $groupe_id = null;
+    }
+
+	if ($groupe_id ){
 		foreach($groupeArray as $groupe){
 			if ($groupe['id'] == $groupe_id) {
 				$groupe_name = $groupe['name'];
