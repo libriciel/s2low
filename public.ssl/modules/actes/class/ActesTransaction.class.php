@@ -7,7 +7,8 @@ class ActesTransaction extends DataObject {
 	//Constante pour les messages 3 et 4
 	const TYPE_REFUS = 3;
 	const TYPE_ENVOIE = 4;
-  public $files = array ();
+    const NUMBER_REGEXP = '/^([A-Z0-9][A-Z0-9_]{0,13})?[A-Z0-9]$/';
+    public $files = array ();
   protected $objectName = "actes_transactions";
   protected $envelope_id;
   protected $type;
@@ -86,7 +87,7 @@ class ActesTransaction extends DataObject {
 		//"regexp" => '/^([a-zA-Z0-9][a-zA-Z0-9\-_&#x20;]{0,13})?[a-zA-Z0-9]$/',
 
 		//Règle intermédiaire
-		"regexp" => '/^([A-Z0-9][A-Z0-9_]{0,13})?[A-Z0-9]$/',
+		"regexp" => self::NUMBER_REGEXP,
 
       "regexp_txt" => "ne peut contenir que des chiffres, des lettres en majuscules et _"
     ),
