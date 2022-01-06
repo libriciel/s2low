@@ -106,7 +106,7 @@ class HeliosTransmissionWindow extends DataObject {
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
    * \return true si succès, false sinon
    */
-  public function save($validate = true) {
+  public function save($validate = true,$return_rather_than_exec = false) {
 	$new = false;
 	if ($this->isNew()) {
 	  $new = true;
@@ -190,9 +190,9 @@ class HeliosTransmissionWindow extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM helios_transmission_window_hours WHERE transmission_window_id=" . $id;
+	$sql = "DELETE FROM helios_transmission_window_hours WHERE transmission_window_id = ? ";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,$id)) {
 	  $this->errorMsg = "Erreur lors de la suppression des heures associées à la fenêtre.";
 	  $this->db->rollback();
 	  return false;
