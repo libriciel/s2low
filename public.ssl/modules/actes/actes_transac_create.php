@@ -54,6 +54,12 @@ for ($i = 1; $i <= 5; $i++) {
 }
 
 $number = Helpers :: getVarFromPost("number", true);
+
+// Vérification que le numéro respecte la regexp
+if (!preg_match(ActesTransaction::NUMBER_REGEXP,$number)) {
+    Helpers :: returnAndExit(1, "Le numéro n'est pas correct", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+}
+
 $decision_date = Helpers :: getVarFromPost("decision_date", true);
 
 if (strtotime($decision_date) > time()){
