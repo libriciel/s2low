@@ -1,5 +1,8 @@
 # 4.3.12
 
+## Évolution
+- Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
+
 ## Correction
 - Corection d'une erreur sur helios-pes-acquit-menage #293
 - Correction d'une vulnérabilité #735

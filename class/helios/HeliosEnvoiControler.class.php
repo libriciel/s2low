@@ -50,9 +50,6 @@ class HeliosEnvoiControler {
 		libxml_use_internal_errors(true);
 		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
-		$message =  "Transaction $transaction_id en cours de traitement";
-		$this->updateStatus($transaction_id,HeliosTransactionsSQL::EN_TRAITEMENT,$message,$transactionInfo['user_id']);
-
 		$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
 
 		$pes_content = file_get_contents($file_path);
