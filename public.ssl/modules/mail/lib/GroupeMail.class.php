@@ -47,9 +47,9 @@ class GroupeMail extends DataObject {
 		
 		$db =DatabasePool::getInstance();
 		
-		$sql = "SELECT id FROM mail_groupe WHERE name=".$db->quote($name)." AND authority_id=$authority_id";
+		$sql = "SELECT id FROM mail_groupe WHERE name=? AND authority_id= ?";
 		
-		$result = $db->select($sql);
+		$result = $db->select($sql,[$name,$authority_id]);
 		if ($result->num_row() == 0){
 			return false;
 		}
