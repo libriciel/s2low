@@ -83,9 +83,9 @@ class ActesTransmissionWindow extends DataObject {
   */
   public function init() {
 	if (parent::init()) {
-	  $sql = "SELECT MIN(window_begin) AS min, MAX(window_end) AS max FROM actes_transmission_window_hours WHERE transmission_window_id = " . $this->id;
+	  $sql = "SELECT MIN(window_begin) AS min, MAX(window_end) AS max FROM actes_transmission_window_hours WHERE transmission_window_id = ?";
 
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,[$this->id]);
 
 	  if (! $result->isError()) {
 		$row = $result->get_next_row();
@@ -191,14 +191,18 @@ class ActesTransmissionWindow extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM actes_transmission_window_hours WHERE transmission_window_id=" . $id;
+	$sql = "DELETE FROM actes_transmission_window_hours WHERE transmission_window_id= ?";
+    try {
+        $windowHourDeleteSucces = $this->db->exec($sql, [$id]);
+    } catch (Exception $e) {
+        $windowHourDeleteSucces = false;
+    }
 
-    if (! $this->db->exec($sql)) {
+    if (!$windowHourDeleteSucces) {
 	  $this->errorMsg = "Erreur lors de la suppression des heures associées à la fenêtre.";
 	  $this->db->rollback();
 	  return false;
     }
-
 	if (! parent::delete($id)) {
 	  $this->db->rollback();
       return false;
