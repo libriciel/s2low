@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated v4.3.12
+ */
 class HeliosStatusSQL {
 
 	const ERREUR = -1;
