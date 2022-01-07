@@ -15,6 +15,20 @@ $siren = $recuperateur->get("siren");
 
 $siren = preg_replace("#\s#","",$siren);
 
+$authorityGroup = new GroupSQL($sqlQuery);;
+
+if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))){
+    $_SESSION["error"] = "L'id fournie n'est pas un entier.";
+    header("Location: " . WEBSITE_SSL);
+    exit;
+}
+
+if(empty($authorityGroup->getInfo($id))){
+    $_SESSION["error"] = "Le groupe $id n'existe pas.";
+    header("Location: " . WEBSITE_SSL);
+    exit;
+}
+
 if (strlen($siren) != 9){
     $_SESSION["error"] = "Le siren ne semble  pas valide.";
     header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
