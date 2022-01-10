@@ -72,7 +72,11 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->canAccess($mod
   Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$id = Helpers::getVarFromPost("id");
+try{
+    $id = Helpers::getIntFromPost("id");
+} catch (Exception $e){
+    Helpers::returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+}
 
 $myAuthority = new Authority($me->get("authority_id"));
 

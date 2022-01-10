@@ -375,9 +375,9 @@ class ActesBatch extends DataObject {
       $next_suffix = 1;
 
       // On récupère le suffixe
-      $sql = "SELECT next_suffix FROM actes_batches WHERE id=" . $this->id . " FOR UPDATE";
+      $sql = "SELECT next_suffix FROM actes_batches WHERE id= ? FOR UPDATE";
 
-      $result = $this->db->select($sql);
+      $result = $this->db->select($sql,[$this->id]);
 
       if (!$result->isError()) {
         if ($result->num_row() > 0) {
@@ -405,9 +405,9 @@ class ActesBatch extends DataObject {
       $next_suffix = $this->getNextSuffix();
 
       if ($next_suffix != null) {
-        $sql = "UPDATE actes_batches SET next_suffix=" . ($next_suffix +1) . " WHERE id=" . $this->id;
+        $sql = "UPDATE actes_batches SET next_suffix= ? WHERE id= ?";
 
-        if (!$this->db->exec($sql)){
+        if (!$this->db->exec($sql,[$next_suffix +1,$this->id])){
           $this->errorMsg = "Erreur d'accès base de données.";
           return $this->errorMsg;
         }
@@ -552,7 +552,12 @@ class ActesBatch extends DataObject {
     }
 
     // Définition du répertoire de stockage
-    if (!$this->db->exec("UPDATE actes_batches SET storage_dir='" . $this->storage_dir . "' WHERE id=" . $this->id)) {
+    if (
+        !$this->db->exec(
+        "UPDATE actes_batches SET storage_dir=? WHERE id= ?",
+        [$this->storage_dir,$this->id]
+        )
+    ) {
       $this->errorMsg = "Erreur lors de la définition du répertoire de stockage du lot.";
       $this->db->rollback();
       return false;

@@ -15,6 +15,13 @@ class Helpers {
     return Helpers::getVarFromRequest($name, "POST", $memorize);
   }
 
+  public static function getIntFromPost($name, $nullable = false) {
+        return self::checkInt(
+            Helpers::getVarFromRequest($name, "POST"),
+            $nullable,
+            $name
+        );
+    }
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête GET
    * \param $name chaîne : nom de la variable à récupérer
@@ -26,14 +33,11 @@ class Helpers {
   }
 
   public static function getIntFromGet($name, $nullable = false) {
-      $var = Helpers::getVarFromRequest($name, "GET");
-      if(is_null($var) && !$nullable){
-          throw new UnexpectedValueException("$name est null ");
-      }
-      if(!ctype_digit($var)){
-          throw new UnexpectedValueException("$name n'est pas un entier");
-      }
-      return $var;
+      return self::checkInt(
+          Helpers::getVarFromRequest($name, "GET"),
+          $nullable,
+          $name
+      );
   }
 
   /**
@@ -533,7 +537,24 @@ class Helpers {
 	}
   }
 
-	public function chunkString($string,$length){
+    /**
+     * @param string $var
+     * @param bool $nullable
+     * @param $name
+     * @return mixed
+     */
+    protected static function checkInt(string $var, bool $nullable, $name): string
+    {
+        if (is_null($var) && !$nullable) {
+            throw new UnexpectedValueException("$name est null ");
+        }
+        if (!ctype_digit($var)) {
+            throw new UnexpectedValueException("$name n'est pas un entier");
+        }
+        return $var;
+    }
+
+    public function chunkString($string,$length){
 		$result = substr($string, 0, $length);
 		if (strlen($string) > 40) {
 			$result .= "...";
