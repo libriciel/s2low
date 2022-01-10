@@ -42,8 +42,8 @@ class HeliosRetour extends DataObject {
   }
   
   public function changeStatus($id, $status){
-  	  $sql = "UPDATE helios_retour SET status = $status WHERE id = $id;";
-	  if (! $this->db->exec($sql)) {
+  	  $sql = "UPDATE helios_retour SET status = ? WHERE id = ?;";
+	  if (! $this->db->exec($sql,[$status,$id])) {
 		$this->errorMsg = "Erreur lors du changement d'état.";
 		return false;
 	  }
