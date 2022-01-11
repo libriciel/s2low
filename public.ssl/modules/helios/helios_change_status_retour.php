@@ -33,7 +33,11 @@ if (!$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGrou
 }
 
 
-$retour_id = Helpers :: getVarFromGet("id");
+try {
+    $retour_id = Helpers :: getIntFromGet("id");
+} catch (Exception $e){
+    Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_retour.php");
+}
 if (isset($retour_id) && !empty($retour_id)){
 	if ($hr->changeStatus($retour_id, 1)){
 		Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", WEBSITE_SSL . "/modules/helios/helios_retour.php");
