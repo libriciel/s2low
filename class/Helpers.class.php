@@ -25,6 +25,17 @@ class Helpers {
     return Helpers::getVarFromRequest($name, "GET", $memorize);
   }
 
+  public static function getIntFromGet($name, $nullable = false) {
+      $var = Helpers::getVarFromRequest($name, "GET");
+      if(is_null($var) && !$nullable){
+          throw new UnexpectedValueException("$name est null ");
+      }
+      if(!ctype_digit($var)){
+          throw new UnexpectedValueException("$name n'est pas un entier");
+      }
+      return $var;
+  }
+
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête HTTP
    * \param $name chaîne : nom de la variable à récupérer

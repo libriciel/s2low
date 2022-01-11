@@ -120,8 +120,12 @@ class Database {
 	 * @return bool|mixed
 	 * @throws Exception
 	 */
-	public function getOneValue($sql){
-		return $this->sqlQuery->queryOne($sql);
+	public function getOneValue($sql,$params=[]){
+        if ( ! is_array($params)){
+            $params = func_get_args();
+            array_shift($params);
+        }
+		return $this->sqlQuery->queryOne($sql,$params);
 	}
 
 	/**

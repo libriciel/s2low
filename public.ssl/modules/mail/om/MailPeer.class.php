@@ -86,11 +86,10 @@ class MailPeer {
 		$MailEmisArray = array();
 
 	  	$sql = "SELECT id FROM mail_message_emis " .
-	  			" WHERE mail_transaction_id = $trans_id" .
+	  			" WHERE mail_transaction_id = ?" .
 	  			" ORDER BY email";
 		
-	  	$result = $db->select($sql);
-		   
+	  	$result = $db->select($sql,[$trans_id]);
 		    if (! $result->isError()) 
 		    {
 			    while ($row = $result->get_next_row()) 
@@ -113,9 +112,9 @@ class MailPeer {
 	  if (! empty($trans_id)) 
 	  	{
 			$sql = "SELECT id FROM mail_included_file where";
-		    $sql.= " mail_transaction_id =".$trans_id;
+		    $sql.= " mail_transaction_id = ?";
 			$db = DatabasePool::getInstance();
-		    $result = $db->select($sql);
+		    $result = $db->select($sql,[$trans_id]);
 		    if (! $result->isError()) 
 		    {
 			    while ($row = $result->get_next_row()) 
@@ -136,19 +135,21 @@ class MailPeer {
 	public static function GetAnnuaire($authority_id,$groupe_id = null) {
 		assert(!!$authority_id);
 		$sql = "SELECT * FROM mail_annuaire ";
+        $params=[];
 		if ($groupe_id){
 			$sql .= " JOIN mail_user_groupe ON mail_annuaire.id = mail_user_groupe.id_user ";
 		}
-		$sql .= " WHERE mail_annuaire.authority_id=$authority_id ";
-		
+		$sql .= " WHERE mail_annuaire.authority_id=?";
+		$params[]=$authority_id;
 		if ($groupe_id){
-			$sql .= " AND mail_user_groupe.id_groupe = $groupe_id";
+			$sql .= " AND mail_user_groupe.id_groupe = ?";
+            $params[] = $groupe_id;
 		}
 		
 		$sql.= " ORDER BY COALESCE(description,mail_address) ;";
 		
 		$db =DatabasePool::getInstance();
-		$result = $db->select($sql);		
+		$result = $db->select($sql,$params);
 		return $result->get_all_rows();
 	}
   
@@ -159,16 +160,16 @@ class MailPeer {
    * pour un email spécifier.
    *
    * @param $trans_id=>mail_trainsaction id:
-   * @return un tableau: 2 colone: mail adress et message retour
+   * @return array|bool un tableau: 2 colone: mail adress et message retour
    */
   public static function GetMailErrors($trans_id)
   {
 	  if (! empty($trans_id)) 
 	  	{
 			$sql = "SELECT mail_message_emis.email, mail_errors.message_retour FROM mail_errors, mail_message_emis where";
-		    $sql.= " mail_errors.id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id=".$trans_id;
+		    $sql.= " mail_errors.id = mail_message_emis.mail_transaction_id and mail_message_emis.mail_transaction_id= ?";
 			$db =DatabasePool::getInstance();
-		    $result = $db->select($sql);
+		    $result = $db->select($sql,[$trans_id]);
 			return $result->get_all_rows();
      	} 
      return false;
@@ -179,7 +180,7 @@ class MailPeer {
    * 
    * @param string $mail :adress qu'on va vérifier
    * @param integer $userId: pour quelle user
-   * @return if exist, return true, si non, return false.
+   * @return bool if exist, return true, si non, return false.
    */
   public static function VerifierMailAnnuaire($mail,$authority_id)
   {
@@ -222,27 +223,27 @@ class MailPeer {
   	$db =DatabasePool::getInstance();
   	
   	$sql="DELETE FROM mail_errors WHERE id IN ";
-  	$sql.="(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis WHERE mail_transaction_id=$transId)";		
-    if (! $db->exec($sql)) {
+  	$sql.="(SELECT mail_message_emis.mail_transaction_id FROM mail_message_emis WHERE mail_transaction_id=?)";
+    if (! $db->exec($sql,[$transId])) {
   		$message[]= "Erreur lors de la suppression de mail_errors ";
 
     }
   	
-  	$sql="delete FROM mail_message_emis WHERE mail_transaction_id=".$transId;
+  	$sql="delete FROM mail_message_emis WHERE mail_transaction_id=?";
 
-    if (! $db->exec($sql)) {
+    if (! $db->exec($sql,[$transId])) {
   		$message[]="Erreur lors de la suppression de mail_transaction_id ";
   		
     }	
 	
-  	$sql="delete FROM mail_included_file WHERE mail_transaction_id=".$transId;	
-    if (! $db->exec($sql)) {
+  	$sql="delete FROM mail_included_file WHERE mail_transaction_id=?";
+    if (! $db->exec($sql,[$transId])) {
   		$message[]="Erreur lors de la suppression de mail_included_file ";
   		
     }	
 
-  	$sql="delete FROM mail_transaction WHERE id=".$transId;		
-    if (! $db->exec($sql)) {
+  	$sql="delete FROM mail_transaction WHERE id=?";
+    if (! $db->exec($sql,[$transId])) {
   		$message[]="Erreur lors de la suppression de mail_transaction";
     }
 	  Log :: newEntry(LOG_ISSUER_NAME, "Suppression du mail {$objet} (id=$transId)" , 1, false, 'USER', $module->get("name"), $me);
