@@ -12,6 +12,7 @@
 - Correction d'une vulnérabilité #735
 - Correction d'une vulnérabilité #736
 - Correction d'une vulnérabilité #737
+- Correction d'une vulnérabilité #738
 - Correction d'une vulnérabilité #739
 - Correction de vulnérabilités XSS #744
 

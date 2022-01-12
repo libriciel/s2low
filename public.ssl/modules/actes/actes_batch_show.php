@@ -79,7 +79,13 @@ if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
   exit();
 }
 
-$id = Helpers::getVarFromGet("id");
+try {
+    $id = Helpers::getIntFromGet("id");
+} catch (Exception $e){
+    $_SESSION["error"] = "Erreur d'initialisation du lot.";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+    exit();
+}
 
 $myAuthority = new Authority($me->get("authority_id"));
 
