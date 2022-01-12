@@ -11,8 +11,11 @@ require_once (__DIR__ . '/../../../class/FileUploader.class.php');
 
 $errorMsg = "";
 $extraRedirect = "";
-if (empty($_POST)){
+if (empty($_POST)){     // La taille est déterminée dans la conf apache par post_max_size, qui serait récupérable par ini_get_all()["post_max_size"]["local_value"] non par ACTES_ARCHIVE_MAX_SIZE.
 	Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : ". ACTES_ARCHIVE_MAX_SIZE .")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+}
+if(error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded"){
+    Helpers :: returnAndExit(1, "Le nombre d'annexes est trop important (max : ".ini_get_all()["max_file_uploads"]["local_value"].")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
 }
 
 // Instanciation du module courant
