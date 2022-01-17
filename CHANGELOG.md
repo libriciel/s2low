@@ -15,6 +15,7 @@
 - Correction d'une vulnérabilité #738
 - Correction d'une vulnérabilité #739
 - Correction de vulnérabilités XSS #744
+- Ajout d'un message d'erreur lorsque le nombre d'annexes à un acte est trop important #747
 
 # 4.3.11 - 2021-12-03
 
