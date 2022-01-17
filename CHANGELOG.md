@@ -1,4 +1,4 @@
-# 4.3.12
+# 4.3.12 - 2022-01-17
 
 ## Évolution
 - Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
