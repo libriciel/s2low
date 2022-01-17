@@ -2,6 +2,7 @@
 
 ## Évolution
 - Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
+- Mise à jour du simulateur en 1.1.2 #748
 
 ## Correction
 - Corection d'une erreur sur helios-pes-acquit-menage #293

@@ -77,7 +77,7 @@ services:
             - NOPASS=true
 
     simulateur:
-        image: gitlab.libriciel.fr:4567/libriciel/pole-plate-formes/s2low/projets-annexes/simulateur-helios:1.1.1
+        image: gitlab.libriciel.fr:4567/libriciel/pole-plate-formes/s2low/projets-annexes/simulateur-helios:1.1.2
         networks:
           - dgfip
           - dgcl
