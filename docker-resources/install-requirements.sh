@@ -31,7 +31,8 @@ apt-get install -y \
     xmlstarlet \
     wget \
     zip \
-    netcat
+    netcat \
+    poppler-utils
 
 apt-get install -y -t stretch-backports python-certbot-apache
 

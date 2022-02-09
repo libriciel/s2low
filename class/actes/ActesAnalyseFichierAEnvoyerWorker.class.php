@@ -15,6 +15,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 	private $actes_dont_valid_signing_certificate;
 	private $actes_type_pj_is_mandatory;
 	private $actesTypePJSQL;
+    /** @var \PdfValid  */
+    private $pdfValid;
 
     public function __construct(
         S2lowLogger $logger,
@@ -27,7 +29,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 		WorkerScript $workerScript,
 		$actes_dont_valid_signing_certificate,
 		$actes_type_pj_is_mandatory,
-		ActesTypePJSQL $actesTypePJSQL
+		ActesTypePJSQL $actesTypePJSQL,
+        PdfValid $pdfValid
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -40,6 +43,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
         $this->actes_type_pj_is_mandatory = $actes_type_pj_is_mandatory;
         $this->actesTypePJSQL = $actesTypePJSQL;
+        $this->pdfValid = $pdfValid;
     }
 
 	public function getQueueName(){
@@ -172,6 +176,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         if ($mime_type != 'application/pdf') {
             return;
         }
+
+        $this->pdfValid->check($filepath);
         try {
             $this->padesValid->validate($filepath,$must_validate_certificate);
 		} catch(RecoverableException $e){
