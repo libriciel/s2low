@@ -548,7 +548,7 @@ class Helpers {
         if (is_null($var) && !$nullable) {
             throw new UnexpectedValueException("$name est null ");
         }
-        if (!ctype_digit($var)) {
+        if (!ctype_digit($var) && !$nullable) {
             throw new UnexpectedValueException("$name n'est pas un entier");
         }
         return $var;

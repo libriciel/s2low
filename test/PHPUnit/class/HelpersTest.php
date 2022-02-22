@@ -275,5 +275,17 @@ class HelpersTest extends TestCase {
 		$this->assertEmpty(Helpers::getAuthorizedCACerts(__DIR__."/fixtures/empty/"));
 	}
 
+    public function testNullIntFromPost(){
+        $this->assertEquals(
+            null,
+            Helpers::getIntFromPost("test",true)
+        );
+    }
+
+    public function testNullExceptionIntFromPost(){
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage("test est null");
+        Helpers::getIntFromPost("test",false);
+    }
 
 }
