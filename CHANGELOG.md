@@ -1,3 +1,8 @@
+# 4.3.13 
+
+## Correction
+- Correction d'un problème d'accès à l'annuaire #751
+
 # 4.3.12 - 2022-01-17
 
 ## Évolution
