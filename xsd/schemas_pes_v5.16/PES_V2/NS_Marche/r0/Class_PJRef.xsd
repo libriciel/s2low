@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:complexType name="TPJRefs">
+    <xs:annotation>
+      <xs:documentation>Pour chaque PJ associée au marché (PJ « pièce contractuelle du marché »), référence unique de la PJ.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PJRef" type="TPJRef" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée au marché (PJ « pièce contractuelle du marché »), référence unique de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPJRef">
+    <xs:annotation>
+      <xs:documentation>PJ associée au marché (PJ « pièce contractuelle du marché »), référence unique de la PJ.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Support" type="cm:TSupport">
+        <xs:annotation>
+          <xs:documentation>Support de la PJ référencée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdUnique" type="cm:Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identifiant unique de la pièce quel que soit le domaine, l'objet, l'exercice et l'acheteur concerné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypePJ" type="TPJMarche">
+        <xs:annotation>
+          <xs:documentation>Type de pièce justificative.
+Valeur possible :
+- 009 « Pièce contractuelle Marché » (nouveau type de PJ pour CCAP/ CCAG / CCTG / CCTP / acte d'engagement / acte de notification du marché, etc).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomPJ" type="cm:Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Nom de la PJ sur 100 caractères maximum, destiné à préciser le référencement de PJ.
+Une PJ qui ne dispose pas d'extension ou bien a une extension d'une longueur supérieur à 4 caractères doit être rejetée par le Guichet XML.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
