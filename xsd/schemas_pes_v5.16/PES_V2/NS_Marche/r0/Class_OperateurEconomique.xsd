@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Partage CPD (D° GLE DES FINANCES PUBLIQUES) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:include schemaLocation="Class_ConditionsExecution.xsd" />
+  <xs:include schemaLocation="Class_BancaireMarche.xsd" />
+  <xs:complexType name="TOperateurs">
+    <xs:annotation>
+      <xs:documentation>Opérateurs économiques du marché public</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Titulaire" type="TTitulaire" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Titulaire/ co-traitants du marché
+A minima 1 élémént.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SousTraitantPaiementDirect" type="TSousTraitantPaiementDirect" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Sous-traitants à paiement direct</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTitulaire">
+    <xs:annotation>
+      <xs:documentation>Titulaire/ co-traitant du marché</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TypeTitulaireMarche" type="TTypeTitulaireMarche">
+        <xs:annotation>
+          <xs:documentation>Type opérateur économique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatIdTitulaire" type="TNatIdTiersMarche">
+        <xs:annotation>
+          <xs:documentation>Type d'Identifiant national de l'opérateur économique.
+- 01 SIRET
+- 05 TVA,
+- 06 HORS UE
+- 07 TAHITI, 
+- 08 RIDET,
+- 09 EN COURS IMMATRICULATION,
+- 10 FRWF,
+- 11 IREP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdTitulaire" type="cm:Base_Texte9_100">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de l'opérateur économique de type :
+- numéro siret (SIREN+NIC), (identifiant français, 14 chiffres)
+- numéro de TVA intracommunautaire (numéro de TVA intracommunautaire, pour les entreprises de pays membres de l'Union européenne) au moins 9 caractères
+- HORS-UE (identifiants pour les entreprises de pays non membres de l'Union Européenne. Code pays ISO 3166 + 16 premiers caractères de la dénomination sociale. Ex. : BRDASILVAMOTORES)
+- Tahiti (identifiants pour Tahiti et la Polynésie française, 9 chiffres)
+- Ridet (identifiants pour la Nouvelle-Calédonie, 10 chiffres),
+- EN_COURS_IMMATRICULATION,
+- FRWF (identifiants pour Wallis-et-Futuna, " FRWF " + 14 premières lettres de la raison sociale. Ex. : FRWFDURANDCHAUFFAG),
+- IREP (personnes physiques françaises, 5 chiffres + LIEU DE NAISSANCE + NOM + PRENOM. Ex. : 18102VANNESDURANDMATHIEU), 80 caractères au maximum.
+
+Nb : la balise &lt;IdTitulaire&gt; est un alphanumérique de 9 à 80 caractères.
+
+Pour les seuls identifiants de type SIRET des contrôles de validité sont effectués. La clé de l'identifiant doit être valide, sinon rejet du Marché. Les longueurs possibles sont 14 pour le Siret, au moins 9 pour TVA, 18 pour HORS-UE (les deux premiers caractères doivent correspondre au code pays ISO 3166), 9 pour Tahiti (9 chiffres), 9 ou 10 pour Ridet (10 chiffres), 18 caractères au maximum pour FRWF (en plus : les 4 premiers caractères = FRWF), 80 caractères au maximum pour IREP (les 5 premiers caractères sont des chiffres).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DenominationSociale" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'opérateur économique intervenant sur le marché public.
+Raison sociale / Nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément de nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Réservé aux opérateurs « personne physique ». Obligatoire pour les personnes physiques.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence attribuée au titulaire/co-traitant par l'ordonnateur : zone destinée à recevoir une référence ou un identifiant, éventuellement géré par l'ordonnateur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CatTiers" type="cm:TCatTiers">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la catégorie de l'opérateur économique.
+Par défaut : valeur 50 correspondant à une personne morale de droit privé dans Hélios.
+
+L'association Cat Nat doit être en concordance avec les speext du PESV2 sinon :
+- si la catégorie est « Personne morale de droit privé », le marché n'est pas rejeté mais la nature juridique est forcée à «Société» ;
+- si la catégorie est « Personne morale de droit public », le marché n'est pas rejeté mais la nature juridique est forcée à « Inconnue » ;
+- si la catégorie n'est ni « Personne morale de droit public » ni « Personne morale de droit privé », le marché n'est pas rejeté mais la catégorie est forcée à « Personne morale de droit privé » et la nature juridique à «Société» et les attributs obligatoires pour une « Personne Physique » ne sont pas retenus.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatJur" type="cm:TNatJur">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la nature juridique de l'opérateur économique.
+Valeur par défaut : 03 Société.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Etat civil de l'opérateur économique.
+Zone destinée à recevoir de manière abrégée l'état civil (Mr, Mme,…), la qualité (Cdt,...) de l'opérateur économique.
+Obligatoire si Cat de l'opérateur économique = Personne physique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="cm:TAdresse">
+        <xs:annotation>
+          <xs:documentation>Adresse du titulaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteBancaire" type="TBancaireMarche">
+        <xs:annotation>
+          <xs:documentation>Référence bancaire du titulaire  (un contrôle négatif [clé RIB ou clé IBAN erronée, domiciliation erronée, BIC absent à tort sur IBAN non français) génère le rejet du marché).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ConditionsExecutionTitulaire" type="TConditionsExecutionTitulaire">
+        <xs:annotation>
+          <xs:documentation>Conditions d'exécution du marché pour le titulaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TSousTraitantPaiementDirect">
+    <xs:annotation>
+      <xs:documentation>Sous-traitant à paiement direct</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumeroActeSousTraitance" type="cm:Base_Num2_2Light">
+        <xs:annotation>
+          <xs:documentation>Numéro d'acte de sous-traitance.
+Valeur : de 01 à 99.
+Le numéro de sous-traitance est discriminant sur un marché public, ce numéro ne doit pas exister pour un autre sous-traitant du marché, sinon rejet du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatIdSousTraitant" type="TNatIdTiersMarche">
+        <xs:annotation>
+          <xs:documentation>Type d'Identifiant national de l'opérateur économique.
+- 01 SIRET
+- 05 TVA,
+- 06 HORS UE
+- 07 TAHITI, 
+- 08 RIDET,
+- 09 EN COURS IMMATRICULATION,
+- 10 FRWF,
+- 11 IREP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdSousTraitant" type="cm:Base_Texte9_100">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de l'opérateur économique de type :
+- numéro siret (SIREN+NIC), (identifiant français, 14 chiffres)
+- numéro de TVA intracommunautaire (numéro de TVA intracommunautaire, pour les entreprises de pays membres de l'Union européenne) au moins 9 caractères
+- HORS-UE (identifiants pour les entreprises de pays non membres de l'Union Européenne. Code pays ISO 3166 + 16 premiers caractères de la dénomination sociale. Ex. : BRDASILVAMOTORES)
+- Tahiti (identifiants pour Tahiti et la Polynésie française, 9 chiffres)
+- Ridet (identifiants pour la Nouvelle-Calédonie, 10 chiffres),
+- EN_COURS_IMMATRICULATION,
+- FRWF (identifiants pour Wallis-et-Futuna, " FRWF " + 14 premières lettres de la raison sociale. Ex. : FRWFDURANDCHAUFFAG),
+- IREP (personnes physiques françaises, 5 chiffres + LIEU DE NAISSANCE + NOM + PRENOM. Ex. : 18102VANNESDURANDMATHIEU), 80 caractères au maximum.
+
+Nb : la balise &lt;IdSousTraitant&gt; est un alphanumérique de 9 à 80 caractères.
+
+Pour les seuls identifiants de type SIRET des contrôles de validité sont effectués. La clé de l'identifiant doit être valide, sinon rejet du Marché. Les longueurs possibles sont 14 pour le Siret, au moins 9 pour TVA, 18 pour HORS-UE (les deux premiers caractères doivent correspondre au code pays ISO 3166), 9 pour Tahiti (9 chiffres), 9 ou 10 pour Ridet (10 chiffres), 18 caractères au maximum pour FRWF (en plus : les 4 premiers caractères = FRWF), 80 caractères au maximum pour IREP (les 5 premiers caractères sont des chiffres).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DenominationSociale" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'opérateur économique intervenant sur le marché public.
+Raison sociale / Nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément de nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Réservé aux opérateurs « personne physique ». Obligatoire pour les personnes physiques.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence attribuée au titulaire par l'ordonnateur : zone destinée à recevoir une référence ou un identifiant, éventuellement géré par l'ordonnateur</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CatTiers" type="cm:TCatTiers">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la catégorie de l'opérateur économique.
+Par défaut : valeur 50 correspondant à une personne morale de droit privé dans Hélios.
+
+L'association Cat Nat doit être en concordance avec les speext du PESV2 sinon :
+- si la catégorie est « Personne morale de droit privé », le marché n'est pas rejeté mais la nature juridique est forcée à «Société» ;
+- si la catégorie est « Personne morale de droit public », le marché n'est pas rejeté mais la nature juridique est forcée à « Inconnue » ;
+- si la catégorie n'est ni « Personne morale de droit public » ni « Personne morale de droit privé », le marché n'est pas rejeté mais la catégorie est forcée à « Personne morale de droit privé » et la nature juridique à «Société» et les attributs obligatoires pour une « Personne Physique » ne sont pas retenus.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatJur" type="cm:TNatJur">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la nature juridique de l'opérateur économique.
+Valeur par défaut : 03 Société.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Etat civil de l'opérateur économique.
+Zone destinée à recevoir de manière abrégée l'état civil (Mr, Mme,…), la qualité (Cdt,...) de l'opérateur économique.
+Obligatoire si Cat de l'opérateur économique = Personne physique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="cm:TAdresse">
+        <xs:annotation>
+          <xs:documentation>Adresse du sous-traitant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+			<xs:element name="CpteBancaire" type="TBancaireMarche">
+        <xs:annotation>
+          <xs:documentation>Référence bancaire du sous-traitant (un contrôle négatif [clé RIB ou clé IBAN erronée, domiciliation erronée, BIC absent à tort sur IBAN non français) pourra générer le rejet du marché).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTitulairesLight">
+    <xs:annotation>
+      <xs:documentation>Acheteur du marché public</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Titulaire" type="TTitulaireLight" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Titulaire/ co-traitant du marché (dont les attributaires d'un accord-cadre)
+A minima 1 titulaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTitulaireLight">
+    <xs:annotation>
+      <xs:documentation>Opérateur économique intervenant sur le marché public :
+- titulaire du marché/co-traitant</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TypeTitulaireMarche" type="TTypeTitulaireMarche">
+        <xs:annotation>
+          <xs:documentation>Type opérateur économique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatId" type="TNatIdTiersMarche">
+        <xs:annotation>
+          <xs:documentation>Type d'Identifiant national de l'opérateur économique.
+- 01 SIRET
+- 05 TVA,
+- 06 HORS UE
+- 07 TAHITI, 
+- 08 RIDET,
+- 09 EN COURS IMMATRICULATION,
+- 10 FRWF,
+- 11 IREP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Id" type="cm:Base_Texte9_100">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de l'opérateur économique de type :
+- numéro siret (SIREN+NIC), (identifiant français, 14 chiffres)
+- numéro de TVA intracommunautaire (numéro de TVA intracommunautaire, pour les entreprises de pays membres de l'Union européenne) au moins 9 caractères
+- HORS-UE (identifiants pour les entreprises de pays non membres de l'Union Européenne. Code pays ISO 3166 + 16 premiers caractères de la dénomination sociale. Ex. : BRDASILVAMOTORES)
+- Tahiti (identifiants pour Tahiti et la Polynésie française, 9 chiffres)
+- Ridet (identifiants pour la Nouvelle-Calédonie, 10 chiffres),
+- EN_COURS_IMMATRICULATION,
+- FRWF (identifiants pour Wallis-et-Futuna, " FRWF " + 14 premières lettres de la raison sociale. Ex. : FRWFDURANDCHAUFFAG),
+- IREP (personnes physiques françaises, 5 chiffres + LIEU DE NAISSANCE + NOM + PRENOM. Ex. : 18102VANNESDURANDMATHIEU), 80 caractères au maximum.
+
+Nb : la balise &lt;Id&gt; est un alphanumérique de 9 à 80 caractères.
+
+Pour les seuls identifiants de type SIRET des contrôles de validité sont effectués. La clé de l'identifiant doit être valide. 
+Les longueurs possibles sont 14 pour le Siret, au moins 9 pour TVA, 18 pour HORS-UE (les deux premiers caractères doivent correspondre au code pays ISO 3166), 9 pour Tahiti (9 chiffres), 9 ou 10 pour Ridet (10 chiffres), 18 caractères au maximum pour FRWF (en plus : les 4 premiers caractères = FRWF), 80 caractères au maximum pour IREP (les 5 premiers caractères sont des chiffres).
+
+Le titulaire doit être référencé dans la liste des opérateurs [Titulaire] du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DenominationSociale" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'opérateur économique intervenant sur le marché public.
+Raison sociale / Nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantHTNotifie" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT du marché qui a été notifié au titulaire/co-traitant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TSousTraitantPaiementDirectLight">
+    <xs:annotation>
+      <xs:documentation>Informations sous-traitant</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatId" type="TNatIdTiersMarche">
+        <xs:annotation>
+          <xs:documentation>Type d'Identifiant national de l'opérateur économique.
+- 01 SIRET
+- 05 TVA,
+- 06 HORS UE
+- 07 TAHITI, 
+- 08 RIDET,
+- 09 EN COURS IMMATRICULATION,
+- 10 FRWF,
+- 11 IREP</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Id" type="cm:Base_Texte9_100">
+        <xs:annotation>
+          <xs:documentation>Identifiant national de l'opérateur économique de type :
+- numéro siret (SIREN+NIC), (identifiant français, 14 chiffres)
+- numéro de TVA intracommunautaire (numéro de TVA intracommunautaire, pour les entreprises de pays membres de l'Union européenne) au moins 9 caractères
+- HORS-UE (identifiants pour les entreprises de pays non membres de l'Union Européenne. Code pays ISO 3166 + 16 premiers caractères de la dénomination sociale. Ex. : BRDASILVAMOTORES)
+- Tahiti (identifiants pour Tahiti et la Polynésie française, 9 chiffres)
+- Ridet (identifiants pour la Nouvelle-Calédonie, 10 chiffres),
+- EN_COURS_IMMATRICULATION,
+- FRWF (identifiants pour Wallis-et-Futuna, " FRWF " + 14 premières lettres de la raison sociale. Ex. : FRWFDURANDCHAUFFAG),
+- IREP (personnes physiques françaises, 5 chiffres + LIEU DE NAISSANCE + NOM + PRENOM. Ex. : 18102VANNESDURANDMATHIEU), 80 caractères au maximum.
+
+Nb : la balise &lt;Id&gt; est un alphanumérique de 9 à 80 caractères.
+
+Pour les seuls identifiants de type SIRET des contrôles de validité sont effectués. La clé de l'identifiant doit être valide. 
+Les longueurs possibles sont 14 pour le Siret, au moins 9 pour TVA, 18 pour HORS-UE (les deux premiers caractères doivent correspondre au code pays ISO 3166), 9 pour Tahiti (9 chiffres), 9 ou 10 pour Ridet (10 chiffres), 18 caractères au maximum pour FRWF (en plus : les 4 premiers caractères = FRWF), 80 caractères au maximum pour IREP (les 5 premiers caractères sont des chiffres).
+
+Le sous-traitant doit être référencé dans la liste des opérateurs |Sous-traitant] du marché.
+Le sous-traitant doit être référencé dans la «VentilationSousTraitantPaiementDirect» pour au moins un titulaire donné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DenominationSociale" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom de l'opérateur économique intervenant sur le marché public.
+Raison sociale / Nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
