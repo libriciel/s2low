@@ -1,7 +1,7 @@
 # 4.3.14 - 
 
 # Évolution
-- Prise en compte de la version 5.14 du schema XSD Pes Aller #762
+- Prise en compte de la version 5.16 du schema XSD Pes Aller #762
 
 # 4.3.13 - 2022-03-08
 
