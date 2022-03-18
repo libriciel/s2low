@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunDepense.xsd" />
+  <xs:complexType name="TBlocPiece">
+    <xs:sequence>
+      <xs:element name="InfoPce" type="TInfoPce">
+        <xs:annotation>
+          <xs:documentation>La cohérence des balises est définie par les annexes du présent document. L'incohérence ou des valeurs inconnues aboutit à un rejet du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DGP" type="TDGP" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Unique si le bloc est présent, les 4 balises DGP, DteDebDgp DteFinDgp, DureeDgp doivent être valorisées. Les autres balises sont optionnelles. On vérifie le format des dates, une durée indiquée. On ne vérifie pas que les données sont cohérentes : Hélios le réalise au prévisa ABNF.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoPce">
+    <xs:annotation>
+      <xs:documentation>La cohérence des balises est définie par les annexes du présent document. L'incohérence ou des valeurs inconnues aboutit à un rejet du bordereau</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d'identification du service de l'ordonnateur. Ce CodServ doit être connu dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Affect" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Critère d'affectation : Zone libre permettant  à l'ordonnateur de déterminer l'affectation du dossier dans les services du comptable. Les critères d'affectation résultent d'une convention entre l'ordonnateur et le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num8">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce : Numéro du mandat porté sur le bordereau récapitulatif de mandat.
+Doit être strictement supérieur à 0.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Informations destinées à déterminer le type de pièce transmis par l'ordonnateur. Cette zone permet d'effectuer des contrôles avec le type de bordereau.
+Cette balise doit fonctionner sur la base des associations de triplets connus (TypBord, TypPce NatPce) tout autre triplet doit aboutir à un rejet du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatPce" type="TNatPce">
+        <xs:annotation>
+          <xs:documentation>Nature du mandat.
+Cette balise fonctionne en association avec TypBord et TypPce. Tout triplet non connu doit aboutir au rejet du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Obj" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zone libre décrivant l'objet de la pièce, restituée au niveau du mandat dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteEch" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'échéance : Date à laquelle l'ordonnateur désire le paiement du mandat.
+Ceci permet le paiement à juste date dans Hélios, à la date transmise par l'ordonnateur si elle est servie.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée à l'objet, référence unique de la PJ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJ" type="cm:Base_Texte250" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zone libre permettant d'indiquer les références des pièces justificatives</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CarteAchatNiveau1" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cette zone permet d'indiquer si la dépense relève ou non d'un paiement par carte achat de niveau 1 exclusivement. 0=NON,1=OUI...Par défaut à 0.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TDGP">
+    <xs:annotation>
+      <xs:documentation>Unique si le bloc est présent, les 4 balises DGP, DteDebDgp DteFinDgp, DureeDgp doivent être valorisées. Les autres balises sont optionnelles. On vérifie le format des dates, une durée indiquée. On ne vérifie pas que les données sont cohérentes : Hélios le réalise au prévisa ABNF.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Dgp" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Dépense éligible au DGP.Zone permettant à l'ordonnateur d'indiquer que la dépense fait l'objet du suivi du délai global de paiement.
+(valeurs : 0 ou FALSE=dépense éligible, 1 ou TRUE= dépense non éligible. Par défaut sur 0).
+Si cette balise est présente, le bloc doit être complet (DGP, DteDebDgp, DteFinDgp, DureeDgp)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteDebDgp" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de départ du délai global de paiement chez l'ordonnateur.
+Balise obligatoire dès lors que le bloc DGP est présent</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteFinDgp" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de fin du délai global de paiement. La date de fin indique la date à laquelle se termine le délai en incluant une éventuelle suspension effectuée par l'ordonnateur.
+Balise obligatoire dès lors que le bloc DGP est présent</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeDgp" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>Durée réglementaire ou conventionnelle du délai global de paiement (Cette durée ne prend pas en compte une éventuelle suspension faite par l'ordonnateur).
+Balise obligatoire dès lors que le bloc DGP est présent</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodIntMor" type="TCodIntMor" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code du taux des intérêts moratoires : Cette information indique le type de taux sur lequel se base les intérêts moratoires</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TxIntMor" type="cm:Base_Taux_Hight" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indication du taux des intérêts moratoires. Cette information permet d'effectuer une préliquidation des intérêts moratoires par le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

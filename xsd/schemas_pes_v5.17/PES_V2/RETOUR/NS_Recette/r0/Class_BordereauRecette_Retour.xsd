@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunRecette_Retour.xsd" />
+  <xs:complexType name="TBlocBordereau">
+    <xs:sequence>
+      <xs:element name="Exer" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice de rattachement budgétaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdBord" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Identifiant du bordereau récapitulatif des titres. Pour les bordereaux de type 05 «P503 » et 04 «Bordereau de régularisation», le système dans Hélios attribue une valeur unique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypBord" type="TTypBord">
+        <xs:annotation>
+          <xs:documentation>Type de bordereau. Le types de bordereau 05 « P503 » et 04 «Bordereau de régularisation» sont utilisés afin de transmettre à l'ordonnateur des demandes de régularisation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBordereauORMCGlobal">
+    <xs:sequence>
+      <xs:element name="Exer" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice de rattachement budgétaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdBord" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Identifiant du bordereau ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTTC" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant TTC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePec" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de PEC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteRej" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de rejet (si le rejet global du bordereau intervient après la PEC,Dte Pec et DteRej seront valorisées simultanément)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteInst" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise en instance du bordereau ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>      
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
