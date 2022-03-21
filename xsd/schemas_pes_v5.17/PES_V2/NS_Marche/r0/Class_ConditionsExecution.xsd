@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_Garantie.xsd" />
+  <xs:include schemaLocation="Class_IndiceReference.xsd" />
+  <xs:complexType name="TConditionsExecution">
+    <xs:annotation>
+      <xs:documentation>Conditions d'exécution du marché</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdAccordCadre" type="cm:Base_Texte5_14" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant de l'accord-cadre (14 caractères : concaténation du millésime sur 4 caractères et d'un numéro interne au maximum sur 10 caractères) permettant de raccrocher les marchés subséquents ou mixtes y afférents.
+Valeur alphanumérique dont le nombre de caractères est compris entre 5 et 14.
+Cette balise est obligatoire si la nature du marché est égale à 05 "Marché Subséquent" sinon rejet du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SiretPAAccordCadre" type="cm:Base_Num14_14_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>SIRET du pouvoir adjudicateur à l'origine de l'accord-cadre.
+Ce SIRET est obligatoire pour tous les marchés subséquents qui se rapportent à l'accord-cadre, notamment pour les marchés subséquents notifiés par les membres d'un groupement d'achat.
+Cette balise est obligatoire si la nature du marché est égale à 05 "Marché Subséquent" sinon rejet du marché</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModaliteExecution" type="TModaliteExecution">
+        <xs:annotation>
+          <xs:documentation>Modalités d'exécution.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MultiBudget" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Zone permettant de déterminer si le marché concerne ou non plusieurs budgets collectivité d'une même collectivité.
+Valeurs :
+- 0 = mono budget,
+- 1 = multi-budget.
+Si la collectivité du flux est un budget annexe, alors la zone doit être obligatoirement valorisée à 0, sinon rejet du marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodesCPVSec" type="TCodesCPVSec" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Codes CPV secondaires (de 0 à 3 codes secondaires) précisant le code CPV principal.
+Il se compose de : 8 chiffres + «-» + 1 chiffre (caractère de contrôle).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbTotalPropositionsRecu" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nombre total des propositions reçues.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbTotalPropositionsDemat" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nombre total de propositions dématérialisées (NbTotalPropositionsDemat inférieur ou égal à NbTotalPropositionRec).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CarteAchat" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valeurs :
+- 1 = carte achat utilisée ;
+- 0 = carte achat non utilisée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ClauseSociale" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valeurs :
+- 1 = Mise en œuvre d'une clause sociale ;
+- 0 = Absence de clause sociale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ClauseEnvironnementale" type="cm:Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Valeurs :
+- 1 = Mise en œuvre d'une clause environnementale ;
+- 0 = Absence de clause environnementale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeGroupement" type="TTypeGroupement" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de groupement.
+Zone obligatoire si groupement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbEntreprisesGroupees" type="cm:Base_Num2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nombre total d'entreprises, qu'il s'agisse ou non d'un groupement, nombre total réel incluant le titulaire (ou attributaire principal) et tous les co-titulaires :
+-Si le contrat n'a qu'un seul titulaire, on portera le nombre 00.
+-Si un autre titulaire est partie au contrat, on inscrira le nombre "02" (titulaire principal inclus).
+-S'il y a deux autres titulaires, on portera le nombre "03" (titulaire principal + 2), etc.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CCAGReference" type="TCCAGReference" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>CCAG (Cahier des Clauses Administratives Générales) de référence</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TCodesCPVSec">
+    <xs:annotation>
+      <xs:documentation>Liste de Code CPV secondaire (de 0 à 3 codes secondaires précisant le code CPV principal)
+Il se compose de : 8 chiffres + «-» + 1 chiffre (caractère de contrôle).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeCPVSec" type="cm:Base_Num8_Num1" maxOccurs="3">
+        <xs:annotation>
+          <xs:documentation>Code CPV secondaire (de 0 à 3 codes secondaires précisant le code CPV principal)
+Il se compose de : 8 chiffres + «-» + 1 chiffre (caractère de contrôle).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TConditionsExecutionTitulaire">
+    <xs:annotation>
+      <xs:documentation>Définition des conditions d'exécution du marché pour le titulaire.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NaturePrestations" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>zone libre pour préciser la nature des prestations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegimeAvance" type="TRegimeAvance">
+        <xs:annotation>
+          <xs:documentation>Type d'avance.
+Le Régime d'avance doit être renseigné de manière significative soit autre que Aucune et Refusée si le Montant d'Avance est renseigné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantAvance" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de l'avance accordée au titulaire (versement d'une partie du montant d'un marché public au titulaire de ce marché avant tout commencement d'exécution de ses prestations). Elle constitue, à la différence de l'acompte , une dérogation à la règle du « service fait » .
+Si le Montant de l'avance est renseigné, le Régime d'avance doit être renseigné de manière significative soit autre que Aucune et Refusée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeGarantieAvance" type="TTypeGarantieAvance" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de garantie liée à l'avance.
+Si le MontantGarantieAvance est renseigné, le Type de garantie de l'avance doit être renseigné de manière significative : soit Garantie à première demande soit Caution personnelle et solidaire soit Autres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantGarantieAvance" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de garantie de l'avance accordée au titulaire, à renseigner uniquement pour le type de garantie indiqué soit Garantie à première demande soit Caution personnelle et solidaire soit Autres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateReceptionGarantieAvance" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>date de réception de la garantie liée à l'avance due au contractant (cette date correspondrait à la date de transmission prévue par le titulaire de la garantie à première demande ou de la caution personnelle et solidaire).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    <xs:element name="PourcentageAvance" type="cm:Base_Taux" minOccurs="0">
+      <xs:annotation>
+        <xs:documentation>Pourcentage de l'avance.
+Obligatoire sur marché donnant lieu à avance.
+Nombre décimal (5,2) &gt; 0</xs:documentation>
+      </xs:annotation>
+      </xs:element>
+      <xs:element name="Garantie" type="TGarantie" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Définition de la garantie sur le marché.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FormePrix" type="TFormePrix">
+        <xs:annotation>
+          <xs:documentation>Forme du prix du marché public applicable au contractant.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VariationPrix" type="TVariationPrix">
+        <xs:annotation>
+          <xs:documentation>Variation du prix du marché public</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IndicesReference" type="TIndicesReference" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indice de référence M0 retenu pour les prix lors de la notification du marché public (à la date de notification du marché)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TConditionsExecutionSousTraitantPaiementDirect">
+    <xs:annotation>
+      <xs:documentation>Conditions d'exécution du marché pour le sous-traitant à paiement direct</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NaturePrestations" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>zone libre pour préciser la nature des prestations</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AutoliquidationTVA" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>L'autoliquidation de TVA consiste pour le sous-traitant à facturer hors taxe, ainsi lors de l'exécution du marché les mandats qui le concernent seront sans TVA, la TVA sera incluse dans les mandats au bénéfice de son titulaire.
+Si Autoliquidation = 1, le MontantTVANotifie de la VentilationSousTraitantPaiementDirect ne doit pas être servi.
+Si Autoliquidation = 0, le MontantTVANotifie de la VentilationSousTraitantPaiementDirect doit être servi.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegimeAvance" type="TRegimeAvance">
+        <xs:annotation>
+          <xs:documentation>Type d'avance.
+Le Régime d'avance doit être renseigné de manière significative soit autre que Aucune et Refusée si le Montant d'Avance est renseigné.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantAvance" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de l'avance accordée au sous-traitant (versement d'une partie du montant d'un marché public au sous-traitant de ce marché avant tout commencement d'exécution de ses prestations). Elle constitue, à la différence de l'acompte , une dérogation à la règle du « service fait » .
+Si le Montant de l'avance est renseigné, le Régime d'avance doit être renseigné de manière significative soit autre que Aucune et Refusée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeGarantieAvance" type="TTypeGarantieAvance" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de garantie liée à l'avance.
+Si le MontantGarantieAvance est renseigné, le Type de garantie de l'avance doit être renseigné de manière significative : soit Garantie à première demande soit Caution personnelle et solidaire soit Autres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MontantGarantieAvance" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant de garantie de l'avance accordée au sous-traitant, à renseigner uniquement pour le type de garantie indiqué soit Garantie à première demande soit Caution personnelle et solidaire soit Autres.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PourcentageAvance" type="cm:Base_Taux" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Pourcentage de l'avance.
+Obligatoire sur marché donnant lieu à avance.
+Nombre décimal (5,2) &gt; 0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FormePrix" type="TFormePrix" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Forme du prix du marché public applicable au sous-traitant à paiement direct.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VariationPrix" type="TVariationPrix" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Variation du prix du marché public applicable au sous-traitant à paiement direct.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IndicesReference" type="TIndicesReference" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indice de référence M0 retenu pour les prix lors de la notification du marché public (à la date de notification du marché)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

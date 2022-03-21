@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunRecette.xsd" />
+  <xs:complexType name="TBlocBordereau">
+    <xs:sequence>
+      <xs:element name="Exer" type="cm:Base_Num4">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice de rattachement budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdBord" type="cm:Base_Num7">
+        <xs:annotation>
+          <xs:documentation>Identifiant du bordereau récapitulatif de titres de recette.
+Le numéro de bordereau est unique par exercice et par type de bordereau pour un budget collectivité. Un contrôle de séquentialité du numéro est effectué. Si le numéro est déjà connu dans Hélios ou les boîtes après la vérification du schéma, rejet du bordereau pour cause de doublon.
+Pour un  bordereau de type ORMC (Ordre de Recette Multi Créanciers) IdBord correspondra au numéro de rôle dans Hélios ; le numéro de rôle est unique par exercice et par type de rôle pour un budget collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteBordEm" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date à laquelle le bordereau est émis par l'ordonnateur.
+Elle est obligatoire dans le PES recette aller et le format doit être respecté sinon rejet du flux.
+Pour un  bordereau de type ORMC DteBordE correspondra à la DateEmission du rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- HLS00052096 -->
+      <xs:element name="TypBord" type="TTypBordAller">
+        <xs:annotation>
+          <xs:documentation>Informations destinées à déterminer le type de bordereau transmis par l'ordonnateur.
+Le type de bordereau : « En tête P503 » n'est utilisé qu'en retour d'information (du comptable vers l'ordonnateur). Il est utilisé pour transmettre des demandes d'émission de titres lors d'encaissement(s) avant émission de titre.
+Seules les valeurs 01 02 03, 06 sont possibles.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NbrPce" type="cm:Base_Num5">
+        <xs:annotation>
+          <xs:documentation>Nombre total de pièces véhiculées par le bordereau.
+Il est forcément supérieur ou égal à 1 sinon rejet du  flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtCumulAnnuel" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cumul annuel du bordereau.
+Obligatoire si dématérialisation avec InfoDematerialisee = 1 ou True et type bordereau différent de ORMC (06). Si la balise est absente ou égale à 0 rejet du bordereau ou des PPEM constituant le bordereau.
+L'information peut être présente et doit être mise à disposition pour affichage dans Hélios même si absence de signature fonctionnelle.
+Information nécessaire à l'autoportabilité de l'objet.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBordHt" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT du bordereau.
+Obligatoire dans le PES recette avec ou sans signature.
+Doit être &gt;0,00 sinon rejet du flux.
+Pour un  bordereau de type BORDEREAU _ORMC,  le MontantHt du rôle correspond à la somme des montants Ht des lignes de titre ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBordTVA" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA du bordereau.
+Zone à  remplir si TVA, montant à 0  aboutit à rejet du bordereau si la balise est présente.
+Si un montant est saisi donc supérieur à 0,00,  au moins une Ligne de Piece du Bordereau doit comporter une balise MtTVA, servie avec un montant supérieur à 0,00. Sinon rejet du bordereau
+Pour un  bordereau de type BORDEREAU_ORMC, le MontantTva du rôle correspond à la somme des montants TVA des lignes de titres ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteAsp" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'envoi de l'avis des sommes à payer. Cette date peut correspondre à la date de départ des poursuites. Cette date doit être supérieure ou égale à la DteBordEm.
+Balise exploitée uniquement pour les bordereaux de type BORDEREAU_ORMC : Date d'envoi de l'avis des sommes à payer au niveau du rôle : s'applique à tous les articles de rôles ne possédant pas eux mêmes une date d'envoi de l'avis des sommes à payer.Cette date n'est exploitée que pour les ASAP transmis à l'usager par l'ordonnateur et non pas traités par Hélios, par conséquent sans objet pour les titres ORMC dont la balise Edition vaut 03 ASAP CPP ORMC ou 06 ASAP ORMC ENSU à éditer.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Objet" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet global sur le bordereau ORMC : correspond à l'objet du rôle.
+Balise exploitée uniquement pour les bordereaux de type BORDEREAU_ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

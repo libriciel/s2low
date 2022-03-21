@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunDepense.xsd" />
+  <xs:complexType name="TInfoTiersDepense">
+    <xs:sequence>
+      <xs:element name="IdTiers" type="cm:Base_Alphanum80" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant national du tiers : Identifiant stable et national d'une personne de type siret, siren, finess, NIR, TVAIntraCo, Hors UE,TAHITI, RIDET , FRWF, EnCoursImm, IREP ou NFP
+Cette balise doit être servie en fonction de NatIdTiers : 01= Siret, 02= Siren 03=Finess 04= NIR 05 = TVAIntraCo, 06= Hors UE, 07= TAHITI, 08= RIDET, 09= EnCoursImm 10=FRWF, 11=IREP, 12=NFP
+Pour les seuls identifiants de type SIRET, SIREN, FINESS et NIR, des contrôles de validité sont effectués. La clé de l'identifiant doit être valide, et les longueurs possibles sont 9 pour le Siren et le finess géo, 14 pour le Siret et 15 pour le Nir, sinon, rejet du bordereau.
+Les longueurs possibles sont:entre 4 et 18 caractères pour TVA intracommunautaire,9 caractères pour le TAHITI, entre 9 et 10 chiffres pour le RIDET,au maximum 18 caractères commençant par FRWF pour FRWF,au plus 18 caractères pour Hors UE,13 chiffres pour le NFP,jusqu'à 80 caractères et commençant par 5 chiffres pour l'IREP,sinon rejet du bordereau.
+Les identifiants NIR,NFP et IREP sont réservés aux créanciers «Personne physique».
+Le NFP (Numéro des Finances Publiques ) n'est autorisé que pour les tiers « Personne physique » ne détenant pas d'autre identifiant national.
+Le N° de sécurité sociale (NIR) est uniquement possible si le mandat est de type « correctif »(02) et de nature « annulant un titre » (09). En outre, l'utilisation du N° de sésurité sociale (NIR) est réservée au domaine hospitalier et seulement en nomenclature M21 , M22. Sinon, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatIdTiers" type="cm:TNatIdTiers" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type d'identifiant. Seules valeurs autorisées : 01 02 03 04 05 06 07 08 09 10 11 12</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteIdTiers" type="cm:Base_Date" minOccurs="0" />
+      <xs:element name="RefTiers" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Référence attribuée au tiers par l'ordonnateur : Zone destinée à recevoir une référence ou un identifiant, éventuellement géré par l'ordonnateur, autorisant le regroupement des pièces comptables.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CatTiers" type="cm:TCatTiers">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la catégorie du tiers. Par défaut sur 01.
+L'association Cat Nat doit être en concordance avec les speext du PESV2 sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatJur" type="cm:TNatJur">
+        <xs:annotation>
+          <xs:documentation>Information destinée à identifier la nature juridique du tiers.
+L'association Cat Nat doit exister dans annexe 3 sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Civilite" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Etat civil du tiers : Zone destinée à recevoir de manière abrégée l'état civil (Mr, Mme,…), la qualité (Cdt,...) du tiers.
+Obligatoire si Cat du tiers 01 sinon  rejet du bordereau ou de l'ensemble des PPEM du bordereau.
+Si balise présente pour Cat du tiers différent de 01, rejet du bordereau.
+La civilité de type Mademoiselle n'existe plus ; ne pas l'utiliser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nom" type="cm:Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Raison sociale / Nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplNom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément de nom : Norme postale</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Prenom" type="cm:Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prénom Obligatoire si Cat 01 personne physique sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau Ne pas utiliser si Cat différent de 01, sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

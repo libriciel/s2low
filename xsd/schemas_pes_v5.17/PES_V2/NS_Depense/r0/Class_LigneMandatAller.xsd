@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunDepense.xsd" />
+  <xs:complexType name="TBlocLignePiece">
+    <xs:sequence>
+      <xs:element name="InfoLignePce" type="TInfoLignePce">
+        <xs:annotation>
+          <xs:documentation>Identification de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoTVAHLM" type="TInfoTVAHLM" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Uniquement pour la M31, obligatoire si le bloc est InfoTVAHlm est ouvert. Si le bloc n'est pas ouvert aucune balise ne doit être servie.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OpSpec" type="TOpSpec" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Si le bloc est valorisé toutes les balises sont obligatoires. Si le bloc n'est pas présent, aucune balise ne doit être présente.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RattachPiece" type="TRattachPiece" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>S'il est présent l'ensemble des balises doivent être cohérentes. Pour l'annulation correction, le bloc comprend les 4 balises. Pour les mandats émis après paiement ou titres émis après encaissement, la balise IdLigneOrig peut être à 0 ou absente.
+Un bloc incomplet ou incohérent aboutit à un rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Certaines balises sont attendues avec certains typages : le numéro de marché avec un mandat sur marché, le numéro d'emprunt avec un  mandat de nature emprunt, le numéro d'actif avec un mandat d'inventaire mais aussi possible avec un marché, le numéro de régie avec un mandat de nature régie. L'absence de l'information est une information qui remonte au prévisa Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoLignePce">
+    <xs:sequence>
+      <xs:element name="IdLigne" type="cm:Base_Num6">
+        <xs:annotation>
+          <xs:documentation>Numéro de la ligne de pièce. Ce numéro permet de subdiviser le mandat lorsqu'il contient plusieurs imputations (mandats à imputation multiple) ou plusieurs créanciers. Dans le cas des mandats n'ayant qu'une imputation budgétaire ou qu'un créancier, le n° de ligne est mis à 1.
+Cette valeur est forcément supérieure ou égale à 1.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nature" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Compte par nature.
+Cette balise est obligatoire dans le PESAller Dépense.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Fonction" type="cm:Base_Num10_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte fonction. Zone concernant seulement les collectivités utilisant les instructions M14, M52, M57 et M71.
+Si présence dans d'autres nomenclatures, rejet du bordereau.
+Si la collectivité n'est pas en nomenclature avec présentation fonctionnelle ou nomenclture fonctionnelle rejet du bordereau concerné.
+Si le budget est en nomenclature fonctionnelle cette balise est obligatoire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Operation" type="cm:Base_Num10_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Opération. Zone concernant seulement les collectivités utilisant les instructions M14, M4x, M52, M57, M61, M71 et M832.
+Si présence dans d'autres nomenclatures, rejet du bordereau.
+Balise utilisée dans le cadre des opérations d'ordre ou d'équipement pour les collectivités à budget voté par nature ou nature avec référence fonctionnelle.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CptAna" type="cm:Base_Alphanum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Description issue du DOSTEC :
+Compte de la comptabilité analytique utilisé chez  l'ordonnateur : Cette donnée est indiquée à titre informatif par l'ordonnateur. Celui-ci peut demander des retours d'informations sériés par compte analytique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Facture" type="cm:Base_Texte20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de facture</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibVir1" type="cm:Base_Texte70" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du virement : zone libre.
+Cette zone peut contenir des informations destinées à être restituées au bénéficiaire sur un avis d'opération ou un relevé de compte.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibVir2" type="cm:Base_Texte70" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du virement :  zone libre.
+Cette zone peut contenir des informations destinées à être restituées au bénéficiaire sur un avis d'opération ou un relevé de compte.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ModRegl" type="TCodePaiement" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code indiquant le moyen de règlement désiré par l'ordonnateur.
+
+Valeurs possibles de 01 à 11 toute autre valeur= rejet du flux (schéma).
+Le mode 03 et le mode 05 nécessitent la présence du bloc CpteBancaire, à défaut rejet du bordereau. Sa validité doit être assurée.
+
+Un RIB ou un SEPA peut être transmis ou non dans le cadre d'une valeur 06 virement à l'étranger ou 10 Prélèvement. Pas de rejet du bordereau si le RIB ou le Sepa est absent. Si un RIB ou SEPA est présent, il est vérifié dans le cas d'une valeur 10 et s'il est invalide rejet du bordereau.
+Pour les valeurs 01 numéraire, 02 chèques, 04 appli externe 07 budgets rattachés, 08 opérations d'ordre, 09 Avis de règlement ou 11 Virement interne, aucun RIB ou SEPA ne doit être porté sur le tiers. Si un RIB Ou SEPA est présent avec ces valeurs, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TVAIntraCom" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Information permettant de déterminer si la ligne de pièce comporte de la TVA intra-communautaire.
+(Valeurs : 0=pas de Tva intra-communautaire, 1= Tva intra-communautaire. Par défaut sur 0).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteTiers" type="cm:Base_Num12" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte de tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant_Light">
+        <xs:annotation>
+          <xs:documentation>Montant HT ou TTC si TVA non remplie.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA. Zone  à remplir si TVA. 
+Si un montant supérieur à 0.00 est servi, alors la balise MtBordTVA doit être présente, et servie avec un montant supérieur à 0,00. Sinon, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtFactHT" type="cm:Base_Montant_Light" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant HT de la facture : cette zone n'a pas à être remplie si montant HT = montant HT facturé.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PJRef" type="cm:TPJReference" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Pour chaque PJ associée à l'objet, référence unique de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoTVAHLM">
+    <xs:annotation>
+      <xs:documentation>Uniquement pour la M31, obligatoire si le bloc est InfoTVAHlm est ouvert. Si le bloc n'est pas ouvert aucune balise ne doit être servie.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="RecTVA" type="cm:Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Récupération partielle de TVA (HLM). Donnée concernant uniquement l'instruction M31.
+(Valeurs: 0=pas de récupération, 1=récupération partielle. Par défaut sur 0).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHtRes" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant hors taxe résiduel. Cette donnée complète la zone "Code récupération partielle de Tva" pour le secteur HLM. Donnée concernant uniquement l'instruction M31.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TOpSpec">
+    <xs:annotation>
+      <xs:documentation>Si le bloc est valorisé toutes les balises sont obligatoires. Si le bloc n'est pas présent, aucune balise ne doit être présente.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodOpSpec" type="TCodOpSpec">
+        <xs:annotation>
+          <xs:documentation>Code de l'opération spécifique.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdOpSpec" type="cm:Base_Alphanum15">
+        <xs:annotation>
+          <xs:documentation>Identifiant de l'opération spécifique. Obligatoire si le code de l'opération est servi.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRattachPiece">
+    <xs:annotation>
+      <xs:documentation>S'il est présent l'ensemble des balises doivent être cohérentes.
+Un bloc incomplet ou incohérent aboutit à un rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NatPceOrig" type="TNatPceOrig">
+        <xs:annotation>
+          <xs:documentation>Type de la pièce d'origine à rattacher.
+Sa valorisation doit respecter les conditions suivantes :
+1/ Pour 02 02 06 (mandat correctif annulation réduction) ou 01 02 09 (mandat correctif annulant un titre) ou
+01 13 01 (charges constatées d'avance  fonctionnement) ou 02 02 10 (mandat correctif annulation du mandat de rattachement), bloc RattachPiece complet et obligatoire, la NatPceOrig = 01 (Mandat) ou 02 (Titre). Toute autre valeur= rejet du bordereau
+2/ Pour le TypPce= 05( mandat émis après paiement), la NatPCeOrig= 03 (Paiement) ( IdPceOrig correspond au numéro de l'ordre de paiement dans Hélios).Toute autre valeur= rejet du bordereau
+3/ Si 01 07 01( mandat d'admission en non valeurs fonctionnement), la NatPceOrig =04 (Liste non valeur). Toute autre valeur= rejet du bordereau
+4/ Pour 01 01 01 (mandat ordinaire fonctionnement) ou 01 09 01 (mandat sur marché fonctionnement), bloc RattachPiece complet et obligatoire, la NatPceOrig =05 (Ordre de paiement ordonnateur). Toute autre valeur= rejet du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExerRat" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Exercice de rattachement : Exercice d'origine mandat à annuler ou à réduire ou de la pièce de dépense. En cas d'annulation en cours d'exercice, cet exercice est identique à celui indiqué dans la zone EXER Si 02 02 06 (mandat correctif annulation réduction), ExerRat= Exer du flux
+Si 01 02 09 (mandat correctif annulant un titre), ExerRat= Exer du flux-N.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPceOrig" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>N° de la pièce d'origine : Numéro d'origine du mandat à annuler ou à réduire (annulation en cours d'exercice) ou n° d'origine du titre à annuler ou à réduire (annulation sur exercice clos), ou n° de la pièce de paiement ou de la liste de non valeur ou de l'ordre de paiement ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdLigneOrig" type="cm:Base_Num6_NonVide" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de ligne de pièce : Numéro de la ligne de pièce d'origine à annuler ou à réduire, ou n° de ligne de la pièce.
+Si NatPceOrig= 01 ou 02 ou 05 IdLigneOrig supérieur ou égal à 1. Sinon rejet du bordereau
+Si NatPceOrig= 03 ou 04 IdLigneOrig balise absente ou avec valeur zéro 0 sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLiensIdent">
+    <xs:annotation>
+      <xs:documentation>Certaines balises sont attendues avec certains typages : le numéro de marché avec un mandat sur marché, le numéro d'emprunt avec un  mandat de nature emprunt, le numéro d'actif avec un mandat d'inventaire mais aussi possible avec un marché, le numéro de régie avec un mandat de nature régie. L'absence de l'information est une information qui remonte au prévisa Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de convention : Cette zone permet de faire le lien entre une ligne de pièce et une fiche convention
+Obligatoire avec le triplet 01 06 01 mandat global. Numéro déterminé par Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de marché: cet identifiant permet de déterminer les marchés contractés et suivis par la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'emprunt ordonnateur : Cette zone permet de faire le lien entre une ligne de pièce et une fiche emprunt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'inventaire : Cette zone permet de faire le lien entre une ligne de pièce et une fiche inventaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de régie : Cette zone permet de faire le lien entre une ligne de pièce et une fiche régie
+A servir avec la NatPce 05 Régie sinon ABNF à l'enregistrement dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<!-- MàJ 20/11/2019 : ET + mél MDD
+ 	 création d'un format texte à 200 car pour les intitulés 1, 2 et 3-->
+    <!-- MàJ 10/01/2020 : CoDev axYus du 08/01/2020
+    suppression des restrictions de format pour le type TNumRegle-->
+    <!-- MàJ 06/03/2020 : Préparation états comptables
+    ajout type texte de longueur 30
+    TSection et TCodRD : création type simple V_Section et V_CodRD
+    réorganisation formelle entre Commun_CFU et Simple_Type
+    complement des ModeTraitement pour les états comptables -->
+    <!-- MàJ 06/04/2020 : Dév Hélios 
+    ajout de la valeur Validation dans ModeTraitement pour l'OPC -->
+    <!-- MàJ 25/05/2020 : Dév Hélios
+    ajout d'un type Sens pour LACTF et EDDS -->
+    <!--                            -->
+    <!-- FORMATS DES DONNEES METIER -->
+    <!--                            -->
+	<xs:simpleType name="V_Chapitre">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:pattern value="[0-9]{2,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TCodeBC">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]{5}"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:simpleType name="V_CodRD">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="R">
+                <xs:annotation>
+                    <xs:documentation>Recette</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="D">
+                <xs:annotation>
+                    <xs:documentation>Dépense</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:simpleType name="TCodique">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TFiness">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z0-9]{1,11}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TMonnaie">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EUR"/>
+			<xs:enumeration value="CFP"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:simpleType name="V_NatFonc">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Le budget est voté par nature.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Le budget est voté par fonction.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>Le budget est voté par nature avec référence fonctionnelle.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NC">
+                <xs:annotation>
+                    <xs:documentation>Non connu ou sans objet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:simpleType name="V_Nature">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:simpleType name="V_NatVote">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FcIc">
+                <xs:annotation>
+                    <xs:documentation>Section fonctionnement, vote au niveau du chapitre. Section investissement, vote au niveau du chapitre.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FaIc">
+                <xs:annotation>
+                    <xs:documentation>Section fonctionnement, vote au niveau de l'article. Section investissement, vote au niveau du chapitre.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FcIa">
+                <xs:annotation>
+                    <xs:documentation>Section fonctionnement, vote au niveau du chapitre. Section investissement, vote est au niveau de l'article.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FaIa">
+                <xs:annotation>
+                    <xs:documentation>Section de fonctionnement, vote au niveau de l'article. Section investissement, vote au niveau de l'article.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NC">
+                <xs:annotation>
+                    <xs:documentation>Non connu ou sans objet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:simpleType name="TNomEdition">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CG14"/>
+			<xs:enumeration value="CG21"/>
+			<xs:enumeration value="CG22"/>
+			<xs:enumeration value="CG31"/>
+			<xs:enumeration value="CG95"/>
+			<xs:enumeration value="CG96"/>
+			<xs:enumeration value="CO44"/>
+			<xs:enumeration value="CG97">
+				<xs:annotation>
+					<xs:documentation>CFU M57</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+            <xs:enumeration value="CO19">
+                <xs:annotation>
+                    <xs:documentation>Livre auxiliaire (LACTF)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CO20">
+                <xs:annotation>
+                    <xs:documentation>Etat de développement des soldes (EFFS)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BU1B">
+                <xs:annotation>
+                    <xs:documentation>Fiches budgétaires</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DP19">
+                <xs:annotation>
+                    <xs:documentation>Etat des RAP</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="RV41">
+                <xs:annotation>
+                    <xs:documentation>Etat des RAR</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CO67">
+                <xs:annotation>
+                    <xs:documentation>Etat des OPC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ORMC">
+                <xs:annotation>
+                    <xs:documentation>Liste des ORMC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="V_Nomenclature">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="M14"/>
+            <xs:enumeration value="M21"/>
+            <xs:enumeration value="M22"/>
+            <xs:enumeration value="M22_EPRD"/>
+            <xs:enumeration value="M31"/>
+            <xs:enumeration value="M57"/>
+            <xs:enumeration value="M4"/>
+            <xs:enumeration value="M41"/>
+            <xs:enumeration value="M42"/>
+            <xs:enumeration value="M43"/>
+            <xs:enumeration value="M44"/>
+            <xs:enumeration value="M49"/>
+            <xs:enumeration value="M51"/>
+            <xs:enumeration value="M52"/>
+            <xs:enumeration value="M157"/>
+            <xs:enumeration value="M61"/>
+            <xs:enumeration value="M71"/>
+            <xs:enumeration value="M832"/>
+            <xs:enumeration value="NA"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_NumRegle">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="V_Section">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="I">
+                <xs:annotation>
+                    <xs:documentation>Section d'investissement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="F">
+                <xs:annotation>
+                    <xs:documentation>Section de fonctionnement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="V_Sens">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="D">
+                <xs:annotation>
+                    <xs:documentation>Débit</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="C">
+                <xs:annotation>
+                    <xs:documentation>Crédit</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TSiret">
+		<xs:restriction base="xs:integer">
+			<xs:pattern value="[0-9]{14}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TTypeBC">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BP">
+				<xs:annotation>
+					<xs:documentation>Budget principal</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BA">
+				<xs:annotation>
+					<xs:documentation>Budget annexe</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BR">
+				<xs:annotation>
+					<xs:documentation>Budget rattaché à autonome financière</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TTypeEdition">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="P">
+				<xs:annotation>
+					<xs:documentation>Edition provisoire</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="D">
+				<xs:annotation>
+					<xs:documentation>Edition définitive</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:simpleType name="V_TypeOpe">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="R">
+                <xs:annotation>
+                    <xs:documentation>Opération réelle</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="O">
+                <xs:annotation>
+                    <xs:documentation>Opération pour ordre</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--                                     -->
+    <!-- FORMATS DES DONNEES DE PRESENTATION -->
+    <!--                                     -->
+    <xs:simpleType name="V_EtatC">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BAL_GE">
+                <xs:annotation>
+                    <xs:documentation>Balance générale des comptes</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BAL_VI">
+                <xs:annotation>
+                    <xs:documentation>Balance des valeurs inactives</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BI_A">
+                <xs:annotation>
+                    <xs:documentation>Bilan actif</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BI_P">
+                <xs:annotation>
+                    <xs:documentation>Bilan passif</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BI_S_A">
+                <xs:annotation>
+                    <xs:documentation>Bilan synthétique actif</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BI_S_P">
+                <xs:annotation>
+                    <xs:documentation>Bilan synthétique passif</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CCA">
+                <xs:annotation>
+                    <xs:documentation>Etat d'anomalie des contrôles comptables automatisés</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CR">
+                <xs:annotation>
+                    <xs:documentation>Compte de résultat</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CR_S">
+                <xs:annotation>
+                    <xs:documentation>Compte de résultat synthétique</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EB_DF">
+                <xs:annotation>
+                    <xs:documentation>Exécution budgétaire - Dépenses de fonctionnement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ECCF">
+                <xs:annotation>
+                    <xs:documentation>Etat des contrôles du compte financier</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EB_RF">
+                <xs:annotation>
+                    <xs:documentation>Exécution budgétaire - Recettes de fonctionnement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EB_DI">
+                <xs:annotation>
+                    <xs:documentation>Exécution budgétaire - Dépenses d'investissement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EB_RI">
+                <xs:annotation>
+                    <xs:documentation>Exécution budgétaire - Recettes d'investissement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="V_Format">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DEF">
+                <xs:annotation>
+                    <xs:documentation>Format par défaut</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AD">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AG">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AC">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ADE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AGE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ACE">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ADI">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, italique</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AGI">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, italique</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ACI">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, italique</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ADIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, italique, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AGIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, italique, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ACIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, italique, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAD">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAG">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAC">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GADE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAGE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAGS">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, gras, souligné</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GACE">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GADI">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, italique, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAGI">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, italique, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GACI">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, italique, gras</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GADIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à droite, italique, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GAGIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement à gauche, italique, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="GACIE">
+                <xs:annotation>
+                    <xs:documentation>Alignement au centre, italique, gras, encadré</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="V_Traitement">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AGREGAT_BILAN">
+                <xs:annotation>
+                    <xs:documentation>Ligne de bilan : agrégat (ligne avec montants)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AGREGAT_CR">
+                <xs:annotation>
+                    <xs:documentation>Ligne de compte de résultat : agrégat</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ANOMALIE">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BALANCE">
+                <xs:annotation>
+                    <xs:documentation>Ligne de détail de la balance générale</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CHAPITRE_SANS_EXECUTION">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="COHERENCE_EP">
+                <xs:annotation>
+                    <xs:documentation>Ligne ECCF : contrôles de cohérence des états patrimoniaux</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CONCORDANCE_EB">
+                <xs:annotation>
+                    <xs:documentation>Ligne ECCF : contrôles de concordance des états budgétaires</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DETAIL">
+                <xs:annotation>
+                    <xs:documentation>Ligne de détail d'un état comptable</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DETAIL_CHAPITRE">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : article</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DETAIL_CHAPITRE_OPERATION">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : opération</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DILIGENCE">
+                <xs:annotation>
+                    <xs:documentation>Ligne supplémentaire de diligence dans un état de RAR</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EMARGE">
+                <xs:annotation>
+                    <xs:documentation>Ligne supplémentaire d'émargement dans un état OPC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NOTE_BAS_PAGE">
+                <xs:annotation>
+                    <xs:documentation>Ligne de note de bas de page</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OPERATION_COMPTE_TIERS">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : opération pour compte de tiers</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OPERATION_EQUIPEMENT">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : équipement</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PAGE">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REGROUP_AGREGAT_BILAN">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REGROUP_AGREGAT_CR">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SANS_TRAITEMENT">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TITRE">
+                <xs:annotation>
+                    <xs:documentation>Ligne de bilan : titre (ligne sans montant)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TITRE_ANOMALIE">
+                <xs:annotation>
+                    <xs:documentation>Titre d'une rubrique de l'ECCF</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TOTAL_CHAPITRE_SANS_EXECUTION">
+                <xs:annotation>
+                    <xs:documentation>???</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TOTAL_DETAIL_CHAPITRE">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : chapitre</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TOTAL_OPERATION_COMPTE_TIERS">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : total opération pour compte de tiers</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TOTAL_DETAIL_CHAPITRE_OPERATION">
+                <xs:annotation>
+                    <xs:documentation>Ligne d'exécution budgétaire : total opération</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TOTALISATION">
+                <xs:annotation>
+                    <xs:documentation>Ligne de bilan : totalisation (ligne avec montants) - Lignes de totalisation des états comptables</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="VALEUR_INACTIVE">
+                <xs:annotation>
+                    <xs:documentation>Ligne de détail d'une balance de VI</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="VALIDATION">
+                <xs:annotation>
+                    <xs:documentation>Ligne de validation d'un état OPC</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+	<!--                         -->
+	<!-- FORMATS SIMPLES COMMUNS -->
+	<!--                         -->
+	<xs:complexType name="TAnnee">
+		<xs:attribute name="V" type="V_Annee" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Annee">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="TDate">
+		<xs:attribute name="V" type="V_Date" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Date">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Booleen">
+		<xs:attribute name="V" type="V_Booleen" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Booleen">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Entier">
+		<xs:attribute name="V" type="V_Entier" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Entier">
+		<xs:restriction base="xs:integer"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Montant">
+		<xs:attribute name="V" type="V_Montant" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte10">
+		<xs:attribute name="V" type="V_Texte10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte10">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte20">
+		<xs:attribute name="V" type="V_Texte20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte20">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:complexType name="Base_Texte30">
+        <xs:attribute name="V" type="V_Texte30" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="V_Texte30">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:complexType name="Base_Texte50">
+		<xs:attribute name="V" type="V_Texte50" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte50">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:complexType name="Base_Texte60">
+        <xs:attribute name="V" type="V_Texte60" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="V_Texte60">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:complexType name="Base_Texte100">
+		<xs:attribute name="V" type="V_Texte100" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte100">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte120">
+		<xs:attribute name="V" type="V_Texte120" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte120">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+    <xs:complexType name="Base_Texte130">
+        <xs:attribute name="V" type="V_Texte130" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="V_Texte130">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="130"/>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:complexType name="Base_Texte256">
+		<xs:attribute name="V" type="V_Texte256" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte256">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte250">
+		<xs:attribute name="V" type="V_Texte250" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte250">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="250"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

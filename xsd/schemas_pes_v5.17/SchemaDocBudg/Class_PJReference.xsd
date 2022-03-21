@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:z="odm:enrichissement" elementFormDefault="qualified" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TPJReference">
+    <xs:annotation>
+      <xs:documentation>Pièce jointes éventuelles</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Support">
+        <xs:annotation>
+          <xs:documentation>Précise la forme de l'élément référencé.
+- 01 : Support électronique
+- 02 : Support papier
+- 03 : Support cdrom/dvdrom</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="V" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="01" />
+                <xs:enumeration value="02" />
+                <xs:enumeration value="03" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IdUnique" type="Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identifiant unique de la pièce justificative.
+La PJ référencée par le document budgétaire doit être intégrée dans Hélios, et porter sur le même budget collectivité. A défaut, rejet du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomPJ" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom de la pièce justificative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeAnnexe" type="Base_Texte100" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
