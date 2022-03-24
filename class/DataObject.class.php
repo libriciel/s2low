@@ -182,9 +182,9 @@ class DataObject {
       }
     }
 
-    $sql = "DELETE FROM " . $this->objectName . " WHERE id='" . $id . "'";
+    $sql = "DELETE FROM " . $this->objectName . " WHERE id= ? ";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 		//Never reached...
 	  $this->errorMsg = "Erreur lors de la suppression de l'entité d'identifiant " . $id;
 	  return false;
@@ -255,13 +255,15 @@ class DataObject {
    * \return true si unique, false sinon
   */
   public function checkUnicity($name) {
-	$sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "='" . $this->$name . "'";
+	$sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "=?";
+    $params = [$this->$name];
 
 	if (isset($this->id)) {
-	  $sql .= " AND id != " . $this->id;
+	  $sql .= " AND id != ?";
+        $params[] = $this->id;
 	}
 
-	$result = $this->db->select($sql);
+	$result = $this->db->select($sql, $params);
 
 	if (! $result->isError()) {
 	  if ($result->num_row() > 0) {
@@ -287,8 +289,6 @@ class DataObject {
       $new = false;
     }
 
-    $sql = "";
-
 	if ($validate) {
 	  if (! $this->validate()) {
 		return false;
@@ -303,12 +303,13 @@ class DataObject {
  
 
       $sql = "INSERT INTO " . $this->objectName . " (id, ";
-      $sql .= implode(array_keys($this->dbFields), ", ");
-      $sql .= ") VALUES (" . $this->id;
+      $sql .= implode(", ", array_keys($this->dbFields));
+      $sql .= ") VALUES ( ?";
+      $params = [$this->id];
 
       foreach($this->dbFields as $field => $val) {
-		$sql .= ", ";
-		$sql .= (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
+		$sql .= ", ?";
+        $params = (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
       }
 
       $sql .= ")";
@@ -322,7 +323,7 @@ class DataObject {
 		$fields[] = $str;
       }
 
-      $sql .= implode($fields, ", ");
+      $sql .= implode(", ", $fields);
 
       $sql .= " WHERE id='". $this->id . "'";
     }
