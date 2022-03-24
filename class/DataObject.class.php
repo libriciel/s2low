@@ -146,7 +146,7 @@ class DataObject {
   public function init() {
   	
 	if (isset($this->id) && ! empty($this->id)) {
-	  $sql = "SELECT " . implode(array_keys($this->dbFields), ", ") . " FROM " . $this->objectName . " WHERE id=?";
+	  $sql = "SELECT " . implode(", ", array_keys($this->dbFields)) . " FROM " . $this->objectName . " WHERE id=?";
 	  $result = $this->db->select($sql,[$this->id]);
 
 	  if (! $result->isError() && $result->num_row() == 1) {
@@ -402,7 +402,7 @@ class DataObject {
 	  }
 	}
 
-	return implode($ret, ',');
+	return implode(',', $ret);
   }
 
   // Méthodes de pagination

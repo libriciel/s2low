@@ -526,7 +526,7 @@ class ActesBatch extends DataObject {
       $this->submission_date = date("Y-m-d H:i:s");
     }
 
-    if (!($sql = parent :: save($validate, true))) {
+    if (!([$sql,$params] = parent :: save($validate, true))) {
       return false;
     }
 
@@ -545,7 +545,7 @@ class ActesBatch extends DataObject {
       return false;
     }
 
-    if (!$this->db->exec($sql)) {
+    if (!$this->db->exec($sql,$params)) {
       $this->errorMsg = "Erreur lors de la sauvegarde du lot.";
       $this->db->rollback();
       return false;
