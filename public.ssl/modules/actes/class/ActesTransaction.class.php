@@ -1467,7 +1467,7 @@ class ActesTransaction extends DataObject {
     	$validate = false;
 	}
 
-    $sql = parent :: save($validate, true);
+    [$sql,$params] = parent :: save($validate, true);
 
     if ( ! $sql ) {
       return false;
@@ -1489,7 +1489,7 @@ class ActesTransaction extends DataObject {
     	}
     }
 
-    if (!$this->db->exec($sql)) {
+    if (!$this->db->exec($sql,$params)) {
       $this->errorMsg = "Erreur lors de la sauvegarde de la transaction.";
       $this->db->rollback();
       return false;

@@ -77,7 +77,7 @@ class Module extends DataObject {
    * \return true si succès, false sinon
    */
   public function save($validate = true, $bouchon_4_strict_standard = true) {
-    if (! ($sql = parent::save($validate, true))) {
+    if (! ([$sql,$params] = parent::save($validate, true))) {
 	  return false;
 	}
   	 
@@ -88,7 +88,7 @@ class Module extends DataObject {
       return false;
 	}
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,$params)) {
       $this->errorMsg = "Erreur lors de la sauvegarde du module.";
 	  $this->db->rollback();
       return false;

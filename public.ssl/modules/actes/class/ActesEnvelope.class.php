@@ -941,7 +941,7 @@ class ActesEnvelope extends DataObject {
 	  $this->submission_date = date('Y-m-d H:i:s');
 	}
 
-    if (! ($sql = parent::save($validate, true))) {
+    if (! ([$sql,$params] = parent::save($validate, true))) {
 	  return false;
 	}
 
@@ -951,7 +951,7 @@ class ActesEnvelope extends DataObject {
       return false;
 	}
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,$params)) {
       $this->errorMsg = "Erreur lors de la sauvegarde de la transaction.";
 	  $this->db->rollback();
       return false;

@@ -532,7 +532,7 @@ class User extends DataObject {
 	}
 
 
-    if (! ($sql = parent::save($validate, true))) {
+    if (! ([$sql,$params] = parent::save($validate, true))) {
 	  return false;
 	}
 
@@ -541,7 +541,7 @@ class User extends DataObject {
       return false;
 	}
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,$params)) {
       $this->errorMsg = "Erreur lors de la sauvegarde de l'utilisateur.";
 	  $this->db->rollback();
       return false;

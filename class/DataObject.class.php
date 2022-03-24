@@ -302,37 +302,45 @@ class DataObject {
       }
  
 
-      $sql = "INSERT INTO " . $this->objectName . " (id, ";
-      $sql .= implode(", ", array_keys($this->dbFields));
-      $sql .= ") VALUES ( ?";
+      $fields = ["id"];
       $params = [$this->id];
+      $values = "? ";
 
       foreach($this->dbFields as $field => $val) {
-		$sql .= ", ?";
-        $params = (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
+          if(isset($this->$field) && strlen($this->$field) > 0){
+              $values .= ", ?";
+              $fields[] = $field;
+              $params[] = $this->$field;
+          }
       }
 
-      $sql .= ")";
+      $sql = "INSERT INTO " . $this->objectName." (";
+      $sql .= implode(", ", $fields);
+      $sql .= ") VALUES ( $values )";
     } else { // Mise à jour
       $sql = "UPDATE " . $this->objectName . " SET ";
       
       $fields = array();
+      $params = array();
       foreach ($this->dbFields as $field => $val) {
-		$str = $field . "=";
-		$str .= (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
-		$fields[] = $str;
+          if(isset($this->$field) && strlen($this->$field) > 0){
+              $str = $field . "= ?";
+              $params[] = $this->$field;
+              $fields[] = $str;
+          }
       }
 
       $sql .= implode(", ", $fields);
 
-      $sql .= " WHERE id='". $this->id . "'";
+      $sql .= " WHERE id=?";
+      $params[] = $this->id;
     }
 
 
     if ($return_rather_than_exec) {
-      return $sql;
+      return [$sql,$params];
     } else {
-      if (! $this->db->exec($sql)) {
+      if (! $this->db->exec($sql,$params)) {
 		$this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
 		return false;
       }
