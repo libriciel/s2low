@@ -227,7 +227,8 @@ class Authority extends DataObject {
    * \return true si succès, false sinon
   */
   public function save($module_perms = true, $validate = true) {
-    if (! ([$sql, $params] = parent::save($validate, true))) {
+      $saveSQLRequest = parent::buildSaveSQLRequest($validate);
+    if (! $saveSQLRequest->isValid()) {
 	  return false;
 	}
 
@@ -239,7 +240,7 @@ class Authority extends DataObject {
       return false;
 	}
 
-    if (! $this->db->exec($sql,$params)) {
+    if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
       $this->errorMsg = "Erreur lors de la sauvegarde de la collectivité.";
 	  $this->db->rollback();
       return false;

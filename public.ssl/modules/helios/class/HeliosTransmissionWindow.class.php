@@ -112,7 +112,8 @@ class HeliosTransmissionWindow extends DataObject {
 	  $new = true;
 	}
 
-    if (! ([$sql,$params] = parent::save($validate, true))) {
+      $saveSQLRequest = parent::buildSaveSQLRequest($validate);
+    if (! $saveSQLRequest->isValid()) {
 	  return false;
 	}
 
@@ -135,7 +136,7 @@ class HeliosTransmissionWindow extends DataObject {
       return false;
 	}
 
-    if (! $this->db->exec($sql,$params)) {
+    if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
       $this->errorMsg = "Erreur lors de la sauvegarde de la fenêtre.";
 	  $this->db->rollback();
       return false;
