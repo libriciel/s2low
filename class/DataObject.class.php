@@ -279,19 +279,14 @@ class DataObject {
   /**
    * \brief Méthode d'enregistrement d'une entité dans la base de données
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \param $return_rather_than_exec booléen (optionnel) Si true, renvoi la requête SQL, si false exécute la requête (false par défaut)
    * \return true si succès, false sinon
   */
-  public function save($validate = true, $return_rather_than_exec = false) {
+  public function save($validate = true) {
 
       $saveSQLRequest = $this->buildSaveSQLRequest($validate);
 
       if(!$saveSQLRequest->isValid()){
         return false;
-    }
-
-    if ($return_rather_than_exec) {
-      throw new Exception("outdateeeeed");
     }
 
       if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
