@@ -371,6 +371,9 @@ class AdminUserController extends Controller {
         if (! $user_id){
             $this->redirect("/");
         }
+        if(! is_numeric($user_id)){
+            $this->redirect("/");
+        }
         if(!$this->me->canEditUser($user_id)){
             $this->redirect("/");
         }
