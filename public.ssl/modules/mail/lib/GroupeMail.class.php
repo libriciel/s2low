@@ -84,8 +84,8 @@ class GroupeMail extends DataObject {
 	
 	public function getNbUtilisateur(){
 		assert(!!$this->id);
-		$sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_groupe=".$this->id;
-		$result = $this->db->select($sql);
+		$sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_groupe=?";
+		$result = $this->db->select($sql,[$this->id]);
 		$ligne = $result->get_next_row();
 		return $ligne['nb'];
 	}
