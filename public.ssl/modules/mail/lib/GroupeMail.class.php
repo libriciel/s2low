@@ -32,8 +32,8 @@ class GroupeMail extends DataObject {
   	
   	public function removeUser($id){
   		assert(!!$this->id);
-  		$sql = "DELETE FROM mail_user_groupe WHERE id_user=$id AND id_groupe=".$this->id;
-  		$this->db->exec($sql);
+  		$sql = "DELETE FROM mail_user_groupe WHERE id_user=? AND id_groupe=?";
+  		$this->db->exec($sql,[$id,$this->id]);
   	}
 
   	public function isUserInGroup($id_user){
