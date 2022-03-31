@@ -288,4 +288,43 @@ class HelpersTest extends TestCase {
         Helpers::getIntFromPost("test",false);
     }
 
+    /**
+     * @dataProvider checkIntProvider
+     * @return void
+     */
+
+    public function testCheckInt($var,$nullable){
+        $this->assertEquals(
+            $var,
+            Helpers::checkInt($var,$nullable,"test")
+        );
+    }
+
+    public function checkIntProvider()
+    {
+        return [
+            ["1",false],
+            [null,true]
+        ];
+    }
+
+    /**
+     * @dataProvider checkIntProviderWithError
+     * @return void
+     */
+
+    public function testCheckIntWithError($var,$nullable){
+        $this->expectException(UnexpectedValueException::class);
+        Helpers::checkInt($var,$nullable,"test");
+    }
+
+    public function checkIntProviderWithError()
+    {
+        return [
+            ["fsdfsqfdsqd",false],
+            ["fsdfsqfdsqd",true],
+            [null,false]
+        ];
+    }
+
 }

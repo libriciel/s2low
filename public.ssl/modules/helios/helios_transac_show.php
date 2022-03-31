@@ -26,7 +26,13 @@ if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
   exit();
 }
 
-$id = Helpers::getVarFromGet("id");
+try{
+    $id = Helpers::getIntFromGet("id",true);
+} catch (Exception $e){
+    $_SESSION["error"] = "id doit être un entier";
+    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    exit ();
+}
 
 
 

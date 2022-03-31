@@ -543,12 +543,12 @@ class Helpers {
      * @param $name
      * @return mixed
      */
-    protected static function checkInt(?string $var, bool $nullable, $name): ?string
+    public static function checkInt(?string $var, bool $nullable, $name): ?string
     {
         if (is_null($var) && !$nullable) {
             throw new UnexpectedValueException("$name est null ");
         }
-        if (!ctype_digit($var) && !$nullable) {
+        if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
             throw new UnexpectedValueException("$name n'est pas un entier");
         }
         return $var;
