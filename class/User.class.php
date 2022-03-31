@@ -329,9 +329,9 @@ class User extends DataObject {
    * \return true si l'utilisateur peut modifier, false sinon
   */
   public function canEditUser($id) {
-	$sql = "SELECT authority_id FROM users WHERE id='" . $id . "'";
+	$sql = "SELECT authority_id FROM users WHERE id=?";
 
-    $result = $this->db->select($sql);
+    $result = $this->db->select($sql,[$id]);
 
     if (! $result->isError() && $result->num_row() == 1) {
       $row = $result->get_next_row();
