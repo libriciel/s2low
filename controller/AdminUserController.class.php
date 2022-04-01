@@ -123,7 +123,7 @@ class AdminUserController extends Controller {
 		$api = $this->getEnvironnement()->post()->get('api');
 		$id = $this->getEnvironnement()->post()->get('id');
 
-        if(!ctype_digit($id)){
+        if(!ctype_digit($id) && !(is_null($id)||!$id)){
             $this->displayErrorAndExit("Le paramètre id doit être un entier","/");
         }
 
