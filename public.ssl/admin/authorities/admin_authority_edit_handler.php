@@ -28,7 +28,12 @@ if (! $me->isAdmin()) {
 	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
 }
 
-$id = Helpers::getVarFromPost("id");
+try{
+    $id = Helpers::getIntFromPost("id");
+} catch (Exception $exception) {
+    exitOrDisplayError($api,$exception->getMessage(),WEBSITE_SSL);
+}
+
 $name = Helpers::getVarFromPost("name");
 $siren = Helpers::getVarFromPost("siren");
 $authorityGroupId = Helpers::getVarFromPost("authority_group_id");
