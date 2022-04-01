@@ -40,6 +40,14 @@ class Helpers {
       );
   }
 
+  public static function getDateFromGet($name, $nullable = false){
+      return self::checkDate(
+          Helpers::getVarFromRequest($name, "GET"),
+          $nullable,
+          $name
+      );
+  }
+
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête HTTP
    * \param $name chaîne : nom de la variable à récupérer
@@ -550,6 +558,13 @@ class Helpers {
         }
         if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
             throw new UnexpectedValueException("$name n'est pas un entier");
+        }
+        return $var;
+    }
+
+    public static function checkDate(?string $var, bool $nullable, string $name){
+        if(!strtotime($var) && !((is_null($var) ||!$var ) && $nullable)){
+            throw new UnexpectedValueException("$name n'est pas une date");
         }
         return $var;
     }
