@@ -283,10 +283,10 @@ class HeliosTransaction extends DataObject {
   }
   
   public function getAcquitFilenameForId($id) {
-    $sql = "SELECT acquit_filename FROM helios_transactions" . " WHERE id=" . $id;
+    $sql = "SELECT acquit_filename FROM helios_transactions" . " WHERE id=?";
 
     $db = DatabasePool :: getInstance();
-    $result = $db->select($sql);
+    $result = $db->select($sql,[$id]);
 
     if (!$result->isError()) {
       $row = $result->get_next_row();
