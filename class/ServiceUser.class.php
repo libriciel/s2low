@@ -75,7 +75,10 @@ class ServiceUser {
 	}
 	
 	function getServiceFromUser($id_user){
-		return $this->db->fetchAll("SELECT * FROM service_user_content JOIN service_user ON service_user_content.id_service=service_user.id WHERE service_user_content.id_user=$id_user");
+		return $this->db->fetchAll(
+            "SELECT * FROM service_user_content JOIN service_user ON service_user_content.id_service=service_user.id WHERE service_user_content.id_user=?",
+            [$id_user]
+        );
 	}
 	
 	function enleverUser($id_service,$id_user){

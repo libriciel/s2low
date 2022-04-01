@@ -133,7 +133,7 @@ class Database {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function fetchAll($sql){
-		return $this->sqlQuery->query($sql);
+	public function fetchAll($sql,$param = []){
+		return $this->sqlQuery->query($sql,$param);
 	}
 }
