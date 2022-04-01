@@ -9,7 +9,13 @@ require_once (MAIL_SITEROOT."/om/mail_message_emis.class.php");
 require_once (MAIL_SITEROOT."/om/mail_included_file.class.php");
 require_once (MAIL_SITEROOT."/om/MailPeer.class.php");
 
-$mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
+try{
+    $mail_emis_id=Helpers::getMD5FromGet("mail_emis_id");
+} catch(Exception $exception){
+    $_SESSION['last_error'] = $exception->getMessage();
+    header("Location: error.php");
+    exit;
+}
 $password=Helpers::getVarFromPost("mdp");
 
 
@@ -67,7 +73,7 @@ if($fndownload) {
 
 $doc->DisplayHead();
 
- 
+ $password
 ?>
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
 <div class="container">

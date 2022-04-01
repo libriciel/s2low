@@ -48,6 +48,14 @@ class Helpers {
       );
   }
 
+  public static function getMD5FromGet($name, $nullable = false) {
+        return self::checkMD5(
+            Helpers::getVarFromRequest($name, "GET"),
+            $nullable,
+            $name
+        );
+    }
+
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête HTTP
    * \param $name chaîne : nom de la variable à récupérer
@@ -562,6 +570,7 @@ class Helpers {
         return $var;
     }
 
+
     public static function checkDate(?string $var, bool $nullable, string $name){
         if(!strtotime($var) && !((is_null($var) ||!$var ) && $nullable)){
             throw new UnexpectedValueException("$name n'est pas une date");
@@ -570,11 +579,29 @@ class Helpers {
     }
 
     public function chunkString($string,$length){
-		$result = substr($string, 0, $length);
-		if (strlen($string) > 40) {
-			$result .= "...";
-		}
-		return $result;
-	}
+        $result = substr($string, 0, $length);
+        if (strlen($string) > 40) {
+            $result .= "...";
+        }
+        return $result;
+    }
 
+    protected static function isValidMd5($md5 =''): bool
+    {
+        return strlen($md5) == 32 && ctype_xdigit($md5);
+    }
+
+    /**
+     * @param string $var
+     * @param bool $nullable
+     * @param $name
+     * @return mixed
+     */
+    public static function checkMD5(?string $var, bool $nullable, $name): ?string
+    {
+        if (!Helpers::isValidMd5($var) && !((is_null($var) || empty($var)) && $nullable)) {
+            throw new UnexpectedValueException("$name est null ");
+        }
+        return $var;
+    }
 }
