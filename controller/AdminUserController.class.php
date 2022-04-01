@@ -123,6 +123,10 @@ class AdminUserController extends Controller {
 		$api = $this->getEnvironnement()->post()->get('api');
 		$id = $this->getEnvironnement()->post()->get('id');
 
+        if(!ctype_digit($id)){
+            $this->displayErrorAndExit("Le paramètre id doit être un entier","/");
+        }
+
         $name = $this->getEnvironnement()->post()->get('name');
         Helpers::putInSession("name", $name);
 
