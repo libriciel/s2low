@@ -11,6 +11,7 @@
 - Correction d'une faille de sécurité #780
 - Correction d'une faille de sécurité #781
 - Correction d'une faille de sécurité #782
+- Correction d'une faille de sécurité #784
 
 # 4.3.15 - 2022-03-24
 
