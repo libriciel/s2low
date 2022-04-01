@@ -1377,9 +1377,9 @@ class ActesTransaction extends DataObject {
    */
   public function fetchWorkflow() {
     if (isset ($this->id) && count($this->workflow) <= 0) {
-      $sql = "SELECT id, status_id, date, message FROM actes_transactions_workflow WHERE transaction_id=" . $this->id . " ORDER BY date, id ASC";
+      $sql = "SELECT id, status_id, date, message FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date, id ASC";
 
-      $result = $this->db->select($sql);
+      $result = $this->db->select($sql,[$this->id]);
 
       if (!$result->isError()) {
         $this->workflow = $result->get_all_rows();
