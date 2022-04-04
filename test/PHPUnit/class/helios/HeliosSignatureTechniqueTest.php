@@ -64,7 +64,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
         $xadesSignatureParser->method("extractXadesSigningTime")
             ->willReturn(new DateTime("2019-01-01"));
-
+        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 		return new XadesSignature(
 		    XMLSEC1_PATH,
             new PKCS12(),
@@ -72,7 +72,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
             __DIR__ . "/../../lib/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
-            new VerifyPemCertificate(__DIR__ . "/../../lib/fixtures/validca_for_xades/")
+            $verifyPemCertificateFactory->get(__DIR__ . "/../../lib/fixtures/validca_for_xades/")
         );
 	}
 

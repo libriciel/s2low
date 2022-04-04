@@ -2,6 +2,7 @@
 
 ## Correction
 - Empêcher l'envoi vers Pastell de doublons lors de l'archivage (module Helios) #355
+- Amélioration de la gestion du lancement des processus extérieurs #750
 
 # 4.3.17 - 2022-05-17
 
@@ -10,6 +11,7 @@
 
 ## Correction
 - Rétablir le fonctionnement de la création de collectivité #803
+- Amélioration de la gestion du lancement des processus extérieurs #750
 
 # 4.3.16 - 2022-05-09
 

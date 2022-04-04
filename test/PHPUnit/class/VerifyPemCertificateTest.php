@@ -5,19 +5,28 @@ class VerifyPemCertificateTest extends S2lowTestCase
 {
     const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
 
+    /** @var \VerifyPemCertificateFactory  */
+    private $verifyPemCertificateFactory;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->verifyPemCertificateFactory = new VerifyPemCertificateFactory();
+    }
+
     /**
      * @throws \Exception
      */
     public function testVerifyAnOKCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->assertTrue($verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem"));
     }
 
     public function testVerifyAnExpiredCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate has expired/");
@@ -30,7 +39,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyJustBeforeItsCaExpires()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->assertTrue(
             $verificator->checkCertificateWithOpenSSL(
@@ -43,7 +52,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyJustAfterItsCaExpires()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate has expired/");
@@ -58,7 +67,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
     public function testVerifyARevokedCertificate()
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
-        $verificator = new VerifyPemCertificate("$baseCertificatesDir/dateOk/revokedFromAC/");
+        $verificator = $this->verifyPemCertificateFactory->get("$baseCertificatesDir/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/Certificat révoqué/");
@@ -68,7 +77,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
     public function testVerifyWrongCertificate()
     {
         $baseCertificatesDir =__DIR__."/fixtures/certificats";
-        $verificator = new VerifyPemCertificate("$baseCertificatesDir/dateOk/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get("$baseCertificatesDir/dateOk/ac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches(
@@ -79,7 +88,8 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyAnExpiredCertificateWithNoRecognizedCA()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
+        $verificator = $verificator = $this->verifyPemCertificateFactory->get(
+            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/unable to get local issuer certificate/");
@@ -88,7 +98,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyAnAutosignedCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
+        $verificator = $this->verifyPemCertificateFactory->get(
+            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
+        );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/self signed certificate/");
@@ -97,7 +109,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyAnExpiredAutosignedCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/self signed certificate/");
@@ -108,7 +120,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainAnOKCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/ac/");
 
         $this->assertTrue(
             $verificator->checkCertificateWithOpenSSL(
@@ -120,7 +132,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainAnExpiredCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateKo/ac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/certificate has expired/");
@@ -132,7 +144,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainARevokedCertificate()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/Certificat révoqué/");
@@ -144,9 +156,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainACertificateWithNoRecognizedCA()   #NOUVEAU : si la date est ok, le résultat devrait être ok
     {
-        $verificator = new VerifyPemCertificate(
-            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
-        );
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->assertTrue(
             $verificator->checkCertificateWithOpenSSL(
@@ -158,7 +168,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainAnExpiredCertificateWithNoRecognizedCA()
     {
-        $verificator = new VerifyPemCertificate(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectNotToPerformAssertions();
         $verificator->checkCertificateWithOpenSSL(                              //Même si ce n'est pas ok, l'erreur
@@ -169,9 +179,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainAnAutosignedCertificate()            #NOUVEAU : si la date est ok, le résultat devrait être ok
     {
-        $verificator = new VerifyPemCertificate(
-            self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/"
-        );
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->assertTrue(
             $verificator->checkCertificateWithOpenSSL(
@@ -183,9 +191,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyWithoutCheckingCertificateChainAnExpiredAutosignedCertificate()
     {
-        $verificator = new VerifyPemCertificate(
-            self::BASE_CERTIFICATES_DIR . "/dateOk/emptyac/"
-        );
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(" certificate has expired");
