@@ -6,7 +6,13 @@ require_once("include/init.php");
 if (! $me->isAuthorityAdmin()){
   		exit;
   	}
-$groupe_id = Helpers::getVarFromGet('groupe_id');
+try{
+    $groupe_id = Helpers::getIntFromGet('groupe_id');
+} catch (Exception $e){
+    $_SESSION['last_error'] = $e->getMessage();
+    header("Location: index.php?command=annuaire");
+    exit;
+}
 
 $groupe = new GroupeMail($groupe_id);
 
