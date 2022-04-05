@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\PdfValidator;
+
 class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
 	const QUEUE_NAME = "actes-analyze-fichier-a-envoyer";
@@ -15,19 +17,22 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 	private $actes_dont_valid_signing_certificate;
 	private $actes_type_pj_is_mandatory;
 	private $actesTypePJSQL;
+    /** @var \S2low\Services\PdfValidator  */
+    private $pdfValidator;
 
     public function __construct(
         S2lowLogger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
-		$actes_appli_quadrigramme,
+        $actes_appli_quadrigramme,
         ActesScriptHelper $actesScriptHelper,
         PadesValid $padesValid,
-		WorkerScript $workerScript,
-		$actes_dont_valid_signing_certificate,
-		$actes_type_pj_is_mandatory,
-		ActesTypePJSQL $actesTypePJSQL
+        WorkerScript $workerScript,
+        $actes_dont_valid_signing_certificate,
+        $actes_type_pj_is_mandatory,
+        ActesTypePJSQL $actesTypePJSQL,
+        PdfValidator $pdfValidator
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -40,6 +45,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
         $this->actes_type_pj_is_mandatory = $actes_type_pj_is_mandatory;
         $this->actesTypePJSQL = $actesTypePJSQL;
+        $this->pdfValidator = $pdfValidator;
     }
 
 	public function getQueueName(){
@@ -172,6 +178,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         if ($mime_type != 'application/pdf') {
             return;
         }
+
+        $this->pdfValidator->check($filepath);
         try {
             $this->padesValid->validate($filepath,$must_validate_certificate);
 		} catch(RecoverableException $e){
