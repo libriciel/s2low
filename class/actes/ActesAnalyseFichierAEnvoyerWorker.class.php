@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\PdfValidator;
+
 class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
 	const QUEUE_NAME = "actes-analyze-fichier-a-envoyer";
@@ -15,7 +17,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 	private $actes_dont_valid_signing_certificate;
 	private $actes_type_pj_is_mandatory;
 	private $actesTypePJSQL;
-    /** @var \PdfValid  */
+    /** @var \S2low\Services\PdfValidator  */
     private $pdfValid;
 
     public function __construct(
@@ -23,14 +25,14 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
-		$actes_appli_quadrigramme,
+        $actes_appli_quadrigramme,
         ActesScriptHelper $actesScriptHelper,
         PadesValid $padesValid,
-		WorkerScript $workerScript,
-		$actes_dont_valid_signing_certificate,
-		$actes_type_pj_is_mandatory,
-		ActesTypePJSQL $actesTypePJSQL,
-        PdfValid $pdfValid
+        WorkerScript $workerScript,
+        $actes_dont_valid_signing_certificate,
+        $actes_type_pj_is_mandatory,
+        ActesTypePJSQL $actesTypePJSQL,
+        PdfValidator $pdfValid
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
