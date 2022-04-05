@@ -2,7 +2,10 @@
 
 ## Évolution
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
- 
+
+## Correction
+- Correction d'une faille de sécurité #775
+
 # 4.3.15 - 2022-03-24
 
 # Évolution
