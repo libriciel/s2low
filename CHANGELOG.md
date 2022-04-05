@@ -4,6 +4,7 @@
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
 
 ## Correction
+- Correction d'une faille de sécurité #774
 - Correction d'une faille de sécurité #775
 - Correction d'une faille de sécurité #776
 - Correction d'une faille de sécurité #779

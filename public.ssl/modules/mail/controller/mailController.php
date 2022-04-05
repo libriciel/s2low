@@ -494,9 +494,14 @@ class mailController {
 		}
   	}
   	$idArray= Helpers :: getVarFromPost("checkbox_id");
-  	
-  	$groupe_id = Helpers :: getVarFromPost("groupe_id");
-  	$old_groupe_id = Helpers :: getVarFromPost("old_groupe_id");
+
+      try{
+          $groupe_id = Helpers :: getIntFromPost("groupe_id",true);
+          $old_groupe_id = Helpers :: getIntFromPost("old_groupe_id",true);
+      } catch (Exception $exception){
+          $this->lastError = $exception->getMessage();
+          return false;
+      }
   	$groupe = new GroupeMail($groupe_id);
   	
   	if ($idArray != null)
