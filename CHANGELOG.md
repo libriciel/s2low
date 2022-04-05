@@ -5,6 +5,7 @@
 
 ## Correction
 - Correction d'une faille de sécurité #775
+- Correction d'une faille de sécurité #776
 
 # 4.3.15 - 2022-03-24
 
