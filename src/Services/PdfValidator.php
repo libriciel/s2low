@@ -28,12 +28,12 @@ class PdfValidator
             $process->run();
         } catch (Exception $exception){
             $message = "PdfValidator->check : ".$exception->getMessage();
-            $this->logger->warning($message);
+            $this->logger->error($message);
             throw new RecoverableException();
         }
-        if ($process->getExitCode() != 0) {
-            $message = "Fichier pdf corrompu dans l'archive : ".basename($filepath);
-            $this->logger->warning($message);
+        if ($process->getExitCode() !== 0) {
+            $message = "Fichier pdf corrompu : ".basename($filepath);
+            $this->logger->error($message);
             throw new UnexpectedValueException($message);
         }
         return true;

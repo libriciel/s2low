@@ -8,22 +8,42 @@ use UnexpectedValueException;
 
 class PdfValidatorTest extends S2lowTestCase
 {
+    /**
+     * @var \S2low\Services\PdfValidator
+     */
+    private $pdfValidator;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->pdfValidator = $this->getObjectInstancier()->get(PdfValidator::class);
+    }
+
     public function testCheckValidFile()
     {
-        $pdfValid = new PdfValidator(
-            $this->getMockBuilder(\S2lowLogger::class)->disableOriginalConstructor()->getMock()
+        $this->assertTrue(
+            $this->pdfValidator->check(__DIR__ . "/fixtures/test_pdf.pdf")
         );
-        $this->assertTrue($pdfValid->check(__DIR__ . "/fixtures/test_pdf.pdf"));
     }
 
     public function testCheckInvalidFile()
     {
-        $pdfValid = new PdfValidator(
-            $this->getMockBuilder(\S2lowLogger::class)->disableOriginalConstructor()->getMock()
-        );
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage("Fichier pdf corrompu dans l'archive : test_pdf_corrupted.pdf");
-        $this->assertTrue($pdfValid->check(__DIR__ . "/fixtures/test_pdf_corrupted.pdf"));
+        $this->expectExceptionMessage("Fichier pdf corrompu : test_pdf_corrupted.pdf");
+        $this->pdfValidator->check(__DIR__ . "/fixtures/test_pdf_corrupted.pdf");
+    }
+
+    public function testCheckInvalidFileLogs()
+    {
+        try{
+            $this->pdfValidator->check(__DIR__ . "/fixtures/test_pdf_corrupted.pdf");
+        } catch (\Exception $exception){
+            //Juste là pour permettre le test après.
+        }
+        $this->assertEquals(
+            "Fichier pdf corrompu : test_pdf_corrupted.pdf",
+            $this->getLogRecords()[0]["message"]
+        );
     }
 
 }
