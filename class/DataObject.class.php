@@ -146,7 +146,7 @@ class DataObject {
   public function init() {
   	
 	if (isset($this->id) && ! empty($this->id)) {
-	  $sql = "SELECT " . implode(array_keys($this->dbFields), ", ") . " FROM " . $this->objectName . " WHERE id=?";
+	  $sql = "SELECT " . implode(", ", array_keys($this->dbFields)) . " FROM " . $this->objectName . " WHERE id=?";
 	  $result = $this->db->select($sql,[$this->id]);
 
 	  if (! $result->isError() && $result->num_row() == 1) {
@@ -182,9 +182,9 @@ class DataObject {
       }
     }
 
-    $sql = "DELETE FROM " . $this->objectName . " WHERE id='" . $id . "'";
+    $sql = "DELETE FROM " . $this->objectName . " WHERE id= ? ";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 		//Never reached...
 	  $this->errorMsg = "Erreur lors de la suppression de l'entité d'identifiant " . $id;
 	  return false;
@@ -255,13 +255,15 @@ class DataObject {
    * \return true si unique, false sinon
   */
   public function checkUnicity($name) {
-	$sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "='" . $this->$name . "'";
+	$sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "=?";
+    $params = [$this->$name];
 
 	if (isset($this->id)) {
-	  $sql .= " AND id != " . $this->id;
+	  $sql .= " AND id != ?";
+        $params[] = $this->id;
 	}
 
-	$result = $this->db->select($sql);
+	$result = $this->db->select($sql, $params);
 
 	if (! $result->isError()) {
 	  if ($result->num_row() > 0) {
@@ -277,65 +279,20 @@ class DataObject {
   /**
    * \brief Méthode d'enregistrement d'une entité dans la base de données
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \param $return_rather_than_exec booléen (optionnel) Si true, renvoi la requête SQL, si false exécute la requête (false par défaut)
    * \return true si succès, false sinon
   */
-  public function save($validate = true, $return_rather_than_exec = false) {
-      
-    $new = true;
-    if (isset($this->id)) {
-      $new = false;
+  public function save($validate = true) {
+
+      $saveSQLRequest = $this->buildSaveSQLRequest($validate);
+
+      if(!$saveSQLRequest->isValid()){
+        return false;
     }
 
-    $sql = "";
-
-	if ($validate) {
-	  if (! $this->validate()) {
-		return false;
-	  }
-	}
-
-    if ($new) {
-      if (! ($this->id = $this->getNextId())) {
-		$this->errorMsg = "Erreur de récupération du nouvel ID";		
-		return false;
-      }
- 
-
-      $sql = "INSERT INTO " . $this->objectName . " (id, ";
-      $sql .= implode(array_keys($this->dbFields), ", ");
-      $sql .= ") VALUES (" . $this->id;
-
-      foreach($this->dbFields as $field => $val) {
-		$sql .= ", ";
-		$sql .= (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
-      }
-
-      $sql .= ")";
-    } else { // Mise à jour
-      $sql = "UPDATE " . $this->objectName . " SET ";
-      
-      $fields = array();
-      foreach ($this->dbFields as $field => $val) {
-		$str = $field . "=";
-		$str .= (isset($this->$field) && strlen($this->$field) > 0) ? "'" . addslashes($this->$field) . "'" : "NULL";
-		$fields[] = $str;
-      }
-
-      $sql .= implode($fields, ", ");
-
-      $sql .= " WHERE id='". $this->id . "'";
-    }
-
-
-    if ($return_rather_than_exec) {
-      return $sql;
-    } else {
-      if (! $this->db->exec($sql)) {
+      if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
 		$this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
 		return false;
       }
-    }
 
     return true;
   }
@@ -393,7 +350,7 @@ class DataObject {
 	  }
 	}
 
-	return implode($ret, ',');
+	return implode(',', $ret);
   }
 
   // Méthodes de pagination
@@ -540,6 +497,67 @@ class DataObject {
     return $msg;
   }
 
+    /**
+     * @param mixed $validate
+     * @return \DataObjectSaveSQLRequest
+     */
+    public function buildSaveSQLRequest(bool $validate): DataObjectSaveSQLRequest
+    {
+        $new = true;
+        $error = true;
+
+        if (isset($this->id)) {
+            $new = false;
+        }
+
+        if ($validate) {
+            if (!$this->validate()) {
+                return new DataObjectSaveSQLRequest(false,"",[]);
+            }
+        }
+
+        if ($new) {
+            if (!($this->id = $this->getNextId())) {
+                $this->errorMsg = "Erreur de récupération du nouvel ID";
+                return new DataObjectSaveSQLRequest(false,"",[]);
+            }
+
+
+            $fields = ["id"];
+            $params = [$this->id];
+            $values = "? ";
+
+            foreach ($this->dbFields as $field => $val) {
+                if (isset($this->$field) && strlen($this->$field) > 0) {
+                    $values .= ", ?";
+                    $fields[] = $field;
+                    $params[] = $this->$field;
+                }
+            }
+
+            $sql = "INSERT INTO " . $this->objectName . " (";
+            $sql .= implode(", ", $fields);
+            $sql .= ") VALUES ( $values )";
+        } else { // Mise à jour
+            $sql = "UPDATE " . $this->objectName . " SET ";
+
+            $fields = array();
+            $params = array();
+            foreach ($this->dbFields as $field => $val) {
+                if (isset($this->$field) && strlen($this->$field) > 0) {
+                    $str = $field . "= ?";
+                    $params[] = $this->$field;
+                    $fields[] = $str;
+                }
+            }
+
+            $sql .= implode(", ", $fields);
+
+            $sql .= " WHERE id=?";
+            $params[] = $this->id;
+        }
+        return new DataObjectSaveSQLRequest(true,$sql,$params);
+    }
 
 
 }
