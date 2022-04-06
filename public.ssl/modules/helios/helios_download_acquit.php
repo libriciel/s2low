@@ -27,7 +27,14 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
   exit ();
 }
 
-$transaction_id = Helpers :: getVarFromGet("id");
+try{
+    $transaction_id = Helpers :: getIntFromGet("id",true);
+} catch (Exception $e){
+    $_SESSION["error"] = $e->getMessage();
+    header("Location: " . WEBSITE_SSL);
+    exit ();
+}
+
 
 if (! $transaction_id){
   $_SESSION["error"] = "Id non trouvé";
