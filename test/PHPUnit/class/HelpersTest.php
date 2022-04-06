@@ -303,8 +303,8 @@ class HelpersTest extends TestCase {
     public function checkIntProvider()
     {
         return [
-            ["1", false],
-            [null, true]
+            ["1",false],
+            [null,true]
         ];
     }
 
