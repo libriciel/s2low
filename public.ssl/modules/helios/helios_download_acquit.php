@@ -28,7 +28,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 try{
-    $transaction_id = Helpers :: getIntFromGet("id",true);          // TODO : il faut que la correction soit déjà mergée.
+    $transaction_id = Helpers :: getIntFromGet("id",true);
 } catch (Exception $e){
     $_SESSION["error"] = $e->getMessage();
     header("Location: " . WEBSITE_SSL);
