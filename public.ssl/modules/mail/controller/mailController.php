@@ -99,8 +99,15 @@ class mailController {
   	 	$etat_string = $tabStatus[$etat];
 
   	 	$sujet = utf8_decode(Helpers :: getVarFromGet("sujet"));
-  	 	$SendDateFrom=Helpers :: getVarFromGet("SendDateFrom");
-  	 	$SendDateTo=Helpers :: getVarFromGet("SendDateTo");
+
+        try{
+               $SendDateFrom=Helpers :: getDateFromGet("SendDateFrom",true);
+               $SendDateTo=Helpers :: getDateFromGet("SendDateTo",true);
+        } catch (Exception $exception){
+            $this->lastError = $exception->getMessage();
+            $_SESSION['last_error'] = $exception->getMessage();
+        }
+
   	 	$cond=" user_id=".$me->getId();
   	 	
   	 	if ($etat_string)

@@ -321,10 +321,62 @@ class HelpersTest extends TestCase {
     public function checkIntProviderWithError()
     {
         return [
-            ["fsdfsqfdsqd",false],
-            ["fsdfsqfdsqd",true],
-            [null,false]
+            ["fsdfsqfdsqd", false],
+            ["fsdfsqfdsqd", true],
+            [null, false]
         ];
     }
 
+    /**
+     * @dataProvider checkDateProvider
+     * @return void
+     */
+
+    public function testCheckDate($var,$nullable){
+        $this->assertEquals(
+            $var,
+            Helpers::checkDate($var,$nullable,"test")
+        );
+    }
+
+    public function checkDateProvider(): array
+    {
+        return [
+            ["2022-1-1", true],
+            ["2022-1-31", true],
+            ["2020-2-29", true],
+            ["2020-12-31", true],
+            ["2022-1-1", false],
+            ["2022-1-31", false],
+            ["2020-2-29", false],
+            ["2020-12-31", false],
+            ["", true],
+            [null, true]
+        ];
+    }
+
+
+    /**
+     * @dataProvider checkDateProviderWithError
+     * @return void
+     */
+
+    public function testCheckDateWithError($var,$nullable){
+        $this->expectException(UnexpectedValueException::class);
+        Helpers::checkDate($var,$nullable,"test");
+    }
+
+    public function checkDateProviderWithError(): array
+    {
+        return [
+            ["2022-1-32",true],
+            ["2020-13-31",true],
+            ["fdsfsqdfsdq",true],
+            ["2022-1-32",false],
+            ["2020-13-31",false],
+            ["fdsfsqdfsdq",false],
+            [null,false],
+            ["",false]
+        ];
+    }
 }
