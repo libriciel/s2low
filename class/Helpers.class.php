@@ -562,7 +562,6 @@ class Helpers {
         return $var;
     }
 
-
     public static function checkDate(?string $var, bool $nullable, string $name){
         if(!strtotime($var) && !((is_null($var) ||!$var ) && $nullable)){
             throw new UnexpectedValueException("$name n'est pas une date");
@@ -571,10 +570,11 @@ class Helpers {
     }
 
     public function chunkString($string,$length){
-        $result = substr($string, 0, $length);
-        if (strlen($string) > 40) {
-            $result .= "...";
-        }
-        return $result;
-    }
+		$result = substr($string, 0, $length);
+		if (strlen($string) > 40) {
+			$result .= "...";
+		}
+		return $result;
+	}
+
 }
