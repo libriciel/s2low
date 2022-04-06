@@ -105,7 +105,7 @@ class mailController {
                $SendDateTo=Helpers :: getDateFromGet("SendDateTo",true);
         } catch (Exception $exception){
             $this->lastError = $exception->getMessage();
-            return false;
+            $_SESSION['last_error'] = $exception->getMessage();
         }
 
   	 	$cond=" user_id=".$me->getId();

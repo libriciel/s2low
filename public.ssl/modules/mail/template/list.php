@@ -1,5 +1,21 @@
  <h1> Mail - Système de mail sécurisé</h1>
 
+ <?php if (isset($_SESSION["last_message"])) : ?>
+     <div class="alert alert-success" >
+         <?php echo $_SESSION["last_message"]; ?>
+     </div>
+     <?php
+     unset($_SESSION["last_message"]);
+ endif;?>
+
+ <?php if (isset($_SESSION["last_error"])) : ?>
+     <div class="alert alert-danger" >
+         <?php echo $_SESSION["last_error"]; ?>
+     </div>
+     <?php
+     unset($_SESSION["last_error"]);
+ endif;?>
+
   	<h2>Actions</h2>
   	<div id="actions_area"> 
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
