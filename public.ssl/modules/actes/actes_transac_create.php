@@ -74,7 +74,11 @@ $document_papier =  Helpers :: getVarFromPost("document_papier", true)?1:0;
 $subject = Helpers :: getVarFromPost("subject", true);
 $subject = cp1252_to_iso88591($subject);
 
-$batchFileId = Helpers :: getVarFromPost("batchfile");
+try{
+    $batchFileId = Helpers :: getIntFromPost("batchfile",true);
+} catch (Exception $exception) {
+    Helpers :: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL );
+}
 
 if (isset($_FILES['acte_pdf_file'])) {
   $actePDFFile = $_FILES["acte_pdf_file"];

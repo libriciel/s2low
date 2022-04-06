@@ -34,7 +34,8 @@ if (! $mailTransaction->isPasswordOK($password)){
     if ($password) {
 		$_SESSION['last_error'] = "Mot de passe incorrect";
 	}
-	header("Location: password.php?mail_emis_id=".$mail_emis_id);
+    $redirectUrl = "Location: password.php?mail_emis_id=" . urlencode($mail_emis_id);
+    header($redirectUrl);
 	exit;
 }
 
