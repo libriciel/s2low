@@ -308,44 +308,6 @@ class HelpersTest extends TestCase {
         ];
     }
 
-     /**
-     * @dataProvider checkMD5Provider
-     * @return void
-     */
-
-    public function testCheckMD5($var,$nullable){
-        $this->assertEquals(
-            $var,
-            Helpers::checkMD5($var,$nullable,"test")
-        );
-    }
-
-    public function checkMD5Provider()
-    {
-        return [
-            ["bb0fa696e73546f449392a7b34c3dfd5",false],
-            [null,true]
-        ];
-    }
-
-    /**
-     * @dataProvider checkMD5ProviderWithError
-    * @return void
-        */
-
-    public function testCheckMD5WithError($var,$nullable){
-        $this->expectException(UnexpectedValueException::class);
-        Helpers::checkMD5($var,$nullable,"test");
-    }
-
-    public function checkMD5ProviderWithError()
-    {
-        return [
-            ["' OR 1=1--'",false],
-            [null,false]
-        ];
-    }
-
     /**
      * @dataProvider checkIntProviderWithError
      * @return void
