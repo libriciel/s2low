@@ -577,9 +577,4 @@ class Helpers {
         }
         return $result;
     }
-
-    protected static function isValidMd5($md5 =''): bool
-    {
-        return strlen($md5) == 32 && ctype_xdigit($md5);
-    }
 }
