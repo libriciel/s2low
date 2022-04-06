@@ -13,6 +13,7 @@
 - Correction d'une faille de sécurité #781
 - Correction d'une faille de sécurité #782
 - Correction d'une faille de sécurité #784
+- Correction d'une faille de sécurité #787
 - Correction d'une faille de sécurité #788
 - Correction d'une faille de sécurité #789
 
