@@ -21,6 +21,12 @@ if (! $me->isAdmin()) {
 
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
+if(!ctype_digit($id) && !(is_null($id)||!$id)){
+    $_SESSION["error"] = "id n'est pas un entier";
+    header("Location: " . WEBSITE_SSL);
+    exit();
+}
+
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Mode modification ou pas
