@@ -157,9 +157,9 @@ class User extends DataObject {
 
 	  $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name " .
 	  		" FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id " .
-	  		" WHERE users_perms.user_id='" . $this->id . "' AND modules.status=1";
+	  		" WHERE users_perms.user_id=? AND modules.status=1";
 
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,[$this->id]);
 
 	  if (! $result->isError()) {
 		while ($row = $result->get_next_row()) {
