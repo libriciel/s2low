@@ -2,6 +2,7 @@
 
 ## Évolution
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
+- Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
 
 ## Correction
 - Correction d'une faille de sécurité #774
