@@ -36,7 +36,12 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du GET
-$transId = Helpers::getVarFromGet("transaction");
+try{
+    $transId = Helpers::getIntFromGet("transaction",true);
+} catch (Exception $e){
+    echo $e->getMessage();
+    exit();
+}
 $transUniqueId = Helpers::getVarFromGet("unique_id");
 
 if(isset($transUniqueId) && ! empty($transUniqueId)){
