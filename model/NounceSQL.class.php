@@ -13,7 +13,7 @@ class NounceSQL extends SQL {
 		$this->menage();
 		$nounce = $this->passwordGenerator->getPassword();
 		$hash = hash("sha256","$password:$nounce");
-        $date = date("c",strtotime("now"));
+        $date = date("c");
 
 		$sql = "INSERT INTO nounce(nounce,login,hash,creation,authority_id) VALUES (?,?,?,?,?)";
 		$this->query($sql,$nounce,$login,$hash,$date,$authority_id);
