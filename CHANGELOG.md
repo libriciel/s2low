@@ -19,6 +19,7 @@
 - Correction d'une faille de sécurité #788
 - Correction d'une faille de sécurité #789
 - Correction d'une faille de sécurité #790
+- Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
 
 # 4.3.15 - 2022-03-24
 
