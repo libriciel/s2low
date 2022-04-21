@@ -573,4 +573,42 @@ class HeliosTransactionsSQL extends SQL
         $sql = "SELECT pes_acquit_is_in_cloud FROM helios_transactions WHERE id=?";
         return $this->queryOne($sql, $object_id);
     }
+
+    /**
+     * @param $dateStatusCible
+     * @param int $status_origine
+     * @param int $status_cible
+     * @return array
+     * Retourne le nombre de transactions passés de $status_origine à $status_cible depuis $dateStatusCible
+     * Cette fonction peut être perturbée par les modifications manuelles de status.
+     */
+    public function getStatusTransitionStatistics($dateStatusCible, int $status_origine, int $status_cible): array
+    {
+        $sql = "
+    SELECT 
+  COUNT(tw_cible.transaction_id) AS nb_transactions_cible, 
+  AVG(tw_cible.date - tw_origine.date) AS delai_de_transmission_moyen 
+FROM 
+  helios_transactions_workflow AS tw_cible
+  INNER JOIN helios_transactions_workflow AS tw_origine ON tw_cible.transaction_id = tw_origine.transaction_id 
+WHERE 
+  tw_cible.date > ? 
+  AND tw_cible.status_id = ? 
+  AND tw_origine.status_id = ?";
+
+        $results = $this->query($sql, $dateStatusCible, $status_origine, $status_cible);
+        return [$results[0]["nb_transactions_cible"], $results[0]["delai_de_transmission_moyen"]];
+    }
+
+    /**
+     * @param $date_status_cible
+     * @return float
+     */
+    public function getNbPostesDepuis($date_status_cible): float
+    {
+        $sql = "SELECT COUNT(id) AS nb_post_par_min FROM helios_transactions_workflow WHERE date > ? AND status_id=1; ";
+
+        $results = $this->query($sql, $date_status_cible);
+        return $results[0]["nb_post_par_min"];
+    }
 }

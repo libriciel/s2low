@@ -5,6 +5,7 @@
 ### Évolutions
 - Permettre la connection à Passtrans #1024
 - Permettre l'export du carnet d'adresse d'une collectivité #1033
+- Mettre à disposition un script de monitoring des analyses et envois actes et helios #793
 
 ### Corrections
 - Récuperer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
