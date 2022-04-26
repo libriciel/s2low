@@ -110,7 +110,11 @@ class ChangeMailDomainCommand extends Command
         $this->s2lowLogger->addHandler($consoleHandler);
 
         try{
-            list($authorities, $usersToModify) = $this->getAuthoritiesAndUsersToModify(
+            $authorities = $this->getAuthoritiesTomodify(
+                (int)$input->getArgument('group-id'),
+                $input->getArgument('domain-name-to-replace')
+            );
+            $usersToModify = $this->getUsersToModify(
                 (int)$input->getArgument('group-id'),
                 $input->getArgument('domain-name-to-replace')
             );
@@ -143,8 +147,7 @@ class ChangeMailDomainCommand extends Command
      */
     protected function getModifiedMail($domaineOrigine, $domaineCible, $email)
     {
-        $new = preg_replace("#@$domaineOrigine#", "@$domaineCible", $email);
-        return $new;
+        return preg_replace("#@$domaineOrigine#", "@$domaineCible", $email);
     }
 
     /**
@@ -153,7 +156,7 @@ class ChangeMailDomainCommand extends Command
      * @return array
      * @throws \Exception
      */
-    protected function getAuthoritiesAndUsersToModify(int $group_id, $existingMailDomain): array
+    protected function getAuthoritiesTomodify(int $group_id): array
     {
         $authorities = $this->authoritySQL->getAllGroup($group_id);
 
@@ -161,14 +164,25 @@ class ChangeMailDomainCommand extends Command
             throw new Exception("Aucune autorité liée au groupe $group_id, ou le groupe n'existe pas");
         }
 
+        return $authorities;
+    }
+
+    /**
+     * @param int $group_id
+     * @param $existingMailDomain
+     * @return array
+     * @throws \Exception
+     */
+    protected function getUsersTomodify(int $group_id, $existingMailDomain): array
+    {
         $usersToModify = $this->user->getUsersList(
             "WHERE authorities.authority_group_id= $group_id AND users.email LIKE '%@$existingMailDomain'"
         );
 
-        if (count($usersToModify) === 0) {
-            throw new Exception('Aucun utilisateur à modifier');
+        if ($usersToModify === false) {
+            return [];
         }
-        return array($authorities, $usersToModify);
+        return $usersToModify;
     }
 
     /**
@@ -198,7 +212,7 @@ class ChangeMailDomainCommand extends Command
      */
     protected function displayChangesBeforeValidation(SymfonyStyle $io, $authorities, array $usersAndMails, $usersToModify): void
     {
-        $io->note("Modified Authorities : " . implode($authorities, " ; "));
+        $io->note("Modified Authorities : " . implode(" ; ",$authorities));
         $io->table(
             ["user.id", "user.email (original)", "user.email (target)"],
             $usersAndMails
