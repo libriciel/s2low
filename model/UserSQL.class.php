@@ -212,4 +212,12 @@ class UserSQL extends SQL {
 		return $this->queryOne($sql,$certificate_hash,$authority_id);
 	}
 
+	public function updateMail(int $id, string $newMail){
+        return $this->queryOne(
+            "UPDATE users SET email=? WHERE id=?",
+            $newMail,
+            $id
+        );
+    }
+
 }
