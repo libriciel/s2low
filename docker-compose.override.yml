@@ -2,8 +2,10 @@ version: '3.5'
 
 services:
     web:
+        image: s2low-local-dev
         build:
             context: .
+            target: s2low_dev
         networks:
           - dgcl
           - dgfip

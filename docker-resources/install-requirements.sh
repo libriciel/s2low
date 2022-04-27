@@ -4,16 +4,11 @@ set -e -x
 
 # Debian stuff
 
-#Suppression des repos buster présents dans l'image
-rm /etc/apt/sources.list.d/buster.list
-rm /etc/apt/preferences.d/argon2-buster
-
-# For certbot
-echo 'deb http://ftp.debian.org/debian stretch-backports main' >  /etc/apt/sources.list.d/stretch.backport.list
+export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-apt-get install -y \
+apt-get install -y  --no-install-recommends \
     clamdscan \
     cron \
     git \
@@ -32,9 +27,28 @@ apt-get install -y \
     wget \
     zip \
     netcat \
-    poppler-utils
+    poppler-utils \
+    tzdata \
+    apache2 \
+    ca-certificates \
+    certbot \
+    php \
+    php-cli \
+    php-curl \
+    php-gd \
+    php-imap \
+    php-pgsql \
+    php-imagick \
+    php-pear \
+    php-zip \
+    redis-tools \
+    php-mbstring \
+    curl \
+    php-dev \
+    php-redis \
+    php-pdo \
+    python-certbot-apache
 
-apt-get install -y -t stretch-backports python-certbot-apache
 
 rm -r /var/lib/apt/lists/*
 
@@ -46,31 +60,8 @@ update-locale LANG=fr_FR.UTF-8
 echo "Europe/Paris" > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
 
-# PHP Stuff
-
-pecl install \
-      redis \
-      xdebug
-
-docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
-docker-php-ext-configure imap --with-kerberos --with-imap-ssl
-
-docker-php-ext-enable \
-      redis \
-      xdebug
-
-docker-php-ext-install \
-    gd \
-    imap \
-    pcntl \
-    pdo \
-    pdo_pgsql \
-    pgsql \
-    zip
-
 # Fix specific problem with Debian/libcurl/let'encrypt  https://serverfault.com/a/1079226
 sed -i '/^mozilla\/DST_Root_CA_X3/s/^/!/' /etc/ca-certificates.conf && update-ca-certificates -f
-
 
 #Suite site pear down suite à attaque
 cd /tmp

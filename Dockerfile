@@ -1,4 +1,4 @@
-FROM php:7.2-apache-stretch
+FROM ubuntu:18.04 as s2low_base
 
 EXPOSE 443 80
 WORKDIR /var/www/s2low/
@@ -13,7 +13,7 @@ RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
 #Composer
 COPY ./composer.* /var/www/s2low/
-RUN composer install
+RUN composer install --ignore-platform-req=ext-redis
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/
@@ -24,3 +24,8 @@ RUN chmod +x /var/www/s2low/script/divers/ipsec-monitor.sh && \
 
 ENTRYPOINT ["docker-s2low-entrypoint"]
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
+
+FROM s2low_base as s2low_dev
+RUN /bin/bash /tmp/docker-resources/install-dev-requirements.sh
+
+FROM s2low_base as s2low_prod

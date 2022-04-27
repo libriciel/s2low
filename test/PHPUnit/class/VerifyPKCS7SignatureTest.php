@@ -12,7 +12,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
 
         $this->assertTrue(
             $verifyPKCS7Signature->verify(
-                __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
                 file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
             )
         );
@@ -45,7 +45,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(" unable to get local issuer certificate");
         $verifyPKCS7Signature->verify(
-            __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
         );
     }
@@ -77,7 +77,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
         $verifyPKCS7Signature->verify(
-            __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
             $dateTime
         );
@@ -109,7 +109,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
 
         $this->assertTrue(
             $verifyPKCS7Signature->verify(
-                __DIR__ . "fixtures/signaturesPKCS7/test_pdf.pdf",
+                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
                 file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
                 $dateTime
             )

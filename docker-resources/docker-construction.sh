@@ -5,7 +5,8 @@ set -e -x
 cd /tmp/
 
 # Copie des fichiers de configurations
-cp ./docker-resources/php/* /usr/local/etc/php/conf.d/
+cp ./docker-resources/php/* /etc/php/7.2/cli/conf.d/
+cp ./docker-resources/php/* /etc/php/7.2/apache2/conf.d/
 cp ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 cp ./docker-resources/clamav/clamd.conf /etc/clamav/
 cp ./docker-resources/cron.d/* /etc/cron.d/
