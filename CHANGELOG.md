@@ -5,6 +5,9 @@
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
 
 ## Correction
+- Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
+
+## sécurité
 - Correction d'une faille de sécurité #774
 - Correction d'une faille de sécurité #775
 - Correction d'une faille de sécurité #776
@@ -20,7 +23,6 @@
 - Correction d'une faille de sécurité #788
 - Correction d'une faille de sécurité #789
 - Correction d'une faille de sécurité #790
-- Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
 
 # 4.3.15 - 2022-03-24
 
