@@ -13,7 +13,7 @@ RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
 #Composer
 COPY ./composer.* /var/www/s2low/
-RUN composer install --ignore-platform-req=ext-redis
+RUN composer install
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/
