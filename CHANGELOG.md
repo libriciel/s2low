@@ -1,14 +1,18 @@
+# 4.3.17 -
+
+## Évolution
+- Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker 
+
 # 4.3.16 - 2022-05-09
 
 ## Évolution
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
-- Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker 
 
 ## Correction
 - Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
 
-## sécurité
+## Sécurité
 - Correction d'une faille de sécurité #774
 - Correction d'une faille de sécurité #775
 - Correction d'une faille de sécurité #776
