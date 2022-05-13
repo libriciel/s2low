@@ -3,17 +3,6 @@ set -e
 
 # TODO vérification de l'installation de composer ?
 
-# Activation ou non de XDEBUG
-if [ -z ${XDEBUG_ON} ]
-then
-    if [ -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]
-    then
-        rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-    fi
-else
-    docker-php-ext-enable xdebug
-fi
-
 /bin/bash /var/www/s2low/docker-resources/generate-config.sh > /etc/s2low/DockerSettings.php
 
 /bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh

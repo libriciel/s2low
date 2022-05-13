@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e -x
+
+# Debian stuff
+
+export DEBIAN_FRONTEND=noninteractive
+
+apt-get update
+
+apt-get install -y  --no-install-recommends php-xdebug
+
+rm -r /var/lib/apt/lists/*

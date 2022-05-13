@@ -3,6 +3,7 @@
 ## Évolution
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
+- Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker 
 
 ## Correction
 - Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
