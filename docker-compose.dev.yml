@@ -1,0 +1,101 @@
+version: '3.7'
+
+services:
+    web:
+        image: s2low-local-dev
+        build:
+            context: .
+            target: s2low_dev
+
+        ports:
+            - "${WEB_HTTP_PORT:-10080}:80"
+            - "${WEB_HTTPS_PORT:-10443}:443"
+        volumes:
+            - .:/var/www/s2low
+        environment:
+            POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST:-db_test}
+            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST:-tedetis}
+            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST:-tedetis}
+            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST:-tedetis}
+            WEB_HTTP_PORT: ${WEB_HTTP_PORT:-10080}
+            WEB_HTTPS_PORT: ${WEB_HTTPS_PORT:-10443}
+            ACTES_ALWAYS_CAN_VALIDATE: "true"
+            XDEBUG_ON: ${XDEBUG_ON:-true}
+            XDEBUG_MODE: "coverage"
+
+    db:
+        environment:
+            - POSTGRES_LOG_ALL_QUERY_TO_STDOUT=true
+
+    simulateur:
+        ports:
+            - ${SIMULATEUR_SITE_PORT:-10444}:80
+
+    ftp:
+        ports:
+            - "${FTP_PORT:-10021}:21"
+            - "${PASV_MIN_PORT:-65000}-${PASV_MAX_PORT:-65004}:${PASV_MIN_PORT:-65000}-${PASV_MAX_PORT:-65004}"
+
+
+    db_test:
+        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        networks:
+          - services
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER_TEST:-tedetis}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST:-tedetis}
+            - POSTGRES_DB=${POSTGRES_DATABASE_TEST:-tedetis}
+        volumes:
+            - ${POSTGRESQL_DATADIR_TEST:-db_datadir_test}:/var/lib/postgresql/data
+
+    phppgadmin:
+        image: keepitcool/phppgadmin
+        networks:
+          - services
+        environment:
+            - DB_HOST=db
+            - DB_PORT=5432
+        links:
+            - db:db
+        ports:
+            - "${PHPPGADMIN_HTTP_PORT:-10001}:80"
+
+    beanstalkd-console:
+        image: schickling/beanstalkd-console
+        networks:
+            - services
+        ports:
+            - ${BEANSTALKD_CONSOLE_PORT:-10002}:2080
+        links:
+            - beanstalkd:beanstalkd
+
+    php-redis-admin:
+        image: faktiva/php-redis-admin
+        environment:
+            - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
+        ports:
+            - "${PHP_REDIS_PORT:-8005}:80"
+        depends_on:
+            - redis
+        networks:
+            - services
+
+    maildev:
+        image: maildev/maildev
+        networks:
+            - services
+        ports:
+            - 1080:80
+
+    openstack:
+        image: serverascode/swift-onlyone
+        networks:
+            - openstack
+        volumes:
+            - ${VOL_OPENSTACK:-openstack_datadir}:/srv
+        ports:
+            - ${BEANSTALKD_PORT:-10003}:8080
+
+volumes:
+    db_datadir_test:
+    openstack_datadir:

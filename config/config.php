@@ -617,10 +617,12 @@ if(!defined('MAIL_SECURE_DESCRIPTION')){
     define('MAIL_SECURE_DESCRIPTION',"ne-pas-repondre");
 }
 
+#TODO probablement à supprimer...
 if(!defined('IMAP_LOGIN')){
 	define('IMAP_LOGIN','s2low-mailsec@s2low.docker.libriciel.fr');
 }
 
+#TODO probablement à supprimer...
 if(!defined('IMAP_PASS')){
 	define('IMAP_PASS','s2low-mailsec');
 }
