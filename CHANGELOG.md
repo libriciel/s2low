@@ -3,6 +3,9 @@
 ## Évolution
 - Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker 
 
+## Correction
+- Rétablir le fonctionnement de la création de collectivité #803
+
 # 4.3.16 - 2022-05-09
 
 ## Évolution
