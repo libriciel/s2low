@@ -29,7 +29,7 @@ if (! $me->isAdmin()) {
 }
 
 try{
-    $id = Helpers::getIntFromPost("id");
+    $id = Helpers::getIntFromPost("id",true);
 } catch (Exception $exception) {
     exitOrDisplayError($api,$exception->getMessage(),WEBSITE_SSL);
 }
