@@ -39,7 +39,13 @@ $xadesSignature = new XadesSignature(
         EXTENDED_VALIDCA_PATH,
         new XadesSignatureParser(),
         new PemCertificateFactory(),
-        new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
+        new VerifyPemCertificate(
+                EXTENDED_VALIDCA_PATH,
+            new \S2low\Services\ExtractIssuerHashCommand(),
+            new \S2low\Services\ExtractCertificateSNCommand(),
+            new \S2low\Services\CheckSnInCRLCommand(),
+            new \S2low\Services\OpensslVerifyCommand(EXTENDED_VALIDCA_PATH)
+        )
 );
 $verify_sign =  true;
 try{
