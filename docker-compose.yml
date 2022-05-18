@@ -8,6 +8,9 @@ services:
           - dgcl
           - dgfip
           - services
+        ports:
+            - "${WEB_HTTP_PORT:-10080}:80"
+            - "${WEB_HTTPS_PORT:-10443}:443"
         environment:
             EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE:-test@libriciel.net}
             S2LOW_WEBSITE: ${S2LOW_WEBSITE:-localhost}
