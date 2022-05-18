@@ -7,9 +7,7 @@ services:
             context: .
             target: s2low_dev
 
-        ports:
-            - "${WEB_HTTP_PORT:-10080}:80"
-            - "${WEB_HTTPS_PORT:-10443}:443"
+
         volumes:
             - .:/var/www/s2low
         environment:
