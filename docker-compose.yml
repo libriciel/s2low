@@ -1,152 +1,99 @@
-version: '3.5'
+version: '3.7'
 
 services:
     web:
-        image: s2low-local-prod
-        build:
-            context: .
-            target: s2low_prod
+        image: registry.libriciel.fr:443/public/plateforme/s2low:canary
         networks:
           - openstack
+          - dgcl
+          - dgfip
+          - services
         environment:
-            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE}
-            S2LOW_WEBSITE: ${S2LOW_WEBSITE}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_HOST: ${POSTGRES_HOST}
-            HELIOS_FTP_SERVER: ${HELIOS_FTP_SERVER}
-            HELIOS_FTP_PORT: ${HELIOS_FTP_PORT}
-            HELIOS_FTP_PASSIVE_MODE: ${HELIOS_FTP_PASSIVE_MODE}
-            HELIOS_SENDING_MODE_DEMO: ${HELIOS_SENDING_MODE_DEMO}
-            HELIOS_FTP_PASSTRANS_MODE: ${HELIOS_FTP_PASSTRANS_MODE}
-            HELIOS_FTP_P_APPLI: ${HELIOS_FTP_P_APPLI}
-            HELIOS_FTP_LOGIN: ${HELIOS_FTP_LOGIN}
-            HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD}
-            HELIOS_SENDING_DESTINATION: ${HELIOS_SENDING_DESTINATION}
-            HELIOS_FTP_RESPONSE_SERVER_PATH: ${HELIOS_FTP_RESPONSE_SERVER_PATH}
-            SMTP_SERVER: ${SMTP_SERVER}
-            SMTP_PORT: ${SMTP_PORT}
-            PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR}
-            ACTES_OPENSTACK_AUTHENTICATION_URL_V3: ${ACTES_OPENSTACK_AUTHENTICATION_URL_V3}
-            ACTES_OPENSTACK_USERNAME: ${ACTES_OPENSTACK_USERNAME}
-            ACTES_OPENSTACK_PASSWORD: ${ACTES_OPENSTACK_PASSWORD}
-            ACTES_OPENSTACK_TENANT: ${ACTES_OPENSTACK_TENANT}
-            ACTES_OPENSTACK_REGION: ${ACTES_OPENSTACK_REGION}
-            ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE:-test@libriciel.net}
+            S2LOW_WEBSITE: ${S2LOW_WEBSITE:-localhost}
+            POSTGRES_USER: ${POSTGRES_USER:-tedetis}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tedetis}
+            POSTGRES_DB: ${POSTGRES_DB:-tedetis}
+            POSTGRES_HOST: ${POSTGRES_HOST:-}
+            HELIOS_FTP_SERVER: ${HELIOS_FTP_SERVER:-ftp}
+            HELIOS_FTP_PORT: ${HELIOS_FTP_PORT:-21}
+            HELIOS_FTP_PASSIVE_MODE: ${HELIOS_FTP_PASSIVE_MODE:-false}
+            HELIOS_SENDING_MODE_DEMO: ${HELIOS_SENDING_MODE_DEMO:-true}
+            HELIOS_FTP_PASSTRANS_MODE: ${HELIOS_FTP_PASSTRANS_MODE:-false}
+            HELIOS_FTP_P_APPLI: ${HELIOS_FTP_P_APPLI:-THELPES2}
+            HELIOS_FTP_LOGIN: ${HELIOS_FTP_LOGIN:-helios}
+            HELIOS_FTP_PASSWORD: ${HELIOS_FTP_PASSWORD:-helios}
+            HELIOS_SENDING_DESTINATION: ${HELIOS_SENDING_DESTINATION:-/entree/}
+            HELIOS_FTP_RESPONSE_SERVER_PATH: ${HELIOS_FTP_RESPONSE_SERVER_PATH:-/sortie/}
+            SMTP_SERVER: ${SMTP_SERVER:-}
+            SMTP_PORT: ${SMTP_PORT:-25}
+            PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR:-true}
+            ACTES_OPENSTACK_AUTHENTICATION_URL_V3: ${ACTES_OPENSTACK_AUTHENTICATION_URL_V3:-}
+            ACTES_OPENSTACK_USERNAME: ${ACTES_OPENSTACK_USERNAME:-}
+            ACTES_OPENSTACK_PASSWORD: ${ACTES_OPENSTACK_PASSWORD:-}
+            ACTES_OPENSTACK_TENANT: ${ACTES_OPENSTACK_TENANT:-}
+            ACTES_OPENSTACK_REGION: ${ACTES_OPENSTACK_REGION:-}
+            ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            HELIOS_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_OPENSTACK_AUTHENTICATION_URL_V3}
-            HELIOS_OPENSTACK_USERNAME: ${HELIOS_OPENSTACK_USERNAME}
-            HELIOS_OPENSTACK_PASSWORD: ${HELIOS_OPENSTACK_PASSWORD}
-            HELIOS_OPENSTACK_TENANT: ${HELIOS_OPENSTACK_TENANT}
-            HELIOS_OPENSTACK_REGION: ${HELIOS_OPENSTACK_REGION}
-            HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            HELIOS_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_OPENSTACK_AUTHENTICATION_URL_V3:-}
+            HELIOS_OPENSTACK_USERNAME: ${HELIOS_OPENSTACK_USERNAME:-}
+            HELIOS_OPENSTACK_PASSWORD: ${HELIOS_OPENSTACK_PASSWORD:-}
+            HELIOS_OPENSTACK_TENANT: ${HELIOS_OPENSTACK_TENANT:-}
+            HELIOS_OPENSTACK_REGION: ${HELIOS_OPENSTACK_REGION:-}
+            HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3}
-            HELIOS_ACQUIT_OPENSTACK_USERNAME: ${HELIOS_ACQUIT_OPENSTACK_USERNAME}
-            HELIOS_ACQUIT_OPENSTACK_PASSWORD: ${HELIOS_ACQUIT_OPENSTACK_PASSWORD}
-            HELIOS_ACQUIT_OPENSTACK_TENANT: ${HELIOS_ACQUIT_OPENSTACK_TENANT}
-            HELIOS_ACQUIT_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION}
-            HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3:-}
+            HELIOS_ACQUIT_OPENSTACK_USERNAME: ${HELIOS_ACQUIT_OPENSTACK_USERNAME:-}
+            HELIOS_ACQUIT_OPENSTACK_PASSWORD: ${HELIOS_ACQUIT_OPENSTACK_PASSWORD:-}
+            HELIOS_ACQUIT_OPENSTACK_TENANT: ${HELIOS_ACQUIT_OPENSTACK_TENANT:-}
+            HELIOS_ACQUIT_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION:-}
+            HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3}
-            HELIOS_RETOUR_OPENSTACK_USERNAME: ${HELIOS_RETOUR_OPENSTACK_USERNAME}
-            HELIOS_RETOUR_OPENSTACK_PASSWORD: ${HELIOS_RETOUR_OPENSTACK_PASSWORD}
-            HELIOS_RETOUR_OPENSTACK_TENANT: ${HELIOS_RETOUR_OPENSTACK_TENANT}
-            HELIOS_RETOUR_OPENSTACK_REGION: ${HELIOS_RETOUR_OPENSTACK_REGION}
-            HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3:-}
+            HELIOS_RETOUR_OPENSTACK_USERNAME: ${HELIOS_RETOUR_OPENSTACK_USERNAME:-}
+            HELIOS_RETOUR_OPENSTACK_PASSWORD: ${HELIOS_RETOUR_OPENSTACK_PASSWORD:-}
+            HELIOS_RETOUR_OPENSTACK_TENANT: ${HELIOS_RETOUR_OPENSTACK_TENANT:-}
+            HELIOS_RETOUR_OPENSTACK_REGION: ${HELIOS_RETOUR_OPENSTACK_REGION:-}
+            HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            MAILSEC_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3}
-            MAILSEC_OPENSTACK_USERNAME: ${HELIOS_ACQUIT_OPENSTACK_USERNAME}
-            MAILSEC_OPENSTACK_PASSWORD: ${HELIOS_ACQUIT_OPENSTACK_PASSWORD}
-            MAILSEC_OPENSTACK_TENANT: ${HELIOS_ACQUIT_OPENSTACK_TENANT}
-            MAILSEC_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION}
-            MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX}
+            MAILSEC_OPENSTACK_AUTHENTICATION_URL_V3: ${HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3:-}
+            MAILSEC_OPENSTACK_USERNAME: ${HELIOS_ACQUIT_OPENSTACK_USERNAME:-}
+            MAILSEC_OPENSTACK_PASSWORD: ${HELIOS_ACQUIT_OPENSTACK_PASSWORD:-}
+            MAILSEC_OPENSTACK_TENANT: ${HELIOS_ACQUIT_OPENSTACK_TENANT:-}
+            MAILSEC_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION:-}
+            MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN}
-            ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD}
-            IMAP_LOGIN: ${IMAP_LOGIN}
-            IMAP_PASS: ${IMAP_PASS}
-            MAILNAME: ${MAILNAME}
+            ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN:-mail@tedetis.org}
+            ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
+            MAILNAME: ${MAILNAME:-mail}
 
             USE_LEGACY_BORDEREAU_MODEL: ${USE_LEGACY_BORDEREAU_MODEL-false}
             USE_LEGACY_SECURE_MAIL_FIELDS: ${USE_LEGACY_SECURE_MAIL_FIELDS-true}
+
+            LETSENCRYPT_DOMAIN: ${LETSENCRYPT_DOMAIN:-}
+            LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-}
+
+            ACTES_ALWAYS_CAN_VALIDATE: "true"
+
         volumes:
-            - ${WORKSPACE_VOLUME}:/data/tdt-workspace
-            - ${SERVER_SSL_CERTIFICAT}:/etc/apache2/ssl/
-            - ${TIMESTAMP_CERTIFICAT_PATH}:/etc/s2low/ssl/
-            - ${LOG_PATH}:/data/log/
+            - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
+            - ${SERVER_SSL_CERTIFICAT:-app_certificate}:/etc/apache2/ssl/
+            - ${TIMESTAMP_CERTIFICAT_PATH:-app_certificate_timestamp}:/etc/s2low/ssl/
+            - ${LOG_PATH:-app_logs}:/data/log/
+            - ${LETSENCRYPT_DATADIR:-letsencrypt_datadir}:/etc/letsencrypt
+
 
     db:
         image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
         networks:
           - services
         environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER:-tedetis}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-tedetis}
+            - POSTGRES_DB=${POSTGRES_DB:-tedetis}
         volumes:
-            - ${POSTGRESQL_DATADIR}:/var/lib/postgresql/data
+            - ${POSTGRESQL_DATADIR:-db_datadir}:/var/lib/postgresql/data
 
-    openstack:
-        image: serverascode/swift-onlyone
-        networks:
-          - openstack
-        volumes:
-            - ${VOL_OPENSTACK}:/srv
-        ports:
-            - ${BEANSTALKD_PORT:-10003}:8080
-
-    simulateur:
-        image: gitlab.libriciel.fr:4567/libriciel/pole-plate-formes/s2low/projets-annexes/simulateur-helios:1.1.2
-        networks:
-          - dgfip
-          - dgcl
-          - services
-        depends_on:
-          - ftp
-        ports:
-            - ${SIMULATEUR_SITE_PORT}:80
-        volumes:
-            - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/var/www/simulateur-helios/workspace
-        environment:
-            MAIL_HOST: mail
-            MAIL_PORT: 25
-            MAIL_FROM: "dgcl@${MAILNAME}"
-
-    ftp:
-        image: mcreations/ftp
-        networks:
-          - dgfip
-        environment:
-            FTP_USER: ${HELIOS_FTP_LOGIN}
-            FTP_PASS: ${HELIOS_FTP_PASSWORD}
-            PASV_MIN_PORT: ${PASV_MIN_PORT}
-            PASV_MAX_PORT: ${PASV_MAX_PORT}
-        volumes:
-          - ${SIMULATEUR_WORKSPACE_DIRECTORY}:/data/${HELIOS_FTP_LOGIN}/
-        ports:
-          - "${FTP_PORT}:21"
-          - "${PASV_MIN_PORT}-${PASV_MAX_PORT}:${PASV_MIN_PORT}-${PASV_MAX_PORT}"
-
-    mail:
-        image: gitlab.libriciel.fr:4567/docker/docker-imap-devel:1.0
-        networks:
-          - services
-        environment:
-            - MAILNAME=${MAILNAME}
-            - MAIL_ADDRESS=${ACTES_IMAP_LOGIN}
-            - MAIL_PASS=${ACTES_IMAP_PASSWORD}
-
-    mailsec:
-        image: gitlab.libriciel.fr:4567/docker/mail-master:1.0
-        networks:
-          - services
-        environment:
-            - DOMAINS=${MAILNAME}
-            - POSTFIX_HOSTNAME=s2low-mailsec.libriciel.fr
-            - MAILS=${IMAP_LOGIN}
-            - NOPASS=true
     clamav:
         image: mkodockx/docker-clamav
         networks:
@@ -166,7 +113,7 @@ services:
         image: redis:3.2
         restart: always
         volumes:
-            - ${REDIS_VOLUME}:/data
+            - ${REDIS_VOLUME:-redis_datadir}:/data
         command: redis-server --appendonly yes
         networks:
             - services
@@ -181,3 +128,13 @@ networks:
   dgfip:
   services:
   openstack:
+
+volumes:
+    db_datadir:
+    app_workspace:
+    app_certificate:
+    app_certificate_timestamp:
+    app_session:
+    letsencrypt_datadir:
+    app_logs:
+    redis_datadir:
