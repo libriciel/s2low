@@ -5,10 +5,10 @@ class VerifyPemCertificateFactory{
     {
         return new VerifyPemCertificate(
             $caCertificatesPath,
-            new \S2low\Services\ExtractIssuerHashCommand(),
-            new \S2low\Services\ExtractCertificateSNCommand(),
-            new \S2low\Services\CheckSnInCRLCommand(),
-            new \S2low\Services\OpensslVerifyCommand($caCertificatesPath)
+            new \S2low\Services\ProcessCommand\ExtractIssuerHashCommand(),
+            new \S2low\Services\ProcessCommand\ExtractCertificateSNCommand(),
+            new \S2low\Services\ProcessCommand\CheckSnInCRLCommand(),
+            new \S2low\Services\ProcessCommand\OpensslVerifyCommand($caCertificatesPath)
         );
     }
 }

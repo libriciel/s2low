@@ -1,6 +1,6 @@
 <?php
 
-namespace S2low\Services;
+namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 

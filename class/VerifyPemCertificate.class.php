@@ -17,28 +17,28 @@ class VerifyPemCertificate
     /** @var string  */
     private $authorized_ca_path;
     /**
-     * @var \S2low\Services\ExtractIssuerHashCommand
+     * @var \S2low\Services\ProcessCommand\ExtractIssuerHashCommand
      */
     private $extractIssuerHashCommand;
     /**
-     * @var \S2low\Services\ExtractCertificateSNCommand
+     * @var \S2low\Services\ProcessCommand\ExtractCertificateSNCommand
      */
     private $extractCertificateSN;
     /**
-     * @var \S2low\Services\CheckSnInCRLCommand
+     * @var \S2low\Services\ProcessCommand\CheckSnInCRLCommand
      */
     private $checkSnInCRL;
     /**
-     * @var \S2low\Services\OpensslVerifyCommand
+     * @var \S2low\Services\ProcessCommand\OpensslVerifyCommand
      */
     private $opensslVerify;
 
     public function __construct(
-        string                                      $authorized_ca_path,
-        \S2low\Services\ExtractIssuerHashCommand    $extractIssuerHashCommand,
-        \S2low\Services\ExtractCertificateSNCommand $extractCertificateSN,
-        \S2low\Services\CheckSnInCRLCommand         $checkSnInCRL,
-        \S2low\Services\OpensslVerifyCommand $opensslVerify
+        string                                                     $authorized_ca_path,
+        \S2low\Services\ProcessCommand\ExtractIssuerHashCommand    $extractIssuerHashCommand,
+        \S2low\Services\ProcessCommand\ExtractCertificateSNCommand $extractCertificateSN,
+        \S2low\Services\ProcessCommand\CheckSnInCRLCommand         $checkSnInCRL,
+        \S2low\Services\ProcessCommand\OpensslVerifyCommand        $opensslVerify
     ){
         $this->authorized_ca_path = $authorized_ca_path;
         $this->extractIssuerHashCommand = $extractIssuerHashCommand;
