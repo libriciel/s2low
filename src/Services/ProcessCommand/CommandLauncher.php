@@ -4,9 +4,10 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-abstract class CommandLauncher
+class CommandLauncher
 {
-   protected function launch( $commmand, $resultatAnalysisOptions=[]){
+   public function launch($commmand, ICommandOutputTranslator $outputTranslator): string
+   {
        $process = new Process($commmand);
        try{
            $process->run();
@@ -14,10 +15,7 @@ abstract class CommandLauncher
            throw new \RecoverableException( get_class($this) ." : ".$exception->getMessage());
        }
 
-       $commandOutput= $this->getCommandOutput(
-           $process,
-           $resultatAnalysisOptions
-       );
+       $commandOutput= $outputTranslator->getCommandOutput($process);
 
        if($commandOutput->hasBlockingErrors()){
            throw new \Exception($commandOutput->getFirstBlockingErrorMessage());
@@ -28,6 +26,4 @@ abstract class CommandLauncher
        }
        return $commandOutput->getResult();
    }
-
-    abstract public function getCommandOutput(Process $process, array $resultatAnalysisOptions): AnalysedOutput;
 }

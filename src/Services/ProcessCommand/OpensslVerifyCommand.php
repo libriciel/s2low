@@ -4,34 +4,16 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class OpensslVerifyCommand extends CommandLauncher
+class OpensslVerifyCommand implements ICommandOutputTranslator
 {
     const VALIDE = "VALIDE";
-    /**
-     * @var string
-     */
-    private $authorized_ca_path;
 
-    public function __construct(string $authorized_ca_path)
+    public function __construct(array $resultatAnalysisOptions)
     {
-        $this->authorized_ca_path = $authorized_ca_path;
+        $this->resultatAnalysisOptions = $resultatAnalysisOptions;
     }
 
-    /**
-     * @throws \RecoverableException
-     */
-    public function verify(string $certificate_path, array $nonBlockingErrors, string $timestamp =null) : void
-    {
-        $verifyCmd = ["openssl","verify","-CApath", $this->authorized_ca_path, $certificate_path];
-
-        if($timestamp){
-            $verifyCmd = ["openssl","verify","-CApath",$this->authorized_ca_path,"-attime",$timestamp, $certificate_path];
-        }
-
-        $this->launch($verifyCmd,$nonBlockingErrors);
-    }
-
-    public function getCommandOutput(Process $process, array $resultatAnalysisOptions): AnalysedOutput
+    public function getCommandOutput(Process $process): AnalysedOutput
     {
         $erreurs = [];
         foreach (explode(PHP_EOL,$process->getErrorOutput()) as $line) {
@@ -44,7 +26,7 @@ class OpensslVerifyCommand extends CommandLauncher
             }
         }
         foreach ($erreurs as $erreur) {
-            if (!in_array($erreur["errorCode"], $resultatAnalysisOptions)) {
+            if (!in_array($erreur["errorCode"], $this->resultatAnalysisOptions)) {
                 return new AnalysedOutput("",[$erreur["message"]]);
             }
         }

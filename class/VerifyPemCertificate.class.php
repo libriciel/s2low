@@ -17,34 +17,16 @@ class VerifyPemCertificate
     /** @var string  */
     private $authorized_ca_path;
     /**
-     * @var \S2low\Services\ProcessCommand\ExtractIssuerHashCommand
+     * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
      */
-    private $extractIssuerHashCommand;
-    /**
-     * @var \S2low\Services\ProcessCommand\ExtractCertificateSNCommand
-     */
-    private $extractCertificateSN;
-    /**
-     * @var \S2low\Services\ProcessCommand\CheckSnInCRLCommand
-     */
-    private $checkSnInCRL;
-    /**
-     * @var \S2low\Services\ProcessCommand\OpensslVerifyCommand
-     */
-    private $opensslVerify;
+    private $openSSLWrapper;
 
     public function __construct(
         string                                                     $authorized_ca_path,
-        \S2low\Services\ProcessCommand\ExtractIssuerHashCommand    $extractIssuerHashCommand,
-        \S2low\Services\ProcessCommand\ExtractCertificateSNCommand $extractCertificateSN,
-        \S2low\Services\ProcessCommand\CheckSnInCRLCommand         $checkSnInCRL,
-        \S2low\Services\ProcessCommand\OpensslVerifyCommand        $opensslVerify
+        \S2low\Services\ProcessCommand\OpenSSLWrapper $openSSLWrapper
     ){
         $this->authorized_ca_path = $authorized_ca_path;
-        $this->extractIssuerHashCommand = $extractIssuerHashCommand;
-        $this->extractCertificateSN = $extractCertificateSN;
-        $this->checkSnInCRL = $checkSnInCRL;
-        $this->opensslVerify = $opensslVerify;
+        $this->openSSLWrapper = $openSSLWrapper;
     }
 
     /**
@@ -53,7 +35,7 @@ class VerifyPemCertificate
     public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
     {
         $this->checkForCrlRevocation($certificate_path);
-        $this->opensslVerify->verify($certificate_path,$filteredErrors,$timestamp);
+        $this->openSSLWrapper->verify($certificate_path,$filteredErrors,$timestamp);
         return true;
     }
 
@@ -64,16 +46,16 @@ class VerifyPemCertificate
      */
     protected function checkForCrlRevocation(string $file) : void
     {
-        $file_r0_name = $this->extractIssuerHashCommand->extract($file);
+        $file_r0_name = $this->openSSLWrapper->extractHash($file);
         $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
-            $serialNumber =$this->extractCertificateSN->extract($file);
+            $serialNumber =$this->openSSLWrapper->extractCertificateSN($file);
             // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
             // On ne vérifie pas
             // 1) la date
             // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-            $this->checkSnInCRL->check($file_r0,$serialNumber);
+            $this->openSSLWrapper->checkSNIsInCRL($file_r0,$serialNumber);
         }
     }
 }

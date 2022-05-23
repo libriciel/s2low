@@ -4,14 +4,9 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class ExtractCertificateSNCommand extends CommandLauncher
+class ExtractCertificateSNCommand implements ICommandOutputTranslator
 {
-    public function extract(string $path) : string
-    {
-        return $this->launch(["openssl","x509","-noout","-serial","-in",$path]);
-    }
-
-    public function getCommandOutput(Process $process, array $resultatAnalysisOptions) : AnalysedOutput
+    public function getCommandOutput(Process $process) : AnalysedOutput
     {
         if (!$process->isSuccessful() || !preg_match("#serial=(.*)#",$process->getOutput(),$serialNumberMatches)) {
             return new AnalysedOutput("",["Impossible d'extraire le SN du certificat"]);

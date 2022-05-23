@@ -4,17 +4,15 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class CheckSnInCRLCommand extends CommandLauncher
+class CheckSnInCRLCommand implements ICommandOutputTranslator
 {
-
-    public function check(string $crlPath, string $serialNumber) : void
-    {
-        $this->launch(["openssl","crl","-in",$crlPath,"-text","-noout"],[$serialNumber]);
+    public function __construct(string $serialNumber){
+        $this->serialNumber = $serialNumber;
     }
 
-    public function getCommandOutput(Process $process, array $resultatAnalysisOptions): AnalysedOutput
+    public function getCommandOutput(Process $process): AnalysedOutput
     {
-        $preg_match = preg_match("#" . $resultatAnalysisOptions[0] . "#", $process->getOutput());
+        $preg_match = preg_match("#" . $this->serialNumber . "#", $process->getOutput());
         if($preg_match === 0){      // Pas trouvé dans le fichier => clairement pas révoqué
             return new AnalysedOutput("");
         }

@@ -31,6 +31,7 @@ $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 
 $r = $heliosPESValidation->validate($pes_content);
 
+$verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 
 $xadesSignature = new XadesSignature(
         XMLSEC1_PATH,
@@ -39,14 +40,9 @@ $xadesSignature = new XadesSignature(
         EXTENDED_VALIDCA_PATH,
         new XadesSignatureParser(),
         new PemCertificateFactory(),
-        new VerifyPemCertificate(
-                EXTENDED_VALIDCA_PATH,
-            new \S2low\Services\ProcessCommand\ExtractIssuerHashCommand(),
-            new \S2low\Services\ProcessCommand\ExtractCertificateSNCommand(),
-            new \S2low\Services\ProcessCommand\CheckSnInCRLCommand(),
-            new \S2low\Services\ProcessCommand\OpensslVerifyCommand(EXTENDED_VALIDCA_PATH)
-        )
+        $verifyPemCertificateFactory->get(EXTENDED_VALIDCA_PATH)
 );
+
 $verify_sign =  true;
 try{
     $xadesSignature->verify($filename);
