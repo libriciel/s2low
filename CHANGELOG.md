@@ -1,3 +1,8 @@
+# 4.3.18
+
+## Correction
+- Empêcher l'envoi vers Pastell de doublons lors de l'archivage (module Helios) #355
+
 # 4.3.17 - 2022-05-17
 
 ## Évolution

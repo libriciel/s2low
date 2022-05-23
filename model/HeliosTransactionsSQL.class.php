@@ -311,7 +311,7 @@ class HeliosTransactionsSQL extends SQL {
 		$module_id = $this->queryOne("SELECT id FROM modules WHERE name=?","helios");
 
 		$date=date('Y-m-d',strtotime("-$nb_days days"));
-		$sql = "SELECT helios_transactions.id FROM helios_transactions ".
+		$sql = "SELECT DISTINCT(helios_transactions.id) FROM helios_transactions ".
 			" JOIN helios_transactions_workflow " .
 			" ON (helios_transactions.id = helios_transactions_workflow.transaction_id AND helios_transactions_workflow.status_id = 8) ".
 			" JOIN authorities ON authorities.id=helios_transactions.authority_id ".
