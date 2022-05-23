@@ -4,7 +4,7 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class OpensslVerifyCommand implements ICommandOutputTranslator
+class OpensslVerifyCommandOutputTranslator implements ICommandOutputTranslator
 {
     const VALIDE = "VALIDE";
 

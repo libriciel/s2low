@@ -31,7 +31,7 @@ class OpenSSLWrapper{
 
         $this->commandLauncher->launch(
             $verifyCmd,
-            new OpensslVerifyCommand($nonBlockingErrors)
+            new OpensslVerifyCommandOutputTranslator($nonBlockingErrors)
         );
     }
 
@@ -42,7 +42,7 @@ class OpenSSLWrapper{
     {
         return $this->commandLauncher->launch(
             ["openssl","x509","-noout","-serial","-in",$path],
-            new ExtractCertificateSNCommand()
+            new ExtractCertificateSNCommandOutputTranslator()
         );
     }
 
@@ -50,7 +50,7 @@ class OpenSSLWrapper{
     {
         return $this->commandLauncher->launch(
             [OPENSSL_PATH,"x509","-noout","-issuer_hash","-in", "$path"],
-            new ExtractIssuerHashCommand()
+            new ExtractIssuerHashCommandOutputTranslator()
         );
     }
 
@@ -58,7 +58,7 @@ class OpenSSLWrapper{
     {
         $this->commandLauncher->launch(
             ["openssl","crl","-in",$crlPath,"-text","-noout"],
-            new CheckSnInCRLCommand($serialNumber)
+            new CheckSnInCRLCommandOutputTranslator($serialNumber)
         );
     }
 }

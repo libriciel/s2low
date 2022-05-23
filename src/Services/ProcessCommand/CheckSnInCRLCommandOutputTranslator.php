@@ -4,7 +4,7 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class CheckSnInCRLCommand implements ICommandOutputTranslator
+class CheckSnInCRLCommandOutputTranslator implements ICommandOutputTranslator
 {
     public function __construct(string $serialNumber){
         $this->serialNumber = $serialNumber;

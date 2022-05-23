@@ -11,7 +11,6 @@
 
 ## Correction
 - Rétablir le fonctionnement de la création de collectivité #803
-- Amélioration de la gestion du lancement des processus extérieurs #750
 
 # 4.3.16 - 2022-05-09
 

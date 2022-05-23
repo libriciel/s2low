@@ -4,7 +4,7 @@ namespace S2low\Services\ProcessCommand;
 
 use Symfony\Component\Process\Process;
 
-class ExtractCertificateSNCommand implements ICommandOutputTranslator
+class ExtractCertificateSNCommandOutputTranslator implements ICommandOutputTranslator
 {
     public function getCommandOutput(Process $process) : AnalysedOutput
     {
