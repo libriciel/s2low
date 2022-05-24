@@ -186,6 +186,25 @@ class HeliosTransactionSQLTest extends S2lowTestCase {
 		);
 	}
 
+    public function testGetTransactionToArchiveDoubleInformationDisponible(){
+        $this->configurePastell();
+        $transaction_id = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id,
+            HeliosStatusSQL::INFORMATION_DISPONIBLE,
+            "test"
+        );
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id,
+            HeliosStatusSQL::INFORMATION_DISPONIBLE,
+            "test doublon information disponible"
+        );
+        $this->assertEquals(
+            [$transaction_id],
+            $this->heliosTransactionSQL->getTransactionToPrepareToSAE(-1)
+        );
+    }
+
     public function testSetPesAcquitAvailable(){
         $transaction_id = $this->createTransaction();
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
