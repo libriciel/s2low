@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 
 class CommandLauncher
 {
-   public function launch(string $commmand, ICommandOutputTranslator $outputTranslator): string
+   public function launch(array $commmand, ICommandOutputTranslator $outputTranslator): string
    {
        $process = new Process($commmand);
        try{
