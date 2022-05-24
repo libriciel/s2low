@@ -101,13 +101,14 @@ class HeliosEnvoiControler {
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
+        $verifyPemFactory = new VerifyPemCertificateFactory();
 		$xadesSignature = new XadesSignature(
 		    XMLSEC1_PATH, new PKCS12(),
             new X509Certificate(),
             EXTENDED_VALIDCA_PATH,
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
+            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
         );
 		$heliosSignatureTechnique = new HeliosSignatureTechnique(
 			$this->heliosTransactionsSQL,

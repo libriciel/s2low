@@ -21,6 +21,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function getXadesSignature(){
+        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 		$xadesSignature = new XadesSignature(
 			XMLSEC1_PATH,
 			new PKCS12(),
@@ -28,7 +29,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 			__DIR__ . "/fixtures/validca_for_xades/",
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
+            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
 		);
 		return $xadesSignature;
 	}
@@ -55,7 +56,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
         $xadesSignatureParser->method("extractXadesSigningTime")
             ->willReturn(new DateTime("2019-01-01"));
-
+        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             new PKCS12(),
@@ -63,7 +64,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
-            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
+            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
         );
 		$xadesSignature->verify($signed_file); //Test no exception is thrown
         $this->assertTrue(true);
@@ -165,7 +166,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
         $xadesSignatureParser->method("extractXadesSigningTime")
             ->willReturn($dateTime);
-
+        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             new PKCS12(),
@@ -173,7 +174,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
-            new VerifyPemCertificate(__DIR__ . "/fixtures/validca_for_xades/")
+            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
         );
 
         $verify = true;
