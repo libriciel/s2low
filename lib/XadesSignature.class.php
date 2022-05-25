@@ -243,15 +243,19 @@ class XadesSignature {
                 $timeStamp = $signingTime->getTimestamp();
             }
 
-            $this->verifyPemCertificate->checkCertificateWithOpenSSL(
-                $file,
-                [
-                    3,  //X509_V_ERR_UNABLE_TO_GET_CRL
-                    11,  //X509_V_ERR_CRL_NOT_YET_VALID
-                    12  //X509_V_ERR_CRL_HAS_EXPIRED
-                ],
-                $timeStamp
-            );
+            try{
+                $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+                    $file,
+                    [
+                        3,  //X509_V_ERR_UNABLE_TO_GET_CRL
+                        11,  //X509_V_ERR_CRL_NOT_YET_VALID
+                        12  //X509_V_ERR_CRL_HAS_EXPIRED
+                    ],
+                    $timeStamp
+                );
+            } finally {
+                unlink($file);
+            }
 
             if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
                 throw new Exception("Impossible d'affirmer que la signature correspond au fichier");

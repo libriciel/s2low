@@ -3,6 +3,7 @@
 ## Correction
 - Empêcher l'envoi vers Pastell de doublons lors de l'archivage (module Helios) #355
 - Amélioration de la gestion du lancement des processus extérieurs #750
+- Suppression des fichiers temporaires générés lors de la vérification des signatures XADES #804
 
 # 4.3.17 - 2022-05-17
 
