@@ -197,4 +197,44 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
             [new DateTime("2022-11-05T11:33:15Z"),false]     // Limite haute du certificat AC_ADULLACT_ROOT_G3
         ];
     }
+
+    public function testcheckCertificateWithOpenSSLThrowException(){
+        $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $verifyPemCertificate = $this->getMockBuilder(VerifyPemCertificate::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $verifyPemCertificate->method("checkCertificateWithOpenSSL")
+            ->willThrowException(new Exception("Test"));
+
+        $verifyPemCertificateFactory = $this->getMockBuilder(VerifyPemCertificateFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $verifyPemCertificateFactory->method("get")->willReturn($verifyPemCertificate);
+
+        $xadesSignature = new XadesSignature(
+            XMLSEC1_PATH,
+            new PKCS12(),
+            new X509Certificate(),
+            __DIR__ . "/fixtures/validca_for_xades/",
+            $xadesSignatureParser,
+            new PemCertificateFactory(),
+            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
+        );
+
+        $filesBeforeVerify = glob('/tmp/s2low_xades_*');
+        try{
+            $xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau.xml");
+        } catch (Exception $e){
+            $filesAfterVerify = glob('/tmp/s2low_xades_*');
+            $this->assertSameSize(
+                $filesAfterVerify,
+                $filesBeforeVerify
+            );
+        }
+    }
 }
