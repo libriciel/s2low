@@ -301,7 +301,7 @@ class Log extends DataObject {
 	$data[] = $this->message;
 
 
-	$log = implode($data, "**||**");
+	$log = implode( "**||**",$data);
 
 	return $log;
   }
@@ -325,7 +325,7 @@ class Log extends DataObject {
         $data[] = $this->message;
 
 
-        $log = implode($data, "**||**");
+        $log = implode( "**||**",$data);
 
         return $log;
     }

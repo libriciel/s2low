@@ -124,13 +124,13 @@ class HeliosTransactionsListe {
 		if (! $this->filter){
 			return "";
 		}
-		return "WHERE " . implode($this->filter, " AND ");
+		return "WHERE " . implode(" AND ", $this->filter);
 	}
 	
 	public function getNbTransaction(){
 		$where = "";
 		if ($this->filter) {
-			$where = "WHERE " . implode($this->filter, " AND ");
+			$where = "WHERE " . implode(" AND ", $this->filter);
 		}
 		$sql = "SELECT count(id)   " .
 				" FROM helios_transactions  " .

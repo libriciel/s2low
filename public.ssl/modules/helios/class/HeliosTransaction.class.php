@@ -172,11 +172,11 @@ class HeliosTransaction extends DataObject {
     */
   public function get_IdTransaction($filename) {
 
-    $sql = "SELECT id FROM helios_transactions" . " WHERE filename=" . pg_escape_string($filename);
+    $sql = "SELECT id FROM helios_transactions" . " WHERE filename=?";
 
     $db = DatabasePool :: getInstance();
 
-    $result = $db->select($sql);
+    $result = $db->select($sql,[$filename]);
 
     if (!$result->isError()) {
       $row = $result->get_next_row();
@@ -549,11 +549,11 @@ class HeliosTransaction extends DataObject {
   }
   
   public function CheckDuplicate() {
-  		$sql = "select sha1 FROM helios_transactions WHERE sha1='".pg_escape_string($this->sha1)."'";
+  		$sql = "select sha1 FROM helios_transactions WHERE sha1=?";
 	
 		$db =DatabasePool::getInstance();
 	
-		$result = $db->select($sql);
+		$result = $db->select($sql,[$this->sha1]);
 		if (! $result->isError() && $result->get_next_row()) 
 			return true;
 		return false;

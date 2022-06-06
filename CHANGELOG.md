@@ -1,3 +1,8 @@
+# 5.0.0
+
+## Évolution
+- Passage en PHP 8.1 / Ubuntu 22.04 et adaptation du code
+
 # 4.3.18 - 2022-06-13
 
 ## Correction

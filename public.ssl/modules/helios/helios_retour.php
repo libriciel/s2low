@@ -75,7 +75,7 @@ if (isset ($fnum) && !empty ($fnum)) {
 
 $where = "";
 if (count($filter) > 0) {
-  $where = " WHERE " . implode($filter, " AND ");
+  $where = " WHERE " . implode(" AND ", $filter);
 }
 
 

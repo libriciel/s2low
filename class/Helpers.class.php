@@ -204,6 +204,20 @@ class Helpers {
 	return mktime($hour, 0, 0, $month, $day, $year);
   }
 
+  public static function TimestampToString($timestamp){
+      $myDateTime = new DateTime();
+      $myDateTime->setTimestamp($timestamp);
+      $pattern = "d MMMM YYYY";
+          $formatter = new IntlDateFormatter(
+              'fr_FR',
+              IntlDateFormatter::FULL,
+              IntlDateFormatter::FULL,
+              'Europe/Paris',
+              IntlDateFormatter::GREGORIAN,
+              $pattern);
+          return utf8_decode($formatter->format($myDateTime));
+  }
+
   /**
    * \brief Méthode traitant une variable récupérée depuis une base de données (prise en compte de l'échappement)
    * \param $var mixed : valeur récupérée depuis la base de données
@@ -224,7 +238,7 @@ class Helpers {
    * \return La chaîne avec tous les guillemets doubles précédés d'un \
   */
   public static function escapeForXML($str) {
-	return str_replace("\"", "\\\"", $str);
+	return str_replace("\"", "\\\"", $str ?? ""); // Quickfix php 8
   }
 
   /**
@@ -274,7 +288,7 @@ class Helpers {
    * \return Le timestamp correspondant
   */
   public static function getTimestampFromBDDDate($date) {
-	if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})\s+([0-9]{2}):([0-9]{2}):([0-9]{2}).*$/", $date, $matches)) {
+	if (preg_match("/^([0-9]{4})-([0-9]{2})-([0-9]{2})\s+([0-9]{2}):([0-9]{2}):([0-9]{2}).*$/", $date ?? "", $matches)) { //Quickfix php 8
 	  $year = $matches[1];
 	  $month = $matches[2];
 	  $day = $matches[3];
@@ -296,14 +310,21 @@ class Helpers {
   */
   public static function getDateFromBDDDate($date, $with_hours = false) {
 	if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
-
-	  $str = utf8_decode( strftime("%e %B %Y", $timestamp) );
+        $myDateTime = new DateTime();
+        $myDateTime->setTimestamp($timestamp);
+	  $pattern = "d MMMM YYYY";//"j F Y";
 
 	  if ($with_hours) {
-		$str .= ' à ' . utf8_decode(strftime('%Hh%Mmin%Ss', $timestamp));
+          $pattern = $pattern . utf8_encode(" à ")."HH'h'mm'min'ss's'";//"j F Y ";//\a H\hi\m\i\ns\s";
 	  }
-
-	  return $str;
+        $formatter = new IntlDateFormatter(
+            'fr_FR',
+            IntlDateFormatter::FULL,
+            IntlDateFormatter::FULL,
+            'Europe/Paris',
+            IntlDateFormatter::GREGORIAN,
+            $pattern);
+        return utf8_decode($formatter->format($myDateTime));
 	}
 
 	return null;
@@ -556,6 +577,9 @@ class Helpers {
         if (is_null($var) && !$nullable) {
             throw new UnexpectedValueException("$name est null ");
         }
+        if (is_null($var) && $nullable) {
+            return $var;
+        }
         if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
             throw new UnexpectedValueException("$name n'est pas un entier");
         }
@@ -563,6 +587,12 @@ class Helpers {
     }
 
     public static function checkDate(?string $var, bool $nullable, string $name){
+        if($nullable && is_null($var)){
+            return $var;
+        }
+        if(!$nullable && is_null($var)){
+            throw new UnexpectedValueException("$name n'est pas une date");
+        }
         if(!strtotime($var) && !((is_null($var) ||!$var ) && $nullable)){
             throw new UnexpectedValueException("$name n'est pas une date");
         }

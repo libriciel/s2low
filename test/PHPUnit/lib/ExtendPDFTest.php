@@ -17,9 +17,10 @@ class ExtendPdfTest extends PHPUnit_Framework_TestCase {
 		$this->extendPDF->Header();
 
 		$this->extendPDF->RoundedRect(10,10,100,100,3,'DF','13');
+        $this->extendPDF->SetMyWidths([100,100,100,100]);   // Quickfix php8
 		$this->extendPDF->myRow(array("","Etat","Date", "Message"));
 
-		$this->extendPDF->SetMyWidths(100);
+		$this->extendPDF->SetMyWidths([100,100,100]);
 		$this->extendPDF->SetMyAligns(array(1,2,3));
 		$this->extendPDF->setMyBorder("TBRL");
 		$this->extendPDF->Footer();

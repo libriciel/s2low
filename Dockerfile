@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as s2low_base
+FROM ubuntu:22.04 as s2low_base
 
 EXPOSE 443 80
 WORKDIR /var/www/s2low/
@@ -13,7 +13,7 @@ RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
 #Composer
 COPY ./composer.* /var/www/s2low/
-RUN composer install
+RUN composer install --ignore-platform-reqs
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/

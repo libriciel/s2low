@@ -264,10 +264,10 @@ class ActesTransmissionWindow extends DataObject {
 	  $end_date = date('Y-m-d H:i:s', ($this->window_end_stamp - 1));
 
 	  $sql = "SELECT DISTINCT transmission_window_id FROM actes_transmission_window_hours"
-		. " WHERE ((window_begin <= '" . pg_escape_string($start_date) . "' AND window_end >= '" . pg_escape_string($start_date) . "')"
-		. " OR (window_begin <= '" . pg_escape_string($end_date) . "' AND window_end >= '" . pg_escape_string($end_date) . "')"
+		. " WHERE ((window_begin <= ? AND window_end >= ?)"
+		. " OR (window_begin <= ? AND window_end >= ?)"
 		// Notre intervalle englobe totalement un autre intervalle
-		. " OR (window_begin >= '" . pg_escape_string($start_date) . "' AND window_end <= '" . pg_escape_string($end_date) . "'))";
+		. " OR (window_begin >= ? AND window_end <= ?))";
 
 	  // Ne pas tenir compte des chevauchements avec nous-même
 	  if (! $this->isNew()) {
@@ -277,7 +277,7 @@ class ActesTransmissionWindow extends DataObject {
 	  //echo $sql;
 	  //exit();
 
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,[$start_date,$start_date,$end_date,$end_date,$start_date,$end_date]);
 
 	  if (! $result->isError() && $result->num_row() > 0) {
 		while ($row = $result->get_next_row()) {

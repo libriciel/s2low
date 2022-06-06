@@ -22,9 +22,18 @@ class LogsController extends Controller {
 		$logs_date_min  = $this->getObjectInstancier()->get('LogsSQL')->getMinDate();
 		$logs_history_date_max  = $this->getObjectInstancier()->get('LogsHistoriqueSQL')->getMaxDate();
 
-		$logs_history_date_max =  date("Y-m-d",strtotime($logs_history_date_max));
+        $timestamp_max = null; //Quickfix php 8
+        if(!is_null($logs_history_date_max)){
+            $timestamp_max = strtotime($logs_history_date_max);
+        }
+        $logs_history_date_max =  date("Y-m-d", $timestamp_max);
 
-		$date_debut_default = date("Y-m-d",strtotime($logs_date_min));
+        $timestamp_min = null;
+
+        if(!is_null($logs_date_min)){
+            $timestamp_min = strtotime($logs_date_min);
+        }
+        $date_debut_default = date("Y-m-d", $timestamp_min);
 
 		$this->date_debut = date("Y-m-d",strtotime($recuperateur->get("date_debut",$date_debut_default)));
 		$this->date_fin =  date("Y-m-d",strtotime($recuperateur->get("date_fin",date("Y-m-d"))));

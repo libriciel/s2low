@@ -36,7 +36,7 @@ class ActesTransactionsSQL extends SQL{
 
 	public function updateStatus($transaction_id,$status_id,$message,$flux_retour=''){
 
-		$message = substr($message,0,512);
+		$message = substr($message ?? '',0,512); // quickfix transition 8.0
 
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message,flux_retour) " .
@@ -269,11 +269,18 @@ class ActesTransactionsSQL extends SQL{
         $nature = $this->queryOne($sql2,$info['nature_code']);
 
 
+
+        if(!is_null($info['decision_date'])){
+            $datetemp = strtotime($info['decision_date']);
+        } else {
+            $datetemp = time();
+        }
+
         return sprintf(
             "%s-%s-%s-%s-%s",
             $info['department'],
             $info['siren'],
-            date("Ymd",strtotime($info['decision_date'])),
+            date("Ymd",$datetemp), #Quickfix passge php8
             $info['number'],
             $nature
         );

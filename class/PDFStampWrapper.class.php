@@ -79,6 +79,9 @@ class PDFStampWrapper {
     }
 
     private function getDateFr($date){
+        if(is_null($date)){
+            return date('d/m/Y');
+        }
         return date('d/m/Y',strtotime($date));
     }
 

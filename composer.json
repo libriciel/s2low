@@ -8,12 +8,12 @@
     "pda/pheanstalk": "^3.1",
     "symfony/process": "^5.1",
     "php-imap/php-imap": "^3.0",
-    "ext-fileinfo": "^1.0",
-    "ext-SimpleXML": "^7.2",
+    "ext-fileinfo": "^8.1.0",
+    "ext-SimpleXML": "^8.1",
     "malkusch/lock": "^2.1",
-    "ext-redis": "^3.1",
-    "ext-pcntl": "^7.2",
-    "ext-libxml": "^7.2",
+    "ext-redis": "^5.3",
+    "ext-pcntl": "^8.1",
+    "ext-libxml": "^8.1",
     "symfony/finder": "^4.3",
     "ext-zip": "^1.15",
     "ext-iconv": "*",
@@ -23,10 +23,12 @@
     "symfony/monolog-bridge": "^5.1",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "ext-json": "^1.6",
+    "ext-json": "^8.1",
     "libriciel/tdt-lib-actes": "^1.4",
     "ext-dom": "*",
-    "erusev/parsedown": "^1.7"
+    "erusev/parsedown": "^1.7",
+    "ext-pgsql": "*",
+    "ext-intl": "*"
   },
 
   "require-dev": {

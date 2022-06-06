@@ -6,8 +6,20 @@ class AdminSAEControllerTest extends S2lowTestCase {
 		$this->setSuperAdminAuthentication();
 		$adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
 
+
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "test";
+        $pastellProperties->login = "login";
+        $pastellProperties->password = "password";
+        $pastellProperties->id_e = 42;
+
+        $authoritySQL->updateSAE(1,$pastellProperties);
+
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
+
 		$adminServiceController->_actionBefore("AdminSAE","edit");
-		$adminServiceController->editAction();
+		$adminServiceController->editAction();  //BUG ??
 		$this->expectOutputRegex("#Identifiant de l'entité#");
 		$adminServiceController->_actionAfter();
 	}

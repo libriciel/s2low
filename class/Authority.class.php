@@ -88,9 +88,9 @@ class Authority extends DataObject {
 	if (! empty($this->department) && ! empty($this->district)) {
 	  $str = "";
 
-	  $sql = "SELECT id, name FROM authority_departments WHERE code='" . pg_escape_string($this->department) . "'";
+	  $sql = "SELECT id, name FROM authority_departments WHERE code=?";
 
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,[$this->department]);
 	  
 	  if (! $result->isError() && $result->num_row() == 1) {
 		$row = $result->get_next_row();
@@ -103,13 +103,14 @@ class Authority extends DataObject {
 
 	  $str .= "&nbsp;/&nbsp;";
 
-	  $sql = "SELECT name FROM authority_districts WHERE code='" . pg_escape_string($this->district) . "'";
-
+	  $sql = "SELECT name FROM authority_districts WHERE code=?";
+      $sqlParams = [$this->district];
 	  if ($deptId) {
-		$sql .= " AND authority_department_id=" . $deptId;
+		$sql .= " AND authority_department_id=?";
+        $sqlParams[]=$deptId;
 	  }
 
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,$sqlParams[]);
 	  
 	  if (! $result->isError() && $result->num_row() == 1) {
 		$row = $result->get_next_row();
@@ -199,11 +200,11 @@ class Authority extends DataObject {
   
   public function getModulePermByName($module_name)
   {
-  	$sql = "SELECT id FROM modules WHERE name='".pg_escape_string($module_name)."'";
+  	$sql = "SELECT id FROM modules WHERE name=?";
 
     $db = DatabasePool::getInstance();
 	
-    $result = $db->select($sql);
+    $result = $db->select($sql,[$module_name]);
     if (! $result->isError()) {
     	$row=$result->get_next_row();
     	$id=$row["id"];
@@ -248,9 +249,9 @@ class Authority extends DataObject {
 
 	if ($module_perms) {
 	  // Traitement permissions sur les modules
-	  $sql = "DELETE FROM modules_authorities WHERE authority_id=" . pg_escape_string($this->id);
+	  $sql = "DELETE FROM modules_authorities WHERE authority_id=?";
 
-	  if (! $this->db->exec($sql)) {
+	  if (! $this->db->exec($sql,[$this->id])) {
 		$this->errorMsg = "Erreur lors de la réinitialisation des permissions de la collectivité.";
 		$this->db->rollback();
 		return false;
@@ -259,9 +260,9 @@ class Authority extends DataObject {
 	  if (count($this->modulesPerms) > 0) {
 		reset($this->modulesPerms);
 		foreach ($this->modulesPerms as $module_id => $val) {
-		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(" . pg_escape_string($module_id) . ", " . pg_escape_string($this->id) . ")";
+		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(?,?)";
 		  
-		  if (! $this->db->exec($sql)) {
+		  if (! $this->db->exec($sql,[$module_id,$this->id])) {
 			$this->errorMsg = "Erreur lors de la sauvegarde des permissions de la collectivité.";
 			$this->db->rollback();
 			return false;
@@ -300,9 +301,9 @@ class Authority extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM modules_authorities WHERE authority_id=" . pg_escape_string($id);
+	$sql = "DELETE FROM modules_authorities WHERE authority_id=?";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
 	  $this->db->rollback();
 	  return false;
@@ -378,11 +379,11 @@ class Authority extends DataObject {
   }
   
   public static function getSirenFromId($id){
-    $sql = "SELECT siren FROM authorities WHERE id = ". pg_escape_string($id);
+    $sql = "SELECT siren FROM authorities WHERE id = ?";
 
     $db =DatabasePool::getInstance();
 
-    $result = $db->select($sql);
+    $result = $db->select($sql,[$id]);
 
     if (!$result->isError() && $result->num_row() == 1) {
       $row = $result->get_next_row();
@@ -443,9 +444,9 @@ class Authority extends DataObject {
 	  while ($row = $result->get_next_row()) {
 		$types[] = array("code" => $row["id"], "description" => $row["description"], "type" => "parent");
 
-		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=" . pg_escape_string($row["id"])." ORDER BY id";
+		$sql = "SELECT id, parent_type_id, description FROM authority_types WHERE parent_type_id=? ORDER BY id";
 
-		$result2 = $db->select($sql);
+		$result2 = $db->select($sql,[$row["id"]]);
 		if (! $result2->isError()) {
 		  while ($row2 = $result2->get_next_row()) {
 			$types[] = array("code" => $row2["id"], "description" => $row2["description"], "type" => "child");
@@ -514,11 +515,11 @@ class Authority extends DataObject {
 	$districts = array();
 
 	if (isset($dept) && ! empty($dept)) {
-	  $sql = "SELECT authority_districts.code, authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code='" . pg_escape_string($dept) . "'";
+	  $sql = "SELECT authority_districts.code, authority_districts.name FROM authority_districts LEFT JOIN authority_departments ON authority_districts.authority_department_id=authority_departments.id WHERE authority_departments.code=?";
 
 	  $db =DatabasePool::getInstance();
 
-	  $result = $db->select($sql);
+	  $result = $db->select($sql,[$dept]);
 
 	  if (! $result->isError()) {
 		while ($row = $result->get_next_row()) {

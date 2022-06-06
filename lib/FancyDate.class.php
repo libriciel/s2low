@@ -7,7 +7,7 @@ class FancyDate {
 		if (! $date){
 			return false;
 		}
-		return utf8_decode(strftime("%e %B %Y", strtotime($date)));
+		return Helpers::TimestampToString(strtotime($date));
 	}
 
 	public function getDateHeureFrancais($date){

@@ -209,8 +209,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotEmpty($pastellWrapper->postARActes(42,__DIR__));
 
 		$this->assertNotEmpty($pastellWrapper->postRelatedTransaction(
-			42,[1=>'courier simple'],[[1,2]],[1,2])
-		);
+			42,[1=>'courier simple'],[[1,2]],[[1,2]])               // Par symétrie entre les rôles de $echange_prefecture
+		);                                                              // et $echange_prefecture_ar
 
 		$this->assertNotEmpty($pastellWrapper->sendSAE(42));
 		$this->assertNotEmpty($pastellWrapper->getInfo(42));

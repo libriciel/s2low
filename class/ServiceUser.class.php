@@ -11,14 +11,20 @@ class ServiceUser {
   	}
 	
 	function add($name,$authority_id){
-		$sql = "SELECT * FROM service_user WHERE name='".pg_escape_string($name)."' AND authority_id=".pg_escape_string($authority_id);
-		$result = $this->db->select($sql);
+		$sql = "SELECT * FROM service_user WHERE name=? AND authority_id=?";
+		$result = $this->db->select(
+            $sql,
+            [$name,$authority_id]
+        );
 		if ($result->num_row() != 0){
 			return false;
 		}
 		
-		$sql = "INSERT INTO service_user(name,authority_id) VALUES ('".pg_escape_string($name)."',".pg_escape_string($authority_id).") RETURNING id";
-		return $this->db->exec($sql);
+		$sql = "INSERT INTO service_user(name,authority_id) VALUES (?,?) RETURNING id";
+		return $this->db->exec(
+            $sql,
+            [$name,$authority_id]
+        );
 		//return true;
 	}
 	
@@ -26,8 +32,8 @@ class ServiceUser {
 		if ($authority_id == null){
 			return array();
 		}
-		$sql = "SELECT service_user.* FROM service_user WHERE authority_id =".pg_escape_string($authority_id)." ORDER by service_user.name";
-		$result = $this->db->select($sql);
+		$sql = "SELECT service_user.* FROM service_user WHERE authority_id =? ORDER by service_user.name";
+		$result = $this->db->select($sql,[$authority_id]);
 		$tabResult = array();
 		while ($ligne = $result->get_next_row()){
 			$tabResult[] = $ligne;
@@ -57,21 +63,30 @@ class ServiceUser {
 
     public function getGroupe($id)
     {
-        $sql = "SELECT s1.*,s2.name as parent_name FROM service_user s1 LEFT JOIN service_user s2 ON s1.parent_id=s2.id where s1.id=".pg_escape_string($id);
-        return $this->db->getOneLine($sql);
+        $sql = "SELECT s1.*,s2.name as parent_name FROM service_user s1 LEFT JOIN service_user s2 ON s1.parent_id=s2.id where s1.id=?";
+        return $this->db->getOneLine($sql,[$id]);
     }
 
 	
 	function getListUser($id){
-		return $this->db->fetchAll("SELECT * FROM service_user_content JOIN users ON service_user_content.id_user=users.id WHERE id_service=".pg_escape_string($id));
+		return $this->db->fetchAll(
+            "SELECT * FROM service_user_content JOIN users ON service_user_content.id_user=users.id WHERE id_service=?",
+            [$id]
+        );
 	}
   	
 	function addUser($id_user,$id_service){
-		$l = $this->db->getOneLine("SELECT * FROM service_user_content WHERE id_user=".pg_escape_string($id_user)." AND id_service=".pg_escape_string($id_service));
+		$l = $this->db->getOneLine(
+            "SELECT * FROM service_user_content WHERE id_user=? AND id_service=?",
+            [$id_user,$id_service]
+        );
 		if ($l){
 			return ;
 		}
-		$this->db->select("INSERT INTO service_user_content(id_user,id_service) VALUES (".pg_escape_string($id_user).",".pg_escape_string($id_service).")");
+		$this->db->select(
+            "INSERT INTO service_user_content(id_user,id_service) VALUES (?,?)",
+            [$id_user,$id_service]
+        );
 	}
 	
 	function getServiceFromUser($id_user){

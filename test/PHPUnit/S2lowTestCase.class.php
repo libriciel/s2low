@@ -85,6 +85,7 @@ abstract class S2lowTestCase extends TestCase {
         $this->getObjectInstancier()->set('helios_ftp_port','HELIOS_FTP_PORT');
         $this->getObjectInstancier()->set('helios_ftp_login','HELIOS_FTP_LOGIN');
         $this->getObjectInstancier()->set('helios_ftp_password','HELIOS_FTP_PASSWORD');
+        $this->getObjectInstancier()->set('image_for_stamp',SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
 	}
 
 	public function getConnection() {

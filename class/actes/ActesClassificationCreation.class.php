@@ -220,7 +220,7 @@ class ActesClassificationCreation {
 		$env->set("department", $this->authority->get("department"));
 		$env->set("district", $this->authority->get("district"));
 		$env->set("authority_type_code", $this->authority->get("authority_type_id"));
-		$env->set("return_mail", implode($mailRetour, '|'));
+		$env->set("return_mail", implode( '|',$mailRetour));
 		$env->set("name", $this->user->getprettyName());
 		$env->set("telephone", $telephone);
 		$env->set("email", $this->user->get("email"));

@@ -46,8 +46,12 @@ class ObjectInstancier {
 		$param = array();
 		foreach($allParameters as $parameters){
 			/* @var $parameters ReflectionParameter */
-        	$param_name = $parameters->getClass() ? $parameters->getClass()->name : $parameters->name;
-        	
+
+            if($parameters->getType()){
+                $param_name =  $parameters->getType()->getName();
+            } else {
+                $param_name =  $parameters->name;
+            }
         	try {
         		$bind_value = $this->$param_name;
         	} catch (Exception $e){

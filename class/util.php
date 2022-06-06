@@ -13,7 +13,7 @@ function get_url_same_page(array $params) {
 
 function utf8_encode_array($array){
 	if (! is_array($array)){
-		return utf8_encode($array);
+		return utf8_encode($array ?? ''); // Quickfix migration PHP 8.0
 	}
 	$result = array();
 	foreach ($array as $cle => $value) {

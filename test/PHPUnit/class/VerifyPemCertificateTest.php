@@ -103,7 +103,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/self signed certificate/");
+        $this->expectExceptionMessageMatches("/self-signed certificate/");
         $this->assertTrue($verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR."/autosignedDateOk/cert.pem"));
     }
 
@@ -112,7 +112,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/self signed certificate/");
+        $this->expectExceptionMessageMatches("/self-signed certificate/");
         $verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR."/autosignedDateKo/cert.pem");
     }
 
