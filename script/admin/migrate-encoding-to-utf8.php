@@ -5,7 +5,6 @@ use Symfony\Component\Finder\Finder;
 require_once( __DIR__."/../../init/init.php");
 
 function changeEncoding($filepath){
-    echo "Fichier traité : $filepath\n";
     $oldContent = file_get_contents($filepath);
     try{
         $newContent = mb_convert_encoding($oldContent,'UTF-8',"ISO-8859-9");
@@ -29,13 +28,13 @@ foreach ($finder as $file) {
     $fileNameWithExtension = $file->getRelativePathname();
     $mb_detect_encoding = mb_detect_encoding(file_get_contents($absoluteFilePath));
     if($mb_detect_encoding != "UTF-8"){
-        echo "$mb_detect_encoding traité\n";
+        echo "$mb_detect_encoding traité $fileNameWithExtension\n";
         if($mb_detect_encoding != "ASCII"){
             $aVerifier[] = $file->getRelativePathname();
         }
         changeEncoding($absoluteFilePath);
     } else{
-        echo "$mb_detect_encoding non traité\n";
+        echo "$mb_detect_encoding non traité $fileNameWithExtension\n";
     }
 }
 
