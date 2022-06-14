@@ -12,7 +12,7 @@ class AdminSAEController extends Controller {
 		$id = $recuperateur->getInt('id');
 		$this->id = $id;
 		$this->authorityInfo = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo($id);
-		$this->pastellProperties = $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->getPastellProperties($id);
+		$this->pastellProperties = $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->getPastellProperties($id); //BUG ??
 		$this->title = "SAE - Configuration";
 	}
 

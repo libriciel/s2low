@@ -14,8 +14,8 @@ class LogTimestampTokenGarbage
     private $s2lowLogger;
 
     public function __construct(
-        string $old_timestamp_token_directory,
-        int $timestamp_token_retention_nb_days,
+        $old_timestamp_token_directory,     //Quickfix PHP 8
+        $timestamp_token_retention_nb_days, //Quickfix PHP 8
         LogsHistoriqueSQL $logsHistoriqueSQL,
         S2lowLogger $s2lowLogger
     )

@@ -38,7 +38,7 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase {
 	public function testRetrieveClientInfoWithEmptyCert(){
 		$_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
 		$info = $this->x509Certificate->retrieveClientInfo();
-		$this->assertNull($info['issuer']);
+		$this->assertFalse($info);
 	}
 
 	public function testRetrieveClientInfoWithCert(){

@@ -73,8 +73,13 @@ class AdminControllerTest extends S2lowTestCase {
 		$adminController->authoritySiretAddAction();
 	}
 
-	public function testDelSiret(){
-        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id',42);
+	public function testDelSiret(){     //Migration php 8 : ce test ne fonctionnait pas ...
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_siret_id',"06552185881996");
+
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
+        $authority_siret_id = $authoritySiret->add(1, "06552185881996");
+
+        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_siret_id',$authority_siret_id);
 
         $this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");

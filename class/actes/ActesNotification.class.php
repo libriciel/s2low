@@ -86,7 +86,7 @@ class ActesNotification {
         $authority_info = $this->authoritySQL->getInfo($transaction_info['authority_id']);
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
 
-		$defaultBroadcastEmail =explode(',',$authority_info['default_broadcast_email']);
+		$defaultBroadcastEmail =explode(',',$authority_info['default_broadcast_email'] ?? '');
 		$brodcastEmail =explode(',',$transaction_info['broadcast_emails']);
 		$brodcastEmail = array_diff($brodcastEmail,$defaultBroadcastEmail);
 

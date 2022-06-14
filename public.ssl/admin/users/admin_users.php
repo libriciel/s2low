@@ -58,7 +58,7 @@ if (isset($fname) && strlen($fname) > 0) {
 
 $where = "";
 if (count($filter) > 0) {
-  $where = "WHERE " . implode($filter, " AND ");
+  $where = "WHERE " . implode(" AND ", $filter);
 }
 
 // Récupération de la liste des utilisateurs en fonction du filtre

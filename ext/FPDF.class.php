@@ -662,7 +662,7 @@ function MultiCell($w, $h, $txt, $border=0, $align='J', $fill=false)
 	if($w==0)
 		$w = $this->w-$this->rMargin-$this->x;
 	$wmax = ($w-2*$this->cMargin)*1000/$this->FontSize;
-	$s = str_replace("\r",'',$txt);
+	$s = str_replace("\r",'',$txt??"");
 	$nb = strlen($s);
 	if($nb>0 && $s[$nb-1]=="\n")
 		$nb--;
@@ -1040,8 +1040,8 @@ protected function _dochecks()
 	if(ini_get('mbstring.func_overload') & 2)
 		$this->Error('mbstring overloading must be disabled');
 	// Ensure runtime magic quotes are disabled
-	if(get_magic_quotes_runtime())
-		@set_magic_quotes_runtime(0);
+	if(version_compare(PHP_VERSION, '7.4.0', '<') && get_magic_quotes_runtime()) //Quickfix migration php8.0
+		@set_magic_quotes_runtime(0);			// https://stackoverflow.com/questions/64526630/how-to-replace-get-magic-quotes-runtime-in-php7-4
 }
 
 protected function _checkoutput()

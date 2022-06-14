@@ -20,7 +20,7 @@ class OpenStackStateManagerTest extends S2lowTestCase {
     {
         parent::setUp();
         $this->logger = new Logger("test");
-        $this->handler = new  Monolog\Handler\TestHandler('php://stdout',Monolog\Logger::EMERGENCY);
+        $this->handler = new  Monolog\Handler\TestHandler();
         $this->logger->pushHandler($this->handler);
     }
 
@@ -78,7 +78,7 @@ class OpenStackStateManagerTest extends S2lowTestCase {
         $classe = new OpenStackStateManager($this->logger);
 
         $classe->declareException($exception);
-
+        
         $this->assertEquals("[Openstack][1] {$message}",
             $this->handler->getRecords()[0]["message"]);
     }

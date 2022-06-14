@@ -111,8 +111,12 @@ class Database {
 	 * @return array
 	 * @throws Exception
 	 */
-	public function getOneLine($sql){
-		return $this->sqlQuery->queryOne($sql);
+	public function getOneLine($sql,$params=[]){
+        if ( ! is_array($params)){
+            $params = func_get_args();
+            array_shift($params);
+        }
+		return $this->sqlQuery->queryOne($sql,$params);
 	}
 
 	/**

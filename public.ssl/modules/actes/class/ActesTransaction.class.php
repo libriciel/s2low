@@ -329,9 +329,9 @@ class ActesTransaction extends DataObject {
   */
   public function isUnique($authority_id) {
     if (isset ($this->number)) {
-      $sql = "SELECT actes_transactions.id FROM actes_transactions LEFT JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id LEFT JOIN users ON actes_envelopes.user_id=users.id WHERE actes_transactions.number='" . pg_escape_string($this->number) . "' AND users.authority_id=" . $authority_id;
+      $sql = "SELECT actes_transactions.id FROM actes_transactions LEFT JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id LEFT JOIN users ON actes_envelopes.user_id=users.id WHERE actes_transactions.number=? AND users.authority_id=?";
 
-      $result = $this->db->select($sql);
+      $result = $this->db->select($sql,[$this->number, $authority_id]);
 
       if (!$result->isError()) {
         if ($result->num_row() > 0) {
@@ -435,9 +435,9 @@ class ActesTransaction extends DataObject {
   * \return True en cas de succès, false sinon
   */
   public function setNotification($emails, $send_sources) {
-    $sql = "UPDATE actes_transactions SET broadcast_send_sources = " . $send_sources . ", broadcast_emails = '" . pg_escape_string($emails) . "' WHERE id = " . $this->id;
+    $sql = "UPDATE actes_transactions SET broadcast_send_sources = " . $send_sources . ", broadcast_emails = ? WHERE id = ?";
 
-    if (!$this->db->exec($sql)) {
+    if (!$this->db->exec($sql,[$emails,$this->id])) {
       $this->errorMsg = "Erreur lors de la définition des paramètres de notification.";
       return false;
     }
@@ -1480,9 +1480,9 @@ class ActesTransaction extends DataObject {
     }
     if ($new && $this->get('authority_id')){
     	$sql_verif = "SELECT actes_transactions.id FROM actes_transactions ".
-    			" WHERE actes_transactions.number='" . pg_escape_string($this->get('number')) . "' AND authority_id=" . $this->get('authority_id');
+    			" WHERE actes_transactions.number=? AND authority_id=?";
 
-    	if ($this->type == 1 && $this->db->getOneValue($sql_verif)){
+    	if ($this->type == 1 && $this->db->getOneValue($sql_verif,[$this->get('number'),$this->get('authority_id')])){
     		$this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
     		$this->db->rollback();
     		return false;

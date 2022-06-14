@@ -222,6 +222,10 @@ class HeliosController extends Controller {
 			}
 
 			$xml = simplexml_load_file($pes_aller_path,"SimpleXMLElement",LIBXML_PARSEHUGE);
+            if(is_null($xml->EnTetePES->IdColl)){       //Quickfix migration php8
+                echo "Transaction $transaction_id : le fichier PES ALLER ne contient pas de SIRET !\n";
+                continue;
+            }
 			$siret = strval($xml->EnTetePES->IdColl['V']);
 			if (! $siret){
 				echo "Transaction $transaction_id : le fichier PES ALLER ne contient pas de SIRET !\n";

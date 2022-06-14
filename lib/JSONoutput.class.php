@@ -25,7 +25,7 @@ class JSONoutput {
 
 	private function normalize($array){
 		if (! is_array($array)){
-			return utf8_encode($array);
+			return utf8_encode($array ??"");
 		}
 		$result = array();
 		foreach ($array as $cle => $value) {

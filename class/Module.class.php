@@ -49,9 +49,9 @@ class Module extends DataObject {
    */
   //FIXME : cette méthode fait deux requete alors qu'une seule est nécessaire
   public function initByName($name) {
-    $sql = "SELECT id FROM modules WHERE name='" . pg_escape_string($name) . "'";
+    $sql = "SELECT id FROM modules WHERE name=?";
 
-    $result = $this->db->select($sql);
+    $result = $this->db->select($sql,[$name]);
 
     if (! $result->isError() && $result->num_row() == 1) {
 	  $row = $result->get_next_row();
@@ -102,9 +102,9 @@ class Module extends DataObject {
 	}
     
     //! Traitement des paramètres du module
-    $sql = "DELETE FROM modules_params WHERE module_id=" . pg_escape_string($this->id);
+    $sql = "DELETE FROM modules_params WHERE module_id=?";
     
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$this->id])) {
       $this->errorMsg = "Erreur lors de la réinitialisation des paramètres du module.";
 	  $this->db->rollback();
       return false;
@@ -113,8 +113,8 @@ class Module extends DataObject {
     if (count($this->moduleParams) > 0) {
 	  reset($this->moduleParams);
 	  foreach ($this->moduleParams as $param) {
-	  	$sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(" . pg_escape_string($this->id) . ", '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
-	  	if (! $this->db->exec($sql)) {
+	  	$sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
+	  	if (! $this->db->exec($sql,[$this->id])) {
 		  $this->errorMsg = "Erreur lors de la sauvegarde des paramètres du module.";
 		  $this->db->rollback();
 		  return false;
@@ -145,25 +145,25 @@ class Module extends DataObject {
       return false;
 	}
 
-	$sql = "DELETE FROM modules_params WHERE module_id=" . pg_escape_string($id);
+	$sql = "DELETE FROM modules_params WHERE module_id=?";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
 	  $this->db->rollback();
 	  return false;
     }
 
-      $sql = "DELETE FROM modules_authorities WHERE module_id=" . pg_escape_string($id);
+      $sql = "DELETE FROM modules_authorities WHERE module_id=?";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
 	  $this->db->rollback();
 	  return false;
     }
     
-    $sql = "DELETE FROM users_perms WHERE module_id=" . pg_escape_string($id);
+    $sql = "DELETE FROM users_perms WHERE module_id=?";
 
-    if (! $this->db->exec($sql)) {
+    if (! $this->db->exec($sql,[$id])) {
 	  $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
 	  $this->db->rollback();
 	  return false;
@@ -188,9 +188,9 @@ class Module extends DataObject {
    * \return Un tableau contenant les paramètres pour le module courant
    */
   public function getModuleParams() {
-  	$sql = "SELECT modules_params.id, modules_params.name, modules_params.value, modules_params.description FROM modules_params WHERE modules_params.module_id=" . pg_escape_string($this->id);
+  	$sql = "SELECT modules_params.id, modules_params.name, modules_params.value, modules_params.description FROM modules_params WHERE modules_params.module_id=?";
   	
-  	$result = $this->db->select($sql);
+  	$result = $this->db->select($sql,[$this->id]);
   	
   	if (! $result->isError()) {
   	  return $result->get_all_rows();
@@ -206,9 +206,9 @@ class Module extends DataObject {
    */
   public function getParam($name) {
 	if (! empty($name)) {
-	  $sql = "SELECT modules_params.value FROM modules_params WHERE modules_params.name='" . pg_escape_string($name) . "' AND modules_params.module_id=" . pg_escape_string($this->id);
+	  $sql = "SELECT modules_params.value FROM modules_params WHERE modules_params.name=? AND modules_params.module_id=?";
   	
-	  $result = $this->db->select($sql);
+	  $result = $this->db->select($sql,[$name,$this->id]);
   	
 	  if (! $result->isError() && $result->num_row() == 1) {
 		$row = $result->get_next_row();
@@ -240,15 +240,17 @@ class Module extends DataObject {
    * \return Un tableau ayant pour clefs les identifiants des modules autorisés
    */
   public static function getModulesForAuthority($authority) {
+
     $sql = "SELECT modules_authorities.id, modules_authorities.module_id " .
 		" FROM modules_authorities " .
 		" LEFT JOIN modules ON modules_authorities.module_id=modules.id " .
-		" WHERE modules_authorities.authority_id=" . pg_escape_string($authority) . " AND modules.status=1 " .
+		" WHERE modules_authorities.authority_id= ? AND modules.status=1 " .
 		" ORDER BY modules.name";
+
 
     $db = DatabasePool::getInstance();
 
-    $result = $db->select($sql);
+    $result = $db->select($sql,[$authority]);
 
 	$modules = array();
 

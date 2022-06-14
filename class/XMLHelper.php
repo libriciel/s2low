@@ -3,7 +3,7 @@
 
 	
 function XML_escaping($text){
-	$result = htmlspecialchars($text,ENT_NOQUOTES,"iso-8859-1");
+	$result = htmlspecialchars($text ?? "",ENT_NOQUOTES,"iso-8859-1");
 	return $result;
 }
 	

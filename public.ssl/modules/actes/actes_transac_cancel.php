@@ -94,7 +94,7 @@ $env->set("siren", $myAuthority->get("siren"));
 $env->set("department", $myAuthority->get("department"));
 $env->set("district", $myAuthority->get("district"));
 $env->set("authority_type_code", $myAuthority->get("authority_type_id"));
-$env->set("return_mail", implode($retMail, '|'));
+$env->set("return_mail", implode('|', $retMail));
 $env->set("name", $me->getprettyName());
 $env->set("telephone", $telephone);
 $env->set("email", $me->get("email"));

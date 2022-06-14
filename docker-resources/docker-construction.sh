@@ -5,8 +5,8 @@ set -e -x
 cd /tmp/
 
 # Copie des fichiers de configurations
-cp ./docker-resources/php/* /etc/php/7.2/cli/conf.d/
-cp ./docker-resources/php/* /etc/php/7.2/apache2/conf.d/
+cp ./docker-resources/php/* /etc/php/8.1/cli/conf.d/
+cp ./docker-resources/php/* /etc/php/8.1/apache2/conf.d/
 cp ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 cp ./docker-resources/clamav/clamd.conf /etc/clamav/
 cp ./docker-resources/cron.d/* /etc/cron.d/
@@ -17,6 +17,9 @@ cp ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 # Copie de l'entrypoint
 cp ./docker-resources/docker-s2low-entrypoint /usr/local/bin/
 chmod a+x /usr/local/bin/docker-s2low-entrypoint
+
+# Ajout du support legacy à openssl
+bash docker-resources/certificate/add-legacy-provider-to-openssl-v3.sh
 
 # Répertoire contenant les certificats
 # Répertoire de configuration de S2low

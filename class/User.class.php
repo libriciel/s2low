@@ -99,11 +99,9 @@ class User extends DataObject {
   }
 
 	public function getNbUserWithMyCertificate(){
-		$sql = "SELECT count(*) AS nb FROM users WHERE certificate_hash='" .
-			pg_escape_string($this->certificate_hash) .
-			"'";
+		$sql = "SELECT count(*) AS nb FROM users WHERE certificate_hash=?";
 
-		$result = $this->db->select($sql);
+		$result = $this->db->select($sql,[$this->certificate_hash]);
 		$row = $result->get_next_row();
 		return  $row['nb'];
 	}
@@ -656,12 +654,10 @@ class User extends DataObject {
 	public function getIdFromCertData($certificate_hash)
 	{
 		$resultat = array();
-		$sql = "SELECT id FROM users WHERE certificate_hash='" .
-			pg_escape_string($certificate_hash) .
-			"'" .
+		$sql = "SELECT id FROM users WHERE certificate_hash=?" .
 			" ORDER BY name,givenname,login";
 
-    $result = $this->db->select($sql);
+    $result = $this->db->select($sql,[$certificate_hash]);
 
 	if ($result->isError() || $result->num_row() == 0){
 		$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
@@ -676,9 +672,9 @@ class User extends DataObject {
   }
 
 	public function getIdFromLogin($login){
-		$sql = "SELECT id FROM users WHERE users.login='" . pg_escape_string($login) . "' AND certificate_hash='" . pg_escape_string($this->certificate) . "'";
+		$sql = "SELECT id FROM users WHERE users.login=? AND certificate_hash=?";
 
-		$result = $this->db->select($sql);
+		$result = $this->db->select($sql,[$login,$this->certificate]);
 		if ($result->num_row() == 0 ){
 			return false;
 		}

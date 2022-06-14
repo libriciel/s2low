@@ -105,7 +105,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',3);
         $this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
         $this->assertEquals(
-            "Le fichier de réponse «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+            "Le fichier de réponse «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
             $this->actesTransaction->getErrorMsg()
         );
     }
@@ -114,7 +114,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',1);
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
 		$this->assertEquals(
-			"Le fichier de l'acte «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF ou XML requis.",
+			"Le fichier de l'acte «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF ou XML requis.",
 			$this->actesTransaction->getErrorMsg()
 		);
 	}
@@ -148,7 +148,7 @@ class ActesTransactionTest extends S2lowTestCase {
 	public function testBadAttachment(){
 		$this->assertFalse($this->actesTransaction->addAttachmentFile("toto.txt","toto",$this->txt_filepath));
 		$this->assertEquals(
-			"Le fichier attaché «&nbsp;toto.txt&nbsp;» est de type «&nbsp;inode/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+			"Le fichier attaché «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
 			$this->actesTransaction->getErrorMsg()
 		);
 	}

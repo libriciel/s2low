@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as s2low_base
+FROM ubuntu:22.04 as s2low_base
 
 EXPOSE 443 80
 WORKDIR /var/www/s2low/

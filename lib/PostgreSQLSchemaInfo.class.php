@@ -76,7 +76,7 @@ class PostgreSQLSchemaInfo extends SQL {
 
 	private function convertConkeyToConkeyname($json_encoded_conkey,array $table, $table_name){
 		$conkeyname = array();
-		$conkey_array = json_decode($json_encoded_conkey);
+		$conkey_array = json_decode($json_encoded_conkey ?? '[]');  //Quickfix passage en 8.0
 		if (! is_array($conkey_array)){
 			return array();
 		}
