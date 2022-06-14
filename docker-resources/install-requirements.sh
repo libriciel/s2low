@@ -65,14 +65,7 @@ dpkg-reconfigure -f noninteractive tzdata
 # Fix specific problem with Debian/libcurl/let'encrypt  https://serverfault.com/a/1079226
 sed -i '/^mozilla\/DST_Root_CA_X3/s/^/!/' /etc/ca-certificates.conf && update-ca-certificates -f
 
-#Suite site pear down suite à attaque
-cd /tmp
-wget https://ressources.libriciel.fr/deploiement/m/mail-v1.4.1.tar.gz \
-      https://ressources.libriciel.fr/deploiement/m/mail_mime-1.10.2.tar.gz
-
-pear install \
-    mail-v1.4.1.tar.gz \
-    mail_mime-1.10.2.tar.gz
+pear install mail mail_mime
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=/usr/local/bin
