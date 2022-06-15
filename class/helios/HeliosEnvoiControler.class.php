@@ -60,7 +60,7 @@ class HeliosEnvoiControler {
 		}
 
 		if (!$this->antivirus->checkArchiveSanity($file_path)) {
-			$message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
+			$message = "Transaction $transaction_id : un virus a Ã©tÃ© detectÃ© dans le fichier PES";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -69,13 +69,13 @@ class HeliosEnvoiControler {
 		/*$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 		if (! $heliosPESValidation->validate($pes_content)){
 			print_r($heliosPESValidation->getLastError());
-			$message = "Transaction $transaction_id : la transaction ne respecte pas le schéma PES_Aller";
+			$message = "Transaction $transaction_id : la transaction ne respecte pas le schÃ©ma PES_Aller";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			continue;
 		}*/
 
 		if (! $this->isInIso8859($pes_content)){
-			$message = "Transaction $transaction_id : ce fichier n'est pas encodé en ISO-8859-1";
+			$message = "Transaction $transaction_id : ce fichier n'est pas encodÃ© en ISO-8859-1";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -88,7 +88,7 @@ class HeliosEnvoiControler {
 		}
 
 		if ($this->isPESEmpty($pes_xml)){
-			$message = "Transaction $transaction_id : ce fichier ne contient ni bordereau, ni PJ, ni marché";
+			$message = "Transaction $transaction_id : ce fichier ne contient ni bordereau, ni PJ, ni marchÃ©";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -97,7 +97,7 @@ class HeliosEnvoiControler {
 
 		$nom_fic = $info_from_pes_aller['nom_fic'];
 		if (! $nom_fic){
-			$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide";
+			$message = "Transaction $transaction_id : La balise Enveloppe/Parametre/NomFic n'est pas prÃ©sente ou est vide";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -135,7 +135,7 @@ class HeliosEnvoiControler {
 		$authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 
 		if (! $this->verifNomFicUnicity($authorityInfo,$info_from_pes_aller)){
-			$message = "Transaction $transaction_id : ce fichier existe déjà sur la plateforme";
+			$message = "Transaction $transaction_id : ce fichier existe dÃ©jÃ  sur la plateforme";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -201,16 +201,16 @@ class HeliosEnvoiControler {
 	public function sendOneTransaction($transaction_id){
 		$file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 
-		echo "Préparation de l'envoi de la transaction $transaction_id\n";
+		echo "PrÃ©paration de l'envoi de la transaction $transaction_id\n";
 		$transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
 		if (! $this->heliosTransmissionWindowsSQL->canSend($transactionInfo['file_size'])){
-			echo "La fenêtre d'envoie est pleine \n";
+			echo "La fenÃªtre d'envoie est pleine \n";
 			if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)){
 				$message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
 				Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $transactionInfo['user_id']);
 				echo $message."\n";
-				mail(EMAIL_ADMIN,"Transaction Helios bloqué",$message,"From: ".TDT_FROM_EMAIL);
+				mail(EMAIL_ADMIN,"Transaction Helios bloquÃ©",$message,"From: ".TDT_FROM_EMAIL);
 				$this->heliosTransactionsSQL->setSendWarning($transaction_id);
 			}
 			return;
@@ -220,13 +220,13 @@ class HeliosEnvoiControler {
 
 		$completeName = $this->createCompleteName($transactionInfo['siren']);
 		$this->heliosTransactionsSQL->setCompleteName($transaction_id,$completeName);
-		echo "Nom du fichier à envoyer : $completeName\n";
+		echo "Nom du fichier Ã  envoyer : $completeName\n";
 
 		$file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
 
 		$file_path_with_complete_name = $file_sending_repository."/".$completeName;
 		if (! copy($file_path, $file_path_with_complete_name)){
-			echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
+			echo "Transaction $transaction_id : Ã©chec de la copie...: cp $file_path $file_path_with_complete_name";
 			return;
 		}
 		if (HELIOS_ZIP_BEFORE_SEND){
@@ -244,7 +244,7 @@ class HeliosEnvoiControler {
 
 		$sha1_file = sha1_file($file_path);
 		if ($sha1_file != $transactionInfo['sha1']){
-			$message = "Transaction $transaction_id : le fichier a été altéré depuis son postage ou sa signature sur la plateforme\n";
+			$message = "Transaction $transaction_id : le fichier a Ã©tÃ© altÃ©rÃ© depuis son postage ou sa signature sur la plateforme\n";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			return;
 		}
@@ -263,7 +263,7 @@ class HeliosEnvoiControler {
 		}
 
 		if (! $authorityInfo["helios_ftp_dest"]){
-			$message = "Transaction $transaction_id : les propriétés Helios FTP ne sont pas configurées correctement";
+			$message = "Transaction $transaction_id : les propriÃ©tÃ©s Helios FTP ne sont pas configurÃ©es correctement";
 			$this->updateStatus($transaction_id,HeliosTransactionsSQL::ERREUR,$message,$transactionInfo['user_id']);
 			unlink($file_path_with_complete_name);
 			return;
@@ -289,10 +289,10 @@ class HeliosEnvoiControler {
 	}
 
 
-	//nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
-	//idColl : numéro siret de la collectivité,
-	//date : date d'envoi à Helios sous la forme AAMMJJ,
-	//numOrdr : numéro d'ordre d'envoi sur 3 chiffres.
+	//nom du fichier Ã  envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
+	//idColl : numÃ©ro siret de la collectivitÃ©,
+	//date : date d'envoi Ã  Helios sous la forme AAMMJJ,
+	//numOrdr : numÃ©ro d'ordre d'envoi sur 3 chiffres.
 	public function sendAllTransactions(){
 
 
@@ -300,7 +300,7 @@ class HeliosEnvoiControler {
 
 		$nb_file_send = 0;
 
-		echo "Il y a ".count($transaction_id_list)." transactions à envoyer\n";
+		echo "Il y a ".count($transaction_id_list)." transactions Ã  envoyer\n";
 
 		foreach($transaction_id_list as $transaction_id){
 			$this->sendOneTransaction($transaction_id);
@@ -309,9 +309,9 @@ class HeliosEnvoiControler {
 		}
 
 		if ($nb_file_send == 0 && count($transaction_id_list)){
-			$message = "Le script helios-reception-envoi.php n'a pas envoyé de transactions sur les ".count($transaction_id_list)." à poster !\n";
+			$message = "Le script helios-reception-envoi.php n'a pas envoyÃ© de transactions sur les ".count($transaction_id_list)." Ã  poster !\n";
 			echo $message;
-			mail(EMAIL_ADMIN,"[ALERTE CRITIQUE] L'envoi des PES à la DGFiP ne fonctionne plus",$message,"From: ".TDT_FROM_EMAIL);
+			mail(EMAIL_ADMIN,"[ALERTE CRITIQUE] L'envoi des PES Ã  la DGFiP ne fonctionne plus",$message,"From: ".TDT_FROM_EMAIL);
 		}
 
 	}
@@ -337,7 +337,7 @@ class HeliosEnvoiControler {
 
 
     /**
-     * Les fichiers qui ne contiennent ni bordereau, ni PJ, ni marché ne généère pas d'acquittement
+     * Les fichiers qui ne contiennent ni bordereau, ni PJ, ni marchÃ© ne gÃ©nÃ©Ã¨re pas d'acquittement
      * et donc ne sont jamais ni acquitter ni en erreur
      * @param SimpleXMLElement $pes_xml
      * @return bool

@@ -49,7 +49,7 @@ class ControllerTest extends S2lowTestCase {
 	}
 
 	public function testVerifNotConnected(){
-		$this->setExpectedException("Exception","Message : Aucune information de certificat trouvée");
+		$this->setExpectedException("Exception","Message : Aucune information de certificat trouvÃ©e");
 		$this->controller->verifAdmin();
 	}
 
@@ -124,7 +124,7 @@ class ControllerTest extends S2lowTestCase {
 
 	public function testVerifGroupAdminNotAuthorized(){
 		$this->setAdminGroup2Authentication();
-		$this->setExpectedException("Exception","Accès refusé");
+		$this->setExpectedException("Exception","AccÃ¨s refusÃ©");
 		$this->controller->verifGroupAdmin(1);
 	}
 

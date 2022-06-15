@@ -6,7 +6,7 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Éhec de l'authentification";
+  $_SESSION["error"] = "Ã‰hec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -18,14 +18,14 @@ $myAuthority = new Authority($me->get("authority_id"));
 $doc = new HTMLLayout("xhtml_simple.tpl.php");
 $doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
 
-$doc->setTitle("Tedetis : sélection attribut");
+$doc->setTitle("Tedetis : sÃ©lection attribut");
 
 $html = "<div id=\"attribute_list\">\n";
 
 switch ($type) {
  case 'authority_type':
    if (! $me->isAdmin()) {
-	 $_SESSION["error"] = "Accès refusé";
+	 $_SESSION["error"] = "AccÃ¨s refusÃ©";
 	 header("Location: " . WEBSITE_SSL);
 	 exit();
    }
@@ -55,7 +55,7 @@ switch ($type) {
 
  case 'department':
    if (! $me->isAdmin()) {
-	 $_SESSION["error"] = "Accès refusé";
+	 $_SESSION["error"] = "AccÃ¨s refusÃ©";
 	 header("Location: " . WEBSITE_SSL);
 	 exit();
    }
@@ -101,12 +101,12 @@ switch ($type) {
 
 	   while ($item) {
 		 if ( empty($done[$item["id"]])) {
-		   // Item non encore traité
+		   // Item non encore traitÃ©
 		   // On l'ajoute sur la pile
 		   array_push($codes, $item["code"]);
 		   // On l'affiche
 		   $html .= "<a class=\"tree_level_" . $level . "\" href=\"#tedetis\" onclick=\"javascript:return_choice('" . implode(".", $codes) . "&nbsp;-&nbsp;" . str_replace('"', "&quot;", str_replace("'", "\\'", $item["description"])) . "', " . implode(",", $codes) . ");\">" . implode(".", $codes) . "&nbsp;-&nbsp;" . $item["description"] . "</a><br />\n";
-		   // On le marque comme traité
+		   // On le marque comme traitÃ©
 		   $done[$item["id"]] = true;
 		 }
 		 
@@ -116,12 +116,12 @@ switch ($type) {
 		   $level++;
 		   // On passe au prochain enfant de l'item courant en le supprimant du tableau des enfants
 		   $item = $classifications[array_shift($par_item["children_id"])];
-		   // On ajoute l'item parent sur la pile des items pour continuer le traitement des enfants lors de la remontée
+		   // On ajoute l'item parent sur la pile des items pour continuer le traitement des enfants lors de la remontÃ©e
 		   array_push($items, $par_item);
 		 } else {
 		   // Plus d'enfant => on remonte la pile des items
 		   $item = array_pop($items);
-		   // On remonte le code courant également
+		   // On remonte le code courant Ã©galement
 		   array_pop($codes);
 		   $level--;
 		 }
@@ -146,8 +146,8 @@ switch ($type) {
 	 $js .= "}\n";
 	 $js .= "</script>\n";
    } else {
-	 $html .= "Pas de classification matières/sous-matières associée à votre collectivité.<br />\n";
-	 $html .= "Utilisez le bouton «&nbsp;Mettre à jour la classification&nbsp;» de l'interface de création de transaction pour effectuer une demande de récupération de la classification.<br />";
+	 $html .= "Pas de classification matiÃ¨res/sous-matiÃ¨res associÃ©e Ã  votre collectivitÃ©.<br />\n";
+	 $html .= "Utilisez le bouton Â«&nbsp;Mettre Ã  jour la classification&nbsp;Â» de l'interface de crÃ©ation de transaction pour effectuer une demande de rÃ©cupÃ©ration de la classification.<br />";
 	 $js = "";
    }
 
@@ -160,7 +160,7 @@ switch ($type) {
 
  
 $html .= "</div>\n";
-$html .= "<a href=\"#tedetis\" onclick=\"javascript:window.close();\">Fermer la fenêtre</a>\n";
+$html .= "<a href=\"#tedetis\" onclick=\"javascript:window.close();\">Fermer la fenÃªtre</a>\n";
 
 $doc->addBody($html);
 

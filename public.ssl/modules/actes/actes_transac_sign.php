@@ -17,20 +17,20 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit ();
 }
 
 if (!$module->isActive() || ! $me->checkDroit($module->get("name"),'CS')) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit ();
 }
 
 $nb_signature = Helpers::getVarFromPost("nb_signature");
 if ($nb_signature == 0){
-	$_SESSION["error"] = "Les signatures n'ont pas pu être récupérées";
+	$_SESSION["error"] = "Les signatures n'ont pas pu Ãªtre rÃ©cupÃ©rÃ©es";
 	header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$id");
 }
 
@@ -44,7 +44,7 @@ try{
 		$signature_id = Helpers::getVarFromPost("signature_id_$i");
 		$transaction_id = $actesSignature->setSignature($signature_id, $signature);
 		$all_transaction_id[] = $transaction_id;
-		/** Vérifier la signature ici */
+		/** VÃ©rifier la signature ici */
 		$verifyPKCS7Signature = new VerifyPKCS7Signature(RGS_VALIDCA_PATH,
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory()
@@ -75,9 +75,9 @@ try{
 }
 
 if (count($all_transaction_id) == 1){
-	$_SESSION["error"] = "La signature a été enregistrée";
+	$_SESSION["error"] = "La signature a Ã©tÃ© enregistrÃ©e";
 	header("Location:  ". WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id={$all_transaction_id[0]}");
 } else {
-	$_SESSION["error"] = "Les signatures ont été enregistrées";
+	$_SESSION["error"] = "Les signatures ont Ã©tÃ© enregistrÃ©es";
 	header("Location:  ". WEBSITE_SSL . "/modules/actes/index.php");
 }

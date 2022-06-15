@@ -41,10 +41,10 @@ class OpenStackContainerFetcher{
                 ->getContainer($this->containerFullName);
         }
         catch(Exception$e){
-            $this->logger->error("Openstack : erreur à la génération du token / recherche du container : ".$e->getMessage());
+            $this->logger->error("Openstack : erreur Ã  la gÃ©nÃ©ration du token / recherche du container : ".$e->getMessage());
             throw $e;
         }
-        $this->logger->info("Openstack : génération du token / recherche du container ".$this->containerFullName);
+        $this->logger->info("Openstack : gÃ©nÃ©ration du token / recherche du container ".$this->containerFullName);
         return [$token, $container];
     }
 }

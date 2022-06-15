@@ -1,8 +1,8 @@
 <?php
 /*
  *
- * Cette classe permet de gérer les différentes collectivités.
- * Les méthodes de bases sont héritées de DataObject.
+ * Cette classe permet de gÃ©rer les diffÃ©rentes collectivitÃ©s.
+ * Les mÃ©thodes de bases sont hÃ©ritÃ©es de DataObject.
 */
 
 require_once("DataObject.class.php");
@@ -10,7 +10,7 @@ require_once("Module.class.php");
 
 class Authority extends DataObject {
   protected $objectName = "authorities";
-  protected $prettyName = "Collectivité";
+  protected $prettyName = "CollectivitÃ©";
 
   protected $name;
   protected $siren;
@@ -32,37 +32,37 @@ class Authority extends DataObject {
   private $modulesPerms = null;
 
   protected $dbFields = array( "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true),
-						 "siren" => array( "descr" => "Numéro de SIREN", "type" => "isString", "mandatory" => true, "unique" => true),
-						 "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => true),
-						 "agreement" => array( "descr" => "Référence convention", "type" => "isString", "mandatory" => false),
-						 "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => false),
-						 "broadcast_email" => array( "descr" => "Adresse électronique de diffusion", "type" => "isEmail", "mandatory" => false),
-						 "default_broadcast_email" => array( "descr" => "Adresse électronique de diffusion par défaut", "type" => "isEmail", "mandatory" => false),
-						 "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true),
-						 "authority_type_id" => array( "descr" => "Type de collectivité", "type" => "isString", "mandatory" => true),
+						 "siren" => array( "descr" => "NumÃ©ro de SIREN", "type" => "isString", "mandatory" => true, "unique" => true),
+						 "authority_group_id" => array( "descr" => "Groupe de collectivitÃ©", "type" => "isInt", "mandatory" => true),
+						 "agreement" => array( "descr" => "RÃ©fÃ©rence convention", "type" => "isString", "mandatory" => false),
+						 "email" => array( "descr" => "Adresse Ã©lectronique", "type" => "isEmail", "mandatory" => false),
+						 "broadcast_email" => array( "descr" => "Adresse Ã©lectronique de diffusion", "type" => "isEmail", "mandatory" => false),
+						 "default_broadcast_email" => array( "descr" => "Adresse Ã©lectronique de diffusion par dÃ©faut", "type" => "isEmail", "mandatory" => false),
+						 "status" => array( "descr" => "Ã‰tat", "type" => "isInt", "mandatory" => true),
+						 "authority_type_id" => array( "descr" => "Type de collectivitÃ©", "type" => "isString", "mandatory" => true),
 						 "address" => array( "descr" => "Adresse", "type" => "isString", "mandatory" => true),
 						 "postal_code" => array( "descr" => "Code postal", "type" => "isString", "mandatory" => true),
 						 "city" => array( "descr" => "Ville", "type" => "isString", "mandatory" => true),
-						 "department" => array( "descr" => "Département", "type" => "isString", "mandatory" => true),
+						 "department" => array( "descr" => "DÃ©partement", "type" => "isString", "mandatory" => true),
 						 "district" => array( "descr" => "Arrondissement", "type" => "isString", "mandatory" => true),
-						 "telephone" => array( "descr" => "Téléphone", "type" => "isString", "mandatory" => false),
+						 "telephone" => array( "descr" => "TÃ©lÃ©phone", "type" => "isString", "mandatory" => false),
 						 "fax" => array( "descr" => "Fax", "type" => "isString", "mandatory" => false),
 	  					"ext_siret" =>array("descr"=> "ext_SIRET","type" =>"isString", "mandatory"=>false),
 	  					"helios_ftp_login" =>array("descr"=>"helios_ftp_login","type"=>"isString","mandatory" =>false),
 	  					"helios_ftp_password" =>array("descr" => "helios_ftp_password", "type" => "isString", "mandatory" =>false),
 	    				"helios_ftp_dest" =>array("descr" => "helios_ftp_dest", "type" => "isString", "mandatory" =>false),
-	  					"email_mail_securise" => array("descr" => "Email pour le module de mail sécurisé", "type" => "isEmail", "mandatory" =>false),
-                        "descr_mail_securise" => array("descr" => "Description pour le module de mail sécurisé", "type" => "isString", "mandatory" =>false),
+	  					"email_mail_securise" => array("descr" => "Email pour le module de mail sÃ©curisÃ©", "type" => "isEmail", "mandatory" =>false),
+                        "descr_mail_securise" => array("descr" => "Description pour le module de mail sÃ©curisÃ©", "type" => "isString", "mandatory" =>false),
 						"new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" =>false),
-  						"dia_siret" => array( "descr" => "Numéro de SIRET de réception des DIA", "type" => "isString", "mandatory" => false, "unique" => true),
+  						"dia_siret" => array( "descr" => "NumÃ©ro de SIRET de rÃ©ception des DIA", "type" => "isString", "mandatory" => false, "unique" => true),
   						"sae_wsdl" => array("descr"=>'','type'=>'isString','mandatory'=>false,'unique'=>false),
 						"helios_do_not_verify_nom_fic_unicity" => array("descr"=>'','type'=>'isBool','mandatory'=>false,'unique'=>false),
 						 );
 
 
   /**
-   * \brief Constructeur d'une collectivité
-   * \param id integer Numéro d'id d'une collectivité existante avec lequel initialiser l'objet
+   * \brief Constructeur d'une collectivitÃ©
+   * \param id integer NumÃ©ro d'id d'une collectivitÃ© existante avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
     parent::__construct($id);
@@ -73,16 +73,16 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'initialisation d'une collectivité depuis la base de données
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'initialisation d'une collectivitÃ© depuis la base de donnÃ©es
+   * \return true si succÃ¨s, false sinon
   */
   public function init() {
 	return (parent::init() && $this->initModulesPerms());
   }
 
   /**
-   * \brief Méthode d'obtention du département et de l'arrondissement d'appartenance de la collectivité
-   * \return Une chaîne indiquant le département et l'arrondissement
+   * \brief MÃ©thode d'obtention du dÃ©partement et de l'arrondissement d'appartenance de la collectivitÃ©
+   * \return Une chaÃ®ne indiquant le dÃ©partement et l'arrondissement
    */
   public function getDeptDistrString() {
 	if (! empty($this->department) && ! empty($this->district)) {
@@ -126,7 +126,7 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode qui renvoie la liste des modules autorisés pour cette collectivité
+   * \brief MÃ©thode qui renvoie la liste des modules autorisÃ©s pour cette collectivitÃ©
    */
   public function getAuthorizedModules() {
 	if (! $this->modulesPerms) {
@@ -137,9 +137,9 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode qui détermine si la collectivité appartient au groupe spécifié
-   * \param $group_id integer : Numéro d'identifiant du groupe
-   * \return True si la collectivité appartient au groupe, False sinon
+   * \brief MÃ©thode qui dÃ©termine si la collectivitÃ© appartient au groupe spÃ©cifiÃ©
+   * \param $group_id integer : NumÃ©ro d'identifiant du groupe
+   * \return True si la collectivitÃ© appartient au groupe, False sinon
   */
   public function isInGroup($group_id) {
 	if (is_numeric($group_id)) {
@@ -152,7 +152,7 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'initialisation des permissions de la collectivité sur les modules
+   * \brief MÃ©thode d'initialisation des permissions de la collectivitÃ© sur les modules
   */
   public function initModulesPerms() {
 	if (isset($this->id)) {
@@ -164,16 +164,16 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode de remise à zéro des permissions sur les modules
+   * \brief MÃ©thode de remise Ã  zÃ©ro des permissions sur les modules
   */
   public function resetModulesPerms() {
 	$this->modulesPerms = null;
   }
 
   /**
-   * \brief Méthode qui permet de fixer les permissions d'une collectivité sur un module
-   * \param $module_id integer Numéro identifiant le module sur lequel fixer la permission
-   * \param $val booléen ou chaine (optionnel) Valeur de la permission, true par défaut, peut être "1" ou "on" ou true pour activer la permission
+   * \brief MÃ©thode qui permet de fixer les permissions d'une collectivitÃ© sur un module
+   * \param $module_id integer NumÃ©ro identifiant le module sur lequel fixer la permission
+   * \param $val boolÃ©en ou chaine (optionnel) Valeur de la permission, true par dÃ©faut, peut Ãªtre "1" ou "on" ou true pour activer la permission
   */
   public function setModulePerm($module_id, $val = true) {
 	if ($val == "1"||$val == "on"||$val === true) {
@@ -182,9 +182,9 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la permission d'une collectivité sur un module
-   * \param $module_id integer Numéro d'identifiant du module
-   * \return true si autorisée, false sinon
+   * \brief MÃ©thode d'obtention de la permission d'une collectivitÃ© sur un module
+   * \param $module_id integer NumÃ©ro d'identifiant du module
+   * \return true si autorisÃ©e, false sinon
   */
   public function getModulePerm($module_id) {
 	if (! $this->modulesPerms) {
@@ -214,7 +214,7 @@ class Authority extends DataObject {
     	return false;
   }
   /**
-   * \brief Méthode permettant de savoir si une collectivité est active
+   * \brief MÃ©thode permettant de savoir si une collectivitÃ© est active
    * \return true si active, false sinon
   */
   public function isActive() {
@@ -222,10 +222,10 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'enregistrement d'une collectivité dans la base de données
-   * \param $module_perms (optionnel) : si true (défaut) sauvegarde aussi les permissions sur les modules
-   * \param $validate booléen (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'enregistrement d'une collectivitÃ© dans la base de donnÃ©es
+   * \param $module_perms (optionnel) : si true (dÃ©faut) sauvegarde aussi les permissions sur les modules
+   * \param $validate boolÃ©en (optionnel) PrÃ©cise si la validation de l'entitÃ© doit avoir lieu (true par dÃ©faut)
+   * \return true si succÃ¨s, false sinon
   */
   public function save($module_perms = true, $validate = true) {
       $saveSQLRequest = parent::buildSaveSQLRequest($validate);
@@ -242,7 +242,7 @@ class Authority extends DataObject {
 	}
 
     if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
-      $this->errorMsg = "Erreur lors de la sauvegarde de la collectivité.";
+      $this->errorMsg = "Erreur lors de la sauvegarde de la collectivitÃ©.";
 	  $this->db->rollback();
       return false;
     }
@@ -252,7 +252,7 @@ class Authority extends DataObject {
 	  $sql = "DELETE FROM modules_authorities WHERE authority_id=?";
 
 	  if (! $this->db->exec($sql,[$this->id])) {
-		$this->errorMsg = "Erreur lors de la réinitialisation des permissions de la collectivité.";
+		$this->errorMsg = "Erreur lors de la rÃ©initialisation des permissions de la collectivitÃ©.";
 		$this->db->rollback();
 		return false;
 	  }
@@ -263,7 +263,7 @@ class Authority extends DataObject {
 		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(?,?)";
 		  
 		  if (! $this->db->exec($sql,[$module_id,$this->id])) {
-			$this->errorMsg = "Erreur lors de la sauvegarde des permissions de la collectivité.";
+			$this->errorMsg = "Erreur lors de la sauvegarde des permissions de la collectivitÃ©.";
 			$this->db->rollback();
 			return false;
 		  }
@@ -281,17 +281,17 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode permettant de supprimer une collectivité de a base de données
-   * \param $id integer (optionnel) Numéro d'identifiant de la collectivité, si non spécifié, collectivité en cours
-   * \return true si succès, false sinon
+   * \brief MÃ©thode permettant de supprimer une collectivitÃ© de a base de donnÃ©es
+   * \param $id integer (optionnel) NumÃ©ro d'identifiant de la collectivitÃ©, si non spÃ©cifiÃ©, collectivitÃ© en cours
+   * \return true si succÃ¨s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    // Efface l'entitÃ© spÃ©cifiÃ©e par $id ou alors l'entitÃ© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && ! empty($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entitÃ© a supprimer";
 		return false;
       }
     }
@@ -324,9 +324,9 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la liste des collectivités et tous leurs attributs
-   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return tableau des collectivités
+   * \brief MÃ©thode d'obtention de la liste des collectivitÃ©s et tous leurs attributs
+   * \param $cond (optionnel) chaÃ®ne ChaÃ®ne contenant les conditions (SQL) Ã  appliquer Ã  la fin de la requÃªte BDD
+   * \return tableau des collectivitÃ©s
   */
   public function getAuthoritiesList($cond = "",$count=null) {
 	if (! $this->pagerInit('authorities.id, authorities.name, authorities.siren, authorities.authority_group_id, authorities.agreement, authorities.email, authorities.broadcast_email, authorities.authority_type_id, authority_types.description AS type_name, authorities.address, authorities.postal_code, authorities.city, authorities.telephone, authorities.fax',
@@ -345,16 +345,16 @@ class Authority extends DataObject {
   
 
   /**********************/
-  /* Méthodes statiques */
+  /* MÃ©thodes statiques */
   /**********************/
 
   /**
-   * \brief Méthode d'obtention d'une liste de collectivité
+   * \brief MÃ©thode d'obtention d'une liste de collectivitÃ©
    * \param $cond chaine : condition SQL a appliquer sur la requete
-   * \return Tableau de collectivités
+   * \return Tableau de collectivitÃ©s
    *
-   * Cette méthode retourne un tableau dont les clefs sont les identifiants
-   * des collectivités et le contenu de la case est le nom de la collectivité
+   * Cette mÃ©thode retourne un tableau dont les clefs sont les identifiants
+   * des collectivitÃ©s et le contenu de la case est le nom de la collectivitÃ©
   */
   public static function getAuthoritiesIdName($cond = "") {
     $sql = "SELECT authorities.id, authorities.name FROM authorities " . $cond;
@@ -396,11 +396,11 @@ class Authority extends DataObject {
   
 
   /**
-   * \brief Méthode d'obtention de la liste id/name des types de collectivités
-   * \return Tableau des types de collectivités
+   * \brief MÃ©thode d'obtention de la liste id/name des types de collectivitÃ©s
+   * \return Tableau des types de collectivitÃ©s
    *
-   * Cette méthode retourne un tableau dont les clefs sont les identifiants
-   * des types et le contenu de la case est le nom du type (tronqué à 40 caractères)
+   * Cette mÃ©thode retourne un tableau dont les clefs sont les identifiants
+   * des types et le contenu de la case est le nom du type (tronquÃ© Ã  40 caractÃ¨res)
    *
   */
   public static function getAuthorityTypesIdName() {
@@ -427,8 +427,8 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la liste des types de collectivités
-   * \return Tableau des types de collectivités
+   * \brief MÃ©thode d'obtention de la liste des types de collectivitÃ©s
+   * \return Tableau des types de collectivitÃ©s
   */
   public static function getAuthorityTypes() {
 	// Obtention des types parents
@@ -459,11 +459,11 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention d'une liste id/nom de départements
-   * \return Tableau de départements
+   * \brief MÃ©thode d'obtention d'une liste id/nom de dÃ©partements
+   * \return Tableau de dÃ©partements
    *
-   * Cette méthode retourne un tableau dont les clefs sont les identifiants
-   * des départements et le contenu de la case est le nom du département
+   * Cette mÃ©thode retourne un tableau dont les clefs sont les identifiants
+   * des dÃ©partements et le contenu de la case est le nom du dÃ©partement
   */
   public static function getDepartmentsIdName() {
     $sql = "SELECT code, name FROM authority_departments";
@@ -484,8 +484,8 @@ class Authority extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention d'une liste de département
-   * \return Tableau de départements
+   * \brief MÃ©thode d'obtention d'une liste de dÃ©partement
+   * \return Tableau de dÃ©partements
    *
   */
   public static function getDepartmentsList() {
@@ -505,10 +505,10 @@ class Authority extends DataObject {
 
 
   /**
-   * \brief Méthode d'obtention d'une liste d'arrondissements pour un département donné
+   * \brief MÃ©thode d'obtention d'une liste d'arrondissements pour un dÃ©partement donnÃ©
    * \return Tableau d'arrondissements
    *
-   * Cette méthode retourne un tableau dont les clefs sont les identifiants
+   * Cette mÃ©thode retourne un tableau dont les clefs sont les identifiants
    * des arrondissements et le contenu de la case est le nom de l'arrondissement
   */
   public static function getDistrictsForDepartment($dept) {

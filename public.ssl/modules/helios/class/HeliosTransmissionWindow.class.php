@@ -1,50 +1,50 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
+ * TÃ©DÃ©TIS - Copyright 2006 Alternance-Soft
  * Contributeur : C. Pop Mars 2007
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
 ?>
 <?php
 /**
  * \class HeliosTransmissionWindow HeliosTransmissionWindow.class.php
- * \brief Cette classe permet de gérer les fenêtres de transmission HELIOS
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \brief Cette classe permet de gÃ©rer les fenÃªtres de transmission HELIOS
+ * \author JÃ©rÃ´me Schell <j.schell@alternancesoft.com>
  * \date 23.08.2006
  * 
  *
- * Cette classe fournit des méthodes de gestion des fenêtres
+ * Cette classe fournit des mÃ©thodes de gestion des fenÃªtres
  * de transmission HELIOS.
  *
  * Modifications :
@@ -59,7 +59,7 @@ class HeliosTransmissionWindow extends DataObject {
   
   protected $rate_limit;
 
-  protected $dbFields = array( "rate_limit" => array( "descr" => "Limitation de débit", "type" => "isInt", "mandatory" => true)
+  protected $dbFields = array( "rate_limit" => array( "descr" => "Limitation de dÃ©bit", "type" => "isInt", "mandatory" => true)
 							   );
 
   protected $window_start_date;
@@ -70,16 +70,16 @@ class HeliosTransmissionWindow extends DataObject {
   private $windowHours;
 
   /**
-   * \brief Constructeur d'une entrée de fenêtre de transmission
-   * \param id integer Numéro d'identifiant d'une entrée existante avec laquelle initialiser l'objet
+   * \brief Constructeur d'une entrÃ©e de fenÃªtre de transmission
+   * \param id integer NumÃ©ro d'identifiant d'une entrÃ©e existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
 	parent::__construct($id);
   }
 
   /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succès, false sinon
+   * \brief MÃ©thode initialisant l'entitÃ© avec l'identifiant courant
+   * \return true si succÃ¨s, false sinon
   */
   public function init() {
 	if (parent::init()) {
@@ -102,9 +102,9 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode d'enregistrement d'une entité dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'enregistrement d'une entitÃ© dans la base de donnÃ©es
+   * \param $validate boolÃ©en (optionnel) Demande la validation ou non des donnÃ©es de l'entitÃ© avant enregistrement (true par dÃ©faut)
+   * \return true si succÃ¨s, false sinon
    */
   public function save($validate = true,$return_rather_than_exec = false) {
 	$new = false;
@@ -124,10 +124,10 @@ class HeliosTransmissionWindow extends DataObject {
 	}
 
 	if ($hours === false) {
-	  $this->errorMsg = "Erreur de récupération des heures de la fenêtre.";
+	  $this->errorMsg = "Erreur de rÃ©cupÃ©ration des heures de la fenÃªtre.";
 	  return false;
 	} elseif (count($hours) <= 0) {
-	  $this->errorMsg = "La fenêtre a une durée nulle.";
+	  $this->errorMsg = "La fenÃªtre a une durÃ©e nulle.";
 	  return false;
 	}
 
@@ -137,25 +137,25 @@ class HeliosTransmissionWindow extends DataObject {
 	}
 
     if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
-      $this->errorMsg = "Erreur lors de la sauvegarde de la fenêtre.";
+      $this->errorMsg = "Erreur lors de la sauvegarde de la fenÃªtre.";
 	  $this->db->rollback();
       return false;
     }
 	// Suppression des heures existante
 	$sql = "DELETE FROM helios_transmission_window_hours WHERE transmission_window_id=" . $this->id;
     if (! $this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la réinitialisation des heures de la fenêtre.";
+      $this->errorMsg = "Erreur lors de la rÃ©initialisation des heures de la fenÃªtre.";
 	  $this->db->rollback();
       return false;
     }
 
-	// Insertion des heures de la fenêtre
+	// Insertion des heures de la fenÃªtre
 	foreach ($hours as $hour) {
 	  $sql = "INSERT INTO helios_transmission_window_hours (transmission_window_id, window_begin, window_end, consumed) VALUES (" . $this->id . ", '"
 		. $hour["window_begin"] . "', '" . $hour["window_end"] . "', " . $hour["consumed"] . ")";
 
 	  if (! $this->db->exec($sql)) {
-		$this->errorMsg = "Erreur lors de l'insertion des heures de la fenêtre.";
+		$this->errorMsg = "Erreur lors de l'insertion des heures de la fenÃªtre.";
 		$this->db->rollback();
 		return false;
 	  }
@@ -171,17 +171,17 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode de suppression d'une fenêtre de la base de données
-   * \param $id integer (optionnel) Numéro d'identifiant de la fenêtre, si non spécifié, entité en cours
-   * \return true si succès, false sinon
+   * \brief MÃ©thode de suppression d'une fenÃªtre de la base de donnÃ©es
+   * \param $id integer (optionnel) NumÃ©ro d'identifiant de la fenÃªtre, si non spÃ©cifiÃ©, entitÃ© en cours
+   * \return true si succÃ¨s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    // Efface l'entitÃ© spÃ©cifiÃ©e par $id ou alors l'entitÃ© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && ! empty($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entitÃ© a supprimer";
 		return false;
       }
     }
@@ -194,7 +194,7 @@ class HeliosTransmissionWindow extends DataObject {
 	$sql = "DELETE FROM helios_transmission_window_hours WHERE transmission_window_id = ? ";
 
     if (! $this->db->exec($sql,$id)) {
-	  $this->errorMsg = "Erreur lors de la suppression des heures associées à la fenêtre.";
+	  $this->errorMsg = "Erreur lors de la suppression des heures associÃ©es Ã  la fenÃªtre.";
 	  $this->db->rollback();
 	  return false;
     }
@@ -214,12 +214,12 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode de calcul des heures de la fenêtre courante
-   * \param $currentHours tableau (optionnel) : Tableau contenant les heures actuelles de la fenêtre en cas de modification
-   * \return Un tableau des heures calculées
+   * \brief MÃ©thode de calcul des heures de la fenÃªtre courante
+   * \param $currentHours tableau (optionnel) : Tableau contenant les heures actuelles de la fenÃªtre en cas de modification
+   * \return Un tableau des heures calculÃ©es
    */
   private function computeHours($currentHours = false) {
-	// Nombre d'heures nécessaires
+	// Nombre d'heures nÃ©cessaires
 	$nb_hours = ceil(($this->window_end_stamp - $this->window_start_stamp) / 3600);
 
 	$newHours = array();
@@ -230,7 +230,7 @@ class HeliosTransmissionWindow extends DataObject {
 
 	  if ($currentHours) {
 		foreach ($currentHours as $hour) {
-		  // Récupération des octets déjà consommés
+		  // RÃ©cupÃ©ration des octets dÃ©jÃ  consommÃ©s
 		  if (Helpers::getTimestampFromBDDDate($hour["window_begin"]) == $start_stamp) {
 			if (! empty($hour["consumed"])) {
 			  $consumed = $hour["consumed"];
@@ -249,8 +249,8 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode qui calcule si la fenêtre courante est en collision avec une fenêtre existante
-   * \return Un tableau d'identifiant des fenêtres qui interfèrent ou false s'il n'y a pas de collision
+   * \brief MÃ©thode qui calcule si la fenÃªtre courante est en collision avec une fenÃªtre existante
+   * \return Un tableau d'identifiant des fenÃªtres qui interfÃ¨rent ou false s'il n'y a pas de collision
    */
   public function hasCollision() {
 	$hoursId = array();
@@ -264,7 +264,7 @@ class HeliosTransmissionWindow extends DataObject {
 		// Notre intervalle englobe totalement un autre intervalle
 		. " OR (window_begin >= '" . $start_date . "' AND window_end <= '" . $end_date . "'))";
 
-	  // Ne pas tenir compte des chevauchements avec nous-même
+	  // Ne pas tenir compte des chevauchements avec nous-mÃªme
 	  if (! $this->isNew()) {
 		$sql .= " AND transmission_window_id != " . $this->id;
 	  }
@@ -287,8 +287,8 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération des heures correspondant à un fenêtre
-   * \return Un tableau contenant les données des heures en cas de succès, false sinon
+   * \brief MÃ©thode de rÃ©cupÃ©ration des heures correspondant Ã  un fenÃªtre
+   * \return Un tableau contenant les donnÃ©es des heures en cas de succÃ¨s, false sinon
    */
   private function getWindowHours() {
 	if (isset($this->id)) {
@@ -315,9 +315,9 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération de la liste des fenêtres de transmission
-   * \param $cond chaîne (optionnel) : condition à appliquer sur la requête SQL
-   * \return Un tableau contenant les données des fenêtres
+   * \brief MÃ©thode de rÃ©cupÃ©ration de la liste des fenÃªtres de transmission
+   * \param $cond chaÃ®ne (optionnel) : condition Ã  appliquer sur la requÃªte SQL
+   * \return Un tableau contenant les donnÃ©es des fenÃªtres
   */
   public function getWindowsList($cond = "") {
 	if (! $this->pagerInit('helios_transmission_windows.id, helios_transmission_windows.rate_limit, MIN(atwh.window_begin) AS start, MAX(atwh.window_end) AS end', 'helios_transmission_windows LEFT OUTER JOIN helios_transmission_window_hours atwh ON helios_transmission_windows.id=atwh.transmission_window_id', $cond . " GROUP BY helios_transmission_windows.id, helios_transmission_windows.rate_limit")) {
@@ -328,10 +328,10 @@ class HeliosTransmissionWindow extends DataObject {
   }
 
   /**
-   * \brief Méthode de détermination de l'heure pleine la plus proche de l'heure passée en paramètre
-   * \param $date chaîne : La date au format YYYY-MM-DD
-   * \param $hour chaîne : L'heure au format HH:MM:SS
-   * \return Un timestamp correspondant à l'heure pleine
+   * \brief MÃ©thode de dÃ©termination de l'heure pleine la plus proche de l'heure passÃ©e en paramÃ¨tre
+   * \param $date chaÃ®ne : La date au format YYYY-MM-DD
+   * \param $hour chaÃ®ne : L'heure au format HH:MM:SS
+   * \return Un timestamp correspondant Ã  l'heure pleine
   */
   public static function roundDate($date, $hour) {
 	$timestamp = Helpers::ansiDateToTimestamp($date, true);

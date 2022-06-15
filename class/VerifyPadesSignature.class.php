@@ -73,7 +73,7 @@ class VerifyPadesSignature
             throw new Exception("Au moins une signature n'est pas valide");
         }
         if(empty($signature->signingCert)){
-            throw new Exception("Impossible de récupérer le certificat de signature");
+            throw new Exception("Impossible de rÃ©cupÃ©rer le certificat de signature");
         };
         if (empty($signature->signatureDate)){
             throw new Exception("Impossible de determiner la date de la signature");

@@ -6,13 +6,13 @@ require_once( __DIR__ . "/../../../init/init-www.php");
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit();
 }
 
 if (! $me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit();
 }
@@ -31,7 +31,7 @@ if ($type == 'rgs'){
 }
 
 if (! file_exists($file)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: certitificate_list.php" );
 	exit();
 }

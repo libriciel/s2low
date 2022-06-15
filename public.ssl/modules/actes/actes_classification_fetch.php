@@ -14,11 +14,11 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive()|| ! $me->checkDroit($module->get("name"),'CS')) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -26,7 +26,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 $zeClassif = new ActesClassification();
 
 if (! $zeClassif->initWithLastSuccessful($myAuthority->getId())) {
-  Helpers::returnAndExit(1, "Erreur de récupération de la dernière classification.", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "Erreur de rÃ©cupÃ©ration de la derniÃ¨re classification.", WEBSITE_SSL);
 }
 
 if (! $zeClassif->pushXMLData()) {

@@ -123,7 +123,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	 */
 	public function testImportApiError(){
 		unset($_FILES);
-		$this->expectedError("Échec lors du téléchargement du fichier");
+		$this->expectedError("Ã‰chec lors du tÃ©lÃ©chargement du fichier");
 		$this->importAPI();
 	}
 
@@ -139,7 +139,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	public function testBadFile(){
 		$tmp_file = $this->testStreamUrl."/pes_aller_not_exist.xml";
 		$_FILES['enveloppe']['tmp_name'] = $tmp_file;
-		$this->expectedError("Échec lors du téléchargement du fichier");
+		$this->expectedError("Ã‰chec lors du tÃ©lÃ©chargement du fichier");
 		$this->importAPI();
 	}
 
@@ -158,7 +158,7 @@ class HeliosControllerTest extends S2lowTestCase {
             'error' => UPLOAD_ERR_OK
         );
 
-        $this->expectedError("Le fichier présenté est vide (0 octet)");
+        $this->expectedError("Le fichier prÃ©sentÃ© est vide (0 octet)");
         $this->importAPI();
     }
 
@@ -171,7 +171,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$this->expectOutputRegex("#<resultat>OK</resultat>#");
 		$this->importAPI();
 		file_put_contents($tmp_file,file_get_contents(__DIR__."/fixtures/pes_aller.xml"));
-		$message = htmlspecialchars("doublon détecté. Ce fichier a déjà été posté.",ENT_COMPAT,"UTF-8");
+		$message = htmlspecialchars("doublon dÃ©tectÃ©. Ce fichier a dÃ©jÃ  Ã©tÃ© postÃ©.",ENT_COMPAT,"UTF-8");
 		$this->expectOutputRegex("#$message>#");
 		$this->importAPI();
 	}
@@ -182,7 +182,7 @@ class HeliosControllerTest extends S2lowTestCase {
 	 */
 	public function testMaxSize(){
 		$this->heliosController->setHeliosMaxUploadSize(0);
-		$this->expectedError("Taille de fichier supérieure à la limite autorisée");
+		$this->expectedError("Taille de fichier supÃ©rieure Ã  la limite autorisÃ©e");
 		$this->importAPI();
 	}
 
@@ -211,7 +211,7 @@ class HeliosControllerTest extends S2lowTestCase {
 		$heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
 		file_put_contents($this->testStreamUrl . "/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
 		$heliosController = new HeliosController($this->getObjectInstancier());
-		$this->expectOutputRegex("#siret 12345678912345 ajouté à la collectivite 1#");
+		$this->expectOutputRegex("#siret 12345678912345 ajoutÃ© Ã  la collectivite 1#");
 		$heliosController->updateSiretFromPESAller();
 		$authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
 		$list = $authoritySiretSQL->siretList(1);

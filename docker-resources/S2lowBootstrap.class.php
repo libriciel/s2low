@@ -27,7 +27,7 @@ class S2lowBootstrap {
 
 	private function installCertificate(){
 		if (file_exists("/etc/apache2/ssl/privkey.pem")){
-			$this->log("Le certificat du site est déjà présent.");
+			$this->log("Le certificat du site est dÃ©jÃ  prÃ©sent.");
 			return;
 		}
 
@@ -37,7 +37,7 @@ class S2lowBootstrap {
 		$privkey_path  = "$letsencrypt_cert_path/privkey.pem";
 		$cert_path  = "$letsencrypt_cert_path/fullchain.pem";
 		if (file_exists($privkey_path)){
-			$this->log("Certificat letsencrypt trouvé !");
+			$this->log("Certificat letsencrypt trouvÃ© !");
 			symlink($privkey_path,"/etc/apache2/ssl/privkey.pem");
 			symlink($cert_path,"/etc/apache2/ssl/fullchain.pem");
 			return;
@@ -48,7 +48,7 @@ class S2lowBootstrap {
 		exec("$script $hostname",$output,$return_var);
 		$this->log(implode("\n",$output));
 		if ($return_var != 0){
-			throw new Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
+			throw new Exception("Impossible de gÃ©nÃ©rer ou de trouver le certificat du site $hostname !");
 		}
 	}
 
@@ -59,14 +59,14 @@ class S2lowBootstrap {
 	private function insertDemos(){
 
 		if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")){
-			$this->log("L'utilisateur admin existe déjà");
+			$this->log("L'utilisateur admin existe dÃ©jÃ ");
 			return;
 		}
 
 		$authority_id = $this->sqlQuery->queryOne(
 			"INSERT INTO authorities (id, status, name) VALUES(nextval('authorities_id_seq'), 1, 'Administrateurs') RETURNING id"
 		);
-		$this->log("Création de l'utilisateur admin [certificat DEMO-SUPER Adullact G3]");
+		$this->log("CrÃ©ation de l'utilisateur admin [certificat DEMO-SUPER Adullact G3]");
 
 		$him = new User();
 
@@ -87,7 +87,7 @@ class S2lowBootstrap {
 		$userSQL = new UserSQL($this->sqlQuery);
 		$userSQL->saveCertificateRGS2Etoiles($user_id,"");
 
-		$this->log("Utilisateur créé avec succès");
+		$this->log("Utilisateur crÃ©Ã© avec succÃ¨s");
 	}
 
 	public function populateDatabase(){
@@ -129,10 +129,10 @@ class S2lowBootstrap {
 		$cert_file = TIMESTAMPING_CERT;
 
 		if (file_exists($cert_file)){
-			$this->log("Certificat de l'horodateur déjà présent");
+			$this->log("Certificat de l'horodateur dÃ©jÃ  prÃ©sent");
 			return;
 		}
-		$this->log("Création des certificat d'horodatage");
+		$this->log("CrÃ©ation des certificat d'horodatage");
 		$hostname = $this->getHostname();
 
 		$script = __DIR__."/certificate/generate-timestamp-certificate.sh $hostname $key_file $cert_file 2>&1";
@@ -140,7 +140,7 @@ class S2lowBootstrap {
 		exec("$script ",$output,$return_var);
 		$this->log(implode("\n",$output));
 		if ($return_var != 0){
-			throw new Exception("Impossible de générer le certificat du timestamp !");
+			throw new Exception("Impossible de gÃ©nÃ©rer le certificat du timestamp !");
 		}
 
 		file_put_contents(TIMESTAMPING_PRIV_KEY_PASS,"");
@@ -149,16 +149,16 @@ class S2lowBootstrap {
 		chown($key_file,$username);
 		chown($cert_file,$username);
 		
-		$this->log("Certificat d'horodatage créé");
+		$this->log("Certificat d'horodatage crÃ©Ã©");
 	}
 
 	public function installLibersign(){
 		if (file_exists(__DIR__."/../public.ssl/libersign/update.json")){
-			$this->log("Libersign est déjà installé");
+			$this->log("Libersign est dÃ©jÃ  installÃ©");
 			return true;
 		}
 		if (empty(LIBERSIGN_INSTALLER)){
-			$this->log("Lien vers l'installeur de Libersign non trouvée");
+			$this->log("Lien vers l'installeur de Libersign non trouvÃ©e");
 			return true;
 		}
 		return $this->majLibersign();

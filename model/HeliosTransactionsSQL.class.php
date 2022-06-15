@@ -8,7 +8,7 @@ class HeliosTransactionsSQL extends SQL {
 	const ATTENTE = 2;
 	const TRANSMIS = 3;
 	const ACQUITTER = 4;
-	const VALIDER = 5; //non utilisé
+	const VALIDER = 5; //non utilisÃ©
 	const REFUSER = 6;
 	const EN_TRAITEMENT = 7;
 	const INFORMATION_DISPONIBLE = 8;

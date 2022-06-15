@@ -3,9 +3,9 @@
 ?>
 <h1>Configuration de la connexion SAE</h1>
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $id ?>'>« revenir au formulaire standard</a><br/>
+	<a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $id ?>'>Â« revenir au formulaire standard</a><br/>
 </p>
-<h2>Modification des propriétés SAE (Pastell) de <?php echo $authorityInfo['name']?></h2>
+<h2>Modification des propriÃ©tÃ©s SAE (Pastell) de <?php echo $authorityInfo['name']?></h2>
 
 <form class="form form-horizontal" action='admin_authority_sae_controler.php' method='post'>
 	<input type='hidden' name='id' value='<?php echo $id ?>' />
@@ -47,7 +47,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 label-form" for="pastell_id_e">Identifiant de l'entité (id_e) :</label>
+        <label class="col-md-4 label-form" for="pastell_id_e">Identifiant de l'entitÃ© (id_e) :</label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -63,7 +63,7 @@
 
     <h3>Actes</h3>
     <div class="form-group">
-        <label class="col-md-4 label-form" for="actes_flux_id">Identifiant du flux à créer&nbsp;(actes-generique par défaut): </label>
+        <label class="col-md-4 label-form" for="actes_flux_id">Identifiant du flux Ã  crÃ©er&nbsp;(actes-generique par dÃ©faut): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -75,7 +75,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 label-form" for="actes_action">Action à déclencher&nbsp;: (send-archive par défaut)</label>
+        <label class="col-md-4 label-form" for="actes_action">Action Ã  dÃ©clencher&nbsp;: (send-archive par dÃ©faut)</label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -123,9 +123,9 @@
     </div>
 
 
-    <h3>Hélios</h3>
+    <h3>HÃ©lios</h3>
     <div class="form-group">
-        <label class="col-md-4 label-form" for="helios_flux_id">Identifiant du flux à créer&nbsp;(helios-generique): </label>
+        <label class="col-md-4 label-form" for="helios_flux_id">Identifiant du flux Ã  crÃ©er&nbsp;(helios-generique): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"
@@ -137,7 +137,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-md-4 label-form" for="helios_action">Action à déclencher&nbsp;(send-archive par défaut): </label>
+        <label class="col-md-4 label-form" for="helios_action">Action Ã  dÃ©clencher&nbsp;(send-archive par dÃ©faut): </label>
         <div class="col-md-6">
             <input class="form-control"
                    type="text" size="30"

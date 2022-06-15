@@ -2,7 +2,7 @@
 
 require_once( __DIR__."/../../init/init.php");
 
-// Paramètre attendu id coll
+// ParamÃ¨tre attendu id coll
 // Retourne la taille du dossier actes et la taille des flux PES
 if (empty($argv[1])){
     echo "Usage : {$argv[0]} authority_id\n";

@@ -8,7 +8,7 @@ if (! $moduleSQL->hasDroit($moduleInfo['id'],$connexion->getId(),'CS')){
 $liste_id = Helpers::getVarFromPost("liste_id");
 
 if (!$liste_id){
-	Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/helios/index.php");
+	Helpers::returnAndExit(1, "Vous devez sÃ©lectionner au moins une transaction Ã  signer.", WEBSITE_SSL . "/modules/helios/index.php");
 }
 
 
@@ -23,7 +23,7 @@ foreach ($liste_id as $transaction_id){
 	try{
 	 	$transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
 	 	if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
-	 		Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
+	 		Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction nÂ°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
 	 	}
         $pesaller_path = $pesAllerRetriever->getPath($transactionInfo['sha1']);
 	 	$signature = $heliosSignature->getInfoForSignature($pesaller_path);
@@ -52,14 +52,14 @@ $doc->openContent();
 $html .= "<h1>HELIOS - Signature de plusieurs PES</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
-$html .= "<h2>Liste des fichiers à signer</h2>\n";
+$html .= "<h2>Liste des fichiers Ã  signer</h2>\n";
 
 $html .= "<div id=\"lot-area\">\n";
 $html .= "<table class=\"data-table table table-striped\">";
 $html .= "<caption>Liste des lots de transactions<caption>\n";
 $html .= "<thead>\n";
 $html .= "<tr>\n";
-$html .= " <th id=\"numero_helios\" class=\"data\">Numéro du fichier</th>\n";
+$html .= " <th id=\"numero_helios\" class=\"data\">NumÃ©ro du fichier</th>\n";
 $html .= " <th id=\"fichier_helios\" class=\"data\">Fichier</th>\n";
 $html .= "</tr>\n";
 $html .= "</thead>\n";
@@ -72,7 +72,7 @@ foreach ($transaction_list as $transactionInfo) {
 	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
 	$html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser le PES\">" . $transactionInfo['id'] . "</a></td>\n";
 	$html .= " <td headers=\"fichier_helios\">"; 
-	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_download_file.php?id=" . $transactionInfo['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['filename']. "</a>";				
+	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_download_file.php?id=" . $transactionInfo['id'] . "\" title=\"TÃ©lÃ©charger le fichier\">" . $transactionInfo['filename']. "</a>";				
 	$html .= "</td>\n";
 	$html .= "</tr>\n";
 

@@ -105,7 +105,7 @@ class PesAllerStorage {
 			$filesystem->remove($file);
 			return true;
 		}catch (Exception $e){
-    		$this->logger->alert("Problème lors de la supression du PES ALLER $file : " . $e->getMessage());
+    		$this->logger->alert("ProblÃ¨me lors de la supression du PES ALLER $file : " . $e->getMessage());
     		return false;
 		}
 	}
@@ -185,11 +185,11 @@ class PesAllerStorage {
             return;
         }
         if (!$this->heliosTransactionsSQL->isTransactionAvailable($id)) {
-            $this->logger->info("$file [transaction $id] passé à not_available = false");
+            $this->logger->info("$file [transaction $id] passÃ© Ã  not_available = false");
             $this->heliosTransactionsSQL->setTransactionAvailable($id, true);
         }
         if ($this->heliosTransactionsSQL->isTransactionInCloud($id)) {
-            $this->logger->info("$file [transaction $id] passé à is_in_cloud = false");
+            $this->logger->info("$file [transaction $id] passÃ© Ã  is_in_cloud = false");
             $this->heliosTransactionsSQL->setTransactionInCloudRemove($id);
         }
     }

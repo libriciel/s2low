@@ -17,13 +17,13 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit ();
 }
 
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit ();
 }
@@ -46,7 +46,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	$is_bordereau_1 = Helpers :: getVarFromPost("is_bordereau_$i");
 		
 	if (empty($id) ){
-		$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+		$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 		header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 		exit ();
 	}
@@ -61,7 +61,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	}
 	
 	if ($trans->get('last_status_id') != 13){
-		$_SESSION["error"] = "Le fichier PES ne peut plus être signé à ce moment-là (status : ".$trans->get('last_status_id').")";
+		$_SESSION["error"] = "Le fichier PES ne peut plus Ãªtre signÃ© Ã  ce moment-lÃ  (status : ".$trans->get('last_status_id').")";
 		header("Location:  ". WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
 	}
 	
@@ -78,7 +78,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	$new_filesize = strlen($new_pes_content);
 	
 	if ($new_filesize > HELIOS_MAX_UPLOAD_SIZE) {
-		$_SESSION["error"] = "Taille de fichier supérieure à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
+		$_SESSION["error"] = "Taille de fichier supÃ©rieure Ã  la limite autorisÃ©e (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";
 		header("Location: " . WEBSITE_SSL);
 		exit ();
 	}
@@ -105,7 +105,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 		exit ();
 	}
 
-	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
+	$heliosTransactionSQL->updateStatus($id, 1, "Fichier signÃ©");
 
 	$workerScript = $objectInstancier->get(WorkerScript::class);
 	$workerScript->putJobByClassName(HeliosStorePESAllerWorker::class,$id);
@@ -114,10 +114,10 @@ for($i=1;$i<=$nb_signature;$i++) {
 }
 	
 if ($nb_signature>1){	
-	$_SESSION["error"] = "Les signatures ont été enregistrées";
+	$_SESSION["error"] = "Les signatures ont Ã©tÃ© enregistrÃ©es";
 	header("Location:  ". WEBSITE_SSL . "/modules/helios/index.php");
 } else {
-	$_SESSION["error"] = "La signature a été enregistrée";
+	$_SESSION["error"] = "La signature a Ã©tÃ© enregistrÃ©e";
 	header("Location:  ". WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
 }
 

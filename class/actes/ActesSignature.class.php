@@ -44,7 +44,7 @@ class ActesSignature {
 	public function setSignatureThrowException($actes_included_file_id,$signature,$tmp_dir){
 		$transaction_id = $this->actesIncludedFileSQL->getTransactionId($actes_included_file_id);
 		if (! $transaction_id){
-			throw new Exception("Impossible de trouver une transaction ratachÈe au fichier ‡ signÈ");
+			throw new Exception("Impossible de trouver une transaction ratach√©e au fichier √† sign√©");
 		}
 		
 		$transactionInfo = $this->actesTransactionSQL->getInfo($transaction_id);
@@ -52,7 +52,7 @@ class ActesSignature {
 			throw new Exception("Impossible de trouver la transaction $transaction_id");
 		}
 		if ($transactionInfo['last_status_id'] != 18){
-			throw new Exception("La transaction $transaction_id n'est pas dans l'Ètat ´ En attente d'Ítre signÈe. ª");
+			throw new Exception("La transaction $transaction_id n'est pas dans l'√©tat ¬´ En attente d'√™tre sign√©e. ¬ª");
 		}
 
 		
@@ -84,7 +84,7 @@ class ActesSignature {
 		system($cmd, $ret);
 		chdir($old_cvd);
 		$this->actesIncludedFileSQL->setSignature($transaction_id,$actes_included_file_id,$signature);
-		$this->actesTransactionSQL->updateStatus($transaction_id,1, "L'acte a ÈtÈ signÈ Èlectroniquement");
+		$this->actesTransactionSQL->updateStatus($transaction_id,1, "L'acte a √©t√© sign√© √©lectroniquement");
 		return $transaction_id;
 	}
 	

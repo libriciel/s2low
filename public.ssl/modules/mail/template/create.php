@@ -2,10 +2,10 @@
 <script src="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.css" type="text/css" />
 
- <h1> Mail - Système de mail sécurisé</h1>
+ <h1> Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
   <h2>Actions</h2>
 	<div id="actions_area"> 
-            <a class="btn btn-primary" href="index.php?command=list">Messages envoyés</a>
+            <a class="btn btn-primary" href="index.php?command=list">Messages envoyÃ©s</a>
 	</div>
 
   <h2 id="in_list">Nouveau message</h2>
@@ -68,7 +68,7 @@
 	
         <form class="form-horizontal mail-form" action="index.php?command=send" method="post"  id="mailform" onSubmit="InsertFileNumber();return checkFormCreateMail();" enctype="multipart/form-data" autocomplete="off">
             <div class="form-group">
-                <label class="col-md-2" for="mailto">À : </label>
+                <label class="col-md-2" for="mailto">Ã€ : </label>
                 <div class="col-md-10">
                     <input name='mailto' id="mailto" class="form-control annuaire-autocomplete"/>
 		</div>
@@ -113,7 +113,7 @@
                 </label>
             </div>
             <div class="form-group">
-                <label class="col-md-2" for="file">Pièces jointes</label>
+                <label class="col-md-2" for="file">PiÃ¨ces jointes</label>
                 <div class="col-md-4">
                     <input id="file" class="btn btn-success btn-sm" type="button" name="ajouter" value="Joindre un fichier" onclick="InsertNewFile();" />
 		</div>

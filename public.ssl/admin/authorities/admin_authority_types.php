@@ -5,11 +5,11 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-	$jsonOutput->displayErrorAndExit("…chec de l'authentification");
+	$jsonOutput->displayErrorAndExit("√âchec de l'authentification");
 }
 
 if (! $me->isGroupAdminOrSuper()) {
-	$jsonOutput->displayErrorAndExit("AccËs refusÈ");
+	$jsonOutput->displayErrorAndExit("Acc√®s refus√©");
 }
 
 

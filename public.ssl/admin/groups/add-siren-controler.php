@@ -47,11 +47,11 @@ if (! $theSiren->isValid($siren)) {
 $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id,$siren)){
-	$_SESSION["error"] = "Le siren existe déjà dans ce groupe";
+	$_SESSION["error"] = "Le siren existe dÃ©jÃ  dans ce groupe";
 	header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
 	exit;
 }
 
 $authorityGroupSirenSQL->add($id,$siren);
-$_SESSION["error"] = "Le siren a été ajouté";
+$_SESSION["error"] = "Le siren a Ã©tÃ© ajoutÃ©";
 header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");

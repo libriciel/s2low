@@ -25,13 +25,13 @@ try {
 }
 
 ?>
-<h1>Pré-requis</h1>
+<h1>PrÃ©-requis</h1>
 
 <table border="1">
 	<tr>
-		<th>Propriété</th>
+		<th>PropriÃ©tÃ©</th>
 		<th>Attendu</th>
-		<th>Résultat</th>
+		<th>RÃ©sultat</th>
 	</tr>
 	<tr>
 		<td>$_SERVER['SSL_CLIENT_VERIFY']</td>
@@ -50,7 +50,7 @@ try {
 	</tr>
 	<tr>
 		<td>ID</td>
-		<td>Identifiant utilisateur trouvé (Authentification)</td>
+		<td>Identifiant utilisateur trouvÃ© (Authentification)</td>
 		<td><?php print_r($id) ?></td>
 	</tr>
 	<tr>
@@ -60,7 +60,7 @@ try {
 	</tr>
 	<tr>
 		<td>ID</td>
-		<td>Identifiant utilisateur trouvé (User)</td>
+		<td>Identifiant utilisateur trouvÃ© (User)</td>
 		<td><?php print_r($user->getId()) ?></td>
 	</tr>
 	<tr>

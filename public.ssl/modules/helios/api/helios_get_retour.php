@@ -1,13 +1,13 @@
 <?php
 
 /**
- * * @api {get} /modules/helios/api/helios_get_retour.php Récupération du contenu d'un PES_RETOUR
- * @apiDescription Récupération du fichier xml correspondant au pes_retour demandé.
+ * * @api {get} /modules/helios/api/helios_get_retour.php RÃ©cupÃ©ration du contenu d'un PES_RETOUR
+ * @apiDescription RÃ©cupÃ©ration du fichier xml correspondant au pes_retour demandÃ©.
  * @apiName helios_get_retour.php
  * @apiGroup Helios
  * @apiVersion 1.1.0
  *
- * @apiParam {Number} id  Identifiant des pes_retour concerné.
+ * @apiParam {Number} id  Identifiant des pes_retour concernÃ©.
  * @apiSuccess String le fichier xml du pes_retour
  *
  */
@@ -43,12 +43,12 @@ try{
 	$me = new User();
 	
 	if (!$me->authenticate()) {
-	  $msg = "Échec de l'authentification";
+	  $msg = "Ã‰chec de l'authentification";
 	  throw new Exception('KO');
 	}
 	
 	if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-	  $msg= "Accès refusé";
+	  $msg= "AccÃ¨s refusÃ©";
 	  throw new Exception('KO');
 	}
 

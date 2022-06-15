@@ -10,7 +10,7 @@ if (! $me->authenticate()) {
 }
 
 if (! $me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit();
 }
@@ -26,7 +26,7 @@ $groups_list = $sqlQuery->query($sql);
 $menuHTML = new MenuHTML();
 
 $doc = new HTMLLayout();
-$doc->setTitle("Configuration de la connexion SAE - S²low");
+$doc->setTitle("Configuration de la connexion SAE - SÂ²low");
 $doc->openContainer();
 $doc->openSideBar();
 $doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
@@ -36,7 +36,7 @@ $doc->openContent();
 ob_start();
 ?>
 
-	<h1>Groupes de collectivités</h1>
+	<h1>Groupes de collectivitÃ©s</h1>
 	<p id="back-transaction-btn">
 		<a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php" class="btn btn-default">Retour liste groupes</a>
 	</p>
@@ -44,7 +44,7 @@ ob_start();
 	<table class="data-table table table-striped ">
 		<tr>
 			<th>Groupe</th>
-			<th>Nombre de collectivités</th>
+			<th>Nombre de collectivitÃ©s</th>
 
 		</tr>
 		<?php foreach($groups_list as $i => $group) : ?>

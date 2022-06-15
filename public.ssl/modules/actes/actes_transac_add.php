@@ -17,31 +17,31 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
 if ($module->getParam("paper") == "on") {
-  $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
+  $_SESSION["error"] = "Mode Â«&nbsp;papier&nbsp;Â» actif. AccÃ¨s interdit.";
   header("Location: " . WEBSITE_SSL . "/modules/actes/");
   exit ();
 }
 
 
-// Collectivité de l'utilisateur courant
+// CollectivitÃ© de l'utilisateur courant
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Parametres pour le traitement par lot
 $batchFileId = Helpers :: getVarFromGet("batchfile");
 
-// Détermination si traitement par lot ou pas
+// DÃ©termination si traitement par lot ou pas
 $batchMode = false;
 if (isset ($batchFileId) && is_numeric($batchFileId)) {
   $zeBatchFile = new ActesBatchFile($batchFileId);
@@ -51,7 +51,7 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
       $owner = new User($zeBatch->get("user_id"));
       $owner->init();
 
-      // Vérification des permissions sur le lot
+      // VÃ©rification des permissions sur le lot
       if (($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) || ($me->getId() == $owner->getId())) {
         $batchMode = true;
       }
@@ -109,10 +109,10 @@ $(function(){
           '<div class="actes_pj">' +
                 '<div class="form-group col-md-offset-1">' +
                     '<label for="acte_attachments_' + field_nb + '" class="">' +
-                        'Pièce jointe n°' + field_nb + ':' +
+                        'PiÃ¨ce jointe nÂ°' + field_nb + ':' +
                     '</label>' +
                          '<div class="form-group col-sm-offset-1" >' +   
-                         '<label>Type de pièce jointe</label><br/>' +
+                         '<label>Type de piÃ¨ce jointe</label><br/>' +
                          '<select class="select_type_pj" id="actes_attachments_type_'+field_nb+'" name="type_pj[]">' +
                          '</select></div>' +
                         '<div class="form-group col-md-offset-1" >' +
@@ -143,7 +143,7 @@ $(function(){
             selector
                  .append($("<option></option>")
                             .attr("value","")
-                            .text("Veuillez sélectionner la nature de l'acte")); 
+                            .text("Veuillez sÃ©lectionner la nature de l'acte")); 
      }
   }
   
@@ -193,7 +193,7 @@ $(function(){
       selector
              .append($("<option></option>")
                         .attr("value","99_SE")
-                        .text("Fichier de signature électronique"));
+                        .text("Fichier de signature Ã©lectronique"));
   };
 
 
@@ -240,18 +240,18 @@ if ( ( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassificati
 
 
   // Zone d'information
-  // Affichage du lien pour demande de mise à jour classification matières sous-matières
+  // Affichage du lien pour demande de mise Ã  jour classification matiÃ¨res sous-matiÃ¨res
   $html .= "<div  class=\"bs-callout bs-callout-info\">\n";
   if ($dateClassif = ActesClassification :: getLastRevisionDate($myAuthority->getId(), false)) {
-    $html .= "<p>La classification matières et sous-matières utilisée pour votre collectivité est la version du " . Helpers :: getDateFromBDDDate($dateClassif) . ".<br/>\n";
-    $html .= "Pour forcer la mise à jour de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
+    $html .= "<p>La classification matiÃ¨res et sous-matiÃ¨res utilisÃ©e pour votre collectivitÃ© est la version du " . Helpers :: getDateFromBDDDate($dateClassif) . ".<br/>\n";
+    $html .= "Pour forcer la mise Ã  jour de cette classification depuis le serveur du ministÃ¨re, veuillez utiliser le bouton ci-dessous :</p>\n";
   } else {
-    $html .= "<p>Il n'existe pas encore de classification matières et sous-matières associée à votre collectivité.</p>\n";
-    $html .= "<p>Pour forcer la récupération de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
+    $html .= "<p>Il n'existe pas encore de classification matiÃ¨res et sous-matiÃ¨res associÃ©e Ã  votre collectivitÃ©.</p>\n";
+    $html .= "<p>Pour forcer la rÃ©cupÃ©ration de cette classification depuis le serveur du ministÃ¨re, veuillez utiliser le bouton ci-dessous :</p>\n";
   }
 
-  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n";
-  $html .= "<div class=\"button_area\"><input class=\"submit_button btn btn-default\" type=\"submit\" value=\"Mise à jour classification\" /></div>\n";
+  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment crÃ©er une transaction de demande de classification ?');\">\n";
+  $html .= "<div class=\"button_area\"><input class=\"submit_button btn btn-default\" type=\"submit\" value=\"Mise Ã  jour classification\" /></div>\n";
   $html .= "</form>\n";
 }
 
@@ -262,32 +262,32 @@ $doc->closeSideBar();
 $doc->openContent();
 
 // Zone contenu
-$html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
+$html = "<h1>ACTES - DÃ©matÃ©rialisation du contrÃ´le de lÃ©galitÃ©</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()){
-    $html.="<div class='alert alert-warning'>Votre certificat n'est pas conforme au RGS, vous ne pourrez pas télétransmettre !</div>";
+    $html.="<div class='alert alert-warning'>Votre certificat n'est pas conforme au RGS, vous ne pourrez pas tÃ©lÃ©transmettre !</div>";
 }
 
 
 
-$html .= "<h2>Création d'une transaction Actes</h2>\n";
+$html .= "<h2>CrÃ©ation d'une transaction Actes</h2>\n";
 
 if ($batchMode) {
-  $html .= "<div class=\"alert alert-info\"> Transmission d'acte depuis le lot «&nbsp;" . get_hecho($zeBatch->get("description")) . "&nbsp;»<br />";
+  $html .= "<div class=\"alert alert-info\"> Transmission d'acte depuis le lot Â«&nbsp;" . get_hecho($zeBatch->get("description")) . "&nbsp;Â»<br />";
   $html .= "Fichier courant&nbsp;: " . get_hecho($zeBatchFile->getDisplayName()) . "<br />\n</div>";
 }
 
-$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
+$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la dÃ©cision', 'isDatePasse'";
 
 
 
 if (!$batchMode) {
-  $html .= ", 'acte_pdf_file', 'Fichier PDF contenant l\'acte', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
+  $html .= ", 'acte_pdf_file', 'Fichier PDF contenant l\'acte', 'RisString', 'acte_attachments[]', 'PiÃ¨ces jointes', 'isString'";
 }
 
-$html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
+$html .= ")) {Â toggle_upload('form_progress', progress_bar); return true; } else {Â return false; }\">\n";
 $html .='<input type="hidden" name="MAX_FILE_SIZE" value="'.ACTES_ARCHIVE_MAX_SIZE.'" /> ';
 
 if ($batchMode) {
@@ -324,7 +324,7 @@ $html .= "   <input type=\"hidden\" id=\"classif4\" name=\"classif4\" value=\"" 
 $html .= "   <input type=\"hidden\" id=\"classif5\" name=\"classif5\" value=\"" . Helpers :: getFromSession("classif5") . "\" />\n";
 $html .= "   </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "   <label for=\"act-number\" class=\"control-label\"> Numéro de l'acte (15 caractères maxi, chiffres, lettres en majuscule ou _)</label>\n";
+$html .= "   <label for=\"act-number\" class=\"control-label\"> NumÃ©ro de l'acte (15 caractÃ¨res maxi, chiffres, lettres en majuscule ou _)</label>\n";
 $html .= "   <input id=\"act-number\" class=\"form-control\" type=\"text\" name=\"number\" value=\"";
 
 $number = Helpers :: getFromSession("number");
@@ -333,10 +333,10 @@ if ($batchMode) {
   $number = $zeBatch->get("num_prefix") . "_" . $zeBatch->getNextSuffix();
 }
 
-$html .= get_hecho($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractères maxi, chiffres, lettres en majuscule ou _\"/>\n";
+$html .= get_hecho($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caractÃ¨res maxi, chiffres, lettres en majuscule ou _\"/>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la décision : </label>\n";
+$html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la dÃ©cision : </label>\n";
 $html .= "    <input id=\"decision_date\" class=\"form-control\" name=\"decision_date\" type=\"hidden\" value=\"" . $decision_date . "\"/>\n";
 $html .= "    <script type=\"text/javascript\">\n";
 $html .= "    //<![CDATA[\n";
@@ -359,7 +359,7 @@ $document_papier_checked = Helpers :: getFromSession("document_papier")?'checked
 
 $html .= <<<"EOL"
     <div class="form-group">
-        <label for="document_papier" class="control-label">Envoi de documents papiers complémentaires : </label>
+        <label for="document_papier" class="control-label">Envoi de documents papiers complÃ©mentaires : </label>
         <input type="checkbox" name="document_papier" $document_papier_checked />
     </div>
 EOL;
@@ -376,7 +376,7 @@ $html .= "   <div class=\"row-legend\">\n";
 $html .= "   <legend>Fichier PDF ou XML contenant l'acte : </legend></div>\n";
 $html .= "     <div class=\"actes_files_form\">\n";
 $html .= "       <div class=\"form-group col-md-offset-1 \">\n";
-$html .= "         <label>Type de pièce jointe</label><br/>";
+$html .= "         <label>Type de piÃ¨ce jointe</label><br/>";
 $html .= "            <select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\"></select>";
 $html .= "       </div>\n";
 if (! $batchMode) {
@@ -392,9 +392,9 @@ $html .= " </div>\n";
 $html .= "<div class=\"form-group\">\n";    
 $html .= "  <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
-$html .= "  <legend>Pièces jointes supplémentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter une pièce jointe</a></legend></div>\n";
+$html .= "  <legend>PiÃ¨ces jointes supplÃ©mentaires : <a id='addField' href=\"#tedetis\" title=\"Ajouter un champ de sÃ©lection de fichier supplÃ©mentaire\">Ajouter une piÃ¨ce jointe</a></legend></div>\n";
 $html .= "   <div id=\"attachments_fields\"></div>\n";
-$html .= " 		<a href='#' id='removeField'>Supprimer la dernière pièce jointe</a>";
+$html .= " 		<a href='#' id='removeField'>Supprimer la derniÃ¨re piÃ¨ce jointe</a>";
 $html .= " </fieldset>\n";  
 $html .= "</div>\n";
 
@@ -434,10 +434,10 @@ foreach ($broadcast_email as $email) {
 $html .= "     </div>\n";
 
 if ($batchMode) {
-  $html .= "   <div class=\"form-group\"><label for=\"next\" class=\"control-label email-checkbox\">Passer au fichier suivant dans le lot après création de cette transaction : </label><input id=\"next\" type=\"checkbox\" name=\"process_next_batch_file\" checked=\"checked\" /></div>\n";
+  $html .= "   <div class=\"form-group\"><label for=\"next\" class=\"control-label email-checkbox\">Passer au fichier suivant dans le lot aprÃ¨s crÃ©ation de cette transaction : </label><input id=\"next\" type=\"checkbox\" name=\"process_next_batch_file\" checked=\"checked\" /></div>\n";
 }
 
-$html .= "<div id=\"form_progress\" class=\"form-group\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\">Créer la transaction</button></div>\n";
+$html .= "<div id=\"form_progress\" class=\"form-group\"><button class=\"col-md-offset-5 btn btn-primary\" type=\"submit\">CrÃ©er la transaction</button></div>\n";
 $html .= "</form>\n";
 
 $doc->addBody($html);

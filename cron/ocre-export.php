@@ -7,12 +7,12 @@ require_once( __DIR__ . "/../init/init.php");
 $dir_handle = opendir(HELIOS_OCRE_FILE_PATH);
 
 if (! $dir_handle){
-	echo "Impossible d'ouvrir le répertoire ".HELIOS_OCRE_FILE_PATH;
+	echo "Impossible d'ouvrir le rÃ©pertoire ".HELIOS_OCRE_FILE_PATH;
 	exit(-1);
 }
 
 
-echo "Envoi des fichier du répertoire : ".HELIOS_OCRE_FILE_PATH."\n";
+echo "Envoi des fichier du rÃ©pertoire : ".HELIOS_OCRE_FILE_PATH."\n";
 $sigtermHandler = SigTermHandler::getInstance();
 while (false !== ($file = readdir($dir_handle)) ) {
 	$file_path = HELIOS_OCRE_FILE_PATH . "/".$file;

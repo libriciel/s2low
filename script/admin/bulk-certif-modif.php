@@ -8,7 +8,7 @@ $user_id = 12745;
 // la partie x509 du certificat :  openssl pkcs12 -in certificat.p12 -out client.pem -clcerts -nokeys
 $old_certificate_pem = '/Users/eric/Desktop/old-cert.pem';
 
-//  la clé privée du certificat :   openssl pkcs12 -in certificat.p12 -out key.pem -nocerts
+//  la clÃ© privÃ©e du certificat :   openssl pkcs12 -in certificat.p12 -out key.pem -nocerts
 $old_key_pem = '/Users/eric/Desktop/old-key.pem';
 
 $login = "epommateau";

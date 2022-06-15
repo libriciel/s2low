@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier que le nombre d'acte revenu en erreur ne dépasse pas un seuil
+//Script charge de verifier que le nombre d'acte revenu en erreur ne dÃ©passe pas un seuil
 //sur une tranche horaire
 
 //RETOURNE 0 si tout va bien

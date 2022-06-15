@@ -6,12 +6,12 @@ $actesStatistiques = new ActesStatistiques($sqlQuery);
 
 $title = "Statistiques de transmission des enveloppes ";
 if ($droit->isSuperAdmin($userInfo)) {
-    $title .= " pour l'ensemble des collectivités";
+    $title .= " pour l'ensemble des collectivitÃ©s";
 } elseif ($droit->isGroupAdmin($userInfo)) {
     $title .="pour le groupe " . $groupeInfo["name"];
     $actesStatistiques->setGroup($userInfo['authority_group_id']);
 } elseif ($droit->isAuthorityAdmin($userInfo)) {
-    $title .= " pour la collectivité " . $authorityInfo["name"];
+    $title .= " pour la collectivitÃ© " . $authorityInfo["name"];
     $actesStatistiques->setAuthority($userInfo['authority_id']);
 } else {
     $title .= " pour l'utilisateur " . $userInfo['pretty_name'];
@@ -30,7 +30,7 @@ $menuHTML = new MenuHTML();
 
 
 $doc = new HTMLLayout();
-$doc->setTitle("Statistiques - ACTES - S²low");
+$doc->setTitle("Statistiques - ACTES - SÂ²low");
 $doc->openContainer();
 $doc->openSideBar();
 $doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
@@ -39,21 +39,21 @@ $doc->openContent();
 
 ob_start();
 ?>
-        <h1>ACTES - Dématérialisation du contrôle de légalité</h1>
+        <h1>ACTES - DÃ©matÃ©rialisation du contrÃ´le de lÃ©galitÃ©</h1>
         <h2><?php echo $title ?></h2>
             <dl>
                 <?php
-                foreach (array(date("Y-m-01") => "Depuis le début du mois",
+                foreach (array(date("Y-m-01") => "Depuis le dÃ©but du mois",
             date("Y-01-01") =>
-            "Depuis le début de l'année", "1970-01-01" => "En totalité") as $date => $titre) :
+            "Depuis le dÃ©but de l'annÃ©e", "1970-01-01" => "En totalitÃ©") as $date => $titre) :
                     ?>
                     <dt><?php echo $titre ?>&nbsp;:</dt>
                     <dd>
                         <ul>
-                            <li>Nombre d'enveloppes postées : <?php echo $statInfo[$date]['nb_envelope'] ?></li>
-                            <li>Nombre d'enveloppes transmises au ministère : <?php echo $statInfo[$date]['nb_envelope_poste'] ?></li>
-                            <li>Volume des enveloppes postées sur le tdt&nbsp;: <?php echo $statInfo[$date]['volume'] ?> octets</li>
-                            <li>Volume des enveloppes transmises au ministère&nbsp;: <?php echo $statInfo[$date]['volume_poste'] ?> octets</li>
+                            <li>Nombre d'enveloppes postÃ©es : <?php echo $statInfo[$date]['nb_envelope'] ?></li>
+                            <li>Nombre d'enveloppes transmises au ministÃ¨re : <?php echo $statInfo[$date]['nb_envelope_poste'] ?></li>
+                            <li>Volume des enveloppes postÃ©es sur le tdt&nbsp;: <?php echo $statInfo[$date]['volume'] ?> octets</li>
+                            <li>Volume des enveloppes transmises au ministÃ¨re&nbsp;: <?php echo $statInfo[$date]['volume_poste'] ?> octets</li>
                         </ul>
 <?php endforeach; ?>
                 </dd>

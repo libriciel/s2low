@@ -23,7 +23,7 @@ class TransactionSQLTest extends S2lowTestCase {
 
 	//FIX #378
 	/*public function testGetAllEmpty(){
-		//Ca ne doit pas marché si on ne met pas %xxx% pour chercher une partie
+		//Ca ne doit pas marchÃ© si on ne met pas %xxx% pour chercher une partie
 		$this->transactionSQL->setNumero('2017');
 		$all = $this->transactionSQL->getAll();
 		$this->assertEmpty($all);

@@ -14,7 +14,7 @@ if (! $id_d){
 	exit;
 }
 
-$msg = "Programmation de l'envoi de la transaction $id à Pastell";
+$msg = "Programmation de l'envoi de la transaction $id Ã  Pastell";
 
 $_SESSION['error'] = $msg;
 	

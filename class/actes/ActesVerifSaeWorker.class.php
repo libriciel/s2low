@@ -46,7 +46,7 @@ class ActesVerifSaeWorker implements IWorker {
 		try {
 			$this->verifArchiveThrow($transaction_id);
 		} catch (Exception $e){
-			$this->logger->error("Problème lors de la vérification de l'archive : " . $e->getMessage());
+			$this->logger->error("ProblÃ¨me lors de la vÃ©rification de l'archive : " . $e->getMessage());
 		}
 	}
 
@@ -59,7 +59,7 @@ class ActesVerifSaeWorker implements IWorker {
 
 		$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
 
-		$this->logger->info("Vérification de la transaction {$transaction_info['unique_id']} ({$transaction_info['id']}) sur Pastell");
+		$this->logger->info("VÃ©rification de la transaction {$transaction_info['unique_id']} ({$transaction_info['id']}) sur Pastell");
 
 		$pastellProperties = $this->pastellPropetiesSQL->getPastellProperties($transaction_info['authority_id']);
 		$pastellWrapper = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
@@ -68,7 +68,7 @@ class ActesVerifSaeWorker implements IWorker {
 		$pastell_transaction_info = $pastellWrapper->getInfo($transaction_info['sae_transfer_identifier']);
 
 		if (in_array($pastell_transaction_info['last_action']['action'],['verif-sae-erreur','validation-sae-erreur','erreur-envoie-sae','fatal-error'])){
-			$msg = "La transaction {$transaction_info['id']} a été refusé par le SAE : (état {$pastell_transaction_info['last_action']['action']})";
+			$msg = "La transaction {$transaction_info['id']} a Ã©tÃ© refusÃ© par le SAE : (Ã©tat {$pastell_transaction_info['last_action']['action']})";
 
 			$this->actesTransactionsSQL->updateStatus(
 				$transaction_info['id'],
@@ -83,7 +83,7 @@ class ActesVerifSaeWorker implements IWorker {
 		try {
 			$reply_sae = $pastellWrapper->getFile($transaction_info['sae_transfer_identifier'], 'reply_sae');
 		} catch (Exception $e){
-			$this->logger->error("Il n'y a pas encore de réponse (".$e->getMessage().")");
+			$this->logger->error("Il n'y a pas encore de rÃ©ponse (".$e->getMessage().")");
 			return false;
 		}
 
@@ -91,7 +91,7 @@ class ActesVerifSaeWorker implements IWorker {
 		$xml = $simpleXMLWrapper->loadString($reply_sae);
 
 		if ( ! $this->isTransfertAccepted($xml)) {
-			$msg = "La transaction {$transaction_info['id']} a été refusé par le SAE.\n" . $this->getXMLMessage($xml);
+			$msg = "La transaction {$transaction_info['id']} a Ã©tÃ© refusÃ© par le SAE.\n" . $this->getXMLMessage($xml);
 			$this->actesTransactionsSQL->updateStatus(
 				$transaction_info['id'],
 				ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ,
@@ -103,7 +103,7 @@ class ActesVerifSaeWorker implements IWorker {
 			return true;
 		}
 
-		$msg = "La transaction {$transaction_info['id']} a été acceptée par le SAE : \n".$this->getXMLMessage($xml);
+		$msg = "La transaction {$transaction_info['id']} a Ã©tÃ© acceptÃ©e par le SAE : \n".$this->getXMLMessage($xml);
 		$this->actesTransactionsSQL->updateStatus(
 			$transaction_info['id'],
 			ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE,

@@ -84,7 +84,7 @@ class ActesExportTest extends S2lowTestCase {
 	 */
 	public function testExportWhenAuthorityDoesNotExists(){
 		$actesExport = $this->getActesExport();
-		$this->setExpectedException(UnrecoverableException::class,"La collectivitÈ 42 n'existe pas");
+		$this->setExpectedException(UnrecoverableException::class,"La collectivit√© 42 n'existe pas");
 		$actesExport->export(42, "/tmp/");
 	}
 
@@ -95,7 +95,7 @@ class ActesExportTest extends S2lowTestCase {
 		$actesExport = $this->getActesExport();
 		$this->setExpectedException(
 			UnrecoverableException::class,
-			"Le rÈpertoire /42/ n'existe pas ou n'est pas accessible en Ècriture"
+			"Le r√©pertoire /42/ n'existe pas ou n'est pas accessible en √©criture"
 		);
 		$actesExport->export(1, "/42/");
 	}
@@ -107,7 +107,7 @@ class ActesExportTest extends S2lowTestCase {
 		$actesExport = $this->getActesExport();
 		$actesExport->export(1, "/tmp/",0,0);
 		$log_records = $this->getLogRecords();
-		$this->assertEquals("Aucune transaction ne correspond aux critËres",$log_records[2]['message']);
+		$this->assertEquals("Aucune transaction ne correspond aux crit√®res",$log_records[2]['message']);
 	}
 
 }

@@ -93,7 +93,7 @@ if (!$me->authenticate()) {
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accés refusé";
+  $_SESSION["error"] = "AccÃ©s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -167,8 +167,8 @@ function afficheWarning(){
       if(liste[i].checked) n++;
     }
   }
-  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sélectionnées ? ";
-  msg += "Cette action est non réversible et est sous votre entière responsabilité";
+  var msg = "Voulez-vous vraiment affecter les " + n + " transactions sÃ©lectionnÃ©es ? ";
+  msg += "Cette action est non rÃ©versible et est sous votre entiÃ¨re responsabilitÃ©";
   return confirm(msg);
 }
 //]]>
@@ -201,7 +201,7 @@ $doc->openContent();
 
 $status = HeliosTransaction :: getStatusList();
 $status["999"] = "En cours";
-$status["all"] = "Tous les états";
+$status["all"] = "Tous les Ã©tats";
 
 if ($envelopes){
 	$owner = new User($envelopes[0]["user_id"]);
@@ -218,34 +218,34 @@ ob_start();
 <script type="text/javascript" src="/javascript/zselect.js"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
-<h1>Helios - Dématérialisation de documents financiers</h1>
+<h1>Helios - DÃ©matÃ©rialisation de documents financiers</h1>
 
 
 <div id="actions_area">
 	<h2>Actions</h2>
 
 	<?php if(! $helios_configured) : ?>
-		<div class='alert alert-danger'>Attention les paramètres du module Helios sont incomplets et ne permettront pas la télétransmission.</div>
+		<div class='alert alert-danger'>Attention les paramÃ¨tres du module Helios sont incomplets et ne permettront pas la tÃ©lÃ©transmission.</div>
 	<?php endif; ?>
 
 	<?php if (!$me->isSuper() && $me->canEdit($module->get('name'))) : ?>
 		<?php if ($module->getParam("paper") == "on") : ?>
-			<p>Le système est actuellement en mode &nbsp;papier&nbsp;.
-				Dans ce mode il est impossible de créer de nouvelle transaction.
-				Les transferts doivent se faire par les moyens classiques (non dématérialisé).
+			<p>Le systÃ¨me est actuellement en mode &nbsp;papier&nbsp;.
+				Dans ce mode il est impossible de crÃ©er de nouvelle transaction.
+				Les transferts doivent se faire par les moyens classiques (non dÃ©matÃ©rialisÃ©).
 			</p>
 		<?php else :  ?>
 	 		<a class="btn btn-primary" href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_fichier_import.php" >Importer un fichier</a>
 		<?php endif; ?>
 	<?php endif; ?>
-	<a class="btn btn-primary" href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_retour.php" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
+	<a class="btn btn-primary" href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_retour.php" title="afficher la liste des rÃ©ponses reÃ§ues">RÃ©ponse d'HÃ©lios</a>
 </div>
 
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering-area');">Filtrage</h2>
 <div id="filtering-area">
 	<form  role="form" class="form-horizontal" action="<?php echo WEBSITE_SSL ?>/modules/helios/index.php" method="get">
 		<div class="form-group">
-			<label class="col-md-3 control-label" for="status">État</label>
+			<label class="col-md-3 control-label" for="status">Ã‰tat</label>
 			<div class="col-md-3">
 				<?php echo $doc->getHTMLSelect("status", $status, $fstatus)  ?>
 			</div>
@@ -325,7 +325,7 @@ ob_start();
 		<div class="form-group">
 
 			<?php if ($me->isGroupAdminOrSuper()) : ?>
-				<label for="authority" class="col-md-3 control-label">Collectivité</label>
+				<label for="authority" class="col-md-3 control-label">CollectivitÃ©</label>
 				<div class="col-md-3">
 					<select class="form-control zselect_authorities" name="authority">
 						<?php if($me->isSuper()) : ?><option value="">Toutes</option><?php endif; ?>
@@ -346,31 +346,31 @@ ob_start();
 		</div>
 		<div class="form-group">
 			<button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
-			<a href="<?php WEBSITE_SSL ?>/modules/helios/index.php" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
+			<a href="<?php WEBSITE_SSL ?>/modules/helios/index.php" class="col-md-offset-3 col-md-3 btn btn-default">Remise Ã Â zÃ©ro</a>
 		</div>
 	</form>
 </div>
 
-<h2>Liste des fichiers postés</h2>
+<h2>Liste des fichiers postÃ©s</h2>
 <div id="transaction-area">
 
 <?php if (count($envelopes) <= 0) : ?>
-	Pas de transaction trouvée correspondant aux critères de filtrage.
+	Pas de transaction trouvÃ©e correspondant aux critÃ¨res de filtrage.
 <?php else: ?>
 
 	<form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_close.php" method="post">
 		<table class="transactions_list">
-			<table id="transaction-list" class="data-table table table-striped" summary="Ce tableau présente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios posté">
-				<caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
+			<table id="transaction-list" class="data-table table table-striped" summary="Ce tableau prÃ©sente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios postÃ©">
+				<caption>Liste des fichiers Helios postÃ©s en fonction des choix de filtrage</caption>
 				<thead>
 					<tr>
-						<th>Sél.</th>
+						<th>SÃ©l.</th>
 						<th id="filename">Nom de fichier</th>
 						<th id="date">Date de postage</th>
 						<th id="status">Etat actuel</th>
 						<th id="authority-name">Suivie par</th>
 						<?php if ($me->isGroupAdminOrSuper()) : ?>
-							<th>Collectivité</th>
+							<th>CollectivitÃ©</th>
 						<?php endif; ?>
 						<th id="action">Actions</th>
 					</tr>
@@ -406,7 +406,7 @@ ob_start();
 							<?php endif; ?>
 							<td headers="action">
 								<a href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_show.php?id=<?php echo $envelope["id"] ?>" class="icon">
-									<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail" />
+									<img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le dÃ©tail" />
 								</a>
 							</td>
 						</tr>
@@ -416,14 +416,14 @@ ob_start();
 			</div>
 		<br/><br/>
 		<div id="selection-actions">
-			<a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
-			<a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout désélectionner" class="btn btn-default">Tout desélectionner</a>
-			<a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sélection" class="btn btn-default">Inverser la sélection</a>
+			<a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sÃ©lectionner" class="btn btn-default">Tout sÃ©lectionner</a>
+			<a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout dÃ©sÃ©lectionner" class="btn btn-default">Tout desÃ©lectionner</a>
+			<a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sÃ©lection" class="btn btn-default">Inverser la sÃ©lection</a>
 		</div>
 		<br/>
 
 		<?php if (isset($sel_ok[4]) || isset($sel_ok[8]) ||  isset($sel_ok[11]) || isset($sel_ok[20])) : ?>
-			<input type='submit' class='btn btn-default' value='Envoyer la sélection au SAE'/>
+			<input type='submit' class='btn btn-default' value='Envoyer la sÃ©lection au SAE'/>
 		<?php endif; ?>
 	</form>
 
@@ -434,7 +434,7 @@ ob_start();
 
 	<?php   if (isset($sel_ok[13])) : ?>
 		<form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_batch_sign.php" method="post">
-			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
+			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sÃ©lectionnÃ©es">
 		</form>
 		<script type='text/javascript'>
 			$(document).ready(function() {

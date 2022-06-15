@@ -9,10 +9,10 @@ interface IWorker {
 	public function getQueueName();
 
 	/**
-	 * En fonction d'un identifiant, retourne les données à envoyé sur la queue
-	 * Cela permettrait d'optimiser pour ne pas avoir a faire des requêtes lors du travail, mais charge la queue...
+	 * En fonction d'un identifiant, retourne les donnÃ©es Ã  envoyÃ© sur la queue
+	 * Cela permettrait d'optimiser pour ne pas avoir a faire des requÃªtes lors du travail, mais charge la queue...
 	 * @param $id int identifiant
-	 * @return mixed donnée à envoyé sur la queue
+	 * @return mixed donnÃ©e Ã  envoyÃ© sur la queue
 	 */
 	public function getData($id);
 
@@ -33,13 +33,13 @@ interface IWorker {
 
 	/**
 	 * @param $data
-	 * @return string|false le nom du verrou exlusif à utiliser pour la section critique "work", false si work n'est pas une section critique
+	 * @return string|false le nom du verrou exlusif Ã  utiliser pour la section critique "work", false si work n'est pas une section critique
 	 */
 	public function getMutexName($data);
 
 	/**
 	 * @param $data
-	 * @return boolean indique si les données sont encore valide (i.e la transaction dans le bon état par exemple), si false, on sort le travail de la file
+	 * @return boolean indique si les donnÃ©es sont encore valide (i.e la transaction dans le bon Ã©tat par exemple), si false, on sort le travail de la file
 	 */
 	public function isDataValid($data);
 

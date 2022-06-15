@@ -24,7 +24,7 @@ class ActesExportControllerTest extends S2lowTestCase {
         $frontController = $this->getObjectInstancier()->get("FrontController");
         $frontController->go("ActesExport","handler");
         $this->assertEquals(
-            "La récupération est limitée à un intervalle de 400 jours",
+            "La rÃ©cupÃ©ration est limitÃ©e Ã  un intervalle de 400 jours",
             $this->getObjectInstancier()->get("Environnement")->session()->get("error")
         );
     }

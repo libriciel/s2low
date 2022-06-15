@@ -2,10 +2,10 @@
 
 /**
  * La partie Java n'enregistait pas correctemnt l'authority_id de la table journal
- * (il s'agit d'une dénormalisation de cette table pour des soucis de performances)
+ * (il s'agit d'une dÃ©normalisation de cette table pour des soucis de performances)
  *
- * Cela crée un bug lors de l'affichage des journaux des collectivités (la requête utilisant les colonnes dénormalisé)
- * Ce script est à passé avant le passage à la version 2.4 de S2LOW
+ * Cela crÃ©e un bug lors de l'affichage des journaux des collectivitÃ©s (la requÃªte utilisant les colonnes dÃ©normalisÃ©)
+ * Ce script est Ã  passÃ© avant le passage Ã  la version 2.4 de S2LOW
  *
  */
 

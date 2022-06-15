@@ -37,7 +37,7 @@ class PastellWrapper {
 	private function callAPI($url,array $postData = array(),$postFile = array(),$http_verb = ""){
 
 		if (! $url){
-			$this->s2lowLogger->alert("Pastell n'est pas configuré !");
+			$this->s2lowLogger->alert("Pastell n'est pas configurÃ© !");
 			return false;
 		}
 
@@ -70,7 +70,7 @@ class PastellWrapper {
 
 		$data = json_decode($raw_data,true);
 		if (! $data){
-			throw new Exception("Impossible de décoder les données reçu : $raw_data");
+			throw new Exception("Impossible de dÃ©coder les donnÃ©es reÃ§u : $raw_data");
         }
 
 		if (isset($data['status']) && $data['status']=='error' ){
@@ -91,7 +91,7 @@ class PastellWrapper {
 				return true;
 			}
 		}
-		$this->lastError = "L'entité Pastell « {$this->pastellProperties->id_e} » n'est pas autorisé pour l'utilisateur « {$this->pastellProperties->login} ».";
+		$this->lastError = "L'entitÃ© Pastell Â« {$this->pastellProperties->id_e} Â» n'est pas autorisÃ© pour l'utilisateur Â« {$this->pastellProperties->login} Â».";
 		return false;
 	}
 
@@ -107,7 +107,7 @@ class PastellWrapper {
 
 		$result = $this->callAPI("create-document.php?id_e={$this->pastellProperties->id_e}&type=$flux_id");
 		if (empty($result['id_d'])){
-			throw new Exception("Impossible de créer le document sur Pastell");
+			throw new Exception("Impossible de crÃ©er le document sur Pastell");
 		}
 
 		$id_d = $result['id_d'];
@@ -136,7 +136,7 @@ class PastellWrapper {
 
 		$result = $this->callAPI("create-document.php?id_e={$this->pastellProperties->id_e}&type=$flux_id");
 		if (empty($result['id_d'])){
-			throw new Exception("Impossible de créer le document sur Pastell");
+			throw new Exception("Impossible de crÃ©er le document sur Pastell");
 		}
 		$id_d = $result['id_d'];
 		$info = array(	'id_e' => $this->pastellProperties->id_e,

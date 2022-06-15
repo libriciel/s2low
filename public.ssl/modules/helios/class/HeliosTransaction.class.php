@@ -2,12 +2,12 @@
 
 /**
  * \class HeliosTransaction HeliosTransaction.class.php
- * \brief Cette classe permet de gérerer les transactions HELIOS
- * \author Cristina Pop <cpop@alternancesoft.com> et Jérômee Schell <j.schell@alternancesoft.com>
+ * \brief Cette classe permet de gÃ©rerer les transactions HELIOS
+ * \author Cristina Pop <cpop@alternancesoft.com> et JÃ©rÃ´mee Schell <j.schell@alternancesoft.com>
  * \date 20.02.2006
  * 
  *
- * Cette classe fournit des méthodes de gestion des transactions
+ * Cette classe fournit des mÃ©thodes de gestion des transactions
  * Helios
  *
  * Modifications :
@@ -48,24 +48,24 @@ class HeliosTransaction extends DataObject {
   protected $dbFields = array (
       //"id" => array( "descr" => "Identifiant de la transaction", "type" => "isInt", "mandatory" => true),
   	"user_id" => array (
-      "descr" => "Identifiant de l'utilisateur qui a créé la transaction",
+      "descr" => "Identifiant de l'utilisateur qui a crÃ©Ã© la transaction",
       "type" => "isString",
       "mandatory" => true
     ),
   		"authority_id" => array (
-  				"descr" => "Identifiant de la collectivité",
+  				"descr" => "Identifiant de la collectivitÃ©",
   				"type" => "isString",
   				"mandatory" => true
   		),
     "filename" => array (
-      "descr" => "Nom du fichier posté",
+      "descr" => "Nom du fichier postÃ©",
       "type" => "isString",
       "mandatory" => true
     ),
 
 
     "file_size" => array( 
-    	"descr" => "taille du fichier posté",
+    	"descr" => "taille du fichier postÃ©",
     	"type" => "isInt",
     	"mandatory" => true
   	),
@@ -129,7 +129,7 @@ class HeliosTransaction extends DataObject {
 
   /**
    * \brief Constructeur d'une transaction
-   * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   * \param id integer NumÃ©ro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
     parent :: __construct($id);
@@ -138,8 +138,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succés, false sinon
+   * \brief MÃ©thode initialisant l'entitÃ© avec l'identifiant courant
+   * \return true si succÃ©s, false sinon
   */
   public function init() {
     if (!parent :: init()) {
@@ -149,8 +149,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode permettant de fixer la valeur d'un attribut
-   * \param $name chaîne : Nom de l'attribut
+   * \brief MÃ©thode permettant de fixer la valeur d'un attribut
+   * \param $name chaÃ®ne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   //cred ca fixeaza valori pentru atributele clasei...!
@@ -166,8 +166,8 @@ class HeliosTransaction extends DataObject {
 
   //added
   /**
-     * \brief Méthode permettant d'obtenir l'id d'une transaction à partir du nom de fichier
-     * \param $name chaîne : Nom du fichier
+     * \brief MÃ©thode permettant d'obtenir l'id d'une transaction Ã  partir du nom de fichier
+     * \param $name chaÃ®ne : Nom du fichier
      * \return id si okay, si non false
     */
   public function get_IdTransaction($filename) {
@@ -188,7 +188,7 @@ class HeliosTransaction extends DataObject {
 
   //added
   /*
-   * \brief Méthode pour obtenir toutes les transactions pour un utilisateur (idUser) donné
+   * \brief MÃ©thode pour obtenir toutes les transactions pour un utilisateur (idUser) donnÃ©
    * 
    */
   public function getAllTransactionsForAUser_1($userID) {
@@ -231,8 +231,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-    * \brief Méthode d'obtention de la liste des enveloppes et tous leurs attributs
-    * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+    * \brief MÃ©thode d'obtention de la liste des enveloppes et tous leurs attributs
+    * \param $cond (optionnel) chaÃ®ne : ChaÃ®ne contenant les conditions (SQL) Ã  appliquer Ã  la fin de la requÃªte BDD
     * \return Tableau des enveloppes
     */
   public function getDocumentList($cond = "") {
@@ -248,7 +248,7 @@ class HeliosTransaction extends DataObject {
   
 
   /*
-   * \brief Méthode d'obtention du nom d efichier qui correponde à une transaction
+   * \brief MÃ©thode d'obtention du nom d efichier qui correponde Ã  une transaction
    * \param $transaction_id
    * \return filename
    * 
@@ -302,7 +302,7 @@ class HeliosTransaction extends DataObject {
   //la mine: ActesEnvelope -> HeliosTransaction si ActesTransaction-> HeliosTransactionWorkFlow
 
   /**
-   * \brief Méthode d'obtention de la liste des ids de transactions pour un fichier
+   * \brief MÃ©thode d'obtention de la liste des ids de transactions pour un fichier
    * \param $id integer : Identifiant du fichier est l'id de la trasnaction
    * \return Tableau d'objet HeliosTransaction correspondant au fichier
   */
@@ -330,8 +330,8 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de l'état courant d'un transaction
-   * \return L'identifiant de l'état courant de la transaction
+   * \brief MÃ©thode d'obtention de l'Ã©tat courant d'un transaction
+   * \return L'identifiant de l'Ã©tat courant de la transaction
    */
   public function getCurrentStatus() {
     if (isset ($this->id) && !empty ($this->id)) {
@@ -349,7 +349,7 @@ class HeliosTransaction extends DataObject {
   }
 
  /**
-  * \brief Méthode de récupération du cycle de vie de cette transaction
+  * \brief MÃ©thode de rÃ©cupÃ©ration du cycle de vie de cette transaction
   * \return Un tableau contenant le workflow de la transaction
   */
   public function fetchWorkflow() {
@@ -367,7 +367,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   *  \brief Méthhode d'obtention de l'id de l'user qui correponde à une transaction
+   *  \brief MÃ©thhode d'obtention de l'id de l'user qui correponde Ã  une transaction
    * \param $transaction_id
    * \return user name
    * //de testat
@@ -407,7 +407,7 @@ class HeliosTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la liste des statuts des transactions
+   * \brief MÃ©thode d'obtention de la liste des statuts des transactions
    * \return Tableau des statuts de transactions
    */
   public static function getStatusList() {
@@ -428,7 +428,7 @@ class HeliosTransaction extends DataObject {
 
  /**
   *  \brief get list de transaction
-  *  \param $authority_id: optional , pour spécialiser la collectivité.
+  *  \param $authority_id: optional , pour spÃ©cialiser la collectivitÃ©.
   *  \reuturn table de transactions
   * 
   */ 
@@ -436,7 +436,7 @@ class HeliosTransaction extends DataObject {
 		$sql = "SELECT DISTINCT ht.id, ht.filename, ht.sha1, ht.file_size, atw.date, auth.siren, auth.department, auth.district";
 		$sql .=" FROM helios_transactions ht,authorities auth, users, helios_transactions_workflow atw";
 		$sql .= " WHERE ht.user_id=users.id AND users.authority_id=auth.id AND atw.transaction_id=ht.id";
-		// On veut récupérer la date à la transaction a ététransmise => statut 3
+		// On veut rÃ©cupÃ©rer la date Ã  la transaction a Ã©tÃ©transmise => statut 3
 		$sql .= " AND atw.status_id=3";
 		
 		if ($authority_id) {

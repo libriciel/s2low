@@ -16,7 +16,7 @@
  	public static $TRACE_ERROR = 'error' ;
 
   /**
-   * \brief Permet de récupérer une instance de la classe Trace
+   * \brief Permet de rÃ©cupÃ©rer une instance de la classe Trace
    */
  	public static function getInstance(){
  		if (!self::$trace) {

@@ -95,7 +95,7 @@ class ActesNotification {
 		try{
             $fichiers_tamponnees =  $this->tamponnerTGZ($archive_path,$transaction_info,$tmp_folder);
         } catch (Exception $e){
-		    $this->logger->warning("[{$transaction_info['envelope_id']}] Erreur lors de la décompression");
+		    $this->logger->warning("[{$transaction_info['envelope_id']}] Erreur lors de la dÃ©compression");
             $this->logger->warning("[{$transaction_info['envelope_id']}] {$e->getMessage()}");
 		    $fichiers_tamponnees = [];
         }
@@ -157,7 +157,7 @@ class ActesNotification {
 
         $message_log =
             sprintf(
-                "[%s] Transaction %s (%d) : Envoi d'une notification à %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                "[%s] Transaction %s (%d) : Envoi d'une notification Ã  %s. NumÃ©ro SIREN de la collectivitÃ© : %s. Type de transaction: %d",
                 $this->actes_appli_trigramme,
                 $transactionInfo['unique_id'],
                 $transactionInfo['id'],
@@ -184,17 +184,17 @@ class ActesNotification {
         ob_start();?>
 
 <?php if ($last_status_id == -1) : ?>
-            L'acte de référence interne <?php echo $transaction_info['number'] ?> est en erreur.
+            L'acte de rÃ©fÃ©rence interne <?php echo $transaction_info['number'] ?> est en erreur.
 <?php elseif ($transaction_info['type'] == 1) : ?>
-L'acte de référence interne <?php echo $transaction_info['number'] ?> a été acquitté sous l'identifiant unique <?php echo $transaction_info['unique_id']  ?>.
+L'acte de rÃ©fÃ©rence interne <?php echo $transaction_info['number'] ?> a Ã©tÃ© acquittÃ© sous l'identifiant unique <?php echo $transaction_info['unique_id']  ?>.
 <?php elseif ($transaction_info['type'] == 3 && $last_status_id == 4) : ?>
-L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
+L'envoi de piÃ¨ces complÃ©mentaires (ou du refus explicite) concernant l'actes <?php echo $transaction_info['number'] ?> a Ã©tÃ© acquittÃ©.
 <?php elseif ($transaction_info['type'] == 4 && $last_status_id == 4) : ?>
-L'envoi de la lettre d'observation (ou du refus de réponse) concernant l'actes <?php echo $transaction_info['number'] ?> a été acquitté.
+L'envoi de la lettre d'observation (ou du refus de rÃ©ponse) concernant l'actes <?php echo $transaction_info['number'] ?> a Ã©tÃ© acquittÃ©.
 <?php elseif ($transaction_info['type'] == 6 && $last_status_id == 4) : ?>
-L'annulation de l'acte <?php echo $transaction_info['number'] ?> a été acquittée.
+L'annulation de l'acte <?php echo $transaction_info['number'] ?> a Ã©tÃ© acquittÃ©e.
 <?php else:?>
-Réception de document pour l'acte  <?php echo $transaction_info['number'] ?>
+RÃ©ception de document pour l'acte  <?php echo $transaction_info['number'] ?>
 <?php endif; ?>
 
 
@@ -202,18 +202,18 @@ Nature de l'Acte : <?php echo $transaction_info['nature_descr'] ?>
 
 Objet : <?php echo $transaction_info['subject'] ?>
 
-Décision du : <?php echo $transaction_info['decision_date']?>
+DÃ©cision du : <?php echo $transaction_info['decision_date']?>
 
 Transmise le :  <?php echo $envelope_info['submission_date']?>
 
 <?php if ($last_status_id == 4): ?>
-Accusé reçu le :  <?php echo $status_info['date'] ?>
+AccusÃ© reÃ§u le :  <?php echo $status_info['date'] ?>
 <?php elseif($last_status_id != -1): ?>
-Document reçu le :  <?php echo $status_info['date'] ?>
+Document reÃ§u le :  <?php echo $status_info['date'] ?>
 <?php endif; ?>
 
 <?php if($add_url_recup && $last_status_id != -1) : ?>
-URL pour récupérer les fichiers : <?php $url = WEBSITE_SSL."/modules/actes/actes_transac_show.php?id=".$transaction_info['id']; echo $url; ?>
+URL pour rÃ©cupÃ©rer les fichiers : <?php $url = WEBSITE_SSL."/modules/actes/actes_transac_show.php?id=".$transaction_info['id']; echo $url; ?>
 <?php endif; ?>
 
 <?php if($transaction_info['archive_url']) : ?>
@@ -239,7 +239,7 @@ Archive disponible sur :<?php echo $transaction_info['archive_url']?>
 		$this->logger->debug("Executing comand : $command");
 		exec($command, $output, $return_var);
 		if ($return_var != 0) {
-			throw new Exception("Erreur ($return_var) lors de la décompression de l'archive $filePath : " . implode("\n", $output));
+			throw new Exception("Erreur ($return_var) lors de la dÃ©compression de l'archive $filePath : " . implode("\n", $output));
 		}
 
 		$result = array();

@@ -7,27 +7,27 @@
  *
  * Outil de purge des transactions.
  *
- * Les transactions candidates à la pure sont
- * - pour actes, à l'état
- *          4 (Acquittement reçu)
- *          5 (Validé)
- *          6 (Refusé)
- * - pour hélios, à l'état
- *          4 (Acquittement reçu = HeliosTransactionsSQL::ACQUITTER)
- *          6 (Refusé = HeliosTransactionsSQL::REFUSER)
+ * Les transactions candidates Ã  la pure sont
+ * - pour actes, Ã  l'Ã©tat
+ *          4 (Acquittement reÃ§u)
+ *          5 (ValidÃ©)
+ *          6 (RefusÃ©)
+ * - pour hÃ©lios, Ã  l'Ã©tat
+ *          4 (Acquittement reÃ§u = HeliosTransactionsSQL::ACQUITTER)
+ *          6 (RefusÃ© = HeliosTransactionsSQL::REFUSER)
  *          8 (Information disponible = HeliosTransactionsSQL::INFORMATION_DISPONIBLE)
- * - passée à cet état depuis au moins HELIOS_RETENTION_FICHIERS_NB_JOURS ou ACTES_RETENTION_FICHIERS_NB_JOURS jours.
- *   Si elles sont plus récentes, même dans ces états, elles ne sont pas purgées.
- * Les transactions sont traitées par ordre d'id.
- * Avant traitement (paramètre mode), toutes les transactions candidates sont comptées et le nombre affiché.
- * Paramètres d'appel :
- *      mode : PURGE ou CONTROLE (défaut)
- *      actes_nb_max : nombre maximum de transactions candidates traitées; toutes par défaut. 0 = aucune
- *      helios_nb_max : nombre maximum de transactions candidates traitées; toutes par défaut. 0 = aucune
+ * - passÃ©e Ã  cet Ã©tat depuis au moins HELIOS_RETENTION_FICHIERS_NB_JOURS ou ACTES_RETENTION_FICHIERS_NB_JOURS jours.
+ *   Si elles sont plus rÃ©centes, mÃªme dans ces Ã©tats, elles ne sont pas purgÃ©es.
+ * Les transactions sont traitÃ©es par ordre d'id.
+ * Avant traitement (paramÃ¨tre mode), toutes les transactions candidates sont comptÃ©es et le nombre affichÃ©.
+ * ParamÃ¨tres d'appel :
+ *      mode : PURGE ou CONTROLE (dÃ©faut)
+ *      actes_nb_max : nombre maximum de transactions candidates traitÃ©es; toutes par dÃ©faut. 0 = aucune
+ *      helios_nb_max : nombre maximum de transactions candidates traitÃ©es; toutes par dÃ©faut. 0 = aucune
  * Exemples
  *      mode=CONTROLE helios_nb_max=0 actes_nb_max=10
  *          Affiche le nombre de toutes les transactions candidates et
- *          Ne liste que les 10 premières Actes, et aucune hélios
+ *          Ne liste que les 10 premiÃ¨res Actes, et aucune hÃ©lios
  *      mode=PURGE
  *          Affiche le nombre de toutes les transactions candidates et
  *          les purge toutes
@@ -67,7 +67,7 @@ $sql = "SELECT t.id, max(t.envelope_id) envelope_id";
 $sql .= " FROM actes_transactions t, actes_transactions_workflow tw";
 $sql .= " WHERE (tw.transaction_id = t.id)";
 $sql .= " AND (t.last_status_id = tw.status_id)";
-$sql .= " AND (t.last_status_id in (" . ActesStatusSQL::STATUS_ACQUITTEMENT_RECU . "," . ActesStatusSQL::STATUS_VALIDE . "," . 6 /* Refusé */  . "))";
+$sql .= " AND (t.last_status_id in (" . ActesStatusSQL::STATUS_ACQUITTEMENT_RECU . "," . ActesStatusSQL::STATUS_VALIDE . "," . 6 /* RefusÃ© */  . "))";
 $sql .= " AND (t.type = '1')";
 $sql .= " GROUP BY t.id";
 $sql .= " HAVING (max(tw.date) < (current_timestamp - interval '" . ACTES_RETENTION_FICHIERS_NB_JOURS . " days'))";
@@ -88,7 +88,7 @@ foreach ($purge_list as $data) {
     $tid = $data['id'];
     $envelope_id = $data['envelope_id'];
     if ($prm_mode == MODE_CONTROLE) {
-        $blScript->traceln("Actes ($index/$count_max) - candidate à la purge - id $tid, envelope $envelope_id");
+        $blScript->traceln("Actes ($index/$count_max) - candidate Ã  la purge - id $tid, envelope $envelope_id");
     } else {
         $msg = "Demande de purge des fichiers";
         $blScript->traceln("Actes ($index/$count_max) - $msg - id $tid, envelope $envelope_id");
@@ -128,7 +128,7 @@ foreach ($purge_list as $data) {
     }
     $tid = $data['id'];
     if ($prm_mode == MODE_CONTROLE) {
-        $blScript->traceln("Helios ($index/$count_max) - candidate à la purge - id $tid");
+        $blScript->traceln("Helios ($index/$count_max) - candidate Ã  la purge - id $tid");
     } else {
         $msg = "Demande de purge des fichiers";
         $blScript->traceln("Helios ($index/$count_max) - $msg - id $tid");

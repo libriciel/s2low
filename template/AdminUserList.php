@@ -5,7 +5,7 @@
     </a><br>
 </p>
 
-<h2>Certificat partagé</h2>
+<h2>Certificat partagÃ©</h2>
 <div class="alert alert-info" style="word-wrap: break-word;">
     <?php hecho($user_info['subject_dn']) ?>
     <br/>
@@ -13,7 +13,7 @@
         <br/>
         <br/>
         <a href='admin_user_edit.php?new_id=<?php echo $user_id ?>' class="btn btn-primary">
-            Créer un nouvel utilisateur avec le même certificat
+            CrÃ©er un nouvel utilisateur avec le mÃªme certificat
         </a>
 </div>
 
@@ -25,9 +25,9 @@
         <tr>
             <th class="data">Login</th>
             <th class="data">Nom</th>
-            <th class="data">Adresse électronique</th>
+            <th class="data">Adresse Ã©lectronique</th>
             <th class="data">R&ocirc;le</th>
-            <th class="data">État</th>
+            <th class="data">Ã‰tat</th>
             <th class="data">Collectivit&eacute;</th>
             <th class="data">Actions</th>
         </tr>
@@ -52,7 +52,7 @@
 <h2>Modifier le certificat</h2>
 
 <div class="alert alert-danger">
-    <b>Attention</b> Ce formulaire permet de modifier le certificat pour tous les utilisateurs listés sur cette page.
+    <b>Attention</b> Ce formulaire permet de modifier le certificat pour tous les utilisateurs listÃ©s sur cette page.
 </div>
 
 
@@ -66,7 +66,7 @@
             </td>
         </tr>
         <tr>
-            <th><label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label></th>
+            <th><label for="confirm">ÃŠtes-vous sÃ»r de vouloir effectuer cette opÃ©ration ? (saisir OUI)</label></th>
             <td>
                 <input  id="confirm" name="confirm" class="form-control" />
             </td>

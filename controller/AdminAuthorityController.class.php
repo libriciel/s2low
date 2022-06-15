@@ -21,7 +21,7 @@ class AdminAuthorityController extends Controller {
         if ( ! $convention_filepath || ! file_exists($convention_filepath)){
             $this->redirect(
                 "/admin/authorities/admin_authority_edit.php?id=" . $authority_id,
-                "Impossible de récupérer la convention"
+                "Impossible de rÃ©cupÃ©rer la convention"
             );
         }
 
@@ -44,7 +44,7 @@ class AdminAuthorityController extends Controller {
 		} else {
 			$this->redirect(
 				"/admin/authorities/admin_authorities.php",
-				"Vous devez être administrateur de groupe ou super admin"
+				"Vous devez Ãªtre administrateur de groupe ou super admin"
 			);
 		}
 

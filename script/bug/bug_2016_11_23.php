@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Les enveloppes de la collectivite 3847 posté le 22/11/2016 entre 16h02 et 16h09 ne sont plus accessibles...
+ * Les enveloppes de la collectivite 3847 postÃ© le 22/11/2016 entre 16h02 et 16h09 ne sont plus accessibles...
  *
  */
 require_once ( __DIR__."/../../init/init.php");

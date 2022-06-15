@@ -114,7 +114,7 @@ class ActesNotificationsTest extends S2lowTestCase {
 
         $logRecords = $this->getLogRecords();
         $this->assertRegExp(
-            "#Erreur lors de la décompression#",
+            "#Erreur lors de la dÃ©compression#",
             $logRecords[2]["message"]
         );
     }

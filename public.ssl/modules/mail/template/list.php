@@ -1,4 +1,4 @@
- <h1> Mail - Système de mail sécurisé</h1>
+ <h1> Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
 
  <?php if (isset($_SESSION["last_message"])) : ?>
      <div class="alert alert-success" >
@@ -30,7 +30,7 @@
             <form action="index.php?command=list" accept-charset="utf-8" role="form" class="form-horizontal">
                 <input type="hidden" name="search" value="1" />
                 <div class="form-group">
-                    <label for="state-type" class="col-md-2 control-label">Type d'état</label>
+                    <label for="state-type" class="col-md-2 control-label">Type d'Ã©tat</label>
                     <div class="col-md-4">
                         <select id="state-type" class="form-control" name="etat">
                             <option value="0" <?php echo $etat==0?"selected='selected'":"" ?>>Tous</option>
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="send_date_from" class="col-md-2 control-label">Date d'envoi à partir du </label>
+                    <label for="send_date_from" class="col-md-2 control-label">Date d'envoi Ã  partir du </label>
                     <div class="col-md-4 sub-date">
                         <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php echo $SendDateFrom; ?>"/>
                         <script type="text/javascript">
@@ -87,26 +87,26 @@
                 </div>
                 <div class="form-group">
                     <button type="submit" class="col-md-offset-2 col-md-2 btn btn-default">Filtrer</button>
-                    <a href="index.php?command=list" class="col-md-offset-4 col-md-2 btn btn-default">Remise à zéro</a>
+                    <a href="index.php?command=list" class="col-md-offset-4 col-md-2 btn btn-default">Remise Ã  zÃ©ro</a>
                 </div>
             </form>
 	</div>
 		
 
-  	<h2 class="toggle_title" onclick="javascript:toggle_visibility('list_area');" >Messages Envoyés</h2>
+  	<h2 class="toggle_title" onclick="javascript:toggle_visibility('list_area');" >Messages EnvoyÃ©s</h2>
         <?php 
             if ($MailTransactions)
             { ?>
 	<div id="sent-message-area">
             <div id="display-actions">
-                <a href="#tedetis" onclick="javascript:show_all();" title="Déplier toutes les emails" class="btn btn-default">Tout déplier</a>
+                <a href="#tedetis" onclick="javascript:show_all();" title="DÃ©plier toutes les emails" class="btn btn-default">Tout dÃ©plier</a>
                 <a href="#tedetis" onclick="javascript:hide_all();" title="Replier toutes les emails" class="btn btn-default">Tout replier</a>
             </div>
 
-            <form action="index.php?command=list" method="post" onsubmit="return confirm('Êtes-vous certain de vouloir supprimer ces emails ?');">
+            <form action="index.php?command=list" method="post" onsubmit="return confirm('ÃŠtes-vous certain de vouloir supprimer ces emails ?');">
                 <dl>
             <?php 
-            $i=0; // le numéro des éléments dans la liste commence par 1 donc dans la fichier de javascript le i commence aussi par 1 
+            $i=0; // le numÃ©ro des Ã©lÃ©ments dans la liste commence par 1 donc dans la fichier de javascript le i commence aussi par 1 
             
             foreach ($MailTransactions as $MailTrans)
             {
@@ -117,15 +117,15 @@
                 </dt>
 
                 <dd id="MailTrans_<?php echo $i; ?>" class="mail" style="display: block">
-                    <table class="transactions_list data-table table table-bordered" summary="Ce tableau présente respectivement une option de sélection pour action, l'objet, le statut, la date d'envoi, et un lien vers le détail de chaque message envoyé">
-                        <caption>Liste des message envoyés</caption>
+                    <table class="transactions_list data-table table table-bordered" summary="Ce tableau prÃ©sente respectivement une option de sÃ©lection pour action, l'objet, le statut, la date d'envoi, et un lien vers le dÃ©tail de chaque message envoyÃ©">
+                        <caption>Liste des message envoyÃ©s</caption>
                         <thead>
                             <tr class="active">
-                                <th id="selection">Sélection</th> 
+                                <th id="selection">SÃ©lection</th> 
                                 <th id="object">Objet</th>
                                 <th id="status">Statut</th>
                                 <th id="date">Date d'envoi</th>
-                                <th id="detail">Détail</th>
+                                <th id="detail">DÃ©tail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,7 +134,7 @@
                                 <td headers="object"> <?php hecho($MailTrans["objet"])?></td>
                                 <td headers="status"> <?php echo $MailTrans["status"] ?></td>	
                                 <td headers="date"> <?php echo $MailTrans["date_envoi"]?></td>
-                                <td headers="detail"><a href="index.php?command=show&trans_id=<?php echo $MailTrans["id"]; ?>"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail"></a></td>
+                                <td headers="detail"><a href="index.php?command=show&trans_id=<?php echo $MailTrans["id"]; ?>"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le dÃ©tail"></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -143,14 +143,14 @@
             } ?>
                 </dl>
                     <div id="actions">
-                        <input type="submit" class="btn btn-default" value="Supprimer les messages sélectionnés" />
+                        <input type="submit" class="btn btn-default" value="Supprimer les messages sÃ©lectionnÃ©s" />
                     </div>
             </form>
 	</div>
         <?php 
             } else {
               ?>  
-        <p>Pas de messages envoyés correspondant aux critères de filtrage </p>
+        <p>Pas de messages envoyÃ©s correspondant aux critÃ¨res de filtrage </p>
         <?php } ?>
 
 

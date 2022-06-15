@@ -29,17 +29,17 @@ class ActesIncludedFile extends DataObject
 
 	protected $dbFields = array("envelope_id" => array("descr" => "Identifiant enveloppe", "type" => "isInt", "mandatory" => true),
 		"transaction_id" => array("descr" => "Identifiant transaction", "type" => "isInt", "mandatory" => false),
-		"filename" => array("descr" => "Nom du fichier mÈtier", "type" => "isString", "mandatory" => true),
+		"filename" => array("descr" => "Nom du fichier m√©tier", "type" => "isString", "mandatory" => true),
 		"posted_filename" => array("descr" => "Nom du fichier original", "type" => "isString", "mandatory" => false),
 		"filetype" => array("descr" => "Type du fichier", "type" => "isString", "maxlength" => 499, "mandatory" => true),
 		"filesize" => array("descr" => "Taille du fichier", "type" => "isInt", "mandatory" => true),
-		"signature" => array("descr" => "Signature Èlectronique du fichier", "type" => "isString", "mandatory" => false),
+		"signature" => array("descr" => "Signature √©lectronique du fichier", "type" => "isString", "mandatory" => false),
 		"code_pj" => array("descr" => "Code de la PJ", "type" => "isString", "mandatory" => false)
 	);
 
 
 	/**
-	 * MÈthode de rÈcupÈration de la liste des fichiers associÈs ‡ une transaction
+	 * M√©thode de r√©cup√©ration de la liste des fichiers associ√©s √† une transaction
 	 * @param $id int identifiant de la transaction
 	 * @return array Un tableau de description des fichiers
 	 * @throws Exception
@@ -83,7 +83,7 @@ class ActesIncludedFile extends DataObject
 	}
 
 	/**
-	 * \brief MÈthode d'initialisation de l'enveloppe contenant le fichier courant
+	 * \brief M√©thode d'initialisation de l'enveloppe contenant le fichier courant
 	 */
 	public function initEnvelope()
 	{
@@ -101,17 +101,17 @@ class ActesIncludedFile extends DataObject
 	}
 
 	/**
-	 * \brief MÈthode qui renvoie le fichier au navigateur
+	 * \brief M√©thode qui renvoie le fichier au navigateur
 	 */
 	public function sendFile()
 	{
 		if (isset($this->filename)) {
-			// Il faut extraire le fichier demandÈ dans un stockage temporaire
+			// Il faut extraire le fichier demand√© dans un stockage temporaire
 			$tmpDir = "/tmp/" . Helpers::genTempName();
 
 			$this->errorMsg = '';
 			if (!@mkdir($tmpDir)) {
-				$this->errorMsg .= "Erreur systËme de fichiers";
+				$this->errorMsg .= "Erreur syst√®me de fichiers";
 				return false;
 			}
 
@@ -131,7 +131,7 @@ class ActesIncludedFile extends DataObject
 			$ret_value = true;
 
 			if ($status === false || $ret != 0) {
-				$this->errorMsg .= "Erreur d'extraction du fichier demandÈ (code " . $ret . ")";
+				$this->errorMsg .= "Erreur d'extraction du fichier demand√© (code " . $ret . ")";
 				$ret_value = false;
 			} else {
 				if (strlen($this->posted_filename)) {
@@ -162,10 +162,10 @@ class ActesIncludedFile extends DataObject
 				}
 			}
 
-			// Suppression du rÈpertoire temporaire
+			// Suppression du r√©pertoire temporaire
 			if (file_exists($tmpDir)) {
 				if (!rmdir($tmpDir)) {
-					$this->errorMsg .= "Erreur suppression rÈpertoire temporaire";
+					$this->errorMsg .= "Erreur suppression r√©pertoire temporaire";
 					$ret_value = false;
 				}
 			}//fin if test dossier $tmpDir

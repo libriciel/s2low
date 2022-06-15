@@ -1,10 +1,10 @@
 <?php
 
-//La connexion clé publique avec une clé privée protégée ne fonctionne pas !
+//La connexion clÃ© publique avec une clÃ© privÃ©e protÃ©gÃ©e ne fonctionne pas !
 //Voir: https://bugs.php.net/bug.php?id=58573
 //Faire un :
 // openssl rsa -in id_rsa -out cle_privee
-// puis mettre la clé privée non protégé
+// puis mettre la clÃ© privÃ©e non protÃ©gÃ©
 
 class SSH2 {
 
@@ -75,7 +75,7 @@ class SSH2 {
 
 		$server_fingerprint = ssh2_fingerprint($ssh_connexion);
 		if ($server_fingerprint != $this->server_fingerprint){
-			$this->lastError = "L'empreinte du serveur ($server_fingerprint) ne correspond pas à l'empreinte de la configuration ({$this->server_fingerprint})";
+			$this->lastError = "L'empreinte du serveur ($server_fingerprint) ne correspond pas Ã  l'empreinte de la configuration ({$this->server_fingerprint})";
 			return false;
 		}
 

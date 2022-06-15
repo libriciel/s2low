@@ -2,7 +2,7 @@
 require_once( __DIR__."/../../init/init.php");
 libxml_use_internal_errors(true);
 
-// Script charge de récuprer la liste distincte des SIRET des PES_RETOUR
+// Script charge de rÃ©cuprer la liste distincte des SIRET des PES_RETOUR
 // dans le dossier HELIOS_RESPONSES_ERROR_PATH
 
 $file_list = scandir(HELIOS_RESPONSES_ERROR_PATH);
@@ -21,7 +21,7 @@ foreach($file_list as $file){
         libxml_clear_errors();
         $xml = simplexml_load_file($filepath);
         if (! $xml){
-            throw new Exception("Le fichier n'est pas bien formé (fichier ignoré)");
+            throw new Exception("Le fichier n'est pas bien formÃ© (fichier ignorÃ©)");
         }
         $root_name = strtolower($xml->getName());
         
@@ -59,5 +59,5 @@ foreach($list_siret as $siret){
     $message .= "\n -------------------------------------------------- \n";
 }
 //print_r($list_coll);
-$message .= "Vous avez jusqu'à 11h59 pour traiter ces SIRET";
+$message .= "Vous avez jusqu'Ã  11h59 pour traiter ces SIRET";
 mail(EMAIL_ADMIN_TECHNIQUE,"Rapport sur les PES_RETOUR non affectable",$message,"from: ".EMAIL_ADMIN);

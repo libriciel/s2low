@@ -33,7 +33,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 				if ($a == self::FAKE_PASTELL_URL."/action.php"){
 					return file_get_contents(__DIR__."/fixtures/pastell-response-action-delete.json");
 				}
-				throw new Exception("Envoi de données inatendue : $a");
+				throw new Exception("Envoi de donnÃ©es inatendue : $a");
 
 			}));
 
@@ -53,7 +53,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 
 		$actesVerifSaeWorker->work($transaction_id);
 
-		$exepected_message = "La transaction $transaction_id a été acceptée par le SAE : \n000 - Votre transfert d'archive a été accepté par la plate-forme as@lae";
+		$exepected_message = "La transaction $transaction_id a Ã©tÃ© acceptÃ©e par le SAE : \n000 - Votre transfert d'archive a Ã©tÃ© acceptÃ© par la plate-forme as@lae";
 
 		$this->assertEquals($exepected_message,
 			$this->getLogRecords()[3]['message']);
@@ -92,7 +92,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 				if ($a == self::FAKE_PASTELL_URL."/action.php"){
 					return file_get_contents(__DIR__."/fixtures/pastell-response-action-delete.json");
 				}
-				throw new Exception("Envoi de données inatendue : $a");
+				throw new Exception("Envoi de donnÃ©es inatendue : $a");
 			}));
 
 		$curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)
@@ -111,7 +111,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 
 		$actesVerifSaeWorker->work($transaction_id);
 
-		$exepected_message = "La transaction $transaction_id a été refusé par le SAE : (état verif-sae-erreur)";
+		$exepected_message = "La transaction $transaction_id a Ã©tÃ© refusÃ© par le SAE : (Ã©tat verif-sae-erreur)";
 
 
 		$this->assertEquals($exepected_message,
@@ -149,7 +149,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 				if ($a == self::FAKE_PASTELL_URL."/action.php"){
 					return file_get_contents(__DIR__."/fixtures/pastell-response-action-delete.json");
 				}
-				throw new Exception("Envoi de données inatendue : $a");
+				throw new Exception("Envoi de donnÃ©es inatendue : $a");
 
 			}));
 
@@ -169,7 +169,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 
 		$actesVerifSaeWorker->work($transaction_id);
 
-		$exepected_message = "La transaction $transaction_id a été refusé par le SAE.\n203 - Votre transfert d'archive a été rejeté par la plate-forme as@lae";
+		$exepected_message = "La transaction $transaction_id a Ã©tÃ© refusÃ© par le SAE.\n203 - Votre transfert d'archive a Ã©tÃ© rejetÃ© par la plate-forme as@lae";
 
 		$this->assertEquals($exepected_message,
 			$this->getLogRecords()[3]['message']);
@@ -204,7 +204,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 				if ($a == "https://fakepastellurl//recuperation-fichier.php?id_e=12&id_d=42&field=reply_sae"){
 					throw new Exception("404 not found");
 				}
-				throw new Exception("Envoi de données inatendue : $a");
+				throw new Exception("Envoi de donnÃ©es inatendue : $a");
 
 			}));
 
@@ -225,7 +225,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 		$actesVerifSaeWorker->work($transaction_id);
 
 
-		$exepected_message = "Il n'y a pas encore de réponse (404 not found)";
+		$exepected_message = "Il n'y a pas encore de rÃ©ponse (404 not found)";
 
 		$this->assertEquals($exepected_message,
 			$this->getLogRecords()[3]['message']);
@@ -248,7 +248,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 		$curlWrapper
 			->method('get')
 			->will($this->returnCallback(function(){
-				return 'Pastell ne répond pas... ou mal';
+				return 'Pastell ne rÃ©pond pas... ou mal';
 			}));
 
 		$curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)
@@ -267,7 +267,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase {
 
 		$actesVerifSaeWorker->work($transaction_id);
 
-		$exepected_message = "Problème lors de la vérification de l'archive : Impossible de décoder les données reçu : Pastell ne répond pas... ou mal";
+		$exepected_message = "ProblÃ¨me lors de la vÃ©rification de l'archive : Impossible de dÃ©coder les donnÃ©es reÃ§u : Pastell ne rÃ©pond pas... ou mal";
 
 		$this->assertEquals($exepected_message,
 			$this->getLogRecords()[3]['message']);

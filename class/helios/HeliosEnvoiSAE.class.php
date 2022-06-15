@@ -35,12 +35,12 @@ class HeliosEnvoiSAE {
 
 	public function sendAllArchive($authority_id = 0){
 		$sigtermHandler = SigTermHandler::getInstance();
-		$this->logger->info("Début de l'envoi");
+		$this->logger->info("DÃ©but de l'envoi");
 		$info_list = $this->heliosTransactionsSQL->getIdsByStatus(
 			HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
 			$authority_id
 		);
-		$this->logger->info( count($info_list)." transactions à envoyer...");
+		$this->logger->info( count($info_list)." transactions Ã  envoyer...");
 		foreach($info_list as $transaction_id){
 			$this->logger->info("Envoi de la transaction $transaction_id.");
 			$this->sendArchive($transaction_id);
@@ -54,9 +54,9 @@ class HeliosEnvoiSAE {
 	public function sendArchive($id){
 		try {
 			$this->sendArchiveThrow($id);
-			$this->logger->info("La transaction $id a été envoyé à Pastell");
+			$this->logger->info("La transaction $id a Ã©tÃ© envoyÃ© Ã  Pastell");
 		} catch (Exception $e){
-			$message = "Le document n'a pas pu être envoyé sur Pastell : " . $e->getMessage();
+			$message = "Le document n'a pas pu Ãªtre envoyÃ© sur Pastell : " . $e->getMessage();
 			$this->heliosTransactionsSQL->updateStatus($id,
 				HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
 				$message);
@@ -80,7 +80,7 @@ class HeliosEnvoiSAE {
 			$pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
 
 			if (! $pes_aller_filepath){
-				throw new RecoverableException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
+				throw new RecoverableException("Impossible de rÃ©cupÃ©rer le PES ALLER {$transactionsInfo['sha1']}");
 			}
 
 			$pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
@@ -109,7 +109,7 @@ class HeliosEnvoiSAE {
 			$this->heliosTransactionsSQL->updateStatus(
 				$transaction_id,
 				HeliosStatusSQL::ENVOYER_AU_SAE,
-				"Envoie de la transaction $transaction_id à Pastell"
+				"Envoie de la transaction $transaction_id Ã  Pastell"
 			);
 			$this->heliosTransactionsSQL->setSAETransferIdentifier($transaction_id, $id_d);
 		} catch (Exception $e) {

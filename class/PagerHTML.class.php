@@ -27,7 +27,7 @@ class PagerHTML {
                                 <?php else : ?>
                                     <li>
                                         <a href="<?php echo get_url_same_page(array("count" => $val,"page"=>1)) ?>"
-                                                title="Afficher <?php echo $val ?>  éléments par page">
+                                                title="Afficher <?php echo $val ?>  Ã©lÃ©ments par page">
                                                 <?php echo $val?>
                                         </a>
                                     </li>
@@ -40,7 +40,7 @@ class PagerHTML {
                         <ul class="pagination pagination-sm">
                             <?php if ($page_number > 1) : ?>
                             <li>
-                                <a href="<?php echo get_url_same_page(array("page" => ($page_number - 1))) ?>" title="Afficher la page précédente">&laquo;</a>
+                                <a href="<?php echo get_url_same_page(array("page" => ($page_number - 1))) ?>" title="Afficher la page prÃ©cÃ©dente">&laquo;</a>
                             </li>
                             <?php else : ?>
                                 <li class="disabled"><a href="#">&laquo;</a></li>

@@ -64,7 +64,7 @@ class AdminSAEController extends Controller {
 
 
 		$this->getObjectInstancier()->get(PastellPropertiesSQL::class)->editProperties($id,$pastellProperties);
-        $this->setErrorMessage("Les informations ont été mises à jour");
+        $this->setErrorMessage("Les informations ont Ã©tÃ© mises Ã  jour");
         $this->redirect("/admin/authorities/admin_authority_sae.php?id=$id");
     }
 

@@ -51,10 +51,10 @@ class VerifyPemCertificate
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
             $serialNumber =$this->openSSLWrapper->extractCertificateSN($file);
-            // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
-            // On ne vérifie pas
+            // 2) vÃ©rifier que ce SN n'est pas prÃ©sent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+            // On ne vÃ©rifie pas
             // 1) la date
-            // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+            // 2) si la CRL garde bien les certificats expirÃ©s ( extension 2.5.29.60 )
             $this->openSSLWrapper->checkSNIsInCRL($file_r0,$serialNumber);
         }
     }

@@ -1,6 +1,6 @@
 <?php 
 
-//Les classes MailPeer et mail_transaction ne sont pas utilisable pour gérer l'API... (EP)
+//Les classes MailPeer et mail_transaction ne sont pas utilisable pour gÃ©rer l'API... (EP)
 
 class MailList {
 	

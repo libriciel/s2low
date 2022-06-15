@@ -20,14 +20,14 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 	 */
 	public function testSendArchiveWhenCreateOnPastellFailed(){
 		$this->mockActesTamponne();
-		$this->mockPastellFactory(0,"Erreur renvoyé par le mock");
+		$this->mockPastellFactory(0,"Erreur renvoyÃ© par le mock");
 
 		$this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
 
 		$transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
 		$this->getActesArchivesControler()->sendArchive($transaction_id);
 		$this->assertEquals(
-			"Impossible d'envoyer la transaction {$transaction_id} : Erreur pastell : Erreur renvoyé par le mock",
+			"Impossible d'envoyer la transaction {$transaction_id} : Erreur pastell : Erreur renvoyÃ© par le mock",
 			$this->getLogRecords()[1][S2lowLogger::MESSAGE]
 		);
 	}
@@ -40,7 +40,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$transaction_id = $this->createTransaction(4);
 		$this->getActesArchivesControler()->sendArchive($transaction_id);
 		$this->assertEquals(
-			"La transaction {$transaction_id} à envoyer au SAE n'est pas dans le bon status ! 4 trouvé",
+			"La transaction {$transaction_id} Ã  envoyer au SAE n'est pas dans le bon status ! 4 trouvÃ©",
 			$this->getLogRecords()[1][S2lowLogger::MESSAGE]
 		);
 	}
@@ -76,7 +76,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 		$log_record = $this->getLogRecords();
 
 		$this->assertEquals(
-			"La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : xyzt)",
+			"La transaction $transaction_id a Ã©tÃ© envoyÃ© sur le SAE (id_d pastell : xyzt)",
 			$log_record[count($log_record)-1][S2lowLogger::MESSAGE]
 		);
 	}
@@ -109,7 +109,7 @@ class ActesArchiveControlerTest extends S2lowTestCase {
 
 		$log_record = $this->getLogRecords();
 		$this->assertEquals(
-			"Une erreur récupérable est survenue : Impossible de récupérer l'enveloppe abc-TACT--000000000--20170803-16.tar.gz. La transaction sera retentée.",
+			"Une erreur rÃ©cupÃ©rable est survenue : Impossible de rÃ©cupÃ©rer l'enveloppe abc-TACT--000000000--20170803-16.tar.gz. La transaction sera retentÃ©e.",
 			$log_record[count($log_record)-1]['message']
 		);
 	}

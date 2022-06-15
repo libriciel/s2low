@@ -34,7 +34,7 @@ $doc->openContent();
 ob_start();
 ?>
 	<div id="content">
-	<h1>Helios - Dématérialisation de documents financiers</h1>
+	<h1>Helios - DÃ©matÃ©rialisation de documents financiers</h1>
 	<p id="back-user-btn">
 		<a href="/admin/index.php" class="btn btn-default" title="">
 			Retour console d'administration
@@ -48,16 +48,16 @@ ob_start();
 		&nbsp;Recevoir par mail
 	</a>
 
-	<h2><?php echo count($transactions_list) ?> fichiers transmis non acquittés</h2>
+	<h2><?php echo count($transactions_list) ?> fichiers transmis non acquittÃ©s</h2>
 
 	<div class="alert alert-info">
-		Liste des transactions restées à l'état transmis (donc non-acquittées par Hélios) avant ce matin à minuit.
+		Liste des transactions restÃ©es Ã  l'Ã©tat transmis (donc non-acquittÃ©es par HÃ©lios) avant ce matin Ã  minuit.
 	</div>
 
 	<table class="data-table table table-striped">
 		<tr>
 			<th>Nom du fichier</th>
-			<th>Date de récupération</th>
+			<th>Date de rÃ©cupÃ©ration</th>
 			<th>Helios-Site destination</th>
 		</tr>
 		<?php

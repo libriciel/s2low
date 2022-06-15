@@ -10,7 +10,7 @@ if ($userInfo['role'] != 'SADM'){
 
 
 $info = array(
-	1=>"Posté",2=>"En attente de transmission",3=>"Transmis"
+	1=>"PostÃ©",2=>"En attente de transmission",3=>"Transmis"
 );
 
 $result = array();

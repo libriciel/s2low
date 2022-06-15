@@ -51,7 +51,7 @@ class MessageAdmin {
 	}
 
 	public function getEtatLibelle(){
-		$libelle = ['en cours de rédaction','publié','retiré'];
+		$libelle = ['en cours de rÃ©daction','publiÃ©','retirÃ©'];
 		return $libelle[$this->getEtat()];
 	}
 

@@ -119,7 +119,7 @@ class CloudStorage {
 		}catch (Exception $e){
 			$this->logger->alert(
 				sprintf(
-					"Problème lors de la supression de l'objet #%s %s : %s",
+					"ProblÃ¨me lors de la supression de l'objet #%s %s : %s",
 					$object_id,
 					$file_path_on_disk,
 					$e->getMessage()
@@ -251,7 +251,7 @@ class CloudStorage {
             $this->logger->info("$object_id set to available");
         }
         if ($this->iCloudStorable->isTransactionInCloud($object_id)) {
-            $this->logger->info("$file [transaction $object_id] passé à is_in_cloud = false");
+            $this->logger->info("$file [transaction $object_id] passÃ© Ã  is_in_cloud = false");
             $this->iCloudStorable->setInCloud($object_id,false);
         }
     }

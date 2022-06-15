@@ -13,7 +13,7 @@ class ActesPostWithoutSignatureController extends Controller {
 		if ( ! $rgsConnexion->isRgsConnexion()){
 			$this->redirect(
 				"/modules/actes",
-				"La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}"
+				"La tÃ©lÃ©transmission nÃ©cessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}"
 			);
 		}
 
@@ -23,7 +23,7 @@ class ActesPostWithoutSignatureController extends Controller {
 		if (! $transaction_info){
 			$this->redirect(
 				"/modules/actes/",
-				"Aucun identifiant de transaction trouvé"
+				"Aucun identifiant de transaction trouvÃ©"
 			);
 		}
 
@@ -36,7 +36,7 @@ class ActesPostWithoutSignatureController extends Controller {
 			);
 		}
 
-		$message = "La transaction $transaction_id a été posté sans signature";
+		$message = "La transaction $transaction_id a Ã©tÃ© postÃ© sans signature";
 		$workerClassName = ActesAnalyseFichierAEnvoyerWorker::class;
 
 

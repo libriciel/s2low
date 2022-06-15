@@ -19,7 +19,7 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase {
 		try {
 			$actesPostWithoutSignature->postAction();
 		} catch (Exception $e){
-			$this->assertRegExp("#La transaction $transaction_id a été posté sans signature#",$e->getMessage());
+			$this->assertRegExp("#La transaction $transaction_id a Ã©tÃ© postÃ© sans signature#",$e->getMessage());
 		}
 
 		$actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
@@ -35,7 +35,7 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase {
 		$this->setRGS2stars();
 		$this->setUserAuthentification();
 		$actesPostWithoutSignature = $this->getObjectInstancier()->get(ActesPostWithoutSignatureController::class);
-		$this->setExpectedException(RedirectException::class,"Aucun identifiant de transaction trouvé");
+		$this->setExpectedException(RedirectException::class,"Aucun identifiant de transaction trouvÃ©");
 		$actesPostWithoutSignature->postAction();
 	}
 
@@ -66,7 +66,7 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase {
 			$this->assertTrue(false);
 		} catch (Exception $e){
 			$this->assertRegExp(
-				"#La télétransmission nécessite un certificat RGS<br/>Erreur : Impossible de vérifier la connexion HTTPS#",
+				"#La tÃ©lÃ©transmission nÃ©cessite un certificat RGS<br/>Erreur : Impossible de vÃ©rifier la connexion HTTPS#",
 				$e->getMessage()
 			);
 		}

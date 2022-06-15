@@ -1,37 +1,37 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
+ * TÃ©DÃ©TIS - Copyright 2006 Alternance-Soft
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
 
@@ -41,7 +41,7 @@
  * \class MailUtil.class.php
  * \brief fonction commun pour envoiyer les email.
  * 
- * Cette classe fournit des méthodes d'envois email de module mail.
+ * Cette classe fournit des mÃ©thodes d'envois email de module mail.
  *
  * \author TH ,JMontiel
  * \date :23-04-2008
@@ -69,7 +69,7 @@ class MailUtil {
 	}
 
  	/**
- 	 * \brief extrait un tableau de fichier à partir d'un repertoire
+ 	 * \brief extrait un tableau de fichier Ã  partir d'un repertoire
  	 * \param $root le chemin racine
  	 * \return array le tableau des fichiers (n'inclue pas les repertoire)
  	 */
@@ -97,8 +97,8 @@ class MailUtil {
  	
  	/**
  	 * \brief 	zip les fichiers dont le chemin est dans array_path et 
- 	 * 			met le résultat dans $file
- 	 * \param	array_file array tableau des fichiers à zipper
+ 	 * 			met le rÃ©sultat dans $file
+ 	 * \param	array_file array tableau des fichiers Ã  zipper
  	 * \param	$file string nom du fichier de sortie
  	 * \return	true si ok false sinon. $this->errorMsg contient le message d'erreur
  	 */
@@ -107,7 +107,7 @@ class MailUtil {
 		$res = $zip->open($file, ZipArchive::CREATE);
 		
 		if (! $res){
-			$this->errorMsg = "Impossible de créer l'archive zip $file : erreur ".$res;
+			$this->errorMsg = "Impossible de crÃ©er l'archive zip $file : erreur ".$res;
 			$this->trace->log($this->errorMsg,Trace::$TRACE_ERROR);
 			return false;
 		} 
@@ -124,7 +124,7 @@ class MailUtil {
  	}
  	
  	/**
-   * \brief   envoyer un mail avec des pièces joindures.
+   * \brief   envoyer un mail avec des piÃ¨ces joindures.
    * \param   objet du class : mail_message_emis
    * \param                    mail_transaction
    * \param                    mail_include_file
@@ -139,7 +139,7 @@ class MailUtil {
 			if ($send_password) {
 				$text.="Le mot de passe du document est : ".$mailTransaction->getPassword()."\n";
 			} else {
-				$text.="Le document est protégé par un mot de passe";
+				$text.="Le document est protÃ©gÃ© par un mot de passe";
 			}
 		}
 
@@ -162,15 +162,15 @@ class MailUtil {
 	    	$htmlpart='';
 			$htmlpart.='
 <a href="'.WEBSITE.'/modules/mail/?command=show&mail_emis_id='.$MailEmis->getId().'" >Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
-<p>Information de sécurité : tous les documents ont été testés par l\'anti-virus CLAMAV.</p>
-<p>Pour toute demande d\'information, vous pouvez contacter l\'expéditeur précisé dans le contenu du message sur la plateforme sécurisée.</p>
+<p>Information de sÃ©curitÃ© : tous les documents ont Ã©tÃ© testÃ©s par l\'anti-virus CLAMAV.</p>
+<p>Pour toute demande d\'information, vous pouvez contacter l\'expÃ©diteur prÃ©cisÃ© dans le contenu du message sur la plateforme sÃ©curisÃ©e.</p>
 ';
 
 	    	$htmlpart.='';
             $htmlBody = $html . $htmlpart."</body></html>";
 
 			$textpart=WEBSITE."/modules/mail/index.php?command=show&mail_emis_id=".$MailEmis->getId();
-			$textpart.="\nInformation de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.\n";
+			$textpart.="\nInformation de sÃ©curitÃ© : tous les documents ont Ã©tÃ© testÃ©s par l'anti-virus CLAMAV.\n";
 			
 			$crlf="\n";
 			$mime = new Mail_mime($crlf);
@@ -196,7 +196,7 @@ class MailUtil {
 	}
 
   public function GetMailMessage() {
-		// Précédemment il y avait un truc très limité pour tester la boite de retour mais ce n'était a priori pas utilisé
+		// PrÃ©cÃ©demment il y avait un truc trÃ¨s limitÃ© pour tester la boite de retour mais ce n'Ã©tait a priori pas utilisÃ©
   		return null;
 
    }

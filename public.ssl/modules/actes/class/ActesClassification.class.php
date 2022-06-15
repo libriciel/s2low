@@ -1,51 +1,51 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡ la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √† la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
- * dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡ 
- * manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
- * logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
+ * d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
+ * manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
+ * logiciel √† leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 ?>
 <?php
 /**
  * \class ActesClassification ActesClassification.class.php
- * \brief Cette classe permet de gÈrer les classifications matiËres/sous-matiËres
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Cette classe permet de g√©rer les classifications mati√®res/sous-mati√®res
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 03.08.2006
  * 
  *
- * Cette classe fournit des mÈthodes de gestion de la liste
- * de classification matËres/sous-matiËres
+ * Cette classe fournit des m√©thodes de gestion de la liste
+ * de classification mat√®res/sous-mati√®res
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -70,16 +70,16 @@ class ActesClassification extends DataObject {
 
   /**
    * \brief Constructeur d'une requete de classification
-   * \param id integer NumÈro d'identifiant d'une requete existante avec laquelle initialiser l'objet
+   * \param id integer Num√©ro d'identifiant d'une requete existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
 	parent::__construct($id);
   }
 
   /**
-   * \brief MÈthode d'initialisation avec les donnÈes de la derniËre requÍte en date ayant rÈussie
-   * \param $authority_id entier : Identifiant de la collectivitÈ concernÈe
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode d'initialisation avec les donn√©es de la derni√®re requ√™te en date ayant r√©ussie
+   * \param $authority_id entier : Identifiant de la collectivit√© concern√©e
+   * \return True en cas de succ√®s, false sinon
    */
   public function initWithLastSuccessful($authority_id) {
  	if (is_numeric($authority_id)) {
@@ -105,8 +105,8 @@ class ActesClassification extends DataObject {
 	return false;
   }
   /**
-   * \brief MÈthode d'envoi de la classification
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode d'envoi de la classification
+   * \return True en cas de succ√®s, false sinon
    */
   public function pushXMLData() {
 	if (! empty($this->xml_data)) {
@@ -127,13 +127,13 @@ class ActesClassification extends DataObject {
 
 
   /**********************/
-  /* MÈthodes statiques */
+  /* M√©thodes statiques */
   /**********************/
 
   /**
-   * \brief MÈthode de vÈrification qu'une transaction de demande de classification n'existe pas dÈj‡ dans la journÈe en cours
-   * \param $authority_id entier : Identifiant de la collectivitÈ concernÈe
-   * \return True si une transaction a dÈj‡ ÈtÈ faites dans la journÈe en cours, false sinon
+   * \brief M√©thode de v√©rification qu'une transaction de demande de classification n'existe pas d√©j√† dans la journ√©e en cours
+   * \param $authority_id entier : Identifiant de la collectivit√© concern√©e
+   * \return True si une transaction a d√©j√† √©t√© faites dans la journ√©e en cours, false sinon
   */
   public static function hasTodayRequest($authority_id) {
 	if (is_numeric($authority_id)) {
@@ -143,8 +143,8 @@ class ActesClassification extends DataObject {
 		. " LEFT JOIN actes_envelopes ae ON at.envelope_id=ae.id"
 		. " LEFT JOIN users ON ae.user_id=users.id"
 		. " WHERE at.type='7' "
-		// On ne tient compte que des demandes dans les Ètats postÈ, en attente ou transmis (3), de ce fait si une demande tombe en erreur
-		// il sera possible de refaire une requÍte dans la mÍme journÈe
+		// On ne tient compte que des demandes dans les √©tats post√©, en attente ou transmis (3), de ce fait si une demande tombe en erreur
+		// il sera possible de refaire une requ√™te dans la m√™me journ√©e
 		
 		//Correger pour la report du bug: 190 =>lenteur du plateforme.
 		. " AND (SELECT status_id FROM actes_transactions_workflow atw2 WHERE date = ( SELECT MAX(date) FROM actes_transactions_workflow atw3 WHERE atw3.transaction_id = atw2.transaction_id) AND transaction_id = at.id ORDER BY atw2.id DESC LIMIT 1) IN (1,2,3)"
@@ -164,14 +164,14 @@ class ActesClassification extends DataObject {
 
 
   /**
-   * \brief MÈthode d'obtention de la date de la derniËre classification utilisÈe
-   * \param $authority_id entier : Identifiant de la collectivitÈ concernÈe
-   * \param $return_ansi bollÈen : si true (dÈfaut) retourne la date au format YYYY-MM-DD, format BDD sinon
-   * \return La date de la derniËre classification utilisÈe
+   * \brief M√©thode d'obtention de la date de la derni√®re classification utilis√©e
+   * \param $authority_id entier : Identifiant de la collectivit√© concern√©e
+   * \param $return_ansi boll√©en : si true (d√©faut) retourne la date au format YYYY-MM-DD, format BDD sinon
+   * \return La date de la derni√®re classification utilis√©e
   */
   public static function getLastRevisionDate($authority_id, $return_ansi = true) {
 	if (is_numeric($authority_id)) {
-	  // TODO : voir s'il ne vaut mieux pas ordonner par ID et prendre la date de la derniËre requÍte
+	  // TODO : voir s'il ne vaut mieux pas ordonner par ID et prendre la date de la derni√®re requ√™te
 	  $sql = "SELECT MAX(version_date) AS max_date FROM actes_classification_requests"
 		. " LEFT JOIN users ON actes_classification_requests.requested_by=users.id"
 		. " WHERE users.authority_id=" . $authority_id;
@@ -194,9 +194,9 @@ class ActesClassification extends DataObject {
   }
 
   /**
-   * \brief MÈthode de rÈcupÈration de la liste de classification
-   * \param $authority_id entier : Identifiant de la collectivitÈ concernÈe
-   * \return Un tableau contenant la liste de classification matiËres/sous-matiËres
+   * \brief M√©thode de r√©cup√©ration de la liste de classification
+   * \param $authority_id entier : Identifiant de la collectivit√© concern√©e
+   * \return Un tableau contenant la liste de classification mati√®res/sous-mati√®res
    */
   public static function getClassificationList($authority_id) {
 	if (is_numeric($authority_id)) {
@@ -242,9 +242,9 @@ class ActesClassification extends DataObject {
   }
 
   /**
-   * \brief MÈthode de rÈcupÈration du fichier XML de la classification
+   * \brief M√©thode de r√©cup√©ration du fichier XML de la classification
 
-   * \return Une chaÓne contenant les donnÈes XML de la classification
+   * \return Une cha√Æne contenant les donn√©es XML de la classification
    */
   public static function getClassificationXMLData($authority_id) {
 

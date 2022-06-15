@@ -48,7 +48,7 @@ class ExtractDataForBordereauPDF{
         $includedFiles = $this->actesIncludedFileSQL->getAll($transactionId);
 
         foreach($includedFiles as $index => $file){
-            $includedFiles[$index]["typeDocument"]='Enveloppe métier';
+            $includedFiles[$index]["typeDocument"]='Enveloppe mÃ©tier';
 
             if($file['code_pj']){
                 $libelle = $this->actesTypePJSQL->getLibelle($file['code_pj'])?:$file['code_pj'];

@@ -42,15 +42,15 @@ class PDFStampWrapper {
             ),
             'rows' => array(
                 array(
-                    'title' => 'Envoyé en préfecture le',
+                    'title' => 'EnvoyÃ© en prÃ©fecture le',
                     'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
                 ),
                 array(
-                    'title' => 'Reçu en préfecture le',
+                    'title' => 'ReÃ§u en prÃ©fecture le',
                     'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
                 ),
                 array(
-                    'title' => 'Affiché le',
+                    'title' => 'AffichÃ© le',
                     'value' => $date_affichage,
                     'logo' => array(
                         'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),

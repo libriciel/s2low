@@ -19,12 +19,12 @@ class ActesTransactionsCloser {
 	public function closeAll(){
 		$this->s2lowLogger->info("Passage du script de cloture de transaction");
 		$date = date("Y-m-d",strtotime("-30 days"));
-		$this->s2lowLogger->info("Toutes les transactions transmises avant le $date vont être fermés");
+		$this->s2lowLogger->info("Toutes les transactions transmises avant le $date vont Ãªtre fermÃ©s");
 		$transaction_id_list = $this->actesTransactionsSQL->getByStatusSinceDate(
 			ActesStatusSQL::STATUS_TRANSMIS,
 			$date
 		);
-		$this->s2lowLogger->info(count($transaction_id_list)." transactions ont été trouvé");
+		$this->s2lowLogger->info(count($transaction_id_list)." transactions ont Ã©tÃ© trouvÃ©");
 		foreach ($transaction_id_list as $transaction_id){
 			$this->s2lowLogger->info("Fermeture de la transaction $transaction_id");
 			$this->actesScriptHelper->updateStatus(

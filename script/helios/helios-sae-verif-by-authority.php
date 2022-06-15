@@ -6,7 +6,7 @@ require_once( __DIR__."/../../init/init.php");
 
 if ($argc < 2){
 	echo "Usage {$argv[0]} authority_id\n";
-	echo "{$argv[0]} : permet de vérifier toutes les transactions envoyé au SAE d'une collectivité\n";
+	echo "{$argv[0]} : permet de vÃ©rifier toutes les transactions envoyÃ© au SAE d'une collectivitÃ©\n";
 	exit(-1);
 }
 
@@ -22,7 +22,7 @@ $transaction_list = $heliosTransactionsSQL->getIdsByStatus(HeliosStatusSQL::ENVO
 
 $heliosVerificationSaeWorker = $objectInstancier->get(HeliosVerificationSaeWorker::class);
 
-$s2LowLogger->info(count($transaction_list). " transactions à vérifier");
+$s2LowLogger->info(count($transaction_list). " transactions Ã  vÃ©rifier");
 foreach($transaction_list as $transaction_id){
 	$heliosVerificationSaeWorker->work($transaction_id);
 }

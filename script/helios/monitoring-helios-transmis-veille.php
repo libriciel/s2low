@@ -1,5 +1,5 @@
 <?php
-// Script chargé de retourner le nombre de flux PES à l'état transmis depuis la veille
+// Script chargÃ© de retourner le nombre de flux PES Ã  l'Ã©tat transmis depuis la veille
 // Sortie au format Influxdb
 require_once( __DIR__."/../../init/init.php");
 

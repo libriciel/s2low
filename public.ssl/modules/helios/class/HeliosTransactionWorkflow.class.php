@@ -11,7 +11,7 @@ class HeliosTransactionWorkflow extends DataObject {
   protected $date; //le timestamp de la transaction
   protected $message; //message concernant la transaction
 
-  //d'ici variables apparement non-utilisées ....................................
+  //d'ici variables apparement non-utilisÃ©es ....................................
   public $files = array ();
   private $fileNameSerial;
 
@@ -54,7 +54,7 @@ class HeliosTransactionWorkflow extends DataObject {
 
   /**
    * \brief Constructeur d'une transaction
-   * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   * \param id integer NumÃ©ro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
     parent :: __construct($id);
@@ -63,8 +63,8 @@ class HeliosTransactionWorkflow extends DataObject {
   }
 
   /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succé, false sinon
+   * \brief MÃ©thode initialisant l'entitÃ© avec l'identifiant courant
+   * \return true si succÃ©, false sinon
   */
   public function init() {
     if (!parent :: init()) {
@@ -75,7 +75,7 @@ class HeliosTransactionWorkflow extends DataObject {
   }
 
   /**
-   * \brief Méhode permettant de fixer la valeur d'un attribut
+   * \brief MÃ©hode permettant de fixer la valeur d'un attribut
    * \param $name  : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
@@ -90,7 +90,7 @@ class HeliosTransactionWorkflow extends DataObject {
    */
 
   /**
-    * \brief Méhode permettant de recuperer la date à la quelle le fichier a ete posté   
+    * \brief MÃ©hode permettant de recuperer la date Ã  la quelle le fichier a ete postÃ©   
     * 
     * \param $transaction_id 
     * \return la date

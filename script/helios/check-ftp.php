@@ -1,5 +1,5 @@
 <?php
-// Script permettant de tester l'accès au serveur FTP de la DGFiP
+// Script permettant de tester l'accÃ¨s au serveur FTP de la DGFiP
 // Sortie au format Influxdb
 require_once( __DIR__."/../../init/init.php");
 

@@ -2,7 +2,7 @@
 
 class HeliosAnalyseFichierRecu {
 	
-	const ID = "Helios Analyse Fichier Réception";
+	const ID = "Helios Analyse Fichier RÃ©ception";
 	const MAX_FILE_SIZE = 150 * 1024 * 1024;
 	
 	private $heliosTransactionsSQL;
@@ -37,22 +37,22 @@ class HeliosAnalyseFichierRecu {
 	public function getAllDirectory($helios_ftp_response_tmp_local_path){
 		$helios_ftp_response_tmp_local_path = rtrim($helios_ftp_response_tmp_local_path,"/")."/";
 
-		$this->s2lowLogger->info("Analyse du répertoire : $helios_ftp_response_tmp_local_path");
+		$this->s2lowLogger->info("Analyse du rÃ©pertoire : $helios_ftp_response_tmp_local_path");
 
 		$file_list = scandir($helios_ftp_response_tmp_local_path);
 
 		if ($file_list === false){
-			$this->s2lowLogger->critical("[ECHEC] Erreur lors de la lecture du répertoire  $helios_ftp_response_tmp_local_path");
+			$this->s2lowLogger->critical("[ECHEC] Erreur lors de la lecture du rÃ©pertoire  $helios_ftp_response_tmp_local_path");
 			return [];
 		}
 
 		$file_list = array_diff($file_list, array('..', '.'));
 
 		if (!$file_list){
-			$this->s2lowLogger->info("Aucun fichier à analyser");
+			$this->s2lowLogger->info("Aucun fichier Ã  analyser");
 			return [];
 		}
-		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvés");
+		$this->s2lowLogger->info("Traitement de ".count($file_list)." fichiers trouvÃ©s");
 		return $file_list;
 	}
 
@@ -82,12 +82,12 @@ class HeliosAnalyseFichierRecu {
 		}
 
 		if ($erreur_list){
-			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de récupération des fichier PES_Acquit/PES_Retour";
+			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de rÃ©cupÃ©ration des fichier PES_Acquit/PES_Retour";
 			$msg = "";
 			foreach($erreur_list as $file => $message){
 				$msg.= "Fichier : $file => $message\n";
 			}
-			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
+			$msg .= "\n\nLes fichiers en erreur sont disponible dans le rÃ©pertoire $helios_responses_error_path\n";
 			$this->sendMailToAdmin($subject, $msg);
 		}
 
@@ -98,7 +98,7 @@ class HeliosAnalyseFichierRecu {
                     $i++;
                     $file_num = "$helios_responses_error_path/$file.$i";
                 } while (file_exists($file_num));
-				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe déjà dans le répertoire des fichiers en erreur : renommé en *.$i");
+				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe dÃ©jÃ  dans le rÃ©pertoire des fichiers en erreur : renommÃ© en *.$i");
                 rename($helios_responses_error_path."/".$file,$file_num);
 			}
 			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
@@ -124,12 +124,12 @@ class HeliosAnalyseFichierRecu {
 			$erreur_list[$filename] = $e->getMessage();
 		}
 		if ($erreur_list){
-			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de récupération des fichier PES_Acquit/PES_Retour";
+			$subject = "[S2low][Helios] Des fichiers sont en erreur sur le script de rÃ©cupÃ©ration des fichier PES_Acquit/PES_Retour";
 			$msg = "";
 			foreach($erreur_list as $file => $message){
 				$msg.= "Fichier : $file => $message\n";
 			}
-			$msg .= "\n\nLes fichiers en erreur sont disponible dans le répertoire $helios_responses_error_path\n";
+			$msg .= "\n\nLes fichiers en erreur sont disponible dans le rÃ©pertoire $helios_responses_error_path\n";
 			$this->sendMailToAdmin($subject, $msg);
 		}
 
@@ -140,7 +140,7 @@ class HeliosAnalyseFichierRecu {
 					$i++;
 					$file_num = "$helios_responses_error_path/$file.$i";
 				} while (file_exists($file_num));
-				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe déjà dans le répertoire des fichiers en erreur : renommé en *.$i");
+				$this->s2lowLogger->warning("[WARNING] Le fichier $file existe dÃ©jÃ  dans le rÃ©pertoire des fichiers en erreur : renommÃ© en *.$i");
 				rename($helios_responses_error_path."/".$file,$file_num);
 			}
 			rename($helios_ftp_response_tmp_local_path."/".$file,$helios_responses_error_path."/".$file);
@@ -161,7 +161,7 @@ class HeliosAnalyseFichierRecu {
 
 		if (preg_match("#.ocre?$#",strtolower($basename))){
 			if (! rename($file_path,$ocre_file_path."/".$basename)){
-				throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
+				throw new Exception(" Le fichier $file_path n'a pas pu Ãªtre dÃ©placÃ© !");
 			}
 			return;
 		}
@@ -169,14 +169,14 @@ class HeliosAnalyseFichierRecu {
 		$file_size = filesize($file_path);
 		$this->s2lowLogger->debug("Taille du fichier $file_path en octets : $file_size");
 		if ($file_size > self::MAX_FILE_SIZE ){
-			throw new Exception(" La taille du fichier $file_path ($file_size octets) dépasse la taille maximale (".self::MAX_FILE_SIZE." octets) !");
+			throw new Exception(" La taille du fichier $file_path ($file_size octets) dÃ©passe la taille maximale (".self::MAX_FILE_SIZE." octets) !");
 		}
 
 
 		libxml_clear_errors();
 		$xml = simplexml_load_file($file_path);
 		if (! $xml){
-			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
+			throw new Exception("Le fichier $basename n'est pas bien formÃ© (fichier ignorÃ©)");
 		}
 		$root_name = strtolower($xml->getName());
 
@@ -194,14 +194,14 @@ class HeliosAnalyseFichierRecu {
 		libxml_clear_errors();
 
 		if ($errors){
-			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
+			throw new Exception("Le fichier $basename n'est pas bien formÃ© (fichier ignorÃ©)");
 		}
 		$dom->schemaValidate($schema_location);
 		$errors = libxml_get_errors();
 		libxml_clear_errors();
 
 		if ($errors && $validate_xsd){
-			$this->s2lowLogger->error("Erreur lors de la validation du schéma XML");
+			$this->s2lowLogger->error("Erreur lors de la validation du schÃ©ma XML");
 			$this->s2lowLogger->error(json_encode($errors));
 			$root_name= "validation_error";
 		}
@@ -212,7 +212,7 @@ class HeliosAnalyseFichierRecu {
 			case 'pes_nonacquit': $this->traitementNack($basename,$xml); break;
 			case 'pes_retour' : $this->traitementPESRetour($basename,$xml); break;
 			case 'validation_error'  : $this->traitementErreur($basename,$xml); break;
-			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignoré)");
+			default: throw new Exception("$basename : Type PES retour inconnu : $root_name (fichier ignorÃ©)");
 		}
         $renameSuccess = false;
 
@@ -224,7 +224,7 @@ class HeliosAnalyseFichierRecu {
             );
         }
         if (!$renameSuccess){
-            $this->s2lowLogger->error("Traitement de $file_path annulé : déplacement impossible");
+            $this->s2lowLogger->error("Traitement de $file_path annulÃ© : dÃ©placement impossible");
 		    $this->heliosTransactionsSQL->rollback();
 		}
         else{
@@ -241,10 +241,10 @@ class HeliosAnalyseFichierRecu {
 		$helios_transaction_id = $this->retrieveTransaction($xml,false);
 
 		if (! $helios_transaction_id){
-			throw new Exception("Le fichier $basename n'est pas valide et aucun NomFic n'a peu être extrait");
+			throw new Exception("Le fichier $basename n'est pas valide et aucun NomFic n'a peu Ãªtre extrait");
 		}
 
-		$message = "Transaction $helios_transaction_id : erreur retournée par Helios";
+		$message = "Transaction $helios_transaction_id : erreur retournÃ©e par Helios";
 		$this->heliosTransactionsSQL->updateStatus(
 			$helios_transaction_id,
 			HeliosTransactionsSQL::ERREUR,
@@ -263,7 +263,7 @@ class HeliosAnalyseFichierRecu {
 	private function traitementAck($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
-		$this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
+		$this->s2lowLogger->info("Transaction trouvÃ© : helios_transaction_id=$helios_transaction_id");
 
 		if (count($xml->ACQUIT) == 0){
 			$message = "Transaction $helios_transaction_id acceptee";
@@ -305,7 +305,7 @@ class HeliosAnalyseFichierRecu {
         }
 		
 		if (!$helios_transaction_list){
-			throw new Exception("L'identificant NomFic $nom_fic n'est associé à aucune transaction dans la base de données");	
+			throw new Exception("L'identificant NomFic $nom_fic n'est associÃ© Ã  aucune transaction dans la base de donnÃ©es");	
 		}
 
 		if (count($helios_transaction_list) == 1){
@@ -352,9 +352,9 @@ class HeliosAnalyseFichierRecu {
 	private function traitementNack($basename,SimpleXMLElement $xml){
 		$helios_transaction_id = $this->retrieveTransaction($xml);
 
-		$this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
+		$this->s2lowLogger->info("Transaction trouvÃ© : helios_transaction_id=$helios_transaction_id");
 
-		$message = "Transaction $helios_transaction_id refusée";
+		$message = "Transaction $helios_transaction_id refusÃ©e";
 		$this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message,true);
 		$this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 
@@ -371,11 +371,11 @@ class HeliosAnalyseFichierRecu {
 
 		$authority_list = $this->authoritySiretSQL->authorityList($siret);
 		if (! $authority_list){
-			throw new Exception("La collectivité $siret n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
+			throw new Exception("La collectivitÃ© $siret n'est pas abonnÃ©e Ã  l'application ComptabilitÃ© Publique du TdT, elle n'est donc pas autorisÃ©e Ã  recevoir le PES_Retour ");
 		}
 
 		if (count($authority_list) > 1){
-			throw new Exception("Le SIRET $siret est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué");
+			throw new Exception("Le SIRET $siret est associÃ© Ã  plusieurs collectivitÃ©s. Le PES_Retour n'est donc pas attribuÃ©");
 		}
 		$authority_id = $authority_list[0]['authority_id'];
 

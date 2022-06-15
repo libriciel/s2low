@@ -1,7 +1,7 @@
 <?php
 require_once( __DIR__."/../../init/init.php");
 
-# Ce script permet de mettre automatiquement la base à jour en fonction du fichier de définition de la base
+# Ce script permet de mettre automatiquement la base Ã  jour en fonction du fichier de dÃ©finition de la base
 
 
 /** @var ObjectInstancier $objectInstancier */

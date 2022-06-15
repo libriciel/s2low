@@ -8,13 +8,13 @@ $x509Certificate = new X509Certificate();
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accés refusé";
+  $_SESSION["error"] = "AccÃ©s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -37,7 +37,7 @@ if (isset($id) && ! empty($id)) {
     if(!is_numeric($id)){
         Helpers :: returnAndExit(
                 1,
-                "admin_user_edit.php : id doit être un entier, $id fourni",
+                "admin_user_edit.php : id doit Ãªtre un entier, $id fourni",
                 WEBSITE_SSL
         );
     }
@@ -56,7 +56,7 @@ if ($new_id){
     if(!is_numeric($new_id)){
         Helpers :: returnAndExit(
                 1,
-                "admin_user_edit.php : new_id doit être un entier, $new_id fourni",
+                "admin_user_edit.php : new_id doit Ãªtre un entier, $new_id fourni",
                 WEBSITE_SSL
         );
     }
@@ -74,7 +74,7 @@ if (! $me->isSuper() && $mod) {
 		$canUserEdit = $me->canEditUser($new_id);
 	}
   if (! $canUserEdit) {
-	$_SESSION["error"] = "Impossible de modifier cet utilisateur. Accés refusé.";
+	$_SESSION["error"] = "Impossible de modifier cet utilisateur. AccÃ©s refusÃ©.";
 	header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
 	exit();
   }
@@ -85,13 +85,13 @@ if (! $me->isSuper() && $mod) {
 if ($mod){
     if ($new_id){
         $title = sprintf(
-                "Ajout d'un nouvel utilisateur (à partir de « %s %s »)",
+                "Ajout d'un nouvel utilisateur (Ã  partir de Â« %s %s Â»)",
                 $him->get('givenname'),
                 $him->get('name')
         );
     } else {
         $title = sprintf(
-                "Modification de l'utilisateur « %s %s  »",
+                "Modification de l'utilisateur Â« %s %s  Â»",
                 $him->get('givenname'),
                 $him->get('name')
     );
@@ -126,7 +126,7 @@ $him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
 
 $roles_list = $me->get("roleTypes");
 if (! $me->isSuper()) {
-	// Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
+	// Les admin simple et de groupe ne peut pas crÃ©er un super admin ni un admin de groupe
 	$tmp = array();
 
 	foreach ($roles_list as $role => $descr) {
@@ -140,16 +140,16 @@ if (! $me->isSuper()) {
 $groups_list = Group::getGroupsIdName();
 
 
-// Récupération des modules actifs globalement
+// RÃ©cupÃ©ration des modules actifs globalement
 $modules = Module::getActiveModulesList();
 
-// Récupération des modules authorisés pour la collectivité
+// RÃ©cupÃ©ration des modules authorisÃ©s pour la collectivitÃ©
 $authModules = array();
 if ($mod) {
 	$authModules = Module::getModulesForAuthority($him->get("authority_id"));
 } else {
 	if ($me->isGroupAdminOrSuper()) {
-		// On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
+		// On ne sait pas Ã  l'avance Ã  quelle collectivitÃ© appartiendra l'utilisateur
 		foreach ($modules as $module) {
 			if ($me->isGroupAdmin()) {
 				if ($me->canGrantModule($module["name"])) {
@@ -209,7 +209,7 @@ ob_start();
 <h1><?php hecho($title)?></h1>
 <p id="back-user-btn"><a class="btn btn-default" href="admin_users.php">Retour liste utilisateurs</a></p>
 
-<h2>Informations générales</h2>
+<h2>Informations gÃ©nÃ©rales</h2>
 <form class="form form-horizontal" 
 		action="admin_user_edit_handler.php" 
 		method="post" name="form" 
@@ -229,7 +229,7 @@ ob_start();
 <?php endif;?>
 		
 		
-<?php foreach(array('name'=>'Nom', 'givenname'=>"Prénom",'email'=>"Adresse électronique","telephone"=>"Téléphone") as $input_id => $input_label): ?>
+<?php foreach(array('name'=>'Nom', 'givenname'=>"PrÃ©nom",'email'=>"Adresse Ã©lectronique","telephone"=>"TÃ©lÃ©phone") as $input_id => $input_label): ?>
 <div class="form-group">
 	<label class="control-label col-md-4"><?php echo $input_label?> : </label>
 	<div class="col-md-6">
@@ -240,7 +240,7 @@ ob_start();
 
 <h2>Authentification</h2>
 <div class="form-group">
-	<label class="control-label col-md-4">Méthode : </label>
+	<label class="control-label col-md-4">MÃ©thode : </label>
 	<div class="col-md-6">
 		<select id="auth_method" name="auth_method">
 			<?php foreach($userSQL->getIdentificatonMethodeList() as $ident_id => $ident_libelle): ?>
@@ -305,7 +305,7 @@ ob_start();
 		Expire le <?php echo $him->getCertificateExpirationDate(); ?>
 		<?php if($me->isSuper()) : ?>
 			<br/>
-			<a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_download_cert.php?id=<?php echo $him->getId()?>">Télécharger</a>
+			<a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_download_cert.php?id=<?php echo $him->getId()?>">TÃ©lÃ©charger</a>
 		<?php endif ?>
 	</div>
 
@@ -315,7 +315,7 @@ ob_start();
 	?>
 	<?php if (! $is_rgs): ?>
 		<div class="alert alert-warning col-md-9 col-md-offset-1">
-			Ce certificat n'est pas RGS et ne peut pas servir à télétransmettre.
+			Ce certificat n'est pas RGS et ne peut pas servir Ã  tÃ©lÃ©transmettre.
 		</div>
 	<?php endif; ?>
 
@@ -331,7 +331,7 @@ ob_start();
 	</div>
 </div>	
 	
-<?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (à nouveau)") as $input_id => $input_label): ?>
+<?php foreach(array('password'=>'Mot de passe', 'password2'=>"Mot de passe (Ã  nouveau)") as $input_id => $input_label): ?>
 <div class="form-group">
 	<label class="control-label col-md-4" for="<?php echo $input_id ?>"><?php echo $input_label?>: </label>
 	<div class="col-md-6">
@@ -355,7 +355,7 @@ ob_start();
 </div>
 
 <div class="form-group" id='rgs2-form'>
-	<label class="control-label col-md-4">Certificat complémentaire (format PEM) :</label>
+	<label class="control-label col-md-4">Certificat complÃ©mentaire (format PEM) :</label>
 	<div class="col-md-6">
 		<?php if ($certificat_rgs_2_etoiles_info): ?>
 			<?php hecho($certificat_rgs_2_etoiles_info['name']) ?><br/>
@@ -375,7 +375,7 @@ ob_start();
 <h2>Droits</h2>
 
 <div class="form-group">
-	<label class="control-label col-md-4">État :</label>
+	<label class="control-label col-md-4">Ã‰tat :</label>
 	<div class="col-md-6 ">
 	<?php echo $doc->getHTMLSelect("status", $status_type_list, $him_status); ?>
 	</div>
@@ -383,7 +383,7 @@ ob_start();
 
 <?php if ($me->isGroupAdminOrSuper()) :?>
 	<div class="form-group">
-  		<label class="control-label col-md-4">Collectivité :</label>
+  		<label class="control-label col-md-4">CollectivitÃ© :</label>
   		<div class="col-md-6">
   			<?php if (! $mod || $new_id) : ?>
 				<select class="form-control zselect_authorities" name="authority_id">
@@ -403,7 +403,7 @@ ob_start();
 <?php endif;?>
 
 <div class="form-group">
-	<label class="control-label col-md-4">Rôle :</label>
+	<label class="control-label col-md-4">RÃ´le :</label>
 	<div class="col-md-6">
 		<?php echo $doc->getHTMLSelect("role", $roles_list, $him_role); ?>
 	</div>
@@ -447,7 +447,7 @@ ob_start();
 	
 </form>
 
-<h2>Autres utilisateurs partageant le même certificat</h2>
+<h2>Autres utilisateurs partageant le mÃªme certificat</h2>
 <?php if (count($certitificate_id_list) > 1) : ?>
     <p>
         <a href="admin_user_list.php?user_id=<?php hecho($him->getId())?>"><?php echo count($certitificate_id_list)?> utilisateurs</a> partagent ce certificat.
@@ -465,13 +465,13 @@ ob_start();
             <br/>
             <br/>
             <a href='admin_user_edit.php?new_id=<?php echo ($id?$id:$new_id) ?>' class="btn btn-primary">
-                Créer un nouvel utilisateur avec le même certificat
+                CrÃ©er un nouvel utilisateur avec le mÃªme certificat
             </a>
 
     </div>
 
 <?php else: ?>
-	Si vous voulez créer un autre utilisateur a partir du même certificat, vous devez saisir le champ login
+	Si vous voulez crÃ©er un autre utilisateur a partir du mÃªme certificat, vous devez saisir le champ login
 <?php endif;?>
 
 

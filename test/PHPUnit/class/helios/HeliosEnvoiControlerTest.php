@@ -72,7 +72,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$info = $heliosTransaction->getInfo($id_t);
 		$this->assertEquals(HeliosStatusSQL::ERREUR,$info['last_status_id']);
 		$last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
-		$this->assertEquals("Transaction $id_t : ce fichier n'est pas encodé en ISO-8859-1",$last_status_info['message']);
+		$this->assertEquals("Transaction $id_t : ce fichier n'est pas encodÃ© en ISO-8859-1",$last_status_info['message']);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 		$heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
 		$info = $heliosTransaction->getInfo($id_t);
 
-		$this->assertEquals("PESALR220001861200016Trésorerie_de_M20141205152530.xml",$info['xml_nomfic']);
+		$this->assertEquals("PESALR220001861200016TrÃ©sorerie_de_M20141205152530.xml",$info['xml_nomfic']);
 
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$siret_list = $authoritySiret->siretList(1);
@@ -121,7 +121,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 
 		$info = $heliosTransaction->getLastStatusInfo($id_t);
 		$this->assertEquals(-1,$info['status_id']);
-		$this->assertRegExp("#ce fichier existe déjà sur la plateforme#",$info['message']);
+		$this->assertRegExp("#ce fichier existe dÃ©jÃ  sur la plateforme#",$info['message']);
 	}
 
 
@@ -166,7 +166,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
         $this->assertEquals(-1,$info['last_status_id']);
         $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
         $this->assertEquals(
-            "Transaction $id_t : ce fichier ne contient ni bordereau, ni PJ, ni marché",
+            "Transaction $id_t : ce fichier ne contient ni bordereau, ni PJ, ni marchÃ©",
             $last_status_info['message']
         );
     }

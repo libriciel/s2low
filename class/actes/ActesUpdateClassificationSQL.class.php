@@ -25,13 +25,13 @@ class ActesUpdateClassificationSQL extends SQL{
     private function updateClassificationThrow($siren,$fichier_xml){
         $authority_id = $this->authoritySQL->getIdBySIREN($siren);
         if (! $authority_id){
-            throw new Exception("Aucune collectivité ne correspond au SIREN $siren");
+            throw new Exception("Aucune collectivitÃ© ne correspond au SIREN $siren");
         }
         $actesXSD = new \Libriciel\LibActes\ActesXSD();
 
         $xml = $actesXSD->getSimpleXMLForActesContent($fichier_xml);
         if($xml->getName() != 'RetourClassification'){
-            throw new Exception("Le message n'est pas un retour de classification: {$xml->getName()} trouvé.");
+            throw new Exception("Le message n'est pas un retour de classification: {$xml->getName()} trouvÃ©.");
         };
 
         $date_classification =  strval($xml->xpath("/actes:RetourClassification/actes:DateClassification")[0]);

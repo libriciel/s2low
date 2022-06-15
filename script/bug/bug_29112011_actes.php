@@ -1,7 +1,7 @@
 <?php
 exit;
 /*
- * L'application a générerer des fichiers XML sans objets...
+ * L'application a gÃ©nÃ©rerer des fichiers XML sans objets...
  * 
  */
 
@@ -36,7 +36,7 @@ $all = $actesTransactionsSQL->getArchiveFStatus(1);
 	}
 	
 	$tmpDir = "/tmp/" . Helpers::genTempName();
-	mkdir($tmpDir) or die("Impossible de créer un répertoire temporaire");
+	mkdir($tmpDir) or die("Impossible de crÃ©er un rÃ©pertoire temporaire");
 		  
 	
 	$cmd = "tar xzf $file_path  -C  $tmpDir ";
@@ -49,9 +49,9 @@ $all = $actesTransactionsSQL->getArchiveFStatus(1);
 	$xml_subject = utf8_decode($r->item(0)->nodeValue);
 	
 	if ($subject != $xml_subject ){	
-		echo "Ooops... le sujet $subject diffère du contenu de l'enveloppe {$xml_subject}...\n";
+		echo "Ooops... le sujet $subject diffÃ¨re du contenu de l'enveloppe {$xml_subject}...\n";
 		$r->item(0)->nodeValue = utf8_encode(XML_escaping("$subject"));
-		$dom->save($tmpDir."/".$acte_file) or die ("OOPS impossible de créer le fichier actes...");
+		$dom->save($tmpDir."/".$acte_file) or die ("OOPS impossible de crÃ©er le fichier actes...");
 		chdir($tmpDir);
 	 	$cmd = "/bin/tar cf - * | /bin/gzip -9 > $file_path";
 		Trace::wrap_exec($cmd, $status, $ret);

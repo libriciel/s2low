@@ -47,7 +47,7 @@ class HeliosSignature {
 		`$command`;
 	
 		if (! file_exists($c14n_file)){
-			throw new Exception("Impossible de créer le fichier XML canonique $c14n_file");
+			throw new Exception("Impossible de crÃ©er le fichier XML canonique $c14n_file");
 		}
 
 		$result = hash_file(self::HASH_ALGORITHME,$c14n_file);

@@ -29,7 +29,7 @@ class PemCertificate{
     {
         if ($date < $this->dateValidFrom || $date > $this->dateValidTo) {
             throw new Exception("La date de la signature ".$date->format("d-M-Y H:i:s") .
-                " n'entre pas dans la date de validité du certificat ".
+                " n'entre pas dans la date de validitÃ© du certificat ".
                     $this->dateValidFrom->format("d-M-Y H:i:s")." - ".$this->dateValidTo->format("d-M-Y H:i:s"));
         }
     }

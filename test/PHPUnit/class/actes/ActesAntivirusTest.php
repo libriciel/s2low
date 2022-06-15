@@ -88,7 +88,7 @@ class ActesAntivirusTest extends S2lowTestCase {
 		$actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
 		$actesAntivirus->work($this->transaction_id);
 		$logs = $this->getLogRecords();
-		$this->assertEquals("La transaction {$this->transaction_id} a dÈj‡ ÈtÈ analysÈ par l'antivirus",$logs[1]['message']);
+		$this->assertEquals("La transaction {$this->transaction_id} a d√©j√† √©t√© analys√© par l'antivirus",$logs[1]['message']);
 	}
 
 	public function testGetAll(){

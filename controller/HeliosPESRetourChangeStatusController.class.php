@@ -7,7 +7,7 @@ class HeliosPESRetourChangeStatusController extends Controller {
 
 		try{
 			$this->modifStatus($retour_id);
-			$msg="Le status a été modifié";
+			$msg="Le status a Ã©tÃ© modifiÃ©";
 			$result = "OK";
 		} catch (Exception $e) {
 			$msg = $e->getMessage();
@@ -47,17 +47,17 @@ class HeliosPESRetourChangeStatusController extends Controller {
 		}
 		$me = new User();
 		if (! $me->authenticate()) {
-			throw new Exception("Échec de l'authentification");
+			throw new Exception("Ã‰chec de l'authentification");
 		}
 
 		if ( !$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGroupAdminOrSuper()) {
-			throw new Exception("Accès refusé");
+			throw new Exception("AccÃ¨s refusÃ©");
 		}
 		$heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
 		$info = $heliosRetourSQL->getInfo($transaction_id);
 
 		if (empty($info['authority_id']) || $info['authority_id'] != $me->get('authority_id')){
-			throw new Exception("Accès refusé");
+			throw new Exception("AccÃ¨s refusÃ©");
 		}
 
 		$heliosRetourSQL->changeStatus(

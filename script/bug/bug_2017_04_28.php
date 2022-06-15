@@ -1,10 +1,10 @@
 <?php
 
 /*
- * Le 28 avril 2017, la base clamav a détecté que les documents signé PADES contenait un virus :
- * Il s'agit d'un faut positif à priori : https://lists.gt.net/clamav/users/69581
- * Pas mal d'actes sont donc passées en erreur
- * On remet ces actes à l'état posté
+ * Le 28 avril 2017, la base clamav a dÃ©tectÃ© que les documents signÃ© PADES contenait un virus :
+ * Il s'agit d'un faut positif Ã  priori : https://lists.gt.net/clamav/users/69581
+ * Pas mal d'actes sont donc passÃ©es en erreur
+ * On remet ces actes Ã  l'Ã©tat postÃ©
  */
 
 
@@ -28,7 +28,7 @@ $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 foreach($actes_list as $acte){
 	echo "{$acte['id']} : {$acte['message']}\n";
 
-	$actesTransactionSQL->updateStatus($acte['id'],1,"Transaction repassee en posté");
+	$actesTransactionSQL->updateStatus($acte['id'],1,"Transaction repassee en postÃ©");
 
 
 }

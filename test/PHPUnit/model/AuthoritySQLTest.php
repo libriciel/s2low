@@ -107,7 +107,7 @@ class AuthoritySQLTest extends S2lowTestCase {
 						'district' => '1',
 						'status' => 1,
 						'group_name' => 'Groupe de test',
-						'description' => 'Conseil régional',
+						'description' => 'Conseil rÃ©gional',
 					),
 				1 =>
 					array (

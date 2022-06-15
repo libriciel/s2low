@@ -6,9 +6,9 @@ class Helpers {
   public static $last_error;
 
   /**
-   * \brief Méthode renvoyant une variable récupérée depuis une requête POST
-   * \param $name chaîne : nom de la variable à récupérer
-   * \param $memorize booléen (optionnel) : Détermine si la variable doit être enregistré dans la session
+   * \brief MÃ©thode renvoyant une variable rÃ©cupÃ©rÃ©e depuis une requÃªte POST
+   * \param $name chaÃ®ne : nom de la variable Ã  rÃ©cupÃ©rer
+   * \param $memorize boolÃ©en (optionnel) : DÃ©termine si la variable doit Ãªtre enregistrÃ© dans la session
    * \return La valeur de la variable ou null si la variable est introuvable
   */
   public static function getVarFromPost($name, $memorize = false) {
@@ -23,9 +23,9 @@ class Helpers {
         );
     }
   /**
-   * \brief Méthode renvoyant une variable récupérée depuis une requête GET
-   * \param $name chaîne : nom de la variable à récupérer
-   * \param $memorize booléen (optionnel) : Détermine si la variable doit être enregistré dans la session
+   * \brief MÃ©thode renvoyant une variable rÃ©cupÃ©rÃ©e depuis une requÃªte GET
+   * \param $name chaÃ®ne : nom de la variable Ã  rÃ©cupÃ©rer
+   * \param $memorize boolÃ©en (optionnel) : DÃ©termine si la variable doit Ãªtre enregistrÃ© dans la session
    * \return La valeur de la variable ou null si la variable est introuvable
   */
   public static function getVarFromGet($name, $memorize = false) {
@@ -49,10 +49,10 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode renvoyant une variable récupérée depuis une requête HTTP
-   * \param $name chaîne : nom de la variable à récupérer
-   * \param $type chaîne : type de la requête GET ou POST
-   * \param $memorize booléen (optionnel) : Détermine si la variable doit être enregistré dans la session
+   * \brief MÃ©thode renvoyant une variable rÃ©cupÃ©rÃ©e depuis une requÃªte HTTP
+   * \param $name chaÃ®ne : nom de la variable Ã  rÃ©cupÃ©rer
+   * \param $type chaÃ®ne : type de la requÃªte GET ou POST
+   * \param $memorize boolÃ©en (optionnel) : DÃ©termine si la variable doit Ãªtre enregistrÃ© dans la session
    * \return La valeur de la variable ou null si la variable est introuvable
   */
   public static function getVarFromRequest($name, $type, $memorize = false) {
@@ -80,12 +80,12 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de suppression des échappements dans une chaîne
-   * \param $str chaîne : chaîne à traiter
-   * \return La chaîne sans échappement
+   * \brief MÃ©thode de suppression des Ã©chappements dans une chaÃ®ne
+   * \param $str chaÃ®ne : chaÃ®ne Ã  traiter
+   * \return La chaÃ®ne sans Ã©chappement
   */
   public static function stripSlashes($str) {
-	  //Suite à la deprecation de get_magic_quotes_gpc()
+	  //Suite Ã  la deprecation de get_magic_quotes_gpc()
     /*if (get_magic_quotes_gpc() == 1) {
 	  return stripslashes($str);
 	} else {
@@ -95,9 +95,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode renvoyant une variable présente dans la session
-   * \param $name chaîne : nom de la variable à récupérer
-   * \param $delete booléen (optionnel) : Détermine si la variable doit être supprimé après récupération (true par défaut)
+   * \brief MÃ©thode renvoyant une variable prÃ©sente dans la session
+   * \param $name chaÃ®ne : nom de la variable Ã  rÃ©cupÃ©rer
+   * \param $delete boolÃ©en (optionnel) : DÃ©termine si la variable doit Ãªtre supprimÃ© aprÃ¨s rÃ©cupÃ©ration (true par dÃ©faut)
    * \return La valeur de la variable ou null si la variable est introuvable
   */
   public static function getFromSession($name, $delete = true) {
@@ -114,37 +114,37 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode d'ajout d'une variable dans la session
-   * \param $name chaîne : nom de la variable à enregistrer
-   * \param $value chaîne : Valeur de la variable
+   * \brief MÃ©thode d'ajout d'une variable dans la session
+   * \param $name chaÃ®ne : nom de la variable Ã  enregistrer
+   * \param $value chaÃ®ne : Valeur de la variable
   */
   public static function putInSession($name, $value) {
 	$_SESSION["temp"][$name] = $value;
   }
 
   /**
-   * \brief Méthode effacant les variables temporaires de la session
+   * \brief MÃ©thode effacant les variables temporaires de la session
   */
   public static function purgeTempSession() {
 	unset($_SESSION["temp"]);
   }
 
   /**
-   * \brief Méthode de redirection et renvoi de status prenant en compte le type de client (API ou formulaire Web)
-   * \param $status entier : statut global du retour (0 : succès, 1 : erreur)
+   * \brief MÃ©thode de redirection et renvoi de status prenant en compte le type de client (API ou formulaire Web)
+   * \param $status entier : statut global du retour (0 : succÃ¨s, 1 : erreur)
   		//FIXME : n'importe quoi, c'est une inversion de true=1 et false=0!!!!
-   * \param $msg chaîne : message à renvoyer
+   * \param $msg chaÃ®ne : message Ã  renvoyer
    * \param $redirect (optionnel) : URL vers laquelle rediriger
-   * \param $apiMsg (optionnel) : message renvoyé dans le cas d'un appel par API (sinon $msg)
+   * \param $apiMsg (optionnel) : message renvoyÃ© dans le cas d'un appel par API (sinon $msg)
   */
   public static function returnAndExit($status, $msg, $redirect = null, $apiMsg = null) {
 
-	  //Permet de logguer le résultat dans un fichier, nottamment utile pour Qualigraf
+	  //Permet de logguer le rÃ©sultat dans un fichier, nottamment utile pour Qualigraf
 	  /*$message = "[{$_SERVER['REMOTE_ADDR']}]".date("Y-m-d H:i:s")." status=$status msg=$msg apiMsg=$apiMsg\n";
 	  file_put_contents("/tmp/s2low-return-and-exit.log",$message,FILE_APPEND);*/
 
 
-	// Détection si appel par API C ou formulaire Web (d'abord en POST puis en GET)
+	// DÃ©tection si appel par API C ou formulaire Web (d'abord en POST puis en GET)
 	$api = Helpers::getVarFromPost("api");
 
 	if (empty($api)) {
@@ -153,7 +153,7 @@ class Helpers {
 
 	if ($api != null && $api == "1") {
 	  if ($status == 0) {
-		// Succès
+		// SuccÃ¨s
 		echo "OK\n";
 	  } else {
 		echo "KO\n";
@@ -183,9 +183,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de conversion d'une date au format YYYY-MM-DD vers un timestamp
-   * \param $date chaîne : Date au format YYYY-MM-DD
-   * \param $at_midnight booléen (optionnel) : Générer le timestamp à minuit (à midi par défaut)
+   * \brief MÃ©thode de conversion d'une date au format YYYY-MM-DD vers un timestamp
+   * \param $date chaÃ®ne : Date au format YYYY-MM-DD
+   * \param $at_midnight boolÃ©en (optionnel) : GÃ©nÃ©rer le timestamp Ã  minuit (Ã  midi par dÃ©faut)
    * \return Le timestamp correspondant
   */
   public static function ansiDateToTimestamp($date, $at_midnight = false) {
@@ -219,9 +219,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode traitant une variable récupérée depuis une base de données (prise en compte de l'échappement)
-   * \param $var mixed : valeur récupérée depuis la base de données
-   * \return La valeur de la variable après traitement
+   * \brief MÃ©thode traitant une variable rÃ©cupÃ©rÃ©e depuis une base de donnÃ©es (prise en compte de l'Ã©chappement)
+   * \param $var mixed : valeur rÃ©cupÃ©rÃ©e depuis la base de donnÃ©es
+   * \return La valeur de la variable aprÃ¨s traitement
   */
   public static function getFromBDD($var) {
 	  return $var;
@@ -233,29 +233,29 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode d'échappement des guillemets double
-   * \param $str chaîne : chaîne à échappée
-   * \return La chaîne avec tous les guillemets doubles précédés d'un \
+   * \brief MÃ©thode d'Ã©chappement des guillemets double
+   * \param $str chaÃ®ne : chaÃ®ne Ã  Ã©chappÃ©e
+   * \return La chaÃ®ne avec tous les guillemets doubles prÃ©cÃ©dÃ©s d'un \
   */
   public static function escapeForXML($str) {
 	return str_replace("\"", "\\\"", $str ?? ""); // Quickfix php 8
   }
 
   /**
-   * \brief Méthode de récupération d'un champ depuis un objet SimpleXMLElement
+   * \brief MÃ©thode de rÃ©cupÃ©ration d'un champ depuis un objet SimpleXMLElement
    * \param $elt SimpleXMLElement : objet dont extraire la valeur
-   * \return La chaîne correspondante en ISO-8859-1
+   * \return La chaÃ®ne correspondante en ISO-8859-1
   */
   public static function getFromXMLElt($elt) {
 	return utf8_decode(sprintf("%s", $elt));
   }
 
   /**
-   * \brief Méthode de troncature d'une chaine à une longueur donnée
-   * \param $str chaîne : chaîne à tronquer
-   * \param $length entier (optionnel) : longueur résiduelle de la chaîne (40 par défaut)
-   * \param $add_ellipsis booléen (optionnel) : ajouter une ellipse à la fin de la chaîne (true par défaut)
-   * \return La chaîne avec tous les guillemets doubles précédés d'un \
+   * \brief MÃ©thode de troncature d'une chaine Ã  une longueur donnÃ©e
+   * \param $str chaÃ®ne : chaÃ®ne Ã  tronquer
+   * \param $length entier (optionnel) : longueur rÃ©siduelle de la chaÃ®ne (40 par dÃ©faut)
+   * \param $add_ellipsis boolÃ©en (optionnel) : ajouter une ellipse Ã  la fin de la chaÃ®ne (true par dÃ©faut)
+   * \return La chaÃ®ne avec tous les guillemets doubles prÃ©cÃ©dÃ©s d'un \
   */
   public static function truncateString($str, $length = 40, $add_ellipsis = true) {
 	$new_str = substr($str, 0, $length);
@@ -268,9 +268,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode qui renvoit une heure bien formatée depuis un format HH:MM:SS
-   * \param $hour chaîne : chaîne d'heure sous la forme HH:MM:SS
-   * \return La chaine bien formatée HHh MMmin SSs
+   * \brief MÃ©thode qui renvoit une heure bien formatÃ©e depuis un format HH:MM:SS
+   * \param $hour chaÃ®ne : chaÃ®ne d'heure sous la forme HH:MM:SS
+   * \return La chaine bien formatÃ©e HHh MMmin SSs
   */
   public static function getPrettyHours($hour) {
 	$hours = explode(':', $hour);
@@ -283,8 +283,8 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode qui renvoit un timestamp correspondant à une date issue de la base de données
-   * \param $date chaîne : chaîne de date issue de la base de données (YYYY-MM-DD HH:MM:SS+TZ)
+   * \brief MÃ©thode qui renvoit un timestamp correspondant Ã  une date issue de la base de donnÃ©es
+   * \param $date chaÃ®ne : chaÃ®ne de date issue de la base de donnÃ©es (YYYY-MM-DD HH:MM:SS+TZ)
    * \return Le timestamp correspondant
   */
   public static function getTimestampFromBDDDate($date) {
@@ -303,10 +303,10 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode qui renvoit une date formatée issue de la base de données
-   * \param $date chaîne : chaîne de date issue de la base de données (YYYY-MM-DD HH:MM:SS+TZ)
-   * \param $with_hours booleén (optionnel) : Si true, la chaîne incluera les heures (false par défaut)
-   * \return La chaîne correspondant à la date
+   * \brief MÃ©thode qui renvoit une date formatÃ©e issue de la base de donnÃ©es
+   * \param $date chaÃ®ne : chaÃ®ne de date issue de la base de donnÃ©es (YYYY-MM-DD HH:MM:SS+TZ)
+   * \param $with_hours booleÃ©n (optionnel) : Si true, la chaÃ®ne incluera les heures (false par dÃ©faut)
+   * \return La chaÃ®ne correspondant Ã  la date
   */
   public static function getDateFromBDDDate($date, $with_hours = false) {
 	if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
@@ -315,7 +315,7 @@ class Helpers {
 	  $pattern = "d MMMM YYYY";//"j F Y";
 
 	  if ($with_hours) {
-          $pattern = $pattern . utf8_encode(" à ")."HH'h'mm'min'ss's'";//"j F Y ";//\a H\hi\m\i\ns\s";
+          $pattern = $pattern . utf8_encode(" Ã  ")."HH'h'mm'min'ss's'";//"j F Y ";//\a H\hi\m\i\ns\s";
 	  }
         $formatter = new IntlDateFormatter(
             'fr_FR',
@@ -331,9 +331,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode qui renvoit une date ANSI issue de la base de données
-   * \param $date chaîne : chaîne de date issue de la base de données (YYYY-MM-DD HH:MM:SS+TZ)
-   * \return La chaîne correspondant à la date au format YYYY-MM-DD
+   * \brief MÃ©thode qui renvoit une date ANSI issue de la base de donnÃ©es
+   * \param $date chaÃ®ne : chaÃ®ne de date issue de la base de donnÃ©es (YYYY-MM-DD HH:MM:SS+TZ)
+   * \return La chaÃ®ne correspondant Ã  la date au format YYYY-MM-DD
   */
   public static function getANSIDateFromBDDDate($date) {
 	if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
@@ -347,19 +347,19 @@ class Helpers {
 
 
   /**
-   * \brief Méthode de construction d'une URL avec un paramètre spécifié en préservant les paramètres existant
-   * \param $params tableau : tableau ayant pour clef les noms des paramètres à ajouter dans l'URL et pour valeur les valeurs des paramètres
-   * \return L'URL générée
+   * \brief MÃ©thode de construction d'une URL avec un paramÃ¨tre spÃ©cifiÃ© en prÃ©servant les paramÃ¨tres existant
+   * \param $params tableau : tableau ayant pour clef les noms des paramÃ¨tres Ã  ajouter dans l'URL et pour valeur les valeurs des paramÃ¨tres
+   * \return L'URL gÃ©nÃ©rÃ©e
    */
   public static function getURLWithParam($params) {
 	$args = $_SERVER["QUERY_STRING"];
 
 	foreach ($params as $param => $value) {
-	  // Suppression du paramètre s'il existe déjà dans l'URL
+	  // Suppression du paramÃ¨tre s'il existe dÃ©jÃ  dans l'URL
 	  $args = preg_replace("/&?" . $param . "=[^&]+/", "", $args);
-	  // Suppression d'un éventuel & résiduel au début de la chaîne
+	  // Suppression d'un Ã©ventuel & rÃ©siduel au dÃ©but de la chaÃ®ne
 	  $args = preg_replace("/^&/", "", $args);
-	  // Détermination du séparateur pour ajouter notre paramètre
+	  // DÃ©termination du sÃ©parateur pour ajouter notre paramÃ¨tre
 	  $sep = (strlen($args) > 0) ? "&" : "";
 
 	  $args .= $sep . $param . "=" . $value;
@@ -374,10 +374,10 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de création d'une arborescence de répertoire (sous ACTES_FILES_UPLOAD_ROOT par défaut)
-   * \param $path chaîne : chemin absolu vers l'arborescence à créer
-   * \param $base chaîne (optionnel) : répertoire de base de la création (ACTES_FILES_UPLOAD_ROOT par défaut)
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de crÃ©ation d'une arborescence de rÃ©pertoire (sous ACTES_FILES_UPLOAD_ROOT par dÃ©faut)
+   * \param $path chaÃ®ne : chemin absolu vers l'arborescence Ã  crÃ©er
+   * \param $base chaÃ®ne (optionnel) : rÃ©pertoire de base de la crÃ©ation (ACTES_FILES_UPLOAD_ROOT par dÃ©faut)
+   * \return True en cas de succÃ¨s, false sinon
    */
   public static function createDirTree($path, $base = ACTES_FILES_UPLOAD_ROOT) {
 
@@ -387,25 +387,25 @@ class Helpers {
 	} else {
 		$t = Trace::getInstance();
 
-		$t->log("Impossible de créer le répertoire (unknow reason): $path ",Trace::$TRACE_ERROR);
+		$t->log("Impossible de crÃ©er le rÃ©pertoire (unknow reason): $path ",Trace::$TRACE_ERROR);
 	  return false;
 	}
 
 	if (! file_exists($path)) {
 	  if (! mkdir($path, GENERATED_DIRS_PERMS, true)) {
 	  	$t = Trace::getInstance();
-	  	$t->log("Impossible de créer le répertoire (mkdir failed): $path ",Trace::$TRACE_ERROR);
+	  	$t->log("Impossible de crÃ©er le rÃ©pertoire (mkdir failed): $path ",Trace::$TRACE_ERROR);
 		return false;
 	  }
 
-	  // Modification des permissions de toute l'arborescence créée
+	  // Modification des permissions de toute l'arborescence crÃ©Ã©e
 	  while (strlen($relPath) > 0) {
 		Helpers::fixPerms($base . "/" . $relPath);
 		$relPath = preg_replace('/[^\/]+\/*$/', "", $relPath);
 	  }
 	} elseif (! is_dir($path)) {
 		$t = Trace::getInstance();
-		$t->log("Impossible de créer le répertoire (file exists): $path ",Trace::$TRACE_ERROR);
+		$t->log("Impossible de crÃ©er le rÃ©pertoire (file exists): $path ",Trace::$TRACE_ERROR);
 	  return false;
 	} else {
 	  return true;
@@ -415,9 +415,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de suppression de fichiers et répertoires
-   * \param .. Liste variables de fichiers et répertoires à supprimer
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de suppression de fichiers et rÃ©pertoires
+   * \param .. Liste variables de fichiers et rÃ©pertoires Ã  supprimer
+   * \return True en cas de succÃ¨s, false sinon
    */
   public static function deleteFromFS() {
 	$return_value = true;
@@ -429,7 +429,7 @@ class Helpers {
 		  if (! @rmdir($entry)) {
 			$return_value = false;
 		  }
-		} elseif (is_file($entry) || is_link($entry)) {
+		} elseif (is_file($entry) ||Â is_link($entry)) {
 		  if (! @unlink($entry)) {
 			$return_value = false;
 		  }
@@ -441,9 +441,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de modification des permissions en fonction de la configuration actuelle
-   * \param $path chaîne : chemin vers le fichier ou répertoire dont modifier les permissions
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de modification des permissions en fonction de la configuration actuelle
+   * \param $path chaÃ®ne : chemin vers le fichier ou rÃ©pertoire dont modifier les permissions
+   * \return True en cas de succÃ¨s, false sinon
    */
   public static function fixPerms($path) {
   	
@@ -466,9 +466,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de récupération des informations des certificats reconnues par le système
-   * \param $path chaîne (optionnel) : chemin vers le répertoire contenant les certificats (defaut EXTENDED_VALIDCA_PATH)
-   * \return Un tableau des données des certificats
+   * \brief MÃ©thode de rÃ©cupÃ©ration des informations des certificats reconnues par le systÃ¨me
+   * \param $path chaÃ®ne (optionnel) : chemin vers le rÃ©pertoire contenant les certificats (defaut EXTENDED_VALIDCA_PATH)
+   * \return Un tableau des donnÃ©es des certificats
    */
   public static function getAuthorizedCACerts($path = EXTENDED_VALIDCA_PATH) {
 	$certs = array();
@@ -500,16 +500,16 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode d'envoi d'un fichier au navigateur
-   * \param $path chaîne : chemin vers le fichier à envoyer, si null envoi des en-têtes uniquement
-   * \param $filename chaîne : nom du fichier dans le navigateur
-   * \param $content_type chaîne (optionnel) : content-type du fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'envoi d'un fichier au navigateur
+   * \param $path chaÃ®ne : chemin vers le fichier Ã  envoyer, si null envoi des en-tÃªtes uniquement
+   * \param $filename chaÃ®ne : nom du fichier dans le navigateur
+   * \param $content_type chaÃ®ne (optionnel) : content-type du fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   public static function sendFileToBrowser($path, $filename, $content_type = null) {
 	if ($path) {
 	  if (! file_exists($path)) {
-		Helpers::$last_error = "Fichier spécifié introuvable";
+		Helpers::$last_error = "Fichier spÃ©cifiÃ© introuvable";
 		return false;
 	  }
 	}
@@ -535,9 +535,9 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de génération d'un nom temporaire
-   * \param $length entier (optionnel) : longueur du suffixe aléatoire
-   * \param $prefix booleén (optionnel) : ajouter ou non le préfixe "__tmp__" devant la chaine générée (défaut true)
+   * \brief MÃ©thode de gÃ©nÃ©ration d'un nom temporaire
+   * \param $length entier (optionnel) : longueur du suffixe alÃ©atoire
+   * \param $prefix booleÃ©n (optionnel) : ajouter ou non le prÃ©fixe "__tmp__" devant la chaine gÃ©nÃ©rÃ©e (dÃ©faut true)
   */
   public static function genTempName($length = 8, $prefix = true) {
 	if ($prefix) {
@@ -554,7 +554,7 @@ class Helpers {
   }
 
   /**
-   * \brief Méthode de récupération du type d'un fichier
+   * \brief MÃ©thode de rÃ©cupÃ©ration du type d'un fichier
    * \param $path chaine : chemin vers le fichier
    * \return Le type MIME du fichier ou null en cas d'erreur
   */

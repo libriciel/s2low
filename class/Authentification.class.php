@@ -68,14 +68,14 @@ class Authentification {
 
             $id_list = $this->getIdFromConnexionInfo($this->getAllConnexionInfo($authentProcess));
             if (empty($id_list)){
-                throw new Exception("Le certificat n'est pas valide : aucun compte trouvé");
+                throw new Exception("Le certificat n'est pas valide : aucun compte trouvÃ©");
             }
             if (count($id_list) != 1){
-                throw new Exception("La connexion n'a pas pu être établie");
+                throw new Exception("La connexion n'a pas pu Ãªtre Ã©tablie");
             } // @codeCoverageIgnore
         } catch (Exception $e){
             $redirect = WEBSITE;
-            if($e->getMessage() ==="La connexion n'a pas pu être établie"){
+            if($e->getMessage() ==="La connexion n'a pas pu Ãªtre Ã©tablie"){
                 $redirect=WEBSITE_SSL."/login.php";
             }
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
@@ -92,13 +92,13 @@ class Authentification {
 	    try{
             $connexion_info = $this->getAllConnexionInfo();
         } catch (Exception $e){
-            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE);
+            Helpers::returnAndExit(1, "La connexion n'a pas pu Ãªtre Ã©tablie",  WEBSITE);
         } // @codeCoverageIgnore
 
 		$list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
 
 		if (! in_array($user_id,$list_id)){
-			Helpers::returnAndExit(1, "La connexion n'a pas pu être établie",  WEBSITE_SSL."/login.php");
+			Helpers::returnAndExit(1, "La connexion n'a pas pu Ãªtre Ã©tablie",  WEBSITE_SSL."/login.php");
 		} // @codeCoverageIgnore
 	}
 
@@ -113,13 +113,13 @@ class Authentification {
         } elseif ($authentProcess===Authentification::AUTHENTIFICATION_BY_FORM){
             $credentials=$this->httpsConnexion->getCredentialsFromPost();
         } else {
-            throw new Exception("Méthode d'authentification non reconnue");
+            throw new Exception("MÃ©thode d'authentification non reconnue");
         }
 
         $certificateInfos=$this->httpsConnexion->getCertificateInfo();
 
         if(!$certificateInfos){
-            throw new Exception("Aucune information de certificat trouvée");
+            throw new Exception("Aucune information de certificat trouvÃ©e");
         }
 
         return array_merge($credentials, $certificateInfos);

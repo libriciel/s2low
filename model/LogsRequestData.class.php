@@ -25,7 +25,7 @@ class LogsRequestData {
 
 
 	public static function getStateString($state){
-		$state_libelle = array(1=>"demande","annulÈ","disponible","archivÈ");
+		$state_libelle = array(1=>"demande","annul√©","disponible","archiv√©");
 		return $state_libelle[$state];
 	}
 

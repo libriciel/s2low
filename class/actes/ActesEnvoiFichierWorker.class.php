@@ -50,7 +50,7 @@ class ActesEnvoiFichierWorker implements IWorker {
 		$sigtermHandler = SigTermHandler::getInstance();
 		$this->logger->debug("Lancement du script");
         $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
-		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
+		$this->logger->debug("Envoie de ".count($enveloppe_ids)." enveloppes de transaction Ã  l'Ã©tat EN ATTENTE DE TRANSMISSION");
         foreach($enveloppe_ids as $enveloppe_id){
         	try {
 				$this->work($enveloppe_id);
@@ -74,13 +74,13 @@ class ActesEnvoiFichierWorker implements IWorker {
 
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($enveloppe_id);
 
-		//On vérifie qu'on est dans l'état qui va bien car si on fait un rebuild-queue pendant le traitement d'une transaction,
-		//celle-ci peut être envoyé deux fois.
+		//On vÃ©rifie qu'on est dans l'Ã©tat qui va bien car si on fait un rebuild-queue pendant le traitement d'une transaction,
+		//celle-ci peut Ãªtre envoyÃ© deux fois.
 		foreach($transaction_ids as $transaction_id){
 			$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
 			if ($transaction_info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION){
 				$this->logger->error(
-					"La transaction $transaction_id à poster n'est pas en attente de transmission : état {$transaction_info['last_status_id']} trouvé"
+					"La transaction $transaction_id Ã  poster n'est pas en attente de transmission : Ã©tat {$transaction_info['last_status_id']} trouvÃ©"
 				);
 				return false;
 			}
@@ -92,7 +92,7 @@ class ActesEnvoiFichierWorker implements IWorker {
         $envelope_info = $this->actesEnvelopeSQL->getInfo($enveloppe_id);
 
         if (! $this->actesTransmissionWindowsSQL->canSend($envelope_info['file_size'])) {
-			$this->logger->notice("[$envelope_libelle] Impossible d'envoyer la transaction : la fenêtre est pleine");
+			$this->logger->notice("[$envelope_libelle] Impossible d'envoyer la transaction : la fenÃªtre est pleine");
 			return false;
         }
         try {
@@ -104,7 +104,7 @@ class ActesEnvoiFichierWorker implements IWorker {
 			$this->logger->error($message);
 			throw new RecoverableException($message,$e->getCode(),$e);
         }
-		$this->logger->info("[$envelope_libelle] L'archive a été envoyé");
+		$this->logger->info("[$envelope_libelle] L'archive a Ã©tÃ© envoyÃ©");
 
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,

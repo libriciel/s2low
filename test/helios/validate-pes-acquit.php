@@ -7,7 +7,7 @@ $schema_pes_path = HELIOS_XSD_PATH;
 
 $xml = simplexml_load_file($file_path);
 if (! $xml){
-	throw new Exception("Le fichier $file_path n'est pas bien formé (fichier ignoré)");
+	throw new Exception("Le fichier $file_path n'est pas bien formÃ© (fichier ignorÃ©)");
 }
 $root_name = strtolower($xml->getName());
 
@@ -27,7 +27,7 @@ $errors = libxml_get_errors();
 libxml_clear_errors();
 
 if ($errors){
-	throw new Exception("Le fichier $file_path n'est pas bien formé (fichier ignoré)");
+	throw new Exception("Le fichier $file_path n'est pas bien formÃ© (fichier ignorÃ©)");
 }
 $dom->schemaValidate($schema_location);
 $errors = libxml_get_errors();
@@ -35,5 +35,5 @@ libxml_clear_errors();
 
 if ($errors){
 	print_r($errors);
-	throw new Exception("Le fichier $file_path n'est pas valide (fichier ignoré)");
+	throw new Exception("Le fichier $file_path n'est pas valide (fichier ignorÃ©)");
 }

@@ -79,14 +79,14 @@ class FileUploaderNG {
 
 	public function getLastError(){
 		switch($this->lastError){
-			case UPLOAD_ERR_INI_SIZE: return "Le fichier dépasse ". ini_get("upload_max_filesize");
-			case UPLOAD_ERR_FORM_SIZE : return "Le fichier dépasse la taille limite autorisée par le formulaire";
-			case UPLOAD_ERR_PARTIAL: return "Le fichier n'a été que partiellement reçu";
-			case UPLOAD_ERR_NO_FILE: return "Aucun fichier n'a été reçu";
-			case UPLOAD_ERR_NO_TMP_DIR: return "Erreur de configuration : le répertoire temporaire n'existe pas";
-			case UPLOAD_ERR_CANT_WRITE  : return "Erreur de configuration : Impossible d'écrire dans le répertoire temporaire";
+			case UPLOAD_ERR_INI_SIZE: return "Le fichier dÃ©passe ". ini_get("upload_max_filesize");
+			case UPLOAD_ERR_FORM_SIZE : return "Le fichier dÃ©passe la taille limite autorisÃ©e par le formulaire";
+			case UPLOAD_ERR_PARTIAL: return "Le fichier n'a Ã©tÃ© que partiellement reÃ§u";
+			case UPLOAD_ERR_NO_FILE: return "Aucun fichier n'a Ã©tÃ© reÃ§u";
+			case UPLOAD_ERR_NO_TMP_DIR: return "Erreur de configuration : le rÃ©pertoire temporaire n'existe pas";
+			case UPLOAD_ERR_CANT_WRITE  : return "Erreur de configuration : Impossible d'Ã©crire dans le rÃ©pertoire temporaire";
 			case UPLOAD_ERR_EXTENSION  : return "Une extension PHP empeche l'upload du fichier!";
-			default: return "Aucun fichier reçu (code : {$this->lastError})";	
+			default: return "Aucun fichier reÃ§u (code : {$this->lastError})";	
 		}
 	}
 

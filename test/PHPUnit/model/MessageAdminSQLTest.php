@@ -63,7 +63,7 @@ class MessageAdminSQLTest extends S2lowTestCase {
 
 	public function testEditPulishMessage(){
 		$this->messageAdminSQL->publier($this->message_id,1);
-		$this->setExpectedException("Exception","Impossible de modifier ce message qui n'est pas en cours de rédaction");
+		$this->setExpectedException("Exception","Impossible de modifier ce message qui n'est pas en cours de rÃ©daction");
 		$this->messageAdminSQL->edit($this->message_id,'test','toto',1,MessageAdmin::NIVEAU_DANGER);
 	}
 

@@ -18,7 +18,7 @@ class AuthentificationTest  extends S2lowTestCase
      */
     public function testAuthenticate()
     {
-        $this->setExpectedException("Exception", "Message : Aucune information de certificat trouvée");
+        $this->setExpectedException("Exception", "Message : Aucune information de certificat trouvÃ©e");
         $this->authenticateWith(false);
     }
 
@@ -47,7 +47,7 @@ class AuthentificationTest  extends S2lowTestCase
     public function testManyCertWithLogin()
     {
         $this->setServerAdullactCertificate();
-        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu être établie");
+        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu Ãªtre Ã©tablie");
         $this->authenticateWith(false);
     }
 
@@ -159,7 +159,7 @@ class AuthentificationTest  extends S2lowTestCase
             'SSL_CLIENT_VERIFY' => "FAILED",
         ]);
         $this->getObjectInstancier()->get("Environnement")->session()->set('id_login', 2);
-        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu être établie");
+        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu Ãªtre Ã©tablie");
         $this->authenticateWith(2);
     }
 
@@ -172,7 +172,7 @@ class AuthentificationTest  extends S2lowTestCase
             'SSL_CLIENT_VERIFY' => "",
         ]);
         $this->getObjectInstancier()->get("Environnement")->session()->set('id_login', 2);
-        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu être établie");
+        $this->setExpectedException("Exception", "Message : La connexion n'a pas pu Ãªtre Ã©tablie");
         $this->authenticateWith(2);
     }
 
@@ -242,7 +242,7 @@ class AuthentificationTest  extends S2lowTestCase
         $this->getObjectInstancier()->get("Environnement")->get()->set('hash', hash("sha256", "alice:$nounce:toto"));
 
         $authentification = $this->getObjectInstancier()->get("Authentification");
-        $this->setExpectedException("Exception", "La connexion n'a pas pu être établie");
+        $this->setExpectedException("Exception", "La connexion n'a pas pu Ãªtre Ã©tablie");
         $authentification->authenticate();
     }
 
@@ -363,7 +363,7 @@ YNN6Z4fNWGHPgI7R6w==
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Méthode d'authentification non reconnue");
+        $this->expectExceptionMessage("MÃ©thode d'authentification non reconnue");
         $this->assertFalse($authentification->getAllConnexionInfo(984645));
     }
 }

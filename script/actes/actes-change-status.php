@@ -5,7 +5,7 @@
 require_once( __DIR__."/../../init/init.php");
 
 function printStatus(array $actesStatuts){
-    $message = "status_id doit Ítre un entier appartenant ‡ la liste suivante :\n";
+    $message = "status_id doit √™tre un entier appartenant √† la liste suivante :\n";
     $message.= "    status_id\t|\tStatut\n";
     $message.= "----------------|---------------------------------------\n";
     foreach ($actesStatuts as $key => $actesStatut) {
@@ -18,14 +18,14 @@ function checkChange($transaction_id,$status_id,ActesTransactionsSQL $actesTrans
     $ancienStatut = $actesStatuts[$actesTransactions->getlaststatusforid($transaction_id)];
     $nouveauStatut=$actesStatuts[$status_id];
 
-    echo "La transaction $transaction_id passera de \"$ancienStatut\" ‡ \"$nouveauStatut\"\n";
-    echo "Etes-vous s˚r de vouloir continuer ? Tapez O pour continuer : ";
+    echo "La transaction $transaction_id passera de \"$ancienStatut\" √† \"$nouveauStatut\"\n";
+    echo "Etes-vous s√ªr de vouloir continuer ? Tapez O pour continuer : ";
 
     $stdin = fopen('php://stdin', 'r');
 
     $response = fgetc($stdin);
     if ($response != 'O') {
-        echo "AnnulÈ.\n";
+        echo "Annul√©.\n";
         return false;
     }
     return true;
@@ -37,7 +37,7 @@ $s2LowLogger->enableStdOut();
 $actesStatuts = $objectInstancier->get(ActesStatusSQL::class)->getAllStatus();
 
 if ($argc != 3){
-    $s2LowLogger->error("Nombre de paramËtres incorrect. ( 2 Attendus, ".($argc -1)." renseignÈ(s) )" );
+    $s2LowLogger->error("Nombre de param√®tres incorrect. ( 2 Attendus, ".($argc -1)." renseign√©(s) )" );
 	$s2LowLogger->error("Usage {$argv[0]} transaction_id new_status_id");
 	$s2LowLogger->error("{$argv[0]} : permet de modifier le statut d'une transaction");
 	echo printStatus($actesStatuts);
@@ -48,7 +48,7 @@ $transaction_id = (int) $argv[1];
 $status_id = $argv[2];
 
 if(!strval($transaction_id) == $argv[1]){
-    $s2LowLogger->error("transaction_id doit Ítre un entier");
+    $s2LowLogger->error("transaction_id doit √™tre un entier");
     exit(-2);
 }
 
@@ -61,7 +61,7 @@ if(!array_key_exists($status_id,$actesStatuts)){
 $actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 
 if(!$actesTransactions->getInfo($transaction_id)){
-    $s2LowLogger->error("transaction_id incorrect : aucune transaction trouvÈe");
+    $s2LowLogger->error("transaction_id incorrect : aucune transaction trouv√©e");
     exit(-4);
 }
 

@@ -1,50 +1,50 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
+ * TÃ©DÃ©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : JÃ©rÃ´me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
 ?>
 <?php
 /**
  * \file actes_admin_window_edit.php
- * \brief Page de modification ou d'ajout d'une fenêtre de transmission
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \brief Page de modification ou d'ajout d'une fenÃªtre de transmission
+ * \author JÃ©rÃ´me Schell <j.schell@alternancesoft.com>
  * \date 23.08.2006
  * 
  *
- * Cette page permet de gérer les fenêtres de transmission vers le ministère
+ * Cette page permet de gÃ©rer les fenÃªtres de transmission vers le ministÃ¨re
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -68,13 +68,13 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isSuper() || ! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -102,32 +102,32 @@ $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/style
 $doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
-$doc->setTitle("Gestion des fenêtres module ACTES");
+$doc->setTitle("Gestion des fenÃªtres module ACTES");
 $doc->openContainer();
 $doc->openSideBar();
 $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php\" class=\"btn btn-default\">Retour liste fenêtres</a></p>\n";
-$html .= "<h2>" . $modStr . " fenêtre";
+$html .= "<h1>Gestion des fenÃªtres de transmission</h1>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php\" class=\"btn btn-default\">Retour liste fenÃªtres</a></p>\n";
+$html .= "<h2>" . $modStr . " fenÃªtre";
 
 if ($mod) {
-  $html .= " n° " . $zeWin->getId();
+  $html .= " nÂ° " . $zeWin->getId();
 }
 
 $html .= "</h2>\n";
-$html .= "<p>Les heures de début et de fin de la fenêtre sont toujours arrondies à l'heure pleine la plus proche (10h, 15h...).</p>";
-$html .= "<form class=\"form-horizontal window-edit-form\" action=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de début', 'RisDate', 'window_start_hour', 'Heure de début', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n";
+$html .= "<p>Les heures de dÃ©but et de fin de la fenÃªtre sont toujours arrondies Ã  l'heure pleine la plus proche (10h, 15h...).</p>";
+$html .= "<form class=\"form-horizontal window-edit-form\" action=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de dÃ©but', 'RisDate', 'window_start_hour', 'Heure de dÃ©but', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n";
 
 if ($mod) {
   $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
 }
 
-// Début de la fenêtre
+// DÃ©but de la fenÃªtre
 $html .= "<div class=\"form-group\">\n";
-$html .= "<label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
+$html .= "<label class=\"col-md-4 control-label\">DÃ©but de la fenÃªtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
 
 $start_date = Helpers::getFromSession("window_start_date");
@@ -161,7 +161,7 @@ if ($start_date) {
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
-$html .= "</a> à ";
+$html .= "</a> Ã  ";
 $html .= "<a href=\"#timepicker\" id=\"timepicker_window_start_hour_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_start_hour.toggleTimePicker(); return false;\">";
 
 if ($start_hour) {
@@ -176,9 +176,9 @@ $html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"timepicke
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 
-// Fin de la fenêtre
+// Fin de la fenÃªtre
 $html .= "<div class=\"form-group\">\n";
-$html .= "<label class=\"col-md-4 control-label\">Fin de la fenêtre</label>\n";
+$html .= "<label class=\"col-md-4 control-label\">Fin de la fenÃªtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
 $html .= "    <input id=\"window_end_date\" name=\"window_end_date\" type=\"hidden\" value=\"" . $end_date . "\"/>\n";
 $html .= "    <input id=\"window_end_hour\" name=\"window_end_hour\" type=\"hidden\" value=\"" . $end_hour . "\"/>\n";
@@ -197,7 +197,7 @@ if ($end_date) {
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
-$html .= "</a> à ";
+$html .= "</a> Ã  ";
 $html .= "<a href=\"#timepicker\" id=\"timepicker_window_end_hour_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_end_hour.toggleTimePicker(); return false;\">";
 
 if ($start_hour) {
@@ -231,9 +231,9 @@ $html .= "</form>\n";
 
 if ($mod) {
   $html .= "<br />\n";
-  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette fenêtre de transmission ?')\" method=\"post\">\n";
+  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer dÃ©finitivement cette fenÃªtre de transmission ?')\" method=\"post\">\n";
   $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId(). "\" />\n";
-  $html .= "<input type=\"submit\" value=\"Supprimer cette fenêtre\" class=\"btn btn-danger\" />\n";
+  $html .= "<input type=\"submit\" value=\"Supprimer cette fenÃªtre\" class=\"btn btn-danger\" />\n";
   $html .= "</form>\n";
 }
 

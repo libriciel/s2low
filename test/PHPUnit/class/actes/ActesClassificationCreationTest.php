@@ -15,7 +15,7 @@ class ActesClassificationCreationTest extends S2lowTestCase {
 		ob_end_clean();
 		$this->assertEquals("Bourg-en-Bresse - id 1 :[OK]
 Saint-Andre de Corcy - id 2 :[PASS] module actes inactif
-Ecully - id 4 :[PASS] collectivité inactive
+Ecully - id 4 :[PASS] collectivitÃ© inactive
 ",$content);
 
 	}

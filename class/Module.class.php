@@ -1,17 +1,17 @@
 <?php
 
-//FIXME : cette classe génère une cinquante de requetes inutile ....
-//gros potentiel pour accélerer le logiciel (EP)
+//FIXME : cette classe gÃ©nÃ¨re une cinquante de requetes inutile ....
+//gros potentiel pour accÃ©lerer le logiciel (EP)
 
 
 require_once("DataObject.class.php");
 
 
-//FIXME Les Module n'ont pas à être dans la base de données ....
+//FIXME Les Module n'ont pas Ã  Ãªtre dans la base de donnÃ©es ....
 class Module extends DataObject {
 	
 	
-	//Ajouté par EP afin de ne pas avoir a cherché l'id du module dans la base ....
+	//AjoutÃ© par EP afin de ne pas avoir a cherchÃ© l'id du module dans la base ....
 	const ACTES = 1;
 	const HELIOS = 2;
 	const MAIL = 3;
@@ -28,26 +28,26 @@ class Module extends DataObject {
   
   protected $dbFields = array( "name" => array( "descr" => "Nom du module", "type" => "isString", "mandatory" => true),
 						 "description" => array( "descr" => "Description", "type" => "isString", "mandatory" => true),
-						 "menu_entry" => array( "descr" => "Entrée du menu", "type" => "isString", "mandatory" => true),
-						 "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true)
+						 "menu_entry" => array( "descr" => "EntrÃ©e du menu", "type" => "isString", "mandatory" => true),
+						 "status" => array( "descr" => "Ã‰tat", "type" => "isInt", "mandatory" => true)
 						 );
 
   private $moduleParams = null;
   
   /**
    * \brief Constructeur d'un module
-   * \param id integer : Numéro d'identifiant d'un module existant avec lequel initialiser l'objet
+   * \param id integer : NumÃ©ro d'identifiant d'un module existant avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
     parent::__construct($id);
   }
 
   /**
-   * \brief Méthode d'initialisation du module d'après son nom
-   * \param $name chaîne : Précise le nom du module à initialiser
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'initialisation du module d'aprÃ¨s son nom
+   * \param $name chaÃ®ne : PrÃ©cise le nom du module Ã  initialiser
+   * \return true si succÃ¨s, false sinon
    */
-  //FIXME : cette méthode fait deux requete alors qu'une seule est nécessaire
+  //FIXME : cette mÃ©thode fait deux requete alors qu'une seule est nÃ©cessaire
   public function initByName($name) {
     $sql = "SELECT id FROM modules WHERE name=?";
 
@@ -64,7 +64,7 @@ class Module extends DataObject {
   }
 
   /**
-   * \brief Méthode qui détermine si le module courant est actif
+   * \brief MÃ©thode qui dÃ©termine si le module courant est actif
    * \return True si le module est actif, false sinon
    */
   public function isActive() {
@@ -72,9 +72,9 @@ class Module extends DataObject {
   }
 
   /**
-   * \brief Méthode d'enregistrement d'un modules dans la base de données
-   * \param $validate booléen (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'enregistrement d'un modules dans la base de donnÃ©es
+   * \param $validate boolÃ©en (optionnel) PrÃ©cise si la validation de l'entitÃ© doit avoir lieu (true par dÃ©faut)
+   * \return true si succÃ¨s, false sinon
    */
   public function save($validate = true, $bouchon_4_strict_standard = true) {
       $saveSQLRequest = parent::buildSaveSQLRequest($validate);
@@ -101,11 +101,11 @@ class Module extends DataObject {
       return false;
 	}
     
-    //! Traitement des paramètres du module
+    //! Traitement des paramÃ¨tres du module
     $sql = "DELETE FROM modules_params WHERE module_id=?";
     
     if (! $this->db->exec($sql,[$this->id])) {
-      $this->errorMsg = "Erreur lors de la réinitialisation des paramètres du module.";
+      $this->errorMsg = "Erreur lors de la rÃ©initialisation des paramÃ¨tres du module.";
 	  $this->db->rollback();
       return false;
     }
@@ -115,7 +115,7 @@ class Module extends DataObject {
 	  foreach ($this->moduleParams as $param) {
 	  	$sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
 	  	if (! $this->db->exec($sql,[$this->id])) {
-		  $this->errorMsg = "Erreur lors de la sauvegarde des paramètres du module.";
+		  $this->errorMsg = "Erreur lors de la sauvegarde des paramÃ¨tres du module.";
 		  $this->db->rollback();
 		  return false;
 		}
@@ -126,17 +126,17 @@ class Module extends DataObject {
 
 
   /** 
-   * \brief Méthode de suppression d'un module dans la base de données
-   * \param $id (optionnel) : numéro d'identifiant du module à supprimer
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de suppression d'un module dans la base de donnÃ©es
+   * \param $id (optionnel) : numÃ©ro d'identifiant du module Ã  supprimer
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    // Efface l'entitÃ© spÃ©cifiÃ©e par $id ou alors l'entitÃ© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && ! empty($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entitÃ© a supprimer";
 		return false;
       }
     }
@@ -184,8 +184,8 @@ class Module extends DataObject {
   }
 
   /** 
-   * \brief Méthode renvoyant les paramètres du module
-   * \return Un tableau contenant les paramètres pour le module courant
+   * \brief MÃ©thode renvoyant les paramÃ¨tres du module
+   * \return Un tableau contenant les paramÃ¨tres pour le module courant
    */
   public function getModuleParams() {
   	$sql = "SELECT modules_params.id, modules_params.name, modules_params.value, modules_params.description FROM modules_params WHERE modules_params.module_id=?";
@@ -200,9 +200,9 @@ class Module extends DataObject {
    }
 
   /** 
-   * \brief Méthode renvoyant la valeur d'un paramètre du module
-   * \param $name chaîne : nom du paramètre dont récupérer la valeur
-   * \return La valeur du paramètre ou null si le paramètre n'existe pas
+   * \brief MÃ©thode renvoyant la valeur d'un paramÃ¨tre du module
+   * \param $name chaÃ®ne : nom du paramÃ¨tre dont rÃ©cupÃ©rer la valeur
+   * \return La valeur du paramÃ¨tre ou null si le paramÃ¨tre n'existe pas
    */
   public function getParam($name) {
 	if (! empty($name)) {
@@ -221,7 +221,7 @@ class Module extends DataObject {
 
 
   /** 
-   * \brief Méthode qui permet de fixer le paramètre d'un module
+   * \brief MÃ©thode qui permet de fixer le paramÃ¨tre d'un module
    * \param $name : nom du module
    * \param $description : description du module
    * \param $value : valeur du module
@@ -231,13 +231,13 @@ class Module extends DataObject {
   }
 
   /**********************/
-  /* Méthodes statiques */
+  /* MÃ©thodes statiques */
   /**********************/
 
   /** 
-   * \brief Méthode renvoyant les modules autorisés pour une collectivité
-   * \param $authority entier : Numéro d'identifiant de la collectivité
-   * \return Un tableau ayant pour clefs les identifiants des modules autorisés
+   * \brief MÃ©thode renvoyant les modules autorisÃ©s pour une collectivitÃ©
+   * \param $authority entier : NumÃ©ro d'identifiant de la collectivitÃ©
+   * \return Un tableau ayant pour clefs les identifiants des modules autorisÃ©s
    */
   public static function getModulesForAuthority($authority) {
 
@@ -264,9 +264,9 @@ class Module extends DataObject {
   }
 
   /** 
-   * \brief Méthode renvoyant les modules autorisés pour un utilisateur (lecture seule ou lecture/écriture)
-   * \param $user entier : Numéro d'identifiant de l'utilisateur
-   * \return Un tableau ayant pour clefs les identifiants des modules autorisés
+   * \brief MÃ©thode renvoyant les modules autorisÃ©s pour un utilisateur (lecture seule ou lecture/Ã©criture)
+   * \param $user entier : NumÃ©ro d'identifiant de l'utilisateur
+   * \return Un tableau ayant pour clefs les identifiants des modules autorisÃ©s
    */
   public static function getModulesForUser($user) {
 	$zeUser = new User($user);
@@ -302,10 +302,10 @@ class Module extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention d'une liste des noms de modules actifs
+   * \brief MÃ©thode d'obtention d'une liste des noms de modules actifs
    * \return tableau des noms de modules
    *
-   * Cette méhode retourne un tableau dont les clefs sont les noms
+   * Cette mÃ©hode retourne un tableau dont les clefs sont les noms
    * des modules et le contenu de la case est le nom du module
   */
   public static function getActiveModulesNames() {
@@ -320,10 +320,10 @@ class Module extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention d'une liste de modules actif
+   * \brief MÃ©thode d'obtention d'une liste de modules actif
    * \return tableau de modules
    *
-   * Cette méhode retourne un tableau dont les clefs sont les identifiants
+   * Cette mÃ©hode retourne un tableau dont les clefs sont les identifiants
    * des modules et le contenu de la case est le nom du module
   */
   public static function getActiveModulesIdName() {
@@ -331,11 +331,11 @@ class Module extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention d'une liste de modules
-   * \param $cond chaîne (optionnel) : condition à appliquer sur la requête SQL 
+   * \brief MÃ©thode d'obtention d'une liste de modules
+   * \param $cond chaÃ®ne (optionnel) : condition Ã  appliquer sur la requÃªte SQL 
    * \return tableau de modules
    *
-   * Cette méhode retourne un tableau dont les clefs sont les identifiants
+   * Cette mÃ©hode retourne un tableau dont les clefs sont les identifiants
    * des modules et le contenu de la case est le nom du module
   */
   public static function getModulesIdName($cond = '') {
@@ -350,17 +350,17 @@ class Module extends DataObject {
   }
 
   /** 
-   * \brief Méthode qui renvoie la liste des modules actifs
-   * \return Un tableau contenant les données des modules actifs
+   * \brief MÃ©thode qui renvoie la liste des modules actifs
+   * \return Un tableau contenant les donnÃ©es des modules actifs
    */
   public static function getActiveModulesList() {
     return Module::getModulesList(" WHERE status=1 ORDER BY name ASC");
   }
 
   /** 
-   * \brief Méthode qui renvoie la liste des modules
-   * \param $cond chaîne (optionnel) : condition à appliquer sur la requête SQL 
-   * \return Un tableau contenant les données des modules
+   * \brief MÃ©thode qui renvoie la liste des modules
+   * \param $cond chaÃ®ne (optionnel) : condition Ã  appliquer sur la requÃªte SQL 
+   * \return Un tableau contenant les donnÃ©es des modules
    */
   public static function getModulesList($cond = "") {
     $sql = "SELECT modules.id, modules.name, modules.description, modules.menu_entry, modules.status FROM modules " . $cond;
@@ -376,7 +376,7 @@ class Module extends DataObject {
     foreach($r as $i => $module){
     	if (in_array($module['name'], array('actes','helios'))){
     		//TODO : revoir les profils avec PK, PEV et EP
-    		//$specific_perms = array("CS" => "Créer et signer","TT"=>"Télétransmettre");
+    		//$specific_perms = array("CS" => "CrÃ©er et signer","TT"=>"TÃ©lÃ©transmettre");
     		$specific_perms = array();
     	} else {
     		$specific_perms = array();

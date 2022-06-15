@@ -24,15 +24,15 @@ class ActesEnvelope extends DataObject {
   protected $destDir;
   protected $tmpDir;
   protected $dbFields = array( "user_id" => array( "descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
-						 "siren" => array( "descr" => "Code SIREN de la collectivitÈ", "type" => "isString", "mandatory" => true),
-						 "submission_date" => array( "descr" => "Date de dÈpÙt de l'enveloppe", "type" => "isDate", "mandatory" => false),
-						 "department" => array( "descr" => "DÈpartement de la collectivitÈ", "type" => "isString", "mandatory" => true),
-						 "district" => array( "descr" => "Arrondissement de la collectivitÈ", "type" => "isString", "mandatory" => true),
-						 "authority_type_code" => array( "descr" => "Code nature de la collectivitÈ", "type" => "isString", "mandatory" => true),
- 						 "return_mail" => array( "descr" => "Adresses Èlectroniques pour la rÈponse", "type" => "isString", "mandatory" => true),
+						 "siren" => array( "descr" => "Code SIREN de la collectivit√©", "type" => "isString", "mandatory" => true),
+						 "submission_date" => array( "descr" => "Date de d√©p√¥t de l'enveloppe", "type" => "isDate", "mandatory" => false),
+						 "department" => array( "descr" => "D√©partement de la collectivit√©", "type" => "isString", "mandatory" => true),
+						 "district" => array( "descr" => "Arrondissement de la collectivit√©", "type" => "isString", "mandatory" => true),
+						 "authority_type_code" => array( "descr" => "Code nature de la collectivit√©", "type" => "isString", "mandatory" => true),
+ 						 "return_mail" => array( "descr" => "Adresses √©lectroniques pour la r√©ponse", "type" => "isString", "mandatory" => true),
 						 "name" => array( "descr" => "Nom de l'interlocuteur", "type" => "isString", "mandatory" => false),
-						 "telephone" => array( "descr" => "TÈlÈphone de l'interlocuteur", "type" => "isString", "mandatory" => false),
-						 "email" => array( "descr" => "Adresse Èlectronique de l'interlocuteur", "type" => "isString", "mandatory" => false),
+						 "telephone" => array( "descr" => "T√©l√©phone de l'interlocuteur", "type" => "isString", "mandatory" => false),
+						 "email" => array( "descr" => "Adresse √©lectronique de l'interlocuteur", "type" => "isString", "mandatory" => false),
  						 "file_path" => array( "descr" => "Chemin vers l'archive .tar.gz", "type" => "isString", "mandatory" => false),
  						 "file_size" => array( "descr" => "Taille de l'archive .tar.gz", "type" => "isInt", "mandatory" => false),
 						 );
@@ -44,16 +44,16 @@ class ActesEnvelope extends DataObject {
 
   /**
    * \brief Constructeur d'une enveloppe
-   * \param id integer NumÈro d'identifiant d'une enveloppe existante avec laquelle initialiser l'objet
+   * \param id integer Num√©ro d'identifiant d'une enveloppe existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
 	parent::__construct($id);
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des identifiants des enveloppes
-   * \param $cond (optionnel) chaÓne : ChaÓne contenant les conditions (SQL) ‡ appliquer ‡ la fin de la requÍte BDD
-   * \param $transmitted_only boolÈen (optionnel) : Ne considËre que les enveloppes rÈellement transmises si true (false par dÈfaut)
+   * \brief M√©thode d'obtention de la liste des identifiants des enveloppes
+   * \param $cond (optionnel) cha√Æne : Cha√Æne contenant les conditions (SQL) √† appliquer √† la fin de la requ√™te BDD
+   * \param $transmitted_only bool√©en (optionnel) : Ne consid√®re que les enveloppes r√©ellement transmises si true (false par d√©faut)
    * \return Tableau des identifiants des enveloppes
   */
   public static function getEnvelopesId($cond = false, $transmitted_only = false) {
@@ -88,10 +88,10 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention du volume transmis depuis une pÈriode donnÈe ou depuis toujours
-   * \param $cond (optionnel) chaÓne : ChaÓne contenant les conditions (SQL) ‡ appliquer ‡ la fin de la requÍte BDD
-   * \param $transmitted_only boolÈen (optionnel) : Ne considËre que les enveloppes rÈellement transmises si true (false par dÈfaut)
-   * \return Volume en octet correspondant ‡ la demande
+   * \brief M√©thode d'obtention du volume transmis depuis une p√©riode donn√©e ou depuis toujours
+   * \param $cond (optionnel) cha√Æne : Cha√Æne contenant les conditions (SQL) √† appliquer √† la fin de la requ√™te BDD
+   * \param $transmitted_only bool√©en (optionnel) : Ne consid√®re que les enveloppes r√©ellement transmises si true (false par d√©faut)
+   * \return Volume en octet correspondant √† la demande
   */
   public static function getEnvelopesVolume($cond = false, $transmitted_only = false) {
 	$sql = "SELECT SUM(actes_envelopes.file_size) AS sum FROM actes_envelopes actes_envelopes"
@@ -111,7 +111,7 @@ class ActesEnvelope extends DataObject {
 	  $filter[] = "actes_transactions_workflow.status_id=1";
 	}
 
-	// Pour Èviter les doublons
+	// Pour √©viter les doublons
 	$filter[] = "actes_transactions.id=(SELECT MIN(actes_transactions.id) FROM actes_transactions WHERE actes_transactions.envelope_id=actes_envelopes.id)";
 
 	$sql .= " WHERE " . implode(" AND ", $filter);
@@ -129,8 +129,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des fichiers inclus dans une enveloppe
-   * \param $env_id integer : Identifiant de l'enveloppe concernÈe
+   * \brief M√©thode d'obtention de la liste des fichiers inclus dans une enveloppe
+   * \param $env_id integer : Identifiant de l'enveloppe concern√©e
    * \return Tableau de noms de fichier
   */
   public static function getEnvelopesIncludedFiles($env_id) {
@@ -148,9 +148,9 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention d'un historique d'envoi des enveloppes au serveur du ministËre
-   * \param $authority_id integer (optionnel) : Identifiant de la collectivitÈ expÈditrice des enveloppes
-   * \return Tableau des donnÈes des enveloppes
+   * \brief M√©thode d'obtention d'un historique d'envoi des enveloppes au serveur du minist√®re
+   * \param $authority_id integer (optionnel) : Identifiant de la collectivit√© exp√©ditrice des enveloppes
+   * \return Tableau des donn√©es des enveloppes
   */
   public static function getEnvelopesHistory($authority_id = false) {
 	$sql = "SELECT DISTINCT ae.id, ae.file_path, atw.date, auth.siren, auth.department, auth.district";
@@ -159,7 +159,7 @@ class ActesEnvelope extends DataObject {
 	$sql .= " LEFT JOIN authorities auth ON users.authority_id=auth.id";
 	$sql .= " LEFT JOIN actes_transactions at ON at.envelope_id=ae.id";
 	$sql .= " LEFT JOIN actes_transactions_workflow atw ON atw.transaction_id=at.id";
-	// On veut rÈcupÈrer la date o˘ la transaction a ÈtÈ transmise => statut 3
+	// On veut r√©cup√©rer la date o√π la transaction a √©t√© transmise => statut 3
 	$sql .= " WHERE atw.status_id=3";
 
 	if ($authority_id) {
@@ -184,8 +184,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode permettant de fixer la valeur d'un attribut
-   * \param $name chaÓne : Nom de l'attribut
+   * \brief M√©thode permettant de fixer la valeur d'un attribut
+   * \param $name cha√Æne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   public function set($name, $val) {
@@ -199,8 +199,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode initialisant l'entitÈ avec l'identifiant courant
-   * \return true si succËs, false sinon
+   * \brief M√©thode initialisant l'entit√© avec l'identifiant courant
+   * \return true si succ√®s, false sinon
   */
   public function init() {
 	if (! parent::init()) {
@@ -213,7 +213,7 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de rÈcupÈration des transactions de l'enveloppe courante dans la variable membre $transactions
+   * \brief M√©thode de r√©cup√©ration des transactions de l'enveloppe courante dans la variable membre $transactions
    */
   public function initTransactions() {
 	if (isset($this->id)) {
@@ -222,9 +222,9 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des transactions pour une enveloppe
-   * \param $id integer : Identifiant de l'enveloppe pour laquelle rÈcupÈrer les transactions
-   * \return Tableau d'objet ActesTransaction correspondant ‡ l'enveloppe spÈcifiÈe
+   * \brief M√©thode d'obtention de la liste des transactions pour une enveloppe
+   * \param $id integer : Identifiant de l'enveloppe pour laquelle r√©cup√©rer les transactions
+   * \return Tableau d'objet ActesTransaction correspondant √† l'enveloppe sp√©cifi√©e
   */
   public static function getTransactionsForEnvelope($id) {
 	$transac = array();
@@ -250,7 +250,7 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de remise ‡ zÈro de la liste des transactions pour l'enveloppe courante
+   * \brief M√©thode de remise √† z√©ro de la liste des transactions pour l'enveloppe courante
    */
   public function resetTransactions() {
 	$this->transactions = array();
@@ -261,13 +261,13 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de crÈation du fichier XML de l'enveloppe
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de cr√©ation du fichier XML de l'enveloppe
+   * \return True en cas de succ√®s, false sinon
    */
   public function generateEnvelopeXMLFile($serial) {
 
   	if (count($this->transactions) <= 0) {
-		$this->errorMsg = "Informations manquantes pour gÈnÈrer l'enveloppe (pas de transaction)";
+		$this->errorMsg = "Informations manquantes pour g√©n√©rer l'enveloppe (pas de transaction)";
 		return false;
   	}
 
@@ -301,7 +301,7 @@ class ActesEnvelope extends DataObject {
 	  }
 	  $xml .= " </actes:AdressesRetour>\n";
 	} else {
-	  $this->errorMsg = "Informations manquantes pour gÈnÈrer l'enveloppe (pas de mail retour)";
+	  $this->errorMsg = "Informations manquantes pour g√©n√©rer l'enveloppe (pas de mail retour)";
 	  return false;
 	}
 
@@ -322,24 +322,24 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'Ècriture du fichier enveloppe
-   * \param $xml chaÓne : contenu du fichier ‡ Ècrire
+   * \brief M√©thode d'√©criture du fichier enveloppe
+   * \param $xml cha√Æne : contenu du fichier √† √©crire
    * \return
    */
   public function writeEnvFile($xml) {
 	if (! Helpers::createDirTree(dirname($this->rootDir . '/' . $this->envXmlFile))) {
-	  $this->errorMsg = "Erreur systËme de fichiers.";
+	  $this->errorMsg = "Erreur syst√®me de fichiers.";
 	  return false;
 	}
 
 	if (! file_put_contents($this->rootDir . '/' . $this->envXmlFile, $xml)) {
-	  $this->errorMsg = "Erreur systËme de fichiers.";
+	  $this->errorMsg = "Erreur syst√®me de fichiers.";
 	  return false;
 	}
 
 
 	if (! $this->envXmlFileSize = @filesize($this->rootDir . '/' . $this->envXmlFile)) {
-	  $this->errorMsg = "Erreur systËme.";
+	  $this->errorMsg = "Erreur syst√®me.";
 	  return false;
 	}
 
@@ -347,8 +347,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de gÈnÈration de l'archive finale .tar.gz
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de g√©n√©ration de l'archive finale .tar.gz
+   * \return True en cas de succ√®s, false sinon
    */
   public function generateArchiveFile() {
 	if (isset($this->envXmlFile)) {
@@ -359,7 +359,7 @@ class ActesEnvelope extends DataObject {
 
 
 	  if (count($this->transactions) > 0) {
-		// En cas d'importation on remet dans l'archive tous les fichiers prÈsents ‡ l'origine
+		// En cas d'importation on remet dans l'archive tous les fichiers pr√©sents √† l'origine
 		// (qui se trouvent dans tmpDir)
 		if (empty($this->tmpDir)) {
 		  $this->buildFileList();
@@ -372,7 +372,7 @@ class ActesEnvelope extends DataObject {
 		$filesDir .= (empty($this->tmpDir)) ? "" : "/" . $this->tmpDir;
 
 		if (! chdir($filesDir)) {
-		  $this->errorMsg = "Erreur systËme de fichiers.";
+		  $this->errorMsg = "Erreur syst√®me de fichiers.";
 		  return false;
 		} else {
 		  $cmd = 'tar cf - ';
@@ -382,7 +382,7 @@ class ActesEnvelope extends DataObject {
 			  $cmd .= " " . $file["name"];
 			}
 		  } else {
-			// Mode import, on prend tous les fichiers du rÈpertoire
+			// Mode import, on prend tous les fichiers du r√©pertoire
 			$cmd .= " * ";
 		  }
 
@@ -392,7 +392,7 @@ class ActesEnvelope extends DataObject {
 		  $status = system($cmd, $ret);
 
 		  if ($status === false || $ret != 0) {
-			$this->errorMsg = "Erreur de crÈation de l'archive. Retour " . $ret;
+			$this->errorMsg = "Erreur de cr√©ation de l'archive. Retour " . $ret;
 			return false;
 		  }
 
@@ -409,7 +409,7 @@ class ActesEnvelope extends DataObject {
 	}
 
 	if (! $this->file_size = filesize($this->rootDir . '/' . $this->file_path)) {
-	  $this->errorMsg = "Erreur systËme.";
+	  $this->errorMsg = "Erreur syst√®me.";
 	  return false;
 	}
 
@@ -417,7 +417,7 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de construction de la liste des fichiers contenu dans l'enveloppe
+   * \brief M√©thode de construction de la liste des fichiers contenu dans l'enveloppe
    */
   public function buildFileList() {
 	// Fichier XML de l'enveloppe
@@ -433,7 +433,7 @@ class ActesEnvelope extends DataObject {
 		  $this->fileList[] = array( "name" => basename($transac->files["acte"]["name"]), "type" => $transac->files["acte"]["mimetype"], "size" => $transac->files["acte"]["size"]);
 		}
 
-		// PiËces jointes (optionnelles)
+		// Pi√®ces jointes (optionnelles)
 		if (isset($transac->files["attachment"])) {
 		  foreach ($transac->files["attachment"] as $attachment) {
 			$this->fileList[] = array( "name" => basename($attachment["name"]), "type" => $attachment["mimetype"], "size" => $attachment["size"]);
@@ -444,10 +444,10 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'importation d'une enveloppe .tar.gz dÈj‡ constituÈe
-   * \param $name chaÓne : Nom du fichier original de l'archive
-   * \param $path chaÓne : Chemin vers le fichier dans le systËme de fichier local
-   * \return Un tableau des noms des fichiers mÈtiers XML contenus dans l'enveloppe, false sinon
+   * \brief M√©thode d'importation d'une enveloppe .tar.gz d√©j√† constitu√©e
+   * \param $name cha√Æne : Nom du fichier original de l'archive
+   * \param $path cha√Æne : Chemin vers le fichier dans le syst√®me de fichier local
+   * \return Un tableau des noms des fichiers m√©tiers XML contenus dans l'enveloppe, false sinon
    */
 	public function importArchiveFile($name, $path) {
 		if (! isset($this->destDir)) {
@@ -457,18 +457,18 @@ class ActesEnvelope extends DataObject {
 
 		$this->file_path = $this->destDir . "/" . $name;
 
-		// CrÈation du rÈpertoire de stockage de l'archive
+		// Cr√©ation du r√©pertoire de stockage de l'archive
   		if (! Helpers::createDirTree($dest)) {
-			$this->errorMsg = "Erreur systËme de fichiers.";
+			$this->errorMsg = "Erreur syst√®me de fichiers.";
 			return false;
   		}
-		//Mise en place de l'archive ‡ son emplacement dÈfinitif
+		//Mise en place de l'archive √† son emplacement d√©finitif
 		if (! move_uploaded_file($path, $this->rootDir . '/' . $this->file_path)) {
-			$this->errorMsg = "Erreur systËme. Abandon.";
+			$this->errorMsg = "Erreur syst√®me. Abandon.";
 			return false;
 		}
 
-		// VÈrification du format de l'archive
+		// V√©rification du format de l'archive
 		if (! $this->checkArchiveType($this->rootDir . '/' . $this->file_path)) {
 			$this->errorMsg = "Mauvais format de l'archive (.tar.gz requis).";
 			return false;
@@ -476,37 +476,37 @@ class ActesEnvelope extends DataObject {
 
 		// Extraction de la taille de l'archive
 		if (! $this->file_size = filesize($this->rootDir . '/' . $this->file_path)) {
-			$this->errorMsg = "Erreur systËme.";
+			$this->errorMsg = "Erreur syst√®me.";
 			return false;
 		}
 
-		// VÈrification taille et antivirus sur l'archive
+		// V√©rification taille et antivirus sur l'archive
 		if (! $this->checkArchiveConformity($this->rootDir . '/' . $this->file_path)) {
 			return false;
 		}
 
 		$this->genTempDirectory();
 
-  // Extraction de l'archive dans un rÈpertoire temporaire
+  // Extraction de l'archive dans un r√©pertoire temporaire
   if (! $this->extractArchive($this->rootDir . '/' . $this->destDir . "/" . $this->tmpDir)) {
-	$this->errorMsg = "Erreur dÈsarchivage archive. Abandon.";
+	$this->errorMsg = "Erreur d√©sarchivage archive. Abandon.";
 	return false;
   }
 
   // Chargement du fichier XML enveloppe
-  // Le nom du fichier xml enveloppe est le nom de l'archive moins le prÈfixe
-  // et avec l'extension .xml ‡ la place de .tar.gz
+  // Le nom du fichier xml enveloppe est le nom de l'archive moins le pr√©fixe
+  // et avec l'extension .xml √† la place de .tar.gz
   $this->envXmlFile = preg_replace("/^[^\-]+-/", "", $name);
   $this->envXmlFile = $this->destDir . "/" . $this->tmpDir . "/" . preg_replace("/\.tar\.gz$/", ".xml", $this->envXmlFile);
 
   $xmlFile = $this->rootDir . "/" . $this->envXmlFile;
 
   if (! file_exists($xmlFile)) {
-	$this->errorMsg = "Impossible de trouver le fichier XML enveloppe correspondant ‡ l'archive.";
+	$this->errorMsg = "Impossible de trouver le fichier XML enveloppe correspondant √† l'archive.";
 	return false;
   } else {
 	if (! $this->envXmlFileSize = filesize($xmlFile)) {
-	  $this->errorMsg = "Erreur systËme.";
+	  $this->errorMsg = "Erreur syst√®me.";
 	  return false;
 	}
   }
@@ -515,7 +515,7 @@ class ActesEnvelope extends DataObject {
 	return false;
   }
 
-  // …criture de l'enveloppe modifiÈe (ajout mail retour TdT)
+  // √âcriture de l'enveloppe modifi√©e (ajout mail retour TdT)
   if (! $this->writeEnvFile($this->envXmlObj->AsXML())) {
 	return false;
   }
@@ -524,15 +524,15 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de vÈrification du type de l'archive
-   * \param $path chaÓne : Chemin vers le fichier archive
+   * \brief M√©thode de v√©rification du type de l'archive
+   * \param $path cha√Æne : Chemin vers le fichier archive
    * \return True en cas de format .tar.gz, false sinon
    *
    */
   public function checkArchiveType($path) {
 	if (! empty($path)) {
 	  // mime_content_type() ne semble pas fonctionner
-	  // On tente bÍtement de lire l'archive et on rÈcupËre le statut de sortie
+	  // On tente b√™tement de lire l'archive et on r√©cup√®re le statut de sortie
 
 	  // Test du format gzip
 	  $cmd = "gzip -d -c " . $path;
@@ -557,10 +557,10 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de vÈrification de l'archive (taille et anti-virus)
-   * 		La vÈrification par l'anti-virus se fait aprËs le postage de la transaction
-   * \param $path chaÓne (optionnel) : chemin vers l'archive ‡ controler (file_path par dÈfaut)
-   * \return True en cas de succËs, false si l'archive n'est pas valide
+   * \brief M√©thode de v√©rification de l'archive (taille et anti-virus)
+   * 		La v√©rification par l'anti-virus se fait apr√®s le postage de la transaction
+   * \param $path cha√Æne (optionnel) : chemin vers l'archive √† controler (file_path par d√©faut)
+   * \return True en cas de succ√®s, false si l'archive n'est pas valide
    */
   public function checkArchiveConformity($path = false) {
 	return $this->checkArchiveSize($path);
@@ -568,13 +568,13 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de vÈrification de la taille de l'archive
-   * \return True en cas de conformitÈ, false sinon
+   * \brief M√©thode de v√©rification de la taille de l'archive
+   * \return True en cas de conformit√©, false sinon
    */
   public function checkArchiveSize() {
 	if (isset($this->file_path) && ! empty($this->file_path)) {
 	  if ($this->file_size > ACTES_ARCHIVE_MAX_SIZE) {
-		$this->errorMsg = "La taille de l'archive est trop ÈlevÈe, " . $this->file_size . " octets (maximum " . ACTES_ARCHIVE_MAX_SIZE . " octets autorisÈs)";
+		$this->errorMsg = "La taille de l'archive est trop √©lev√©e, " . $this->file_size . " octets (maximum " . ACTES_ARCHIVE_MAX_SIZE . " octets autoris√©s)";
 		return false;
 	  } else {
 		return true;
@@ -585,24 +585,24 @@ class ActesEnvelope extends DataObject {
   }
   
   /**
-   * \brief MÈthode de gÈnÈration d'un rÈpertoire temporaire avec un nom alÈatoire
+   * \brief M√©thode de g√©n√©ration d'un r√©pertoire temporaire avec un nom al√©atoire
   */
   private function genTempDirectory() {
 	$this->tmpDir = Helpers::genTempName();
   }
 
   /**
-   * \brief MÈthode d'extraction d'une enveloppe archive .tar.gz
-   * \param $dest chaÓne : rÈpertoire de destination de l'extraction
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode d'extraction d'une enveloppe archive .tar.gz
+   * \param $dest cha√Æne : r√©pertoire de destination de l'extraction
+   * \return True en cas de succ√®s, false sinon
    *
-   * L'extraction est faite dans le rÈpertoire tmpDir
-   * en dessous du rÈpertoire de l'archive.
+   * L'extraction est faite dans le r√©pertoire tmpDir
+   * en dessous du r√©pertoire de l'archive.
    *
    */
   public function extractArchive($dest) {
 	if (! Helpers::createDirTree($dest)) {
-	  $this->errorMsg = "Erreur systËme de fichiers.";
+	  $this->errorMsg = "Erreur syst√®me de fichiers.";
 	  return false;
 	}
 
@@ -618,8 +618,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'importation de l'enveloppe XML existante
-   * \return Tableau de nom de fichier XML des actes en cas de succËs, false sinon
+   * \brief M√©thode d'importation de l'enveloppe XML existante
+   * \return Tableau de nom de fichier XML des actes en cas de succ√®s, false sinon
    *
    */
   public function processXMLEnvelope($xmlFile) {
@@ -630,37 +630,37 @@ class ActesEnvelope extends DataObject {
 
 	// Extraction des informations du XML pour initialiser l'enveloppe
 	$namespaces = $this->envXmlObj->getDocNamespaces();
-	// RÈcupÈration des ÈlÈments dans le namespace "actes"
+	// R√©cup√©ration des √©l√©ments dans le namespace "actes"
 	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
 	$this->name = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Nom);
 	$this->telephone = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Telephone);
 	$this->email = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Email);
 
-	// VÈrification SIREN enveloppe <=> posteur
+	// V√©rification SIREN enveloppe <=> posteur
 	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["insee"]);
 	if (strcmp($this->siren, utf8_decode($authority_attr['SIREN'])) != 0) {
-	  $this->errorMsg = "Le numÈro de SIREN contenu dans l'enveloppe ne correspond pas ‡ celui de l'utilisateur authentifiÈ. Abandon.";
+	  $this->errorMsg = "Le num√©ro de SIREN contenu dans l'enveloppe ne correspond pas √† celui de l'utilisateur authentifi√©. Abandon.";
 	  return false;
 	}
 
-	// VÈrification type de collectivitÈ enveloppe <=> posteur
+	// V√©rification type de collectivit√© enveloppe <=> posteur
 	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["actes"]);
 	if ($this->authority_type_code != utf8_decode($authority_attr['Nature'])) {
-	  $this->errorMsg = "Le type de collectivitÈ contenu dans l'enveloppe ne correspond pas ‡ celui de l'utilisateur authentifiÈ. Abandon.";
+	  $this->errorMsg = "Le type de collectivit√© contenu dans l'enveloppe ne correspond pas √† celui de l'utilisateur authentifi√©. Abandon.";
 	  return false;
 	}
 
-	// VÈrification dÈpartement enveloppe <=> posteur
+	// V√©rification d√©partement enveloppe <=> posteur
 	$department = Helpers::getFromXMLElt($authority_attr['Departement']);
 	if (strcmp($this->department, $department) != 0) {
-	  $this->errorMsg = "Le dÈpartement de la collectivitÈ contenu dans l'enveloppe ne correspond pas ‡ celui de l'utilisateur authentifiÈ. Abandon.";
+	  $this->errorMsg = "Le d√©partement de la collectivit√© contenu dans l'enveloppe ne correspond pas √† celui de l'utilisateur authentifi√©. Abandon.";
 	  return false;
 	}
 
-	// VÈrification arrondissement enveloppe <=> posteur
+	// V√©rification arrondissement enveloppe <=> posteur
 	$district = Helpers::getFromXMLElt($authority_attr['Arrondissement']);
 	if (strcmp($this->district, $district) != 0) {
-	  $this->errorMsg = "L'arrondissement de la collectivitÈ contenu dans l'enveloppe ne correspond pas ‡ celui de l'utilisateur authentifiÈ. Abandon.";
+	  $this->errorMsg = "L'arrondissement de la collectivit√© contenu dans l'enveloppe ne correspond pas √† celui de l'utilisateur authentifi√©. Abandon.";
 	  return false;
 	}
 
@@ -669,11 +669,11 @@ class ActesEnvelope extends DataObject {
 	  return false;
 	}
 
-	// Rafraichissement des ÈlÈments Actes
+	// Rafraichissement des √©l√©ments Actes
 	$namespaces = $this->envXmlObj->getDocNamespaces();
 	$actesItems = $this->envXmlObj->children($namespaces["actes"]);
 
-	// RÈcupÈration adresses de retour
+	// R√©cup√©ration adresses de retour
 	$return_mails = $actesItems->AdressesRetour;
 
 	$mails = array();
@@ -683,7 +683,7 @@ class ActesEnvelope extends DataObject {
 
 	$this->return_mail = implode('|', $mails);
 
-	// Extraction des noms des fichiers XML dÈcrivant les messages contenus dans l'enveloppe
+	// Extraction des noms des fichiers XML d√©crivant les messages contenus dans l'enveloppe
 	$xmlFiles = array();
 	$messages = $actesItems->FormulairesEnvoyes;
 
@@ -695,12 +695,12 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'ajout de l'adresse mail de retour du TdT dans le fichier XML enveloppe
-   * \return Un objet SimpleXMLElement en cas de succËs, false sinon
+   * \brief M√©thode d'ajout de l'adresse mail de retour du TdT dans le fichier XML enveloppe
+   * \return Un objet SimpleXMLElement en cas de succ√®s, false sinon
    *
    */
   public function xmlAddTDTReturnMail() {
-	// La version PHP 5.1.2 ne contient pas la mÈthode addChild sur un SimpleXMLElement
+	// La version PHP 5.1.2 ne contient pas la m√©thode addChild sur un SimpleXMLElement
 	// (apparition en 5.1.4).
 	// Il faut donc passer par DOM pour modifier le fichier XML
 	if (($domElt = @dom_import_simplexml($this->envXmlObj)) === false) {
@@ -712,7 +712,7 @@ class ActesEnvelope extends DataObject {
 	$domElt = $dom->importNode($domElt, true);
 	$dom->appendChild($domElt);
 
-	// TODO : voir comment rÈcupÈrer l'URI du namespace depuis le fichier
+	// TODO : voir comment r√©cup√©rer l'URI du namespace depuis le fichier
 	$newMail = new DOMElement("actes:Email", ACTES_TDT_MAIL_ADDRESS, "http://www.interieur.gouv.fr/ACTES#v1.1-20040216");
 
 	$mailList = $dom->getElementsByTagName("AdressesRetour");
@@ -725,8 +725,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de suppression des fichiers intermÈdiaires ayant servi ‡ la contruction de l'archive
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de suppression des fichiers interm√©diaires ayant servi √† la contruction de l'archive
+   * \return True en cas de succ√®s, false sinon
   */
   public function purgeFiles() {
 	// Suppression du fichier XML de l'enveloppe
@@ -745,7 +745,7 @@ class ActesEnvelope extends DataObject {
 	  }
 	}
 
-	// Suppression du rÈpertoire temporaire s'il existe
+	// Suppression du r√©pertoire temporaire s'il existe
 	if (! empty($this->tmpDir)) {
 	  $cmd = "rm -rf " . $this->rootDir . "/" . $this->destDir . "/" . $this->tmpDir;
 
@@ -760,10 +760,10 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de contrÙle de la cloture de toutes les transactions d'une enveloppe puis suppression de l'archive
+   * \brief M√©thode de contr√¥le de la cloture de toutes les transactions d'une enveloppe puis suppression de l'archive
    * \return True en cas de suppression, false sinon
   */
-  //Il semnblerait que cette fonction ne soit utilisÈ nulle part... Je la supprime pas, mais j'enlËve pas non plus le each (deprecated)
+  //Il semnblerait que cette fonction ne soit utilis√© nulle part... Je la supprime pas, mais j'enl√®ve pas non plus le each (deprecated)
   public function deleteArchiveFileIfAllClose() {
 	$this->initTransactions();
 
@@ -790,8 +790,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de suppression du fichier archive .tar.gz
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de suppression du fichier archive .tar.gz
+   * \return True en cas de succ√®s, false sinon
   */
   public function deleteArchiveFile() {
 	if (isset($this->file_path)) {
@@ -799,7 +799,7 @@ class ActesEnvelope extends DataObject {
 		$this->errorMsg .= "Erreur lors de la tentative de suppression du fichier archive.";
 		return false;
 	  } else {
-		// Tentative de suppression du rÈpertoire contenant
+		// Tentative de suppression du r√©pertoire contenant
 		@rmdir(ACTES_FILES_UPLOAD_ROOT . "/" . dirname($this->file_path));
 		return true;
 	  }
@@ -811,11 +811,11 @@ class ActesEnvelope extends DataObject {
 
 
   /**********************/
-  /* MÈthodes statiques */
+  /* M√©thodes statiques */
   /**********************/
 
   /**
-   * \brief MÈthode qui renvoie le fichier archive .tar.gz au navigateur
+   * \brief M√©thode qui renvoie le fichier archive .tar.gz au navigateur
    */
     public function sendFile() {
         if (! isset($this->file_path)){
@@ -843,9 +843,9 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention du numÈro de sÈrie suivant pour la gÈnÈration du nom du fichier XML enveloppe
-   * \param $authority Authority (optionnel) : objet reprÈsentant la collectivitÈ demandeuse du numÈro
-   * \return Un numÈro de sÈrie
+   * \brief M√©thode d'obtention du num√©ro de s√©rie suivant pour la g√©n√©ration du nom du fichier XML enveloppe
+   * \param $authority Authority (optionnel) : objet repr√©sentant la collectivit√© demandeuse du num√©ro
+   * \return Un num√©ro de s√©rie
   */
 	public function getNextEnvelopeSerial($authority_id) {
 		if ( ! $authority_id && ! isset($this->user_id)) {
@@ -863,19 +863,19 @@ class ActesEnvelope extends DataObject {
 		return false;
 	  }
 
-	  // On vÈrifie si le numÈro doit Ítre remis ‡ zÈro ou pas
+	  // On v√©rifie si le num√©ro doit √™tre remis √† z√©ro ou pas
 	  $sql = "SELECT reset_date, serial FROM actes_envelope_serials WHERE authority_id=$authority_id FOR UPDATE";
 
 	  $result = $this->db->select($sql);
 
 	  if (! $result->isError()) {
 		if ($result->num_row() <= 0) {
-		  // Pas encore d'entrÈe pour cette collectivitÈ
+		  // Pas encore d'entr√©e pour cette collectivit√©
 		  $date = date('Y-m-d');
 		  $sql = "INSERT INTO actes_envelope_serials (authority_id, reset_date, serial) VALUES($authority_id, '$date', 2)";
 
 		  if (! $this->db->exec($sql)) {
-			$this->errorMsg = "Erreur d'accËs base de donnÈes.";
+			$this->errorMsg = "Erreur d'acc√®s base de donn√©es.";
 			$this->db->rollback();
 			return false;
 		  } else {
@@ -888,11 +888,11 @@ class ActesEnvelope extends DataObject {
 		  $today = date('Y-m-d');
 
 		  if (strcmp($today, $date) != 0) {
-			// La derniËre remise ‡ zÈro n'est pas d'aujourd'hui => on remet ‡ zÈro le compteur
+			// La derni√®re remise √† z√©ro n'est pas d'aujourd'hui => on remet √† z√©ro le compteur
 			$sql = "UPDATE actes_envelope_serials SET reset_date='" . $today . "', serial=2 WHERE authority_id=$authority_id" ;
 
 			if (! $this->db->exec($sql)) {
-			  $this->errorMsg = "Erreur d'accËs base de donnÈes.";
+			  $this->errorMsg = "Erreur d'acc√®s base de donn√©es.";
 			  $this->db->rollback();
 			  return false;
 			} else {
@@ -900,12 +900,12 @@ class ActesEnvelope extends DataObject {
 			  return 1;
 			}
 		  } else {
-			// Mise ‡ jour aujourd'hui => on incrÈmente le numÈro de sÈrie
+			// Mise √† jour aujourd'hui => on incr√©mente le num√©ro de s√©rie
 
-		  // pour le bug 240, modifiÈ par HTan, 15-12-2008
+		  // pour le bug 240, modifi√© par HTan, 15-12-2008
 			if ($row['serial']>=10000 || $row['serial']<=0)
 			{
-				$this->errorMsg = "Serial number: dÈborder 10000. VÈrifier serial est modifiÈ par quelqu'un ou on a commitÈ plus que 9999 tranactions par jour.";
+				$this->errorMsg = "Serial number: d√©border 10000. V√©rifier serial est modifi√© par quelqu'un ou on a commit√© plus que 9999 tranactions par jour.";
 				return false;
 			}
 			//-----
@@ -913,7 +913,7 @@ class ActesEnvelope extends DataObject {
 			$sql = "UPDATE actes_envelope_serials SET serial=serial+1 WHERE authority_id=$authority_id";
 
 			if (! $this->db->exec($sql)) {
-			  $this->errorMsg = "Erreur d'accËs base de donnÈes.";
+			  $this->errorMsg = "Erreur d'acc√®s base de donn√©es.";
 			  $this->db->rollback();
 			  return false;
 			} else {
@@ -923,16 +923,16 @@ class ActesEnvelope extends DataObject {
 		  }
 		}
 	  } else {
-		$this->errorMsg = "Erreur d'accËs base de donnÈes.";
+		$this->errorMsg = "Erreur d'acc√®s base de donn√©es.";
 		return false;
 	  }
 
   }
 
   /**
-   * \brief MÈthode d'enregistrement d'une enveloppe dans la base de donnÈes
-   * \param $validate boolÈen (optionnel) Demande la validation ou non des donnÈes de l'entitÈ avant enregistrement (true par dÈfaut)
-   * \return true si succËs, false sinon
+   * \brief M√©thode d'enregistrement d'une enveloppe dans la base de donn√©es
+   * \param $validate bool√©en (optionnel) Demande la validation ou non des donn√©es de l'entit√© avant enregistrement (true par d√©faut)
+   * \return true si succ√®s, false sinon
    */
   public function save($validate = true,$bouchon_4_strict_standard = true) {
 	$new = false;
@@ -979,17 +979,17 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode de suppression d'une enveloppe de la base de donnÈes
-   * \param $id integer (optionnel) NumÈro d'identifiant de l'enveloppe, si non spÈcifiÈ, entitÈ en cours
-   * \return true si succËs, false sinon
+   * \brief M√©thode de suppression d'une enveloppe de la base de donn√©es
+   * \param $id integer (optionnel) Num√©ro d'identifiant de l'enveloppe, si non sp√©cifi√©, entit√© en cours
+   * \return true si succ√®s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entitÈ spÈcifiÈe par $id ou alors l'entitÈ courante si pas d'id
+    // Efface l'entit√© sp√©cifi√©e par $id ou alors l'entit√© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && ! empty($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entitÈ a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entit√© a supprimer";
 		return false;
       }
     }
@@ -1002,13 +1002,13 @@ class ActesEnvelope extends DataObject {
 	$sql = "DELETE FROM actes_included_files WHERE envelope_id=" . $id;
 
     if (! $this->db->exec($sql)) {
-	  $this->errorMsg = "Erreur lors de la suppression des fichiers reliÈs ‡ l'enveloppe.";
+	  $this->errorMsg = "Erreur lors de la suppression des fichiers reli√©s √† l'enveloppe.";
 	  $this->db->rollback();
 	  return false;
     }
 
-	// On ne supprime pas les transaction Ètant donnÈ que l'appel ‡ cette mÈthode se fait
-	// uniquement quand l'enregistrment d'une transaction Èchoue
+	// On ne supprime pas les transaction √©tant donn√© que l'appel √† cette m√©thode se fait
+	// uniquement quand l'enregistrment d'une transaction √©choue
 
 	if (! parent::delete($id)) {
 	  $this->db->rollback();
@@ -1025,8 +1025,8 @@ class ActesEnvelope extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des enveloppes et tous leurs attributs
-   * \param $cond (optionnel) chaÓne : ChaÓne contenant les conditions (SQL) ‡ appliquer ‡ la fin de la requÍte BDD
+   * \brief M√©thode d'obtention de la liste des enveloppes et tous leurs attributs
+   * \param $cond (optionnel) cha√Æne : Cha√Æne contenant les conditions (SQL) √† appliquer √† la fin de la requ√™te BDD
    * \return Tableau des enveloppes
    */
   public function getEnvelopesList($cond = "") {

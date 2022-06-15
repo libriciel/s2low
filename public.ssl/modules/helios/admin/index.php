@@ -1,38 +1,38 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
+ * TÃ©DÃ©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : JÃ©rÃ´me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant Ã  la
+ * dÃ©matÃ©rialisation de l'administration. 
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
- * manipuler et qui le réserve donc à des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
- * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã  l'utilisation,  Ã  la modification et/ou au
+ * dÃ©veloppement et Ã  la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã  
+ * manipuler et qui le rÃ©serve donc Ã  des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã  charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã  leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tÃªte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
 ?>
@@ -40,7 +40,7 @@
 /**
  * \file public.ssl/modules/helios/admin/index.php
  * \brief Page d'accueil de la section administration du module helios
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \author JÃ©rÃ´me Schell <j.schell@alternancesoft.com>
  * \date 10.08.2006
  * 
  *
@@ -68,19 +68,19 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
 
 if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -97,16 +97,16 @@ $doc->openContent();
 
 $html .= "<h1>Utilitaires - HELIOS</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('export_area');\">Export liste transactions</h2>\n";
-$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyées au ministère&nbsp;:<br />";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_transac_export.php\">Télécharger le fichier</a></p>\n";
-$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les réponses reçues du ministère&nbsp;:<br />";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_transac_retour_export.php\">Télécharger le fichier</a></p>\n";
+$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyÃ©es au ministÃ¨re&nbsp;:<br />";
+$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_transac_export.php\">TÃ©lÃ©charger le fichier</a></p>\n";
+$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les rÃ©ponses reÃ§ues du ministÃ¨re&nbsp;:<br />";
+$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_transac_retour_export.php\">TÃ©lÃ©charger le fichier</a></p>\n";
 
 
-$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('window_area');\">Gestion des fenêtres de transmission</h2>\n";
+$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('window_area');\">Gestion des fenÃªtres de transmission</h2>\n";
 $html .= "<p id=\"window_area\" style=\"display: block;\">\n";
-$html .= "La transmission des données vers le serveur du ministère se fait par défaut à tout moment de la journée sans limitation de volume. Il est cependant possible de définir des fenêtres horaires où le volume de transmission autorisé sera limité à une certaine taille ou tout simplement nul.<br />\n";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_windows.php\">Accéder à l'interface de définition des fenêtres</a></p>\n";
+$html .= "La transmission des donnÃ©es vers le serveur du ministÃ¨re se fait par dÃ©faut Ã  tout moment de la journÃ©e sans limitation de volume. Il est cependant possible de dÃ©finir des fenÃªtres horaires oÃ¹ le volume de transmission autorisÃ© sera limitÃ© Ã  une certaine taille ou tout simplement nul.<br />\n";
+$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_windows.php\">AccÃ©der Ã  l'interface de dÃ©finition des fenÃªtres</a></p>\n";
 $html .= "</div>\n";
 
 $doc->addBody($html);

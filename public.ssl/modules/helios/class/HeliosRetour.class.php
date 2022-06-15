@@ -17,7 +17,7 @@ class HeliosRetour extends DataObject {
       "mandatory" => true
     ),
    "date" => array (
-      "descr" => "date de réception",
+      "descr" => "date de rÃ©ception",
       "type" => "isDate",
       "mandatory" => true
     ),
@@ -44,7 +44,7 @@ class HeliosRetour extends DataObject {
   public function changeStatus($id, $status){
   	  $sql = "UPDATE helios_retour SET status = ? WHERE id = ?;";
 	  if (! $this->db->exec($sql,[$status,$id])) {
-		$this->errorMsg = "Erreur lors du changement d'état.";
+		$this->errorMsg = "Erreur lors du changement d'Ã©tat.";
 		return false;
 	  }
 	  return true;

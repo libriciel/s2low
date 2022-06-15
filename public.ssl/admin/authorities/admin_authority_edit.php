@@ -5,13 +5,13 @@ require_once("../../../config/config.php");
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -27,7 +27,7 @@ if (isset($id)) {
     if(!is_numeric($id)){
         Helpers::returnAndExit(
                 1,
-            "[admin_authority_edit.php] id doit être un entier, $id fourni",
+            "[admin_authority_edit.php] id doit Ãªtre un entier, $id fourni",
             WEBSITE_SSL
         );
 
@@ -42,14 +42,14 @@ if (isset($id)) {
 }
 
 if (! $mod && ! $me->isGroupAdminOrSuper()) {
-  $_SESSION["error"] = "Accès refusé.";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©.";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
 
-// Vérification permission sur la collectivité
+// VÃ©rification permission sur la collectivitÃ©
 if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_group_id"))) || ($me->isAuthorityAdmin() && $authority->getId() != $me->get("authority_id"))) {
-  $_SESSION["error"] = "Accès refusé pour la modification de cette collectivité";
+  $_SESSION["error"] = "AccÃ¨s refusÃ© pour la modification de cette collectivitÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -68,7 +68,7 @@ $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
-$doc->setTitle("Tedetis : " . $modStr . " collectivité");
+$doc->setTitle("Tedetis : " . $modStr . " collectivitÃ©");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -76,7 +76,7 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion collectivités";
+$html .= "<h1>Gestion collectivitÃ©s";
 
 if ($me->isGroupAdmin()) {
   $myGroup = new Group($me->get("authority_group_id"));
@@ -86,10 +86,10 @@ if ($me->isGroupAdmin()) {
 $html .= "</h1>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-  $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivités</a></p>\n";
+  $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivitÃ©s</a></p>\n";
 }
 
-$html .= "<h2>" . $modStr . " collectivité</h2>\n";
+$html .= "<h2>" . $modStr . " collectivitÃ©</h2>\n";
 $html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email','status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax','email_mail_securise') . ")\">\n";
 
 if ($mod) {
@@ -111,10 +111,10 @@ if ($me->isGroupAdminOrSuper()) {
 $html .= " </div>\n";
 $html .= " </div>\n";
 
-//TODO: le mot de passe n'est pas caché, il faut soit faire un md5 sur 
+//TODO: le mot de passe n'est pas cachÃ©, il faut soit faire un md5 sur 
 // le mot de passe et ici on affiche pas mot de passe.
-// quand il chnange on le cripte par md5 et le sauvgarder dans base de donné.
-//en ce moment je pas le temp de tout faire et je laiss pour après.
+// quand il chnange on le cripte par md5 et le sauvgarder dans base de donnÃ©.
+//en ce moment je pas le temp de tout faire et je laiss pour aprÃ¨s.
 //********************************
 $accessHelios=0;
 
@@ -186,7 +186,7 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
   $html .= " </div>\n";
 }
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label for=\"sirenId\" class=\"control-label col-md-4\">Numéro de SIREN</label>\n";
+$html .= "  <label for=\"sirenId\" class=\"control-label col-md-4\">NumÃ©ro de SIREN</label>\n";
 
 if ($me->isGroupAdminOrSuper())
 {
@@ -221,7 +221,7 @@ $html .= " </div>\n";
 
 
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Type de collectivité</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Type de collectivitÃ©</label>\n";
 $html .= "  <div class=\"col-md-6 link-input\">\n";
 
 if ($me->isGroupAdminOrSuper()) {
@@ -243,7 +243,7 @@ $html .= " </div>\n";
 
 if ($me->isGroupAdminOrSuper()) {
   $html .= " <div class=\"form-group\">\n";
-  $html .= "  <label class=\"control-label col-md-4\">État</label>\n";
+  $html .= "  <label class=\"control-label col-md-4\">Ã‰tat</label>\n";
   $html .= "  <div class=\"col-md-6\">\n";
 
   $html .= $doc->getHTMLSelect("status", $authority->get("statusTypes"), $authority->get("status"));
@@ -253,15 +253,15 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Adresse électronique «&nbsp;métier&nbsp;»</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Adresse Ã©lectronique Â«&nbsp;mÃ©tier&nbsp;Â»</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email\" value=\"" . get_hecho($authority->get("email")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Adresse électronique de diffusion par défaut</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Adresse Ã©lectronique de diffusion par dÃ©faut</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"default_broadcast_email\" value=\"" . get_hecho($authority->get("default_broadcast_email")) . "\" size=\"30\" maxlength=\"600\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Adresse électronique de diffusion d'informations</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Adresse Ã©lectronique de diffusion d'informations</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\"  name=\"broadcast_email\" value=\"" . get_hecho($authority->get("broadcast_email")) . "\" size=\"30\" maxlength=\"2000\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -279,7 +279,7 @@ $html .= "  <label class=\"control-label col-md-4\">Ville</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"city\" value=\"" . get_hecho($authority->get("city")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Département&nbsp;/&nbsp;Arrondissement</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">DÃ©partement&nbsp;/&nbsp;Arrondissement</label>\n";
 $html .= "  <div class=\"col-md-6 link-input\">";
 $html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\"" . $authority->get("department") . "\" />\n";
 $html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
@@ -290,7 +290,7 @@ if ($me->isGroupAdminOrSuper()) {
   if ($authority->getDeptDistrString()) {
 	$html .= $authority->getDeptDistrString();
   } else {
-	$html .= "[&nbsp;Choisir un département/arrondissement&nbsp;]";
+	$html .= "[&nbsp;Choisir un dÃ©partement/arrondissement&nbsp;]";
   }
   $html .= "</a>\n";
 } else {
@@ -302,7 +302,7 @@ $actesConventions = $objectInstancier->get('ActesConventions');
 $html .= "  </div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Téléphone</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">TÃ©lÃ©phone</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"telephone\" value=\"" . get_hecho($authority->get("telephone")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -310,11 +310,11 @@ $html .= "  <label class=\"control-label col-md-4\">Fax</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"fax\" value=\"" . get_hecho($authority->get("fax")) . "\" size=\"30\" maxlength=\"20\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Description pour le module de mail sécurisé:</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Description pour le module de mail sÃ©curisÃ©:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"descr_mail_securise\" value=\"" . get_hecho($authority->get("descr_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Adresse Ã©lectronique pour le module de mail sÃ©curisÃ©:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
@@ -328,7 +328,7 @@ if ($actesConventions->hasConvention($id)){
             $actesConventions->getConventionFilename($id) .
         "</a></div>";
 } else {
-    $html.="<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
+    $html.="<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvÃ©e</div>";
 }
 
 if ($me->isGroupAdminOrSuper()) {
@@ -343,12 +343,12 @@ if ($me->isGroupAdminOrSuper()) {
 
 if (HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY && $me->isSuper()){
 	$html .= " <div class=\"form-group\">\n";
-	$html .= "  <label class=\"control-label col-md-4\">Unicité la balise NomFic (PES)</label>\n";
+	$html .= "  <label class=\"control-label col-md-4\">UnicitÃ© la balise NomFic (PES)</label>\n";
 	$html .= "  <div class=\"col-md-6\">";
 	$html .= $doc->getHTMLSelect("helios_do_not_verify_nom_fic_unicity",
             array(
-				'f' =>"Vérification de l'unicité de la balise NomFic",
-                't'=>"Pas de vérification de l'unicité de la balise NomFic - DÉCONSEILLÉ"),
+				'f' =>"VÃ©rification de l'unicitÃ© de la balise NomFic",
+                't'=>"Pas de vÃ©rification de l'unicitÃ© de la balise NomFic - DÃ‰CONSEILLÃ‰"),
             $authority->get('helios_do_not_verify_nom_fic_unicity')?:'f'
     );
 	$html .= "</div>";
@@ -361,7 +361,7 @@ if ($me->isGroupAdminOrSuper()) {
 	$modules = Module::getActiveModulesList();
 
   $html .= " <div class=\"form-group\">\n";
-  $html .= "  <label class=\"control-label col-md-4\">Modules autorisés</label>\n";
+  $html .= "  <label class=\"control-label col-md-4\">Modules autorisÃ©s</label>\n";
   $html .= "  <div class=\"col-md-6\">";
 
   //$me->canGrantModule($module["name"]
@@ -377,7 +377,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 /*$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Nouveau système de notification</label>\n";
+$html .= "  <label class=\"control-label col-md-4\">Nouveau systÃ¨me de notification</label>\n";
 $html .= "  <input type=\"checkbox\" name=\"newnotif\" value=\"on\" ";
 if ($authority->get("new_notification") != 'f')
         $html .= " checked=\"checked\"";
@@ -389,7 +389,7 @@ $html .= " </div>\n";
 if ($authority->getModulePermByName("dia") && $me->isAdmin())
 {
 	$html .= " <div class=\"form-group\">\n";
-	$html .= "  <label class=\"control-label col-md-4\">Numéro SIRET pour la réception des DIA</label>\n";
+	$html .= "  <label class=\"control-label col-md-4\">NumÃ©ro SIRET pour la rÃ©ception des DIA</label>\n";
 	$html .= "  <div class=\"col-md-6\">";
 	$html .= "  <input type=\"text\" name=\"dia_siret\" value=\"" . get_hecho($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" />";
 	$html .= " </div>\n";
@@ -403,14 +403,14 @@ if ($authority->getModulePermByName("dia") && $me->isAdmin())
 $html .= "</div>\n";
 $html .= "<div class=\"form-group\"> <button type=\"submit\" class=\"col-md-offset-4 col-md-6 btn btn-default\">";
 
-$html .= ($mod) ? "Valider les modifications" : "Ajouter la collectivité";
+$html .= ($mod) ? "Valider les modifications" : "Ajouter la collectivitÃ©";
 $html .= "</button></div>\n";
 $html .= "</form>\n";
 
 
-$html .="<div><a class=\"btn btn-primary\" href='admin_authority_sae.php?id=".$id."'>Configurer la connexion SAE »</a></div>";
+$html .="<div><a class=\"btn btn-primary\" href='admin_authority_sae.php?id=".$id."'>Configurer la connexion SAE Â»</a></div>";
 $html .= "<br/>";
-$html .="<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=".$id."'>Configurer les numéros SIRET »</a></div>";
+$html .="<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=".$id."'>Configurer les numÃ©ros SIRET Â»</a></div>";
 
 if ($me->isSuper()){
     $html.="<br/><div><a class=\"btn btn-primary\" href='".WEBSITE_SSL."/modules/actes/admin/actes_force_classifiction.php?authority_id=".$id."'>Envoyer une demande de classification</a></div>";
@@ -418,7 +418,7 @@ if ($me->isSuper()){
 
 }
 if ($me->isGroupAdminOrSuper()){
-    $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivité</a></div>";
+    $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivitÃ©</a></div>";
 }
 
 

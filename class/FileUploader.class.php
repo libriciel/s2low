@@ -25,7 +25,7 @@ class FileUploader {
 	
 	public function verifOKAll($formFileName){
 		if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName] ) {
-			$this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
+			$this->lastError = "Il n'y a pas de fichier Ã  charger sur le serveur";
 	  	 	return false;
 		}
 		
@@ -45,7 +45,7 @@ class FileUploader {
 	
 	public function verifOK($formFileName){
 		if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName] ) {
-			$this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
+			$this->lastError = "Il n'y a pas de fichier Ã  charger sur le serveur";
 	  	 	return false;
 		}
 		
@@ -78,7 +78,7 @@ class FileUploader {
 		}		
 	  
 		if(file_exists($this->destinationDirectory.$this->fileName)) {
-	  		$this->lastError = "Le fichier ". $this->fileName." existe déjà sur le serveur";	   
+	  		$this->lastError = "Le fichier ". $this->fileName." existe dÃ©jÃ  sur le serveur";	   
 	   		return false;
 		}
   		if ($this->destinationDirectory){
@@ -103,22 +103,22 @@ class FileUploader {
 	private function setErrorMessage($code){
 		switch($code) {
 			case  UPLOAD_ERR_INI_SIZE   :
-				$message = "La taille du fichier excède la taille maximum (".ini_get('upload_max_filesize').")";
+				$message = "La taille du fichier excÃ¨de la taille maximum (".ini_get('upload_max_filesize').")";
 				break;
 			case UPLOAD_ERR_FORM_SIZE : 
-				$message = "Le fichier dépasse la taille limite autorisée par le formulaire";
+				$message = "Le fichier dÃ©passe la taille limite autorisÃ©e par le formulaire";
 				break;
 			case UPLOAD_ERR_PARTIAL: 
-				$message = "Le fichier n'a été que partiellement reçu";
+				$message = "Le fichier n'a Ã©tÃ© que partiellement reÃ§u";
 				break;	
 			case  UPLOAD_ERR_NO_FILE   :
-				$message = "Aucun fichier n'a été présenté"; 
+				$message = "Aucun fichier n'a Ã©tÃ© prÃ©sentÃ©"; 
 				break;
 			case UPLOAD_ERR_NO_TMP_DIR: 
-				$message = "Erreur de configuration : le répertoire temporaire n'existe pas";
+				$message = "Erreur de configuration : le rÃ©pertoire temporaire n'existe pas";
 				break;
 			case UPLOAD_ERR_CANT_WRITE  : 
-				$message = "Erreur de configuration : Impossible d'écrire dans le répertoire temporaire";
+				$message = "Erreur de configuration : Impossible d'Ã©crire dans le rÃ©pertoire temporaire";
 				break;
 			case UPLOAD_ERR_EXTENSION  : 
 				$message = "Une extension PHP empeche l'upload du fichier!";

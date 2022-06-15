@@ -13,7 +13,7 @@ class ActesSAEController extends Controller {
 
 		try {
 			$this->getObjectInstancier()->get(ActesArchiveControler::class)->sendArchiveThrow($transaction_id);
-			$message = "La transaction a été envoyé au SAE";
+			$message = "La transaction a Ã©tÃ© envoyÃ© au SAE";
 		} catch (Exception $e){
 			$message =  $e->getMessage();
 		}
@@ -33,9 +33,9 @@ class ActesSAEController extends Controller {
 		try {
 			$r = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class)->verifArchiveThrow($transaction_id);
 			if ($r){
-				$message = "La transaction a été vérifié sur le SAE";
+				$message = "La transaction a Ã©tÃ© vÃ©rifiÃ© sur le SAE";
 			} else {
-				$message = "La transaction n'a pas encore été traité par le SAE";
+				$message = "La transaction n'a pas encore Ã©tÃ© traitÃ© par le SAE";
 			}
 
 		} catch (Exception $e){
@@ -94,9 +94,9 @@ class ActesSAEController extends Controller {
             $actesTransactionSQL->updateStatus(
                 $transaction_id,
                 $status_id,
-                "Modification manuelle de l'état"
+                "Modification manuelle de l'Ã©tat"
             );
-            $this->setMessage("Le status de la transaction a été modifiée");
+            $this->setMessage("Le status de la transaction a Ã©tÃ© modifiÃ©e");
         } else {
             $this->setErrorMessage("Impossible de changer le status de la transaction");
         }
@@ -127,11 +127,11 @@ class ActesSAEController extends Controller {
             $actesTransactionsSQL->updateStatus(
                 $transaction_id,
                 $status_id_to,
-                "Modification manuelle de l'état"
+                "Modification manuelle de l'Ã©tat"
             );
         }
 
-        $this->setMessage("L'état des transactions a été modifié");
+        $this->setMessage("L'Ã©tat des transactions a Ã©tÃ© modifiÃ©");
         $this->redirect("/admin/authorities/admin_authority_sae_statistiques.php?id=$authority_id");
     }
 

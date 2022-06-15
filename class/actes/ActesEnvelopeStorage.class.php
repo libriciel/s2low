@@ -87,7 +87,7 @@ class ActesEnvelopeStorage {
 			return true;
 		}catch (Exception $e){
 			$this->logger->alert(
-				"Problème lors de la supression de l'acte $actes_envelope_file_path : " . $e->getMessage()
+				"ProblÃ¨me lors de la supression de l'acte $actes_envelope_file_path : " . $e->getMessage()
 			);
 			return false;
 		}

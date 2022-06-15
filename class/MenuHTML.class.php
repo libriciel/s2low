@@ -14,8 +14,8 @@ class MenuHTML  {
             <?php $this->displayUserMenu($userInfo,$modulesInfo) ; ?>
         <?php else: ?>
             <div id="menu-header">
-                <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-                (Certificat nécessaire)
+                <a href="<?php echo WEBSITE_SSL ?>">AccÃ©der au site</a><br />
+                (Certificat nÃ©cessaire)
             </div>
         <?php endif;?>
         </div>
@@ -72,9 +72,9 @@ class MenuHTML  {
                     $messageAdmin->displayTitre();
 
                         ?>
-                        Rôle <?php  echo $userInfo['role_str'] ?>
+                        RÃ´le <?php  echo $userInfo['role_str'] ?>
 			<?php if ($userInfo['nb_user_with_my_certificate'] > 1 ) : ?>
-			<br/><a href='<?php echo WEBSITE_SSL ?>/logout.php'>déconnexion</a>
+			<br/><a href='<?php echo WEBSITE_SSL ?>/logout.php'>dÃ©connexion</a>
 			<?php endif;?>
                     </div>
                     <ul class="text-menu nav">
@@ -87,11 +87,11 @@ class MenuHTML  {
 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php">Gestion des groupes</a></li>
 			<?php endif;?>
  			<?php if (in_array($userInfo['role'],array('SADM','GADM'))) : ?>
- 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>
+ 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authorities.php">Gestion des collectivitÃ©s</a></li>
 			<?php endif?>
 			<?php if ($userInfo['role'] == 'ADM') : ?>
- 				<li><a href="<?php echo WEBSITE_SSL ?>/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivité</a></li>
- 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_edit.php?id=<?php echo $userInfo["authority_id"] ?>">Paramètres collectivité</a></li>			
+ 				<li><a href="<?php echo WEBSITE_SSL ?>/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivitÃ©</a></li>
+ 				<li><a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_edit.php?id=<?php echo $userInfo["authority_id"] ?>">ParamÃ¨tres collectivitÃ©</a></li>			
  			<?php endif;?>
  			<?php if ($userInfo['role'] != 'USER') : ?>
  				
@@ -102,7 +102,7 @@ class MenuHTML  {
  		
  		
  			 <?php if ($userInfo['role'] == 'SADM') : ?>			
-				<li><a href="<?php echo WEBSITE_SSL ?>/admin/utilities/index.php">Utilitaires système</a></li>
+				<li><a href="<?php echo WEBSITE_SSL ?>/admin/utilities/index.php">Utilitaires systÃ¨me</a></li>
  			<?php endif;?>
  			<?php foreach ($module_admin as $module) : ?>
  				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/admin/index.php">Utilitaires module <?php echo $module["name"] ?></a></li>
@@ -127,7 +127,7 @@ class MenuHTML  {
 
 
             <li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" :""?></li>
-			<li><a href="<?php echo WEBSITE_SSL ?>/common/logs_view.php">Journal des événements</a></li>
+			<li><a href="<?php echo WEBSITE_SSL ?>/common/logs_view.php">Journal des Ã©vÃ©nements</a></li>
 			<?php foreach ($module_stat as $module) : ?>
 				<li><a href="<?php echo WEBSITE_SSL ?>/modules/<?php echo $module["name"] ?>/<?php echo $module["name"]?>_stats.php">Statistiques module <?php echo $module["name"] ?></a></li>
 			<?php endforeach;?>

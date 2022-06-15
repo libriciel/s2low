@@ -134,11 +134,11 @@ class PadesValidTest extends S2lowTestCase {
 
     public function provider(){
         return[
-            ['{"signatures":[],"signed":true}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
-            ['{"signatures":[]}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
+            ['{"signatures":[],"signed":true}',"","","",Exception::class,"Impossible de determiner si le fichier est signÃ©"],
+            ['{"signatures":[]}',"","","",Exception::class,"Impossible de determiner si le fichier est signÃ©"],
             ['',"last error","last output","404",Exception::class,"last error last output"],
             ['',"last error","last output","",RecoverableException::class,"last error last output"],
-            ["uzye","","","",Exception::class,"Impossible de décoder le message de pades-valid : "],
+            ["uzye","","","",Exception::class,"Impossible de dÃ©coder le message de pades-valid : "],
 
 
         ];

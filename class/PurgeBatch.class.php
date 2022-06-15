@@ -46,7 +46,7 @@ class PurgeBatch {
     public function read($prompt, $default = null) {
         echo utf8_encode($prompt . ' : ');
         if (!defined('STDIN')) {
-            $this->error('Saisie impossible, pas de flux d\'entrée.');
+            $this->error('Saisie impossible, pas de flux d\'entrÃ©e.');
         }
         $ret = utf8_decode(trim(fgets(STDIN)));
         if (empty($ret)) {
@@ -65,12 +65,12 @@ class PurgeBatch {
     }
 
     /**
-     * En mode http comme en mode 'cli', les paramètres sont fournis au format {name}={value}.<br>
+     * En mode http comme en mode 'cli', les paramÃ¨tres sont fournis au format {name}={value}.<br>
      * L'argument est obligatoire si $default est null ou STDIN.<br>
-     * La valeur peut être saisie, en mode CLI, si elle n'est pas fournie et
+     * La valeur peut Ãªtre saisie, en mode CLI, si elle n'est pas fournie et
      * que $defaut est STDIN.<br>
      * @param string $name
-     * @param mixed $default la valeur de l'argument si l'argument n'est pas déclaré.<br>
+     * @param mixed $default la valeur de l'argument si l'argument n'est pas dÃ©clarÃ©.<br>
      *      STDIN pour
      * @return mixed
      */
@@ -99,7 +99,7 @@ class PurgeBatch {
             return $argValue;
         }
         if (!isset($default)) {
-            throw new Exception('Paramètre \'' . $name . '\' non fourni');
+            throw new Exception('ParamÃ¨tre \'' . $name . '\' non fourni');
         }
         if (defined('STDIN') && ($default === STDIN)) {
             $argValue = $this->read($name);
@@ -109,9 +109,9 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une fonction en mesurant sa durée et la mémoire consommée.
-     * @param Closure $function fonction exécutant le traitement à mesurer. Aucun paramètre.
-     * @return array tableau à indexation numérique contenant le résultat de la fonction, la durée, la mémoire consommée
+     * ExÃ©cute une fonction en mesurant sa durÃ©e et la mÃ©moire consommÃ©e.
+     * @param Closure $function fonction exÃ©cutant le traitement Ã  mesurer. Aucun paramÃ¨tre.
+     * @return array tableau Ã  indexation numÃ©rique contenant le rÃ©sultat de la fonction, la durÃ©e, la mÃ©moire consommÃ©e
      */
     function mesurer($function) {
         $debut = microtime(true);
@@ -134,8 +134,8 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une requête INSERT et renvoie l'id du dernier élément ajouté.
-     * @return int id du dernier élément ajouté, ou FALSE en cas d'erreur (attention à la différence entre FALSE et 0)
+     * ExÃ©cute une requÃªte INSERT et renvoie l'id du dernier Ã©lÃ©ment ajoutÃ©.
+     * @return int id du dernier Ã©lÃ©ment ajoutÃ©, ou FALSE en cas d'erreur (attention Ã  la diffÃ©rence entre FALSE et 0)
      */
     function sqlInsert(PDOStatement $stmt, array $params = null) {
         /** @var $pdo PDO */
@@ -147,8 +147,8 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une requête UPDATE et renvoie le nombre de lignes modifiées.
-     * @return mixed nombre de lignes modifiées, ou FALSE en cas d'erreur (attention à la différence entre FALSE et 0)
+     * ExÃ©cute une requÃªte UPDATE et renvoie le nombre de lignes modifiÃ©es.
+     * @return mixed nombre de lignes modifiÃ©es, ou FALSE en cas d'erreur (attention Ã  la diffÃ©rence entre FALSE et 0)
      */
     function sqlUpdate(PDOStatement $stmt, array $params = null) {
         $result = $stmt->execute($params);
@@ -158,8 +158,8 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une requête DELETE et renvoie le nombre de lignes supprimées.
-     * @return mixed nombre de lignes supprimées, ou FALSE en cas d'erreur (attention à la différence entre FALSE et 0)
+     * ExÃ©cute une requÃªte DELETE et renvoie le nombre de lignes supprimÃ©es.
+     * @return mixed nombre de lignes supprimÃ©es, ou FALSE en cas d'erreur (attention Ã  la diffÃ©rence entre FALSE et 0)
      */
     function sqlDelete(PDOStatement $stmt, array $params = null) {
         $result = $stmt->execute($params);
@@ -169,8 +169,8 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une requête SELECT et renvoie tous les éléments
-     * @return array éléments, ou FALSE en cas d'erreur
+     * ExÃ©cute une requÃªte SELECT et renvoie tous les Ã©lÃ©ments
+     * @return array Ã©lÃ©ments, ou FALSE en cas d'erreur
      */
     function sqlSelect(PDOStatement $stmt, array $params = null) {
         $result = $stmt->execute($params);
@@ -183,8 +183,8 @@ class PurgeBatch {
     }
 
     /**
-     * Exécute une requête SELECT et renvoie une seule ligne
-     * @return array éléments, ou FALSE en cas d'erreur
+     * ExÃ©cute une requÃªte SELECT et renvoie une seule ligne
+     * @return array Ã©lÃ©ments, ou FALSE en cas d'erreur
      */
     function sqlSelectOne(PDOStatement $stmt, array $params = null) {
         $result = $stmt->execute($params);
@@ -231,7 +231,7 @@ class PurgeBatch {
     }
 
     /**
-     * Exécuter une méthode d'un objet, même si elle est private.
+     * ExÃ©cuter une mÃ©thode d'un objet, mÃªme si elle est private.
      * @param object $object
      * @param name $methodName
      * @param array $parameters

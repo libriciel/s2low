@@ -75,7 +75,7 @@ class XadesSignatureParserTest extends TestCase
         $xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("SigningTime non trouvé pour NoTarget");
+        $this->expectExceptionMessage("SigningTime non trouvÃ© pour NoTarget");
         $this->XadesSignatureParser->extractRawSigningTime($xml, 'NoTarget');
 
     }

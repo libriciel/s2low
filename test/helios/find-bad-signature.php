@@ -33,7 +33,7 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
     );
 
 	if (! $xadesSignature->isSigned($pes_aller)){
-		echo "Le fichier n'est pas signé\n";
+		echo "Le fichier n'est pas signÃ©\n";
 		continue;
 	}
 
@@ -44,7 +44,7 @@ foreach($transactions_list as $num_transaction => $transaction_helios){
 	    $verify = false;
     }
 
-	echo "Vérification : ".($verify?"OK":"FAIL")."\n";
+	echo "VÃ©rification : ".($verify?"OK":"FAIL")."\n";
 
 	if (! $verify){
 		$error_list[] = $transaction_helios['id'];

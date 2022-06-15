@@ -4,4 +4,4 @@ define("API_VERSION","1.2");
 
 echo API_VERSION. "\n";
 
-echo "S²low API mail sécurisé - version ". API_VERSION;
+echo "SÂ²low API mail sÃ©curisÃ© - version ". API_VERSION;

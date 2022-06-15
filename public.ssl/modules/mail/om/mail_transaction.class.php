@@ -5,8 +5,8 @@ require_once(SITEROOT . "/class/DataObject.class.php");
 class mail_transaction extends DataObject {
 
 	const STATUS_NO_CONFIRMATION = "aucune confirmation";
-	const STATUS_CONFIRMER_PARTIELLEMENT = "confirmé partiellement";
-	const STATUS_CONFIRMER = "confirmé";
+	const STATUS_CONFIRMER_PARTIELLEMENT = "confirmÃ© partiellement";
+	const STATUS_CONFIRMER = "confirmÃ©";
 	
 	public static function getTabStatus(){
 		return array(0=>'',self::STATUS_CONFIRMER,self::STATUS_NO_CONFIRMATION,self::STATUS_CONFIRMER_PARTIELLEMENT);
@@ -74,7 +74,7 @@ class mail_transaction extends DataObject {
 		return $this->status;
 	}
 	
-	//TODO : Orthographe défaillante (utilisé partout)...
+	//TODO : Orthographe dÃ©faillante (utilisÃ© partout)...
 	public function getDateEvnoi()
 	{
 		return $this->date_envoi;

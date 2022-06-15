@@ -30,20 +30,20 @@ class User extends DataObject {
   protected $certFilePath;
   protected $certPassphrase;
   protected $certificate_rgs_2_etoiles;
-  protected $dbFields = array( "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => true),
+  protected $dbFields = array( "email" => array( "descr" => "Adresse Ã©lectronique", "type" => "isEmail", "mandatory" => true),
 						 "subject_dn" => array( "descr" => "Dn du certificat", "type" => "isString", "mandatory" => true),
 						 "issuer_dn" => array( "descr" => "DN du fournisseur du certificat", "type" => "isString", "mandatory" => true),
 						 "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true),
-						 "givenname" => array( "descr" => "Prénom", "type" => "isString", "mandatory" => true),
- 						 "role" => array( "descr" => "Rôle", "type" => "isString", "mandatory" => true),
- 						 "telephone" => array( "descr" => "Téléphone", "type" => "isString", "mandatory" => false),
+						 "givenname" => array( "descr" => "PrÃ©nom", "type" => "isString", "mandatory" => true),
+ 						 "role" => array( "descr" => "RÃ´le", "type" => "isString", "mandatory" => true),
+ 						 "telephone" => array( "descr" => "TÃ©lÃ©phone", "type" => "isString", "mandatory" => false),
 						 "authority_group_id" => array( "descr" =>  "Groupe", "type" => "isInt", "mandatory" => false),
-						 "authority_id" => array( "descr" =>  "Collectivité", "type" => "isInt", "mandatory" => true),
-						 "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true),
+						 "authority_id" => array( "descr" =>  "CollectivitÃ©", "type" => "isInt", "mandatory" => true),
+						 "status" => array( "descr" => "Ã‰tat", "type" => "isInt", "mandatory" => true),
 						 "certificate" => array( "descr" => "Certificat de l'utilisateur", "type" => "isString", "mandatory" => false),
-						 "cert_not_before" => array( "descr" => "Date d'émission du certificat", "type" => "isDate", "mandatory" => true),
+						 "cert_not_before" => array( "descr" => "Date d'Ã©mission du certificat", "type" => "isDate", "mandatory" => true),
 						 "cert_not_after" => array( "descr" => "Date d'expiration du certificat", "type" => "isDate", "mandatory" => true),
-						 "cert_serial" => array( "descr" => "Numéro de série du certificat", "type" => "isDate", "mandatory" => true),
+						 "cert_serial" => array( "descr" => "NumÃ©ro de sÃ©rie du certificat", "type" => "isDate", "mandatory" => true),
   						"login" => array("descr" => "login","type"=>"isString","mandatory"=>false),
   						"password" => array("descr" => "password","type"=>"isString","mandatory"=>false),
   						"certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type"=>"isString","mandatory"=>false),
@@ -53,7 +53,7 @@ class User extends DataObject {
   protected $roleTypes = array(
 							   "SADM" => "Super administrateur",
 							   "GADM" => "Administrateur de groupe",
-							   "ADM" => "Administrateur collectivité",
+							   "ADM" => "Administrateur collectivitÃ©",
 							   "USER" => "Utilisateur"
 							   );
   protected $permsTypes = array(
@@ -69,14 +69,14 @@ class User extends DataObject {
   
   /**
    * \brief Constructeur d'un utilisateur
-   * \param $id integer (optionnel) : numéro d'identifiant de l'utilisateur
+   * \param $id integer (optionnel) : numÃ©ro d'identifiant de l'utilisateur
   */
   public function __construct($id = false) {
     parent::__construct($id);
   }
 
   /**
-   * \brief Méthode de vérification de la présence d'utilisateur dans la base
+   * \brief MÃ©thode de vÃ©rification de la prÃ©sence d'utilisateur dans la base
    * \return True si la base contient au moins un utilisateur, false sinon
   */
   public static function dbHasUser() {
@@ -107,18 +107,18 @@ class User extends DataObject {
 	}
 
   /**
-   * \brief Méthode d'authentification de l'utilisateur
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'authentification de l'utilisateur
+   * \return true si succÃ¨s, false sinon
    *
-   * Cette méthode vérifie qu'un utilisateur est bien autorisé à se connecter au système.
-   * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
-   * et initialiser les données de l'utilisateur.
+   * Cette mÃ©thode vÃ©rifie qu'un utilisateur est bien autorisÃ© Ã  se connecter au systÃ¨me.
+   * Elle se base sur les donnÃ©es du certificat prÃ©sentÃ© au serveur Web pour authentifier
+   * et initialiser les donnÃ©es de l'utilisateur.
   */
 	public function authenticate(int $authentProcess=Authentification::AUTHENTIFICATION_BY_APACHE) {
 		$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
 		$this->id = $authenfication->authenticate($authentProcess);
 
-		// Utile si on veut vérifier qui n'est pas en TLSv1.2
+		// Utile si on veut vÃ©rifier qui n'est pas en TLSv1.2
 		/*
 		if (isset($_SERVER['SSL_PROTOCOL']) && $_SERVER['SSL_PROTOCOL'] != 'TLSv1.2' ) {
 			file_put_contents(
@@ -136,16 +136,16 @@ class User extends DataObject {
 	}
 	
   /**
-   * \brief Méthode d'initialisation d'un utilisateur depuis la base de données
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'initialisation d'un utilisateur depuis la base de donnÃ©es
+   * \return true si succÃ¨s, false sinon
   */
   public function init() {
 	return (parent::init() && $this->initPerms());
   }
  
   /**
-   * \brief Méthode d'initialisation des permissions d'un utilisateur depuis la base de données
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'initialisation des permissions d'un utilisateur depuis la base de donnÃ©es
+   * \return true si succÃ¨s, false sinon
   */
   public function initPerms() {
 	if (isset($this->id)) {
@@ -161,13 +161,13 @@ class User extends DataObject {
 
 	  if (! $result->isError()) {
 		while ($row = $result->get_next_row()) {
-		  // Ajout de la permission uniquement si la collectivité est autorisée sur ce module
+		  // Ajout de la permission uniquement si la collectivitÃ© est autorisÃ©e sur ce module
 		  if ($this->isGroupAdminOrSuper() || ! empty($authModules[$row["module_id"]])) {
 			$this->perms[$row["name"]] = array("module_id" => $row["module_id"], "perm" => $row["perm"], "id" => $row["id"]);
 		  }
 		}
 	  } else {
-		$this->errorMsg = "User::initPerms - erreur de récupération des permissions de l'utilisateur";
+		$this->errorMsg = "User::initPerms - erreur de rÃ©cupÃ©ration des permissions de l'utilisateur";
 		return false;
 	  }
 
@@ -177,14 +177,14 @@ class User extends DataObject {
   }
 	
   /**
-   * \brief Méthode de remise à zéro des permission de l'objet utilisateur courant
+   * \brief MÃ©thode de remise Ã  zÃ©ro des permission de l'objet utilisateur courant
   */
   public function resetPerms() {
 	$this->perms = array();
   }
 	
   /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe ou un super administrateur
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est un administrateur de groupe ou un super administrateur
    * \return true si l'utilisateur est administrateur de groupe ou super administrateur, false sinon
   */
   public function isGroupAdminOrSuper() {
@@ -192,7 +192,7 @@ class User extends DataObject {
   }
   
   /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est un administrateur de groupe
    * \return true si l'utilisateur est administrateur de groupe, false sinon
   */
   public function isGroupAdmin() {
@@ -204,7 +204,7 @@ class User extends DataObject {
   }
 	
   /**
-   * \brief Méthode qui détermine si l'utilisateur est un super administrateur
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est un super administrateur
    * \return true si l'utilisateur est super administrateur, false sinon
   */
   public function isSuper() {
@@ -216,8 +216,8 @@ class User extends DataObject {
   }
 	
   /**
-   * \brief Méthode qui détermine si l'utilisateur est activé ou non
-   * \return true si l'utilisateur est activé, false s'il est désactivé
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est activÃ© ou non
+   * \return true si l'utilisateur est activÃ©, false s'il est dÃ©sactivÃ©
   */
   public function isActive() {
 	$authority = new Authority($this->authority_id);
@@ -227,7 +227,7 @@ class User extends DataObject {
 	  $group = new Group($authority->get("authority_group_id"));
 	  $groupIsActive = $group->isActive();
 	} else {
-	  // La collectivité n'appartient à aucun groupe
+	  // La collectivitÃ© n'appartient Ã  aucun groupe
 	  $groupIsActive = true;
 	}
 
@@ -252,13 +252,13 @@ class User extends DataObject {
 	       	return false;
 		}
 
-		// Si l'utilisateur est authentifié par certificat
+		// Si l'utilisateur est authentifiÃ© par certificat
 	    $this->issuer_dn = "";
         foreach ($tab['issuer'] as $key => $val) {
         	$this->issuer_dn .= "/" . $key . "=" . utf8_decode($val);
 		}
 
-		// Si l'utilisateur est authentifié par certificat
+		// Si l'utilisateur est authentifiÃ© par certificat
 		$this->subject_dn = "";
 		foreach ($tab['subject'] as $key => $val) {
 			$this->subject_dn .= "/" . $key . "=" . utf8_decode($val);
@@ -279,7 +279,7 @@ class User extends DataObject {
 	}
 
   /**
-   * \brief Méthode de réinitialisation de la session d'un utilisateur
+   * \brief MÃ©thode de rÃ©initialisation de la session d'un utilisateur
   */
   public function resetSession() {
     $_SESSION = array();
@@ -298,7 +298,7 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur, un administrateur de groupe ou un super administrateur
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est un administrateur, un administrateur de groupe ou un super administrateur
    * \return true si l'utilisateur est administrateur, administrateur de groupe ou super administrateur, false sinon
   */
   public function isAdmin() {
@@ -310,8 +310,8 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de collectivité
-   * \return true si l'utilisateur est administrateur de collectivité, false sinon
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur est un administrateur de collectivitÃ©
+   * \return true si l'utilisateur est administrateur de collectivitÃ©, false sinon
   */
   public function isAuthorityAdmin() {
 	if (isset($this->role) && $this->role == "ADM") {
@@ -322,8 +322,8 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode qui détermine si l'utilisateur courant à les droits pour modifier un autre utilisateur
-   * \param $id integer : Numéro d'identifiant de l'utilisateur a éditer
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur courant Ã  les droits pour modifier un autre utilisateur
+   * \param $id integer : NumÃ©ro d'identifiant de l'utilisateur a Ã©diter
    * \return true si l'utilisateur peut modifier, false sinon
   */
   public function canEditUser($id) {
@@ -341,21 +341,21 @@ class User extends DataObject {
 		$group = new Group($authority->get("authority_group_id"));
 		$inGroup = $this->role == "GADM" && $this->authority_group_id == $group->getId();
 	  } else {
-		// La collectivité n'appartient à aucun groupe
+		// La collectivitÃ© n'appartient Ã  aucun groupe
 		$inGroup = false;
 	  }
 
       return ($this->role == "SADM" || $inGroup || ($row["authority_id"] == $this->authority_id && $this->role == "ADM"));
     } else {
-      $this->errorMsg = "User::canEditUser - erreur de résultat requête base de données";
+      $this->errorMsg = "User::canEditUser - erreur de rÃ©sultat requÃªte base de donnÃ©es";
       return false;
     }
   }
 
   /**
-   * \brief Méthode qui détermine si l'utilisateur courant à les droits pour concéder des droits sur un module
+   * \brief MÃ©thode qui dÃ©termine si l'utilisateur courant Ã  les droits pour concÃ©der des droits sur un module
    * \param $name chaine : Nom du module
-   * \return true si l'utilisateur peut concéder, false sinon
+   * \return true si l'utilisateur peut concÃ©der, false sinon
   */
   public function canGrantModule($name) {
 	if (strcmp($this->getPerm($name), "GRANT") == 0) {
@@ -366,9 +366,9 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode retournant les permissions de l'utilisateur sur un module particulier
-   * \param $module chaîne : nom du module pour lequel récupérer les permissions
-   * \return La chaîne des permissions sur le module ou null si aucune permission trouvée
+   * \brief MÃ©thode retournant les permissions de l'utilisateur sur un module particulier
+   * \param $module chaÃ®ne : nom du module pour lequel rÃ©cupÃ©rer les permissions
+   * \return La chaÃ®ne des permissions sur le module ou null si aucune permission trouvÃ©e
   */
   public function getPerm($module) {
   	if (empty($this->perms[$module])){
@@ -378,25 +378,25 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode retournant la description du rôle de l'utilisateur en cours
-   * \return La description ou une chaîne vide si la decsription n'est pas trouvée
+   * \brief MÃ©thode retournant la description du rÃ´le de l'utilisateur en cours
+   * \return La description ou une chaÃ®ne vide si la decsription n'est pas trouvÃ©e
   */
   public function getRoleDescr() {
     return (isset($this->role)) ? $this->roleTypes[$this->role] : "";
   }
 
   /**
-   * \brief Méthode retournant les permissions de l'utilisateur en cours sur les modules
-   * \return Un tableau de permissions ou null si les permissions ne sont pas définies
+   * \brief MÃ©thode retournant les permissions de l'utilisateur en cours sur les modules
+   * \return Un tableau de permissions ou null si les permissions ne sont pas dÃ©finies
   */
   public function getPerms() {
     return (isset($this->perms)) ? $this->perms : null;
   }
 
   /**
-   * \brief Méthode déterminant si un utilisateur peut accéder à une page
-   * \param $module chaîne : nom du module
-   * \return True si l'utilisateur peut accéder ou false sinon
+   * \brief MÃ©thode dÃ©terminant si un utilisateur peut accÃ©der Ã  une page
+   * \param $module chaÃ®ne : nom du module
+   * \return True si l'utilisateur peut accÃ©der ou false sinon
   */
 	public function canAccess($module) {
 		if ($this->isGroupAdminOrSuper()) {
@@ -445,8 +445,8 @@ class User extends DataObject {
   }
   
   /**
-   * \brief Méthode déterminant si un utilisateur à accès en modification
-   * \param $module chaîne : nom du module
+   * \brief MÃ©thode dÃ©terminant si un utilisateur Ã  accÃ¨s en modification
+   * \param $module chaÃ®ne : nom du module
    * \return True si l'utilisateur peut modifier ou false sinon
   */
 	public function canEdit($module) {
@@ -470,10 +470,10 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode permettant de fixer les permissions d'un utilisateur sur un module
-   * \param $module_id integer : numéro d'identifiant du module dont fixer les permissions
-   * \param $perm chaîne : permission sur le module
-   * \return true si succès, false sinon
+   * \brief MÃ©thode permettant de fixer les permissions d'un utilisateur sur un module
+   * \param $module_id integer : numÃ©ro d'identifiant du module dont fixer les permissions
+   * \param $perm chaÃ®ne : permission sur le module
+   * \return true si succÃ¨s, false sinon
   */
   public function setPerm($module_id, $perm,array $specific_perms = array()) {
 	$module = new Module($module_id);
@@ -504,8 +504,8 @@ class User extends DataObject {
 	}
 
   /**
-   * \brief Méthode renvoyant le nom d'un utilisateur formatté "Prénom Nom"
-   * \return La chaîne du nom de l'utilisateur
+   * \brief MÃ©thode renvoyant le nom d'un utilisateur formattÃ© "PrÃ©nom Nom"
+   * \return La chaÃ®ne du nom de l'utilisateur
   */
   public function getPrettyName() {
     if (strlen($this->name) > 0) {
@@ -518,9 +518,9 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode d'enregistrement d'un utilisateur dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'enregistrement d'un utilisateur dans la base de donnÃ©es
+   * \param $validate boolÃ©en (optionnel) Demande la validation ou non des donnÃ©es de l'entitÃ© avant enregistrement (dÃ©faut : true)
+   * \return true si succÃ¨s, false sinon
   */
   public function save($validate = true,$bouchon_4_strict_standard = true) {
 	if (isset($this->certFilePath)) {
@@ -549,7 +549,7 @@ class User extends DataObject {
 	$sql = "DELETE FROM users_perms WHERE user_id=" . $this->id;
 
     if (! $this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la réinitialisation des permissions de l'utilisateur.";
+      $this->errorMsg = "Erreur lors de la rÃ©initialisation des permissions de l'utilisateur.";
 	  $this->db->rollback();
       return false;
     }
@@ -577,8 +577,8 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode d'import des informations contenus dans le certificat utilisateur
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'import des informations contenus dans le certificat utilisateur
+   * \return true si succÃ¨s, false sinon
   */
   private function importCert() {
 	if (isset($this->certFilePath)) {
@@ -615,8 +615,8 @@ class User extends DataObject {
 		$this->certificate_hash = $x509->getBase64Hash($this->certificate, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
 
 
-	  // Controle de l'existence d'un utilisateur avec les mêmes données de certificat.
-	  // Si un utilisateur a les mêmes données mais qu'il s'agit de l'utilisateur courant
+	  // Controle de l'existence d'un utilisateur avec les mÃªmes donnÃ©es de certificat.
+	  // Si un utilisateur a les mÃªmes donnÃ©es mais qu'il s'agit de l'utilisateur courant
 	  // on accepte => permet de modifier le certificat
 		$ids = $this->getIdFromCertData($this->certificate_hash);
 
@@ -626,7 +626,7 @@ class User extends DataObject {
 	  		$autre = new User($ids[0]);
 	  		$autre->init();
 	  		if (! $autre->get('login')){
-	  			$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
+	  			$this->errorMsg = "Un utilisateur avec les mÃªmes donnÃ©es de certificat existe dÃ©jÃ . Vous pouvez mettre un login/mot de passe pour les diffÃ©rencier";
   				return false;
 	  		}
 	  	}
@@ -634,13 +634,13 @@ class User extends DataObject {
 	  	if ($this->login) {
 	  		$id = $this->getIdFromLogin($this->login);
   			if ($id){
-  				$this->errorMsg = "Un utilisateur avec le même login existe déjà.";
+  				$this->errorMsg = "Un utilisateur avec le mÃªme login existe dÃ©jÃ .";
   				return false;
   			}
 
 	  		return true;
 	  	}
-		$this->errorMsg = "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier";
+		$this->errorMsg = "Un utilisateur avec les mÃªmes donnÃ©es de certificat existe dÃ©jÃ . Vous pouvez mettre un login/mot de passe pour les diffÃ©rencier";
 		return false;
 	  }
 
@@ -660,7 +660,7 @@ class User extends DataObject {
     $result = $this->db->select($sql,[$certificate_hash]);
 
 	if ($result->isError() || $result->num_row() == 0){
-		$this->errorMsg = "User::getIdFromCertData - Échec du mappage de l'utilisateur depuis les informations du certificat";
+		$this->errorMsg = "User::getIdFromCertData - Ã‰chec du mappage de l'utilisateur depuis les informations du certificat";
 		return false;
 	}
 
@@ -683,17 +683,17 @@ class User extends DataObject {
 	}
 
   /**
-   * \brief Méthode de suppression d'un utilisateur de la base de données
-   * \param $id integer (optionnel) Numéro d'identifiant de l'utilisateur, si non spécifié, entité en cours
-   * \return true si succès, false sinon
+   * \brief MÃ©thode de suppression d'un utilisateur de la base de donnÃ©es
+   * \param $id integer (optionnel) NumÃ©ro d'identifiant de l'utilisateur, si non spÃ©cifiÃ©, entitÃ© en cours
+   * \return true si succÃ¨s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    // Efface l'entitÃ© spÃ©cifiÃ©e par $id ou alors l'entitÃ© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && ! empty($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entitÃ© a supprimer";
 		return false;
       }
     }
@@ -726,9 +726,9 @@ class User extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération de la liste des utilisateurs
-   * \param $cond chaîne (optionnel) : condition à appliquer sur la requête SQL
-   * \return Un tableau contenant les données des utilisateurs
+   * \brief MÃ©thode de rÃ©cupÃ©ration de la liste des utilisateurs
+   * \param $cond chaÃ®ne (optionnel) : condition Ã  appliquer sur la requÃªte SQL
+   * \return Un tableau contenant les donnÃ©es des utilisateurs
   */
   public function getUsersList($cond = "") {
 	if (! $this->pagerInit('users.id, users.name, users.givenname, users.email, users.role, users.authority_group_id, users.telephone, users.status, users.authority_id, authorities.name AS authority_name, users.login, users.cert_not_after ', 'users LEFT OUTER JOIN authorities ON users.authority_id=authorities.id', $cond, 'users.name', null, null, "ASC")) {
@@ -750,7 +750,7 @@ class User extends DataObject {
       $row = $result->get_next_row();
       return $row["siren"];
     } else {
-      $this->errorMsg = "User::getUserSiren - Échec du mappage de l'utilisateur depuis les informations du certificat";
+      $this->errorMsg = "User::getUserSiren - Ã‰chec du mappage de l'utilisateur depuis les informations du certificat";
       return false;
     }
 	}
@@ -764,8 +764,8 @@ class User extends DataObject {
 	}
 
   /**
-   * \brief Méthode permettant de fixer la valeur d'un attribut
-   * \param $name chaîne : Nom de l'attribut
+   * \brief MÃ©thode permettant de fixer la valeur d'un attribut
+   * \param $name chaÃ®ne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   public function set($name, $val) {

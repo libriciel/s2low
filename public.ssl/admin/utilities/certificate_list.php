@@ -6,13 +6,13 @@ require_once( __DIR__ . "/../../../init/init-www.php");
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit();
 }
 
 if (! $me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit();
 }
@@ -36,7 +36,7 @@ if ($type == 'rgs'){
 $menuHTML = new MenuHTML();
 
 $doc = new HTMLLayout();
-$doc->setTitle("Liste des certificats - S²low");
+$doc->setTitle("Liste des certificats - SÂ²low");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -46,19 +46,19 @@ $doc->openContent();
 
 ob_start();
 ?>
-	<h1>Autorités de certification</h1>
+	<h1>AutoritÃ©s de certification</h1>
 
 
 
 	<div id="actions_area">
 		<h2>Actions</h2>
-		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=extended">Voir les certificats étendus</a>
+		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=extended">Voir les certificats Ã©tendus</a>
 		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=rgs">Voir les certificats RGS</a>
         <a class="btn btn-primary" href="/admin/utilities/test-certificate.php">Tester un certificat</a>
 	</div>
 
 
-<h2>Liste des certificats <?php echo $type=='rgs'?"RGS":"étendus" ?></h2>
+<h2>Liste des certificats <?php echo $type=='rgs'?"RGS":"Ã©tendus" ?></h2>
 
 <table class="data-table table table-striped ">
 <?php foreach($certificate_list as $i => $cert) : ?>

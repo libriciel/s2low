@@ -17,7 +17,7 @@ $all_transaction = $sqlQuery->query($sql);
 
 foreach ($all_transaction as $info) {
 	echo $info['transaction_id'];
-	$actesTransactionSQL->updateStatus($info['transaction_id'], -1, "Transaction passÈ en erreur");
+	$actesTransactionSQL->updateStatus($info['transaction_id'], -1, "Transaction pass√© en erreur");
 	echo " [OK]\n";
 	exit;
 }

@@ -16,11 +16,11 @@ $me = new User();
 $sortie = "";
 
 if (!$me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if (! $me->isGroupAdminOrSuper() && (!$module->isActive() || !$me->checkDroit($module->get("name"),'CS'))) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 $liste_id = array ();
@@ -43,12 +43,12 @@ if ($status == "valid") {
 	$new_status_id = 19;
     $actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 } else {
-	Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
+	Helpers::returnAndExit(1, "Ã‰tat incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 
 if ($status != 'sae' && $me->isGroupAdminOrSuper()){
-	Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+	Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
     
 foreach ($liste_id as $id) {
@@ -62,27 +62,27 @@ foreach ($liste_id as $id) {
 	}
 
     if ($trans->get("type") != 1) {
-      Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+      Helpers::returnAndExit(1, "Ce type de transaction ne peut pas Ãªtre cloturÃ©.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
     }
 
     if (! in_array($trans->get('last_status_id'),array(4,5,14,20,18))){
 	    $last_status_id = $trans->get('last_status_id');
-        $sortie .= "Cette transaction $id ne peut pas encore être clôturée (statut $last_status_id)\n";
+        $sortie .= "Cette transaction $id ne peut pas encore Ãªtre clÃ´turÃ©e (statut $last_status_id)\n";
         continue;
     }
 
     if ($trans->get('last_status_id') == 18 && $new_status_id != 6){
-        $sortie .= "La transaction $id en attente de signature peut seulement être rejeté\n";
+        $sortie .= "La transaction $id en attente de signature peut seulement Ãªtre rejetÃ©\n";
         continue;
     }
 
     if (! $trans->canValidate() && $new_status_id !=19 && $trans->get('last_status_id') != 18){
-        $sortie .= "Cette transaction $id ne peut pas encore être clôturée\n";
+        $sortie .= "Cette transaction $id ne peut pas encore Ãªtre clÃ´turÃ©e\n";
         continue;
     }
 
     if (in_array($new_status_id,[5,6]) && in_array($trans->get('last_status_id'),[5,6])){
-		$sortie .= "La transaction $id est déjà terminée et ne peut l'être de nouveau directement\n";
+		$sortie .= "La transaction $id est dÃ©jÃ  terminÃ©e et ne peut l'Ãªtre de nouveau directement\n";
 		continue;
 	}
 
@@ -90,28 +90,28 @@ foreach ($liste_id as $id) {
     $envelope = new ActesEnvelope($trans->get("envelope_id"));
     $envelope->init();
 
-    // Vérification des permissions
+    // VÃ©rification des permissions
     if ($status != 'sae' && (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->checkDroit($module->get("name"),'CS')))) {
-      Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
+      Helpers::returnAndExit(1, "AccÃ¨s refusÃ©.", WEBSITE_SSL . "/modules/actes/index.php");
     }
     
     if ($new_status_id == 19) {
     	$result = $actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA($me->getId(),$id);
 		if ($result){
-			$msg = "Programmation de l'envoi de la transaction $id à Pastell\n";
+			$msg = "Programmation de l'envoi de la transaction $id Ã  Pastell\n";
 	    	$severity = 1;
 	      	$status = 0;	
 		} else {
-			$msg= "Erreur lors de l'envoi de la transaction $id à Pastell : " . $actesPrepareEnvoiSAE->getLastError();
+			$msg= "Erreur lors de l'envoi de la transaction $id Ã  Pastell : " . $actesPrepareEnvoiSAE->getLastError();
 			$severity = 3;
 			$status = 1;
 		}
     } else if (! $trans->setNewStatus($new_status_id, "Fermeture par l'utilisateur " . $me->getPrettyName())) {
-      $msg = "Erreur lors de la tentative de passage de la transaction n°" . $trans->getId() . " vers l'état " . $types[$new_status_id] . ".\n";
+      $msg = "Erreur lors de la tentative de passage de la transaction nÂ°" . $trans->getId() . " vers l'Ã©tat " . $types[$new_status_id] . ".\n";
       $severity = 3;
       $status = 1;
     } else {
-      $msg = "Passage de la transaction n°" . $trans->getId() . " à l'état « " . $types[$new_status_id] . " ». Résultat ok.\n";
+      $msg = "Passage de la transaction nÂ°" . $trans->getId() . " Ã  l'Ã©tat Â« " . $types[$new_status_id] . " Â». RÃ©sultat ok.\n";
       $severity = 1;
       $status = 0;
     }

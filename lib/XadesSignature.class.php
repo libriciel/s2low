@@ -52,15 +52,15 @@ class XadesSignature {
      * @throws \Exception
      */
     public function sign($xml_file_to_sign, $p12_certificate_path, $p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties){
-	    //throw new Exception("La signature technique n'est plus implémenté dans s2low");
+	    //throw new Exception("La signature technique n'est plus implÃ©mentÃ© dans s2low");
 		$certificate_info = $this->getCertificateInfo($p12_certificate_path,$p12_password);
 
 		$domDocument = $this->loadDomDocument($xml_file_to_sign);
 		$document_id = $this->getDocumentId($domDocument);
 
 		if ($this->hasSignature($domDocument)){
-			//Limitation de cette classe : on ne fait pas de signature multiple enveloppé...
-			throw new XadesSignatureHasSignatureException("Le fichier à signer a déjà une signature");
+			//Limitation de cette classe : on ne fait pas de signature multiple enveloppÃ©...
+			throw new XadesSignatureHasSignatureException("Le fichier Ã  signer a dÃ©jÃ  une signature");
 		}
 
 		$signatureTemplate = $this->getXMLSignatureTemplate($document_id,$certificate_info,$xadesSignatureProperties);

@@ -72,11 +72,11 @@ class ActesImapRetrieve {
      * @throws UnrecoverableException
 	 */
     private function saveMail(Mailbox $mailbox,$mail_id){
-		$this->logger->info("Récupération du message : $mail_id");
+		$this->logger->info("RÃ©cupÃ©ration du message : $mail_id");
 		$tmp_dir = sys_get_temp_dir()."/".date("YmdHis")."_".mt_rand(0,mt_getrandmax());
 
         if (! mkdir( $tmp_dir)){
-            $exception_message = "Impossible de créer le répertoire $tmp_dir";
+            $exception_message = "Impossible de crÃ©er le rÃ©pertoire $tmp_dir";
 			$this->logger->info($exception_message);
             throw new UnrecoverableException($exception_message);
         }
@@ -85,7 +85,7 @@ class ActesImapRetrieve {
         $textHtml = $incomingMail->textHtml;
 
         if(empty($textHtml)){
-            $this->logger->info("Le corps du mail est vide, il ne sera pas sauvegardé");
+            $this->logger->info("Le corps du mail est vide, il ne sera pas sauvegardÃ©");
         } else {
             $message_body_path = $tmp_dir."/message_body.html";
             $this->logger->info("Sauvegarde du contenu du message HTML $message_body_path");
@@ -110,18 +110,18 @@ class ActesImapRetrieve {
 		}
 
 
-		$this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->actes_response_tmp_local_path}");
+		$this->logger->info("DÃ©placement du rÃ©pertoire $tmp_dir vers {$this->actes_response_tmp_local_path}");
 
         if (! file_exists($this->actes_response_tmp_local_path)){
         	throw new UnrecoverableException("{$this->actes_response_tmp_local_path} n'existe pas");
 		}
 
-        // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
+        // rename() fonctionne pas si on est sur deux systÃ¨mes de fichiers diffÃ©rents... ce qui est le cas sur docker
 		$command = "mv $tmp_dir {$this->actes_response_tmp_local_path}";
 
 		exec($command,$output,$return_var);
         if ($return_var != 0){
-        	throw new UnrecoverableException("Impossible de déplacer $tmp_dir ");
+        	throw new UnrecoverableException("Impossible de dÃ©placer $tmp_dir ");
 		}
 
 		$this->workerScript->putJobByClassName(
@@ -130,9 +130,9 @@ class ActesImapRetrieve {
 		);
     }
 
-    //Je vois vraiment pas pourquoi on doit faire ça
-    //Le simulateur Java est buggé : il envoi des fichiers en UTF-8, mais le cartouche <?xml indique ISO-8859-1
-    //Peut-être que de la même manière la plateforme DGCL envoi la meme chose ?
+    //Je vois vraiment pas pourquoi on doit faire Ã§a
+    //Le simulateur Java est buggÃ© : il envoi des fichiers en UTF-8, mais le cartouche <?xml indique ISO-8859-1
+    //Peut-Ãªtre que de la mÃªme maniÃ¨re la plateforme DGCL envoi la meme chose ?
     private function transcode($path){
         $out = exec("file -b --mime-encoding $path");
         if (preg_match("#utf-8#",$out)){

@@ -4,8 +4,8 @@
  * @deprecated
  * 
  * Cette fonction est deprecated, on doit utiliser : 
- * - actes_transac_get_files_list.php pour récupérer la liste des fichiers attachés à un acte.
- * - actes_download_file.php?file=id&tampon=true pour récupérer le fichier ou le fichier tamponné
+ * - actes_transac_get_files_list.php pour rÃ©cupÃ©rer la liste des fichiers attachÃ©s Ã  un acte.
+ * - actes_download_file.php?file=id&tampon=true pour rÃ©cupÃ©rer le fichier ou le fichier tamponnÃ©
  * 
  */
 
@@ -24,12 +24,12 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  echo "KO\nÉchec de l'authentification";
+  echo "KO\nÃ‰chec de l'authentification";
   exit();
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-  echo "KO\nAccès refusé";
+  echo "KO\nAccÃ¨s refusÃ©";
   exit();
 }
 
@@ -53,7 +53,7 @@ if (isset($transId) && ! empty($transId)) {
 	$zeTrans = new ActesTransaction();
 	$zeTrans->setId($transId);
 } else {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();
 }
 
@@ -61,7 +61,7 @@ if ($zeTrans->init()) {
 	$owner = new User($zeTrans->get("user_id"));
 	$owner->init();
 } else {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();
   }
 
@@ -71,10 +71,10 @@ if (! $zeEnv->init()) {
   exit();
 }
 
-// Vérification des permissions
+// VÃ©rification des permissions
 if (! $me->isSuper()) {
   if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $zeEnv->get("user_id") && $me->canAccess($module->get("name")))) {
-	echo "KO\nAccès refusé";
+	echo "KO\nAccÃ¨s refusÃ©";
 	exit();
   }
 }

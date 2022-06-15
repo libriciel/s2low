@@ -1,5 +1,5 @@
 <?php 
-//Attention, cette classe n'est pas utilisée partout EP
+//Attention, cette classe n'est pas utilisÃ©e partout EP
 class ModulePermission {
 	
 	private $service;

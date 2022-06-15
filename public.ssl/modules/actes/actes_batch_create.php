@@ -14,11 +14,11 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($module->get("name"))) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 $description = utf8_decode(Helpers::getVarFromPost("intitule"));
@@ -30,8 +30,8 @@ $zeBatch->set("description", $description);
 $zeBatch->set("num_prefix", $num_prefix);
 $zeBatch->set("user_id", $me->getId());
 
-//Stéphane Sampaio Edit
-//conversion du tableau $_FILES reçu pour adaptation au traitement
+//StÃ©phane Sampaio Edit
+//conversion du tableau $_FILES reÃ§u pour adaptation au traitement
 $converted = array();
 $filerefs = array();
 for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
@@ -53,7 +53,7 @@ for ($i = 0; $i <= max($filerefs);$i++){
   $converted[$name]['size'] = $_FILES['files']['size'][$i];
 }
 
-$logger->debug("Fichier reçu dans le lot",$converted);
+$logger->debug("Fichier reÃ§u dans le lot",$converted);
 //Fin
 $alljson = array();
 

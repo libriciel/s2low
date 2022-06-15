@@ -161,7 +161,7 @@ class ChangeMailDomainCommand extends Command
         $authorities = $this->authoritySQL->getAllGroup($group_id);
 
         if (count($authorities) === 0) {
-            throw new Exception("Aucune autorité liée au groupe $group_id, ou le groupe n'existe pas");
+            throw new Exception("Aucune autoritÃ© liÃ©e au groupe $group_id, ou le groupe n'existe pas");
         }
 
         return $authorities;

@@ -22,11 +22,11 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#RÃ©cupÃ©ration du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
         $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-		$this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Sauvegarde de.*foo-Ã©cole.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+		$this->assertRegExp("#DÃ©placement du rÃ©pertoire#", $logs[6][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
     }
 
@@ -80,11 +80,11 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#RÃ©cupÃ©ration du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertRegExp("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Le corps du mail est vide, il ne sera pas sauvegardÃ©#", $logs[4][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Sauvegarde de.*foo-Ã©cole.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#DÃ©placement du rÃ©pertoire#", $logs[6][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
     }
 
@@ -105,7 +105,7 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
 
 		$attachments= new StdClass;
-		$attachments->name = "foo-école.pdf";
+		$attachments->name = "foo-Ã©cole.pdf";
 		$attachments->filePath = __FILE__;
 
         $incomingMail = $this->getMockBuilder('PhpImap\IncomingMail')->disableOriginalConstructor()->getMock();

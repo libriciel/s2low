@@ -33,9 +33,9 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem");
     }
 
-    # Le point limitant de la date de validité de chaine de certification est le myCA.pem, avec
+    # Le point limitant de la date de validitÃ© de chaine de certification est le myCA.pem, avec
     # Not After : Jun 11 14:00:56 2025 GMT
-    # En juin, heure d'été => GMT+02:00
+    # En juin, heure d'Ã©tÃ© => GMT+02:00
 
     public function testVerifyJustBeforeItsCaExpires()
     {
@@ -70,7 +70,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = $this->verifyPemCertificateFactory->get("$baseCertificatesDir/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $this->expectExceptionMessageMatches("/Certificat rÃ©voquÃ©/");
         $verificator->checkCertificateWithOpenSSL("$baseCertificatesDir/dateOk/fullchain.pem");
     }
 
@@ -147,14 +147,14 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/revokedFromAC/");
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $this->expectExceptionMessageMatches("/Certificat rÃ©voquÃ©/");
         $verificator->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR."/dateOk/fullchain.pem",
             VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
         );
     }
 
-    public function testVerifyWithoutCheckingCertificateChainACertificateWithNoRecognizedCA()   #NOUVEAU : si la date est ok, le résultat devrait être ok
+    public function testVerifyWithoutCheckingCertificateChainACertificateWithNoRecognizedCA()   #NOUVEAU : si la date est ok, le rÃ©sultat devrait Ãªtre ok
     {
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
@@ -171,13 +171,13 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 
         $this->expectNotToPerformAssertions();
-        $verificator->checkCertificateWithOpenSSL(                              //Même si ce n'est pas ok, l'erreur
+        $verificator->checkCertificateWithOpenSSL(                              //MÃªme si ce n'est pas ok, l'erreur
             self::BASE_CERTIFICATES_DIR."/dateKo/fullchain.pem",   // n'apparait pas car Openssl verify
-            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS          // s'arrête avant la vérification
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS          // s'arrÃªte avant la vÃ©rification
         );
     }
 
-    public function testVerifyWithoutCheckingCertificateChainAnAutosignedCertificate()            #NOUVEAU : si la date est ok, le résultat devrait être ok
+    public function testVerifyWithoutCheckingCertificateChainAnAutosignedCertificate()            #NOUVEAU : si la date est ok, le rÃ©sultat devrait Ãªtre ok
     {
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR."/dateOk/emptyac/");
 

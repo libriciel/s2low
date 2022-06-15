@@ -39,7 +39,7 @@ class HeliosPrepareEnvoiSAE {
 
 			if (!in_array($transaction_info['last_status_id'], array(8,4, 6, 11,20))) {
 				throw new UnrecoverableException(
-					"Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé »."
+					"Impossible d'archiver une transaction qui n'est pas en Ã©tat Â« Information disponible Â», Â« acquittÃ© Â» ou Â« refusÃ© Â»."
 				);
 			}
 			$this->authoritySQL->verifHasPastell($transaction_info[HeliosTransactionsSQL::AUTHORITY_ID]);
@@ -87,20 +87,20 @@ class HeliosPrepareEnvoiSAE {
 			return true;
 		}
 		if ($user_info['role'] != 'ADM'){
-			throw new UnrecoverableException("Accès interdit");
+			throw new UnrecoverableException("AccÃ¨s interdit");
 		}
 		if ($user_info[UserSQL::AUTHORITY_ID] == $transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]){
 			return true;
 		}
 
-		throw new UnrecoverableException("Accès interdit");
+		throw new UnrecoverableException("AccÃ¨s interdit");
 	}
 
 	public function setArchiveEnAttenteEnvoiSEAManuellement(
 		int $authority_id,
 		$nb_days = HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER
 	){
-		$this->logger->info("Début du script");
+		$this->logger->info("DÃ©but du script");
 		$transaction_id_list = $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
 			$nb_days,
 			$authority_id,
@@ -112,7 +112,7 @@ class HeliosPrepareEnvoiSAE {
 		);
 
 		$this->logger->info(sprintf(
-			"%d transaction(s) vont être traité(s)",
+			"%d transaction(s) vont Ãªtre traitÃ©(s)",
 			count($transaction_id_list)
 		));
 

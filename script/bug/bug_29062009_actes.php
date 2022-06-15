@@ -1,8 +1,8 @@
 <?php 
 exit;
 //Correction du bug survenu le 29/06/2009 
-//La plateforme n'a pas convenablement horodatÈ l'ensemble des changement d'Ètat
-//08h32min22s ‡ 18h16min27s
+//La plateforme n'a pas convenablement horodat√© l'ensemble des changement d'√©tat
+//08h32min22s √† 18h16min27s
 
 
 require_once (dirname(__FILE__)."/../config/config.php");
@@ -32,10 +32,10 @@ while ($row = $result->get_next_row()) {
 	$r2 = $db->select($sql);
 	$cpt = $r2->get_next_row();
 	if ($cpt['count']) {
-		echo " -- DÈj‡ dans la base";
+		echo " -- D√©j√† dans la base";
 	} else {
 		Log::newEntry('TdT', $msg, 1, $row['date'], 'USER', 'actes', false , $row['user_id']);
-		echo " -- AjoutÈ dans la base";
+		echo " -- Ajout√© dans la base";
 	}	
 	echo "\n";	
 }

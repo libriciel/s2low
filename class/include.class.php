@@ -19,7 +19,7 @@ if (php_sapi_name() != 'cli'){
 }
 
 /*
- * Ce fichier à l'air d'être inclu dans tous les scripts S²low
+ * Ce fichier Ã  l'air d'Ãªtre inclu dans tous les scripts SÂ²low
  * 
  */
 function hecho($message,$quot_style=ENT_QUOTES){
@@ -66,7 +66,7 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
 }
 
 
-//Cette variable est utilisée partout sans être initialisé...
+//Cette variable est utilisÃ©e partout sans Ãªtre initialisÃ©...
 $html = "";
 
 $jsonOutput = new JSONoutput();

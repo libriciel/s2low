@@ -78,7 +78,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
      */
     public function testDonwloadWithFilenameAndAccents(){
         $mail_transaction_id = $this->createMailTransaction();
-        $this->addFile($mail_transaction_id,'fooé.txt');
+        $this->addFile($mail_transaction_id,'fooÃ©.txt');
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
@@ -91,7 +91,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
 
         $mailsecDownloadController = $this->getObjectInstancier()->get(MailsecDownloadController::class);
 
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('filename','fooé.txt');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('filename','fooÃ©.txt');
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('root',$this->fn_download_payload);
 
         ob_start();
@@ -101,7 +101,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
         $contents = ob_get_contents();
         ob_end_clean();
 
-        $this->assertStringContainsString(iconv('ISO-8859-1','UTF-8',"Ceci est un test avec un é"),$contents);
+        $this->assertStringContainsString(iconv('ISO-8859-1','UTF-8',"Ceci est un test avec un Ã©"),$contents);
     }
 
 	/**

@@ -77,8 +77,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
 
         if(!$archive_path){
-            $this->logger->error("[$envelope_libelle] Non trouvée en local ou sur le cloud");
-            throw new RecoverableException("[$envelope_libelle] Non trouvée en local ou sur le cloud");
+            $this->logger->error("[$envelope_libelle] Non trouvÃ©e en local ou sur le cloud");
+            throw new RecoverableException("[$envelope_libelle] Non trouvÃ©e en local ou sur le cloud");
         }
 
 		$this->logger->debug("[$envelope_libelle] Emplacement de l'archive :  $archive_path");
@@ -103,7 +103,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         	try {
 
 			    if ($this->actes_type_pj_is_mandatory){
-			        // C'est pas très joli...
+			        // C'est pas trÃ¨s joli...
                     $archive->setValidationTypologieByNature($this->actesTypePJSQL->getListByNature());
                 }
 
@@ -135,7 +135,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
         $this->actesScriptHelper->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
-            "Accepté par le TdT : validation OK"
+            "AcceptÃ© par le TdT : validation OK"
         );
 
 		$this->workerScript->putJobByClassName(ActesEnvoiFichierWorker::class,$enveloppe_id);
@@ -185,15 +185,15 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 		} catch(RecoverableException $e){
         	throw $e;
 		} catch (Exception $e){
-        	throw new Exception("Problème sur ".basename($filepath)." : " . $e->getMessage(),$e->getCode(),$e);
+        	throw new Exception("ProblÃ¨me sur ".basename($filepath)." : " . $e->getMessage(),$e->getCode(),$e);
 		}
     }
 
 	/**
 	 *
-	 * On ne valide pas le certificat sur les marchés publics car les soumissionnaire peuvent le signer avec n'importe quel certificat
-	 * Cela n'est de toute manière pas une exigence.
-	 * On le fait sur le reste pour s'assurer que la collectivité signe avec des certificat valides (délib, arreté, ...)
+	 * On ne valide pas le certificat sur les marchÃ©s publics car les soumissionnaire peuvent le signer avec n'importe quel certificat
+	 * Cela n'est de toute maniÃ¨re pas une exigence.
+	 * On le fait sur le reste pour s'assurer que la collectivitÃ© signe avec des certificat valides (dÃ©lib, arretÃ©, ...)
 	 *
 	 *
 	 * @param $transaction_ids

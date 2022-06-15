@@ -185,13 +185,13 @@
 
 			var certSelector = '<div id="libersign-cert-select">';
 			if (certsList.length > 1) {
-				certSelector += '<span class="text-info">Sélectionnez un certificat de signature :</span>';
+				certSelector += '<span class="text-info">SÃ©lectionnez un certificat de signature :</span>';
 			}
 
 			if (certsList.length === 0) {
-				certSelector += '<span class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Aucun certificat de signature détecté</span>';
+				certSelector += '<span class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Aucun certificat de signature dÃ©tectÃ©</span>';
 			} else {
-				certSelector += '<table class="table"><thead> <tr> <th></th> <th></th> <th>Nom</th> <th>Émetteur</th> <th>Date d\'expiration</th></tr></thead><tbody class="certificateList">';
+				certSelector += '<table class="table"><thead> <tr> <th></th> <th></th> <th>Nom</th> <th>Ã‰metteur</th> <th>Date d\'expiration</th></tr></thead><tbody class="certificateList">';
 
 				certsList.forEach(function (element, index) {
 					certSelector += constructCertificateRow(element);
@@ -240,7 +240,7 @@
 			var month = ("0" + (date.getMonth() + 1)).slice(-2);
 			var year = date.getFullYear();
 
-			certSelector += '<tr><td class="libersign-fav"><span title="Sélectionner en favori" class="'+ config.iconType + ' ' + icons[config.iconType].emptyStar + '"></span></td>';
+			certSelector += '<tr><td class="libersign-fav"><span title="SÃ©lectionner en favori" class="'+ config.iconType + ' ' + icons[config.iconType].emptyStar + '"></span></td>';
 			certSelector += '<td style="text-align: center">';
 			if (cert.verifiedWith.indexOf('RGS') != -1) {
 				certSelector += '<span class="libersign-tooltip label label-success">RGS</span>'
@@ -264,7 +264,7 @@
 
 		var clickOnFav = function () {
 			// '+ config.iconType + ' ' + icons[config.iconType].warn + '
-			$(that).find("tbody > tr > .libersign-fav > span").removeClass("text-warning").removeClass(icons[config.iconType].star).addClass(icons[config.iconType].emptyStar).attr("data-original-title", "Sélectionner en favori");
+			$(that).find("tbody > tr > .libersign-fav > span").removeClass("text-warning").removeClass(icons[config.iconType].star).addClass(icons[config.iconType].emptyStar).attr("data-original-title", "SÃ©lectionner en favori");
 			$(this).find("span").removeClass(icons[config.iconType].emptyStar).addClass("text-warning").addClass(icons[config.iconType].star).attr("data-original-title", "Certificat favori");
 
 			localStorage.setItem("libersign-fav", certsList[$(this).parent().index()].ID);
@@ -289,7 +289,7 @@
 
 			$(that).trigger('libersign.loaded');
 
-			var htmlError = '<div class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Chargement de LiberSign impossible. Merci de vérifier l\'installation.</div>';
+			var htmlError = '<div class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Chargement de LiberSign impossible. Merci de vÃ©rifier l\'installation.</div>';
 
 			if (config.installRedirect) {
 				htmlError += '<a onclick="$(this).trigger(\'libersign.cancel\');" href="' + config.installRedirect + '" >Aide d\'installation</a>';
@@ -318,9 +318,9 @@
 			return '<div  class="libersign-loader"></div>' +
 				'<span id="libersign-cert-load" class="text-info">Chargement des certificats disponibles en cours...</span>' +
 				'<span id="libersign-signing" style="display:none;" class="text-info">Signature en cours...</span>' +
-				'<span id="libersign-signed" style="display:none;" class="text-success">Document(s) signé(s). Envoi des informations de signature au serveur...</span>' +
+				'<span id="libersign-signed" style="display:none;" class="text-success">Document(s) signÃ©(s). Envoi des informations de signature au serveur...</span>' +
 				'<span id="libersign-error" style="display:none;" class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Erreur lors de la signature.<br/><span id="libersign-message"></span><br/><button id="libersign-error-confirm" class="btn btn-default">Retour</button></span>' +
-				'<span id="libersign-no-impl" style="display:none;" class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Installation de LiberSign incomplète. Merci d\'installer l\'application cliente</span>';
+				'<span id="libersign-no-impl" style="display:none;" class="text-danger"><i class="'+ config.iconType + ' ' + icons[config.iconType].warn + '"></i> Installation de LiberSign incomplÃ¨te. Merci d\'installer l\'application cliente</span>';
 		};
 
 		var methods = {

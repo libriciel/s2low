@@ -25,7 +25,7 @@
 					<?php endforeach; ?>
 				</select>
 			</div>
-			<label for="severity-choice" class="col-md-3 control-label">Sévérité</label>
+			<label for="severity-choice" class="col-md-3 control-label">SÃ©vÃ©ritÃ©</label>
 			<div class="col-md-3">
 				<select name="severity" class="form-control">
 					<option value="-1" <?php  echo $fseverity==-1?'selected="selected"':''?>>Choisissez</option>
@@ -36,7 +36,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="date_debut" class="col-md-3 control-label">Date de début</label>
+			<label for="date_debut" class="col-md-3 control-label">Date de dÃ©but</label>
 			<div class="col-md-3">
 				<input id="date_debut" name="date_debut" type="hidden" value="<?php hecho($date_debut) ?>"/>
 				<script type="text/javascript">
@@ -79,7 +79,7 @@
 		<?php if($this->me->isAdmin()): ?>
 			<div class="form-group">
 				<?php 	if ($this->me->isGroupAdminOrSuper()) : ?>
-					<label for="collectivity-choice" class="col-md-3 control-label">Collectivité</label>
+					<label for="collectivity-choice" class="col-md-3 control-label">CollectivitÃ©</label>
 					<div class="col-md-3">
 						<select name="authority" class="form-control">
 							<option value="">Choisissez</option>
@@ -100,20 +100,20 @@
 		</div>
 	</form>
 </div>
-<h2>Entrées du journal</h2>
+<h2>EntrÃ©es du journal</h2>
 <div id="journal_area">
 	<?php if (! $logs_list) : ?>
-		Aucune entrée du journal ne correspond au filtrage spécifié.
+		Aucune entrÃ©e du journal ne correspond au filtrage spÃ©cifiÃ©.
 	<?php else : ?>
 
 		<table class="logs data-table table table-striped"
-			   summary="Ce tableau présente respectivement la date, l'auteur, la sévérité, le module, le message et un lien vers une archive de chaque événement du journal">
-			<caption>Liste des événements du journal en fonction des choix de filtrage</caption>
+			   summary="Ce tableau prÃ©sente respectivement la date, l'auteur, la sÃ©vÃ©ritÃ©, le module, le message et un lien vers une archive de chaque Ã©vÃ©nement du journal">
+			<caption>Liste des Ã©vÃ©nements du journal en fonction des choix de filtrage</caption>
 			<thead>
 				<tr>
 					<th id="date" class="data">Date</th>
-					<th id="author" class="data">Créé par</th>
-					<th id="severity" class="data">Sévérité</th>
+					<th id="author" class="data">CrÃ©Ã© par</th>
+					<th id="severity" class="data">SÃ©vÃ©ritÃ©</th>
 					<th id="module" class="data">Module</th>
 					<th id="user" class="data">Utilisateur</th>
 					<th id="message" class="data">Message</th>
@@ -145,7 +145,7 @@
 					</td>
 					<td headers="timestamp">
 							<a href="<?php echo WEBSITE_SSL ?>/common/logs_get_timestamp.php?id=<?php echo $logEntry["id"] ?>"
-							   title="Télécharger une archive contenant l'entrée de journal n°<?php echo $logEntry["id"] ?> et sa signature"
+							   title="TÃ©lÃ©charger une archive contenant l'entrÃ©e de journal nÂ°<?php echo $logEntry["id"] ?> et sa signature"
 							   class="icon">
 								<img src="<?php echo WEBSITE_SSL ?>/custom/images/timestamping_icon.png" alt="timestamp" />
 							</a>

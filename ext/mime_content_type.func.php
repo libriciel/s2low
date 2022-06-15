@@ -5,7 +5,7 @@ if (! function_exists("mime_content_type")) {
 	
 //La fonction mime_content_type semble ne pas exister sur 
 // certaine installation du paquet PHP5 d'Ubuntu 8.04
-// L'implémentation suivante ne fonctionne que sous Linux (commande file)
+// L'implÃ©mentation suivante ne fonctionne que sous Linux (commande file)
 
 function mime_content_type ($filename) {
     

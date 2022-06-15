@@ -26,7 +26,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $actesEnvoiFichierController->sendAllEnvelopes();
         $logs = $this->getLogRecords();
         $this->assertRegExp("#Lancement du script#",$logs[0]['message']);
-        $this->assertRegExp("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
+        $this->assertRegExp("#Envoie de 0 enveloppes de transaction Ã  l'Ã©tat EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
         $this->assertRegExp("#Fin du script#",$logs[2]['message']);
     }
 
@@ -50,7 +50,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat transmis#",$liste['message']);
     }
 
 	public function testEnvoiUneEnveloppeMauvaisEtat(){
@@ -79,7 +79,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
 		);
 
 		$this->assertEquals(
-			"La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
+			"La transaction $transaction_id Ã  poster n'est pas en attente de transmission : Ã©tat 3 trouvÃ©",
 			$this->getLogRecords()[0]['message']
 		);
 	}

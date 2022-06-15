@@ -46,8 +46,8 @@ class ActesStatusSQL {
 	    $status_libelle_list = [
 	        19 => "En attente de transmission au SAE",
 	        20 => "Erreur lors de l'envoi au SAE",
-            12 => "Envoyé au SAE",
-            13 => "Archivé par le SAE",
+            12 => "EnvoyÃ© au SAE",
+            13 => "ArchivÃ© par le SAE",
             14 => "Erreur lors de l'archivage",
         ];
 

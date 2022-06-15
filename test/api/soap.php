@@ -29,7 +29,7 @@ print_r($client->getDia(12));
 /*$id = 13;
 print_r($client->setAE($id,"titi.xml","<titi/>"));*/
 
-//print_r($client->setErreur(15,utf8_encode("j'ai pas envie d'aller à l'école")));
+//print_r($client->setErreur(15,utf8_encode("j'ai pas envie d'aller Ã  l'Ã©cole")));
 
 $response = $client->__getLastResponse();
 $xml = simplexml_load_string($response);

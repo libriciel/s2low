@@ -6,7 +6,7 @@
 <h1>Message d'urgence</h1>
 
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="/admin/message/">Revenir à la liste des messages
+	<a class="btn btn-default" href="/admin/message/">Revenir Ã  la liste des messages
 	</a><br>
 </p>
 
@@ -17,15 +17,15 @@
 
 	<table class="data-table table table-striped">
 		<tr>
-			<th>Numéro du message</th>
+			<th>NumÃ©ro du message</th>
 			<td><?php hecho($messageAdmin->message_id) ?></td>
 		</tr>
 		<tr>
-			<th>État</th>
+			<th>Ã‰tat</th>
 			<td><?php $messageAdmin->displayEtatLabel() ?></td>
 		</tr>
 		<tr>
-			<th>Dernier rédacteur</th>
+			<th>Dernier rÃ©dacteur</th>
 			<td><?php hecho($messageAdmin->user_name) ?></td>
 		</tr>
 		<tr>

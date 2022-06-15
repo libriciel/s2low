@@ -37,7 +37,7 @@ class Antivirus {
         $tmpFolder->delete($tmp_dir);
 
         if ($ret === 1){
-            $this->last_error = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
+            $this->last_error = "L'archive est infectÃ©e par un virus. Retour de l'antivirus&nbsp;:<br />\n";
             // Format de ligne : /Nom/de/fichier: Nom virus
             foreach (explode("\n",$output) as $line) {
                 if (preg_match('/^\/.*: .* FOUND$/', $line)) {
@@ -68,7 +68,7 @@ class Antivirus {
         $ret = $this->shellCommand->exec([$this->antivirus_command, __FILE__]);
 		if ($ret !== 0){
 	        $output = $this->shellCommand->getLastOutput();
-            throw new Exception("Problème avec l'antivirus : $output");
+            throw new Exception("ProblÃ¨me avec l'antivirus : $output");
 		}
         return true;
 	}

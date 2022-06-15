@@ -12,12 +12,12 @@ $sql = "SELECT * FROM helios_transactions WHERE last_status_id=".HeliosStatusSQL
 $allTransaction = $sqlQuery->query($sql);
 $heliosFile = new HeliosFiles(HELIOS_FILES_UPLOAD_ROOT,HELIOS_RESPONSES_ROOT);
 
-echo count($allTransaction) . " transactions Helios trouvées dans l'état a détruire\n";
+echo count($allTransaction) . " transactions Helios trouvÃ©es dans l'Ã©tat a dÃ©truire\n";
 
 foreach($allTransaction as $transactionInfo){
     $heliosFile->deleteFiles($transactionInfo);
 
-    $msg = "Les fichiers de la transaction {$transactionInfo['id']} ont été détruits";
+    $msg = "Les fichiers de la transaction {$transactionInfo['id']} ont Ã©tÃ© dÃ©truits";
 
     $heliosTransactionsSQL->updateStatus($transactionInfo['id'],HeliosStatusSQL::DETRUITE, $msg);
     Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "helios", false,$transactionInfo['user_id']);

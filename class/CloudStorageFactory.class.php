@@ -29,7 +29,7 @@ class CloudStorageFactory {
 		$icloudStorable = $this->objectInstancier->get($classname);
 		if (! $icloudStorable instanceof ICloudStorable){
 			throw new UnrecoverableException(
-				"Impossible de créer un CloudStorage à partir d'un objet $classname"
+				"Impossible de crÃ©er un CloudStorage Ã  partir d'un objet $classname"
 			);
 		}
 		return $this->getInstance($icloudStorable);

@@ -25,7 +25,7 @@ class PemCertificateFactory
         $x509_info = openssl_x509_parse($certificate);
 
         if(!$x509_info){
-            throw new Exception("Problème à l'ouverture du certificat : ".openssl_error_string());
+            throw new Exception("ProblÃ¨me Ã  l'ouverture du certificat : ".openssl_error_string());
         }
         return $x509_info;
     }

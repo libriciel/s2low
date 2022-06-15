@@ -1,6 +1,6 @@
 <?php
 
-//Note : SoapClient crée un fichier de cache du WSDL, voir http://www.php.net/manual/en/soap.configuration.php
+//Note : SoapClient crÃ©e un fichier de cache du WSDL, voir http://www.php.net/manual/en/soap.configuration.php
 
 class SoapClientFactory {
 

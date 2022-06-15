@@ -31,7 +31,7 @@ class Droit {
 
 
 
-    //Repond à la question : est-ce que tel utilisateur peut accéder au module XYZ
+    //Repond Ã  la question : est-ce que tel utilisateur peut accÃ©der au module XYZ
     //TODO : A tester et remplacer la fonction plus bas
     public function canAccessNG($user_id,$module_name = ''){
 

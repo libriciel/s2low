@@ -36,7 +36,7 @@ class OpenStackStateManager{
             "[Openstack][$this->unsuccessfullConsecutiveAttempts] $message"
         );
         if($this->unsuccessfullConsecutiveAttempts > self::MAX_CONSECUTIVE_ATTEMPTS){
-            throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
+            throw new PausingQueueException("[Openstack] Nombre de tentatives dÃ©passÃ©");
         }
     }
 
@@ -56,12 +56,12 @@ class OpenStackStateManager{
     {
         $ExceptionClass = get_class($e);
         if ($ExceptionClass === ConnectException::class) {
-            // Erreur 404 rencontrée lorsque le serveur n'est pas accessible
+            // Erreur 404 rencontrÃ©e lorsque le serveur n'est pas accessible
             $message = "Erreur Guzzle : " . $e->getMessage();
         } elseif ($ExceptionClass === BadResponseError::class) {
             $statusCode = $e->getResponse()->getStatusCode();
             if ($statusCode === 401) {
-                // Erreur d'authentification : on se réauthentifie
+                // Erreur d'authentification : on se rÃ©authentifie
                 $message = "Erreur d'authentification";
             } else {
                 $message = "Erreur $statusCode : " . $e->getResponse()->getReasonPhrase();

@@ -1,7 +1,7 @@
 
 <h1>Gestion du service <?php hecho($groupe['name']);?></h1>
 
-<p id="back-admin-services-btn"><a class="btn btn-default" href='admin_services.php?authority_id=<?php echo $groupe['authority_id']?>'>Revenir à l'affichage des services</a></p>
+<p id="back-admin-services-btn"><a class="btn btn-default" href='admin_services.php?authority_id=<?php echo $groupe['authority_id']?>'>Revenir Ã  l'affichage des services</a></p>
 
 <h2>Liste des utilisateurs de <?php hecho($groupe['name'])?></h2>
 <div>
@@ -18,7 +18,7 @@
                     </li>
                 <?php endforeach;?>
             </ul>
-            Pour la sélection : <input type='submit' class='btn btn-primary btn-sm' value='enlever du service'/>
+            Pour la sÃ©lection : <input type='submit' class='btn btn-primary btn-sm' value='enlever du service'/>
         </form>
         <br/>
     <?php else : ?>

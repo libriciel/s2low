@@ -3,7 +3,7 @@
 /**
  * Ce script lance la notification manuelle de l'acquittement d'un acte
  *
- * NOTE : Ce script a l'air de faire partie de l'API (il prend en charge une liste d'id à notifier....) (EP) */
+ * NOTE : Ce script a l'air de faire partie de l'API (il prend en charge une liste d'id Ã  notifier....) (EP) */
 
 require_once ("../../../config/config.php");
 require_once (SITEROOT . '/class/include.class.php');
@@ -20,12 +20,12 @@ $me = new User();
 $sortie = "";
 
 if (!$me->authenticate()) {
-  Helpers :: returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers :: returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
-// Un super admin ne peut pas accéder à cette page
+// Un super admin ne peut pas accÃ©der Ã  cette page
 if (!$module->isActive() || $me->isGroupAdminOrSuper() || !$me->canEdit($module->get("name"))) {
-  Helpers :: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers :: returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 $liste_id = array ();
@@ -37,7 +37,7 @@ if (Helpers :: getVarFromPost("id")) {
 }
 
 if (! $liste_id){
-	Helpers :: returnAndExit(1, "Pas d'identifiant de transaction spécifié.", WEBSITE_SSL . "/modules/actes/index.php");
+	Helpers :: returnAndExit(1, "Pas d'identifiant de transaction spÃ©cifiÃ©.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 $msg = "";
@@ -54,14 +54,14 @@ foreach ($liste_id as $id) {
     $owner = new User($trans->get("user_id"));
     $owner->init();
     
-	//Vérification du type de transaction
+	//VÃ©rification du type de transaction
 	if ($trans->get("type") != 1) {
-		Helpers :: returnAndExit(1, "Ce type de transaction ne peut pas être notifié.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+		Helpers :: returnAndExit(1, "Ce type de transaction ne peut pas Ãªtre notifiÃ©.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
 	}
 
-	// Vérification des permissions
+	// VÃ©rification des permissions
 	if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->canEdit($module->get("name")))) {
-		Helpers :: returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
+		Helpers :: returnAndExit(1, "AccÃ¨s refusÃ©.", WEBSITE_SSL . "/modules/actes/index.php");
 	}
   
 	$broadcastEmail = Helpers :: getVarFromPost("broadcast_email");		

@@ -1,6 +1,6 @@
 <?php
-//Script permettant d'avoir le nombre de transaction pour un statut donné
-// Prend en paramètre un statut
+//Script permettant d'avoir le nombre de transaction pour un statut donnÃ©
+// Prend en paramÃ¨tre un statut
 
 // Sortie au format Influxdb
 require_once( __DIR__."/../../init/init.php");

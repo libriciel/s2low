@@ -1,8 +1,8 @@
 <?php
 
-//Script appelé pour avoir le nombre d'enveloppes de type 1 ou 6 pour un statut donné en paramètre
-// le script doit avoir un paramètre obligaoire, le statut
-// le second est optionnel, il s'agit d'une durée en minutes
+//Script appelÃ© pour avoir le nombre d'enveloppes de type 1 ou 6 pour un statut donnÃ© en paramÃ¨tre
+// le script doit avoir un paramÃ¨tre obligaoire, le statut
+// le second est optionnel, il s'agit d'une durÃ©e en minutes
 // Cela permet d'avoir le nombre d'enveloppes entre x minutes et maitenant
 
 // la sortie est au format Influxdb

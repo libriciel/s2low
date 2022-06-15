@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../init/init.php");
 
 if ($argc < 5){
-	echo "{$argv[0]} : Crée un utilisateur avec le rôle SUPER ADMIN\n";
+	echo "{$argv[0]} : CrÃ©e un utilisateur avec le rÃ´le SUPER ADMIN\n";
 	echo "Usage : {$argv[0]} nom prenom email fichier_certificat_pem\n";
 	exit(-1);
 }
@@ -33,4 +33,4 @@ $user_id = $him->getId();
 $userSQL = new UserSQL($sqlQuery);
 $userSQL->saveCertificateRGS2Etoiles($user_id,"");
 
-echo "Utilisateur créé avec succès";
+echo "Utilisateur crÃ©Ã© avec succÃ¨s";

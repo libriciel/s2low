@@ -23,8 +23,8 @@ class HeliosStatusSQL {
 		$status_libelle_list = [
 			19 => "En attente de transmission au SAE",
 			20 => "Erreur lors de l'envoi au SAE",
-			9 => "Envoy� au SAE",
-			10 => "Accept� par le SAE",
+			9 => "Envoyï¿½ au SAE",
+			10 => "Acceptï¿½ par le SAE",
 		];
 
 		return $status_libelle_list[$status_id]??$status_id;

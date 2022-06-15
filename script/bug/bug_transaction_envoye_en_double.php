@@ -1,8 +1,8 @@
 <?php
 /**
- * Si la servlet est executÈ deux fois en parallËle, alors, il est possible que des transactions Actes soit envoyÈ deux fois ‡ la prÈfecture.
+ * Si la servlet est execut√© deux fois en parall√®le, alors, il est possible que des transactions Actes soit envoy√© deux fois √† la pr√©fecture.
  * 
- * Ce script detecte et supprime les Ètat doublon et l'erreur
+ * Ce script detecte et supprime les √©tat doublon et l'erreur
  * 
  */
 
@@ -31,7 +31,7 @@ foreach($transaction_id_list as $transaction_id){
 	$info = $sqlQuery->query($sql,$transaction_id);
 
 	if ($info[0]['status_id'] != -1){
-		echo "[$transaction_id] Le dernier Ètat de la transaction n'est pas en erreur...\n";
+		echo "[$transaction_id] Le dernier √©tat de la transaction n'est pas en erreur...\n";
 		continue;
 	}
 
@@ -47,7 +47,7 @@ foreach($transaction_id_list as $transaction_id){
 		}
 	}
 	if (! $is_acquitter){
-		echo "[$transaction_id] La transaction n'a pas ÈtÈ acquittÈ\n";
+		echo "[$transaction_id] La transaction n'a pas √©t√© acquitt√©\n";
 		continue;
 	}
 
@@ -55,7 +55,7 @@ foreach($transaction_id_list as $transaction_id){
 		if ($line['status_id'] == 4){
 			break;
 		}
-		echo "[$transaction_id] Suppression de l'Ètat {$line['status_id']} ({$line['date']})\n";
+		echo "[$transaction_id] Suppression de l'√©tat {$line['status_id']} ({$line['date']})\n";
 		if ($do) {
 			$sql = "DELETE FROM actes_transactions_workflow WHERE id=? AND transaction_id=?";
 			$sqlQuery->query($sql, $line['id'], $transaction_id);
@@ -63,11 +63,11 @@ foreach($transaction_id_list as $transaction_id){
 
 	}
 
-	echo "[$transaction_id] Mise ‡ jour du statut de la transaction ‡ 4\n";
+	echo "[$transaction_id] Mise √† jour du statut de la transaction √† 4\n";
 	if ($do){
 		$sql = "UPDATE actes_transactions SET last_status_id = ? WHERE id=?";
 		$sqlQuery->query($sql, 4,$transaction_id);
 	} 
-	echo "[$transaction_id] -> acquittÈ\n";
+	echo "[$transaction_id] -> acquitt√©\n";
 	
 }

@@ -16,7 +16,7 @@ $doc->DisplayHead();
     <div class="container">
 
 <div >
-  <h2>Document protégé par un mot de passe</h2>
+  <h2>Document protÃ©gÃ© par un mot de passe</h2>
 
 
     <div class="alert alert-info">
@@ -42,7 +42,7 @@ $doc->DisplayHead();
             </div>
 
             <div class="form-group">
-                <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default" onclick="checkDownloadPW();" >Accéder au contenu</button>
+                <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default" onclick="checkDownloadPW();" >AccÃ©der au contenu</button>
             </div>
 
 

@@ -169,9 +169,9 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
      * @dataProvider providerForNombreTransactionsAEnvoyer
      * @throws Exception
      *
-     * Ce test vérifie :
-     *  -> que le nombre de transactions par autorite correspond bien à ce qui est attendu
-     *  -> qu'aucune transaction non envoyable n'est envoyée
+     * Ce test vÃ©rifie :
+     *  -> que le nombre de transactions par autorite correspond bien Ã  ce qui est attendu
+     *  -> qu'aucune transaction non envoyable n'est envoyÃ©e
      */
     
     public function testNombreTransactionsAEnvoyer($transactions, $limit, $attendu){
@@ -196,12 +196,12 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
      * @return array
      * structure de l'array :
      *  [ [ array $transactions , int $limit, array $attendu ] ]
-     * $transactions renseigne les transactions à créer en base de données :
+     * $transactions renseigne les transactions Ã  crÃ©er en base de donnÃ©es :
      *    [ int autorite, const envoyable, const status ]
-     * $limite donne le nombre limite par autorité de transactions en cours de transmission au SAE simultanément
+     * $limite donne le nombre limite par autoritÃ© de transactions en cours de transmission au SAE simultanÃ©ment
      * $attendu a la forme
      * [ autorite => int nbTransactions ]
-     *  avec nbTransactions le nombre de transactions à transmettre
+     *  avec nbTransactions le nombre de transactions Ã  transmettre
      */
     public function providerForNombreTransactionsAEnvoyer(){
         return [

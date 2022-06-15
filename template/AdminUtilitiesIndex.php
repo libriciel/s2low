@@ -5,16 +5,16 @@
 	<h2>Action</h2>
 	<a class="btn btn-primary" href='/admin/utilities/certificate_list.php'>Liste des certificats</a>
 	<a class="btn btn-primary" href='/admin/utilities/libersign.php'>Libersign</a>
-	<a class="btn btn-danger" href='/admin/utilities/send-critical-message.php'>Déclencher une erreur critique (test)</a>
+	<a class="btn btn-danger" href='/admin/utilities/send-critical-message.php'>DÃ©clencher une erreur critique (test)</a>
 </div>
 
-<h2 >Envoi de message électronique global</h2>
+<h2 >Envoi de message Ã©lectronique global</h2>
 <div id="global_message">
 	<p class="alert-info alert">Utilisez le formulaire ci-dessous pour envoyer un message a l'ensemble des utilisateurs d'un module.</p>
-		<form action="/admin/utilities/admin_send_global_message.php" method="post" name="form" onsubmit="return confirm('Voulez-vous vraiment envoyer le message à tous les utilisateurs de ce module');">
+		<form action="/admin/utilities/admin_send_global_message.php" method="post" name="form" onsubmit="return confirm('Voulez-vous vraiment envoyer le message Ã  tous les utilisateurs de ce module');">
 			<table class="data-table table table-striped">
 				<tr>
-					<th><label for="module">Module concerné</label></th>
+					<th><label for="module">Module concernÃ©</label></th>
 					<td>
 						<select name="module" id="module" class="form-control">
 							<option value="">Choisissez</option>
@@ -25,7 +25,7 @@
 					</td>
 				</tr>
                 <tr>
-                    <th><label for="authority_group_id">Groupe concerné</label></th>
+                    <th><label for="authority_group_id">Groupe concernÃ©</label></th>
                     <td>
                         <select name="authority_group_id" id="authority_group_id" class="form-control">
                             <option value="">Tous les groupes</option>

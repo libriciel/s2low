@@ -5,9 +5,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Permet de supprimer tous les fichiers du repertoire mailsec qui ne sont pas "mail.zip" car quand on en a besoin on
- * les décompresse désormais à la volée.
+ * les dÃ©compresse dÃ©sormais Ã  la volÃ©e.
  *
- * il faut appeller le script avec "ok" derrière afin qu'il supprime bien les fichiers
+ * il faut appeller le script avec "ok" derriÃ¨re afin qu'il supprime bien les fichiers
  *
  */
 

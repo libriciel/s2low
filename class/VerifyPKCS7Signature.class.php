@@ -54,7 +54,7 @@ class VerifyPKCS7Signature {
     private function verifyThrow($file_path, $signature, $signature_file, $certificate_file,DateTime $dateTime){
 		$result = file_put_contents($signature_file, $signature);
 		if ($result === false){
-			throw new Exception("Impossible d'écrire la signature dans $signature_file");
+			throw new Exception("Impossible d'Ã©crire la signature dans $signature_file");
 		}
 
 		$certificate = $this->getCertificate($signature_file);
@@ -62,19 +62,19 @@ class VerifyPKCS7Signature {
 
 		$result = file_put_contents($certificate_file, $certificate);
 		if ($result === false){
-			throw new Exception("Impossible d'écrire le certificat dans $certificate_file");
+			throw new Exception("Impossible d'Ã©crire le certificat dans $certificate_file");
 		}
         $this->pemCertificateFactory->getFromString($certificate)->checkCertificateIsValidAtDate($dateTime);
 		$this->verifyPemCertificate->checkCertificateWithOpenSSL($certificate_file,[],$dateTime->getTimestamp());
-		# On ne va pas vérifier le certificat (option -noverify)
-        # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
+		# On ne va pas vÃ©rifier le certificat (option -noverify)
+        # Au niveau du purpose, smime est trop restrictif par rapport Ã  notre besoin
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
-        # la fonction précédente
+        # la fonction prÃ©cÃ©dente
 		$command ="openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path} > /dev/null 2>&1";
 		exec($command, $output, $return);
 		$output = implode("\n",$output);
 		if ($return != 0 ){
-			throw new Exception("La vérification de la signature a échoué (code $return):  (command : $command) (retour : $output)");
+			throw new Exception("La vÃ©rification de la signature a Ã©chouÃ© (code $return):  (command : $command) (retour : $output)");
 		}
 	}
 

@@ -60,17 +60,17 @@ $doc->openContent();
 ob_start();
 ?>
 	<div id="content">
-		<h1>Ancien système de notification</h1>
+		<h1>Ancien systÃ¨me de notification</h1>
 
 	<div class="alert alert-info">
-		Sur cette page, on ne présente que les collectivités abonnés au module actes qui utilise l'ancien système de notification.
+		Sur cette page, on ne prÃ©sente que les collectivitÃ©s abonnÃ©s au module actes qui utilise l'ancien systÃ¨me de notification.
 	</div>
 <p>
 	<a href="/admin/ancien_systeme_notif.php?csv=true" class="btn btn-primary">CSV</a>
 </p>
 <table class="data-table table table-striped">
 	<tr>
-		<th>Collectivité</th>
+		<th>CollectivitÃ©</th>
 		<th>Groupes</th>
 		<th>Email</th>
 	</tr>

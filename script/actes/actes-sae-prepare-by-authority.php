@@ -4,8 +4,8 @@ require_once( __DIR__."/../../init/init.php");
 
 if (empty($argv[1])){
 	echo "Usage : {$argv[0]} authority_id\n";
-	echo "\tEnvoi à l'archivage toutes les transactions actes d'une collectivité\n";
-	echo "\tLes transactions sont à l'état 'Acquittement reçu' ou 'Validé' et il s'agit uniquement des envois d'actes (pas des réponses de la préfectures)\n";
+	echo "\tEnvoi Ã  l'archivage toutes les transactions actes d'une collectivitÃ©\n";
+	echo "\tLes transactions sont Ã  l'Ã©tat 'Acquittement reÃ§u' ou 'ValidÃ©' et il s'agit uniquement des envois d'actes (pas des rÃ©ponses de la prÃ©fectures)\n";
 	exit;
 }
 
@@ -26,13 +26,13 @@ $sql = "SELECT at.id ".
 $transaction_id_list = $sqlQuery->queryOneCol($sql,$authority_id,4,5,$date);
 
 if (! $transaction_id_list){
-	echo "Aucune transaction trouvée\n";
+	echo "Aucune transaction trouvÃ©e\n";
 	exit;
 }
 
 $nb_transaction = count($transaction_id_list);
 
-echo "$nb_transaction vont être traité\n";
+echo "$nb_transaction vont Ãªtre traitÃ©\n";
 
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);

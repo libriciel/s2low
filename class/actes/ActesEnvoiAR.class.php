@@ -43,7 +43,7 @@ class ActesEnvoiAR {
 		$sigtermHandler = SigTermHandler::getInstance();
 		$this->logger->info("Lancement du script");
         $transaction_ids = $this->actesTransactionsSQL->getArchiveFStatus(ActesStatusSQL::STATUS_DOCUMENT_RECU);
-		$this->logger->info("Envoie de ".count($transaction_ids)." enveloppes de transaction à l'état DOCUMENT RECU");
+		$this->logger->info("Envoie de ".count($transaction_ids)." enveloppes de transaction Ã  l'Ã©tat DOCUMENT RECU");
         foreach($transaction_ids as $transaction_id){
             $this->envoiAR($transaction_id['id']);
             if ($sigtermHandler->isSigtermCalled()){
@@ -99,7 +99,7 @@ class ActesEnvoiAR {
             $messageMetierAR = new MessageMetierARLettreObservations();
             $messageMetierAR->date_courrier_pref = $messageMetierAller->date_lettre_observation;
         } else {
-            throw new Exception("Message de type {$transaction_info['type']} non géré !");
+            throw new Exception("Message de type {$transaction_info['type']} non gÃ©rÃ© !");
         }
 
         $messageMetierAR->id_actes = $transaction_info['unique_id'];
@@ -132,7 +132,7 @@ class ActesEnvoiAR {
         $this->actesScriptHelper->updateStatus(
             array($transaction_id),
             ActesStatusSQL::STATUS_ACQUITTEMENT_ENVOYE,
-            "Acquittement envoyé"
+            "Acquittement envoyÃ©"
         );
     }
 

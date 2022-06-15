@@ -27,15 +27,15 @@ foreach ($finder as $file) {
     $absoluteFilePath = $file->getRealPath();
     $fileNameWithExtension = $file->getRelativePathname();
     $mb_detect_encoding = mb_detect_encoding(file_get_contents($absoluteFilePath));
-    if($mb_detect_encoding != "UTF-8"){
-        echo "$mb_detect_encoding traité $fileNameWithExtension\n";
-        if($mb_detect_encoding != "ASCII"){
-            $aVerifier[] = $file->getRelativePathname();
-        }
+    //if($mb_detect_encoding != "UTF-8"){
+    echo "$mb_detect_encoding traitÃ© $fileNameWithExtension\n";
+    //    if($mb_detect_encoding != "ASCII"){
+    //        $aVerifier[] = $file->getRelativePathname();
+    //    }
         changeEncoding($absoluteFilePath);
-    } else{
-        echo "$mb_detect_encoding non traité $fileNameWithExtension\n";
-    }
+    /*} else{
+        echo "$mb_detect_encoding non traitÃ© $fileNameWithExtension\n";
+    }*/
 }
 
-var_dump($aVerifier);
+//var_dump($aVerifier);

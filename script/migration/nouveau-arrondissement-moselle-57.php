@@ -26,7 +26,7 @@ $authorities_migrate_district = [
 ];
 
 foreach($authorities_migrate_district as $from => $to){
-	echo "Migration des collectivités de l'arrondissement $from vers $to\n";
+	echo "Migration des collectivitÃ©s de l'arrondissement $from vers $to\n";
 	$sql = 'SELECT name,id FROM authorities WHERE department=? AND district=?';
 	print_r($sqlQuery->query($sql,$code_departement,$from));
 	if ($do) {
@@ -44,7 +44,7 @@ foreach($authorities_migrate_district as $from => $to){
 
 $district_new_name = [
 	3 => 'Forbach-Boulay-Moselle',
-	5 => 'Sarrebourg-Château-Salins',
+	5 => 'Sarrebourg-ChÃ¢teau-Salins',
 	6 => 'Sarreguemines',
 	7 => 'Thionville',
 	9 => 'Metz'

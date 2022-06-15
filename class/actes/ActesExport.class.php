@@ -49,7 +49,7 @@ class ActesExport {
 
 		$this->s2lowLogger->info(
 			sprintf(
-				"Export des transactions actes de la collectivité %d vers %s (min_transaction_id=%d, max_transaction_id=%d)",
+				"Export des transactions actes de la collectivitÃ© %d vers %s (min_transaction_id=%d, max_transaction_id=%d)",
 				$authority_id,
 				$output_directory,
 				$min_transaction_id,
@@ -58,18 +58,18 @@ class ActesExport {
 		);
 
 		$authority_info = $this->checkAuthority($authority_id);
-		$this->s2lowLogger->info(sprintf("Traitement des actes de la collectivité %s",$authority_info['name']));
+		$this->s2lowLogger->info(sprintf("Traitement des actes de la collectivitÃ© %s",$authority_info['name']));
 
 		$this->checkOutputDirectory($output_directory);
 
 		$transactions_list = $this->actesTransactionsSQL->getAllForExport($authority_id,$min_transaction_id,$max_trasaction_id);
 
 		if (! $transactions_list){
-			$this->s2lowLogger->info("Aucune transaction ne correspond aux critères");
+			$this->s2lowLogger->info("Aucune transaction ne correspond aux critÃ¨res");
 			return;
 		}
 
-		$this->s2lowLogger->info(count($transactions_list)." transaction(s) trouvée(s)");
+		$this->s2lowLogger->info(count($transactions_list)." transaction(s) trouvÃ©e(s)");
 
 
 		foreach($transactions_list as $transaction_info){
@@ -89,7 +89,7 @@ class ActesExport {
 		$authority_info = $this->authoritySQL->getInfo($authority_id);
 
 		if (! $authority_info){
-			throw new UnrecoverableException("La collectivité $authority_id n'existe pas");
+			throw new UnrecoverableException("La collectivitÃ© $authority_id n'existe pas");
 		}
 		return $authority_info;
 	}
@@ -107,7 +107,7 @@ class ActesExport {
 			! is_writable($output_directory)
 		){
 			throw new UnrecoverableException(
-				"Le répertoire $output_directory n'existe pas ou n'est pas accessible en écriture"
+				"Le rÃ©pertoire $output_directory n'existe pas ou n'est pas accessible en Ã©criture"
 			);
 		}
 	}

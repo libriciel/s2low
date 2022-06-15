@@ -39,22 +39,22 @@ class PostgreSQLController {
 
 		$sql_command = $this->getAlterDatabaseCommand() ;
 		if (! $sql_command){
-			$log_function("La base de données est déjà à jour");
+			$log_function("La base de donnÃ©es est dÃ©jÃ  Ã  jour");
 			return;
 		}
 		$this->sqlQuery->query("BEGIN");
-		$log_function("Début de la transaction");
+		$log_function("DÃ©but de la transaction");
 		try {
 			foreach($sql_command as $sql){
 				$log_function("$sql");
 				$this->sqlQuery->query($sql);
 			}
 			$this->sqlQuery->query("COMMIT");
-			$log_function("Base de données modifié avec succès");
+			$log_function("Base de donnÃ©es modifiÃ© avec succÃ¨s");
 		} catch (Exception $e){
 			$log_function($e->getMessage());
 			$this->sqlQuery->query("ROLLBACK");
-			$log_function("Erreur : La base de données N'A PAS été modifié");
+			$log_function("Erreur : La base de donnÃ©es N'A PAS Ã©tÃ© modifiÃ©");
 		}
 	}
 

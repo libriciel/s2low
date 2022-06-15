@@ -35,20 +35,20 @@ $doc->openContent();
 ob_start();
 ?>
 	<div id="content">
-		<h1>Actes - Dématérialisation du contrôle de légalité</h1>
+		<h1>Actes - DÃ©matÃ©rialisation du contrÃ´le de lÃ©galitÃ©</h1>
 		<p id="back-user-btn"><a href="/admin/index.php" class="btn btn-default" title="">Retour console d'administration</a></p>
-		<h2><?php echo $nb_responses_error ?> mails reçus en erreur</h2>
+		<h2><?php echo $nb_responses_error ?> mails reÃ§us en erreur</h2>
 
 	<div class="alert alert-info">
-		Liste des fichiers trouvés reçu par mail mais dont l'analyse a échoué.
+		Liste des fichiers trouvÃ©s reÃ§u par mail mais dont l'analyse a Ã©chouÃ©.
 	</div>
 
 		<table class="data-table table table-striped">
 			<tr>
 				<th>Nom du fichier</th>
-				<th>Date de récupération</th>
+				<th>Date de rÃ©cupÃ©ration</th>
 				<th>Supprimer</th>
-				<th>Analyser à nouveau</th>
+				<th>Analyser Ã  nouveau</th>
 			</tr>
 			<?php
 				/** @var DirectoryIterator $errorFile */
@@ -59,7 +59,7 @@ ob_start();
 					<td><?php echo date("Y-m-d H:i:s",$errorFile->getCTime()) ?></td>
 					<td class="text-center">
 						<a class="btn btn-danger"
-						   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce fichier ?');"
+						   onclick="return confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce fichier ?');"
 						   href="/modules/actes/admin/delete-response.php?file=<?php echo urlencode($errorFile->getFilename()) ?>"
 						>
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>

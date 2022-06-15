@@ -19,11 +19,11 @@ try {
     return -2;
 }
 if ($is_signed){
-    echo "Le fichier est signé et la signature est valide\n";
+    echo "Le fichier est signÃ© et la signature est valide\n";
     print_r($padesValid->getLastResult());
     return 0;
 } else{
-    echo "Le fichier n'est pas signé\n";
+    echo "Le fichier n'est pas signÃ©\n";
     echo $padesValid->getLastResult();
     return -3;
 }

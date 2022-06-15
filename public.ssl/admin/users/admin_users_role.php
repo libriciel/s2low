@@ -5,11 +5,11 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-	$jsonOutput->displayErrorAndExit("Échec de l'authentification");
+	$jsonOutput->displayErrorAndExit("Ã‰chec de l'authentification");
 }
 
 if (! $me->isAdmin()) {
-	$jsonOutput->displayErrorAndExit("Accès refusé");
+	$jsonOutput->displayErrorAndExit("AccÃ¨s refusÃ©");
 }
 
 $jsonOutput->display($me->get("roleTypes"));

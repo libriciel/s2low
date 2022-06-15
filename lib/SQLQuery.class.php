@@ -173,16 +173,16 @@ class SQLQuery {
 				$nb_retry ++;
 
 				$this->query("SELECT 1;");
-				$log_function("PostgreSQL est maintenant démarré");
+				$log_function("PostgreSQL est maintenant dÃ©marrÃ©");
 				$connected = true;
 			} catch (Exception $e) {
-				$log_function("[essai $nb_retry] PostgreSQL n'a pas démarré ... on attend une seconde de plus");
+				$log_function("[essai $nb_retry] PostgreSQL n'a pas dÃ©marrÃ© ... on attend une seconde de plus");
 				sleep(1);
 			}
 		} while(! $connected && $nb_retry < $nb_retry_max);
 
 		if (! $connected){
-			$log_function("PostgreSQL n'a pas démarré après $nb_retry essai...");
+			$log_function("PostgreSQL n'a pas dÃ©marrÃ© aprÃ¨s $nb_retry essai...");
 		}
 		return $connected;
 	}

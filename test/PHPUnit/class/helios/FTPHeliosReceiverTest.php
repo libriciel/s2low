@@ -74,7 +74,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase {
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects($this->exactly(2))
             ->method("info")
-            ->withConsecutive(["Remote_path : response_server_path"],["PESALR2_File : PES ALLER ignoré"]);
+            ->withConsecutive(["Remote_path : response_server_path"],["PESALR2_File : PES ALLER ignorÃ©"]);
 
         /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
         $ftpService = $this->getMockBuilder(FTPService::class)
@@ -111,7 +111,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase {
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects($this->exactly(2))
             ->method("info")
-            ->withConsecutive(["Remote_path : response_server_path"],["0 : File récupéré : ECHEC"]);
+            ->withConsecutive(["Remote_path : response_server_path"],["0 : File rÃ©cupÃ©rÃ© : ECHEC"]);
 
         /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
         $ftpService = $this->getMockBuilder(FTPService::class)

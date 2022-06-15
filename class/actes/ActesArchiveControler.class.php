@@ -79,10 +79,10 @@ class ActesArchiveControler {
 		try {
 			$this->sendArchiveThrow($transaction_id);
 		} catch (RecoverableException $e){
-			$this->logger->error("Une erreur récupérable est survenue : ".$e->getMessage().". La transaction sera retentée.");
+			$this->logger->error("Une erreur rÃ©cupÃ©rable est survenue : ".$e->getMessage().". La transaction sera retentÃ©e.");
 			if ($id_d){
 				$this->deletePastellDocument($transaction_id,$id_d);
-				$this->logger->error("L'identifiant du document sur Pastell était : $id_d, le document a été supprimé sur Pastell");
+				$this->logger->error("L'identifiant du document sur Pastell Ã©tait : $id_d, le document a Ã©tÃ© supprimÃ© sur Pastell");
 			}
 		} catch (Exception $e){
 			$message = "Impossible d'envoyer la transaction $transaction_id : " . $e->getMessage();
@@ -116,7 +116,7 @@ class ActesArchiveControler {
 
 			$id_d = $this->createPastellDocument($transaction_id);
 			$this->sendFilesToPastell($transaction_id, $id_d, $actesFileForArchive);
-			$this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
+			$this->logger->info("La transaction $transaction_id a Ã©tÃ© envoyÃ© sur le SAE (id_d pastell : $id_d)");
 
 			$actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
 			$this->actesEnvelopeStorage->deleteIfIsInCloud($actesEnvelopeInfo['file_path']);
@@ -146,7 +146,7 @@ class ActesArchiveControler {
 		$enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
 
 		if (! $enveloppe_path){
-			throw new RecoverableException("Impossible de récupérer l'enveloppe {$actesEnvelopeInfo['file_path']}");
+			throw new RecoverableException("Impossible de rÃ©cupÃ©rer l'enveloppe {$actesEnvelopeInfo['file_path']}");
 		}
 
 		$tgzExtractor = new TGZExtractor($tmp_folder);
@@ -321,9 +321,9 @@ class ActesArchiveControler {
 		    if(! ($e->getMessage()==="Erreur HTTP : Code 400")){
 		        throw $e;
             }
-		    // Le champ n'est pas obligatoire. Si côté Pastell n'y a pas de Tdt dans le flux actes-generiques utilisé,
+		    // Le champ n'est pas obligatoire. Si cÃ´tÃ© Pastell n'y a pas de Tdt dans le flux actes-generiques utilisÃ©,
             // ou si la classification est absente, Pastell renvoie une erreur 400.
-            $this->logger->warning("Le type des pièces jointes n'a pu être enregistré (Message Pastell :{$e->getMessage()})");
+            $this->logger->warning("Le type des piÃ¨ces jointes n'a pu Ãªtre enregistrÃ© (Message Pastell :{$e->getMessage()})");
         }
 
 
@@ -331,7 +331,7 @@ class ActesArchiveControler {
 		if (! $result){
 			throw new UnrecoverableException($pastell->getLastError());
 		}
-		$this->actesTransactionsSQL->updateStatus($transaction_id,12,"Envoie de la transaction $transaction_id à Pastell");
+		$this->actesTransactionsSQL->updateStatus($transaction_id,12,"Envoie de la transaction $transaction_id Ã  Pastell");
 		$this->actesTransactionsSQL->setSAETransferIdentifier($transaction_id,$id_d);
 	}
 
@@ -344,7 +344,7 @@ class ActesArchiveControler {
 		$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 		if($transactionsInfo['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE){
 			$this->logger->error(sprintf(
-				"La transaction %d à envoyer au SAE n'est pas dans le bon status ! %d trouvé",
+				"La transaction %d Ã  envoyer au SAE n'est pas dans le bon status ! %d trouvÃ©",
 				$transaction_id,
 				$transactionsInfo['last_status_id']
 			));
@@ -368,7 +368,7 @@ class ActesArchiveControler {
 		if (! $id_d){
 			throw new UnrecoverableException("Erreur pastell : ". $pastell->getLastError());
 		}
-		$this->logger->debug("Création du document sur Pastell id_d=$id_d");
+		$this->logger->debug("CrÃ©ation du document sur Pastell id_d=$id_d");
 
 		return $id_d;
 	}

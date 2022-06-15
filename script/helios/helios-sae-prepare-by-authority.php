@@ -11,11 +11,11 @@ $authority_id = intval($argv[1]??0);
 
 if (! $authority_id) {
 	$s2lowLogger->info("Usage : {$argv[0]} authority_id");
-	$s2lowLogger->info("\tEnvoi à l'archivage toutes les transactions PES d'une collectivité");
-	$s2lowLogger->info("\tLes transactions sont à l'état 'Information disponible' ou 'Erreur lors de l'envoi au SAE' (20)");
+	$s2lowLogger->info("\tEnvoi Ã  l'archivage toutes les transactions PES d'une collectivitÃ©");
+	$s2lowLogger->info("\tLes transactions sont Ã  l'Ã©tat 'Information disponible' ou 'Erreur lors de l'envoi au SAE' (20)");
 	exit(-1);
 }
-$s2lowLogger->info("Début du script");
+$s2lowLogger->info("DÃ©but du script");
 
 
 $objectInstancier->get(HeliosPrepareEnvoiSAE::class)->setArchiveEnAttenteEnvoiSEAManuellement($authority_id);

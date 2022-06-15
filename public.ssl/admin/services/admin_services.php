@@ -18,7 +18,7 @@ if ($authority_id){
     if(!is_numeric($authority_id)){
         Helpers::returnAndExit(
                 1,
-            "[admin_services.php] authority_id doit être un entier, $authority_id fourni",
+            "[admin_services.php] authority_id doit Ãªtre un entier, $authority_id fourni",
             WEBSITE_SSL
         );
     }
@@ -46,7 +46,7 @@ ob_start();?>
     <h1>Gestion des services</h1>
 
 <?php if(count($authorities) > 1): ?>
-    <h2>Choix de la collectivité</h2>
+    <h2>Choix de la collectivitÃ©</h2>
 	<?php if ( ! $authority_id): ?>
 	<ul>
 	<?php foreach($authorities as $id=>$name): ?>
@@ -54,7 +54,7 @@ ob_start();?>
 	<?php endforeach;?>
 	</ul>
 	<?php else : ?>
-		<a href='admin_services.php'>Voir une autre collectivité</a>
+		<a href='admin_services.php'>Voir une autre collectivitÃ©</a>
 	<?php endif;?>
 <?php endif;?>
 

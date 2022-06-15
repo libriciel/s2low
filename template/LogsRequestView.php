@@ -1,5 +1,5 @@
 <div id="content">
-	<h1>Journal - Requête sur l'historique</h1>
+	<h1>Journal - RequÃªte sur l'historique</h1>
 	<p id="back-user-btn">
 		<a href="/common/logs_view.php" class="btn btn-default" title="">
 			Retour au journal
@@ -11,7 +11,7 @@
 
 	<?php if(! $logs_request_list) : ?>
 	<div class="alert alert-info">
-		Aucune demande en attente ou archivée.
+		Aucune demande en attente ou archivÃ©e.
 	</div>
 	<?php endif; ?>
 
@@ -21,7 +21,7 @@
 			<th>Heure de la demande</th>
 			<th>Heure du traitement</th>
 
-			<th>Date début (journal)</th>
+			<th>Date dÃ©but (journal)</th>
 			<th>Date fin (journal)</th>
 
 			<th>Etat</th>
@@ -41,7 +41,7 @@
 						<a href="/common/logs_request_cancel.php?id=<?php echo $logs_request['id'] ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;Supprimer</a>
 					<?php endif; ?>
 					<?php if($logs_request['state'] == LogsRequestData::STATE_AVAILABLE) :?>
-						<a href="/common/logs_request_donwload.php?id=<?php echo $logs_request['id'] ?>" class="btn btn-primary"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Télécharger</a>
+						<a href="/common/logs_request_donwload.php?id=<?php echo $logs_request['id'] ?>" class="btn btn-primary"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;TÃ©lÃ©charger</a>
 					<?php endif; ?>
 				</td>
 			</tr>

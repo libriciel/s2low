@@ -27,7 +27,7 @@ class ShellCommand {
 		$this->last_error = $process->getErrorOutput();
 
 		$this->s2lowLogger->debug(
-			"Résultat de l'éxecution de la commande : $command_line",
+			"RÃ©sultat de l'Ã©xecution de la commande : $command_line",
             [
                 'ret'=>$ret,
                 'output'=>$this->last_output,

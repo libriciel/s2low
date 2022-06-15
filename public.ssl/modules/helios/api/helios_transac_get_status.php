@@ -17,7 +17,7 @@ $transaction['status']  = "";
 $heliosAPIResponse = new HeliosAPIResponse();
 
 if(! $transId){
-	$transaction['message']  ="Pas de numéro de transaction.";
+	$transaction['message']  ="Pas de numÃ©ro de transaction.";
 	$heliosAPIResponse->displayAndExit($transaction,"transaction");
 }
 
@@ -30,13 +30,13 @@ if ( ! $module->initByName("helios")) {
 	
 $me = new User();
 if (! $me->authenticate()) {
-	$transaction['message']  = "Échec de l'authentification";
+	$transaction['message']  = "Ã‰chec de l'authentification";
 	$heliosAPIResponse->displayAndExit($transaction,"transaction");
 }
 	
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-	$transaction['message']  = "Accès refusé";
+	$transaction['message']  = "AccÃ¨s refusÃ©";
 	$heliosAPIResponse->displayAndExit($transaction,"transaction");
 }
 
@@ -44,7 +44,7 @@ $zeTrans = new HeliosTransaction();
 $zeTrans->setId($transId);
 
 if (  ! $zeTrans->init()){
-	$transaction['message']  = "Numéro de transaction invalide";
+	$transaction['message']  = "NumÃ©ro de transaction invalide";
 	$heliosAPIResponse->displayAndExit($transaction,"transaction");
 }
 
@@ -52,7 +52,7 @@ $owner = new User($zeTrans->get("user_id"));
 $owner->init();
 if ( ! ($me->get("authority_id") == $owner->get("authority_id")) && 
 	        $me->canAccess($module->get("name"))){
-	$transaction['message']  = "Accès refusé";
+	$transaction['message']  = "AccÃ¨s refusÃ©";
 	$heliosAPIResponse->displayAndExit($transaction,"transaction");
 }  
 

@@ -39,7 +39,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 		$xadesSignatureProperties->city = "Paris";
 		$xadesSignatureProperties->postalCode = "75008";
 		$xadesSignatureProperties->countryName = "France";
-		$xadesSignatureProperties->claimedRole = "Test Tiers de tÈlÈtransmission";
+		$xadesSignatureProperties->claimedRole = "Test Tiers de t√©l√©transmission";
 		return $xadesSignatureProperties;
 	}
 
@@ -191,7 +191,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase {
 
     public function datesProvider(){
         return [
-            // Date de vÈrification                  validitÈ attendue
+            // Date de v√©rification                  validit√© attendue
             [new DateTime("2012-11-05T11:33:13Z"),false],    // Limite basse du certificat AC_ADULLACT_ROOT_G3
             [new DateTime("2016-11-07T11:03:01Z"),true],     // Date de la signature
             [new DateTime("2022-11-05T11:33:15Z"),false]     // Limite haute du certificat AC_ADULLACT_ROOT_G3

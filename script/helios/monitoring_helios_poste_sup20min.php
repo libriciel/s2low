@@ -1,10 +1,10 @@
 <?php
 
-//Script charge de verifier que le plus vieil acte à l'état poste
+//Script charge de verifier que le plus vieil acte Ã  l'Ã©tat poste
 //n'a pas plus de 30 minutes
 
 //RETOURNE 0 si tout va bien
-//RETOURNE 2 si le plus vieil acte à l'état posté à plus d'une heure
+//RETOURNE 2 si le plus vieil acte Ã  l'Ã©tat postÃ© Ã  plus d'une heure
 require_once( __DIR__."/../../init/init.php");
 
 $email=EMAIL_ADMIN_TECHNIQUE;

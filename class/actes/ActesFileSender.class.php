@@ -51,7 +51,7 @@ class ActesFileSender {
             $expected_hash = $x509Certificate->getBase64Hash($expected_certificat);
 
             if ($actual_hash != $expected_hash){
-                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
+                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas Ã  celui attendu ($expected_hash)");
             }
         }
 

@@ -48,11 +48,11 @@ class LogsController extends Controller {
 		$this->taille_page =  $recuperateur->getInt('count',10);
 
 		$this->verifUser();
-		$this->title = "Tedetis : Journal d'évènements";
+		$this->title = "Tedetis : Journal d'Ã©vÃ¨nements";
 
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 
-		$h1_title = "Journal d'évènements";
+		$h1_title = "Journal d'Ã©vÃ¨nements";
 
 		$moduleSQL = new ModuleSQL($this->getSQLQuery());
 		$this->module_list = $moduleSQL->getActiveModuleList();
@@ -85,14 +85,14 @@ class LogsController extends Controller {
 		} elseif ($this->me->isGroupAdmin()) {
 			$groupSQL = new GroupSQL($this->getSQLQuery());
 			$groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
-			$h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
+			$h1_title .= " du groupe Â«&nbsp;{$groupe_info['name']}&nbsp;Â»";
 			$this->authorities_list = $authoritySQL->getAllGroup($this->me->get("authority_group_id"));
 			$authority_group_id = $this->me->get("authority_group_id");
 			$authority_id = $this->fauthority;
 			$visibility = array('GADM','ADM','USER');
 		} elseif ($this->me->isAuthorityAdmin()) {
 			$authority_info = $authoritySQL->getInfo($this->me->get('authority_id'));
-			$h1_title .= " de la collectivité «&nbsp;{$authority_info['name']}&nbsp;»";
+			$h1_title .= " de la collectivitÃ© Â«&nbsp;{$authority_info['name']}&nbsp;Â»";
 			$this->authorities_list = array();
 			$authority_id = $this->me->get('authority_id');
 			$visibility = array('ADM','USER');
@@ -134,7 +134,7 @@ class LogsController extends Controller {
 
 
 		if ($this->getLogsRequestSQL()->hasPendingRequest($this->me->get('id'))){
-			$this->setErrorMessage("Une requête est déjà en cours.");
+			$this->setErrorMessage("Une requÃªte est dÃ©jÃ  en cours.");
 			$this->redirect("/common/logs_request_view.php");
 		}
 
@@ -162,7 +162,7 @@ class LogsController extends Controller {
 
 		$this->getLogsRequestSQL()->newRequest($logsRequestData);
 
-		$this->setMessage("Votre demande a été enregistrée.");
+		$this->setMessage("Votre demande a Ã©tÃ© enregistrÃ©e.");
 		$this->redirect("/common/logs_request_view.php");
 	}
 
@@ -177,17 +177,17 @@ class LogsController extends Controller {
 		$id = $recuperateur->get('id');
 		$this->verifUser();
 		$this->getLogsRequestSQL()->delete($id,$this->me->get('id'));
-		$this->setMessage("La demande a été supprimée");
+		$this->setMessage("La demande a Ã©tÃ© supprimÃ©e");
 		$this->redirect("/common/logs_request_view.php");
 	}
 
 	public function doRequest(){
 		$all_request = $this->getLogsRequestSQL()->getAllByState(LogsRequestData::STATE_ASKING);
-		echo count($all_request)." requêtes en attente...";
+		echo count($all_request)." requÃªtes en attente...";
 		$sigtermHandler = SigTermHandler::getInstance();
 		foreach($all_request as $request) {
 
-			echo "Traitement de la requête {$request['id']}\n";
+			echo "Traitement de la requÃªte {$request['id']}\n";
 			$logsRequestData = new LogsRequestData();
 			$logsRequestData->date_debut = $request['date_debut'];
 			$logsRequestData->date_fin = $request['date_fin'];
@@ -216,7 +216,7 @@ class LogsController extends Controller {
 
 		$old_request = $this->getLogsRequestSQL()->getOldRequest();
 		foreach($old_request as $request){
-			echo "Suppresion de la requête {$request['id']}\n";
+			echo "Suppresion de la requÃªte {$request['id']}\n";
 			$this->getLogsRequestSQL()->forceDelete($request['id']);
 			unlink(EXPORT_LOGS_DIRECTORY."/{$request['id']}.csv");
 		}

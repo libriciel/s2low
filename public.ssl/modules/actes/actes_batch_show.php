@@ -1,38 +1,38 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡ la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √† la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
- * dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡ 
- * manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
- * logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
+ * d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
+ * manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
+ * logiciel √† leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 ?>
@@ -40,11 +40,11 @@
 /**
  * \file actes_batch_show.php
  * \brief Page d'affichage d'un lot de fichier transaction Actes
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 13.02.2007
  * 
  *
- * Cette page affiche les dÈtails d'un lot de transaction Actes et 
+ * Cette page affiche les d√©tails d'un lot de transaction Actes et 
  * permet de demander sa suppression
  *
  * Modifications :
@@ -68,13 +68,13 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "…chec de l'authentification";
+  $_SESSION["error"] = "√âchec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "AccËs refusÈ";
+  $_SESSION["error"] = "Acc√®s refus√©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -102,15 +102,15 @@ if (isset($id) && ! empty($id)) {
 	exit();
   }
 } else {
-  $_SESSION["error"] = "Pas d'identifiant de lot spÈcifiÈ";
+  $_SESSION["error"] = "Pas d'identifiant de lot sp√©cifi√©";
   header("Location: " . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
   exit();
 }
 
-// VÈrification des permissions
+// V√©rification des permissions
 if (! $me->isSuper()) {
   if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ($me->getId() != $owner->getId())) {
-	$_SESSION["error"] = "AccËs refusÈ";
+	$_SESSION["error"] = "Acc√®s refus√©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit();
   }
@@ -129,16 +129,16 @@ $doc->openContent();
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Visualisation du lot ". $zeBatch->getId() . " </h1>";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_handle.php\" class=\"btn btn-default\">Retour liste lots</a></p>\n";
-$html .= "<h2>DÈtails du lot</h2>\n";
+$html .= "<h2>D√©tails du lot</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
-$html .= $doc->getHTMLArrayline("NumÈro du lot", $zeBatch->getId());
+$html .= $doc->getHTMLArrayline("Num√©ro du lot", $zeBatch->getId());
 $html .= $doc->getHTMLArrayline("Description", get_hecho($zeBatch->get("description")));
-$html .= $doc->getHTMLArrayline("PrÈfixe numÈro interne", get_hecho($zeBatch->get("num_prefix")));
-$html .= $doc->getHTMLArrayline("Date de crÈation", Helpers::getDateFromBDDDate($zeBatch->get("submission_date"), true));
+$html .= $doc->getHTMLArrayline("Pr√©fixe num√©ro interne", get_hecho($zeBatch->get("num_prefix")));
+$html .= $doc->getHTMLArrayline("Date de cr√©ation", Helpers::getDateFromBDDDate($zeBatch->get("submission_date"), true));
 $html .= $doc->getHTMLArrayline("Nombre total de fichiers", $zeBatch->getAllFilesCount());
-$html .= $doc->getHTMLArrayline("Nombre de fichiers traitÈs", ($zeBatch->getAllFilesCount() - $zeBatch->getUnprocessedFilesCount()));
-$html .= $doc->getHTMLArrayline("Nombre de fichiers restant ‡ traiter", $zeBatch->getUnprocessedFilesCount());
+$html .= $doc->getHTMLArrayline("Nombre de fichiers trait√©s", ($zeBatch->getAllFilesCount() - $zeBatch->getUnprocessedFilesCount()));
+$html .= $doc->getHTMLArrayline("Nombre de fichiers restant √† traiter", $zeBatch->getUnprocessedFilesCount());
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
@@ -155,7 +155,7 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
     $html .= " <tr>\n";
     $html .= "  <th id=\"file\">Fichier</th>\n";
     $html .= "  <th id=\"size\">Taille</th>\n";
-    $html .= "  <th id=\"signature\">Signature numÈrique</th>\n";
+    $html .= "  <th id=\"signature\">Signature num√©rique</th>\n";
     $html .= "  <th id=\"status\">Statut</th>\n";
     $html .= "  <th id=\"actions\">Traiter</th>\n";
     $html .= " </tr>\n";
@@ -164,28 +164,28 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
     foreach ($batchFiles as $batchFile) {
         $html .= " <tr>\n";
 	$html .= "  <td headers=\"file\" class=\"long_field\">";	
-	$html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"TÈlÈcharger le fichier\">" . get_hecho($batchFile->getDisplayName()) . "</a>";
+	$html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"T√©l√©charger le fichier\">" . get_hecho($batchFile->getDisplayName()) . "</a>";
 	$html .= "</td>\n";
 	$html .= "  <td headers=\"size\" >" . $batchFile->get("filesize") . "</td>\n";
 	$html .= "  <td headers=\"signature\" >";
-	$html .= (strlen($batchFile->get("signature")) > 0) ? "PrÈsente" : "Non prÈsente";
+	$html .= (strlen($batchFile->get("signature")) > 0) ? "Pr√©sente" : "Non pr√©sente";
 	$html .= "</td>\n";
 	$html .= "  <td headers=\"status\" >";
-	$html .= ($batchFile->isProcessed()) ? "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id") . "\" title=\"Voir la transaction issue de ce fichier\">TraitÈ</a>" : "Non traitÈ";
+	$html .= ($batchFile->isProcessed()) ? "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id") . "\" title=\"Voir la transaction issue de ce fichier\">Trait√©</a>" : "Non trait√©";
 	$html .= "</td>\n";
-	$html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId() . "\" class=\"icon\" title=\"CrÈer la transaction correspondant ‡ ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n":"<td headers=\"actions\" >&nbsp;</td>";
+	$html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId() . "\" class=\"icon\" title=\"Cr√©er la transaction correspondant √† ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n":"<td headers=\"actions\" >&nbsp;</td>";
 	$html .= " </tr>\n";
         
   }
   $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
-  $html .= "  <p>Pas de fichier trouvÈ</p>";
+  $html .= "  <p>Pas de fichier trouv√©</p>";
 }
 
 $nb_fichier = count($batchFiles);
 $html .= "</div>\n";
-$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Il reste $nb_fichier fichier(s) ‡ traiter dans ce lot. Souhaitez-vous rÈellement supprimer ce lot ?')\" method=\"post\">\n";
+$html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Il reste $nb_fichier fichier(s) √† traiter dans ce lot. Souhaitez-vous r√©ellement supprimer ce lot ?')\" method=\"post\">\n";
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeBatch->getId(). "\" />\n";
 $html .= "<input type=\"submit\" value=\"Supprimer ce lot\" class=\"btn btn-warning\" />\n";
 $html .= "</form>\n";

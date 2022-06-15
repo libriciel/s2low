@@ -56,7 +56,7 @@ class Versionning {
 		$result['revision'] = $this->getRevision();
 		$result['date'] = $this->getDate();
 
-		$result['version-complete'] =  "Version {$result['version']} - Révision  {$result['revision']} - {$result['date']}" ;
+		$result['version-complete'] =  "Version {$result['version']} - RÃ©vision  {$result['revision']} - {$result['date']}" ;
 		return $result;
 	}
 }

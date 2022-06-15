@@ -12,7 +12,7 @@
     <form class="form-horizontal" action="actes_export_handler.php">
         <?php if ($me->isGroupAdminOrSuper()) : ?>
             <div class="form-group">
-                <label for="authority_id" class="col-md-3 control-label">Collectivité</label>
+                <label for="authority_id" class="col-md-3 control-label">CollectivitÃ©</label>
                 <div class="col-md-3">
                     <select class="form-control zselect_authorities" name="authority_id" id="authority_id">
                         <option value="">Toutes</option>
@@ -29,7 +29,7 @@
         <?php endif;?>
 
         <div class="form-group">
-            <label for="date_debut" class="col-md-3 control-label">Date de début</label>
+            <label for="date_debut" class="col-md-3 control-label">Date de dÃ©but</label>
             <div class="col-md-3">
                 <input id="date_debut" name="date_debut" type="hidden" value="<?php hecho($date_debut) ?>"/>
                 <script type="text/javascript">

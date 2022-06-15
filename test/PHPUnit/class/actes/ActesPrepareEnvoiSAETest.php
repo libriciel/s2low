@@ -20,7 +20,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase {
 		$result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1,$transaction_id);
 		$this->assertFalse($result);
 		$this->assertEquals(
-			"Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».",
+			"Impossible d'archiver une transaction qui n'est pas en Ã©tat Â« Acquittement reÃ§u Â» ou Â« ValidÃ© Â».",
 			$this->getActesPrepareEnvoiSAE()->getLastError()
 		);
 	}
@@ -48,7 +48,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase {
 		);
 
 		$this->assertEquals(
-			"La collectivité n'a pas de Pastell configuré",
+			"La collectivitÃ© n'a pas de Pastell configurÃ©",
 			$this->getActesPrepareEnvoiSAE()->getLastError()
 		);
 	}
@@ -60,7 +60,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase {
 		$transaction_id = $this->createTransaction(4);
 		$result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(5,$transaction_id);
 		$this->assertFalse($result);
-		$this->assertEquals("Accès interdit",$this->getActesPrepareEnvoiSAE()->getLastError());
+		$this->assertEquals("AccÃ¨s interdit",$this->getActesPrepareEnvoiSAE()->getLastError());
 	}
 
 }

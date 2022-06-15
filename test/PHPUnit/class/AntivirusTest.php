@@ -64,7 +64,7 @@ class AntivirusTest extends S2lowSimpleTestCase {
 
     public function testIsDead(){
 	    $this->setShellCommandReturn(-1);
-        $this->setExpectedException(Exception::class,"Problème avec l'antivirus");
+        $this->setExpectedException(Exception::class,"ProblÃ¨me avec l'antivirus");
         $this->getAntivirus()->isAlive();
     }
 }

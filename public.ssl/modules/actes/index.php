@@ -81,7 +81,7 @@ $transNatures = $transactionSQL->getNatures();
 
 $status = $transactionSQL->getStatus();
 $status[TransactionSQL::EN_COURS] = "En cours";
-$status["all"] = "Tous les états";
+$status["all"] = "Tous les Ã©tats";
 
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
@@ -100,7 +100,7 @@ $listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, 
 $listeActesHTML->setDate($fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date);
 
 $doc = new HTMLLayout();
-$doc->setTitle("Liste des transactions - ACTES - S²low");
+$doc->setTitle("Liste des transactions - ACTES - SÂ²low");
 $doc->addCSS("/custom/styles/date-picker.css");
 $doc->addJavascript("/javascript/date-picker.js");
 $doc->addJavascript("/javascript/tedetis.js");
@@ -114,7 +114,7 @@ $doc->openContent();
 
 ob_start();
 ?>
-        <h1>ACTES - Dématérialisation du contrôle de légalité</h1>
+        <h1>ACTES - DÃ©matÃ©rialisation du contrÃ´le de lÃ©galitÃ©</h1>
         <?php $listeActesHTML->display($envelopes);?>	
 <?php 			
 $html = ob_get_contents();

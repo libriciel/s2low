@@ -15,13 +15,13 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Éhec de l'authentification";
+  $_SESSION["error"] = "Ã‰hec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -29,7 +29,7 @@ if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
 try{
     $id = Helpers::getIntFromGet("id",true);
 } catch (Exception $e){
-    $_SESSION["error"] = "id doit être un entier";
+    $_SESSION["error"] = "id doit Ãªtre un entier";
     header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
     exit ();
 }
@@ -52,7 +52,7 @@ if (isset($id) && ! empty($id)) {
 	exit();
   }
 } else {
-  $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+  $_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
   header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
   exit();
 }
@@ -61,7 +61,7 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"helios");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit ();
 }
@@ -109,17 +109,17 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id));
 if ($trans->get('xml_nomfic')){
-	$html .= $doc->getHTMLArrayline("Nom du fichier posté (balise NomFic)", $trans->get('xml_nomfic'));
-	$html .= $doc->getHTMLArrayline("Code collectivité (codcol)", $trans->get('xml_cod_col'));
+	$html .= $doc->getHTMLArrayline("Nom du fichier postÃ© (balise NomFic)", $trans->get('xml_nomfic'));
+	$html .= $doc->getHTMLArrayline("Code collectivitÃ© (codcol)", $trans->get('xml_cod_col'));
 	$html .= $doc->getHTMLArrayline("Code budget (codbud)", $trans->get('xml_cod_bud'));
 	$html .= $doc->getHTMLArrayline("Identifiant du poste comptable (idPost)", $trans->get('xml_id_post'));
 }
 $html .= $doc->getHTMLArrayline("Date de postage" ,Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
-$html .= $doc->getHTMLArrayline("État actuel" ,$currentStatus);
+$html .= $doc->getHTMLArrayline("Ã‰tat actuel" ,$currentStatus);
 $html .= $doc->getHTMLArrayline("Taille (octets)" ,$trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1" ,$trans->get("sha1"));
 $html .= $doc->getHTMLArrayline("Suivie par" ,$user_td);
-$html .= $doc->getHTMLArrayline("Collectivité" ,$authority_td);
+$html .= $doc->getHTMLArrayline("CollectivitÃ©" ,$authority_td);
 
 
 if ($trans->get("sae_transfer_identifier")) {
@@ -133,15 +133,15 @@ $arch_url = $trans->get("archive_url");
 if (!empty ($arch_url)) {
       $url = "<a href=\"" . $trans->get("archive_url") . "\">" . get_hecho($trans->get("archive_url")) . "</a>";
     } else {
-      $url = "Non définie";
+      $url = "Non dÃ©finie";
     }
 $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
 $html .= "</table>\n";
 $html .= "</div>\n";
 
 
-$html .= "<h2>Récuperation du fichier posté ";
-$html .= "<a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_file.php?id=" .$id. "\" title=\"Télécharger le fichier\">".$trans->getFilenameForID($id)."</a> </h2>";
+$html .= "<h2>RÃ©cuperation du fichier postÃ© ";
+$html .= "<a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_file.php?id=" .$id. "\" title=\"TÃ©lÃ©charger le fichier\">".$trans->getFilenameForID($id)."</a> </h2>";
 
 
 if ($me->isSuper()) {
@@ -181,7 +181,7 @@ if (count($workflow) > 0) {
 }
 
 if ($trans->get('acquit_filename')){
-	$html .= " <a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_acquit.php?id=" .$id. "\" title=\"Télécharger l'acquittement\">Télécharger le PES Acquit</a> ";
+	$html .= " <a href=\"" .WEBSITE_SSL. "/modules/helios/helios_download_acquit.php?id=" .$id. "\" title=\"TÃ©lÃ©charger l'acquittement\">TÃ©lÃ©charger le PES Acquit</a> ";
 }
 
 
@@ -203,7 +203,7 @@ if ($currentStatusId == HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
 	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer la transaction sur Pastell\" />\n";
-	$actionHtml .= " (Attention, peut être très long.) \n";
+	$actionHtml .= " (Attention, peut Ãªtre trÃ¨s long.) \n";
 	$actionHtml .= "</div>\n</form>\n";
 }
 
@@ -212,7 +212,7 @@ if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
 	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_verif_sae.php\"  method=\"post\">\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
-	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur Pastell\" />\n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"VÃ©rifier la transaction sur Pastell\" />\n";
 	$actionHtml .= "</div>\n</form>\n";
 }
 
@@ -221,24 +221,24 @@ $status_cible_list = $heliosSAEController->getActionPossible($currentStatusId);
 foreach ($status_cible_list as $new_status_id) {
 	$libelle_status = HeliosStatusSQL::getStatusLibelle($new_status_id);
 	$actionHtml .= "<div class=\"action\">\n";
-	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en Ã©tat $new_status_id ?.');\">\n";
 	$actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
-	$actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status Â« $libelle_status Â»\" /> \n";
 	$actionHtml .= "</div>\n</form>\n";
 	$actionHtml .= "</div>\n";
 }
 
 if ($me->isSuper()) {
 
-	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
-	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera Ã©radiquÃ©e DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnÃ©e (TRES DANGEREUX) : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
-	$actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+	$actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de donnÃ©es\" class=\"btn btn-danger\" />\n";
 	$actionHtml .= "</div></form>\n";
 	
-	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passÃ©e en erreur ')\" method=\"post\">\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id. "\" />\n";
 	$actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />";
@@ -251,12 +251,12 @@ if ($me->isSuper()) {
 	<form
 		action="<?php WEBSITE_SSL ?>/modules/helios/helios_transac_rollback.php"
 		method="post"
-		onsubmit="return confirm('Êtes-vous certain de vouloir faire cela ?')"
+		onsubmit="return confirm('ÃŠtes-vous certain de vouloir faire cela ?')"
 		>
 		<div class="form-group">
-			<label class="col-md-4 control-label">Repasser la transaction en « posté »</label>
+			<label class="col-md-4 control-label">Repasser la transaction en Â« postÃ© Â»</label>
 			<input type="hidden" name="id" value="<?php hecho($id) ?>"/>
-			<input type="submit" value="Revenir en arrière" class="btn btn-danger" />
+			<input type="submit" value="Revenir en arriÃ¨re" class="btn btn-danger" />
 		</div>
 
 
@@ -356,11 +356,11 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"),'CS') ){
 if ($currentStatusId == 14 && $me->checkDroit($module->get("name"),'TT') ){
 
 ob_start(); ?>
-<h3>Télétransmission du fichier</h3>
+<h3>TÃ©lÃ©transmission du fichier</h3>
 <p>
 <form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_submit.php' id='form_sign' method='post'>
 	<input type='hidden' name='id'  value='<?php echo $id?>'/>
-	<input class='submit_button' type='submit' value='Télétransmettre'/>
+	<input class='submit_button' type='submit' value='TÃ©lÃ©transmettre'/>
 
 </form>
 </p>

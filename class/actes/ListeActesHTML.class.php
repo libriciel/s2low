@@ -56,13 +56,13 @@ class ListeActesHTML {
 		<?php 
 		if ($enveloppe) {
                     ?>
-                    <button id="expand-all" onclick="javascript:show_all();" class="toggle-action">Tout déplier<span class="hidden-info">les enveloppes de transactions</span></button>
+                    <button id="expand-all" onclick="javascript:show_all();" class="toggle-action">Tout dÃ©plier<span class="hidden-info">les enveloppes de transactions</span></button>
                     <button id="collapse-all" onclick="javascript:hide_all()" class="toggle-action">Tout replier<span class="hidden-info">les enveloppes de transactions</span></button>
                 </h2>    
                     <?php	 $this->displayList($enveloppe);
 		} else {
                     ?> 
-                     </h2>       Pas de transaction trouvée correspondant aux critères de filtrage
+                     </h2>       Pas de transaction trouvÃ©e correspondant aux critÃ¨res de filtrage
                     <?php 
 		}
 	}
@@ -74,14 +74,14 @@ class ListeActesHTML {
     <?php if ($this->actionBox) : ?>
         <div id="actions_area">
             <h2>Actions</h2>
-            <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_transac_add.php" class="btn btn-primary">Créer une transaction</a>
+            <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_transac_add.php" class="btn btn-primary">CrÃ©er une transaction</a>
             <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_transac_import.php" class="btn btn-primary">Importer une enveloppe</a>
             <a href="<?php echo  WEBSITE_SSL ?>/modules/actes/actes_batch_handle.php" class="btn btn-primary">Traitement par lots</a>
         </div>
     <?php endif;?>
     <h2>
         <span>Filtrage</span>
-        <button id="expand-all" onclick="javascript:expand_area('filtering-area');" class="toggle-action">Tout déplier<span class="hidden-info">le formulaire de filtrage</span></button>
+        <button id="expand-all" onclick="javascript:expand_area('filtering-area');" class="toggle-action">Tout dÃ©plier<span class="hidden-info">le formulaire de filtrage</span></button>
         <button id="collapse-all" onclick="javascript:collapse_area('filtering-area');" class="toggle-action">Tout replier<span class="hidden-info">le formulaire de filtrage</span></button>
     </h2>
     <div id="filtering-area" >
@@ -97,11 +97,11 @@ class ListeActesHTML {
                 </div>
             </div>
             <div class="form-group">
-                <label for="status" class="col-md-3 control-label">État</label>
+                <label for="status" class="col-md-3 control-label">Ã‰tat</label>
                 <div class="col-md-3">
                     <?php echo $this->getHTMLSelect("status", $status, $fstatus) ?>
                 </div>
-                <label for="number" class="col-md-3 control-label">Le numéro contient</label>
+                <label for="number" class="col-md-3 control-label">Le numÃ©ro contient</label>
                 <div class="col-md-3">
                     <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php hecho($fnum) ?>" />
                 </div>
@@ -134,7 +134,7 @@ class ListeActesHTML {
             </div>
             <?php if ($this->allCollectivite) : ?>
             <div class="form-group">
-                <label for="authority" class="col-md-3 control-label">Collectivité</label>
+                <label for="authority" class="col-md-3 control-label">CollectivitÃ©</label>
                 <div class="col-md-3">
                     <?php $this->getHTMLSelect("authority",$this->allCollectivite, $this->filtreAuthority,"zselect_authorities") ?>
                 </div>
@@ -143,7 +143,7 @@ class ListeActesHTML {
             <div class="form-group">
                 <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
                 <a href="<?php echo WEBSITE_SSL ?>/modules/actes/index.php" class="col-md-offset-3 col-md-3 btn btn-default">
-                    Remise à zéro
+                    Remise Ã Â zÃ©ro
                 </a>
             </div>
 	</form>
@@ -198,7 +198,7 @@ class ListeActesHTML {
                     <form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_close.php" method="post">
                         <div class="form-group">
 <!--                            <div id="display-actions">  
-                                <a href="#tedetis" onclick="javascript:show_all();" title="Déplier toutes les enveloppes" class="btn btn-default">Tout déplier</a>
+                                <a href="#tedetis" onclick="javascript:show_all();" title="DÃ©plier toutes les enveloppes" class="btn btn-default">Tout dÃ©plier</a>
                                 <a href="#tedetis" onclick="javascript:hide_all();" title="Replier toutes les enveloppes" class="btn btn-default">Tout replier</a>
                             </div>-->
                             <dl class="envelopes_list">
@@ -207,26 +207,26 @@ class ListeActesHTML {
                             <?php endforeach;?>
                             </dl>
                             <div id="selection-actions">
-                                    <a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
-                                    <a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout désélectionner" class="btn btn-default">Tout desélectionner</a>
-                                    <a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sélection" class="btn btn-default">Inverser la sélection</a>
+                                    <a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sÃ©lectionner" class="btn btn-default">Tout sÃ©lectionner</a>
+                                    <a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout dÃ©sÃ©lectionner" class="btn btn-default">Tout desÃ©lectionner</a>
+                                    <a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sÃ©lection" class="btn btn-default">Inverser la sÃ©lection</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="change-status" class="col-md-5 control-label">Passer les transactions sélectionnées en état</label>
+                            <label for="change-status" class="col-md-5 control-label">Passer les transactions sÃ©lectionnÃ©es en Ã©tat</label>
                             <div class="col-md-2">
                                 <select id ="change-status" name="status" class="form-control">
-                                    <option value="valid">Validé</option>
-                                    <option value="invalid">Refusé</option>
-                                    <option value="sae">Envoyé au SAE</option>
+                                    <option value="valid">ValidÃ©</option>
+                                    <option value="invalid">RefusÃ©</option>
+                                    <option value="sae">EnvoyÃ© au SAE</option>
                                 </select>
                                 </div>
-                            <button type="submit" class="btn btn-default col-md-offset-3 col-md-2">Exécuter</button>
+                            <button type="submit" class="btn btn-default col-md-offset-3 col-md-2">ExÃ©cuter</button>
                         </div>
                     </form>
                    	<div class="form-group">
                    		<form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/actes/actes_batch_sign.php" method="post">
-                   			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
+                   			<input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sÃ©lectionnÃ©es">
                    		</form>
                    		<script type='text/javascript'>
                    		$(document).ready(function() {              
@@ -251,27 +251,27 @@ class ListeActesHTML {
 		?>
 			<dt>
 				<a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander btn btn-default btn-xs">-</a>
-				1 transaction de l'enveloppe n°<a href="<?php echo get_url_same_page(array("order" => "id","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
+				1 transaction de l'enveloppe nÂ°<a href="<?php echo get_url_same_page(array("order" => "id","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
 								title="Trier par identifiant"><?php echo $envelope["envelope_id"] ?></a> 
-				déposée le <a href="<?php echo get_url_same_page(array("order" => "submission_date","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
-								title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
+				dÃ©posÃ©e le <a href="<?php echo get_url_same_page(array("order" => "submission_date","sortway" => $sortWay=='asc'?'desc':'asc')) ?>"
+								title="Trier par date de dÃ©pÃ´t"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
 				<?php if ($this->allCollectivite) : ?>
-      				de la collectivité <?php hecho($envelope['authority_name']) ?>
+      				de la collectivitÃ© <?php hecho($envelope['authority_name']) ?>
 				<?php endif;?>
 			</dt>
 			<dd id="envelope_content_<?php echo $i ?>" class="envelope_content" style="display: block">
-				<table id="transactions-list" class="data-table table table-bordered" summary="Ce tableau présente respectivement une option de sélection pour action, le type, le numéro, le numéro interne, l'objet, la nature, l'état, le courrier ministre, le nom du responsable et un lien vers les actions disponibles de chaque enveloppe de transaction">
+				<table id="transactions-list" class="data-table table table-bordered" summary="Ce tableau prÃ©sente respectivement une option de sÃ©lection pour action, le type, le numÃ©ro, le numÃ©ro interne, l'objet, la nature, l'Ã©tat, le courrier ministre, le nom du responsable et un lien vers les actions disponibles de chaque enveloppe de transaction">
                                     <caption>Liste des transactions en fonction des choix de filtrage</caption>
                                     <thead>
 					<tr class="active">
-                                            <th id="selection">Sél.</th>
+                                            <th id="selection">SÃ©l.</th>
                                             <th id="transaction-type">Type de transaction</th>
-                                            <th id="act-number">Numéro de l'acte</th>
-                                            <th id="act-internal-number">Numéro Interne de l'acte</th>
+                                            <th id="act-number">NumÃ©ro de l'acte</th>
+                                            <th id="act-internal-number">NumÃ©ro Interne de l'acte</th>
                                             <th id="object">Objet</th>
                                             <th id="nature">Nature</th>
                                             <th id="status">Etat</th>
-                                            <th id="mail">courrier ministère</th>
+                                            <th id="mail">courrier ministÃ¨re</th>
                                             <th id="follower">Suivie par</th>
                                             <th id="actions">Actions</th>
 					</tr>
@@ -299,7 +299,7 @@ class ListeActesHTML {
                                                     foreach ($envelope['courrier_info'] as $id => $info): ?>
                                                             <a href="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_show.php?id=<?php echo $id ?>">
                                                                     <?php echo $info["type_str"] ?>
-                                                                    (<?php echo isset($info["sens"])?$info["sens"]:"envoyé" ?>) 
+                                                                    (<?php echo isset($info["sens"])?$info["sens"]:"envoyÃ©" ?>) 
                                                             </a>
                                                             <br/>
                                                     <?php endforeach; ?>
@@ -309,13 +309,13 @@ class ListeActesHTML {
                                                     <a href="<?php echo WEBSITE_SSL ?>/modules/actes/actes_transac_show.php?id=<?php echo $envelope['transaction_id']?>" 
                                                                     class="icon">
                                                             <img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" 
-                                                                            alt="image_modif" title="Afficher le détail" />
+                                                                            alt="image_modif" title="Afficher le dÃ©tail" />
                                                     </a>
                                                     <?php if ($envelope["archive_url"]) : ?>
                                                                 <a href="<?php echo $envelope["archive_url"] ?>" 
                                                                     class="icon">
                                                                     <img src="<?php echo WEBSITE_SSL ?>/custom/images/icone_archivage.png" 
-                                                                                    alt="image_archivage" title="Accéder à  l'archivage de cette transaction" />
+                                                                                    alt="image_archivage" title="AccÃ©der Ã Â  l'archivage de cette transaction" />
                                                                 </a>
                                                     <?php endif;?>
                                             </td>

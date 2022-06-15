@@ -18,8 +18,8 @@ class ExtendPdf extends FPDF {
         parent::__construct($orientation, $unit, $size);
     }
   /**
-  * \brief Initialiser l'entête du fichier pdf.
-  * \param pas de paramètre.
+  * \brief Initialiser l'entÃªte du fichier pdf.
+  * \param pas de paramÃ¨tre.
   * 
   */
 	public function Header() {
@@ -40,7 +40,7 @@ class ExtendPdf extends FPDF {
 	
   /**
   * \brief Initialiser le pied du fichier pdf.
-  * \param pas de paramètre.
+  * \param pas de paramÃ¨tre.
   * 
   */
 	public function Footer() {
@@ -64,7 +64,7 @@ class ExtendPdf extends FPDF {
 
 	/**
   * @brief Initialiser alligne du chaque collone.
-  * @param $a =array =>la façcon d'alligne de chaque multicell.
+  * @param $a =array =>la faÃ§con d'alligne de chaque multicell.
   * 
   */
 	public function SetMyAligns($a) {
@@ -79,7 +79,7 @@ class ExtendPdf extends FPDF {
 	/**
   * @brief Initialiser border du chaque multicell.
   * @param $border =array =>la border de chaque multicell.
-  *      par défault, $border=0 =>pas de border.
+  *      par dÃ©fault, $border=0 =>pas de border.
   *      $border peut prend ses valeur de 'T','B','R','L' ou le metter ensemble.
   *      T=top, B=Bottom, R=right, L=left.
   */
@@ -119,7 +119,7 @@ class ExtendPdf extends FPDF {
 	    {
 	        $w=$this->widths[$i];
 	        
-	        //default aligne à  gauche.
+	        //default aligne Ã Â  gauche.
 	        $a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
 	        //default pas de border
 	        $b=isset($this->border[$i]) ? $this->border[$i] : 0;
@@ -162,9 +162,9 @@ class ExtendPdf extends FPDF {
 	}
 
 	/**
-  * @brief véréfier le table est deborder une page ou non.
+  * @brief vÃ©rÃ©fier le table est deborder une page ou non.
   * @param $h =float =>la position de ligne
-  *     si il a déborder, créer une nouvelle page.
+  *     si il a dÃ©border, crÃ©er une nouvelle page.
   * 
   */
 	public function CheckPageBreak($h) {
@@ -174,7 +174,7 @@ class ExtendPdf extends FPDF {
 	}
 	
   /**
-  * @brief  calculer on doit sauter des ligne ou pas si le text est déborder un multicell
+  * @brief  calculer on doit sauter des ligne ou pas si le text est dÃ©border un multicell
   * @param  $w =float =>large de multicell
   * @param  $txt=string => le contenu de ce multicell
    * @return int
@@ -238,7 +238,7 @@ class ExtendPdf extends FPDF {
 	 * @param $h =float => le large et le hauteur de rectangle.
 	 * @param $r
   * @param $style
-  * @param $angle= 1, 2 ,3, 4, ou mélanger les pour définir le quelle angle est rond.
+  * @param $angle= 1, 2 ,3, 4, ou mÃ©langer les pour dÃ©finir le quelle angle est rond.
   */
 	function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234') {
         $k = $this->k;

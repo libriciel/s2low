@@ -2,8 +2,8 @@
 
 <div id="actions-area">
 	<h2>Actions</h2>
-	<a class="btn btn-primary" href="admin_authority_edit.php" class="bouton">Ajouter une collectivité</a>
-    <a class="btn btn-primary" href="admin_authorities_export.php" class="bouton">Exporter la liste des collectivités</a>
+	<a class="btn btn-primary" href="admin_authority_edit.php" class="bouton">Ajouter une collectivitÃ©</a>
+    <a class="btn btn-primary" href="admin_authorities_export.php" class="bouton">Exporter la liste des collectivitÃ©s</a>
 </div>
 
 <div id="filtering-area">
@@ -61,16 +61,16 @@
 </div>
 <br />
 
-<h2>Liste des collectivités</h2>
+<h2>Liste des collectivitÃ©s</h2>
 <div id="authority-list">
 	<table class="data-table table table-striped" summary="">
 		<thead>
 		<tr>
 			<th id="name">Nom</th>
 			<th id="group-member">Groupe</th>
-			<th id="authority-type">Type de collectivité</th>
+			<th id="authority-type">Type de collectivitÃ©</th>
 			<th id="address">Adresse</th>
-			<th id="phone">Téléphone</th>
+			<th id="phone">TÃ©lÃ©phone</th>
 			<th id="fax">SIREN</th>
 			<th id="actions">Actions</th>
 		</tr>

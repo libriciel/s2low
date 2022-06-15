@@ -57,7 +57,7 @@ class OpenStackContainerWrapper{
     private function hasValidToken(){
         $hasValidToken = isset($this->token) && !$this->token->hasExpired();
         if(!$hasValidToken){
-            $this->logger->info("[Openstack] Token expirÈ");
+            $this->logger->info("[Openstack] Token expir√©");
         }
         return ($hasValidToken);
     }

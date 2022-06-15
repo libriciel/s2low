@@ -15,8 +15,8 @@ class ActesPdfLegacy implements IActesPdf
 
 
     public function initPage(ExtendPdf $pdf){
-        //fini de la traitment de les requêtes.
-        //créer un objet pdf.
+        //fini de la traitment de les requÃªtes.
+        //crÃ©er un objet pdf.
         $pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
         $pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
 
@@ -27,7 +27,7 @@ class ActesPdfLegacy implements IActesPdf
     public function printInfosCollectivite(ExtendPdf $pdf, string $texteCollectivite, string $texteUtilisateur){
         $pdf->SetFont('Arial','B',12);
         $pdf->SetTextColor(94,106,23);
-        $pdf->Cell(40,10,"Collectivité :",0,0,'R');
+        $pdf->Cell(40,10,"CollectivitÃ© :",0,0,'R');
         $pdf->Cell(40,10,$texteCollectivite,0,1,'L');
         $pdf->Cell(40,10,"Utilisateur :",0,0,'R');
         $pdf->Cell(40,10,$texteUtilisateur,0,1,'L');
@@ -46,7 +46,7 @@ class ActesPdfLegacy implements IActesPdf
     }
 
     /**
-     * \brief ajouter l'entête de pdf
+     * \brief ajouter l'entÃªte de pdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */
@@ -72,7 +72,7 @@ class ActesPdfLegacy implements IActesPdf
 	public function transTable(ExtendPdf $pdf, array $contenuTableau)
 	{
         $pdf->SetTextColor(40,36,94);
-        $this->writeTitreParagraphe($pdf,"Paramètre de la transaction :",60);
+        $this->writeTitreParagraphe($pdf,"ParamÃ¨tre de la transaction :",60);
         //obtenir tous les info et commencer de les ajouter dans tableau
         $pdf->SetFont('Arial','i',10);
         $pdf->SetMyWidths(array(10,70,80));
@@ -108,7 +108,7 @@ class ActesPdfLegacy implements IActesPdf
             if ($file["filename"])
             {
                 $this->addCellToTable($pdf,
-                    "Nom métier :",
+                    "Nom mÃ©tier :",
                     $file["filename"], $file["filetype"], $file["filesize"]
                 );
             }
@@ -180,7 +180,7 @@ class ActesPdfLegacy implements IActesPdf
         $pdf->SetMyBorder(array('R', 'LTR', 'LTR', 'LTR'));
         $pdf->myRow(array("", $typeNom, "", ""), true);
         $pdf->SetMyBorder(array('R', 'LBR', 'LBR', 'LBR'));
-        // Pour le fichier métier, on affiche la taille et le type du fichier original...
+        // Pour le fichier mÃ©tier, on affiche la taille et le type du fichier original...
         $pdf->myRow(array("", $posted_filename, $filetype, $filesize), true);
     }
 }

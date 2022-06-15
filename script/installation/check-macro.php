@@ -1,16 +1,16 @@
 <?php
-// Ce script a pour but de retourner les macro qui n'ont pas été surchargées
+// Ce script a pour but de retourner les macro qui n'ont pas Ã©tÃ© surchargÃ©es
 
 require_once( __DIR__ . "/../../config/LoadLocalSettings.php");
-echo "récupération des constantes surchargées";
+echo "rÃ©cupÃ©ration des constantes surchargÃ©es";
 $constantes_surchargee = get_defined_constants();
 
 require_once( __DIR__ . "/../../config/config.php");
 
-echo "récupération de toutes les constantes";
+echo "rÃ©cupÃ©ration de toutes les constantes";
 $constantes_globales = get_defined_constants();
 
 $constantes_non_surchargees = array_diff_assoc($constantes_globales,$constantes_surchargee);
 
-echo "Voici les marcos qui n'ont pas été surchargées";
+echo "Voici les marcos qui n'ont pas Ã©tÃ© surchargÃ©es";
 print_r($constantes_non_surchargees);

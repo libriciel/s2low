@@ -41,12 +41,12 @@ class RgsConnexion {
 
 	public function isRgsConnexion(){
 		if ( empty($this->server_global['SSL_CLIENT_VERIFY'])){
-			$this->last_message = "Impossible de vÈrifier la connexion HTTPS";
+			$this->last_message = "Impossible de v√©rifier la connexion HTTPS";
 			return false;
 		}
 
 		if ($this->server_global['SSL_CLIENT_VERIFY'] != "SUCCESS") {
-			$this->last_message = "La connexion HTTPS n'est pas opÈrationnel";
+			$this->last_message = "La connexion HTTPS n'est pas op√©rationnel";
 			return false;
 		}
 

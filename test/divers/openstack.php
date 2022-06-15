@@ -4,7 +4,7 @@ require_once(__DIR__ . "/../../init/init.php");
 
 $file_content = mt_rand(0,mt_getrandmax());
 $filename = tempnam(sys_get_temp_dir(),"test_s2low_openstack_");
-echo "Création du fichier $filename\n";
+echo "CrÃ©ation du fichier $filename\n";
 file_put_contents($filename,$file_content);
 
 /** @var OpenStackSwiftWrapper $openStackSwiftWrapper */
@@ -21,13 +21,13 @@ unlink($filename);
 
 $debut = microtime(true)."\n";
 $openStackSwiftWrapper->retrieveFile("test",$filename);
-echo "Temps pour récupérer un fichier (swift): ";
+echo "Temps pour rÃ©cupÃ©rer un fichier (swift): ";
 echo ceil((microtime(true)-$debut) * 1000);
 echo "ms\n";
 
 $debut = microtime(true)."\n";
 $file_content_result = file_get_contents($filename);
-echo "Temps pour récupérer un fichier (local): ";
+echo "Temps pour rÃ©cupÃ©rer un fichier (local): ";
 echo ceil((microtime(true)-$debut) * 1000);
 echo "ms\n";
 

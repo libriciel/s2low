@@ -24,27 +24,27 @@
                 <div id="menu-area" class="col-md-3">
                     <div id="menu">
                         <div id="menu-header">
-                            <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-                            (Certificat nécessaire)
+                            <a href="<?php echo WEBSITE_SSL ?>">AccÃ©der au site</a><br />
+                            (Certificat nÃ©cessaire)
                         </div>
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <h1>Pré-requis S²LOW&nbsp;</h1>
+                    <h1>PrÃ©-requis SÂ²LOW&nbsp;</h1>
                     <h2 class="home">Navigateurs compatibles</h2>
                     <p class="home">
-                        S²LOW est développé principalement pour  <b>Google Chrome</b> et  <b>Mozilla Firefox</b>
+                        SÂ²LOW est dÃ©veloppÃ© principalement pour  <b>Google Chrome</b> et  <b>Mozilla Firefox</b>
                     </p>
                     <p class="home">
-                        S²LOW assure la compatibilité avec :
+                        SÂ²LOW assure la compatibilitÃ© avec :
                     <ul>
-                    <li>la dernière version stable de Google Chrome.</li>
-                    <li> la dernière version de Mozilla Firefox</li>
+                    <li>la derniÃ¨re version stable de Google Chrome.</li>
+                    <li> la derniÃ¨re version de Mozilla Firefox</li>
                     <li> les versions ESR de Mozilla Firefox</li>
                     </ul>
                     </p>
                     <p class="home">
-                        Bien que développé pour les standards du web, le fonctionnement et l'affichage de S²LOW ne sont pas garantis :
+                        Bien que dÃ©veloppÃ© pour les standards du web, le fonctionnement et l'affichage de SÂ²LOW ne sont pas garantis :
                         <ul>
                         <li> sur d'autres versions de Google Chrome ou Mozilla Firefox</li>
                         <li> sur d'autres navigateurs (Microsoft Internet Explorer, Microsoft Edge, Apple Safari, Opera, ...)</li>
