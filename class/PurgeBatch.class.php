@@ -4,7 +4,7 @@ class PurgeBatch {
 
     public function __construct() {
         if (PHP_SAPI != 'cli') {
-            header("Content-type: text/html; charset=iso-8859-15");
+            header("Content-type: text/html; charset=utf-8");
         }
     }
 

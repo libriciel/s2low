@@ -23,10 +23,10 @@ if (php_sapi_name() != 'cli'){
  * 
  */
 function hecho($message,$quot_style=ENT_QUOTES){
-	echo get_hecho($message,$quot_style,"iso-8859-15");
+	echo get_hecho($message,$quot_style,"utf-8");
 }
 
-function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="iso-8859-15"){
+function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="utf-8"){
 	return htmlspecialchars($message,$quot_style,$encoding);
 }
 
