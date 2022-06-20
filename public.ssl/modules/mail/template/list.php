@@ -76,7 +76,7 @@
                                 <?php 
                                 if ($SendDateTo) {
                                     //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-                                    echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($SendDateTo)));
+                                    echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($SendDateTo));
                                 } else {
                                     echo "Choisir une date";	
                                 }

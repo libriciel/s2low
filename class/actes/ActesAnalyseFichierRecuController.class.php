@@ -113,7 +113,7 @@ class ActesAnalyseFichierRecuController {
 		$expected_content = "Notre service de contrôle de légalité a identifié qu'il s'agit d'un acte dont la transmission est effectuée en multi canal.";
 		if (! preg_match(
 			"#$expected_content#",
-			utf8_decode(file_get_contents($message_body)))
+			file_get_contents($message_body))
 		){
 			return false;
 		}
@@ -136,7 +136,7 @@ class ActesAnalyseFichierRecuController {
 				$this->s2lowLogger->info("Message de réponse à un multicanal");
 				return;
 			}
-            throw new Exception(utf8_decode($e->getMessage()));
+            throw new Exception($e->getMessage());
         }
 
         if ($archiveData->is_ano){
@@ -203,11 +203,11 @@ class ActesAnalyseFichierRecuController {
         /** @var \Libriciel\LibActes\FichierXML\EnveloppeAnomalie $anomalieEnveloppe */
         $anomalieEnveloppe = $actesXML->getDataFromXML(file_get_contents($archiveData->enveloppe_path));
 
-        $detail_erreur = utf8_decode($anomalieEnveloppe->detail_erreur);
+        $detail_erreur = $anomalieEnveloppe->detail_erreur;
 
         $message = "Enveloppe rejetée par le {$this->actes_ministere_acronyme} ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
-        $xml = file_get_contents($archiveData->enveloppe_path);
-
+        $xml = mb_convert_encoding(file_get_contents($archiveData->enveloppe_path),"UTF-8","ISO-8859-1"); // FIX conversion UTF-8
+                                                    //Est-on sûr que l'acte est toujours en ISO-8859-1 ??
         $this->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ERREUR,

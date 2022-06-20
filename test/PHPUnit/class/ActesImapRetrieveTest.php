@@ -26,8 +26,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-		$this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
+		$this->assertRegExp("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 
 	/**
@@ -84,8 +84,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $this->assertRegExp("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Déplacement du répertoire#", $logs[6][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Suppression du message : 13#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 
 

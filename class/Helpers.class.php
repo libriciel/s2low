@@ -215,7 +215,7 @@ class Helpers {
               'Europe/Paris',
               IntlDateFormatter::GREGORIAN,
               $pattern);
-          return utf8_decode($formatter->format($myDateTime));
+          return $formatter->format($myDateTime);
   }
 
   /**
@@ -247,7 +247,7 @@ class Helpers {
    * \return La chaîne correspondante en ISO-8859-1
   */
   public static function getFromXMLElt($elt) {
-	return utf8_decode(sprintf("%s", $elt));
+	return sprintf("%s", $elt);
   }
 
   /**
@@ -315,7 +315,7 @@ class Helpers {
 	  $pattern = "d MMMM YYYY";//"j F Y";
 
 	  if ($with_hours) {
-          $pattern = $pattern . utf8_encode(" à ")."HH'h'mm'min'ss's'";//"j F Y ";//\a H\hi\m\i\ns\s";
+          $pattern = $pattern . " à "."HH'h'mm'min'ss's'";
 	  }
         $formatter = new IntlDateFormatter(
             'fr_FR',
@@ -324,7 +324,7 @@ class Helpers {
             'Europe/Paris',
             IntlDateFormatter::GREGORIAN,
             $pattern);
-        return utf8_decode($formatter->format($myDateTime));
+        return $formatter->format($myDateTime);
 	}
 
 	return null;

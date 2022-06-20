@@ -114,7 +114,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
                 );
 
 			} catch (Exception $e){
-				throw new Exception(utf8_decode($e->getMessage()),$e->getCode(),$e);
+				throw new Exception($e->getMessage(),$e->getCode(),$e);
 			}
 			$this->validatePades($archive_path,$tmp_dir,$must_validate_certificate);
 		} catch (RecoverableException $e){

@@ -46,7 +46,7 @@ $all = $actesTransactionsSQL->getArchiveFStatus(1);
 	$dom->load($tmpDir."/".$acte_file);
 	$r  = $dom->getElementsByTagName("Objet");
 	
-	$xml_subject = utf8_decode($r->item(0)->nodeValue);
+	$xml_subject = $r->item(0)->nodeValue;
 	
 	if ($subject != $xml_subject ){	
 		echo "Ooops... le sujet $subject diffère du contenu de l'enveloppe {$xml_subject}...\n";

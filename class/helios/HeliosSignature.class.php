@@ -134,7 +134,7 @@ class HeliosSignature {
 		$result = $domDocument->saveXML();
 
 		foreach($signature_raw as $text_to_replace => $raw_signature){
-			$result = preg_replace("#$text_to_replace#s",utf8_decode($raw_signature),$result);
+			$result = preg_replace("#$text_to_replace#s",$raw_signature,$result);
 		}
 		return $result;
 	}

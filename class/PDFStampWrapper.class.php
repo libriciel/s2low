@@ -68,7 +68,7 @@ class PDFStampWrapper {
         /* curl -F "file=@Courrier.pdf" -F "metadata=$SAMPLE" -X POST http://pdf-stamp:8080 (!) */
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->addPostFile('file',$pdf_filepath);
-        $curlWrapper->addPostData('metadata',json_encode(utf8_encode_array($data)));
+        $curlWrapper->addPostData('metadata',json_encode($data));
 
 
         $result = $curlWrapper->get($this->pdf_stamp_url);

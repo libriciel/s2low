@@ -89,7 +89,11 @@ class HeliosController extends Controller {
         }
 
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+        try{
+            $SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+        } catch (Exception $e){
+            throw new Exception("Échec lors du téléchargement du fichier");
+        }
 
 		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
 			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
@@ -173,7 +177,7 @@ class HeliosController extends Controller {
 		}
 
 
-		$doc = new DOMDocument();
+		$doc = new DOMDocument("1.0", "UTF-8");
 		$doc->formatOutput = true;
 		$doc->preserveWhiteSpace = false;
 		$root=$doc->createElement("import");
@@ -191,10 +195,10 @@ class HeliosController extends Controller {
 			$msg = "Téléchargement du fichier réussi.";
 			$idElement->appendChild( $doc->createTextNode($id_transaction));
 			$resultatElement->appendChild( $doc->createTextNode("OK"));
-			$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));
+			$messageElement->appendChild( $doc->createTextNode( $msg));
 		} catch (Exception $e) {
 			$resultatElement->appendChild( $doc->createTextNode( "KO" ) );
-			$messageElement->appendChild( $doc->createTextNode( utf8_encode($e->getMessage())));
+			$messageElement->appendChild( $doc->createTextNode( $e->getMessage()));
 		}
 
 		$xmlFile = HELIOS_FILES_ROOT."/temp/import-".date('YmdHis').mt_rand(0,mt_getrandmax()).".xml";
@@ -298,7 +302,7 @@ class HeliosController extends Controller {
             $messageElement=$doc->createElement("message");
             $root->appendChild($messageElement);
         }
-		$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg) ));
+		$messageElement->appendChild( $doc->createTextNode( $msg ));
 
 		header("Content-type: text/xml");
 		echo $doc->saveXML();

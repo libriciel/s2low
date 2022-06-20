@@ -289,7 +289,7 @@ class HeliosAnalyseFichierRecu {
 			throw new Exception("Impossible de trouver le NomFic dans le fichier");
 		}
 
-		$nom_fic = utf8_decode(strval($xml->Enveloppe->Parametres->NomFic['V']));
+		$nom_fic = strval($xml->Enveloppe->Parametres->NomFic['V']);
 		$cod_col = strval($xml->EnTetePES->CodCol['V']);
 		if (!$nom_fic){
 			throw new Exception("Impossible de trouver l'attribut NomFic dans le PESAcquit");

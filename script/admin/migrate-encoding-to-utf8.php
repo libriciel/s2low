@@ -15,10 +15,12 @@ function changeEncoding($filepath){
     file_put_contents($filepath,$newContent);
 }
 
-$basePath = realpath(__DIR__."/../../");
+//$basePath = realpath(__DIR__."/../../");
+$basePath = realpath("/home/jlegall/Projets/tdt-lib-actes/");
 
 $finder = new Finder();
 
+var_dump($basePath);
 $finder->files()->in($basePath)->exclude("vendor")->name("*.php");
 
 $aVerifier = [];

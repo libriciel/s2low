@@ -82,7 +82,7 @@ if(!defined('DB_DATABASE')){
 }
 
 if(!defined('DB_CLIENT_ENCODING')){
-	define('DB_CLIENT_ENCODING', "LATIN9");
+	define('DB_CLIENT_ENCODING', "UTF-8");
 }
 
 

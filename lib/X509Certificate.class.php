@@ -53,7 +53,7 @@ class X509Certificate {
 				$val = utf8_encode_array($val);
 				$val = implode(",",$val);
 			} else {
-				$val = utf8_decode($val);
+				$val = $val;
 			}
 
 			$result .= "/$key=$val";

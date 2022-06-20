@@ -123,7 +123,7 @@ class ActesVerifSaeWorker implements IWorker {
 	}
 
 	private function getXMLMessage(SimpleXMLElement $xml){
-		return utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
+		return strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'});
 	}
 
 	public function getMutexName($data) {

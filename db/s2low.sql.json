@@ -200,7 +200,7 @@
                 "column_default": null
             },
             "xml_data": {
-                "data_type": "text",
+                "data_type": "bytea",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null

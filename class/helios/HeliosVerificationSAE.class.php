@@ -88,7 +88,7 @@ class HeliosVerificationSAE {
 
 
 		$nodeName = strval($xml->getName());
-		$xml_message = utf8_decode(strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'}));
+		$xml_message = strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'});
 
 		if ($nodeName == 'ArchiveTransferAcceptance' ||
 			($nodeName == 'ArchiveTransferReply' && (strval($xml->{'ReplyCode'}) == '000'))){

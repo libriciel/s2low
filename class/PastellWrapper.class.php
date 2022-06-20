@@ -74,7 +74,7 @@ class PastellWrapper {
         }
 
 		if (isset($data['status']) && $data['status']=='error' ){
-			throw new Exception("Message de Pastell : " . utf8_decode($data['error-message']));
+			throw new Exception("Message de Pastell : " . $data['error-message']);
 		}
 		return $data;
 	}

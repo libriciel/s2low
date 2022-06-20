@@ -99,7 +99,7 @@ class ActesEnvoiFichierWorker implements IWorker {
             $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
             $this->actesFileSender->send($archive_path);
         } catch(Exception $e){
-            $message = utf8_decode( $e->getMessage());
+            $message = $e->getMessage();
             $message = "[$envelope_libelle] Impossible d'envoyer l'archive : $message";
 			$this->logger->error($message);
 			throw new RecoverableException($message,$e->getCode(),$e);

@@ -118,7 +118,7 @@ class HelpersTest extends TestCase {
 	}
 
 	public function testGetFromXMLElt(){
-		$this->assertEquals("école",Helpers::getFromXMLElt(utf8_encode("école")));
+		$this->assertEquals("école",Helpers::getFromXMLElt("école"));
 	}
 
 	public function testTruncateString(){

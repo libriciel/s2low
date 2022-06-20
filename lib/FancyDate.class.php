@@ -14,11 +14,11 @@ class FancyDate {
 		if (! $date){
 			return false;
 		}
-		return utf8_decode(strftime("%e %B %Y %H:%M:%S", strtotime($date)));
+		return strftime("%e %B %Y %H:%M:%S", strtotime($date));
 	}
 
 	public function getMois($date){
-		return utf8_decode(strftime("%B %Y", strtotime($date)));
+		return strftime("%B %Y", strtotime($date));
 	}
 	
 }

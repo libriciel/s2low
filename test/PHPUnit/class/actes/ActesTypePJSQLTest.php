@@ -10,7 +10,7 @@ class ActesTypePJSQLTest extends S2lowTestCase {
 
 		$actesUpdateClassificationSQL->updateClassification(
 			"123456789",
-			file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
+			     file_get_contents(__DIR__."/fixtures/classification-exemple.xml"),
 		);
 
 		$actesTypePJSQL = $this->getObjectInstancier()->get(ActesTypePJSQL::class);
@@ -26,7 +26,7 @@ class ActesTypePJSQLTest extends S2lowTestCase {
 
 		$actesUpdateClassificationSQL->updateClassification(
 			"123456789",
-			file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
+                file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
 		);
 
 		$actesTypePJSQL = $this->getObjectInstancier()->get(ActesTypePJSQL::class);

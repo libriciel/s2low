@@ -101,7 +101,10 @@ class MailsecDownloadControllerTest extends S2lowTestCase {
         $contents = ob_get_contents();
         ob_end_clean();
 
-        $this->assertStringContainsString(iconv('ISO-8859-1','UTF-8',"Ceci est un test avec un é"),$contents);
+        $this->assertStringContainsString(
+            "Ceci est un test avec un é", //Quickfix passage utf-8
+            $contents
+        );
     }
 
 	/**

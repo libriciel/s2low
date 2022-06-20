@@ -293,8 +293,8 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 
 		$actesUpdateClassificationSQL->updateClassification(
 			"123456789",
-			file_get_contents(__DIR__."/../../class/actes/fixtures/classification-exemple.xml")
-		);
+			utf8_decode(file_get_contents(__DIR__."/../../class/actes/fixtures/classification-exemple.xml"))
+		);   // FIX passage en UTF8
 
 		$this->getObjectInstancier()->set('actes_appli_trigramme','abc');
 		$this->getObjectInstancier()->set('actes_appli_quadrigramme','TACT');
@@ -324,8 +324,8 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 
         $actesUpdateClassificationSQL->updateClassification(
             "123456789",
-            file_get_contents(__DIR__."/../../class/actes/fixtures/classification-exemple.xml")
-        );
+            utf8_decode(file_get_contents(__DIR__."/../../class/actes/fixtures/classification-exemple.xml"))
+        ); // Quickfix passage en UTF-8
 
         $this->getObjectInstancier()->set('actes_appli_trigramme','abc');
         $this->getObjectInstancier()->set('actes_appli_quadrigramme','TACT');
