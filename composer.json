@@ -29,7 +29,10 @@
     "erusev/parsedown": "^1.7",
     "ext-pgsql": "*",
     "ext-intl": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-curl": "*",
+    "ext-zlib": "*",
+    "ext-gd": "*"
   },
 
   "require-dev": {

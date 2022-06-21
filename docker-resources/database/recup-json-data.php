@@ -20,7 +20,7 @@ foreach($table_to_save as $table) {
 	$result[$table] = $sqlQuery->query("SELECT * FROM $table");
 }
 
-$data =  json_encode(utf8_encode_array($result),JSON_PRETTY_PRINT);
+$data =  json_encode($result,JSON_PRETTY_PRINT);
 
 
 file_put_contents(__DIR__."/database_populate.json",$data);

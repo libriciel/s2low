@@ -58,8 +58,8 @@ foreach($info["other_id"] as $id){
 	$data= array(
 		"api"	=>	"1",
 		"id"	=>	$id,
-		"name"	=>	utf8_decode($userinfo["name"]),
-		"givenname"	=>	utf8_decode($userinfo["givenname"]),
+		"name"	=>	utf8_decode($userinfo["name"]),             //OK, on attaque l'API en ISO
+		"givenname"	=>	utf8_decode($userinfo["givenname"]),    // (conversion UTF-8)
 		"email"	=>	$userinfo["email"],
 		"status"	=>	$userinfo["status"],
 		"authority_id"	=>	$userinfo["authority_id"],

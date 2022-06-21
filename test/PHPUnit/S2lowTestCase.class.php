@@ -100,7 +100,7 @@ abstract class S2lowTestCase extends TestCase {
 
 	protected function getSQLContent(){
 		if (! self::$sqlContentStatic){
-			self::$sqlContentStatic = utf8_encode(file_get_contents(__DIR__."/s2low-test.sql"));
+			self::$sqlContentStatic = utf8_encode(file_get_contents(__DIR__."/s2low-test.sql")); // passage utf8
 		}
 		return self::$sqlContentStatic;
 	}

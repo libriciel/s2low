@@ -63,10 +63,10 @@ if (isset ($batchFileId) && is_numeric($batchFileId)) {
 $actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
 
 
-$type_pj_list = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNature()));
-$type_pj_list_matiere1 = json_encode(utf8_encode_array($actesTypePJSQL->getAllByNatureMatiere1()));
-$type_pj_default = json_encode(utf8_encode_array($actesTypePJSQL->getAllDefaultNature()));
-$type_pj_list_par_nature = json_encode(utf8_encode_array($actesTypePJSQL->getListByNature()));
+$type_pj_list = json_encode($actesTypePJSQL->getAllByNature());
+$type_pj_list_matiere1 = json_encode($actesTypePJSQL->getAllByNatureMatiere1());
+$type_pj_default = json_encode($actesTypePJSQL->getAllDefaultNature());
+$type_pj_list_par_nature = json_encode($actesTypePJSQL->getListByNature());
 $actes_type_par_nature = ACTES_TYPE_PAR_NATURE?"true":"false";
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
@@ -347,7 +347,7 @@ $html .= "    </script>\n";
 $html .= "    <a class=\"form-control\" href=\"#datepicker\" id=\"datepicker_decision_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_decision_date.toggleDatePicker(); return false;\">";
 
 if ($decision_date) {
-  $html .= utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date)));
+  $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date));
 } else {
   $html .= "Choisir une date";
 }

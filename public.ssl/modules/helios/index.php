@@ -264,7 +264,7 @@ ob_start();
 				</script>
 				<a href="#datepicker" id="datepicker_min_submission_date_link" class="datepicker_link" onclick="javascript:obj_min_submission_date.toggleDatePicker(); return false">
 					<?php if ($fmin_submission_date)  : ?>
-						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date))); ?>
+						<?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date)); ?>
 					<?php else : ?>
 						Choisir une date
 					<?php endif; ?>
@@ -279,7 +279,7 @@ ob_start();
 				</script>
 				<a href="#datepicker" id="datepicker_min_ack_date_link" class="datepicker_link" onclick="javascript:obj_min_ack_date.toggleDatePicker(); return false;">
 					<?php if ($fmin_ack_date): ?>
-					  <?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date))); ?>
+					  <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date)); ?>
 					<?php else : ?>
 					  Choisir une date
 					<?php endif; ?>
@@ -297,7 +297,7 @@ ob_start();
 				</script>
 				<a href="#datepicker" id="datepicker_max_submission_date_link" class="datepicker_link" onclick="javascript:obj_max_submission_date.toggleDatePicker(); return false;">
 					<?php if ($fmax_submission_date) :?>
-  						<?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date))); ?>
+  						<?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date)); ?>
 					<?php else: ?>
   						Choisir une date
   					<?php endif; ?>
@@ -313,7 +313,7 @@ ob_start();
 				</script>
 				<a href="#datepicker" id="datepicker_max_ack_date_link" class="datepicker_link" onclick="javascript:obj_max_ack_date.toggleDatePicker(); return false;">
 					<?php if ($fmax_ack_date) :?>
-					  <?php echo utf8_decode(strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date))); ?>
+					  <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date)); ?>
 					<?php else : ?>
 					  Choisir une date
 					<?php endif; ?>

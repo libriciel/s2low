@@ -16,7 +16,7 @@ class ActesAPIController extends Controller {
         $actesStatusSQL = $this->getObjectInstancier()->get('ActesStatusSQL');
         $result = $actesStatusSQL->getAllStatus();
 
-        echo json_encode(utf8_encode_array($result));
+        echo json_encode($result);
         return true;
     }
 
@@ -61,7 +61,7 @@ class ActesAPIController extends Controller {
             'transactions'=>$transactions_list
         );
 
-        echo json_encode(utf8_encode_array($result));
+        echo json_encode(legacy_encode_array($result));
         return true;
     }
 
@@ -72,7 +72,7 @@ class ActesAPIController extends Controller {
 		$authority_id = intval($this->me->get("authority_id"));
 		$list = $this->getActesTransactionsSQL()->listDocumentPrefectureNonLu($authority_id);
 
-		echo json_encode(utf8_encode_array($list));
+		echo json_encode($list);
 		return true;
 	}
 

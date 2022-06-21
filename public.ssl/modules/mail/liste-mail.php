@@ -11,7 +11,9 @@ $bd = DatabasePool::getInstance();
 $annuaire = new Annuaire($bd,$me->get('authority_id'));
 
 $result = array();
+
 foreach($annuaire->getListeMailAndGroupe($debut) as $line){
-	$result[] = utf8_encode($line);
+	$result[] = $line;
 }
+
 echo json_encode($result);

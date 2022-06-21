@@ -82,6 +82,4 @@ if(! $has_file){
 
 $files = $zeTrans->fetchFilesList();
 
-$files = utf8_encode_array($files);
-
 echo json_encode($files);

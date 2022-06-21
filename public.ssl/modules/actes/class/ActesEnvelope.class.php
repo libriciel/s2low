@@ -638,14 +638,14 @@ class ActesEnvelope extends DataObject {
 
 	// Vérification SIREN enveloppe <=> posteur
 	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["insee"]);
-	if (strcmp($this->siren, utf8_decode($authority_attr['SIREN'])) != 0) {
+	if (strcmp($this->siren, $authority_attr['SIREN']) != 0) {
 	  $this->errorMsg = "Le numéro de SIREN contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
 	  return false;
 	}
 
 	// Vérification type de collectivité enveloppe <=> posteur
 	$authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["actes"]);
-	if ($this->authority_type_code != utf8_decode($authority_attr['Nature'])) {
+	if ($this->authority_type_code != $authority_attr['Nature']) {
 	  $this->errorMsg = "Le type de collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
 	  return false;
 	}

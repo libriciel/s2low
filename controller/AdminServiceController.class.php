@@ -42,7 +42,7 @@ class AdminServiceController extends Controller {
 		$this->verifAdmin($authority_id);
 		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
 		$result = $serviceUser->getServiceUser($authority_id);
-		echo json_encode(utf8_encode_array($result));
+		echo json_encode($result);
 		exit_wrapper();
 	}
 

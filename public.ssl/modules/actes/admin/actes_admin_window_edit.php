@@ -157,7 +157,7 @@ $html .= "    </script>\n";
 $html .= "    <span class=\"form-control\"><a href=\"#datepicker\" id=\"datepicker_window_start_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_start_date.toggleDatePicker(); return false;\">";
 
 if ($start_date) {
-  $html .= utf8_decode(strftime("%e %B %Y", Helpers::ansiDateToTimestamp($start_date)));
+  $html .= strftime("%e %B %Y", Helpers::ansiDateToTimestamp($start_date));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }
@@ -193,7 +193,7 @@ $html .= "    </script>\n";
 $html .= "    <span class=\"form-control\"><a href=\"#datepicker\" id=\"datepicker_window_end_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_end_date.toggleDatePicker(); return false;\">";
 
 if ($end_date) {
-  $html .= utf8_decode(strftime("%e %B %Y", Helpers::ansiDateToTimestamp($end_date)));
+  $html .= strftime("%e %B %Y", Helpers::ansiDateToTimestamp($end_date));
 } else {
   $html .= "[&nbsp;Choisir une date&nbsp;]";
 }

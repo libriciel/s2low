@@ -34,7 +34,6 @@ class MessageAdmin {
 		$parsedown = new Parsedown();
 		$result = $parsedown->parse($this->message);
 		$purifyconfig = HTMLPurifier_Config::createDefault();
-		$purifyconfig->set('Core.Encoding', 'ISO-8859-1');
 		$HTMLPurifier = new HTMLPurifier($purifyconfig);
 		$result = $HTMLPurifier->purify($result);
 		return $result;

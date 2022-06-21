@@ -110,7 +110,7 @@ class S2lowBootstrap {
 					} else if ($value === "0"){
 						$all_value[] = 0;
 					} else {
-						$all_value[] = utf8_decode($value) ?: '';
+						$all_value[] = $value ?: '';
 					}
 					$point[] = "?";
 				}

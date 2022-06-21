@@ -110,7 +110,7 @@ class Authority extends DataObject {
         $sqlParams[]=$deptId;
 	  }
 
-	  $result = $this->db->select($sql,$sqlParams[]);
+	  $result = $this->db->select($sql,$sqlParams);
 	  
 	  if (! $result->isError() && $result->num_row() == 1) {
 		$row = $result->get_next_row();

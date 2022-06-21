@@ -28,7 +28,7 @@ class HeliosPESRetourChangeStatusController extends Controller {
 		$root->appendChild($messageElement);
 
 		$resultatElement->appendChild( $doc->createTextNode( $result ));
-		$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg) ));
+		$messageElement->appendChild( $doc->createTextNode( $msg ));
 
 		header_wrapper("Content-type: text/xml");
 		echo $doc->saveXML();

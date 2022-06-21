@@ -98,7 +98,7 @@ class mailController {
   	 	$tabStatus = mail_transaction::getTabStatus();
   	 	$etat_string = $tabStatus[$etat];
 
-  	 	$sujet = utf8_decode(Helpers :: getVarFromGet("sujet"));
+  	 	$sujet = Helpers :: getVarFromGet("sujet");
 
         try{
                $SendDateFrom=Helpers :: getDateFromGet("SendDateFrom",true);

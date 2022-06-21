@@ -50,7 +50,7 @@ class X509Certificate {
 		$result = "";
 		foreach ($info as $key => $val) {
 			if (is_array($val)){
-				$val = utf8_encode_array($val);
+				$val = legacy_encode_array($val);
 				$val = implode(",",$val);
 			} else {
 				$val = $val;

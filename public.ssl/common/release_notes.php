@@ -82,11 +82,9 @@ $html .= "<h1>Logiciel S²LOW - notes de publication</h1>\n<br/>";
 $Parsedown = new ParsedownExtended(2);
 
 $html  .= $Parsedown->text(
-    utf8_decode(
-        file_get_contents(
+            file_get_contents(
             __DIR__."/../../CHANGELOG.md"
         )
-    )
 );
 
 $doc->addBody($html);

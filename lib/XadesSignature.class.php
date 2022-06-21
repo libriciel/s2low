@@ -166,10 +166,10 @@ class XadesSignature {
 		$cert_digest_child = $signedSignatureProperties->SigningCertificate->Cert->CertDigest->children(self::NS_XAD_URI);
 		$cert_digest_child->DigestValue = $certificate_info['certDigest'];
 
-		$signedSignatureProperties->SignatureProductionPlace->City = utf8_encode($xadesSignatureProperties->city);
-		$signedSignatureProperties->SignatureProductionPlace->PostalCode = utf8_encode($xadesSignatureProperties->postalCode);
-		$signedSignatureProperties->SignatureProductionPlace->CountryName = utf8_encode($xadesSignatureProperties->countryName);
-		$signedSignatureProperties->SignerRole->ClaimedRoles->ClaimedRole = utf8_encode($xadesSignatureProperties->claimedRole);
+		$signedSignatureProperties->SignatureProductionPlace->City = $xadesSignatureProperties->city;
+		$signedSignatureProperties->SignatureProductionPlace->PostalCode = $xadesSignatureProperties->postalCode;
+		$signedSignatureProperties->SignatureProductionPlace->CountryName = $xadesSignatureProperties->countryName;
+		$signedSignatureProperties->SignerRole->ClaimedRoles->ClaimedRole = $xadesSignatureProperties->claimedRole;
 
 		return $signatureTemplate;
 	}
