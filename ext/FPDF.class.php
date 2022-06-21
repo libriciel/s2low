@@ -621,6 +621,8 @@ function Cell($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link
 	}
 	if($txt!=='')
 	{
+		$txt = iconv('utf-8', 'cp1252', $txt); //QUICKFIX passage UTF-8
+		// SRC : https://stackoverflow.com/questions/6334134/fpdf-utf-8-encoding-how-to
 		if(!isset($this->CurrentFont))
 			$this->Error('No font has been set');
 		if($align=='R')
