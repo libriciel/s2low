@@ -28,7 +28,7 @@ class BordereauPdfGenerator
         $pdf=new ExtendPdf($legacy);
 
         $this->create_pdf($pdf,$data);
-        return $pdf->Output($output,$out);
+        return $pdf->Output($output,$out,true);
     }
 
     /**
