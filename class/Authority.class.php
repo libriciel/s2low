@@ -257,7 +257,7 @@ class Authority extends DataObject {
 		return false;
 	  }
 
-	  if (count($this->modulesPerms) > 0) {
+	  if (!is_null($this->modulesPerms) && count($this->modulesPerms) > 0) {
 		reset($this->modulesPerms);
 		foreach ($this->modulesPerms as $module_id => $val) {
 		  $sql = "INSERT INTO modules_authorities (module_id, authority_id) VALUES(?,?)";

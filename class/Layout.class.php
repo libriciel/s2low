@@ -300,7 +300,7 @@ class HTMLLayout extends Layout {
     foreach ($data as $key => $val) {
       $html .= " <option value=\"" . $key . "\"";
 
-      $html .= (strcmp($key, $selectedValue) == 0) ? " selected=\"selected\"" : "";
+      $html .= (strcmp($key, $selectedValue ?? '') == 0) ? " selected=\"selected\"" : "";
       
       $html .= ">" . get_hecho($val) . "</option>\n";
     }

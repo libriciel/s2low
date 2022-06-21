@@ -27,7 +27,7 @@ function hecho($message,$quot_style=ENT_QUOTES){
 }
 
 function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="utf-8"){
-	return htmlspecialchars($message,$quot_style,$encoding);
+	return htmlspecialchars($message ?? '',$quot_style,$encoding);
 }
 
 if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {

@@ -62,7 +62,7 @@ $html .= "<div class=\"form-group\">\n";
 $html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom contient</label>\n";
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
-if (mb_strlen($fname) > 0) {
+if (mb_strlen($fname ?? '') > 0) {
   $html .= " value=\"" . get_hecho($fname) . "\"";
 }
 
