@@ -128,7 +128,7 @@ ob_start();?>
 			<div class="col-md-3"><?php echo $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) ?></div>
 			<label for="name" class="col-md-3 control-label">Le nom contient</label>
 			<div class="col-md-3">
-				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (mb_strlen($fname) > 0)?get_hecho($fname):"" ?>' />
+				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (mb_strlen($fname ?? '') > 0)?get_hecho($fname):"" ?>' />
 			</div>
 		</div>
 		
@@ -139,7 +139,7 @@ ob_start();?>
 					<select class="form-control zselect_authorities" name="authority" id="authority">
     					<option value="">Toutes</option>
 						<?php foreach ($authority_id_list as $key => $val) : ?>
-      						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
+      						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority ?? '') == 0) ? " selected='selected'" : ""; ?>>
       							<?php hecho($val)?> 
       						</option>
     					<?php endforeach; ?>
