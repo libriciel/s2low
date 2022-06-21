@@ -20,11 +20,11 @@ foreach($file_list as $file){
         //echo $filepath."\n";
         libxml_clear_errors();
         $xml = simplexml_load_file($filepath);
-        $root_name = strtolower($xml->getName());
+        $root_name = mb_strtolower($xml->getName());
         
         if ($root_name == 'pes_retour'){
             $siret=strval($xml->EnTetePES->IdColl["V"]);
-            if(strlen($siret) == 14 )
+            if(mb_strlen($siret) == 14 )
                 rename($filepath,HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH."/".$file);
         }
     } catch (Exception $e){

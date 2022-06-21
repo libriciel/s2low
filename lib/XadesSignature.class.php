@@ -125,7 +125,7 @@ class XadesSignature {
 				continue;
 			}
 			/** @var $node DomElement */
-			if (strtolower($node->localName) == 'signature' && $node->namespaceURI == self::NS_DS_URI){
+			if (mb_strtolower($node->localName) == 'signature' && $node->namespaceURI == self::NS_DS_URI){
 				return true;
 			}
 		}

@@ -134,7 +134,7 @@ class ActesIncludedFile extends DataObject
 				$this->errorMsg .= "Erreur d'extraction du fichier demandé (code " . $ret . ")";
 				$ret_value = false;
 			} else {
-				if (strlen($this->posted_filename)) {
+				if (mb_strlen($this->posted_filename)) {
 					$browserName = $this->posted_filename;
 				} else {
 					$browserName = $this->filename;

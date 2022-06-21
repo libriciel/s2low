@@ -1342,7 +1342,7 @@ class ActesTransaction extends DataObject {
     // Fichier des pièces jointes
     if (isset ($this->files["attachment"])) {
       foreach ($this->files["attachment"] as $file) {
-        if (strlen($file["name"]) > 0) {
+        if (mb_strlen($file["name"]) > 0) {
           if (!unlink($this->rootDir . "/" . $file["name"])) {
             $this->errorMsg = "Ne peut supprimer un fichier temporaire.";
             return false;

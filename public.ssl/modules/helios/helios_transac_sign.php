@@ -75,7 +75,7 @@ for($i=1;$i<=$nb_signature;$i++) {
 	$new_pes_content = $heliosSignature->injectSignature($file_path, $signature_1,$is_bordereau_1);
 	
 	$new_sha1 = sha1($new_pes_content);
-	$new_filesize = strlen($new_pes_content);
+	$new_filesize = mb_strlen($new_pes_content);
 	
 	if ($new_filesize > HELIOS_MAX_UPLOAD_SIZE) {
 		$_SESSION["error"] = "Taille de fichier supérieure à la limite autorisée (". (HELIOS_MAX_UPLOAD_SIZE/1024/1024)."Mo maximum).";

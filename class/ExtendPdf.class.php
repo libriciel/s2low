@@ -187,7 +187,7 @@ class ExtendPdf extends FPDF {
 	        $w=$this->w-$this->rMargin-$this->x;
 	    $wmax=($w-2*$this->cMargin)*1000/$this->FontSize;
 	    $s=str_replace("\r",'',$txt??'');//Quickfix migration php 8
-	    $nb=strlen($s);
+	    $nb=mb_strlen($s);
 	    if($nb>0 and $s[$nb-1]=="\n")
 	        $nb--;
 	    $sep=-1;

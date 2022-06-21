@@ -258,9 +258,9 @@ class Helpers {
    * \return La chaîne avec tous les guillemets doubles précédés d'un \
   */
   public static function truncateString($str, $length = 40, $add_ellipsis = true) {
-	$new_str = substr($str, 0, $length);
+	$new_str = mb_substr($str, 0, $length);
 
-	if ($add_ellipsis && strlen($new_str) < strlen($str)) {
+	if ($add_ellipsis && mb_strlen($new_str) < mb_strlen($str)) {
 	  $new_str .= "...";
 	}
 
@@ -360,7 +360,7 @@ class Helpers {
 	  // Suppression d'un éventuel & résiduel au début de la chaîne
 	  $args = preg_replace("/^&/", "", $args);
 	  // Détermination du séparateur pour ajouter notre paramètre
-	  $sep = (strlen($args) > 0) ? "&" : "";
+	  $sep = (mb_strlen($args) > 0) ? "&" : "";
 
 	  $args .= $sep . $param . "=" . $value;
 	}
@@ -399,7 +399,7 @@ class Helpers {
 	  }
 
 	  // Modification des permissions de toute l'arborescence créée
-	  while (strlen($relPath) > 0) {
+	  while (mb_strlen($relPath) > 0) {
 		Helpers::fixPerms($base . "/" . $relPath);
 		$relPath = preg_replace('/[^\/]+\/*$/', "", $relPath);
 	  }
@@ -600,8 +600,8 @@ class Helpers {
     }
 
     public static function chunkString($string,$length){
-		$result = substr($string, 0, $length);
-		if (strlen($string) > 40) {
+		$result = mb_substr($string, 0, $length);
+		if (mb_strlen($string) > 40) {
 			$result .= "...";
 		}
 		return $result;

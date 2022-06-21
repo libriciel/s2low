@@ -10,7 +10,7 @@ class PemCertificateFactory
 
         $nakedCertificate = trim($nakedCertificate);
 
-        if (strlen(explode("\n",$nakedCertificate)[0]) >= 64) {
+        if (mb_strlen(explode("\n",$nakedCertificate)[0]) >= 64) {
             $nakedCertificate = preg_replace('/\s+/', ' ', trim($nakedCertificate));
             $nakedCertificate = rtrim(chunk_split($nakedCertificate, 64, "\n"));
         }

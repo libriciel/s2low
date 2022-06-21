@@ -221,7 +221,7 @@ class ActesAnalyseFichierRecuController {
     	$archiveFilename = new \Libriciel\LibActes\ArchiveFilename();
 		$targz_filename = $archiveFilename->getFilename($archiveData->id_tdt,basename($archiveData->enveloppe_path));
 
-		$tar_filename = substr($targz_filename,0,-3);
+		$tar_filename = mb_substr($targz_filename,0,-3);
 
 		$final_destination = $archive_folder."/".$tar_filename.".gz";
 
@@ -265,7 +265,7 @@ class ActesAnalyseFichierRecuController {
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
-        $envelope_path = substr($archive_path, strlen($this->actes_files_upload_root));
+        $envelope_path = mb_substr($archive_path, mb_strlen($this->actes_files_upload_root));
         $envelope_size = filesize($archive_path);
 
 		$this->s2lowLogger->info("Archive enregistré dans $archive_path");
@@ -291,7 +291,7 @@ class ActesAnalyseFichierRecuController {
 
         $related_transaction_id = $this->actesTransactionsSQL->createRelatedTransaction(
             $related_envelope_id,
-            substr($fichierXML->getCodeMessage(),0,1),
+            mb_substr($fichierXML->getCodeMessage(),0,1),
             $date_decision,
             $transaction_id
         );

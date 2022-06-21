@@ -29,7 +29,7 @@ if(empty($authorityGroup->getInfo($id))){
     exit;
 }
 
-if (strlen($siren) != 9){
+if (mb_strlen($siren) != 9){
     $_SESSION["error"] = "Le siren ne semble  pas valide.";
     header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
     exit;

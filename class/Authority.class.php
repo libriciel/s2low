@@ -415,9 +415,9 @@ class Authority extends DataObject {
 
     if (! $result->isError()) {
 	  while ($row = $result->get_next_row()) {
-		$types[$row["id"]] = $row["id"] . ' - ' . substr($row["description"], 0, 40);
+		$types[$row["id"]] = $row["id"] . ' - ' . mb_substr($row["description"], 0, 40);
 
-		if (strlen($row["description"]) > 40) {
+		if (mb_strlen($row["description"]) > 40) {
 		  $types[$row["id"]] .= "...";
 		}
 	  }

@@ -326,8 +326,8 @@ class mailController {
 	    	return false;
 		}
 
-		if (strlen($message)>2000){
-            $this->lastError =  "Le corps du message ne peut dépasser les 2000 caractères : ".strlen($message)." caractères trouvés.";
+		if (mb_strlen($message)>2000){
+            $this->lastError =  "Le corps du message ne peut dépasser les 2000 caractères : ".mb_strlen($message)." caractères trouvés.";
             return false;
         }
 		if ($mailCC && ! checkAllEmail($mailCC)) {

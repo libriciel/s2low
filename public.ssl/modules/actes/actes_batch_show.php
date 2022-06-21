@@ -168,7 +168,7 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
 	$html .= "</td>\n";
 	$html .= "  <td headers=\"size\" >" . $batchFile->get("filesize") . "</td>\n";
 	$html .= "  <td headers=\"signature\" >";
-	$html .= (strlen($batchFile->get("signature")) > 0) ? "Présente" : "Non présente";
+	$html .= (mb_strlen($batchFile->get("signature")) > 0) ? "Présente" : "Non présente";
 	$html .= "</td>\n";
 	$html .= "  <td headers=\"status\" >";
 	$html .= ($batchFile->isProcessed()) ? "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id") . "\" title=\"Voir la transaction issue de ce fichier\">Traité</a>" : "Non traité";

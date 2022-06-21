@@ -123,7 +123,7 @@ if (! $me->isGroupAdminOrSuper()) {
 
 //Vérification de l'email de la collectivité pour le module mail sec
 $mailer = new Mailer();
-if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || strstr($email_mail_securise," ")) ) {
+if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise," ")) ) {
  	if ($authority->isNew()) {
  		$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
  	} else {

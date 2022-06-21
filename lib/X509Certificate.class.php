@@ -115,7 +115,7 @@ class X509Certificate {
 		$issuerName = [];
 		foreach(array_reverse($info['issuer']) as $document_id => $value){
 			if ($strtoupper) {
-				$issuerName[] = strtoupper($document_id) . "=$value";
+				$issuerName[] = mb_strtoupper($document_id) . "=$value";
 			} else {
 				$issuerName[] = "$document_id=$value";
 			}

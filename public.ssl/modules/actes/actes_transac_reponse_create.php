@@ -191,7 +191,7 @@ if (isset ($actePDFFile) ) {
 
 if (isset ($acteAttachments)) {
   for ($i = 0; $i < count($acteAttachments["tmp_name"]?:[]); $i++) {
-    if (strlen($acteAttachments["tmp_name"][$i])) {
+    if (mb_strlen($acteAttachments["tmp_name"][$i])) {
       if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
         // Sauvegarde dans la session pour réaffichage en cas d'erreur dans le formulaire
         // Désactivé, de toute façon on ne peut pas préremplir un champ de type file

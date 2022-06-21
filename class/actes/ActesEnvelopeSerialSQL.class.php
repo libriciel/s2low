@@ -47,7 +47,7 @@ class ActesEnvelopeSerialSQL {
 		  }
 		} else {
 		  $row = $result->get_next_row();
-		  $date = substr($row["reset_date"], 0, 10);
+		  $date = mb_substr($row["reset_date"], 0, 10);
 		  $today = date('Y-m-d');
 
 		  if (strcmp($today, $date) != 0) {

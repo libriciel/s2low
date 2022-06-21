@@ -9,7 +9,7 @@ $xml = simplexml_load_file($file_path);
 if (! $xml){
 	throw new Exception("Le fichier $file_path n'est pas bien formé (fichier ignoré)");
 }
-$root_name = strtolower($xml->getName());
+$root_name = mb_strtolower($xml->getName());
 
 if ($root_name == 'pes_retour'){
 	$schema_location = $schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd";

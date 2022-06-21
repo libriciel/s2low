@@ -12,7 +12,7 @@ class ActesEnvelopeSQL extends SQL
 
     public function findByAnomalieEnveloppeName($anomalie_enveloppe_name)
     {
-        $file_path = "%" . substr($anomalie_enveloppe_name, 4, -3) . "%";
+        $file_path = "%" . mb_substr($anomalie_enveloppe_name, 4, -3) . "%";
         $sql = "SELECT id FROM actes_envelopes  WHERE file_path LIKE ? ";
         return $this->queryOne($sql, $file_path);
     }

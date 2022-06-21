@@ -16,7 +16,7 @@ class LuhnKey {
 	
 	public function getLuhnKey($number){
 		$sum = 0;
-		foreach(array_reverse(str_split($number)) as $i => $chiffre){
+		foreach(array_reverse(mb_str_split($number)) as $i => $chiffre){
 			if ( $i % 2 == 1){
 				$chiffre *= 2;
 				if ($chiffre>9){

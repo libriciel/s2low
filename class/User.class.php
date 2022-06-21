@@ -508,7 +508,7 @@ class User extends DataObject {
    * \return La chaîne du nom de l'utilisateur
   */
   public function getPrettyName() {
-    if (strlen($this->name) > 0) {
+    if (mb_strlen($this->name) > 0) {
       $str = $this->givenname .  " " . $this->name;
     } else {
       $str = $this->login;

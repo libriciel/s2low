@@ -207,7 +207,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker {
 
 		$this->logger->debug("test {$transaction_ids[0]}", $transactions_info);
 
-		if ($transactions_info['nature_code'] != 4 || substr($transactions_info['classification'], 0, 3) != '1.1') {
+		if ($transactions_info['nature_code'] != 4 || mb_substr($transactions_info['classification'], 0, 3) != '1.1') {
 			$this->logger->debug("validate certificate on");
 			return true;
 		}

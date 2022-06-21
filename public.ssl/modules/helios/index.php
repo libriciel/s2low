@@ -252,7 +252,7 @@ ob_start();
 			<label class="col-md-3 control-label" for="filename-contain">Le nom de fichier contient</label>
 			<div class="col-md-3">
 				<input id="filename-contain" class="form-control" type="text" name="num" size="20" maxlength="25"
-					value="<?php hecho( (strlen($fnum) > 0)?$fnum:"" );?>" />
+					value="<?php hecho( (mb_strlen($fnum) > 0)?$fnum:"" );?>" />
 			</div>
 		</div>
 		<div class="form-group">
@@ -340,7 +340,7 @@ ob_start();
 			<label class="col-md-3 control-label" for="xml-nomfic-contain">La balise NomFic contient</label>
 			<div class="col-md-3">
 				<input id="xml-nomfic-contain" class="form-control" type="text" name="nomFic" size="20"
-					value="<?php hecho((strlen($fnomFic) > 0)?$fnomFic:""); ?>" />
+					value="<?php hecho((mb_strlen($fnomFic) > 0)?$fnomFic:""); ?>" />
 			</div>
 
 		</div>

@@ -235,14 +235,14 @@ class HTMLLayout extends Layout {
 	$args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	$args = preg_replace("/^&/", "", $args);
 	$args = preg_replace("/&/", "&amp;", $args);
-	$sep = (strlen($args) > 0) ? "&amp;" : "";
+	$sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
 	$html .= "<ul class=\"pagination pagination-sm\">\n";
         if ($page_number > 1) {
 	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	  $args = preg_replace("/^&/", "", $args);
 	  $args = preg_replace("/&/", "&amp;", $args);
-	  $sep = (strlen($args) > 0) ? "&amp;" : "";
+	  $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
 	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
 	} else {
@@ -263,7 +263,7 @@ class HTMLLayout extends Layout {
 	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
 	  $args = preg_replace("/^&/", "", $args);
 	  $args = preg_replace("/&/", "&amp;", $args);
-	  $sep = (strlen($args) > 0) ? "&amp;" : "";
+	  $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
 	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
 	} else {

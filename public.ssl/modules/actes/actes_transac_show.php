@@ -244,7 +244,7 @@ $html .= " <tbody>\n";
 
     $html .= "<dl>\n";
 
-    if (strlen($file["posted_filename"]) > 0) {
+    if (mb_strlen($file["posted_filename"]) > 0) {
       $html .= "<dt>Nom original&nbsp;:</dt>\n";
       $html .= "<dd>";
 
@@ -312,7 +312,7 @@ $html .= " <tbody>\n";
     $html .= "<dt>Nom métier&nbsp;:</dt>\n";
     $html .= "<dd>";
 
-    if (strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
+    if (mb_strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
       $html .= $file["name"]."<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>";
     } else {
       $html .= $file["name"];

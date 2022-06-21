@@ -36,7 +36,7 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
 	}
 } elseif ($me->isGroupAdmin()) {
   // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
-  if (isset($fauthority) && strlen($fauthority) > 0) {
+  if (isset($fauthority) && mb_strlen($fauthority) > 0) {
 		$auth = new Authority($fauthority);
 		if ($auth->isInGroup($me->get("authority_group_id"))) {
 			$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
@@ -48,11 +48,11 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
 	$filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 }
 
-if (isset($frole) && strlen($frole) > 0) {
+if (isset($frole) && mb_strlen($frole) > 0) {
 	$filter[] .= "users.role='" . addslashes($frole) . "'";
 }
 
-if (isset($fname) && strlen($fname) > 0) {
+if (isset($fname) && mb_strlen($fname) > 0) {
 	$filter[] .= "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
@@ -128,7 +128,7 @@ ob_start();?>
 			<div class="col-md-3"><?php echo $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) ?></div>
 			<label for="name" class="col-md-3 control-label">Le nom contient</label>
 			<div class="col-md-3">
-				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (strlen($fname) > 0)?get_hecho($fname):"" ?>' />
+				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (mb_strlen($fname) > 0)?get_hecho($fname):"" ?>' />
 			</div>
 		</div>
 		

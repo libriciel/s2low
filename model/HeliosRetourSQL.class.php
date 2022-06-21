@@ -6,7 +6,7 @@ class HeliosRetourSQL extends SQL {
 	const STATUS_LU = 1;
 	
 	public function add($authority_id,$siret,$filename){
-		$siren = substr($siret, 0,9);
+		$siren = mb_substr($siret, 0,9);
 		$sql = "INSERT INTO helios_retour(authority_id, siren, filename, status, date,siret) " .
 				" VALUES ( ?,?,?,0,now(),?) returning id";
 		return $this->queryOne($sql,$authority_id,$siren,$filename,$siret);

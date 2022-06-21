@@ -201,7 +201,7 @@ class DataObject {
 	$this->errorMsg = "";
 
 	foreach ($this->dbFields as $name => $attr) {
-	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || strlen($this->$name) <= 0)) {
+	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || mb_strlen($this->$name) <= 0)) {
 		$this->errorMsg .= $attr["descr"] . " doit être présent.\n";
 	  } else {
 		if (isset($this->$name) && ! empty($this->$name)) {
@@ -227,7 +227,7 @@ class DataObject {
 			}
 			
 			if (isset($attr["maxlength"])) {
-			  if (strlen($this->$name) > $attr["maxlength"]) {
+			  if (mb_strlen($this->$name) > $attr["maxlength"]) {
 				$this->errorMsg .= "Le champ " . $attr["descr"] . " est trop long (" . $attr["maxlength"] . " caractères maxi autorisés).\n";
 			  }
 			}
@@ -341,7 +341,7 @@ class DataObject {
 
 		if (! empty($this->dbFields[$args[$i]]["regexp"])) {
 		  // On enlève les caractères / au début et à la fin de la regexp, javascript les rajoute automatiquement
-		  $str .= "RegExp" . substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
+		  $str .= "RegExp" . mb_substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
 		}
 
 		$str .= "'";
@@ -528,7 +528,7 @@ class DataObject {
             $values = "? ";
 
             foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && strlen($this->$field) > 0) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
                     $values .= ", ?";
                     $fields[] = $field;
                     $params[] = $this->$field;
@@ -544,7 +544,7 @@ class DataObject {
             $fields = array();
             $params = array();
             foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && strlen($this->$field) > 0) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
                     $str = $field . "= ?";
                     $params[] = $this->$field;
                     $fields[] = $str;

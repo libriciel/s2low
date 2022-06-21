@@ -36,7 +36,7 @@ class ActesTransactionsSQL extends SQL{
 
 	public function updateStatus($transaction_id,$status_id,$message,$flux_retour=''){
 
-		$message = substr($message ?? '',0,512); // quickfix transition 8.0
+		$message = mb_substr($message ?? '',0,512); // quickfix transition 8.0
 
 	    $date = date("Y-m-d H:i:s");
 	    $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message,flux_retour) " .

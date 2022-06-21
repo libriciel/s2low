@@ -175,7 +175,7 @@ class HeliosEnvoiControler {
 	}
 
 	private function isInIso8859($pes_content){
-		$first_line = substr($pes_content,0,50);
+		$first_line = mb_substr($pes_content,0,50);
 		return preg_match("#ISO-8859-1#i",$first_line);
 	}
 

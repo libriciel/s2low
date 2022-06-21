@@ -125,7 +125,7 @@ class CurlWrapper {
 	
 	private function getBoundary(){
 		return '----------------------------' .
-	        substr(sha1( 'CurlWrapper' . microtime()), 0, 12);
+	        mb_substr(sha1( 'CurlWrapper' . microtime()), 0, 12);
 	}
 	
 	private function curlSetPostData() {
@@ -216,7 +216,7 @@ class CurlWrapper {
 	    $content = join(self::POST_DATA_SEPARATOR, $body);
 	    
 	    
-	    $curlHttpHeader[] = 'Content-Length: ' . strlen($content);
+	    $curlHttpHeader[] = 'Content-Length: ' . mb_strlen($content);
 		$curlHttpHeader[] = 'Expect: 100-continue';
 		$curlHttpHeader[] = "Content-Type: multipart/form-data; boundary=$boundary";	
 	

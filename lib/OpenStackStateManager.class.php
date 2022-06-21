@@ -42,8 +42,8 @@ class OpenStackStateManager{
 
     private function shorten($message){
         $lgMax= 1000;
-        if(strlen($message) > $lgMax){
-            $message = substr($message, 0, $lgMax)."...";
+        if(mb_strlen($message) > $lgMax){
+            $message = mb_substr($message, 0, $lgMax)."...";
         }
         return $message;
     }

@@ -23,13 +23,13 @@ foreach($file_list as $file){
         if (! $xml){
             throw new Exception("Le fichier n'est pas bien formé (fichier ignoré)");
         }
-        $root_name = strtolower($xml->getName());
+        $root_name = mb_strtolower($xml->getName());
         
         if ($root_name == 'pes_retour'){
             //echo "c'est un PES RETOUR\n";
             //var_dump($xml->EnTetePES);exit;
             $siret=strval($xml->EnTetePES->IdColl["V"]);
-            if((! in_array($siret,$list_siret)) && (strlen($siret) == 14 ))
+            if((! in_array($siret,$list_siret)) && (mb_strlen($siret) == 14 ))
                 array_push($list_siret,$siret);
         }
     } catch (Exception $e){

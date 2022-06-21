@@ -112,7 +112,7 @@ if (is_array($param_id) && count($param_id) > 0) {
   }
 }
 
-if (strlen($new_param_name) > 0 && strlen($new_param_description) > 0 && strlen($new_param_value) > 0) {
+if (mb_strlen($new_param_name) > 0 && mb_strlen($new_param_description) > 0 && mb_strlen($new_param_value) > 0) {
   $modules->setModuleParams($new_param_name,$new_param_description,$new_param_value);
 }
 

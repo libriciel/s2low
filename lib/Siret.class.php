@@ -12,11 +12,11 @@ class Siret {
 	}
 	
 	public function isValid($siret){
-		if (strlen($siret) != self::LENGTH){
+		if (mb_strlen($siret) != self::LENGTH){
 			return false;
 		}
 		
-		$siren = substr($siret,0,Siren::LENGTH);
+		$siren = mb_substr($siret,0,Siren::LENGTH);
 		if (! $this->siren->isValid($siren)){
 			return false;
 		}

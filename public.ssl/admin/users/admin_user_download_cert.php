@@ -49,6 +49,6 @@ header('Content-Transfer-Encoding: none');
 header('Content-Type: application/octetstream; name="' . $output_file . '"'); //This should work for IE & Opera
 header('Content-Type: application/octet-stream; name="' . $output_file . '"'); //This should work for the rest
 header('Content-Disposition: attachment; filename="' . $output_file . '"');
-header("Content-length: ".strlen($certificate));
+header("Content-length: ".mb_strlen($certificate));
   
 echo $certificate;

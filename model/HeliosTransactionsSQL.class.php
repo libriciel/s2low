@@ -37,8 +37,8 @@ class HeliosTransactionsSQL extends SQL {
 	}
 
 	public function updateStatus($transaction_id,$status_id,$message){
-	    if (strlen($message) > self::WORKFLOW_MESSAGE_MAX_LENGTH){
-			$message =  substr($message,0,self::WORKFLOW_MESSAGE_MAX_LENGTH);
+	    if (mb_strlen($message) > self::WORKFLOW_MESSAGE_MAX_LENGTH){
+			$message =  mb_substr($message,0,self::WORKFLOW_MESSAGE_MAX_LENGTH);
 		}
 		$date = date("Y-m-d H:i:s");
 

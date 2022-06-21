@@ -306,7 +306,7 @@ if (isset ($acteAttachments)) {
 	}
 
 	for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
-		if (! strlen($acteAttachments["tmp_name"][$i])){
+		if (! mb_strlen($acteAttachments["tmp_name"][$i])){
 			continue;
 		}
 

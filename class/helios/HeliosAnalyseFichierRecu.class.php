@@ -159,7 +159,7 @@ class HeliosAnalyseFichierRecu {
 		$basename = basename($file_path);
 		$this->s2lowLogger->info("Traitement de $file_path");
 
-		if (preg_match("#.ocre?$#",strtolower($basename))){
+		if (preg_match("#.ocre?$#",mb_strtolower($basename))){
 			if (! rename($file_path,$ocre_file_path."/".$basename)){
 				throw new Exception(" Le fichier $file_path n'a pas pu être déplacé !");
 			}
@@ -178,7 +178,7 @@ class HeliosAnalyseFichierRecu {
 		if (! $xml){
 			throw new Exception("Le fichier $basename n'est pas bien formé (fichier ignoré)");
 		}
-		$root_name = strtolower($xml->getName());
+		$root_name = mb_strtolower($xml->getName());
 
 		if ($root_name == 'pes_retour'){
 			$schema_location = $this->schema_pes_path."/PES_V2/RETOUR/Rev0/PES_Retour.xsd";

@@ -230,7 +230,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
 
 
-		$this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+		$this->assertEquals("2017-07-25",mb_substr($info['decision_date'],0,10));
 
         $this->cleanAnalysePath();
     }
@@ -259,7 +259,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
 
 
-        $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+        $this->assertEquals("2017-07-25",mb_substr($info['decision_date'],0,10));
         $this->cleanAnalysePath();
     }
 
@@ -330,7 +330,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
 		$info = $actesTransactionSQL->getInfo($transaction_id);
 
-		$this->assertEquals("2017-07-25", substr($info['decision_date'], 0, 10));
+		$this->assertEquals("2017-07-25", mb_substr($info['decision_date'], 0, 10));
 
 		$actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
 

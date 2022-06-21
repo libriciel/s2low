@@ -99,8 +99,8 @@ class NotBuggySoapClient extends SoapClient {
 
 
     	if ($this->is_jax_ws){
-			$response = strstr($response,"<?xml");
-	        $response = strstr($response,"--uuid:",true);
+			$response = mb_strstr($response,"<?xml");
+	        $response = mb_strstr($response,"--uuid:",true);
         }
 
         return $response;

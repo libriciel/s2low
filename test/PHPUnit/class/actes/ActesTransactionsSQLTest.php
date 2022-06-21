@@ -92,7 +92,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase {
 		$message = str_repeat("1234567890",53);
 		$this->getActesTransactionsSQL()->updateStatus($transaction_id,1,$message);
 		$info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id,1);
-		$this->assertEquals(512,strlen($info['message']));
+		$this->assertEquals(512,mb_strlen($info['message']));
 	}
 
 	/**
