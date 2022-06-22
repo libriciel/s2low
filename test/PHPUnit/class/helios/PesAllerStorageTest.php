@@ -37,7 +37,7 @@ class PesAllerStorageTest extends S2lowTestCase {
 		$pes_aller_path = $this->mockOpenStackSwiftWrapper(true);
 		$this->assertFileExists($pes_aller_path);
 		$this->getObjectInstancier()->get(PesAllerStorage::class)->deleteIfIsInCloud(self::SHA1_EXEMPLE);
-		$this->assertFileNotExists($pes_aller_path);
+		$this->assertFileDoesNotExist($pes_aller_path);
 	}
 
 	/**
