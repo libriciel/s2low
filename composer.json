@@ -54,7 +54,7 @@
   },
   "scripts": {
     "test": "phpunit",
-    "test-cover": "phpunit --coverage-text --colors=never"
+    "test-cover": "phpunit --coverage-text --colors=never --coverage-clover coverage/coverage.xml --log-junit coverage/logfile.xml"
   },
   "autoload": {
     "psr-4": {

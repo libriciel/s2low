@@ -76,7 +76,7 @@ services:
             LETSENCRYPT_DOMAIN: ${LETSENCRYPT_DOMAIN:-}
             LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL:-}
 
-            ACTES_ALWAYS_CAN_VALIDATE: "true"
+            ACTES_ALWAYS_CAN_VALIDATE: ${ACTES_ALWAYS_CAN_VALIDATE:-false}
 
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
