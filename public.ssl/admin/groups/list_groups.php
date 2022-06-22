@@ -49,12 +49,21 @@ ob_start();
 		</tr>
 		<?php foreach($groups_list as $i => $group) : ?>
 			<tr>
-				<td><a href="/admin/groups/admin_group_edit.php?id=<?php echo $group['id'] ?>">
-						<?php hecho($group['name'])  ?></a>
-				</td>
-				<td>
-					<?php echo $group['count'] ?>
-				</td>
+                <?php  if(is_null($group['name'])):?>
+                    <td>
+                            <?php hecho("Collectivité(s) sans groupe attaché")  ?>
+                    </td>
+                    <td>
+                        <?php echo $group['count'] ?>
+                    </td>
+                <?php  else :?>
+                    <td><a href="/admin/groups/admin_group_edit.php?id=<?php echo $group['id'] ?>">
+                            <?php hecho($group['name'])  ?></a>
+                    </td>
+                    <td>
+                        <?php echo $group['count'] ?>
+                    </td>
+        <?php endif; ?>
 			</tr>
 		<?php endforeach ?>
 
