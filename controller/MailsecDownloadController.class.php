@@ -2,7 +2,7 @@
 
 class MailsecDownloadController extends Controller
 {
-    const DEFAULT_ARCHIVE_NAME = 'mail.zip';
+    public const DEFAULT_ARCHIVE_NAME = 'mail.zip';
     /**
      * @return bool
      * @throws RedirectException

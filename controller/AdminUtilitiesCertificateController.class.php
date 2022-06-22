@@ -2,7 +2,7 @@
 
 class AdminUtilitiesCertificateController extends Controller
 {
-    const SESSION_KEY = 'last_certificate_analyse';
+    public const SESSION_KEY = 'last_certificate_analyse';
 
     public function testAction()
     {

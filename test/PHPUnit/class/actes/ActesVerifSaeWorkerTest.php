@@ -2,7 +2,7 @@
 
 class ActesVerifSaeWorkerTest extends S2lowTestCase
 {
-    const FAKE_PASTELL_URL = "https://fakepastellurl/";
+    private const FAKE_PASTELL_URL = "https://fakepastellurl/";
 
     public function testGetAllId()
     {

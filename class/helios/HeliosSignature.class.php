@@ -2,7 +2,7 @@
 
 class HeliosSignature
 {
-    const HASH_ALGORITHME = "sha256";
+    private const HASH_ALGORITHME = "sha256";
 
     private $xml_starlet_path;
 

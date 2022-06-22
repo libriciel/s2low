@@ -3,7 +3,7 @@
 //http://xml.insee.fr/schema/siret.html#controles
 class Siren
 {
-    const LENGTH = 9;
+    public const LENGTH = 9;
 
     private $luhnKey;
 

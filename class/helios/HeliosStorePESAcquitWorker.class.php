@@ -2,7 +2,7 @@
 
 class HeliosStorePESAcquitWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-store-pes-acquit';
+    public const QUEUE_NAME = 'helios-store-pes-acquit';
 
     public function getQueueName()
     {

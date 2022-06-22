@@ -2,7 +2,7 @@
 
 class TransactionSQL
 {
-    const EN_COURS = 999;
+    public const EN_COURS = 999;
 
     private static $transactionTypes = array (
         "1" => "Transmission d'actes",

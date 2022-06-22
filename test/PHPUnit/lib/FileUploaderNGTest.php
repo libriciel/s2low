@@ -2,7 +2,7 @@
 
 class FileUploaderNGTest extends PHPUnit_Framework_TestCase
 {
-    const FILE_CONTENT = "Hello World!";
+    private const FILE_CONTENT = "Hello World!";
 
     /** @var  FileUploaderNG */
     private $fileUploader;

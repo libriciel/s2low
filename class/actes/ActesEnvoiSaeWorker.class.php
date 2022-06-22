@@ -2,7 +2,7 @@
 
 class ActesEnvoiSaeWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-envoi-sae';
+    public const QUEUE_NAME = 'actes-envoi-sae';
     private const MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE = 100;
 
     private $actesArchiveControler;

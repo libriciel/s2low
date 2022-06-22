@@ -2,9 +2,9 @@
 
 class ActesMinistereProperties
 {
-    const AUTHENTICATION_NONE = "NONE";
-    const AUTHENTICATION_BASIC = "BASIC";
-    const AUTHENTICATION_POST = "POST";
+    public const AUTHENTICATION_NONE = "NONE";
+    public const AUTHENTICATION_BASIC = "BASIC";
+    public const AUTHENTICATION_POST = "POST";
 
     public $url;
 

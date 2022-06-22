@@ -2,8 +2,8 @@
 
 class PastellWrapper
 {
-    const ACTES_FLUX_ID_DEFAULT = 'actes-generique';
-    const HELIOS_FLUX_ID_DEFAULT = 'helios-generique';
+    private const ACTES_FLUX_ID_DEFAULT = 'actes-generique';
+    private const HELIOS_FLUX_ID_DEFAULT = 'helios-generique';
 
     private $lastError;
 

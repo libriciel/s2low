@@ -2,9 +2,9 @@
 
 class PasswordGenerator
 {
-    const NB_SIGNE_DEFAULT = 7;
+    private const NB_SIGNE_DEFAULT = 7;
 
-    const SIGNE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const SIGNE = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private $nbSigne;
     private $signe;

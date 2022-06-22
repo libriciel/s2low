@@ -2,10 +2,10 @@
 
 class ActesTransactionsSQL extends SQL
 {
-    const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
+    public const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
-    const AUTHORITY_ID = 'authority_id';
-    const ENVELOPE_ID = 'envelope_id';
+    public const AUTHORITY_ID = 'authority_id';
+    public const ENVELOPE_ID = 'envelope_id';
 
     public function getInfo($id)
     {

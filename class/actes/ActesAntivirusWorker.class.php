@@ -2,7 +2,7 @@
 
 class ActesAntivirusWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-antivirus';
+    public const QUEUE_NAME = 'actes-antivirus';
 
     private $actesTransactionSQL;
     private $actesRetriever;

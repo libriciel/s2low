@@ -2,7 +2,7 @@
 
 class CSVoutput
 {
-    const DEFAULT_OUTPUT_FILE = "php://output";
+    private const DEFAULT_OUTPUT_FILE = "php://output";
 
     private $enableHeader;
     private $outputFile;

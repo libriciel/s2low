@@ -2,9 +2,9 @@
 
 class ActesNameArchiveTest extends PHPUnit_Framework_TestCase
 {
-    const ARCHIVE_NAME = "abc-TACT--123456789--20150729-1.tar.gz";
-    const TRIGRAMME = "abc";
-    const QUADRIGRAMME = "TACT";
+    private const ARCHIVE_NAME = "abc-TACT--123456789--20150729-1.tar.gz";
+    private const TRIGRAMME = "abc";
+    private const QUADRIGRAMME = "TACT";
 
     /**
      * @var ActesNameArchive

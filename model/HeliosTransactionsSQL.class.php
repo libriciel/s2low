@@ -2,28 +2,28 @@
 
 class HeliosTransactionsSQL extends SQL
 {
-    const ERREUR = -1;
-    const ANNULE = 0;
-    const POSTE = 1;
-    const ATTENTE = 2;
-    const TRANSMIS = 3;
-    const ACQUITTER = 4;
-    const VALIDER = 5; //non utilisé
-    const REFUSER = 6;
-    const EN_TRAITEMENT = 7;
-    const INFORMATION_DISPONIBLE = 8;
-    const ACCEPTE_SAE = 10;
-    const REFUSER_SAE = 11;
-    const ATTENTE_POSTEE = 14;
-    const ATTENTE_SIGNEE = 13;
+    public const ERREUR = -1;
+    public const ANNULE = 0;
+    public const POSTE = 1;
+    public const ATTENTE = 2;
+    public const TRANSMIS = 3;
+    public const ACQUITTER = 4;
+    public const VALIDER = 5; //non utilisé
+    public const REFUSER = 6;
+    public const EN_TRAITEMENT = 7;
+    public const INFORMATION_DISPONIBLE = 8;
+    public const ACCEPTE_SAE = 10;
+    public const REFUSER_SAE = 11;
+    public const ATTENTE_POSTEE = 14;
+    public const ATTENTE_SIGNEE = 13;
 
-    const SEND_WARNING_AFTER_SECOND = 172800;
+    private  const SEND_WARNING_AFTER_SECOND = 172800;
 
-    const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
+    private const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
 
-    const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
+    public const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
-    const AUTHORITY_ID = 'authority_id';
+    public const AUTHORITY_ID = 'authority_id';
 
     public function create($filename, $sha1, $user_id, $authority_id, $file_size, $siren)
     {

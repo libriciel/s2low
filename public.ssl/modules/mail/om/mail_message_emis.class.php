@@ -4,9 +4,9 @@ require_once(SITEROOT . "/class/DataObject.class.php");
 
 class mail_message_emis extends DataObject
 {
-    const TYPE_MAIL_TO = "mailTo";
-    const TYPE_MAIL_CC = "mailCC";
-    const TYPE_MAIL_BCC = "mailBCC";
+    public const TYPE_MAIL_TO = "mailTo";
+    public const TYPE_MAIL_CC = "mailCC";
+    public const TYPE_MAIL_BCC = "mailBCC";
 
     protected $objectName = "mail_message_emis";
     protected $mail_transaction_id;

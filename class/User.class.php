@@ -5,7 +5,7 @@ require_once("Authority.class.php");
 
 class User extends DataObject
 {
-    const PERM_MODIFICATION = "RW";
+    public const PERM_MODIFICATION = "RW";
 
 
     protected $objectName = "users";

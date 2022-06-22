@@ -2,7 +2,7 @@
 
 class HeliosVerificationSaeWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-verification-sae';
+    public const QUEUE_NAME = 'helios-verification-sae';
 
     private $heliosVerificationSAE;
     private $heliosTransactionsSQL;

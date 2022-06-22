@@ -6,7 +6,7 @@ require_once(SITEROOT . "/class/pearMail.class.php");
 
 class Mailer
 {
-    const FILESIZE_LIMIT =  10485760; /* 10 Mio */
+    private const FILESIZE_LIMIT =  10485760; /* 10 Mio */
 
     private $recipients;
     private $lastError;

@@ -4,7 +4,7 @@ class PesAllerStorageTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
-    const SHA1_EXEMPLE = "ab3321d34d3fb32b52332befa534c9854fff677b";
+    private const SHA1_EXEMPLE = "ab3321d34d3fb32b52332befa534c9854fff677b";
 
     /**
      * @param bool $fileExistsOnCloud

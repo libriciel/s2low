@@ -2,9 +2,9 @@
 
 class HeliosEnvoiSaeWorker implements IWorker
 {
-    const MAX_TRANSACTION_TO_SEND = 100;
+    private const MAX_TRANSACTION_TO_SEND = 100;
 
-    const QUEUE_NAME = 'helios-envoi-sae';
+    public const QUEUE_NAME = 'helios-envoi-sae';
 
     private $heliosArchiveControler;
     private $heliosTransactionsSQL;

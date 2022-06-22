@@ -2,9 +2,9 @@
 
 class UsersPermsSQL extends SQL
 {
-    const PERM_MODIFICATION = "RW";
-    const PERM_VISUALISATION = "RO";
-    const PERM_NONE = "NONE";
+    public const PERM_MODIFICATION = "RW";
+    public const PERM_VISUALISATION = "RO";
+    public const PERM_NONE = "NONE";
 
     public function getInfoPerms($module_id, $user_id)
     {

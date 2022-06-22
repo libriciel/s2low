@@ -5,7 +5,7 @@ require_once("SoapClientFactory.class.php");
 
 class OpenSign
 {
-    const DEFAULT_TIMEOUT = 2;
+    private const DEFAULT_TIMEOUT = 2;
 
     private $wsdl;
     private $soapClientFactory;

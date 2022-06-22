@@ -2,7 +2,7 @@
 
 class ActesExportController extends Controller
 {
-    const MAX_EXPORT_INTERVAL_IN_DAY = 400;
+    public const MAX_EXPORT_INTERVAL_IN_DAY = 400;
 
     public function indexAction()
     {

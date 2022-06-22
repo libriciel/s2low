@@ -2,8 +2,8 @@
 
 class HeliosRetourSQL extends SQL
 {
-    const STATUS_NON_LU = 0;
-    const STATUS_LU = 1;
+    public const STATUS_NON_LU = 0;
+    public const STATUS_LU = 1;
 
     public function add($authority_id, $siret, $filename)
     {

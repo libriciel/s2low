@@ -2,8 +2,8 @@
 
 class HeliosMenageWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-menage';
-    const NB_DAYS_IN_DISK = 15;
+    public const QUEUE_NAME = 'helios-menage';
+    private const NB_DAYS_IN_DISK = 15;
 
     private $pesAllerStorage;
 

@@ -2,7 +2,7 @@
 
 class Siret
 {
-    const LENGTH = 14;
+    private const LENGTH = 14;
 
     private $siren;
     private $luhnKey;

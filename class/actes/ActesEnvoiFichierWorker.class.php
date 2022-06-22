@@ -2,7 +2,7 @@
 
 class ActesEnvoiFichierWorker implements IWorker
 {
-    const QUEUE_NAME = "actes-envoi-fichier";
+    public const QUEUE_NAME = "actes-envoi-fichier";
 
 
     private $actesTransactionsSQL;

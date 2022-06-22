@@ -3,7 +3,7 @@
     <description>Custom standard for S2low (derived from Pastell).</description>
 
     <arg name="basepath" value="."/>
-    <arg name="colors"/>
+    <!-- <arg name="colors"/> -->
     <arg name="parallel" value="50"/>
     <arg value="ps"/>
 
@@ -46,7 +46,7 @@
     <rule ref="Generic.Files.LineLength">
         <properties>
             <property name="lineLimit" value="270"/>
-            <property name="absoluteLineLimit" value="270"/>
+            <property name="absoluteLineLimit" value="2700"/>
         </properties>
     </rule>
 </ruleset>

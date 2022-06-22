@@ -4,7 +4,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PesAllerStorage
 {
-    const CONTAINER_NAME = "pes_aller";
+    public const CONTAINER_NAME = "pes_aller";
 
     private $helios_files_upload_root;
     private $heliosTransactionsSQL;

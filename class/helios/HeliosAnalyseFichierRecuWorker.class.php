@@ -2,7 +2,7 @@
 
 class HeliosAnalyseFichierRecuWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-analyse-fichier-recu';
+    public const QUEUE_NAME = 'helios-analyse-fichier-recu';
 
 
     private $heliosAnalyseFichierRecu;

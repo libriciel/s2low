@@ -4,8 +4,8 @@ use Pheanstalk\PheanstalkInterface;
 
 class WorkerScript
 {
-    const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
-    const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
+    private const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
+    private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
     private $s2lowLogger;
     private $beanstalkdWrapper;

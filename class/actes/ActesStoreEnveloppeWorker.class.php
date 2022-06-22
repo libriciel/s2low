@@ -2,7 +2,7 @@
 
 class ActesStoreEnveloppeWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-store-enveloppe';
+    public const QUEUE_NAME = 'actes-store-enveloppe';
 
     public function getQueueName()
     {

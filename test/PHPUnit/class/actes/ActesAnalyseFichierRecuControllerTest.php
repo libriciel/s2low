@@ -2,7 +2,7 @@
 
 class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 {
-    const TEST_ARCHIVE_MISILCL_PATH = __DIR__ . "/../fixtures/test-archive-MISILCL";
+    private const TEST_ARCHIVE_MISILCL_PATH = __DIR__ . "/../fixtures/test-archive-MISILCL";
 
     /** @var  TmpFolder */
     private $tmpFolder;

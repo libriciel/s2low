@@ -5,7 +5,7 @@
 require_once(__DIR__ . "/../../init/init.php");
 
 //CONSTANTES------------------------------------------------------------------------------------------------------------
-const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
+private const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
     "SL1V" => "VHPCE11",
     "SL2V" => "VHPCE21",
     "SL3V" => "VHPCE31",
@@ -17,7 +17,7 @@ const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
     "SL5M" => "MHPCE51"
 ];
 
-const COL = [
+private const COL = [
         "DATE" => 2,
         "SIRET" => 8,
         "SL_SOURCE" => 3,

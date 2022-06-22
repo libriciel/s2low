@@ -2,7 +2,7 @@
 
 class HeliosStorePESAllerWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-store-pes-aller';
+    public const QUEUE_NAME = 'helios-store-pes-aller';
 
     public function getQueueName()
     {

@@ -2,7 +2,7 @@
 
 class HeliosStorePESRetourWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-store-pes-retour';
+    public const QUEUE_NAME = 'helios-store-pes-retour';
 
     public function getQueueName()
     {

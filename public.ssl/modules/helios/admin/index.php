@@ -1,4 +1,5 @@
 <?php
+
 /*
  * TéDéTIS - Copyright 2006 Alternance-Soft
  * Contributeur : Jérôme Schell, Août 2006
@@ -35,8 +36,6 @@
  * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
-?>
-<?php
 
 /**
  * \file public.ssl/modules/helios/admin/index.php

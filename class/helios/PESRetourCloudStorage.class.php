@@ -5,7 +5,7 @@ use Symfony\Component\Finder\Finder;
 
 class PESRetourCloudStorage implements ICloudStorable
 {
-    const CONTAINER_NAME = "helios_pes_retour";
+    public const CONTAINER_NAME = "helios_pes_retour";
 
     private $heliosRetourSQL;
     private $helios_responses_root;

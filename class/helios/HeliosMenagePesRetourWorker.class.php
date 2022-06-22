@@ -2,8 +2,8 @@
 
 class HeliosMenagePesRetourWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-pes-retour-menage';
-    const NB_DAYS_IN_DISK = 15;
+    public const QUEUE_NAME = 'helios-pes-retour-menage';
+    private const NB_DAYS_IN_DISK = 15;
 
     private $cloudStorageFactory;
     private $cloudStorage;

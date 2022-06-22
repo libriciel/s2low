@@ -2,7 +2,7 @@
 
 class PemCertificateTest extends S2lowTestCase
 {
-    const BASE_CERTIFICATES_DIR = __DIR__ . "/../class/fixtures/certificats";
+    public const BASE_CERTIFICATES_DIR = __DIR__ . "/../class/fixtures/certificats";
 
     public function testAnExpiredCertificate()
     {

@@ -2,7 +2,7 @@
 
 class HeliosReceptionWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-reception-fichier';
+    public const QUEUE_NAME = 'helios-reception-fichier';
 
     private $workerScript;
     private $s2lowLogger;

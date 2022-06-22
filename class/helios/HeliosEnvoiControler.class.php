@@ -2,7 +2,7 @@
 
 class HeliosEnvoiControler
 {
-    const P_APPLI = "GHELPES2";
+    private const P_APPLI = "GHELPES2";
 
     private $sqlQuery;
     private $heliosTransactionsSQL;

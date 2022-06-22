@@ -2,7 +2,7 @@
 
 class ActesReceptionFichierWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-reception-fichier';
+    private const QUEUE_NAME = 'actes-reception-fichier';
 
     private $actesImapRetrieve;
     private $workerScript;

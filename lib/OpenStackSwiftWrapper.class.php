@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\Stream;
 
 class OpenStackSwiftWrapper
 {
-    const OPENSTACK_SERVICE = 'swift';
+    private const OPENSTACK_SERVICE = 'swift';
 
     /** @var OpenStackContainerStore  */
     private $openStackContainersStore;

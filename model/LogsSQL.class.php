@@ -2,11 +2,11 @@
 
 class LogsSQL extends SQL
 {
-    const LEVEL_DEBUG = 0;
-    const LEVEL_INFO = 1;
-    const LEVEL_WARNING = 2;
-    const LEVEL_ERROR = 3;
-    const LEVEL_CRITICAL = 4;
+    public const LEVEL_DEBUG = 0;
+    public const LEVEL_INFO = 1;
+    public const LEVEL_WARNING = 2;
+    public const LEVEL_ERROR = 3;
+    public const LEVEL_CRITICAL = 4;
 
 
     public function getLogLevelList()

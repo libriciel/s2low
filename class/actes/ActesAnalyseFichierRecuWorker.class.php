@@ -2,7 +2,7 @@
 
 class ActesAnalyseFichierRecuWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-analyse-fichier-recu';
+    public const QUEUE_NAME = 'actes-analyse-fichier-recu';
 
 
     private $actesAnalyseFichierRecuController;

@@ -2,9 +2,9 @@
 
 class ActesPrepareSaeWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-prepare-sae';
+    public const QUEUE_NAME = 'actes-prepare-sae';
 
-    const NB_DAYS_ARCHIVE_AFTER = 62;
+    public const NB_DAYS_ARCHIVE_AFTER = 62;
 
     private $actesTransactionsSQL;
     private $s2lowLogger;

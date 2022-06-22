@@ -2,7 +2,7 @@
 
 class HeliosPESValidation
 {
-    const RELATIVE_PATH_TO_PES_ALLER_XSD = '/PES_V2/Rev0/PES_Aller.xsd';
+    private const RELATIVE_PATH_TO_PES_ALLER_XSD = '/PES_V2/Rev0/PES_Aller.xsd';
 
     private $helios_xsd_path;
     private $last_error;

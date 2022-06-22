@@ -2,9 +2,9 @@
 
 class HeliosPrepareSaeWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-prepare-sae';
+    public const QUEUE_NAME = 'helios-prepare-sae';
 
-    const NB_DAYS_ARCHIVE_AFTER = 15;
+    public const NB_DAYS_ARCHIVE_AFTER = 15;
 
     private $heliosPrepareEnvoiSAE;
     private $s2lowLogger;

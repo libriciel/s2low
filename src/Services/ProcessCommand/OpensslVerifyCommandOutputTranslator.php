@@ -6,7 +6,7 @@ use Symfony\Component\Process\Process;
 
 class OpensslVerifyCommandOutputTranslator implements ICommandOutputTranslator
 {
-    const VALIDE = "VALIDE";
+    private const VALIDE = "VALIDE";
 
     public function __construct(array $resultatAnalysisOptions)
     {

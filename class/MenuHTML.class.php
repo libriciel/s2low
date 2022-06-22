@@ -2,9 +2,9 @@
 
 class MenuHTML
 {
-    const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING = 90;
+    private const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING = 90;
 
-    const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER = 7;
+    private const NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER = 7;
 
     public function getMenuContent(array $userInfo, $modulesInfo)
     {

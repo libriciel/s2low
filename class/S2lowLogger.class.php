@@ -4,7 +4,7 @@ use Monolog\Handler\HandlerInterface;
 
 class S2lowLogger
 {
-    const MESSAGE = 'message';
+    public const MESSAGE = 'message';
 
     private $logger;
     private $log_level;

@@ -5,7 +5,7 @@ use Symfony\Component\Finder\Finder;
 
 class PESAcquitCloudStorage implements ICloudStorable
 {
-    const CONTAINER_NAME = "helios_pes_acquit";
+    public const CONTAINER_NAME = "helios_pes_acquit";
 
     private $heliosTransactionsSQL;
     private $helios_responses_root;

@@ -2,7 +2,7 @@
 
 class MessageAdminSQLTest extends S2lowTestCase
 {
-    const MESSAGE_TEST = "Ceci est un message";
+    private const MESSAGE_TEST = "Ceci est un message";
 
     /**
      * @var MessageAdminSQL

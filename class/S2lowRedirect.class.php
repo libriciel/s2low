@@ -2,7 +2,7 @@
 
 class S2lowRedirect
 {
-    const SESSION_MESSAGE_KEY = 'error';
+    public const SESSION_MESSAGE_KEY = 'error';
 
     private $sessionWrapper;
     private $website_ssl;

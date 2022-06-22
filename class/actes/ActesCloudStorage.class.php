@@ -5,7 +5,7 @@ use Symfony\Component\Finder\Finder;
 
 class ActesCloudStorage implements ICloudStorable
 {
-    const CONTAINER_NAME = 'acte_envelope';
+    public const CONTAINER_NAME = 'acte_envelope';
 
     private $actesEnvelopeSQL;
     private $actes_files_upload_root;

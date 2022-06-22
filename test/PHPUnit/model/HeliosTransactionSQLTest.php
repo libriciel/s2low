@@ -5,7 +5,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
     use HeliosUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
-    const FILENAME = "pes_aller.xml";
+    private const FILENAME = "pes_aller.xml";
 
     /**
      * @var HeliosTransactionsSQL

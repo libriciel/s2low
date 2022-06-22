@@ -5,7 +5,7 @@ use Pheanstalk\Pheanstalk;
 
 class BeanstalkdWrapper
 {
-    const DEFAULT_TTR = 60; /* 60 secondes * 20 */
+    private const DEFAULT_TTR = 60; /* 60 secondes * 20 */
 
     private $mode_beanstalkd;
     private $beanstalkd_server;

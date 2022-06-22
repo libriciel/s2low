@@ -4,7 +4,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ActesEnvelopeStorage
 {
-    const CONTAINER_NAME = 'acte_envelope';
+    public const CONTAINER_NAME = 'acte_envelope';
 
     private $actes_files_upload_root;
     private $actesEnvelopeSQL;

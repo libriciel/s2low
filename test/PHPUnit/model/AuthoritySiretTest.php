@@ -2,7 +2,7 @@
 
 class AuthoritySiretTest extends S2lowTestCase
 {
-    const SIRET_EXEMPLE = 49358727300035;
+    private const SIRET_EXEMPLE = 49358727300035;
 
     /**
      * @var AuthoritySiretSQL

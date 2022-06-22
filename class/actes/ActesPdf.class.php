@@ -5,18 +5,18 @@ require_once __DIR__ . "/IActesPdf.php";
 
 class ActesPdf implements IActesPdf
 {
-    const TEXTE_NOIR = [56, 55, 55];
-    const TEXTE_BLEU = [52, 60, 142];
-    const BLEU_HEADER = [196, 229, 238];
-    const BLEU_FONCE_BACK = [225, 241, 247];
-    const BLEU_CLAIR_BACK = [245, 250, 251];
+    private const TEXTE_NOIR = [56, 55, 55];
+    private const TEXTE_BLEU = [52, 60, 142];
+    private const BLEU_HEADER = [196, 229, 238];
+    private const BLEU_FONCE_BACK = [225, 241, 247];
+    private const BLEU_CLAIR_BACK = [245, 250, 251];
 
-    const COLOR_ARRAY = [self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
+    private const COLOR_ARRAY = [self::BLEU_FONCE_BACK,self::BLEU_CLAIR_BACK];
 
-    const TAILLE_POLICE_TITRE = 18;
-    const TAILLE_POLICE_COLLECTIVITE = 14;
-    const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
-    const TAILLE_POLICE_TABLEAU = 11;
+    private const TAILLE_POLICE_TITRE = 18;
+    private const TAILLE_POLICE_COLLECTIVITE = 14;
+    private const TAILLE_POLICE_TITRE_PARAGRAPHE = 14;
+    private const TAILLE_POLICE_TABLEAU = 11;
 
     private $img;
     /**

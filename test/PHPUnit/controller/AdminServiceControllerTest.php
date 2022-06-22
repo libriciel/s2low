@@ -2,7 +2,7 @@
 
 class AdminServiceControllerTest extends S2lowTestCase
 {
-    const NOM_SERVICE = 'mon service';
+    private const NOM_SERVICE = 'mon service';
 
     /** @var AdminServiceController */
     private $adminServiceController;

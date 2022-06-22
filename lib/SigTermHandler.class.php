@@ -2,7 +2,7 @@
 
 class SigTermHandler
 {
-    const SIGNO_TO_HANDLE = [
+    private const SIGNO_TO_HANDLE = [
         SIGTERM,
         SIGINT
     ];

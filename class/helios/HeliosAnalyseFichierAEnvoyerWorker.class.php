@@ -2,7 +2,7 @@
 
 class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-analyse-fichier-a-envoyer';
+    public const QUEUE_NAME = 'helios-analyse-fichier-a-envoyer';
 
 
     private $heliosEnvoiControler;

@@ -5,9 +5,9 @@ require_once(SITEROOT . "/class/DataObject.class.php");
 
 class mail_transaction extends DataObject
 {
-    const STATUS_NO_CONFIRMATION = "aucune confirmation";
-    const STATUS_CONFIRMER_PARTIELLEMENT = "confirmé partiellement";
-    const STATUS_CONFIRMER = "confirmé";
+    public const STATUS_NO_CONFIRMATION = "aucune confirmation";
+    public const STATUS_CONFIRMER_PARTIELLEMENT = "confirmé partiellement";
+    public const STATUS_CONFIRMER = "confirmé";
 
     public static function getTabStatus()
     {

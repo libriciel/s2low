@@ -5,7 +5,7 @@ use Symfony\Component\Finder\Finder;
 
 class MailIncludedFilesCloudStorage implements ICloudStorable
 {
-    const CONTAINER_NAME = "mailsec_included_files";
+    public const CONTAINER_NAME = "mailsec_included_files";
 
     private $mailTransactionSQL;
     private $mail_files_upload_root;

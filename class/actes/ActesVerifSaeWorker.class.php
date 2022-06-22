@@ -2,7 +2,7 @@
 
 class ActesVerifSaeWorker implements IWorker
 {
-    const QUEUE_NAME = 'actes-verif-sae';
+    public const QUEUE_NAME = 'actes-verif-sae';
 
     private $actesTransactionsSQL;
     private $logger;

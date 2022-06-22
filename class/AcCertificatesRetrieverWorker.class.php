@@ -2,8 +2,8 @@
 
 class AcCertificatesRetrieverWorker implements IWorker
 {
-    const QUEUE_NAME = 'certificates-retriever';
-    const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
+    private const QUEUE_NAME = 'certificates-retriever';
+    private const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
 
     public function __construct(S2lowLogger $logger)
     {

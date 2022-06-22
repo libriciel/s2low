@@ -12,9 +12,9 @@ class VersionningFactory
 
 class Versionning
 {
-    const BUILD_ID = "BUILD_ID";
-    const BUILD_DATE = "BUILD_DATE";
-    const VERSION = "VERSION";
+    private const BUILD_ID = "BUILD_ID";
+    private const BUILD_DATE = "BUILD_DATE";
+    private const VERSION = "VERSION";
 
     private $manifest_file;
 

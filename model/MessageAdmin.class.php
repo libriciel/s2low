@@ -5,13 +5,13 @@ require_once __DIR__ . "/../ext/HTMLPurifier.standalone.php";
 
 class MessageAdmin
 {
-    const ETAT_EN_COURS_DE_REDACTION = 0;
-    const ETAT_PUBLIE = 1;
-    const ETAT_RETIRE = 2;
+    public const ETAT_EN_COURS_DE_REDACTION = 0;
+    public const ETAT_PUBLIE = 1;
+    public const ETAT_RETIRE = 2;
 
-    const NIVEAU_INFO = 1;
-    const NIVEAU_WARNING = 2;
-    const NIVEAU_DANGER = 3;
+    public const NIVEAU_INFO = 1;
+    public const NIVEAU_WARNING = 2;
+    public const NIVEAU_DANGER = 3;
 
 
     public $message_id;

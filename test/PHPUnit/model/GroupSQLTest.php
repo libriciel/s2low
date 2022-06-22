@@ -2,8 +2,8 @@
 
 class GroupSQLTest extends S2lowTestCase
 {
-    const GROUPE_1_NAME = "Groupe de test";
-    const GROUPE_2_NAME = "Groupe & co";
+    private const GROUPE_1_NAME = "Groupe de test";
+    private const GROUPE_2_NAME = "Groupe & co";
 
     /**
      * @var GroupSQL

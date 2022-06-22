@@ -2,11 +2,11 @@
 
 class SQLQuery
 {
-    const DATABASE_TYPE = "pgsql";
-    const DEFAULT_HOST = "localhost";
-    const SLOW_QUERY_IN_MS = 2000;
+    private const DATABASE_TYPE = "pgsql";
+    private const DEFAULT_HOST = "localhost";
+    private const SLOW_QUERY_IN_MS = 2000;
 
-    const CLIENT_ENCODING_DEFAULT = "LATIN9";
+    private const CLIENT_ENCODING_DEFAULT = "LATIN9";
 
     private $databaseName;
     private $host;

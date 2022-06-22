@@ -2,7 +2,7 @@
 
 class VerifyPemCertificateTest extends S2lowTestCase
 {
-    const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
+    private const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
 
     /** @var \VerifyPemCertificateFactory  */
     private $verifyPemCertificateFactory;

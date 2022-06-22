@@ -2,7 +2,7 @@
 
 class HeliosEnvoiWorker implements IWorker
 {
-    const QUEUE_NAME = 'helios-envoi';
+    public const QUEUE_NAME = 'helios-envoi';
 
 
     private $heliosEnvoiControler;

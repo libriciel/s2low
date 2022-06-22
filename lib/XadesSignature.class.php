@@ -3,11 +3,11 @@
 //http://users.dcc.uchile.cl/~pcamacho/tutorial/web/xmlsec/xmlsec.html
 class XadesSignature
 {
-    const NS_DS_URI = "http://www.w3.org/2000/09/xmldsig#";
-    const NS_XAD_URI = "http://uri.etsi.org/01903/v1.1.1#";
+    public const NS_DS_URI = "http://www.w3.org/2000/09/xmldsig#";
+    public const NS_XAD_URI = "http://uri.etsi.org/01903/v1.1.1#";
 
     //const HASH_ALG = "sha256";
-    const HASH_ALG = "sha1";
+    private const HASH_ALG = "sha1";
 
     private $xmlsec1_path;
     private $pkcs12;

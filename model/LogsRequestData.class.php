@@ -2,10 +2,10 @@
 
 class LogsRequestData
 {
-    const STATE_ASKING = 1;
-    const STATE_CANCEL = 2;
-    const STATE_AVAILABLE = 3;
-    const STATE_ARCHIVED = 4;
+    public const STATE_ASKING = 1;
+    public const STATE_CANCEL = 2;
+    public const STATE_AVAILABLE = 3;
+    public const STATE_ARCHIVED = 4;
 
 
     public $user_id_demandeur;

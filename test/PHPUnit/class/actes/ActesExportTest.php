@@ -4,8 +4,8 @@ class ActesExportTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
-    const ENVELOPPE_TEST_PATH = __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz";
-    const XML_TEST = "<test></test>";
+    private const ENVELOPPE_TEST_PATH = __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz";
+    private const XML_TEST = "<test></test>";
 
     private function getActesExport()
     {

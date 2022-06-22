@@ -75,7 +75,8 @@ class AdminController extends Controller
         $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
         $authoritySiret->add($authority_id, $siret);
         $this->displayAndExit("Numéro SIRET ajouté", "/admin/authorities/admin_authority_siret.php?id=$authority_id");
-    } // @codeCoverageIgnore
+    }
+    // @codeCoverageIgnore
 
     public function authoritySiretDelAction()
     {
@@ -86,7 +87,8 @@ class AdminController extends Controller
         $info = $authoritySiret->getInfo($authority_siret_id);
         $authoritySiret->del($authority_siret_id);
         $this->displayAndExit("Numéro SIRET retiré", "/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
-    } // @codeCoverageIgnore
+    }
+    // @codeCoverageIgnore
 
 
     /**

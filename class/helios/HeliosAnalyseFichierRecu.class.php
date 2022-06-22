@@ -2,8 +2,8 @@
 
 class HeliosAnalyseFichierRecu
 {
-    const ID = "Helios Analyse Fichier Réception";
-    const MAX_FILE_SIZE = 150 * 1024 * 1024;
+    public const ID = "Helios Analyse Fichier Réception";
+    private const MAX_FILE_SIZE = 150 * 1024 * 1024;
 
     private $heliosTransactionsSQL;
     private $authoritySQL;

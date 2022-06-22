@@ -2,7 +2,7 @@
 
 class FileUploader
 {
-    const MAX_LINE_LENGTH = 1024;
+    private const MAX_LINE_LENGTH = 1024;
 
     private $forbidenExtension = array("asp","aspx","asax","asa","jsp","cer","cdx","asa","htr","php","php3","exe","cgi");
 

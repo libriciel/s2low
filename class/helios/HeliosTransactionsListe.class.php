@@ -2,7 +2,7 @@
 
 class HeliosTransactionsListe
 {
-    const EN_COURS = 999;
+    private const EN_COURS = 999;
 
     private static $etat_en_cours = array(1,2,3,13,14);
 

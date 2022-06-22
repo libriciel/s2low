@@ -6,7 +6,7 @@ require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php
 
 class HeliosController extends Controller
 {
-    const MODULE_NAME = 'helios';
+    private const MODULE_NAME = 'helios';
 
     private $helios_max_upload_size;
 

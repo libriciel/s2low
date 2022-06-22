@@ -2,7 +2,7 @@
 
 class ActesPrepareSaeWorkerTest extends S2lowTestCase
 {
-    const FAKE_PASTELL_URL = "http://fakePastell/";
+    private const FAKE_PASTELL_URL = "http://fakePastell/";
 
     /**
      * @throws Exception

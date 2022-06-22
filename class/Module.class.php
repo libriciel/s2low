@@ -11,9 +11,9 @@ require_once("DataObject.class.php");
 class Module extends DataObject
 {
     //Ajouté par EP afin de ne pas avoir a cherché l'id du module dans la base ....
-    const ACTES = 1;
-    const HELIOS = 2;
-    const MAIL = 3;
+    public const ACTES = 1;
+    public const HELIOS = 2;
+    public const MAIL = 3;
 
 
 
