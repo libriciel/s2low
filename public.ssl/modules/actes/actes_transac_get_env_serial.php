@@ -12,12 +12,12 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  echo "KO\nÉchec de l'authentification";
+  echo "KO\nÃ‰chec de l'authentification";
   exit();
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-  echo "KO\nAccès refusé";
+  echo "KO\nAccÃ¨s refusÃ©";
   exit();
 }
 
@@ -29,7 +29,7 @@ $actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
 $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 if ( ! $serialNumber) {
-	 echo "KO\nErreur récupération numéro de série\n";
+	 echo "KO\nErreur rÃ©cupÃ©ration numÃ©ro de sÃ©rie\n";
 	 exit;
 }
 

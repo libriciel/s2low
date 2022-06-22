@@ -39,7 +39,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 		);
 
 		$this->assertFileNotExists($pes_aller_path);
-		$this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell",2);
+		$this->assertLogMessage("La transaction $transaction_id a Ã©tÃ© envoyÃ© Ã  Pastell",2);
 	}
 
 	private function setTransactionEnattente(){
@@ -57,14 +57,14 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 	public function testSendTransactionEnErreur(){
 		$this->mockOpenStack();
 
-		$this->mockPastellFactory(false,"Erreur renvoyé par le mock");
+		$this->mockPastellFactory(false,"Erreur renvoyÃ© par le mock");
 		$transaction_id = $this->setTransactionEnattente();
 
 		$this->assertFalse(
 			$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
 		);
 		$this->assertLogMessage(
-			"Le document n'a pas pu être envoyé sur Pastell : Erreur renvoyé par le mock",
+			"Le document n'a pas pu Ãªtre envoyÃ© sur Pastell : Erreur renvoyÃ© par le mock",
 			1
 		);
 	}
@@ -77,8 +77,8 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 		$this->mockPastellFactory("xyzt",false);
 		$transaction_id = $this->setTransactionEnattente();
 		$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendAllArchive();
-		$this->assertLogMessage("1 transactions à envoyer...",2);
-		$this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell",5);
+		$this->assertLogMessage("1 transactions Ã  envoyer...",2);
+		$this->assertLogMessage("La transaction $transaction_id a Ã©tÃ© envoyÃ© Ã  Pastell",5);
 	}
 
 	/**
@@ -93,7 +93,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 			$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
 		);
 		$this->assertLogMessage(
-			"Le document n'a pas pu être envoyé sur Pastell : $error_message",
+			"Le document n'a pas pu Ãªtre envoyÃ© sur Pastell : $error_message",
 			1
 		);
 

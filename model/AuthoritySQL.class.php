@@ -6,7 +6,7 @@ class AuthoritySQL extends SQL {
 			'pastell_url' => "URL Pastell",
 			'pastell_login' => "Login",
 			'pastell_password' => "Mot de passe",
-			'pastell_id_e' => "Identifiant de l'entité (id_e)"
+			'pastell_id_e' => "Identifiant de l'entitÃ© (id_e)"
 		);
   	}
 	
@@ -37,13 +37,13 @@ class AuthoritySQL extends SQL {
   		return [
 			'authorities.name' => 'Nom',
 			'email' => 'Adresse email',
-			'siren' => 'Numéro SIREN',
+			'siren' => 'NumÃ©ro SIREN',
 			'address' => 'Adresse',
 			'postal_code' => "Code Postal",
 			'city' => 'Ville',
-			'telephone' => 'Numéro de téléphone',
-			'fax' => 'Numéro de fax',
-			'department' => 'Département',
+			'telephone' => 'NumÃ©ro de tÃ©lÃ©phone',
+			'fax' => 'NumÃ©ro de fax',
+			'department' => 'DÃ©partement',
 			'district' => 'Arrondissement',
 			'authorities.status' => 'Status',
 			'authority_groups.name as group_name' => 'Nom du groupe' ,
@@ -172,7 +172,7 @@ class AuthoritySQL extends SQL {
 	public function verifHasPastell($authority_id){
 		$authorityInfo = $this->getInfo($authority_id);
 		if (! $authorityInfo['pastell_url'] ){
-			throw new UnrecoverableException("La collectivité n'a pas de Pastell configuré");
+			throw new UnrecoverableException("La collectivitÃ© n'a pas de Pastell configurÃ©");
 		}
 	}
 

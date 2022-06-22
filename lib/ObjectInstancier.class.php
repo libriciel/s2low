@@ -57,7 +57,7 @@ class ObjectInstancier {
         	} catch (Exception $e){
 
 				//throw $e;
-        		//On a pas trouvé le paramètre...
+        		//On a pas trouvÃ© le paramÃ¨tre...
         	}
         	
         	if (! isset($bind_value) ) {

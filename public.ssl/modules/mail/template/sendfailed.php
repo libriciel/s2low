@@ -1,10 +1,10 @@
- <h1> Mail - Système de mail sécurisé</h1>
+ <h1> Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
 
   	<h2>Actions</h2>
   	<div id="actions_area"> 
 		<a href="index.php?command=create" class="btn btn-default">Nouveau message</a>
-		<a href="index.php?command=lsit" class="btn btn-default">Messages envoyés</a>
+		<a href="index.php?command=lsit" class="btn btn-default">Messages envoyÃ©s</a>
 	</div>
-	<h2>L'envoi a echoué</h2> 
+	<h2>L'envoi a echouÃ©</h2> 
 	
 	<p class="alert alert-danger"><?php echo $returnMsg ?></p>

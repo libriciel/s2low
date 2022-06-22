@@ -67,7 +67,7 @@ class UserSQL extends SQL {
 	public function  getRoleStr($role) {		
 		$roleTypes = array( "SADM" => "Super administrateur",
 							   "GADM" => "Administrateur de groupe",
-							   "ADM" => "Administrateur collectivité",
+							   "ADM" => "Administrateur collectivitÃ©",
 							   "USER" => "Utilisateur"
 							   );
 		return $roleTypes[$role];
@@ -99,8 +99,8 @@ class UserSQL extends SQL {
 
 	public function getIdentificatonMethodeList(){
 		return array(
-			self::IDENT_METHOD_CERT_ONLY=>'Certificat à usage individuel',
-			self::IDENT_METHOD_LOGIN => 'Certificat partagé et login/mot de passe'
+			self::IDENT_METHOD_CERT_ONLY=>'Certificat Ã  usage individuel',
+			self::IDENT_METHOD_LOGIN => 'Certificat partagÃ© et login/mot de passe'
 		);
 	}
 
@@ -122,7 +122,7 @@ class UserSQL extends SQL {
 		$this->saveCertificateRGS2Etoiles($user_id, "");
 	}
 	
-	//Hack affreux pour prévenir les NULL introduit par le DataObject !
+	//Hack affreux pour prÃ©venir les NULL introduit par le DataObject !
 	public function updateCertificatRGS2EtoilesIfNull($user_id){
 		$sql = "SELECT * FROM users WHERE id=? AND certificate_rgs_2_etoiles IS NULL";
 		if ($this->queryOne($sql,$user_id)){

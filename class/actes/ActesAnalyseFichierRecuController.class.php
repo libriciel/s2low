@@ -56,13 +56,13 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     public function analyseAll(){
-        $this->s2lowLogger->info("DÈbut du script");
-		$this->s2lowLogger->info("Analyse du rÈpertoire : {$this->actes_response_tmp_local_path}");
+        $this->s2lowLogger->info("D√©but du script");
+		$this->s2lowLogger->info("Analyse du r√©pertoire : {$this->actes_response_tmp_local_path}");
 
 		$file_list = $this->getAllDirectory();
 
         if (!$file_list){
-			$this->s2lowLogger->info("Aucun rÈpertoire ‡ analyser");
+			$this->s2lowLogger->info("Aucun r√©pertoire √† analyser");
             return true;
         }
 		$sigtermHandler = SigTermHandler::getInstance();
@@ -81,12 +81,12 @@ class ActesAnalyseFichierRecuController {
 		$file_list = @ scandir($this->actes_response_tmp_local_path);
 
 		if ($file_list === false){
-			$message = "Erreur lors de la lecture du rÈpertoire  $this->actes_response_tmp_local_path";
+			$message = "Erreur lors de la lecture du r√©pertoire  $this->actes_response_tmp_local_path";
 			$this->s2lowLogger->error($message);
 			throw new Exception($message);
 		}
 		$file_list = array_diff($file_list, array('..', '.'));
-		$this->s2lowLogger->info("Traitement de ".count($file_list)." rÈpertoire trouvÈs");
+		$this->s2lowLogger->info("Traitement de ".count($file_list)." r√©pertoire trouv√©s");
 		return $file_list;
 	}
 
@@ -96,11 +96,11 @@ class ActesAnalyseFichierRecuController {
         try {
             $this->analyseOneFile($rep_path);
             $tmpDir = new TmpFolder();
-			$this->s2lowLogger->info("Suppression du rÈpertoire $rep_path");
+			$this->s2lowLogger->info("Suppression du r√©pertoire $rep_path");
             $tmpDir->delete($rep_path);
         } catch (Exception $e){
 			$this->s2lowLogger->error("Echec du traitement de $rep_path : " . $e->getMessage());
-			$this->s2lowLogger->error("DÈplacement du rÈpertoire $file vers {$this->actes_response_error_path}");
+			$this->s2lowLogger->error("D√©placement du r√©pertoire $file vers {$this->actes_response_error_path}");
 			rename($rep_path, $this->actes_response_error_path . "/" . $file);
         }
     }
@@ -110,10 +110,10 @@ class ActesAnalyseFichierRecuController {
 		if (! file_exists($message_body)){
 			return false;
 		}
-		$expected_content = "Notre service de contrÙle de lÈgalitÈ a identifiÈ qu'il s'agit d'un acte dont la transmission est effectuÈe en multi canal.";
+		$expected_content = "Notre service de contr√¥le de l√©galit√© a identifi√© qu'il s'agit d'un acte dont la transmission est effectu√©e en multi canal.";
 		if (! preg_match(
 			"#$expected_content#",
-			utf8_decode(file_get_contents($message_body)))
+			file_get_contents($message_body))
 		){
 			return false;
 		}
@@ -133,10 +133,10 @@ class ActesAnalyseFichierRecuController {
             $archiveData = $archive->getArchiveDataFromFolder($rep_path);
         } catch(Exception $e){
 			if ($this->isMulticanalResponse($rep_path)){
-				$this->s2lowLogger->info("Message de rÈponse ‡ un multicanal");
+				$this->s2lowLogger->info("Message de r√©ponse √† un multicanal");
 				return;
 			}
-            throw new Exception(utf8_decode($e->getMessage()));
+            throw new Exception($e->getMessage());
         }
 
         if ($archiveData->is_ano){
@@ -178,7 +178,7 @@ class ActesAnalyseFichierRecuController {
                 /** @var MessageMetierARReponseRejetLettreObservations $fichierXML */
                 $this->traitementARReponseLO($fichierXML);
             } else {
-                throw new Exception("Code message $code_message non gÈrÈ");
+                throw new Exception("Code message $code_message non g√©r√©");
             }
         }
 
@@ -190,12 +190,12 @@ class ActesAnalyseFichierRecuController {
 	 */
     private function traitementEnveloppeAnomalie(ArchiveData $archiveData){
         $enveloppe_anomalie_name = basename($archiveData->enveloppe_path);
-		$this->s2lowLogger->info("Anomalie trouvÈe pour l'enveloppe $enveloppe_anomalie_name");
+		$this->s2lowLogger->info("Anomalie trouv√©e pour l'enveloppe $enveloppe_anomalie_name");
         $envelope_id = $this->actesEnvelopeSQL->findByAnomalieEnveloppeName($enveloppe_anomalie_name);
         if (! $envelope_id){
-            throw new Exception("L'enveloppe d'anomalie $enveloppe_anomalie_name ne correspond ‡ aucune enveloppe de la base");
+            throw new Exception("L'enveloppe d'anomalie $enveloppe_anomalie_name ne correspond √† aucune enveloppe de la base");
         }
-		$this->s2lowLogger->info("Enveloppe $envelope_id trouvÈ pour l'anomalie $enveloppe_anomalie_name");
+		$this->s2lowLogger->info("Enveloppe $envelope_id trouv√© pour l'anomalie $enveloppe_anomalie_name");
 
         $transaction_ids = $this->actesTransactionsSQL->getIdByEnvelopeId($envelope_id);
 
@@ -203,11 +203,11 @@ class ActesAnalyseFichierRecuController {
         /** @var \Libriciel\LibActes\FichierXML\EnveloppeAnomalie $anomalieEnveloppe */
         $anomalieEnveloppe = $actesXML->getDataFromXML(file_get_contents($archiveData->enveloppe_path));
 
-        $detail_erreur = utf8_decode($anomalieEnveloppe->detail_erreur);
+        $detail_erreur = $anomalieEnveloppe->detail_erreur;
 
-        $message = "Enveloppe rejetÈe par le {$this->actes_ministere_acronyme} ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
-        $xml = file_get_contents($archiveData->enveloppe_path);
-
+        $message = "Enveloppe rejet√©e par le {$this->actes_ministere_acronyme} ({$anomalieEnveloppe->nature_erreur} : $detail_erreur)";
+        $xml = mb_convert_encoding(file_get_contents($archiveData->enveloppe_path),"UTF-8","ISO-8859-1"); // FIX conversion UTF-8
+                                                    //Est-on s√ªr que l'acte est toujours en ISO-8859-1 ??
         $this->updateStatus(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ERREUR,
@@ -221,7 +221,7 @@ class ActesAnalyseFichierRecuController {
     	$archiveFilename = new \Libriciel\LibActes\ArchiveFilename();
 		$targz_filename = $archiveFilename->getFilename($archiveData->id_tdt,basename($archiveData->enveloppe_path));
 
-		$tar_filename = substr($targz_filename,0,-3);
+		$tar_filename = mb_substr($targz_filename,0,-3);
 
 		$final_destination = $archive_folder."/".$tar_filename.".gz";
 
@@ -253,7 +253,7 @@ class ActesAnalyseFichierRecuController {
 
         if(is_file($archive_folder)){
                 throw new UnexpectedValueException(
-                    "Impossible de crÈer $archive_folder : un fichier de ce nom existe dÈj‡"
+                    "Impossible de cr√©er $archive_folder : un fichier de ce nom existe d√©j√†"
                 );
         }
         if(!is_dir($archive_folder)){
@@ -265,10 +265,10 @@ class ActesAnalyseFichierRecuController {
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
-        $envelope_path = substr($archive_path, strlen($this->actes_files_upload_root));
+        $envelope_path = mb_substr($archive_path, mb_strlen($this->actes_files_upload_root));
         $envelope_size = filesize($archive_path);
 
-		$this->s2lowLogger->info("Archive enregistrÈ dans $archive_path");
+		$this->s2lowLogger->info("Archive enregistr√© dans $archive_path");
 
         $transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
 
@@ -276,7 +276,7 @@ class ActesAnalyseFichierRecuController {
             $transaction_info['envelope_id'],
             $envelope_path, $envelope_size
         );
-		$this->s2lowLogger->info("CrÈation de l'enveloppe $related_envelope_id");
+		$this->s2lowLogger->info("Cr√©ation de l'enveloppe $related_envelope_id");
 
         //HORRIBLE HACK
         if (isset($fichierXML->date_courrier_pref)) {
@@ -291,12 +291,12 @@ class ActesAnalyseFichierRecuController {
 
         $related_transaction_id = $this->actesTransactionsSQL->createRelatedTransaction(
             $related_envelope_id,
-            substr($fichierXML->getCodeMessage(),0,1),
+            mb_substr($fichierXML->getCodeMessage(),0,1),
             $date_decision,
             $transaction_id
         );
 
-		$this->s2lowLogger->info("CrÈation de la transaction $related_transaction_id");
+		$this->s2lowLogger->info("Cr√©ation de la transaction $related_transaction_id");
 
 
 
@@ -314,10 +314,10 @@ class ActesAnalyseFichierRecuController {
             array(MessageMetierCourrierSimple::CODE_MESSAGE,
                 MessageMetierDefereTA::CODE_MESSAGE)
         )){
-            $message = "ReÁu par le Tdt (pas d'AR envoyÈ)";
+            $message = "Re√ßu par le Tdt (pas d'AR envoy√©)";
             $status = ActesStatusSQL::STATUS_DOCUMENT_RECU_PAS_DAR;
         } else {
-            $message = "ReÁu par le Tdt";
+            $message = "Re√ßu par le Tdt";
             $status = ActesStatusSQL::STATUS_DOCUMENT_RECU;
         }
         $this->updateStatus(
@@ -349,7 +349,7 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     private function traitementARActe(MessageMetierARActes $fichierXML){
-		$this->s2lowLogger->info("AR Actes trouvÈ pour l'acte : " . $fichierXML->id_actes);
+		$this->s2lowLogger->info("AR Actes trouv√© pour l'acte : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
 
@@ -357,7 +357,7 @@ class ActesAnalyseFichierRecuController {
 
 		$this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
 
-        $message = "ReÁu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
+        $message = "Re√ßu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -374,12 +374,12 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     private function traitementARPC(MessageMetierARPieceComplementaire $fichierXML){
-		$this->s2lowLogger->info("AR Actes trouvÈ pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
+		$this->s2lowLogger->info("AR Actes trouv√© pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,3,true);
 
 		$this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
-        $message = "ReÁu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
+        $message = "Re√ßu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -396,12 +396,12 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     private function traitementARReponseLO(MessageMetierARReponseRejetLettreObservations $fichierXML){
-		$this->s2lowLogger->info("AR Actes trouvÈ pour l'envoi d'une rÈponse ou d'un refus ‡ une lettre d'observation : " . $fichierXML->id_actes);
+		$this->s2lowLogger->info("AR Actes trouv√© pour l'envoi d'une r√©ponse ou d'un refus √† une lettre d'observation : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne,4,true);
 
 		$this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
-        $message = "ReÁu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
+        $message = "Re√ßu par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -418,14 +418,14 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     private function traitementAnomalie(MessageMetieAnomalieActe $fichierXML){
-		$this->s2lowLogger->info("Anomalie trouvÈ pour l'acte : " . $fichierXML->numero_interne);
+		$this->s2lowLogger->info("Anomalie trouv√© pour l'acte : " . $fichierXML->numero_interne);
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
         $message = "Anomalie signalee par le {$this->actes_ministere_acronyme} : ".$fichierXML->nature_anomalie." - ".$fichierXML->detail_anomalie;
 
         $info_transaction = $this->actesTransactionsSQL->getInfo($transaction_id);
         if ($info_transaction['last_status_id'] != ActesStatusSQL::STATUS_TRANSMIS){
 			$this->s2lowLogger->info("$message");
-        	$exception_message  = "Message d'anomalie reÁu alors que le status de l'acte n'est plus transmis ({$info_transaction['last_status_id']} trouvÈ)";
+        	$exception_message  = "Message d'anomalie re√ßu alors que le status de l'acte n'est plus transmis ({$info_transaction['last_status_id']} trouv√©)";
 			$this->s2lowLogger->error($exception_message);
         	throw new Exception($exception_message);
 		}
@@ -446,10 +446,10 @@ class ActesAnalyseFichierRecuController {
     private function traitementRetourClassification(MessageMetierRetourClassification $fichierXML){
         $transaction_id = $this->actesTransactionsSQL->getLastDemandeClassificationTransmis($fichierXML->siren);
         if (! $transaction_id){
-            throw new Exception("Aucune demande de classification transmise trouvÈe pour le siren {$fichierXML->siren}");
+            throw new Exception("Aucune demande de classification transmise trouv√©e pour le siren {$fichierXML->siren}");
         }
         $this->actesUpdateClassificationSQL->updateClassification($fichierXML->siren,file_get_contents($fichierXML->file_path));
-        $message = "Mise ‡ jour de la classification (date de classification: {$fichierXML->date_classification})";
+        $message = "Mise √† jour de la classification (date de classification: {$fichierXML->date_classification})";
         $xml = file_get_contents($fichierXML->file_path);
 
         $this->updateStatus(
@@ -465,10 +465,10 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     private function traitementRetourClassificationSansChangement(MessageMetierReponseClassificationSansChangement $fichierXML){
-		$this->s2lowLogger->info("Classification sans changement reÁu");
+		$this->s2lowLogger->info("Classification sans changement re√ßu");
         $transaction_id = $this->actesTransactionsSQL->getLastDemandeClassificationTransmis($fichierXML->siren);
         if (! $transaction_id){
-            throw new Exception("Aucune demande de classification transmise trouvÈe pour le siren {$fichierXML->siren}");
+            throw new Exception("Aucune demande de classification transmise trouv√©e pour le siren {$fichierXML->siren}");
         }
         $message = "Classification sans changement (date de classification: {$fichierXML->date_classification})";
         $xml = file_get_contents($fichierXML->file_path);
@@ -485,12 +485,12 @@ class ActesAnalyseFichierRecuController {
 	 * @throws Exception
 	 */
     public function traitementARAnnulation(MessageMetierARAnnulation $fichierXML){
-		$this->s2lowLogger->info("Annulation trouvÈe pour l'Acte : " . $fichierXML->id_actes);
+		$this->s2lowLogger->info("Annulation trouv√©e pour l'Acte : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren,$fichierXML->numero_interne);
 
 		$this->s2lowLogger->info("{$fichierXML->id_actes} -> transaction_id = $transaction_id");
-        $message = "Annulation reÁue par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
+        $message = "Annulation re√ßue par le {$this->actes_ministere_acronyme} le ".$fichierXML->date_reception;
 
         $xml = file_get_contents($fichierXML->file_path);
 
@@ -535,10 +535,10 @@ class ActesAnalyseFichierRecuController {
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren,$numeroInterne,$type,$type_reponse_not_null);
         if (! $transaction_id){
             throw new Exception(
-                "Aucune transation trouver pour le couple SIREN $siren - numÈro interne $numeroInterne"
+                "Aucune transation trouver pour le couple SIREN $siren - num√©ro interne $numeroInterne"
             );
         }
-		$this->s2lowLogger->info("Transaction de type $type trouvÈ avec le SIREN $siren et le numÈro interne $numeroInterne : $transaction_id ");
+		$this->s2lowLogger->info("Transaction de type $type trouv√© avec le SIREN $siren et le num√©ro interne $numeroInterne : $transaction_id ");
         return $transaction_id;
     }
 }

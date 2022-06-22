@@ -2,9 +2,9 @@
 require_once(dirname(__FILE__)."/../config/config.php"); 
 require_once(SITEROOT . "/class/Trace.class.php");
 /**
-	Cette classe ne fonctionne qui si on a dÈfini les trois constante suivantes (qui sont des noms de fichiers)  :
+	Cette classe ne fonctionne qui si on a d√©fini les trois constante suivantes (qui sont des noms de fichiers)  :
  	TIMESTAMPING_CERT => le fichier contenant le certificat au format PEM
-	TIMESTAMPING_PRIV_KEY => la clÈ privÈe au format PEM protegÈ par un mot de passe
+	TIMESTAMPING_PRIV_KEY => la cl√© priv√©e au format PEM proteg√© par un mot de passe
 	TIMESTAMPING_PRIV_KEY_PASS => le fichier contenant le mot de passe
 **/
 /**
@@ -23,7 +23,7 @@ class Parapheur {
 	public function __construct($data){
 		$this->data = $data;
 		$this->last_error = "";
-		//Par dÈfaut on construit avec les paramËtre de timestamp
+		//Par d√©faut on construit avec les param√®tre de timestamp
 		$this->setSignerParameter(TIMESTAMPING_CERT,TIMESTAMPING_PRIV_KEY,null);
 		$this->setKeyPaswordFromFile(TIMESTAMPING_PRIV_KEY_PASS);
 	}
@@ -104,7 +104,7 @@ class Parapheur {
 		}
 		
 		if ($this->isCertificateRevoked($cert)){
-			$this->last_error = "Le certificat utilisÈ pour la signature est rÈvoquÈ";
+			$this->last_error = "Le certificat utilis√© pour la signature est r√©voqu√©";
 			return false;
 		}
 		
@@ -124,9 +124,9 @@ class Parapheur {
   	}
   	
 	/**
-	* \brief MÈthode d'extraction d'un certificat x509 d'un fichier PKCS7
-	* \param $signFile chaÓne : Chemin vers le fichier PKCS7
-	* \return Une chaÓne contenant le certificat encodÈ en base64 ou false en cas d'erreur
+	* \brief M√©thode d'extraction d'un certificat x509 d'un fichier PKCS7
+	* \param $signFile cha√Æne : Chemin vers le fichier PKCS7
+	* \return Une cha√Æne contenant le certificat encod√© en base64 ou false en cas d'erreur
 	*/
 	public function getCertificate($signatureFileName){
 	
@@ -147,14 +147,14 @@ class Parapheur {
 	  }
   
 	 /**
-   * \brief MÈthode de vÈrification de la validitÈ d'un certificat (incluant les crl)
-   * \param $cert chaÓne : Certificat en base64 ‡ contrÙler
-   * \return True si le certificat est rÈvoquÈ, false sinon
+   * \brief M√©thode de v√©rification de la validit√© d'un certificat (incluant les crl)
+   * \param $cert cha√Æne : Certificat en base64 √† contr√¥ler
+   * \return True si le certificat est r√©voqu√©, false sinon
    */
   public function isCertificateRevoked($cert) {
 	$certFile = tempnam('/tmp', 'tedetis_sign_cert_');
 	if (! file_put_contents($certFile, $cert)) {
-	  $this->last_error = "Erreur systËme de fichiers";
+	  $this->last_error = "Erreur syst√®me de fichiers";
 	  return -1;
 	}
 
@@ -167,7 +167,7 @@ class Parapheur {
 	$revoked = false;
 
 	if ($ret != 0) {
-	  self::$last_error = "Erreur de vÈrification des CRL";
+	  self::$last_error = "Erreur de v√©rification des CRL";
 	  return false;
 	} else {
 	  foreach ($out as $line) {

@@ -42,15 +42,15 @@ class PDFStampWrapper {
             ),
             'rows' => array(
                 array(
-                    'title' => 'Envoyé en préfecture le',
+                    'title' => 'EnvoyÃ© en prÃ©fecture le',
                     'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
                 ),
                 array(
-                    'title' => 'Reçu en préfecture le',
+                    'title' => 'ReÃ§u en prÃ©fecture le',
                     'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
                 ),
                 array(
-                    'title' => 'Affiché le',
+                    'title' => 'AffichÃ© le',
                     'value' => $date_affichage,
                     'logo' => array(
                         'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),
@@ -68,7 +68,7 @@ class PDFStampWrapper {
         /* curl -F "file=@Courrier.pdf" -F "metadata=$SAMPLE" -X POST http://pdf-stamp:8080 (!) */
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->addPostFile('file',$pdf_filepath);
-        $curlWrapper->addPostData('metadata',json_encode(utf8_encode_array($data)));
+        $curlWrapper->addPostData('metadata',json_encode($data));
 
 
         $result = $curlWrapper->get($this->pdf_stamp_url);

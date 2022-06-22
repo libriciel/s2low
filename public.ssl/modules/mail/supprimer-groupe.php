@@ -28,5 +28,5 @@ if ($nb_user){
 
 $groupe->delete();
 
-$_SESSION['last_message'] = "Le groupe $name a été supprimé";
+$_SESSION['last_message'] = "Le groupe $name a Ã©tÃ© supprimÃ©";
 header("Location: index.php?command=annuaire");

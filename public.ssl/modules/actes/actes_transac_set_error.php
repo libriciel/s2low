@@ -16,10 +16,10 @@ $actesScriptHelper  = $objectInstancier->get(ActesScriptHelper::class);
 $actesScriptHelper->updateStatus(
 	[$id],
 	ActesStatusSQL::STATUS_EN_ERREUR,
-	"Transaction passée manuellement en erreur"
+	"Transaction passÃ©e manuellement en erreur"
 );
 
 
 
-$_SESSION['error'] = "La transaction $id a été passée en erreur.";
+$_SESSION['error'] = "La transaction $id a Ã©tÃ© passÃ©e en erreur.";
 header("Location: actes_transac_show.php?id=$id");

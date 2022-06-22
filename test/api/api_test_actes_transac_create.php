@@ -44,7 +44,7 @@ if ($curl_return === false) {
 	echo 'curl_error() = ' . curl_error($ch) . "\n";
 	echo $curl_log;
 } else {
-	echo 'Document envoyé [' . $curl_return . ']<br >';
+	echo 'Document envoyÃ© [' . $curl_return . ']<br >';
 }
 
 curl_close($ch);

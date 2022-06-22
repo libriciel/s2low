@@ -84,7 +84,7 @@ class WorkerScript {
 	private function beanstalkdWorker(IWorker $IWorker){
 
 		$queue = $this->beanstalkdWrapper->getQueue($IWorker->getQueueName());
-		$this->s2lowLogger->info("Démarrage en mode beanstalkd");
+		$this->s2lowLogger->info("DÃ©marrage en mode beanstalkd");
 
 		$this->sigTermHandler->setExitOnSignal(true);
 
@@ -143,7 +143,7 @@ class WorkerScript {
 		if ($IWorker->isDataValid($data)){
 			$IWorker->work($data);
 		} else {
-			$this->s2lowLogger->info("Le travail n'est plus à faire, abandon",[$data]);
+			$this->s2lowLogger->info("Le travail n'est plus Ã  faire, abandon",[$data]);
 		}
 		$this->s2lowLogger->debug("Sortie section critique");
 	}
@@ -151,7 +151,7 @@ class WorkerScript {
 	private function oldSchoolScript(IWorker $IWorker){
 		$start = time();
 
-		$this->s2lowLogger->info("Démarrage en mode supervisord");
+		$this->s2lowLogger->info("DÃ©marrage en mode supervisord");
 
 		try {
 			$this->checkAll($IWorker);
@@ -184,18 +184,18 @@ class WorkerScript {
 	 */
 	private function checkAll(IWorker $IWorker){
 		$id_list = $IWorker->getAllId();
-		$this->s2lowLogger->info(count($id_list) . " travaux trouvées");
+		$this->s2lowLogger->info(count($id_list) . " travaux trouvÃ©es");
 
 		foreach($id_list as $id){
 			if ($this->sigTermHandler->isSigtermCalled()){
-				throw new WorkerScriptException("SIGTERM reçu");
+				throw new WorkerScriptException("SIGTERM reÃ§u");
 			}
 			$data = $IWorker->getData($id);
 			try {
 				if ($IWorker->isDataValid($data)){
 					$IWorker->work($data);
 				} else {
-					$this->s2lowLogger->info("Le travail n'est plus à faire, abandon",[$data]);
+					$this->s2lowLogger->info("Le travail n'est plus Ã  faire, abandon",[$data]);
 				}
 			} catch (RecoverableException $e){
 				/* Nothing to do*/

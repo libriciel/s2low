@@ -118,7 +118,7 @@ class HelpersTest extends TestCase {
 	}
 
 	public function testGetFromXMLElt(){
-		$this->assertEquals("Ècole",Helpers::getFromXMLElt(utf8_encode("Ècole")));
+		$this->assertEquals("√©cole",Helpers::getFromXMLElt("√©cole"));
 	}
 
 	public function testTruncateString(){
@@ -147,7 +147,7 @@ class HelpersTest extends TestCase {
 	}
 
 	public function testGetDateFromBDDDateOK(){
-		$this->assertEquals("14 septembre 2015 ‡ 07h22min42s",Helpers::getDateFromBDDDate("2015-09-14 07:22:42",true));
+		$this->assertEquals("14 septembre 2015 √† 07h22min42s",Helpers::getDateFromBDDDate("2015-09-14 07:22:42",true));
 	}
 
 	public function testGetANSIDateFromBDDDate() {
@@ -250,7 +250,7 @@ class HelpersTest extends TestCase {
 
 	public function testSendFileToBrowserFileNotFound(){
 		$this->assertFalse(Helpers::sendFileToBrowser("foo","bar"));
-		$this->assertEquals("Fichier spÈcifiÈ introuvable",Helpers::$last_error);
+		$this->assertEquals("Fichier sp√©cifi√© introuvable",Helpers::$last_error);
 	}
 
 	/**

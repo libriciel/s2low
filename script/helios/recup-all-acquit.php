@@ -17,11 +17,11 @@ $sql = "SELECT acquit_filename FROM helios_transactions" . " WHERE authority_id=
 $aquit_filename_list = $sqlQuery->queryOneCol($sql,$authority_id);
 
 if (count($aquit_filename_list) <= 0){
-	echo "Aucun fichier trouvé => sortie\n";
+	echo "Aucun fichier trouvÃ© => sortie\n";
 	exit;
 }
 
-echo count($aquit_filename_list)." fichiers trouvés\n";
+echo count($aquit_filename_list)." fichiers trouvÃ©s\n";
 
 $zip = new ZipArchive;
 $res = $zip->open($zip_file, ZipArchive::CREATE);
@@ -36,5 +36,5 @@ foreach($aquit_filename_list as $acquit_filename){
 	echo "$filename\n";
 }
 $zip->close();
-echo "Fichiers sauvegardés dans $zip_file\n";
+echo "Fichiers sauvegardÃ©s dans $zip_file\n";
 

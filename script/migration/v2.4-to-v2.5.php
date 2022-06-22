@@ -12,22 +12,22 @@
 
 exit;
 
-//Il est nécessaire de spécifier l'identifiant de la table log a partir de laquelle on va vider les lignes dans
+//Il est nÃ©cessaire de spÃ©cifier l'identifiant de la table log a partir de laquelle on va vider les lignes dans
 //la table log_historique.
-//Il faut être au plus pret des 6 mois.
-//Le mieux est d'indexé la table logs de de calculer l'id.
+//Il faut Ãªtre au plus pret des 6 mois.
+//Le mieux est d'indexÃ© la table logs de de calculer l'id.
 
-//Coupe la table en deux à partir du id_cut
+//Coupe la table en deux Ã  partir du id_cut
 $id_cut_journal = 0;
 
-//A FAIRE AVANT : mise à jour de la base de données
+//A FAIRE AVANT : mise Ã  jour de la base de donnÃ©es
 
 require_once( __DIR__."/../../init/init.php");
 
 migration_log("Migration S2low 2.4 vers 2.5");
 
-//1. Passage au nouveau système de notification forcé pour tout le monde.
-migration_log("Passage au nouveau système de notification : déporter à une date ultérieur");
+//1. Passage au nouveau systÃ¨me de notification forcÃ© pour tout le monde.
+migration_log("Passage au nouveau systÃ¨me de notification : dÃ©porter Ã  une date ultÃ©rieur");
 //$sql = "UPDATE authorities SET new_notification=true";
 //$sqlQuery->query($sql);
 migration_log("[PASS]");
@@ -38,7 +38,7 @@ $sql = "CREATE TABLE logs_historique AS SELECT * FROM logs;";
 $sqlQuery->query($sql);
 migration_log("[DONE]");
 
-migration_log("Ajout de la clé primaire sur la table logs_historique");
+migration_log("Ajout de la clÃ© primaire sur la table logs_historique");
 $sql = "ALTER TABLE logs_historique ADD PRIMARY KEY (id);";
 $sqlQuery->query($sql);
 migration_log("[DONE]");
@@ -55,7 +55,7 @@ $sqlQuery->query($sql,$id_cut_journal);
 migration_log("[DONE]");
 
 
-migration_log("Migration terminée");
+migration_log("Migration terminÃ©e");
 
 function migration_log($message){
 	echo date("Y-m-d H:i:s")." - $message\n";

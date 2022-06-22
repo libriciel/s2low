@@ -1,7 +1,7 @@
 <?php
 require_once( __DIR__ . "/../init/init.php");
 
-throw new Exception("Script désactivé pour le moment. Avec le stockage objet, on peut se poser la question du ménage...");
+throw new Exception("Script dÃ©sactivÃ© pour le moment. Avec le stockage objet, on peut se poser la question du mÃ©nage...");
 
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
@@ -10,12 +10,12 @@ $allEnvelopes = $actesTransactionsSQL->getEnvelopeToDelete();
 
 $actesEnvelope = new ActesFiles(ACTES_FILES_UPLOAD_ROOT);
 
-echo count($allEnvelopes). " transactions trouvées dans l'état <archivé par le SAE>\n";
+echo count($allEnvelopes). " transactions trouvÃ©es dans l'Ã©tat <archivÃ© par le SAE>\n";
 $sigtermHandler = SigTermHandler::getInstance();
 foreach($allEnvelopes as $envelopeInfo){
 	$actesEnvelope->deleteFiles($envelopeInfo['file_path']);
 	
-	$msg = "Les fichiers de l'envelope {$envelopeInfo['id']} ont été détruits";
+	$msg = "Les fichiers de l'envelope {$envelopeInfo['id']} ont Ã©tÃ© dÃ©truits";
 	
 	$actesTransactionsSQL->updateStatus($envelopeInfo['transaction_id'],16,$msg);
 	Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false,$envelopeInfo['user_id']);

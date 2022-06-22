@@ -16,7 +16,7 @@ class PesAllerTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetPmsgBadPesAller(){
 		$pes_aller_path = __DIR__."/fixtures/test.xml";
-		$this->setExpectedException("Exception","La balise EnTetePES/CodCol n'est pas présente ou est vide");
+		$this->setExpectedException("Exception","La balise EnTetePES/CodCol n'est pas prÃ©sente ou est vide");
 		$this->pesAller->getP_MSG($pes_aller_path);
 	}
 

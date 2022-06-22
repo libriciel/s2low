@@ -36,14 +36,14 @@ class ActesPrepareEnvoiSAE
 	{
 		try {
 			$transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
-			$this->logger->info("PrÈparation de l'envoie au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
+			$this->logger->info("Pr√©paration de l'envoie au SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : en cours");
 
 			$user = new User($user_id);
 			$user->init();
 			$this->isAllowToSendArchive($user_id, $transactionsInfo);
 
 			if (!in_array($transactionsInfo['last_status_id'], array(4, 5, 14, 20)) || $transactionsInfo['type'] != 1) {
-				throw new UnrecoverableException("Impossible d'archiver une transaction qui n'est pas en Ètat ´ Acquittement reÁu ª ou ´ ValidÈ ª.");
+				throw new UnrecoverableException("Impossible d'archiver une transaction qui n'est pas en √©tat ¬´ Acquittement re√ßu ¬ª ou ¬´ Valid√© ¬ª.");
 			}
 			$this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
 		} catch (Exception $e) {
@@ -62,7 +62,7 @@ class ActesPrepareEnvoiSAE
 				ActesEnvoiSaeWorker::class, $transaction_id
 			);
 		}
-		$this->logger->info("PrÈparation de l'envoi SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : OK");
+		$this->logger->info("Pr√©paration de l'envoi SAE pour l'actes $transaction_id - {$transactionsInfo['unique_id']} : OK");
 		return $actes_transaction_workflow_id;
 	}
 
@@ -87,14 +87,14 @@ class ActesPrepareEnvoiSAE
 		}
 
 		if ($user_info['role'] != 'ADM'){
-			throw new UnrecoverableException("AccËs interdit");
+			throw new UnrecoverableException("Acc√®s interdit");
 		}
 
 		if ($user_info[ActesTransactionsSQL::AUTHORITY_ID] == $transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]){
 			return true;
 		}
 
-		throw new UnrecoverableException("AccËs interdit");
+		throw new UnrecoverableException("Acc√®s interdit");
 	}
 
 

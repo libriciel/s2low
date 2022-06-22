@@ -17,13 +17,13 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -31,7 +31,7 @@ if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
 $myAuthority = new Authority($me->get("authority_id"));
 
 
-// Récupération de la liste des enveloppes en fonction de l'utilisateur en cours
+// RÃ©cupÃ©ration de la liste des enveloppes en fonction de l'utilisateur en cours
 $author_filter = "";
 if ($me->isAuthorityAdmin()) {
   $author_filter= "AND users.authority_id=" . $me->get("authority_id");;
@@ -59,7 +59,7 @@ $monthTransmitted = HeliosTransaction::countTransactions($author_filter,true,tru
 $monthVol = HeliosTransaction::countTransactionVol($author_filter,false,true);
 $monthVolTransmitted= HeliosTransaction::countTransactionVol($author_filter,true,true);
 
-// transactions de l'année
+// transactions de l'annÃ©e
 $yearTrans = HeliosTransaction::countTransactions($author_filter,false,false,true);
 $yearTransmitted = HeliosTransaction::countTransactions($author_filter,true,false,true);
 $yearVol = HeliosTransaction::countTransactionVol($author_filter,false,false,true);
@@ -67,7 +67,7 @@ $yearVolTransmitted = HeliosTransaction::countTransactionVol($author_filter,true
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Tedetis : Hélios - Statistiques");
+$doc->setTitle("Tedetis : HÃ©lios - Statistiques");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -75,16 +75,16 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html = "<h1>HELIOS - Dématérialisation de documents financiers</h1>\n";
-$html .= "<h2>Statistiques des transactions Hélios";
+$html = "<h1>HELIOS - DÃ©matÃ©rialisation de documents financiers</h1>\n";
+$html .= "<h2>Statistiques des transactions HÃ©lios";
 
 if ($me->isSuper()) 
 {
-		$html .= " pour l'ensemble des collectivités/utilisateurs";
+		$html .= " pour l'ensemble des collectivitÃ©s/utilisateurs";
 } 
 elseif ($me->isAuthorityAdmin()) 
 {
-  	$html .= " pour la collectivité " . $myAuthority->get("name");
+  	$html .= " pour la collectivitÃ© " . $myAuthority->get("name");
 } 
 elseif ($me->isGroupAdmin())
 {
@@ -100,26 +100,26 @@ else
 $html .= "</h2>\n";
 $html .= "<div class=\"list_form\">\n";
 $html .= " <dl>\n";
-$html .= "  <dt>Depuis le début du mois&nbsp;:</dt>\n";
+$html .= "  <dt>Depuis le dÃ©but du mois&nbsp;:</dt>\n";
 $html .= "   <dd><ul>\n";
-$html .= "    <li>Nombre de transaction postées sur le tdt&nbsp;: " . $monthTrans . "</li>\n";
-$html .= "    <li>Nombre de transaction transmises à Hélios&nbsp;: " .$monthTransmitted . "</li>\n";
-$html .= "    <li>Volume des transactions postées sur le tdt&nbsp;: " .$monthVol. " octets</li>\n";
-$html .= "    <li>Volume des transactions transmises à Hélios&nbsp;: " . $monthVolTransmitted. " octets</li>\n";
+$html .= "    <li>Nombre de transaction postÃ©es sur le tdt&nbsp;: " . $monthTrans . "</li>\n";
+$html .= "    <li>Nombre de transaction transmises Ã  HÃ©lios&nbsp;: " .$monthTransmitted . "</li>\n";
+$html .= "    <li>Volume des transactions postÃ©es sur le tdt&nbsp;: " .$monthVol. " octets</li>\n";
+$html .= "    <li>Volume des transactions transmises Ã  HÃ©lios&nbsp;: " . $monthVolTransmitted. " octets</li>\n";
 $html .= "   </ul></dd>\n";
-$html .= "  <dt>Depuis le début de l'année&nbsp;:</dt>\n";
+$html .= "  <dt>Depuis le dÃ©but de l'annÃ©e&nbsp;:</dt>\n";
 $html .= "   <dd><ul>\n";
-$html .= "    <li>Nombre de transaction postées sur le tdt&nbsp;: " . $yearTrans . "</li>\n";
-$html .= "    <li>Nombre de transaction transmises à Hélios&nbsp;: " .$yearTransmitted . "</li>\n";
-$html .= "    <li>Volume des transactions postées sur le tdt&nbsp;: " .$yearVol. " octets</li>\n";
-$html .= "    <li>Volume des transactions transmises à Hélios&nbsp;: " . $yearVolTransmitted. " octets</li>\n";
+$html .= "    <li>Nombre de transaction postÃ©es sur le tdt&nbsp;: " . $yearTrans . "</li>\n";
+$html .= "    <li>Nombre de transaction transmises Ã  HÃ©lios&nbsp;: " .$yearTransmitted . "</li>\n";
+$html .= "    <li>Volume des transactions postÃ©es sur le tdt&nbsp;: " .$yearVol. " octets</li>\n";
+$html .= "    <li>Volume des transactions transmises Ã  HÃ©lios&nbsp;: " . $yearVolTransmitted. " octets</li>\n";
 $html .= "   </ul></dd>\n";
-$html .= "  <dt>En totalité&nbsp;:</dt>\n";
+$html .= "  <dt>En totalitÃ©&nbsp;:</dt>\n";
 $html .= "   <dd><ul>\n";
-$html .= "    <li>Nombre de transaction postées sur le tdt&nbsp;: " .$allTrans . "</li>\n";
-$html .= "    <li>Nombre de transaction transmises à Hélios&nbsp;: " .$allTransmitted . "</li>\n";
-$html .= "    <li>Volume des transactions postées sur le tdt&nbsp;: " .$allVol. " octets</li>\n";
-$html .= "    <li>Volume des transactions transmises à Hélios&nbsp;: " .$allVolTransmitted." octets</li>\n";
+$html .= "    <li>Nombre de transaction postÃ©es sur le tdt&nbsp;: " .$allTrans . "</li>\n";
+$html .= "    <li>Nombre de transaction transmises Ã  HÃ©lios&nbsp;: " .$allTransmitted . "</li>\n";
+$html .= "    <li>Volume des transactions postÃ©es sur le tdt&nbsp;: " .$allVol. " octets</li>\n";
+$html .= "    <li>Volume des transactions transmises Ã  HÃ©lios&nbsp;: " .$allVolTransmitted." octets</li>\n";
 $html .= "   </ul></dd>\n";
 $html .= " </dl>\n";
 $html .= "</div>\n";

@@ -15,7 +15,7 @@ class ActesFileSender {
 
         $url = $this->actesMinistereProperties->url;
 
-        if (substr($url,0,5)=='https'){
+        if (mb_substr($url,0,5)=='https'){
             $curlWrapper->setProperties( CURLOPT_SSL_VERIFYHOST , 0 );
             $curlWrapper->setProperties(  CURLOPT_CERTINFO, 1);
         }
@@ -41,7 +41,7 @@ class ActesFileSender {
             throw new Exception($curlWrapper->getLastError());
         }
 
-        if (substr($url,0,5)=='https'){
+        if (mb_substr($url,0,5)=='https'){
             $x509Certificate = new X509Certificate();
 
             $actual_certificat = $curlWrapper->getServerCertificate();
@@ -51,7 +51,7 @@ class ActesFileSender {
             $expected_hash = $x509Certificate->getBase64Hash($expected_certificat);
 
             if ($actual_hash != $expected_hash){
-                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
+                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas Ã  celui attendu ($expected_hash)");
             }
         }
 

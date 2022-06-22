@@ -14,7 +14,7 @@ while (($file = readdir($dh)) !== false) {
 	}
 
 	$nb_files = $heliosTransactionsSQL->isDuplicate($file);
-	echo "Fichier $file : $nb_files trouvé(s)\n";
+	echo "Fichier $file : $nb_files trouvÃ©(s)\n";
 
 	if ($nb_files == 0){
 		echo "Destruction du fichier\n";

@@ -27,8 +27,8 @@ class OpenStackSwiftWrapper {
     /**
      * Envoi un fichier dans les nuages
      * @param string $container_name Le nom du container au sens swift
-     * @param string $filepath_local Le chemin local du fichier à envoyer dans les nuages
-     * @param string $filename_on_cloud Si présent l'emplacement sur le nuage, sinon, on prend le nom du fichier qu'on met directement sur le container
+     * @param string $filepath_local Le chemin local du fichier Ã  envoyer dans les nuages
+     * @param string $filename_on_cloud Si prÃ©sent l'emplacement sur le nuage, sinon, on prend le nom du fichier qu'on met directement sur le container
      * @throws CloudStorageException|UnrecoverableException|PausingQueueException
      */
     public function sendFile($container_name,$filepath_local,$filename_on_cloud = ''){
@@ -84,7 +84,7 @@ class OpenStackSwiftWrapper {
         if(preg_match('#//+#',$filepath_on_cloud) && ! $containerWrapper->objectExists($filepath_on_cloud)){
             $filepath_on_cloud = preg_replace('#/+#','/',$filepath_on_cloud);
             if(!$containerWrapper->objectExists($filepath_on_cloud)){
-                throw new CloudStorageException("$filepath_on_cloud non trouvé dans $container_name");
+                throw new CloudStorageException("$filepath_on_cloud non trouvÃ© dans $container_name");
             }
         }
 
@@ -96,9 +96,9 @@ class OpenStackSwiftWrapper {
     }
 
     /**
-     * Si nécessaire, récupère et copie le fichier depuis OpenStack vers le système de fichier local
+     * Si nÃ©cessaire, rÃ©cupÃ¨re et copie le fichier depuis OpenStack vers le systÃ¨me de fichier local
      * @param $container_name : Le nom du container au sens swift
-     * @param $filepath_local : Le chemin local du fichier à récupérer
+     * @param $filepath_local : Le chemin local du fichier Ã  rÃ©cupÃ©rer
      * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
      * @return mixed
      * @throws UnrecoverableException|PausingQueueException

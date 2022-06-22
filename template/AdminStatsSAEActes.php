@@ -7,11 +7,11 @@
 	<a href="/admin/stats-sae.php" class="btn btn-default">Retour statistiques globale SAE</a>
 </p>
 
-<h2>Détail par collectivité</h2>
+<h2>DÃ©tail par collectivitÃ©</h2>
 <table class="data-table table table-striped ">
 
 	<tr>
-		<th>Collectivités</th>
+		<th>CollectivitÃ©s</th>
 		<?php foreach($status_list as $status_id) : ?>
 			<th>
 				<?php hecho(ActesStatusSQL::getStatusLibelle($status_id));?>

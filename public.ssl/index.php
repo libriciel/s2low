@@ -3,7 +3,7 @@ require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -24,8 +24,8 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html = " <h1>Espace de télétransmission</h1>\n";
-$html .= "<p>Vous êtes connecté avec le rôle";
+$html = " <h1>Espace de tÃ©lÃ©transmission</h1>\n";
+$html .= "<p>Vous Ãªtes connectÃ© avec le rÃ´le";
 
 if ($me->isSuper()) {
   $html .= " de super administrateur";
@@ -33,26 +33,26 @@ if ($me->isSuper()) {
   $myGroup = new Group($me->get("authority_group_id"));
   $html .= " d'administrateur du groupe " . $myGroup->get("name");
 } elseif ($me->isAdmin()) {
-  $html .= " d'administrateur de la collectivité " . $myAuthority->get("name");
+  $html .= " d'administrateur de la collectivitÃ© " . $myAuthority->get("name");
 } else {
-  $html .= " d'utilisateur de la collectivité " . $myAuthority->get("name");
+  $html .= " d'utilisateur de la collectivitÃ© " . $myAuthority->get("name");
 }
 
 $html .= ".<br />\n";
 
-$html .= "Le menu de gauche vous donne accès aux opérations permises par ce rôle.<br /><br />\n";
-$html .= "Le «&nbsp;Journal des événements&nbsp;» consigne l'ensemble des événements relatifs à vos opérations sur le site.<br /><br />";
+$html .= "Le menu de gauche vous donne accÃ¨s aux opÃ©rations permises par ce rÃ´le.<br /><br />\n";
+$html .= "Le Â«&nbsp;Journal des Ã©vÃ©nements&nbsp;Â» consigne l'ensemble des Ã©vÃ©nements relatifs Ã  vos opÃ©rations sur le site.<br /><br />";
 
 if (defined("HOTLINE_NUM")) {
   $html .= "La hotline de support est disponible pour toute question au " . HOTLINE_NUM . ".<br /><br />\n";
 }
 
-$html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
+$html .= "Merci de signaler tout problÃ¨me rencontrÃ© sur la plate-forme ";
 
 
 
 if (defined("SUPPORT_URL")) {
-	$html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
+	$html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> rÃ©servÃ© Ã  cet effet";
 } elseif(defined("PHRASE_SUPPORT")){
 	$html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
 } else {

@@ -55,7 +55,7 @@ class S2lowLogger {
 			$handler = new  Monolog\Handler\StreamHandler('php://stdout',$this->log_level);
 			$this->logger->pushHandler($handler);
 		} catch (Exception $e){
-			$message =  "Impossible de créer un streamHandler sur sdtout : " . $e->getMessage();
+			$message =  "Impossible de crÃ©er un streamHandler sur sdtout : " . $e->getMessage();
 			echo $message;
 			$this->critical($message,[$e]);
 		}

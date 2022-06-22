@@ -26,7 +26,7 @@ class HeliosEnvoiSaeWorker implements IWorker {
 	}
 
 	/**
-	 * On envoie que les 100 premiers id car sinon, il est possible que le script de récup sur le cloud plante (suite à l'expiration du ticket)
+	 * On envoie que les 100 premiers id car sinon, il est possible que le script de rÃ©cup sur le cloud plante (suite Ã  l'expiration du ticket)
 	 *
 	 * @return 0|array|int[]
 	 */

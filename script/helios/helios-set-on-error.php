@@ -20,10 +20,10 @@ foreach (array_slice($argv,1, $argc) as $argument){
 
 if($help){
     echo "Usage :  {$argv[0]} [-t ] [nbJours]\n";
-    echo "{$argv[0]} : permet de passer à l'état erreur toutes les transactions helios à l'état \"Transmis\" \n";
+    echo "{$argv[0]} : permet de passer Ã  l'Ã©tat erreur toutes les transactions helios Ã  l'Ã©tat \"Transmis\" \n";
     echo "depuis plus de nbJours\n";
-    echo "-t : mode test (ne réalise pas la transaction)\n";
-    echo "nbJours : entier spécifiant le nombre de jours à prendre en compte\n";
+    echo "-t : mode test (ne rÃ©alise pas la transaction)\n";
+    echo "nbJours : entier spÃ©cifiant le nombre de jours Ã  prendre en compte\n";
     exit(-1);
 }
 
@@ -55,5 +55,5 @@ foreach($all as $line){
     $i++;
 }
 
-$action = $test?"à traiter":"traitée(s)";
+$action = $test?"Ã  traiter":"traitÃ©e(s)";
 echo "$i transaction(s) $action\n";

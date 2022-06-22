@@ -36,7 +36,7 @@ class WorkerScriptTest extends S2lowTestCase {
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
 		$this->assertTrue($workerScript->script($IWorker));
 		$logs_records = $this->getLogRecords();
-		$this->assertEquals("SIGTERM reÁu",$logs_records[2]['message']);
+		$this->assertEquals("SIGTERM re√ßu",$logs_records[2]['message']);
 	}
 
 	public function testScriptFailed(){

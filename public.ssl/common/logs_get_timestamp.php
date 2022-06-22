@@ -1,51 +1,51 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡†  la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √†¬†  la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡†  l'utilisation,  ‡†  la modification et/ou au
- * dÈveloppement et ‡†  la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡†  
- * manipuler et qui le rÈserve donc ‡†  des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡†  charger  et  tester  l'adÈquation  du
- * logiciel ‡†  leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡† l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √†¬†  l'utilisation,  √†¬†  la modification et/ou au
+ * d√©veloppement et √†¬†  la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √†¬†  
+ * manipuler et qui le r√©serve donc √†¬†  des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √†¬†  charger  et  tester  l'ad√©quation  du
+ * logiciel √†¬†  leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √†¬† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-tte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 ?>
 <?php
 /**
  * \file logs_get_timestamp.php
- * \brief Page de tÈlÈchargement de l'entrÈe de logs accompagnÈe de son horodatage
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Page de t√©l√©chargement de l'entr√©e de logs accompagn√©e de son horodatage
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 21.08.2006
  * 
  *
- * Ce script permet de tÈlÈcharger une archive zip contenant l'entrÈe de journal
- * accompagnÈe de son fichier d'horodatage.
+ * Ce script permet de t√©l√©charger une archive zip contenant l'entr√©e de journal
+ * accompagn√©e de son fichier d'horodatage.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -59,7 +59,7 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "…chec de l'authentification";
+  $_SESSION["error"] = "√âchec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -73,25 +73,25 @@ $log = new Log();
 if (isset($id) && ! empty($id)) {
   $log->setId($id);
   if (! $log->init()) {
-    $_SESSION["error"] = "Erreur lors de l'initialisation de l'entrÈe de journal.";
+    $_SESSION["error"] = "Erreur lors de l'initialisation de l'entr√©e de journal.";
     header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
     exit();
   }
 } else {
-  $_SESSION["error"] = "Pas d'identifiant de log spÈcifiÈ.";
+  $_SESSION["error"] = "Pas d'identifiant de log sp√©cifi√©.";
   header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
   exit();
 }
 
-// VÈrification des permissions sur l'entrÈe de journal
+// V√©rification des permissions sur l'entr√©e de journal
 if (! $log->canView($me)) {
-  $_SESSION["error"] = "AccËs refusÈ.";
+  $_SESSION["error"] = "Acc√®s refus√©.";
   header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
   exit();
 }
 
 if (! $log->sendArchive()) {
-  $_SESSION["error"] = "Erreur de rÈcupÈration de l'entrÈe de log et de son horodatage.<br />" . $log->getErrorMsg();
+  $_SESSION["error"] = "Erreur de r√©cup√©ration de l'entr√©e de log et de son horodatage.<br />" . $log->getErrorMsg();
   header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
 }
 

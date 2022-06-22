@@ -28,7 +28,7 @@ class PasswordHandler{
      */
     private function passwordIsMd5Encoded(string $hash): bool
     {
-        return strlen($hash) === 32;
+        return mb_strlen($hash) === 32;
     }
 
     /**

@@ -41,7 +41,7 @@ class FileUploaderNGTest extends PHPUnit_Framework_TestCase {
 	public function testGetNameFailed(){
 		$this->assertFalse($this->fileUploader->getName('baz'));
 		$this->assertEquals(
-			"Aucun fichier reçu (code : Fichier baz inexistant)",
+			"Aucun fichier reÃ§u (code : Fichier baz inexistant)",
 			$this->fileUploader->getLastError()
 		);
 	}

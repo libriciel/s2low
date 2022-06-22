@@ -45,11 +45,11 @@ function validateForm() { //v4.0
   			date_choisi = new Date(0);
   			date_choisi.setFullYear(num[0],num[1] - 1,num[2]);
   			if(today < date_choisi)
-  			errors += '- ' + nm + ' ne doit pas être une date dans le futur.\n';
+  			errors += '- ' + nm + ' ne doit pas Ãªtre une date dans le futur.\n';
   		} else if (test.indexOf('isEmail') != -1) {
 		  p = val.indexOf('@');
 		  if (p < 1 || p == (val.length-1)) {
-			errors+='- ' + nm + ' doit contenir une adresse électronique valide.\n';
+			errors+='- ' + nm + ' doit contenir une adresse Ã©lectronique valide.\n';
 		  }
 		} else if (test.indexOf('isDate') != -1) {
 		  num = val.split('-');
@@ -64,7 +64,7 @@ function validateForm() { //v4.0
 		} else if (test.indexOf('isFloat') != -1) {
 		  num = parseFloat(val);
 		  if (isNaN(val)) { 
-			errors += '- ' + nm + ' doit contenir un réel.\n';
+			errors += '- ' + nm + ' doit contenir un rÃ©el.\n';
 		  }
 		} 
 
@@ -82,7 +82,7 @@ function validateForm() { //v4.0
 		  p = test.indexOf('!');
 		  maxlength = parseInt(test.substring(pos + 9,p));
 		  if (val.length > maxlength) { 
-			errors += '- ' + nm + ' est limité à ' + maxlength + ' caractères maxi.\n';
+			errors += '- ' + nm + ' est limitÃ© Ã  ' + maxlength + ' caractÃ¨res maxi.\n';
 		  }
 		}
 
@@ -91,7 +91,7 @@ function validateForm() { //v4.0
 		  pattern = test.substring(pos + 6, p);
 		  regexp = new RegExp(pattern);
 		  if (! regexp.test(val)) {
-			errors += '- ' + nm + ' ne correspond pas au motif de caractères autorisés.\n';
+			errors += '- ' + nm + ' ne correspond pas au motif de caractÃ¨res autorisÃ©s.\n';
 		  }
 		}
 	  } else if (test.charAt(0) == 'R') {
@@ -102,7 +102,7 @@ function validateForm() { //v4.0
 
   
   if (errors) {
-    alert('Les erreurs suivantes ont été trouvées:\n'+errors);
+    alert('Les erreurs suivantes ont Ã©tÃ© trouvÃ©es:\n'+errors);
     return false;
   }
   return true;

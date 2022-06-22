@@ -17,13 +17,13 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -50,7 +50,7 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }

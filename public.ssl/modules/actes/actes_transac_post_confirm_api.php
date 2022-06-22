@@ -27,23 +27,23 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-	return_error_api("Échec de l'authentification");
+	return_error_api("Ã‰chec de l'authentification");
 }
 
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
-	return_error_api("Accès refusé");
+	return_error_api("AccÃ¨s refusÃ©");
 }
 
 $rgsConnexion = new RgsConnexion();
 if ( ! $rgsConnexion->isRgsConnexion()){
-	return_error_api("La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}");
+	return_error_api("La tÃ©lÃ©transmission nÃ©cessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}");
 }
 
 
 
 $id = Helpers :: getVarFromGet("id");
 if (empty($id) ){
-	return_error_api("Pas d'identifiant de transaction spécifié");
+	return_error_api("Pas d'identifiant de transaction spÃ©cifiÃ©");
 }
 
 
@@ -63,15 +63,15 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	return_error_api("Accès refusé");
+	return_error_api("AccÃ¨s refusÃ©");
 }
 
-$msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
+$msg = "La transaction a Ã©tÃ© postÃ©e par l'agent tÃ©lÃ©transmetteur {$me->getPrettyName()}";
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $info = $actesTransactionsSQL->getInfo($id);
 if($info['last_status_id'] != 17){
-	return_error_api("La transaction n'est pas dans le statut « En attente d'être posté»");
+	return_error_api("La transaction n'est pas dans le statut Â« En attente d'Ãªtre postÃ©Â»");
 }
 
 $actesTransactionsSQL->updateStatus($id,1,$msg);

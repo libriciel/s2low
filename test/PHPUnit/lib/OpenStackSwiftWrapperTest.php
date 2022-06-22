@@ -381,7 +381,7 @@ class OpenStackSwiftWrapperTest extends TestCase {
         );
 
         $this->expectException(CloudStorageException::class);
-        $this->expectExceptionMessage("/trop/de/double/slash non trouvé dans container_test");
+        $this->expectExceptionMessage("/trop/de/double/slash non trouvÃ© dans container_test");
 
         $openStackSwiftWrapper->retrieveFile(
                 self::CONTAINER_TEST,

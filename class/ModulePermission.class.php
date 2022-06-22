@@ -1,5 +1,9 @@
 <?php 
-//Attention, cette classe n'est pas utilisée partout EP
+//Attention, cette classe n'est pas utilisÃ©e partout EP
+/**
+ * Class ServiceUser
+ * @deprecated 5.0.0
+ */
 class ModulePermission {
 	
 	private $service;

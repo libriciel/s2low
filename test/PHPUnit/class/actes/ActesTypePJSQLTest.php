@@ -10,12 +10,12 @@ class ActesTypePJSQLTest extends S2lowTestCase {
 
 		$actesUpdateClassificationSQL->updateClassification(
 			"123456789",
-			file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
+			     file_get_contents(__DIR__."/fixtures/classification-exemple.xml"),
 		);
 
 		$actesTypePJSQL = $this->getObjectInstancier()->get(ActesTypePJSQL::class);
 		$all_typologie = $actesTypePJSQL->getAllByNature();
-		$this->assertEquals("Avis de l'autoritÈ compÈtente de l'…tat",$all_typologie[4][3][2]['32_AA']);
+		$this->assertEquals("Avis de l'autorit√© comp√©tente de l'√âtat",$all_typologie[4][3][2]['32_AA']);
 	}
 
 	/**
@@ -26,14 +26,14 @@ class ActesTypePJSQLTest extends S2lowTestCase {
 
 		$actesUpdateClassificationSQL->updateClassification(
 			"123456789",
-			file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
+                file_get_contents(__DIR__."/fixtures/classification-exemple.xml")
 		);
 
 		$actesTypePJSQL = $this->getObjectInstancier()->get(ActesTypePJSQL::class);
 		$all_typologie = $actesTypePJSQL->getListByNature();
 
-		$this->assertEquals("Avis de l'autoritÈ compÈtente de l'…tat (32_AA)",$all_typologie[4]['32_AA']);
-		$this->assertEquals("DÈlibÈration (99_DE)",reset($all_typologie[1]));
+		$this->assertEquals("Avis de l'autorit√© comp√©tente de l'√âtat (32_AA)",$all_typologie[4]['32_AA']);
+		$this->assertEquals("D√©lib√©ration (99_DE)",reset($all_typologie[1]));
 	}
 
 }

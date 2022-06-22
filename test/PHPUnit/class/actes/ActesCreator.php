@@ -28,7 +28,7 @@ class ActesCreator {
 		$this->actesTransactionsSQL->updateStatus(
 			$transaction_id,
 			$status,
-			"Création de la transaction via PHPUNIT"
+			"CrÃ©ation de la transaction via PHPUNIT"
 		);
 		return $transaction_id;
 	}

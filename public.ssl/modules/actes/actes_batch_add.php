@@ -14,13 +14,13 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit();
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit();
 }
@@ -277,7 +277,7 @@ $html .= "var test = $(this).val().match(/[^A-Z0-9_]*/g);
     });\n";
 
 
-//on lance le test javascript pour vérifire si le navigateur client peut faire de la sélection multiple
+//on lance le test javascript pour vÃ©rifire si le navigateur client peut faire de la sÃ©lection multiple
 $html .="verifMultiUpload();\n";
 
 //ici on masque par defaut le bouton d envoi. Il sera afficher si aucun fichier invalide n est present dans la liste

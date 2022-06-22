@@ -7,46 +7,46 @@ class TransactionSQL {
 	private static $transactionTypes = array (
 	    "1" => "Transmission d'actes",
 	  	"2" => "Courrier simple",
-	  	"3" => "Demande de pièces complémentaires",
+	  	"3" => "Demande de piÃ¨ces complÃ©mentaires",
 	  	"4" => "Lettre d'observation",
-	  	"5" => "Déféré au Tribunal Administratif",
+	  	"5" => "DÃ©fÃ©rÃ© au Tribunal Administratif",
 	    "6" => "Annulation",
 	    "7" => "Demande de classification"
 	);
 
 	private static $natureTransaction = array (
 		3 => 'Actes individuels',
-		2 => 'Actes réglementaires',
+		2 => 'Actes rÃ©glementaires',
 		6 => 'Autres',
 		4 => 'Contrats, conventions et avenants',
-		1 => 'Délibérations',
-		5 => 'Documents budgétaires et financiers'
+		1 => 'DÃ©libÃ©rations',
+		5 => 'Documents budgÃ©taires et financiers'
 	);
 	
 	private static $status = array ( 
 		-1 => 'Erreur',
-		0 => 'Annulé',
-		1 => 'Posté',
+		0 => 'AnnulÃ©',
+		1 => 'PostÃ©',
 		2=> 'En attente de transmission',
 		3 => 'Transmis', 
-		4 => 'Acquittement reçu', 
-		5 => 'Validé',
-		6 => 'Refusé',
-		7 => 'Document reçu',
-		8 => 'Acquittement envoyé',
-		9 => 'Document envoyé',
+		4 => 'Acquittement reÃ§u', 
+		5 => 'ValidÃ©',
+		6 => 'RefusÃ©',
+		7 => 'Document reÃ§u',
+		8 => 'Acquittement envoyÃ©',
+		9 => 'Document envoyÃ©',
 		10 => 'Refus d\'envoi',
-		11 => 'Acquittement de document reçu',
-		12 => 'Envoyé au SAE',
-		13 => 'Archivé par le SAE',
+		11 => 'Acquittement de document reÃ§u',
+		12 => 'EnvoyÃ© au SAE',
+		13 => 'ArchivÃ© par le SAE',
 		14 => 'Erreur lors de l\'archivage',
-		15 => 'Reçu par le SAE',
-		16 => 'Détruite',
-		17 => "En attente d'être postée",
-		18 => "En attente d'être signée",
+		15 => 'ReÃ§u par le SAE',
+		16 => 'DÃ©truite',
+		17 => "En attente d'Ãªtre postÃ©e",
+		18 => "En attente d'Ãªtre signÃ©e",
 		19 => "En attente de transmission au SAE",
 		20 => "Erreur lors de l'envoi au SAE",
-        21 => "Document reçu (pas d'AR)"
+        21 => "Document reÃ§u (pas d'AR)"
 	); 
 	
 	private static $etat_en_cours = array(1,2,3,4,7,8,17,18);
@@ -245,7 +245,7 @@ class TransactionSQL {
 
 			if (! $line["related_transaction_id"]) {
 				$id = 	$line["id"];
-				$rline['sens'] = "reçu";
+				$rline['sens'] = "reÃ§u";
 			} else {
 				$id = 	$line["related_transaction_id"];
 				$line['sens'] = "envoye";
@@ -297,7 +297,7 @@ class TransactionSQL {
     }
 
     /**
-     * \brief Méthode de récupération du cycle de vie de cette transaction
+     * \brief MÃ©thode de rÃ©cupÃ©ration du cycle de vie de cette transaction
      * \return Un tableau contenant le workflow de la transaction
      * @param int $id
      * @return array

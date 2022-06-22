@@ -9,7 +9,7 @@ $file_manifest_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-
 $dom = simplexml_load_file($file_manifest_path);
 
 $namespaces = $dom->getDocNamespaces();
-// Récupération des éléments dans le namespace "actes"
+// RÃ©cupÃ©ration des Ã©lÃ©ments dans le namespace "actes"
 $actesItems = $dom->children($namespaces["actes"]);
 
 

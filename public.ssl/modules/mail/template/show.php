@@ -1,11 +1,11 @@
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
- <h1> Mail - Système de mail sécurisé</h1>
+ <h1> Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
         <h2>Actions</h2>
  	<div id="actions_area"> 
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
-            <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
+            <a href="index.php?command=list" class="btn btn-primary">Messages envoyÃ©s</a>
 	</div>
-        <h2>Détail du message</h2>
+        <h2>DÃ©tail du message</h2>
 
 	<div id="list_area">
             <table id="message-detail" class="data-table table table-bordered">
@@ -44,7 +44,7 @@
                     echo '<td>'.get_hecho($mailEmis->getEmail()).'';
 
                     if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                        echo '<span class="alert alert-info">RÃ©ception confirmÃ©e le '.$mailEmis->getAckDate().'</span></td></tr>';
                     else
                         echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>';
                 }
@@ -66,7 +66,7 @@
                     echo '<td>'.get_hecho($mailEmis->getEmail()).'';
 
                     if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                        echo '<span class="alert alert-info">RÃ©ception confirmÃ©e le '.$mailEmis->getAckDate().'</span></td></tr>';
                     else
                         echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
                 }
@@ -88,7 +88,7 @@
                     echo '<td>'.get_hecho($mailEmis->getEmail()).'';
                     
                     if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
+                        echo '<span class="alert alert-info">RÃ©ception confirmÃ©e le '.$mailEmis->getAckDate().'</span></td></tr>';
                     else
                         echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
                 }
@@ -110,7 +110,7 @@
     if ($mailIncludeFileArray)
     {
 
-        //C'est super dégeulasse...
+        //C'est super dÃ©geulasse...
 		/** @var CloudStorage $cloudStorage */
 		$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
 			->get(CloudStorageFactory::class)
@@ -119,14 +119,14 @@
 
 
 		?>
-            <h2>Pièces jointes&nbsp;:</h2>
+            <h2>PiÃ¨ces jointes&nbsp;:</h2>
             <table class="transactions_list table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th id="file">Nom du fichier</th>
                         <th id="size">Taille</th>
                         <th id="type">Type</th>
-                        <th id="download">Télécharger</th>
+                        <th id="download">TÃ©lÃ©charger</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,32 +136,32 @@
                         <td headers="file"><?php echo $mailIncludeFile->getFileName(); ?></td>
                         <td headers="size"><?php echo $mailIncludeFile->getFileSize(); ?></td>
                         <td headers="type"><?php echo $mailIncludeFile->getFileType(); ?></td>
-                        <td headers="download"><a href="template/download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                        <td headers="download"><a href="template/download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">TÃ©lÃ©charger</a></td>
                     </tr>
             <?php }?>
                     <tr>
-                        <td>&lt;Télécharger tous les fichiers&gt;</td>
+                        <td>&lt;TÃ©lÃ©charger tous les fichiers&gt;</td>
                         <td><?php echo filesize($mailzip_filepath); ?></td>
                         <td>zip</td>
-                        <td><a href="template/download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                        <td><a href="template/download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">TÃ©lÃ©charger</a></td>
                     </tr>
                 </tbody> 
             </table> 
 	<?php  	}
 		else 
 		{?>
-            <h2>Aucune pièce jointe</h2>
+            <h2>Aucune piÃ¨ce jointe</h2>
 	<?php } ?>	
 	<?php if ($mailErrors !=false) 
 	{
-		echo "<h3>L'envoi des messages a echoué</h3>";
+		echo "<h3>L'envoi des messages a echouÃ©</h3>";
 		for ($i=0;$i<count($mailErrors);$i++)
 		{ ?>
 			 <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
 			 	Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
 			 <dd id="mailError_<?php echo $i;  ?>" class="mailerror" style="display:none"> 
 			 <table class="transactions_list">
-			 	<td>Message retourné : </td>
+			 	<td>Message retournÃ© : </td>
 			 	<td><?php echo $mailErrors[$i]['message_retour']; ?> </td>
 			 </table>
 			</dd>

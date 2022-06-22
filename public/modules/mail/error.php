@@ -14,9 +14,9 @@ $doc->DisplayHead();
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Mail - Système de mail sécurisé</h1>
+            <h1>Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
 
-            <div class="alert alert-danger">Problème d'affichage du mail.<br/>
+            <div class="alert alert-danger">ProblÃ¨me d'affichage du mail.<br/>
                 <strong><?php echo $_SESSION['last_error']?></strong>
             </div>
         </div>

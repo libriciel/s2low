@@ -10,8 +10,8 @@ $authority_id = intval($argv[1]??0);
 
 if (! $authority_id) {
 	$s2lowLogger->info("Usage : {$argv[0]} authority_id");
-	$s2lowLogger->info("\tEnvoi à l'archivage toutes les transactions PES d'une collectivité");
-	$s2lowLogger->info("\tLes transactions sont à l'état en attente d'envoi au SAE");
+	$s2lowLogger->info("\tEnvoi Ã  l'archivage toutes les transactions PES d'une collectivitÃ©");
+	$s2lowLogger->info("\tLes transactions sont Ã  l'Ã©tat en attente d'envoi au SAE");
 	exit(-1);
 }
 

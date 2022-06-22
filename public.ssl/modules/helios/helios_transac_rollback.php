@@ -14,7 +14,7 @@ $transactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 $transactionInfo = $transactionSQL->getInfo($id);
 
-$message = "La transaction $id est de nouveau à l'état posté.";
+$message = "La transaction $id est de nouveau Ã  l'Ã©tat postÃ©.";
 
 $transactionSQL->updateStatus($id,HeliosTransactionsSQL::POSTE,$message);
 $transactionSQL->setInfoFromPESAller($id,array(

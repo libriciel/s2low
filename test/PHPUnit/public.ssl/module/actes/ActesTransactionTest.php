@@ -31,7 +31,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->actesTransaction->set('number',$number);
 		$this->actesTransaction->validate();
 		$error_msg = $this->actesTransaction->getErrorMsg();
-		$number_error = "Le champ Numéro de l'acte ne peut contenir que des chiffres, des lettres en majuscules et _";
+		$number_error = "Le champ NumÃ©ro de l'acte ne peut contenir que des chiffres, des lettres en majuscules et _";
 		if ($valide){
 			$this->assertStringNotContainsString($number_error, $error_msg);
 		} else {
@@ -105,7 +105,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',3);
         $this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
         $this->assertEquals(
-            "Le fichier de réponse «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+            "Le fichier de rÃ©ponse Â«&nbsp;toto.txt&nbsp;Â» est de type Â«&nbsp;application/x-empty&nbsp;Â». Fichier PDF, XML, PNG ou JPEG requis.",
             $this->actesTransaction->getErrorMsg()
         );
     }
@@ -114,7 +114,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',1);
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.txt","toto",$this->txt_filepath));
 		$this->assertEquals(
-			"Le fichier de l'acte «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF ou XML requis.",
+			"Le fichier de l'acte Â«&nbsp;toto.txt&nbsp;Â» est de type Â«&nbsp;application/x-empty&nbsp;Â». Fichier PDF ou XML requis.",
 			$this->actesTransaction->getErrorMsg()
 		);
 	}
@@ -134,7 +134,7 @@ class ActesTransactionTest extends S2lowTestCase {
         $this->actesTransaction->set('type',1);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
-		$this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.",$this->actesTransaction->getErrorMsg());
+		$this->assertEquals("Seuls les documents budgÃ©taires et financiers peuvent Ãªtre au format XML.",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testAddActesXMLBadClassif(){
@@ -142,13 +142,13 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->actesTransaction->set('nature_code',5);
 		$dest_filename = mt_rand(0,mt_getrandmax());
 		$this->assertFalse($this->actesTransaction->addActeFile("toto.xml","toto/$dest_filename",$this->xml_filepath));
-		$this->assertEquals("Seule la classification 7.1 est autorisée pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
+		$this->assertEquals("Seule la classification 7.1 est autorisÃ©e pour la transmission au format XML",$this->actesTransaction->getErrorMsg());
 	}
 
 	public function testBadAttachment(){
 		$this->assertFalse($this->actesTransaction->addAttachmentFile("toto.txt","toto",$this->txt_filepath));
 		$this->assertEquals(
-			"Le fichier attaché «&nbsp;toto.txt&nbsp;» est de type «&nbsp;application/x-empty&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.",
+			"Le fichier attachÃ© Â«&nbsp;toto.txt&nbsp;Â» est de type Â«&nbsp;application/x-empty&nbsp;Â». Fichier PDF, XML, PNG ou JPEG requis.",
 			$this->actesTransaction->getErrorMsg()
 		);
 	}
@@ -251,7 +251,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		$this->assertEquals(['short_descr'=>'DE','descr'=>'Deliberations'],ActesTransaction::getTransactionNatureDescr(1));
 	}
 	public function testGetTransactionNatureDescrFailed(){
-		$this->assertFalse(ActesTransaction::getTransactionNatureDescr('Délibération'));
+		$this->assertFalse(ActesTransaction::getTransactionNatureDescr('DÃ©libÃ©ration'));
 	}
 
 
@@ -291,7 +291,7 @@ class ActesTransactionTest extends S2lowTestCase {
 		);
 		$this->assertFalse($result);
 		$this->assertEquals(
-			'Le code de la PJ doit faire 5 caractères',
+			'Le code de la PJ doit faire 5 caractÃ¨res',
 			$this->actesTransaction->getErrorMsg()
 		);
 

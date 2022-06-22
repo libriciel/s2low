@@ -1,11 +1,11 @@
 <h1>Tester un certificat</h1>
 
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="/admin/utilities/certificate_list.php">Revenir à la page précédente
+	<a class="btn btn-default" href="/admin/utilities/certificate_list.php">Revenir Ã  la page prÃ©cÃ©dente
 	</a><br>
 </p>
 
-<h2>Certificat à tester</h2>
+<h2>Certificat Ã  tester</h2>
 
 <form action="/admin/utilities/do-test-certificate.php" method="POST" enctype="multipart/form-data">
 	<table class="data-table table table-striped">
@@ -54,17 +54,17 @@
             <td>
 				<?php if($certificate_info['nb_users']):?>
                     <div class="alert-success alert">
-                        <?php echo $certificate_info['nb_users']; ?> utilisateur(s) correspond(ent) à ce certificat
+                        <?php echo $certificate_info['nb_users']; ?> utilisateur(s) correspond(ent) Ã  ce certificat
                         <a class="btn btn-primary" href="/admin/users/admin_user_list.php?user_id=<?php echo $certificate_info['user_id'] ?>">Voir</a>
                     </div>
 				<?php else :?>
-                    <div class="alert-danger alert">Ce certificat n'est pas utilisé</div>
+                    <div class="alert-danger alert">Ce certificat n'est pas utilisÃ©</div>
 				<?php endif; ?>
             </td>
         </tr>
     </table>
 
-<h2>Informations complémentaires</h2>
+<h2>Informations complÃ©mentaires</h2>
 
     <table class="data-table table table-striped">
         <?php foreach($certificate_info['certificate_info'] as $key => $value) : ?>

@@ -2,7 +2,7 @@
 $(document).ready(function() {
 
 
-	$(".zselect_authorities").pastell_zselect('Sélectionnez une collectivité');
+	$(".zselect_authorities").pastell_zselect('SÃ©lectionnez une collectivitÃ©');
 
 	
 });
@@ -17,7 +17,7 @@ $(document).ready(function() {
 					return $('<span>').text(item.label);
 				},
 				noResults: function (term) {
-					return $('<span>').addClass('no-results').text("Pas de résultat pour " + term + ".")
+					return $('<span>').addClass('no-results').text("Pas de rÃ©sultat pour " + term + ".")
 				}
 			})
 		})

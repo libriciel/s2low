@@ -36,7 +36,7 @@ class ActesExportController extends Controller {
             $this->redirect(
                 "/modules/actes/actes_export.php?date_debut=$date_debut&date_fin=$date_fin&authority_id=$authority_id",
                 sprintf(
-                    "La récupération est limitée à un intervalle de %d jours",
+                    "La rÃ©cupÃ©ration est limitÃ©e Ã  un intervalle de %d jours",
                     self::MAX_EXPORT_INTERVAL_IN_DAY
                 )
             );

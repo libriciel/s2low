@@ -14,13 +14,13 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -56,7 +56,7 @@ $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" .
 if (! $me->isSuper() && $me->canEdit($module->get('name'))) {
   $html .= "<div id=\"actions_area\">\n";
   $html .= "<h2>Actions</h2>\n";
-  $html .= "<a class=\"btn btn-primary\" href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_add.php\">Créer un nouveau lot</a>\n";
+  $html .= "<a class=\"btn btn-primary\" href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_add.php\">CrÃ©er un nouveau lot</a>\n";
   $html .= "</div>\n";
 }
 
@@ -64,13 +64,13 @@ $html .= "<h2>Liste des lots de transactions</h2>\n";
 
 if (is_array($batchesList) && count($batchesList) > 0) {
   $html .= "<div id=\"lot-area\">\n";
-  $html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau présente respectivement un lien vers le détail, une description, la date, le nombre de fichiers non traités et un lien vers les actions disponibles de chaque lot\">";
+  $html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau prÃ©sente respectivement un lien vers le dÃ©tail, une description, la date, le nombre de fichiers non traitÃ©s et un lien vers les actions disponibles de chaque lot\">";
   $html .= "<caption>Liste des lots de transactions<caption>\n";
   $html .= "<thead>\n";
   $html .= "<tr>\n";
   $html .= " <th id=\"lot\" class=\"data\">Lot</th>\n";
   $html .= " <th id=\"description\" class=\"data\">Description</th>\n";
-  $html .= " <th id=\"date\" class=\"data\">Date de création</th>\n";
+  $html .= " <th id=\"date\" class=\"data\">Date de crÃ©ation</th>\n";
   $html .= " <th id=\"file-remaining\" class=\"data\">Fichiers restants</th>\n";
   $html .= " <th id=\"treatment\" class=\"data\">Traiter le fichier&nbsp;:</th>\n";
   $html .= "</tr>\n";
@@ -84,7 +84,7 @@ if (is_array($batchesList) && count($batchesList) > 0) {
 	$batch->init();
 
 	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td headers=\"lot\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les détails du lot n°" . $batch->getId() . "\">" . get_hecho($batch->getId()) . "</a></td>\n";
+	$html .= " <td headers=\"lot\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les dÃ©tails du lot nÂ°" . $batch->getId() . "\">" . get_hecho($batch->getId()) . "</a></td>\n";
 	$html .= " <td headers=\"description\">" . get_hecho($batch->get("description")) . "</td>\n";
 	$html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($batch->get("submission_date"), true) . "</td>\n";
 	$html .= " <td headers=\"file-remaining\">" . $batch->getUnprocessedFilesCount() . "</td>\n";
@@ -93,8 +93,8 @@ if (is_array($batchesList) && count($batchesList) > 0) {
 	if ($batch->getUnprocessedFilesCount() > 0) {
 	  $html .= $doc->getHTMLSelect("batch_files", $batch->getUnprocessedFilesIdName(), null, " onchange=\"javascript:redirect_to_create_form(this);\"");
 	} else {
-	  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce lot ?')\" method=\"post\">\n";
-	  $html .= "<p>Tous les fichiers sont traités&nbsp;:\n";
+	  $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer dÃ©finitivement ce lot ?')\" method=\"post\">\n";
+	  $html .= "<p>Tous les fichiers sont traitÃ©s&nbsp;:\n";
 	  $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $batch->getId(). "\" />\n";
 	  $html .= "<input type=\"submit\" value=\"Supprimer le lot\" />\n";
 	  $html .= "</p></form>\n";
@@ -109,7 +109,7 @@ if (is_array($batchesList) && count($batchesList) > 0) {
   $html .= "</table>\n";
   $html .= "</div>\n";
 } else {
-  $html .= "Pas de lot trouvé.";
+  $html .= "Pas de lot trouvÃ©.";
 }
 
 $doc->addBody($html);

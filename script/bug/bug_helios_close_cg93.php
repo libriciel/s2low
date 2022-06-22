@@ -12,7 +12,7 @@ $all = $sqlQuery->query($sql,"2016-04-26","2016-05-04");
 
 foreach($all as $line){
 	print_r($line);
-	$message = "La transaction {$line['id']} est de nouveau à l'état posté.";
+	$message = "La transaction {$line['id']} est de nouveau Ã  l'Ã©tat postÃ©.";
 	$heliosTransactionSQL->updateStatus($line['id'],HeliosTransactionsSQL::POSTE,$message);
 	$heliosTransactionSQL->setNomFic($transaction_id,NULL);
 	echo "$message\n";

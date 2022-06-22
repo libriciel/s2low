@@ -27,7 +27,7 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("La vérification de la signature a échoué");
+        $this->expectExceptionMessage("La vÃ©rification de la signature a Ã©chouÃ©");
         $verifyPKCS7Signature->verify(
             __DIR__ . "/fixtures/toto.txt",
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
@@ -87,10 +87,10 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
     {
         return [
             [new DateTime("Jun 12 14:00:57 2020", new DateTimeZone("GMT")),
-                "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
+                "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validitÃ© du certificat 12-Jun-2020 16:00:58"
             ],
             [new DateTime("Jun 10 14:00:59 2030", new DateTimeZone("GMT")),
-                "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
+                "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validitÃ© du certificat 12-Jun-2020 16:00:58"
             ]
         ];
     }
@@ -119,8 +119,8 @@ class verifyPKCS7SignatureTest extends S2lowTestCase
     public function getGoodDate(): array
     {
         return [
-            [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validité crl
-            [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
+            [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validitÃ© crl
+            [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validitÃ© myCA.pem
         ];
     }
 

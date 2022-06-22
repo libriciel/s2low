@@ -16,20 +16,20 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
 $retourId= Helpers :: getVarFromGet("id");
 
-// Vérification des permissions
+// VÃ©rification des permissions
 $heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
 $info = $heliosRetourSQL->getInfo($retourId);
 
@@ -39,7 +39,7 @@ $authtority_info = $authoritySQL->getInfo($info['authority_id']);
 if (! $me->isSuper()) {
 	if ($me->get("authority_id") != $info['authority_id']) {
 		if (! ($me->isGroupAdmin() && $me->get("authority_group_id") == $authtority_info['authority_group_id'])){
-			echo "KO\nAccès refusé";
+			echo "KO\nAccÃ¨s refusÃ©";
 			exit();
 		}
 	}

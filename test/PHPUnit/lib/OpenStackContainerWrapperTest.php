@@ -219,16 +219,16 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->mockManager
         );
 
-        // Première connexion : le token est périmé mais le getNewTokenAndContainer renvoie
-        // quand même un container
+        // PremiÃ¨re connexion : le token est pÃ©rimÃ© mais le getNewTokenAndContainer renvoie
+        // quand mÃªme un container
         $openStackContainerWrapper->createObject(["options"]);
-        // Deuxième connexion : le token périmé est détecté. Nouvelle appel à
+        // DeuxiÃ¨me connexion : le token pÃ©rimÃ© est dÃ©tectÃ©. Nouvelle appel Ã 
         // openStackContainerFetcher
-        // Première éxécution de createObject sur la deuxième instance de
+        // PremiÃ¨re Ã©xÃ©cution de createObject sur la deuxiÃ¨me instance de
         // $containerMock
         $openStackContainerWrapper->createObject(["options"]);
-        //Troisième connexion : le token est ok. Aucun appel à openStackContainerFetcher
-        // Deuxième éxécution de createObject sur la deuxième instance de
+        //TroisiÃ¨me connexion : le token est ok. Aucun appel Ã  openStackContainerFetcher
+        // DeuxiÃ¨me Ã©xÃ©cution de createObject sur la deuxiÃ¨me instance de
         // $containerMock
         $openStackContainerWrapper->createObject(["options"]);
     }
@@ -265,16 +265,16 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->mockManager
         );
 
-        // Première connexion : premier appel à identityV3 et objectStoreV1
+        // PremiÃ¨re connexion : premier appel Ã  identityV3 et objectStoreV1
         $openStackContainerWrapper->createObject(["options1"]);
         $openStackContainerWrapper->resetConnection();
-        // Deuxième connexion : deuxième appel à identityV3 et objectStoreV1
-        // Première éxécution de createObject sur la deuxième instance de
+        // DeuxiÃ¨me connexion : deuxiÃ¨me appel Ã  identityV3 et objectStoreV1
+        // PremiÃ¨re Ã©xÃ©cution de createObject sur la deuxiÃ¨me instance de
         // $containerMock
         $openStackContainerWrapper->createObject(["options2"]);
-        //Troisième connexion : le token en ok. Aucun appel à identityV3
+        //TroisiÃ¨me connexion : le token en ok. Aucun appel Ã  identityV3
         // et objectStoreV1
-        // Deuxième éxécution de createObject sur la deuxième instance de
+        // DeuxiÃ¨me Ã©xÃ©cution de createObject sur la deuxiÃ¨me instance de
         // $containerMock
         $openStackContainerWrapper->createObject(["options2"]);
     }

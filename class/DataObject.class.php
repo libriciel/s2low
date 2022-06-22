@@ -1,51 +1,51 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡ la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √† la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
- * dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡ 
- * manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
- * logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
+ * d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
+ * manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
+ * logiciel √† leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 ?>
 <?php
 /**
  * \class DataObject DataObject.class.php
- * \brief Classe de base pour la gestion d'entitÈ en base de donnÈes
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Classe de base pour la gestion d'entit√© en base de donn√©es
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 17.02.2006
  * 
  *
- * Cette classe fournit des mÈthodes de base pour la gestion d'entitÈ
- * stockÈes en base de donnÈes (initialisation, sauvegarde, suppression...)
+ * Cette classe fournit des m√©thodes de base pour la gestion d'entit√©
+ * stock√©es en base de donn√©es (initialisation, sauvegarde, suppression...)
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -63,11 +63,11 @@ class DataObject {
 	 */
   protected $db;
 
-  protected $statusTypes = array( 0 => "DÈsactivÈ",
-							1 => "ActivÈ"
+  protected $statusTypes = array( 0 => "D√©sactiv√©",
+							1 => "Activ√©"
 							);
 
-  // DonnÈes de pagination
+  // Donn√©es de pagination
   protected $displayItems;
   protected $currentPage;
   protected $pageNbr;
@@ -83,7 +83,7 @@ class DataObject {
 
   /**
    * \brief Constructeur
-   * \param id integer (optionnel) NumÈro d'id d'une entitÈ existante avec lequel initialiser l'objet
+   * \param id integer (optionnel) Num√©ro d'id d'une entit√© existante avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
     $this->db = DatabasePool::getInstance();
@@ -94,24 +94,24 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode renvoyant le numÈro d'identifiant de l'entitÈ en cours
-   * \return l'id en cours ou null si non dÈfinit
+   * \brief M√©thode renvoyant le num√©ro d'identifiant de l'entit√© en cours
+   * \return l'id en cours ou null si non d√©finit
   */
   public function getId() {
     return (isset($this->id)) ? $this->id : null;
   }
 
   /**
-   * \brief MÈthode permettant de fixer l'identifiant de l'entitÈ en cours
-   * \param $pId integer NumÈro d'identifiant de l'entitÈ
+   * \brief M√©thode permettant de fixer l'identifiant de l'entit√© en cours
+   * \param $pId integer Num√©ro d'identifiant de l'entit√©
   */
   public function setId($pId) {
     $this->id = $pId;
   }
 
   /**
-   * \brief MÈthode permettant de fixer la valeur d'un attribut
-   * \param $name chaÓne : Nom de l'attribut
+   * \brief M√©thode permettant de fixer la valeur d'un attribut
+   * \param $name cha√Æne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   public function set($name, $val) {
@@ -119,8 +119,8 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode permettant de rÈcupÈrer la valeur d'un attribut
-   * \param $name chaÓne : Nom de l'attribut
+   * \brief M√©thode permettant de r√©cup√©rer la valeur d'un attribut
+   * \param $name cha√Æne : Nom de l'attribut
    * \return Valeur de l'attribut ou null si l'attribut n'existe pas
   */
   public function get($name) {
@@ -128,7 +128,7 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode permettant de dÈterminer si l'entitÈ est un nouvel enregistrement ou non
+   * \brief M√©thode permettant de d√©terminer si l'entit√© est un nouvel enregistrement ou non
     * \return true si nouvel enregistrement, false sinon
   */
   public function isNew() {
@@ -140,8 +140,8 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode initialisant l'entitÈ avec l'identifiant courant
-   * \return true si succËs, false sinon
+   * \brief M√©thode initialisant l'entit√© avec l'identifiant courant
+   * \return true si succ√®s, false sinon
   */
   public function init() {
   	
@@ -158,7 +158,7 @@ class DataObject {
 
 		return true;
 	  } else {
-		$this->errorMsg = "::init - RÈsultat incorrect pour l'initialisation de l'entitÈ";
+		$this->errorMsg = "::init - R√©sultat incorrect pour l'initialisation de l'entit√©";
 		return false;
 	  }
 	}
@@ -167,17 +167,17 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode de suppression d'une entitÈ dans la base de donnÈes
-   * \param $id integer (optionnel) NumÈro d'identifiant de l'identitÈ, si non spÈcifiÈ, entitÈ en cours
-   * \return true si succËs, false sinon
+   * \brief M√©thode de suppression d'une entit√© dans la base de donn√©es
+   * \param $id integer (optionnel) Num√©ro d'identifiant de l'identit√©, si non sp√©cifi√©, entit√© en cours
+   * \return true si succ√®s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entitÈ spÈcifiÈe par $id ou alors l'entitÈ courante si pas d'id
+    // Efface l'entit√© sp√©cifi√©e par $id ou alors l'entit√© courante si pas d'id
     if (! $id) {
       if (isset($this->id) && is_numeric($this->id)) {
 		$id = $this->id;
       } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entitÈ a supprimer";
+		$this->errorMsg = "Pas d'identifiant pour l'entit√© a supprimer";
 		return false;
       }
     }
@@ -186,7 +186,7 @@ class DataObject {
 
     if (! $this->db->exec($sql,[$id])) {
 		//Never reached...
-	  $this->errorMsg = "Erreur lors de la suppression de l'entitÈ d'identifiant " . $id;
+	  $this->errorMsg = "Erreur lors de la suppression de l'entit√© d'identifiant " . $id;
 	  return false;
     }
 
@@ -194,41 +194,41 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode permettant de valider les attributs de l'entitÈ courante (bon type, prÈsence...)
-   * \return true si succËs, false sinon
+   * \brief M√©thode permettant de valider les attributs de l'entit√© courante (bon type, pr√©sence...)
+   * \return true si succ√®s, false sinon
   */
   public function validate() {
 	$this->errorMsg = "";
 
 	foreach ($this->dbFields as $name => $attr) {
-	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || strlen($this->$name) <= 0)) {
-		$this->errorMsg .= $attr["descr"] . " doit Ítre prÈsent.\n";
+	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || mb_strlen($this->$name) <= 0)) {
+		$this->errorMsg .= $attr["descr"] . " doit √™tre pr√©sent.\n";
 	  } else {
 		if (isset($this->$name) && ! empty($this->$name)) {
 		  if (! empty($attr["unique"]) && ! $this->checkUnicity($name)) {
-			  $this->errorMsg .= $attr["descr"] . " doit Ítre unique.\n";
+			  $this->errorMsg .= $attr["descr"] . " doit √™tre unique.\n";
 		  } else {
 			switch ($attr["type"]) {
 			case "isInt":
 			  if (! preg_match("/^[-+]?[0-9]+$/", $this->$name)) {
-				$this->errorMsg .= $attr["descr"] . " doit Ítre un entier.\n";
+				$this->errorMsg .= $attr["descr"] . " doit √™tre un entier.\n";
 			  }
 			  break;
 			case "isFloat":
 			  if (! preg_match ("/^[-+]?[0-9]+(\.[0-9]+)*$/", $this->$name)) {
-				$this->errorMsg .= $attr["descr"] . " doit Ítre un rÈel.\n";
+				$this->errorMsg .= $attr["descr"] . " doit √™tre un r√©el.\n";
 			  }
 			  break;
 			case "isEmail":
 				if (! is_valid_email($this->$name)) {
-					$this->errorMsg .= $attr["descr"] . " doit Ítre une adresse Èlectronique valide.\n";
+					$this->errorMsg .= $attr["descr"] . " doit √™tre une adresse √©lectronique valide.\n";
 			  	}
 			  break;
 			}
 			
 			if (isset($attr["maxlength"])) {
-			  if (strlen($this->$name) > $attr["maxlength"]) {
-				$this->errorMsg .= "Le champ " . $attr["descr"] . " est trop long (" . $attr["maxlength"] . " caractËres maxi autorisÈs).\n";
+			  if (mb_strlen($this->$name) > $attr["maxlength"]) {
+				$this->errorMsg .= "Le champ " . $attr["descr"] . " est trop long (" . $attr["maxlength"] . " caract√®res maxi autoris√©s).\n";
 			  }
 			}
 			
@@ -250,8 +250,8 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode permettant de vÈrifier qu'un attribut est unique dans une table
-   * \param $name chaÓne : Nom de l'attribut
+   * \brief M√©thode permettant de v√©rifier qu'un attribut est unique dans une table
+   * \param $name cha√Æne : Nom de l'attribut
    * \return true si unique, false sinon
   */
   public function checkUnicity($name) {
@@ -277,9 +277,9 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode d'enregistrement d'une entitÈ dans la base de donnÈes
-   * \param $validate boolÈen (optionnel) Demande la validation ou non des donnÈes de l'entitÈ avant enregistrement (true par dÈfaut)
-   * \return true si succËs, false sinon
+   * \brief M√©thode d'enregistrement d'une entit√© dans la base de donn√©es
+   * \param $validate bool√©en (optionnel) Demande la validation ou non des donn√©es de l'entit√© avant enregistrement (true par d√©faut)
+   * \return true si succ√®s, false sinon
   */
   public function save($validate = true) {
 
@@ -290,7 +290,7 @@ class DataObject {
     }
 
       if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
-		$this->errorMsg = "Erreur lors de la sauvegarde de l'entitÈ";
+		$this->errorMsg = "Erreur lors de la sauvegarde de l'entit√©";
 		return false;
       }
 
@@ -298,8 +298,8 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode de rÈcupÈration du prochain identifiant dans la base de donnÈes pour cette entitÈ
-   * \return l'identifiant ou null si Èchec
+   * \brief M√©thode de r√©cup√©ration du prochain identifiant dans la base de donn√©es pour cette entit√©
+   * \return l'identifiant ou null si √©chec
   */
   protected function getNextId() {
     $sql = "SELECT nextval('" . $this->objectName . "_id_seq') AS id";
@@ -316,9 +316,9 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la chaine ‡ passer en paramËtre ‡ la fonction de validation javascript des formulaires
-   * \param .. Un nombre variable de chaÓnes reprÈsentant les noms des variables membres ‡ valider
-   * \return La chaÓne de description des champs ‡ valider
+   * \brief M√©thode d'obtention de la chaine √† passer en param√®tre √† la fonction de validation javascript des formulaires
+   * \param .. Un nombre variable de cha√Ænes repr√©sentant les noms des variables membres √† valider
+   * \return La cha√Æne de description des champs √† valider
   */
   public function getValidationTrio() {
 	$args = func_get_args();
@@ -340,8 +340,8 @@ class DataObject {
 		}
 
 		if (! empty($this->dbFields[$args[$i]]["regexp"])) {
-		  // On enlËve les caractËres / au dÈbut et ‡ la fin de la regexp, javascript les rajoute automatiquement
-		  $str .= "RegExp" . substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
+		  // On enl√®ve les caract√®res / au d√©but et √† la fin de la regexp, javascript les rajoute automatiquement
+		  $str .= "RegExp" . mb_substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
 		}
 
 		$str .= "'";
@@ -353,18 +353,18 @@ class DataObject {
 	return implode(',', $ret);
   }
 
-  // MÈthodes de pagination
+  // M√©thodes de pagination
 
 
   /**
-   * \brief MÈthode d'initialisation du pager
-   * \param $fields chaÓne : Liste des champs ‡ rÈcupÈrer
-   * \param $from chaÓne : Liste des tables dans lesquelles rÈcupÈrer les donnÈes (peut inclure des jointures)
-   * \param $cond chaÓne (optionnel) : ChaÓne conditionnelle (comporte une instruction WHERE)
-   * \param $order chaÓne (optionnel) : ChaÓne dÈfinissant l'ordre de tri pour les rÈsultats (SQL)
-   * \param $count entier (optionnel) : Nombre de rÈsultat par page dÈsirÈs
-   * \param $page entier (optionnel) : Page courante dÈsirÈe
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode d'initialisation du pager
+   * \param $fields cha√Æne : Liste des champs √† r√©cup√©rer
+   * \param $from cha√Æne : Liste des tables dans lesquelles r√©cup√©rer les donn√©es (peut inclure des jointures)
+   * \param $cond cha√Æne (optionnel) : Cha√Æne conditionnelle (comporte une instruction WHERE)
+   * \param $order cha√Æne (optionnel) : Cha√Æne d√©finissant l'ordre de tri pour les r√©sultats (SQL)
+   * \param $count entier (optionnel) : Nombre de r√©sultat par page d√©sir√©s
+   * \param $page entier (optionnel) : Page courante d√©sir√©e
+   * \return True en cas de succ√®s, false sinon
   */
   public function pagerInit($fields, $from, $cond = null, $order = null, $count = null, $page = null,$sortWay="DESC") {
 	$this->fields = $fields;
@@ -377,7 +377,7 @@ class DataObject {
 	if ($order) {
 	  $this->order = $order;
 	} elseif (isset($_GET["order"])) {
-	  // On vÈrifie que ce champ est bien prÈsent dans la table concernÈe
+	  // On v√©rifie que ce champ est bien pr√©sent dans la table concern√©e
 	  if (array_search($_GET["order"], array_keys($this->dbFields)) !== false) {
 		$this->order = $this->objectName . "." . $_GET["order"];
 	  }	 
@@ -411,7 +411,7 @@ class DataObject {
 	  return false;
 	} else {
 	  if (! $this->pagerFetchData()) {
-		$this->errorMsg = "Erreur lors de la rÈcupÈration des enregistrements.";
+		$this->errorMsg = "Erreur lors de la r√©cup√©ration des enregistrements.";
 		return false;
 	  }
 	}
@@ -420,8 +420,8 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode de comptage du nombre total d'enregistrements pour le pager
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de comptage du nombre total d'enregistrements pour le pager
+   * \return True en cas de succ√®s, false sinon
   */
   protected function pagerCountRecords() {
 	// Comptage du nombre total d'enregistrements
@@ -441,7 +441,7 @@ class DataObject {
 		  // Nombre de pages en fonction du nombre d'items par page
 		  $this->pageNbr = ceil($this->totalRecords / $this->displayItems);
 	
-		  // Controle du dÈbordement des pages
+		  // Controle du d√©bordement des pages
 		  if ($this->currentPage > $this->pageNbr) 
 		  {
 			   $this->currentPage = $this->pageNbr;
@@ -455,8 +455,8 @@ class DataObject {
  }
 
   /**
-   * \brief MÈthode de rÈcupÈration des donnÈes pour le pager depuis la base de donnÈes
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode de r√©cup√©ration des donn√©es pour le pager depuis la base de donn√©es
+   * \return True en cas de succ√®s, false sinon
   */
   protected function pagerFetchData() {
 	$offset = ($this->currentPage - 1) * $this->displayItems;
@@ -487,7 +487,7 @@ class DataObject {
   }
 
   /**
-   * \brief MÈthode de rÈcupÈration du message d'erreur associÈ ‡ l'entitÈ
+   * \brief M√©thode de r√©cup√©ration du message d'erreur associ√© √† l'entit√©
    * \return Le message d'erreur
   */
   public function getErrorMsg() {
@@ -518,7 +518,7 @@ class DataObject {
 
         if ($new) {
             if (!($this->id = $this->getNextId())) {
-                $this->errorMsg = "Erreur de rÈcupÈration du nouvel ID";
+                $this->errorMsg = "Erreur de r√©cup√©ration du nouvel ID";
                 return new DataObjectSaveSQLRequest(false,"",[]);
             }
 
@@ -528,7 +528,7 @@ class DataObject {
             $values = "? ";
 
             foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && strlen($this->$field) > 0) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
                     $values .= ", ?";
                     $fields[] = $field;
                     $params[] = $this->$field;
@@ -538,13 +538,13 @@ class DataObject {
             $sql = "INSERT INTO " . $this->objectName . " (";
             $sql .= implode(", ", $fields);
             $sql .= ") VALUES ( $values )";
-        } else { // Mise ‡ jour
+        } else { // Mise √† jour
             $sql = "UPDATE " . $this->objectName . " SET ";
 
             $fields = array();
             $params = array();
             foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && strlen($this->$field) > 0) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
                     $str = $field . "= ?";
                     $params[] = $this->$field;
                     $fields[] = $str;

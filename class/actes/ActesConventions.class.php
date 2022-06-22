@@ -20,7 +20,7 @@ class ActesConventions {
     public function getConventionFilename($authority_id){
         $filepath = $this->getConventionFilepath($authority_id);
         if (!$filepath){
-            throw new Exception("Aucune convention présente pour la collectivité $authority_id");
+            throw new Exception("Aucune convention prÃ©sente pour la collectivitÃ© $authority_id");
         }
         return basename($filepath);
     }
@@ -40,12 +40,12 @@ class ActesConventions {
     public function setConvention($authority_id,$filepath){
         $destination_path = $this->getConventionFilepath($authority_id);
         if (! $destination_path){
-            throw new Exception("Impossible de récupérer le chemin de la convention pour la collectivité $authority_id");
+            throw new Exception("Impossible de rÃ©cupÃ©rer le chemin de la convention pour la collectivitÃ© $authority_id");
         }
         $dirname = dirname($destination_path);
         if (!file_exists($dirname)){
             if (! mkdir($dirname)){
-                throw new Exception("Impossible de créer le répertoire $dirname");
+                throw new Exception("Impossible de crÃ©er le rÃ©pertoire $dirname");
             }
         }
         if (! copy($filepath,$destination_path)){

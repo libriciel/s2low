@@ -64,12 +64,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
         $this->assertEquals(
-            "Accepté par le TdT : validation OK",
+            "AcceptÃ© par le TdT : validation OK",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat en attente#",$liste['message']);
     }
 
 	/**
@@ -95,7 +95,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat erreur#",$liste['message']);
 	}
 
 
@@ -118,12 +118,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
 		$this->assertEquals(
-			"Accepté par le TdT : validation OK",
+			"AcceptÃ© par le TdT : validation OK",
 			$transaction_info['message']
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+		$this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat en attente#",$liste['message']);
 	}
 
 
@@ -139,12 +139,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
         $this->assertEquals(
-            "Enveloppe invalide : Le format text/plain du fichier 045-214502494-20170717-D201717-DE-1-1_1.txt n'est pas autorisé",
+            "Enveloppe invalide : Le format text/plain du fichier 045-214502494-20170717-D201717-DE-1-1_1.txt n'est pas autorisÃ©",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat erreur#",$liste['message']);
     }
 
 	/**
@@ -242,12 +242,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
 		$this->assertEquals(
-			"Enveloppe invalide : Problème sur 045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
+			"Enveloppe invalide : ProblÃ¨me sur 045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
 			$transaction_info['message']
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat erreur#",$liste['message']);
 	}
 
 	/**
@@ -263,12 +263,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['status_id']);
 		$this->assertEquals(
-			"Accepté par le TdT : validation OK",
+			"AcceptÃ© par le TdT : validation OK",
 			$transaction_info['message']
 		);
 
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+		$this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat en attente#",$liste['message']);
 	}
 
 	/**
@@ -312,7 +312,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat erreur#",$liste['message']);
 	}
 
     /**

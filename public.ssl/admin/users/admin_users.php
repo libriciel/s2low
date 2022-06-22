@@ -10,7 +10,7 @@ if (! $me->authenticate()) {
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accés refusé";
+  $_SESSION["error"] = "AccÃ©s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -25,8 +25,8 @@ $api = Helpers::getVarFromGet("api");
 $myAuthority = new Authority($me->get("authority_id"));
 
 $filter = array();
-// Construction chaîne de filtrage
-if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et tous les groupes
+// Construction chaÃ®ne de filtrage
+if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivitÃ©s et tous les groupes
 	if (isset($fauthority) && is_numeric($fauthority)) {
 		$filter[] .= "users.authority_id=" . addslashes($fauthority);
 	}
@@ -35,8 +35,8 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et t
 		$filter[] .= "authorities.authority_group_id=" . addslashes($fgroup);
 	}
 } elseif ($me->isGroupAdmin()) {
-  // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
-  if (isset($fauthority) && strlen($fauthority) > 0) {
+  // Un admin de groupe ne voit forcÃ©ment que les utilisateurs des collectivitÃ© appartenant Ã  son groupe
+  if (isset($fauthority) && mb_strlen($fauthority) > 0) {
 		$auth = new Authority($fauthority);
 		if ($auth->isInGroup($me->get("authority_group_id"))) {
 			$filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
@@ -44,15 +44,15 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et t
 	}
 	$filter[] .= "authorities.authority_group_id='" . $me->get("authority_group_id") . "'";
 } elseif ($me->isAuthorityAdmin()) {
-  	//Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
+  	//Un admin d'une collectivitÃ© ne voit forcÃ©ment que les utilisateurs de sa collectivitÃ©
 	$filter[] .= "users.authority_id='" . $me->get("authority_id") . "'";
 }
 
-if (isset($frole) && strlen($frole) > 0) {
+if (isset($frole) && mb_strlen($frole) > 0) {
 	$filter[] .= "users.role='" . addslashes($frole) . "'";
 }
 
-if (isset($fname) && strlen($fname) > 0) {
+if (isset($fname) && mb_strlen($fname) > 0) {
 	$filter[] .= "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
@@ -61,7 +61,7 @@ if (count($filter) > 0) {
   $where = "WHERE " . implode(" AND ", $filter);
 }
 
-// Récupération de la liste des utilisateurs en fonction du filtre
+// RÃ©cupÃ©ration de la liste des utilisateurs en fonction du filtre
 $users = $me->getUsersList($where);
 
 
@@ -75,10 +75,10 @@ if ($api){
 }
 
 if ($me->isAuthorityAdmin()) {
-	$title = "Gestion des utilisateurs de la collectivité «&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;»";
+	$title = "Gestion des utilisateurs de la collectivitÃ© Â«&nbsp;" . get_hecho($myAuthority->get("name")) . "&nbsp;Â»";
 } elseif ($me->isGroupAdmin()) {
 	$myGroup = new Group($me->get("authority_group_id"));
-	$title = "Gestion des utilisateurs du groupe «&nbsp;" . get_hecho($myGroup->get("name")) . "&nbsp;»";
+	$title = "Gestion des utilisateurs du groupe Â«&nbsp;" . get_hecho($myGroup->get("name")) . "&nbsp;Â»";
 } else {
 	$title = "Gestion des utilisateurs";
 }
@@ -124,22 +124,22 @@ ob_start();?>
 	<h2>Filtrage</h2>
 		<form action="admin_users.php" method="get" class="form-horizontal">
 		<div class="form-group">
-			<label for="role" class="col-md-3 control-label">Le rôle est</label>
+			<label for="role" class="col-md-3 control-label">Le rÃ´le est</label>
 			<div class="col-md-3"><?php echo $doc->getHTMLSelect("role", $me->get("roleTypes"), $frole) ?></div>
 			<label for="name" class="col-md-3 control-label">Le nom contient</label>
 			<div class="col-md-3">
-				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (strlen($fname) > 0)?get_hecho($fname):"" ?>' />
+				<input id="name" class="form-control" type="text" name="name" size="20" maxlength="25" value='<?php echo  (mb_strlen($fname ?? '') > 0)?get_hecho($fname):"" ?>' />
 			</div>
 		</div>
 		
 		<?php if ($me->isGroupAdminOrSuper()) : ?>
 			<div class="form-group">
-				<label for="authority" class="col-md-3 control-label">Collectivité</label>
+				<label for="authority" class="col-md-3 control-label">CollectivitÃ©</label>
 				<div class="col-md-3">
 					<select class="form-control zselect_authorities" name="authority" id="authority">
     					<option value="">Toutes</option>
 						<?php foreach ($authority_id_list as $key => $val) : ?>
-      						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority) == 0) ? " selected='selected'" : ""; ?>>
+      						<option value="<?php hecho($key) ?>"  <?php echo (strcmp($key, $fauthority ?? '') == 0) ? " selected='selected'" : ""; ?>>
       							<?php hecho($val)?> 
       						</option>
     					<?php endforeach; ?>
@@ -167,7 +167,7 @@ ob_start();?>
 	<thead>
 	<tr>
 		<th id="name">Nom</th>
-		<th id="email">Adresse électronique</th>
+		<th id="email">Adresse Ã©lectronique</th>
 		<th id="role">R&ocirc;le</th>
 		<th id="status">Etat</th>
 		<th id="authority">Collectivit&eacute;</th>
@@ -186,7 +186,7 @@ ob_start();?>
             <?php $nb_days_before_expire = floor((strtotime($user["cert_not_after"]) - time())/86400) ?>
             <?php if($nb_days_before_expire<1): ?>
                 <div class="alert alert-danger message-admin">
-                    <b>Certificat expiré</b>
+                    <b>Certificat expirÃ©</b>
                 </div>
             <?php elseif ($nb_days_before_expire<30): ?>
                 <div class="alert alert-warning message-admin">

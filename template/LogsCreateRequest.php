@@ -1,5 +1,5 @@
 <div id="content">
-	<h1>Journal - Requête sur l'historique</h1>
+	<h1>Journal - RequÃªte sur l'historique</h1>
 	<p id="back-user-btn">
 		<a href="/common/logs_view.php" class="btn btn-default" title="">
 			Retour au journal
@@ -7,7 +7,7 @@
 	</p>
 
 	<div class="alert alert-warning">
-		Votre demande concerne des transactions trop anciennes. Veuillez confirmer votre demande. Vous recevrez alors un email vous permettant de télécharger un fichier CSV contenant le résultat de la requête.
+		Votre demande concerne des transactions trop anciennes. Veuillez confirmer votre demande. Vous recevrez alors un email vous permettant de tÃ©lÃ©charger un fichier CSV contenant le rÃ©sultat de la requÃªte.
 	</div>
 
 	<h2>Faire une demande</h2>
@@ -15,7 +15,7 @@
 	<form action="/common/logs_request.php" method="POST">
 	<table class="data-table table table-striped">
 		<tr>
-			<th>Date de début</th>
+			<th>Date de dÃ©but</th>
 			<td><?php echo $this->fancyDate->getDateFrancais($date_debut) ?>
 			<input type="hidden" name="date_debut" value="<?php echo $date_debut ?>"?>
 			</td>
@@ -29,7 +29,7 @@
 
 	</table>
 		<?php if($has_pending_logs_request):  ?>
-		<div class="alert alert-danger">Vous avez déjà une requête en cours. Veuillez attendre ou annuler la requete précédente.</div>
+		<div class="alert alert-danger">Vous avez dÃ©jÃ  une requÃªte en cours. Veuillez attendre ou annuler la requete prÃ©cÃ©dente.</div>
 		<?php else: ?>
 		<input type="submit" value="Confirmer la demande" class="btn btn-primary"/>
 		<?php endif; ?>

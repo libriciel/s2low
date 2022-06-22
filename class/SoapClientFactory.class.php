@@ -1,6 +1,6 @@
 <?php
 
-//Note : SoapClient crée un fichier de cache du WSDL, voir http://www.php.net/manual/en/soap.configuration.php
+//Note : SoapClient crÃ©e un fichier de cache du WSDL, voir http://www.php.net/manual/en/soap.configuration.php
 
 class SoapClientFactory {
 
@@ -99,8 +99,8 @@ class NotBuggySoapClient extends SoapClient {
 
 
     	if ($this->is_jax_ws){
-			$response = strstr($response,"<?xml");
-	        $response = strstr($response,"--uuid:",true);
+			$response = mb_strstr($response,"<?xml");
+	        $response = mb_strstr($response,"--uuid:",true);
         }
 
         return $response;

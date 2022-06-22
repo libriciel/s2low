@@ -42,7 +42,7 @@
 </table>
 
 
-<a href="/admin/stats-sae-actes.php" class="btn btn-primary">Détail</a>
+<a href="/admin/stats-sae-actes.php" class="btn btn-primary">DÃ©tail</a>
 
 
 <h2>Helios - Mode automatique</h2>
@@ -72,10 +72,10 @@
 
 </table>
 
-<a href="/admin/stats-sae-helios.php" class="btn btn-primary">Détail</a>
+<a href="/admin/stats-sae-helios.php" class="btn btn-primary">DÃ©tail</a>
 
 
-<h2>@ctes - Basé sur l'état</h2>
+<h2>@ctes - BasÃ© sur l'Ã©tat</h2>
 
 <table class="data-table table table-striped ">
 
@@ -123,7 +123,7 @@
 
 
 
-<h2>Helios - Basé sur l'état</h2>
+<h2>Helios - BasÃ© sur l'Ã©tat</h2>
 
 <table class="data-table table table-striped ">
     <tr class="<?php echo $helios_nb_en_attente_sae_4h?"danger":"success" ?>">

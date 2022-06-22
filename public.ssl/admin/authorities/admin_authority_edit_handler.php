@@ -21,11 +21,11 @@ function exitOrDisplayError($api,$erreur_msg,$location){
 }
 
 if (! $me->authenticate()) {
-	exitOrDisplayError($api,"Échec de l'authentification",WEBSITE);
+	exitOrDisplayError($api,"Ã‰chec de l'authentification",WEBSITE);
 }
 
 if (! $me->isAdmin()) {
-	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
+	exitOrDisplayError($api,"AccÃ¨s refusÃ©",WEBSITE_SSL);
 }
 
 try{
@@ -73,7 +73,7 @@ $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
 if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)){
-	exitOrDisplayError($api,"Le code département ou le code arrondissement sont incorrects",$form_location);
+	exitOrDisplayError($api,"Le code dÃ©partement ou le code arrondissement sont incorrects",$form_location);
 	
 }
 
@@ -87,7 +87,7 @@ if (isset($id) && ! empty($id)) {
   $authority->setId($id);
   $mod = true;
   if (! $authority->init()) {
-	exitOrDisplayError($api,"Erreur lors de la modification de la collectivité",$form_location);
+	exitOrDisplayError($api,"Erreur lors de la modification de la collectivitÃ©",$form_location);
   }
   $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
 }
@@ -96,34 +96,34 @@ if (isset($id) && ! empty($id)) {
 
 
 // Mode ajout => interdit aux admins simples
-// et modif de sa collectivité uniquement
+// et modif de sa collectivitÃ© uniquement
 if (! $me->isGroupAdminOrSuper()) {
   if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
-  	exitOrDisplayError($api,"Accès refusé",$form_location);
+  	exitOrDisplayError($api,"AccÃ¨s refusÃ©",$form_location);
   }
 } elseif ($me->isGroupAdmin()) {
-  // Si mode modif on vérifie que la collectivité appartient bien au groupe dont l'utilisateur est admin
+  // Si mode modif on vÃ©rifie que la collectivitÃ© appartient bien au groupe dont l'utilisateur est admin
   if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
-  	exitOrDisplayError($api,"Accès refusé.",$form_location);
+  	exitOrDisplayError($api,"AccÃ¨s refusÃ©.",$form_location);
   }
 
-  // Vérification que le SIREN est bien autorisé pour ce groupe
+  // VÃ©rification que le SIREN est bien autorisÃ© pour ce groupe
   $group = new Group($me->get("authority_group_id"));
 
   $sirenList = $group->getAuthorizedSiren();
 
   if (array_search($siren, $sirenList) === false) {
-  	exitOrDisplayError($api,"Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"),$form_location);
+  	exitOrDisplayError($api,"Ce numÃ©ro de SIREN (" . $siren . ") n'est pas autorisÃ© pour le groupe " . $group->get("name"),$form_location);
   }
 
-  // On force le authority_group_id à celui de l'admin du groupe
+  // On force le authority_group_id Ã  celui de l'admin du groupe
   $authorityGroupId = $me->get("authority_group_id");
 }
 
 
-//Vérification de l'email de la collectivité pour le module mail sec
+//VÃ©rification de l'email de la collectivitÃ© pour le module mail sec
 $mailer = new Mailer();
-if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || strstr($email_mail_securise," ")) ) {
+if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise," ")) ) {
  	if ($authority->isNew()) {
  		$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
  	} else {
@@ -161,7 +161,7 @@ $authority->set("dia_siret",$dia_siret);
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
   $savePerms = true;
-  // Module autorisés pour la collectivité
+  // Module autorisÃ©s pour la collectivitÃ©
   $modules = Module::getActiveModulesList();
   $authority->resetModulesPerms();
 
@@ -171,7 +171,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 if (! $authority->save($savePerms)) {
-  $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
+  $msg = "Erreur lors de l'enregistrement de la collectivitÃ©&nbsp;:\n" . $authority->getErrorMsg();
   if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3,false, $me->get("role"), false, $me)) {
 	$msg .= "\nErreur de journalisation.";
   }
@@ -209,8 +209,8 @@ if ($me->isSuper()) {
 	$authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(),$helios_do_not_verify_nom_fic_unicity);
 }
 
-$msg = ($mod) ? "Modification" : "Création";
-$msg .= " de la collectivité " . $authority->get("name") . " (id=" . $authority->getId() . "). Résultat ok.";
+$msg = ($mod) ? "Modification" : "CrÃ©ation";
+$msg .= " de la collectivitÃ© " . $authority->get("name") . " (id=" . $authority->getId() . "). RÃ©sultat ok.";
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
 	$msg .= "\nErreur de journalisation.";
 }

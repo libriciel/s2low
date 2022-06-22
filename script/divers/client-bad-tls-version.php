@@ -21,7 +21,7 @@ while ($input = fgets($fr,1024)){
 	$line = trim($input);
 	$info = explode(" ",$line);
 	if (!$info[1]){
-		echo "Erreur lors de la génération de la liste";
+		echo "Erreur lors de la gÃ©nÃ©ration de la liste";
 		exit;
 	}
 

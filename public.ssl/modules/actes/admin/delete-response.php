@@ -17,7 +17,7 @@ $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 
 try {
     $actesResponsesError->delete($filename);
-	$_SESSION['error'] = "Le fichier $filename a été supprimé";
+	$_SESSION['error'] = "Le fichier $filename a Ã©tÃ© supprimÃ©";
 } catch (Exception $e){
 	$_SESSION['error'] = $e->getMessage();
 }

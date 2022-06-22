@@ -7,7 +7,7 @@ require_once ("Mail/mime.php");
 class pearMail extends Mail {
 
 	
-	//EP : A priori la classe Pear::Mail a été surchargé afin de pouvoir integrer le champs FROM
+	//EP : A priori la classe Pear::Mail a Ã©tÃ© surchargÃ© afin de pouvoir integrer le champs FROM
     function send($recipients, $headers, $body,$from='') {
 
         $this->_sanitizeHeaders($headers);
@@ -31,7 +31,7 @@ class pearMail extends Mail {
         
         if (!$prepareHeader || PEAR::isError($prepareHeader)){
         	print_r($prepareHeader);
-        	throw new Exception("Impossible de parser les en-têtes du mail ($prepareHeader)");
+        	throw new Exception("Impossible de parser les en-tÃªtes du mail ($prepareHeader)");
         		
         }
 

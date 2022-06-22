@@ -44,12 +44,12 @@ class AdminUserController extends Controller {
 
 
 		if ($api && ! $authority_id){
-			//Il faut penser au cas où on on est en modification et ou on passe pas l'authority_id... c'est  nul...
+			//Il faut penser au cas oÃ¹ on on est en modification et ou on passe pas l'authority_id... c'est  nul...
 			throw new Exception("authority_id est obligatoire");
 		}
 
 		if ($role == 'GADM' && ! $authority_group_id){
-			throw new Exception("Vous devez indiquer un groupe pour créer un administrateur de groupe");
+			throw new Exception("Vous devez indiquer un groupe pour crÃ©er un administrateur de groupe");
 		}
 
 		if (! $api && $password != $password2){
@@ -106,7 +106,7 @@ class AdminUserController extends Controller {
 		}
 
 		if ($this->userSQL->hasDoublon($user_id,$certificat_connexion_info,$login,$certificate_rgs_2_etoiles_clean_content)){
-			throw new Exception("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
+			throw new Exception("Un utilisateur avec les mÃªmes informations de connexion et d'identification existe dans la base S2low");
 		}
 
 		//OK ALL GOOD !
@@ -125,7 +125,7 @@ class AdminUserController extends Controller {
         $id = $this->getEnvironnement()->post()->get('id');
 
         if( !(is_null($id)||!$id) && !ctype_digit($id)){
-            $this->displayErrorAndExit("Le paramètre id doit être un entier","/");
+            $this->displayErrorAndExit("Le paramÃ¨tre id doit Ãªtre un entier","/");
         }
 
         $name = $this->getEnvironnement()->post()->get('name');
@@ -174,11 +174,11 @@ class AdminUserController extends Controller {
 		$me = new User();
 
 		if (! $me->authenticate()) {
-			$this->displayErrorAndExit("Échec de l'authentification","/");
+			$this->displayErrorAndExit("Ã‰chec de l'authentification","/");
 		}
 
 		if (! $me->isAdmin()) {
-			$this->displayErrorAndExit("Accès refusé","/");
+			$this->displayErrorAndExit("AccÃ¨s refusÃ©","/");
 		}
 
 		$myAuthority = new Authority($me->get("authority_id"));
@@ -193,10 +193,10 @@ class AdminUserController extends Controller {
 				$this->displayErrorAndExit("Erreur lors de la modification de l'utilisateur","/admin/users/admin_users.php");
 			}
 
-			// On vérifie que l'utilisateur courant à le droit de modifier cet utilisateur
+			// On vÃ©rifie que l'utilisateur courant Ã  le droit de modifier cet utilisateur
 			if (! $me->canEditUser($id)) {
 				$this->displayErrorAndExit(
-				    "Accès refusé pour la modification de cet utilisateur",
+				    "AccÃ¨s refusÃ© pour la modification de cet utilisateur",
                     "/admin/users/admin_users.php"
                 );
 			}
@@ -234,7 +234,7 @@ class AdminUserController extends Controller {
 
 		if ($new_id){
 			if ($him->getIdFromLogin($login)){
-				$this->displayErrorAndExit("Ce login est déja utilisé","/admin/users/admin_user_edit.php?new_id=$new_id");
+				$this->displayErrorAndExit("Ce login est dÃ©ja utilisÃ©","/admin/users/admin_user_edit.php?new_id=$new_id");
 			}
 			$him->cloneCertificat($new_id);
 		} else {
@@ -242,7 +242,7 @@ class AdminUserController extends Controller {
 				$the_id = $him->getIdFromLogin($login);
 
 				if ($the_id && $id != $the_id){
-					$this->displayErrorAndExit("Ce login est déja utilisé", "/admin/users/admin_users.php");
+					$this->displayErrorAndExit("Ce login est dÃ©ja utilisÃ©", "/admin/users/admin_users.php");
 				}
 			}
 		}
@@ -260,16 +260,16 @@ class AdminUserController extends Controller {
 				if ($authority->isInGroup($me->get("authority_group_id"))) {
 					$him->set("authority_id", $authority_id);
 				} else {
-					$this->displayErrorAndExit("La collectivité n'appartient pas au groupe courant",
+					$this->displayErrorAndExit("La collectivitÃ© n'appartient pas au groupe courant",
 						"/admin/users/admin_users.php");
 				}
 			} else {
-				// Un admin de collectivité ne peut créer que des utilisateurs appartenant à sa collectivité
+				// Un admin de collectivitÃ© ne peut crÃ©er que des utilisateurs appartenant Ã  sa collectivitÃ©
 				$him->set("authority_id", $myAuthority->getId());
 			}
 		}
 
-		// Les admins de collectivité et de groupe ne peuvent créer que des administrateurs de collectivité
+		// Les admins de collectivitÃ© et de groupe ne peuvent crÃ©er que des administrateurs de collectivitÃ©
 		// ou des utilisateurs simples
 		if (! $me->isSuper()) {
 			if (strcasecmp($role, 'SADM') == 0 || strcasecmp($role, 'GADM') == 0) {
@@ -285,9 +285,9 @@ class AdminUserController extends Controller {
 
 
 		// Permissions sur les modules
-		// Récupération des modules actifs globalement
+		// RÃ©cupÃ©ration des modules actifs globalement
 		$modules = Module::getActiveModulesList();
-		// Récupération des modules authorisés pour la collectivité
+		// RÃ©cupÃ©ration des modules authorisÃ©s pour la collectivitÃ©
 		$authModules = Module::getModulesForAuthority($him->get("authority_id"));
 
 		$him->resetPerms();
@@ -320,8 +320,8 @@ class AdminUserController extends Controller {
 		}
 
 
-		$msg = ($mod) ? "Modification" : "Création";
-		$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
+		$msg = ($mod) ? "Modification" : "CrÃ©ation";
+		$msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). RÃ©sultat ok.";
 
 		$userSQL = new UserSQL($this->getSQLQuery());
 
@@ -394,7 +394,7 @@ class AdminUserController extends Controller {
 
         $this->user_list = $userSQL->getListFromCertificateInfo($this->user_info['certificate_hash']);
 
-        $this->title = "Utilisateurs partageant le même certificat";
+        $this->title = "Utilisateurs partageant le mÃªme certificat";
 
         $this->status_type_list = $this->me->get("statusTypes");
         $this->roles_type_list = $this->me->get("roleTypes");
@@ -411,7 +411,7 @@ class AdminUserController extends Controller {
 
         $user_id = $this->getRecuperateurPost()->get('user_id');
         if (! $user_id){
-            $this->redirect("/","Aucun identifiant utilisateur n'a été présenté");
+            $this->redirect("/","Aucun identifiant utilisateur n'a Ã©tÃ© prÃ©sentÃ©");
         }
 
         $confirm = $this->getRecuperateurPost()->get('confirm');
@@ -452,7 +452,7 @@ class AdminUserController extends Controller {
             }
         }
 
-        $this->redirect("/admin/users/admin_user_list.php?user_id=$user_id","Certificat mis à jour");
+        $this->redirect("/admin/users/admin_user_list.php?user_id=$user_id","Certificat mis Ã  jour");
     }
 
 }

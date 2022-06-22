@@ -38,9 +38,9 @@ $head = array(
 	"Heure de transmission",
 	"Nom du fichier (.tar.gz.) transmis",
 	"Nom des fichiers contenus dans le fichier .tar.gz. transmis",
-	"SIREN de la collectivité émettrice",
-	"Département de la collectivité",
-	"Arrondissement de la collectivité"
+	"SIREN de la collectivitÃ© Ã©mettrice",
+	"DÃ©partement de la collectivitÃ©",
+	"Arrondissement de la collectivitÃ©"
 );
 
 fputcsv($output_handle, $head);

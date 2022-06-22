@@ -40,7 +40,7 @@ class HeliosReceptionWorker implements IWorker {
 	public function work($data){
         $sigtermHandler = SigTermHandler::getInstance();
 		try {
-			$this->s2lowLogger->info("Début de la récupération");
+			$this->s2lowLogger->info("DÃ©but de la rÃ©cupÃ©ration");
             $this->ftpFileGetter->retrieveNames();
             /* Reception des fichiers*/
             foreach ($this->ftpFileGetter as $file){

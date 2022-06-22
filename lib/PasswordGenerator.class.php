@@ -16,7 +16,7 @@ class PasswordGenerator {
 	
 	public function setSigne($signe){
 		$this->signe = $signe;
-		$this->lengthSigne = strlen($this->signe);	
+		$this->lengthSigne = mb_strlen($this->signe);
 	}
 	
 	public function getPassword(){

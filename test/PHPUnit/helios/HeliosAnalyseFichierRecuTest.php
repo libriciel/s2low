@@ -40,7 +40,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
     public function testAnalyseVide(){
 		$this->analyse();
-		$this->assertEquals("Aucun fichier à analyser",$this->getLogRecords()[1]['message']);
+		$this->assertEquals("Aucun fichier Ã  analyser",$this->getLogRecords()[1]['message']);
 	}
 
 	private function analyse($response_root = null){
@@ -89,7 +89,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         $this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml","/Rep/qui/existe/pas");
         //print_r($this->getLogRecords()[4]['formatted']);
         $this->assertRegExp(
-            '#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/pes_retour.xml annulé : déplacement impossible#i',
+            '#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/pes_retour.xml annulÃ© : dÃ©placement impossible#i',
             $this->getLogRecords()[5]['formatted']
         );
         $this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
@@ -103,12 +103,12 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 	}
 
 	public function testAnalysePesRetourNonAbonne(){
-		//$this->expectOutputRegex("#La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT#");
+		//$this->expectOutputRegex("#La collectivitÃ© 66920145100015 n'est pas abonnÃ©e Ã  l'application ComptabilitÃ© Publique du TdT#");
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour_nonabonne.xml");
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour_nonabonne.xml"));
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"[ERREUR] La collectivité 66920145100015 n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ",
+			"[ERREUR] La collectivitÃ© 66920145100015 n'est pas abonnÃ©e Ã  l'application ComptabilitÃ© Publique du TdT, elle n'est donc pas autorisÃ©e Ã  recevoir le PES_Retour ",
 			$logs_records[4]['message']
 		);
 
@@ -122,7 +122,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         $this->assertTrue(file_exists($this->helios_responses_error_path."/pes_retour_nonabonne.xml.1"));
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"[WARNING] Le fichier pes_retour_nonabonne.xml existe déjà dans le répertoire des fichiers en erreur : renommé en *.1",
+			"[WARNING] Le fichier pes_retour_nonabonne.xml existe dÃ©jÃ  dans le rÃ©pertoire des fichiers en erreur : renommÃ© en *.1",
 			$logs_records[5]['message']
 		);
 	}
@@ -135,7 +135,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->assertFalse(file_exists($this->helios_response_root."/pes_retour.xml"));
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"[ERREUR] Le SIRET 12345678900035 est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué",
+			"[ERREUR] Le SIRET 12345678900035 est associÃ© Ã  plusieurs collectivitÃ©s. Le PES_Retour n'est donc pas attribuÃ©",
 			$logs_records[4]['message']
 		);
 	}
@@ -162,7 +162,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->analyse();
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"[ERREUR] L'identificant NomFic pescg291201703030412001 n'est associé à aucune transaction dans la base de données",
+			"[ERREUR] L'identificant NomFic pescg291201703030412001 n'est associÃ© Ã  aucune transaction dans la base de donnÃ©es",
 			$logs_records[4]['message']
 		);
 	}
@@ -196,7 +196,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         $this->analyse("/repertoire/Non/Existant");
         $logs_records = $this->getLogRecords();
         $this->assertRegExp(
-            "#Traitement.*/helios_ftp_response_tmp_local_path/pes_acquit.xml annulé : déplacement impossible#i",
+            "#Traitement.*/helios_ftp_response_tmp_local_path/pes_acquit.xml annulÃ© : dÃ©placement impossible#i",
             $logs_records[7]['message']
         );
         $this->assertFalse(file_exists($this->helios_response_root."/pes_acquit.xml"));
@@ -302,7 +302,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		);
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"Transaction $transaction_id : erreur retournée par Helios",
+			"Transaction $transaction_id : erreur retournÃ©e par Helios",
 			$logs_records[4]['message']
 		);
 	}
@@ -326,7 +326,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         );
         $logs_records = $this->getLogRecords();
         $this->assertRegExp(
-        "#Trai.*/helios_ftp_response_tmp_local_path//pes_acquit_not_valid.xml annulé : déplacement impossible#i",
+        "#Trai.*/helios_ftp_response_tmp_local_path//pes_acquit_not_valid.xml annulÃ© : dÃ©placement impossible#i",
             $logs_records[6]['message']
         );
 
@@ -351,7 +351,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         );
 		$logs_records = $this->getLogRecords();
 		$this->assertEquals(
-			"Transaction $transaction_id : erreur retournée par Helios",
+			"Transaction $transaction_id : erreur retournÃ©e par Helios",
 			$logs_records[4]['message']
 		);
 

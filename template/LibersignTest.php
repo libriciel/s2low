@@ -26,7 +26,7 @@
 				signatureInformations: siginfos
 			}).on('libersign.sign', function (event, signatures) {
 
-				// Les signatures sont l‡
+				// Les signatures sont l√†
 				console.log(signatures);
 				$("#libersign_result").html("Signature : " + JSON.stringify(signatures));
 				$("#box_signature").hide();
@@ -44,6 +44,6 @@
 </div>
 
 <div id='box_result' class='box' style="word-wrap: break-word; max-width: 920px;">
-	<h2>RÈsultat de la signature</h2>
+	<h2>R√©sultat de la signature</h2>
 	<div id="libersign_result"></div>
 </div>

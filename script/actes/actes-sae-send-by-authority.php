@@ -6,7 +6,7 @@ require_once( __DIR__."/../../init/init.php");
 
 if ($argc < 2){
     echo "Usage {$argv[0]} authority_id\n";
-    echo "{$argv[0]} : permet d'envoyer au SAE toutes les transactions dont on a préparé l'envoi pour une collectivité\n";
+    echo "{$argv[0]} : permet d'envoyer au SAE toutes les transactions dont on a prÃ©parÃ© l'envoi pour une collectivitÃ©\n";
     exit(-1);
 }
 
@@ -22,7 +22,7 @@ $transaction_list = $actesTransactionsSQL->getListByStatusAndAuthority(ActesStat
 
 $actesVerifSAEWorker = $objectInstancier->get(ActesEnvoiSaeWorker::class);
 
-echo count($transaction_list). " transactions à envoyer\n";
+echo count($transaction_list). " transactions Ã  envoyer\n";
 foreach($transaction_list as $transaction_info){
     $actesVerifSAEWorker->work($transaction_info['id']);
 }

@@ -54,7 +54,7 @@ class FTPHeliosReceiver implements Iterator {
 	private function isPesAller($filename){
         $isPesAller = preg_match("#^PESALR2_#",basename($filename));
         if($isPesAller){
-            $this->s2lowLogger->info("$filename : PES ALLER ignorÈ");
+            $this->s2lowLogger->info("$filename : PES ALLER ignor√©");
         }
         return $isPesAller;
     }
@@ -82,7 +82,7 @@ class FTPHeliosReceiver implements Iterator {
     private function recupOneFile($file, $i): void
     {
         $ftp_get_result = $this->FTPService->retrieveFile($file, $this->localPath);
-        $this->s2lowLogger->info($i . " : " . $file . " rÈcupÈrÈ : " . ($ftp_get_result ? "SUCCES" : "ECHEC")) ;
+        $this->s2lowLogger->info($i . " : " . $file . " r√©cup√©r√© : " . ($ftp_get_result ? "SUCCES" : "ECHEC")) ;
     }
 
     public function finTraitement()

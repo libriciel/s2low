@@ -15,13 +15,13 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -30,7 +30,7 @@ $doc = new HTMLLayout();
 $win = new ActesTransmissionWindow();
 $windows = $win->getWindowsList();
 
-$doc->setTitle("Gestion des fenêtres module ACTES");
+$doc->setTitle("Gestion des fenÃªtres module ACTES");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -40,19 +40,19 @@ $doc->closeSideBar();
 $doc->openContent();
 
 
-$html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
+$html .= "<h1>Gestion des fenÃªtres de transmission</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n";
-$html .= "<h2>Liste des fenêtres existantes</h2>\n";
+$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenÃªtre</a>\n";
+$html .= "<h2>Liste des fenÃªtres existantes</h2>\n";
 
 if (count($windows) > 0) {
   $html .= "<table class=\"data-table table table-striped\" summary=\"\">";
   $html .= "<thead>\n";
   $html .= "<tr>\n";
-  $html .= " <th id=\"number\">Numéro</th>\n";
-  $html .= " <th id=\"start-date\">Début</th>\n";
+  $html .= " <th id=\"number\">NumÃ©ro</th>\n";
+  $html .= " <th id=\"start-date\">DÃ©but</th>\n";
   $html .= " <th id=\"end-date\">Fin</th>\n";
-  $html .= " <th id=\"rate\">Débit horaire</th>\n";
+  $html .= " <th id=\"rate\">DÃ©bit horaire</th>\n";
   $html .= " <th class=\"data\">Actions</th>\n";
   $html .= "</tr>\n";
   $html .= "</thead>\n";
@@ -73,7 +73,7 @@ if (count($windows) > 0) {
   $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
-  $html .= "Pas de fenêtre de transmission définie.";
+  $html .= "Pas de fenÃªtre de transmission dÃ©finie.";
 }
 
 

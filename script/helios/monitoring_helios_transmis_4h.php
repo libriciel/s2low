@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier que le plus vieux vlux à l'état transmis
+//Script charge de verifier que le plus vieux vlux Ã  l'Ã©tat transmis
 //n'a pas plus de 4h
 
 //RETOURNE 0 si tout va bien

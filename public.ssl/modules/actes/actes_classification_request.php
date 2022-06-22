@@ -13,15 +13,15 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive()|| ! $me->checkDroit($module->get("name"),'TT')) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-  Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+  Helpers::returnAndExit(1, "Mode Â« papier Â» actif. AccÃ¨s interdit.", WEBSITE_SSL . "/modules/actes/");
 }
 
 $myAuthority = new Authority($me->get("authority_id"));

@@ -8,18 +8,16 @@ function get_url_same_page(array $params) {
 	$url = $_SERVER["PHP_SELF"] . "?" . http_build_query($args);
 	return $url;
 }
-	
 
-
-function utf8_encode_array($array){
-	if (! is_array($array)){
-		return utf8_encode($array ?? ''); // Quickfix migration PHP 8.0
-	}
-	$result = array();
-	foreach ($array as $cle => $value) {
-		$result[utf8_encode($cle)] = utf8_encode_array($value);
-	}
-	return $result;
+function legacy_encode_array($array){             // migration UTF-8 : utilisé pour garder le même comportement de l'API
+    if (! is_array($array)){
+        return  (string) $array ?? '';
+    }
+    $result = array();
+    foreach ($array as $cle => $value) {
+        $result[ (string) $cle] = legacy_encode_array($value);
+    }
+    return $result;
 }
 
 

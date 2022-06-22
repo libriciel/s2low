@@ -4,7 +4,7 @@ use malkusch\lock\mutex\PHPRedisMutex;
 
 class RedisMutexWrapper {
 
-	/** @var int on mets 2* le TTR de la réponse beanstalked */
+	/** @var int on mets 2* le TTR de la rÃ©ponse beanstalked */
 	const DEFAULT_TIMEOUT = 120;
 
 	private $redis_mode;

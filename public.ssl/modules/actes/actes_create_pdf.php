@@ -9,7 +9,7 @@ require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.ph
 $id = Helpers :: getVarFromGet("trans_id");
 
 if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
@@ -27,13 +27,13 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -57,11 +57,11 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
 
-//passer les paramètre
+//passer les paramÃ¨tre
 $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
 $bordereauPdfGenerator->generate($id,"acquittement.pdf",false);

@@ -55,11 +55,11 @@ class DataForBordereauPDF
         return [
             ["Type de transaction :",$this->typeDeTransaction],
             ["Nature de l'acte :",$this->nature_description],
-            ["Numéro de l'acte :",$this->numeroActe],
-            ["Date de la décision :",$this->dateDecision],
+            ["NumÃ©ro de l'acte :",$this->numeroActe],
+            ["Date de la dÃ©cision :",$this->dateDecision],
             ["Objet :",$this->objet],
-            ["Documents papiers complémentaires :",$this->presenceDocPapier],
-            ["Classification matières/sous-matières :",$this->classification],
+            ["Documents papiers complÃ©mentaires :",$this->presenceDocPapier],
+            ["Classification matiÃ¨res/sous-matiÃ¨res :",$this->classification],
             ["Identifiant unique :",$this->idUnique],
             ["URL d'archivage :",$this->arch_url],
             ["Notification :",$this->getNotifieA()]
@@ -90,7 +90,7 @@ class DataForBordereauPDF
 
     public function setCycleVieTransaction($workflow, $status)
     {
-        //traiter des requêtes
+        //traiter des requÃªtes
         $cycle_table=[];
         foreach ($workflow as $stage) {
             $cycle_table[] = [
@@ -111,9 +111,9 @@ class DataForBordereauPDF
      */
     private function getNotifieA(){
         if (($this->broadcasted == 't') || ($this->addEmailNotificationField && $this->broadcastEmails) ) {
-            return "Notifiée à " . $this->broadcastEmails;
+            return "NotifiÃ©e Ã  " . $this->broadcastEmails;
         }
-        return "Non notifiée";
+        return "Non notifiÃ©e";
     }
 
     public function setClassification($classification,$classificationString){
@@ -138,7 +138,7 @@ class DataForBordereauPDF
             $transactionComplement["classification_string"]
         );
 
-        $this->arch_url = $transactionComplement["archive_url"] ? : "Non définie";;
+        $this->arch_url = $transactionComplement["archive_url"] ? : "Non dÃ©finie";;
 
         $this->typeDeTransaction = $transactionComplement["type_str"];
 

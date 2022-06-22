@@ -26,7 +26,7 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
 	}
 
 	public function testgetUnusedSiren(){
-		//Les deux SIREN suivant sont déjà utilisé par les collectivités de test
+		//Les deux SIREN suivant sont dÃ©jÃ  utilisÃ© par les collectivitÃ©s de test
 		$this->authorityGroupSirenSQL->add(1,"123456789");
 		$this->authorityGroupSirenSQL->add(1,"999999999");
 		$this->authorityGroupSirenSQL->add(1,"000000000");
@@ -35,7 +35,7 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
 	}
 
 	public function testGetUnusedSirenUsedInAnotherGroup(){
-		$this->authorityGroupSirenSQL->add(2,"123456789"); //Utilisé par la collectivité 1 du groupe 1
+		$this->authorityGroupSirenSQL->add(2,"123456789"); //UtilisÃ© par la collectivitÃ© 1 du groupe 1
 		$this->authorityGroupSirenSQL->add(2,"000000000");
 
 		$list = $this->authorityGroupSirenSQL->getUnusedSiren(2);

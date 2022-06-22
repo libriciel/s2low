@@ -61,7 +61,7 @@ class ActesClassificationCreation {
 
 			$authorityObject = new Authority($authority['id']);
 			if (! $authorityObject->isActive()) {
-				echo "[PASS] collectivité inactive\n";
+				echo "[PASS] collectivitÃ© inactive\n";
 				continue;
             }
             if (! $authorityObject->getModulePermByName('actes')) {
@@ -85,23 +85,23 @@ class ActesClassificationCreation {
 		if (! $user){
 			$result = $this->setDefaultUser();
 			if (!$result){
-				$this->lastMessage = "La collectivité ne contient pas d'utilisateur";
+				$this->lastMessage = "La collectivitÃ© ne contient pas d'utilisateur";
 				return false;
 			}
 		} 
 		
 		if ($this->frequencyRestriction && ActesClassification::hasTodayRequest($this->authority->getId())){
-			$this->lastMessage =  "La dernière demande de classification date de moins d'un jour.";
+			$this->lastMessage =  "La derniÃ¨re demande de classification date de moins d'un jour.";
 			return false;
 		}
 		
 		$env = $this->initEnveloppe();
 		$trans = $this->initTransaction($force);
 		
-		// Génération du fichier XML de la transaction
+		// GÃ©nÃ©ration du fichier XML de la transaction
 		$xml_name = $trans->getStdFileName($env, false);
 		if (! $trans->generateMessageXMLFile($xml_name)) {
-			$this->lastMessage = "Erreur lors de la génération du message métier :\n" . $trans->getErrorMsg();
+			$this->lastMessage = "Erreur lors de la gÃ©nÃ©ration du message mÃ©tier :\n" . $trans->getErrorMsg();
 			return false;
 		}
 		
@@ -111,19 +111,19 @@ class ActesClassificationCreation {
 		$actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
 		$serialNumber = $actesEnvelopeSerial->getNext($authority->getId());
 
-		// Génération du fichier XML de l'enveloppe
+		// GÃ©nÃ©ration du fichier XML de l'enveloppe
 		if (! $env->generateEnvelopeXMLFile($serialNumber)) {
-			$this->lastMessage = "Erreur lors de la génération de l'enveloppe.";
+			$this->lastMessage = "Erreur lors de la gÃ©nÃ©ration de l'enveloppe.";
 			return false;
 		}
 		
-		// Création de l'archive .tar.gz
+		// CrÃ©ation de l'archive .tar.gz
 		if (! $env->generateArchiveFile()) {
-			$this->lastMessage = "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg();
+			$this->lastMessage = "Erreur lors de la gÃ©nÃ©ration de l'archive.\n" . $env->getErrorMsg();
 			return false;
 		}
 		
-		// Purge des fichiers intermédiaires
+		// Purge des fichiers intermÃ©diaires
 		$env->purgeFiles();
 		$result = $env->save();
 		if (! $result) {
@@ -150,11 +150,11 @@ class ActesClassificationCreation {
 			$trans->delete();
 			$env->deleteArchiveFile();
 			$env->delete();
-			$this->lastMessage = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg();
+			$this->lastMessage = "Erreur lors de l'enregistrement de la requÃªte de classification.\n" . $classifRequest->getErrorMsg();
 			return false;
 	  	}
 		
-		$this->lastMessage = "Création de l'enveloppe n°" . $env->getId() . " contenant une demande de classification. Résultat OK.";
+		$this->lastMessage = "CrÃ©ation de l'enveloppe nÂ°" . $env->getId() . " contenant une demande de classification. RÃ©sultat OK.";
 		$this->logLastMessage(1);
 
 		$objectInstancier = ObjectInstancierFactory::getObjetInstancier();

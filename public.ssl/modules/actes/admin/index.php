@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
 
 if (! $droit->isSuperAdmin($userInfo)){
-    $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
+    $objectInstancier->get('S2lowRedirect')->redirect("/","AccÃ¨s refusÃ©");
 }
 
 
@@ -21,12 +21,12 @@ $doc->openContent();
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Utilitaires - ACTES</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('export_area');\">Export liste transactions</h2>\n";
-$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyées au ministère&nbsp;:<br />";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_transac_export.php\">Télécharger le fichier</a></p>\n";
-$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('window_area');\">Gestion des fenêtres de transmission</h2>\n";
+$html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyÃ©es au ministÃ¨re&nbsp;:<br />";
+$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_transac_export.php\">TÃ©lÃ©charger le fichier</a></p>\n";
+$html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('window_area');\">Gestion des fenÃªtres de transmission</h2>\n";
 $html .= "<p id=\"window_area\" style=\"display: block;\">\n";
-$html .= "La transmission des données vers le serveur du ministère se fait par défaut à tout moment de la journée sans limitation de volume. Il est cependant possible de définir des fenêtres horaires où le volume de transmission autorisé sera limité à une certaine taille ou tout simplement nul.<br />\n";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php\">Accéder à l'interface de définition des fenêtres</a></p>\n";
+$html .= "La transmission des donnÃ©es vers le serveur du ministÃ¨re se fait par dÃ©faut Ã  tout moment de la journÃ©e sans limitation de volume. Il est cependant possible de dÃ©finir des fenÃªtres horaires oÃ¹ le volume de transmission autorisÃ© sera limitÃ© Ã  une certaine taille ou tout simplement nul.<br />\n";
+$html .= "<a style=\"margin-left: 10px\" href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php\">AccÃ©der Ã  l'interface de dÃ©finition des fenÃªtres</a></p>\n";
 
 ob_start();
 

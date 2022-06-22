@@ -6,13 +6,13 @@ require_once (SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit ();
 }
 
 if (!$me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit ();
 }
@@ -30,7 +30,7 @@ if (isset ($id) && !empty ($id)) {
 }
 
 if (! $mod) {
-  $_SESSION["error"] = "Pas d'identifiant de module spécifié.";
+  $_SESSION["error"] = "Pas d'identifiant de module spÃ©cifiÃ©.";
   header("Location: " . WEBSITE_SSL . "/admin/modules/admin_modules.php");
   exit();
 }
@@ -63,7 +63,7 @@ $html .= "  <td class=\"td-register\">Description&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\">" . get_hecho($zeModule->get("description")) . "</td>\n";
 $html .= " </tr>\n";
 $html .= " <tr>\n";
-$html .= "  <td class=\"td-register\">État&nbsp;:</td>\n";
+$html .= "  <td class=\"td-register\">Ã‰tat&nbsp;:</td>\n";
 $html .= "  <td class=\"td-input\">\n";
 
 $html .= $doc->getHTMLSelect("status", $zeModule->get("statusTypes"), $zeModule->get("status"));
@@ -73,11 +73,11 @@ $html .= " </tr>\n";
 $html .= "</table>\n";
 $html .= "</div>\n";
 
-//! On récupère la liste des paramètres du modules dans le tableau module_params
+//! On rÃ©cupÃ¨re la liste des paramÃ¨tres du modules dans le tableau module_params
 $module_params = $zeModule->getModuleParams();
  $tr_style = "alternate1";
 if (count($module_params)>0) {
-  //! Le module a un ou plusieurs paramètres, on affiche la table des paramètres
+  //! Le module a un ou plusieurs paramÃ¨tres, on affiche la table des paramÃ¨tres
  
 
   $html .= "<h2>Modification/Suppression des param&egrave;tres</h2>\n";

@@ -13,7 +13,7 @@ class PemCertificateTest extends S2lowTestCase
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validité du certificat .*? - .*?/");
+        $this->expectExceptionMessageMatches("/La date de la signature .*? n'entre pas dans la date de validitÃ© du certificat .*? - .*?/");
         $certificate->checkCertificateIsValidAtDate(new DateTime());
     }
 

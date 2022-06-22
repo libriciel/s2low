@@ -1,48 +1,48 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡ la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √† la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
- * dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡ 
- * manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
- * logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
+ * d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
+ * manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
+ * logiciel √† leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 /**
  * \class ActesBatchFile ActesBatchFile.class.php
- * \brief Cette classe permet de gÈrer les fichiers contenus dans les lots de transactions ACTES
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Cette classe permet de g√©rer les fichiers contenus dans les lots de transactions ACTES
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 08.02.2007
  * 
  *
- * Cette classe fournit des mÈthodes de gestion des fichiers contenus dans les lots de transactions
+ * Cette classe fournit des m√©thodes de gestion des fichiers contenus dans les lots de transactions
  * Actes
  *
  * Modifications :
@@ -71,14 +71,14 @@ class ActesBatchFile extends DataObject {
 							  "transaction_id" => array( "descr" => "Transaction issu du fichier", "type" => "isInt", "mandatory" => false),
 							  "filename" => array( "descr" => "Nom du fichier sur le serveur", "type" => "isString", "mandatory" => true),
 							  "filesize" => array( "descr" => "Taille du fichier", "type" => "isInt", "mandatory" => true),
-							  "signature" => array( "descr" => "Signature Èlectronique du fichier", "type" => "isString", "mandatory" => false),
+							  "signature" => array( "descr" => "Signature √©lectronique du fichier", "type" => "isString", "mandatory" => false),
 							  "status" => array( "descr" => "Statut du fichier", "type" => "isString", "mandatory" => true)
 							  );
 
 
 	/**
 	 * ActesBatchFile constructor.
-	 * @param bool|int $id NumÈro d'identifiant d'un fichier de lot existant avec lequel initialiser l'objet
+	 * @param bool|int $id Num√©ro d'identifiant d'un fichier de lot existant avec lequel initialiser l'objet
 	 */
   public function __construct($id = false) {
 	parent::__construct($id);
@@ -91,8 +91,8 @@ class ActesBatchFile extends DataObject {
   }
 
   /**
-   * \brief DÈtermination si un fichier est dÈj‡ traitÈ ou pas
-   * \return True si le fichier est traitÈ, false sinon
+   * \brief D√©termination si un fichier est d√©j√† trait√© ou pas
+   * \return True si le fichier est trait√©, false sinon
    */
   public function isProcessed() {
 	if (strcmp($this->status, 'PRO') == 0) {
@@ -103,22 +103,22 @@ class ActesBatchFile extends DataObject {
   }
 
   /**
-   * \brief Positionnement du statut sur "Non traitÈ"
+   * \brief Positionnement du statut sur "Non trait√©"
    */
   public function setUnprocessed() {
 	$this->status = 'UNPRO';
   }
 
   /**
-   * \brief Positionnement du statut sur "TraitÈ"
+   * \brief Positionnement du statut sur "Trait√©"
    */
   public function setProcessed() {
 	$this->status = 'PRO';
   }
 
   /**
-   * \brief MÈthode d'obtention du chemin absolu vers le fichier
-   * \return Chemin du fichier sous forme de chaÓne
+   * \brief M√©thode d'obtention du chemin absolu vers le fichier
+   * \return Chemin du fichier sous forme de cha√Æne
    */
   public function getAbsoluteFilePath() {
 	if (! empty($this->filename)) {
@@ -129,7 +129,7 @@ class ActesBatchFile extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention du nom de base du fichier
+   * \brief M√©thode d'obtention du nom de base du fichier
    * \return Nom de base du fichier
    */
   public function getDisplayName() {
@@ -137,8 +137,8 @@ class ActesBatchFile extends DataObject {
   }
 
   /**
-   * \brief Mise en place du fichier dans le rÈpertoire de stockage du lot
-   * \return True en cas de succËs, false sinon
+   * \brief Mise en place du fichier dans le r√©pertoire de stockage du lot
+   * \return True en cas de succ√®s, false sinon
    */
   public function putTempFileInStorageDir() {
 	if (! move_uploaded_file($this->tmpFile, $this->getAbsoluteFilePath())) {
@@ -150,7 +150,7 @@ class ActesBatchFile extends DataObject {
 
   /**
    * \brief Suppression physique du fichier du lot
-   * \return True en cas de succËs, false sinon
+   * \return True en cas de succ√®s, false sinon
    */
   public function deleteFile() {
 	return Helpers::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->filename);
@@ -158,15 +158,15 @@ class ActesBatchFile extends DataObject {
 
 
 	/**
-	 * MÈthode d'enregistrement d'un lot dans la base de donnÈes // EP - 2018-10-17 : non visiblement ca a pas l'air d'Ítre Áa...
-	 * @param bool $validate Demande la validation ou non des donnÈes de l'entitÈ avant enregistrement (true par dÈfaut)
-	 * @param bool $return_rather_than_exec - pas utilisÈ, juste pour assurer la compatibilitÈ avec la fonction de la classe mËre
-	 * @return bool|string true si succËs, false sinon
+	 * M√©thode d'enregistrement d'un lot dans la base de donn√©es // EP - 2018-10-17 : non visiblement ca a pas l'air d'√™tre √ßa...
+	 * @param bool $validate Demande la validation ou non des donn√©es de l'entit√© avant enregistrement (true par d√©faut)
+	 * @param bool $return_rather_than_exec - pas utilis√©, juste pour assurer la compatibilit√© avec la fonction de la classe m√®re
+	 * @return bool|string true si succ√®s, false sinon
 	 */
   public function save($validate = true,$return_rather_than_exec = false) {
 	if ($this->isNew()) {
 	  if (empty($this->storage_dir) || empty($this->tmpFile) || empty($this->tmpName)) {
-		$this->errorMsg = "Informations manquantes pour la crÈation du fichier de lot.";
+		$this->errorMsg = "Informations manquantes pour la cr√©ation du fichier de lot.";
 		return false;
 	  }
 
@@ -178,7 +178,7 @@ class ActesBatchFile extends DataObject {
 	  }
 
 	  if (! $this->filesize = @filesize($this->getAbsoluteFilePath())) {
-		$this->errorMsg = "Erreur dÈtermination taille fichier.";
+		$this->errorMsg = "Erreur d√©termination taille fichier.";
 		return false;
 	  }
 	}
@@ -191,9 +191,9 @@ class ActesBatchFile extends DataObject {
   }
 
 	/**
-	 * MÈthode de suppression d'un fichier de lot
-	 * @param bool $id - Pas utilisÈ, uniquemnet pour la compatibilitÈ
-	 * @return bool true si succËs, false sinon
+	 * M√©thode de suppression d'un fichier de lot
+	 * @param bool $id - Pas utilis√©, uniquemnet pour la compatibilit√©
+	 * @return bool true si succ√®s, false sinon
 	 */
   public function delete($id=false) {
 	if (! $this->deleteFile()) {
@@ -208,8 +208,8 @@ class ActesBatchFile extends DataObject {
   }
 
   /**
-   * \brief MÈthode qui renvoie le fichier au navigateur
-   * \return True en cas de succËs, false sinon
+   * \brief M√©thode qui renvoie le fichier au navigateur
+   * \return True en cas de succ√®s, false sinon
    */
   public function sendFile() {
 	$ret_value = false;
@@ -231,12 +231,12 @@ class ActesBatchFile extends DataObject {
 
 
   /**********************/
-  /* MÈthodes statiques */
+  /* M√©thodes statiques */
   /**********************/
 
 	/**
-	 * RÈcupÈration des id des fichiers associÈs ‡ un lot
-	 * @param int $id NumÈro d'identifiant du lot
+	 * R√©cup√©ration des id des fichiers associ√©s √† un lot
+	 * @param int $id Num√©ro d'identifiant du lot
 	 * @return array Un tableau contenant les id des fichiers
 	 * @throws Exception
 	 */

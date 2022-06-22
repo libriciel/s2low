@@ -25,13 +25,13 @@ class ActesUpdateClassificationSQL extends SQL{
     private function updateClassificationThrow($siren,$fichier_xml){
         $authority_id = $this->authoritySQL->getIdBySIREN($siren);
         if (! $authority_id){
-            throw new Exception("Aucune collectivité ne correspond au SIREN $siren");
+            throw new Exception("Aucune collectivitÃ© ne correspond au SIREN $siren");
         }
         $actesXSD = new \Libriciel\LibActes\ActesXSD();
 
         $xml = $actesXSD->getSimpleXMLForActesContent($fichier_xml);
         if($xml->getName() != 'RetourClassification'){
-            throw new Exception("Le message n'est pas un retour de classification: {$xml->getName()} trouvé.");
+            throw new Exception("Le message n'est pas un retour de classification: {$xml->getName()} trouvÃ©.");
         };
 
         $date_classification =  strval($xml->xpath("/actes:RetourClassification/actes:DateClassification")[0]);
@@ -46,21 +46,21 @@ class ActesUpdateClassificationSQL extends SQL{
         foreach($actes_nature_list as $actes_nature){
             $codeNatureActe =  strval($actes_nature->xpath('@actes:CodeNatureActe')[0]);
             $typeAbrege = strval($actes_nature->xpath('@actes:TypeAbrege')[0]);
-            $libelle = utf8_decode(strval($actes_nature->xpath('@actes:Libelle')[0]));
+            $libelle = strval($actes_nature->xpath('@actes:Libelle')[0]);
             $this->insertActeNature($codeNatureActe,$typeAbrege, $libelle);
         }
         $this->updateCodePJ($xml);
 
 
         $this->deleteClassification($authority_id);
-        $matiere = $xml->xpath("/actes:RetourClassification/actes:Matieres")[0];
+        $matiere = $xml->xpath("/actes:RetourClassification/actes:Matieres")[0];;
         $this->ajoutMatieres($matiere,null,1,$authority_id);
     }
 
     private function updateCodePJ(SimpleXMLElement $xml){
         foreach( $xml->xpath("//actes:TypePJNatureActe") as $type_pj){
             $code = strval($type_pj->xpath("@actes:CodeTypePJ")[0]);
-            $libelle = utf8_decode(strval($type_pj->xpath("@actes:Libelle")[0]));
+            $libelle = strval($type_pj->xpath("@actes:Libelle")[0]);
             $nature_id = strval($type_pj->xpath("parent::actes:NatureActe/@actes:CodeNatureActe")[0]);
             $this->insertActeTypePJ($nature_id,$code,$libelle);
         }
@@ -71,7 +71,7 @@ class ActesUpdateClassificationSQL extends SQL{
         /** @var SimpleXMLElement $matiere_children */
         foreach($matiere->children(ActesXSD::ACTES_NAMESPACE) as $matiere_children){
 			$code = intval($matiere_children->attributes(ActesXSD::ACTES_NAMESPACE)->{'CodeMatiere'});
-            $libelle = utf8_decode(strval($matiere_children->attributes(ActesXSD::ACTES_NAMESPACE)->{'Libelle'}));
+            $libelle = strval($matiere_children->attributes(ActesXSD::ACTES_NAMESPACE)->{'Libelle'});
 
 			$new_parent_id = $this->insertClassification($level, $code, $parent_id, $libelle,$authority_id);
 			$this->ajoutMatieres($matiere_children,$new_parent_id,$level + 1,$authority_id);
@@ -94,13 +94,30 @@ class ActesUpdateClassificationSQL extends SQL{
         $sql = "UPDATE actes_classification_requests SET version_date = ?, xml_data = ? " .
                 " WHERE version_date IS NULL AND requested_by IN ( SELECT users.id FROM  users, authorities" .
                 " WHERE users.authority_id = authorities.id AND authorities.siren = ? )";
-        $this->query($sql,$date_classification,$xml_data,$siren);
+        $pdo = $this->getSQLQuery()->getPdo();
+        $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
+        $stmt->bindParam(1,$date_classification);
+        $stmt->bindParam(2,$xml_data,PDO::PARAM_LOB);
+        $stmt->bindParam(3,$siren);
+        //$pdo->beginTransaction();
+        $stmt->execute();
+        //$pdo->commit();
+        //$this->query($sql,$date_classification,$xml_data,$siren);
     }
 
     public function getClassification($siren){
         $sql = "SELECT xml_data FROM actes_classification_requests WHERE requested_by IN ( SELECT users.id FROM  users, authorities" .
             " WHERE users.authority_id = authorities.id AND authorities.siren = ? ) ORDER BY version_date LIMIT 1";
-        return $this->queryOne($sql,$siren);
+
+        $pdo = $this->getSQLQuery()->getPdo();
+        $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
+        $stmt->execute([$siren]);
+        $stmt->bindColumn(1,$xml_data,PDO::PARAM_LOB);
+        $stmt->fetch(PDO::FETCH_BOUND);
+        $contents = stream_get_contents($xml_data);
+        fclose($xml_data);
+        return $contents;
+        //return $this->queryOne($sql,$siren);
     }
 
     public function deleteActeNature() {

@@ -8,7 +8,7 @@ class RgsCertificate {
 
 	/**
 	 * @param $openssl_path string chemin vers l'executable OpenSSL
-	 * @param $validca_path string chemin vers un répertoire contenant des autorités de certification "hasher" : man c_rehash
+	 * @param $validca_path string chemin vers un rÃ©pertoire contenant des autoritÃ©s de certification "hasher" : man c_rehash
 	 */
 	public function __construct($openssl_path,$validca_path){
 		$this->validca_path = $validca_path;
@@ -20,8 +20,8 @@ class RgsCertificate {
 	}
 
     /**
-     * @param string $x509_pem_certificate string contenant le certificat à tester
-     * @param string|null $clientCertChain string contenant les certificats intermédiaire et racine
+     * @param string $x509_pem_certificate string contenant le certificat Ã  tester
+     * @param string|null $clientCertChain string contenant les certificats intermÃ©diaire et racine
      * @return bool
      * @throws Exception
      */
@@ -46,7 +46,7 @@ class RgsCertificate {
             $command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} {$tmp_cert} 2>&1";
         }
 
-		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
+		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vÃ©rification d'un certificat
 
 		exec($command,$output,$return_var);
 

@@ -75,7 +75,7 @@ CREATE TABLE actes_classification_requests (
     request_date timestamp with time zone,
     requested_by integer,
     version_date timestamp with time zone,
-    xml_data text
+    xml_data bytea
 );
 CREATE TABLE actes_envelopes (
     id integer DEFAULT nextval('actes_envelopes_id_seq'::regclass) NOT NULL,

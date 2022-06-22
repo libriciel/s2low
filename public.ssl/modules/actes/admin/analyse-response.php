@@ -33,7 +33,7 @@ $message = ob_get_contents();
 ob_end_clean();
 
 if (!$message){
-    $message = "Le fichier a été analysé";
+    $message = "Le fichier a Ã©tÃ© analysÃ©";
 }
 
 $_SESSION['error'] .= "<br/>".nl2br($message);

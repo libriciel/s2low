@@ -32,7 +32,7 @@ class ActesScriptHelper {
 
         return
             sprintf(
-                "[%s] Transaction %s (%d) : %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                "[%s] Transaction %s (%d) : %s. NumÃ©ro SIREN de la collectivitÃ© : %s. Type de transaction: %d",
                 $this->actes_appli_trigramme,
                 $info['unique_id']?:$this->actesTransactionsSQL->guessUniqueId($transactions_id),
                 $transactions_id,
@@ -51,7 +51,7 @@ class ActesScriptHelper {
 
             $message_log =
                 sprintf(
-                    "[%s] Transaction %s (%d) : passage à l'état %s. Numéro SIREN de la collectivité : %s. Type de transaction: %d",
+                    "[%s] Transaction %s (%d) : passage Ã  l'Ã©tat %s. NumÃ©ro SIREN de la collectivitÃ© : %s. Type de transaction: %d",
                     $this->actes_appli_trigramme,
                     $info['unique_id']?:$this->actesTransactionsSQL->guessUniqueId($transactions_id),
                     $transactions_id,
@@ -67,7 +67,7 @@ class ActesScriptHelper {
 
     public function getStatusName($status_id){
         $status_list = array(
-            -1 => 'erreur', 'annulé', 'posté', 'en attente','transmis','acquittement reçu', 7=>'document reçu','acquittement envoyé', 21=>"document reçu (pas d'AR)"
+            -1 => 'erreur', 'annulÃ©', 'postÃ©', 'en attente','transmis','acquittement reÃ§u', 7=>'document reÃ§u','acquittement envoyÃ©', 21=>"document reÃ§u (pas d'AR)"
         );
         return $status_list[$status_id];
     }

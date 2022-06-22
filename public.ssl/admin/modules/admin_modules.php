@@ -7,7 +7,7 @@ $api = Helpers::getVarFromGet("api");
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
@@ -23,7 +23,7 @@ if($me->isGroupAdminOrSuper() && $api){
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -47,7 +47,7 @@ $html .= "<thead>\n";
 $html .= "<tr>\n";
 $html .= " <th id=\"name\">Nom</th>\n";
 $html .= " <th id=\"description\">Description</th>\n";
-$html .= " <th id=\"status\">État</th>\n";
+$html .= " <th id=\"status\">Ã‰tat</th>\n";
 $html .= " <th id=\"actions\">Actions</th>\n";
 $html .= "</tr>\n";
 $html .= "</thead>\n";

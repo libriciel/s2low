@@ -21,7 +21,7 @@ class ActesTypePJSQL extends SQL {
 
 			$to_add = [];
 			foreach ($typologie_list as $code => $libelle){
-				if (substr($code,0,3)=='99_'){
+				if (mb_substr($code,0,3)=='99_'){
 					unset($result[$nature][$code]);
 					$to_add[$code] = $libelle;
 				}
@@ -64,7 +64,7 @@ class ActesTypePJSQL extends SQL {
     public function getAllDefaultNature(){
         $result = array();
         foreach($this->getAll() as $type){
-            if (substr($type['code'],0,2) == '99') {
+            if (mb_substr($type['code'],0,2) == '99') {
                 $result[$type['nature_id']][$type['code']] = $type['libelle'];
             }
         }

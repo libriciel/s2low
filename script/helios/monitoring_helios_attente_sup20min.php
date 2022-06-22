@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier que le plus vieil acte à l'état en attente
+//Script charge de verifier que le plus vieil acte Ã  l'Ã©tat en attente
 //n'a pas plus de 20 minutes
 
 //RETOURNE 0 si tout va bien

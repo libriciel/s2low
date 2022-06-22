@@ -3,7 +3,7 @@
 require_once("include/init.php");
 
 require_once("controller/mailController.php");
-//commencer traiter la layout normal correspond de le système.
+//commencer traiter la layout normal correspond de le systÃ¨me.
 require_once ("lib/MailLayout.class.php");
 
 $api=Helpers :: getVarFromPost("api");

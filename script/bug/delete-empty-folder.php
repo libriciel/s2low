@@ -23,7 +23,7 @@ while(true) {
     $nb_file=0;
 
     /*
-     * On ne peux pas parcourir l'itérateur et supprimer un repertoire en même temps...
+     * On ne peux pas parcourir l'itÃ©rateur et supprimer un repertoire en mÃªme temps...
      * Du coup, on prends les 100 premiers truc et on recommence
      */
 

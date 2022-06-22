@@ -34,7 +34,7 @@ class AdminAuthorityControllerTest extends S2lowTestCase {
         $adminAuthorityController = $this->getObjectInstancier()->get("AdminAuthorityController");
         $this->setExpectedException(
             "Exception",
-            "Redirect to /admin/authorities/admin_authority_edit.php?id=1 with message : Impossible de récupérer la convention"
+            "Redirect to /admin/authorities/admin_authority_edit.php?id=1 with message : Impossible de rÃ©cupÃ©rer la convention"
         );
         $adminAuthorityController->downloadConventionAction();
     }
@@ -80,7 +80,7 @@ class AdminAuthorityControllerTest extends S2lowTestCase {
 	public function testExportListActionUser(){
 		$this->setAdminColAuthentication();
 		$adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
-		$this->setExpectedException(RedirectException::class,"Vous devez être administrateur de groupe ou super admin");
+		$this->setExpectedException(RedirectException::class,"Vous devez Ãªtre administrateur de groupe ou super admin");
 		$adminAuthorityController->exportListAction();
 	}
 

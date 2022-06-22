@@ -58,7 +58,7 @@ endif;?>
             <form action="index.php?command=annuaire" method="post" id='form_generique'> 	
             <input type='hidden' name='action_h' value=''>    
             <div class='contact-list'>
-                Sélectionner <a class="btn btn-default" onclick='javascript:coche_case(true)'>Tous</a>
+                SÃ©lectionner <a class="btn btn-default" onclick='javascript:coche_case(true)'>Tous</a>
                 <a class="btn btn-default"  onclick='javascript:coche_case(false)'>Aucun</a>	
                 <?php foreach ($mailAnnuaireArray as $mailAnnuaire) : ?>
                     <div class='contact' title='<?php echo $mailAnnuaire['mail_address']?>'>
@@ -71,7 +71,7 @@ endif;?>
         <div class="col-md-3">
             <div id="actions">  
                 <div class='actionmail'>
-                    <h2> Actions générales </h2>
+                    <h2> Actions gÃ©nÃ©rales </h2>
                     <ul>
                         <li><a class="btn btn-primary btn-xs" href="ajouter-annuaire.php">Nouveau contact</a></li>
                         <li><a class="btn btn-primary btn-xs" href="ajouter-groupe.php">Nouveau groupe</a></li>
@@ -80,7 +80,7 @@ endif;?>
                     <?php endif;?>		
                         <li><a class="btn btn-primary btn-xs" href="import_annuaire_result.php">Importer</a></li>
                     </ul>    
-                    <h2> Actions sur les contacts sélectionnés </h2>
+                    <h2> Actions sur les contacts sÃ©lectionnÃ©s </h2>
                     <ul>
                         <li><input class="btn btn-primary btn-xs" value="Supprimer" type="submit" /></li>
                     <?php if (count($groupeArray)) : ?>  	
@@ -90,7 +90,7 @@ endif;?>
                     <?php endif;?>	
                         <li>
                             <select class="form-control" name='groupe_id' id='select_group' onchange='javascript:onChangeGroupSelect()'>
-                                <option value='0'>Ajouter à ... </option>
+                                <option value='0'>Ajouter Ã  ... </option>
                                 <?php foreach($groupeArray as $groupe):?>
                                         <option value='<?php echo $groupe['id'] ?>'><?php hecho($groupe['name']) ?></option>
                                 <?php endforeach?>

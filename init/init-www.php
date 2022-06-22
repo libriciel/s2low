@@ -10,7 +10,7 @@ if (!$connexion->isConnected()){
 	$me = new User();
 	
 	if (!$me->authenticate()) {
-		$_SESSION["error"] = "…chec de l'authentification";
+		$_SESSION["error"] = "√âchec de l'authentification";
 		header("Location: " . WEBSITE);
 		exit();
 	}
@@ -40,7 +40,7 @@ if ( ! empty($module_name)) {
 	$permUser = $moduleSQL->getInfoPerms($moduleInfo['id'],$connexion->getId());
 	
 	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific)){
-        $objectInstancier->get('S2lowRedirect')->redirect("/","AccËs refusÈ");
+        $objectInstancier->get('S2lowRedirect')->redirect("/","Acc√®s refus√©");
     }
 }
 

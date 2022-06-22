@@ -161,7 +161,7 @@ class CloudStorageTest extends S2lowTestCase {
 		$this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
 		$this->assertFileExists($file_to_send);
 		$this->assertLogMessage(
-			"Problème lors de la supression de l'objet #42 $file_to_send : test unitaire"
+			"ProblÃ¨me lors de la supression de l'objet #42 $file_to_send : test unitaire"
 		);
 	}
 
@@ -274,12 +274,12 @@ class CloudStorageTest extends S2lowTestCase {
 
     public function availabilityAndCloudProvider() : array
     {
-        // Si on arrive à la partie testée, le fichier a été trouvé sur le disque mais pas dans le cloud.
-        // S'il est marqué comme non available en BDD, il faut corriger : il est au moins sur le disque.
-        // S'il est marqué comme sur le cloud en BDD, il faut corriger : il n'y est pas.
+        // Si on arrive Ã  la partie testÃ©e, le fichier a Ã©tÃ© trouvÃ© sur le disque mais pas dans le cloud.
+        // S'il est marquÃ© comme non available en BDD, il faut corriger : il est au moins sur le disque.
+        // S'il est marquÃ© comme sur le cloud en BDD, il faut corriger : il n'y est pas.
         return [
-            "withBothAvailableAndTransactionInCloud"=>[true, true, 0, 1, ["3"=>"#passé à is_in_cloud = false#"]],
-            "withNotAvailableAndTransactionInCloud"=>[false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passé à is_in_cloud = false#"]],
+            "withBothAvailableAndTransactionInCloud"=>[true, true, 0, 1, ["3"=>"#passÃ© Ã  is_in_cloud = false#"]],
+            "withNotAvailableAndTransactionInCloud"=>[false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passÃ© Ã  is_in_cloud = false#"]],
             "withOnlyAvailable"=>[true, false, 0, 0,  []],
             "withNotAvailableAndNotInCloud"=>[false,false, 1, 0,["3"=>"#set to available#"]]
         ];

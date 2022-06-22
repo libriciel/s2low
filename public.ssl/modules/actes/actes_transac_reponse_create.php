@@ -33,15 +33,15 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-	sortir_atrc( "Échec de l'authentification",$api);
+	sortir_atrc( "Ã‰chec de l'authentification",$api);
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-	sortir_atrc( "Accès refusé",$api);
+	sortir_atrc( "AccÃ¨s refusÃ©",$api);
 }
 
 if ($module->getParam("paper") == "on") {
-	sortir_atrc(  "Mode « papier » actif. Accès interdit.",$api);
+	sortir_atrc(  "Mode Â« papier Â» actif. AccÃ¨s interdit.",$api);
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -61,7 +61,7 @@ $type_pj = Helpers::getVarFromPost('type_pj',true);
 if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)){
 	Helpers :: returnAndExit(
 		1,
-		"Erreur lors de la réception du fichier : typologie absente"  ,
+		"Erreur lors de la rÃ©ception du fichier : typologie absente"  ,
 		WEBSITE_SSL . "/modules/actes/actes_transac_reponse.php?id=$related_id"
 	);
 }
@@ -146,16 +146,16 @@ $trans->set("classification_date",$related_trans->get('classification_date'));
 $trans->set("unique_id",$related_trans->get('unique_id'));
 
 
-// Destination de création des fichiers
+// Destination de crÃ©ation des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
 $trans->set("destDir", $dest);
 $env->set("destDir", $dest);
 
-// On essaye d'importer tous les fichiers même si une erreur se produit
-// lors de l'import de l'un d'eux. On trace les erreurs avec un booléen.
+// On essaye d'importer tous les fichiers mÃªme si une erreur se produit
+// lors de l'import de l'un d'eux. On trace les erreurs avec un boolÃ©en.
 $fileImportError = false;
 
-// Validation du type des fichiers uploadés
+// Validation du type des fichiers uploadÃ©s
 // Fichier de l'acte
 if (isset ($actePDFFile) ) {
 
@@ -163,7 +163,7 @@ if (isset ($actePDFFile) ) {
       $acteFilePath = $actePDFFile["tmp_name"];
       $acteFileName = $actePDFFile["name"];
     } else {
- 		 sortir_atrc( "Envoi de fichier illégal.",$api);    	
+ 		 sortir_atrc( "Envoi de fichier illÃ©gal.",$api);    	
     }
 
   $dest_name = $trans->getStdFileName($env,true,$type_acte);
@@ -171,7 +171,7 @@ if (isset ($actePDFFile) ) {
     $errorMsg = "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
     $fileImportError = true;
   } else {
-    // Ajout de la signature si présente
+    // Ajout de la signature si prÃ©sente
     $signFile = null;
 
       if (isset ($actePDFFileSign["tmp_name"]) && is_uploaded_file($actePDFFileSign["tmp_name"])) {
@@ -191,10 +191,10 @@ if (isset ($actePDFFile) ) {
 
 if (isset ($acteAttachments)) {
   for ($i = 0; $i < count($acteAttachments["tmp_name"]?:[]); $i++) {
-    if (strlen($acteAttachments["tmp_name"][$i])) {
+    if (mb_strlen($acteAttachments["tmp_name"][$i])) {
       if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
-        // Sauvegarde dans la session pour réaffichage en cas d'erreur dans le formulaire
-        // Désactivé, de toute façon on ne peut pas préremplir un champ de type file
+        // Sauvegarde dans la session pour rÃ©affichage en cas d'erreur dans le formulaire
+        // DÃ©sactivÃ©, de toute faÃ§on on ne peut pas prÃ©remplir un champ de type file
         /*Helpers::putInSession("attachment_file" . ($i + 1), $acteAttachments["name"][$i]);
         if (isset($acteAttachmentsSign["tmp_name"][$i]) {
         Helpers::putInSession("attachment_sign_file" . ($i + 1), $acteAttachmentsSign["name"][$i]);
@@ -203,7 +203,7 @@ if (isset ($acteAttachments)) {
 		  if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_pj[$i])){
 			  Helpers :: returnAndExit(
 				  1,
-				  "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente"  ,
+				  "Erreur lors de la rÃ©ception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente"  ,
 				  WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
 			  );
 		  }
@@ -215,10 +215,10 @@ if (isset ($acteAttachments)) {
 
         $dest_name = $trans->getStdFileName($env,true,$type_pj[$i]);
         if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i],true,$type_pj[$i])) {
-          $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
+          $errorMsg .= "Erreur de validation d'un fichier de piÃ¨ce jointe :\n" . $trans->getErrorMsg() . "\n";
           $fileImportError = true;
         } else {
-          // Ajout de la signature si présente
+          // Ajout de la signature si prÃ©sente
           if (isset ($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file($acteAttachmentsSign["tmp_name"][$i])) {
             if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
               $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg() . "\n";
@@ -227,7 +227,7 @@ if (isset ($acteAttachments)) {
           }
         }
       } else {
-      	sortir_atrc(  "Envoi de fichier illégal.",$api);
+      	sortir_atrc(  "Envoi de fichier illÃ©gal.",$api);
       }
     }
   }
@@ -239,10 +239,10 @@ if ($fileImportError) {
 	sortir_atrc($errorMsg,$api);
 }
 
-// Génération du fichier XML de l'acte
+// GÃ©nÃ©ration du fichier XML de l'acte
 $xml_name = $trans->getStdFileName($env, false);
 if (!$trans->generateMessageXMLFile($xml_name)) {
-	sortir_atrc("Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(),$api);
+	sortir_atrc("Erreur lors de la gÃ©nÃ©ration de l'acte : " . $trans->getErrorMsg(),$api);
 }
 
 $env->addTransaction($trans);
@@ -253,22 +253,22 @@ $authority_id = $me->get("authority_id");
 $actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
 $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
-// Génération du fichier XML de l'enveloppe
+// GÃ©nÃ©ration du fichier XML de l'enveloppe
 if (!$env->generateEnvelopeXMLFile($serialNumber)) {
-	sortir_atrc("Erreur lors de la génération de l'enveloppe.",$api);
+	sortir_atrc("Erreur lors de la gÃ©nÃ©ration de l'enveloppe.",$api);
 }
 
-// Création de l'archive .tar.gz
+// CrÃ©ation de l'archive .tar.gz
 if (!$env->generateArchiveFile()) {
-	sortir_atrc("Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(),$api);
+	sortir_atrc("Erreur lors de la gÃ©nÃ©ration de l'archive.\n" . $env->getErrorMsg(),$api);
 }
 
-// Contrôle de l'archive (anti-virus et taille)
+// ContrÃ´le de l'archive (anti-virus et taille)
 if (!$env->checkArchiveConformity()) {
-	sortir_atrc("L'archive générée n'est pas conforme :\n" . $env->getErrorMsg(),$api);
+	sortir_atrc("L'archive gÃ©nÃ©rÃ©e n'est pas conforme :\n" . $env->getErrorMsg(),$api);
 }
 
-// Purge des fichiers intermédiaires
+// Purge des fichiers intermÃ©diaires
 $env->purgeFiles();
 
 if (!$env->save()) {
@@ -291,13 +291,13 @@ if (!$trans->save()) {
   $env->delete();
   sortir_atrc($msg,$api);
 } else {
-  $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
+  $msg = "CrÃ©ation de l'envelope nÂ°" . $env->getId() . ". RÃ©sultat ok.";
   if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
   }
 
-  // Message réservé à l'appel via API
-  // Id de la transaction créée
+  // Message rÃ©servÃ© Ã  l'appel via API
+  // Id de la transaction crÃ©Ã©e
   $apiMsg = $trans->getId() . "\n";
  
 }
@@ -308,7 +308,7 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 
 
 if ($api) {
-	echo "OK : id généré : ".$apiMsg;	
+	echo "OK : id gÃ©nÃ©rÃ© : ".$apiMsg;	
 } else {
 	Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
 }

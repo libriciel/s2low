@@ -4,11 +4,11 @@ require_once( __DIR__ . "/../../../init/init.php");
 $me = new User();
 
 if (! $me->authenticate()) {
-	$jsonOutput->displayErrorAndExit("…chec de l'authentification");
+	$jsonOutput->displayErrorAndExit("√âchec de l'authentification");
 }
 
 if (! $me->isAdmin()) {
-	$jsonOutput->displayErrorAndExit("AccËs refusÈ");
+	$jsonOutput->displayErrorAndExit("Acc√®s refus√©");
 }
 
 $id = Helpers::getVarFromGet("id");
@@ -17,10 +17,10 @@ $authority = new Authority();
 $authority->setId($id);
 $authority->init();
   	
-// VÈrification permission sur la collectivitÈ
+// V√©rification permission sur la collectivit√©
 if (($me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_group_id"))) 
 	|| ($me->isAuthorityAdmin() && $authority->getId() != $me->get("authority_id"))) {
-	$jsonOutput->displayErrorAndExit("AccËs refusÈ pour la consultation de cette collectivitÈ");
+	$jsonOutput->displayErrorAndExit("Acc√®s refus√© pour la consultation de cette collectivit√©");
 }
 
 $info_to_display = array("id","name","siren","authority_type_id","status","email","default_broadcast_email","broadcast_email",

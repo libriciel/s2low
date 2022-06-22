@@ -34,13 +34,13 @@ class HeliosController extends Controller {
 
 		$me = new User();
 		if (!$me->authenticate()) {
-			$this->redirectSSL(WEBSITE,"Échec de l'authentification");
+			$this->redirectSSL(WEBSITE,"Ã‰chec de l'authentification");
 		}
 
 		$userId = $me->getId();
 
 		if (!$module->isActive() || !$me->checkDroit(self::MODULE_NAME,'CS')) {
-			$this->redirectSSL(WEBSITE_SSL,"Accès refusé");
+			$this->redirectSSL(WEBSITE_SSL,"AccÃ¨s refusÃ©");
 		}
 
 		$id_transaction = false;
@@ -54,7 +54,7 @@ class HeliosController extends Controller {
 
 
 
-		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
+		$msg = "CrÃ©ation de la transation nÂ°" . $id_transaction . ". RÃ©sultat ok.";
 		Helpers :: returnAndExit(0,$msg, WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
 	}
 
@@ -62,48 +62,52 @@ class HeliosController extends Controller {
 		/** @var RgsConnexion $rgsConnexion */
 		$rgsConnexion = $this->getObjectInstancier()->{'RgsConnexion'};
 		if (! $rgsConnexion->isRgsConnexion()){
-			throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
+			throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de tÃ©lÃ©transmettre");
 		}
 
 		if (empty($_FILES['enveloppe'])){
-		    throw new Exception("Aucune enveloppe trouvée : la taille de l'enveloppe dépasse probablement la taille maximum");
+		    throw new Exception("Aucune enveloppe trouvÃ©e : la taille de l'enveloppe dÃ©passe probablement la taille maximum");
         }
 
 		if ($_FILES['enveloppe']['error'] != UPLOAD_ERR_OK){
 		    throw new Exception(
-		        "Erreur lors du téléchargement du fichier : code {$_FILES['enveloppe']['error']}");
+		        "Erreur lors du tÃ©lÃ©chargement du fichier : code {$_FILES['enveloppe']['error']}");
         }
 
 
 		$file_size = $_FILES['enveloppe']['size'];
 
 		if ($file_size > $this->helios_max_upload_size) {
-			$message = "Taille de fichier supérieure à la limite autorisée (".
+			$message = "Taille de fichier supÃ©rieure Ã  la limite autorisÃ©e (".
 				($this->helios_max_upload_size/1024/1024)." Mo maximum).";
 			throw new Exception($message);
 		}
 
 		if($file_size == 0) {
-		    $message = "Le fichier présenté est vide (0 octet)";
+		    $message = "Le fichier prÃ©sentÃ© est vide (0 octet)";
             throw new Exception($message);
         }
 
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-		$SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+        try{
+            $SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
+        } catch (Exception $e){
+            throw new Exception("Ã‰chec lors du tÃ©lÃ©chargement du fichier");
+        }
 
 		if ($heliosTransactionSQL->isDuplicate($SHA1)) {
-			throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
+			throw new Exception("doublon dÃ©tectÃ©. Ce fichier a dÃ©jÃ  Ã©tÃ© postÃ©.");
 		}
 
         $pes_aller_destination = $this->getPesAllerRetriever()->getPathForNonExistingFile($SHA1);
 		try {
 			$pes_aller_original_name = $_FILES['enveloppe']['name'];
 			if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
-				throw new Exception("Échec lors du téléchargement du fichier");
+				throw new Exception("Ã‰chec lors du tÃ©lÃ©chargement du fichier");
 			}
 			chmod($pes_aller_destination, 0644);
 		} catch (Exception $e){
-			throw new Exception("Échec lors du téléchargement du fichier");
+			throw new Exception("Ã‰chec lors du tÃ©lÃ©chargement du fichier");
 		}
 		return $this->importFile($user_id,$pes_aller_destination,$pes_aller_original_name);
 	}
@@ -130,17 +134,17 @@ class HeliosController extends Controller {
 
 		if ($must_signed){
 			$state = HeliosTransactionsSQL::ATTENTE_SIGNEE;
-			$message = "Fichier en attente d'être signé";
+			$message = "Fichier en attente d'Ãªtre signÃ©";
 		} elseif(! $moduleSQL->hasDroit($module_info['id'],$user_id,'TT')) {
 			$state = HeliosTransactionsSQL::ATTENTE_POSTEE;
-			$message = "Fichier en attente d'être télétransmis";
+			$message = "Fichier en attente d'Ãªtre tÃ©lÃ©transmis";
 		} else {
 			$state = HeliosTransactionsSQL::POSTE;
-			$message = "Fichier bien reçu par la plate-forme S2low";
+			$message = "Fichier bien reÃ§u par la plate-forme S2low";
 		}
 		$heliosTransactionSQL->updateStatus($id_transaction,$state,$message);
 
-		$msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
+		$msg = "CrÃ©ation de la transation nÂ°" . $id_transaction . ". RÃ©sultat ok.";
 		Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false,$user_id);
 
 		$workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
@@ -161,19 +165,19 @@ class HeliosController extends Controller {
 		$me = new User();
 		if (! $me->authenticate()) {
 
-			echo "KO\nÉchec de l'authentification";
+			echo "KO\nÃ‰chec de l'authentification";
 			exit();
 		}
 
 		$userId = $me->getId();
 
 		if (!$module->isActive() || !$me->canAccess(self::MODULE_NAME)) {
-			echo "KO\nAccès refusé";
+			echo "KO\nAccÃ¨s refusÃ©";
 			exit();
 		}
 
 
-		$doc = new DOMDocument();
+		$doc = new DOMDocument("1.0", "UTF-8");
 		$doc->formatOutput = true;
 		$doc->preserveWhiteSpace = false;
 		$root=$doc->createElement("import");
@@ -188,13 +192,13 @@ class HeliosController extends Controller {
 
 		try{
 			$id_transaction = $this->import($userId);
-			$msg = "Téléchargement du fichier réussi.";
+			$msg = "TÃ©lÃ©chargement du fichier rÃ©ussi.";
 			$idElement->appendChild( $doc->createTextNode($id_transaction));
 			$resultatElement->appendChild( $doc->createTextNode("OK"));
-			$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg)));
+			$messageElement->appendChild( $doc->createTextNode( $msg));
 		} catch (Exception $e) {
 			$resultatElement->appendChild( $doc->createTextNode( "KO" ) );
-			$messageElement->appendChild( $doc->createTextNode( utf8_encode($e->getMessage())));
+			$messageElement->appendChild( $doc->createTextNode( $e->getMessage()));
 		}
 
 		$xmlFile = HELIOS_FILES_ROOT."/temp/import-".date('YmdHis').mt_rand(0,mt_getrandmax()).".xml";
@@ -232,7 +236,7 @@ class HeliosController extends Controller {
 				continue;
 			}
 			$authoritySiretSQL->add($info['authority_id'],$siret);
-			echo "Transaction $transaction_id : siret $siret ajouté à la collectivite {$info['authority_id']}\n";
+			echo "Transaction $transaction_id : siret $siret ajoutÃ© Ã  la collectivite {$info['authority_id']}\n";
 		}
 	}
 
@@ -255,12 +259,12 @@ class HeliosController extends Controller {
 			$me = new User();
 
 			if (! $me->authenticate()) {
-				$msg= "Échec de l'authentification";
+				$msg= "Ã‰chec de l'authentification";
 				throw new Exception('KO');
 			}
 
             if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-                $msg= "Accès refusé";
+                $msg= "AccÃ¨s refusÃ©";
                 throw new Exception('KO');
             }
 
@@ -285,7 +289,7 @@ class HeliosController extends Controller {
 				$pes_retourElement->appendChild($doc->createElement("date",$envelope["date"]));
 				$root->appendChild($pes_retourElement);
 			}
-			$msg="liste réussi";
+			$msg="liste rÃ©ussi";
 		}
 		catch (Exception $e) {
 		   if (! isset($resultatElement)){
@@ -298,7 +302,7 @@ class HeliosController extends Controller {
             $messageElement=$doc->createElement("message");
             $root->appendChild($messageElement);
         }
-		$messageElement->appendChild( $doc->createTextNode( utf8_encode($msg) ));
+		$messageElement->appendChild( $doc->createTextNode( $msg ));
 
 		header("Content-type: text/xml");
 		echo $doc->saveXML();

@@ -13,7 +13,7 @@ $id = $recuperateur->get('id');
 $transactionSQL = new TransactionSQL($sqlQuery);
 $transactionSQL->delete($id);
 
-$msg = "La transaction $id a été éradiquée ....";
+$msg = "La transaction $id a Ã©tÃ© Ã©radiquÃ©e ....";
 
 
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module_name, null,$userInfo['id'])) {

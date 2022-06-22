@@ -11,8 +11,8 @@ class ActesFilesForSAETest extends TestCase {
 			[['a.pdf','b.pdf','c.pdf'],['a.pdf','b.pdf','c.pdf']],
 			[['a.pdf','b.pdf','a.pdf'],['a.pdf','b.pdf','a_1.pdf']],
 			[['a','b','a'],['a','b','a_1']],
-			[['a','piéce','pièce'],['a','piéce','pièce_1']],
-			[['a','piéce.pdf','pièce.pdf'],['a','piéce.pdf','pièce_1.pdf']]
+			[['a','piÃ©ce','piÃ¨ce'],['a','piÃ©ce','piÃ¨ce_1']],
+			[['a','piÃ©ce.pdf','piÃ¨ce.pdf'],['a','piÃ©ce.pdf','piÃ¨ce_1.pdf']]
 		];
 	}
 

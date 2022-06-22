@@ -50,10 +50,10 @@ class X509Certificate {
 		$result = "";
 		foreach ($info as $key => $val) {
 			if (is_array($val)){
-				$val = utf8_encode_array($val);
+				$val = legacy_encode_array($val);
 				$val = implode(",",$val);
 			} else {
-				$val = utf8_decode($val);
+				$val = $val;
 			}
 
 			$result .= "/$key=$val";
@@ -115,7 +115,7 @@ class X509Certificate {
 		$issuerName = [];
 		foreach(array_reverse($info['issuer']) as $document_id => $value){
 			if ($strtoupper) {
-				$issuerName[] = strtoupper($document_id) . "=$value";
+				$issuerName[] = mb_strtoupper($document_id) . "=$value";
 			} else {
 				$issuerName[] = "$document_id=$value";
 			}

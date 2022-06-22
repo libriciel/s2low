@@ -13,15 +13,15 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-  Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+  Helpers::returnAndExit(1, "Mode Â« papier Â» actif. AccÃ¨s interdit.", WEBSITE_SSL . "/modules/actes/");
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -30,7 +30,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 $enveloppe = $_FILES["enveloppe"];
 
 if (! is_array($enveloppe) || count($enveloppe) <= 0) {
-  Helpers::returnAndExit(1, "Pas de fichier archive spécifié.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+  Helpers::returnAndExit(1, "Pas de fichier archive spÃ©cifiÃ©.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 }
 
 if (! is_uploaded_file($enveloppe["tmp_name"])) {
@@ -39,7 +39,7 @@ if (! is_uploaded_file($enveloppe["tmp_name"])) {
 
 $rgsConnexion = new RgsConnexion();
 if ( ! $rgsConnexion->isRgsConnexion()){
-  Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
+  Helpers :: returnAndExit(1, "La tÃ©lÃ©transmission nÃ©cessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
 }
 
 $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME,ACTES_APPLI_QUADRIGRAMME);
@@ -61,7 +61,7 @@ $env->set("district", $myAuthority->get("district"));
 $env->set("authority_type_code", $myAuthority->get("authority_type_id"));
 $env->set("file_path", "");
 
-// Destination de création des fichiers
+// Destination de crÃ©ation des fichiers
 $dest = $env->get("siren") . "/import/";
 $env->set("destDir", $dest);
 
@@ -72,7 +72,7 @@ if (($xmlTransFiles = $env->importArchiveFile($enveloppe["name"], $enveloppe["tm
   Helpers::returnAndExit(1, "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 }
 
-// Création des transactions d'après les fichiers XML contenus dans l'enveloppe
+// CrÃ©ation des transactions d'aprÃ¨s les fichiers XML contenus dans l'enveloppe
 $classifRequests = array();
 $transacs = array();
 
@@ -94,15 +94,15 @@ foreach ($xmlTransFiles as $xmlFile) {
   $env->addTransaction($trans);
 
   if ($trans->get("type") == 1) {
-	// Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
+	// VÃ©rification qu'une transaction ayant le mÃªme numÃ©ro interne n'existe pas dÃ©jÃ 
 	if (! $trans->isUnique($myAuthority->getId())){
 	  $env->purgeFiles();
 	  $env->deleteArchiveFile();
-	  Helpers::returnAndExit(1, "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+	  Helpers::returnAndExit(1, "Un numÃ©ro interne d'acte entre en conflit avec un acte existant dans la base de donnÃ©es.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 	}
   }
 
-  // En cas de demande de classification, création de la requête dans la table idoine
+  // En cas de demande de classification, crÃ©ation de la requÃªte dans la table idoine
   if ($trans->get("type") == 7) {
 	$classifRequest = new ActesClassification();
 
@@ -117,22 +117,22 @@ foreach ($xmlTransFiles as $xmlFile) {
 }
 
 
-// Création de l'archive .tar.gz
+// CrÃ©ation de l'archive .tar.gz
 if (! $env->generateArchiveFile()) {
   $env->purgeFiles();
   $env->deleteArchiveFile();
-  Helpers::returnAndExit(1, "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+  Helpers::returnAndExit(1, "Erreur lors de la regÃ©nÃ©ration de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 }
 
-// Vérification taille après regénération
-// Le scan anti-virus a déjà été fait lors de l'import (gruik !!)
+// VÃ©rification taille aprÃ¨s regÃ©nÃ©ration
+// Le scan anti-virus a dÃ©jÃ  Ã©tÃ© fait lors de l'import (gruik !!)
 if (! $env->checkArchiveSize()) {
   $env->purgeFiles();
   $env->deleteArchiveFile();
   Helpers::returnAndExit(1, $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
 }
 
-// Purge des fichiers intermédiaires
+// Purge des fichiers intermÃ©diaires
 $env->purgeFiles();
 
 
@@ -176,7 +176,7 @@ foreach ($transacs as $trans) {
 if (count($classifRequests) > 0) {
   foreach ($classifRequests as $classifRequest) {
 	if (! $classifRequest->save()) {
-	  $msg = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg();
+	  $msg = "Erreur lors de l'enregistrement de la requÃªte de classification.\n" . $classifRequest->getErrorMsg();
 	  if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
 		$msg .= "\nErreur de journalisation.";
 	  }
@@ -192,14 +192,14 @@ if (count($classifRequests) > 0) {
   }
 }
 
-$msg = "Importation fichier archive réussie. Enveloppe n°" . $env->getId() . " contenant " . count($transacs);
-$msg .= (count($transacs) > 1) ? " transactions créée." : " transaction créée.";
+$msg = "Importation fichier archive rÃ©ussie. Enveloppe nÂ°" . $env->getId() . " contenant " . count($transacs);
+$msg .= (count($transacs) > 1) ? " transactions crÃ©Ã©e." : " transaction crÃ©Ã©e.";
 
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
   $msg .= "\nErreur de journalisation.";
 }
 
-// Message réservé à l'appel via API
+// Message rÃ©servÃ© Ã  l'appel via API
 // Nombre total de transaction
 $apiMsg = count($transacs) . "\n";
 // Id de chaque transaction

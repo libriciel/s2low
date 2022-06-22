@@ -12,7 +12,7 @@ class Siren {
 	}
 	
 	public function isValid($siren){
-		if (strlen($siren) != self::LENGTH){
+		if (mb_strlen($siren) != self::LENGTH){
 			return false;
 		}
 		return $this->luhnKey->isValid($siren);

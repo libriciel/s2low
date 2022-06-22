@@ -13,7 +13,7 @@ $s2lowLogger->enableStdOut(true);
 
 $date=date("Y-m-d",strtotime(sprintf("-%d days",HELIOS_RETENTION_FICHIERS_NB_JOURS)));
 
-$s2lowLogger->info(sprintf("Transaction passÈ ‡ l'Ètat information disponible avant le %s",$date));
+$s2lowLogger->info(sprintf("Transaction pass√© √† l'√©tat information disponible avant le %s",$date));
 
 $sql = "SELECT helios_transactions.id FROM helios_transactions_workflow 
     JOIN helios_transactions ON helios_transactions_workflow.transaction_id=helios_transactions.id 
@@ -22,7 +22,7 @@ $sql = "SELECT helios_transactions.id FROM helios_transactions_workflow
 
 $transaction_ids = $sqlQuery->queryOneCol($sql, $date,HeliosStatusSQL::INFORMATION_DISPONIBLE);
 
-$s2lowLogger->info(sprintf("%d transactions trouvÈes ‡ dÈtruire",count($transaction_ids)));
+$s2lowLogger->info(sprintf("%d transactions trouv√©es √† d√©truire",count($transaction_ids)));
 
 $heliosTransactionSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 
@@ -36,15 +36,15 @@ foreach($transaction_ids as $transaction_id){
     if ($delete_all || ask("Voulez-vous supprimer la transaction $transaction_id  ? (oui/non)")){
         if (file_exists($pes_aquit_completename)){
             unlink($pes_aquit_completename);
-            $s2lowLogger->info("Le fichier $pes_aquit_completename a ÈtÈ supprimÈ");
+            $s2lowLogger->info("Le fichier $pes_aquit_completename a √©t√© supprim√©");
         }
         if (file_exists($pes_aller_filename)){
             unlink($pes_aller_filename);
-            $s2lowLogger->info("Le fichier $pes_aller_filename a ÈtÈ supprimÈ");
+            $s2lowLogger->info("Le fichier $pes_aller_filename a √©t√© supprim√©");
         }
         if (file_exists($pes_aquit_filename)){
             unlink($pes_aquit_filename);
-            $s2lowLogger->info("Le fichier $pes_aquit_filename a ÈtÈ supprimÈ");
+            $s2lowLogger->info("Le fichier $pes_aquit_filename a √©t√© supprim√©");
         }
 
         $heliosTransactionSQL->updateStatus(
@@ -52,7 +52,7 @@ foreach($transaction_ids as $transaction_id){
             HeliosStatusSQL::DETRUITE,
             "Destruction de la transaction"
         );
-        $s2lowLogger->info("Les fichiers de la transaction $transaction_id ont ÈtÈ dÈtruits");
+        $s2lowLogger->info("Les fichiers de la transaction $transaction_id ont √©t√© d√©truits");
     }
 }
 

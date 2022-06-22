@@ -37,10 +37,10 @@ $head = array(
 	"Nom du fichier transmis",
 	"Empreinte SHA1",
 	"Taille du fichier (octets)",
-	"SIREN de la collectivité émettrice",
-	"Département de la collectivité",
-	"Arrondissement de la collectivité",
-	"Type de la collectivité"
+	"SIREN de la collectivitÃ© Ã©mettrice",
+	"DÃ©partement de la collectivitÃ©",
+	"Arrondissement de la collectivitÃ©",
+	"Type de la collectivitÃ©"
 );
 
 fputcsv($output_handle, $head);

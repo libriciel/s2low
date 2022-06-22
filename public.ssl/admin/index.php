@@ -10,7 +10,7 @@ if ($userInfo['role'] != 'SADM'){
 
 
 $helios_status = array(
-	1=>"Posté",
+	1=>"PostÃ©",
 	7 => "En traitement",
 	2=>"En attente de transmission",
 	3=>"Transmis"
@@ -32,10 +32,10 @@ $helios_nb_responses_error = $heliosResponsesError->getNbError();
 
 
 $actes_status = array(
-    1=>"Posté",
+    1=>"PostÃ©",
     2=>"En attente de transmission",
     3=>"Transmis",
-    7=>"Document reçu",
+    7=>"Document reÃ§u",
 );
 $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
@@ -105,7 +105,7 @@ ob_start();
                 </td>
             </tr>
             <tr class="<?php echo $actes_nb_responses_error?"danger":"success" ?>">
-                <td>Emails reçus depuis Actes en erreur</td>
+                <td>Emails reÃ§us depuis Actes en erreur</td>
                 <td><span class="label label-<?php echo $actes_nb_responses_error?"danger":"success" ?>"><?php echo $actes_nb_responses_error ?></span></td>
                 <td>
                     <a href="/modules/actes/admin/responses-actes-error.php" >
@@ -147,7 +147,7 @@ ob_start();
 				</td>
 			</tr>
 			<tr class="<?php echo $helios_nb_responses_error?"danger":"success" ?>">
-				<td>Fichiers reçus depuis Helios en erreur</td>
+				<td>Fichiers reÃ§us depuis Helios en erreur</td>
 				<td><span class="label label-<?php echo $helios_nb_responses_error?"danger":"success" ?>"><?php echo $helios_nb_responses_error ?></span></td>
 				<td>
 					<a href="/modules/helios/admin/responses-helios-error.php" >
@@ -163,7 +163,7 @@ ob_start();
 
 <h2>Autres</h2>
 <div class="alert alert-warning">
-	Attention, page non optimisée qui ralentit le logiciel : <a href="stats.php">Statistiques</a>
+	Attention, page non optimisÃ©e qui ralentit le logiciel : <a href="stats.php">Statistiques</a>
 </div>
 
 <a href='/admin/stats-sae.php' class='btn  btn-primary'>Statistiques envoi SAE</a>

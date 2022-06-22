@@ -30,7 +30,7 @@ class ActesTransaction extends DataObject {
   protected $broadcasted;
   protected $broadcast_send_sources;
   protected $broadcast_emails;
-  protected $last_status_id; //pour les message 3 et 4, les types de réponse 3=> REJET 4=> ACCEPTE
+  protected $last_status_id; //pour les message 3 et 4, les types de rÃ©ponse 3=> REJET 4=> ACCEPTE
   protected $type_reponse;
   protected $related_transaction;
   protected $last_classification_date;
@@ -55,7 +55,7 @@ class ActesTransaction extends DataObject {
       "mandatory" => true
     ),
     "related_transaction_id" => array (
-      "descr" => "Transaction reliée",
+      "descr" => "Transaction reliÃ©e",
       "type" => "isInt",
       "mandatory" => false
     ),
@@ -76,33 +76,33 @@ class ActesTransaction extends DataObject {
       "mandatory" => true
     ),
     "number" => array (
-      "descr" => "Numéro de l'acte",
+      "descr" => "NumÃ©ro de l'acte",
       "type" => "isString",
       "maxlength" => 15,
       "mandatory" => true,
-		//Règle original sur s2low depuis le début
+		//RÃ¨gle original sur s2low depuis le dÃ©but
 		//"regexp" => '/^[0-9A-Z][0-9A-Z_]*[0-9A-Z]$/',
 
-		// Ci-dessous, c'est la bonne règle qui est dans le XSD @ctes
+		// Ci-dessous, c'est la bonne rÃ¨gle qui est dans le XSD @ctes
 		//"regexp" => '/^([a-zA-Z0-9][a-zA-Z0-9\-_&#x20;]{0,13})?[a-zA-Z0-9]$/',
 
-		//Règle intermédiaire
+		//RÃ¨gle intermÃ©diaire
 		"regexp" => self::NUMBER_REGEXP,
 
       "regexp_txt" => "ne peut contenir que des chiffres, des lettres en majuscules et _"
     ),
     "classification" => array (
-      "descr" => "Classification matières/sous-matières",
+      "descr" => "Classification matiÃ¨res/sous-matiÃ¨res",
       "type" => "isString",
       "mandatory" => true
     ),
     "classification_date" => array (
-      "descr" => "Date classification matières/sous-matières utilisée",
+      "descr" => "Date classification matiÃ¨res/sous-matiÃ¨res utilisÃ©e",
       "type" => "isDate",
       "mandatory" => true
     ),
     "decision_date" => array (
-      "descr" => "Date de la décision",
+      "descr" => "Date de la dÃ©cision",
       "type" => "isDate",
       "mandatory" => true
     ),
@@ -112,13 +112,13 @@ class ActesTransaction extends DataObject {
       "mandatory" => false
     ),
     "archive_url" => array (
-      "descr" => "URL d'accès à l'archive",
+      "descr" => "URL d'accÃ¨s Ã  l'archive",
       "type" => "isString",
       "maxlength" => 1023,
       "mandatory" => false
     ),
     "broadcast_send_sources" => array (
-      "descr" => "Joindre ou non les sources à la notification",
+      "descr" => "Joindre ou non les sources Ã  la notification",
       "type" => "isString",
       "maxlength" => 1023,
       "mandatory" => false
@@ -130,13 +130,13 @@ class ActesTransaction extends DataObject {
       "mandatory" => false
     ),
     "broadcasted" => array (
-      "descr" => "Indique si la notification a été effectuée",
+      "descr" => "Indique si la notification a Ã©tÃ© effectuÃ©e",
       "type" => "isString",
       "maxlength" => 1023,
       "mandatory" => false
     ),
      "type_reponse" => array (
-      "descr" => "Type de la réponse pour les réponse ministère LO et Demande de PC",
+      "descr" => "Type de la rÃ©ponse pour les rÃ©ponse ministÃ¨re LO et Demande de PC",
       "type" => "isInt",
       "mandatory" => false
     ),
@@ -168,7 +168,7 @@ class ActesTransaction extends DataObject {
 		  "mandatory" => false
 	  ),
       "document_papier" => array(
-          "descr" => "indique si la télétransmission est suivi d'un envoi de piece papier",
+          "descr" => "indique si la tÃ©lÃ©transmission est suivi d'un envoi de piece papier",
           "type" => "isInt",
           "mandatory" => false
       ),
@@ -176,9 +176,9 @@ class ActesTransaction extends DataObject {
   protected $transactionTypes = array (
     "1" => "Transmission d'actes",
   	"2" => "Courrier simple",
-  	"3" => "Demande de pièces complémentaires",
+  	"3" => "Demande de piÃ¨ces complÃ©mentaires",
   	"4" => "Lettre d'observation",
-  	"5" => "Déféré au Tribunal Administratif",
+  	"5" => "DÃ©fÃ©rÃ© au Tribunal Administratif",
     "6" => "Annulation",
     "7" => "Demande de classification"
   );
@@ -189,7 +189,7 @@ class ActesTransaction extends DataObject {
   
   /**
    * \brief Constructeur d'une transaction
-   * \param id integer Numéro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
+   * \param id integer NumÃ©ro d'identifiant d'une transaction existante avec laquelle initialiser l'objet
    */
   public function __construct($id = false) {
     parent :: __construct($id);
@@ -200,8 +200,8 @@ class ActesTransaction extends DataObject {
 	public static function getTypeReponse($transactionType,$reponseType){
 
 		$typeReponse = array(
-		3	=> array(4 => "Transmission de pièces complémentaires",
-					3 => "Refus explicite d'envoi de pièces complémentaires"
+		3	=> array(4 => "Transmission de piÃ¨ces complÃ©mentaires",
+					3 => "Refus explicite d'envoi de piÃ¨ces complÃ©mentaires"
 					),
 		4 => array(4 => "Lettre de justification de l'acte",
 					3 => "Rejet explicite d'une lettre d'observations")
@@ -214,7 +214,7 @@ class ActesTransaction extends DataObject {
 	}
 
   /**
-   * \brief Méthode de récupération des différentes natures de transaction
+   * \brief MÃ©thode de rÃ©cupÃ©ration des diffÃ©rentes natures de transaction
    * \return Un tableau de natures de transaction
    */
   public static function getTransactionNatures() {
@@ -234,10 +234,10 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération des natures de transaction
+   * \brief MÃ©thode de rÃ©cupÃ©ration des natures de transaction
    * \return Un tableau de natures de transaction
    *
-   * Cette méthode renvoie un tableau dont les clefs sont l'identifiant numérique
+   * Cette mÃ©thode renvoie un tableau dont les clefs sont l'identifiant numÃ©rique
    * de la nature et dont les valeurs sont la description de la nature de transaction
    *
    */
@@ -260,8 +260,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la liste des transactions et tous leurs attributs
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
+   * \brief MÃ©thode d'obtention de la liste des transactions et tous leurs attributs
+   * \param $cond (optionnel) chaÃ®ne : ChaÃ®ne contenant les conditions (SQL) Ã  appliquer Ã  la fin de la requÃªte BDD
    * \return tableau des transactions
   */
   public static function getTransactionsList($cond = "") {
@@ -280,7 +280,7 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de la liste des statuts des transactions
+   * \brief MÃ©thode d'obtention de la liste des statuts des transactions
    * \return Tableau des statuts de transactions
   */
   public static function getStatusList() {
@@ -302,8 +302,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode permettant de fixer la valeur d'un attribut
-   * \param $name chaîne : Nom de l'attribut
+   * \brief MÃ©thode permettant de fixer la valeur d'un attribut
+   * \param $name chaÃ®ne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
   public function set($name, $val) {
@@ -323,8 +323,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode vérifiant qu'aucune autre transaction n'a le même numéro interne pour la collectivité
-   * \param $authority_id entier : Identifiant de la collectivité concernée
+   * \brief MÃ©thode vÃ©rifiant qu'aucune autre transaction n'a le mÃªme numÃ©ro interne pour la collectivitÃ©
+   * \param $authority_id entier : Identifiant de la collectivitÃ© concernÃ©e
    * \return True si la transaction est unique, false sinon
   */
   public function isUnique($authority_id) {
@@ -346,8 +346,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode permettant de récuperer l'enveloppe de retour si elle existe
-   * \param $status_id entier : l'enveloppe attaché au status de la transaction
+   * \brief MÃ©thode permettant de rÃ©cuperer l'enveloppe de retour si elle existe
+   * \param $status_id entier : l'enveloppe attachÃ© au status de la transaction
    * \return le flux XML de retour
    */
 	public function getFluxRetour($status_id) {
@@ -364,8 +364,8 @@ class ActesTransaction extends DataObject {
 	}
 
   /**
-   * \brief Méthode qui détermine si une transaction est considérée comme étant fermée
-   * \return L'identifiant de l'état courant de la transaction
+   * \brief MÃ©thode qui dÃ©termine si une transaction est considÃ©rÃ©e comme Ã©tant fermÃ©e
+   * \return L'identifiant de l'Ã©tat courant de la transaction
    */
   public function isClose() {
     $currentStatus = $this->getCurrentStatus();
@@ -377,8 +377,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'obtention de l'état courant d'un transaction
-   * \return L'identifiant de l'état courant de la transaction
+   * \brief MÃ©thode d'obtention de l'Ã©tat courant d'un transaction
+   * \return L'identifiant de l'Ã©tat courant de la transaction
    */
   public function getCurrentStatus() {
     if (isset ($this->id) && !empty ($this->id)) {
@@ -411,8 +411,8 @@ class ActesTransaction extends DataObject {
 	}
 
   /**
-   * \brief Méthode pour déterminer si la transaction est déjà passée par un état donné
-   * \return True si la transaction est passé par cet état, false sinon
+   * \brief MÃ©thode pour dÃ©terminer si la transaction est dÃ©jÃ  passÃ©e par un Ã©tat donnÃ©
+   * \return True si la transaction est passÃ© par cet Ã©tat, false sinon
    */
   public function hasStatus($status_id) {
     if (isset ($this->id) && !empty ($this->id)) {
@@ -429,16 +429,16 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-  * \brief Méthode qui positionne les éléments relatifs à une notification manuelle
-  * \param $emails chaîne : emails des destinataires
+  * \brief MÃ©thode qui positionne les Ã©lÃ©ments relatifs Ã  une notification manuelle
+  * \param $emails chaÃ®ne : emails des destinataires
   * \param $send_sources entier : Envoi des fichiers sources (0/1)
-  * \return True en cas de succès, false sinon
+  * \return True en cas de succÃ¨s, false sinon
   */
   public function setNotification($emails, $send_sources) {
     $sql = "UPDATE actes_transactions SET broadcast_send_sources = " . $send_sources . ", broadcast_emails = ? WHERE id = ?";
 
     if (!$this->db->exec($sql,[$emails,$this->id])) {
-      $this->errorMsg = "Erreur lors de la définition des paramètres de notification.";
+      $this->errorMsg = "Erreur lors de la dÃ©finition des paramÃ¨tres de notification.";
       return false;
     }
 
@@ -446,9 +446,9 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode retournant un nom de fichier (non enveloppe) formaté au standard de la transmission Actes
+   * \brief MÃ©thode retournant un nom de fichier (non enveloppe) formatÃ© au standard de la transmission Actes
    * \param $env ActesEnvelope : Object enveloppe correspondant
-   * \param $use_serial boolean (optionnel) : Ajouter le numéro de série à la fin du nom de fichier puis l'incrémenter (true par défaut)
+   * \param $use_serial boolean (optionnel) : Ajouter le numÃ©ro de sÃ©rie Ã  la fin du nom de fichier puis l'incrÃ©menter (true par dÃ©faut)
    * \return Le nom du fichier sans extension
    */
   public function getStdFileName($env, $use_serial = true,$code_pj = '') {
@@ -468,7 +468,7 @@ class ActesTransaction extends DataObject {
     }
 
     // Nom du fichier
-    // Département
+    // DÃ©partement
     $name .= $env->get("department");
 
     // Siren
@@ -480,7 +480,7 @@ class ActesTransaction extends DataObject {
       $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
     }
 
-    // Numéro de l'acte interne à la collectivité
+    // NumÃ©ro de l'acte interne Ã  la collectivitÃ©
     $name .= "-";
     if ($this->type != 7) {
       $name .= $trans->number;
@@ -516,7 +516,7 @@ class ActesTransaction extends DataObject {
     }
 
     if ($use_serial) {
-      // Numéro de série
+      // NumÃ©ro de sÃ©rie
       $name .= "_" . $this->fileNameSerial;
 
       $this->fileNameSerial++;
@@ -526,8 +526,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération des descriptions courtes et longue de la nature d'un acte en fonction de son identifiant
-   * \param $id integer : identifiant de la nature à rechercher
+   * \brief MÃ©thode de rÃ©cupÃ©ration des descriptions courtes et longue de la nature d'un acte en fonction de son identifiant
+   * \param $id integer : identifiant de la nature Ã  rechercher
    * \return Un tableau associatif contenant les descriptions ou false en cas d'erreur
    *
    */
@@ -553,21 +553,21 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'ajout d'une signature de l'acte
-   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
-   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'ajout d'une signature de l'acte
+   * \param $sign chaÃ®ne : Chemin du fichier dans le systÃ¨me de fichier ou signature sous forme de chaine
+   * \param $readFile boolÃ©en : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addActeSign($sign, $readFile = true) {
     return $this->addSign("acte", $sign, $readFile);
   }
 
   /**
-   * \brief Méthode d'ajout d'une signature d'un fichier
-   * \param $type chaîne : Type de fichier, "acte" ou "attachment"
-   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
-   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'ajout d'une signature d'un fichier
+   * \param $type chaÃ®ne : Type de fichier, "acte" ou "attachment"
+   * \param $sign chaÃ®ne : Chemin du fichier dans le systÃ¨me de fichier ou signature sous forme de chaine
+   * \param $readFile boolÃ©en : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addSign($type, $sign, $readFile) {
     // Lecture du contenu du fichier
@@ -576,7 +576,7 @@ class ActesTransaction extends DataObject {
         $this->errorMsg = "Erreur lors de la lecture du fichier signature";
         return false;
       } else {
-        // Suppression retour à la ligne éventuel
+        // Suppression retour Ã  la ligne Ã©ventuel
         $signStr = rtrim($signStr);
       }
     } else {
@@ -591,9 +591,9 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de stockag ede la signature dans le tableau des fichiers
-   * \param $type chaîne : Type de fichier, "acte" ou "attachment"
-   * \param $sign chaîne : Chaîne de signature
+   * \brief MÃ©thode de stockag ede la signature dans le tableau des fichiers
+   * \param $type chaÃ®ne : Type de fichier, "acte" ou "attachment"
+   * \param $sign chaÃ®ne : ChaÃ®ne de signature
    */
   public function storeSign($type, $sign) {
     if ($type == "acte") {
@@ -610,19 +610,19 @@ class ActesTransaction extends DataObject {
   }
   
   /**
-   * \brief Méthode d'ajout d'une signature de pièce jointe
-   * \param $sign chaîne : Chemin du fichier dans le système de fichier ou signature sous forme de chaine
-   * \param $readFile booléen : lire ou non le fichier (donc $sign est un nom de fichier)
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'ajout d'une signature de piÃ¨ce jointe
+   * \param $sign chaÃ®ne : Chemin du fichier dans le systÃ¨me de fichier ou signature sous forme de chaine
+   * \param $readFile boolÃ©en : lire ou non le fichier (donc $sign est un nom de fichier)
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addAttachmentSign($sign, $readFile = true) {
     return $this->addSign("attachment", $sign, $readFile);
   }
 
   /**
-   * \brief Méthode de création du message métier XML de la transaction
-   * \param $xml_name chaîne : Nom du fichier à créer
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de crÃ©ation du message mÃ©tier XML de la transaction
+   * \param $xml_name chaÃ®ne : Nom du fichier Ã  crÃ©er
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function generateMessageXMLFile($xml_name) {
     switch ($this->type) {
@@ -652,17 +652,17 @@ class ActesTransaction extends DataObject {
     }
 
     if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
-      $this->errorMsg = "Erreur système de fichiers (createDirTree).";
+      $this->errorMsg = "Erreur systÃ¨me de fichiers (createDirTree).";
       return false;
     }
 
     if (! file_put_contents($this->rootDir . "/" . $this->xmlFileName, $xml)) {
-        $this->errorMsg = "Erreur système de fichiers (file_put_contents ) : ".$this->rootDir . "/" . $this->xmlFileName;
+        $this->errorMsg = "Erreur systÃ¨me de fichiers (file_put_contents ) : ".$this->rootDir . "/" . $this->xmlFileName;
       return false;
     }
 
     if (!$this->xmlFilesize = @ filesize($this->rootDir . "/" . $this->xmlFileName)) {
-      $this->errorMsg = "Erreur système de fichiers (filesize).";
+      $this->errorMsg = "Erreur systÃ¨me de fichiers (filesize).";
       return false;
     }
 
@@ -670,9 +670,9 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de création du message métier XML d'une transmission d'acte
-   * \param $xml_name chaîne : Nom du fichier à créer
-   * \return Le XML généré ou false en cas d'échec
+   * \brief MÃ©thode de crÃ©ation du message mÃ©tier XML d'une transmission d'acte
+   * \param $xml_name chaÃ®ne : Nom du fichier Ã  crÃ©er
+   * \return Le XML gÃ©nÃ©rÃ© ou false en cas d'Ã©chec
    */
   public function generateActeXMLFile($xml_name) {
     $xml_name .= "_0.xml";
@@ -689,14 +689,14 @@ class ActesTransaction extends DataObject {
     $xml .= "actes:NumeroInterne=\"" . Helpers :: escapeForXML($this->number) . "\"\n";
     $xml .= "actes:CodeNatureActe=\"" . Helpers :: escapeForXML($this->nature_code) . "\">\n";
 
-    // Les codes matières
+    // Les codes matiÃ¨res
     for ($i = 1; $i <= 5; $i++) {
       $var = "classif" . $i;
       if (isset ($this-> $var) && !empty ($this-> $var) && is_numeric($this-> $var)) {
         $xml .= " <actes:CodeMatiere" . $i . " actes:CodeMatiere=\"" . $this-> $var . "\"/>\n";
       }
     }
-    $xml .= " <actes:Objet>" . XML_escaping($this->subject) . "</actes:Objet>\n";
+    $xml .= " <actes:Objet>" . XML_escaping(mb_convert_encoding($this->subject,"ISO-8859-1")) . "</actes:Objet>\n";
     $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
     $xml .= " <actes:Document>\n";
     $xml .= "  <actes:NomFichier>" . Helpers :: escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";
@@ -744,7 +744,7 @@ class ActesTransaction extends DataObject {
       		} elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
       			$root = "PieceComplementaire";
       		} else {
-      			$this->errorMsg = "Vous devez choisir un type de réponse";
+      			$this->errorMsg = "Vous devez choisir un type de rÃ©ponse";
       			return false;
       		}
       		break;
@@ -754,7 +754,7 @@ class ActesTransaction extends DataObject {
       		} elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
       			$root = "ReponseLettreObservations";
       		} else {
-      			$this->errorMsg = "Vous devez choisir un type de réponse";
+      			$this->errorMsg = "Vous devez choisir un type de rÃ©ponse";
       			return false;
       		}
       	break;
@@ -797,9 +797,9 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de création du message métier XML d'une demande d'annulation
-   * \param $xml_name chaîne : Nom du fichier à créer
-   * \return Le XML généré ou false en cas d'échec
+   * \brief MÃ©thode de crÃ©ation du message mÃ©tier XML d'une demande d'annulation
+   * \param $xml_name chaÃ®ne : Nom du fichier Ã  crÃ©er
+   * \return Le XML gÃ©nÃ©rÃ© ou false en cas d'Ã©chec
    */
   public function generateCancelXMLFile($xml_name) {
     $xml_name .= "_0.xml";
@@ -817,16 +817,16 @@ class ActesTransaction extends DataObject {
       $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
       $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\"/>\n";
     } else {
-      $this->errorMsg = "Info manquante pour générer le XML.";
+      $this->errorMsg = "Info manquante pour gÃ©nÃ©rer le XML.";
     }
 
     return $xml;
   }
 
   /**
-   * \brief Méthode de création du message métier XML d'une demande de classification
-   * \param $xml_name chaîne : Nom du fichier à créer
-   * \return Le XML généré ou false en cas d'échec
+   * \brief MÃ©thode de crÃ©ation du message mÃ©tier XML d'une demande de classification
+   * \param $xml_name chaÃ®ne : Nom du fichier Ã  crÃ©er
+   * \return Le XML gÃ©nÃ©rÃ© ou false en cas d'Ã©chec
    */
   public function generateClassifRequestXMLFile($xml_name) {
     $xml_name .= "_0.xml";
@@ -851,9 +851,9 @@ class ActesTransaction extends DataObject {
   }
   
   /**
-   * \brief Méthode d'importation d'un fichier XML de description d'une transaction
-   * \param $xmlFile chaîne : Chemin vers le fichier XML de description (relatif à ACTES_FILES_UPLOAD_ROOT)
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'importation d'un fichier XML de description d'une transaction
+   * \param $xmlFile chaÃ®ne : Chemin vers le fichier XML de description (relatif Ã  ACTES_FILES_UPLOAD_ROOT)
+   * \return True en cas de succÃ¨s, false sinon
   */
   public function createFromXML($xmlFile) {
   	
@@ -867,7 +867,7 @@ class ActesTransaction extends DataObject {
     }
 
     if (!$this->xmlFilesize = filesize($absXmlFile)) {
-      $this->errorMsg = "Erreur système.";
+      $this->errorMsg = "Erreur systÃ¨me.";
       return false;
     }
 
@@ -879,20 +879,20 @@ class ActesTransaction extends DataObject {
 
     // Extraction des informations du XML pour initialiser la transaction
     $namespaces = $this->xmlObj->getDocNamespaces();
-    // Récupération des éléments dans le namespace "actes"
+    // RÃ©cupÃ©ration des Ã©lÃ©ments dans le namespace "actes"
     $actesItems = $this->xmlObj->children($namespaces["actes"]);
 
     $rep = true;
     
-    // Détermination du type de transaction
+    // DÃ©termination du type de transaction
     switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
 	    	
     	case "actes:Acte" :
         $this->type = 1;
         $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
-        // Date de la décision
+        // Date de la dÃ©cision
         $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
-        // Numéro interne
+        // NumÃ©ro interne
         $this->number = Helpers :: getFromXMLElt($acte_attr["NumeroInterne"]);
         // Nature de l'acte
         $this->nature_code = Helpers :: getFromXMLElt($acte_attr["CodeNatureActe"]);
@@ -901,7 +901,7 @@ class ActesTransaction extends DataObject {
 
 		$classification = array();
 
-        // Classification matière
+        // Classification matiÃ¨re
         for ($i = 1; $i <= 5; $i++) {
           if (isset ($actesItems-> {"CodeMatiere" . $i })) {
             $classif_attr = $actesItems-> { "CodeMatiere" . $i } ->attributes($namespaces["actes"]);
@@ -953,7 +953,7 @@ class ActesTransaction extends DataObject {
         	}
         }
 
-        // Fichiers pièces jointes
+        // Fichiers piÃ¨ces jointes
         if (isset ($actesItems->Annexes)) {
           foreach ($actesItems->Annexes->Annexe as $annexe) {
             $attachmentPath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($annexe->NomFichier);
@@ -1000,13 +1000,13 @@ class ActesTransaction extends DataObject {
         $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
 
         if (!$this->related_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
-          $this->errorMsg = "Transaction de référence introuvable.";
+          $this->errorMsg = "Transaction de rÃ©fÃ©rence introuvable.";
           return false;
         }
 
         $related_trans = new ActesTransaction($related_id);
         if (!$related_trans->init()) {
-          $this->errorMsg = "Erreur d'initialisation de la transaction de référence.";
+          $this->errorMsg = "Erreur d'initialisation de la transaction de rÃ©fÃ©rence.";
           return false;
         }
 
@@ -1029,12 +1029,12 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'ajout du fichier de l'acte
-   * \param $name chaîne : Nom du fichier
-   * \param $dest_name chaîne : Nom du fichier destination
-   * \param $path chaîne (optionnel) : Chemin du fichier dans le système de fichier
-   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'ajout du fichier de l'acte
+   * \param $name chaÃ®ne : Nom du fichier
+   * \param $dest_name chaÃ®ne : Nom du fichier destination
+   * \param $path chaÃ®ne (optionnel) : Chemin du fichier dans le systÃ¨me de fichier
+   * \param $validate boolÃ©en (optionnel) : ProcÃ©der ou non Ã  la validation du type de fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addActeFile($name, $dest_name, $path = null, $validate = true,$code_pj='') {
     if (!$this->addFile("acte", $name, $dest_name, $path, $validate,$code_pj)) {
@@ -1045,20 +1045,20 @@ class ActesTransaction extends DataObject {
   }
   
   /**
-   * \brief Méthode générique d'ajout d'un fichier
-   * \param $type chaîne : Type de fichier à ajouter "acte" ou "attachment"
-   * \param $name chaîne : Nom du fichier
-   * \param $dest_name chaîne : Nom du fichier destination
-   * \param $path chaîne : Chemin du fichier dans le système de fichier
-   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode gÃ©nÃ©rique d'ajout d'un fichier
+   * \param $type chaÃ®ne : Type de fichier Ã  ajouter "acte" ou "attachment"
+   * \param $name chaÃ®ne : Nom du fichier
+   * \param $dest_name chaÃ®ne : Nom du fichier destination
+   * \param $path chaÃ®ne : Chemin du fichier dans le systÃ¨me de fichier
+   * \param $validate boolÃ©en (optionnel) : ProcÃ©der ou non Ã  la validation du type de fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addFile($type, $name, $dest_name, $path = false, $validate = true, $code_pj = '') {
 
     $ext = null;
 
-    // Si le chemin n'est pas spécifié et les deux noms fournis identiques
-    // c'est que le fichier se trouve déjà dans son emplacement définitif (dans le cas d'import de .tar.gz)
+    // Si le chemin n'est pas spÃ©cifiÃ© et les deux noms fournis identiques
+    // c'est que le fichier se trouve dÃ©jÃ  dans son emplacement dÃ©finitif (dans le cas d'import de .tar.gz)
     $import = false;
     if (!$path && strcmp($name, $dest_name) == 0) {
       $path = $this->rootDir . "/" . $dest_name;
@@ -1067,7 +1067,7 @@ class ActesTransaction extends DataObject {
 
     if ($validate && $path) {
     	if (!file_exists($path)) {
-			$this->errorMsg = "Fichier non présent : " . basename($path);
+			$this->errorMsg = "Fichier non prÃ©sent : " . basename($path);
         	return false;
       	}
 
@@ -1091,40 +1091,40 @@ class ActesTransaction extends DataObject {
 
       if ($type == 'acte' && $this->type == 1){
       	if (! in_array($ext,array('pdf','xml'))){
-			$this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF ou XML requis.";
+			$this->errorMsg = "Le fichier de l'acte Â«&nbsp;" . basename($name) . "&nbsp;Â» est de type Â«&nbsp;" . $mimeType . "&nbsp;Â». Fichier PDF ou XML requis.";
       		return false;
       	}
 
       	if ($ext == "xml"){
       		if ($this->nature_code != 5){
-      			$this->errorMsg = "Seuls les documents budgétaires et financiers peuvent être au format XML.";
+      			$this->errorMsg = "Seuls les documents budgÃ©taires et financiers peuvent Ãªtre au format XML.";
       			return false;
       		}
       		if ($this->classif1 != 7 || $this->classif2 != 1){
-      			$this->errorMsg = "Seule la classification 7.1 est autorisée pour la transmission au format XML";
+      			$this->errorMsg = "Seule la classification 7.1 est autorisÃ©e pour la transmission au format XML";
       			return false;
       		}
       	}
       } elseif($type == "acte") {
           if (! in_array($ext,array('pdf','jpg','png','xml'))){
-              $this->errorMsg = "Le fichier de réponse «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
+              $this->errorMsg = "Le fichier de rÃ©ponse Â«&nbsp;" . basename($name) . "&nbsp;Â» est de type Â«&nbsp;" . $mimeType . "&nbsp;Â». Fichier PDF, XML, PNG ou JPEG requis.";
               return false;
           }
  	  } elseif($type == "attachment") {
  	  	if (! in_array($ext,array('pdf','jpg','png','xml'))){
-			$this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
+			$this->errorMsg = "Le fichier attachÃ© Â«&nbsp;" . basename($name) . "&nbsp;Â» est de type Â«&nbsp;" . $mimeType . "&nbsp;Â». Fichier PDF, XML, PNG ou JPEG requis.";
 			return false;
  	  	}
 
  	  	if (  (isset($this->files["acte"]['mimetype']) && $this->files["acte"]['mimetype'] == 'application/xml') && (! in_array($ext,array('pdf')))){
- 	  		$this->errorMsg = "Les pièces jointes doivent être au format PDF avec un acte au format XML";
+ 	  		$this->errorMsg = "Les piÃ¨ces jointes doivent Ãªtre au format PDF avec un acte au format XML";
  	  		return false;
  	  	}
 
       }
 
       	if (!$size = @ filesize($path)) {
-        	$this->errorMsg = "Erreur détermination taille fichier.";
+        	$this->errorMsg = "Erreur dÃ©termination taille fichier.";
         	return false;
       	}
 
@@ -1134,7 +1134,7 @@ class ActesTransaction extends DataObject {
     $new_name = $dest_name;
 
     if ($code_pj && ! preg_match("#^[A-Z0-9_]{5}$#",$code_pj)){
-    	$this->errorMsg = "Le code de la PJ doit faire 5 caractères";
+    	$this->errorMsg = "Le code de la PJ doit faire 5 caractÃ¨res";
     	return false;
 	}
 
@@ -1171,16 +1171,16 @@ class ActesTransaction extends DataObject {
       );
     }
 
-    // Mise en place du fichier dans le répertoire de destination
+    // Mise en place du fichier dans le rÃ©pertoire de destination
     if (!$import) {
       if ($path) {
         if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $new_name))) {
-          $this->errorMsg = "Erreur système (createDirTree). Abandon";
+          $this->errorMsg = "Erreur systÃ¨me (createDirTree). Abandon";
           return false;
         } else {
 
           if (!copy($path, $this->rootDir . "/" . $new_name)) {
-            $this->errorMsg = "Erreur système (copy). Abandon";
+            $this->errorMsg = "Erreur systÃ¨me (copy). Abandon";
             return false;
           }
         }
@@ -1191,12 +1191,12 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode d'ajout d'un fichier de pièce jointe
-   * \param $name chaîne : Nom du fichier
-   * \param $dest_name chaîne : Nom du fichier destination
-   * \param $path chaîne (optionnel) : Chemin du fichier dans le système de fichier
-   * \param $validate booléen (optionnel) : Procéder ou non à la validation du type de fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'ajout d'un fichier de piÃ¨ce jointe
+   * \param $name chaÃ®ne : Nom du fichier
+   * \param $dest_name chaÃ®ne : Nom du fichier destination
+   * \param $path chaÃ®ne (optionnel) : Chemin du fichier dans le systÃ¨me de fichier
+   * \param $validate boolÃ©en (optionnel) : ProcÃ©der ou non Ã  la validation du type de fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function addAttachmentFile($name, $dest_name, $path = null, $validate = true,$code_pj='') {
     if (!$this->addFile("attachment", $name, $dest_name, $path, $validate,$code_pj)) {
@@ -1220,14 +1220,14 @@ class ActesTransaction extends DataObject {
 			$this->decision_date = Helpers :: getFromXMLElt($acte_attr["DateCourrierPref"]);
 
 		if (!$this->related_transaction_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
-        	$this->errorMsg = "Transaction de référence introuvable.";
+        	$this->errorMsg = "Transaction de rÃ©fÃ©rence introuvable.";
          	return false;
        	}
 
 		$related_trans = new ActesTransaction($this->related_transaction_id);
 
         if (!$related_trans->init()) {
-        	$this->errorMsg = "Erreur d'initialisation de la transaction de référence.";
+        	$this->errorMsg = "Erreur d'initialisation de la transaction de rÃ©fÃ©rence.";
         	return false;
         }
 
@@ -1261,7 +1261,7 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération de l'identifiant d'une transaction d'après son unique_id
+   * \brief MÃ©thode de rÃ©cupÃ©ration de l'identifiant d'une transaction d'aprÃ¨s son unique_id
    * \return Un tableau de natures de transaction
    *
    * Commentaire : ce serait plus logique de renvoyer l'objet (EP 07/03/08)
@@ -1281,7 +1281,7 @@ class ActesTransaction extends DataObject {
       return $row["id"];
     }
 
-    //On a pas trouvé, on va essayer dans les messages métier.
+    //On a pas trouvÃ©, on va essayer dans les messages mÃ©tier.
     $sql = "SELECT * FROM actes_included_files " .
 			" WHERE filename='" . addslashes($unique_id) .
 			"_0.xml' ";
@@ -1297,15 +1297,15 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succès, false sinon
+   * \brief MÃ©thode initialisant l'entitÃ© avec l'identifiant courant
+   * \return true si succÃ¨s, false sinon
   */
   public function init() {
     if (!parent :: init()) {
       return false;
     }
 
-    // Traitement des codes matières
+    // Traitement des codes matiÃ¨res
     $classif = explode(".", $this->classification);
 
     for ($i = 1; $i <= 5; $i++) {
@@ -1319,8 +1319,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de suppression des différents fichiers associés à la transaction
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode de suppression des diffÃ©rents fichiers associÃ©s Ã  la transaction
+   * \return True en cas de succÃ¨s, false sinon
   */
   public function purgeFiles() {
     // Fichier XML de l'acte
@@ -1339,10 +1339,10 @@ class ActesTransaction extends DataObject {
       }
     }
 
-    // Fichier des pièces jointes
+    // Fichier des piÃ¨ces jointes
     if (isset ($this->files["attachment"])) {
       foreach ($this->files["attachment"] as $file) {
-        if (strlen($file["name"]) > 0) {
+        if (mb_strlen($file["name"]) > 0) {
           if (!unlink($this->rootDir . "/" . $file["name"])) {
             $this->errorMsg = "Ne peut supprimer un fichier temporaire.";
             return false;
@@ -1355,7 +1355,7 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération de la liste des fichiers associés à cette transaction
+   * \brief MÃ©thode de rÃ©cupÃ©ration de la liste des fichiers associÃ©s Ã  cette transaction
    * \return Un tableau de description des fichiers
    */
   public function fetchFilesList() {
@@ -1363,7 +1363,7 @@ class ActesTransaction extends DataObject {
       $this->files = array ();
 
       if (!($this->files = ActesIncludedFile :: fetchFilesList($this->id))) {
-        $this->errorMsg = "Erreur de récupération de la liste des fichiers.";
+        $this->errorMsg = "Erreur de rÃ©cupÃ©ration de la liste des fichiers.";
         $this->files = array ();
       }
     }
@@ -1372,7 +1372,7 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de récupération du cycle de vie de cette transaction
+   * \brief MÃ©thode de rÃ©cupÃ©ration du cycle de vie de cette transaction
    * \return Un tableau contenant le workflow de la transaction
    */
   public function fetchWorkflow() {
@@ -1389,11 +1389,11 @@ class ActesTransaction extends DataObject {
     return $this->workflow;
   }
   
-  //Renvoie des informations sur les courriers de retour de la préfécture
+  //Renvoie des informations sur les courriers de retour de la prÃ©fÃ©cture
   //Message 2, 3, 4 et 5
 
   /**
-   * \brief Méthode de détermination si la transaction en cours a une demande d'annulation en cours
+   * \brief MÃ©thode de dÃ©termination si la transaction en cours a une demande d'annulation en cours
    * \return True si une demande d'annulation est en cours, false sinon
    */
   public function hasPendingCancelTrans() {
@@ -1425,13 +1425,13 @@ class ActesTransaction extends DataObject {
   
 
   /**********************/
-  /* Méthodes statiques */
+  /* MÃ©thodes statiques */
   /**********************/
 
   /**
-   * \brief Méthode d'enregistrement d'une transaction dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \return true si succès, false sinon
+   * \brief MÃ©thode d'enregistrement d'une transaction dans la base de donnÃ©es
+   * \param $validate boolÃ©en (optionnel) Demande la validation ou non des donnÃ©es de l'entitÃ© avant enregistrement (true par dÃ©faut)
+   * \return true si succÃ¨s, false sinon
    */
   public function save($validate = true,$bouchon_4_strict_standard = true) {
     $new = false;
@@ -1448,7 +1448,7 @@ class ActesTransaction extends DataObject {
         if (isset ($this-> $var) && !empty ($this-> $var) && is_numeric($this-> $var)) {
           $this->classification .= ($i > 1) ? "." . $this-> $var : $this-> $var;
         } else {
-          // Les deux premiers numéros de classification sont obligatoires
+          // Les deux premiers numÃ©ros de classification sont obligatoires
           if ($i <= 2) {
             $this->errorMsg = "Les deux premiers niveaux de classification sont obligatoires.";
             return false;
@@ -1461,8 +1461,8 @@ class ActesTransaction extends DataObject {
       }
     }
 
-    // Si la transaction n'est pas une transmission d'acte on désactive
-    // le contrôle des champs car tous les champs ne sont plus obligatoire
+    // Si la transaction n'est pas une transmission d'acte on dÃ©sactive
+    // le contrÃ´le des champs car tous les champs ne sont plus obligatoire
     if ($this->type != 1) {
     	$validate = false;
 	}
@@ -1483,7 +1483,7 @@ class ActesTransaction extends DataObject {
     			" WHERE actes_transactions.number=? AND authority_id=?";
 
     	if ($this->type == 1 && $this->db->getOneValue($sql_verif,[$this->get('number'),$this->get('authority_id')])){
-    		$this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
+    		$this->errorMsg = "Une transaction avec le mÃªme numÃ©ro existe dÃ©jÃ  dans la base.";
     		$this->db->rollback();
     		return false;
     	}
@@ -1496,16 +1496,16 @@ class ActesTransaction extends DataObject {
     }
 
     if ($new) {
-      // Ajout de l'état initial
+      // Ajout de l'Ã©tat initial
       if ($this->en_attente){
-      	$result_set_status = $this->setNewStatus(17, "Dépôt dans un état d'attente");
+      	$result_set_status = $this->setNewStatus(17, "DÃ©pÃ´t dans un Ã©tat d'attente");
       } elseif ($this->is_en_attente_de_signature){
-      	$result_set_status = $this->setNewStatus(18, "En attente d'être signé");
+      	$result_set_status = $this->setNewStatus(18, "En attente d'Ãªtre signÃ©");
       } else {
-      	$result_set_status = $this->setNewStatus(1, "Dépôt initial");
+      	$result_set_status = $this->setNewStatus(1, "DÃ©pÃ´t initial");
       }
       if (!$result_set_status) {
-        $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
+        $this->errorMsg = "Erreur lors de la dÃ©finition de l'Ã©tat initial de la transaction.";
         $this->db->rollback();
         return false;
       }
@@ -1564,19 +1564,19 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode qui positionne une transaction dans un état spécifié
-   * \param $new_status_id entier : Identifiant du nouveau statut à positionner
-   * \param $message chaîne : Message accompagnant le changement d'état
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode qui positionne une transaction dans un Ã©tat spÃ©cifiÃ©
+   * \param $new_status_id entier : Identifiant du nouveau statut Ã  positionner
+   * \param $message chaÃ®ne : Message accompagnant le changement d'Ã©tat
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function setNewStatus($new_status_id, $message) {
-  	//TODO vérifier que le status est pas déjà positionné
+  	//TODO vÃ©rifier que le status est pas dÃ©jÃ  positionnÃ©
 
     $date = date("Y-m-d H:i:s");
     $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message) VALUES(" . $this->id . ", " . $new_status_id . ", '" . $date . "', '" . addslashes($message) . "')";
 
     if (!$this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
+      $this->errorMsg = "Erreur lors de la dÃ©finition de l'Ã©tat initial de la transaction.";
       return false;
     }
 
@@ -1587,17 +1587,17 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode de suppression d'une transaction de la base de données
-   * \param $id integer (optionnel) Numéro d'identifiant de la transaction, si non spécifié, entité en cours
-   * \return true si succès, false sinon
+   * \brief MÃ©thode de suppression d'une transaction de la base de donnÃ©es
+   * \param $id integer (optionnel) NumÃ©ro d'identifiant de la transaction, si non spÃ©cifiÃ©, entitÃ© en cours
+   * \return true si succÃ¨s, false sinon
   */
   public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+    // Efface l'entitÃ© spÃ©cifiÃ©e par $id ou alors l'entitÃ© courante si pas d'id
     if (!$id) {
       if (isset ($this->id) && !empty ($this->id)) {
         $id = $this->id;
       } else {
-        $this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+        $this->errorMsg = "Pas d'identifiant pour l'entitÃ© a supprimer";
         return false;
       }
     }
@@ -1610,7 +1610,7 @@ class ActesTransaction extends DataObject {
     $sql = "DELETE FROM actes_included_files WHERE transaction_id=" . $id;
 
     if (!$this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la suppression des fichiers reliés à la transaction.";
+      $this->errorMsg = "Erreur lors de la suppression des fichiers reliÃ©s Ã  la transaction.";
       $this->db->rollback();
       return false;
     }
@@ -1618,7 +1618,7 @@ class ActesTransaction extends DataObject {
     $sql = "DELETE FROM actes_transactions_workflow WHERE transaction_id=" . $id;
 
     if (!$this->db->exec($sql)) {
-      $this->errorMsg = "Erreur lors de la suppression des états reliés à la transaction.";
+      $this->errorMsg = "Erreur lors de la suppression des Ã©tats reliÃ©s Ã  la transaction.";
       $this->db->rollback();
       return false;
     }
@@ -1638,10 +1638,10 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode avertissant le moteur transactionnel qu'une nouvelle transaction est a traiter
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode avertissant le moteur transactionnel qu'une nouvelle transaction est a traiter
+   * \return True en cas de succÃ¨s, false sinon
    *
-   * Non utilisée
+   * Non utilisÃ©e
    */
   public function warnTransactionalEngine() {
     if (isset ($this->id) && !empty ($this->id)) {
@@ -1660,8 +1660,8 @@ class ActesTransaction extends DataObject {
   }
 
   /**
-   * \brief Méthode déterminant si un utilisateur peut modifier la transaction courante
-   * \param $user objet User : utilisateur considéré
+   * \brief MÃ©thode dÃ©terminant si un utilisateur peut modifier la transaction courante
+   * \param $user objet User : utilisateur considÃ©rÃ©
    * \return True en cas d'authorisation, false sinon
    */
   public function userCanEdit($user) {
@@ -1691,14 +1691,14 @@ class ActesTransaction extends DataObject {
   	$result = $this->db->select($sql);
 
   	if ($result->isError()) {
-  		$this->errorMsg = "Impossible de récupere les transactions relatives.";
+  		$this->errorMsg = "Impossible de rÃ©cupere les transactions relatives.";
   		return false;
   	}
 
   	while ($row = $result->get_next_row()) {
 		if ($row["related_transaction_id"] == "") {
     		$renvoie[$row["id"]] = array("type" => $row["type"],
-    								"sens" => "reçu");
+    								"sens" => "reÃ§u");
 		} else {
 			$renvoie[$row["related_transaction_id"]] = array("type" => $row["type"],
     								"sens" => "envoye");
@@ -1736,7 +1736,7 @@ class ActesTransaction extends DataObject {
 		$sql = 	"SELECT date + interval '2 month' < now() as can_validate " . 
 				" FROM actes_transactions_workflow " .
 				" WHERE transaction_id=".$this->id.
-				" AND status_id=4" ; //FIXME constante magique 4 dans la base de données....
+				" AND status_id=4" ; //FIXME constante magique 4 dans la base de donnÃ©es....
 		$result = $this->db->fetchAll($sql);
 		if (! $result){
 			return false;

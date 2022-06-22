@@ -4,7 +4,7 @@ require_once( __DIR__ . "/../../init/init.php");
 
 /**
  * Le script BL de purge ne purge pas les pes_aquit
- * Par contre, le Ètat MIPIH ne correspondent pas ‡ ce qui existe rÈellement sur s2low...
+ * Par contre, le √©tat MIPIH ne correspondent pas √† ce qui existe r√©ellement sur s2low...
  * Appeller le script avec l'argument "do" permet de ne pas poser la question pour chaque transaction
  */
 
@@ -18,7 +18,7 @@ $sql = "select id,acquit_filename from helios_transactions WHERE last_status_id=
 
 $result = $sqlQuery->query($sql);
 
-$s2lowLogger->info(sprintf("%d transactions dÈtruites trouvÈes",count($result)));
+$s2lowLogger->info(sprintf("%d transactions d√©truites trouv√©es",count($result)));
 
 foreach($result as $info){
     $s2lowLogger->info("Traitement de la transaction {$info['id']}");
@@ -31,7 +31,7 @@ foreach($result as $info){
 
     if ($delete_all || ask("Voulez-vous supprimer le fichier $pes_aquit_filename  ? (oui/non)")) {
         unlink($pes_aquit_filename);
-        $s2lowLogger->info("Le fichier $pes_aquit_filename a ÈtÈ supprimÈ");
+        $s2lowLogger->info("Le fichier $pes_aquit_filename a √©t√© supprim√©");
     }
 }
 

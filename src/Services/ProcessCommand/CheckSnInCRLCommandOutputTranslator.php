@@ -13,11 +13,11 @@ class CheckSnInCRLCommandOutputTranslator implements ICommandOutputTranslator
     public function getCommandOutput(Process $process): AnalysedOutput
     {
         $preg_match = preg_match("#" . $this->serialNumber . "#", $process->getOutput());
-        if($preg_match === 0){      // Pas trouvÈ dans le fichier => clairement pas rÈvoquÈ
+        if($preg_match === 0){      // Pas trouv√© dans le fichier => clairement pas r√©voqu√©
             return new AnalysedOutput("");
         }
-        if($preg_match === 1){      // TrouvÈ dans le fichier CRL => clairement rÈvoquÈ
-            return new AnalysedOutput("",["Certificat rÈvoquÈ"]);
+        if($preg_match === 1){      // Trouv√© dans le fichier CRL => clairement r√©voqu√©
+            return new AnalysedOutput("",["Certificat r√©voqu√©"]);
         }
         return new AnalysedOutput("",[],["Erreur inconnue"]);
     }

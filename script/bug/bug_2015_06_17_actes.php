@@ -1,10 +1,10 @@
 <?php 
 
 /**
- * Entre la version 1.5 et la version 2.1 les enveloppes soumises directement dont le fichier métier contenait une signature n'ont pas pu avoir 
- * cette signature enregistré correctement dans le système.
+ * Entre la version 1.5 et la version 2.1 les enveloppes soumises directement dont le fichier mÃ©tier contenait une signature n'ont pas pu avoir 
+ * cette signature enregistrÃ© correctement dans le systÃ¨me.
  * 
- * Ce script extrait toutes les transactions entre ces deux dates et vérifie que les enveloppes métier contiennent une signature.
+ * Ce script extrait toutes les transactions entre ces deux dates et vÃ©rifie que les enveloppes mÃ©tier contiennent une signature.
  * Si c'est le cas, alors on enregistre cette signature 
  * 
  */

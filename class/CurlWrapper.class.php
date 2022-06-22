@@ -125,7 +125,7 @@ class CurlWrapper {
 	
 	private function getBoundary(){
 		return '----------------------------' .
-	        substr(sha1( 'CurlWrapper' . microtime()), 0, 12);
+	        mb_substr(sha1( 'CurlWrapper' . microtime()), 0, 12);
 	}
 	
 	private function curlSetPostData() {
@@ -140,8 +140,8 @@ class CurlWrapper {
 	private function isPostDataWithSimilarName(){
 		$array = array();
 		
-		//cURL ne permet pas de poster plusieurs fichiers avec le même nom !
-		//cette fonction est inspiré de http://blog.srcmvn.com/multiple-values-for-the-same-key-and-file-upl
+		//cURL ne permet pas de poster plusieurs fichiers avec le mÃªme nom !
+		//cette fonction est inspirÃ© de http://blog.srcmvn.com/multiple-values-for-the-same-key-and-file-upl
 		foreach($this->postData as $name => $multipleValue){
 			foreach($multipleValue as $data) {
 				if (isset($array[$name])){
@@ -181,8 +181,8 @@ class CurlWrapper {
 	}
 	
 	private function curlSetPostDataWithSimilarFilename( ) {
-		//cette fonction, bien que résolvant la limitation du problème de nom multiple de fichier 
-		//nécessite le chargement en mémoire de l'ensemble des fichiers.
+		//cette fonction, bien que rÃ©solvant la limitation du problÃ¨me de nom multiple de fichier 
+		//nÃ©cessite le chargement en mÃ©moire de l'ensemble des fichiers.
 	    $boundary = $this->getBoundary();
 	
 	    $body = array();
@@ -216,7 +216,7 @@ class CurlWrapper {
 	    $content = join(self::POST_DATA_SEPARATOR, $body);
 	    
 	    
-	    $curlHttpHeader[] = 'Content-Length: ' . strlen($content);
+	    $curlHttpHeader[] = 'Content-Length: ' . mb_strlen($content);
 		$curlHttpHeader[] = 'Expect: 100-continue';
 		$curlHttpHeader[] = "Content-Type: multipart/form-data; boundary=$boundary";	
 	
@@ -235,10 +235,10 @@ class CurlWrapper {
     public function getServerCertificate(){
 	    $info = $this->getInfo();
 	    if (!$info){
-	        throw new Exception("Impossible de récupérer les informations sur la connexion Curl");
+	        throw new Exception("Impossible de rÃ©cupÃ©rer les informations sur la connexion Curl");
         }
         if (empty($info['certinfo'])){
-            throw new Exception("Impossible de récupérer le certificat de la connexion Curl");
+            throw new Exception("Impossible de rÃ©cupÃ©rer le certificat de la connexion Curl");
         }
 
 	    return $info['certinfo'][0]['Cert'];

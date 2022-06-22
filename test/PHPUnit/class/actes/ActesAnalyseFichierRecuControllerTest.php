@@ -42,7 +42,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
         $logs = $this->getLogRecords();
-        $this->assertEquals("Traitement de 0 répertoire trouvés",$logs[2][S2lowLogger::MESSAGE]);
+        $this->assertEquals("Traitement de 0 rÃ©pertoire trouvÃ©s",$logs[2][S2lowLogger::MESSAGE]);
     }
 
 	/**
@@ -58,8 +58,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertFileExists($this->tmp_dir2."/test_bad");
 
         $logs = $this->getLogRecords();
-        $this->assertEquals("Echec du traitement de $bad_dir : Aucun fichier de type enveloppe métier n'a été trouvé dans le répertoire $bad_dir",$logs[4][S2lowLogger::MESSAGE]);
-        $this->assertEquals("Déplacement du répertoire test_bad vers {$this->tmp_dir2}",$logs[5][S2lowLogger::MESSAGE]);
+        $this->assertEquals("Echec du traitement de $bad_dir : Aucun fichier de type enveloppe mÃ©tier n'a Ã©tÃ© trouvÃ© dans le rÃ©pertoire $bad_dir",$logs[4][S2lowLogger::MESSAGE]);
+        $this->assertEquals("DÃ©placement du rÃ©pertoire test_bad vers {$this->tmp_dir2}",$logs[5][S2lowLogger::MESSAGE]);
     }
 
 
@@ -93,12 +93,12 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['status_id']);
         $this->assertRegExp(
-            "#Reçu par le {$this->actes_ministere_acronyme} le#",
+            "#ReÃ§u par le {$this->actes_ministere_acronyme} le#",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état acquittement reçu#",$liste['message']);
+        $this->assertRegExp("#Transaction.*[0-9]* : passage Ã  l'Ã©tat acquittement reÃ§u#",$liste['message']);
 
         $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
     }
@@ -111,7 +111,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#Aucune transation trouver pour le couple SIREN 000000000 - numéro interne 20170721D#",$logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#Aucune transation trouver pour le couple SIREN 000000000 - numÃ©ro interne 20170721D#",$logs[6][S2lowLogger::MESSAGE]);
     }
 
     private function createTransaction($status){
@@ -134,10 +134,10 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 			$actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
 			$actesAnalyseFichierRecuController->analyseAll();
 		} catch (Exception $e){
-        	$this->assertEquals("Erreur lors de la lecture du répertoire  {$this->tmp_dir}/not-exists/",$e->getMessage());
+        	$this->assertEquals("Erreur lors de la lecture du rÃ©pertoire  {$this->tmp_dir}/not-exists/",$e->getMessage());
 		}
         $logs = $this->getLogRecords();
-        $this->assertEquals("Erreur lors de la lecture du répertoire  {$this->tmp_dir}/not-exists/",$logs[2]['message']);
+        $this->assertEquals("Erreur lors de la lecture du rÃ©pertoire  {$this->tmp_dir}/not-exists/",$logs[2]['message']);
     }
 
 	/**
@@ -155,7 +155,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
         $this->assertRegExp(
-            "#Enveloppe rejetée par le {$this->actes_ministere_acronyme}#",
+            "#Enveloppe rejetÃ©e par le {$this->actes_ministere_acronyme}#",
             $transaction_info['message']
         );
         $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
@@ -230,13 +230,13 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
 
 
-		$this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+		$this->assertEquals("2017-07-25",mb_substr($info['decision_date'],0,10));
 
         $this->cleanAnalysePath();
     }
 
     /**
-     * Après 15J, le repertoire risque d'être détruit...
+     * AprÃ¨s 15J, le repertoire risque d'Ãªtre dÃ©truit...
      * @throws Exception
      */
     public function testCourrierSimpleApres15J(){
@@ -259,13 +259,13 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertNotEmpty($actesTransactionSQL->getRelatedTransaction($transaction_id_orig));
 
 
-        $this->assertEquals("2017-07-25",substr($info['decision_date'],0,10));
+        $this->assertEquals("2017-07-25",mb_substr($info['decision_date'],0,10));
         $this->cleanAnalysePath();
     }
 
     /**
-     * Si on a un fichier à la place du répertoire correspondant à l'acte, on ne veut pas qu'il soit détruit mais
-     * qu'une exception soit lancée.
+     * Si on a un fichier Ã  la place du rÃ©pertoire correspondant Ã  l'acte, on ne veut pas qu'il soit dÃ©truit mais
+     * qu'une exception soit lancÃ©e.
      * @throws Exception
      */
     public function testCourrierSimpleApres15JFichierPenible(){
@@ -279,7 +279,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController->analyseAll();
 
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#un fichier de ce nom existe déjà#",$logs[6][S2lowLogger::MESSAGE]);
+        $this->assertRegExp("#un fichier de ce nom existe dÃ©jÃ #",$logs[6][S2lowLogger::MESSAGE]);
         unlink($this->actes_files_upload_root."/000000000/20170725A");
         rmdir($this->actes_files_upload_root."/000000000/");
     }
@@ -330,7 +330,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 
 		$info = $actesTransactionSQL->getInfo($transaction_id);
 
-		$this->assertEquals("2017-07-25", substr($info['decision_date'], 0, 10));
+		$this->assertEquals("2017-07-25", mb_substr($info['decision_date'], 0, 10));
 
 		$actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
 
@@ -371,8 +371,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$actesAnalyseFichierRecuController->analyseAll();
 		$this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
 		$logs = $this->getLogRecords();
-		$this->assertRegExp("#Message de réponse à un multicanal#",$logs[4][S2lowLogger::MESSAGE]);
-		$this->assertRegExp("#Suppression du répertoire#",$logs[5]['message']);
+		$this->assertRegExp("#Message de rÃ©ponse Ã  un multicanal#",$logs[4][S2lowLogger::MESSAGE]);
+		$this->assertRegExp("#Suppression du rÃ©pertoire#",$logs[5]['message']);
 
 		$actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);

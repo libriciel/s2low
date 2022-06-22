@@ -63,14 +63,14 @@ ob_start();
 		<h1>Client qui n'ont pas de SAE</h1>
 
 	<div class="alert alert-info">
-		Sur cette page, on ne présente que les collectivités qui n'ont pas de SAE et qui ont des actes de plus de 26 mois
+		Sur cette page, on ne prÃ©sente que les collectivitÃ©s qui n'ont pas de SAE et qui ont des actes de plus de 26 mois
 	</div>
 <p>
 	<a href="/admin/ancien_systeme_notif.php?csv=true" class="btn btn-primary">CSV</a>
 </p>
 <table class="data-table table table-striped">
 	<tr>
-		<th>Collectivité</th>
+		<th>CollectivitÃ©</th>
 		<th>Groupes</th>
 		<th>Email</th>
 	</tr>

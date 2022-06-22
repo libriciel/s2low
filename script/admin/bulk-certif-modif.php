@@ -8,7 +8,7 @@ $user_id = 12745;
 // la partie x509 du certificat :  openssl pkcs12 -in certificat.p12 -out client.pem -clcerts -nokeys
 $old_certificate_pem = '/Users/eric/Desktop/old-cert.pem';
 
-//  la clé privée du certificat :   openssl pkcs12 -in certificat.p12 -out key.pem -nocerts
+//  la clÃ© privÃ©e du certificat :   openssl pkcs12 -in certificat.p12 -out key.pem -nocerts
 $old_key_pem = '/Users/eric/Desktop/old-key.pem';
 
 $login = "epommateau";
@@ -58,8 +58,8 @@ foreach($info["other_id"] as $id){
 	$data= array(
 		"api"	=>	"1",
 		"id"	=>	$id,
-		"name"	=>	utf8_decode($userinfo["name"]),
-		"givenname"	=>	utf8_decode($userinfo["givenname"]),
+		"name"	=>	utf8_decode($userinfo["name"]),             //OK, on attaque l'API en ISO
+		"givenname"	=>	utf8_decode($userinfo["givenname"]),    // (conversion UTF-8)
 		"email"	=>	$userinfo["email"],
 		"status"	=>	$userinfo["status"],
 		"authority_id"	=>	$userinfo["authority_id"],

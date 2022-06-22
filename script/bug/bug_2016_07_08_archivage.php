@@ -3,7 +3,7 @@
 /*
  * Ce script n'est plus fonctionnel
  *
- * Les transactions helios versé et accepté par le SAE n'ont pas été supprimé sur Pastell
+ * Les transactions helios versÃ© et acceptÃ© par le SAE n'ont pas Ã©tÃ© supprimÃ© sur Pastell
  *
  *
  */

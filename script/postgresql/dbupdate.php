@@ -1,7 +1,7 @@
 <?php
 require_once( __DIR__."/../../init/init.php");
 
-# Ce script permet d'afficher les requêtes à passer pour que la base soit conforme au schéma attendu
+# Ce script permet d'afficher les requÃªtes Ã  passer pour que la base soit conforme au schÃ©ma attendu
 
 /** @var ObjectInstancier $objectInstancier */
 /** @var PostgreSQLController $postgreSQLController */

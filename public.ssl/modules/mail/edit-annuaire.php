@@ -20,7 +20,7 @@ if (! $info){
 }
 
 $doc = new HTMLLayout();
-$doc->setTitle(($id?"Edition":"Ajout")." d'un contact de l'annuaire - Mail sécurisé - S²low");
+$doc->setTitle(($id?"Edition":"Ajout")." d'un contact de l'annuaire - Mail sÃ©curisÃ© - SÂ²low");
 
 $doc->openContainer();
 $doc->openSideBar();

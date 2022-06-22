@@ -17,8 +17,8 @@ if (count($argv)<3){
 	);
 	$s2lowLogger->error(
 		"Exporte l'ensemble des transactions actes".
-		"dans le rÈpertoire output_directory entre min_transaction_date (inclu) et max_transaction_date (exclu).\n" .
-		"Si le 4eme argument est TAMPON, alors les fichiers seront tamponnÈs"
+		"dans le r√©pertoire output_directory entre min_transaction_date (inclu) et max_transaction_date (exclu).\n" .
+		"Si le 4eme argument est TAMPON, alors les fichiers seront tamponn√©s"
 	);
 	exit(-1);
 }
@@ -48,7 +48,7 @@ try {
 	foreach($authority_info_list as $authority_info){
 		$s2lowLogger->info(
 			sprintf(
-				"Export des transactions de la collectivitÈ %s (%s) entre les transactions %d et %d",
+				"Export des transactions de la collectivit√© %s (%s) entre les transactions %d et %d",
 				$authority_info['name'],
 				$authority_info['siren'],
 				$authority_info['min_id'],
@@ -72,5 +72,5 @@ try {
 	exit(-2);
 }
 
-$s2lowLogger->info("Export terminÈ");
+$s2lowLogger->info("Export termin√©");
 exit(0);

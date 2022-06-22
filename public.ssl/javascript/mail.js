@@ -2,7 +2,7 @@ function checkFormCreateMail() {
 	var returnvalue=true;
 	if (checkpsw()==false)
 	{
-		alert("Les mots de passe doivent être identiques.");
+		alert("Les mots de passe doivent Ãªtre identiques.");
 		returnvalue=false;
 	}
 	var email=document.getElementById("mailto");
@@ -26,7 +26,7 @@ function checkFormCreateMail() {
 	}
 	if (message.value=="" || message.value==null)
 	{
-		alert("Le message ne peut pas être vide");
+		alert("Le message ne peut pas Ãªtre vide");
 		returnvalue=false;
 	}
 	return returnvalue;
@@ -109,7 +109,7 @@ function checkFormCreateMail() {
 	}
 	
   /**
-   *\brief  java scripte pour créer dynamiquement les upload bar.
+   *\brief  java scripte pour crÃ©er dynamiquement les upload bar.
    *\param FileNumber: le nombre total de upload fichier.
    *
    */

@@ -1,9 +1,9 @@
 <?php
 require_once(__DIR__ . "/../../init/init.php");
 
-// supprime les fichier de plus de nb jours avec nb passé en parametre
-// mettre la chaine de caractère ok en second parametre pour faire la suppression
-// Attention, une fois qu'on a passé ce script, il ne sert plus à rien, il vaut mieux passer par helios-menage.php qui fonctionne avec beanstalked
+// supprime les fichier de plus de nb jours avec nb passÃ© en parametre
+// mettre la chaine de caractÃ¨re ok en second parametre pour faire la suppression
+// Attention, une fois qu'on a passÃ© ce script, il ne sert plus Ã  rien, il vaut mieux passer par helios-menage.php qui fonctionne avec beanstalked
 
 $openStackSwiftWrapper = $objectInstancier->get('OpenStackSwiftWrapper');
 
@@ -30,7 +30,7 @@ $sql = "SELECT id,sha1,filename,submission_date FROM helios_transactions WHERE i
 
 $sqlQuery->prepareAndExecute($sql,$submission_date);
 
-echo "Il y a un certain nombre de PES ALLER à analyser\n";
+echo "Il y a un certain nombre de PES ALLER Ã  analyser\n";
 $sigtermHandler = SigTermHandler::getInstance();
 while($sqlQuery->hasMoreResult()){
     $pes = $sqlQuery->fetch();
@@ -44,9 +44,9 @@ while($sqlQuery->hasMoreResult()){
         echo "Le fichier existe sur le cloud, supression...\n";
         if($confirm){
             unlink($filename);
-            echo "Fichier $filename supprimé [OK] \n";
+            echo "Fichier $filename supprimÃ© [OK] \n";
         } else {
-            echo "Le fichier $filename aurait été supprimé [PASS]\n";
+            echo "Le fichier $filename aurait Ã©tÃ© supprimÃ© [PASS]\n";
         }
     }
     if ($sigtermHandler->isSigtermCalled()){

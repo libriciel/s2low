@@ -1,7 +1,7 @@
 <?php
 require_once( __DIR__."/../../init/init.php");
 
-# Ce script à utiliser en développement est utiliser pour mettre à jour les fichiers de définition de la base de données
+# Ce script Ã  utiliser en dÃ©veloppement est utiliser pour mettre Ã  jour les fichiers de dÃ©finition de la base de donnÃ©es
 
 /** @var ObjectInstancier $objectInstancier */
 /** @var PostgreSQLController $postgreSQLController */

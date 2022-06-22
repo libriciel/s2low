@@ -16,8 +16,8 @@ if (count($argv)<3){
 		)
 	);
 	$s2lowLogger->error(
-		"Exporte l'ensemble des transactions actes de la collectivitÈ autority_id ".
-		"dans le rÈpertoire output_directory entre min_transaction_id (inclu) et max_transaction_id (inclu). Si le 5eme argument est TAMPON, alors les fichiers seront tamponnÈs"
+		"Exporte l'ensemble des transactions actes de la collectivit√© autority_id ".
+		"dans le r√©pertoire output_directory entre min_transaction_id (inclu) et max_transaction_id (inclu). Si le 5eme argument est TAMPON, alors les fichiers seront tamponn√©s"
 	);
 	exit(-1);
 }
@@ -39,5 +39,5 @@ try {
 	exit(-2);
 }
 
-$s2lowLogger->info("Export terminÈ");
+$s2lowLogger->info("Export termin√©");
 exit(0);

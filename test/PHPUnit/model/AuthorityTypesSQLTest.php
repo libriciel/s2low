@@ -4,7 +4,7 @@ class AuthorityTypesSQLTest extends S2lowTestCase {
 
 	public function testGetInfo(){
 		$authoritiesTypeSQL = new AuthorityTypesSQL($this->getSQLQuery());
-		$this->assertEquals("Conseil régional",$authoritiesTypeSQL->getInfo(11)['description']);
+		$this->assertEquals("Conseil rÃ©gional",$authoritiesTypeSQL->getInfo(11)['description']);
 	}
 
 }

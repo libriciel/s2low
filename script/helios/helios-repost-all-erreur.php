@@ -36,4 +36,4 @@ foreach($all as $line){
     exit;
     $i++;
 }
-echo "$i transaction traité\n";
+echo "$i transaction traitÃ©\n";

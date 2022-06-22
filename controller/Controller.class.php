@@ -121,7 +121,7 @@ class Controller {
 		$this->verifUser();
 
 		if (! $this->me->isAdmin()) {
-			$this->displayErrorAndExit("AccËs refusÈ","");
+			$this->displayErrorAndExit("Acc√®s refus√©","");
 		} // @codeCoverageIgnore
 		if ($this->me->isSuper()){
 			return;
@@ -134,13 +134,13 @@ class Controller {
 				if ($info['authority_group_id'] == $this->me->get("authority_group_id")){
 					return;
 				}
-				$this->displayErrorAndExit("AccËs refusÈ","");
+				$this->displayErrorAndExit("Acc√®s refus√©","");
 			} // @codeCoverageIgnore
 			
 			if ($info['id'] == $this->me->get('authority_id')){
 				return ;
 			}
-			$this->displayErrorAndExit("AccËs refusÈ","");
+			$this->displayErrorAndExit("Acc√®s refus√©","");
 		} // @codeCoverageIgnore
 	}
 	
@@ -158,14 +158,14 @@ class Controller {
 			}
 		} 
 		
-		$this->redirect(WEBSITE_SSL,"AccËs refusÈ");
+		$this->redirect(WEBSITE_SSL,"Acc√®s refus√©");
 	} // @codeCoverageIgnore
 	
 	
 	public function verifSuperAdmin(){
 		$this->verifAdmin();
 		if (! $this->me->isSuper()){
-			$this->redirect(WEBSITE_SSL,"AccËs refusÈ");
+			$this->redirect(WEBSITE_SSL,"Acc√®s refus√©");
 		} // @codeCoverageIgnore
 	}
 	

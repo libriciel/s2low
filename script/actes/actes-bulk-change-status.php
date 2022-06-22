@@ -10,9 +10,9 @@ $actesStatus = $objectInstancier->get(ActesStatusSQL::class)->getAllStatus();
 
 
 if ($argc != 5) {
-    $s2LowLogger->error("Nombre de paramètres incorrect. ( 2 Attendus, ".($argc -1)." renseigné(s) )" );
+    $s2LowLogger->error("Nombre de paramÃ¨tres incorrect. ( 2 Attendus, ".($argc -1)." renseignÃ©(s) )" );
     $s2LowLogger->error("Usage {$argv[0]} status_from status_to date_min date_max");
-    $s2LowLogger->error("{$argv[0]} : Modifie le status de TOUTES les transactions status_from vers status_to entré dans l'état status_from entre date_min et date_max");
+    $s2LowLogger->error("{$argv[0]} : Modifie le status de TOUTES les transactions status_from vers status_to entrÃ© dans l'Ã©tat status_from entre date_min et date_max");
     $s2LowLogger->error("Date au format YYYY-mm-dd");
     echo printStatus($actesStatus);
     exit(-1);
@@ -31,7 +31,7 @@ $sql = "SELECT actes_transactions.id,actes_transactions.number, authorities.name
 $transaction_info_list = $sqlQuery->query($sql,$status_from,$status_from,$date_min,$date_max);
 
 if (count($transaction_info_list) < 1){
-    echo "Aucune transaction ne correspond au critère\n";
+    echo "Aucune transaction ne correspond au critÃ¨re\n";
     exit(-3);
 }
 
@@ -46,7 +46,7 @@ $stdin = fopen('php://stdin', 'r');
 
 $response = fgets($stdin);
 if ($response != "OUI\n") {
-    echo "Annulé\n";
+    echo "AnnulÃ©\n";
     exit (-2);
 }
 

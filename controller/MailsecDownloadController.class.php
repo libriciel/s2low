@@ -40,9 +40,25 @@ class MailsecDownloadController extends Controller {
 			$tmp_folder = $tmpFolder->create();
 			$zipArchive = new ZipArchive();
 			$zipArchive->open($filepath);
-            $filenameInZip = iconv('IBM437','UTF-8',$filename);
-            $zipArchive->extractTo($tmp_folder,$filenameInZip);
-			$filepath = $tmp_folder."/".$filenameInZip;
+            $filenameInZip = iconv('IBM437','UTF-8',
+                mb_convert_encoding($filename,"ISO-8859-9","UTF-8")
+            );     // HACK Fix passage en utf-8!!
+
+            echo bin2hex("é")."\n";
+            echo hex2bin("c3a9")."\n";
+            echo "é :\t".bin2hex("é")."\n";
+            echo "é :\t".bin2hex(iconv('IBM437','UTF-8',"é"))."\n";
+            echo "filename :\t\t".bin2hex($filename)."\n";
+            echo "filenameInZip :\t".bin2hex($filenameInZip)."\n";
+
+            $filepath = $tmp_folder."/".$filename;
+            $contents = stream_get_contents($zipArchive->getStream($filenameInZip));
+            file_put_contents(
+                $filepath,
+                $contents
+            );
+
+            var_dump(scandir($tmp_folder));
 		}
 
 		$finfo = finfo_open(FILEINFO_MIME_TYPE|FILEINFO_MIME_ENCODING);

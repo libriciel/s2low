@@ -1,7 +1,7 @@
- <h1> Mail - Système de mail sécurisé</h1>
+ <h1> Mail - SystÃ¨me de mail sÃ©curisÃ©</h1>
   	<div id="actions_area"> 
-   		<a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
+   		<a href="index.php?command=list" class="btn btn-primary">Messages envoyÃ©s</a>
   	</div>
   
 
-<p>Enregistrement des messages réussi</p>
+<p>Enregistrement des messages rÃ©ussi</p>

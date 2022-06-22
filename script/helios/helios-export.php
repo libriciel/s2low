@@ -16,8 +16,8 @@ if (count($argv)<3){
 		)
 	);
 	$s2lowLogger->error(
-		"Exporte l'ensemble des transactions helios (PES ALLER et PES Acquit) de la collectivitÈ autority_id ".
-		"dans le rÈpertoire output_directory entre min_transaction_id (inclu) et max_transaction_id (inclu)"
+		"Exporte l'ensemble des transactions helios (PES ALLER et PES Acquit) de la collectivit√© autority_id ".
+		"dans le r√©pertoire output_directory entre min_transaction_id (inclu) et max_transaction_id (inclu)"
 	);
 	exit(-1);
 }
@@ -37,5 +37,5 @@ try {
 	exit(-2);
 }
 
-$s2lowLogger->info("Export terminÈ");
+$s2lowLogger->info("Export termin√©");
 exit(0);

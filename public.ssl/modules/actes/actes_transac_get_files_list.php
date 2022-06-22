@@ -15,12 +15,12 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  echo "KO\nÉchec de l'authentification";
+  echo "KO\nÃ‰chec de l'authentification";
   exit();
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
-  echo "KO\nAccès refusé";
+  echo "KO\nAccÃ¨s refusÃ©";
   exit();
 }
 
@@ -39,7 +39,7 @@ if (isset($transId) && ! empty($transId)) {
 	$zeTrans = new ActesTransaction();
 	$zeTrans->setId($transId);
 } else {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();
 }
 
@@ -47,7 +47,7 @@ if ($zeTrans->init()) {
 	$owner = new User($zeTrans->get("user_id"));
 	$owner->init();
 } else {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();
   }
 
@@ -57,10 +57,10 @@ if (! $zeEnv->init()) {
   exit();
 }
 
-// Vérification des permissions
+// VÃ©rification des permissions
 if (! $me->isSuper()) {
   if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $zeEnv->get("user_id") && $me->canAccess($module->get("name")))) {
-	echo "KO\nAccès refusé";
+	echo "KO\nAccÃ¨s refusÃ©";
 	exit();
   }
 }
@@ -81,7 +81,5 @@ if(! $has_file){
 
 
 $files = $zeTrans->fetchFilesList();
-
-$files = utf8_encode_array($files);
 
 echo json_encode($files);

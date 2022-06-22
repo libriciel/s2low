@@ -15,17 +15,17 @@ $status_id = (int) $recuperateur->get('status_id',ActesStatusSQL::STATUS_EN_ATTE
 switch ($status_id){
 
 	case ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION:
-		$message = "La transaction $id a été passée manuellement en attente de transmission";
+		$message = "La transaction $id a Ã©tÃ© passÃ©e manuellement en attente de transmission";
 		$workerClassName = ActesEnvoiFichierWorker::class;
 		break;
 
 	case ActesStatusSQL::STATUS_POSTE:
-		$message = "La transaction $id a été passée manuellement en posté";
+		$message = "La transaction $id a Ã©tÃ© passÃ©e manuellement en postÃ©";
 		$workerClassName = ActesAnalyseFichierAEnvoyerWorker::class;
 		break;
 
 	default:
-		$_SESSION['error'] = "Impossible de passer la transaction $id dans l'état $status_id.";
+		$_SESSION['error'] = "Impossible de passer la transaction $id dans l'Ã©tat $status_id.";
 		header("Location: actes_transac_show.php?id=$id");
 		exit;
 }

@@ -5,7 +5,7 @@ require_once( __DIR__."/../../init/init.php");
 
 if ($argc < 2){
 	echo "Usage {$argv[0]} authority_id\n";
-	echo "{$argv[0]} : permet d'afficher les informations actes/sae sur une collectivité\n";
+	echo "{$argv[0]} : permet d'afficher les informations actes/sae sur une collectivitÃ©\n";
 	exit(-1);
 }
 
@@ -16,8 +16,8 @@ $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 $status_info = [
 	ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE => 'En attente de transmission au SAE',
-	ActesStatusSQL::STATUS_ENVOYE_AU_SAE => 'Envoyé au SAE',
-	ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE => 'Archivé par le SAE',
+	ActesStatusSQL::STATUS_ENVOYE_AU_SAE => 'EnvoyÃ© au SAE',
+	ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE => 'ArchivÃ© par le SAE',
 	ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE => "Erreur lors de l'envoi au SAE",
 	ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE => 'Erreur lors de l\'archivage',
 

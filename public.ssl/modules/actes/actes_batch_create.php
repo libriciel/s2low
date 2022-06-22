@@ -14,14 +14,14 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($module->get("name"))) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
-$description = utf8_decode(Helpers::getVarFromPost("intitule"));
+$description = Helpers::getVarFromPost("intitule");
 $num_prefix = Helpers::getVarFromPost("prefixe");
 
 $zeBatch = new ActesBatch();
@@ -30,8 +30,8 @@ $zeBatch->set("description", $description);
 $zeBatch->set("num_prefix", $num_prefix);
 $zeBatch->set("user_id", $me->getId());
 
-//Stéphane Sampaio Edit
-//conversion du tableau $_FILES reçu pour adaptation au traitement
+//StÃ©phane Sampaio Edit
+//conversion du tableau $_FILES reÃ§u pour adaptation au traitement
 $converted = array();
 $filerefs = array();
 for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
@@ -46,14 +46,14 @@ for ($i = 0; $i < count($_FILES['files']['name']); $i++) {
 }
 for ($i = 0; $i <= max($filerefs);$i++){
   $name = $_FILES['files']['name'][$i];
-  $converted[$name]['name'] = utf8_decode($name);
+  $converted[$name]['name'] = $name;
   $converted[$name]['type'] = $_FILES['files']['type'][$i];
   $converted[$name]['tmp_name'] = $_FILES['files']['tmp_name'][$i];
   $converted[$name]['error'] = $_FILES['files']['error'][$i];
   $converted[$name]['size'] = $_FILES['files']['size'][$i];
 }
 
-$logger->debug("Fichier reçu dans le lot",$converted);
+$logger->debug("Fichier reÃ§u dans le lot",$converted);
 //Fin
 $alljson = array();
 
@@ -90,7 +90,7 @@ $elvl = 0;
 
 foreach ($converted as $kFile => $file){
        $jsontest = new stdClass();
-        $jsontest->name = utf8_encode($file['name']);
+        $jsontest->name = $file['name'];   // Passage UTF8 : utf8_encode supprimÃ© : probable bug de l'API
         $jsontest->size = $file['size'];
         $jsontest->type = $file['type'];
         $alljson[] = $jsontest;

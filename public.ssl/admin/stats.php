@@ -43,7 +43,7 @@ ob_start();
 		<h1>Statistiques (super admin)</h1>
 
 		<div class="alert alert-warning">
-			Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
+			Attention, cette page n'est pas optimisÃ©e et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
 			parcimonie pour les besoins du service.
 		</div>
 
@@ -61,7 +61,7 @@ ob_start();
 			<?php endforeach ?>
 		</table>
 
-		<h2>Hélios</h2>
+		<h2>HÃ©lios</h2>
 		<table  class="data-table table table-striped ">
 			<tr>
 				<th>Mois</th>

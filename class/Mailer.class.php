@@ -113,14 +113,14 @@ class Mailer {
   }
 
   /**
-   * \brief Méthode d'encodage d'une chaîne en quoted-printable
-   * \param $str chaîne : Chaîne à encoder
-   * \param $add_mark booléen (optionnel) : Ajouter ou non le marqueur 'ISO-8859-1' (true par défaut)
-   * \return La chaîne encodée en quoted-printable
+   * \brief MÃ©thode d'encodage d'une chaÃ®ne en quoted-printable
+   * \param $str chaÃ®ne : ChaÃ®ne Ã  encoder
+   * \param $add_mark boolÃ©en (optionnel) : Ajouter ou non le marqueur 'ISO-8859-1' (true par dÃ©faut)
+   * \return La chaÃ®ne encodÃ©e en quoted-printable
    *
    */  
   public function quoted_printable_encode($str, $add_mark = true) {
-	// pas de caractère à échapper
+	// pas de caractÃ¨re Ã  Ã©chapper
 	if (! preg_match('/[^\x21-\x3C\x3E-\x7E\x09\x20]/', $str)) {
 	  return $str;
 	}
@@ -128,12 +128,12 @@ class Mailer {
 	// instead of replace_callback i used <b>e</b> modifier for regex rule, which works as eval php function
 	$new = preg_replace('/[^\x21-\x3C\x3E-\x7E\x09\x20]/e', 'sprintf("=%02X",ord("$0"));', $str);
 
-	// Ajout des marqueurs de début et de fin
+	// Ajout des marqueurs de dÃ©but et de fin
 	if ($add_mark) {
 	  $new = preg_replace('/[^\s]*=[^\s]*/','=?ISO-8859-1?Q?$0?=', $new);
 	}
 
-	// Problème: coupe le début des chaines sans espace de plus de 73 caractères.
+	// ProblÃ¨me: coupe le dÃ©but des chaines sans espace de plus de 73 caractÃ¨res.
 	preg_match_all('/.{1,73}( |$)/', $new, $aMatch);
 	$new = implode("\r\n\t", $aMatch[0]);
 	return $new;

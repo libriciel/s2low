@@ -28,7 +28,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$this->assertEquals($info['sha1'],sha1_file("/tmp/{$info['sha1']}"));
 		$this->assertEquals($info['file_size'],filesize("/tmp/{$info['sha1']}"));
 		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
-		$this->assertTrue(true);    //VÈrifie qu'aucune exception n'est lancÈe
+		$this->assertTrue(true);    //V√©rifie qu'aucune exception n'est lanc√©e
 
 		$heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 		$r = $heliosPESValidation->validate(file_get_contents("/tmp/{$info['sha1']}"));
@@ -78,7 +78,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 
 	private function getXadesSignatureProperties(){
 		$xadesSignatureProperties = new XadesSignatureProperties();
-		$xadesSignatureProperties->claimedRole = "RÙle de test";
+		$xadesSignatureProperties->claimedRole = "R√¥le de test";
 		$xadesSignatureProperties->countryName = "France";
 		$xadesSignatureProperties->postalCode = "69003";
 		$xadesSignatureProperties->city = "Lyon";
@@ -88,7 +88,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 	public function testSignModif(){
 		$file = $this->getFilePathInHeliosUplload();
 		file_put_contents($file,"toto");
-		$this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException","Le fichier a ÈtÈ modifÈ depuis son postage sur la plateforme");
+		$this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException","Le fichier a √©t√© modif√© depuis son postage sur la plateforme");
 		$this->sign();
 	}
 
@@ -109,7 +109,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$info = $heliosTransactionSQL->getInfo($transaction_id);
 		$this->assertTrue($info['signature_technique']);
 		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
-		$this->assertTrue(true); // vÈrifie qu'aucune exception n'est lancÈe
+		$this->assertTrue(true); // v√©rifie qu'aucune exception n'est lanc√©e
 	}
 
 	public function testDejaSigneBadSignature(){
@@ -137,7 +137,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase {
 		$heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 		$info = $heliosTransactionSQL->getInfo($transaction_id);
 		$this->getXadesSignature()->verify("/tmp/{$info['sha1']}");
-		$this->assertTrue(true); //VÈrifie qu'aucune exception n'est lancÈe
+		$this->assertTrue(true); //V√©rifie qu'aucune exception n'est lanc√©e
 	}
 
 	public function testSigneNoID(){

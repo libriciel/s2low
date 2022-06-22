@@ -1,6 +1,6 @@
 <?php
 
-//Permet de poster toutes les transactions d'une collectivité qui sont dans l'état 14
+//Permet de poster toutes les transactions d'une collectivitÃ© qui sont dans l'Ã©tat 14
 require_once( __DIR__."/../../init/init.php");
 
 require_once(__DIR__."/../../public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php");
@@ -27,7 +27,7 @@ foreach($all_info as $info){
 
 	$htw->set("transaction_id", $id);
 	$htw->set("status_id", 1);
-	$htw->set("message", "Fichier bien reçu par la plate-forme S2low");
+	$htw->set("message", "Fichier bien reÃ§u par la plate-forme S2low");
 
 	$htw->set("date", date('Y-m-d H:i:s'));
 
@@ -35,7 +35,7 @@ foreach($all_info as $info){
 		throw new Exception("Erreur lors de la sauvegarde de $id");
 	}
 	$heliosTransactionSQL->setLastStatusId($id);
-	$msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
+	$msg = "PrÃ©paration de la tÃ©lÃ©transmission Transaction nÂ°" . $id . ". RÃ©sultat ok.";
 
 	$me = new User($info['user_id']);
 	$me->init();

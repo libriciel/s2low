@@ -10,7 +10,7 @@ class XadesSignatureParser
         $xpath = "//*[local-name()='QualifyingProperties' and @Target=\"#$target\"]//*[local-name()='SigningTime']";
         $result = $XMLElement->xpath($xpath);
         if (count($result) !== 1) {
-            throw new Exception("SigningTime non trouvé pour $target");
+            throw new Exception("SigningTime non trouvÃ© pour $target");
         }
         return (string)$result[0];
     }

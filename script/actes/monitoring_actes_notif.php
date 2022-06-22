@@ -3,7 +3,7 @@
 //Script charge de verifier qu'il y a moins de X notification en attente d'etre envoyees
 
 //RETOURNE 0 si tout va bien
-//RETOURNE 2 si le nombre de transactions restant à notifier est supérieur à la limite
+//RETOURNE 2 si le nombre de transactions restant Ã  notifier est supÃ©rieur Ã  la limite
 require_once( __DIR__."/../../init/init.php");
 
 $email=EMAIL_ADMIN_TECHNIQUE;

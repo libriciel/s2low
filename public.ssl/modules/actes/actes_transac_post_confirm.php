@@ -19,28 +19,28 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 
 if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
 $rgsConnexion = new RgsConnexion();
 if ( ! $rgsConnexion->isRgsConnexion()){
-    $_SESSION["error"] = "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}";
+    $_SESSION["error"] = "La tÃ©lÃ©transmission nÃ©cessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}";
     header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
     exit ();
 }
 
 $id = Helpers :: getVarFromPost("id");
 if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
@@ -64,18 +64,18 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
 
-$msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
+$msg = "La transaction a Ã©tÃ© postÃ©e par l'agent tÃ©lÃ©transmetteur {$me->getPrettyName()}";
 
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $info = $actesTransactionsSQL->getInfo($id);
 if($info['last_status_id'] != 17){
-	$_SESSION["error"] ="La transaction n'est pas dans le statut « En attente d'être posté»";
+	$_SESSION["error"] ="La transaction n'est pas dans le statut Â« En attente d'Ãªtre postÃ©Â»";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }

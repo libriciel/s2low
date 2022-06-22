@@ -25,7 +25,7 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         );
 
         $this->assertEquals(
-            'Actes réglementaires',
+            'Actes rÃ©glementaires',
             $this->actesUpdateClassificationSQL->getActeNature()[1]['descr']
         );
         $authority_id = $this->getObjectInstancier()->get("AuthoritySQL")->getIdBySIREN("123456789");
@@ -39,12 +39,12 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
     }
 
     public function testUpdateClassificationBadSiren(){
-        $this->setExpectedException("Exception","Aucune collectivité ne correspond au SIREN 42");
+        $this->setExpectedException("Exception","Aucune collectivitÃ© ne correspond au SIREN 42");
         $this->actesUpdateClassificationSQL->updateClassification("42",$this->classification_xml);
     }
 
     public function testUpdateClassificationNoXML(){
-        $this->setExpectedException("Exception","Le message n'est pas un retour de classification: EnveloppeMISILLCL trouvé.");
+        $this->setExpectedException("Exception","Le message n'est pas un retour de classification: EnveloppeMISILLCL trouvÃ©.");
         $this->actesUpdateClassificationSQL->updateClassification("123456789",file_get_contents(__DIR__."/../fixtures/test-archive-MISILCL/TACT--SPREF0011-000000000-20170721-4.xml"));
     }
 

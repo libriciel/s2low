@@ -10,7 +10,7 @@ if (! $droit->isSuperAdmin($userInfo)){
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit ();
 }
@@ -74,9 +74,9 @@ ob_start();
 		<a
 			href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_show.php?id=<?php hecho($transaction_id) ?>"
 			class="btn btn-default"
-			title="Retour à la transaction"
+			title="Retour Ã  la transaction"
 			>
-			Retour à la transaction
+			Retour Ã  la transaction
 		</a>
 	</p>
 	<h2>Helios - Validation d'un PES_Aller</h2>
@@ -115,7 +115,7 @@ ob_start();
 <h2>Validation de la signature du PES</h2>
 
 <?php if(! $is_signed): ?>
-    <div class="alert alert-warning">Le fichier n'est pas signé !</div>
+    <div class="alert alert-warning">Le fichier n'est pas signÃ© !</div>
 <?php elseif($verify_sign): ?>
 	<div class="alert alert-success">La signature du fichier est valide !</div>
 <?php else : ?>
@@ -130,7 +130,7 @@ ob_start();
 </div>
 
 <div class="alert alert-info">
-    Outil externe de vérification de signatures :
+    Outil externe de vÃ©rification de signatures :
     <a class="btn btn-info" href="http://dss.nowina.lu/validation" target="_blank">
         Validation de signature
     </a>

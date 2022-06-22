@@ -20,7 +20,7 @@ class AdminSAEControllerTest extends S2lowTestCase {
 
 		$adminServiceController->_actionBefore("AdminSAE","edit");
 		$adminServiceController->editAction();  //BUG ??
-		$this->expectOutputRegex("#Identifiant de l'entité#");
+		$this->expectOutputRegex("#Identifiant de l'entitÃ©#");
 		$adminServiceController->_actionAfter();
 	}
 

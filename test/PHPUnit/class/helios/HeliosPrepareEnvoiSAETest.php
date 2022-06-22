@@ -42,7 +42,7 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase {
 			$this->getHeliosTransactionSQL()->getLastStatusInfo($transaction_id)['status_id']
 		);
 		$this->assertLogMessage(
-			"Impossible d'archiver une transaction qui n'est pas en Ètat ´ Information disponible ª, ´ acquittÈ ª ou ´ refusÈ ª."
+			"Impossible d'archiver une transaction qui n'est pas en √©tat ¬´ Information disponible ¬ª, ¬´ acquitt√© ¬ª ou ¬´ refus√© ¬ª."
 		);
 	}
 
@@ -60,7 +60,7 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase {
 		$this->assertFalse(
 			$this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(5,$transaction_id)
 		);
-		$this->assertLogMessage("AccËs interdit");
+		$this->assertLogMessage("Acc√®s interdit");
 	}
 
 	public function testsetArchiveEnAttenteEnvoiSEAManuellement(){

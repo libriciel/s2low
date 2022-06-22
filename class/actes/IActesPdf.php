@@ -7,7 +7,7 @@ interface IActesPdf
     public function printInfosCollectivite(ExtendPdf $pdf, string $texteCollectivite, string $texteUtilisateur);
 
     /**
-     * \brief ajouter l'entête de pdf
+     * \brief ajouter l'entÃªte de pdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */

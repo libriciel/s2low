@@ -55,12 +55,12 @@ class ActesConventionsTest extends S2lowTestCase {
     }
 
     public function testGetConventionFilenameNoException(){
-        $this->setExpectedException("Exception","Aucune convention présente pour la collectivité 0");
+        $this->setExpectedException("Exception","Aucune convention prÃ©sente pour la collectivitÃ© 0");
         $this->actesConventions->getConventionFilename(0);
     }
 
     public function testGetConventionFilenameNoException2(){
-        $this->setExpectedException("Exception","Aucune convention présente pour la collectivité 18");
+        $this->setExpectedException("Exception","Aucune convention prÃ©sente pour la collectivitÃ© 18");
         $this->actesConventions->getConventionFilename(18);
     }
 

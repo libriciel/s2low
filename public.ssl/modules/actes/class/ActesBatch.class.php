@@ -1,48 +1,48 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡ la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √† la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡ l'utilisation,  ‡ la modification et/ou au
- * dÈveloppement et ‡ la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡ 
- * manipuler et qui le rÈserve donc ‡ des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡ charger  et  tester  l'adÈquation  du
- * logiciel ‡ leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡ l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √† l'utilisation,  √† la modification et/ou au
+ * d√©veloppement et √† la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √† 
+ * manipuler et qui le r√©serve donc √† des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √† charger  et  tester  l'ad√©quation  du
+ * logiciel √† leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tÍte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-t√™te signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 /**
  * \class ActesBatch ActesBatch.class.php
- * \brief Cette classe permet de gÈrer les lots de transactions ACTES
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Cette classe permet de g√©rer les lots de transactions ACTES
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 02.02.2007
  * 
  *
- * Cette classe fournit des mÈthodes de gestion des lots de transactions
+ * Cette classe fournit des m√©thodes de gestion des lots de transactions
  * Actes
  *
  * Modifications :
@@ -66,12 +66,12 @@ class ActesBatch extends DataObject {
 
   protected $dbFields = array (
     "description" => array (
-      "descr" => "IntitulÈ du lot",
+      "descr" => "Intitul√© du lot",
       "type" => "isString",
       "mandatory" => true
     ),
     "storage_dir" => array (
-      "descr" => "RÈpertoire de stockage sur le serveur",
+      "descr" => "R√©pertoire de stockage sur le serveur",
       "type" => "isString",
       "mandatory" => false
     ),
@@ -81,17 +81,17 @@ class ActesBatch extends DataObject {
       "mandatory" => true
     ),
     "user_id" => array (
-      "descr" => "Utilisateur propriÈtaire du lot",
+      "descr" => "Utilisateur propri√©taire du lot",
       "type" => "isInt",
       "mandatory" => true
     ),
     "num_prefix" => array (
-      "descr" => "PrÈfixe numÈro interne transactions",
+      "descr" => "Pr√©fixe num√©ro interne transactions",
       "type" => "isString",
       "mandatory" => false
     ),
     "next_suffix" => array (
-      "descr" => "Prochain suffixe du numÈro interne",
+      "descr" => "Prochain suffixe du num√©ro interne",
       "type" => "isInt",
       "mandatory" => false
     )
@@ -104,23 +104,23 @@ class ActesBatch extends DataObject {
 	/**
      * Constructeur d'un lot
 	 * ActesBatch constructor.
-	 * @param bool|int $id NumÈro d'identifiant d'un lot existant avec lequel initialiser l'objet
+	 * @param bool|int $id Num√©ro d'identifiant d'un lot existant avec lequel initialiser l'objet
 	 */
   public function __construct($id = false) {
     parent :: __construct($id);
   }
 
   /**
-   * \brief MÈthode initialisant l'entitÈ avec l'identifiant courant
-   * \return true si succËs, false sinon
+   * \brief M√©thode initialisant l'entit√© avec l'identifiant courant
+   * \return true si succ√®s, false sinon
   */
   public function init() {
     return $this->initBatchFiles() && parent :: init();
   }
 
   /**
-   * \brief Initialisation du rÈpertoire de stockage (crÈation)
-   * \return True en cas de succËs, false sinon
+   * \brief Initialisation du r√©pertoire de stockage (cr√©ation)
+   * \return True en cas de succ√®s, false sinon
    */
   public function initStorage() {
     if (isset ($this->user_id) && isset ($this->id)) {
@@ -132,7 +132,7 @@ class ActesBatch extends DataObject {
       $this->storage_dir = $authority->get("siren") . "/" . $this->id;
 
       if ($this->storage_dir == "/" || !Helpers :: createDirTree(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir, ACTES_BATCHES_UPLOAD_ROOT)) {
-        $this->errorMsg = "Erreur de crÈation du rÈpertoire de stockage du lot.";
+        $this->errorMsg = "Erreur de cr√©ation du r√©pertoire de stockage du lot.";
         return false;
       }
     } else {
@@ -143,8 +143,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief Nettoyage du rÈpertoire de stockage
-   * \return True en cas de succËs, false sinon
+   * \brief Nettoyage du r√©pertoire de stockage
+   * \return True en cas de succ√®s, false sinon
    */
   public function purgeStorage() {
     foreach ($this->batchFiles as $batchFile) {
@@ -161,15 +161,15 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief Suppression du rÈpertoire de stockage
-   * \return True en cas de succËs, false sinon
+   * \brief Suppression du r√©pertoire de stockage
+   * \return True en cas de succ√®s, false sinon
    */
   public function deleteStorage() {
     return Helpers :: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir);
   }
 
   /**
-   * \brief Initialisation des fichiers associÈs ‡ un lot
+   * \brief Initialisation des fichiers associ√©s √† un lot
    */
   public function initBatchFiles() {
     if (isset ($this->id)) {
@@ -192,8 +192,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief RÈcupÈration des fichiers associÈs ‡ un lot
-   * \return Un tableau de ActesBatchFile associÈ au lot
+   * \brief R√©cup√©ration des fichiers associ√©s √† un lot
+   * \return Un tableau de ActesBatchFile associ√© au lot
    */
   public function getBatchFiles() {
     if (!isset ($this->batchFiles)) {
@@ -204,8 +204,8 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * MÈthode d'obtention de la liste des lots et tous leurs attributs
-	 * @param string $cond ChaÓne contenant les conditions (SQL) ‡ appliquer ‡ la fin de la requÍte BDD
+     * M√©thode d'obtention de la liste des lots et tous leurs attributs
+	 * @param string $cond Cha√Æne contenant les conditions (SQL) √† appliquer √† la fin de la requ√™te BDD
 	 * @return bool|array Tableau des lots
 	 */
   public function getBatchesList($cond = "") {
@@ -217,7 +217,7 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * MÈthode d'obtention de la liste des lots et tous leurs attributs pour un utilisateur
+     * M√©thode d'obtention de la liste des lots et tous leurs attributs pour un utilisateur
 	 * @param int $user_id  Identifiant de l'utilisateur
 	 * @return array|bool Tableau des lots
 	 */
@@ -230,8 +230,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode de rafraichissement de la liste des fichiers du lot restant ‡ traiter
-   * \return Tableau des fichiers restant ‡ traiter
+   * \brief M√©thode de rafraichissement de la liste des fichiers du lot restant √† traiter
+   * \return Tableau des fichiers restant √† traiter
    */
   private function refreshUnprocessedFiles() {
     if (!isset ($this->batchFiles)) {
@@ -248,8 +248,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des fichiers du lot restant ‡ traiter
-   * \return Tableau des fichiers restant ‡ traiter
+   * \brief M√©thode d'obtention de la liste des fichiers du lot restant √† traiter
+   * \return Tableau des fichiers restant √† traiter
    */
   public function getUnprocessedFiles() {
     if (!isset ($this->unprocessedBatchFiles)) {
@@ -260,8 +260,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention du nombre de fichiers du lot restant ‡ traiter
-   * \return Le nombre de fichier restant ‡ traiter dans le lot
+   * \brief M√©thode d'obtention du nombre de fichiers du lot restant √† traiter
+   * \return Le nombre de fichier restant √† traiter dans le lot
    */
   public function getUnprocessedFilesCount() {
     if (!isset ($this->unprocessedBatchFiles)) {
@@ -272,7 +272,7 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention du nombre de fichiers du lot
+   * \brief M√©thode d'obtention du nombre de fichiers du lot
    * \return Le nombre de fichier dans le lot
    */
   public function getAllFilesCount() {
@@ -284,8 +284,8 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des fichiers du lot restant ‡ traiter sous forme id/name
-   * \return Tableau des fichiers restant ‡ traiter, clef=id, valeur=nom fichier
+   * \brief M√©thode d'obtention de la liste des fichiers du lot restant √† traiter sous forme id/name
+   * \return Tableau des fichiers restant √† traiter, clef=id, valeur=nom fichier
    */
   public function getUnprocessedFilesIdName() {
     if (!isset ($this->unprocessedBatchFiles)) {
@@ -296,7 +296,7 @@ class ActesBatch extends DataObject {
   }
 
   /**
-   * \brief MÈthode d'obtention de la liste des fichiers du lot sous forme id/name
+   * \brief M√©thode d'obtention de la liste des fichiers du lot sous forme id/name
    * \return Tableau des fichiers, clef=id, valeur=nom fichier
    */
   public function getAllFilesIdName() {
@@ -308,7 +308,7 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * MÈthode d'obtention de la liste de fichiers du lot sous forme id/name
+     * M√©thode d'obtention de la liste de fichiers du lot sous forme id/name
 	 * @param array $files Tableau d'objet ActesBatchFiles
 	 * @return array Tableau des fichiers, clef=id, valeur=nom fichier
 	 */
@@ -325,9 +325,9 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * RÈcupÈration du prochain Id de fichier ‡ traiter
+     * R√©cup√©ration du prochain Id de fichier √† traiter
 	 * @param null|int $currentId identifiant du fichier courant
-	 * @return null|int L'identifiant du prochain fichier ‡ traiter ou null si plus de fichier ‡ traiter
+	 * @return null|int L'identifiant du prochain fichier √† traiter ou null si plus de fichier √† traiter
 	 */
   public function getNextUnprocessedId($currentId = null) {
     $nextId = null;
@@ -366,15 +366,15 @@ class ActesBatch extends DataObject {
    */
 
 	/**
-     * RÈcupÈration du prochain suffixe pour le numÈro interne
-	 * @return bool|int|null|string Le suffixe pour le numÈro interne
+     * R√©cup√©ration du prochain suffixe pour le num√©ro interne
+	 * @return bool|int|null|string Le suffixe pour le num√©ro interne
 	 * @throws Exception
 	 */
   public function getNextSuffix() {
     if (isset ($this->id)) {
       $next_suffix = 1;
 
-      // On rÈcupËre le suffixe
+      // On r√©cup√®re le suffixe
       $sql = "SELECT next_suffix FROM actes_batches WHERE id= ? FOR UPDATE";
 
       $result = $this->db->select($sql,[$this->id]);
@@ -396,7 +396,7 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * IncrÈmentaiton du prochain suffixe pour le numÈro interne
+     * Incr√©mentaiton du prochain suffixe pour le num√©ro interne
 	 * @return bool|int|null|string
 	 * @throws Exception
 	 */
@@ -408,21 +408,21 @@ class ActesBatch extends DataObject {
         $sql = "UPDATE actes_batches SET next_suffix= ? WHERE id= ?";
 
         if (!$this->db->exec($sql,[$next_suffix +1,$this->id])){
-          $this->errorMsg = "Erreur d'accËs base de donnÈes.";
+          $this->errorMsg = "Erreur d'acc√®s base de donn√©es.";
           return $this->errorMsg;
         }
         return $this->getNextSuffix();
       } else
-        $this->errorMsg = "Impossible de rÈcupÈrer le suffixe courant.";
+        $this->errorMsg = "Impossible de r√©cup√©rer le suffixe courant.";
         return $this->errorMsg;
     }
     return false;
   }
 
 	/**
-     * MÈthode d'importation des fichiers depuis les parametres du formulaire
+     * M√©thode d'importation des fichiers depuis les parametres du formulaire
 	 * @param array $files tableau des fichiers (format $_FILE)
-	 * @return bool True en cas de succËs ou False sinon
+	 * @return bool True en cas de succ√®s ou False sinon
 	 */
   public function importFilesFromForm($files) {
     $ret_value = true;
@@ -442,7 +442,7 @@ class ActesBatch extends DataObject {
       	$filename=str_replace("?","-",$filename);
 		/*if (strstr($filename,"?"))
 		{	
-			$this->errorMsg .= "Le fichier " . $filename . " ne doit pas contenir des lettres accentuÈes";
+			$this->errorMsg .= "Le fichier " . $filename . " ne doit pas contenir des lettres accentu√©es";
 			$ret_value = false;	
 		}*/
       	//echo $fiename;
@@ -451,18 +451,18 @@ class ActesBatch extends DataObject {
         // On ne traite pas individuellement les fichiers de signature
         if (!preg_match("/\.sig$/", $filename)) {
           if (is_uploaded_file($file["tmp_name"])) {
-            // VÈrification du type de fichier
+            // V√©rification du type de fichier
             $type = Helpers :: getFileType($file["tmp_name"]);
           	$trace = Trace::getInstance();
           	
-          	$trace->log("RÈcuperation de ". $file['name'] . " - type : " .$type  . " - tmp_name : " . $file["tmp_name"]);
+          	$trace->log("R√©cuperation de ". $file['name'] . " - type : " .$type  . " - tmp_name : " . $file["tmp_name"]);
           	
           	
             if ( $type != "application/pdf") {
               $this->errorMsg .= "Le fichier <span style='font-weight:bold;'>" . $filename . "</span> n'est pas du type requis ($type). <span style='font-weight:bold;'>Seuls les fichiers PDF sont autoris&eacute;s.</span><br />\n";
               $ret_value = false;
             } else {
-              // On recherche un fichier de signature associÈ
+              // On recherche un fichier de signature associ√©
               $foundSig = false;
               $sign = "";
               reset($filesDup);
@@ -488,11 +488,11 @@ class ActesBatch extends DataObject {
 
 
 	/**
-     * MÈthode d'ajout d'un fichier dans le lot
-	 * @param string $filepath chemin vers le fichier dans le systËme de fichier
+     * M√©thode d'ajout d'un fichier dans le lot
+	 * @param string $filepath chemin vers le fichier dans le syst√®me de fichier
 	 * @param string $name nom du fichier final
-	 * @param string $sign signature Èlectronique du fichier
-	 * @return bool True en cas de succËs ou False sinon
+	 * @param string $sign signature √©lectronique du fichier
+	 * @return bool True en cas de succ√®s ou False sinon
 	 */
   public function addBatchFile($filepath, $name, $sign) {
     $batchF = new ActesBatchFile();
@@ -508,10 +508,10 @@ class ActesBatch extends DataObject {
   }
 
 	/**
-     * MÈthode d'enregistrement d'un lot dans la base de donnÈes
-	 * @param bool $validate Demande la validation ou non des donnÈes de l'entitÈ avant enregistrement (true par dÈfaut)
-	 * @param bool $return_rather_than_exec : Attention, ce paramËtre ne sert pas et est utilisÈ que pour la compatibilitÈ
-	 * @return bool|string true si succËs, false sinon
+     * M√©thode d'enregistrement d'un lot dans la base de donn√©es
+	 * @param bool $validate Demande la validation ou non des donn√©es de l'entit√© avant enregistrement (true par d√©faut)
+	 * @param bool $return_rather_than_exec : Attention, ce param√®tre ne sert pas et est utilis√© que pour la compatibilit√©
+	 * @return bool|string true si succ√®s, false sinon
 	 * @throws Exception
 	 */
   public function save($validate = true,$return_rather_than_exec = false) {
@@ -520,7 +520,7 @@ class ActesBatch extends DataObject {
       $new = true;
 
       if (empty ($this->description)) {
-        $this->description = "Lot postÈ le " . date("d-m-Y");
+        $this->description = "Lot post√© le " . date("d-m-Y");
       }
 
       $this->submission_date = date("Y-m-d H:i:s");
@@ -532,7 +532,7 @@ class ActesBatch extends DataObject {
     }
 
     if ($new) {
-      // Si nouveau lot, crÈation rÈpertoire de stockage
+      // Si nouveau lot, cr√©ation r√©pertoire de stockage
       if (!$this->initStorage()) {
         return false;
       }
@@ -552,14 +552,14 @@ class ActesBatch extends DataObject {
       return false;
     }
 
-    // DÈfinition du rÈpertoire de stockage
+    // D√©finition du r√©pertoire de stockage
     if (
         !$this->db->exec(
         "UPDATE actes_batches SET storage_dir=? WHERE id= ?",
         [$this->storage_dir,$this->id]
         )
     ) {
-      $this->errorMsg = "Erreur lors de la dÈfinition du rÈpertoire de stockage du lot.";
+      $this->errorMsg = "Erreur lors de la d√©finition du r√©pertoire de stockage du lot.";
       $this->db->rollback();
       return false;
     }
@@ -598,8 +598,8 @@ class ActesBatch extends DataObject {
 
 	/**
      *
-     * MÈthode de suppression d'un lot
-	 * @param bool $id - Ne sert pas, uniquement pour assurer la compatibilitÈ
+     * M√©thode de suppression d'un lot
+	 * @param bool $id - Ne sert pas, uniquement pour assurer la compatibilit√©
 	 * @return bool
 	 * @throws Exception
 	 */
@@ -616,13 +616,13 @@ class ActesBatch extends DataObject {
 
     foreach ($this->batchFiles as $batchFile) {
       if (!$batchFile->delete()) {
-        $this->errorMsg = "Erreur lors de la suppression des fichiers associÈs au lot : " . $batchFile->getErrorMsg();
+        $this->errorMsg = "Erreur lors de la suppression des fichiers associ√©s au lot : " . $batchFile->getErrorMsg();
         $this->db->rollback();
         return false;
       }
     }
 
-    // Suppression du rÈpertoire de stockage
+    // Suppression du r√©pertoire de stockage
     if (!$this->deleteStorage()) {
       return false;
     }

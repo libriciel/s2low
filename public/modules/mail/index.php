@@ -16,7 +16,7 @@ $password=Helpers::getVarFromPost("mdp");
 $mailEmis=new mail_message_emis($mail_emis_id);
 $mailEmis->init();
 if (! $mailEmis) {
-	$_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
+	$_SESSION['last_error'] = "Le message que vous avez demandÃ© n'existe pas.";
 	header("Location: error.php");
 	exit;
 }
@@ -25,7 +25,7 @@ $mail_id=$mailEmis->getMailTransactionId();
 
 $mailTransaction=new mail_transaction($mail_id);
 if (! $mailTransaction->init()) {
-	$_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
+	$_SESSION['last_error'] = "Le message que vous avez demandÃ© n'existe pas.";
 	header("Location: error.php");
 	exit;
 }
@@ -76,13 +76,13 @@ $doc->DisplayHead();
         <div class="col-md-12">
             <div id="list_area">
                 <div class="lecture_mail">
-                    <h2>Message reçu</h2>
-                    <div class="col_gauche">Envoyé à :</div>
+                    <h2>Message reÃ§u</h2>
+                    <div class="col_gauche">EnvoyÃ© Ã  :</div>
                     <div class="col_droite">
                         <?php echo get_hecho($mailTo);?>
                     </div>
 
-                    <div class="col_gauche_info">Envoyé le :</div>
+                    <div class="col_gauche_info">EnvoyÃ© le :</div>
                     <div class="col_droite_info">
                         <?php echo $mailTransaction->getDateEvnoi(); ?>
                     </div>
@@ -108,7 +108,7 @@ $doc->DisplayHead();
 
                     <?php  if ($mailIncludeFileArray) : ?>		
 	
-                    <h2>Pièces jointes</h2>
+                    <h2>PiÃ¨ces jointes</h2>
 	
                     <div class="col_gauche_pj">&nbsp;</div>
                     <div class="col_droite_pj">
@@ -118,7 +118,7 @@ $doc->DisplayHead();
                                     <th id="file" class="align_left">Nom du fichier</th>
                                     <th id="size">Taille </th>
                                     <th id="type">Type </th>
-                                    <th id="download">Télécharger</th>
+                                    <th id="download">TÃ©lÃ©charger</th>
                                 </tr>
                             </thead>    
                             </body>    
@@ -127,14 +127,14 @@ $doc->DisplayHead();
                                     <td class="align_left" ><?php echo $mailIncludeFile->getFileName(); ?></td>
                                     <td><?php echo $mailIncludeFile->getFileSize(); ?></td>
                                     <td class="force_maj"><?php echo $mailIncludeFile->getFileType(); ?></td>
-                                    <td><a href="download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                                    <td><a href="download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">TÃ©lÃ©charger</a></td>
                                 </tr>
 		<?php endforeach; ?>
                                 <tr>
-                                    <td class="align_left">&lt;Télécharger tous les fichiers&gt; </td>
+                                    <td class="align_left">&lt;TÃ©lÃ©charger tous les fichiers&gt; </td>
                                     <td><?php echo $filesize; ?></td>
                                     <td class="force_maj">zip</td>
-                                    <td><a href="download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">Télécharger</a></td>
+                                    <td><a href="download.php?filename=mail.zip&root=<?php echo $fndownload; ?>">TÃ©lÃ©charger</a></td>
                                 </tr>
 
                             </tbody>
@@ -142,7 +142,7 @@ $doc->DisplayHead();
                 </div>
                 <br class="clear" />
 	<?php  	else : ?>
-                <h2>Ce mail ne comporte pas de pièces jointes</h2> 	
+                <h2>Ce mail ne comporte pas de piÃ¨ces jointes</h2> 	
 	<?php endif; ?>	
             </div><!-- list-area-->
         </div><!-- col-md-12 -->

@@ -24,7 +24,7 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->_actionBefore("Admin","authoritySiret");
-		$this->expectOutputRegex("#Numéros SIRET - Bourg-en-Bresse#");
+		$this->expectOutputRegex("#NumÃ©ros SIRET - Bourg-en-Bresse#");
 		$adminController->authoritySiretAction();
 		$adminController->_actionAfter();
 	}
@@ -119,14 +119,14 @@ class AdminControllerTest extends S2lowTestCase {
 		$this->setSuperAdminAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->authoritiesAction();
-		$this->assertEquals("Gestion des collectivités",$adminController->getViewParameter('titre'));
+		$this->assertEquals("Gestion des collectivitÃ©s",$adminController->getViewParameter('titre'));
 	}
 
 	public function testAuthoritiesActionGroupAdmin(){
 		$this->setAdminGroupAuthentication();
         $adminController = $this->getObjectInstancier()->get("AdminController");
 		$adminController->authoritiesAction();
-		$this->assertEquals("Gestion des collectivités du groupe Groupe de test",$adminController->getViewParameter('titre'));
+		$this->assertEquals("Gestion des collectivitÃ©s du groupe Groupe de test",$adminController->getViewParameter('titre'));
 
 		$authorities = $adminController->getViewParameter('authorities');
 		foreach ($authorities as $authority) {

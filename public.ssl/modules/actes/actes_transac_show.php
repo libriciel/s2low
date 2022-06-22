@@ -22,20 +22,20 @@ if (!$module->initByName("actes")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
 $id = intval(Helpers :: getVarFromGet("id"));
 if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
@@ -59,7 +59,7 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"actes");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
 	exit ();
 }
@@ -100,7 +100,7 @@ $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
 if ($trans->get("type_reponse")){
-	$html .= $doc->getHTMLArrayline("Type de réponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
+	$html .= $doc->getHTMLArrayline("Type de rÃ©ponse",ActesTransaction::getTypeReponse($trans->get("type"),$trans->get("type_reponse")));
 }
 
 if ($me->isSuper()){
@@ -114,25 +114,25 @@ if ($me->isSuper()){
 	$user_td = get_hecho($owner->get("givenname") . " " . $owner->get("name"));
 }
 
-$html .= $doc->getHTMLArrayline("Collectivité",$authority_td);
+$html .= $doc->getHTMLArrayline("CollectivitÃ©",$authority_td);
 $html .= $doc->getHTMLArrayline("Dossier suivi par", $user_td);
 
 
-// Contenu différent en fonction du type de transaction
+// Contenu diffÃ©rent en fonction du type de transaction
 switch ($trans->get("type")) {
   case 1 :
     $html .= $doc->getHTMLArrayline("Nature de l'acte", $transNatures[$trans->get("nature_code")]);
-    $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
-    $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
+    $html .= $doc->getHTMLArrayline("NumÃ©ro de l'acte", get_hecho($trans->get("number")));
+    $html .= $doc->getHTMLArrayline("Date de la dÃ©cision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
     $html .= $doc->getHTMLArrayline("Objet", nl2br(get_hecho($trans->get("subject"))));
-    $html .= $doc->getHTMLArrayline("Documents papiers complémentaires",$trans->getDocumentPapier()?"OUI":"NON");
+    $html .= $doc->getHTMLArrayline("Documents papiers complÃ©mentaires",$trans->getDocumentPapier()?"OUI":"NON");
 
 	$classification = get_hecho($trans->get("classification"));
 	if(  $trans->get("classification_string")){
 		$classification .= " - " .$trans->get("classification_string");
 	}
 
-    $html .= $doc->getHTMLArrayline("Classification matières/sous-matières",$classification);
+    $html .= $doc->getHTMLArrayline("Classification matiÃ¨res/sous-matiÃ¨res",$classification);
     $html .= $doc->getHTMLArrayline("Identifiant unique", get_hecho($trans->get("unique_id")));
 
     $arch_url = $trans->get("archive_url");
@@ -140,7 +140,7 @@ switch ($trans->get("type")) {
     if (!empty ($arch_url)) {
       $url = "<a href=\"" . $trans->get("archive_url") . "\">" . get_hecho($trans->get("archive_url")) . "</a>";
     } else {
-      $url = "Non définie";
+      $url = "Non dÃ©finie";
     }
     $html .= $doc->getHTMLArrayline("URL d'archivage", $url);
     if ($trans->get("sae_transfer_identifier")) {
@@ -150,9 +150,9 @@ switch ($trans->get("type")) {
     }
 
     if ($trans->get("broadcasted") == 't')
-      $notification = "Notifiée à " . $trans->get("broadcast_emails");
+      $notification = "NotifiÃ©e Ã  " . $trans->get("broadcast_emails");
     else
-      $notification = "Non notifiée";
+      $notification = "Non notifiÃ©e";
     $html .= $doc->getHTMLArrayline("Notification", $notification);
     break;
 
@@ -164,20 +164,20 @@ switch ($trans->get("type")) {
     $related_trans->init();
 
 
-    $html .= $doc->getHTMLArrayline("Date de réception du document  ", $related_trans->get("decision_date"));
+    $html .= $doc->getHTMLArrayline("Date de rÃ©ception du document  ", $related_trans->get("decision_date"));
 
     if ($related_trans->get("related_transaction_id")){
 
     	$files = $related_trans->fetchFilesList();
 		foreach ($files as $file) {
-    		$html .= $doc->getHTMLArrayline("Document reçu   ",
-    			"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>"
+    		$html .= $doc->getHTMLArrayline("Document reÃ§u   ",
+    			"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"TÃ©lÃ©charger le fichier\">" . $file["posted_filename"] . "</a>"
     	 	);
 		}
 
     	$related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
         $related_trans->init();
-		$html .= $doc->getHTMLArrayline("Date de décision de l'acte initial   ", $related_trans->get("decision_date"));
+		$html .= $doc->getHTMLArrayline("Date de dÃ©cision de l'acte initial   ", $related_trans->get("decision_date"));
 		$html .= $doc->getHTMLArrayline("Acte initial", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
 
     } else {
@@ -191,7 +191,7 @@ switch ($trans->get("type")) {
     $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
     $related_trans->init();
 
-    $html .= $doc->getHTMLArrayline("Acte à annuler", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>");
+    $html .= $doc->getHTMLArrayline("Acte Ã  annuler", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>");
     break;
 
   case 7 :
@@ -203,7 +203,7 @@ $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
 
-// Fichier archive présent ou non ?
+// Fichier archive prÃ©sent ou non ?
 $status = $trans->getCurrentStatus();
 $archiveDeleted = false;
 /*if ($trans->get("type") != 1 || $status > 4 || $status <= 0) {
@@ -244,14 +244,14 @@ $html .= " <tbody>\n";
 
     $html .= "<dl>\n";
 
-    if (strlen($file["posted_filename"]) > 0) {
+    if (mb_strlen($file["posted_filename"]) > 0) {
       $html .= "<dt>Nom original&nbsp;:</dt>\n";
       $html .= "<dd>";
 
       if ($archiveDeleted){
 		$html .=  $file["posted_filename"];
       } else {
-            $html .= $file["posted_filename"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>" ;
+            $html .= $file["posted_filename"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"TÃ©lÃ©charger le fichier\"> [TÃ©lÃ©charger le fichier original]</a>" ;
             $html .= "&nbsp;&nbsp;";
 
 
@@ -268,8 +268,8 @@ $html .= " <tbody>\n";
 						?>
 						<br/>
 
-						<a class='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
-						[Télécharger le fichier tamponné]</a>
+						<a class='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="TÃ©lÃ©charger le fichier avec tampon">
+						[TÃ©lÃ©charger le fichier tamponnÃ©]</a>
 						<input id="<?php echo $name ?>" type="hidden">
 
 						<?php if($file_num == 1) : ?>
@@ -309,11 +309,11 @@ $html .= " <tbody>\n";
       }
      }
 
-    $html .= "<dt>Nom métier&nbsp;:</dt>\n";
+    $html .= "<dt>Nom mÃ©tier&nbsp;:</dt>\n";
     $html .= "<dd>";
 
-    if (strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
-      $html .= $file["name"]."<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>";
+    if (mb_strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
+      $html .= $file["name"]."<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"TÃ©lÃ©charger le fichier\">[TÃ©lÃ©charger]</a>";
     } else {
       $html .= $file["name"];
     }
@@ -322,11 +322,11 @@ $html .= " <tbody>\n";
     $html .= "</dl>\n";
     if ($file['sign']) {
     	$html .= "<dt>Signature</dt>";
-    	$html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>";
+    	$html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"TÃ©lÃ©charger le fichier\">Ce document est signÃ© Ã©lectroniquement</a></dd>";
     }
 
     if ($file['code_pj']){
-        $html .= '<dt>Type de pièce jointe :</dt>';
+        $html .= '<dt>Type de piÃ¨ce jointe :</dt>';
         $html .= "<dd>". get_hecho($actesTypePJSQL->getLibelle($file['code_pj'])?:$file['code_pj'])."</dd>";
     }
 
@@ -339,10 +339,10 @@ $html .= " <tbody>\n";
       $html .= "</tbody>\n";
       $html .= "</table>\n";
 } else {
-  $html .= "  <p>Pas de fichier trouvé</p>";
+  $html .= "  <p>Pas de fichier trouvÃ©</p>";
 }
 
-$html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
+$html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"TÃ©lÃ©charger l'archive .tar.gz\">" . $archiveName . "</a>";
 
 if ($me->isSuper()) {
 	$link = WEBSITE_SSL ."/modules/actes/actes_transac_validate.php?transaction_id=$id";
@@ -359,14 +359,14 @@ if (count($workflow) > 0) {
   $html .= "<table class=\"table-striped table table-bordered\">\n";
   $html .= " <thead>\n";
   $html .= " <tr>\n";
-  $html .= "  <th id=\"status\">État</th>\n";
+  $html .= "  <th id=\"status\">Ã‰tat</th>\n";
   $html .= "  <th id=\"date\">Date</th>\n";
   $html .= "  <th id=\"message\">Message</th>\n";
   $html .= " </tr>\n";
   $html .= " </thead>\n";
   $html .= " <tbody>\n";
   	$create_pdf_html ="&nbsp;<a href=\"actes_create_pdf.php?trans_id=".$id."&user_id=".$me->getId()."\">";
-	$create_pdf_html.="<br/>[Télécharger]</a>";
+	$create_pdf_html.="<br/>[TÃ©lÃ©charger]</a>";
 
     $create_pdf_html.="<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
 
@@ -399,7 +399,7 @@ if (count($workflow) > 0) {
 
 $courrier = $trans->getCourrierInfo();
 if (count($courrier) != 0){
-	$html .= "<h2>Document reçu relatif à l'acte</h2>\n";
+	$html .= "<h2>Document reÃ§u relatif Ã  l'acte</h2>\n";
 	 $html .= "<div class=\"data_table\">\n";
   $html .= "<table class=\"table data-table table-striped table-bordered\">\n";
   $html .= " <thead>\n";
@@ -431,7 +431,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
 
 
   // Formulaire de notification a posteriori
-  // Affichés quand la transaction a été acquittée par le MIAT et non notifiée
+  // AffichÃ©s quand la transaction a Ã©tÃ© acquittÃ©e par le MIAT et non notifiÃ©e
   if ($trans->get("type") == 1 && $transStatus == 4 && ! $trans->get("broadcasted")) {
     // adresses emails de diffusion
 
@@ -471,29 +471,29 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"),'CS') &&  $permissio
   }
 }
 
-//On vérifie qu'il n'y a pas de demande d'annulation en cours
+//On vÃ©rifie qu'il n'y a pas de demande d'annulation en cours
 if (!$trans->hasPendingCancelTrans()) {
     // Boutons de cloture de la transaction
-    // Affichés quand la transaction a été acquittée par le MIAT
+    // AffichÃ©s quand la transaction a Ã©tÃ© acquittÃ©e par le MIAT
     if ($trans->get("type") == 1 && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
 
         if ($trans->canValidate()) {
 		$actionHtml .= "<div class=\"action\">\n";
-		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
-		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non rÃ©versible et est sous votre entiÃ¨re responsabilitÃ©.' . "');\" method=\"post\">\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validÃ© par le ministÃ¨re : </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
-		$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état « Validée »\" />\n";
+		$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en Ã©tat Â« ValidÃ©e Â»\" />\n";
 		$actionHtml .= "</div>\n</form>\n";
 		$actionHtml .= "</div>\n";
 	}//fin if verfiie canValidate
 
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
-        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
+        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non rÃ©versible et est sous votre entiÃ¨re responsabilitÃ©.' . "')\" method=\"post\">\n";
+        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusÃ© par le ministÃ¨re : </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
-        $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
+        $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en Ã©tat Â«&nbsp;RefusÃ©e&nbsp;Â»\" />\n";
         $actionHtml .= "</div>\n</form>\n";
         $actionHtml .= "</div>\n";
     }//fin if qui verifie type == 1 et status == 4
@@ -541,7 +541,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISS
     $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
-    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer au SAE\" /> (Attention, peut-être long)\n";
+    $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer au SAE\" /> (Attention, peut-Ãªtre long)\n";
     $actionHtml .= "</div>\n</form>\n";
     $actionHtml .= "</div>\n";
 }
@@ -551,7 +551,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
 	$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n";
 	$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
 	$actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
-	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur le SAE\" /> \n";
+	$actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"VÃ©rifier la transaction sur le SAE\" /> \n";
 	$actionHtml .= "</div>\n</form>\n";
 	$actionHtml .= "</div>\n";
 }
@@ -562,25 +562,25 @@ if ($me->isSuper()) {
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en Ã©tat $new_status_id ?.');\">\n";
         $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
-        $actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+        $actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status Â« $libelle_status Â»\" /> \n";
         $actionHtml .= "</div>\n</form>\n";
         $actionHtml .= "</div>\n";
     }
 }
 
 
-// Bouton d'annulation en fonction du type et de l'état
-// Doit être une transaction de transmission d'acte
-// et être dans l'état Acquittement reçu
+// Bouton d'annulation en fonction du type et de l'Ã©tat
+// Doit Ãªtre une transaction de transmission d'acte
+// et Ãªtre dans l'Ã©tat Acquittement reÃ§u
 if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
   $actionHtml .= "<div class=\"action\">\n";
   if (!$trans->hasPendingCancelTrans()) {
     if ($module->getParam("paper") == "on") {
-      $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode «&nbsp;papier&nbsp;» actif. Pas d'annulation possible.</label>";
+      $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode Â«&nbsp;papier&nbsp;Â» actif. Pas d'annulation possible.</label>";
     } else {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n";
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
@@ -594,13 +594,13 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
   $actionHtml .= "</div>\n";
 }
 
-// Boutons de réponse à un courrier
+// Boutons de rÃ©ponse Ã  un courrier
 
 if ( in_array($transStatus, array(7,8,21)) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
-      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
+      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">RÃ©pondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"btn btn-primary\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"RÃ©pondre Ã  ce document\" class=\"btn btn-primary\" />\n";
       $actionHtml .= "</div></form>\n";
 }
 
@@ -613,17 +613,17 @@ if ($transStatus == 17 && $me->checkDroit("actes", "TT")){
 }
 
 $actionHtml .= "<div class=\"action\">\n";
-$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
+$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs Ã  l'acte nÂ°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs Ã  l'acte</a>\n";
 $actionHtml .= "</div>\n</div>\n";
 
 if ($me->isSuper()) {
-       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
-      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera Ã©radiquÃ©e DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnÃ©e (TRES DANGEREUX) : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de donnÃ©es\" class=\"btn btn-danger\" />\n";
       $actionHtml .= "</div></form>\n";
 
-      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passÃ©e en erreur ')\" method=\"post\">\n";
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />\n";
@@ -633,17 +633,17 @@ if ($me->isSuper()) {
 
 	if (in_array($transStatus,array(3,-1))  && $trans->get("type") == 1) {
 
-		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
-		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('ÃŠtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer Ã  En attente de transmission </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
 		$actionHtml .= "<input type=\"submit\" value=\"Passer en attente de transmission\" class=\"btn btn-warning\" />\n";
 		$actionHtml .= "</div></form>\n";
 
-		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
-		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à Poster </label>\n";
+		$actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('ÃŠtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+		$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer Ã  Poster </label>\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
 		$actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"1\" />\n";
-		$actionHtml .= "<input type=\"submit\" value=\"Passer à Poster\" class=\"btn btn-warning\" />\n";
+		$actionHtml .= "<input type=\"submit\" value=\"Passer Ã  Poster\" class=\"btn btn-warning\" />\n";
 		$actionHtml .= "</div></form>\n";
 	}
 
@@ -726,10 +726,10 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")){
 		$html.= ob_get_contents();
 		ob_end_clean();
         $html .="<h3>Ne plus signer</h3>";
-        $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signé. Êtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n";
+        $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signÃ©. ÃŠtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n";
         $html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Ne plus signer l'acte et le poster</label>\n";
         $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-        $html .= "<input type=\"submit\" value=\"Télétransmettre sans signature\" class=\"btn btn-warning\" />\n";
+        $html .= "<input type=\"submit\" value=\"TÃ©lÃ©transmettre sans signature\" class=\"btn btn-warning\" />\n";
         $html .= "</div></form>\n";
 }
 

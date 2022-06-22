@@ -1,6 +1,6 @@
 <?php
 
-//Script utilisé pour la compta
+//Script utilisÃ© pour la compta
 // Il compte pour actes et helios
 require_once( __DIR__."/../../init/init.php");
 

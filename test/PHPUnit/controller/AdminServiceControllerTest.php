@@ -109,7 +109,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('id',$parent_id);
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('service_id',$enfant_id);
         $this->expectException(RedirectException::class);
-        $this->expectExceptionMessage("Parent modifié");
+        $this->expectExceptionMessage("Parent modifiÃ©");
         $this->adminServiceController->addParentAction();
     }
 
@@ -126,7 +126,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
             $this->assertFalse(true);
         } catch(RedirectException $e) {
             $this->assertEquals(
-                "Redirect to /admin/services/gestion-service-content.php?id=$service_id with message : L'utilisateur a été retiré du service",
+                "Redirect to /admin/services/gestion-service-content.php?id=$service_id with message : L'utilisateur a Ã©tÃ© retirÃ© du service",
                 $e->getMessage()
             );
         }
@@ -138,7 +138,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
         $service_id = $this->createService();
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service',$service_id);
         $this->expectException(RedirectException::class);
-        $this->expectExceptionMessage("Il faut sélectionner un utilisateur à enlever du service");
+        $this->expectExceptionMessage("Il faut sÃ©lectionner un utilisateur Ã  enlever du service");
         $this->adminServiceController->enleverUtilisateurAction();
     }
 
@@ -153,7 +153,7 @@ class AdminServiceControllerTest extends S2lowTestCase {
             $this->assertFalse(true);
         } catch (RedirectException $e){
             $this->assertEquals(
-                "Redirect to /admin/services/admin_services.php with message : Le service a été supprimé",
+                "Redirect to /admin/services/admin_services.php with message : Le service a Ã©tÃ© supprimÃ©",
                 $e->getMessage()
             );
         }

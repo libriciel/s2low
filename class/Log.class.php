@@ -6,7 +6,7 @@ require_once(SITEROOT . "/class/Parapheur.class.php");
 
 class Log extends DataObject {
   protected $objectName = "logs";
-  protected $prettyName = "Entrée de journal";
+  protected $prettyName = "EntrÃ©e de journal";
 
   protected $date;
   protected $module;
@@ -19,10 +19,10 @@ class Log extends DataObject {
 
   protected $dbFields = array( "date" => array( "descr" => "Date", "type" => "isDate", "mandatory" => true),
 						 "module" => array( "descr" => "Module", "type" => "isString", "mandatory" => false),
-						 "severity" => array( "descr" => "Sévérité", "type" => "isString", "mandatory" => true),
-						 "issuer" => array( "descr" => "Émetteur de l'entrée", "type" => "isString", "mandatory" => false),
+						 "severity" => array( "descr" => "SÃ©vÃ©ritÃ©", "type" => "isString", "mandatory" => true),
+						 "issuer" => array( "descr" => "Ã‰metteur de l'entrÃ©e", "type" => "isString", "mandatory" => false),
 						 "user_id" => array( "descr" => "Identifiant de l'utilisateur", "type" => "isInt", "mandatory" => false),
-						 "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
+						 "visibility" => array( "descr" => "VisibilitÃ©", "type" => "isString", "mandatory" => false),
 						 "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
 						 "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
 	  						"authority_id" => array("descr"=>"Authority","type"=>"isInt","mandatory"=>false),
@@ -38,8 +38,8 @@ class Log extends DataObject {
 						   );
 
   /**
-   * \brief Constructeur d'une entrée de log
-   * \param id integer Numéro d'id d'une collectivité existante avec lequel initialiser l'objet
+   * \brief Constructeur d'une entrÃ©e de log
+   * \param id integer NumÃ©ro d'id d'une collectivitÃ© existante avec lequel initialiser l'objet
    */
   public function __construct($id = false) {
     parent::__construct($id);
@@ -49,15 +49,15 @@ class Log extends DataObject {
   }
 
   /**
-   * \brief Constructeur d'une entrée de log à partir d'infos fournies en paramètres
-   * \param $issuer chaîne : Créateur de l'entrée de journal
-   * \param $message chaîne : Message de l'entrée de journal
-   * \param $severity chaîne : Sévérité du message
-   * \param $date chaîne (optionnel) : Date de l'entrée de journal (date courante par défaut)
-   * \param $visibility chaîne (optionnel) : Visibilité de l'entrée de log ('USER', 'ADM' ou 'SADM') (vide par défaut)
-   * \param $module chaîne (optionnel) : Module concerné par le message (vide par défaut)
-   * \param $user objet User (optionnel) : Utilisateur concerné par l'entrée de journal (vide par défaut)
-   * \return True en cas de succès, false sinon
+   * \brief Constructeur d'une entrÃ©e de log Ã  partir d'infos fournies en paramÃ¨tres
+   * \param $issuer chaÃ®ne : CrÃ©ateur de l'entrÃ©e de journal
+   * \param $message chaÃ®ne : Message de l'entrÃ©e de journal
+   * \param $severity chaÃ®ne : SÃ©vÃ©ritÃ© du message
+   * \param $date chaÃ®ne (optionnel) : Date de l'entrÃ©e de journal (date courante par dÃ©faut)
+   * \param $visibility chaÃ®ne (optionnel) : VisibilitÃ© de l'entrÃ©e de log ('USER', 'ADM' ou 'SADM') (vide par dÃ©faut)
+   * \param $module chaÃ®ne (optionnel) : Module concernÃ© par le message (vide par dÃ©faut)
+   * \param $user objet User (optionnel) : Utilisateur concernÃ© par l'entrÃ©e de journal (vide par dÃ©faut)
+   * \return True en cas de succÃ¨s, false sinon
    */
   public static function newEntry($issuer, $message, $severity, $date = false, $visibility = false, $module = false, $user = false ,$userid=false) {
 	$logEntry = new Log();
@@ -111,7 +111,7 @@ class Log extends DataObject {
 	  $logEntry->set("authority_id",$authority_id);
 	  $logEntry->set("authority_group_id",$authority_group_id);
 
-	// Enregistrement de l'entrée pour déterminer son id
+	// Enregistrement de l'entrÃ©e pour dÃ©terminer son id
 	if (! $logEntry->save()) {
 	  return false;
 	}
@@ -145,8 +145,8 @@ class Log extends DataObject {
   } 
 
   /**
-   * \brief Méthode qui détermine si un utilisateur a la permission de visualiser l'entrée de journal courante
-   * \param $user User : Objet utilisateur concerné
+   * \brief MÃ©thode qui dÃ©termine si un utilisateur a la permission de visualiser l'entrÃ©e de journal courante
+   * \param $user User : Objet utilisateur concernÃ©
    */
   public function canView($user) {
 	if ($user->isSuper()) {
@@ -154,22 +154,22 @@ class Log extends DataObject {
 	}
 
 	if (! empty($this->user_id)) {
-	  // L'utilisateur est "propriétaire" de l'entrée
+	  // L'utilisateur est "propriÃ©taire" de l'entrÃ©e
 	  if ($this->user_id == $user->getId()) {
 		if ($user->isAdmin()) {
-		  // Un admin peut voir tout ce qui n'est pas en visibilité SADM
+		  // Un admin peut voir tout ce qui n'est pas en visibilitÃ© SADM
 		  if ($this->visibility != 'SADM') {
 			return true;
 		  }
 		} else {
-		  // Un utilisateur peut voir tout ce qui n'est pas en visibilité 'ADM', 'GADM' et 'SADM'
+		  // Un utilisateur peut voir tout ce qui n'est pas en visibilitÃ© 'ADM', 'GADM' et 'SADM'
 		  if ($this->visibility != 'SADM' && $this->visibility != 'ADM' && $this->visibility != 'GADM') {
 			return true;
 		  }
 		}
 	  } else {
-		// Utilisateur non propriétaire de l'entrée
-		// Si l'utilisateur est admin de collectivité, il peut voir l'entrée si elle appartient à un utilisateur de sa collectivité
+		// Utilisateur non propriÃ©taire de l'entrÃ©e
+		// Si l'utilisateur est admin de collectivitÃ©, il peut voir l'entrÃ©e si elle appartient Ã  un utilisateur de sa collectivitÃ©
 		$owner = new User($this->user_id);
 		$owner->init();
 
@@ -180,7 +180,7 @@ class Log extends DataObject {
 		}
 	  }
 	} else {
-	  // Entrée non associé à un utilisateur
+	  // EntrÃ©e non associÃ© Ã  un utilisateur
 	  if ($user->isAuthorityAdmin() && ($this->visibility == 'ADM' || $this->visibility == 'USER')) {
 		return true;
 	  }
@@ -198,8 +198,8 @@ class Log extends DataObject {
   }
 
   /**
-   * \brief Méthode de génération et d'envoi d'une archive contenant le fichier de l'entrée de log et son horodatage
-   * \return True en cas succès, false sinon
+   * \brief MÃ©thode de gÃ©nÃ©ration et d'envoi d'une archive contenant le fichier de l'entrÃ©e de log et son horodatage
+   * \return True en cas succÃ¨s, false sinon
    */
   public function sendArchive() {
 	if (isset($this->id) && ! empty($this->id)) {
@@ -210,7 +210,7 @@ class Log extends DataObject {
 	  }
 
 	  if (! @mkdir($tmpDir)) {
-		$this->errorMsg = "Erreur système de fichiers";
+		$this->errorMsg = "Erreur systÃ¨me de fichiers";
 		return false;
 	  }
 
@@ -226,11 +226,11 @@ class Log extends DataObject {
 	  }
 
 	  if (! @chdir($tmpDir)) {
-		$this->errorMsg =  "Erreur système de fichiers";
+		$this->errorMsg =  "Erreur systÃ¨me de fichiers";
 		return false;
 	  }
 
-	  // Génération de l'archive zip
+	  // GÃ©nÃ©ration de l'archive zip
 	  $zipFile = "tedetis_journal_" . $this->id . ".zip";
 	  $cmd = "/usr/bin/zip -9 " . $zipFile . " " . basename($logFile) . " " . basename($timestampFile);
 
@@ -255,15 +255,15 @@ class Log extends DataObject {
 		}
 
 		if (! Helpers::deleteFromFS($zipFile)) {
-		  $this->errorMsg = "Erreur système de fichiers";
+		  $this->errorMsg = "Erreur systÃ¨me de fichiers";
 		  return false;
 		}
 	  }
 
 	  // Suprression des fichiers temporaires
-	  // Bien laissé le répertoire à la fin
+	  // Bien laissÃ© le rÃ©pertoire Ã  la fin
 	  if (! Helpers::deleteFromFS($logFile, $timestampFile, $tmpDir)) {
-		$this->errorMsg =  "Erreur système de fichiers";
+		$this->errorMsg =  "Erreur systÃ¨me de fichiers";
 		return false;
 	  }
 
@@ -274,12 +274,12 @@ class Log extends DataObject {
   }
 
   /**
-   * \brief Méthode d'écriture de l'entrée de journal dans un fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'Ã©criture de l'entrÃ©e de journal dans un fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   public function writeLogEntryToFile($logFile, $data) {
 	if (! file_put_contents($logFile, $data)) {
-	  $this->errorMsg = "Erreur système de fichiers.";
+	  $this->errorMsg = "Erreur systÃ¨me de fichiers.";
 	  return false;
 	}
 
@@ -287,8 +287,8 @@ class Log extends DataObject {
   }
 
   /**
-   * Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-   * @return string La chaîne de tous les champs séparés par '**||**'
+   * MÃ©thode d'obtention de l'entrÃ©e de log en format concatÃ©nÃ© pour horodatage
+   * @return string La chaÃ®ne de tous les champs sÃ©parÃ©s par '**||**'
    */
   public function generateMessageHorodate() {
 	$data[] = $this->id;
@@ -307,14 +307,14 @@ class Log extends DataObject {
   }
 
     /**
-     *  Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-     * @return string La chaîne de tous les champs séparés par '**||**'
+     *  MÃ©thode d'obtention de l'entrÃ©e de log en format concatÃ©nÃ© pour horodatage
+     * @return string La chaÃ®ne de tous les champs sÃ©parÃ©s par '**||**'
      */
     public function retrieveMessageHorodate() {
         if ($this->get('message_horodate')){
             return $this->get('message_horodate');
         }
-        //Ancienne méthode de génération du message horodaté
+        //Ancienne mÃ©thode de gÃ©nÃ©ration du message horodatÃ©
         $data[] = $this->id;
         $data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
         $data[] = $this->module;
@@ -332,13 +332,13 @@ class Log extends DataObject {
 
 
   /**
-   * \brief Méthode d'écriture de l'horodatage dans un fichier
-   * \return True en cas de succès, false sinon
+   * \brief MÃ©thode d'Ã©criture de l'horodatage dans un fichier
+   * \return True en cas de succÃ¨s, false sinon
    */
   function writeTimestampToFile($timestampFile) {
 	if (isset($this->timestamp) && ! empty($this->timestamp)) {
 	  if (! file_put_contents($timestampFile, $this->timestamp)) {
-		$this->errorMsg = "Erreur système de fichiers.";
+		$this->errorMsg = "Erreur systÃ¨me de fichiers.";
 		return false;
 	  }
 
@@ -349,13 +349,13 @@ class Log extends DataObject {
   }
 
   /**********************/
-  /* Méthodes statiques */
+  /* MÃ©thodes statiques */
   /**********************/
 
   /**
-   * \brief Méthode d'obtention d'une liste d'entrées de journal
-   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return Tableau des entrées de journal
+   * \brief MÃ©thode d'obtention d'une liste d'entrÃ©es de journal
+   * \param $cond (optionnel) chaÃ®ne ChaÃ®ne contenant les conditions (SQL) Ã  appliquer Ã  la fin de la requÃªte BDD
+   * \return Tableau des entrÃ©es de journal
   */
   public function getLogEntriesList($cond = "") {
 	if (! $this->pagerInit('logs.id, logs.date, logs.module, logs.severity, logs.issuer, logs.user_id, logs.message, logs.timestamp', 'logs LEFT JOIN users ON logs.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id', $cond)) {

@@ -4,11 +4,11 @@
 <h1>Message d'urgence</h1>
 
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="/admin/message/">Revenir à la liste des messages
+	<a class="btn btn-default" href="/admin/message/">Revenir Ã  la liste des messages
 	</a><br>
 </p>
 
-<h2>Édition d'un message</h2>
+<h2>Ã‰dition d'un message</h2>
 
 
 <form action="/admin/message/do_message_edit.php" method="POST">

@@ -30,7 +30,7 @@ class HeliosSignatureTechnique {
 		$orig_pes_aller_path = $this->pesAllerRetriever->getPath($info['sha1']);
 
 		if (sha1_file($orig_pes_aller_path) != $info['sha1']){
-			throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier a été modifé depuis son postage sur la plateforme");
+			throw new UnrecoverableHeliosSignatureTechniqueException("Le fichier a Ã©tÃ© modifÃ© depuis son postage sur la plateforme");
 		}
 		$file_signed = sys_get_temp_dir()."/".uniqid("pes_aller_signed");
 

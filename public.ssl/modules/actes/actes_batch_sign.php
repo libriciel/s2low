@@ -8,7 +8,7 @@ if (! $moduleSQL->hasDroit($moduleInfo['id'],$connexion->getId(),'CS')){
 $liste_id = Helpers::getVarFromPost("liste_id");
 
 if (!$liste_id){
-	Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/actes/index.php");
+	Helpers::returnAndExit(1, "Vous devez sÃ©lectionner au moins une transaction Ã  signer.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
@@ -18,7 +18,7 @@ $transaction_list = array();
 foreach ($liste_id as $transaction_id){
 	 $transactionInfo = $actesTransactionSQL->getInfo($transaction_id);
 	 if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
-	 	Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/actes/index.php");
+	 	Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton nÂ°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/actes/index.php");
 	 }
 	 
 	 $tab_included_files = $actesIncludedFileSQL->getSendFile($transaction_id);
@@ -40,15 +40,15 @@ $doc->openContent();
 $html .= "<h1>ACTES - Signature de plusieurs Actes</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
-$html .= "<h2>Liste des fichiers à signer</h2>\n";
+$html .= "<h2>Liste des fichiers Ã  signer</h2>\n";
 
 $html .= "<div id=\"lot-area\">\n";
-$html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau présente respectivement un lien vers le détail, une description, la date, le nombre de fichiers non traités et un lien vers les actions disponibles de chaque lot\">";
+$html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau prÃ©sente respectivement un lien vers le dÃ©tail, une description, la date, le nombre de fichiers non traitÃ©s et un lien vers les actions disponibles de chaque lot\">";
 $html .= "<caption>Liste des lots de transactions<caption>\n";
 $html .= "<thead>\n";
 $html .= "<tr>\n";
-$html .= " <th id=\"numero_acte\" class=\"data\">Numéro de l'acte</th>\n";
-$html .= " <th id=\"numero_interne_acte\" class=\"data\">Numéro interne de l'acte</th>\n";
+$html .= " <th id=\"numero_acte\" class=\"data\">NumÃ©ro de l'acte</th>\n";
+$html .= " <th id=\"numero_interne_acte\" class=\"data\">NumÃ©ro interne de l'acte</th>\n";
 $html .= " <th id=\"objet_actes\" class=\"data\">Objet</th>\n";
 $html .= " <th id=\"fichier_actes\" class=\"data\">Fichier</th>\n";
 $html .= "</tr>\n";
@@ -64,7 +64,7 @@ foreach ($transaction_list as $transactionInfo) {
 	$html .= " <td headers=\"numero_interne_acte\">" . get_hecho($transactionInfo['number']) . "</td>\n";
 	$html .= " <td headers=\"objet_actes\">" . $transactionInfo['subject']. "</td>\n";
 	$html .= " <td headers=\"fichier_actes\">"; 
-	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['file']['posted_filename']. "</a>";				
+	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"TÃ©lÃ©charger le fichier\">" . $transactionInfo['file']['posted_filename']. "</a>";				
 	$html .= "</td>\n";
 	$html .= "</tr>\n";
 

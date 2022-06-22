@@ -1,12 +1,12 @@
 <?php
 
-// Script chargé de sortir le nombre d'envellopes du type 1 et 6 sur les 4 dernières heures
-// Ne prend pas de paramètre obligatoire
-// Si le mot 'telegraf' est mis en paramètre, la sortie du script sera au format Influxdb
+// Script chargÃ© de sortir le nombre d'envellopes du type 1 et 6 sur les 4 derniÃ¨res heures
+// Ne prend pas de paramÃ¨tre obligatoire
+// Si le mot 'telegraf' est mis en paramÃ¨tre, la sortie du script sera au format Influxdb
 
-// Sortie par défaut au format Nagios
+// Sortie par dÃ©faut au format Nagios
 //RETOURNE 0 si tout va bien
-//RETOURNE 2 si le plus vieil acte � l'�tat post� � plus d'une heure
+//RETOURNE 2 si le plus vieil acte ï¿½ l'ï¿½tat postï¿½ ï¿½ plus d'une heure
 require_once( __DIR__."/../../init/init.php");
 
 $email=EMAIL_ADMIN_TECHNIQUE;

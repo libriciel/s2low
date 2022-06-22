@@ -12,4 +12,4 @@ $objectInstancierTest->set('database_sql_definition_filepath',__DIR__."/../db/s2
 
 /** @var PostgreSQLController $postgreSQLController */
 $postgreSQLController = $objectInstancierTest->get('PostgreSQLController');
-$postgreSQLController->alterDatabase(function($m){echo "[Mise a  jour base de donnees de test]".$m."\n";});
+$postgreSQLController->alterDatabase(function($m){echo "[Mise aÂ  jour base de donnees de test]".$m."\n";});

@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier l'etat des versements d'une collectivité donnee
+//Script charge de verifier l'etat des versements d'une collectivitÃ© donnee
 //Prend en parametre l'id de la collectivite
 
 //RETOURNE 0 si tout va bien
@@ -40,7 +40,7 @@ $message="---------------------------------\n".
     "id : $id_coll \n".
     "nom de la collectivite : $namecoll\n";
 
-// Vérification : il doit y avoir 0 actes en Erreur lors de l'envoi au SAE, statut 20
+// VÃ©rification : il doit y avoir 0 actes en Erreur lors de l'envoi au SAE, statut 20
 $last_status="20";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -48,7 +48,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Erreur lors de l'envoi au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
-// Vérification : il doit y avoir 0 actes Refuser par le SAE, statut 11
+// VÃ©rification : il doit y avoir 0 actes Refuser par le SAE, statut 11
 $last_status="11";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -72,7 +72,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut En attente de transmission au SAE.\n";
 }
 
-// Indication : il peut y avoir des actes au statut Envoyé au SAE, statut 12. Fixer une limite de temps
+// Indication : il peut y avoir des actes au statut EnvoyÃ© au SAE, statut 12. Fixer une limite de temps
 $last_status="9";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 

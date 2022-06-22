@@ -38,7 +38,7 @@ class PdfValidatorTest extends S2lowTestCase
         try{
             $this->pdfValidator->check(__DIR__ . "/fixtures/test_pdf_corrupted.pdf");
         } catch (\Exception $exception){
-            //Juste là pour permettre le test après.
+            //Juste lÃ  pour permettre le test aprÃ¨s.
         }
         $this->assertEquals(
             "Fichier pdf corrompu : test_pdf_corrupted.pdf",

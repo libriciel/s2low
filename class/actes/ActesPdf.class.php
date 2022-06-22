@@ -38,8 +38,8 @@ class ActesPdf implements IActesPdf
     }
 
     public function initPage(ExtendPdf $pdf){
-        //fini de la traitment de les requêtes.
-        //créer un objet pdf.
+        //fini de la traitment de les requÃªtes.
+        //crÃ©er un objet pdf.
         $pdf->AddFont('Ubuntu','R','Ubuntu-R.php');
         $pdf->AddFont('Ubuntu','B','Ubuntu-B.php');
 
@@ -52,7 +52,7 @@ class ActesPdf implements IActesPdf
         $pdf->Ln(4);
         $tailleCellInfosCollectivite = $pdf->convertPixelsToMM(self::TAILLE_POLICE_COLLECTIVITE+2);
 
-        //ajouter collectivité et utilisateur.
+        //ajouter collectivitÃ© et utilisateur.
         $pdf->SetFont('Ubuntu','R',self::TAILLE_POLICE_COLLECTIVITE);
         $this->setTextColor($pdf,self::TEXTE_BLEU);
 
@@ -71,7 +71,7 @@ class ActesPdf implements IActesPdf
     );
         $pdf->SetLineWidth(0);
 
-        $pdf->Cell(40,$tailleCellInfosCollectivite,"Collectivité : ".$texteCollectivite,0,0,'L');
+        $pdf->Cell(40,$tailleCellInfosCollectivite,"CollectivitÃ© : ".$texteCollectivite,0,0,'L');
         $pdf->Ln();
         $pdf->Cell(40,$tailleCellInfosCollectivite,"Utilisateur : ".$texteUtilisateur,0,0,'L');
         $pdf->Ln(16);
@@ -95,7 +95,7 @@ class ActesPdf implements IActesPdf
     }
 
     /**
-     * \brief ajouter l'entête de pdf
+     * \brief ajouter l'entÃªte de pdf
      * \param aucun.
      * @param ExtendPdf $pdf
      */
@@ -121,7 +121,7 @@ class ActesPdf implements IActesPdf
 
 	public function transTable(ExtendPdf $pdf, array $contenuTableau)
 	{
-        $this->writeTitreParagraphe($pdf,"Paramètres de la transaction :");
+        $this->writeTitreParagraphe($pdf,"ParamÃ¨tres de la transaction :");
 
 	    $this->setUpTable($pdf,[80,110],['L','L']);
 
@@ -168,7 +168,7 @@ class ActesPdf implements IActesPdf
             }
             if ($file["filename"])
             {
-                $pdf->myRow(["   Nom métier : ".$file["filename"],'','']);
+                $pdf->myRow(["   Nom mÃ©tier : ".$file["filename"],'','']);
             }
             $this->switchColor($pdf);
         }

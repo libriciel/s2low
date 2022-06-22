@@ -1,6 +1,6 @@
 <?php
 
-//Script charge de verifier l'etat des versements d'une collectivité donnée
+//Script charge de verifier l'etat des versements d'une collectivitÃ© donnÃ©e
 //Prend en parametre l'id de la collectivite
 
 require_once( __DIR__."/../../init/init.php");
@@ -43,7 +43,7 @@ $message="---------------------------------\n".
     "id : $id_coll ".WEBSITE_SSL."/admin/authorities/admin_authority_sae.php?id=$id_coll\n".
     "nom de la collectivite : $namecoll\n";
 
-// Vérification : il doit y avoir 0 actes en Erreur lors de l'archivage, statut 14
+// VÃ©rification : il doit y avoir 0 actes en Erreur lors de l'archivage, statut 14
 $last_status="14";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -51,7 +51,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Erreur lors de l'archivage. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
-// Vérification : il doit y avoir 0 actes en Erreur lors de l'envoie au SAE, statut 20
+// VÃ©rification : il doit y avoir 0 actes en Erreur lors de l'envoie au SAE, statut 20
 $last_status="20";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -59,7 +59,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut Erreur lors de l'envoie au SAE. ---> ".creationurl($id_coll,$last_status)."\n";
 }
 
-// Indication : il doit y avoir des actes au statut Archivé par le SAE, statut 13
+// Indication : il doit y avoir des actes au statut ArchivÃ© par le SAE, statut 13
 $last_status="13";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -75,7 +75,7 @@ if ( $nb_transac > 0 ){
     $message .=  "- $nb_transac au statut En attente de transmission au SAE.\n";
 }
 
-// Indication : il peut y avoir des actes au statut Envoyé au SAE, statut 12. Fixer une limite de temps
+// Indication : il peut y avoir des actes au statut EnvoyÃ© au SAE, statut 12. Fixer une limite de temps
 $last_status="12";
 $nb_transac=nbtransac($sqlQuery,$id_coll,$last_status);
 
@@ -104,7 +104,7 @@ if ($nb_to_archive > 0){
 $pastellPropertiesSQL = $objectInstancier->get(PastellPropertiesSQL::class);
 $pastellProperties = $pastellPropertiesSQL->getPastellProperties($id_coll);
 if ($pastellProperties->actes_send_auto){
-    $message.= "Cette collecitivité est gérée automatiquement\n";
+    $message.= "Cette collecitivitÃ© est gÃ©rÃ©e automatiquement\n";
 }
 
 

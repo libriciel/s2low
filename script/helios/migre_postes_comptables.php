@@ -65,7 +65,7 @@ function extractDataFromFile($nameFile, $date): array
 function checkIfAllValuesAreDefined($dataLigne){
     foreach (COL as $nomColonne=>$indiceColonne){
         if(!isset($dataLigne[$indiceColonne])){
-            throw new Exception("Ligne mal définie rencontrée");            //TODO : rajouter le numéro de ligne
+            throw new Exception("Ligne mal dÃ©finie rencontrÃ©e");            //TODO : rajouter le numÃ©ro de ligne
         }
     }
 }
@@ -75,13 +75,13 @@ function checkIfLigneIsATraiter($dateLigne, $changeSL, $date){
         throw new Exception("Autre date");
     }
     if($changeSL != "OUI"){
-       throw new Exception("SL inchangé");
+       throw new Exception("SL inchangÃ©");
     }
 }
 
 function checkIfSiretIsAlreadyPresent($siret,$array){
     if(in_array($siret,array_keys($array))){
-        throw new DomainException("Fichier incohérent, SIRET $siret en double");
+        throw new DomainException("Fichier incohÃ©rent, SIRET $siret en double");
     }
 }
 
@@ -96,11 +96,11 @@ function getAuthorityIdFromSiret(object $sqlQuery, $siret): int
     $infoAuthority = $sqlQuery->query("SELECT authority_id FROM authority_siret WHERE siret=? AND is_blocked=FALSE", $siret);
 
     if (! $infoAuthority){
-        throw new Exception("La collectivité $siret n'est pas abonnée à l'application Comptabilité Publique du TdT, elle n'est donc pas autorisée à recevoir le PES_Retour ");
+        throw new Exception("La collectivitÃ© $siret n'est pas abonnÃ©e Ã  l'application ComptabilitÃ© Publique du TdT, elle n'est donc pas autorisÃ©e Ã  recevoir le PES_Retour ");
     }
 
     if (count($infoAuthority) > 1){
-        throw new Exception("Le SIRET $siret est associé à plusieurs collectivités. Le PES_Retour n'est donc pas attribué");
+        throw new Exception("Le SIRET $siret est associÃ© Ã  plusieurs collectivitÃ©s. Le PES_Retour n'est donc pas attribuÃ©");
     }
 
     return (int) $infoAuthority[0]['authority_id'];
@@ -110,14 +110,14 @@ function getAuthorityIdFromSiret(object $sqlQuery, $siret): int
 // TRAITEMENT DES PARAMETRES
 if(!in_array($argc,[3,4])){
     echo "Usage : ".$argv[0]." nomFichier date [confirmExecution]\n";
-    echo "confirmExecution (optionnel) les modifs en BDD sont réalisée ssi ce paramètre vaut execute\n ";
+    echo "confirmExecution (optionnel) les modifs en BDD sont rÃ©alisÃ©e ssi ce paramÃ¨tre vaut execute\n ";
     return -1;
 }
 
 $nameFile = $argv[1];
 
 if(!is_file($nameFile)){
-    echo "$nameFile doit être un nom de fichier\n";
+    echo "$nameFile doit Ãªtre un nom de fichier\n";
     return -2;
 }
 
@@ -152,7 +152,7 @@ foreach ($collectivitesATraiter as $siret=> $collectivite){
                 ||
                 $authorities[$idAuthority]["SlCible"] != $collectivite["SlCible"]
             ){
-                throw new DomainException("Fichier incohérent : deux collectivités dépendant de la même autorité ont des Sl différents");
+                throw new DomainException("Fichier incohÃ©rent : deux collectivitÃ©s dÃ©pendant de la mÃªme autoritÃ© ont des Sl diffÃ©rents");
             }
             $authorities[$idAuthority]["sirets"][]=$siret;
         }
@@ -164,7 +164,7 @@ foreach ($collectivitesATraiter as $siret=> $collectivite){
         }
     }
 }
-// 3) Tous les Sl_Cibles doivent être égaux.
+// 3) Tous les Sl_Cibles doivent Ãªtre Ã©gaux.
 
 $bddAuthorities = [];
 
@@ -183,8 +183,8 @@ foreach ($authorities as $idAuthority=>$arraySiren){
 }
 
 //VERIFICATION DES AUTORITES. IL FAUT QUE
-// 1) TOUS LES SIRETS D'UNE MËME AUTORITE SOIENT MIGRES
-// 2) Chaque Sl_Source d'un siret corresponde au helios_ftp_dest de l'autorité
+// 1) TOUS LES SIRETS D'UNE MÃ‹ME AUTORITE SOIENT MIGRES
+// 2) Chaque Sl_Source d'un siret corresponde au helios_ftp_dest de l'autoritÃ©
 echo "TRAITEMENT des autorites--------------------------------------------------------------------------------------\n";
 /**
  * @param $sirets1
@@ -208,13 +208,13 @@ foreach($authorities as $id=> $authority){
     $action = $bddAuthoritie["name"] . " ( " . $id." , ".$bddAuthoritie["helios_ftp_dest"].") ".CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]. "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]];
     try{
         if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
-            throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+            throw new Exception("helios_ftp_dest ne correspond pas Ã  SlSource");
         }
         if(areEquals($bddAuthoritie["sirets"], $authority["sirets"])){
-            throw new Exception("La liste en BDD des sirets de l'authorité $id [".implode(",",$bddAuthoritie["sirets"])."] ne correspond pas à l'ensemble des SIRETS présents dans le fichier [".implode(",",$authority["sirets"])."]");
+            throw new Exception("La liste en BDD des sirets de l'authoritÃ© $id [".implode(",",$bddAuthoritie["sirets"])."] ne correspond pas Ã  l'ensemble des SIRETS prÃ©sents dans le fichier [".implode(",",$authority["sirets"])."]");
         }
         if($bddAuthoritie["helios_ftp_dest"] != CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlSource"]]){
-            throw new Exception("helios_ftp_dest ne correspond pas à SlSource");
+            throw new Exception("helios_ftp_dest ne correspond pas Ã  SlSource");
         }
 
         $action = $bddAuthoritie["name"] . " ( " . $id . " ) " . $bddAuthoritie["helios_ftp_dest"] . "=>" . CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]]; // TDO : check

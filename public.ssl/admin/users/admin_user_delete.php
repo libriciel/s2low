@@ -1,38 +1,38 @@
 <?php
 /*
- * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
+ * TÃ©DÃ©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : JÃ©rÃ´me Schell, AoÃ»t 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant à   la
- * dématérialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant Ã Â   la
+ * dÃ©matÃ©rialisation de l'administration. 
  *
- * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * Ce logiciel est rÃ©gi par la licence CeCILL soumise au droit franÃ§ais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusÃ©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilité au code source et des droits de copie,
- * de modification et de redistribution accordés par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
- * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concédants successifs.
+ * En contrepartie de l'accessibilitÃ© au code source et des droits de copie,
+ * de modification et de redistribution accordÃ©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitÃ©e.  Pour les mÃªmes raisons,
+ * seule une responsabilitÃ© restreinte pÃ¨se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concÃ©dants successifs.
  *
- * A cet égard  l'attention de l'utilisateur est attirée sur les risques
- * associés au chargement,  à   l'utilisation,  à   la modification et/ou au
- * développement et à   la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à   
- * manipuler et qui le réserve donc à   des développeurs et des professionnels
- * avertis possédant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invités à   charger  et  tester  l'adéquation  du
- * logiciel à   leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à  l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * A cet Ã©gard  l'attention de l'utilisateur est attirÃ©e sur les risques
+ * associÃ©s au chargement,  Ã Â   l'utilisation,  Ã Â   la modification et/ou au
+ * dÃ©veloppement et Ã Â   la reproduction du logiciel par l'utilisateur Ã©tant 
+ * donnÃ© sa spÃ©cificitÃ© de logiciel libre, qui peut le rendre complexe Ã Â   
+ * manipuler et qui le rÃ©serve donc Ã Â   des dÃ©veloppeurs et des professionnels
+ * avertis possÃ©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invitÃ©s Ã Â   charger  et  tester  l'adÃ©quation  du
+ * logiciel Ã Â   leurs besoins dans des conditions permettant d'assurer la
+ * sÃ©curitÃ© de leurs systÃ¨mes et ou de leurs donnÃ©es et, plus gÃ©nÃ©ralement, 
+ * Ã Â  l'utiliser et l'exploiter dans les mÃªmes conditions de sÃ©curitÃ©. 
  *
- * Le fait que vous puissiez accéder à cet en-tte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * Le fait que vous puissiez accÃ©der Ã  cet en-tte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez acceptÃ© les
  * termes.
 */
 ?>
@@ -40,13 +40,13 @@
 /**
  * \file admin_user_delete.php
  * \brief Page effectuant la suppression d'un utilisateur
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \author JÃ©rÃ´me Schell <j.schell@alternancesoft.com>
  * \date 16.03.2006
  * 
  *
- * Cette page supprime un utilisateur de la base de données
- * Elle prend un paramètre id dans la requête HTTP POST designant
- * l'utilisateur à supprimer.
+ * Cette page supprime un utilisateur de la base de donnÃ©es
+ * Elle prend un paramÃ¨tre id dans la requÃªte HTTP POST designant
+ * l'utilisateur Ã  supprimer.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -57,19 +57,19 @@
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-// Suppression utilisateur désactivée
+// Suppression utilisateur dÃ©sactivÃ©e
 header("Location: " . WEBSITE);
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -80,12 +80,12 @@ if (isset($id) && ! empty($id)) {
   $him = new User($id);
 
   if (! $me->canEditUser($id)) {
-	$_SESSION["error"] = "Accès refusé pour la suppression de cet utilisateur";
+	$_SESSION["error"] = "AccÃ¨s refusÃ© pour la suppression de cet utilisateur";
 	header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
 	exit();
   } else {
 	if ($him->delete()) {
-	  $msg = "Suppression de l'utilisateur " . $him->getPrettyName() . ". Résultat ok.";
+	  $msg = "Suppression de l'utilisateur " . $him->getPrettyName() . ". RÃ©sultat ok.";
 	  if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
 		$msg .= "\nErreur de journalisation.";
 	  }
@@ -105,7 +105,7 @@ if (isset($id) && ! empty($id)) {
 	}
   }
 } else {
-  $_SESSION["error"] = "Pas d'identifiant utilisateur spécifié";
+  $_SESSION["error"] = "Pas d'identifiant utilisateur spÃ©cifiÃ©";
   header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
   exit();
 }

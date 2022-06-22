@@ -1,52 +1,52 @@
 <?php
 /*
- * TÈDÈTIS - Copyright 2006 Alternance-Soft
- * Contributeur : JÈrÙme Schell, Ao˚t 2006 
+ * T√©D√©TIS - Copyright 2006 Alternance-Soft
+ * Contributeur : J√©r√¥me Schell, Ao√ªt 2006 
  *
  * contact@alternancesoft.com
  *
- * Ce logiciel est un programme informatique servant ‡†  la
- * dÈmatÈrialisation de l'administration. 
+ * Ce logiciel est un programme informatique servant √†¬†  la
+ * d√©mat√©rialisation de l'administration. 
  *
- * Ce logiciel est rÈgi par la licence CeCILL soumise au droit franÁais et
+ * Ce logiciel est r√©gi par la licence CeCILL soumise au droit fran√ßais et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusÈe par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffus√©e par le CEA, le CNRS et l'INRIA 
  * sur le site "http://www.cecill.info".
  *
- * En contrepartie de l'accessibilitÈ au code source et des droits de copie,
- * de modification et de redistribution accordÈs par cette licence, il n'est
- * offert aux utilisateurs qu'une garantie limitÈe.  Pour les mÍmes raisons,
- * seule une responsabilitÈ restreinte pËse sur l'auteur du programme,  le
- * titulaire des droits patrimoniaux et les concÈdants successifs.
+ * En contrepartie de l'accessibilit√© au code source et des droits de copie,
+ * de modification et de redistribution accord√©s par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limit√©e.  Pour les m√™mes raisons,
+ * seule une responsabilit√© restreinte p√®se sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les conc√©dants successifs.
  *
- * A cet Ègard  l'attention de l'utilisateur est attirÈe sur les risques
- * associÈs au chargement,  ‡†  l'utilisation,  ‡†  la modification et/ou au
- * dÈveloppement et ‡†  la reproduction du logiciel par l'utilisateur Ètant 
- * donnÈ sa spÈcificitÈ de logiciel libre, qui peut le rendre complexe ‡†  
- * manipuler et qui le rÈserve donc ‡†  des dÈveloppeurs et des professionnels
- * avertis possÈdant  des  connaissances  informatiques approfondies.  Les
- * utilisateurs sont donc invitÈs ‡†  charger  et  tester  l'adÈquation  du
- * logiciel ‡†  leurs besoins dans des conditions permettant d'assurer la
- * sÈcuritÈ de leurs systËmes et ou de leurs donnÈes et, plus gÈnÈralement, 
- * ‡† l'utiliser et l'exploiter dans les mÍmes conditions de sÈcuritÈ. 
+ * A cet √©gard  l'attention de l'utilisateur est attir√©e sur les risques
+ * associ√©s au chargement,  √†¬†  l'utilisation,  √†¬†  la modification et/ou au
+ * d√©veloppement et √†¬†  la reproduction du logiciel par l'utilisateur √©tant 
+ * donn√© sa sp√©cificit√© de logiciel libre, qui peut le rendre complexe √†¬†  
+ * manipuler et qui le r√©serve donc √†¬†  des d√©veloppeurs et des professionnels
+ * avertis poss√©dant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invit√©s √†¬†  charger  et  tester  l'ad√©quation  du
+ * logiciel √†¬†  leurs besoins dans des conditions permettant d'assurer la
+ * s√©curit√© de leurs syst√®mes et ou de leurs donn√©es et, plus g√©n√©ralement, 
+ * √†¬† l'utiliser et l'exploiter dans les m√™mes conditions de s√©curit√©. 
  *
- * Le fait que vous puissiez accÈder ‡ cet en-tte signifie que vous avez 
- * pris connaissance de la licence CeCILL, et que vous en avez acceptÈ les
+ * Le fait que vous puissiez acc√©der √† cet en-tte signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accept√© les
  * termes.
 */
 ?>
 <?php
 /**
  * \file admin_authority_delete.php
- * \brief Page effectuant la suppression d'une collectivitÈ
- * \author JÈrÙme Schell <j.schell@alternancesoft.com>
+ * \brief Page effectuant la suppression d'une collectivit√©
+ * \author J√©r√¥me Schell <j.schell@alternancesoft.com>
  * \date 21.07.2006
  * 
  *
- * Cette page supprime une collectivitÈ de la base de donnÈes
- * Elle prend un paramËtre id dans la requÍte HTTP POST designant
- * la collectivitÈ ‡ supprimer.
+ * Cette page supprime une collectivit√© de la base de donn√©es
+ * Elle prend un param√®tre id dans la requ√™te HTTP POST designant
+ * la collectivit√© √† supprimer.
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -57,20 +57,20 @@
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-// Suppression collectivitÈ dÈsactivÈe
+// Suppression collectivit√© d√©sactiv√©e
 header("Location: " . WEBSITE);
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "…chec de l'authentification";
+  $_SESSION["error"] = "√âchec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 // Seul un super administrateur peut effectuer cette action
 if (! $me->isGroupAdminOrSuper()) {
-  $_SESSION["error"] = "AccËs refusÈ";
+  $_SESSION["error"] = "Acc√®s refus√©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -81,13 +81,13 @@ if (isset($id) && ! empty($id)) {
   $authority = new Authority($id);
 
   if ($me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_group_id"))) {
-	$_SESSION["error"] = "AccËs refusÈ pour la collectivitÈ spÈcifiÈe";
+	$_SESSION["error"] = "Acc√®s refus√© pour la collectivit√© sp√©cifi√©e";
 	header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
 	exit();
   }
 
   if ($authority->delete()) {
-	$msg = "Suppression de la collectivitÈ " . $authority->get("name") . ". RÈsultat ok.";
+	$msg = "Suppression de la collectivit√© " . $authority->get("name") . ". R√©sultat ok.";
 	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
 	  $msg .= "\nErreur de journalisation.";
 	}
@@ -96,7 +96,7 @@ if (isset($id) && ! empty($id)) {
     header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
     exit();
   } else {
-	$msg = "Erreur lors de la tentative de suppression de la collectivitÈ<br />" . $authority->getErrorMsg();
+	$msg = "Erreur lors de la tentative de suppression de la collectivit√©<br />" . $authority->getErrorMsg();
 	if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
 	  $msg .= "\nErreur de journalisation.";
 	}
@@ -106,7 +106,7 @@ if (isset($id) && ! empty($id)) {
     exit();
   }
 } else {
-  $_SESSION["error"] = "Pas d'identifiant de collectivitÈ spÈcifiÈ";
+  $_SESSION["error"] = "Pas d'identifiant de collectivit√© sp√©cifi√©";
   header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
   exit();
 }

@@ -71,18 +71,18 @@ class PadesValid {
 		}
 		$result = json_decode($result);
 		if (! $result){
-			throw new Exception("Impossible de décoder le message de pades-valid : ".$curlWrapper->getLastOutput());
+			throw new Exception("Impossible de dÃ©coder le message de pades-valid : ".$curlWrapper->getLastOutput());
 		}
 		if (! isset($result->signed)){
-			throw new Exception("Impossible de determiner si le fichier est signé");
+			throw new Exception("Impossible de determiner si le fichier est signÃ©");
 		}
 
 		if ($result->signed == false){
-			//Le fichier n'est pas signée
+			//Le fichier n'est pas signÃ©e
 			return false;
 		}
 		if (empty($result->signatures)){
-			throw new Exception("Impossible de determiner si le fichier est signé");
+			throw new Exception("Impossible de determiner si le fichier est signÃ©");
 		}
 		return $result;
 	}

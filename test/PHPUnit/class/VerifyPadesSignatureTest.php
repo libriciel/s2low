@@ -145,7 +145,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ],
             [
                 $this->getSignature(true,"",""),
-                "Impossible de récupérer le certificat de signature"
+                "Impossible de rÃ©cupÃ©rer le certificat de signature"
             ],
             [
                 $this->getSignature(true,"certificat",""),
@@ -189,8 +189,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     }
 
     // Check checkCertificateWithoutCheckingCertificateChain est
-    //  - appelé par validateSignature
-    //  - pas appelé par validateSignatureWithoutCertificateChecking
+    //  - appelÃ© par validateSignature
+    //  - pas appelÃ© par validateSignatureWithoutCertificateChecking
 
     public function testcheckCertificateWithoutCheckingCertificateChainIsCalled(){
         $this->verifyPemCertificateMock
@@ -214,7 +214,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
     }
 
-    // Test que l'exception lancée par checkCertificateWithoutCheckingCertificateChain passe le cas échéant
+    // Test que l'exception lancÃ©e par checkCertificateWithoutCheckingCertificateChain passe le cas Ã©chÃ©ant
 
     public function testcheckCertificateWithoutCheckingCertificateChainExceptionGoesThrough(){
         $this->verifyPemCertificateMock

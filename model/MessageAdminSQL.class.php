@@ -61,7 +61,7 @@ class MessageAdminSQL extends SQL {
 		if($message_id){
 			$messageAdmin = $this->getMessage($message_id);
 			if ($messageAdmin->getEtat() != MessageAdmin::ETAT_EN_COURS_DE_REDACTION){
-				throw new Exception("Impossible de modifier ce message qui n'est pas en cours de rédaction");
+				throw new Exception("Impossible de modifier ce message qui n'est pas en cours de rÃ©daction");
 			}
 			$sql = "UPDATE message_admin set titre=?,message=?,niveau=? WHERE id=?";
 			$this->query($sql,$titre,$message,$niveau,$message_id);

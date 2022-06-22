@@ -24,7 +24,7 @@ class AdminController extends Controller {
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$this->authority_info = $authoritySQL->getInfo($id);
 		if (! $this->authority_info){
-			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
+			$this->displayErrorAndExit("Aucune collectivitÃ© trouvÃ©e","/admin/authorities/admin_authorities.php");
 		} // @codeCoverageIgnore
 		
 		$this->verifAdmin($id);
@@ -45,7 +45,7 @@ class AdminController extends Controller {
 		} //@codeCoverageIgnore
 
 		$this->siret_exemple = $this->getSiret()->generate();
-		$this->title = "Numéros SIRET - {$this->authority_info['name']}";
+		$this->title = "NumÃ©ros SIRET - {$this->authority_info['name']}";
 	}
 
 	/**
@@ -60,17 +60,17 @@ class AdminController extends Controller {
 		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
 		$this->authority_info = $authoritySQL->getInfo($authority_id);
 		if (! $this->authority_info){
-			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
+			$this->displayErrorAndExit("Aucune collectivitÃ© trouvÃ©e","/admin/authorities/admin_authorities.php");
 		} // @codeCoverageIgnore
 		
 		
 		if (! $this->getSiret()->isValid($siret)){
-			$this->displayErrorAndExit("Le numéro SIRET n'est pas valide","/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
+			$this->displayErrorAndExit("Le numÃ©ro SIRET n'est pas valide","/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
 		} // @codeCoverageIgnore
 		
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$authoritySiret->add($authority_id, $siret);
-		$this->displayAndExit("Numéro SIRET ajouté","/admin/authorities/admin_authority_siret.php?id=$authority_id");
+		$this->displayAndExit("NumÃ©ro SIRET ajoutÃ©","/admin/authorities/admin_authority_siret.php?id=$authority_id");
 	} // @codeCoverageIgnore
 	
 	public function authoritySiretDelAction(){
@@ -80,7 +80,7 @@ class AdminController extends Controller {
 		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
 		$info = $authoritySiret->getInfo($authority_siret_id);
 		$authoritySiret->del($authority_siret_id);
-		$this->displayAndExit("Numéro SIRET retiré","/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
+		$this->displayAndExit("NumÃ©ro SIRET retirÃ©","/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
 	} // @codeCoverageIgnore
 
 
@@ -91,7 +91,7 @@ class AdminController extends Controller {
 		$this->verifSuperAdmin();
 		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
 		$this->getAuthoritySiretSQL()->blocked($authority_siret_id);
-		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été bloqué");
+		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a Ã©tÃ© bloquÃ©");
 	}
 
 	/**
@@ -101,7 +101,7 @@ class AdminController extends Controller {
 		$this->verifSuperAdmin();
 		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
 		$this->getAuthoritySiretSQL()->unblocked($authority_siret_id);
-		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été débloqué");
+		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a Ã©tÃ© dÃ©bloquÃ©");
 	}
 
 	/**
@@ -124,7 +124,7 @@ class AdminController extends Controller {
 	public function authoritiesAction(){
 		$this->verifAdmin();
 		$pagerHTML  = new PagerHTML();
-		$this->title = "Gestion des collectivités | S²low";
+		$this->title = "Gestion des collectivitÃ©s | SÂ²low";
 		$recuperateur = $this->getRecuperateurGet();
 
 		$this->ftype =  $recuperateur->get("type");
@@ -162,10 +162,10 @@ class AdminController extends Controller {
 		if ($this->me->isGroupAdmin()){
 			$userSQL = new UserSQL($this->getSQLQuery());
 			$group_name = $userSQL->getGroupeName($this->me->getId());
-			$this->titre = "Gestion des collectivités du groupe $group_name";
+			$this->titre = "Gestion des collectivitÃ©s du groupe $group_name";
 			$this->groupe_list = false;
 		} else {
-			$this->titre = "Gestion des collectivités";
+			$this->titre = "Gestion des collectivitÃ©s";
 			$groupeSQL = new GroupSQL($this->getSQLQuery());
 			$this->groupe_list = $groupeSQL->getAll();
 		}

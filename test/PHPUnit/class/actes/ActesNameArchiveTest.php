@@ -26,12 +26,12 @@ class ActesNameArchiveTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testVerifNameBadTrigramme(){
-		$this->setExpectedException("Exception","Le trigramme trouvé (def) ne correspond pas au trigramme attendu (abc)");
+		$this->setExpectedException("Exception","Le trigramme trouvÃ© (def) ne correspond pas au trigramme attendu (abc)");
 		$this->actesNameArchive->verifNameOK("def-TACT--123456789--20150729-1.tar.gz");
 	}
 
 	public function testVerifNameBadQuadrigramme(){
-		$this->setExpectedException("Exception","Le quadrigramme trouvé (EACT) ne correspond pas au quadrigramme attendu (TACT)");
+		$this->setExpectedException("Exception","Le quadrigramme trouvÃ© (EACT) ne correspond pas au quadrigramme attendu (TACT)");
 		$this->actesNameArchive->verifNameOK("abc-EACT--123456789--20150729-1.tar.gz");
 	}
 

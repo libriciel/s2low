@@ -32,9 +32,8 @@ trait PastellConfigurationTestTrait {
 
 	/**
 	 * @param $classname
-	 * @return PHPUnit_Framework_MockObject_MockBuilder
 	 */
-	abstract public function getMockBuilder($classname);
+	abstract public function getMockBuilder(string $classname);
 
 	/**
 	 * @return ObjectInstancier

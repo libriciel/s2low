@@ -12,19 +12,19 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-  $_SESSION["error"] = "Accès refusée";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©e";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
 
 if ($module->getParam("paper") == "on") {
-  $_SESSION["error"] = "Mode &nbsp;papier&nbsp; actif. Accès interdit.";
+  $_SESSION["error"] = "Mode &nbsp;papier&nbsp; actif. AccÃ¨s interdit.";
   header("Location: " . WEBSITE_SSL . "/modules/helios/");
   exit ();
 }
@@ -32,7 +32,7 @@ if ($module->getParam("paper") == "on") {
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()){
-  $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
+  $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas tÃ©lÃ©transmettre !";
   header("Location: " . WEBSITE_SSL . "/modules/helios/");
   exit ();
 }
@@ -65,7 +65,7 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
+$html = "<h1>Helios - DÃ©matÃ©rialisation de documents comptables</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 ob_start();
@@ -83,7 +83,7 @@ ob_start();
 		</tr>
 		<tr>
 			<th>
-				<label for="must_signed" class="control-label">Signer le fichier PES avant de le télétransmettre</label>
+				<label for="must_signed" class="control-label">Signer le fichier PES avant de le tÃ©lÃ©transmettre</label>
 			</th>
 			<td>
 				<input type="checkbox"  name="must_signed" id="must_signed"/>

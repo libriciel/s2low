@@ -30,10 +30,10 @@ class AdminServiceController extends Controller {
 		$result = $serviceUserSQL->add($name,$authority_id);
 
 		if (! $result){
-			$this->displayErrorAndExit("Ce service existe dÈj‡ !",$url_redirect);
+			$this->displayErrorAndExit("Ce service existe d√©j√† !",$url_redirect);
 		}
 
-		$this->displayAndExit("Le service a ÈtÈ crÈÈ",$url_redirect);
+		$this->displayAndExit("Le service a √©t√© cr√©√©",$url_redirect);
 	}
 
 
@@ -42,7 +42,7 @@ class AdminServiceController extends Controller {
 		$this->verifAdmin($authority_id);
 		$serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
 		$result = $serviceUser->getServiceUser($authority_id);
-		echo json_encode(utf8_encode_array($result));
+		echo json_encode($result);
 		exit_wrapper();
 	}
 
@@ -66,7 +66,7 @@ class AdminServiceController extends Controller {
 		$serviceUser->addUser($id_user,$id_service);
 
 		$url_redirect = "/admin/users/admin_user_edit.php?id=$id_user";
-		$this->displayAndExit("L'utilisateur a ÈtÈ ajoutÈ au service",$url_redirect);
+		$this->displayAndExit("L'utilisateur a √©t√© ajout√© au service",$url_redirect);
 	}
 
     /**
@@ -96,7 +96,7 @@ class AdminServiceController extends Controller {
         $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
 
         if (! $service_id){
-            $this->redirect(self::ADMIN_SERVICE_URL,"Aucun service trouvÈ");
+            $this->redirect(self::ADMIN_SERVICE_URL,"Aucun service trouv√©");
         }
 
         $service_info = $serviceUserSQL->getInfo($service_id);
@@ -136,7 +136,7 @@ class AdminServiceController extends Controller {
             $serviceUser->addParent($id,$service_id);
         }
 
-        $this->redirect("/admin/services/gestion-service-content.php?id=$id","Parent modifiÈ");
+        $this->redirect("/admin/services/gestion-service-content.php?id=$id","Parent modifi√©");
     }
 
     /**
@@ -152,7 +152,7 @@ class AdminServiceController extends Controller {
         if (! $id_users){
             $this->redirect(
                 "/admin/services/gestion-service-content.php?id=$id_service",
-                'Il faut sÈlectionner un utilisateur ‡ enlever du service'
+                'Il faut s√©lectionner un utilisateur √† enlever du service'
             );
         }
 
@@ -163,7 +163,7 @@ class AdminServiceController extends Controller {
 
         $this->redirect(
             "/admin/services/gestion-service-content.php?id=$id_service",
-        "L'utilisateur a ÈtÈ retirÈ du service"
+        "L'utilisateur a √©t√© retir√© du service"
         );
     }
 
@@ -178,6 +178,6 @@ class AdminServiceController extends Controller {
         $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
         $serviceUserSQL->supprimerService($service_id);
 
-        $this->redirect(self::ADMIN_SERVICE_URL,"Le service a ÈtÈ supprimÈ");
+        $this->redirect(self::ADMIN_SERVICE_URL,"Le service a √©t√© supprim√©");
     }
 }

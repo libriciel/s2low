@@ -19,15 +19,15 @@ if (php_sapi_name() != 'cli'){
 }
 
 /*
- * Ce fichier à l'air d'être inclu dans tous les scripts S²low
+ * Ce fichier Ã  l'air d'Ãªtre inclu dans tous les scripts SÂ²low
  * 
  */
 function hecho($message,$quot_style=ENT_QUOTES){
-	echo get_hecho($message,$quot_style,"iso-8859-15");
+	echo get_hecho($message,$quot_style,"utf-8");
 }
 
-function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="iso-8859-15"){
-	return htmlspecialchars($message,$quot_style,$encoding);
+function get_hecho($message,$quot_style=ENT_QUOTES,$encoding="utf-8"){
+	return htmlspecialchars($message ?? '',$quot_style,$encoding);
 }
 
 if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
@@ -66,7 +66,7 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
 }
 
 
-//Cette variable est utilisée partout sans être initialisé...
+//Cette variable est utilisÃ©e partout sans Ãªtre initialisÃ©...
 $html = "";
 
 $jsonOutput = new JSONoutput();

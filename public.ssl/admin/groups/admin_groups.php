@@ -10,7 +10,7 @@ if (! $me->authenticate()) {
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -21,7 +21,7 @@ $api = Helpers::getVarFromGet("api");
 $group = new Group();
 
 $filter = array();
-if (isset($fname) && strlen($fname) > 0) {
+if (isset($fname) && mb_strlen($fname) > 0) {
   $filter[] .= "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
@@ -42,7 +42,7 @@ if ($api){
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Tedetis : gestion des groupes de collectivités");
+$doc->setTitle("Tedetis : gestion des groupes de collectivitÃ©s");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -51,7 +51,7 @@ $doc->buildPager($group);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion des groupes de collectivités</h1>\n";
+$html .= "<h1>Gestion des groupes de collectivitÃ©s</h1>\n";
 $html .= "<h2>Actions</h2>\n";
 $html .= "<a href=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n";
 $html .= "<a href=\"" . WEBSITE_SSL . "/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n";
@@ -62,7 +62,7 @@ $html .= "<div class=\"form-group\">\n";
 $html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom contient</label>\n";
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
-if (strlen($fname) > 0) {
+if (mb_strlen($fname ?? '') > 0) {
   $html .= " value=\"" . get_hecho($fname) . "\"";
 }
 
@@ -73,7 +73,7 @@ $html .= "<button class=\"btn btn-default col-md-offset-2 col-md-3\" type=\"subm
 $html .= "</div>\n";
 $html .= "</form>\n";
 $html .= "</div><br />\n";
-$html .= "<h2>Liste des groupes de collectivités</h2>\n";
+$html .= "<h2>Liste des groupes de collectivitÃ©s</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 
 if (is_array($groups)) {
@@ -81,7 +81,7 @@ if (is_array($groups)) {
   $html .= "<thead>\n";
   $html .= "<tr>\n";
   $html .= " <th id=\"name\">Nom</th>\n";
-  $html .= " <th id=\"status\">État</th>\n";
+  $html .= " <th id=\"status\">Ã‰tat</th>\n";
   $html .= " <th id=\"action\">Actions</th>\n";
   $html .= "</tr>\n";
   $html .= "</thead>\n";
@@ -100,7 +100,7 @@ if (is_array($groups)) {
   $html .= "</tbody>\n";
   $html .= "</table>\n";
 } else {
-  $html .= "<p>Pas de groupe correspondant aux critères de filtrage</p>";
+  $html .= "<p>Pas de groupe correspondant aux critÃ¨res de filtrage</p>";
 }
 
 $html .= "</div>\n";

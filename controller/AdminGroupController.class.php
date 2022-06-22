@@ -17,7 +17,7 @@ class AdminGroupController extends Controller {
 		$groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
 
 		if ($groupSQL->groupNameAlreadyExists($id,$name)){
-			$this->setMessage("Le nom de ce groupe est déjà utilisé");
+			$this->setMessage("Le nom de ce groupe est dÃ©jÃ  utilisÃ©");
 			$this->redirect("/admin/groups/admin_group_edit.php?id=$id");
 		}
 
@@ -32,7 +32,7 @@ class AdminGroupController extends Controller {
 
 		$file_content = $fileUploaderNG->getFileContent('siren_file');
         if ($fileUploaderNG->getFileType('siren_file') != 'text/plain'){
-            $this->setMessage("Le fichier SIREN n'a pas été analysé car il n'est pas au bon format)");
+            $this->setMessage("Le fichier SIREN n'a pas Ã©tÃ© analysÃ© car il n'est pas au bon format");
             $this->redirect("/admin/groups/admin_group_edit.php?id=$id");
         }
 		foreach (preg_split('/\n|\r\n?/',$file_content) as $siren) {
@@ -42,7 +42,7 @@ class AdminGroupController extends Controller {
 			}
 		}
 
-		$message = "Le groupe « ".get_hecho($name)." » (id=$id) a été édité";
+		$message = "Le groupe Â« ".get_hecho($name)." Â» (id=$id) a Ã©tÃ© Ã©ditÃ©";
 		$this->setMessage($message);
 		$this->log($message);
 

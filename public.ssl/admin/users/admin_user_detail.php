@@ -8,11 +8,11 @@ $x509Certificate = new X509Certificate();
 $me = new User();
 
 if (! $me->authenticate()) {
-	$jsonOutput->displayErrorAndExit("…chec de l'authentification");
+	$jsonOutput->displayErrorAndExit("√âchec de l'authentification");
 }
 
 if (! $me->isAdmin()) {
-	$jsonOutput->displayErrorAndExit("AccÈs refusÈ");
+	$jsonOutput->displayErrorAndExit("Acc√©s refus√©");
 }
 
 $id = Helpers::getVarFromGet("id");
@@ -24,7 +24,7 @@ $him->setId($id);
 $him->init();
 
 if (! $me->isSuper()  && ! $me->canEditUser($id) ) {
-	$jsonOutput->displayErrorAndExit("Impossible de d'accÈder ‡ cet utilisateur. AccÈs refusÈ.");
+	$jsonOutput->displayErrorAndExit("Impossible de d'acc√©der √† cet utilisateur. Acc√©s refus√©.");
 }
 
 foreach(array('name','givenname','login','email','telephone','status','authority_id','authority_group_id','role','certificate') as $key){

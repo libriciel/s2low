@@ -6,13 +6,13 @@ require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -35,7 +35,7 @@ if (isset($id)) {
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé.";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©.";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -44,7 +44,7 @@ $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
-$doc->setTitle("Tedetis : " . $modStr . " groupe de collectivité");
+$doc->setTitle("Tedetis : " . $modStr . " groupe de collectivitÃ©");
 
 $doc->openContainer();
 $doc->openSideBar();
@@ -52,11 +52,11 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Gestion groupe de collectivités</h1>\n";
+$html .= "<h1>Gestion groupe de collectivitÃ©s</h1>\n";
 
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_groups.php\" class=\"btn btn-default\">Retour liste groupes</a></p>\n";
 
-$html .= "<h2>" . $modStr . " groupe de collectivités</h2>\n";
+$html .= "<h2>" . $modStr . " groupe de collectivitÃ©s</h2>\n";
 $html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $group->getValidationTrio('name', 'status') . ")\">\n";
 
 if ($mod) {
@@ -72,7 +72,7 @@ $html .= ($mod) ? get_hecho($group->get("name")) : Helpers::getFromSession("name
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
 $html .= "<div class=\"form-group\">\n";
-$html .= "<label for=\"status\" class=\"col-md-3 control-label\">État</label>\n";
+$html .= "<label for=\"status\" class=\"col-md-3 control-label\">Ã‰tat</label>\n";
 $html .= "  <div class=\"col-md-4\">";
 
 $status = ($mod) ? $group->get("status") : Helpers::getFromSession("status");
@@ -81,7 +81,7 @@ $html .= $doc->getHTMLSelect("status", $group->get("statusTypes"), $status);
 $html .= "  </div>\n";
 $html .= " </div>\n";
 $html .= "<div class=\"form-group\">\n";
-$html .= "<label for=\"siren-file\" class=\"col-md-3 control-label\">Liste des SIREN autorisés</label>\n";
+$html .= "<label for=\"siren-file\" class=\"col-md-3 control-label\">Liste des SIREN autorisÃ©s</label>\n";
 $html .= "  <div class=\"col-md-4\">";
 $html .= "  <input id=\"siren-file\" type=\"file\" name=\"siren_file\" size=\"30\" maxlength=\"255\" />";
 $html .= "  </div>\n";
@@ -95,7 +95,7 @@ $html .= "</div>\n";
 $html .= "</form>\n";
 
 if ($mod && $group->isEmpty($group->getId())) {
-  $html .= "<form action=\"" . WEBSITE_SSL . "/admin/groups/admin_group_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce groupe ?')\" method=\"post\">\n";
+  $html .= "<form action=\"" . WEBSITE_SSL . "/admin/groups/admin_group_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer dÃ©finitivement ce groupe ?')\" method=\"post\">\n";
   $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId(). "\" />\n";
   $html .= "<input type=\"submit\" value=\"Supprimer ce groupe\" class=\"btn btn-danger\" />\n";
   $html .= "</form>\n";
@@ -109,13 +109,13 @@ if ($api){
         exit;
 }
 
-$html .= "<h2>Liste des SIREN autorisés pour ce groupe</h2>\n";
+$html .= "<h2>Liste des SIREN autorisÃ©s pour ce groupe</h2>\n";
 
 if ($mod){
 	  $html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/groups/add-siren-controler.php\" method=\"post\">\n";
 	  $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId(). "\" />\n";
 	  $html .= "<div class=\"form-group\">\n";
-	$html .= "  <label for=\"add-siren\" class=\"col-md-3 control-label\">Ajouter un numéro SIREN</label>\n";
+	$html .= "  <label for=\"add-siren\" class=\"col-md-3 control-label\">Ajouter un numÃ©ro SIREN</label>\n";
 	$html .= "  <div class=\"col-md-4\">";
 	$html .= "  <input id=\"add-siren\" class=\"form-control\" name=\"siren\" size=\"30\" maxlength=\"255\" />";
         $html .= "  </div>";
@@ -134,7 +134,7 @@ if (count($sirenList) > 0) {
   }
   $html .= "</ul>\n";
 } else {
-  $html .= "Pas de SIREN autorisé.";
+  $html .= "Pas de SIREN autorisÃ©.";
 }
 
 $html .= "</div>\n";

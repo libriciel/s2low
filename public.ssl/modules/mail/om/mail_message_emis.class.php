@@ -28,7 +28,7 @@ class mail_message_emis extends DataObject {
 	 * parent::save() always try to save the record with id in int and auto inc
 	 * 
 	 * en plus: si il y a un mail adress de cc = mail adress de to par example
-	 * il va envois 2 mail sur un même adresse. et le destinataire faut confirmer 2 fois.
+	 * il va envois 2 mail sur un mÃªme adresse. et le destinataire faut confirmer 2 fois.
 	 *
 	 * 
 	 * @param string $email= mail address emis
@@ -85,7 +85,7 @@ class mail_message_emis extends DataObject {
 		$this->save(false);
 		
 		$date = date('Y-m-d H:i:s');
-		$message = sprintf("Dossier %s retiré le %s par %s",$mailTransaction->getObjet(),$date,$this->getEmail());	
+		$message = sprintf("Dossier %s retirÃ© le %s par %s",$mailTransaction->getObjet(),$date,$this->getEmail());	
 		Log::newEntry(LOG_ISSUER_NAME, $message, 1, $date, 'USER', "mail",false,$mailTransaction->getUser_id());
 	}
 	

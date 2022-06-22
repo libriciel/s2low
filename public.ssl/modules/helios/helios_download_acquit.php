@@ -16,13 +16,13 @@ if (!$module->initByName("helios")) {
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit ();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -37,7 +37,7 @@ try{
 
 
 if (! $transaction_id){
-  $_SESSION["error"] = "Id non trouvé";
+  $_SESSION["error"] = "Id non trouvÃ©";
   header("Location: " . WEBSITE_SSL);
   exit ();
 }
@@ -56,7 +56,7 @@ if (isset($transaction_id) && ! empty($transaction_id)) {
 		exit();
 	}
 } else {
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit();
 }
@@ -65,7 +65,7 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser,"helios");
 
 if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit ();
 }

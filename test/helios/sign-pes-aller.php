@@ -26,7 +26,7 @@ $xadesSignatureProperties = new XadesSignatureProperties();
 $xadesSignatureProperties->city = "Paris";
 $xadesSignatureProperties->postalCode = "75008";
 $xadesSignatureProperties->countryName = "France";
-$xadesSignatureProperties->claimedRole = "Test Tiers de télétransmission";
+$xadesSignatureProperties->claimedRole = "Test Tiers de tÃ©lÃ©transmission";
 
 $xadesSignature->sign(
 	$xml_file,
@@ -36,4 +36,4 @@ $xadesSignature->sign(
 	$xadesSignatureProperties
 );
 
-echo "fichier signé\n";
+echo "fichier signÃ©\n";

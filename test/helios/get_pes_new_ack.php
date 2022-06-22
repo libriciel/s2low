@@ -13,7 +13,7 @@ $content =<<<PES
 <NomFic V="$filename"/>
 </Parametres>
 <Emetteur>
-<Sigle V="e.gf évolution - 7.61.01.00"/>
+<Sigle V="e.gf Ã©volution - 7.61.01.00"/>
 <Adresse V="echangeXML - 2.7.6.7"/>
 </Emetteur>
 </Enveloppe>

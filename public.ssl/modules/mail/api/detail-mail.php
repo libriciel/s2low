@@ -13,7 +13,7 @@ if (!$id){
 	exit;
 }
 
-header("content-type: text/plain; charset=iso-8859-15");
+header("content-type: text/plain; charset=utf-8");
 
 
 $detail = $mailList->getDetail($id);

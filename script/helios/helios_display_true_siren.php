@@ -6,7 +6,7 @@ libxml_use_internal_errors(true);
 
 if ($argc < 2){
 	echo "Usage {$argv[0]} authority_id \n";
-	echo "Affiche le SIREN des transactions Helios trouvé dans les PES ALLER d'une collectivité donnée\n\n";
+	echo "Affiche le SIREN des transactions Helios trouvÃ© dans les PES ALLER d'une collectivitÃ© donnÃ©e\n\n";
 	exit;
 }
 
@@ -15,7 +15,7 @@ $authority_id = $argv[1];
 $sql = "SELECT id,filename,sha1 FROM helios_transactions WHERE authority_id=?";
 $transactions_list = $sqlQuery->query($sql,$authority_id);
 
-echo count($transactions_list)." transactions trouvées\n";
+echo count($transactions_list)." transactions trouvÃ©es\n";
 
 
 /** @var PesAllerRetriever $pesAllerRetriever */

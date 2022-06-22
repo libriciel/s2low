@@ -26,7 +26,7 @@ $nomUSer = $me->get("name");
 $userId = $me->getId();
 
 if (!$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGroupAdminOrSuper()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   echo $_SESSION["error"];
   exit ();
@@ -40,6 +40,6 @@ try {
 }
 if (isset($retour_id) && !empty($retour_id)){
 	if ($hr->changeStatus($retour_id, 1)){
-		Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", WEBSITE_SSL . "/modules/helios/helios_retour.php");
-	}else Helpers :: returnAndExit(1, "Erreur lors du changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php"); 
-}else Helpers :: returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php");
+		Helpers :: returnAndExit(0, "Changement d'Ã©tat effectuÃ© avec succÃ¨s", WEBSITE_SSL . "/modules/helios/helios_retour.php");
+	}else Helpers :: returnAndExit(1, "Erreur lors du changement d'Ã©tat", WEBSITE_SSL . "/modules/helios/helios_retour.php"); 
+}else Helpers :: returnAndExit(1, "Pas de rÃ©ponse sÃ©lectionnÃ©e pour le changement d'Ã©tat", WEBSITE_SSL . "/modules/helios/helios_retour.php");

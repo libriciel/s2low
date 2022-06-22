@@ -1,7 +1,7 @@
 <?php
 
 /*
- * L'ajout d'une colonne non-nulle avec une valeur par défaut verrouille toute la table, potentiellement plusieurs heures pour une très grosse table
+ * L'ajout d'une colonne non-nulle avec une valeur par dÃ©faut verrouille toute la table, potentiellement plusieurs heures pour une trÃ¨s grosse table
  * on a ici un moyen d'ajouter une colonne sans aucun verrou
  */
 

@@ -15,11 +15,11 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
 if ($me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 $transId = Helpers::getVarFromGet("id");
@@ -30,7 +30,7 @@ if ($unique_id){
 }	
 
 if (! $transId) {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();	
 }
 
@@ -41,7 +41,7 @@ if ($zeTrans->init()) {
 	$owner = new User($zeTrans->get("user_id"));
 	$owner->init();
 } else {
-	echo "KO\nNuméro de transaction invalide.";
+	echo "KO\nNumÃ©ro de transaction invalide.";
 	exit();
 }
 

@@ -50,7 +50,7 @@ class ActesAntivirusWorker implements IWorker {
 		$transaction_id = $data;
 		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
 		if ($transaction_info['antivirus_check']){
-			$this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
+			$this->logger->notice("La transaction $transaction_id a dÃ©jÃ  Ã©tÃ© analysÃ© par l'antivirus");
 			return false;
 		}
 		return true;
@@ -67,7 +67,7 @@ class ActesAntivirusWorker implements IWorker {
 
 		$transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
 		if ($transaction_info['antivirus_check']){
-			$this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
+			$this->logger->notice("La transaction $transaction_id a dÃ©jÃ  Ã©tÃ© analysÃ© par l'antivirus");
 			return true;
 		}
 
@@ -77,7 +77,7 @@ class ActesAntivirusWorker implements IWorker {
 		if (! $this->antivirus->checkArchiveSanity($archive_path)){
 			$message = $this->antivirus->getLastError();
 			$this->logger->notice(
-				"Un virus a été trouvé pour la transaction $transaction_id",[$message]
+				"Un virus a Ã©tÃ© trouvÃ© pour la transaction $transaction_id",[$message]
 			);
 			$this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
 			return false;

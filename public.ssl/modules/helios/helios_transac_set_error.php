@@ -14,10 +14,10 @@ $message = $recuperateur->get('message');
 
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
-$message = "Transaction passée manuellement en erreur - $message";
+$message = "Transaction passÃ©e manuellement en erreur - $message";
 $heliosTransactionSQL->updateStatus($id,-1,$message);
 Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios',false, $userInfo['id']);
 
 
-$_SESSION['error'] = "La transaction $id a été passée en erreur.";
+$_SESSION['error'] = "La transaction $id a Ã©tÃ© passÃ©e en erreur.";
 header("Location: helios_transac_show.php?id=$id");

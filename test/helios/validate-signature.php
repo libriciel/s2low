@@ -29,7 +29,7 @@ try{
     $verify = false;
 }
 
-echo "Vérification : ".($verify?"OK":"FAIL")."\n";
+echo "VÃ©rification : ".($verify?"OK":"FAIL")."\n";
 
 if (! $verify){
 	echo $xadesSignature->getLastOutput()."\n";

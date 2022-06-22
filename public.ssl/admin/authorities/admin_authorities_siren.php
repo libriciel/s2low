@@ -4,11 +4,11 @@ require_once( __DIR__ . "/../../../init/init.php");
 $me = new User();
 
 if (! $me->authenticate()) {
-	$jsonOutput->displayErrorAndExit("Échec de l'authentification");
+	$jsonOutput->displayErrorAndExit("Ã‰chec de l'authentification");
 }
 
 if (! $me->isGroupAdminOrSuper()) {
-	$jsonOutput->displayErrorAndExit("Accès refusé");
+	$jsonOutput->displayErrorAndExit("AccÃ¨s refusÃ©");
 }
 
 if($me->isSuper()){

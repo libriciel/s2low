@@ -8,7 +8,7 @@ class LogsControllerTest extends S2lowTestCase {
 		$logsController = new LogsController($this->getObjectInstancier());
 		$logsController->_actionBefore("Logs","view");
 		$logsController->viewAction();
-		$this->expectOutputRegex("#Tedetis : Journal d'évènements#");
+		$this->expectOutputRegex("#Tedetis : Journal d'Ã©vÃ¨nements#");
 		$logsController->_actionAfter();
 	}
 
@@ -16,7 +16,7 @@ class LogsControllerTest extends S2lowTestCase {
 		$this->setAdminGroupAuthentication();
 		$logsController = new LogsController($this->getObjectInstancier());
 		$logsController->viewAction();
-		$h1_title_expected = "Journal d'évènements du groupe «&nbsp;Groupe de test&nbsp;»";
+		$h1_title_expected = "Journal d'Ã©vÃ¨nements du groupe Â«&nbsp;Groupe de test&nbsp;Â»";
 		$this->assertEquals($h1_title_expected,$logsController->getViewParameter('h1_title'));
 	}
 
@@ -24,7 +24,7 @@ class LogsControllerTest extends S2lowTestCase {
 		$this->setAdminCol2Authentication();
 		$logsController = new LogsController($this->getObjectInstancier());
 		$logsController->viewAction();
-		$h1_title_expected = "Journal d'évènements de la collectivité «&nbsp;Saint-Andre de Corcy&nbsp;»";
+		$h1_title_expected = "Journal d'Ã©vÃ¨nements de la collectivitÃ© Â«&nbsp;Saint-Andre de Corcy&nbsp;Â»";
 		$this->assertEquals($h1_title_expected,$logsController->getViewParameter('h1_title'));
 	}
 
@@ -32,7 +32,7 @@ class LogsControllerTest extends S2lowTestCase {
 		$this->setUserAuthentification();
 		$logsController = new LogsController($this->getObjectInstancier());
 		$logsController->viewAction();
-		$h1_title_expected = "Journal d'évènements";
+		$h1_title_expected = "Journal d'Ã©vÃ¨nements";
 		$this->assertEquals($h1_title_expected,$logsController->getViewParameter('h1_title'));
 	}
 

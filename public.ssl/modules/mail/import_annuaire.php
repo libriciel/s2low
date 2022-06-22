@@ -7,7 +7,7 @@ if (! $me->isAuthorityAdmin()){
 require_once(SITEROOT . "/class/FileUploader.class.php");
 
 if (! isset($_FILES['carnet'])){
-	$_SESSION['error'] = "Aucun fichier envoyé";
+	$_SESSION['error'] = "Aucun fichier envoyÃ©";
 	header("Location: index.php?command=annuaire");
 	exit;
 }

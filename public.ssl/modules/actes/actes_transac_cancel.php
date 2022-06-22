@@ -14,16 +14,16 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+  Helpers::returnAndExit(1, "Ã‰chec de l'authentification", WEBSITE);
 }
 
-// Un super admin ne peut pas accéder à cette page
+// Un super admin ne peut pas accÃ©der Ã  cette page
 if (! $module->isActive() || $me->isGroupAdminOrSuper() || ! $me->checkDroit($module->get("name"),'TT')) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-  Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+  Helpers::returnAndExit(1, "Mode Â« papier Â» actif. AccÃ¨s interdit.", WEBSITE_SSL . "/modules/actes/");
 }
 
 $related_id = Helpers::getVarFromPost("id");
@@ -41,36 +41,36 @@ if (isset($related_id) && ! empty($related_id)) {
 	Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", WEBSITE_SSL . "/modules/actes/index.php");
   }
 } else {
-  Helpers::returnAndExit(1, "Pas d'identifiant de transaction à annuler spécifié.", WEBSITE_SSL . "/modules/actes/index.php");
+  Helpers::returnAndExit(1, "Pas d'identifiant de transaction Ã  annuler spÃ©cifiÃ©.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
-// Vérification du type de transaction
+// VÃ©rification du type de transaction
 if ($rel_trans->get("type") != 1) {
-  Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être annulé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+  Helpers::returnAndExit(1, "Ce type de transaction ne peut pas Ãªtre annulÃ©.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
 }
 
 if ($rel_trans->hasPendingCancelTrans()) {
-  Helpers::returnAndExit(1, "Une demande d'annulation est déjà en cours pour cette transaction.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+  Helpers::returnAndExit(1, "Une demande d'annulation est dÃ©jÃ  en cours pour cette transaction.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
 }
 
 $rel_envelope = new ActesEnvelope($rel_trans->get("envelope_id"));
 $rel_envelope->init();
 
-// Vérification des permissions
+// VÃ©rification des permissions
 if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) 
 && ! ($me->getId() == $rel_envelope->get("user_id") && $me->checkDroit($module->get("name"),'TT'))) {
-  Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
+  Helpers::returnAndExit(1, "AccÃ¨s refusÃ©.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 if ($rel_trans->getCurrentStatus() != 4) {
-  Helpers::returnAndExit(1, "Impossible d'annuler une transaction qui n'est pas en état « Acquittement reçu ».", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+  Helpers::returnAndExit(1, "Impossible d'annuler une transaction qui n'est pas en Ã©tat Â« Acquittement reÃ§u Â».", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
 }
 
 $env = new ActesEnvelope();
 $trans = new ActesTransaction();
 $transNatures = ActesTransaction::getTransactionNaturesIdDescr();
 
-// Définition des adresses de retour
+// DÃ©finition des adresses de retour
 $retMail = array();
 $retMail[] = ACTES_TDT_MAIL_ADDRESS;
 
@@ -81,7 +81,7 @@ if ($myAuthority->get("email")) {
   $retMail[] = $myAuthority->get("email");
 }
 
-// Téléphone du contact
+// TÃ©lÃ©phone du contact
 if ($me->get("telephone")) {
   $telephone = $me->get("telephone");
 } else {
@@ -111,16 +111,16 @@ $trans->set("classification",$rel_trans->get('classification'));
 $trans->set("classification_date",$rel_trans->get('classification_date'));
 $trans->set("unique_id",$rel_trans->get('unique_id'));
 
-// Destination de création des fichiers
+// Destination de crÃ©ation des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
 $trans->set("destDir", $dest);
 $env->set("destDir", $dest);
 
 
-// Génération du fichier XML de la transaction
+// GÃ©nÃ©ration du fichier XML de la transaction
 $xml_name = $trans->getStdFileName($env, false);
 if (! $trans->generateMessageXMLFile($xml_name)) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération du message métier : ".$trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
+  Helpers::returnAndExit(1, "Erreur lors de la gÃ©nÃ©ration du message mÃ©tier : ".$trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
 $env->addTransaction($trans);
@@ -132,17 +132,17 @@ $authority_id = $me->get("authority_id");
 $actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
 $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
-// Génération du fichier XML de l'enveloppe
+// GÃ©nÃ©ration du fichier XML de l'enveloppe
 if (! $env->generateEnvelopeXMLFile($serialNumber)) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
+  Helpers::returnAndExit(1, "Erreur lors de la gÃ©nÃ©ration de l'enveloppe.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
-// Création de l'archive .tar.gz
+// CrÃ©ation de l'archive .tar.gz
 if (! $env->generateArchiveFile()) {
-  Helpers::returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
+  Helpers::returnAndExit(1, "Erreur lors de la gÃ©nÃ©ration de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$related_id");
 }
 
-// Purge des fichiers intermédiaires
+// Purge des fichiers intermÃ©diaires
 $env->purgeFiles();
 
 if (! $env->save()) {
@@ -169,7 +169,7 @@ if (! $trans->save()) {
 
   Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
 } else {
-  $msg = "Création transaction d'annulation réussie. Enveloppe n°" . $env->getId() . " créée.";
+  $msg = "CrÃ©ation transaction d'annulation rÃ©ussie. Enveloppe nÂ°" . $env->getId() . " crÃ©Ã©e.";
 
   if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
 	$msg .= "\nErreur de journalisation.";
@@ -182,8 +182,8 @@ if (! $trans->save()) {
 	$workerScript->putJobByClassName(ActesAntivirusWorker::class,$trans->getId());
 
 
-    // Message réservé à l'appel via API
-  // Id de transaction créée
+    // Message rÃ©servÃ© Ã  l'appel via API
+  // Id de transaction crÃ©Ã©e
   $apiMsg = $trans->getId() . "\n";
 
   Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId(), $apiMsg);

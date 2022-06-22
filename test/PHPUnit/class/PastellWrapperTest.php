@@ -38,7 +38,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
 		$this->setExpectedException(
 			Exception::class,
-			"Impossible de décoder les données reçu : not_in_json"
+			"Impossible de dÃ©coder les donnÃ©es reÃ§u : not_in_json"
 		);
 		$pastellWrapper->testConnexion();
 	}
@@ -98,7 +98,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
 		$this->assertFalse($pastellWrapper->testConnexion());
 		$this->assertEquals(
-			"L'entité Pastell « 35 » n'est pas autorisé pour l'utilisateur « toto ».",
+			"L'entitÃ© Pastell Â« 35 Â» n'est pas autorisÃ© pour l'utilisateur Â« toto Â».",
 			$pastellWrapper->getLastError()
 		);
 	}
@@ -139,7 +139,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellProperties->login = "toto";
 
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
-		$this->setExpectedException(Exception::class,"Impossible de créer le document sur Pastell");
+		$this->setExpectedException(Exception::class,"Impossible de crÃ©er le document sur Pastell");
 
 		$pastellWrapper->createActes([
 			'nature_code'=> 4,
@@ -183,7 +183,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$pastellProperties->login = "toto";
 
 		$pastellWrapper = new PastellWrapper($pastellProperties,$curlWrapperFactory, $this->getS2lowLogger());
-		$this->setExpectedException(Exception::class,"Impossible de créer le document sur Pastell");
+		$this->setExpectedException(Exception::class,"Impossible de crÃ©er le document sur Pastell");
 		$pastellWrapper->createHelios([
 			'filename'=>'test',
 			'id'=>12,
@@ -209,7 +209,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotEmpty($pastellWrapper->postARActes(42,__DIR__));
 
 		$this->assertNotEmpty($pastellWrapper->postRelatedTransaction(
-			42,[1=>'courier simple'],[[1,2]],[[1,2]])               // Par symétrie entre les rôles de $echange_prefecture
+			42,[1=>'courier simple'],[[1,2]],[[1,2]])               // Par symÃ©trie entre les rÃ´les de $echange_prefecture
 		);                                                              // et $echange_prefecture_ar
 
 		$this->assertNotEmpty($pastellWrapper->sendSAE(42));

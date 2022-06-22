@@ -57,7 +57,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	}
 
 	public function testDoEditFailed(){
-		$this->setExpectedException("Exception","Message : Aucune information de certificat trouvée");
+		$this->setExpectedException("Exception","Message : Aucune information de certificat trouvÃ©e");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -72,8 +72,8 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testDoEditApiFailed(){
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('api',1);
         $_POST['api'] = 1;
-		$this->setExpectedException("Exception","Aucune information de certificat trouvée");
-		$this->expectOutputRegex("#KO\nAucune information de certificat trouvée#");
+		$this->setExpectedException("Exception","Aucune information de certificat trouvÃ©e");
+		$this->expectOutputRegex("#KO\nAucune information de certificat trouvÃ©e#");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -94,7 +94,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testDoEditNoGroupIdForGroupAdmin(){
 		$this->setAdminGroup2Authentication();
 		$this->setOnlyDataOk();
-		$this->setExpectedException("Exception","La collectivité n'appartient pas au groupe courant");
+		$this->setExpectedException("Exception","La collectivitÃ© n'appartient pas au groupe courant");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -111,14 +111,14 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$this->setAdminCol2Authentication();
 		$this->setOnlyDataOk();
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('id',1);
-		$this->setExpectedException("Exception","Accès refusé pour la modification de cet utilisateur");
+		$this->setExpectedException("Exception","AccÃ¨s refusÃ© pour la modification de cet utilisateur");
 		$this->adminUserController->doEditAction();
 	}
 
 	public function testCreateGADMWithoutGroupId(){
 		$this->setDataOk();
 		$this->getObjectInstancier()->get(Environnement::class)->post()->set('role','GADM');
-		$this->setExpectedException("Exception","Vous devez indiquer un groupe pour créer un administrateur de groupe");
+		$this->setExpectedException("Exception","Vous devez indiquer un groupe pour crÃ©er un administrateur de groupe");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -168,7 +168,7 @@ class AdminUserControllerTest extends S2lowTestCase {
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('password2','eey3fo4A');
 
 
-		$this->setExpectedException("Exception", "Un utilisateur avec les mêmes données de certificat existe déjà. Vous pouvez mettre un login/mot de passe pour les différencier");
+		$this->setExpectedException("Exception", "Un utilisateur avec les mÃªmes donnÃ©es de certificat existe dÃ©jÃ . Vous pouvez mettre un login/mot de passe pour les diffÃ©rencier");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -197,7 +197,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 		$_POST['password'] = 'eey3fo4A';
 		$_POST['password2'] = 'eey3fo4A';
 		$this->adminUserController->doEditAction();
-		$this->setExpectedException("Exception","Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
+		$this->setExpectedException("Exception","Un utilisateur avec les mÃªmes informations de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -231,7 +231,7 @@ class AdminUserControllerTest extends S2lowTestCase {
 	public function testSameInfo(){
 		$this->setDataOk();
 		$this->adminUserController->doEditAction();
-		$this->setExpectedException("Exception","Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
+		$this->setExpectedException("Exception","Un utilisateur avec les mÃªmes informations de connexion et d'identification existe dans la base S2low");
 		$this->adminUserController->doEditAction();
 	}
 
@@ -248,7 +248,7 @@ class AdminUserControllerTest extends S2lowTestCase {
         $frontController = $this->getObjectInstancier()->get("FrontController");
         $frontController->go("AdminUser","doBulkModifCertif");
         $this->assertEquals(
-            "Aucun identifiant utilisateur n'a été présenté",
+            "Aucun identifiant utilisateur n'a Ã©tÃ© prÃ©sentÃ©",
             $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
             );
     }
@@ -287,7 +287,7 @@ class AdminUserControllerTest extends S2lowTestCase {
         $frontController = $this->getObjectInstancier()->get("FrontController");
         $frontController->go("AdminUser","doBulkModifCertif");
         $this->assertEquals(
-            "Certificat mis à jour",
+            "Certificat mis Ã  jour",
             $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
         );
 

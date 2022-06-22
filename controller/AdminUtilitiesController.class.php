@@ -21,21 +21,21 @@ class AdminUtilitiesController extends Controller {
 
 
 		if (empty($subject) || empty($body)) {
-			$this->redirect("/admin/utilities/","Données manquantes pour l'envoi du message.");
+			$this->redirect("/admin/utilities/","DonnÃ©es manquantes pour l'envoi du message.");
 		}
 
 		if (empty($module_id)) {
-			$this->redirect("/admin/utilities/","Pas de module spécifié.");
+			$this->redirect("/admin/utilities/","Pas de module spÃ©cifiÃ©.");
 		}
 
 		$moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
 		$module_info =$moduleSQL->getInfo($module_id);
 		if (! $module_info){
-			$this->redirect("/admin/utilities/","Module incorrect spécifié.");
+			$this->redirect("/admin/utilities/","Module incorrect spÃ©cifiÃ©.");
 		}
 
 		if (! $recipients = $moduleSQL->getUsers($module_id,$authority_group_id)) {
-			$this->redirect("/admin/utilities/", "Récupération destinataire impossible.");
+			$this->redirect("/admin/utilities/", "RÃ©cupÃ©ration destinataire impossible.");
 		}
 
 		$result = ['recipient_ok'=>[],'recipient_ko'=>[]];
@@ -51,7 +51,7 @@ class AdminUtilitiesController extends Controller {
 			}
 		}
 
-		$msg = "Envoi de message aux " . count($recipients) . " utilisateurs du module {$module_info['name']}.\n Résultat :\n" ;
+		$msg = "Envoi de message aux " . count($recipients) . " utilisateurs du module {$module_info['name']}.\n RÃ©sultat :\n" ;
 		$msg .= "Envoi OK : ".implode(", ",$result['recipient_ok'])."\n";
 		$msg .= "Envoi KO : ".implode(", ",$result['recipient_ko'])."\n";
 

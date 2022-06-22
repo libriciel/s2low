@@ -9,13 +9,13 @@ require_once(SITEROOT . '/class/Helpers.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
+  $_SESSION["error"] = "Ã‰chec de l'authentification";
   header("Location: " . WEBSITE);
   exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -23,7 +23,7 @@ if (! $me->isAdmin()) {
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
 if (! $id) {
-  $_SESSION["error"] = "Accès refusé";
+  $_SESSION["error"] = "AccÃ¨s refusÃ©";
   header("Location: " . WEBSITE_SSL);
   exit();
 }
@@ -49,6 +49,6 @@ header('Content-Transfer-Encoding: none');
 header('Content-Type: application/octetstream; name="' . $output_file . '"'); //This should work for IE & Opera
 header('Content-Type: application/octet-stream; name="' . $output_file . '"'); //This should work for the rest
 header('Content-Disposition: attachment; filename="' . $output_file . '"');
-header("Content-length: ".strlen($certificate));
+header("Content-length: ".mb_strlen($certificate));
   
 echo $certificate;

@@ -14,13 +14,13 @@ if (! $module->initByName("helios")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
+	$_SESSION["error"] = "Ã‰chec de l'authentification";
 	header("Location: " . WEBSITE);
 	exit();
 }
 
 if (! $module->isActive()|| ! $me->checkDroit("helios", "TT")) {
-	$_SESSION["error"] = "Accès refusé";
+	$_SESSION["error"] = "AccÃ¨s refusÃ©";
 	header("Location: " . WEBSITE_SSL);
 	exit();
 }
@@ -28,7 +28,7 @@ if (! $module->isActive()|| ! $me->checkDroit("helios", "TT")) {
 
 $id = Helpers :: getVarFromPost("id");
 if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+	$_SESSION["error"] = "Pas d'identifiant de transaction spÃ©cifiÃ©";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
 	exit ();
 }
@@ -36,7 +36,7 @@ if (empty($id) ){
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if (! $currentStatusId != 14){
-	$_SESSION["error"] = "\nLa transaction n'est pas dans le bon état";
+	$_SESSION["error"] = "\nLa transaction n'est pas dans le bon Ã©tat";
 	header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
 }
 
@@ -44,12 +44,12 @@ $htw = new HeliosTransactionWorkflow();
 
 $htw->set("transaction_id", $id);
 $htw->set("status_id", 1);
-$htw->set("message", "Fichier bien reçu par la plate-forme S2low");
+$htw->set("message", "Fichier bien reÃ§u par la plate-forme S2low");
 
 $htw->set("date", date('Y-m-d H:i:s'));
 
 if (!$htw->save(true)) {
-	$_SESSION["error"] = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
+	$_SESSION["error"] = "Erreur de l'initialisaton de l'accÃ¨s Ã  la table helios_transactions_workflow.";
 	if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
 		$_SESSION["error"] .= "\nErreur de journalisation.";
 	}
@@ -61,7 +61,7 @@ $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $heliosTransactionSQL->setLastStatusId($id);
 
 
-$msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
+$msg = "PrÃ©paration de la tÃ©lÃ©transmission Transaction nÂ°" . $id . ". RÃ©sultat ok.";
 if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
 	$msg .= "\nErreur de journalisation.";
 }
@@ -69,4 +69,4 @@ if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name
 $workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class,$id);
 
-Helpers :: returnAndExit(0,"Préparation de la télétransmission réusssie.", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
+Helpers :: returnAndExit(0,"PrÃ©paration de la tÃ©lÃ©transmission rÃ©usssie.", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);

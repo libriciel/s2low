@@ -13,7 +13,7 @@
 
 
     <tr class="<?php echo $actes_nb_en_retard?"danger":"success" ?>">
-        <td>Actes à archiver (dans l'état acquittement reçu)</td>
+        <td>Actes Ã  archiver (dans l'Ã©tat acquittement reÃ§u)</td>
         <td><span class="label label-<?php echo $actes_nb_en_retard?"danger":"success" ?>"><?php echo $actes_nb_en_retard ?></span></td>
         <td>
             <a href="/modules/actes/index.php?status=<?php echo ActesStatusSQL::STATUS_ACQUITTEMENT_RECU ?>&authority=<?php hecho($authority_id) ?>" class="icon">
@@ -99,7 +99,7 @@
 
 
     <tr class="<?php echo $helios_nb_en_retard?"danger":"success" ?>">
-        <td>Fichiers PES à archiver (dans l'état information disponible)</td>
+        <td>Fichiers PES Ã  archiver (dans l'Ã©tat information disponible)</td>
         <td><span class="label label-<?php echo $helios_nb_en_retard?"danger":"success" ?>"><?php echo $helios_nb_en_retard ?></span></td>
         <td>
             <a href="/modules/helios/index.php?status=<?php echo HeliosStatusSQL::INFORMATION_DISPONIBLE ?>&authority=<?php hecho($authority_id) ?>" class="icon">

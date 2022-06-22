@@ -1,9 +1,9 @@
-<?php echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n" ?>
+<?php echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
     <head>
         <title><?php echo $this->title ?></title>
-        <meta http-equiv="content-type" content="text/html; charset=iso-8859-15" />
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
@@ -23,22 +23,22 @@
                 <div id="menu-area" class="col-md-3">
                     <div id="menu">
                         <div id="menu-header">
-                            <a href="<?php echo WEBSITE_SSL ?>">Accéder au site</a><br />
-                            (Certificat nécessaire)
+                            <a href="<?php echo WEBSITE_SSL ?>">AccÃ©der au site</a><br />
+                            (Certificat nÃ©cessaire)
                         </div>
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <h1>Bienvenue sur la plate-forme S²LOW&nbsp;-&nbsp;ADULLACT</h1>
-                    <h2 class="home">Offre S²LOW</h2>
+                    <h1>Bienvenue sur la plate-forme SÂ²LOW&nbsp;-&nbsp;ADULLACT</h1>
+                    <h2 class="home">Offre SÂ²LOW</h2>
                     <p class="home">
-						La plate-forme S²LOW permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales :
-						elle permet ainsi la transmission des actes aux préfectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministère de l'Intérieur,
-						ainsi que les transmissions d'information vers le Trésor Public
-						(états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
+						La plate-forme SÂ²LOW permet aux collectivitÃ©s la transmission dÃ©matÃ©rialisÃ©e d'information vers les administrations centrales :
+						elle permet ainsi la transmission des actes aux prÃ©fectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministÃšre de l'IntÃ©rieur,
+						ainsi que les transmissions d'information vers le TrÃ©sor Public
+						(Ã©tats de paye, titres de recette, mandats de dÃ©penses et les factures, piÃšces justificatives des marchÃ©s publics)
 						via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
 					<p class="home">
-						L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
+						L'accÃšs aux services est rÃ©servÃ© aux personnes autorisÃ©es disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat Ã©lectronique</a> Ã  cet effet.
 					</p>
                     <?php
 
@@ -55,8 +55,8 @@
 
                     <div id="mention">
                         <div id="mention_hebergement">
-                            <h2 class="home">Opérateur</h2>
-                            <p class="home"><a href="http://adullact.org/">Association ADULLACT</a>, tiers opérateur homologué</p>
+                            <h2 class="home">OpÃ©rateur</h2>
+                            <p class="home"><a href="http://adullact.org/">Association ADULLACT</a>, tiers opÃ©rateur homologuÃ©</p>
 
                         </div>
                         <div id="mention_partenaires">
