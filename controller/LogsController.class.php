@@ -22,7 +22,7 @@ class LogsController extends Controller {
 		$logs_date_min  = $this->getObjectInstancier()->get('LogsSQL')->getMinDate();
 		$logs_history_date_max  = $this->getObjectInstancier()->get('LogsHistoriqueSQL')->getMaxDate();
 
-        $timestamp_max = null; //Quickfix php 8
+        $timestamp_max = 0; //Quickfix php 8
         if(!is_null($logs_history_date_max)){
             $timestamp_max = strtotime($logs_history_date_max);
         }

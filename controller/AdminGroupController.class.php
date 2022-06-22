@@ -32,7 +32,7 @@ class AdminGroupController extends Controller {
 
 		$file_content = $fileUploaderNG->getFileContent('siren_file');
         if ($fileUploaderNG->getFileType('siren_file') != 'text/plain'){
-            $this->setMessage("Le fichier SIREN n'a pas été analysé car il n'est pas au bon format)");
+            $this->setMessage("Le fichier SIREN n'a pas été analysé car il n'est pas au bon format");
             $this->redirect("/admin/groups/admin_group_edit.php?id=$id");
         }
 		foreach (preg_split('/\n|\r\n?/',$file_content) as $siren) {

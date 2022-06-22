@@ -16,9 +16,9 @@ if (! $me->isSuper()) {
 }
 
 
-$sql = "select count(*) as count,authority_group_id as id,authority_groups.name FROM authorities " .
-	" JOIN authority_groups ON authorities.authority_group_id = authority_groups.id " .
-	" GROUP BY authority_group_id,authority_groups.name ORDER BY authority_groups.name;";
+$sql = "select count(authorities.id) as count,authority_group_id as id,authority_groups.name FROM authorities " .
+	"FULL JOIN authority_groups ON authorities.authority_group_id = authority_groups.id " .
+	"GROUP BY authority_group_id,authority_groups.name  ORDER BY authority_groups.name ;";
 
 $groups_list = $sqlQuery->query($sql);
 
