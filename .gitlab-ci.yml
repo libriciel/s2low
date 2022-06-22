@@ -58,8 +58,8 @@ unit_test:
 
 quality:
   stage: quality
-  #only:
-  #  - master
+  only:
+    - master
   image : gitlab.libriciel.fr:4567/docker/sonar-scanner:latest
   script:
     - mkdir -p /var/www/s2low
