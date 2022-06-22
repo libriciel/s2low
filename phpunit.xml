@@ -1,25 +1,26 @@
-<phpunit backupGlobals="false" bootstrap="test/PHPUnit/bootstrap.php">
-    <testsuites>
-        <testsuite name="S2low">
-            <directory>test/PHPUnit</directory>
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">class</directory>
-            <directory suffix=".php">config</directory>
-            <directory suffix=".php">controller</directory>
-            <directory suffix=".php">cron</directory>
-            <directory suffix=".php">init</directory>
-            <directory suffix=".php">lib</directory>
-            <directory suffix=".php">model</directory>
-            <directory suffix=".php">public</directory>
-            <directory suffix=".php">public.ssl</directory>
-            <directory suffix=".php">script</directory>
-            <directory suffix=".php">template</directory>
-            <directory suffix=".php">tools</directory>
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="test/PHPUnit/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">class</directory>
+      <directory suffix=".php">config</directory>
+      <directory suffix=".php">controller</directory>
+      <directory suffix=".php">cron</directory>
+      <directory suffix=".php">init</directory>
+      <directory suffix=".php">lib</directory>
+      <directory suffix=".php">model</directory>
+      <directory suffix=".php">public</directory>
+      <directory suffix=".php">public.ssl</directory>
+      <directory suffix=".php">script</directory>
+      <directory suffix=".php">template</directory>
+      <directory suffix=".php">tools</directory>
+      <directory suffix=".php">src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="S2low">
+      <directory>test/PHPUnit</directory>
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

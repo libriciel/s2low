@@ -25,9 +25,9 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#Lancement du script#",$logs[0]['message']);
-        $this->assertRegExp("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
-        $this->assertRegExp("#Fin du script#",$logs[2]['message']);
+        $this->assertMatchesRegularExpression("#Lancement du script#",$logs[0]['message']);
+        $this->assertMatchesRegularExpression("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
+        $this->assertMatchesRegularExpression("#Fin du script#",$logs[2]['message']);
     }
 
     public function testEnvoiUneEnveloppe(){
@@ -50,7 +50,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
+        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
     }
 
 	public function testEnvoiUneEnveloppeMauvaisEtat(){
@@ -102,7 +102,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
 
 		$logs = $this->getLogRecords();
-        $this->assertRegExp("#Erreur du mock#",$logs[3]['message']);
+        $this->assertMatchesRegularExpression("#Erreur du mock#",$logs[3]['message']);
     }
 
     private function createTransaction($status,$archive_path){

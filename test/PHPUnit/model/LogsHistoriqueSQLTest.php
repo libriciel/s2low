@@ -31,7 +31,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase {
 	}
 
 	public function testGetMaxDate(){
-		$this->assertRegExp("#^{$this->last_month}#",$this->logsHistoriqueSQL->getMaxDate());
+		$this->assertMatchesRegularExpression("#^{$this->last_month}#",$this->logsHistoriqueSQL->getMaxDate());
 	}
 
 	public function testRequest(){

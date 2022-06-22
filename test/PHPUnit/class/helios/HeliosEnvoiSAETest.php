@@ -38,7 +38,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase {
 			$this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
 		);
 
-		$this->assertFileNotExists($pes_aller_path);
+		$this->assertFileDoesNotExist($pes_aller_path);
 		$this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell",2);
 	}
 

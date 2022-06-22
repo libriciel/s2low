@@ -241,11 +241,11 @@ class HelpersTest extends TestCase {
 	}
 
 	public function testGetTempName(){
-		$this->assertRegExp("#^__tmp__[0-9]{8}$#",Helpers::genTempName());
+		$this->assertMatchesRegularExpression("#^__tmp__[0-9]{8}$#",Helpers::genTempName());
 	}
 
 	public function testGetTempNamePrefix(){
-		$this->assertRegExp("#^[0-9]{8}$#",Helpers::genTempName(8,false));
+		$this->assertMatchesRegularExpression("#^[0-9]{8}$#",Helpers::genTempName(8,false));
 	}
 
 	public function testSendFileToBrowserFileNotFound(){

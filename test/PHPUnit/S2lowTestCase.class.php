@@ -199,8 +199,8 @@ abstract class S2lowTestCase extends TestCase {
 		);
 	}
 
-    public function assertRegExpLogMessage($expected_message,$num_log = 0){
-        $this->assertRegExp(
+    public function assertMatchesRegularExpressionLogMessage($expected_message,$num_log = 0){
+        $this->assertMatchesRegularExpression(
             $expected_message,
             $this->getLogRecords()[$num_log]['message']
         );

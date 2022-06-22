@@ -92,13 +92,13 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,$transaction_info['status_id']);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             "#Reçu par le {$this->actes_ministere_acronyme} le#",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état acquittement reçu#",$liste['message']);
+        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état acquittement reçu#",$liste['message']);
 
         $this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
     }
@@ -111,7 +111,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#Aucune transation trouver pour le couple SIREN 000000000 - numéro interne 20170721D#",$logs[6][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Aucune transation trouver pour le couple SIREN 000000000 - numéro interne 20170721D#",$logs[6][S2lowLogger::MESSAGE]);
     }
 
     private function createTransaction($status){
@@ -154,7 +154,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             "#Enveloppe rejetée par le {$this->actes_ministere_acronyme}#",
             $transaction_info['message']
         );
@@ -176,7 +176,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['last_status_id']);
 		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
 		$this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR,$transaction_info['status_id']);
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			"#Anomalie signalee par le MI : 042 - Ca ne fonctionne pas#",
 			$transaction_info['message']
 		);
@@ -279,7 +279,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
         $actesAnalyseFichierRecuController->analyseAll();
 
         $logs = $this->getLogRecords();
-        $this->assertRegExp("#un fichier de ce nom existe déjà#",$logs[6][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#un fichier de ce nom existe déjà#",$logs[6][S2lowLogger::MESSAGE]);
         unlink($this->actes_files_upload_root."/000000000/20170725A");
         rmdir($this->actes_files_upload_root."/000000000/");
     }
@@ -371,8 +371,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase {
 		$actesAnalyseFichierRecuController->analyseAll();
 		$this->assertEquals(array('.','..'),scandir("{$this->tmp_dir}"));
 		$logs = $this->getLogRecords();
-		$this->assertRegExp("#Message de réponse à un multicanal#",$logs[4][S2lowLogger::MESSAGE]);
-		$this->assertRegExp("#Suppression du répertoire#",$logs[5]['message']);
+		$this->assertMatchesRegularExpression("#Message de réponse à un multicanal#",$logs[4][S2lowLogger::MESSAGE]);
+		$this->assertMatchesRegularExpression("#Suppression du répertoire#",$logs[5]['message']);
 
 		$actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
 		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);

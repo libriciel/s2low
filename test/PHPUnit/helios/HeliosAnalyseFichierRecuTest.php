@@ -71,7 +71,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
 		$this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml");
 		//print_r($this->getLogRecords());
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			'#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/pes_retour.xml#i',
 			$this->getLogRecords()[2]['message']
 		);
@@ -88,7 +88,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 
         $this->analysePesRetour(__DIR__."/fixtures/pes_retour.xml","/Rep/qui/existe/pas");
         //print_r($this->getLogRecords()[4]['formatted']);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/pes_retour.xml annulé : déplacement impossible#i',
             $this->getLogRecords()[5]['formatted']
         );
@@ -147,7 +147,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
 		$this->analyse();
 		$this->assertTrue(file_exists($this->helios_ocre."/".$filename));
 		$logs_records = $this->getLogRecords();
-		$this->assertRegExp(
+		$this->assertMatchesRegularExpression(
 			"#Traitement de /tmp/phpunit.*/helios_ftp_response_tmp_local_path/toto.ocre#i",
 			$logs_records[2]['message']
 		);
@@ -195,7 +195,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
         );
         $this->analyse("/repertoire/Non/Existant");
         $logs_records = $this->getLogRecords();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             "#Traitement.*/helios_ftp_response_tmp_local_path/pes_acquit.xml annulé : déplacement impossible#i",
             $logs_records[7]['message']
         );
@@ -325,7 +325,7 @@ class HeliosAnalyseFichierRecuTest extends S2lowTestCase {
             HELIOS_XSD_PATH
         );
         $logs_records = $this->getLogRecords();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
         "#Trai.*/helios_ftp_response_tmp_local_path//pes_acquit_not_valid.xml annulé : déplacement impossible#i",
             $logs_records[6]['message']
         );

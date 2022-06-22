@@ -31,7 +31,7 @@ class RgsCertificateTest extends TestCase {
 	public function testVerifyBadCertificat(){
 		$x509_pem_certificate = file_get_contents(__DIR__."/fixtures/clean_pem.pem");
 		$this->assertFalse($this->rgsCertificate->isRgsCertificate($x509_pem_certificate));
-		$this->assertRegExp("#unable to get local issuer certificate#",$this->rgsCertificate->getLastMessage());
+		$this->assertMatchesRegularExpression("#unable to get local issuer certificate#",$this->rgsCertificate->getLastMessage());
 	}
 
     /**

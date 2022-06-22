@@ -10,7 +10,7 @@ class LogTest extends S2lowTestCase {
         $last_log = $logsSQL->getLastLog();
 
         $this->assertEquals("message",$last_log['message']);
-        $this->assertRegExp("#message#",$last_log['message_horodate']);
+        $this->assertMatchesRegularExpression("#message#",$last_log['message_horodate']);
         $log = new Log($last_log['id']);
         $log->init();
         $log->generateMessageHorodate();

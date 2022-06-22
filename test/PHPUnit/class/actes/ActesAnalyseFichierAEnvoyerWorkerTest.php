@@ -69,7 +69,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
     }
 
 	/**
@@ -95,7 +95,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
 	}
 
 
@@ -123,7 +123,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+		$this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
 	}
 
 
@@ -144,7 +144,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
     }
 
 	/**
@@ -247,7 +247,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
 	}
 
 	/**
@@ -268,7 +268,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
+		$this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état en attente#",$liste['message']);
 	}
 
 	/**
@@ -312,7 +312,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase {
 		);
 		$logsSQL = $this->getObjectInstancier()->get("LogsSQL");
 		$liste = $logsSQL->getLastLog();
-		$this->assertRegExp("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
+		$this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état erreur#",$liste['message']);
 	}
 
     /**

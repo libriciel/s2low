@@ -53,7 +53,7 @@ class AdminGroupControllerTest extends S2lowTestCase {
 			$this->adminGroupController->doEditAction();
 			$this->assertFalse(true);
 		} catch (Exception $e){
-			$this->assertRegExp("#^Redirect to .* with message : $#",$e->getMessage());
+			$this->assertMatchesRegularExpression("#^Redirect to .* with message : $#",$e->getMessage());
 		}
 
 		$this->assertEquals('493587273',$authorityGroupSirenSQL->exist(1,493587273)['siren']);
