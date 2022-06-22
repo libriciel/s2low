@@ -1,6 +1,6 @@
 <?php
 
-class verifyPKCS7SignatureTest extends S2lowTestCase
+class VerifyPKCS7SignatureTest extends S2lowTestCase
 {
     public function testRightFileWithSignature()
     {

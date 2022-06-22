@@ -67,7 +67,7 @@ class ActesNotificationsTest extends S2lowTestCase {
             ->willReturn(true);
 
         $this->actesNotification->sendAutomaticNotification();
-        $this->assertRegExp("#Notification de la transaction $this->transaction_id#",$this->getLogRecords()[0]['message']);
+        $this->assertMatchesRegularExpression("#Notification de la transaction $this->transaction_id#",$this->getLogRecords()[0]['message']);
     }
 
     private function createTransaction($status) : int {
@@ -113,7 +113,7 @@ class ActesNotificationsTest extends S2lowTestCase {
         $this->actesNotification->sendAutomaticNotification();
 
         $logRecords = $this->getLogRecords();
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             "#Erreur lors de la décompression#",
             $logRecords[2]["message"]
         );

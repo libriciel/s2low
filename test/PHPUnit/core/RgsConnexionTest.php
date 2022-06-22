@@ -34,7 +34,7 @@ class RgsConnexionTest extends TestCase {
 		$server[self::SSL_CLIENT_CERT] = "rogue certificate";
 		$this->rgsConnexion->setServerGlobal($server);
 		$this->assertFalse($this->rgsConnexion->isRgsConnexion());
-		$this->assertRegExp("#Could not read certificate file#",$this->rgsConnexion->getLastMessage());
+		$this->assertMatchesRegularExpression("#Could not read certificate file#",$this->rgsConnexion->getLastMessage());
 	}
 
 	public function testIsRgsConnexionOK(){

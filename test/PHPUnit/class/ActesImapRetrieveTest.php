@@ -20,14 +20,14 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $logs = $this->getLogRecords();
 
-        $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertRegExp("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-		$this->assertRegExp("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+		$this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 
 	/**
@@ -78,14 +78,14 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase {
 
         $logs = $this->getLogRecords();
 
-        $this->assertRegExp("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertRegExp("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
-        $this->assertRegExp("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 
 

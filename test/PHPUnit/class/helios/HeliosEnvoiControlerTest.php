@@ -121,7 +121,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase {
 
 		$info = $heliosTransaction->getLastStatusInfo($id_t);
 		$this->assertEquals(-1,$info['status_id']);
-		$this->assertRegExp("#ce fichier existe déjà sur la plateforme#",$info['message']);
+		$this->assertMatchesRegularExpression("#ce fichier existe déjà sur la plateforme#",$info['message']);
 	}
 
 

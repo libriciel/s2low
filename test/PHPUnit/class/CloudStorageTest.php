@@ -268,7 +268,7 @@ class CloudStorageTest extends S2lowTestCase {
         $iCloudStorable->expects($this->exactly($nbOfsetInCloudCalls))->method("setInCloud");
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
         foreach ($logs as $key=>$line){
-            $this->assertRegExpLogMessage($line,$key);
+            $this->assertMatchesRegularExpressionLogMessage($line,$key);
         }
     }
 
