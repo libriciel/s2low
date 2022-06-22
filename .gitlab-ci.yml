@@ -50,6 +50,11 @@ unit_test:
     script:
         - cd /var/www/s2low/
         - composer test-cover
+        - cp -rf coverage $CI_PROJECT_DIR
+    artifacts:
+      paths:
+        - coverage
+      expire_in: 1h
 
 quality:
   stage: quality

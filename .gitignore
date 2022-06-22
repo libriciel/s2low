@@ -16,3 +16,4 @@ ext/standalone/HTMLPurifier/DefinitionCache
 .phpunit.result.cache
 .vscode
 var/
+coverage
