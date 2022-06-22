@@ -7,6 +7,7 @@ include:
 stages:
     - build
     - test
+    - quality
     - deploy
     - staging
     - production
