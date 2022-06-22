@@ -100,7 +100,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase {
 
 		$this->assertFileExists($actes_files_upload_root."/$filename");
 		$this->getObjectInstancier()->get(ActesEnvelopeStorage::class)->deleteIfIsInCloud($filename);
-		$this->assertFileNotExists($actes_files_upload_root."/$filename");
+		$this->assertFileDoesNotExist($actes_files_upload_root."/$filename");
 		$this->assertLogMessage("Deleting Actes : $filename");
 	}
 

@@ -47,7 +47,7 @@ class AdminUserControllerTest extends S2lowTestCase {
         catch (Exception $e){
             $message = $e->getMessage();
         }
-        $this->assertNotRegExp("/Undefined index: /",$message);
+        $this->assertDoesNotMatchRegularExpression("/Undefined index: /",$message);
     }
 
 	public function testDoEdit(){

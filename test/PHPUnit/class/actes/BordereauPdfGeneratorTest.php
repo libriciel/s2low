@@ -22,7 +22,7 @@ class BordereauPdfGeneratorTest extends S2lowTestCase
         );
         $bordereauPdfGenerator = $this->getObjectInstancier()->get(BordereauPdfGenerator::class);
 
-        $this->assertFileNotExists($filepath);
+        $this->assertFileDoesNotExist($filepath);
         $bordereauPdfGenerator->generate($transaction_id,$filepath,false,"F");
         $this->assertFileExists($filepath);
         $tmpFolder->delete($tmp_folder);

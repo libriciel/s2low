@@ -62,8 +62,8 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
-        $this->assertFileNotExists($actes_path);
-        $this->assertDirectoryNotExists(dirname($actes_path));
+        $this->assertFileDoesNotExist($actes_path);
+        $this->assertDirectoryDoesNotExist(dirname($actes_path));
     }
 
     /**
@@ -93,7 +93,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
-        $this->assertFileNotExists($actes_path);
+        $this->assertFileDoesNotExist($actes_path);
         $this->assertDirectoryExists(dirname($actes_path));
     }
 }

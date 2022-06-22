@@ -127,7 +127,7 @@ class CloudStorageTest extends S2lowTestCase {
 		$file_to_send = $this->createFile();
 		$iCloudStorable = $this->getICloudStorable($file_to_send,$file_to_send);
 		$this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
-		$this->assertFileNotExists($file_to_send);
+		$this->assertFileDoesNotExist($file_to_send);
 		$this->assertLogMessage("Deleting object #42 : $file_to_send");
 	}
 
@@ -299,8 +299,7 @@ class CloudStorageTest extends S2lowTestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        $openStackSwiftWrapper->expects($this->at(0))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
-        $openStackSwiftWrapper->expects($this->at(1))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
+        $openStackSwiftWrapper->expects($this->exactly(2))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
 
 		$logger = $this->getMockBuilder( Logger::class)
             ->disableOriginalConstructor()
@@ -360,8 +359,12 @@ class CloudStorageTest extends S2lowTestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        $openStackSwiftWrapper->expects($this->at(0))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
-        $openStackSwiftWrapper->expects($this->at(1))->method('fileExistsOnCloud')->with(null, "/test/import//test.tar.gz")->willReturn(true);
+        $openStackSwiftWrapper->expects($this->exactly(2))
+            ->method('fileExistsOnCloud')
+            ->withConsecutive(
+                [$this->equalTo(null), $this->equalTo($filePathOnDisk)],
+                [$this->equalTo(null), $this->equalTo("/test/import//test.tar.gz")]
+            )->willReturnOnConsecutiveCalls(false,true);
 
         $logger = $this->getMockBuilder( Logger::class)
             ->disableOriginalConstructor()
