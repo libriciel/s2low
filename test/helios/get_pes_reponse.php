@@ -2,7 +2,7 @@
 
 //$filename = $argv[1];
 
-$content =<<<ACK
+$content = <<<ACK
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <n:PES_Retour xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour /opt/tx/users/edihls10/messages/XML/PES_V2/Externe/Schemas_PES/PES_V2/Rev0/PES_V2_DepenseRetour_Autonome.xsd">
 <Enveloppe>

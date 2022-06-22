@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-require_once( __DIR__ . "/../init/init.php");
+require_once(__DIR__ . "/../init/init.php");
 
 $x509Certificate = new X509Certificate();
 $certificateInfo = $x509Certificate->retrieveClientInfo();
@@ -10,7 +10,7 @@ $userSQL = new UserSQL($sqlQuery);
 $allUser = $userSQL->getInfoFromCertificateInfo($certificateInfo);
 
 if (! $allUser) {
-    $objectInstancier->get('S2lowRedirect')->redirect("/","Certificat invalide");
+    $objectInstancier->get('S2lowRedirect')->redirect("/", "Certificat invalide");
 }
 
 $doc = new HTMLLayout();

@@ -65,8 +65,8 @@
             return {
                 send: function (_, completeCallback) {
                     var message = {
-                            id: 'postmessage-transport-' + (counter += 1)
-                        },
+                        id: 'postmessage-transport-' + (counter += 1)
+                    },
                         eventName = 'message.' + message.id;
                     iframe = $(
                         '<iframe style="display:none;" src="' +

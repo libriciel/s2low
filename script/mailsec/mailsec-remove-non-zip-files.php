@@ -11,21 +11,21 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  */
 
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();
 
-$confirm = ($argv[1]??false)==='ok';
+$confirm = ($argv[1] ?? false) === 'ok';
 
 $finder = new Finder();
-$finder->in(MAIL_FILES_UPLOAD_ROOT."/*")->files()->notName("mail.zip");
+$finder->in(MAIL_FILES_UPLOAD_ROOT . "/*")->files()->notName("mail.zip");
 
 $filesystem = new Filesystem();
 
-foreach($finder->getIterator() as $file){
-	$s2lowLogger->info("Removing " . $file->getRealPath() ." \n");
-	if ($confirm) {
-		$filesystem->remove($file->getRealPath());
-	}
+foreach ($finder->getIterator() as $file) {
+    $s2lowLogger->info("Removing " . $file->getRealPath() . " \n");
+    if ($confirm) {
+        $filesystem->remove($file->getRealPath());
+    }
 }

@@ -1,238 +1,254 @@
 <?php
 
-class AdminController extends Controller {
-	
-	public function _actionBefore($controller,$action){
-		parent::_actionBefore($controller,$action);
-	}
+class AdminController extends Controller
+{
+    public function _actionBefore($controller, $action)
+    {
+        parent::_actionBefore($controller, $action);
+    }
 
-	/**
-	 * @return AuthoritySiretSQL
-	 */
-	private function getAuthoritySiretSQL(){
-		return $authoritySiretSQL = $this->getObjectInstancier()->get(AuthoritySiretSQL::class);
-	}
+    /**
+     * @return AuthoritySiretSQL
+     */
+    private function getAuthoritySiretSQL()
+    {
+        return $authoritySiretSQL = $this->getObjectInstancier()->get(AuthoritySiretSQL::class);
+    }
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function authoritySiretAction(){
-		$recuperateur = $this->getRecuperateurGet();
-		$id = $recuperateur->getInt('id');
-		$this->siret = $recuperateur->get('siret');
-		
-		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$this->authority_info = $authoritySQL->getInfo($id);
-		if (! $this->authority_info){
-			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
-		} // @codeCoverageIgnore
-		
-		$this->verifAdmin($id);
-		
-		$this->authority_id = $id;
-		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
-		$this->siret_list = $authoritySiret->siretList($id);
-		$this->siret_blocked_list = $authoritySiret->siretListBlocked($id);
-		if ($this->isApiCall()){
-			$result = array();
-			foreach($this->siret_list as $siret_info){
-				$result[]  = $siret_info['siret'];
-			}
-			$json = new JSONoutput();
-			$json->display($result);
+    /**
+     * @throws RedirectException
+     */
+    public function authoritySiretAction()
+    {
+        $recuperateur = $this->getRecuperateurGet();
+        $id = $recuperateur->getInt('id');
+        $this->siret = $recuperateur->get('siret');
 
-			$this->controller_exit();
-		} //@codeCoverageIgnore
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $this->authority_info = $authoritySQL->getInfo($id);
+        if (! $this->authority_info) {
+            $this->displayErrorAndExit("Aucune collectivité trouvée", "/admin/authorities/admin_authorities.php");
+        } // @codeCoverageIgnore
 
-		$this->siret_exemple = $this->getSiret()->generate();
-		$this->title = "Numéros SIRET - {$this->authority_info['name']}";
-	}
+        $this->verifAdmin($id);
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function authoritySiretAddAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurPost();
-		$authority_id = $recuperateur->getInt('authority_id');
-		$siret = $recuperateur->get('siret');
-		
-		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$this->authority_info = $authoritySQL->getInfo($authority_id);
-		if (! $this->authority_info){
-			$this->displayErrorAndExit("Aucune collectivité trouvée","/admin/authorities/admin_authorities.php");
-		} // @codeCoverageIgnore
-		
-		
-		if (! $this->getSiret()->isValid($siret)){
-			$this->displayErrorAndExit("Le numéro SIRET n'est pas valide","/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
-		} // @codeCoverageIgnore
-		
-		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
-		$authoritySiret->add($authority_id, $siret);
-		$this->displayAndExit("Numéro SIRET ajouté","/admin/authorities/admin_authority_siret.php?id=$authority_id");
-	} // @codeCoverageIgnore
-	
-	public function authoritySiretDelAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurPost();
-		$authority_siret_id = $recuperateur->getInt('authority_siret_id');
-		$authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
-		$info = $authoritySiret->getInfo($authority_siret_id);
-		$authoritySiret->del($authority_siret_id);
-		$this->displayAndExit("Numéro SIRET retiré","/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
-	} // @codeCoverageIgnore
+        $this->authority_id = $id;
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
+        $this->siret_list = $authoritySiret->siretList($id);
+        $this->siret_blocked_list = $authoritySiret->siretListBlocked($id);
+        if ($this->isApiCall()) {
+            $result = array();
+            foreach ($this->siret_list as $siret_info) {
+                $result[]  = $siret_info['siret'];
+            }
+            $json = new JSONoutput();
+            $json->display($result);
+
+            $this->controller_exit();
+        } //@codeCoverageIgnore
+
+        $this->siret_exemple = $this->getSiret()->generate();
+        $this->title = "Numéros SIRET - {$this->authority_info['name']}";
+    }
+
+    /**
+     * @throws RedirectException
+     */
+    public function authoritySiretAddAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurPost();
+        $authority_id = $recuperateur->getInt('authority_id');
+        $siret = $recuperateur->get('siret');
+
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $this->authority_info = $authoritySQL->getInfo($authority_id);
+        if (! $this->authority_info) {
+            $this->displayErrorAndExit("Aucune collectivité trouvée", "/admin/authorities/admin_authorities.php");
+        } // @codeCoverageIgnore
 
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function authoritySiretBlockedAction(){
-		$this->verifSuperAdmin();
-		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
-		$this->getAuthoritySiretSQL()->blocked($authority_siret_id);
-		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été bloqué");
-	}
+        if (! $this->getSiret()->isValid($siret)) {
+            $this->displayErrorAndExit("Le numéro SIRET n'est pas valide", "/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
+        } // @codeCoverageIgnore
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function authoritySiretUnblockedAction(){
-		$this->verifSuperAdmin();
-		$authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
-		$this->getAuthoritySiretSQL()->unblocked($authority_siret_id);
-		$this->redirectToSiretPage($authority_siret_id,"Le SIRET a été débloqué");
-	}
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
+        $authoritySiret->add($authority_id, $siret);
+        $this->displayAndExit("Numéro SIRET ajouté", "/admin/authorities/admin_authority_siret.php?id=$authority_id");
+    } // @codeCoverageIgnore
 
-	/**
-	 * @param $authority_siret_id
-	 * @param $message
-	 * @throws RedirectException
-	 */
-	private function redirectToSiretPage($authority_siret_id,$message){
-		$info = $this->getAuthoritySiretSQL()->getInfo($authority_siret_id);
-		$this->redirect("/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}",$message);
-	}
-
-	/**
-	 * @return Siret
-	 */
-	private function getSiret(){
-		return $this->getObjectInstancier()->Siret;
-	}
-	
-	public function authoritiesAction(){
-		$this->verifAdmin();
-		$pagerHTML  = new PagerHTML();
-		$this->title = "Gestion des collectivités | S²low";
-		$recuperateur = $this->getRecuperateurGet();
-
-		$this->ftype =  $recuperateur->get("type");
-		$this->fname = $recuperateur->get("name");
-		$this->fgroup = $recuperateur->get("group");
-		$this->api = $recuperateur->get("api");
-		$this->fsiren = $recuperateur->get("siren");
-		$this->fsiret = $recuperateur->get("siret");
-		$this->count = $recuperateur->get("count")?:10;
-		$this->page_number = $recuperateur->getInt('page',1);
-		$this->taille_page =  $recuperateur->getInt('count',10);
+    public function authoritySiretDelAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurPost();
+        $authority_siret_id = $recuperateur->getInt('authority_siret_id');
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
+        $info = $authoritySiret->getInfo($authority_siret_id);
+        $authoritySiret->del($authority_siret_id);
+        $this->displayAndExit("Numéro SIRET retiré", "/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
+    } // @codeCoverageIgnore
 
 
-		$user_authority_group_id = $this->me->get('authority_group_id');
-		if ($this->me->isGroupAdmin()) {
-			$this->fgroup = $user_authority_group_id;
-		}
+    /**
+     * @throws RedirectException
+     */
+    public function authoritySiretBlockedAction()
+    {
+        $this->verifSuperAdmin();
+        $authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
+        $this->getAuthoritySiretSQL()->blocked($authority_siret_id);
+        $this->redirectToSiretPage($authority_siret_id, "Le SIRET a été bloqué");
+    }
 
-		$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-		$this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype,$this->fname,$this->fsiren,$this->fsiret,($this->page_number - 1) * $this->taille_page,$this->taille_page);
+    /**
+     * @throws RedirectException
+     */
+    public function authoritySiretUnblockedAction()
+    {
+        $this->verifSuperAdmin();
+        $authority_siret_id = $this->getEnvironnement()->post()->getInt('authority_siret_id');
+        $this->getAuthoritySiretSQL()->unblocked($authority_siret_id);
+        $this->redirectToSiretPage($authority_siret_id, "Le SIRET a été débloqué");
+    }
 
-		$nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype,$this->fname,$this->fsiren,$this->fsiret);
+    /**
+     * @param $authority_siret_id
+     * @param $message
+     * @throws RedirectException
+     */
+    private function redirectToSiretPage($authority_siret_id, $message)
+    {
+        $info = $this->getAuthoritySiretSQL()->getInfo($authority_siret_id);
+        $this->redirect("/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}", $message);
+    }
 
-		if ($this->api){
-			$jsonOutput = new JSONoutput();
-			$jsonOutput->retrictAndDisplay($this->authorities,array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
-			$this->controller_exit();
-		}
+    /**
+     * @return Siret
+     */
+    private function getSiret()
+    {
+        return $this->getObjectInstancier()->Siret;
+    }
 
-		$authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
-		$this->authority_types = $authorityTypes->getChildList();
+    public function authoritiesAction()
+    {
+        $this->verifAdmin();
+        $pagerHTML  = new PagerHTML();
+        $this->title = "Gestion des collectivités | S²low";
+        $recuperateur = $this->getRecuperateurGet();
 
-		$this->side_bar = $pagerHTML->getHTML($this->page_number,$nb_authorities,$this->taille_page);;
-
-		if ($this->me->isGroupAdmin()){
-			$userSQL = new UserSQL($this->getSQLQuery());
-			$group_name = $userSQL->getGroupeName($this->me->getId());
-			$this->titre = "Gestion des collectivités du groupe $group_name";
-			$this->groupe_list = false;
-		} else {
-			$this->titre = "Gestion des collectivités";
-			$groupeSQL = new GroupSQL($this->getSQLQuery());
-			$this->groupe_list = $groupeSQL->getAll();
-		}
-	}
+        $this->ftype =  $recuperateur->get("type");
+        $this->fname = $recuperateur->get("name");
+        $this->fgroup = $recuperateur->get("group");
+        $this->api = $recuperateur->get("api");
+        $this->fsiren = $recuperateur->get("siren");
+        $this->fsiret = $recuperateur->get("siret");
+        $this->count = $recuperateur->get("count") ?: 10;
+        $this->page_number = $recuperateur->getInt('page', 1);
+        $this->taille_page =  $recuperateur->getInt('count', 10);
 
 
-	public function messageAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurGet();
-		$this->{'offset'} = $recuperateur->getInt('offset',0);
-		$this->{'message_list'} = $this->getMessageAdminSQL()->getAll($this->{'offset'},100);
-		$this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
-	}
+        $user_authority_group_id = $this->me->get('authority_group_id');
+        if ($this->me->isGroupAdmin()) {
+            $this->fgroup = $user_authority_group_id;
+        }
 
-	public function messageEditAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurGet();
-		$message_id = $recuperateur->getInt('message_id');
-		$this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
-	}
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
 
-	/**
-	 * @throws RedirectException
-	 * @throws Exception
-	 */
-	public function doMessageEditAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurPost();
-		$message_id = $recuperateur->getInt('message_id');
-		$titre = $recuperateur->get('titre');
-		$message = $recuperateur->get('message');
-		$niveau = $recuperateur->get('niveau');
-		$user_id = $this->me->getId();
-		$message_id = $this->getMessageAdminSQL()->edit($message_id, $titre,$message,$user_id,$niveau);
-		$this->redirect("/admin/message/detail.php?message_id=$message_id");
-	}
+        $nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret);
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function messagePublierAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurGet();
-		$message_id = $recuperateur->getInt('message_id');
-		$user_id = $this->me->getId();
-		$this->getMessageAdminSQL()->publier($message_id,$user_id);
-		$this->redirect("/admin/message/detail.php?message_id=$message_id");
-	}
+        if ($this->api) {
+            $jsonOutput = new JSONoutput();
+            $jsonOutput->retrictAndDisplay($this->authorities, array('id','name','authority_group_id','siren','address','city','postal_code','telephone'));
+            $this->controller_exit();
+        }
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function messageRetirerAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurGet();
-		$message_id = $recuperateur->getInt('message_id');
-		$user_id = $this->me->getId();
-		$this->getMessageAdminSQL()->retirer($message_id,$user_id);
-		$this->redirect("/admin/message/detail.php?message_id=$message_id");
-	}
+        $authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
+        $this->authority_types = $authorityTypes->getChildList();
 
-	public function messageDetailAction(){
-		$this->verifSuperAdmin();
-		$recuperateur = $this->getRecuperateurGet();
-		$message_id = $recuperateur->getInt('message_id');
-		$this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
-		$this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
-	}
+        $this->side_bar = $pagerHTML->getHTML($this->page_number, $nb_authorities, $this->taille_page);
+        ;
 
+        if ($this->me->isGroupAdmin()) {
+            $userSQL = new UserSQL($this->getSQLQuery());
+            $group_name = $userSQL->getGroupeName($this->me->getId());
+            $this->titre = "Gestion des collectivités du groupe $group_name";
+            $this->groupe_list = false;
+        } else {
+            $this->titre = "Gestion des collectivités";
+            $groupeSQL = new GroupSQL($this->getSQLQuery());
+            $this->groupe_list = $groupeSQL->getAll();
+        }
+    }
+
+
+    public function messageAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurGet();
+        $this->{'offset'} = $recuperateur->getInt('offset', 0);
+        $this->{'message_list'} = $this->getMessageAdminSQL()->getAll($this->{'offset'}, 100);
+        $this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+    }
+
+    public function messageEditAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurGet();
+        $message_id = $recuperateur->getInt('message_id');
+        $this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
+    }
+
+    /**
+     * @throws RedirectException
+     * @throws Exception
+     */
+    public function doMessageEditAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurPost();
+        $message_id = $recuperateur->getInt('message_id');
+        $titre = $recuperateur->get('titre');
+        $message = $recuperateur->get('message');
+        $niveau = $recuperateur->get('niveau');
+        $user_id = $this->me->getId();
+        $message_id = $this->getMessageAdminSQL()->edit($message_id, $titre, $message, $user_id, $niveau);
+        $this->redirect("/admin/message/detail.php?message_id=$message_id");
+    }
+
+    /**
+     * @throws RedirectException
+     */
+    public function messagePublierAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurGet();
+        $message_id = $recuperateur->getInt('message_id');
+        $user_id = $this->me->getId();
+        $this->getMessageAdminSQL()->publier($message_id, $user_id);
+        $this->redirect("/admin/message/detail.php?message_id=$message_id");
+    }
+
+    /**
+     * @throws RedirectException
+     */
+    public function messageRetirerAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurGet();
+        $message_id = $recuperateur->getInt('message_id');
+        $user_id = $this->me->getId();
+        $this->getMessageAdminSQL()->retirer($message_id, $user_id);
+        $this->redirect("/admin/message/detail.php?message_id=$message_id");
+    }
+
+    public function messageDetailAction()
+    {
+        $this->verifSuperAdmin();
+        $recuperateur = $this->getRecuperateurGet();
+        $message_id = $recuperateur->getInt('message_id');
+        $this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
+        $this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+    }
 }

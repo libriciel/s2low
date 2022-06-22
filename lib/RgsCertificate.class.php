@@ -1,23 +1,25 @@
 <?php
 
-class RgsCertificate {
+class RgsCertificate
+{
+    private $openssl_path;
+    private $validca_path;
+    private $last_message;
 
-	private $openssl_path;
-	private $validca_path;
-	private $last_message;
+    /**
+     * @param $openssl_path string chemin vers l'executable OpenSSL
+     * @param $validca_path string chemin vers un répertoire contenant des autorités de certification "hasher" : man c_rehash
+     */
+    public function __construct($openssl_path, $validca_path)
+    {
+        $this->validca_path = $validca_path;
+        $this->openssl_path = $openssl_path;
+    }
 
-	/**
-	 * @param $openssl_path string chemin vers l'executable OpenSSL
-	 * @param $validca_path string chemin vers un répertoire contenant des autorités de certification "hasher" : man c_rehash
-	 */
-	public function __construct($openssl_path,$validca_path){
-		$this->validca_path = $validca_path;
-		$this->openssl_path = $openssl_path;
-	}
-
-	public function getLastMessage(){
-		return $this->last_message;
-	}
+    public function getLastMessage()
+    {
+        return $this->last_message;
+    }
 
     /**
      * @param string $x509_pem_certificate string contenant le certificat à tester
@@ -26,42 +28,40 @@ class RgsCertificate {
      * @throws Exception
      */
 
-	public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain =null){
+    public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain = null)
+    {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
 
         $tmp_cert = "$tmp_folder/s2low-lib-rgscertificate.pem";
-		file_put_contents($tmp_cert,$x509_pem_certificate);
+        file_put_contents($tmp_cert, $x509_pem_certificate);
 
-		if($clientCertChain) {
-
+        if ($clientCertChain) {
             $tmp_chain = "$tmp_folder/s2low-lib-certchain.pem";
             file_put_contents($tmp_chain, $clientCertChain);
 
 
             $command = "{$this->openssl_path} verify -verbose -untrusted {$tmp_chain} -CApath {$this->validca_path} {$tmp_cert} 2>&1";
             // Explication de la commande sur https://stackoverflow.com/a/26520714/1694298
-        }
-		else {
+        } else {
             $command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} {$tmp_cert} 2>&1";
         }
 
-		//Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
+        //Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
 
-		exec($command,$output,$return_var);
+        exec($command, $output, $return_var);
 
-		$tmpFolder->delete($tmp_folder);
+        $tmpFolder->delete($tmp_folder);
 
-		$output = implode("\n",$output);
+        $output = implode("\n", $output);
 
-		if (preg_match("#{$tmp_cert}: OK#",$output)){
-			$result = true;
-		} else {
-			$result = false;
-			$this->last_message = $output;
-		}
+        if (preg_match("#{$tmp_cert}: OK#", $output)) {
+            $result = true;
+        } else {
+            $result = false;
+            $this->last_message = $output;
+        }
 
-		return $result;
-	}
-
+        return $result;
+    }
 }

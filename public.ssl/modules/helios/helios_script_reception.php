@@ -1,3 +1,4 @@
 <?php
-require_once (__DIR__."/../../../init/init.php");
-$frontController->go("Helios","import");
+
+require_once(__DIR__ . "/../../../init/init.php");
+$frontController->go("Helios", "import");

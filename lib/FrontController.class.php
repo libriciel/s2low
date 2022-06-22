@@ -1,29 +1,31 @@
 <?php
 
+class RedirectException extends Exception
+{
+}
 
-class RedirectException extends Exception {}
+class FrontController
+{
+    private $objectInstancier;
 
-class FrontController {
+    public function __construct(ObjectInstancier $objectInstancier)
+    {
+        $this->objectInstancier = $objectInstancier;
+    }
 
-	private $objectInstancier;
+    public function go($controller, $action)
+    {
 
-	public function __construct(ObjectInstancier $objectInstancier){
-		$this->objectInstancier = $objectInstancier;
-	}
-	
-	public function go($controller, $action){
-
-		$controllerName = "{$controller}Controller";
-		$actionName = "{$action}Action";
-		/** @var Controller $controllerObject */
-		$controllerObject = new $controllerName($this->objectInstancier);
-		try {
-			$controllerObject->_actionBefore($controller,$action);
-			$controllerObject->$actionName();
-			$controllerObject->_actionAfter();
-		} catch (RedirectException $e){
-			//nothing to do
-		}
-	}
-	
+        $controllerName = "{$controller}Controller";
+        $actionName = "{$action}Action";
+        /** @var Controller $controllerObject */
+        $controllerObject = new $controllerName($this->objectInstancier);
+        try {
+            $controllerObject->_actionBefore($controller, $action);
+            $controllerObject->$actionName();
+            $controllerObject->_actionAfter();
+        } catch (RedirectException $e) {
+            //nothing to do
+        }
+    }
 }

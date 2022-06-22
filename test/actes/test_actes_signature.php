@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__."/../../class/VerifyPKCS7Signature.class.php");
+require_once(__DIR__ . "/../../class/VerifyPKCS7Signature.class.php");
 
 $file_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_1.pdf";
 

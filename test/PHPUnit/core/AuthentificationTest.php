@@ -1,8 +1,7 @@
 <?php
 
-class AuthentificationTest  extends S2lowTestCase
+class AuthentificationTest extends S2lowTestCase
 {
-
     /**
      * @param $expected
      * @throws Exception
@@ -215,14 +214,14 @@ class AuthentificationTest  extends S2lowTestCase
 
         $environment = $this->getObjectInstancier()->get(Environnement::class);
 
-        $httpsConnexion = new HttpsConnexion($environment,$certHandler);
+        $httpsConnexion = new HttpsConnexion($environment, $certHandler);
 
         $authentification = new Authentification(
             $environment,
-		$this->getObjectInstancier()->get(UserSQL::class),
-        $this->getObjectInstancier()->get(PasswordHandler::class),
-        $httpsConnexion,
-		$nounceSQL
+            $this->getObjectInstancier()->get(UserSQL::class),
+            $this->getObjectInstancier()->get(PasswordHandler::class),
+            $httpsConnexion,
+            $nounceSQL
         );
 
         $this->assertEquals(2, $authentification->authenticate());

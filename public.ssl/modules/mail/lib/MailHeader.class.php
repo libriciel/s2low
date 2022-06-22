@@ -1,10 +1,8 @@
 <?php
 
-
 class MailHeader extends AbstractMailHeader implements IMailHeader
 {
-
-    private function getFromField() : string
+    private function getFromField(): string
     {
         return "{$this->fromDescription} <{$this->s2lowFromMail}>";
     }
@@ -14,12 +12,12 @@ class MailHeader extends AbstractMailHeader implements IMailHeader
         return $this->fromMail;
     }
 
-    public function getFromEnveloppeAdressOption() : string
+    public function getFromEnveloppeAdressOption(): string
     {
         return "-f{$this->s2lowFromMail}";
     }
 
-    public function getHeader() : array
+    public function getHeader(): array
     {
         return array(
             'From'    => $this->getFromField(),

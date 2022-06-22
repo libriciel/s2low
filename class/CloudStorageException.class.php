@@ -1,3 +1,5 @@
 <?php
 
-class CloudStorageException extends Exception {}
+class CloudStorageException extends Exception
+{
+}

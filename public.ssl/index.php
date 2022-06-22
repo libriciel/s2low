@@ -1,11 +1,12 @@
 <?php
+
 require_once("../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 $me = new User();
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 /** @var MessageAdminSQL $messageAdminSQL */
@@ -28,14 +29,14 @@ $html = " <h1>Espace de télétransmission</h1>\n";
 $html .= "<p>Vous êtes connecté avec le rôle";
 
 if ($me->isSuper()) {
-  $html .= " de super administrateur";
+    $html .= " de super administrateur";
 } elseif ($me->isGroupAdmin()) {
-  $myGroup = new Group($me->get("authority_group_id"));
-  $html .= " d'administrateur du groupe " . $myGroup->get("name");
+    $myGroup = new Group($me->get("authority_group_id"));
+    $html .= " d'administrateur du groupe " . $myGroup->get("name");
 } elseif ($me->isAdmin()) {
-  $html .= " d'administrateur de la collectivité " . $myAuthority->get("name");
+    $html .= " d'administrateur de la collectivité " . $myAuthority->get("name");
 } else {
-  $html .= " d'utilisateur de la collectivité " . $myAuthority->get("name");
+    $html .= " d'utilisateur de la collectivité " . $myAuthority->get("name");
 }
 
 $html .= ".<br />\n";
@@ -44,7 +45,7 @@ $html .= "Le menu de gauche vous donne accès aux opérations permises par ce r�
 $html .= "Le «&nbsp;Journal des événements&nbsp;» consigne l'ensemble des événements relatifs à vos opérations sur le site.<br /><br />";
 
 if (defined("HOTLINE_NUM")) {
-  $html .= "La hotline de support est disponible pour toute question au " . HOTLINE_NUM . ".<br /><br />\n";
+    $html .= "La hotline de support est disponible pour toute question au " . HOTLINE_NUM . ".<br /><br />\n";
 }
 
 $html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
@@ -52,29 +53,27 @@ $html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
 
 
 if (defined("SUPPORT_URL")) {
-	$html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
-} elseif(defined("PHRASE_SUPPORT")){
-	$html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
+    $html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
+} elseif (defined("PHRASE_SUPPORT")) {
+    $html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
 } else {
-  $html .= " au <a href=\"mailto:" . WEBMASTER . "\">webmaster</a>";
+    $html .= " au <a href=\"mailto:" . WEBMASTER . "\">webmaster</a>";
 }
 
 $html .= ".<br />\n";
 
 $html .= "</p>\n";
 
-if ($messageAdmin->message_id){
-	ob_start();
-	$messageAdmin->displayMessage();
-	$html .= ob_get_clean();
+if ($messageAdmin->message_id) {
+    ob_start();
+    $messageAdmin->displayMessage();
+    $html .= ob_get_clean();
 }
 
 
-if ($me->isSuper()){
-
-	$html.="<h2>Fonctions super administrateur</h2>";
-	$html.="<a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>";
-
+if ($me->isSuper()) {
+    $html .= "<h2>Fonctions super administrateur</h2>";
+    $html .= "<a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>";
 }
 
 
@@ -87,4 +86,3 @@ $doc->closeContainer();
 $doc->buildFooter();
 
 $doc->display();
-

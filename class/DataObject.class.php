@@ -1,17 +1,17 @@
 <?php
 /*
  * TéDéTIS - Copyright 2006 Alternance-Soft
- * Contributeur : Jérôme Schell, Août 2006 
+ * Contributeur : Jérôme Schell, Août 2006
  *
  * contact@alternancesoft.com
  *
  * Ce logiciel est un programme informatique servant à la
- * dématérialisation de l'administration. 
+ * dématérialisation de l'administration.
  *
  * Ce logiciel est régi par la licence CeCILL soumise au droit français et
  * respectant les principes de diffusion des logiciels libres. Vous pouvez
  * utiliser, modifier et/ou redistribuer ce programme sous les conditions
- * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
  * sur le site "http://www.cecill.info".
  *
  * En contrepartie de l'accessibilité au code source et des droits de copie,
@@ -22,27 +22,28 @@
  *
  * A cet égard  l'attention de l'utilisateur est attirée sur les risques
  * associés au chargement,  à l'utilisation,  à la modification et/ou au
- * développement et à la reproduction du logiciel par l'utilisateur étant 
- * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
  * manipuler et qui le réserve donc à des développeurs et des professionnels
  * avertis possédant  des  connaissances  informatiques approfondies.  Les
  * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
  * logiciel à leurs besoins dans des conditions permettant d'assurer la
- * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
- * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
  *
- * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
  * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
 ?>
 <?php
+
 /**
  * \class DataObject DataObject.class.php
  * \brief Classe de base pour la gestion d'entité en base de données
  * \author Jérôme Schell <j.schell@alternancesoft.com>
  * \date 17.02.2006
- * 
+ *
  *
  * Cette classe fournit des méthodes de base pour la gestion d'entité
  * stockées en base de données (initialisation, sauvegarde, suppression...)
@@ -54,304 +55,318 @@
 
 require_once("Helpers.class.php");
 
-class DataObject {
-  protected $id;
-  protected $errorMsg = null;
+class DataObject
+{
+    protected $id;
+    protected $errorMsg = null;
 
-	/**
-	 * @var Database
-	 */
-  protected $db;
+    /**
+     * @var Database
+     */
+    protected $db;
 
-  protected $statusTypes = array( 0 => "Désactivé",
-							1 => "Activé"
-							);
+    protected $statusTypes = array( 0 => "Désactivé",
+                            1 => "Activé"
+                            );
 
   // Données de pagination
-  protected $displayItems;
-  protected $currentPage;
-  protected $pageNbr;
-  protected $fields;
-  protected $from;
-  protected $cond;
-  protected $order;
+    protected $displayItems;
+    protected $currentPage;
+    protected $pageNbr;
+    protected $fields;
+    protected $from;
+    protected $cond;
+    protected $order;
 
-  protected $totalRecords;
-  
-  public $data;
+    protected $totalRecords;
+
+    public $data;
   //
 
   /**
    * \brief Constructeur
    * \param id integer (optionnel) Numéro d'id d'une entité existante avec lequel initialiser l'objet
    */
-  public function __construct($id = false) {
-    $this->db = DatabasePool::getInstance();
+    public function __construct($id = false)
+    {
+        $this->db = DatabasePool::getInstance();
 
-    if ($id) {
-      $this->id = $id;
+        if ($id) {
+            $this->id = $id;
+        }
     }
-  }
 
   /**
    * \brief Méthode renvoyant le numéro d'identifiant de l'entité en cours
    * \return l'id en cours ou null si non définit
   */
-  public function getId() {
-    return (isset($this->id)) ? $this->id : null;
-  }
+    public function getId()
+    {
+        return (isset($this->id)) ? $this->id : null;
+    }
 
   /**
    * \brief Méthode permettant de fixer l'identifiant de l'entité en cours
    * \param $pId integer Numéro d'identifiant de l'entité
   */
-  public function setId($pId) {
-    $this->id = $pId;
-  }
+    public function setId($pId)
+    {
+        $this->id = $pId;
+    }
 
   /**
    * \brief Méthode permettant de fixer la valeur d'un attribut
    * \param $name chaîne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
-  public function set($name, $val) {
-	$this->$name = $val;
-  }
+    public function set($name, $val)
+    {
+        $this->$name = $val;
+    }
 
   /**
    * \brief Méthode permettant de récupérer la valeur d'un attribut
    * \param $name chaîne : Nom de l'attribut
    * \return Valeur de l'attribut ou null si l'attribut n'existe pas
   */
-  public function get($name) {
-    return (isset($this->$name)) ? $this->$name : null;
-  }
+    public function get($name)
+    {
+        return (isset($this->$name)) ? $this->$name : null;
+    }
 
   /**
    * \brief Méthode permettant de déterminer si l'entité est un nouvel enregistrement ou non
     * \return true si nouvel enregistrement, false sinon
   */
-  public function isNew() {
-	if (! isset($this->id) ||empty($this->id)) {
-	  return true;
-	} else {
-	  return false;
-	}
-  }
+    public function isNew()
+    {
+        if (! isset($this->id) || empty($this->id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
   /**
    * \brief Méthode initialisant l'entité avec l'identifiant courant
    * \return true si succès, false sinon
   */
-  public function init() {
-  	
-	if (isset($this->id) && ! empty($this->id)) {
-	  $sql = "SELECT " . implode(", ", array_keys($this->dbFields)) . " FROM " . $this->objectName . " WHERE id=?";
-	  $result = $this->db->select($sql,[$this->id]);
+    public function init()
+    {
 
-	  if (! $result->isError() && $result->num_row() == 1) {
-		$row = $result->get_next_row();
-	  
-		foreach (array_keys($this->dbFields) as $key) {
-		  $this->$key = Helpers::getFromBDD($row[$key]);
-		}
+        if (isset($this->id) && ! empty($this->id)) {
+            $sql = "SELECT " . implode(", ", array_keys($this->dbFields)) . " FROM " . $this->objectName . " WHERE id=?";
+            $result = $this->db->select($sql, [$this->id]);
 
-		return true;
-	  } else {
-		$this->errorMsg = "::init - Résultat incorrect pour l'initialisation de l'entité";
-		return false;
-	  }
-	}
+            if (! $result->isError() && $result->num_row() == 1) {
+                $row = $result->get_next_row();
 
-    return false;
-  }
+                foreach (array_keys($this->dbFields) as $key) {
+                    $this->$key = Helpers::getFromBDD($row[$key]);
+                }
+
+                return true;
+            } else {
+                $this->errorMsg = "::init - Résultat incorrect pour l'initialisation de l'entité";
+                return false;
+            }
+        }
+
+        return false;
+    }
 
   /**
    * \brief Méthode de suppression d'une entité dans la base de données
    * \param $id integer (optionnel) Numéro d'identifiant de l'identité, si non spécifié, entité en cours
    * \return true si succès, false sinon
   */
-  public function delete($id = false) {
-    // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
-    if (! $id) {
-      if (isset($this->id) && is_numeric($this->id)) {
-		$id = $this->id;
-      } else {
-		$this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
-		return false;
-      }
+    public function delete($id = false)
+    {
+      // Efface l'entité spécifiée par $id ou alors l'entité courante si pas d'id
+        if (! $id) {
+            if (isset($this->id) && is_numeric($this->id)) {
+                $id = $this->id;
+            } else {
+                $this->errorMsg = "Pas d'identifiant pour l'entité a supprimer";
+                return false;
+            }
+        }
+
+        $sql = "DELETE FROM " . $this->objectName . " WHERE id= ? ";
+
+        if (! $this->db->exec($sql, [$id])) {
+            //Never reached...
+            $this->errorMsg = "Erreur lors de la suppression de l'entité d'identifiant " . $id;
+            return false;
+        }
+
+        return true;
     }
-
-    $sql = "DELETE FROM " . $this->objectName . " WHERE id= ? ";
-
-    if (! $this->db->exec($sql,[$id])) {
-		//Never reached...
-	  $this->errorMsg = "Erreur lors de la suppression de l'entité d'identifiant " . $id;
-	  return false;
-    }
-
-    return true;
-  }
 
   /**
    * \brief Méthode permettant de valider les attributs de l'entité courante (bon type, présence...)
    * \return true si succès, false sinon
   */
-  public function validate() {
-	$this->errorMsg = "";
+    public function validate()
+    {
+        $this->errorMsg = "";
 
-	foreach ($this->dbFields as $name => $attr) {
-	  if (! empty($attr["mandatory"]) && (! isset($this->$name) || mb_strlen($this->$name) <= 0)) {
-		$this->errorMsg .= $attr["descr"] . " doit être présent.\n";
-	  } else {
-		if (isset($this->$name) && ! empty($this->$name)) {
-		  if (! empty($attr["unique"]) && ! $this->checkUnicity($name)) {
-			  $this->errorMsg .= $attr["descr"] . " doit être unique.\n";
-		  } else {
-			switch ($attr["type"]) {
-			case "isInt":
-			  if (! preg_match("/^[-+]?[0-9]+$/", $this->$name)) {
-				$this->errorMsg .= $attr["descr"] . " doit être un entier.\n";
-			  }
-			  break;
-			case "isFloat":
-			  if (! preg_match ("/^[-+]?[0-9]+(\.[0-9]+)*$/", $this->$name)) {
-				$this->errorMsg .= $attr["descr"] . " doit être un réel.\n";
-			  }
-			  break;
-			case "isEmail":
-				if (! is_valid_email($this->$name)) {
-					$this->errorMsg .= $attr["descr"] . " doit être une adresse électronique valide.\n";
-			  	}
-			  break;
-			}
-			
-			if (isset($attr["maxlength"])) {
-			  if (mb_strlen($this->$name) > $attr["maxlength"]) {
-				$this->errorMsg .= "Le champ " . $attr["descr"] . " est trop long (" . $attr["maxlength"] . " caractères maxi autorisés).\n";
-			  }
-			}
-			
-			if (isset($attr["regexp"])) {
-			  if (! preg_match($attr["regexp"], $this->$name)) {
-				$this->errorMsg .= "Le champ " . $attr["descr"] . " " . $attr["regexp_txt"];
-			  }
-			}
-		  }
-		}
-	  }
-	}
+        foreach ($this->dbFields as $name => $attr) {
+            if (! empty($attr["mandatory"]) && (! isset($this->$name) || mb_strlen($this->$name) <= 0)) {
+                $this->errorMsg .= $attr["descr"] . " doit être présent.\n";
+            } else {
+                if (isset($this->$name) && ! empty($this->$name)) {
+                    if (! empty($attr["unique"]) && ! $this->checkUnicity($name)) {
+                        $this->errorMsg .= $attr["descr"] . " doit être unique.\n";
+                    } else {
+                        switch ($attr["type"]) {
+                            case "isInt":
+                                if (! preg_match("/^[-+]?[0-9]+$/", $this->$name)) {
+                                    $this->errorMsg .= $attr["descr"] . " doit être un entier.\n";
+                                }
+                                break;
+                            case "isFloat":
+                                if (! preg_match("/^[-+]?[0-9]+(\.[0-9]+)*$/", $this->$name)) {
+                                    $this->errorMsg .= $attr["descr"] . " doit être un réel.\n";
+                                }
+                                break;
+                            case "isEmail":
+                                if (! is_valid_email($this->$name)) {
+                                    $this->errorMsg .= $attr["descr"] . " doit être une adresse électronique valide.\n";
+                                }
+                                break;
+                        }
 
-	if (! empty($this->errorMsg)) {
-	  return false;
-	} else {
-	  return true;
-	}
-  }
+                        if (isset($attr["maxlength"])) {
+                            if (mb_strlen($this->$name) > $attr["maxlength"]) {
+                                $this->errorMsg .= "Le champ " . $attr["descr"] . " est trop long (" . $attr["maxlength"] . " caractères maxi autorisés).\n";
+                            }
+                        }
+
+                        if (isset($attr["regexp"])) {
+                            if (! preg_match($attr["regexp"], $this->$name)) {
+                                $this->errorMsg .= "Le champ " . $attr["descr"] . " " . $attr["regexp_txt"];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (! empty($this->errorMsg)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
   /**
    * \brief Méthode permettant de vérifier qu'un attribut est unique dans une table
    * \param $name chaîne : Nom de l'attribut
    * \return true si unique, false sinon
   */
-  public function checkUnicity($name) {
-	$sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "=?";
-    $params = [$this->$name];
+    public function checkUnicity($name)
+    {
+        $sql = "SELECT * FROM " . $this->objectName . " WHERE " . $name . "=?";
+        $params = [$this->$name];
 
-	if (isset($this->id)) {
-	  $sql .= " AND id != ?";
-        $params[] = $this->id;
-	}
+        if (isset($this->id)) {
+            $sql .= " AND id != ?";
+            $params[] = $this->id;
+        }
 
-	$result = $this->db->select($sql, $params);
+        $result = $this->db->select($sql, $params);
 
-	if (! $result->isError()) {
-	  if ($result->num_row() > 0) {
-		return false;
-	  } else {
-		return true;
-	  }
-	} else {
-	  return false;
-	}
-  }
+        if (! $result->isError()) {
+            if ($result->num_row() > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
 
   /**
    * \brief Méthode d'enregistrement d'une entité dans la base de données
    * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
    * \return true si succès, false sinon
   */
-  public function save($validate = true) {
+    public function save($validate = true)
+    {
 
-      $saveSQLRequest = $this->buildSaveSQLRequest($validate);
+        $saveSQLRequest = $this->buildSaveSQLRequest($validate);
 
-      if(!$saveSQLRequest->isValid()){
-        return false;
+        if (!$saveSQLRequest->isValid()) {
+            return false;
+        }
+
+        if (! $this->db->exec($saveSQLRequest->getRequest(), $saveSQLRequest->getParams())) {
+            $this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
+            return false;
+        }
+
+        return true;
     }
-
-      if (! $this->db->exec($saveSQLRequest->getRequest(),$saveSQLRequest->getParams())) {
-		$this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
-		return false;
-      }
-
-    return true;
-  }
 
   /**
    * \brief Méthode de récupération du prochain identifiant dans la base de données pour cette entité
    * \return l'identifiant ou null si échec
   */
-  protected function getNextId() {
-    $sql = "SELECT nextval('" . $this->objectName . "_id_seq') AS id";
+    protected function getNextId()
+    {
+        $sql = "SELECT nextval('" . $this->objectName . "_id_seq') AS id";
 
-    $result = $this->db->select($sql);
+        $result = $this->db->select($sql);
 
-    if (! $result->isError()) {
-      $row = $result->get_next_row();
+        if (! $result->isError()) {
+            $row = $result->get_next_row();
 
-      return $row["id"];
+            return $row["id"];
+        }
+
+        return null;
     }
-
-    return null;
-  }
 
   /**
    * \brief Méthode d'obtention de la chaine à passer en paramètre à la fonction de validation javascript des formulaires
    * \param .. Un nombre variable de chaînes représentant les noms des variables membres à valider
    * \return La chaîne de description des champs à valider
   */
-  public function getValidationTrio() {
-	$args = func_get_args();
+    public function getValidationTrio()
+    {
+        $args = func_get_args();
 
-	$ret = array();
+        $ret = array();
 
-	for ($i = 0; $i < count($args); $i++) {
-	  if (isset($this->dbFields[$args[$i]])) {
-		$str = "'" . addslashes($args[$i]) . "', '" . addslashes($this->dbFields[$args[$i]]["descr"]) . "', '";
+        for ($i = 0; $i < count($args); $i++) {
+            if (isset($this->dbFields[$args[$i]])) {
+                $str = "'" . addslashes($args[$i]) . "', '" . addslashes($this->dbFields[$args[$i]]["descr"]) . "', '";
 
-		if ($this->dbFields[$args[$i]]["mandatory"]) {
-		  $str .= "R";
-		}
+                if ($this->dbFields[$args[$i]]["mandatory"]) {
+                    $str .= "R";
+                }
 
-		$str .= addslashes($this->dbFields[$args[$i]]["type"]);
+                $str .= addslashes($this->dbFields[$args[$i]]["type"]);
 
-		if (! empty($this->dbFields[$args[$i]]["maxlength"])) {
-		  $str .= "maxLength" . $this->dbFields[$args[$i]]["maxlength"] . "!";
-		}
+                if (! empty($this->dbFields[$args[$i]]["maxlength"])) {
+                    $str .= "maxLength" . $this->dbFields[$args[$i]]["maxlength"] . "!";
+                }
 
-		if (! empty($this->dbFields[$args[$i]]["regexp"])) {
-		  // On enlève les caractères / au début et à la fin de la regexp, javascript les rajoute automatiquement
-		  $str .= "RegExp" . mb_substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
-		}
+                if (! empty($this->dbFields[$args[$i]]["regexp"])) {
+                  // On enlève les caractères / au début et à la fin de la regexp, javascript les rajoute automatiquement
+                    $str .= "RegExp" . mb_substr($this->dbFields[$args[$i]]["regexp"], 1, -1) . "#";
+                }
 
-		$str .= "'";
+                $str .= "'";
 
-		$ret[] = $str;
-	  }
-	}
+                $ret[] = $str;
+            }
+        }
 
-	return implode(',', $ret);
-  }
+        return implode(',', $ret);
+    }
 
   // Méthodes de pagination
 
@@ -366,136 +381,137 @@ class DataObject {
    * \param $page entier (optionnel) : Page courante désirée
    * \return True en cas de succès, false sinon
   */
-  public function pagerInit($fields, $from, $cond = null, $order = null, $count = null, $page = null,$sortWay="DESC") {
-	$this->fields = $fields;
-	$this->from = $from;
-	$this->cond = $cond;
+    public function pagerInit($fields, $from, $cond = null, $order = null, $count = null, $page = null, $sortWay = "DESC")
+    {
+        $this->fields = $fields;
+        $this->from = $from;
+        $this->cond = $cond;
 
-	$this->order = $this->objectName . ".id";
-	
+        $this->order = $this->objectName . ".id";
 
-	if ($order) {
-	  $this->order = $order;
-	} elseif (isset($_GET["order"])) {
-	  // On vérifie que ce champ est bien présent dans la table concernée
-	  if (array_search($_GET["order"], array_keys($this->dbFields)) !== false) {
-		$this->order = $this->objectName . "." . $_GET["order"];
-	  }	 
-	  if (isset($_GET["sortway"])) {
-		if ($_GET["sortway"] == "asc") {
-		  $sortWay = " ASC";
-		}
-	  }
-	}
 
-	$this->order .= " ".$sortWay;
+        if ($order) {
+            $this->order = $order;
+        } elseif (isset($_GET["order"])) {
+          // On vérifie que ce champ est bien présent dans la table concernée
+            if (array_search($_GET["order"], array_keys($this->dbFields)) !== false) {
+                $this->order = $this->objectName . "." . $_GET["order"];
+            }
+            if (isset($_GET["sortway"])) {
+                if ($_GET["sortway"] == "asc") {
+                    $sortWay = " ASC";
+                }
+            }
+        }
 
-	if ($count) {
-	  $this->displayItems = $count;
-	} elseif (isset($_GET["count"]) && is_numeric($_GET["count"])) {
-	  $this->displayItems = $_GET["count"];
-	} else {
-	  $this->displayItems = DEFAULT_ITEMS_PER_PAGE;
-	}
+        $this->order .= " " . $sortWay;
 
-	if ($page) {
-	  $this->currentPage = $page;
-	} elseif (isset($_GET["page"]) && is_numeric($_GET["page"])) {
-	  $this->currentPage = $_GET["page"];
-	} else {
-	  $this->currentPage = 1;
-	}
+        if ($count) {
+            $this->displayItems = $count;
+        } elseif (isset($_GET["count"]) && is_numeric($_GET["count"])) {
+            $this->displayItems = $_GET["count"];
+        } else {
+            $this->displayItems = DEFAULT_ITEMS_PER_PAGE;
+        }
 
-	if (! $this->pagerCountRecords()) {
-	  $this->errorMsg = "Erreur lors du comptage des enregistrements.";
-	  return false;
-	} else {
-	  if (! $this->pagerFetchData()) {
-		$this->errorMsg = "Erreur lors de la récupération des enregistrements.";
-		return false;
-	  }
-	}
+        if ($page) {
+            $this->currentPage = $page;
+        } elseif (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+            $this->currentPage = $_GET["page"];
+        } else {
+            $this->currentPage = 1;
+        }
 
-	return true;
-  }
+        if (! $this->pagerCountRecords()) {
+            $this->errorMsg = "Erreur lors du comptage des enregistrements.";
+            return false;
+        } else {
+            if (! $this->pagerFetchData()) {
+                $this->errorMsg = "Erreur lors de la récupération des enregistrements.";
+                return false;
+            }
+        }
+
+        return true;
+    }
 
   /**
    * \brief Méthode de comptage du nombre total d'enregistrements pour le pager
    * \return True en cas de succès, false sinon
   */
-  protected function pagerCountRecords() {
-	// Comptage du nombre total d'enregistrements
-	  $sql = "SELECT count(*) AS total_count FROM " . $this->from . " " . $this->cond;
-
-    $db = DatabasePool::getInstance();
-
-    $result = $db->select($sql);
-
-    if (! $result->isError())
+    protected function pagerCountRecords()
     {
-      $row = $result->get_next_row();
+      // Comptage du nombre total d'enregistrements
+        $sql = "SELECT count(*) AS total_count FROM " . $this->from . " " . $this->cond;
 
-		  // Nombre total d'enregistrements
-		  $this->totalRecords = $row["total_count"];
-	
-		  // Nombre de pages en fonction du nombre d'items par page
-		  $this->pageNbr = ceil($this->totalRecords / $this->displayItems);
-	
-		  // Controle du débordement des pages
-		  if ($this->currentPage > $this->pageNbr) 
-		  {
-			   $this->currentPage = $this->pageNbr;
-	    }
+        $db = DatabasePool::getInstance();
+
+        $result = $db->select($sql);
+
+        if (! $result->isError()) {
+            $row = $result->get_next_row();
+
+            // Nombre total d'enregistrements
+            $this->totalRecords = $row["total_count"];
+
+            // Nombre de pages en fonction du nombre d'items par page
+            $this->pageNbr = ceil($this->totalRecords / $this->displayItems);
+
+            // Controle du débordement des pages
+            if ($this->currentPage > $this->pageNbr) {
+                 $this->currentPage = $this->pageNbr;
+            }
+        } else {
+            return false;
+        }
+
+        return true;
     }
-    else {
-	   return false;
-	  }
-
-	return true;
- }
 
   /**
    * \brief Méthode de récupération des données pour le pager depuis la base de données
    * \return True en cas de succès, false sinon
   */
-  protected function pagerFetchData() {
-	$offset = ($this->currentPage - 1) * $this->displayItems;
-	if ($offset < 0){
-		$offset = 0;	
-	}
-	$sql = "SELECT " . $this->fields . " FROM " . $this->from . " " . $this->cond;
+    protected function pagerFetchData()
+    {
+        $offset = ($this->currentPage - 1) * $this->displayItems;
+        if ($offset < 0) {
+            $offset = 0;
+        }
+        $sql = "SELECT " . $this->fields . " FROM " . $this->from . " " . $this->cond;
 
-	if (! empty($this->order)) {
-	  $sql .= " ORDER BY " . $this->order;
-	}
+        if (! empty($this->order)) {
+            $sql .= " ORDER BY " . $this->order;
+        }
 
-	$sql .= " LIMIT " . $this->displayItems . " OFFSET " . $offset;
+        $sql .= " LIMIT " . $this->displayItems . " OFFSET " . $offset;
 
-	//echo $sql;
+      //echo $sql;
 
-    $db = DatabasePool::getInstance();
+        $db = DatabasePool::getInstance();
 
-    $result = $db->select($sql);
+        $result = $db->select($sql);
 
-    if (! $result->isError()) {
-	  $this->data = $result->get_all_rows();
-    } else {
-	  return false;
-	}
+        if (! $result->isError()) {
+            $this->data = $result->get_all_rows();
+        } else {
+            return false;
+        }
 
-	return true;
-  }
+        return true;
+    }
 
   /**
    * \brief Méthode de récupération du message d'erreur associé à l'entité
    * \return Le message d'erreur
   */
-  public function getErrorMsg() {
-    $msg = $this->errorMsg;
-    $this->errorMsg = null;
+    public function getErrorMsg()
+    {
+        $msg = $this->errorMsg;
+        $this->errorMsg = null;
 
-    return $msg;
-  }
+        return $msg;
+    }
 
     /**
      * @param mixed $validate
@@ -512,14 +528,14 @@ class DataObject {
 
         if ($validate) {
             if (!$this->validate()) {
-                return new DataObjectSaveSQLRequest(false,"",[]);
+                return new DataObjectSaveSQLRequest(false, "", []);
             }
         }
 
         if ($new) {
             if (!($this->id = $this->getNextId())) {
                 $this->errorMsg = "Erreur de récupération du nouvel ID";
-                return new DataObjectSaveSQLRequest(false,"",[]);
+                return new DataObjectSaveSQLRequest(false, "", []);
             }
 
 
@@ -556,8 +572,6 @@ class DataObject {
             $sql .= " WHERE id=?";
             $params[] = $this->id;
         }
-        return new DataObjectSaveSQLRequest(true,$sql,$params);
+        return new DataObjectSaveSQLRequest(true, $sql, $params);
     }
-
-
 }

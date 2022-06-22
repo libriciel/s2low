@@ -1,20 +1,20 @@
 <?php
 
-require_once( __DIR__ . "/../../../init/init-www.php");
+require_once(__DIR__ . "/../../../init/init-www.php");
 
 
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
-	header("Location: " . WEBSITE);
-	exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if (! $me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL);
-	exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 
@@ -24,22 +24,19 @@ $name = $recuperateur->get('name');
 
 $name = basename($name);
 
-if ($type == 'rgs'){
-	$file = RGS_VALIDCA_PATH."/$name";
+if ($type == 'rgs') {
+    $file = RGS_VALIDCA_PATH . "/$name";
 } else {
-	$file = EXTENDED_VALIDCA_PATH."/$name";
+    $file = EXTENDED_VALIDCA_PATH . "/$name";
 }
 
-if (! file_exists($file)){
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: certitificate_list.php" );
-	exit();
+if (! file_exists($file)) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: certitificate_list.php");
+    exit();
 }
 
 header("Content-type: text/plain");
 header("Content-disposition: attachment; filename=$name");
 
 readfile($file);
-
-
-

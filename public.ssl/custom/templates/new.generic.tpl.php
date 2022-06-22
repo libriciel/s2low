@@ -22,7 +22,8 @@
         <?php
         $this->doc->includeErrors();
         echo $this->doc->body;
-        if ($layout)
-            require_once ($layout);
+        if ($layout) {
+            require_once($layout);
+        }
         ?>
 </html>

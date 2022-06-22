@@ -1,27 +1,25 @@
-<?php 
+<?php
 
 require_once("../include/init.php");
 
 require_once("../controller/mailController.php");
 
 
-if (isset($_POST['password'])){
-	$_POST['psw1'] = $_POST['password'];
-	$_POST['psw2'] = $_POST['password'];
+if (isset($_POST['password'])) {
+    $_POST['psw1'] = $_POST['password'];
+    $_POST['psw2'] = $_POST['password'];
 }
 
 $_POST['FileNumber'] = count($_FILES);
 
-$MailCtl=new mailController();
+$MailCtl = new mailController();
 ob_start();
 $mailId = $MailCtl->executeSend();
 ob_end_clean();
 
-if ($mailId){
-	echo "OK:$mailId\n";
+if ($mailId) {
+    echo "OK:$mailId\n";
 } else {
-	$erreur = $MailCtl->getLastError();
-	echo "ERROR:$erreur\n";
+    $erreur = $MailCtl->getLastError();
+    echo "ERROR:$erreur\n";
 }
-
-

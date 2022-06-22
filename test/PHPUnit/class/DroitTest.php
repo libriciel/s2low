@@ -1,98 +1,104 @@
 <?php
 
-class DroitTest extends S2lowTestCase {
-
-    private function getDroit(){
+class DroitTest extends S2lowTestCase
+{
+    private function getDroit()
+    {
         return $this->getObjectInstancier()->get('Droit');
     }
 
-    public function testCanAccess(){
+    public function testCanAccess()
+    {
 
         $moduleInfo = array();
-        $userInfo = array('status'=>0,'role'=>'');
+        $userInfo = array('status' => 0,'role' => '');
         $authorityInfo = array();
         $groupeInfo = array();
-        $droitModuleInfo=array();
-        $permUser= array();
+        $droitModuleInfo = array();
+        $permUser = array();
         $droit_specific = array();
 
         $droit = $this->getDroit();
 
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $moduleInfo['status'] = 0;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $moduleInfo['status'] = 1;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $userInfo['status'] = 1;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $authorityInfo['status'] = 1;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $groupeInfo['status'] = 0;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $groupeInfo['status'] = 1;
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $userInfo['role'] = 'SADM';
-        $this->assertTrue($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertTrue($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $userInfo['role'] = 'ADM';
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $droitModuleInfo = 'toto';
-        $this->assertFalse($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertFalse($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $permUser = 'RO';
-        $this->assertTrue($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertTrue($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
 
         $permUser = "TT";
         $droit_specific = array("TT");
-        $this->assertTrue($droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific));
+        $this->assertTrue($droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific));
     }
 
-    public function testIsSuperAdmin(){
+    public function testIsSuperAdmin()
+    {
         $droit = $this->getDroit();
-        $this->assertTrue($droit->isSuperAdmin(array('role'=>'SADM')));
-        $this->assertFalse($droit->isSuperAdmin(array('role'=>'GADM')));
-        $this->assertFalse($droit->isSuperAdmin(array('role'=>'ADM')));
-        $this->assertFalse($droit->isSuperAdmin(array('role'=>'USER')));
+        $this->assertTrue($droit->isSuperAdmin(array('role' => 'SADM')));
+        $this->assertFalse($droit->isSuperAdmin(array('role' => 'GADM')));
+        $this->assertFalse($droit->isSuperAdmin(array('role' => 'ADM')));
+        $this->assertFalse($droit->isSuperAdmin(array('role' => 'USER')));
     }
 
-    public function testIsAdmin(){
+    public function testIsAdmin()
+    {
         $droit = $this->getDroit();
-        $this->assertTrue($droit->isAdmin(array('role'=>'SADM')));
-        $this->assertTrue($droit->isAdmin(array('role'=>'GADM')));
-        $this->assertTrue($droit->isAdmin(array('role'=>'ADM')));
-        $this->assertFalse($droit->isAdmin(array('role'=>'USER')));
+        $this->assertTrue($droit->isAdmin(array('role' => 'SADM')));
+        $this->assertTrue($droit->isAdmin(array('role' => 'GADM')));
+        $this->assertTrue($droit->isAdmin(array('role' => 'ADM')));
+        $this->assertFalse($droit->isAdmin(array('role' => 'USER')));
     }
 
-    public function testIsGroupAdmin(){
+    public function testIsGroupAdmin()
+    {
         $droit = $this->getDroit();
-        $this->assertFalse($droit->isGroupAdmin(array('role'=>'SADM')));
-        $this->assertTrue($droit->isGroupAdmin(array('role'=>'GADM')));
-        $this->assertFalse($droit->isGroupAdmin(array('role'=>'ADM')));
-        $this->assertFalse($droit->isGroupAdmin(array('role'=>'USER')));
+        $this->assertFalse($droit->isGroupAdmin(array('role' => 'SADM')));
+        $this->assertTrue($droit->isGroupAdmin(array('role' => 'GADM')));
+        $this->assertFalse($droit->isGroupAdmin(array('role' => 'ADM')));
+        $this->assertFalse($droit->isGroupAdmin(array('role' => 'USER')));
     }
 
-    public function testIsAuthorityAdmin(){
+    public function testIsAuthorityAdmin()
+    {
         $droit = $this->getDroit();
-        $this->assertFalse($droit->isAuthorityAdmin(array('role'=>'SADM')));
-        $this->assertFalse($droit->isAuthorityAdmin(array('role'=>'GADM')));
-        $this->assertTrue($droit->isAuthorityAdmin(array('role'=>'ADM')));
-        $this->assertFalse($droit->isAuthorityAdmin(array('role'=>'USER')));
+        $this->assertFalse($droit->isAuthorityAdmin(array('role' => 'SADM')));
+        $this->assertFalse($droit->isAuthorityAdmin(array('role' => 'GADM')));
+        $this->assertTrue($droit->isAuthorityAdmin(array('role' => 'ADM')));
+        $this->assertFalse($droit->isAuthorityAdmin(array('role' => 'USER')));
     }
 
-    public function testHasDroit(){
+    public function testHasDroit()
+    {
         $droit = $this->getDroit();
-        $this->assertTrue($droit->hasDroit(array('role'=>'SADM'),array()));
-        $this->assertTrue($droit->hasDroit(array('role'=>'ADM','authority_group_id'=>42),array('authority_group_id'=>42)));
-        $this->assertTrue($droit->hasDroit(array('role'=>'GADM','authority_group_id'=>42),array('authority_group_id'=>42)));
-        $this->assertFalse($droit->hasDroit(array('role'=>'USER','authority_group_id'=>42),array('authority_group_id'=>42)));
+        $this->assertTrue($droit->hasDroit(array('role' => 'SADM'), array()));
+        $this->assertTrue($droit->hasDroit(array('role' => 'ADM','authority_group_id' => 42), array('authority_group_id' => 42)));
+        $this->assertTrue($droit->hasDroit(array('role' => 'GADM','authority_group_id' => 42), array('authority_group_id' => 42)));
+        $this->assertFalse($droit->hasDroit(array('role' => 'USER','authority_group_id' => 42), array('authority_group_id' => 42)));
     }
-
 }

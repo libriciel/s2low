@@ -1,14 +1,15 @@
 <?php
 
-class Environnement {
-
+class Environnement
+{
     private $getWrapper;
     private $postWrapper;
     private $requestWrapper;
     private $serverWrapper;
     private $sessionWrapper;
 
-    public function __construct($get,$post,$request,& $session,$server) {
+    public function __construct($get, $post, $request, &$session, $server)
+    {
         $this->getWrapper = new Recuperateur($get);
         $this->postWrapper = new Recuperateur($post);
         $this->requestWrapper = new Recuperateur($request);
@@ -16,23 +17,27 @@ class Environnement {
         $this->serverWrapper = new Recuperateur($server);
     }
 
-    public function session(){
+    public function session()
+    {
         return $this->sessionWrapper;
     }
 
-    public function get(){
+    public function get()
+    {
         return $this->getWrapper;
     }
 
-    public function post(){
+    public function post()
+    {
         return $this->postWrapper;
     }
 
-    public function request(){
+    public function request()
+    {
         return $this->requestWrapper;
     }
-    public function server(){
+    public function server()
+    {
         return $this->serverWrapper;
     }
-
 }

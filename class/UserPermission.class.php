@@ -1,8 +1,9 @@
 <?php
 
-class UserPermission {
-
-    public function checkSuperAdmin(){
+class UserPermission
+{
+    public function checkSuperAdmin()
+    {
 
         $me = new User();
 
@@ -17,8 +18,5 @@ class UserPermission {
             header("Location: " . WEBSITE_SSL);
             exit();
         }
-
     }
-
-
 }

@@ -1,11 +1,11 @@
-<?php 
+<?php
 require_once("include/init.php");
-if (! $me->isAuthorityAdmin()){
-  		exit;
-  	}
-require_once ("lib/MailLayout.class.php");
+if (! $me->isAuthorityAdmin()) {
+        exit;
+}
+require_once("lib/MailLayout.class.php");
 $doc = new MailLayout();
-$doc->disableError(); 
+$doc->disableError();
 $doc->setTitle("Gestion du carnet d'adresses");
 
 $doc->openContainer();
@@ -17,12 +17,12 @@ $doc->openContent();
 $doc->DisplayHead();
 ?>
 <h1> Carnet d'adresses </h1>
-  	
-<h2> Ajout d'email</h2>  	
+    
+<h2> Ajout d'email</h2>     
 
 
     <div id="add-user">
-	<form action="index.php?command=annuaire" method="post" class="form-horizontal">
+    <form action="index.php?command=annuaire" method="post" class="form-horizontal">
             <div class="form-group">
                 <label class="col-md-2 control-label" for="name">Nom</label>
                 <div class="col-md-4"> <input id="name" class="form-control" size="40" maxlength="128" name="description" type="text" /></div>
@@ -36,15 +36,15 @@ $doc->DisplayHead();
             <div class="form-group">
                 <input class="btn btn-primary" value="Ajouter une nouvelle adresse" type="submit" />
             </div>
-	</form>
+    </form>
     </div>
 
 </div>
 
 
-<?php 
+<?php
 
-$doc->closeContent(true);	
-$doc->closeContainer(true);	
+$doc->closeContent(true);
+$doc->closeContainer(true);
 
-$doc->DisplayFoot();	
+$doc->DisplayFoot();

@@ -9,23 +9,23 @@ require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
-if (! $module->isActive()|| ! $me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $fileId = Helpers::getVarFromGet("id");
@@ -38,7 +38,7 @@ $mode = "file";
 $zeFile = new ActesIncludedFile($fileId);
 
 $env = $zeFile->get("envelope");
-	
+
 
 $ownerId = $env->get("user_id");
 
@@ -47,12 +47,12 @@ $owner->init();
 
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser,"actes");
+$permission = new ModulePermission($serviceUser, "actes");
 
-if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+if (! $permission->canView($me, $owner)) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit();
 }
 header("Content-type: text/plain");
 

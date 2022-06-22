@@ -1,16 +1,15 @@
 <?php
 
-
 class PemCertificateFactory
 {
-    private function addBeginAndEndToPemCertificate(string $nakedCertificate) : string
+    private function addBeginAndEndToPemCertificate(string $nakedCertificate): string
     {
         $beginpem = "-----BEGIN CERTIFICATE-----\n";
         $endpem = "\n-----END CERTIFICATE-----\n";
 
         $nakedCertificate = trim($nakedCertificate);
 
-        if (mb_strlen(explode("\n",$nakedCertificate)[0]) >= 64) {
+        if (mb_strlen(explode("\n", $nakedCertificate)[0]) >= 64) {
             $nakedCertificate = preg_replace('/\s+/', ' ', trim($nakedCertificate));
             $nakedCertificate = rtrim(chunk_split($nakedCertificate, 64, "\n"));
         }
@@ -24,8 +23,8 @@ class PemCertificateFactory
     {
         $x509_info = openssl_x509_parse($certificate);
 
-        if(!$x509_info){
-            throw new Exception("Problème à l'ouverture du certificat : ".openssl_error_string());
+        if (!$x509_info) {
+            throw new Exception("Problème à l'ouverture du certificat : " . openssl_error_string());
         }
         return $x509_info;
     }
@@ -50,5 +49,4 @@ class PemCertificateFactory
             $this->addBeginAndEndToPemCertificate($minimalContent)
         );
     }
-
 }

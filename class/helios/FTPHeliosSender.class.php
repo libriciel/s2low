@@ -1,5 +1,7 @@
 <?php
-class FTPHeliosSender {
+
+class FTPHeliosSender
+{
     /** @var FTPService  */
     private $FTPConnection;
     private $isPstMode;
@@ -42,9 +44,9 @@ class FTPHeliosSender {
         if ($this->isPstMode) {
             $commands = ["site meta P_DEST={$p_dest};P_APPLI={$this->pAppli};P_MSG=$p_msg"];
         } else {
-            $commands=["site P_DEST {$p_dest}","site P_APPLI {$this->pAppli}","site P_MSG $p_msg"];
+            $commands = ["site P_DEST {$p_dest}","site P_APPLI {$this->pAppli}","site P_MSG $p_msg"];
         }
-        foreach ($commands as $command){
+        foreach ($commands as $command) {
             $this->FTPConnection->sendRawCommand($command);
         }
     }

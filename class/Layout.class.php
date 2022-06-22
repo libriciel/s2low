@@ -1,48 +1,49 @@
 <?php
 
-require_once( SITEROOT . "class/Versionning.class.php");
+require_once(SITEROOT . "class/Versionning.class.php");
 
 
-class Layout {
-  public $header;
-  public $body;
-  public $title;
+class Layout
+{
+    public $header;
+    public $body;
+    public $title;
 
   /**
    * \brief Méthode permettant de définir le titre du document
    * \param $str chaîne : le titre du document
   */
-  public function setTitle($str) {
+    public function setTitle($str)
+    {
         $this->title =  $str;
-  }
-  
+    }
+
   /**
    * \brief Méthode d'ajout de contenu dans l'en-tête du document
    * \param $str chaîne : chaîne de caractères à ajouter dans le document
   */
-  public function addHeader($str) {
-    $this->header .= $str;
-  }
+    public function addHeader($str)
+    {
+        $this->header .= $str;
+    }
 
   /**
    * \brief Méthode d'ajout de contenu dans le corps du document
    * \param $str chaîne : chaîne de caractères à ajouter dans le document
   */
-  public function addBody($str) {
-    $this->body .= $str;
-  }
+    public function addBody($str)
+    {
+        $this->body .= $str;
+    }
   /**
-   * 
-   * @param $templateFile: le template full path name correspond to the controller index.php 
+   *
+   * @param $templateFile: le template full path name correspond to the controller index.php
    * @return no return value
    */
-  public function setTemplate($template)
-  {
-  	$this->templateFile=$template;
-  }
-  
- 
-
+    public function setTemplate($template)
+    {
+        $this->templateFile = $template;
+    }
 }
 
 /**
@@ -50,7 +51,7 @@ class Layout {
  * \brief Classe pour la génération de mise en page en HTML
  * \author Jérôme Schell <j.schell@alternancesoft.com>
  * \date 17.02.2006
- * 
+ *
  *
  * Cette classe fournit des méthodes pour la génération de mise en page en HTML
  *
@@ -59,198 +60,209 @@ class Layout {
  *
  */
 
-class HTMLLayout extends Layout {
+class HTMLLayout extends Layout
+{
+    protected $template = false;
 
-	protected $template = false;
-	
-	private $errorDisabled;
+    private $errorDisabled;
 
-	
-  public function __construct($template = false) {
-    if ($template) {
-      $this->template = $template;
-    } elseif (defined("DEFAULT_HTML_TEMPLATE")) {
-      $this->template = DEFAULT_HTML_TEMPLATE;
+
+    public function __construct($template = false)
+    {
+        if ($template) {
+            $this->template = $template;
+        } elseif (defined("DEFAULT_HTML_TEMPLATE")) {
+            $this->template = DEFAULT_HTML_TEMPLATE;
+        }
     }
-  }
-  
-  public function disableError(){
-  	$this->errorDisabled = true;
-  }
+
+    public function disableError()
+    {
+        $this->errorDisabled = true;
+    }
 
 
-  public function openContainer($displayInline = false) {
-      $html = "        <div class=\"container\">\n";
-      $html .= "            <div class=\"row\">\n";
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }
-    
-  public function closeContainer($displayInline = false) {
-      $html = "            </div><!-- <div class=\"row\" -->\n";
-      $html .= "        </div><!-- <div class=\"container\" -->\n";
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }
-  
-  public function openSideBar($displayInline = false) {
-      $html = "                <div id=\"sidebar\" class=\"col-md-3\" role=\"navigation\">\n";
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }
+    public function openContainer($displayInline = false)
+    {
+        $html = "        <div class=\"container\">\n";
+        $html .= "            <div class=\"row\">\n";
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
 
-  public function closeSideBar($displayInline = false) {
-      $html = "                </div><!-- <div id=\"sidebar\" -->\n";
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }  
-  
-  public function openContent($displayInline = false) {
-      $html = "                <div id=\"content\" class=\"col-md-9\" role=\"main\">\n";
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }
+    public function closeContainer($displayInline = false)
+    {
+        $html = "            </div><!-- <div class=\"row\" -->\n";
+        $html .= "        </div><!-- <div class=\"container\" -->\n";
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
 
-  public function closeContent($displayInline = false) {
-      $html = "                </div><!-- <div class=\"content\" -->\n";
-      
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }  
-  
+    public function openSideBar($displayInline = false)
+    {
+        $html = "                <div id=\"sidebar\" class=\"col-md-3\" role=\"navigation\">\n";
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
+
+    public function closeSideBar($displayInline = false)
+    {
+        $html = "                </div><!-- <div id=\"sidebar\" -->\n";
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
+
+    public function openContent($displayInline = false)
+    {
+        $html = "                <div id=\"content\" class=\"col-md-9\" role=\"main\">\n";
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
+
+    public function closeContent($displayInline = false)
+    {
+        $html = "                </div><!-- <div class=\"content\" -->\n";
+
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
+
   /**
    * \brief Méthode permettant de construire un menu
    * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
-  public function buildMenu(User $user = null, $displayInline = false) {
+    public function buildMenu(User $user = null, $displayInline = false)
+    {
 
-      $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get('SQLQuery');
+        $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get('SQLQuery');
 
-      $userSQL = new UserSQL($sqlQuery);
-      $userInfo = $userSQL->getInfo($user->getId());
-      $moduleSQL = new ModuleSQL($sqlQuery);
+        $userSQL = new UserSQL($sqlQuery);
+        $userInfo = $userSQL->getInfo($user->getId());
+        $moduleSQL = new ModuleSQL($sqlQuery);
 
-      $modulesInfo = $moduleSQL->getModulesForUser($userInfo);
+        $modulesInfo = $moduleSQL->getModulesForUser($userInfo);
 
-      $menuHTML = new MenuHTML();
-      $html =  $menuHTML->getMenuContent($userInfo,$modulesInfo);
+        $menuHTML = new MenuHTML();
+        $html =  $menuHTML->getMenuContent($userInfo, $modulesInfo);
 
-      if ($displayInline) {
-          echo $html;
-      } else {
-          $this->addBody($html);
-      }
-  }
-  
-  
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
+    }
+
+
   /**
    * \brief Méthode de construction du pied de page du document
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
-  public function buildFooter($displayInline = false) {
-  	
-    $html = "        <footer class=\"bs-footer\">\n            <div class=\"container\">\n";
+    public function buildFooter($displayInline = false)
+    {
 
-	if (defined("WEBMASTER")) {
-	  $html .= "                <a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
-	}
+        $html = "        <footer class=\"bs-footer\">\n            <div class=\"container\">\n";
 
-	if (defined("SUPPORT_URL")) {
-	  $html .= "                <a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - \n";
-	}
+        if (defined("WEBMASTER")) {
+            $html .= "                <a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
+        }
 
-	$versionning = VersionningFactory::getInstance();
-	$versionningInfo = $versionning->getAllInfo();
-	
-	$html .= "                    Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">\n".
-  	$versionningInfo['version-complete'] . "</a>\n";
-	global $debut;
-  	if ($debut){
-  		$html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms\n";
-  	}
+        if (defined("SUPPORT_URL")) {
+            $html .= "                <a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - \n";
+        }
 
-	$html .= "            </div>\n        </footer>\n";
+        $versionning = VersionningFactory::getInstance();
+        $versionningInfo = $versionning->getAllInfo();
 
-    if ($displayInline) {
-      echo $html;
-    } else {
-      $this->addBody($html);
+        $html .= "                    Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">\n" .
+        $versionningInfo['version-complete'] . "</a>\n";
+        global $debut;
+        if ($debut) {
+            $html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms\n";
+        }
+
+        $html .= "            </div>\n        </footer>\n";
+
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
     }
-  }
 
   /**
    * \brief Méthode de construction de la zone de pagination
    * \param $dataObj DataObject : objet représentant les données manipulées et contenant les informations de pagination
    * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
   */
-  public function buildPager($dataObj, $displayInline = false) {
+    public function buildPager($dataObj, $displayInline = false)
+    {
         $nb_total_page = $dataObj->get("pageNbr");
         $page_number = $dataObj->get("currentPage");
-        $page = array(1,2,3,$page_number  - 1 , $page_number , $page_number +1,$nb_total_page-2,$nb_total_page-1,$nb_total_page );
+        $page = array(1,2,3,$page_number  - 1 , $page_number , $page_number + 1,$nb_total_page - 2,$nb_total_page - 1,$nb_total_page );
         $page = array_unique($page);
         sort($page);
-	foreach($page as $i => $nb_page){
-			if ($nb_page>$nb_total_page || $nb_page<=0){
-				unset($page[$i]);
-			}
+        foreach ($page as $i => $nb_page) {
+            if ($nb_page > $nb_total_page || $nb_page <= 0) {
+                unset($page[$i]);
+            }
         }
-        $last_page = 0;	
-	$html = "            <div id=\"display-items\">\n";
+        $last_page = 0;
+        $html = "            <div id=\"display-items\">\n";
 
-	// Nombre de résultats par page
-	$html .= "<h2>Afficher par page</h2>\n";
-	$html .= "<ul class=\"pagination pagination-sm\">\n";
-	foreach (array(10, 20, 50, 100) as $val) {
-	  if ($dataObj->get("displayItems") != $val) {
-		$html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
-	  } else {
+      // Nombre de résultats par page
+        $html .= "<h2>Afficher par page</h2>\n";
+        $html .= "<ul class=\"pagination pagination-sm\">\n";
+        foreach (array(10, 20, 50, 100) as $val) {
+            if ($dataObj->get("displayItems") != $val) {
+                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
+            } else {
                 $html .= "<li class=\"disabled\"><a href=\"#\">" . $val . "</a></li>\n";
-	  }
-	}
+            }
+        }
 
-	$html .= "</ul>\n</div>\n";
+        $html .= "</ul>\n</div>\n";
 
-	// Liste des pages
+      // Liste des pages
         $html .= "<div id=\"pages\">\n";
-	$html .= "<h2>Page&nbsp;:</h2>\n";
-	$args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
-	$args = preg_replace("/^&/", "", $args);
-	$args = preg_replace("/&/", "&amp;", $args);
-	$sep = (mb_strlen($args) > 0) ? "&amp;" : "";
+        $html .= "<h2>Page&nbsp;:</h2>\n";
+        $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
+        $args = preg_replace("/^&/", "", $args);
+        $args = preg_replace("/&/", "&amp;", $args);
+        $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-	$html .= "<ul class=\"pagination pagination-sm\">\n";
+        $html .= "<ul class=\"pagination pagination-sm\">\n";
         if ($page_number > 1) {
-	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
-	  $args = preg_replace("/^&/", "", $args);
-	  $args = preg_replace("/&/", "&amp;", $args);
-	  $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
+            $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
+            $args = preg_replace("/^&/", "", $args);
+            $args = preg_replace("/&/", "&amp;", $args);
+            $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
-	} else {
-	  $html .= "<li class=\"disabled\"><a href=\"#\">&laquo;</a></li>\n";
-	}
+            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
+        } else {
+            $html .= "<li class=\"disabled\"><a href=\"#\">&laquo;</a></li>\n";
+        }
         foreach ($page as $i) {
             if ($last_page + 1 != $i) {
-              $html .= "<li class=\"disabled\"><a href=\"#\">...</a></li>\n";  
+                $html .= "<li class=\"disabled\"><a href=\"#\">...</a></li>\n";
             }
             $last_page = $i;
             if ($page_number == $i) {
@@ -260,24 +272,24 @@ class HTMLLayout extends Layout {
             }
         }
         if ($page_number < $nb_total_page) {
-	  $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
-	  $args = preg_replace("/^&/", "", $args);
-	  $args = preg_replace("/&/", "&amp;", $args);
-	  $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
+            $args = preg_replace("/&?page=[0-9]+/", "", $_SERVER["QUERY_STRING"]);
+            $args = preg_replace("/^&/", "", $args);
+            $args = preg_replace("/&/", "&amp;", $args);
+            $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-	  $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
-	} else {
-	  $html .= "<li class=\"disabled\"><a href=\"#\">&raquo;</a></li>\n";
-	}
-	$html .= "</ul>\n</div>\n";
+            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
+        } else {
+            $html .= "<li class=\"disabled\"><a href=\"#\">&raquo;</a></li>\n";
+        }
+        $html .= "</ul>\n</div>\n";
 
 
-    if ($displayInline) {
-      echo $html;
-    } else {
-      $this->addBody($html);
+        if ($displayInline) {
+            echo $html;
+        } else {
+            $this->addBody($html);
+        }
     }
-  }
 
 
   /**
@@ -287,29 +299,30 @@ class HTMLLayout extends Layout {
    * \param $selectedValue mixed : valeur actuelle du champ pour préselection
    * \param $extraAttributes chaîne : chaîne de caractères contenant des attribut HTML à ajouter au select
    * \return Le code HTML du champ select
-   * @deprecated 
+   * @deprecated
   */
-  public function getHTMLSelect($name, $data, $selectedValue, $extraAttributes = "",$onChange=null) {
-  	if ($onChange==null) {
-    	$html = "<select class=\"form-control\" name=\"" . $name . "\"" . $extraAttributes . ">\n";
-  	} else { 
-    	$html = '<select id="'.$name.'" class="form-control" name="' . $name . "\"" . $extraAttributes . ' onchange="'.$onChange.'">\n';
-  	}
-    $html .= " <option value=\"\">Choisissez</option>\n";
+    public function getHTMLSelect($name, $data, $selectedValue, $extraAttributes = "", $onChange = null)
+    {
+        if ($onChange == null) {
+            $html = "<select class=\"form-control\" name=\"" . $name . "\"" . $extraAttributes . ">\n";
+        } else {
+            $html = '<select id="' . $name . '" class="form-control" name="' . $name . "\"" . $extraAttributes . ' onchange="' . $onChange . '">\n';
+        }
+        $html .= " <option value=\"\">Choisissez</option>\n";
 
-    foreach ($data as $key => $val) {
-      $html .= " <option value=\"" . $key . "\"";
+        foreach ($data as $key => $val) {
+            $html .= " <option value=\"" . $key . "\"";
 
-      $html .= (strcmp($key, $selectedValue ?? '') == 0) ? " selected=\"selected\"" : "";
-      
-      $html .= ">" . get_hecho($val) . "</option>\n";
+            $html .= (strcmp($key, $selectedValue ?? '') == 0) ? " selected=\"selected\"" : "";
+
+            $html .= ">" . get_hecho($val) . "</option>\n";
+        }
+
+        $html .= "</select>\n";
+
+        return $html;
     }
 
-    $html .= "</select>\n";
-
-    return $html;
-  }
-  
 
   /**
    * \brief Méthode de construction d'un champ de formulaire de type checkbox
@@ -318,17 +331,18 @@ class HTMLLayout extends Layout {
    * \param $extraAttributes chaîne : Attributs supplémentaires du champ HTML
    * \return Le code HTML du champ checkbox
   */
-  public function getHTMLCheckbox($name, $value, $extraAttributes = "") {
-    $html = "<input type=\"checkbox\" name=\"" . $name . "\" value=\"on\"";
+    public function getHTMLCheckbox($name, $value, $extraAttributes = "")
+    {
+        $html = "<input type=\"checkbox\" name=\"" . $name . "\" value=\"on\"";
 
-    if ($value == "on") {
-      $html .= " checked=\"checked\"";
+        if ($value == "on") {
+            $html .= " checked=\"checked\"";
+        }
+
+        $html .= $extraAttributes . " />";
+
+        return $html;
     }
-
-    $html .= $extraAttributes . " />";
-
-    return $html;
-  }
 
   /**
    * \brief Méthode de construction d'une ligne de tableau de liste d'attribut
@@ -336,26 +350,28 @@ class HTMLLayout extends Layout {
    * \param $value mixed : Valeur de l'attribut
    * \return Le code HTML de la ligne
   */
-  public function getHTMLArrayline($name, $value) {
-	$html = " <tr>\n";
-	$html .= "  <th class=\"td-register th-row\" scope=\"row\">" . $name . "&nbsp;:</th>\n";
-	$html .= "  <td class=\"td-input\">" . $value . "</td>\n";
-	$html .= " </tr>\n";
+    public function getHTMLArrayline($name, $value)
+    {
+        $html = " <tr>\n";
+        $html .= "  <th class=\"td-register th-row\" scope=\"row\">" . $name . "&nbsp;:</th>\n";
+        $html .= "  <td class=\"td-input\">" . $value . "</td>\n";
+        $html .= " </tr>\n";
 
-    return $html;
-  }
+        return $html;
+    }
 
 
   /**
    * \brief Méthode d'inclusion du message d'erreur stocké en session
   */
-    public function includeErrors() {
-        if ($this->errorDisabled){
+    public function includeErrors()
+    {
+        if ($this->errorDisabled) {
             return;
         }
 
         ob_start();
-        if (isset($_SESSION["error"])) { 
+        if (isset($_SESSION["error"])) {
             $this->afficheErrors();
         }
         $html = ob_get_contents();
@@ -366,11 +382,12 @@ class HTMLLayout extends Layout {
         // il faut "injecter" la zone d'erreur à l'intérieur de la zone "content"
         //FIXME (EP), ce n'est pas un "bug" d'IE, la CSS ne défini la errorbox qu'a l'interieur du content
         //FIXME c'est cette classe qui n'est pas très bien concu ...
-        $this->body = str_replace("role=\"main\">", "role=\"main\">\n" . $html, $this->body);		
+        $this->body = str_replace("role=\"main\">", "role=\"main\">\n" . $html, $this->body);
     }
-  
-    public function afficheErrors(){ 
-        if (! isset($_SESSION["error"]) || ! $_SESSION["error"] ) {
+
+    public function afficheErrors()
+    {
+        if (! isset($_SESSION["error"]) || ! $_SESSION["error"]) {
                 return;
         }
         ?>
@@ -379,36 +396,39 @@ class HTMLLayout extends Layout {
         </div>
 
         <?php
-            unset($_SESSION["error"]); 
+            unset($_SESSION["error"]);
     }
 
 
-    public function displayTemplate($layout,$templateFile)
+    public function displayTemplate($layout, $templateFile)
     {
             $this->includeErrors();
             require_once(HTML_TEMPLATE_PATH . "/" . "new.generic.tpl.php");
     }
 
 
-    public function addCSS($css){
+    public function addCSS($css)
+    {
             $this->addHeader("<link rel='stylesheet' type='text/css' href='$css' />");
     }
 
-    public function addJavascript($javascript){
+    public function addJavascript($javascript)
+    {
             $this->addHeader("<script src='$javascript' type='text/javascript'></script>");
     }
-  	
-	
+
+
   /**
    * \brief Méthode générant l'affichage du document
   */
- 
-    public function display() {
+
+    public function display()
+    {
         $this->includeErrors();
 
         if ($this->template) {
-			//Note EP 09/09/2015 : avant il y avait require_once, ce qui pour un template est ... spécial.
-			//Du coup, ca passe pas les tests unitaire... je mets include, mais je sais pas ce que ca va donner...
+            //Note EP 09/09/2015 : avant il y avait require_once, ce qui pour un template est ... spécial.
+            //Du coup, ca passe pas les tests unitaire... je mets include, mais je sais pas ce que ca va donner...
             include(HTML_TEMPLATE_PATH . "/" . $this->template);
         } else {
             echo "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n";
@@ -434,7 +454,7 @@ class HTMLLayout extends Layout {
  * \brief Classe pour la génération de fichier CSV
  * \author Jérôme Schell <j.schell@alternancesoft.com>
  * \date 17.02.2006
- * 
+ *
  *
  * Cette classe fournit des méthodes pour la génération de fichiers CSV
  *
@@ -443,43 +463,45 @@ class HTMLLayout extends Layout {
  *
  */
 
-class CSVLayout extends Layout {
-
+class CSVLayout extends Layout
+{
   /**
    * \brief Méthode d'ajout d'une ligne dans le fichier CSV
    * \param $str chaîne : chaîne de caractères à ajouter dans le document ou tableau de champs qui seront ajoutés séparés par des points virgules
   */
-  public function addLine($str) {
-	if (is_array($str)) {
-	  $line = implode(";", $str);
-	} else {
-	  $line = $str;
-	}
+    public function addLine($str)
+    {
+        if (is_array($str)) {
+            $line = implode(";", $str);
+        } else {
+            $line = $str;
+        }
 
-	$line .= "\r\n";
+        $line .= "\r\n";
 
-	$this->addBody($line);
-  }
+        $this->addBody($line);
+    }
 
   /**
    * \brief Méthode générant l'affichage du document
    */
-  public function display() {
-	$content_type = "text/csv;charset=iso-8859-1";
-	if (! empty($this->header)) {
-	  $content_type .= ";header=present";
-	}
+    public function display()
+    {
+        $content_type = "text/csv;charset=iso-8859-1";
+        if (! empty($this->header)) {
+            $content_type .= ";header=present";
+        }
 
-	if (! Helpers::sendFileToBrowser(null, "transactions.csv", $content_type)) {
-	  return false;
-	}
+        if (! Helpers::sendFileToBrowser(null, "transactions.csv", $content_type)) {
+            return false;
+        }
 
-	if (! empty($this->header)) {
-	  echo $this->header . "\r\n";
-	}
+        if (! empty($this->header)) {
+            echo $this->header . "\r\n";
+        }
 
-	echo $this->body;
-  }
+        echo $this->body;
+    }
 }
 
 ?>

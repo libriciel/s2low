@@ -1,10 +1,11 @@
 <?php
-class MockClassParam {
-	
-	private $param;
-	
-	public function __construct($param){
-		$this->param = $param;
-	}
-	
+
+class MockClassParam
+{
+    private $param;
+
+    public function __construct($param)
+    {
+        $this->param = $param;
+    }
 }

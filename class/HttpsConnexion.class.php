@@ -1,6 +1,5 @@
 <?php
 
-
 class HttpsConnexion
 {
     /** @var Environnement */
@@ -8,22 +7,23 @@ class HttpsConnexion
     /** @var X509Certificate  */
     private $certificateHandler;
 
-    public function __construct(Environnement $environnement, X509Certificate $certificateHandler){
+    public function __construct(Environnement $environnement, X509Certificate $certificateHandler)
+    {
         $this->environnement = $environnement;
-        $this->certificateHandler=$certificateHandler;
+        $this->certificateHandler = $certificateHandler;
     }
 
     private function der2pem(string $der_data): string
     {
         $pem = chunk_split(base64_encode($der_data), 64, "\n");
-        $pem = "-----BEGIN CERTIFICATE-----\n".$pem."-----END CERTIFICATE-----\n";
+        $pem = "-----BEGIN CERTIFICATE-----\n" . $pem . "-----END CERTIFICATE-----\n";
         return $pem;
     }
 
-    private function getParameterList(array $correspondanceArray,string $localisation): array
+    private function getParameterList(array $correspondanceArray, string $localisation): array
     {
         $result = array();
-        foreach ($correspondanceArray as $server_key => $result_key){
+        foreach ($correspondanceArray as $server_key => $result_key) {
             if (!$this->environnement->$localisation()->get($server_key)) {
                 $result[$result_key] = false;
             } else {
@@ -47,29 +47,31 @@ class HttpsConnexion
             }
         }
 
-        $result = $this->getParameterList([
+        $result = $this->getParameterList(
+            [
                 'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
                 'SSL_CLIENT_S_DN' => 'subject_dn',
                 'SSL_CLIENT_I_DN' => 'issuer_dn',
                 'SSL_CLIENT_CERT' => 'ssl_client_cert',
                 'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => 'certificate_rgs_2_etoiles',
                 'TESTING_CERTIFICATE_HASH' => 'certificate_hash'],
-            "server");
+            "server"
+        );
 
-        if (! $result['ssl_client_verify']){
+        if (! $result['ssl_client_verify']) {
             return false;
         }
 
-        if ($result['ssl_client_cert']){
+        if ($result['ssl_client_cert']) {
             $info = $this->certificateHandler->getInfo($result['ssl_client_cert']);
-            if (! $info){
+            if (! $info) {
                 return false;
             }
             $result['issuer_dn'] = $info['issuer_name'];
             $result['subject_dn'] = $info['subject_name'];
             $result['certificate_hash'] = $info['certificate_hash'];
         }
-        if ($result['certificate_rgs_2_etoiles']){
+        if ($result['certificate_rgs_2_etoiles']) {
             $result['certificate_rgs_2_etoiles'] = $this->der2pem(base64_decode($result['certificate_rgs_2_etoiles']));
         }
         return $result;
@@ -82,7 +84,7 @@ class HttpsConnexion
     {
         return $this->getParameterList([
                 'PHP_AUTH_USER' => 'login',
-                'PHP_AUTH_PW' => 'password'],"server");
+                'PHP_AUTH_PW' => 'password'], "server");
     }
 
     /**
@@ -105,7 +107,7 @@ class HttpsConnexion
             $this->environnement->get()->get('hash')];
     }
 
-    public function getCertificateHash() : string
+    public function getCertificateHash(): string
     {
         return $this->getCertificateInfo()['certificate_hash'];
     }

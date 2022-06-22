@@ -1,8 +1,9 @@
 <?php
 
-class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
-
-    private function getCurlWrapperFactory($return_string){
+class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
+{
+    private function getCurlWrapperFactory($return_string)
+    {
         $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
         $curlWrapper->method("get")->willReturn($return_string);
         $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
@@ -14,8 +15,9 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
     /**
      * @throws Exception
      */
-    public function testStamp(){
-        $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/",__DIR__."/../../../public.ssl/custom/images/s2low-stamp.png");
+    public function testStamp()
+    {
+        $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/", __DIR__ . "/../../../public.ssl/custom/images/s2low-stamp.png");
         $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory("test"));
         $pdfStampData = new PDFStampData();
         $pdfStampData->identifiant_unique = "toto";
@@ -25,8 +27,7 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase {
 
         $this->assertEquals(
             "test",
-            $pdfStampWrapper->stamp(__DIR__."/fixtures/signature-pades/Courrier.pdf",$pdfStampData)
+            $pdfStampWrapper->stamp(__DIR__ . "/fixtures/signature-pades/Courrier.pdf", $pdfStampData)
         );
-
     }
 }

@@ -22,7 +22,7 @@ class ClassHelper
 
     protected static function translateNamespacePath(string $namespace): string
     {
-        $rootPath = __DIR__ . "/../".DIRECTORY_SEPARATOR;
+        $rootPath = __DIR__ . "/../" . DIRECTORY_SEPARATOR;
 
         $nsParts = explode('\\', $namespace);
         array_shift($nsParts);
@@ -30,7 +30,7 @@ class ClassHelper
         if (empty($nsParts)) {
             return '';
         }
-        return realpath($rootPath. implode(DIRECTORY_SEPARATOR, $nsParts)) ?: '';
+        return realpath($rootPath . implode(DIRECTORY_SEPARATOR, $nsParts)) ?: '';
     }
 
     private static function searchClasses(string $namespace, string $namespacePath): array
@@ -41,10 +41,12 @@ class ClassHelper
          * @var RecursiveDirectoryIterator $iterator
          * @var SplFileInfo $item
          */
-        foreach ($iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($namespacePath, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::SELF_FIRST
-        ) as $item) {
+        foreach (
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($namespacePath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            ) as $item
+        ) {
             if ($item->isDir()) {
                 $nextPath = $iterator->current()->getPathname();
                 $nextNamespace = $namespace . '\\' . $item->getFilename();

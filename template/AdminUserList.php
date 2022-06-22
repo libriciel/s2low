@@ -31,10 +31,10 @@
             <th class="data">Collectivit&eacute;</th>
             <th class="data">Actions</th>
         </tr>
-        <?php foreach($user_list as $i => $info): ?>
+        <?php foreach ($user_list as $i => $info) : ?>
             <tr >
                 <td><?php hecho($info['login']) ?></td>
-                <td><?php hecho($info['givenname'] . " ".$info['name']) ?></td>
+                <td><?php hecho($info['givenname'] . " " . $info['name']) ?></td>
                 <td><a href="mailto: <?php hecho($info['email']) ?>"><?php hecho($info['email']) ?></a></td>
                 <td><?php echo $roles_type_list[$info['role']] ?></td>
                 <td><?php echo $status_type_list[$info["status"]] ?></td>

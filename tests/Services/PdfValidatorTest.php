@@ -35,9 +35,9 @@ class PdfValidatorTest extends S2lowTestCase
 
     public function testCheckInvalidFileLogs()
     {
-        try{
+        try {
             $this->pdfValidator->check(__DIR__ . "/fixtures/test_pdf_corrupted.pdf");
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             //Juste là pour permettre le test après.
         }
         $this->assertEquals(
@@ -45,5 +45,4 @@ class PdfValidatorTest extends S2lowTestCase
             $this->getLogRecords()[0]["message"]
         );
     }
-
 }

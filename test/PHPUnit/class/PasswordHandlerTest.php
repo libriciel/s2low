@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-class PasswordHandlerTest extends S2lowTestCase{
-
+class PasswordHandlerTest extends S2lowTestCase
+{
     /**
      * @var MockObject|UserSQL
      */
@@ -11,7 +11,8 @@ class PasswordHandlerTest extends S2lowTestCase{
     /** @var PasswordHandler  */
     private $passwordHandler;
 
-    protected function setUp() : void{
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->userSQL = $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock();
         $this->passwordHandler = new PasswordHandler($this->userSQL);
@@ -27,7 +28,7 @@ class PasswordHandlerTest extends S2lowTestCase{
         string $password,
         string $hash,
         bool $match
-    ){
+    ) {
         $this->assertEquals(
             $match,
             $this->passwordHandler->passwordMatchesHash(
@@ -38,7 +39,8 @@ class PasswordHandlerTest extends S2lowTestCase{
         );
     }
 
-    public function passwordValidationProvider(){
+    public function passwordValidationProvider()
+    {
         return [
             ["password",md5("password"),true],
             ["wrong_password",md5("password"),false],
@@ -48,27 +50,30 @@ class PasswordHandlerTest extends S2lowTestCase{
     }
 
 
-    public function testMD5passwordIsChanged(){
+    public function testMD5passwordIsChanged()
+    {
 
         $this->userSQL->expects($this->once())
             ->method('setPassword')
             ->with(
                 $this->equalTo(1),
-                $this->callback(function ($subject){
-                return password_verify("password",$subject);
-            }));
+                $this->callback(function ($subject) {
+                    return password_verify("password", $subject);
+                })
+            );
 
         $this->passwordHandler->passwordMatchesHash(
-                "password",
-                md5("password"),
-                1
-            );
+            "password",
+            md5("password"),
+            1
+        );
     }
 
     /**
      * @dataProvider passwordNotChangedProvider
      */
-    public function testMD5passwordIsNotChanged(string $password, string $hash){
+    public function testMD5passwordIsNotChanged(string $password, string $hash)
+    {
         $this->userSQL->expects($this->never())->method('setPassword');
 
         $this->passwordHandler->passwordMatchesHash(
@@ -78,7 +83,8 @@ class PasswordHandlerTest extends S2lowTestCase{
         );
     }
 
-    public function passwordNotChangedProvider() : array{
+    public function passwordNotChangedProvider(): array
+    {
         return[
             ["wrong_password",md5("password")],
             ["password",password_hash("password", PASSWORD_DEFAULT)],

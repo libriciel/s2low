@@ -36,7 +36,8 @@
                 var xdr;
                 return {
                     send: function (headers, completeCallback) {
-                        function callback(status, statusText, responses, responseHeaders) {
+                        function callback(status, statusText, responses, responseHeaders)
+                        {
                             xdr.onload = xdr.onerror = xdr.ontimeout = $.noop;
                             xdr = null;
                             completeCallback(status, statusText, responses, responseHeaders);

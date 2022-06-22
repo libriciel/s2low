@@ -1,3 +1,5 @@
 <?php
 
-class WorkerScriptException extends Exception {}
+class WorkerScriptException extends Exception
+{
+}

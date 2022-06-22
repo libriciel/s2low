@@ -1,6 +1,5 @@
 <?php
 
-
 require_once(__DIR__ . "/../../init/init.php");
 
 
@@ -16,8 +15,8 @@ WHERE last_status_id=3 AND type='7' AND date<'2019-04-12'
 $all_transaction = $sqlQuery->query($sql);
 
 foreach ($all_transaction as $info) {
-	echo $info['transaction_id'];
-	$actesTransactionSQL->updateStatus($info['transaction_id'], -1, "Transaction passé en erreur");
-	echo " [OK]\n";
-	exit;
+    echo $info['transaction_id'];
+    $actesTransactionSQL->updateStatus($info['transaction_id'], -1, "Transaction passé en erreur");
+    echo " [OK]\n";
+    exit;
 }

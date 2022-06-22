@@ -13,10 +13,10 @@
     </head>
     <body>
 
-	<div id="bandeau_s2low" class="container">
-		<a href='<?php echo WEBSITE_SSL ?>'>
-			<img src="<?php echo WEBSITE_SSL ?>/custom/images/bandeau_s2low.jpg"  />
-		</a>
-	</div>
+    <div id="bandeau_s2low" class="container">
+        <a href='<?php echo WEBSITE_SSL ?>'>
+            <img src="<?php echo WEBSITE_SSL ?>/custom/images/bandeau_s2low.jpg"  />
+        </a>
+    </div>
 
         <?php echo $this->body ?>

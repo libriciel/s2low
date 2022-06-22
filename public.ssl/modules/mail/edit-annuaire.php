@@ -1,9 +1,9 @@
-<?php 
+<?php
 
-require_once( __DIR__ . "/../../../init/init-www-mailsec.php");
+require_once(__DIR__ . "/../../../init/init-www-mailsec.php");
 
-if (! $droit->isAuthorityAdmin($userInfo)){
-	exit;
+if (! $droit->isAuthorityAdmin($userInfo)) {
+    exit;
 }
 $recuperateur = new Recuperateur($_GET);
 $menuHTML = new MenuHTML();
@@ -14,17 +14,17 @@ $id = $recuperateur->getInt('id');
 $mailAnnuaireSQL = new MailAnnuaireSQL($sqlQuery);
 $info = $mailAnnuaireSQL->getInfo($id);
 
-if (! $info){
-	$id = "";
-	$info = array("email" => "","description" => "");
+if (! $info) {
+    $id = "";
+    $info = array("email" => "","description" => "");
 }
 
 $doc = new HTMLLayout();
-$doc->setTitle(($id?"Edition":"Ajout")." d'un contact de l'annuaire - Mail sécurisé - S²low");
+$doc->setTitle(($id ? "Edition" : "Ajout") . " d'un contact de l'annuaire - Mail sécurisé - S²low");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -33,7 +33,7 @@ ob_start();
 
     <h1> Carnet d'adresses </h1>
 
-    <h2> Edition d'un contact</h2>  	
+    <h2> Edition d'un contact</h2>      
 
     <div class="data_table">
         <form class="form form-horizontal" action="index.php?command=annuaire" method="post">
@@ -51,13 +51,13 @@ ob_start();
                 </div>
             </div>
             <div class="form-group">
-                <input class="btn btn-primary" value="<?php echo $id?"Modifier":"Ajouter" ?>" type="submit" />
+                <input class="btn btn-primary" value="<?php echo $id ? "Modifier" : "Ajouter" ?>" type="submit" />
             </div>
         </form>
     </div>
 
 
-<?php 			
+<?php
 $html = ob_get_contents();
 ob_end_clean();
 

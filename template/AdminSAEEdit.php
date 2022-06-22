@@ -3,12 +3,12 @@
 ?>
 <h1>Configuration de la connexion SAE</h1>
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $id ?>'>« revenir au formulaire standard</a><br/>
+    <a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $id ?>'>« revenir au formulaire standard</a><br/>
 </p>
 <h2>Modification des propriétés SAE (Pastell) de <?php echo $authorityInfo['name']?></h2>
 
 <form class="form form-horizontal" action='admin_authority_sae_controler.php' method='post'>
-	<input type='hidden' name='id' value='<?php echo $id ?>' />
+    <input type='hidden' name='id' value='<?php echo $id ?>' />
 
     <div class="form-group">
         <label class="col-md-4 label-form" for="pastell_url">URL Pastell&nbsp;: </label>
@@ -93,7 +93,7 @@
                     type="checkbox"
                     name="actes_send_auto"
                     id="actes_send_auto"
-                <?php echo $pastellProperties->actes_send_auto?"checked='checked'":""?>
+                <?php echo $pastellProperties->actes_send_auto ? "checked='checked'" : ""?>
             />
         </div>
     </div>
@@ -155,7 +155,7 @@
                    type="checkbox"
                    name="helios_send_auto"
                    id="helios_send_auto"
-                   <?php echo $pastellProperties->helios_send_auto?"checked='checked'":""?>
+                   <?php echo $pastellProperties->helios_send_auto ? "checked='checked'" : ""?>
             />
         </div>
     </div>
@@ -186,8 +186,8 @@
 
 
     <div class="form-group">
-		<input class="col-md-offset-4 col-md-6 btn btn-default" value="Modifier" type="submit" />
-	</div>
+        <input class="col-md-offset-4 col-md-6 btn btn-default" value="Modifier" type="submit" />
+    </div>
 </form>
 
 <div id="actions-area">

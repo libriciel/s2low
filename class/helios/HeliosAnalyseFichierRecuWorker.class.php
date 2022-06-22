@@ -1,57 +1,60 @@
 <?php
 
-class HeliosAnalyseFichierRecuWorker implements IWorker {
+class HeliosAnalyseFichierRecuWorker implements IWorker
+{
+    const QUEUE_NAME = 'helios-analyse-fichier-recu';
 
 
-	const QUEUE_NAME = 'helios-analyse-fichier-recu';
+    private $heliosAnalyseFichierRecu;
 
+    public function __construct(
+        HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu
+    ) {
+        $this->heliosAnalyseFichierRecu = $heliosAnalyseFichierRecu;
+    }
 
-	private $heliosAnalyseFichierRecu;
+    public function getQueueName()
+    {
+        return self::QUEUE_NAME;
+    }
 
-	public function __construct(
-		HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu
-	) {
-		$this->heliosAnalyseFichierRecu = $heliosAnalyseFichierRecu;
-	}
+    public function getData($id)
+    {
+        return $id;
+    }
 
-	public function getQueueName(){
-		return self::QUEUE_NAME;
-	}
+    /**
+     * @return array|false|int[]
+     * @throws Exception
+     */
+    public function getAllId()
+    {
+        return $this->heliosAnalyseFichierRecu->getAllDirectory(HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
+    }
 
-	public function getData($id){
-		return $id;
-	}
+    /**
+     * @param $data
+     * @return void
+     * @throws Exception
+     */
+    public function work($data)
+    {
+        $this->heliosAnalyseFichierRecu->analyseOneFileForWorker(
+            HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH,
+            HELIOS_RESPONSES_ROOT,
+            HELIOS_RESPONSES_ERROR_PATH,
+            HELIOS_OCRE_FILE_PATH,
+            $data
+        );
+    }
 
-	/**
-	 * @return array|false|int[]
-	 * @throws Exception
-	 */
-	public function getAllId(){
-		return $this->heliosAnalyseFichierRecu->getAllDirectory(HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
-	}
+    public function getMutexName($data)
+    {
+        return sprintf("%s-%s", self::QUEUE_NAME, $data);
+    }
 
-	/**
-	 * @param $data
-	 * @return void
-	 * @throws Exception
-	 */
-	public function work($data){
-		$this->heliosAnalyseFichierRecu->analyseOneFileForWorker(
-			HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH,
-			HELIOS_RESPONSES_ROOT,
-			HELIOS_RESPONSES_ERROR_PATH,
-			HELIOS_OCRE_FILE_PATH,
-			$data
-		);
-	}
-
-	public function getMutexName($data) {
-		return sprintf("%s-%s",self::QUEUE_NAME,$data);
-	}
-
-	public function isDataValid($data) {
-		return true;
-	}
-
-
+    public function isDataValid($data)
+    {
+        return true;
+    }
 }

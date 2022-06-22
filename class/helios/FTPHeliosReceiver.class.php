@@ -1,7 +1,8 @@
 <?php
-class FTPHeliosReceiver implements Iterator {
-    
-	 /**
+
+class FTPHeliosReceiver implements Iterator
+{
+     /**
      * @var FTPService
      */
     private $FTPService;
@@ -16,31 +17,33 @@ class FTPHeliosReceiver implements Iterator {
         FTPService $FTPService,
         $helios_ftp_response_server_path,
         $helios_ftp_response_tmp_local_path
-    )
-    {
+    ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->FTPService = $FTPService;
         $this->remotePath = $helios_ftp_response_server_path;
         $this->localPath = $helios_ftp_response_tmp_local_path;
     }
 
-    public function current(){
+    public function current()
+    {
         $this->recupOneFile($this->filesToProcess[$this->index], $this->key());
         return $this->filesToProcess[$this->index];
     }
 
-    public function key(){
+    public function key()
+    {
         return $this->index;
     }
 
-    public function next(){
+    public function next()
+    {
         $this->index++;
     }
 
     public function valid()
     {
-        $valid=isset($this->filesToProcess[$this->key()]);
-        if(!$valid){
+        $valid = isset($this->filesToProcess[$this->key()]);
+        if (!$valid) {
             $this->finTraitement();
         }
         return $valid;
@@ -51,15 +54,17 @@ class FTPHeliosReceiver implements Iterator {
         $this->index = 0;
     }
 
-	private function isPesAller($filename){
-        $isPesAller = preg_match("#^PESALR2_#",basename($filename));
-        if($isPesAller){
+    private function isPesAller($filename)
+    {
+        $isPesAller = preg_match("#^PESALR2_#", basename($filename));
+        if ($isPesAller) {
             $this->s2lowLogger->info("$filename : PES ALLER ignoré");
         }
         return $isPesAller;
     }
 
-    public function retrieveNames(){
+    public function retrieveNames()
+    {
         $this->FTPService->connect();
 
         $this->s2lowLogger->info("Remote_path : $this->remotePath");
@@ -67,9 +72,9 @@ class FTPHeliosReceiver implements Iterator {
         $all_file = $this->FTPService->getFileNames($this->remotePath);
         $this->filesToProcess = [];
 
-        foreach ($all_file as $file){
-            if(!$this->isPesAller(basename($file))){
-                $this->filesToProcess[]=$file;
+        foreach ($all_file as $file) {
+            if (!$this->isPesAller(basename($file))) {
+                $this->filesToProcess[] = $file;
             }
         }
     }

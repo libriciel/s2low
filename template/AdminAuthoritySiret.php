@@ -1,7 +1,7 @@
 <h1><?php hecho($title)?></h1>
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="admin_authority_edit.php?id=<?php hecho($authority_id) ?>">Retour formulaire
-		principal</a><br>
+    <a class="btn btn-default" href="admin_authority_edit.php?id=<?php hecho($authority_id) ?>">Retour formulaire
+        principal</a><br>
 </p>
 <h2>Gestion des numéro SIRET</h2>
 
@@ -10,18 +10,16 @@
     <li class="list-group-item">
         <b>SIRET activé</b>
     </li>
-<?php if (! $siret_list): ?>
-	<li class="list-group-item">
-    	Cette collectivité n'est associée à aucun numéro SIRET.
+<?php if (! $siret_list) : ?>
+    <li class="list-group-item">
+        Cette collectivité n'est associée à aucun numéro SIRET.
     </li>
 <?php endif;?>
 
-<?php foreach($siret_list as $siret_info) : ?>
-	<li class="list-group-item">
-	  	<?php hecho($siret_info['siret'])?>
-	  	<?php if($this->me->isSuper()):?>
-
-
+<?php foreach ($siret_list as $siret_info) : ?>
+    <li class="list-group-item">
+        <?php hecho($siret_info['siret'])?>
+        <?php if ($this->me->isSuper()) :?>
             <form action='admin_authority_siret_del.php' method='post' class="pull-right">
                 <input type='hidden' name='authority_siret_id' value='<?php hecho($siret_info['id'])?>'/>
                 <button class="btn btn-xs btn-warning" type='submit' title="Supprimer ce numéro SIRET">
@@ -39,8 +37,8 @@
             </form>
 
 
-		<?php endif;?>
-	</li>
+        <?php endif;?>
+    </li>
 <?php endforeach;?>
 
 
@@ -50,16 +48,15 @@
     <b>SIRET bloqués</b>
 </li>
 
-	<?php if (! $siret_blocked_list): ?>
+    <?php if (! $siret_blocked_list) : ?>
         <li class="list-group-item">
             Cette collectivité n'a pas de SIRET bloqué.
         </li>
-	<?php endif;?>
-	<?php foreach($siret_blocked_list as $siret_info) : ?>
+    <?php endif;?>
+    <?php foreach ($siret_blocked_list as $siret_info) : ?>
         <li class="list-group-item">
-			<?php hecho($siret_info['siret'])?>
-			<?php if($this->me->isSuper()):?>
-
+            <?php hecho($siret_info['siret'])?>
+            <?php if ($this->me->isSuper()) :?>
                 <form action='admin_authority_siret_del.php' method='post' class="pull-right">
                     <input type='hidden' name='authority_siret_id' value='<?php hecho($siret_info['id'])?>'/>
                     <button class="btn btn-xs btn-warning" type='submit' title="Supprimer ce numéro SIRET">
@@ -77,15 +74,15 @@
                 </form>
 
 
-			<?php endif;?>
+            <?php endif;?>
         </li>
-	<?php endforeach;?>
+    <?php endforeach;?>
 </ul>
 
 </div>
 
 <div class='col-xs-6'>
-<?php if($this->me->isSuper()):?>
+<?php if ($this->me->isSuper()) :?>
 <form action='admin_authority_siret_add.php' method='post'>
 <input type='hidden' name='authority_id' value='<?php hecho($authority_id)?>' />
     <div class="input-group">
@@ -107,11 +104,11 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-  <?php if($this->me->isSuper()):?>
-	<small>Exemple de numéro SIRET valide : <?php hecho($siret_exemple)?></small>
-	<?php else :?>
-	<small>Seul un super admin peut modifier cette liste.</small>
-	<?php endif;?>
+  <?php if ($this->me->isSuper()) :?>
+    <small>Exemple de numéro SIRET valide : <?php hecho($siret_exemple)?></small>
+  <?php else :?>
+    <small>Seul un super admin peut modifier cette liste.</small>
+  <?php endif;?>
   </div>
 </div>
 </div>

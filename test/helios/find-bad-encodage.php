@@ -1,36 +1,31 @@
 <?php
 
-require_once(__DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
-if (empty($argv[1])){
-	echo "Usage : {$argv[0]} YYYY-mm-dd\n";
-	exit;
+if (empty($argv[1])) {
+    echo "Usage : {$argv[0]} YYYY-mm-dd\n";
+    exit;
 }
 $date = $argv[1];
 
 $sql = "SELECT id,sha1 FROM helios_transactions WHERE submission_date>? AND submission_date<?";
-$transactions_list = $sqlQuery->query($sql,$date." 00:00",$date." 23:59:59");
+$transactions_list = $sqlQuery->query($sql, $date . " 00:00", $date . " 23:59:59");
 
 $nb_transaction = count($transactions_list);
 
 echo "Analyse de $nb_transaction fichiers\n";
 
 
-foreach($transactions_list as $num_transaction => $transaction_helios){
-	echo "Transaction {$transaction_helios['id']} ($num_transaction/$nb_transaction)\n";
-	$pes_aller = HELIOS_FILES_UPLOAD_ROOT."/{$transaction_helios['sha1']}";
-	echo "Analyse du fichier : $pes_aller\n";
+foreach ($transactions_list as $num_transaction => $transaction_helios) {
+    echo "Transaction {$transaction_helios['id']} ($num_transaction/$nb_transaction)\n";
+    $pes_aller = HELIOS_FILES_UPLOAD_ROOT . "/{$transaction_helios['sha1']}";
+    echo "Analyse du fichier : $pes_aller\n";
 
-	$f = @fopen($pes_aller, "r");
+    $f = @fopen($pes_aller, "r");
 
-	if (! $f){
-		echo "Impossible de lire le fichier\n";
-	}
+    if (! $f) {
+        echo "Impossible de lire le fichier\n";
+    }
 
-	echo fgets($f,90);
-
+    echo fgets($f, 90);
 }
-
-
-
-

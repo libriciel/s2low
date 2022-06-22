@@ -9,19 +9,18 @@
  *
  */
 
-
-require_once (__DIR__."/../../config/config.php");
-require_once (SITEROOT . '/init/init.php');
+require_once(__DIR__ . "/../../config/config.php");
+require_once(SITEROOT . '/init/init.php');
 
 echo "Correction authority_id\n";
 $sql = "UPDATE logs SET authority_id=users.authority_id FROM users " .
-		" WHERE logs.user_id=users.id AND logs.authority_id IS NULL AND logs.user_id IS NOT NULL";
+        " WHERE logs.user_id=users.id AND logs.authority_id IS NULL AND logs.user_id IS NOT NULL";
 
 $sqlQuery->query($sql);
 
 echo "Correction authority_group_id\n";
 $sql = "UPDATE logs SET authority_group_id=authorities.authority_group_id FROM authorities " .
-	" WHERE logs.authority_id=authorities.id AND logs.authority_group_id IS NULL AND logs.authority_id IS NOT NULL";
+    " WHERE logs.authority_id=authorities.id AND logs.authority_group_id IS NULL AND logs.authority_id IS NOT NULL";
 $sqlQuery->query($sql);
 
 echo "ok\n";

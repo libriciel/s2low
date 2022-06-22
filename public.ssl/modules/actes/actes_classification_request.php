@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
@@ -7,21 +8,21 @@ require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.cla
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("actes")) {
-  Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+    Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
 }
 
-if ($me->isGroupAdminOrSuper() || ! $module->isActive()|| ! $me->checkDroit($module->get("name"),'TT')) {
-  Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->checkDroit($module->get("name"), 'TT')) {
+    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-  Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -29,12 +30,12 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 $classificationCreation = new ActesClassificationCreation();
 
-if (! ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY){
-	$classificationCreation->unsetFrequencyRestriction();
+if (! ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY) {
+    $classificationCreation->unsetFrequencyRestriction();
 }
 
-$result = $classificationCreation->createEnveloppe($myAuthority,$me);
+$result = $classificationCreation->createEnveloppe($myAuthority, $me);
 
 
 $transaction_id = $classificationCreation->getLastTransactionId();
-Helpers::returnAndExit( ! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$transaction_id",$transaction_id);
+Helpers::returnAndExit(! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$transaction_id", $transaction_id);

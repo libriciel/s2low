@@ -2,9 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 
-class S2lowSimpleTestCase extends TestCase {
-
-    protected function setUp() : void {
+class S2lowSimpleTestCase extends TestCase
+{
+    protected function setUp(): void
+    {
         parent::setUp();
         ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
         $this->getObjectInstancier()->set("Monolog\Logger", new  Monolog\Logger('PHPUNIT'));
@@ -14,18 +15,21 @@ class S2lowSimpleTestCase extends TestCase {
         $this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
     }
 
-    public function getObjectInstancier() {
+    public function getObjectInstancier()
+    {
         return ObjectInstancierFactory::getObjetInstancier();
     }
 
 
-	public function getLogRecords(){
-		$testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
-		return $testHandler->getRecords();
-	}
-	/** @deprecated  */
-	public function setExpectedException(string $e,string $message){
-		$this->expectException($e);
-		$this->expectExceptionMessage($message);
-	}
+    public function getLogRecords()
+    {
+        $testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+        return $testHandler->getRecords();
+    }
+    /** @deprecated  */
+    public function setExpectedException(string $e, string $message)
+    {
+        $this->expectException($e);
+        $this->expectExceptionMessage($message);
+    }
 }

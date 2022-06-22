@@ -1,7 +1,7 @@
 <?php
 
-class ActesImapProperties {
-
+class ActesImapProperties
+{
     public $host;
     public $port;
     public $login;

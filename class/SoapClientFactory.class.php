@@ -2,23 +2,25 @@
 
 //Note : SoapClient crée un fichier de cache du WSDL, voir http://www.php.net/manual/en/soap.configuration.php
 
-class SoapClientFactory {
-
-	public function getInstance($wsdl,array $options = array(),$is_jax_ws = false){
-		return new NotBuggySoapClient($wsdl, $options,$is_jax_ws);
+class SoapClientFactory
+{
+    public function getInstance($wsdl, array $options = array(), $is_jax_ws = false)
+    {
+        return new NotBuggySoapClient($wsdl, $options, $is_jax_ws);
     }
-
 }
 
 $soapErrorException = null;
 
-function soapErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+function soapErrorHandler($errno, $errstr, $errfile, $errline, $errcontext)
+{
     global $soapErrorException;
     $soapErrorException = soapErrorAdd($errstr, $errno);
     return false;
 }
 
-function soapErrorAdd($errstr, $errno = 0) {
+function soapErrorAdd($errstr, $errno = 0)
+{
     global $soapErrorException;
     $cause = $soapErrorException;
     $error = $errstr;
@@ -31,13 +33,14 @@ function soapErrorAdd($errstr, $errno = 0) {
     return $error;
 }
 
-class NotBuggySoapClient extends SoapClient {
-
+class NotBuggySoapClient extends SoapClient
+{
     private $is_jax_ws;
     private $option;
 
-//PHP SUCKS : https://bugs.php.net/bug.php?id=47584	
-	public function __construct($wsdl,array $options = array(),$is_jax_ws = false){		
+//PHP SUCKS : https://bugs.php.net/bug.php?id=47584
+    public function __construct($wsdl, array $options = array(), $is_jax_ws = false)
+    {
         global $soapErrorException;
         $this->is_jax_ws = $is_jax_ws;
         $this->option = $options;
@@ -62,16 +65,18 @@ class NotBuggySoapClient extends SoapClient {
         $this->construct_finally($errorHandlerSave);
     }
 
-    private function construct_finally($errorHandlerSave) {
+    private function construct_finally($errorHandlerSave)
+    {
         restore_error_handler($errorHandlerSave);
         if (function_exists('xdebug_enable')) {
             xdebug_enable();
         }
     }
 
-//http://stackoverflow.com/questions/5948402/having-issues-with-mime-headers-when-consuming-jax-ws-using-php-soap-client	
-    public function __doRequest($request, $location, $action, $version, $one_way = 0) {
-		if (isset($this->option['use_curl'])){
+//http://stackoverflow.com/questions/5948402/having-issues-with-mime-headers-when-consuming-jax-ws-using-php-soap-client
+    public function __doRequest($request, $location, $action, $version, $one_way = 0)
+    {
+        if (isset($this->option['use_curl'])) {
             $response = $this->doRequestWithCurl($request, $location, $action, $version);
         } else {
             global $soapErrorException;
@@ -90,7 +95,7 @@ class NotBuggySoapClient extends SoapClient {
             }
             $this->doRequest_finally($errorHandlerSave);
             if (isset($this->__soap_fault) && ($this->__soap_fault != null)) {
-                //this is where the exception from __doRequest is stored 
+                //this is where the exception from __doRequest is stored
                 $exEtCauses = soapErrorAdd($this->__soap_fault->getMessage());
                 throw new SoapFault($this->__soap_fault->faultcode, $exEtCauses);
             }
@@ -98,15 +103,16 @@ class NotBuggySoapClient extends SoapClient {
 
 
 
-    	if ($this->is_jax_ws){
-			$response = mb_strstr($response,"<?xml");
-	        $response = mb_strstr($response,"--uuid:",true);
+        if ($this->is_jax_ws) {
+            $response = mb_strstr($response, "<?xml");
+            $response = mb_strstr($response, "--uuid:", true);
         }
 
         return $response;
     }
 
-    private function doRequest_finally($errorHandlerSave) {
+    private function doRequest_finally($errorHandlerSave)
+    {
         restore_error_handler($errorHandlerSave);
     }
 
@@ -118,37 +124,35 @@ class NotBuggySoapClient extends SoapClient {
             'Connection: Keep-Alive',
             'User-Agent: PHP-SOAP-CURL',
             'Content-Type: text/xml; charset=utf-8',
-        );
+            );
 
         $ch = curl_init($location);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POST, true );
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-		curl_setopt($ch,  CURLOPT_SSL_VERIFYHOST , false ); 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		if (isset( $this->option['userCertOnly'])){
+        if (isset($this->option['userCertOnly'])) {
             curl_setopt($ch, CURLOPT_SSLCERT, $this->option['userCertOnly']);
             curl_setopt($ch, CURLOPT_SSLKEY, $this->option['userKeyOnly']);
-			curl_setopt($ch, CURLOPT_SSLKEYPASSWD,$this->option['passphrase'] );
+            curl_setopt($ch, CURLOPT_SSLKEYPASSWD, $this->option['passphrase']);
         }
 
 
-        if ($this->option['login'])
-        {
-            curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->option['login'].':'.$this->option['password']);
+        if ($this->option['login']) {
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->option['login'] . ':' . $this->option['password']);
         }
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
         $response = curl_exec($ch);
-        if (curl_errno($ch) !== 0)
-        {
-            throw new Exception('CurlSoapClient, curl error ('.curl_errno($ch).'): ' .
+        if (curl_errno($ch) !== 0) {
+            throw new Exception('CurlSoapClient, curl error (' . curl_errno($ch) . '): ' .
             curl_error($ch));
         }
 
@@ -157,7 +161,4 @@ class NotBuggySoapClient extends SoapClient {
 
         return $response;
     }
-
-    
-    
 }

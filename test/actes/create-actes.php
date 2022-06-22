@@ -1,14 +1,13 @@
 <?php
 
-require_once(__DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
-require_once __DIR__."/../PHPUnit/class/actes/ActesCreator.php";
+require_once __DIR__ . "/../PHPUnit/class/actes/ActesCreator.php";
 
 $actesCreator = $objectInstancier->get(ActesCreator::class);
 
 $transaction_id = $actesCreator->createTransaction(
     ActesStatusSQL::STATUS_POSTE,
-    __DIR__."/../PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz",
+    __DIR__ . "/../PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz",
     ACTES_FILES_UPLOAD_ROOT
-    );
-
+);

@@ -1,6 +1,6 @@
 <?php
 
-require_once( __DIR__ . "/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 /**
  * Le script BL de purge ne purge pas les pes_aquit
@@ -18,13 +18,13 @@ $sql = "select id,acquit_filename from helios_transactions WHERE last_status_id=
 
 $result = $sqlQuery->query($sql);
 
-$s2lowLogger->info(sprintf("%d transactions détruites trouvées",count($result)));
+$s2lowLogger->info(sprintf("%d transactions détruites trouvées", count($result)));
 
-foreach($result as $info){
+foreach ($result as $info) {
     $s2lowLogger->info("Traitement de la transaction {$info['id']}");
-    $pes_aquit_filename = HELIOS_RESPONSES_ROOT."/{$info['acquit_filename']}";
+    $pes_aquit_filename = HELIOS_RESPONSES_ROOT . "/{$info['acquit_filename']}";
 
-    if (! file_exists($pes_aquit_filename)){
+    if (! file_exists($pes_aquit_filename)) {
         $s2lowLogger->info("Le fichier $pes_aquit_filename n'existe pas");
         continue;
     }
@@ -36,10 +36,10 @@ foreach($result as $info){
 }
 
 
-function ask($question){
+function ask($question)
+{
     echo "$question";
-    $handle = fopen ("php://stdin","r");
+    $handle = fopen("php://stdin", "r");
     $line = fgets($handle);
     return (trim($line) == 'oui');
 }
-

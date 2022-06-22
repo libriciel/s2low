@@ -1,65 +1,70 @@
 <?php
 
-class SigTermHandler {
+class SigTermHandler
+{
+    const SIGNO_TO_HANDLE = [
+        SIGTERM,
+        SIGINT
+    ];
 
-	const SIGNO_TO_HANDLE = [
-		SIGTERM,
-		SIGINT
-	];
+    private static $instance;
 
-	private static $instance;
-
-	public static function getInstance(){
-		if (! self::$instance){
-			self::$instance = new SigTermHandler();
-		}
-		return self::$instance;
-	}
-
-    private $sig_term_called = false;
-	private $last_signo;
-	private $exit_on_signal = false;
-
-	private $is_activated = false;
-
-    private function __construct(){
-		/* Nothing to do */
+    public static function getInstance()
+    {
+        if (! self::$instance) {
+            self::$instance = new SigTermHandler();
+        }
+        return self::$instance;
     }
 
-    public function activate(){
+    private $sig_term_called = false;
+    private $last_signo;
+    private $exit_on_signal = false;
 
-    	if ($this->is_activated){
-    		return ;
-		}
+    private $is_activated = false;
 
-		pcntl_async_signals(true);
+    private function __construct()
+    {
+        /* Nothing to do */
+    }
 
-		$f = function($signo){
-			$this->sig_term_called = true;
-			$this->last_signo = $signo;
-			if ($this->exit_on_signal){
-				exit(0);
-			}
-		};
-		foreach(self::SIGNO_TO_HANDLE as $signo){
-			pcntl_signal($signo, $f);
-		}
-		$this->is_activated = true;
-	}
+    public function activate()
+    {
+
+        if ($this->is_activated) {
+            return ;
+        }
+
+        pcntl_async_signals(true);
+
+        $f = function ($signo) {
+            $this->sig_term_called = true;
+            $this->last_signo = $signo;
+            if ($this->exit_on_signal) {
+                exit(0);
+            }
+        };
+        foreach (self::SIGNO_TO_HANDLE as $signo) {
+            pcntl_signal($signo, $f);
+        }
+        $this->is_activated = true;
+    }
 
 
-    public function isSigtermCalled(){
-    	$this->activate();
+    public function isSigtermCalled()
+    {
+        $this->activate();
         return $this->sig_term_called;
     }
 
-    public function getLastSigNo(){
-    	return $this->last_signo;
-	}
+    public function getLastSigNo()
+    {
+        return $this->last_signo;
+    }
 
-	public function setExitOnSignal(bool $exit_on_signal){
-		$this->activate();
-		$this->exit_on_signal = $exit_on_signal;
-	}
-
+    public function setExitOnSignal(bool $exit_on_signal)
+    {
+        $this->activate();
+        $this->exit_on_signal = $exit_on_signal;
+    }
 }

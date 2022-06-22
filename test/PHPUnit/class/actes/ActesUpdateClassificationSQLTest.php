@@ -1,23 +1,24 @@
 <?php
 
-class ActesUpdateClassificationSQLTest extends S2lowTestCase {
-
+class ActesUpdateClassificationSQLTest extends S2lowTestCase
+{
     /** @var  ActesUpdateClassificationSQL */
     private $actesUpdateClassificationSQL;
     private $classification_xml;
 
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
-        $this->classification_xml = file_get_contents(__DIR__."/../fixtures/classification.xml");
-
+        $this->classification_xml = file_get_contents(__DIR__ . "/../fixtures/classification.xml");
     }
 
-    public function testUpdateClassification(){
+    public function testUpdateClassification()
+    {
         $sql = "INSERT into actes_classification_requests(request_date, requested_by, version_date, xml_data) VALUES (now(),?,NULL,NULL)";
-        $this->getSQLQuery()->query($sql,1);
+        $this->getSQLQuery()->query($sql, 1);
 
-        $this->actesUpdateClassificationSQL->updateClassification("123456789",$this->classification_xml);
+        $this->actesUpdateClassificationSQL->updateClassification("123456789", $this->classification_xml);
 
         $this->assertEquals(
             $this->classification_xml,
@@ -35,28 +36,33 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         );
 
         $actesTypePJSQL = $this->getObjectInstancier()->get('ActesTypePJSQL');
-        $this->assertEquals(13,count($actesTypePJSQL->getAll()));
+        $this->assertEquals(13, count($actesTypePJSQL->getAll()));
     }
 
-    public function testUpdateClassificationBadSiren(){
-        $this->setExpectedException("Exception","Aucune collectivité ne correspond au SIREN 42");
-        $this->actesUpdateClassificationSQL->updateClassification("42",$this->classification_xml);
+    public function testUpdateClassificationBadSiren()
+    {
+        $this->setExpectedException("Exception", "Aucune collectivité ne correspond au SIREN 42");
+        $this->actesUpdateClassificationSQL->updateClassification("42", $this->classification_xml);
     }
 
-    public function testUpdateClassificationNoXML(){
-        $this->setExpectedException("Exception","Le message n'est pas un retour de classification: EnveloppeMISILLCL trouvé.");
-        $this->actesUpdateClassificationSQL->updateClassification("123456789",file_get_contents(__DIR__."/../fixtures/test-archive-MISILCL/TACT--SPREF0011-000000000-20170721-4.xml"));
+    public function testUpdateClassificationNoXML()
+    {
+        $this->setExpectedException("Exception", "Le message n'est pas un retour de classification: EnveloppeMISILLCL trouvé.");
+        $this->actesUpdateClassificationSQL->updateClassification("123456789", file_get_contents(__DIR__ . "/../fixtures/test-archive-MISILCL/TACT--SPREF0011-000000000-20170721-4.xml"));
     }
 
-    public function testRollback(){
+    public function testRollback()
+    {
 
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-        $transaction_id = $heliosTransactionSQL->create("toto",
+        $transaction_id = $heliosTransactionSQL->create(
+            "toto",
             "xxx",
             8,
             1,
             42,
-            "123");
+            "123"
+        );
 
         $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, "test");
         $heliosTransactionSQL->begin();
@@ -72,14 +78,17 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
         );
     }
 
-    public function testCommit(){
+    public function testCommit()
+    {
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-        $transaction_id = $heliosTransactionSQL->create("toto",
+        $transaction_id = $heliosTransactionSQL->create(
+            "toto",
             "xxx",
             8,
             1,
             42,
-            "123");
+            "123"
+        );
 
         $heliosTransactionSQL->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, "test");
         $heliosTransactionSQL->begin();
@@ -99,5 +108,4 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase {
             $heliosTransactionSQL->getLatestStatusId($transaction_id)
         );
     }
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 class VerifyPemCertificate
 {
     # extracted from https://github.com/openssl
@@ -22,9 +21,9 @@ class VerifyPemCertificate
     private $openSSLWrapper;
 
     public function __construct(
-        string                                                     $authorized_ca_path,
+        string $authorized_ca_path,
         \S2low\Services\ProcessCommand\OpenSSLWrapper $openSSLWrapper
-    ){
+    ) {
         $this->authorized_ca_path = $authorized_ca_path;
         $this->openSSLWrapper = $openSSLWrapper;
     }
@@ -32,10 +31,10 @@ class VerifyPemCertificate
     /**
      * @throws Exception
      */
-    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null ): bool
+    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null): bool
     {
         $this->checkForCrlRevocation($certificate_path);
-        $this->openSSLWrapper->verify($certificate_path,$filteredErrors,$timestamp);
+        $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
         return true;
     }
 
@@ -44,18 +43,18 @@ class VerifyPemCertificate
      * @return void
      * @throws \Exception
      */
-    protected function checkForCrlRevocation(string $file) : void
+    protected function checkForCrlRevocation(string $file): void
     {
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
         $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
-            $serialNumber =$this->openSSLWrapper->extractCertificateSN($file);
+            $serialNumber = $this->openSSLWrapper->extractCertificateSN($file);
             // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
             // On ne vérifie pas
             // 1) la date
             // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-            $this->openSSLWrapper->checkSNIsInCRL($file_r0,$serialNumber);
+            $this->openSSLWrapper->checkSNIsInCRL($file_r0, $serialNumber);
         }
     }
 }

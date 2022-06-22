@@ -1,7 +1,4 @@
 <?php
 
-require_once( __DIR__ . "/../../../init/init.php");
-$frontController->go("ActesPostWithoutSignature","post");
-
-
-
+require_once(__DIR__ . "/../../../init/init.php");
+$frontController->go("ActesPostWithoutSignature", "post");

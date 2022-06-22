@@ -1,24 +1,24 @@
 <?php
 
-class ActesRetrieverTest extends S2lowTestCase {
+class ActesRetrieverTest extends S2lowTestCase
+{
+    /**
+     * @throws Exception
+     */
+    public function testGetPath()
+    {
+        $tmpFolder = new TmpFolder();
+        $my_tmp_folder = $tmpFolder->create();
+        $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
 
-	/**
-	 * @throws Exception
-	 */
-    public function testGetPath(){
-    	$tmpFolder = new TmpFolder();
-    	$my_tmp_folder = $tmpFolder->create();
-		$this->getObjectInstancier()->set('actes_files_upload_root',$my_tmp_folder);
-
-		mkdir($my_tmp_folder."/foo");
-    	file_put_contents("$my_tmp_folder/foo/bar","foo");
-		$actesRetriever = $this->getObjectInstancier()->get('ActesRetriever');
+        mkdir($my_tmp_folder . "/foo");
+        file_put_contents("$my_tmp_folder/foo/bar", "foo");
+        $actesRetriever = $this->getObjectInstancier()->get('ActesRetriever');
 
         $this->assertEquals(
-			"$my_tmp_folder/foo/bar",
+            "$my_tmp_folder/foo/bar",
             $actesRetriever->getPath("foo/bar")
         );
         $tmpFolder->delete($my_tmp_folder);
     }
-
 }

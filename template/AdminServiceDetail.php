@@ -10,10 +10,10 @@
         <form action='enlever-utilisateur.php' method='post'>
             <input type='hidden' name='id_service' value='<?php echo $id?>'>
             <ul>
-                <?php foreach($users as $u) : ?>
+                <?php foreach ($users as $u) : ?>
                     <li>
                         <input type='checkbox' name='id_user[]' value='<?php echo $u['id_user']?>'>
-                        <a href='../users/admin_user_edit.php?id=<?php echo $u['id_user']?>'><?php echo $u['givenname'] ."&nbsp;".$u['name']?></a>
+                        <a href='../users/admin_user_edit.php?id=<?php echo $u['id_user']?>'><?php echo $u['givenname'] . "&nbsp;" . $u['name']?></a>
 
                     </li>
                 <?php endforeach;?>
@@ -43,8 +43,10 @@
         <div class="col-md-4">
             <select id="service_id" name='service_id' class='form-control'>
                 <option value='0'>(aucun)</option>
-                <?php foreach($all_groupes as $grp) : ?>
-                    <option value='<?php echo $grp['id'] ?>' <?php if ($grp['id'] == $groupe['parent_id']) echo "selected='selected'"?>>
+                <?php foreach ($all_groupes as $grp) : ?>
+                    <option value='<?php echo $grp['id'] ?>' <?php if ($grp['id'] == $groupe['parent_id']) {
+                        echo "selected='selected'";
+                                   }?>>
                         <?php hecho($grp['name'])?></option>
                 <?php endforeach;?>
             </select>
@@ -56,7 +58,7 @@
 
 <?php if ($serviceEnfant) : ?>
     <h2>Groupe enfant</h2>
-    <?php foreach($serviceEnfant as $enfant): ?>
+    <?php foreach ($serviceEnfant as $enfant) : ?>
         <a href='gestion-service-content.php?id=<?php echo $enfant['id']?>'><?php hecho($enfant['name'])?></a>&nbsp;
     <?php endforeach;?>
 <?php endif;?>
@@ -65,12 +67,11 @@
 <h2>Suppression</h2>
 <p>
     <?php if (! $users && ! $serviceEnfant) : ?>
-
     <form action="supprimer-service.php" method="post"  onsubmit="return confirm('Voulez-vous vraiment supprimer ce service ?')">
         <input type="hidden" name="id" value="<?php echo $id ?>" />
         <input type="submit" value="Supprimer ce service" class="btn btn-danger" />
     </form>
-<?php else : ?>
+    <?php else : ?>
     Pour supprimer le service, il faut que celui-ci ne contienne plus d'utilisateur et ne soit pas parent d'un autre service.
-<?php endif;?>
+    <?php endif;?>
 </p>

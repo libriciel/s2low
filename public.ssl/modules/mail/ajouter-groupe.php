@@ -1,13 +1,13 @@
-<?php 
+<?php
 require_once("include/init.php");
 
-if (! $me->isAuthorityAdmin()){
-  		exit;
-  	}
+if (! $me->isAuthorityAdmin()) {
+        exit;
+}
 
-require_once ("lib/MailLayout.class.php");
+require_once("lib/MailLayout.class.php");
 $doc = new MailLayout();
-$doc->disableError(); 
+$doc->disableError();
 $doc->setTitle("Gestion du carnet d'adresses");
 
 $doc->openContainer();
@@ -19,7 +19,7 @@ $doc->openContent();
 $doc->DisplayHead();
 ?>
     <h1> Carnet d'adresses </h1>
-    <h2> Ajout d'un groupe</h2>  	
+    <h2> Ajout d'un groupe</h2>     
     <div class="data_table">
         <form class="form" action="ajouter-groupe-controler.php" method="post">
             <div class="form-group">
@@ -35,9 +35,9 @@ $doc->DisplayHead();
     </div>
 </div>
 
-<?php 
+<?php
 
-$doc->closeContent(true);	
-$doc->closeContainer(true);	
+$doc->closeContent(true);
+$doc->closeContainer(true);
 
-$doc->DisplayFoot();	
+$doc->DisplayFoot();

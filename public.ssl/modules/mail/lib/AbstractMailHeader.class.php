@@ -1,6 +1,7 @@
 <?php
 
-abstract class AbstractMailHeader{
+abstract class AbstractMailHeader
+{
     /** @var string */
     protected $message;
     protected $s2lowFromMail;
@@ -20,40 +21,40 @@ abstract class AbstractMailHeader{
     }
 
 
-    public function setMessage(string $message) : void
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
 
-    public function setAuthorityName(string $name) : void
+    public function setAuthorityName(string $name): void
     {
         $this->authorityName = $name;
     }
 
-    public function setS2LowFromMail(?string $s2lowFromMail) : void
+    public function setS2LowFromMail(?string $s2lowFromMail): void
     {
         $this->s2lowFromMail = $s2lowFromMail;
     }
 
-    public function setFromMail(?string $fromMail) : void
+    public function setFromMail(?string $fromMail): void
     {
-        if (!is_null($fromMail)){
+        if (!is_null($fromMail)) {
             $this->fromMail = $fromMail;
         }
     }
 
-    public function setFromDescription(?string $fromDescription) : void
+    public function setFromDescription(?string $fromDescription): void
     {
-        if(!is_null($fromDescription)){
+        if (!is_null($fromDescription)) {
             $this->fromDescription = $fromDescription;
         }
     }
 
-    protected function getSubject() : string
+    protected function getSubject(): string
     {
-        if(!isset($this->authorityName)){
+        if (!isset($this->authorityName)) {
             return $this->message;
         }
-        return "[".$this->authorityName."] ".$this->message;
+        return "[" . $this->authorityName . "] " . $this->message;
     }
 }

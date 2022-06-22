@@ -2,36 +2,37 @@
 
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
-require_once( SITEROOT . '/class/Mailer.class.php');
+require_once(SITEROOT . '/class/Mailer.class.php');
 
 $me = new User();
 
 $api = Helpers::getVarFromPost("api");
 
 
-function exitOrDisplayError($api,$erreur_msg,$location){
-	if ($api){
-		$jsonOutput = new JSONoutput();
-		$jsonOutput->displayErrorAndExit($erreur_msg);
-	} else {
-		$_SESSION["error"] = $erreur_msg;
-		header("Location: $location" );
-		exit;
-	}
+function exitOrDisplayError($api, $erreur_msg, $location)
+{
+    if ($api) {
+        $jsonOutput = new JSONoutput();
+        $jsonOutput->displayErrorAndExit($erreur_msg);
+    } else {
+        $_SESSION["error"] = $erreur_msg;
+        header("Location: $location");
+        exit;
+    }
 }
 
 if (! $me->authenticate()) {
-	exitOrDisplayError($api,"Échec de l'authentification",WEBSITE);
+    exitOrDisplayError($api, "Échec de l'authentification", WEBSITE);
 }
 
 if (! $me->isAdmin()) {
-	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
+    exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
 }
 
-try{
-    $id = Helpers::getIntFromPost("id",true);
+try {
+    $id = Helpers::getIntFromPost("id", true);
 } catch (Exception $exception) {
-    exitOrDisplayError($api,$exception->getMessage(),WEBSITE_SSL);
+    exitOrDisplayError($api, $exception->getMessage(), WEBSITE_SSL);
 }
 
 $name = Helpers::getVarFromPost("name");
@@ -50,31 +51,31 @@ $department = Helpers::getVarFromPost("department");
 $district = Helpers::getVarFromPost("district");
 $telephone = Helpers::getVarFromPost("telephone");
 $fax = Helpers::getVarFromPost("fax");
-$helios_ftp_dest=Helpers::getVarFromPost("helios_ftp_dest");
+$helios_ftp_dest = Helpers::getVarFromPost("helios_ftp_dest");
 $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
 $descr_mail_securise = Helpers::getVarFromPost("descr_mail_securise");
 $helios_do_not_verify_nom_fic_unicity =
-	Helpers::getVarFromPost("helios_do_not_verify_nom_fic_unicity")==='t'?true:false;
+    Helpers::getVarFromPost("helios_do_not_verify_nom_fic_unicity") === 't' ? true : false;
 //$newmailnotif = Helpers::getVarFromPost("newnotif");
 $newmailnotif = "on";
 
 
 $dia_siret = Helpers::getVarFromPost("dia_siret");
 
-if($newmailnotif == 'on')
-    $newmailnotif='true';
-else
-    $newmailnotif='false';
+if ($newmailnotif == 'on') {
+    $newmailnotif = 'true';
+} else {
+    $newmailnotif = 'false';
+}
 
 
 
-$form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
+$form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id";
 
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
-if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)){
-	exitOrDisplayError($api,"Le code département ou le code arrondissement sont incorrects",$form_location);
-	
+if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)) {
+    exitOrDisplayError($api, "Le code département ou le code arrondissement sont incorrects", $form_location);
 }
 
 
@@ -84,12 +85,12 @@ $mod = false;
 
 
 if (isset($id) && ! empty($id)) {
-  $authority->setId($id);
-  $mod = true;
-  if (! $authority->init()) {
-	exitOrDisplayError($api,"Erreur lors de la modification de la collectivité",$form_location);
-  }
-  $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id"; 
+    $authority->setId($id);
+    $mod = true;
+    if (! $authority->init()) {
+        exitOrDisplayError($api, "Erreur lors de la modification de la collectivité", $form_location);
+    }
+    $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id";
 }
 
 
@@ -98,51 +99,51 @@ if (isset($id) && ! empty($id)) {
 // Mode ajout => interdit aux admins simples
 // et modif de sa collectivité uniquement
 if (! $me->isGroupAdminOrSuper()) {
-  if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
-  	exitOrDisplayError($api,"Accès refusé",$form_location);
-  }
+    if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
+        exitOrDisplayError($api, "Accès refusé", $form_location);
+    }
 } elseif ($me->isGroupAdmin()) {
   // Si mode modif on vérifie que la collectivité appartient bien au groupe dont l'utilisateur est admin
-  if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
-  	exitOrDisplayError($api,"Accès refusé.",$form_location);
-  }
+    if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
+        exitOrDisplayError($api, "Accès refusé.", $form_location);
+    }
 
   // Vérification que le SIREN est bien autorisé pour ce groupe
-  $group = new Group($me->get("authority_group_id"));
+    $group = new Group($me->get("authority_group_id"));
 
-  $sirenList = $group->getAuthorizedSiren();
+    $sirenList = $group->getAuthorizedSiren();
 
-  if (array_search($siren, $sirenList) === false) {
-  	exitOrDisplayError($api,"Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"),$form_location);
-  }
+    if (array_search($siren, $sirenList) === false) {
+        exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"), $form_location);
+    }
 
   // On force le authority_group_id à celui de l'admin du groupe
-  $authorityGroupId = $me->get("authority_group_id");
+    $authorityGroupId = $me->get("authority_group_id");
 }
 
 
 //Vérification de l'email de la collectivité pour le module mail sec
 $mailer = new Mailer();
-if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise," ")) ) {
- 	if ($authority->isNew()) {
- 		$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
- 	} else {
-		$location = WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
- 	}  	
- 	exitOrDisplayError($api,"L'email " . get_hecho($email_mail_securise) . " n'est pas valide.",$location);
+if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise, " "))) {
+    if ($authority->isNew()) {
+        $location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
+    } else {
+        $location = WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
+    }
+    exitOrDisplayError($api, "L'email " . get_hecho($email_mail_securise) . " n'est pas valide.", $location);
 }
 
 
 if ($me->isGroupAdminOrSuper()) {
-  $authority->set("name", $name);
-  $authority->set("siren", $siren);
-  $authority->set("authority_group_id", $authorityGroupId);
-  $authority->set("agreement", $agreement);
-  $authority->set("status", $status);
-  $authority->set("authority_type_id", $authorityTypeId);
-  $authority->set("department", $department);
-  $authority->set("district", $district);
-  $authority->set("helios_ftp_dest",$helios_ftp_dest);
+    $authority->set("name", $name);
+    $authority->set("siren", $siren);
+    $authority->set("authority_group_id", $authorityGroupId);
+    $authority->set("agreement", $agreement);
+    $authority->set("status", $status);
+    $authority->set("authority_type_id", $authorityTypeId);
+    $authority->set("department", $department);
+    $authority->set("district", $district);
+    $authority->set("helios_ftp_dest", $helios_ftp_dest);
 }
 
 $authority->set("email", $email);
@@ -153,48 +154,47 @@ $authority->set("postal_code", $postalCode);
 $authority->set("city", $city);
 $authority->set("telephone", $telephone);
 $authority->set("fax", $fax);
-$authority->set("email_mail_securise",$email_mail_securise);
-$authority->set("descr_mail_securise",$descr_mail_securise);
-$authority->set("new_notification",$newmailnotif);
-$authority->set("dia_siret",$dia_siret);
+$authority->set("email_mail_securise", $email_mail_securise);
+$authority->set("descr_mail_securise", $descr_mail_securise);
+$authority->set("new_notification", $newmailnotif);
+$authority->set("dia_siret", $dia_siret);
 
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
-  $savePerms = true;
+    $savePerms = true;
   // Module autorisés pour la collectivité
-  $modules = Module::getActiveModulesList();
-  $authority->resetModulesPerms();
+    $modules = Module::getActiveModulesList();
+    $authority->resetModulesPerms();
 
-  foreach ($modules as $module) {
-	$authority->setModulePerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]));
-  }
+    foreach ($modules as $module) {
+        $authority->setModulePerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]));
+    }
 }
 
 if (! $authority->save($savePerms)) {
-  $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
-  if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3,false, $me->get("role"), false, $me)) {
-	$msg .= "\nErreur de journalisation.";
-  }
+    $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+        $msg .= "\nErreur de journalisation.";
+    }
 
-  if ($authority->isNew()) {
-	$location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
-  } else {
-	$location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
-  }  
-  
-  exitOrDisplayError($api, nl2br($msg),$location);
+    if ($authority->isNew()) {
+        $location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
+    } else {
+        $location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
+    }
 
+    exitOrDisplayError($api, nl2br($msg), $location);
 }
 
 
 if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
     $fileUploader = new FileUploader();
-    if ($fileUploader->verifOK('convention_actes')){
+    if ($fileUploader->verifOK('convention_actes')) {
         $actesConventions = $objectInstancier->get("ActesConventions");
 
         $finfo = new finfo();
-        if ($finfo->file($_FILES['convention_actes']['tmp_name'],FILEINFO_MIME_TYPE) == 'application/pdf'){
-            $actesConventions->setConvention($authority->getId(),$_FILES['convention_actes']['tmp_name']);
+        if ($finfo->file($_FILES['convention_actes']['tmp_name'], FILEINFO_MIME_TYPE) == 'application/pdf') {
+            $actesConventions->setConvention($authority->getId(), $_FILES['convention_actes']['tmp_name']);
         } else {
             exitOrDisplayError(
                 $api,
@@ -206,20 +206,20 @@ if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
 }
 
 if ($me->isSuper()) {
-	$authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(),$helios_do_not_verify_nom_fic_unicity);
+    $authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(), $helios_do_not_verify_nom_fic_unicity);
 }
 
 $msg = ($mod) ? "Modification" : "Création";
 $msg .= " de la collectivité " . $authority->get("name") . " (id=" . $authority->getId() . "). Résultat ok.";
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
-	$msg .= "\nErreur de journalisation.";
+    $msg .= "\nErreur de journalisation.";
 }
 
-if ($api){
-	$jsonOutput = new JSONoutput();
-	$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$authority->getId()));
+if ($api) {
+    $jsonOutput = new JSONoutput();
+    $jsonOutput->display(array('status' => 'ok','message' => $msg,'id' => $authority->getId()));
 } else {
-	$_SESSION["error"] = nl2br($msg);
-	header("Location: ". WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId() );
-	exit;
+    $_SESSION["error"] = nl2br($msg);
+    header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId());
+    exit;
 }

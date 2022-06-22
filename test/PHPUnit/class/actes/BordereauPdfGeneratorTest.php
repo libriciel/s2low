@@ -13,7 +13,7 @@ class BordereauPdfGeneratorTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
-            __DIR__."/fixtures/abc-TACT--000000000--20170803-16.tar.gz"
+            __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz"
         );
 
         $this->getObjectInstancier()->set(
@@ -23,9 +23,8 @@ class BordereauPdfGeneratorTest extends S2lowTestCase
         $bordereauPdfGenerator = $this->getObjectInstancier()->get(BordereauPdfGenerator::class);
 
         $this->assertFileDoesNotExist($filepath);
-        $bordereauPdfGenerator->generate($transaction_id,$filepath,false,"F");
+        $bordereauPdfGenerator->generate($transaction_id, $filepath, false, "F");
         $this->assertFileExists($filepath);
         $tmpFolder->delete($tmp_folder);
     }
-
 }

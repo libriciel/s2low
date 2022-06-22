@@ -1,8 +1,9 @@
 <?php
-require_once(dirname(__FILE__)."/../../../../init/init-www-actes.php");
 
-if (! $droit->isSuperAdmin($userInfo)){
-    $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
+require_once(dirname(__FILE__) . "/../../../../init/init-www-actes.php");
+
+if (! $droit->isSuperAdmin($userInfo)) {
+    $objectInstancier->get('S2lowRedirect')->redirect("/", "Accès refusé");
 }
 
 
@@ -14,7 +15,7 @@ $doc->setTitle("Utilitaires module ACTES");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -41,5 +42,3 @@ $doc->closeContainer();
 
 $doc->buildFooter();
 $doc->display();
-
-

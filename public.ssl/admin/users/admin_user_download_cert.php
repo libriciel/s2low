@@ -1,6 +1,5 @@
 <?php
 
-
 // Configuration
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
@@ -9,23 +8,23 @@ require_once(SITEROOT . '/class/Helpers.class.php');
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if (! $me->isAdmin()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
 if (! $id) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 
@@ -34,12 +33,12 @@ $him->init();
 $certificate = $him->get("certificate");
 
 if (! $certificate) {
-  $_SESSION["error"] = "Pas de certificate";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Pas de certificate";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
-$output_file = $him->get('id')."_certificate.pem";
+$output_file = $him->get('id') . "_certificate.pem";
 
 header('Pragma: public');
 header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -49,6 +48,6 @@ header('Content-Transfer-Encoding: none');
 header('Content-Type: application/octetstream; name="' . $output_file . '"'); //This should work for IE & Opera
 header('Content-Type: application/octet-stream; name="' . $output_file . '"'); //This should work for the rest
 header('Content-Disposition: attachment; filename="' . $output_file . '"');
-header("Content-length: ".mb_strlen($certificate));
-  
+header("Content-length: " . mb_strlen($certificate));
+
 echo $certificate;

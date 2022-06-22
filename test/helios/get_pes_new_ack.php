@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 $filename = $argv[1];
 
 
-$content =<<<PES
+$content = <<<PES
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <n:PES_ACQUIT xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour">
 <Enveloppe>

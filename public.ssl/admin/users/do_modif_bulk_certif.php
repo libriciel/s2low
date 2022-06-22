@@ -1,5 +1,4 @@
 <?php
 
-require_once(__DIR__."/../../../init/init.php");
-$frontController->go("AdminUser","doBulkModifCertif");
-
+require_once(__DIR__ . "/../../../init/init.php");
+$frontController->go("AdminUser", "doBulkModifCertif");

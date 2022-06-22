@@ -9,22 +9,25 @@ class DataObjectSaveSQLRequest
     /** @var array  */
     private $params;
 
-    public function __construct(bool $valid, string $request, array $params ){
+    public function __construct(bool $valid, string $request, array $params)
+    {
         $this->valid = $valid;
         $this->request = $request;
         $this->params = $params;
     }
 
-    public function isValid(){
+    public function isValid()
+    {
         return $this->valid;
     }
 
-    public function getRequest(){
+    public function getRequest()
+    {
         return $this->request;
     }
 
-    public function getParams(){
+    public function getParams()
+    {
         return $this->params;
     }
-
 }

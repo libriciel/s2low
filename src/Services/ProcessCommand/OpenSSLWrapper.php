@@ -2,7 +2,8 @@
 
 namespace S2low\Services\ProcessCommand;
 
-class OpenSSLWrapper{
+class OpenSSLWrapper
+{
     /**
      * @var string
      */
@@ -12,7 +13,7 @@ class OpenSSLWrapper{
      */
     private $commandLauncher;
 
-    public function __construct(string $authorized_ca_path,CommandLauncher $commandLauncher)
+    public function __construct(string $authorized_ca_path, CommandLauncher $commandLauncher)
     {
         $this->commandLauncher = $commandLauncher;
         $this->authorized_ca_path = $authorized_ca_path;
@@ -21,11 +22,11 @@ class OpenSSLWrapper{
     /**
      * @throws \RecoverableException
      */
-    public function verify(string $certificate_path, array $nonBlockingErrors, string $timestamp =null) : void
+    public function verify(string $certificate_path, array $nonBlockingErrors, string $timestamp = null): void
     {
         $verifyCmd = ["openssl","verify","-CApath", $this->authorized_ca_path, $certificate_path];
 
-        if($timestamp){
+        if ($timestamp) {
             $verifyCmd = ["openssl","verify","-CApath",$this->authorized_ca_path,"-attime",$timestamp, $certificate_path];
         }
 
@@ -38,7 +39,7 @@ class OpenSSLWrapper{
     /**
      * @throws \RecoverableException
      */
-    public function extractCertificateSN(string $path) : string
+    public function extractCertificateSN(string $path): string
     {
         return $this->commandLauncher->launch(
             ["openssl","x509","-noout","-serial","-in",$path],
@@ -46,7 +47,7 @@ class OpenSSLWrapper{
         );
     }
 
-    public function extractHash(string $path) : string
+    public function extractHash(string $path): string
     {
         return $this->commandLauncher->launch(
             [OPENSSL_PATH,"x509","-noout","-issuer_hash","-in", "$path"],
@@ -54,7 +55,7 @@ class OpenSSLWrapper{
         );
     }
 
-    public function checkSNIsInCRL(string $crlPath, string $serialNumber) : void
+    public function checkSNIsInCRL(string $crlPath, string $serialNumber): void
     {
         $this->commandLauncher->launch(
             ["openssl","crl","-in",$crlPath,"-text","-noout"],

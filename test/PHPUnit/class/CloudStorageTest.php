@@ -1,238 +1,258 @@
 <?php
 
 use Monolog\Logger;
-use \Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\Finder;
 
-class CloudStorageTest extends S2lowTestCase {
+class CloudStorageTest extends S2lowTestCase
+{
+    /**
+     * @param $file_path_on_disk
+     * @param string $file_path_on_cloud
+     * @param Finder|null $finder
+     * @return \PHPUnit\Framework\MockObject\MockObject
+     */
+    private function getICloudStorable($file_path_on_disk, $file_path_on_cloud = "test42", Finder $finder = null)
+    {
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $iCloudStorable->method('getAllObjectIdToStore')->willReturn([42]);
+        $iCloudStorable->method('getFilePathOnDisk')->willReturn($file_path_on_disk);
+        $iCloudStorable->method('getFilePathOnCloud')->willReturn($file_path_on_cloud);
+        if ($finder) {
+            $iCloudStorable->method("getFinder")->willReturn($finder);
+        }
 
-	/**
-	 * @param $file_path_on_disk
-	 * @param string $file_path_on_cloud
-	 * @param Finder|null $finder
-	 * @return \PHPUnit\Framework\MockObject\MockObject
-	 */
-	private function getICloudStorable($file_path_on_disk,$file_path_on_cloud = "test42",Finder $finder = null){
-		$iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$iCloudStorable->method('getAllObjectIdToStore')->willReturn([42]);
-		$iCloudStorable->method('getFilePathOnDisk')->willReturn($file_path_on_disk);
-		$iCloudStorable->method('getFilePathOnCloud')->willReturn($file_path_on_cloud);
-		if ($finder){
-			$iCloudStorable->method("getFinder")->willReturn($finder);
-		}
+        return $iCloudStorable;
+    }
 
-		return $iCloudStorable;
-	}
+    /**
+     * @param $iCloudStorable
+     * @return CloudStorage
+     */
+    private function getCloudStorage($iCloudStorable)
+    {
+        $cloudStorageFactory = $this->getObjectInstancier()->get(CloudStorageFactory::class);
+        return $cloudStorageFactory->getInstance($iCloudStorable);
+    }
 
-	/**
-	 * @param $iCloudStorable
-	 * @return CloudStorage
-	 */
-	private function getCloudStorage($iCloudStorable){
-		$cloudStorageFactory = $this->getObjectInstancier()->get(CloudStorageFactory::class);
-		return $cloudStorageFactory->getInstance($iCloudStorable);
-	}
+    private function setOpenStackSwiftWrapper($fileExistsOnCloud = true, $sendFile = true)
+    {
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $openStackSwiftWrapper->method('sendFile')->willReturn($sendFile);
+        $openStackSwiftWrapper->method('fileExistsOnCloud')->willReturn($fileExistsOnCloud);
+        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
+        return $openStackSwiftWrapper;
+    }
 
-	private function setOpenStackSwiftWrapper($fileExistsOnCloud = true,$sendFile = true){
-		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$openStackSwiftWrapper->method('sendFile')->willReturn($sendFile);
-		$openStackSwiftWrapper->method('fileExistsOnCloud')->willReturn($fileExistsOnCloud);
-		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
-		return $openStackSwiftWrapper;
-	}
+    /**
+     * @return string
+     * @throws Exception
+     */
+    private function createFile()
+    {
+        $tmpFolder = new TmpFolder();
+        $tmp_folder = $tmpFolder->create();
 
-	/**
-	 * @return string
-	 * @throws Exception
-	 */
-	private function createFile(){
-		$tmpFolder = new TmpFolder();
-		$tmp_folder = $tmpFolder->create();
+        file_put_contents($tmp_folder . "/foo.txt", 'bar');
+        return $tmp_folder . "/foo.txt";
+    }
 
-		file_put_contents($tmp_folder."/foo.txt",'bar');
-		return $tmp_folder."/foo.txt";
-	}
+    /**
+     * @throws Exception
+     */
+    public function testAllObjectIdToStore()
+    {
+        $this->assertEquals(
+            [42],
+            $this->getCloudStorage($this->getICloudStorable(""))->getAllObjectIdToStore()
+        );
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testAllObjectIdToStore(){
-		$this->assertEquals(
-			[42],
-			$this->getCloudStorage($this->getICloudStorable(""))->getAllObjectIdToStore()
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testStoreObject()
+    {
+        $this->setOpenStackSwiftWrapper();
+        $file_to_send = $this->createFile();
+        $this->assertTrue(
+            $this->getCloudStorage($this->getICloudStorable($file_to_send))
+                ->storeObject(42)
+        );
+        $this->assertLogMessage("Stored object [OK] : 42", 3);
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testStoreObject(){
-		$this->setOpenStackSwiftWrapper();
-		$file_to_send = $this->createFile();
-		$this->assertTrue(
-			$this->getCloudStorage($this->getICloudStorable($file_to_send))
-				->storeObject(42)
-		);
-		$this->assertLogMessage("Stored object [OK] : 42",3);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testStoreObjetWhenFileOnDiskNotAvailable()
+    {
+        $iCloudStorable = $this->getICloudStorable("");
+        $this->assertFalse(
+            $this->getCloudStorage($iCloudStorable)->storeObject(42)
+        );
+        $this->assertLogMessage(
+            "Unable to store object #42 in cloud : file_path_on_disk not found !"
+        );
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testStoreObjetWhenFileOnDiskNotAvailable(){
-		$iCloudStorable = $this->getICloudStorable("");
-		$this->assertFalse(
-			$this->getCloudStorage($iCloudStorable)->storeObject(42)
-		);
-		$this->assertLogMessage(
-			"Unable to store object #42 in cloud : file_path_on_disk not found !"
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testStoreObjetWhenFileOnDiskNotFound()
+    {
+        $iCloudStorable = $this->getICloudStorable("this_file_did_not_exists");
+        $this->assertFalse(
+            $this->getCloudStorage($iCloudStorable)->storeObject(42)
+        );
+        $this->assertLogMessage(
+            "Unable to store object #42 in cloud : file this_file_did_not_exists did not exist !"
+        );
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testStoreObjetWhenFileOnDiskNotFound(){
-		$iCloudStorable = $this->getICloudStorable("this_file_did_not_exists");
-		$this->assertFalse(
-			$this->getCloudStorage($iCloudStorable)->storeObject(42)
-		);
-		$this->assertLogMessage(
-			"Unable to store object #42 in cloud : file this_file_did_not_exists did not exist !"
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testStoreObjetWhenFileOnCloudNotFound()
+    {
+        $file_to_send = $this->createFile();
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "");
+        $this->assertFalse(
+            $this->getCloudStorage($iCloudStorable)->storeObject(42)
+        );
+        $this->assertLogMessage(
+            "Unable to store object #42 in cloud : file_path_on_cloud not found ?!?"
+        );
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testStoreObjetWhenFileOnCloudNotFound(){
-		$file_to_send = $this->createFile();
-		$iCloudStorable = $this->getICloudStorable($file_to_send,"");
-		$this->assertFalse(
-			$this->getCloudStorage($iCloudStorable)->storeObject(42)
-		);
-		$this->assertLogMessage(
-			"Unable to store object #42 in cloud : file_path_on_cloud not found ?!?"
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testDeleteIfIsInCloud()
+    {
+        $this->setOpenStackSwiftWrapper();
+        $file_to_send = $this->createFile();
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send);
+        $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
+        $this->assertFileDoesNotExist($file_to_send);
+        $this->assertLogMessage("Deleting object #42 : $file_to_send");
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteIfIsInCloud(){
-		$this->setOpenStackSwiftWrapper();
-		$file_to_send = $this->createFile();
-		$iCloudStorable = $this->getICloudStorable($file_to_send,$file_to_send);
-		$this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
-		$this->assertFileDoesNotExist($file_to_send);
-		$this->assertLogMessage("Deleting object #42 : $file_to_send");
-	}
+    /**
+     * @throws Exception
+     */
+    public function testDeleteIfIsInCloudWhenNotOnCloud()
+    {
+        $this->setOpenStackSwiftWrapper(false);
+        $file_to_send = $this->createFile();
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "foo");
+        $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
+        $this->assertFileExists($file_to_send);
+        $this->assertLogMessage("Object #42 not existing on cloud : not deleted (foo not found)");
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteIfIsInCloudWhenNotOnCloud(){
-		$this->setOpenStackSwiftWrapper(false);
-		$file_to_send = $this->createFile();
-		$iCloudStorable = $this->getICloudStorable($file_to_send,"foo");
-		$this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
-		$this->assertFileExists($file_to_send);
-		$this->assertLogMessage("Object #42 not existing on cloud : not deleted (foo not found)");
-	}
+    /**
+     * @throws Exception
+     */
+    public function testDeleteIfIsInCloudWhenAnExceptionIsThrowing()
+    {
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $openStackSwiftWrapper->method('sendFile')->willReturn(true);
+        $openStackSwiftWrapper->method('fileExistsOnCloud')->willThrowException(
+            new Exception("test unitaire")
+        );
+        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
+        $file_to_send = $this->createFile();
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "foo");
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteIfIsInCloudWhenAnExceptionIsThrowing(){
-		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$openStackSwiftWrapper->method('sendFile')->willReturn(true);
-		$openStackSwiftWrapper->method('fileExistsOnCloud')->willThrowException(
-			new Exception("test unitaire")
-		);
-		$this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
-		$file_to_send = $this->createFile();
-		$iCloudStorable = $this->getICloudStorable($file_to_send,"foo");
+        $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
+        $this->assertFileExists($file_to_send);
+        $this->assertLogMessage(
+            "Problème lors de la supression de l'objet #42 $file_to_send : test unitaire"
+        );
+    }
 
-		$this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
-		$this->assertFileExists($file_to_send);
-		$this->assertLogMessage(
-			"Problème lors de la supression de l'objet #42 $file_to_send : test unitaire"
-		);
-	}
+    private function assertNbJourDerniereModif()
+    {
+        $this->assertLogMessage(
+            "Nombre de jour depuis la derniere modif : 0"
+        );
+    }
 
-	private function assertNbJourDerniereModif(){
-		$this->assertLogMessage(
-			"Nombre de jour depuis la derniere modif : 0"
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testDeleteFileOnDisk()
+    {
+        $this->setOpenStackSwiftWrapper();
+        $file_to_send = $this->createFile();
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteFileOnDisk(){
-		$this->setOpenStackSwiftWrapper();
-		$file_to_send = $this->createFile();
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
 
-		$finder = new Finder();
-		$finder->in(dirname($file_to_send));
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send, $finder);
 
-		$iCloudStorable = $this->getICloudStorable($file_to_send,$file_to_send,$finder);
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk();
+        $this->assertFileExists($file_to_send);
+        $this->assertNbJourDerniereModif();
+        $this->assertLogMessage(
+            "File foo.txt too young to die : not deleted",
+            1
+        );
+    }
 
-		$this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk();
-		$this->assertFileExists($file_to_send);
-		$this->assertNbJourDerniereModif();
-		$this->assertLogMessage(
-			"File foo.txt too young to die : not deleted",1
-		);
-	}
+    /**
+     * @throws Exception
+     */
+    public function testDeleteFileOnDiskWhenTooOld()
+    {
+        $this->setOpenStackSwiftWrapper();
+        $file_to_send = $this->createFile();
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteFileOnDiskWhenTooOld(){
-		$this->setOpenStackSwiftWrapper();
-		$file_to_send = $this->createFile();
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
 
-		$finder = new Finder();
-		$finder->in(dirname($file_to_send));
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send, $finder);
 
-		$iCloudStorable = $this->getICloudStorable($file_to_send,$file_to_send,$finder);
-
-		$this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-		$this->assertNbJourDerniereModif();
-		$this->assertLogMessage(
-			"Deleting file : $file_to_send",2
-		);
-	}
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $this->assertNbJourDerniereModif();
+        $this->assertLogMessage(
+            "Deleting file : $file_to_send",
+            2
+        );
+    }
 
 
-	/**
-	 * @throws Exception
-	 */
-	public function testDeleteFileOnDiskWhenNotExistingOnCloud(){
-		$this->setOpenStackSwiftWrapper(false);
-		$file_to_send = $this->createFile();
+    /**
+     * @throws Exception
+     */
+    public function testDeleteFileOnDiskWhenNotExistingOnCloud()
+    {
+        $this->setOpenStackSwiftWrapper(false);
+        $file_to_send = $this->createFile();
 
-		$finder = new Finder();
-		$finder->in(dirname($file_to_send));
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
 
-		$iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "", $finder);
 
-		$this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-		$this->assertFileExists($file_to_send);
-		$this->assertNbJourDerniereModif();
-		$this->assertLogMessage(
-			"File $file_to_send not existing on cloud : not deleted",2
-		);
-	}
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $this->assertFileExists($file_to_send);
+        $this->assertNbJourDerniereModif();
+        $this->assertLogMessage(
+            "File $file_to_send not existing on cloud : not deleted",
+            2
+        );
+    }
 
-	public function testErrorWhileCreatingFile(){
-        $this->setOpenStackSwiftWrapper(false,false);
+    public function testErrorWhileCreatingFile()
+    {
+        $this->setOpenStackSwiftWrapper(false, false);
         $file_to_send = $this->createFile();
         $this->assertFalse(
             $this->getCloudStorage($this->getICloudStorable($file_to_send))
@@ -242,50 +262,52 @@ class CloudStorageTest extends S2lowTestCase {
 
     public function testWhenObjectMarkedAsNotAvailableAndNotInCloud()
     {
-        $this->setOpenStackSwiftWrapper(false,false);
+        $this->setOpenStackSwiftWrapper(false, false);
         $file_to_send = $this->createFile();
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
-        $iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "", $finder);
         $iCloudStorable->method("isAvailable")->willReturn(false);
         $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
         $iCloudStorable->expects($this->once())->method("setAvailable")->with($this->equalTo(true));
-        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
-        $this->assertLogMessage("42 set to available",3);
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0, true);
+        $this->assertLogMessage("42 set to available", 3);
     }
 
     /** @dataProvider availabilityAndCloudProvider */
-    public function testAvailabilityAndInCloud(bool $isAvailable, bool $isTransactionInCloud, int $nbOfSetAvailableCalls, int $nbOfsetInCloudCalls, array $logs){
-        $this->setOpenStackSwiftWrapper(false,false);
+    public function testAvailabilityAndInCloud(bool $isAvailable, bool $isTransactionInCloud, int $nbOfSetAvailableCalls, int $nbOfsetInCloudCalls, array $logs)
+    {
+        $this->setOpenStackSwiftWrapper(false, false);
         $file_to_send = $this->createFile();
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
-        $iCloudStorable = $this->getICloudStorable($file_to_send,"",$finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "", $finder);
         $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
         $iCloudStorable->method("isAvailable")->willReturn($isAvailable);
         $iCloudStorable->method("isTransactionInCloud")->willReturn($isTransactionInCloud);
         $iCloudStorable->expects($this->exactly($nbOfSetAvailableCalls))->method("setAvailable");
         $iCloudStorable->expects($this->exactly($nbOfsetInCloudCalls))->method("setInCloud");
-        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0,true);
-        foreach ($logs as $key=>$line){
-            $this->assertMatchesRegularExpressionLogMessage($line,$key);
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0, true);
+        foreach ($logs as $key => $line) {
+            $this->assertMatchesRegularExpressionLogMessage($line, $key);
         }
     }
 
-    public function availabilityAndCloudProvider() : array
+    public function availabilityAndCloudProvider(): array
     {
         // Si on arrive à la partie testée, le fichier a été trouvé sur le disque mais pas dans le cloud.
         // S'il est marqué comme non available en BDD, il faut corriger : il est au moins sur le disque.
         // S'il est marqué comme sur le cloud en BDD, il faut corriger : il n'y est pas.
         return [
-            "withBothAvailableAndTransactionInCloud"=>[true, true, 0, 1, ["3"=>"#passé à is_in_cloud = false#"]],
-            "withNotAvailableAndTransactionInCloud"=>[false, true, 1, 1,  ["3"=>"#set to available#","4"=>"#passé à is_in_cloud = false#"]],
-            "withOnlyAvailable"=>[true, false, 0, 0,  []],
-            "withNotAvailableAndNotInCloud"=>[false,false, 1, 0,["3"=>"#set to available#"]]
+            "withBothAvailableAndTransactionInCloud" => [true, true, 0, 1, ["3" => "#passé à is_in_cloud = false#"]],
+            "withNotAvailableAndTransactionInCloud" => [false, true, 1, 1,  ["3" => "#set to available#","4" => "#passé à is_in_cloud = false#"]],
+            "withOnlyAvailable" => [true, false, 0, 0,  []],
+            "withNotAvailableAndNotInCloud" => [false,false, 1, 0,["3" => "#set to available#"]]
         ];
     }
 
-    public function testFileNotIncloud(){
+    public function testFileNotIncloud()
+    {
         $filePathOnDisk = "/test/test/test.tar.gz";
 
         $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
@@ -295,17 +317,17 @@ class CloudStorageTest extends S2lowTestCase {
         $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
             ->willReturnArgument(0);
 
-		$openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $openStackSwiftWrapper->expects($this->exactly(2))->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(false);
 
-		$logger = $this->getMockBuilder( Logger::class)
+        $logger = $this->getMockBuilder(Logger::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -315,7 +337,8 @@ class CloudStorageTest extends S2lowTestCase {
         );
     }
 
-    public function testFileInCloudWithSamePath(){
+    public function testFileInCloudWithSamePath()
+    {
         $filePathOnDisk = "/test/test/test.tar.gz";
 
         $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
@@ -331,11 +354,11 @@ class CloudStorageTest extends S2lowTestCase {
 
         $openStackSwiftWrapper->expects($this->once())->method('fileExistsOnCloud')->with(null, $filePathOnDisk)->willReturn(true);
 
-        $logger = $this->getMockBuilder( Logger::class)
+        $logger = $this->getMockBuilder(Logger::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -345,7 +368,8 @@ class CloudStorageTest extends S2lowTestCase {
         );
     }
 
-    public function testFileInCloudWithDoubleSlash(){
+    public function testFileInCloudWithDoubleSlash()
+    {
         $filePathOnDisk = "/test/import/test.tar.gz";
 
         $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
@@ -364,13 +388,13 @@ class CloudStorageTest extends S2lowTestCase {
             ->withConsecutive(
                 [$this->equalTo(null), $this->equalTo($filePathOnDisk)],
                 [$this->equalTo(null), $this->equalTo("/test/import//test.tar.gz")]
-            )->willReturnOnConsecutiveCalls(false,true);
+            )->willReturnOnConsecutiveCalls(false, true);
 
-        $logger = $this->getMockBuilder( Logger::class)
+        $logger = $this->getMockBuilder(Logger::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper,$logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 

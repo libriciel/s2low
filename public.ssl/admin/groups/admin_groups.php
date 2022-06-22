@@ -1,18 +1,19 @@
 <?php
+
 require_once("../../../config/config.php");
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Ehec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Ehec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $fname = Helpers::getVarFromGet("name");
@@ -22,12 +23,12 @@ $group = new Group();
 
 $filter = array();
 if (isset($fname) && mb_strlen($fname) > 0) {
-  $filter[] .= "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
+    $filter[] .= "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
 $where = "";
 if (count($filter) > 0) {
-  $where = "WHERE " . implode(" AND ", $filter);
+    $where = "WHERE " . implode(" AND ", $filter);
 }
 
 $statusList = $me->get("statusTypes");
@@ -35,9 +36,9 @@ $statusList = $me->get("statusTypes");
 
 $groups = $group->getGroupsList($where);
 
-if ($api){
-	$jsonOutput->display($groups);
-	exit;
+if ($api) {
+    $jsonOutput->display($groups);
+    exit;
 }
 
 $doc = new HTMLLayout();
@@ -63,7 +64,7 @@ $html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom co
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
 if (mb_strlen($fname ?? '') > 0) {
-  $html .= " value=\"" . get_hecho($fname) . "\"";
+    $html .= " value=\"" . get_hecho($fname) . "\"";
 }
 
 $html .= " /></div>\n";
@@ -77,30 +78,30 @@ $html .= "<h2>Liste des groupes de collectivités</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 
 if (is_array($groups)) {
-  $html .= "<table class=\"data-table table table-striped \">";
-  $html .= "<thead>\n";
-  $html .= "<tr>\n";
-  $html .= " <th id=\"name\">Nom</th>\n";
-  $html .= " <th id=\"status\">État</th>\n";
-  $html .= " <th id=\"action\">Actions</th>\n";
-  $html .= "</tr>\n";
-  $html .= "</thead>\n";
-  $html .= "<tbody>\n";
+    $html .= "<table class=\"data-table table table-striped \">";
+    $html .= "<thead>\n";
+    $html .= "<tr>\n";
+    $html .= " <th id=\"name\">Nom</th>\n";
+    $html .= " <th id=\"status\">État</th>\n";
+    $html .= " <th id=\"action\">Actions</th>\n";
+    $html .= "</tr>\n";
+    $html .= "</thead>\n";
+    $html .= "<tbody>\n";
 
-  $i = 0;
+    $i = 0;
 
-  foreach ($groups as $ent) {
-	$html .= "<tr>\n";
-	$html .= " <td headers=\"name\">" . get_hecho($ent["name"]) . "</td>\n";
-	$html .= " <td headers=\"status\">" . $statusList[$ent["status"]] . "</td>\n";
-	$html .= " <td headers=\"actions\"><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . get_url("/custom/images/erreur.png") . "\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
-	$html .= "</tr>\n";
-  }
+    foreach ($groups as $ent) {
+        $html .= "<tr>\n";
+        $html .= " <td headers=\"name\">" . get_hecho($ent["name"]) . "</td>\n";
+        $html .= " <td headers=\"status\">" . $statusList[$ent["status"]] . "</td>\n";
+        $html .= " <td headers=\"actions\"><a href=\"admin_group_edit.php?id=" . $ent["id"] . "\" class=\"icon\"><img src=\"" . get_url("/custom/images/erreur.png") . "\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+        $html .= "</tr>\n";
+    }
 
-  $html .= "</tbody>\n";
-  $html .= "</table>\n";
+    $html .= "</tbody>\n";
+    $html .= "</table>\n";
 } else {
-  $html .= "<p>Pas de groupe correspondant aux critères de filtrage</p>";
+    $html .= "<p>Pas de groupe correspondant aux critères de filtrage</p>";
 }
 
 $html .= "</div>\n";

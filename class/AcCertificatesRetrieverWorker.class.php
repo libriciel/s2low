@@ -2,7 +2,6 @@
 
 class AcCertificatesRetrieverWorker implements IWorker
 {
-
     const QUEUE_NAME = 'certificates-retriever';
     const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
 
@@ -39,15 +38,15 @@ class AcCertificatesRetrieverWorker implements IWorker
      */
     public function work($data)
     {
-        $output=null;
-        $retval=null;
+        $output = null;
+        $retval = null;
         $this->logger->info(self::COMMAND);
         $execResult = exec(self::COMMAND, $output, $retval);
         $logger = "info";
-        if(!$execResult || $retval!=0){
+        if (!$execResult || $retval != 0) {
             $logger = "error";
         }
-        foreach ($output as $outputLine){
+        foreach ($output as $outputLine) {
             $this->logger->$logger($outputLine);
         }
     }
@@ -57,7 +56,7 @@ class AcCertificatesRetrieverWorker implements IWorker
      */
     public function getMutexName($data)
     {
-        return sprintf("%s-%s",self::QUEUE_NAME,$data);
+        return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
     /**

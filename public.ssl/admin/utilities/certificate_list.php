@@ -1,36 +1,36 @@
 <?php
 
-require_once( __DIR__ . "/../../../init/init-www.php");
+require_once(__DIR__ . "/../../../init/init-www.php");
 
 
 $me = new User();
 
 if (! $me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
-	header("Location: " . WEBSITE);
-	exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if (! $me->isSuper()) {
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL);
-	exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 
 $recuperateur = new Recuperateur($_GET);
 $type = $recuperateur->get('type');
 
-if (! in_array($type, array('extended','rgs'))){
-	$type = 'extended';
+if (! in_array($type, array('extended','rgs'))) {
+    $type = 'extended';
 }
 
 
 
-if ($type == 'rgs'){
-	$certificate_list = glob(RGS_VALIDCA_PATH."/*.pem");
+if ($type == 'rgs') {
+    $certificate_list = glob(RGS_VALIDCA_PATH . "/*.pem");
 } else {
-	$certificate_list = glob(EXTENDED_VALIDCA_PATH."/*.pem");
+    $certificate_list = glob(EXTENDED_VALIDCA_PATH . "/*.pem");
 }
 
 $menuHTML = new MenuHTML();
@@ -40,31 +40,31 @@ $doc->setTitle("Liste des certificats - S²low");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
 ob_start();
 ?>
-	<h1>Autorités de certification</h1>
+    <h1>Autorités de certification</h1>
 
 
 
-	<div id="actions_area">
-		<h2>Actions</h2>
-		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=extended">Voir les certificats étendus</a>
-		<a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=rgs">Voir les certificats RGS</a>
+    <div id="actions_area">
+        <h2>Actions</h2>
+        <a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=extended">Voir les certificats étendus</a>
+        <a class="btn btn-primary" href="/admin/utilities/certificate_list.php?type=rgs">Voir les certificats RGS</a>
         <a class="btn btn-primary" href="/admin/utilities/test-certificate.php">Tester un certificat</a>
-	</div>
+    </div>
 
 
-<h2>Liste des certificats <?php echo $type=='rgs'?"RGS":"étendus" ?></h2>
+<h2>Liste des certificats <?php echo $type == 'rgs' ? "RGS" : "étendus" ?></h2>
 
 <table class="data-table table table-striped ">
-<?php foreach($certificate_list as $i => $cert) : ?>
-	<tr>
-		<td><a href="/admin/utilities/certificate.php?type=<?php echo $type ?>&name=<?php echo basename($cert) ?>"><?php echo basename($cert) ?></a></td>
-	</tr>
+<?php foreach ($certificate_list as $i => $cert) : ?>
+    <tr>
+        <td><a href="/admin/utilities/certificate.php?type=<?php echo $type ?>&name=<?php echo basename($cert) ?>"><?php echo basename($cert) ?></a></td>
+    </tr>
 <?php endforeach ?>
 </table>
 

@@ -5,9 +5,9 @@
  * on a ici un moyen d'ajouter une colonne sans aucun verrou
  */
 
-require_once __DIR__."/../../init/init.php";
+require_once __DIR__ . "/../../init/init.php";
 
-if($argc < 5){
+if ($argc < 5) {
     echo "{$argv[0]} - create a not null column with a defaut value in the database\n";
     echo "Usage : {$argv[0]} table_name column_name column_type default_value\n";
     exit(1);
@@ -39,7 +39,7 @@ do {
     $row_count = $pdoStatement->rowCount() . "\n";
     $total += intval($row_count);
     echo "$total\n";
-} while(intval($row_count) != 0);
+} while (intval($row_count) != 0);
 
 echo "4) Add not null constraint\n";
 $sqlQuery->query("ALTER TABLE $table_name ALTER COLUMN $column_name SET NOT NULL");
@@ -47,4 +47,3 @@ $sqlQuery->query("ALTER TABLE $table_name ALTER COLUMN $column_name SET NOT NULL
 echo "OK\n";
 
 exit(0);
-

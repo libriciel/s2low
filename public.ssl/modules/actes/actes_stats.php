@@ -1,5 +1,5 @@
 <?php
-require_once( __DIR__ . "/../../../init/init-www-actes.php");
+require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $actesStatistiques = new ActesStatistiques($sqlQuery);
 
@@ -8,7 +8,7 @@ $title = "Statistiques de transmission des enveloppes ";
 if ($droit->isSuperAdmin($userInfo)) {
     $title .= " pour l'ensemble des collectivités";
 } elseif ($droit->isGroupAdmin($userInfo)) {
-    $title .="pour le groupe " . $groupeInfo["name"];
+    $title .= "pour le groupe " . $groupeInfo["name"];
     $actesStatistiques->setGroup($userInfo['authority_group_id']);
 } elseif ($droit->isAuthorityAdmin($userInfo)) {
     $title .= " pour la collectivité " . $authorityInfo["name"];
@@ -33,7 +33,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Statistiques - ACTES - S²low");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -43,9 +43,11 @@ ob_start();
         <h2><?php echo $title ?></h2>
             <dl>
                 <?php
-                foreach (array(date("Y-m-01") => "Depuis le début du mois",
-            date("Y-01-01") =>
-            "Depuis le début de l'année", "1970-01-01" => "En totalité") as $date => $titre) :
+                foreach (
+                    array(date("Y-m-01") => "Depuis le début du mois",
+                    date("Y-01-01") =>
+                    "Depuis le début de l'année", "1970-01-01" => "En totalité") as $date => $titre
+                ) :
                     ?>
                     <dt><?php echo $titre ?>&nbsp;:</dt>
                     <dd>
@@ -55,18 +57,18 @@ ob_start();
                             <li>Volume des enveloppes postées sur le tdt&nbsp;: <?php echo $statInfo[$date]['volume'] ?> octets</li>
                             <li>Volume des enveloppes transmises au ministère&nbsp;: <?php echo $statInfo[$date]['volume_poste'] ?> octets</li>
                         </ul>
-<?php endforeach; ?>
+                <?php endforeach; ?>
                 </dd>
             </dl>
     <?php
     $html = ob_get_contents();
     ob_end_clean();
     $doc->addBody($html);
-    
+
     $doc->closeContent();
     $doc->closeContainer();
-    
+
     $doc->buildFooter();
     $doc->display();
 
-    
+

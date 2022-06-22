@@ -13,7 +13,8 @@ class PdfValidator
     /** @var \S2lowLogger  */
     private $logger;
 
-    public function __construct(S2lowLogger $logger){
+    public function __construct(S2lowLogger $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -21,22 +22,21 @@ class PdfValidator
      * @throws \RecoverableException
      * @throws \UnexpectedValueException
      */
-    public function check(string $filepath) : bool
+    public function check(string $filepath): bool
     {
         $process = new Process(["pdfinfo",$filepath]);
-        try{
+        try {
             $process->run();
-        } catch (Exception $exception){
-            $message = "PdfValidator->check : ".$exception->getMessage();
+        } catch (Exception $exception) {
+            $message = "PdfValidator->check : " . $exception->getMessage();
             $this->logger->error($message);
             throw new RecoverableException();
         }
         if ($process->getExitCode() !== 0) {
-            $message = "Fichier pdf corrompu : ".basename($filepath);
+            $message = "Fichier pdf corrompu : " . basename($filepath);
             $this->logger->error($message);
             throw new UnexpectedValueException($message);
         }
         return true;
     }
-
 }

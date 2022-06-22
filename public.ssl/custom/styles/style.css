@@ -1,30 +1,30 @@
 body{
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	margin: 0px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    margin: 0px;
     padding: 0px 0px 10px 0px;
-	overflow: auto;
+    overflow: auto;
     background-color: white;
     text-align: left;
 }
 
 a {
-	color: black;
-	text-decoration: none;
+    color: black;
+    text-decoration: none;
 }
 
 a:hover {
-	color: black;
-	text-decoration: underline;
+    color: black;
+    text-decoration: underline;
 }
 
-a img { 
+a img {
     border: none;
 }
 
 input,select,textarea {
-	border : 1px solid #aaaaaa;
-	background-color : #FFFFFF;
+    border : 1px solid #aaaaaa;
+    background-color : #FFFFFF;
     padding: 1px;
 }
 
@@ -32,7 +32,7 @@ input.checkbox {
         border : 0px;
 }
 
-a.bouton { 
+a.bouton {
     margin: 15px;
     padding: 3px;
     font-size: 11px;
@@ -62,8 +62,8 @@ Style du bandeau d'en-tete
 #header {
     margin: 0px;
     padding: 0px;
-	text-align: left;
-	background-color: transparent;
+    text-align: left;
+    background-color: transparent;
 }
 
 #home_header1 {
@@ -81,7 +81,7 @@ Style du bandeau d'en-tete
 #home_header2 {
     text-align: left;
     padding: 0px;
-    margin: -3px 0px 30px 0px;	
+    margin: -3px 0px 30px 0px;
 }
 
 #home_header2 img {
@@ -99,30 +99,30 @@ Style du bandeau d'en-tete
 Style du menu de gauche
 */
 #menu-area {
-	float: left;
+    float: left;
     margin: 15px 0px 0px 0px;
     padding-bottom: 5px;
-	background-color: transparent;
-	width: 190px;
+    background-color: transparent;
+    width: 190px;
     text-align: center;
 }
 
-#menu { 
-	background-color: transparent;
-	padding: 5px 0px 5px 5px;
+#menu {
+    background-color: transparent;
+    padding: 5px 0px 5px 5px;
     margin: 5px 0px 5px 5px;
     font-size: 11px;
     border-right: 2px solid #aaaaaa;
     text-align: left;
 }
 
-#menu ul { 
+#menu ul {
     margin: 0px;
 }
 
-#menu a:hover { 
+#menu a:hover {
     color: #ff6600;
-	background-color: #d6deeb;
+    background-color: #d6deeb;
     text-decoration: none;
 }
 
@@ -134,7 +134,7 @@ Style du menu de gauche
     border-bottom: 1px solid #aaaaaa;
 }
 
-#menu .text-menu { 
+#menu .text-menu {
     padding-left: 20px;
 }
 
@@ -148,7 +148,7 @@ Style du menu de gauche
     padding: 2px 2px 2px 5px;
 }
 
-#menu .menu-list-title { 
+#menu .menu-list-title {
     font-size: 12px;
     color: #555555;
     list-style-type: none;
@@ -173,7 +173,7 @@ Style du menu de gauche
     text-align: left;
 }
 
-#errorbox #close_button_area { 
+#errorbox #close_button_area {
     display: inline;
     margin-right: 5px;
     margin-bottom: 10px;
@@ -187,23 +187,23 @@ Style du menu de gauche
 Style du contenu principal
 */
 #content {
-	margin-left: 200px;
+    margin-left: 200px;
     width: 770px;
-	overflow: visible;
-	padding: 10px;
+    overflow: visible;
+    padding: 10px;
     text-align: left;
     font-size: 11px;
 }
 
-#content a { 
+#content a {
     border-bottom: 1px dashed black;
 }
 
-#content a.bouton { 
+#content a.bouton {
     border-bottom: 1px solid black;
 }
 
-#content a:hover { 
+#content a:hover {
     text-decoration: none;
     border-bottom: 1px solid black;
 }
@@ -232,14 +232,14 @@ Style du contenu principal
 }
 
 #content h2.home {
-	color: #555555;
+    color: #555555;
     font-size: 14px;
-	font-weight: bold;
+    font-weight: bold;
     border: none;
     margin: 0px;
 }
 
-#content #mention { 
+#content #mention {
     margin: 0px;
     padding: 0px;
 }
@@ -258,28 +258,28 @@ Style du contenu principal
 }
 
 
-#content #mention_partenaires { 
+#content #mention_partenaires {
     padding: 0px;
 }
 
-#content #mention_partenaires img { 
+#content #mention_partenaires img {
     margin-left: 20px;
 }
 
 #content h1 {
-	color: #ff6600;
-	font-weight: bold;
+    color: #ff6600;
+    font-weight: bold;
     font-size: 18px;
     text-align: left;
 }
 
 #content h2 {
-	color: #555555;
-	border-bottom: 1px ridge #555555;
-	padding: 3px;
-	font-weight: bold;
+    color: #555555;
+    border-bottom: 1px ridge #555555;
+    padding: 3px;
+    font-weight: bold;
     font-size: 14px;
-	margin-bottom: 10px;
+    margin-bottom: 10px;
     text-align: left;
 }
 
@@ -288,12 +288,12 @@ Style du contenu principal
 }
 
 #content h3 {
-	color: #555555;
-	border-left: 1px ridge #555555;
-	padding: 3px;
-	font-weight:bold;
+    color: #555555;
+    border-left: 1px ridge #555555;
+    padding: 3px;
+    font-weight:bold;
     font-size: 12px;
-	margin-left: 30px;
+    margin-left: 30px;
     text-align: left;
 }
 
@@ -308,14 +308,14 @@ Style du contenu principal
     font-size: 11px;
 }
 
-#content table * .long_field { 
+#content table * .long_field {
     text-align: left;
 }
 
 #content th.data {
     background-color: #bbc7e1;
     color: black;
-	font-size: 11px;
+    font-size: 11px;
     text-align: center
 }
 
@@ -335,18 +335,18 @@ Style du contenu principal
 }
 
 #content td.td-input{
-	padding-left: 10px;
+    padding-left: 10px;
     text-align: left;
 }
 
 #content td.td-register {
     font-weight: bold;
     font-size: 11px;
-	color: black;
-	background-color: #bbc7e1;
-	text-align: right;
-	padding: 3px;
-	width: 50%;
+    color: black;
+    background-color: #bbc7e1;
+    text-align: right;
+    padding: 3px;
+    width: 50%;
 }
 
 #content dd.inactive,dt.inactive {
@@ -354,7 +354,7 @@ Style du contenu principal
   font-style: italic;
 }
 
-#content .list_form { 
+#content .list_form {
   margin: 5px 5px 15px 20%;
 }
 
@@ -380,11 +380,11 @@ Style du contenu principal
   margin-bottom: 4px;
 }
 
-#content .toggle_title { 
+#content .toggle_title {
   cursor: pointer;
 }
 
-#content #form_progress { 
+#content #form_progress {
   margin-top: 10px;
   text-align: center;
 }
@@ -401,16 +401,16 @@ Style du contenu principal
   margin-right: auto;
 }
 
-#content #filtering_area td { 
+#content #filtering_area td {
   padding: 0px;
   margin: 0px;
 }
 
-#content #filtering_area td.title { 
+#content #filtering_area td.title {
   text-align: right;
 }
 
-#content #filtering_area td.value { 
+#content #filtering_area td.value {
   text-align: left;
 }
 
@@ -431,22 +431,22 @@ Style du contenu principal
 
 #content td.td_mailAddress {
     font-size: 11px;
-	background-color: #bbc7e1;
-	text-align: left;
+    background-color: #bbc7e1;
+    text-align: left;
 
 }
 #content td.td_mailDescription {
-	padding-left: 2px;
-	text-align: left;
+    padding-left: 2px;
+    text-align: left;
 }
 
 /* Liste d'attribut */
-#attribute_list { 
+#attribute_list {
   text-align: left;
   font-size: 11px;
 }
 
-#attribute_list dt { 
+#attribute_list dt {
   font-weight: bold;
 }
 
@@ -456,30 +456,30 @@ Style du contenu principal
   margin-left: 5px;
 }
 
-#attribute_list .tree_level_2 { 
+#attribute_list .tree_level_2 {
   font-size: 12px;
   font-weight: bold;
   margin-left: 15px;
 }
 
-#attribute_list .tree_level_3 { 
+#attribute_list .tree_level_3 {
   font-size: 11px;
   margin-left: 25px;
 }
 
-#attribute_list .tree_level_4 { 
+#attribute_list .tree_level_4 {
   font-size: 11px;
   margin-left: 35px;
 }
 
-#attribute_list .tree_level_5 { 
+#attribute_list .tree_level_5 {
   font-size: 11px;
   margin-left: 45px;
 }
 
 /* Style zone d'informations */
 
-#info_area { 
+#info_area {
   border: 0px;
   border-top: 1px solid black;
   float: left;
@@ -493,19 +493,19 @@ Style du contenu principal
   color: #555555;
 }
 
-#info_area .button_area { 
+#info_area .button_area {
   margin: 2px 0px 0px 0px;
   padding: 0px;
   text-align: center;
-} 
+}
 
 #info_area h3 {
-	color: #555555;
-	border-left: 1px ridge #555555;
-	padding: 3px;
-	font-weight:bold;
+    color: #555555;
+    border-left: 1px ridge #555555;
+    padding: 3px;
+    font-weight:bold;
     font-size: 12px;
-	margin-left: 0px;
+    margin-left: 0px;
     text-align: left;
 }
 
@@ -545,21 +545,21 @@ Style du contenu principal
 Style du pied de page
 */
 #footer{
-	color: black;
-	clear: both;
-	text-align: center;
+    color: black;
+    clear: both;
+    text-align: center;
     width: 950px;
     margin: 25px 35px 15px 35px;
     border-top: 1px solid #aaaaaa;
 }
 #footer a {
-	color: black;
+    color: black;
     border-bottom: 1px dashed #aaaaaa;
-	text-decoration: none;
+    text-decoration: none;
 }
 #footer a:hover {
-	color: black;
-	text-decoration: none;
+    color: black;
+    text-decoration: none;
     border-bottom: 1px solid #aaaaaa;
 }
 
@@ -578,7 +578,7 @@ Style du pied de page
   padding: 0px;
 }
 
-dl.envelopes_list dt { 
+dl.envelopes_list dt {
   font-size: 11px;
   margin-bottom: 5px;
   margin-top: 10px;
@@ -625,7 +625,7 @@ table.file_list {
   margin-right: auto;
 }
 
-table.file_list td, table.file_list th { 
+table.file_list td, table.file_list th {
   border-top: 1px solid #aaaaaa;
   border-left: 1px solid #aaaaaa;
   border-bottom: 1px solid black;
@@ -651,7 +651,7 @@ table.workflow_list td, table.workflow_list th {
   text-align: center;
 }
 
-.action { 
+.action {
   margin-left: 60px;
   margin-bottom: 15px;
 }

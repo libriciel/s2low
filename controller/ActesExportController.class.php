@@ -1,13 +1,14 @@
 <?php
 
-class ActesExportController extends Controller {
-
+class ActesExportController extends Controller
+{
     const MAX_EXPORT_INTERVAL_IN_DAY = 400;
 
-    public function indexAction(){
+    public function indexAction()
+    {
         $this->verifAdmin();
         $this->{"title"} = "Actes - Export des informations";
-        $this->setViewParameter('me',$this->me);
+        $this->setViewParameter('me', $this->me);
         $authoritySQL = $this->getObjectInstancier()->get("AuthoritySQL");
 
         $date_debut = $this->getRecuperateurGet()->get('date_debut');
@@ -16,23 +17,24 @@ class ActesExportController extends Controller {
 
         if ($this->me->isSuper()) {
             $this->{"authority_id_list"} = $authoritySQL->getAll();
-        } elseif ($this->me->isGroupAdmin()){
+        } elseif ($this->me->isGroupAdmin()) {
             $this->{"authority_id_list"} = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
         } else {
             $this->authority_id = $this->me->get('authority_id');
         }
 
-        $this->date_debut = $date_debut?:date("Y-m-d",strtotime("-1 month"));
-        $this->date_fin =  $date_fin?:date("Y-m-d");
+        $this->date_debut = $date_debut ?: date("Y-m-d", strtotime("-1 month"));
+        $this->date_fin =  $date_fin ?: date("Y-m-d");
     }
 
-    public function handlerAction(){
+    public function handlerAction()
+    {
         $this->verifAdmin();
         $date_debut = $this->getRecuperateurGet()->get('date_debut');
         $date_fin = $this->getRecuperateurGet()->get('date_fin');
         $authority_id = $this->getRecuperateurGet()->get('authority_id');
 
-        if (strtotime($date_fin) - strtotime($date_debut) > self::MAX_EXPORT_INTERVAL_IN_DAY * 86440){
+        if (strtotime($date_fin) - strtotime($date_debut) > self::MAX_EXPORT_INTERVAL_IN_DAY * 86440) {
             $this->redirect(
                 "/modules/actes/actes_export.php?date_debut=$date_debut&date_fin=$date_fin&authority_id=$authority_id",
                 sprintf(
@@ -43,22 +45,22 @@ class ActesExportController extends Controller {
         }
         $authority_group_id = false;
 
-        if ($this->me->isGroupAdmin()){
+        if ($this->me->isGroupAdmin()) {
             if ($authority_id) {
                 $this->verifAdmin($authority_id);
             } else {
                 $authority_group_id = $this->me->get('authority_group_id');
             }
         }
-        if ($this->me->isAuthorityAdmin()){
+        if ($this->me->isAuthorityAdmin()) {
             $authority_id = $this->me->get('authority_id');
         }
 
         $result = array();
 
         $actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
-        $envelope_list = $actesEnvelopeSQL->listEnveloppe($date_debut,$date_fin,$authority_id,$authority_group_id);
-        foreach($envelope_list as $envelope_info){
+        $envelope_list = $actesEnvelopeSQL->listEnveloppe($date_debut, $date_fin, $authority_id, $authority_group_id);
+        foreach ($envelope_list as $envelope_info) {
             $line = array(
                 $envelope_info['id'],
                 $envelope_info['submission_date'],
@@ -76,7 +78,7 @@ class ActesExportController extends Controller {
         }
 
         $csvOutput = $this->getObjectInstancier()->get("CSVOutput");
-        $csvOutput->sendAttachment("actes.csv",$result);
+        $csvOutput->sendAttachment("actes.csv", $result);
 
         $this->controller_exit();
     }

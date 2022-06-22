@@ -10,7 +10,7 @@ $private_key_authentification = "user1-key.pem";
 
 $certicat_identification_pem = file_get_contents("Eric_Pommateau_RGS_2_etoiles.pem");
 $certicat_identification_der = pem2der($certicat_identification_pem);
-$certicat_identification= base64_encode($certicat_identification_der);
+$certicat_identification = base64_encode($certicat_identification_der);
 
 
 $ch = curl_init();
@@ -19,7 +19,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($ch, CURLOPT_SSLCERT, $certificat_authentification);
 curl_setopt($ch, CURLOPT_SSLKEY, $private_key_authentification);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_VERBOSE, 1);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array("$custom_header_name: $certicat_identification"));
@@ -27,19 +27,20 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array("$custom_header_name: $certicat_ident
 
 $data = curl_exec($ch);
 
-if (! $data ){
-	echo curl_error($ch);
+if (! $data) {
+    echo curl_error($ch);
 }
 curl_close($ch);
 
 echo $data;
 
 
-function pem2der($pem_data) {
-	$begin = "CERTIFICATE-----";
-	$end   = "-----END";
-	$pem_data = mb_substr($pem_data, mb_strpos($pem_data, $begin)+mb_strlen($begin));
-	$pem_data = mb_substr($pem_data, 0, mb_strpos($pem_data, $end));
-	$der = base64_decode($pem_data);
-	return $der;
+function pem2der($pem_data)
+{
+    $begin = "CERTIFICATE-----";
+    $end   = "-----END";
+    $pem_data = mb_substr($pem_data, mb_strpos($pem_data, $begin) + mb_strlen($begin));
+    $pem_data = mb_substr($pem_data, 0, mb_strpos($pem_data, $end));
+    $der = base64_decode($pem_data);
+    return $der;
 }

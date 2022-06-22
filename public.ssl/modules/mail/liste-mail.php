@@ -1,6 +1,7 @@
 <?php
-if (empty($_GET['term'])){
-	return; 
+
+if (empty($_GET['term'])) {
+    return;
 }
 
 require_once("include/init.php");
@@ -8,12 +9,12 @@ $debut = urldecode($_GET['term']);
 
 $bd = DatabasePool::getInstance();
 
-$annuaire = new Annuaire($bd,$me->get('authority_id'));
+$annuaire = new Annuaire($bd, $me->get('authority_id'));
 
 $result = array();
 
-foreach($annuaire->getListeMailAndGroupe($debut) as $line){
-	$result[] = $line;
+foreach ($annuaire->getListeMailAndGroupe($debut) as $line) {
+    $result[] = $line;
 }
 
 echo json_encode($result);

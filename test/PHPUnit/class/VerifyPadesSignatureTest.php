@@ -20,22 +20,23 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     private $pemCertificateMock;
 
     private function getSignature(
-        bool $valid=true,
-        string $signingCert="certificat",
-        string $signatureDate="1502268600000"
-    ){
+        bool $valid = true,
+        string $signingCert = "certificat",
+        string $signatureDate = "1502268600000"
+    ) {
         $signature = $this->getMockBuilder(stdClass::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $signature->valid = $valid;
         $signature->signingCert = $signingCert;
-        $signature->signatureDate =$signatureDate;
+        $signature->signatureDate = $signatureDate;
 
         return $signature;
     }
 
-    protected function setUp() :void {
+    protected function setUp(): void
+    {
         $this->verifyPemCertificateMock = $this->getMockBuilder(VerifyPemCertificate::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -48,8 +49,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->pemCertificateMock = $this->getMockBuilder(PemCertificate::class)
             ->disableOriginalConstructor()
-            ->getMock();    
-            
+            ->getMock();
+
         $pemCertificateFactoryMock = $this->getMockBuilder(PemCertificateFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -66,11 +67,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 
         $this->verifyPadesSignature = new VerifyPadesSignature(
-            __DIR__."/../lib/fixtures/validca/",
+            __DIR__ . "/../lib/fixtures/validca/",
             $verifyPemCertificateFactory,
             new PemCertificateFactory()
         );
-
     }
 
     //Integration tests
@@ -78,9 +78,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testValidateSigned(){
+    public function testValidateSigned()
+    {
         $signature = json_decode(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json")
+            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-signe.json")
         )->signatures[0];
 
         $this->expectNotToPerformAssertions();
@@ -90,9 +91,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testNotValidateSigned(){
+    public function testNotValidateSigned()
+    {
         $signature = json_decode(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-alter.json")
+            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-alter.json")
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
@@ -102,9 +104,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testValidateSignedNoCertificatCheking(){
+    public function testValidateSignedNoCertificatCheking()
+    {
         $signature = json_decode(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-signe.json")
+            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-signe.json")
         )->signatures[0];
 
         $this->expectNotToPerformAssertions();
@@ -114,9 +117,10 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testNotValidateAlteredSignature(){
+    public function testNotValidateAlteredSignature()
+    {
         $signature = json_decode(
-            file_get_contents(__DIR__."/fixtures/signature-pades/return-courrier-alter.json")
+            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-alter.json")
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
@@ -130,34 +134,36 @@ class VerifyPadesSignatureTest extends S2lowTestCase
      * @dataProvider missingNecessaryFieldsProvider
      */
 
-    public function testMissingNecessaryFields($signature, $exceptionMessage){
+    public function testMissingNecessaryFields($signature, $exceptionMessage)
+    {
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($exceptionMessage);
         $this->verifyPadesSignatureWithMock->validateSignature($signature);
     }
 
-    public function missingNecessaryFieldsProvider(){
+    public function missingNecessaryFieldsProvider()
+    {
         return [
             [
-                $this->getSignature(false,"",""),
+                $this->getSignature(false, "", ""),
                 "Au moins une signature n'est pas valide"
             ],
             [
-                $this->getSignature(true,"",""),
+                $this->getSignature(true, "", ""),
                 "Impossible de récupérer le certificat de signature"
             ],
             [
-                $this->getSignature(true,"certificat",""),
+                $this->getSignature(true, "certificat", ""),
                 "Impossible de determiner la date de la signature"
             ]
         ];
-
     }
 
     // checkCertificateWasValidAtSignatureTime
 
-    public function testCertificateWasValidOnSignature(){
+    public function testCertificateWasValidOnSignature()
+    {
         $this->expectNotToPerformAssertions();
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
@@ -165,7 +171,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testCertificateWasInvalidOnSignature(){
+    public function testCertificateWasInvalidOnSignature()
+    {
         $date = new DateTime();
         $date->setTimestamp(1502268600);
         $this->pemCertificateMock
@@ -179,7 +186,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testCertificateDateInvalidGoesThrough(){
+    public function testCertificateDateInvalidGoesThrough()
+    {
         $this->pemCertificateMock
             ->method('checkCertificateIsValidAtDate')
             ->willThrowException(new Exception("CkSugdE3ETSh9xhQ"));
@@ -192,12 +200,15 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     //  - appelé par validateSignature
     //  - pas appelé par validateSignatureWithoutCertificateChecking
 
-    public function testcheckCertificateWithoutCheckingCertificateChainIsCalled(){
+    public function testcheckCertificateWithoutCheckingCertificateChainIsCalled()
+    {
         $this->verifyPemCertificateMock
             ->expects($this->once())
             ->method("checkCertificateWithOpenSSL")
-            ->with($this->stringContains(
-                "/s2low_valid_certifcate_"),
+            ->with(
+                $this->stringContains(
+                    "/s2low_valid_certifcate_"
+                ),
                 $this->equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
             );
 
@@ -205,7 +216,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     }
 
 
-    public function testCheckCertificateWithOpenSSLIsNotCalled(){
+    public function testCheckCertificateWithOpenSSLIsNotCalled()
+    {
 
         $this->verifyPemCertificateMock
             ->expects($this->never())
@@ -216,7 +228,8 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
     // Test que l'exception lancée par checkCertificateWithoutCheckingCertificateChain passe le cas échéant
 
-    public function testcheckCertificateWithoutCheckingCertificateChainExceptionGoesThrough(){
+    public function testcheckCertificateWithoutCheckingCertificateChainExceptionGoesThrough()
+    {
         $this->verifyPemCertificateMock
             ->method("checkCertificateWithOpenSSL")
             ->willThrowException(new Exception("Exception de test LahgnjCM"));

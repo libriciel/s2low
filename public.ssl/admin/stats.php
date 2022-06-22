@@ -1,11 +1,11 @@
 <?php
 
-require_once( __DIR__ . "/../../init/init-www-helios.php");
+require_once(__DIR__ . "/../../init/init-www-helios.php");
 
-if ($userInfo['role'] != 'SADM'){
-	$_SESSION["error"] = "Super admin only !";
-	header("Location: " . WEBSITE);
-	exit();
+if ($userInfo['role'] != 'SADM') {
+    $_SESSION["error"] = "Super admin only !";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 //nombre de transaction/mois
@@ -31,7 +31,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 
 
@@ -39,43 +39,43 @@ $doc->openContent();
 
 ob_start();
 ?>
-	<div id="content">
-		<h1>Statistiques (super admin)</h1>
+    <div id="content">
+        <h1>Statistiques (super admin)</h1>
 
-		<div class="alert alert-warning">
-			Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
-			parcimonie pour les besoins du service.
-		</div>
+        <div class="alert alert-warning">
+            Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
+            parcimonie pour les besoins du service.
+        </div>
 
-		<h2>Actes</h2>
-		<table  class="data-table table table-striped ">
-			<tr>
-				<th>Mois</th>
-				<th>Nombre de transactions</th>
-			</tr>
-			<?php foreach($nb_transactions_actes_list as $nb_transaction_info): ?>
-				<tr>
-					<td><?php echo $fancyDate->getMois($nb_transaction_info['month'])?></td>
-					<td><?php echo $nb_transaction_info['nb']?></td>
-				</tr>
-			<?php endforeach ?>
-		</table>
+        <h2>Actes</h2>
+        <table  class="data-table table table-striped ">
+            <tr>
+                <th>Mois</th>
+                <th>Nombre de transactions</th>
+            </tr>
+            <?php foreach ($nb_transactions_actes_list as $nb_transaction_info) : ?>
+                <tr>
+                    <td><?php echo $fancyDate->getMois($nb_transaction_info['month'])?></td>
+                    <td><?php echo $nb_transaction_info['nb']?></td>
+                </tr>
+            <?php endforeach ?>
+        </table>
 
-		<h2>Hélios</h2>
-		<table  class="data-table table table-striped ">
-			<tr>
-				<th>Mois</th>
-				<th>Nombre de transactions</th>
-			</tr>
-			<?php foreach($nb_transactions_helios_list as $nb_transaction_info): ?>
-				<tr>
-					<td><?php echo $fancyDate->getMois($nb_transaction_info['month'])?></td>
-					<td><?php echo $nb_transaction_info['nb']?></td>
-				</tr>
-			<?php endforeach ?>
-		</table>
+        <h2>Hélios</h2>
+        <table  class="data-table table table-striped ">
+            <tr>
+                <th>Mois</th>
+                <th>Nombre de transactions</th>
+            </tr>
+            <?php foreach ($nb_transactions_helios_list as $nb_transaction_info) : ?>
+                <tr>
+                    <td><?php echo $fancyDate->getMois($nb_transaction_info['month'])?></td>
+                    <td><?php echo $nb_transaction_info['nb']?></td>
+                </tr>
+            <?php endforeach ?>
+        </table>
 
-	</div>
+    </div>
 
 
 <?php

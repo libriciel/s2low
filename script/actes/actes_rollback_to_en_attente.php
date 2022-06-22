@@ -1,7 +1,6 @@
 <?php
 
-
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
@@ -16,9 +15,9 @@ ORDER BY date
 
 $all_transaction = $sqlQuery->query($sql);
 
-foreach($all_transaction as $info){
-	echo $info['transaction_id'];
-	$actesTransactionSQL->updateStatus($info['transaction_id'],2,"Transaction repassee manuellement en attente de transmission");
-	echo " [OK]\n";
-	exit;
+foreach ($all_transaction as $info) {
+    echo $info['transaction_id'];
+    $actesTransactionSQL->updateStatus($info['transaction_id'], 2, "Transaction repassee manuellement en attente de transmission");
+    echo " [OK]\n";
+    exit;
 }

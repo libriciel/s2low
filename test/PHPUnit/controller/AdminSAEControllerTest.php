@@ -1,10 +1,11 @@
 <?php
 
-class AdminSAEControllerTest extends S2lowTestCase {
-
-	public function testEditAction(){
-		$this->setSuperAdminAuthentication();
-		$adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
+class AdminSAEControllerTest extends S2lowTestCase
+{
+    public function testEditAction()
+    {
+        $this->setSuperAdminAuthentication();
+        $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
 
 
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
@@ -14,25 +15,25 @@ class AdminSAEControllerTest extends S2lowTestCase {
         $pastellProperties->password = "password";
         $pastellProperties->id_e = 42;
 
-        $authoritySQL->updateSAE(1,$pastellProperties);
+        $authoritySQL->updateSAE(1, $pastellProperties);
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id', 1);
 
-		$adminServiceController->_actionBefore("AdminSAE","edit");
-		$adminServiceController->editAction();  //BUG ??
-		$this->expectOutputRegex("#Identifiant de l'entité#");
-		$adminServiceController->_actionAfter();
-	}
-
-	/**
-	 * @throws RedirectException
-	 */
-	public function testTestAction(){
-        $this->setSuperAdminAuthentication();
-        $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id',1);
-        $this->setExpectedException(Exception::class,"Redirect to");
-        $adminServiceController->testAction();
+        $adminServiceController->_actionBefore("AdminSAE", "edit");
+        $adminServiceController->editAction();  //BUG ??
+        $this->expectOutputRegex("#Identifiant de l'entité#");
+        $adminServiceController->_actionAfter();
     }
 
+    /**
+     * @throws RedirectException
+     */
+    public function testTestAction()
+    {
+        $this->setSuperAdminAuthentication();
+        $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('id', 1);
+        $this->setExpectedException(Exception::class, "Redirect to");
+        $adminServiceController->testAction();
+    }
 }

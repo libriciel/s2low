@@ -3,8 +3,8 @@
 use GuzzleHttp\Exception\ConnectException;
 use OpenStack\Common\Error\BadResponseError;
 
-
-class OpenStackStateManager{
+class OpenStackStateManager
+{
     public const MAX_CONSECUTIVE_ATTEMPTS = 5;
 
 
@@ -20,30 +20,34 @@ class OpenStackStateManager{
         $this->logger = $logger;
     }
 
-    public function isResetNeeded(){
-        return $this->unsuccessfullConsecutiveAttempts>0;
+    public function isResetNeeded()
+    {
+        return $this->unsuccessfullConsecutiveAttempts > 0;
     }
 
-    public function declareSuccess(){
+    public function declareSuccess()
+    {
         $this->unsuccessfullConsecutiveAttempts = 0;
         $this->messages = [];
     }
 
-    public function declareException(Exception $e){
+    public function declareException(Exception $e)
+    {
         $this->unsuccessfullConsecutiveAttempts ++;
         $message = $this->processException($e);
         $this->logger->error(
             "[Openstack][$this->unsuccessfullConsecutiveAttempts] $message"
         );
-        if($this->unsuccessfullConsecutiveAttempts > self::MAX_CONSECUTIVE_ATTEMPTS){
+        if ($this->unsuccessfullConsecutiveAttempts > self::MAX_CONSECUTIVE_ATTEMPTS) {
             throw new PausingQueueException("[Openstack] Nombre de tentatives dépassé");
         }
     }
 
-    private function shorten($message){
-        $lgMax= 1000;
-        if(mb_strlen($message) > $lgMax){
-            $message = mb_substr($message, 0, $lgMax)."...";
+    private function shorten($message)
+    {
+        $lgMax = 1000;
+        if (mb_strlen($message) > $lgMax) {
+            $message = mb_substr($message, 0, $lgMax) . "...";
         }
         return $message;
     }

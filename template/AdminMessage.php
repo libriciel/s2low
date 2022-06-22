@@ -5,8 +5,8 @@
 <h1>Message d'urgence</h1>
 
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="/admin/index.php">Retour
-		</a><br>
+    <a class="btn btn-default" href="/admin/index.php">Retour
+        </a><br>
 </p>
 
 <h2>Actions</h2>
@@ -27,25 +27,25 @@
         </tr>
         </thead>
         <tbody>
-		<?php foreach($message_list as $message):?>
+        <?php foreach ($message_list as $message) :?>
             <tr>
-                <td><a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>"><?php hecho($message->titre?:$message->message_id) ?></a></td>
+                <td><a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>"><?php hecho($message->titre ?: $message->message_id) ?></a></td>
 
                 <td>
                     <?php $message->displayEtatLabel() ?>
                 </td>
                 <td>
-                    <?php if($message->is_publie) : ?>
+                    <?php if ($message->is_publie) : ?>
                         <?php echo $fancyDate->getDateHeureFrancais($message->date_publication) ?>
                     <?php endif;?>
                 </td>
                 <td>
-					<?php if($message->is_publie) : ?>
-						<?php echo $fancyDate->getDateHeureFrancais($message->date_retrait) ?>
-					<?php endif;?>
+                    <?php if ($message->is_publie) : ?>
+                        <?php echo $fancyDate->getDateHeureFrancais($message->date_retrait) ?>
+                    <?php endif;?>
                 </td>
             </tr>
-		<?php endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>

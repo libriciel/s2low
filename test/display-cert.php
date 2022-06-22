@@ -1,6 +1,5 @@
 <?php
 
-
 print_r($_SERVER);
 
 //    SSLOptions +StdEnvVars +ExportCertData

@@ -1,7 +1,4 @@
 <?php
 
-require_once( __DIR__ . "/../../../init/init.php");
-$frontController->go("ActesTransactionsValidate","validate");
-
-
-
+require_once(__DIR__ . "/../../../init/init.php");
+$frontController->go("ActesTransactionsValidate", "validate");

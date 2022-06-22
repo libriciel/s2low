@@ -1,6 +1,5 @@
 <?php
 
-
 namespace S2low\Command;
 
 use S2low\Services\LogTimestampTokenGarbage;
@@ -23,8 +22,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
     public function __construct(
         LogTimestampTokenGarbage $logTimestampTokenGarbage,
         S2lowLogger $s2lowLogger
-    )
-    {
+    ) {
         $this->logTimestampTokenGarbage = $logTimestampTokenGarbage;
         $this->s2lowLogger = $s2lowLogger;
         parent::__construct();
@@ -77,15 +75,15 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
 
     private function askIfNeeded(InputInterface $input, SymfonyStyle $io): bool
     {
-        if ($input->getOption('dry-run')){
+        if ($input->getOption('dry-run')) {
             $io->writeln("Dry run mode : halt");
             $io->success('Pass');
             return false;
         }
-        if (! $input->getOption('force')){
+        if (! $input->getOption('force')) {
             $question = new ConfirmationQuestion("Are you sure ?", false);
             $response = $io->askQuestion($question);
-            if (! $response){
+            if (! $response) {
                 $this->s2lowLogger->notice("Operation canceled");
                 $io->success('Cancel');
                 return false;
@@ -108,7 +106,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
             );
         }
 
-        if ($input->getOption('directory')){
+        if ($input->getOption('directory')) {
             $this->logTimestampTokenGarbage->setOldTimestampTokenDirectory(
                 $input->getOption('directory')
             );
@@ -117,7 +115,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $info = $this->logTimestampTokenGarbage->getInfo($limit);
 
         $io->writeln("Found {$info['nb_result']} line(s)");
-        if ($info['nb_result'] === 0){
+        if ($info['nb_result'] === 0) {
             $io->success('Pass');
             return 0;
         }
@@ -125,7 +123,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         $io->writeln("Line with min date : {$info['min_date']['date']} (id={$info['min_date']['id']})");
         $io->writeln("Line with max date : {$info['max_date']['date']} (id={$info['max_date']['id']})");
 
-        if (! $this->askIfNeeded($input,$io)){
+        if (! $this->askIfNeeded($input, $io)) {
             return 0;
         }
 

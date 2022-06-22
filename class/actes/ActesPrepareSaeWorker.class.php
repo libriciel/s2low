@@ -1,56 +1,62 @@
 <?php
 
-class ActesPrepareSaeWorker implements IWorker {
+class ActesPrepareSaeWorker implements IWorker
+{
+    const QUEUE_NAME = 'actes-prepare-sae';
 
-	const QUEUE_NAME = 'actes-prepare-sae';
+    const NB_DAYS_ARCHIVE_AFTER = 62;
 
-	const NB_DAYS_ARCHIVE_AFTER = 62;
+    private $actesTransactionsSQL;
+    private $s2lowLogger;
+    private $actesPrepareEnvoiSAE;
 
-	private $actesTransactionsSQL;
-	private $s2lowLogger;
-	private $actesPrepareEnvoiSAE;
+    public function __construct(
+        ActesTransactionsSQL $actesTransactionsSQL,
+        S2lowLogger $s2lowLogger,
+        ActesPrepareEnvoiSAE $actesPrepareEnvoiSAE
+    ) {
+        $this->actesTransactionsSQL = $actesTransactionsSQL;
+        $this->s2lowLogger = $s2lowLogger;
+        $this->actesPrepareEnvoiSAE = $actesPrepareEnvoiSAE;
+    }
 
-	public function __construct(
-		ActesTransactionsSQL $actesTransactionsSQL,
-		S2lowLogger $s2lowLogger,
-		ActesPrepareEnvoiSAE $actesPrepareEnvoiSAE
-	) {
-		$this->actesTransactionsSQL = $actesTransactionsSQL;
-		$this->s2lowLogger = $s2lowLogger;
-		$this->actesPrepareEnvoiSAE = $actesPrepareEnvoiSAE;
-	}
+    public function getQueueName()
+    {
+        return self::QUEUE_NAME;
+    }
 
-	public function getQueueName(){
-		return self::QUEUE_NAME;
-	}
+    public function getData($id)
+    {
+        return $id;
+    }
 
-	public function getData($id){
-		return $id;
-	}
+    public function getAllId()
+    {
+        return $this->actesTransactionsSQL->getTransactionToArchive(
+            self::NB_DAYS_ARCHIVE_AFTER
+        );
+    }
 
-	public function getAllId(){
-		return $this->actesTransactionsSQL->getTransactionToArchive(
-			self::NB_DAYS_ARCHIVE_AFTER
-		);
-	}
+    /**
+     * @param $transaction_id
+     * @return void
+     */
+    public function work($transaction_id)
+    {
+        $transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
+        $this->actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA(
+            $transaction_info['user_id'],
+            $transaction_id
+        );
+    }
 
-	/**
-	 * @param $transaction_id
-	 * @return void
-	 */
-	public function work($transaction_id){
-		$transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
-		$this->actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA(
-			$transaction_info['user_id'],
-			$transaction_id
-		);
-	}
+    public function getMutexName($data)
+    {
+        return sprintf("actes-transaction-%s", $data);
+    }
 
-	public function getMutexName($data) {
-		return sprintf("actes-transaction-%s",$data);
-	}
-
-	public function isDataValid($data) {
-		return true;
-	}
+    public function isDataValid($data)
+    {
+        return true;
+    }
 }
