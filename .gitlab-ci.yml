@@ -10,6 +10,7 @@ include:
 
 stages:
     - build
+    - static-analysis
     - test
     - quality
     - deploy
@@ -32,6 +33,14 @@ build:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --target s2low_dev --pull -t ${CONTAINER_IMAGE} .
     - docker push ${CONTAINER_IMAGE}
+
+lint:
+  stage: static-analysis
+  image : "$CONTAINER_IMAGE"
+  variables:
+    DONT_RETRIEVE_VALIDCA: "true"
+  script:
+    - vendor/bin/phpcs .
 
 unit_test:
     stage: test
