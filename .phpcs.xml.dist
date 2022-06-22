@@ -24,6 +24,9 @@
     <file>./test</file>
     <file>./tests</file>
 
+    <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>/ext/*</exclude-pattern>
+
     <rule ref="PSR12">
         <!-- require and require_once before classes declarations -->
         <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
