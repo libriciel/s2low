@@ -40,13 +40,18 @@ class AdminUtilitiesCertificateController extends Controller {
 			$this->getObjectInstancier()->get('openssl_path'),
 			$this->getObjectInstancier()->get('rgs_validca_path')
 		);
-		$certificate_info['is_rgs'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']),file_get_contents($files['certificat']['tmp_chaine']));
+        $clientCertChain = null;
+        if(isset($files['certificat']['tmp_chaine']) && file_exists(file_get_contents($files['certificat']['tmp_chaine']))){
+            $clientCertChain = file_get_contents($files['certificat']['tmp_chaine']);
+        }
+
+        $certificate_info['is_rgs'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
 
 		$rgsCertificate = new RgsCertificate(
 			$this->getObjectInstancier()->get('openssl_path'),
 			$this->getObjectInstancier()->get('extended_validca_path')
 		);
-		$certificate_info['is_extended'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']),file_get_contents($files['certificat']['tmp_chaine']));
+		$certificate_info['is_extended'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
 
 		$userSQL = $this->getObjectInstancier()->get(UserSQL::class);
 		$certificate_info['nb_users'] = $userSQL->getNbUserWithMyCertificate($certificate_info['certificate_info']['certificate_hash']);
