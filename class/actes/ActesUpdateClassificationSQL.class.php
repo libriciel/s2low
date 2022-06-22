@@ -79,8 +79,6 @@ class ActesUpdateClassificationSQL extends SQL{
 	}
 
     private function insertClassification($level, $code, $parent_id, $description,$authority_id) {
-        var_dump($code);
-        var_dump($description);
         $sql = "INSERT INTO actes_classification_codes (level, code, parent_id, description, authority_id)" .
                 " VALUES (?,?,?,?,?) RETURNING ID";
 
