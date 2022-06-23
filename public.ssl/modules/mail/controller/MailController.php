@@ -1,7 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) . "/../om/MailPeer.class.php");
-require_once(dirname(__FILE__) . "/../om/mail_transaction.class.php");
+require_once(dirname(__FILE__) . "/../om/MailTransaction.class.php");
 require_once(dirname(__FILE__) . "/../lib/MailList.class.php");
 
 class MailController
