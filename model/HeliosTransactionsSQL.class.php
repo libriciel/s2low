@@ -17,7 +17,7 @@ class HeliosTransactionsSQL extends SQL
     public const ATTENTE_POSTEE = 14;
     public const ATTENTE_SIGNEE = 13;
 
-    private  const SEND_WARNING_AFTER_SECOND = 172800;
+    private const SEND_WARNING_AFTER_SECOND = 172800;
 
     private const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
 

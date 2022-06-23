@@ -1,4 +1,5 @@
 <?php
+
 /*
  * S2low - Copyright 2006 Alternance-Soft
  * Contributeurs : Jérôme Schell, Aout 2006
@@ -37,8 +38,6 @@
  * pris connaissance de la licence CeCILL, et que vous en avez accepté les
  * termes.
 */
-?>
-<?php
 
 /**
  * \file release_notes.php
