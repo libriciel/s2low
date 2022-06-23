@@ -39,6 +39,7 @@ lint:
   image : "$CONTAINER_IMAGE"
   variables:
     DONT_RETRIEVE_VALIDCA: "true"
+    DONT_INIT_DATABASE: "true"
   script:
     - vendor/bin/phpcs .
 
