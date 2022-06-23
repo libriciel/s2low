@@ -14,7 +14,7 @@
  * PEV      15/08/2010  Avec Postgres 8.4 les requêtes impliquant la table mail_error posait des problèmes. Les requêtes avaient pour condiction un char = un int.
  */
 
-require_once(MAIL_SITEROOT . "/om/mail_transaction.class.php");
+require_once(MAIL_SITEROOT . "/om/MailTransaction.class.php");
 require_once("MailIncludedFile.class.php");
 
 

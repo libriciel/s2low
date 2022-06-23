@@ -17,7 +17,7 @@
 require_once(SITEROOT . "/class/DataObject.class.php");
 class MailAnnuaire extends DataObject
 {
-    protected $objectName = "MailAnnuaire";
+    protected $objectName = "mail_annuaire";
     protected $id;
     protected $user_id;
     protected $mail_address;

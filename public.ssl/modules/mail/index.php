@@ -2,7 +2,7 @@
 
 require_once("include/init.php");
 
-require_once("controller/mailController.php");
+require_once("controller/MailController.php");
 //commencer traiter la layout normal correspond de le système.
 require_once("lib/MailLayout.class.php");
 

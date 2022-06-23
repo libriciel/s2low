@@ -2,7 +2,7 @@
 
 class MailsecStoreFilesWorker implements IWorker
 {
-    private const QUEUE_NAME = 'mailsec-included-file';
+    public const QUEUE_NAME = 'mailsec-included-file';
 
     public function getQueueName()
     {

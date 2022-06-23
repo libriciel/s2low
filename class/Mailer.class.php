@@ -2,7 +2,7 @@
 
 require_once("Mail/RFC822.php");
 require_once("PEAR.php");
-require_once(SITEROOT . "/class/pearMail.class.php");
+require_once(SITEROOT . "/class/PearMail.class.php");
 
 class Mailer
 {

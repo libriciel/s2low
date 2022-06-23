@@ -16,7 +16,7 @@ class MailTransaction extends DataObject
 
     private $arrayEmail;
 
-    protected $objectName = "MailTransaction";
+    protected $objectName = "mail_transaction";
     protected $user_id;
     protected $objet;
     protected $password;
@@ -85,7 +85,7 @@ class MailTransaction extends DataObject
 
     public function getFile($fileId)
     {
-        $sql = "SELECT * FROM MailIncludedFile WHERE id=? AND mail_transaction_id= ?";
+        $sql = "SELECT * FROM mail_included_file WHERE id=? AND mail_transaction_id= ?";
         $result = $this->db->select($sql, [$fileId,$this->getId()]);
         return $result->get_next_row();
     }
@@ -101,7 +101,7 @@ class MailTransaction extends DataObject
 
     public function updateStatus()
     {
-        $sql = "SELECT bool_and(ack) FROM MailMessageEmis WHERE mail_transaction_id =? GROUP BY mail_transaction_id";
+        $sql = "SELECT bool_and(ack) FROM mail_message_emis WHERE mail_transaction_id =? GROUP BY mail_transaction_id";
 
         $all_confirme = $this->db->getOneValue($sql, [$this->getId()]);
 
@@ -127,7 +127,7 @@ class MailTransaction extends DataObject
                             MailMessageEmis::TYPE_MAIL_BCC => array(),
                             );
 
-        $sql = "SELECT * FROM MailMessageEmis WHERE mail_transaction_id =  ?";
+        $sql = "SELECT * FROM mail_message_emis WHERE mail_transaction_id =  ?";
         $result = $this->db->select($sql, [$this->getId()]);
 
         while ($info = $result->get_next_row()) {

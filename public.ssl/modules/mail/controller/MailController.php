@@ -171,7 +171,7 @@ class MailController
     protected function executeShow()
     {
         require_once(__DIR__ . "/../om/MailPeer.class.php");
-        require_once(__DIR__ . "/../om/mail_message_emis.class.php");
+        require_once(__DIR__ . "/../om/MailMessageEmis.class.php");
         require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
         require_once(__DIR__ . "/../om/mail_errors.class.php");
         global $doc;
@@ -285,7 +285,7 @@ class MailController
         //FIXME fonction trop grande ...
 
 
-        require_once(dirname(__FILE__) . "/../om/mail_message_emis.class.php");
+        require_once(dirname(__FILE__) . "/../om/MailMessageEmis.class.php");
         require_once(dirname(__FILE__) . "/../om/MailPeer.class.php");
         require_once(dirname(__FILE__) . "/../lib/mailfunction.php");
         require_once(dirname(__FILE__) . "/../lib/MailUtil.class.php");

@@ -2,7 +2,7 @@
 
 require_once("../include/init.php");
 require_once("../lib/MailList.class.php");
-require_once(MAIL_SITEROOT . "/om/mail_transaction.class.php");
+require_once(MAIL_SITEROOT . "/om/MailTransaction.class.php");
 
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db, $me->getId());

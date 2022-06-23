@@ -8,7 +8,7 @@ class MailMessageEmis extends DataObject
     public const TYPE_MAIL_CC = "mailCC";
     public const TYPE_MAIL_BCC = "mailBCC";
 
-    protected $objectName = "MailMessageEmis";
+    protected $objectName = "mail_message_emis";
     protected $mail_transaction_id;
     protected $email;
     protected $type_envoi;
@@ -44,7 +44,7 @@ class MailMessageEmis extends DataObject
         $now = date("Y-m-d H:i:s");
         $this->id = md5($email . $type_envois . $now);
         $this->ack = 0;
-        $sql = "INSERT INTO MailMessageEmis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
+        $sql = "INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
         $sql .= "('" . $this->id . "', '" . $mail_transaction_id . "', " . $this->db->quote($email) . ", '" . $type_envois . "', '0')";
 
         return  $this->db->exec($sql);

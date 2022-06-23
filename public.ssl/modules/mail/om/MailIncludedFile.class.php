@@ -22,7 +22,7 @@ class MailIncludedFile extends DataObject
 {
     private $lastError;
 
-    protected $objectName = "MailIncludedFile";
+    protected $objectName = "mail_included_file";
     protected $mail_transaction_id;
     protected $filename;
     protected $filetype;

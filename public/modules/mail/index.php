@@ -4,8 +4,8 @@ require_once('../../../config/config.php');
 require_once(SITEROOT . '/class/include.class.php');
 require_once(MAIL_SITEROOT . "/lib/MailLayout.class.php");
 
-require_once(MAIL_SITEROOT . "/om/mail_transaction.class.php");
-require_once(MAIL_SITEROOT . "/om/mail_message_emis.class.php");
+require_once(MAIL_SITEROOT . "/om/MailTransaction.class.php");
+require_once(MAIL_SITEROOT . "/om/MailMessageEmis.class.php");
 require_once(MAIL_SITEROOT . "/om/MailIncludedFile.class.php");
 require_once(MAIL_SITEROOT . "/om/MailPeer.class.php");
 
