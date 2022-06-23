@@ -4,6 +4,10 @@ include:
     ref: master
     file: '/publish-container-to-registry.yml'
 
+  - project: "libriciel/integration-continue/templates"
+    ref: master
+    file: '/security-check.yml'
+
 stages:
     - build
     - test
@@ -66,6 +70,12 @@ quality:
     - cp -rf $CI_PROJECT_DIR/* /var/www/s2low
     - cd /var/www/s2low
     - /sonar-scanner -Dsonar.login=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
+
+
+security_scan:
+  allow_failure: true
+  before_script:
+    - cp .trivyignore /
 
 deploy_app:
     stage: staging
