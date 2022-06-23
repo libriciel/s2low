@@ -8,7 +8,7 @@ class ServiceUserSQL extends SQL
         return $this->queryOne($sql, $service_id);
     }
 
-    function add($name, $authority_id)
+    public function add($name, $authority_id)
     {
         $sql = "SELECT * FROM service_user WHERE name=? AND authority_id=?";
         if ($this->query($sql, $name, $authority_id)) {

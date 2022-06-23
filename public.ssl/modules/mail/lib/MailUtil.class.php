@@ -15,7 +15,7 @@
  */
 
 require_once SITEROOT . '/class/include.class.php';
-require_once SITEROOT . "/class/pearMail.class.php";
+require_once SITEROOT . "/class/PearMail.class.php";
 require_once __DIR__ . "/MailHeader.class.php";
 
 
@@ -91,8 +91,8 @@ class MailUtil
 
     /**
    * \brief   envoyer un mail avec des pièces joindures.
-   * \param   objet du class : mail_message_emis
-   * \param                    mail_transaction
+   * \param   objet du class : MailMessageEmis
+   * \param                    MailTransaction
    * \param                    mail_include_file
    * \param
    * \return  true si ok false sinon.
@@ -151,7 +151,7 @@ class MailUtil
                         $tohdrs = $tomime->headers($tohdrs);
                         $to = $tohdrs['To'];
 
-            $mail = new pearMail();
+            $mail = new PearMail();
             $mail->sep = $crlf;
             if (!$mail->send($to, $hdrs, $body, $this->mailHeader->getFromEnveloppeAdressOption())) {
                     return false;

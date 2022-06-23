@@ -115,7 +115,8 @@ class Controller
             throw new RedirectException("Redirect to $url_redirect with message : $error_message");
         }
         $this->redirectSSL($url_redirect);
-    } //@codeCoverageIgnore
+    }
+    //@codeCoverageIgnore
 
     public function displayAndExit($message, $url_redirect)
     {
@@ -125,7 +126,8 @@ class Controller
         } //@codeCoverageIgnore
         $this->setErrorMessage($message);
         $this->redirectSSL($url_redirect);
-    } //@codeCoverageIgnore
+    }
+    //@codeCoverageIgnore
 
 
     public function verifUser()
@@ -178,7 +180,8 @@ class Controller
         }
 
         $this->redirect(WEBSITE_SSL, "Accès refusé");
-    } // @codeCoverageIgnore
+    }
+    // @codeCoverageIgnore
 
 
     public function verifSuperAdmin()

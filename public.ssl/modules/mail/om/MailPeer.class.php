@@ -15,7 +15,7 @@
  */
 
 require_once(MAIL_SITEROOT . "/om/mail_transaction.class.php");
-require_once("mail_included_file.class.php");
+require_once("MailIncludedFile.class.php");
 
 
 class MailPeer
@@ -63,7 +63,7 @@ class MailPeer
         if (! $result->isError()) {
             while ($row = $result->get_next_row()) {
                 //FIXME : ICI : on fait une requete par mail
-                $obj = new mail_message_emis($row["id"]);
+                $obj = new MailMessageEmis($row["id"]);
                 if ($obj->init()) {
                     $MailEmisArray[] = $obj;
                 }
@@ -83,7 +83,7 @@ class MailPeer
             $result = $db->select($sql, [$trans_id]);
             if (! $result->isError()) {
                 while ($row = $result->get_next_row()) {
-                    $obj = new mail_included_file($row["id"]);
+                    $obj = new MailIncludedFile($row["id"]);
                     if ($obj->init()) {
                         $MailIncludeFileArray[] = $obj;
                     }
@@ -120,7 +120,7 @@ class MailPeer
 
   /**
    * \bref:recuperer les email adress et message retour par 2 tableau:
-   * mail_errors, mail_message_emis
+   * MailErrors, MailMessageEmis
    * pour un email spécifier.
    *
    * @param $trans_id=>mail_trainsaction id:
@@ -165,9 +165,9 @@ class MailPeer
   /**
    * \bref supprimer l'enregistment(n-uplet) correspond de trans mail id
    * \ aussi les relation sur les autre tableau ;
-   * \ : mail_message_emis
-   * \ : mail_included_file
-   * \ : mail_errors
+   * \ : MailMessageEmis
+   * \ : MailIncludedFile
+   * \ : MailErrors
    * @param integer $transId
    */
     public static function DeleteMailTransation($transId)

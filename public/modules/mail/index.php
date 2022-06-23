@@ -6,14 +6,14 @@ require_once(MAIL_SITEROOT . "/lib/MailLayout.class.php");
 
 require_once(MAIL_SITEROOT . "/om/mail_transaction.class.php");
 require_once(MAIL_SITEROOT . "/om/mail_message_emis.class.php");
-require_once(MAIL_SITEROOT . "/om/mail_included_file.class.php");
+require_once(MAIL_SITEROOT . "/om/MailIncludedFile.class.php");
 require_once(MAIL_SITEROOT . "/om/MailPeer.class.php");
 
 $mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
 $password = Helpers::getVarFromPost("mdp");
 
 
-$mailEmis = new mail_message_emis($mail_emis_id);
+$mailEmis = new MailMessageEmis($mail_emis_id);
 $mailEmis->init();
 if (! $mailEmis) {
     $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
@@ -23,7 +23,7 @@ if (! $mailEmis) {
 
 $mail_id = $mailEmis->getMailTransactionId();
 
-$mailTransaction = new mail_transaction($mail_id);
+$mailTransaction = new MailTransaction($mail_id);
 if (! $mailTransaction->init()) {
     $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
     header("Location: error.php");
@@ -42,8 +42,8 @@ if (! $mailTransaction->isPasswordOK($password)) {
 $mailEmis->acquitter();
 $mailTransaction->updateStatus();
 
-$mailTo = $mailTransaction->getEmailByType(mail_message_emis::TYPE_MAIL_TO);
-$mailCC = $mailTransaction->getEmailByType(mail_message_emis::TYPE_MAIL_CC);
+$mailTo = $mailTransaction->getEmailByType(MailMessageEmis::TYPE_MAIL_TO);
+$mailCC = $mailTransaction->getEmailByType(MailMessageEmis::TYPE_MAIL_CC);
 
 $fndownload = $mailTransaction->getFNDownload();
 $mailIncludeFileArray = MailPeer::GetIncludeFiles($mail_id);

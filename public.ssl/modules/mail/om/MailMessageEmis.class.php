@@ -2,13 +2,13 @@
 
 require_once(SITEROOT . "/class/DataObject.class.php");
 
-class mail_message_emis extends DataObject
+class MailMessageEmis extends DataObject
 {
     public const TYPE_MAIL_TO = "mailTo";
     public const TYPE_MAIL_CC = "mailCC";
     public const TYPE_MAIL_BCC = "mailBCC";
 
-    protected $objectName = "mail_message_emis";
+    protected $objectName = "MailMessageEmis";
     protected $mail_transaction_id;
     protected $email;
     protected $type_envoi;
@@ -36,7 +36,7 @@ class mail_message_emis extends DataObject
      * @param string $type_envois with 3 type : mailto, mailcc, mailbcc
      * @return return true if save success; or false if failed.
      */
-    function newSave($email, $mail_transaction_id, $type_envois)
+    public function newSave($email, $mail_transaction_id, $type_envois)
     {
         $this->mail_transaction_id = $mail_transaction_id;
         $this->email = $email;
@@ -44,7 +44,7 @@ class mail_message_emis extends DataObject
         $now = date("Y-m-d H:i:s");
         $this->id = md5($email . $type_envois . $now);
         $this->ack = 0;
-        $sql = "INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
+        $sql = "INSERT INTO MailMessageEmis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
         $sql .= "('" . $this->id . "', '" . $mail_transaction_id . "', " . $this->db->quote($email) . ", '" . $type_envois . "', '0')";
 
         return  $this->db->exec($sql);
@@ -80,7 +80,7 @@ class mail_message_emis extends DataObject
     public function acquitter()
     {
 
-        $mailTransaction = new mail_transaction($this->getMailTransactionId());
+        $mailTransaction = new MailTransaction($this->getMailTransactionId());
         $mailTransaction->init();
 
         if ($this->get("ack") == 't') {

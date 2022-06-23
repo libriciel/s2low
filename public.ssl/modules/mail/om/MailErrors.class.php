@@ -1,23 +1,23 @@
 <?php
 
 /**
- * \class mail_errors  mail_errors.class.php
- * \brief Cette classe permet de modeliser le tableau correspond de mail_errors
+ * \class MailErrors  MailErrors.class.php
+ * \brief Cette classe permet de modeliser le tableau correspond de MailErrors
  *
  * \author TH  ,JMontiel
  * \date :23-04-2008
  *
  *
- * Cette classe fournit des méthodes de traiter le tableau mail_errors
+ * Cette classe fournit des méthodes de traiter le tableau MailErrors
  * Modifications :
  * Auteur   Date       Commentaire
  *
  */
 
 require_once(SITEROOT . "/class/DataObject.class.php");
-class mail_errors extends DataObject
+class MailErrors extends DataObject
 {
-    protected $objectName = "mail_errors";
+    protected $objectName = "MailErrors";
     protected $id;
     protected $mail_message_emis_id;
     protected $date_registered;

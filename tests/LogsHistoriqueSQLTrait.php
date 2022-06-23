@@ -7,9 +7,9 @@ use LogsSQL;
 
 trait LogsHistoriqueSQLTrait
 {
-    static $LOG_ID_TO_DELETE = 42;
-    static $LOG_ID_NOT_DELETE_LIMIT = 43;
-    static $LOG_ID_NOT_DELETE_DATE = 44;
+    public static int $LOG_ID_TO_DELETE = 42;
+    public static int $LOG_ID_NOT_DELETE_LIMIT = 43;
+    public static int $LOG_ID_NOT_DELETE_DATE = 44;
 
     abstract public function getLogHistoriqueSQL(): LogsHistoriqueSQL;
 

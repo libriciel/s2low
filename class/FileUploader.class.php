@@ -148,7 +148,7 @@ class FileUploader
         return $this->fileSize;
     }
 
-    function getLastError()
+    public function getLastError()
     {
         return $this->lastError;
     }

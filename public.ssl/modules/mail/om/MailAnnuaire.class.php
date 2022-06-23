@@ -1,23 +1,23 @@
 <?php
 
 /**
- * \class mail_annuaire  mail_annuaire.class.php
+ * \class MailAnnuaire  MailAnnuaire.class.php
  * \brief Cette classe permet de modeliser le tableau correspond de mail_annuraire
  *
  * \author TH ,JMontiel
  * \date :23-04-2008
  *
  *
- * Cette classe fournit des méthodes de traiter le tableau mail_annuaire
+ * Cette classe fournit des méthodes de traiter le tableau MailAnnuaire
  * Modifications :
  * Auteur   Date       Commentaire
  *
  */
 
 require_once(SITEROOT . "/class/DataObject.class.php");
-class mail_annuaire extends DataObject
+class MailAnnuaire extends DataObject
 {
-    protected $objectName = "mail_annuaire";
+    protected $objectName = "MailAnnuaire";
     protected $id;
     protected $user_id;
     protected $mail_address;
@@ -29,7 +29,7 @@ class mail_annuaire extends DataObject
     "description"   => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
 
-    function __construct($id = false)
+    public function __construct($id = false)
     {
         parent::__construct($id);
     }

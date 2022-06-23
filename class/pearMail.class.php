@@ -4,10 +4,10 @@ require_once("PEAR.php");
 require_once("Mail.php");
 require_once("Mail/mime.php");
 
-class pearMail extends Mail
+class PearMail extends Mail
 {
     //EP : A priori la classe Pear::Mail a été surchargé afin de pouvoir integrer le champs FROM
-    function send($recipients, $headers, $body, $from = '')
+    public function send($recipients, $headers, $body, $from = '')
     {
 
         $this->_sanitizeHeaders($headers);

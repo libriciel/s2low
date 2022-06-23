@@ -28,6 +28,11 @@
     <exclude-pattern>./var/*</exclude-pattern>
     <exclude-pattern>./.git/*</exclude-pattern>
     <exclude-pattern>./ext/*</exclude-pattern>
+    <exclude-pattern>./public.ssl/custom/styles/*</exclude-pattern>
+    <exclude-pattern>./public/custom/styles/*</exclude-pattern>
+    <exclude-pattern>./public.ssl/javascript/*</exclude-pattern>
+    <exclude-pattern>./public/javascript/*</exclude-pattern>
+    <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
 
     <rule ref="PSR12">
         <!-- require and require_once before classes declarations -->
@@ -44,9 +49,6 @@
     </rule>
 
     <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="270"/>
-            <property name="absoluteLineLimit" value="2700"/>
-        </properties>
+            <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
 </ruleset>

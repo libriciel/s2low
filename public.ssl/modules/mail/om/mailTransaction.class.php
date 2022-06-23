@@ -3,7 +3,7 @@
 require_once(SITEROOT . "/class/DataObject.class.php");
 
 
-class mail_transaction extends DataObject
+class MailTransaction extends DataObject
 {
     public const STATUS_NO_CONFIRMATION = "aucune confirmation";
     public const STATUS_CONFIRMER_PARTIELLEMENT = "confirmé partiellement";
@@ -16,7 +16,7 @@ class mail_transaction extends DataObject
 
     private $arrayEmail;
 
-    protected $objectName = "mail_transaction";
+    protected $objectName = "MailTransaction";
     protected $user_id;
     protected $objet;
     protected $password;
@@ -85,7 +85,7 @@ class mail_transaction extends DataObject
 
     public function getFile($fileId)
     {
-        $sql = "SELECT * FROM mail_included_file WHERE id=? AND mail_transaction_id= ?";
+        $sql = "SELECT * FROM MailIncludedFile WHERE id=? AND mail_transaction_id= ?";
         $result = $this->db->select($sql, [$fileId,$this->getId()]);
         return $result->get_next_row();
     }
@@ -101,7 +101,7 @@ class mail_transaction extends DataObject
 
     public function updateStatus()
     {
-        $sql = "SELECT bool_and(ack) FROM mail_message_emis WHERE mail_transaction_id =? GROUP BY mail_transaction_id";
+        $sql = "SELECT bool_and(ack) FROM MailMessageEmis WHERE mail_transaction_id =? GROUP BY mail_transaction_id";
 
         $all_confirme = $this->db->getOneValue($sql, [$this->getId()]);
 
@@ -122,12 +122,12 @@ class mail_transaction extends DataObject
             return $this->arrayEmail;
         }
 
-        $this->arrayEmail = array(mail_message_emis::TYPE_MAIL_TO => array(),
-                            mail_message_emis::TYPE_MAIL_CC => array(),
-                            mail_message_emis::TYPE_MAIL_BCC => array(),
+        $this->arrayEmail = array(MailMessageEmis::TYPE_MAIL_TO => array(),
+                            MailMessageEmis::TYPE_MAIL_CC => array(),
+                            MailMessageEmis::TYPE_MAIL_BCC => array(),
                             );
 
-        $sql = "SELECT * FROM mail_message_emis WHERE mail_transaction_id =  ?";
+        $sql = "SELECT * FROM MailMessageEmis WHERE mail_transaction_id =  ?";
         $result = $this->db->select($sql, [$this->getId()]);
 
         while ($info = $result->get_next_row()) {

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * \class mail_annuaire  mail_included_file.class.php
- * \brief Cette classe permet de modeliser le tableau correspond de mail_included_file
+ * \class MailAnnuaire  MailIncludedFile.class.php
+ * \brief Cette classe permet de modeliser le tableau correspond de MailIncludedFile
  *
  * \author TH ,JMontiel
  * \date :23-04-2008
  *
  *
- * Cette classe fournit des méthodes de traiter le tableau mail_included_file
+ * Cette classe fournit des méthodes de traiter le tableau MailIncludedFile
  * Modifications :
  * Auteur   Date       Commentaire
  *
@@ -18,11 +18,11 @@ require_once(SITEROOT . "/class/DataObject.class.php");
 require_once(SITEROOT . "/class/FileUploader.class.php");
 
 
-class mail_included_file extends DataObject
+class MailIncludedFile extends DataObject
 {
     private $lastError;
 
-    protected $objectName = "mail_included_file";
+    protected $objectName = "MailIncludedFile";
     protected $mail_transaction_id;
     protected $filename;
     protected $filetype;

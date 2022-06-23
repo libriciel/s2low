@@ -1,9 +1,5 @@
 <?php
 
-class RedirectException extends Exception
-{
-}
-
 class FrontController
 {
     private $objectInstancier;

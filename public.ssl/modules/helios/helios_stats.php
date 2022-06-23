@@ -34,7 +34,6 @@ $myAuthority = new Authority($me->get("authority_id"));
 $author_filter = "";
 if ($me->isAuthorityAdmin()) {
     $author_filter = "AND users.authority_id=" . $me->get("authority_id");
-    ;
 }
 //---- corrige bug 209 par TAN
 // ajoute le statistique de group admin

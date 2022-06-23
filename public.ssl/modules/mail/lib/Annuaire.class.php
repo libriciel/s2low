@@ -10,7 +10,7 @@ require_once(SITEROOT . "/class/FileUploader.class.php");
 require_once(SITEROOT . "/class/Mailer.class.php");
 require_once(SITEROOT . "/class/Database.class.php");
 
-require_once(dirname(__FILE__) . "/../om/mail_annuaire.class.php");
+require_once(dirname(__FILE__) . "/../om/MailAnnuaire.class.php");
 
 
 class Annuaire
@@ -98,7 +98,7 @@ class Annuaire
 
     private function saveAnnuaire($email, $description)
     {
-        $annuaire = new mail_annuaire();
+        $annuaire = new MailAnnuaire();
         $annuaire->set("mail_address", $email);
         $annuaire->set("description", $description);
         $annuaire->set("authority_id", $this->authority_id);

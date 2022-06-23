@@ -1,15 +1,5 @@
 <?php
 
-class VersionningFactory
-{
-    public static function getInstance()
-    {
-        $manifest = __DIR__ . "/../manifest.txt";
-        $versionning = new Versionning($manifest);
-        return $versionning;
-    }
-}
-
 class Versionning
 {
     private const BUILD_ID = "BUILD_ID";

@@ -89,13 +89,13 @@ class mailController
      //----delete fini
 
      //contruit la filtre sql requete.
-        $MailTransaction = new mail_transaction();
+        $MailTransaction = new MailTransaction();
         if (!$search) {
             $MailTransactions = MailPeer::mailList($MailTransaction, $me->getId());
         } else {
             $etat = Helpers :: getVarFromGet("etat");
 
-            $tabStatus = mail_transaction::getTabStatus();
+            $tabStatus = MailTransaction::getTabStatus();
             $etat_string = $tabStatus[$etat];
 
             $sujet = Helpers :: getVarFromGet("sujet");
@@ -154,7 +154,7 @@ class mailController
         global $doc;
         global $module;
         require_once(__DIR__ . "/../om/MailPeer.class.php");
-        require_once(__DIR__ . "/../om/mail_annuaire.class.php");
+        require_once(__DIR__ . "/../om/MailAnnuaire.class.php");
 
         //fini de la tratement
         //affichier la page
@@ -172,7 +172,7 @@ class mailController
     {
         require_once(__DIR__ . "/../om/MailPeer.class.php");
         require_once(__DIR__ . "/../om/mail_message_emis.class.php");
-        require_once(__DIR__ . "/../om/mail_included_file.class.php");
+        require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
         require_once(__DIR__ . "/../om/mail_errors.class.php");
         global $doc;
         $error = $this->SaveError();
@@ -183,7 +183,7 @@ class mailController
             echo $e->getMessage();
             return false;
         }
-        $mailTransaction = new mail_transaction($trans_id);
+        $mailTransaction = new MailTransaction($trans_id);
         $mailTransaction->init();
         $fndownload = $mailTransaction->getFNDownload();
 
@@ -351,7 +351,7 @@ class mailController
         //----ini mail tranaction.
         // mail transaction faut absolutment inite avant tous les autre opération car tous les autre tableau need
         // mail transaction id.
-        $mailTransaction = new mail_transaction();
+        $mailTransaction = new MailTransaction();
         $mailTransaction->newSave($me->getId());
         $Transaction_id = $mailTransaction->getId();
         $mailIncludedFiles = array();
@@ -362,7 +362,7 @@ class mailController
         $InputFileName = array();
         $FileNumber = Helpers :: getVarFromPost("FileNumber");
         if ($FileNumber != null) {
-            require_once(dirname(__FILE__) . "/../om/mail_included_file.class.php");
+            require_once(dirname(__FILE__) . "/../om/MailIncludedFile.class.php");
             for ($i = 1; $i <= $FileNumber; $i++) {
                // le nom de uploadFile pass par var _FILES
                // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'à FileNumber
@@ -395,7 +395,7 @@ class mailController
             $mailTransaction->set("fn_download", md5("mail" . $now) . mt_rand(0, mt_getrandmax()));
             $mailTransaction->save(false);
 
-            require_once(__DIR__ . "/../om/mail_included_file.class.php");
+            require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
 
             // créer un repertoir de md5
             $newdir = MAIL_FILES_UPLOAD_ROOT . "/" . $mailTransaction->getFNDownload() . '/';
@@ -406,7 +406,7 @@ class mailController
             }
             $mailFiles = array();
             foreach ($InputFileName as $Filename) {
-                 $temp = new mail_included_file();
+                 $temp = new MailIncludedFile();
                 if ($temp->newSave($Filename, $Transaction_id, $newdir)) {
                     $mailIncludedFiles[] = $temp;
                 } else {
@@ -481,7 +481,7 @@ class mailController
             if (! is_valid_email($email)) {
                 $_SESSION['last_message'] = "L'email n'est pas valide";
             } else {
-                $annuaire = new mail_annuaire();
+                $annuaire = new MailAnnuaire();
                 $annuaire->set("mail_address", $email);
                 $annuaire->set("description", $description);
                 $annuaire->set("authority_id", $me->get('authority_id'));
@@ -512,7 +512,7 @@ class mailController
                     if ($groupe->isUserInGroup($id)) {
                         $this->lastError = "Impossible de supprimer un utilisateur qui est encore dans un groupe";
                     } else {
-                        $annuaire = new mail_annuaire($id);
+                        $annuaire = new MailAnnuaire($id);
                         $annuaire->delete();
                     }
                 }
@@ -580,7 +580,7 @@ class mailController
         }
         $length = sizeof($mailMessageArray["mail_emis_id"]);
         for ($i = 0; $i < $length; $i++) {
-            $mailErros = new mail_errors();
+            $mailErros = new MailErrors();
             $mailErros->set("mail_message_emis_id", $mailMessageArray["mail_emis_id"][$i]);
             $mailErros->set("message_retour", $mailMessageArray["body"][$i]);
             $now = date("Y-m-d H:i:s");
@@ -610,7 +610,7 @@ class mailController
             $Email = trim($Email);
 
             if ($Email != "") {
-                 $this->MailMessageEmis[] = new mail_message_emis();
+                 $this->MailMessageEmis[] = new MailMessageEmis();
                 if (end($this->MailMessageEmis)->newSave($Email, $Transaction_id, $type) == false) {
                     return false;
                 }
@@ -627,7 +627,7 @@ class mailController
 
     protected function executeSaveNewEmail()
     {
-        require_once(__DIR__ . "/../om/mail_annuaire.class.php");
+        require_once(__DIR__ . "/../om/MailAnnuaire.class.php");
         global $me;
         global $doc;
         $emails = Helpers :: getVarFromPost("newMailAddress");
@@ -636,7 +636,7 @@ class mailController
 
         echo $maxLengh;
         for ($i = 0; $i < $maxLengh; $i++) {
-            $annuaire = new mail_annuaire();
+            $annuaire = new MailAnnuaire();
             $annuaire->set("user_id", $me->getId());
             $annuaire->set("mail_address", $emails[$i]);
             $annuaire->set("description", $descriptions[$i]);

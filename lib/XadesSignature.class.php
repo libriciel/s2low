@@ -301,11 +301,3 @@ class XadesSignature
         $xml->asXML($xml_file_result);
     }
 }
-
-class XadesSignatureHasSignatureException extends Exception
-{
-}
-
-class XadesSignatureNoIDException extends Exception
-{
-}

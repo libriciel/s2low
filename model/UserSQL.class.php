@@ -2,19 +2,19 @@
 
 class UserSQL extends SQL
 {
-    const IDENT_METHOD_NONE = 0;
-    const IDENT_METHOD_CERT_ONLY = 1;
-    const IDENT_METHOD_LOGIN = 2 ;
+    public const IDENT_METHOD_NONE = 0;
+    public const IDENT_METHOD_CERT_ONLY = 1;
+    public const IDENT_METHOD_LOGIN = 2 ;
 
     /** @deprecated 4.0.3 */
-    const IDENT_METHOD_RGS_2_ETOILES = 3;
+    public const IDENT_METHOD_RGS_2_ETOILES = 3;
 
-    const STATUS_DESACTIVE = 0;
-    const STATUS_ACTIVE = 1;
+    public const STATUS_DESACTIVE = 0;
+    public const STATUS_ACTIVE = 1;
 
-    const CERTIFICATE_FINGERPRINT_HASH_ALG = 'sha1';
+    public const CERTIFICATE_FINGERPRINT_HASH_ALG = 'sha1';
 
-    const AUTHORITY_ID = 'authority_id';
+    public const AUTHORITY_ID = 'authority_id';
 
     public function getPrettyName($name, $givenname, $login)
     {
