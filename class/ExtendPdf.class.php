@@ -251,7 +251,7 @@ class ExtendPdf extends FPDF
   * @param $style
   * @param $angle= 1, 2 ,3, 4, ou mélanger les pour définir le quelle angle est rond.
   */
-    function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234')
+    public function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234')
     {
         $k = $this->k;
         $hp = $this->h;

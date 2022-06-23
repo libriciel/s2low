@@ -58,8 +58,8 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase
             $heliosTransactionSQL,
             "/tmp/",
             $this->getXadesSignature(),
-            true,
-            $pesAllerRetriever
+            $pesAllerRetriever,
+            true
         );
     }
 

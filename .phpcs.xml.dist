@@ -33,6 +33,7 @@
     <exclude-pattern>./public.ssl/javascript/*</exclude-pattern>
     <exclude-pattern>./public/javascript/*</exclude-pattern>
     <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
+    <exclude-pattern>test/PHPUnit/bootstrap.php</exclude-pattern>
 
     <rule ref="PSR12">
         <!-- require and require_once before classes declarations -->

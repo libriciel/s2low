@@ -33,7 +33,7 @@ if (isset($_GET["command"])) {
 } else {
     $command = "";
 }
-$MailCtl = new mailController();
+$MailCtl = new MailController();
 $MailCtl->run($command);
 $doc->closeContent(true);
 $doc->closeContainer(true);

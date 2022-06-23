@@ -2,6 +2,8 @@
 
 class ActesIncludedFileSQLTest extends S2lowTestCase
 {
+    use ActesUtilitiesTestTrait;
+
     public function testInsert()
     {
 
@@ -29,8 +31,6 @@ class ActesIncludedFileSQLTest extends S2lowTestCase
         $all = $this->getObjectInstancier()->get("ActesIncludedFileSQL")->getAll($transaction_id);
         $this->assertEquals("toto.xml", $all[0]['posted_filename']);
     }
-
-    use ActesUtilitiesTestTrait;
 
     /**
      * @throws Exception

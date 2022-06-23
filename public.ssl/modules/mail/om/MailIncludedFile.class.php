@@ -33,17 +33,17 @@ class MailIncludedFile extends DataObject
     "filetype"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
     "filesize"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
-    function __construct($id = false)
+    public function __construct($id = false)
     {
         parent::__construct($id);
     }
 
-    function getLastError()
+    public function getLastError()
     {
         return $this->lastError;
     }
 
-    function newSave($file_name, $Transaction_id, $newdir)
+    public function newSave($file_name, $Transaction_id, $newdir)
     {
 
         $uploader = new FileUploader();
@@ -65,19 +65,19 @@ class MailIncludedFile extends DataObject
         return true;
     }
 
-    function getMailTransactionId()
+    public function getMailTransactionId()
     {
         return $this->mail_transaction_id;
     }
-    function getFileName()
+    public function getFileName()
     {
         return $this->filename;
     }
-    function getFileType()
+    public function getFileType()
     {
         return $this->filetype;
     }
-    function getFileSize()
+    public function getFileSize()
     {
         return $this->filesize;
     }

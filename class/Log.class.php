@@ -342,7 +342,7 @@ class Log extends DataObject
    * \brief Méthode d'écriture de l'horodatage dans un fichier
    * \return True en cas de succès, false sinon
    */
-    function writeTimestampToFile($timestampFile)
+    public function writeTimestampToFile($timestampFile)
     {
         if (isset($this->timestamp) && ! empty($this->timestamp)) {
             if (! file_put_contents($timestampFile, $this->timestamp)) {

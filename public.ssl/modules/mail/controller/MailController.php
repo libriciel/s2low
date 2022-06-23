@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/../om/MailPeer.class.php");
 require_once(dirname(__FILE__) . "/../om/mail_transaction.class.php");
 require_once(dirname(__FILE__) . "/../lib/MailList.class.php");
 
-class mailController
+class MailController
 {
     private $MailMessageEmis = array ();
     private $MailAnnuaireArray = array();
@@ -165,7 +165,7 @@ class mailController
 
   /**
  * \bref afficher le détail d'un email.
- * \bref appelé juste par mailController::run();
+ * \bref appelé juste par MailController::run();
  * \param: pas de paramètre
  */
     protected function executeShow()
@@ -461,7 +461,7 @@ class mailController
     }
 
 /**
- * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelé juste par mailController::run();
+ * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelé juste par MailController::run();
  *
  * \param pas de paramètre
  */

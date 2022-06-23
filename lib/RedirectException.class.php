@@ -2,5 +2,4 @@
 
 class RedirectException extends Exception
 {
-
 }

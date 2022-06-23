@@ -6,12 +6,12 @@
  */
 class ServiceUser
 {
-    function __construct(Database $db)
+    public function __construct(Database $db)
     {
         $this->db = $db;
     }
 
-    function add($name, $authority_id)
+    public function add($name, $authority_id)
     {
         $sql = "SELECT * FROM service_user WHERE name=? AND authority_id=?";
         $result = $this->db->select(
@@ -30,7 +30,7 @@ class ServiceUser
         //return true;
     }
 
-    function getServiceUser($authority_id)
+    public function getServiceUser($authority_id)
     {
         if ($authority_id == null) {
             return array();
@@ -44,7 +44,7 @@ class ServiceUser
         return $tabResult;
     }
 
-    function getPossibleParent($authority_id, $service_id)
+    public function getPossibleParent($authority_id, $service_id)
     {
         $result = array();
 
@@ -72,7 +72,7 @@ class ServiceUser
     }
 
 
-    function getListUser($id)
+    public function getListUser($id)
     {
         return $this->db->fetchAll(
             "SELECT * FROM service_user_content JOIN users ON service_user_content.id_user=users.id WHERE id_service=?",
@@ -80,7 +80,7 @@ class ServiceUser
         );
     }
 
-    function addUser($id_user, $id_service)
+    public function addUser($id_user, $id_service)
     {
         $l = $this->db->getOneLine(
             "SELECT * FROM service_user_content WHERE id_user=? AND id_service=?",
@@ -95,7 +95,7 @@ class ServiceUser
         );
     }
 
-    function getServiceFromUser($id_user)
+    public function getServiceFromUser($id_user)
     {
         return $this->db->fetchAll(
             "SELECT * FROM service_user_content JOIN service_user ON service_user_content.id_service=service_user.id WHERE service_user_content.id_user=?",
@@ -103,17 +103,17 @@ class ServiceUser
         );
     }
 
-    function enleverUser($id_service, $id_user)
+    public function enleverUser($id_service, $id_user)
     {
         $this->db->select("DELETE FROM service_user_content WHERE id_service=$id_service AND id_user=$id_user");
     }
 
-    function supprimerService($id_service)
+    public function supprimerService($id_service)
     {
         $this->db->select("DELETE FROM service_user WHERE id=$id_service");
     }
 
-    function getMesCollegues($id_user)
+    public function getMesCollegues($id_user)
     {
 
         $sql = "SELECT DISTINCT id_service FROM service_user_content WHERE id_user=$id_user";
@@ -155,7 +155,7 @@ class ServiceUser
         return $this->db->fetchAll($sql);
     }
 
-    function areCollegues($id_user1, $id_user2)
+    public function areCollegues($id_user1, $id_user2)
     {
         if ($this->areInSameService($id_user1, $id_user2)) {
             return true;

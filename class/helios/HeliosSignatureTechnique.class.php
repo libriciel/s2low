@@ -12,8 +12,8 @@ class HeliosSignatureTechnique
         HeliosTransactionsSQL $heliosTransactionsSQL,
         $helios_files_upload_root,
         XadesSignature $xadesSignature,
-        $enableSignatureTechnique = true,
-        PesAllerRetriever $pesAllerRetriever
+        PesAllerRetriever $pesAllerRetriever,
+        $enableSignatureTechnique = true
     ) {
         $this->heliosTransactionSQL = $heliosTransactionsSQL;
         $this->xadesSignature = $xadesSignature;
@@ -74,12 +74,4 @@ class HeliosSignatureTechnique
         unlink($file_signed);
         return true;
     }
-}
-
-class UnrecoverableHeliosSignatureTechniqueException extends Exception
-{
-}
-
-class RecoverableHeliosSignatureTechniqueException extends Exception
-{
 }

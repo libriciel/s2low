@@ -118,8 +118,8 @@ class HeliosEnvoiControler
             $this->heliosTransactionsSQL,
             $this->helios_files_upload_root,
             $xadesSignature,
-            HELIOS_ENABLE_SIGNATURE_TECHNIQUE,
-            $this->pesAllerRetriever
+            $this->pesAllerRetriever,
+            HELIOS_ENABLE_SIGNATURE_TECHNIQUE
         );
         $xadesSignatureProperties = new XadesSignatureProperties();
         $xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;

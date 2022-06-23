@@ -28,7 +28,7 @@ class MailErrors extends DataObject
     "date_registered"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
 
-    function __construct($id = false)
+    public function __construct($id = false)
     {
         parent::__construct($id);
     }
