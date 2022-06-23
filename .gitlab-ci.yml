@@ -41,6 +41,7 @@ lint:
     DONT_RETRIEVE_VALIDCA: "true"
     DONT_INIT_DATABASE: "true"
   script:
+    - cd /var/www/s2low
     - vendor/bin/phpcs .
 
 unit_test:
