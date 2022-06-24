@@ -173,7 +173,7 @@ class MailController
         require_once(__DIR__ . "/../om/MailPeer.class.php");
         require_once(__DIR__ . "/../om/MailMessageEmis.class.php");
         require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
-        require_once(__DIR__ . "/../om/mail_errors.class.php");
+        require_once(__DIR__ . "/../om/MailErrors.class.php");
         global $doc;
         $error = $this->SaveError();
      //traitement des information
@@ -571,7 +571,7 @@ class MailController
     protected function SaveError()
     {
         require_once(MAIL_SITEROOT . "/lib/MailUtil.class.php");
-        require_once(MAIL_SITEROOT . "/om/mail_errors.class.php");
+        require_once(MAIL_SITEROOT . "/om/MailErrors.class.php");
         $mailUtil = new MailUtil();
         $mailMessageArray = $mailUtil->GetMailMessage();
         if ($mailMessageArray == null) {
