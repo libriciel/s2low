@@ -20,14 +20,12 @@ class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
     public function testCommand()
     {
         $this->addFixtures();
-        $this->getObjectInstancier()->set('old_timestamp_token_directory',"/tmp/");
-        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days',42);
+        $this->getObjectInstancier()->set('old_timestamp_token_directory', "/tmp/");
+        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days', 42);
         $extractAndDeleteTimestampTokenCommand = $this->getObjectInstancier()
             ->get(ExtractAndDeleteTimestampTokenCommand::class);
         $commandTester = new CommandTester($extractAndDeleteTimestampTokenCommand);
-        $commandTester->execute(['--force'=>'true','--limit'=>'1']);
+        $commandTester->execute(['--force' => 'true','--limit' => '1']);
         $this->assertStringContainsString("[OK] Done", $commandTester->getDisplay());
     }
-
-
 }

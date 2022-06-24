@@ -1,43 +1,48 @@
 <?php
 
-class MailsecStoreFilesWorker implements IWorker {
+class MailsecStoreFilesWorker implements IWorker
+{
+    public const QUEUE_NAME = 'mailsec-included-file';
 
-	const QUEUE_NAME = 'mailsec-included-file';
+    public function getQueueName()
+    {
+        return self::QUEUE_NAME;
+    }
 
-	public function getQueueName(){
-		return self::QUEUE_NAME;
-	}
+    private $cloudStorageFactory;
+    private $cloudStorage;
 
-	private $cloudStorageFactory;
-	private $cloudStorage;
+    public function __construct(CloudStorageFactory $cloudStorageFactory)
+    {
+        $this->cloudStorageFactory = $cloudStorageFactory;
+    }
 
-	public function __construct(CloudStorageFactory $cloudStorageFactory) {
-		$this->cloudStorageFactory = $cloudStorageFactory;
-	}
+    public function getData($id)
+    {
+        return $id;
+    }
 
-	public function getData($id){
-		return $id;
-	}
+    /**
+     * @return CloudStorage
+     * @throws UnrecoverableException
+     */
+    private function getCloudStorage()
+    {
+        if (! $this->cloudStorage) {
+            $this->cloudStorage = $this->cloudStorageFactory
+                ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+        }
+        return $this->cloudStorage;
+    }
 
-	/**
-	 * @return CloudStorage
-	 * @throws UnrecoverableException
-	 */
-	private function getCloudStorage(){
-		if (! $this->cloudStorage){
-			$this->cloudStorage = $this->cloudStorageFactory
-				->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-		}
-		return $this->cloudStorage;
-	}
-
-	/**
-	 * @return int[]
-	 * @throws UnrecoverableException
-	 */
-	public function getAllId(){
-		return $this->getCloudStorage()->getAllObjectIdToStore();
-	}
+    /**
+     * @return int[]
+     * @throws UnrecoverableException
+     */
+    public function getAllId()
+    {
+        return $this->getCloudStorage()->getAllObjectIdToStore();
+    }
 
     /**
      * @param $data
@@ -45,16 +50,18 @@ class MailsecStoreFilesWorker implements IWorker {
      * @throws CloudStorageException | PausingQueueException | UnrecoverableException
      */
 
-	public function work($data){
-		$this->getCloudStorage()->storeObject($data);
-	}
+    public function work($data)
+    {
+        $this->getCloudStorage()->storeObject($data);
+    }
 
-	public function getMutexName($data) {
-		return sprintf("%s-%s",self::QUEUE_NAME,$data);
-	}
+    public function getMutexName($data)
+    {
+        return sprintf("%s-%s", self::QUEUE_NAME, $data);
+    }
 
-	public function isDataValid($data) {
-		return true;
-	}
-
+    public function isDataValid($data)
+    {
+        return true;
+    }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 class FTPService
 {
     private const TIMEOUT = 90;
@@ -28,8 +27,7 @@ class FTPService
         $helios_sending_mode_demo,
         $helios_ftp_passive_mode,
         $helios_ftp_passtrans_mode
-    )
-    {
+    ) {
         $this->logger = $s2lowLogger;
         $this->ftpServiceWrapper = $ftpServiceWrapper;
         $this->host = $helios_ftp_server;
@@ -58,11 +56,11 @@ class FTPService
     public function connect()
     {
         $mode = $this->isPassiveMode ? "Passif" : "Actif";
-        $demo = $this->modeDemo ? "[MODE DEMO]":"";
+        $demo = $this->modeDemo ? "[MODE DEMO]" : "";
         $protocol = $this->isPstMode ? "ftps" : "ftp";
         $this->logger->info("Connection à $protocol://{$this->login}:{$this->password}@{$this->host }:{$this->port} (mode $mode) $demo");
 
-        if($this->isPstMode){
+        if ($this->isPstMode) {
             $this->ftp = $this->ftpServiceWrapper->sslConnect($this->host, $this->port, self::TIMEOUT);
         } else {
             $this->ftp = $this->ftpServiceWrapper->connect($this->host, $this->port, self::TIMEOUT);
@@ -159,27 +157,30 @@ class FTPService
      * Permet de switcher en mode passif
      * @param boolean $is_pasv
      */
-    public function setPassiveMode($is_pasv){
-        $this->ftpServiceWrapper->pasv ($this->ftp,$is_pasv);
+    public function setPassiveMode($is_pasv)
+    {
+        $this->ftpServiceWrapper->pasv($this->ftp, $is_pasv);
     }
 
-    public function sendRawCommand($command){
+    public function sendRawCommand($command)
+    {
         $result = $this->ftpServiceWrapper->raw($this->ftp, $command);
-        if ($this->modeDemo){
+        if ($this->modeDemo) {
             return ;
         }
-        if (!$result || ! preg_match("#^200#",$result[0])){
+        if (!$result || ! preg_match("#^200#", $result[0])) {
             $message =  "[FAILED] Send FTP raw command\n$command\n********** RESULT *******\n";
-            $message .= implode("\n",$result)."\n";
+            $message .= implode("\n", $result) . "\n";
             $message .=  "******** END RESULT ************\n";
             throw new Exception($message);
         }
     }
 
-    public function sendOneFile($directory_destination,$file_path){
-        $result = $this->ftpServiceWrapper->put($this->ftp,$directory_destination.basename($file_path),$file_path,FTP_BINARY);
-        if (! $result){
-            throw new Exception("Erreur lors de l'envoi du fichier ".basename($file_path) ." vers le serveur FTP");
+    public function sendOneFile($directory_destination, $file_path)
+    {
+        $result = $this->ftpServiceWrapper->put($this->ftp, $directory_destination . basename($file_path), $file_path, FTP_BINARY);
+        if (! $result) {
+            throw new Exception("Erreur lors de l'envoi du fichier " . basename($file_path) . " vers le serveur FTP");
         }
     }
 }

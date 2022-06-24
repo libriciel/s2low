@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 $archive = new \Libriciel\LibActes\Archive();

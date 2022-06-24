@@ -1,5 +1,5 @@
 <?php
 
-class RecoverableException extends Exception {
-
+class RecoverableException extends Exception
+{
 }

@@ -1,10 +1,11 @@
-<?php 
+<?php
 
-class SirenTest extends PHPUnit_Framework_TestCase {
-
-	public function get_data(){
-	    return [
-	        ['000000000',true],
+class SirenTest extends PHPUnit_Framework_TestCase
+{
+    public function get_data()
+    {
+        return [
+            ['000000000',true],
             ['000000001',false],
             ['493587273',true],
             ['',false],
@@ -18,17 +19,18 @@ class SirenTest extends PHPUnit_Framework_TestCase {
     /**
      * @dataProvider get_data
      */
-    public function testAllSiren($siren_to_test,$expected_result){
+    public function testAllSiren($siren_to_test, $expected_result)
+    {
         $siren = new Siren(new LuhnKey());
         $this->assertEquals(
             $expected_result,
             $siren->isValid($siren_to_test)
-            );
+        );
     }
 
-	public function testGenerate(){
+    public function testGenerate()
+    {
         $siren = new Siren(new LuhnKey());
-		$this->assertTrue($siren->isValid($siren->generate()));
-	}
-
+        $this->assertTrue($siren->isValid($siren->generate()));
+    }
 }

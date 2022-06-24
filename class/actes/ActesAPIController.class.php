@@ -1,14 +1,16 @@
 <?php
 
-class ActesAPIController extends Controller {
-
-    public function _actionAfter(){
+class ActesAPIController extends Controller
+{
+    public function _actionAfter()
+    {
         /* Nothing to do*/
     }
 
-    private function getActesTransactionsSQL(){
-    	return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-	}
+    private function getActesTransactionsSQL()
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 
     public function listStatusAction(): bool
     {
@@ -28,9 +30,9 @@ class ActesAPIController extends Controller {
 
         $authority_id = intval($this->me->get("authority_id"));
 
-        $nb_transactions = $this->getActesTransactionsSQL()->getNbByStatusAndAuthority($status_id,$authority_id);
+        $nb_transactions = $this->getActesTransactionsSQL()->getNbByStatusAndAuthority($status_id, $authority_id);
 
-        $result = array('status_id'=>$status_id,'authority_id'=>$authority_id,'nb_transactions'=>$nb_transactions);
+        $result = array('status_id' => $status_id,'authority_id' => $authority_id,'nb_transactions' => $nb_transactions);
 
         echo json_encode($result);
         return true;
@@ -42,7 +44,7 @@ class ActesAPIController extends Controller {
 
         $status_id = $this->getRecuperateurGet()->getInt('status_id');
         $offset = $this->getRecuperateurGet()->getInt('offset');
-        $limit = $this->getRecuperateurGet()->getInt('limit',100);
+        $limit = $this->getRecuperateurGet()->getInt('limit', 100);
 
         $authority_id = intval($this->me->get("authority_id"));
 
@@ -54,11 +56,11 @@ class ActesAPIController extends Controller {
         );
 
         $result = array(
-            'status_id'=>$status_id,
-            'authority_id'=>$authority_id,
+            'status_id' => $status_id,
+            'authority_id' => $authority_id,
             'offset' => $offset,
             'limit' => $limit,
-            'transactions'=>$transactions_list
+            'transactions' => $transactions_list
         );
 
         echo json_encode(legacy_encode_array($result));
@@ -67,26 +69,26 @@ class ActesAPIController extends Controller {
 
     public function listDocumentPrefectureAction(): bool
     {
-    	$this->verifUser();
+        $this->verifUser();
 
-		$authority_id = intval($this->me->get("authority_id"));
-		$list = $this->getActesTransactionsSQL()->listDocumentPrefectureNonLu($authority_id);
+        $authority_id = intval($this->me->get("authority_id"));
+        $list = $this->getActesTransactionsSQL()->listDocumentPrefectureNonLu($authority_id);
 
-		echo json_encode($list);
-		return true;
-	}
+        echo json_encode($list);
+        return true;
+    }
 
-	public function documentPrefectureMarkAsReadAction(): bool
+    public function documentPrefectureMarkAsReadAction(): bool
     {
-    	$this->verifUser();
-		$authority_id = intval($this->me->get("authority_id"));
-		$transaction_id = $this->getRecuperateurGet()->getInt('transaction_id');
-		$this->getActesTransactionsSQL()->markAsRead($authority_id,$transaction_id);
-		echo json_encode(["result" => "ok"]);
-		return true;
-	}
+        $this->verifUser();
+        $authority_id = intval($this->me->get("authority_id"));
+        $transaction_id = $this->getRecuperateurGet()->getInt('transaction_id');
+        $this->getActesTransactionsSQL()->markAsRead($authority_id, $transaction_id);
+        echo json_encode(["result" => "ok"]);
+        return true;
+    }
 
-	public function nbCreatedActesByAuthorityGroupIdAndMonthAction(): bool
+    public function nbCreatedActesByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
         $authority_id = intval($this->me->get("authority_id"));
@@ -98,15 +100,15 @@ class ActesAPIController extends Controller {
             $authority_group_id = $this->getRecuperateurGet()->getInt("authority_group_id");
         }
 
-        if (! $authority_group_id){
-            echo json_encode(["result" => "ko","message"=> "Authorities is not in a group or no group_id provided"]);
+        if (! $authority_group_id) {
+            echo json_encode(["result" => "ko","message" => "Authorities is not in a group or no group_id provided"]);
             return false;
         }
 
         $this->verifGroupAdmin($authority_group_id);
 
-        $month = $this->getRecuperateurGet()->getInt('month',date("m", strtotime("last month")));
-        $year = $this->getRecuperateurGet()->getInt('year',date("Y", strtotime("last month")));
+        $month = $this->getRecuperateurGet()->getInt('month', date("m", strtotime("last month")));
+        $year = $this->getRecuperateurGet()->getInt('year', date("Y", strtotime("last month")));
 
         $min_date = "$year-$month-01";
         $max_date = date("Y-m-t", strtotime($min_date));
@@ -114,12 +116,12 @@ class ActesAPIController extends Controller {
         $nbTransactionPerAuthorities = $this->getActesTransactionsSQL()->getNbActesByAuthorityGroupIdBeetweenDate(
             $authority_group_id,
             $min_date,
-            $max_date."T23:59:59"
+            $max_date . "T23:59:59"
         );
         $result = [
             "result" => "ok",
             "message" => "",
-            "authority_group_id"=>$authority_group_id,
+            "authority_group_id" => $authority_group_id,
             "min_date" => $min_date,
             "max_date" => $max_date,
             "nbTransactionPerAuthorities" => $nbTransactionPerAuthorities

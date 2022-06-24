@@ -1,23 +1,23 @@
 <script language='javascript'>
 <!--
 function onChangeGroupSelect() {
-	form = document.getElementById('form_generique');
-	form.submit();
+    form = document.getElementById('form_generique');
+    form.submit();
 }
 
 function coche_case(value){
 
-	var tab = document.getElementsByName("checkbox_id[]");
-	
-	for (i = 0; i<tab.length; ++i) {
-		tab[i].checked = value;
-	}
+    var tab = document.getElementsByName("checkbox_id[]");
+    
+    for (i = 0; i<tab.length; ++i) {
+        tab[i].checked = value;
+    }
 }
 
 function retirer(){
-	form = document.getElementById('form_generique');
-	form.groupe_id.value=form.old_groupe_id.value;
-	form.submit();
+    form = document.getElementById('form_generique');
+    form.groupe_id.value=form.old_groupe_id.value;
+    form.submit();
 }
 -->
 </script>
@@ -27,9 +27,9 @@ function retirer(){
     <?php if (isset($_SESSION["last_message"])) : ?>
     <div class="alert alert-success" >
             <?php echo $_SESSION["last_message"]; ?>
-    </div>  	
-    <?php 
-    unset($_SESSION["last_message"]);
+    </div>      
+        <?php
+        unset($_SESSION["last_message"]);
     endif;?>
 
 <?php if (isset($_SESSION["last_error"])) : ?>
@@ -45,25 +45,29 @@ endif;?>
         <div class="col-md-9">
             <ul class="nav nav-tabs">
                 <?php if (count($groupeArray)) : ?>
-                <li <?php if(! $groupe_id) echo " class=\"active\""?>>
+                <li <?php if (! $groupe_id) {
+                    echo " class=\"active\"";
+                    }?>>
                     <a href='index.php?command=annuaire'>Tous les contacts (<?php echo $annuaire->getNbContact(); ?>)</a>
                 </li>
-                <?php foreach($groupeArray as $groupe):?>
-                <li<?php if($groupe_id == $groupe['id']) echo " class=\"active\""?>>
+                    <?php foreach ($groupeArray as $groupe) :?>
+                <li<?php if ($groupe_id == $groupe['id']) {
+                    echo " class=\"active\"";
+                   }?>>
                     <a href='index.php?command=annuaire&groupe_id=<?php echo $groupe['id'] ?>'><?php hecho($groupe['name']) ?> (<?php echo $groupe['nb_contact']?>)</a>
                 </li>
-                <?php endforeach?>
-            <?php endif;?>
+                    <?php endforeach?>
+                <?php endif;?>
             </ul>
-            <form action="index.php?command=annuaire" method="post" id='form_generique'> 	
+            <form action="index.php?command=annuaire" method="post" id='form_generique'>    
             <input type='hidden' name='action_h' value=''>    
             <div class='contact-list'>
                 Sélectionner <a class="btn btn-default" onclick='javascript:coche_case(true)'>Tous</a>
-                <a class="btn btn-default"  onclick='javascript:coche_case(false)'>Aucun</a>	
+                <a class="btn btn-default"  onclick='javascript:coche_case(false)'>Aucun</a>    
                 <?php foreach ($mailAnnuaireArray as $mailAnnuaire) : ?>
                     <div class='contact' title='<?php echo $mailAnnuaire['mail_address']?>'>
                         <input type="checkbox" name="checkbox_id[]" value="<?php echo $mailAnnuaire['id']; ?>" />
-                        <a href='edit-annuaire.php?id=<?php echo $mailAnnuaire['id']?>'><?php hecho($mailAnnuaire['description']?$mailAnnuaire['description']:$mailAnnuaire['mail_address']); ?></a>
+                        <a href='edit-annuaire.php?id=<?php echo $mailAnnuaire['id']?>'><?php hecho($mailAnnuaire['description'] ? $mailAnnuaire['description'] : $mailAnnuaire['mail_address']); ?></a>
                     </div>
                 <?php endforeach?>
             </div>
@@ -75,23 +79,23 @@ endif;?>
                     <ul>
                         <li><a class="btn btn-primary btn-xs" href="ajouter-annuaire.php">Nouveau contact</a></li>
                         <li><a class="btn btn-primary btn-xs" href="ajouter-groupe.php">Nouveau groupe</a></li>
-                    <?php if ($groupe_id): ?>
+                    <?php if ($groupe_id) : ?>
                         <li><a class="btn btn-primary btn-xs" href="supprimer-groupe.php?groupe_id=<?php echo $groupe_id?>">Supprimer le groupe</a></li>
-                    <?php endif;?>		
+                    <?php endif;?>      
                         <li><a class="btn btn-primary btn-xs" href="import_annuaire_result.php">Importer</a></li>
                     </ul>    
                     <h2> Actions sur les contacts sélectionnés </h2>
                     <ul>
                         <li><input class="btn btn-primary btn-xs" value="Supprimer" type="submit" /></li>
-                    <?php if (count($groupeArray)) : ?>  	
-                    <?php if ($groupe_id) : ?>
+                    <?php if (count($groupeArray)) : ?>     
+                        <?php if ($groupe_id) : ?>
                         <li><input class="btn btn-primary btn-xs" value="Retirer de <?php hecho($groupe_name) ?>" type="submit" onclick='javascript:retirer();'/></li>
                             <input type='hidden' name='old_groupe_id' value='<?php echo $groupe_id?>' />
-                    <?php endif;?>	
+                        <?php endif;?>  
                         <li>
                             <select class="form-control" name='groupe_id' id='select_group' onchange='javascript:onChangeGroupSelect()'>
                                 <option value='0'>Ajouter à ... </option>
-                                <?php foreach($groupeArray as $groupe):?>
+                                <?php foreach ($groupeArray as $groupe) :?>
                                         <option value='<?php echo $groupe['id'] ?>'><?php hecho($groupe['name']) ?></option>
                                 <?php endforeach?>
                             </select>
@@ -104,6 +108,6 @@ endif;?>
                 </div>
             </div>
         </div>
-	</form>
+    </form>
 
 </div>

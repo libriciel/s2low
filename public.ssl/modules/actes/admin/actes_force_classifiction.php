@@ -1,12 +1,11 @@
 <?php
 
+require_once(__DIR__ . "/../../../../init/init-www-actes.php");
 
-require_once( __DIR__ . "/../../../../init/init-www-actes.php");
-
-if ($userInfo['role'] != 'SADM'){
-$_SESSION["error"] = "Super admin only !";
-header("Location: " . WEBSITE);
-exit();
+if ($userInfo['role'] != 'SADM') {
+    $_SESSION["error"] = "Super admin only !";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 $recuperateur = new Recuperateur($_GET);
@@ -21,7 +20,7 @@ $classificationCreation = new ActesClassificationCreation();
 $classificationCreation->unsetFrequencyRestriction();
 
 
-$result = $classificationCreation->createEnveloppe($authority,null,$force);
+$result = $classificationCreation->createEnveloppe($authority, null, $force);
 Helpers::returnAndExit(
     ! $result,
     $classificationCreation->getLastMessage(),

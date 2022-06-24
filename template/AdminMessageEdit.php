@@ -4,8 +4,8 @@
 <h1>Message d'urgence</h1>
 
 <p id="back-transaction-btn">
-	<a class="btn btn-default" href="/admin/message/">Revenir à la liste des messages
-	</a><br>
+    <a class="btn btn-default" href="/admin/message/">Revenir à la liste des messages
+    </a><br>
 </p>
 
 <h2>Édition d'un message</h2>
@@ -13,7 +13,7 @@
 
 <form action="/admin/message/do_message_edit.php" method="POST">
     <input type="hidden" name="message_id" value="<?php hecho($messageAdmin->message_id)?>"/>
-	<table class="data-table table table-striped">
+    <table class="data-table table table-striped">
         <tr>
             <th><label for="titre">Titre</label></th>
             <td>
@@ -24,8 +24,8 @@
             <th><label for="niveau">Niveau</label></th>
             <td>
                 <select name="niveau" id="niveau">
-                    <?php foreach($messageAdmin->getLibelleNiveau() as $niveau => $libelle) :?>
-                        <option value="<?php hecho($niveau)?>" <?php echo $niveau==$messageAdmin->niveau?'selected':'' ?>>
+                    <?php foreach ($messageAdmin->getLibelleNiveau() as $niveau => $libelle) :?>
+                        <option value="<?php hecho($niveau)?>" <?php echo $niveau == $messageAdmin->niveau ? 'selected' : '' ?>>
                             <?php hecho($libelle) ?>
                         </option>
                     <?php endforeach; ?>
@@ -33,18 +33,18 @@
 
             </td>
         </tr>
-		<tr>
-			<th><label for="message">Message</label></th>
-			<td>
-				<textarea id="message" name="message" class="form-control" rows="20"><?php hecho($messageAdmin->message) ?></textarea>
-			</td>
-		</tr>
+        <tr>
+            <th><label for="message">Message</label></th>
+            <td>
+                <textarea id="message" name="message" class="form-control" rows="20"><?php hecho($messageAdmin->message) ?></textarea>
+            </td>
+        </tr>
         <tr>
             <th>&nbsp;</th>
             <td><input type="submit" value="Enregistrer" class="btn btn-primary"/></td>
         </tr>
 
-	</table>
+    </table>
 
 </form>
 <br/><br/>

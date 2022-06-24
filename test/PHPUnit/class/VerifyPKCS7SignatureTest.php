@@ -123,5 +123,4 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
         ];
     }
-
 }

@@ -1,11 +1,10 @@
 <?php
 
+require_once(__DIR__ . "/../../init/init.php");
 
-require_once(__DIR__."/../../init/init.php");
-
-if (empty($argv[1])){
-	echo "Usage : {$argv[0]} fichier_xades.xml\n";
-	exit;
+if (empty($argv[1])) {
+    echo "Usage : {$argv[0]} fichier_xades.xml\n";
+    exit;
 }
 
 $xml_file = $argv[1];
@@ -23,15 +22,14 @@ $xadesSignature = new XadesSignature(
 );
 
 $verify = true;
-try{
+try {
     $xadesSignature->verify($xml_file);
-} catch (Exception $e){
+} catch (Exception $e) {
     $verify = false;
 }
 
-echo "Vérification : ".($verify?"OK":"FAIL")."\n";
+echo "Vérification : " . ($verify ? "OK" : "FAIL") . "\n";
 
-if (! $verify){
-	echo $xadesSignature->getLastOutput()."\n";
+if (! $verify) {
+    echo $xadesSignature->getLastOutput() . "\n";
 }
-

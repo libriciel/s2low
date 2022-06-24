@@ -31,7 +31,7 @@ input[type="radio"], input[type="checkbox"] {
 
 .data-table caption {
     position: absolute !important;
-    height: 1px; width: 1px; 
+    height: 1px; width: 1px;
     overflow: hidden;
     clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
     clip: rect(1px, 1px, 1px, 1px);
@@ -203,16 +203,16 @@ span.form-control {
  Template : back button
 -----------------------------------------------
 */
-#back-transaction-btn, 
-#back-user-btn, 
-#back-admin-services-btn, 
+#back-transaction-btn,
+#back-user-btn,
+#back-admin-services-btn,
 #back-helios-admin-btn {
     text-align: right;
 }
 
 /*
 -----------------------------------------------
- Template : window add/edit 
+ Template : window add/edit
 -----------------------------------------------
 */
 .window-edit-form {
@@ -252,7 +252,7 @@ span.form-control {
 
 .envelopes_list dt, #sent-message-area dt, #sent-message-area dd  {
     margin-top: 10px;
-    
+
 }
 
 /*
@@ -328,7 +328,7 @@ span.form-control {
     text-align: right;
     background-color: #BBC7E1;
     width: 50%;
-    
+
 }
 
 /*---------------------------------------------
@@ -409,11 +409,11 @@ span.form-control {
 }
 
 .dropdown li {
-	padding-left: 10px;
+    padding-left: 10px;
 }
 
 .dropdown li.current {
-	background-color: #CCC;
+    background-color: #CCC;
 }
-  
+
 

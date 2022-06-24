@@ -1,4 +1,5 @@
 <?php
-require_once( __DIR__ . "/../../../init/init.php");
 
-$frontController->go("Admin","messageDetail");
+require_once(__DIR__ . "/../../../init/init.php");
+
+$frontController->go("Admin", "messageDetail");

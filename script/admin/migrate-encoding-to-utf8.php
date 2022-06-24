@@ -2,17 +2,18 @@
 
 use Symfony\Component\Finder\Finder;
 
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
-function changeEncoding($filepath){
+function changeEncoding($filepath)
+{
     $oldContent = file_get_contents($filepath);
-    try{
-        $newContent = mb_convert_encoding($oldContent,'UTF-8',"ISO-8859-9");
-    } catch (Exception $exception){
+    try {
+        $newContent = mb_convert_encoding($oldContent, 'UTF-8', "ISO-8859-9");
+    } catch (Exception $exception) {
         echo "Exception";
         die();
     }
-    file_put_contents($filepath,$newContent);
+    file_put_contents($filepath, $newContent);
 }
 
 //$basePath = realpath(__DIR__."/../../");

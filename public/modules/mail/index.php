@@ -1,74 +1,73 @@
-<?php 
+<?php
 
 require_once('../../../config/config.php');
 require_once(SITEROOT . '/class/include.class.php');
-require_once (MAIL_SITEROOT."/lib/MailLayout.class.php");
-  
-require_once (MAIL_SITEROOT."/om/mail_transaction.class.php");
-require_once (MAIL_SITEROOT."/om/mail_message_emis.class.php");
-require_once (MAIL_SITEROOT."/om/mail_included_file.class.php");
-require_once (MAIL_SITEROOT."/om/MailPeer.class.php");
+require_once(MAIL_SITEROOT . "/lib/MailLayout.class.php");
 
-$mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
-$password=Helpers::getVarFromPost("mdp");
+require_once(MAIL_SITEROOT . "/om/MailTransaction.class.php");
+require_once(MAIL_SITEROOT . "/om/MailMessageEmis.class.php");
+require_once(MAIL_SITEROOT . "/om/MailIncludedFile.class.php");
+require_once(MAIL_SITEROOT . "/om/MailPeer.class.php");
+
+$mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
+$password = Helpers::getVarFromPost("mdp");
 
 
-$mailEmis=new mail_message_emis($mail_emis_id);
+$mailEmis = new MailMessageEmis($mail_emis_id);
 $mailEmis->init();
 if (! $mailEmis) {
-	$_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
-	header("Location: error.php");
-	exit;
+    $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
+    header("Location: error.php");
+    exit;
 }
 
-$mail_id=$mailEmis->getMailTransactionId();
+$mail_id = $mailEmis->getMailTransactionId();
 
-$mailTransaction=new mail_transaction($mail_id);
+$mailTransaction = new MailTransaction($mail_id);
 if (! $mailTransaction->init()) {
-	$_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
-	header("Location: error.php");
-	exit;
+    $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
+    header("Location: error.php");
+    exit;
 }
 
-if (! $mailTransaction->isPasswordOK($password)){
+if (! $mailTransaction->isPasswordOK($password)) {
     if ($password) {
-		$_SESSION['last_error'] = "Mot de passe incorrect";
-	}
+        $_SESSION['last_error'] = "Mot de passe incorrect";
+    }
     $redirectUrl = "Location: password.php?mail_emis_id=" . urlencode($mail_emis_id);
     header($redirectUrl);
-	exit;
+    exit;
 }
 
 $mailEmis->acquitter();
 $mailTransaction->updateStatus();
 
-$mailTo = $mailTransaction->getEmailByType(mail_message_emis::TYPE_MAIL_TO);
-$mailCC = $mailTransaction->getEmailByType(mail_message_emis::TYPE_MAIL_CC);
+$mailTo = $mailTransaction->getEmailByType(MailMessageEmis::TYPE_MAIL_TO);
+$mailCC = $mailTransaction->getEmailByType(MailMessageEmis::TYPE_MAIL_CC);
 
-$fndownload=$mailTransaction->getFNDownload();
-$mailIncludeFileArray=MailPeer::GetIncludeFiles($mail_id);
-	  	
+$fndownload = $mailTransaction->getFNDownload();
+$mailIncludeFileArray = MailPeer::GetIncludeFiles($mail_id);
+
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 /** @var CloudStorage $cloudStorage */
 $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
-	->get(CloudStorageFactory::class)
-	->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+    ->get(CloudStorageFactory::class)
+    ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
 
-if($fndownload) {
+if ($fndownload) {
     try {
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
         $filesize = filesize($mailzip_filepath);
-    }
-    catch (Exception $e){
+    } catch (Exception $e) {
         $filesize = "Fichier non disponible";
     }
 }
 
 $doc->DisplayHead();
 
- 
+
 ?>
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
 <div class="container">
@@ -88,7 +87,6 @@ $doc->DisplayHead();
                     </div>
 
                     <?php if ($mailCC) : ?>
-
                     <div class="col_gauche_info">CC :</div>
                     <div class="col_droite_info">
                         <?php echo get_hecho($mailCC); ?>
@@ -106,10 +104,9 @@ $doc->DisplayHead();
                     </div>
                     <br class="clear" />
 
-                    <?php  if ($mailIncludeFileArray) : ?>		
-	
+                    <?php  if ($mailIncludeFileArray) : ?>      
                     <h2>Pièces jointes</h2>
-	
+    
                     <div class="col_gauche_pj">&nbsp;</div>
                     <div class="col_droite_pj">
                         <table>
@@ -122,14 +119,14 @@ $doc->DisplayHead();
                                 </tr>
                             </thead>    
                             </body>    
-		<?php foreach ($mailIncludeFileArray as $mailIncludeFile) : ?>
+                        <?php foreach ($mailIncludeFileArray as $mailIncludeFile) : ?>
                                 <tr>
                                     <td class="align_left" ><?php echo $mailIncludeFile->getFileName(); ?></td>
                                     <td><?php echo $mailIncludeFile->getFileSize(); ?></td>
                                     <td class="force_maj"><?php echo $mailIncludeFile->getFileType(); ?></td>
                                     <td><a href="download.php?filename=<?php echo urlencode($mailIncludeFile->getFileName()); ?>&root=<?php echo $fndownload; ?>">Télécharger</a></td>
                                 </tr>
-		<?php endforeach; ?>
+                        <?php endforeach; ?>
                                 <tr>
                                     <td class="align_left">&lt;Télécharger tous les fichiers&gt; </td>
                                     <td><?php echo $filesize; ?></td>
@@ -141,12 +138,12 @@ $doc->DisplayHead();
                         </table>
                 </div>
                 <br class="clear" />
-	<?php  	else : ?>
-                <h2>Ce mail ne comporte pas de pièces jointes</h2> 	
-	<?php endif; ?>	
+                    <?php   else : ?>
+                <h2>Ce mail ne comporte pas de pièces jointes</h2>  
+                    <?php endif; ?> 
             </div><!-- list-area-->
         </div><!-- col-md-12 -->
     </div><!-- row -->
 </div><!-- container -->
-<?php 
+<?php
 $doc->DisplayFoot();

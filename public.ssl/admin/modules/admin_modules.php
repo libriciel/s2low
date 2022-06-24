@@ -1,4 +1,5 @@
 <?php
+
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
@@ -7,9 +8,9 @@ $api = Helpers::getVarFromGet("api");
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 
@@ -17,15 +18,15 @@ $zeMod = new Module();
 $modules = $zeMod->getModulesList("ORDER BY id ASC");
 $statusList = $zeMod->get("statusTypes");
 
-if($me->isGroupAdminOrSuper() && $api){
-	$jsonOutput->retrictAndDisplay($modules,array('id','name','description'));
-	exit;
+if ($me->isGroupAdminOrSuper() && $api) {
+    $jsonOutput->retrictAndDisplay($modules, array('id','name','description'));
+    exit;
 }
 
 if (! $me->isSuper()) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $doc = new HTMLLayout();
@@ -56,12 +57,12 @@ $html .= "<tbody>\n";
 $i = 0;
 
 foreach ($modules as $module) {
-  $html .= "<tr>\n";
-  $html .= " <td headers=\"name\">" . $module["name"] . "</td>\n";
-  $html .= " <td headers=\"description\">" . $module["description"] . "</td>\n";
-  $html .= " <td headers=\"status\">" . $statusList[$module["status"]] . "</td>\n";
-  $html .= " <td  headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
-  $html .= "</tr>\n";
+    $html .= "<tr>\n";
+    $html .= " <td headers=\"name\">" . $module["name"] . "</td>\n";
+    $html .= " <td headers=\"description\">" . $module["description"] . "</td>\n";
+    $html .= " <td headers=\"status\">" . $statusList[$module["status"]] . "</td>\n";
+    $html .= " <td  headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+    $html .= "</tr>\n";
 }
 $html .= "</tbody>\n";
 $html .= "</table>\n";

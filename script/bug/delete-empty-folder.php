@@ -2,11 +2,11 @@
 
 use Symfony\Component\Finder\Finder;
 
-require_once __DIR__."/../../init/init.php";
+require_once __DIR__ . "/../../init/init.php";
 
-$i=0;
+$i = 0;
 
-while(true) {
+while (true) {
     $finder = new Finder();
     $finder
         ->in(ACTES_FILES_UPLOAD_ROOT)
@@ -20,7 +20,7 @@ while(true) {
         exit;
     }
     $all = [];
-    $nb_file=0;
+    $nb_file = 0;
 
     /*
      * On ne peux pas parcourir l'itérateur et supprimer un repertoire en même temps...
@@ -29,11 +29,11 @@ while(true) {
 
     foreach ($finder as $directory) {
         $all[] = $directory->getRealPath();
-        if (++$nb_file>=100){
+        if (++$nb_file >= 100) {
             break;
         }
     }
-    foreach($all as $rep){
+    foreach ($all as $rep) {
         echo ++$i . ". remove $rep\n";
         rmdir($rep);
     }

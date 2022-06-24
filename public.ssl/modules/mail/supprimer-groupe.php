@@ -1,14 +1,13 @@
 <?php
 
-
 require_once("include/init.php");
 
-if (! $me->isAuthorityAdmin()){
-  		exit;
-  	}
-try{
+if (! $me->isAuthorityAdmin()) {
+        exit;
+}
+try {
     $groupe_id = Helpers::getIntFromGet('groupe_id');
-} catch (Exception $e){
+} catch (Exception $e) {
     $_SESSION['last_error'] = $e->getMessage();
     header("Location: index.php?command=annuaire");
     exit;
@@ -20,10 +19,10 @@ $nb_user = $groupe->getNbUtilisateur();
 
 $name = $groupe->get('name');
 
-if ($nb_user){
-	$_SESSION['last_error'] = "Le groupe $name n'est pas vide !";
-	header("Location: index.php?command=annuaire&groupe_id=$groupe_id");
-	exit;
+if ($nb_user) {
+    $_SESSION['last_error'] = "Le groupe $name n'est pas vide !";
+    header("Location: index.php?command=annuaire&groupe_id=$groupe_id");
+    exit;
 }
 
 $groupe->delete();

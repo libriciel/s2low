@@ -1,12 +1,14 @@
 <?php
 
-class HeliosAPIController extends Controller {
-
-    public function _actionAfter(){
+class HeliosAPIController extends Controller
+{
+    public function _actionAfter()
+    {
         /* Nothing to do*/
     }
 
-    private function getHeliosTransactionsSQL(){
+    private function getHeliosTransactionsSQL()
+    {
         return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
 
@@ -23,15 +25,15 @@ class HeliosAPIController extends Controller {
             $authority_group_id = $this->getRecuperateurGet()->getInt("authority_group_id");
         }
 
-        if (! $authority_group_id){
-            echo json_encode(["result" => "ko","message"=> "Your authority is not in a group or no group_id provided"]);
+        if (! $authority_group_id) {
+            echo json_encode(["result" => "ko","message" => "Your authority is not in a group or no group_id provided"]);
             return false;
         }
 
         $this->verifGroupAdmin($authority_group_id);
 
-        $month = $this->getRecuperateurGet()->getInt('month',date("m", strtotime("last month")));
-        $year = $this->getRecuperateurGet()->getInt('year',date("Y", strtotime("last month")));
+        $month = $this->getRecuperateurGet()->getInt('month', date("m", strtotime("last month")));
+        $year = $this->getRecuperateurGet()->getInt('year', date("Y", strtotime("last month")));
 
         $min_date = "$year-$month-01";
         $max_date = date("Y-m-t", strtotime($min_date));
@@ -39,12 +41,12 @@ class HeliosAPIController extends Controller {
         $nbTransactionPerAuthorities = $this->getHeliosTransactionsSQL()->getNbPesAllerByAuthorityGroupIdBetweenDate(
             $authority_group_id,
             $min_date,
-            $max_date."T23:59:59"
+            $max_date . "T23:59:59"
         );
         $result = [
             "result" => "ok",
             "message" => "",
-            "authority_group_id"=>$authority_group_id,
+            "authority_group_id" => $authority_group_id,
             "min_date" => $min_date,
             "max_date" => $max_date,
             "nbTransactionPerAuthorities" => $nbTransactionPerAuthorities

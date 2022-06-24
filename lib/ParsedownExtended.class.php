@@ -5,7 +5,8 @@ class ParsedownExtended extends Parsedown
     /** @var int  */
     private $minimumLevel;
 
-    public function __construct(int $minimumLevel){
+    public function __construct(int $minimumLevel)
+    {
         $this->minimumLevel = $minimumLevel;
     }
 
@@ -14,17 +15,14 @@ class ParsedownExtended extends Parsedown
 
     protected function blockHeader($Line)
     {
-        if (isset($Line['text'][1]))
-        {
-            $level=1;
+        if (isset($Line['text'][1])) {
+            $level = 1;
 
-            while (isset($Line['text'][$level]) and $Line['text'][$level] === '#')
-            {
-                $level ++;
+            while (isset($Line['text'][$level]) and $Line['text'][$level] === '#') {
+                $level++;
             }
 
-            if ($this->getHeaderLevel($level) > 6)
-            {
+            if ($this->getHeaderLevel($level) > 6) {
                 return;
             }
 
@@ -42,7 +40,8 @@ class ParsedownExtended extends Parsedown
         }
     }
 
-    private function getHeaderLevel(int $level){
-        return $level + $this->minimumLevel -1;
+    private function getHeaderLevel(int $level)
+    {
+        return $level + $this->minimumLevel - 1;
     }
 }

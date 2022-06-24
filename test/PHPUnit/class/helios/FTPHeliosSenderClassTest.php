@@ -1,8 +1,9 @@
 <?php
 
-class FTPHeliosSenderClassTest extends S2lowTestCase {
-
-    public function testSendPstMode(){
+class FTPHeliosSenderClassTest extends S2lowTestCase
+{
+    public function testSendPstMode()
+    {
         /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
         $ftpService = $this->getMockBuilder(FTPService::class)
             ->disableOriginalConstructor()
@@ -19,11 +20,11 @@ class FTPHeliosSenderClassTest extends S2lowTestCase {
             "destination"
         );
 
-        $ftpHeliosSender->sendFile("p_dest","p_msg","file_tosend");
-
+        $ftpHeliosSender->sendFile("p_dest", "p_msg", "file_tosend");
     }
 
-    public function testSendNotPstMode(){
+    public function testSendNotPstMode()
+    {
         /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
         $ftpService = $this->getMockBuilder(FTPService::class)
             ->disableOriginalConstructor()
@@ -31,7 +32,7 @@ class FTPHeliosSenderClassTest extends S2lowTestCase {
 
         $ftpService->expects($this->once())->method("connect");
         $ftpService->expects($this->exactly(3))->method("sendRawCommand")
-            ->withConsecutive(["site P_DEST p_dest"],["site P_APPLI p_appli"],["site P_MSG p_msg"]);
+            ->withConsecutive(["site P_DEST p_dest"], ["site P_APPLI p_appli"], ["site P_MSG p_msg"]);
 
         $ftpHeliosSender = new FTPHeliosSender(
             $ftpService,
@@ -40,7 +41,6 @@ class FTPHeliosSenderClassTest extends S2lowTestCase {
             "destination"
         );
 
-        $ftpHeliosSender->sendFile("p_dest","p_msg","file_tosend");
-
+        $ftpHeliosSender->sendFile("p_dest", "p_msg", "file_tosend");
     }
 }

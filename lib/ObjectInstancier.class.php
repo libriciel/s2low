@@ -1,74 +1,80 @@
 <?php
 
-class ObjectInstancier {
+class ObjectInstancier
+{
+    private $objects;
 
-	private $objects;
-		
-	public function __construct(){		
-		$this->objects = array('ObjectInstancier' => $this);
-	}
-	
-	public function __get($name){
-		return $this->get($name);
-	}
-	
-	public function __set($name,$value){
-		$this->set($name,$value);
-	}
+    public function __construct()
+    {
+        $this->objects = array('ObjectInstancier' => $this);
+    }
 
-	public function get($name){
-		if (! isset($this->objects[$name])){
-			$this->objects[$name] =  $this->newInstance($name);
-		}
-		return $this->objects[$name];
-	}
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
 
-	public function unset_object($name){
-		unset($this->objects[$name]);
-	}
+    public function __set($name, $value)
+    {
+        $this->set($name, $value);
+    }
 
-	public function set($name,$value){
-		$this->objects[$name] = $value;
-	}
+    public function get($name)
+    {
+        if (! isset($this->objects[$name])) {
+            $this->objects[$name] =  $this->newInstance($name);
+        }
+        return $this->objects[$name];
+    }
 
-	private function newInstance($className){
-		$reflexionClass = new ReflectionClass($className);
-		if (! $reflexionClass->hasMethod('__construct')){
-			return $reflexionClass->newInstance();
-		}
-		$constructor = $reflexionClass->getMethod('__construct');
+    public function unset_object($name)
+    {
+        unset($this->objects[$name]);
+    }
+
+    public function set($name, $value)
+    {
+        $this->objects[$name] = $value;
+    }
+
+    private function newInstance($className)
+    {
+        $reflexionClass = new ReflectionClass($className);
+        if (! $reflexionClass->hasMethod('__construct')) {
+            return $reflexionClass->newInstance();
+        }
+        $constructor = $reflexionClass->getMethod('__construct');
         $allParameters = $constructor->getParameters();
-        $param = $this->bindParameters($className,$allParameters);        
+        $param = $this->bindParameters($className, $allParameters);
         return $reflexionClass->newInstanceArgs($param);
-	}
+    }
 
-	private function bindParameters($className,array $allParameters){
-		$param = array();
-		foreach($allParameters as $parameters){
-			/* @var $parameters ReflectionParameter */
+    private function bindParameters($className, array $allParameters)
+    {
+        $param = array();
+        foreach ($allParameters as $parameters) {
+            /* @var $parameters ReflectionParameter */
 
-            if($parameters->getType()){
+            if ($parameters->getType()) {
                 $param_name =  $parameters->getType()->getName();
             } else {
                 $param_name =  $parameters->name;
             }
-        	try {
-        		$bind_value = $this->$param_name;
-        	} catch (Exception $e){
+            try {
+                $bind_value = $this->$param_name;
+            } catch (Exception $e) {
+                //throw $e;
+                //On a pas trouvé le paramètre...
+            }
 
-				//throw $e;
-        		//On a pas trouvé le paramètre...
-        	}
-        	
-        	if (! isset($bind_value) ) {
-        		
-        		if ($parameters->isOptional()){
-        			return $param;
-        		}
-        		throw new Exception("Impossible d'instancier $className car le parametre {$parameters->name} est manquant");
-        	}
-        	$param[] = $bind_value;
+            if (! isset($bind_value)) {
+                if ($parameters->isOptional()) {
+                    return $param;
+                }
+                throw new Exception("Impossible d'instancier $className car le parametre {$parameters->name} est manquant");
+            }
+            $param[] = $bind_value;
         }
         return $param;
-	}
+    }
 }

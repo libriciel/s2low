@@ -5,8 +5,8 @@ use Monolog\Logger;
 use OpenStack\Common\Error\BadResponseError;
 use Psr\Http\Message\RequestInterface;
 
-class OpenStackStateManagerTest extends S2lowTestCase {
-
+class OpenStackStateManagerTest extends S2lowTestCase
+{
     /**
      * @var Logger
      */
@@ -24,17 +24,18 @@ class OpenStackStateManagerTest extends S2lowTestCase {
         $this->logger->pushHandler($this->handler);
     }
 
-    public function testMaxConsecutiveExceptions(){
+    public function testMaxConsecutiveExceptions()
+    {
 
 
         $classe = new OpenStackStateManager($this->logger);
 
         $exceptionThrown = true;
-        try{
-            for($i = 1 ; $i <= OpenStackStateManager::MAX_CONSECUTIVE_ATTEMPTS ; $i++){
-                $classe->declareException(new Exception("Test_".$i));
+        try {
+            for ($i = 1; $i <= OpenStackStateManager::MAX_CONSECUTIVE_ATTEMPTS; $i++) {
+                $classe->declareException(new Exception("Test_" . $i));
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $exceptionThrown = true;
             $this->assertEquals(
                 PausingQueueException::class,
@@ -44,7 +45,8 @@ class OpenStackStateManagerTest extends S2lowTestCase {
         $this->assertEquals(true, $exceptionThrown);
     }
 
-    public function testNoResetNeeded(){
+    public function testNoResetNeeded()
+    {
         $classe = new OpenStackStateManager($this->logger);
 
         $this->assertFalse($classe->isResetNeeded());
@@ -53,7 +55,8 @@ class OpenStackStateManagerTest extends S2lowTestCase {
     /**
      * @throws PausingQueueException
      */
-    public function testResetNeededAfterException(){
+    public function testResetNeededAfterException()
+    {
         $classe = new OpenStackStateManager($this->logger);
 
         $classe->declareException(new Exception("test"));
@@ -64,7 +67,8 @@ class OpenStackStateManagerTest extends S2lowTestCase {
     /**
      * @throws PausingQueueException
      */
-    public function testNoResetNeededAfterSuccess(){
+    public function testNoResetNeededAfterSuccess()
+    {
         $classe = new OpenStackStateManager($this->logger);
 
         $classe->declareException(new Exception("test"));
@@ -74,26 +78,31 @@ class OpenStackStateManagerTest extends S2lowTestCase {
     }
 
     /** @dataProvider exceptionsProvider */
-    public function testException(Exception $exception,string $message){
+    public function testException(Exception $exception, string $message)
+    {
         $classe = new OpenStackStateManager($this->logger);
 
         $classe->declareException($exception);
-        
-        $this->assertEquals("[Openstack][1] {$message}",
-            $this->handler->getRecords()[0]["message"]);
+
+        $this->assertEquals(
+            "[Openstack][1] {$message}",
+            $this->handler->getRecords()[0]["message"]
+        );
     }
 
-    public function exceptionsProvider(){
+    public function exceptionsProvider()
+    {
         return [
             $this->buildExceptionRequestInterface(),
             $this->buildBadResponseError(401),
-            $this->buildBadResponseError(404,"Parceque mais parceque"),
+            $this->buildBadResponseError(404, "Parceque mais parceque"),
             $this->buildArbitraryException(UnexpectedValueException::class, "Isn't it unexpected")
 
         ];
     }
 
-    public function buildExceptionRequestInterface(){
+    public function buildExceptionRequestInterface()
+    {
         /** @var RequestInterface | PHPUnit\Framework\MockObject\ $requestInterfaceMock */
         $requestInterfaceMock = $this->getMockBuilder(RequestInterface::class)
             ->disableOriginalConstructor()
@@ -104,7 +113,8 @@ class OpenStackStateManagerTest extends S2lowTestCase {
         return [$exceptionRequestInterface, "Erreur Guzzle : $exceptionMessage"];
     }
 
-    public function buildBadResponseError($status,$reasonPhrase=""){
+    public function buildBadResponseError($status, $reasonPhrase = "")
+    {
         $exceptionBadResponseError = new \OpenStack\Common\Error\BadResponseError("");
 
         /** @var \Psr\Http\Message\ResponseInterface | \PHPUnit\Framework\MockObject\MockObject $badResponse */
@@ -116,14 +126,14 @@ class OpenStackStateManagerTest extends S2lowTestCase {
         $badResponse->method('getReasonPhrase')->willReturn($reasonPhrase);
         $exceptionBadResponseError->setResponse($badResponse);
 
-        return [$exceptionBadResponseError, $status===401?"Erreur d'authentification":"Erreur ${status} : ${reasonPhrase}"];
+        return [$exceptionBadResponseError, $status === 401 ? "Erreur d'authentification" : "Erreur ${status} : ${reasonPhrase}"];
     }
 
-    public function buildArbitraryException($exceptionName,$message){
+    public function buildArbitraryException($exceptionName, $message)
+    {
         return [
             new $exceptionName($message),
             "Erreur $exceptionName : $message"
         ];
     }
-
 }

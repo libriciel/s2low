@@ -297,7 +297,8 @@
                         'DownloadURL',
                         [type, name, url].join(':')
                     );
-                } catch (err) {}
+                } catch (err) {
+                }
             });
         },
 

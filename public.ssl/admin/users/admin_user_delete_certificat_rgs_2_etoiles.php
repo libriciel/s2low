@@ -1,28 +1,29 @@
 <?php
 
-require_once(__DIR__."/../../../init/init.php");
+require_once(__DIR__ . "/../../../init/init.php");
 
 $me = new User();
 
 $api = Helpers::getVarFromPost("api");
 
-function exitOrDisplayError($api,$erreur_msg,$location){
-	if ($api){
-		$jsonOutput = new JSONoutput();
-		$jsonOutput->displayErrorAndExit($erreur_msg);
-	} else {
-		$_SESSION["error"] = $erreur_msg;
-		header("Location: $location " );
-		exit;
-	}
+function exitOrDisplayError($api, $erreur_msg, $location)
+{
+    if ($api) {
+        $jsonOutput = new JSONoutput();
+        $jsonOutput->displayErrorAndExit($erreur_msg);
+    } else {
+        $_SESSION["error"] = $erreur_msg;
+        header("Location: $location ");
+        exit;
+    }
 }
 
 if (! $me->authenticate()) {
-	exitOrDisplayError($api,"Échec de l'authentification",WEBSITE);
+    exitOrDisplayError($api, "Échec de l'authentification", WEBSITE);
 }
 
 if (! $me->isAdmin()) {
-	exitOrDisplayError($api,"Accès refusé",WEBSITE_SSL);
+    exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
 }
 
 $id = Helpers::getVarFromGet("id");
@@ -30,11 +31,11 @@ $id = Helpers::getVarFromGet("id");
 $him = new User();
 $him->setId($id);
 if (! $him->init()) {
-	exitOrDisplayError($api,"Erreur lors de la modification de l'utilisateur",WEBSITE_SSL . "/admin/users/admin_users.php");
+    exitOrDisplayError($api, "Erreur lors de la modification de l'utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
 } else {
-	if (! $me->canEditUser($id)) {
-		exitOrDisplayError($api,"Accès refusé pour la modification de cet utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
-	}
+    if (! $me->canEditUser($id)) {
+        exitOrDisplayError($api, "Accès refusé pour la modification de cet utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
+    }
 }
 
 $userSQL = new UserSQL($sqlQuery);
@@ -42,8 +43,8 @@ $userSQL = new UserSQL($sqlQuery);
 $user_info = $userSQL->getInfo($him->getId());
 $x509Certificate = new X509Certificate();
 $certificat_connexion_info = $x509Certificate->getInfo($user_info['certificate']);
-if ($userSQL->hasDoublon($him->getId(),$certificat_connexion_info,$user_info['login'],false)){
-	exitOrDisplayError($api,"Impossible de supprimer le certificat car l'opération entrainerait des doublons", WEBSITE_SSL . "/admin/users/admin_user_edit.php?id={$him->getId()}");
+if ($userSQL->hasDoublon($him->getId(), $certificat_connexion_info, $user_info['login'], false)) {
+    exitOrDisplayError($api, "Impossible de supprimer le certificat car l'opération entrainerait des doublons", WEBSITE_SSL . "/admin/users/admin_user_edit.php?id={$him->getId()}");
 }
 $userSQL->deleteCertificateRGS2Etoiles($him->getId());
 
@@ -51,15 +52,15 @@ $userSQL->deleteCertificateRGS2Etoiles($him->getId());
 $msg = "Modification ";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
-	$msg .= "\nErreur de journalisation.";
+    $msg .= "\nErreur de journalisation.";
 }
 
 
-if ($api){
-	$jsonOutput = new JSONoutput();
-	$jsonOutput->display(array('status'=>'ok','message'=>$msg,'id'=>$him->getId()));
+if ($api) {
+    $jsonOutput = new JSONoutput();
+    $jsonOutput->display(array('status' => 'ok','message' => $msg,'id' => $him->getId()));
 } else {
-	$_SESSION["error"] = nl2br($msg);
-	Helpers::purgeTempSession();
-	header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId() );
+    $_SESSION["error"] = nl2br($msg);
+    Helpers::purgeTempSession();
+    header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId());
 }

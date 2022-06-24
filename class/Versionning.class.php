@@ -1,62 +1,60 @@
 <?php
 
-class VersionningFactory {
-	
-	public static function getInstance(){
-		$manifest = __DIR__."/../manifest.txt";
-		$versionning = new Versionning($manifest);
-		return $versionning;
-	}
-}
+class Versionning
+{
+    private const BUILD_ID = "BUILD_ID";
+    private const BUILD_DATE = "BUILD_DATE";
+    private const VERSION = "VERSION";
 
-class Versionning {
+    private $manifest_file;
 
-	const BUILD_ID = "BUILD_ID";
-	const BUILD_DATE = "BUILD_DATE";
-	const VERSION = "VERSION";
+    public function __construct($manifest_file)
+    {
+        $this->manifest_file = $manifest_file;
+    }
 
-	private $manifest_file;
+    private function getInfo()
+    {
+        $revisionFileContent = file_get_contents($this->manifest_file);
+        $result = array();
+        foreach (explode("\n", $revisionFileContent) as $line) {
+            foreach (array(self::BUILD_DATE,self::BUILD_ID,self::VERSION) as $info) {
+                if (preg_match("#^$info=(.*)#", $line, $matches)) {
+                    $result[$info] = $matches[1];
+                }
+            }
+        }
+        return $result;
+    }
 
-	public function __construct($manifest_file){
-		$this->manifest_file = $manifest_file;
-	}
+    private function getSpecificInfo($key)
+    {
+        $info = $this->getInfo();
+        return $info[$key];
+    }
 
-	private function getInfo(){
-		$revisionFileContent = file_get_contents($this->manifest_file);
-		$result = array();
-		foreach(explode("\n",$revisionFileContent) as $line){
-			foreach(array(self::BUILD_DATE,self::BUILD_ID,self::VERSION) as $info){
-				if (preg_match("#^$info=(.*)#",$line,$matches)){
-					$result[$info] = $matches[1];
-				}
-			}
-		}
-		return $result;
-	}
+    public function getRevision()
+    {
+        return $this->getSpecificInfo(self::BUILD_ID);
+    }
 
-	private function getSpecificInfo($key){
-		$info = $this->getInfo();
-		return $info[$key];
-	}
+    public function getDate()
+    {
+        return $this->getSpecificInfo(self::BUILD_DATE);
+    }
 
-	public function getRevision(){
-		return $this->getSpecificInfo(self::BUILD_ID);
-	}
+    public function getVersion()
+    {
+        return $this->getSpecificInfo(self::VERSION);
+    }
 
-	public function getDate(){
-		return $this->getSpecificInfo(self::BUILD_DATE);
-	}
+    public function getAllInfo()
+    {
+        $result['version'] = $this->getVersion();
+        $result['revision'] = $this->getRevision();
+        $result['date'] = $this->getDate();
 
-	public function getVersion(){
-		return $this->getSpecificInfo(self::VERSION);
-	}
-
-	public function getAllInfo(){
-		$result['version'] = $this->getVersion();
-		$result['revision'] = $this->getRevision();
-		$result['date'] = $this->getDate();
-
-		$result['version-complete'] =  "Version {$result['version']} - Révision  {$result['revision']} - {$result['date']}" ;
-		return $result;
-	}
+        $result['version-complete'] =  "Version {$result['version']} - Révision  {$result['revision']} - {$result['date']}" ;
+        return $result;
+    }
 }

@@ -24,7 +24,7 @@
                     </select>
                 </div>
             </div>
-        <?php else: ?>
+        <?php else : ?>
             <input type="hidden" name="authority_id" value="<?php hecho($authority_id) ?>"/>
         <?php endif;?>
 
@@ -38,7 +38,7 @@
                 <a href="#datepicker" id="datepicker_date_debut_link" class="datepicker_link" onclick="javascript:obj_date_debut.toggleDatePicker(); return false;">
                     <?php if ($date_debut) :?>
                         <?php echo Helpers::TimestampToString(Helpers :: ansiDateToTimestamp($date_debut)); ?>
-                    <?php else: ?>
+                    <?php else : ?>
                         Choisir une date
                     <?php endif; ?>
                 </a>
@@ -54,8 +54,8 @@
                 </script>
                 <a href="#datepicker" id="datepicker_date_fin_link" class="datepicker_link" onclick="javascript:obj_date_fin.toggleDatePicker(); return false;">
                     <?php if ($date_fin) :?>
-                        <?php echo Helpers ::TimestampToString( Helpers :: ansiDateToTimestamp($date_fin)); ?>
-                    <?php else: ?>
+                        <?php echo Helpers ::TimestampToString(Helpers :: ansiDateToTimestamp($date_fin)); ?>
+                    <?php else : ?>
                         Choisir une date
                     <?php endif; ?>
                 </a>

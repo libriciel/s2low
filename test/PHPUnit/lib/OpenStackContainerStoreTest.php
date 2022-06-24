@@ -1,10 +1,9 @@
 <?php
 
-
 use PHPUnit\Framework\MockObject\MockObject;
 
-class OpenStackContainerStoreTest extends S2lowTestCase {
-
+class OpenStackContainerStoreTest extends S2lowTestCase
+{
     private const GET_CONTAINER_WRAPPER = "getContainerWrapper";
     private const ACTES = "actes";
 
@@ -14,7 +13,8 @@ class OpenStackContainerStoreTest extends S2lowTestCase {
     private $openStackContainerWrapperFactoryMock;
     private $openStackConfig;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $this->openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -35,7 +35,8 @@ class OpenStackContainerStoreTest extends S2lowTestCase {
      * @throws UnrecoverableException
      */
 
-    public function testExecuteOnUnavailableContainer(){
+    public function testExecuteOnUnavailableContainer()
+    {
 
         $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
@@ -43,7 +44,7 @@ class OpenStackContainerStoreTest extends S2lowTestCase {
             ->willReturn($this->openStackContainerWrapperMock);
 
         $openStackContainerManager = new OpenStackContainerStore($this->openStackContainerWrapperFactoryMock);
-        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+        $openStackContainerManager->addConfiguration(self::ACTES, $this->openStackConfig);
 
         $this->expectException(UnrecoverableException::class);
         $this->expectExceptionMessage("Impossible de trouver la configuration Openstack pour UnavailableContainer");
@@ -55,7 +56,8 @@ class OpenStackContainerStoreTest extends S2lowTestCase {
      * @throws UnrecoverableException
      */
 
-    public function testExecuteOnAvailableContainer(){
+    public function testExecuteOnAvailableContainer()
+    {
 
         $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
@@ -63,10 +65,11 @@ class OpenStackContainerStoreTest extends S2lowTestCase {
             ->willReturn($this->openStackContainerWrapperMock);
 
         $openStackContainerManager = new OpenStackContainerStore($this->openStackContainerWrapperFactoryMock);
-        $openStackContainerManager->addConfiguration(self::ACTES,$this->openStackConfig);
+        $openStackContainerManager->addConfiguration(self::ACTES, $this->openStackConfig);
 
-        $this->assertEquals($openStackContainerManager->getContainerWrapper(self::ACTES),
-            $this->openStackContainerWrapperMock);
+        $this->assertEquals(
+            $openStackContainerManager->getContainerWrapper(self::ACTES),
+            $this->openStackContainerWrapperMock
+        );
     }
-
 }

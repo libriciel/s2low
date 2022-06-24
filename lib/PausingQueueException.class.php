@@ -1,7 +1,7 @@
 <?php
 
-class PausingQueueException extends Exception{
-
+class PausingQueueException extends Exception
+{
     /**
      * Time to wait (in seconds) when this exceptions is thrown
      * @var int
@@ -13,7 +13,8 @@ class PausingQueueException extends Exception{
         parent::__construct($message, $code, $previous);
     }
 
-    public function getTimeToWait(){
+    public function getTimeToWait()
+    {
         return $this->timeToWait;
     }
 }

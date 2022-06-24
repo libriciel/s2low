@@ -8,16 +8,17 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class OpenStackContainerFetcherTest extends TestCase{
-
+class OpenStackContainerFetcherTest extends TestCase
+{
     /**
      * @throws Exception
      */
 
-    public function testgetNewTokenAndContainer(){
+    public function testgetNewTokenAndContainer()
+    {
 
-        $containerFullName="containerFullName";
-        $generate_token_options = ["option"=>"option"];
+        $containerFullName = "containerFullName";
+        $generate_token_options = ["option" => "option"];
 
         /** @var MockObject | OpenStack $openStackMock */
         $openStackMock = $this->getMockBuilder(OpenStack::class)
@@ -58,7 +59,8 @@ class OpenStackContainerFetcherTest extends TestCase{
             ->method('objectStoreV1')
             ->willReturn($openStoreV1Mock);
 
-        $openStackContainerFetcher = new OpenStackContainerFetcher($containerFullName,
+        $openStackContainerFetcher = new OpenStackContainerFetcher(
+            $containerFullName,
             $generate_token_options,
             $openStackMock,
             new NullLogger()

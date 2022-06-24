@@ -8,7 +8,7 @@
  */
 
 
-require_once ( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 
@@ -20,19 +20,13 @@ $sql = "SELECT actes_envelopes.id, actes_transactions.id as transaction_id, acte
 		AND actes_transactions.last_status_id=-1 AND message LIKE ?";
 
 
-$actes_list = $sqlQuery->query($sql,'2017-04-28','%Pdf.Exploit.%');
+$actes_list = $sqlQuery->query($sql, '2017-04-28', '%Pdf.Exploit.%');
 
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
-foreach($actes_list as $acte){
-	echo "{$acte['id']} : {$acte['message']}\n";
+foreach ($actes_list as $acte) {
+    echo "{$acte['id']} : {$acte['message']}\n";
 
-	$actesTransactionSQL->updateStatus($acte['id'],1,"Transaction repassee en posté");
-
-
+    $actesTransactionSQL->updateStatus($acte['id'], 1, "Transaction repassee en posté");
 }
-
-
-
-

@@ -2,7 +2,7 @@
 
 //Script utilisÃ© pour la compta
 // Il compte pour actes et helios
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 $sql = "select authority_groups.name,authority_group_id as id FROM users " .
@@ -16,24 +16,24 @@ $result = $sqlQuery->query($sql);
 $sql_helios = "SELECT sum(file_size) FROM helios_transactions " .
     " WHERE authority_id=?";
 
-$sql_actes = "SELECT sum(file_size) FROM actes_envelopes JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id ".
+$sql_actes = "SELECT sum(file_size) FROM actes_envelopes JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id " .
     " WHERE actes_transactions.authority_id=?";
 
 $total_helios = 0;
 $total_actes = 0;
 
-foreach($result as $group_info){
+foreach ($result as $group_info) {
     $group_helios_size = 0;
     $group_actes_size = 0;
     //echo "\nGROUPE {$group_info['name']} : \n";
     $sql = "SELECT name,id FROM authorities WHERE authority_group_id=?";
-    $authority_list = $sqlQuery->query($sql,$group_info['id']);
-    foreach($authority_list as $authority_info){
+    $authority_list = $sqlQuery->query($sql, $group_info['id']);
+    foreach ($authority_list as $authority_info) {
         //echo "\tCOLLECTIVITE {$authority_info['name']}\n";
-        $helios_size = $sqlQuery->queryOne($sql_helios,$authority_info['id']);
+        $helios_size = $sqlQuery->queryOne($sql_helios, $authority_info['id']);
         //echo "\t\tHelios: $helios_size\n";
         $group_helios_size += $helios_size;
-        $actes_size = $sqlQuery->queryOne($sql_actes,$authority_info['id']);
+        $actes_size = $sqlQuery->queryOne($sql_actes, $authority_info['id']);
         //echo "\t\tActes: $actes_size\n";
         $group_actes_size += $actes_size;
     }

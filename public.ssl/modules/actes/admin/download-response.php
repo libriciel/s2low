@@ -1,11 +1,11 @@
 <?php
 
-require_once( __DIR__ . "/../../../../init/init-www-actes.php");
+require_once(__DIR__ . "/../../../../init/init-www-actes.php");
 
-if ($userInfo['role'] != 'SADM'){
-	$_SESSION["error"] = "Super admin only !";
-	header("Location: " . WEBSITE);
-	exit();
+if ($userInfo['role'] != 'SADM') {
+    $_SESSION["error"] = "Super admin only !";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 $recuperateur = new Recuperateur($_GET);
@@ -17,7 +17,7 @@ $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 
 try {
     $actesResponsesError->download($filename);
-} catch (Exception $e){
-	$_SESSION['error'] = $e->getMessage();
-	header("Location: responses-actes-error.php");
+} catch (Exception $e) {
+    $_SESSION['error'] = $e->getMessage();
+    header("Location: responses-actes-error.php");
 }

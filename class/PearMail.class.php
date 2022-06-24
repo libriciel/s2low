@@ -1,14 +1,14 @@
 <?php
 
 require_once("PEAR.php");
-require_once ("Mail.php");
-require_once ("Mail/mime.php"); 
-		
-class pearMail extends Mail {
+require_once("Mail.php");
+require_once("Mail/mime.php");
 
-	
-	//EP : A priori la classe Pear::Mail a été surchargé afin de pouvoir integrer le champs FROM
-    function send($recipients, $headers, $body,$from='') {
+class PearMail extends Mail
+{
+    //EP : A priori la classe Pear::Mail a été surchargé afin de pouvoir integrer le champs FROM
+    public function send($recipients, $headers, $body, $from = '')
+    {
 
         $this->_sanitizeHeaders($headers);
 
@@ -27,20 +27,19 @@ class pearMail extends Mail {
 
         // flatten the headers out.
         $prepareHeader = Mail::prepareHeaders($headers);
-        
-        
-        if (!$prepareHeader || PEAR::isError($prepareHeader)){
-        	print_r($prepareHeader);
-        	throw new Exception("Impossible de parser les en-têtes du mail ($prepareHeader)");
-        		
+
+
+        if (!$prepareHeader || PEAR::isError($prepareHeader)) {
+            print_r($prepareHeader);
+            throw new Exception("Impossible de parser les en-têtes du mail ($prepareHeader)");
         }
 
-        
-        $text_headers= $prepareHeader[1];
+
+        $text_headers = $prepareHeader[1];
 
 
 
-        $result = mail($recipients, $subject, $body, $text_headers,$from);
+        $result = mail($recipients, $subject, $body, $text_headers, $from);
         return $result;
     }
 }

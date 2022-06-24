@@ -1,6 +1,5 @@
 <?php
 
-
 class VerifyPadesSignature
 {
     /** @var VerifyPemCertificate  */
@@ -12,8 +11,7 @@ class VerifyPadesSignature
         $rgs_validca_path,
         VerifyPemCertificateFactory $verifyPemCertificateFactory,
         PemCertificateFactory $pemCertificateFactory
-    )
-    {
+    ) {
         $this->verifyPemCertificate = $verifyPemCertificateFactory->get($rgs_validca_path);
         $this->pemCertificateFactory = $pemCertificateFactory;
     }
@@ -28,7 +26,7 @@ class VerifyPadesSignature
         $pemCertificate = $this->pemCertificateFactory
             ->getFromMinimalString($signature->signingCert);
         $pemCertificate->checkCertificateIsValidAtDate(
-                $this->getDateTimeFromSignature($signature)
+            $this->getDateTimeFromSignature($signature)
         );
         return $pemCertificate;
     }
@@ -51,16 +49,17 @@ class VerifyPadesSignature
      * @return bool
      * @throws Exception
      */
-    private function validateCertificateFomSignature($certificateContent,$signatureTimestamp){
-        $certificate_path = sys_get_temp_dir()."/s2low_valid_certifcate_".time().mt_rand(0,mt_getrandmax());
-        file_put_contents($certificate_path,$certificateContent);
+    private function validateCertificateFomSignature($certificateContent, $signatureTimestamp)
+    {
+        $certificate_path = sys_get_temp_dir() . "/s2low_valid_certifcate_" . time() . mt_rand(0, mt_getrandmax());
+        file_put_contents($certificate_path, $certificateContent);
         try {
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
-            $certificate_path,
-            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
-            $signatureTimestamp
+                $certificate_path,
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
+                $signatureTimestamp
             );
-        } catch (Exception $e){
+        } catch (Exception $e) {
             unlink($certificate_path);
             throw $e;
         }
@@ -68,14 +67,15 @@ class VerifyPadesSignature
         return true;
     }
 
-    private function checkNecessaryFields($signature){
-        if (empty($signature->valid) || ! $signature->valid){
+    private function checkNecessaryFields($signature)
+    {
+        if (empty($signature->valid) || ! $signature->valid) {
             throw new Exception("Au moins une signature n'est pas valide");
         }
-        if(empty($signature->signingCert)){
+        if (empty($signature->signingCert)) {
             throw new Exception("Impossible de récupérer le certificat de signature");
         };
-        if (empty($signature->signatureDate)){
+        if (empty($signature->signatureDate)) {
             throw new Exception("Impossible de determiner la date de la signature");
         }
     }

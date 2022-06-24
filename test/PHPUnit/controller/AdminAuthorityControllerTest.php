@@ -1,36 +1,38 @@
 <?php
 
-class AdminAuthorityControllerTest extends S2lowTestCase {
-
+class AdminAuthorityControllerTest extends S2lowTestCase
+{
     /**
      * @preserveGlobalState disabled
      * @runInSeparateProcess
-	 * @throws RedirectException
+     * @throws RedirectException
      */
-    public function testDownloadConventionAction(){
+    public function testDownloadConventionAction()
+    {
         $actesConvention = $this->getMockBuilder("ActesConventions")->disableOriginalConstructor()->getMock();
         $actesConvention->method("getConventionFilepath")->willReturn(
-            __DIR__."/../class/fixtures/vide.pdf"
+            __DIR__ . "/../class/fixtures/vide.pdf"
         );
 
-        $this->getObjectInstancier()->set("ActesConventions",$actesConvention);
+        $this->getObjectInstancier()->set("ActesConventions", $actesConvention);
 
         $this->setSuperAdminAuthentication();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_id', 1);
         $adminAuthorityController = $this->getObjectInstancier()->get("AdminAuthorityController");
 
-        $this->setExpectedException("Exception","exit() called");
+        $this->setExpectedException("Exception", "exit() called");
         $this->expectOutputRegex("##");
         $adminAuthorityController->downloadConventionAction();
     }
 
 
-	/**
-	 * @throws RedirectException
-	 */
-    public function testDownloadConventionActionNoConvention(){
+    /**
+     * @throws RedirectException
+     */
+    public function testDownloadConventionActionNoConvention()
+    {
         $this->setSuperAdminAuthentication();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_id',1);
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_id', 1);
         $adminAuthorityController = $this->getObjectInstancier()->get("AdminAuthorityController");
         $this->setExpectedException(
             "Exception",
@@ -39,10 +41,11 @@ class AdminAuthorityControllerTest extends S2lowTestCase {
         $adminAuthorityController->downloadConventionAction();
     }
 
-	/**
-	 * @throws RedirectException
-	 */
-    public function testDownloadConventionActionNoAuthorityId(){
+    /**
+     * @throws RedirectException
+     */
+    public function testDownloadConventionActionNoAuthorityId()
+    {
         $this->setSuperAdminAuthentication();
         $adminAuthorityController = $this->getObjectInstancier()->get("AdminAuthorityController");
         $this->setExpectedException(
@@ -52,36 +55,38 @@ class AdminAuthorityControllerTest extends S2lowTestCase {
         $adminAuthorityController->downloadConventionAction();
     }
 
-	/**
-	 * @throws RedirectException
-	 */
-    public function testExportListAction(){
-		$this->setSuperAdminAuthentication();
-		$adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
-		$this->setExpectedException(Exception::class,"exit() called");
-		$this->expectOutputRegex("#Bourg-en-Bresse#");
-		$adminAuthorityController->exportListAction();
-	}
+    /**
+     * @throws RedirectException
+     */
+    public function testExportListAction()
+    {
+        $this->setSuperAdminAuthentication();
+        $adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
+        $this->setExpectedException(Exception::class, "exit() called");
+        $this->expectOutputRegex("#Bourg-en-Bresse#");
+        $adminAuthorityController->exportListAction();
+    }
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function testExportListActionGroupAdmin(){
-		$this->setAdminGroupAuthentication();
-		$adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
-		$this->setExpectedException(Exception::class,"exit() called");
-		$this->expectOutputRegex("#Bourg-en-Bresse#");
-		$adminAuthorityController->exportListAction();
-	}
+    /**
+     * @throws RedirectException
+     */
+    public function testExportListActionGroupAdmin()
+    {
+        $this->setAdminGroupAuthentication();
+        $adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
+        $this->setExpectedException(Exception::class, "exit() called");
+        $this->expectOutputRegex("#Bourg-en-Bresse#");
+        $adminAuthorityController->exportListAction();
+    }
 
-	/**
-	 * @throws RedirectException
-	 */
-	public function testExportListActionUser(){
-		$this->setAdminColAuthentication();
-		$adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
-		$this->setExpectedException(RedirectException::class,"Vous devez être administrateur de groupe ou super admin");
-		$adminAuthorityController->exportListAction();
-	}
-
+    /**
+     * @throws RedirectException
+     */
+    public function testExportListActionUser()
+    {
+        $this->setAdminColAuthentication();
+        $adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
+        $this->setExpectedException(RedirectException::class, "Vous devez être administrateur de groupe ou super admin");
+        $adminAuthorityController->exportListAction();
+    }
 }

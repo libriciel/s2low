@@ -1,28 +1,29 @@
 <?php
+
 // Configuration
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
+require_once("../../../config/config.php");
+require_once(SITEROOT . '/class/include.class.php');
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-	$_SESSION["error"] = "Erreur d'initialisation du module";
-	header("Location: " . WEBSITE_SSL);
-	exit();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-	$_SESSION["error"] = "Échec de l'authentification";
-	header("Location: " . WEBSITE);
-	exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL);
-	exit();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -278,10 +279,10 @@ $html .= "var test = $(this).val().match(/[^A-Z0-9_]*/g);
 
 
 //on lance le test javascript pour vérifire si le navigateur client peut faire de la sélection multiple
-$html .="verifMultiUpload();\n";
+$html .= "verifMultiUpload();\n";
 
 //ici on masque par defaut le bouton d envoi. Il sera afficher si aucun fichier invalide n est present dans la liste
-$html .="$('.start').css('display', 'none');
+$html .= "$('.start').css('display', 'none');
     </script>\n
   ";
 

@@ -1,7 +1,6 @@
 <?php
 
-
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 echo "Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu\n";
@@ -10,7 +9,7 @@ $sqlQuery->query($sql);
 
 echo "Mise à jour du libellé du status 18 - En attente d'être signée -> En attente d'être signé\n";
 $sql = "UPDATE helios_status SET name=? WHERE id=?";
-$sqlQuery->query($sql,"En attente d'être signé",13);
+$sqlQuery->query($sql, "En attente d'être signé", 13);
 
 
 echo "(re)Mise à jour de la colonne actes_transactions.user_id\n";

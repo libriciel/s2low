@@ -1,20 +1,19 @@
-<?php 
+<?php
 
 require_once("init.php");
-if (empty($droit_specific)){
-	$droit_specific = array();
+if (empty($droit_specific)) {
+    $droit_specific = array();
 }
 
 $connexion = new Connexion();
-if (!$connexion->isConnected()){
-	$me = new User();
-	
-	if (!$me->authenticate()) {
-		$_SESSION["error"] = "Échec de l'authentification";
-		header("Location: " . WEBSITE);
-		exit();
-	}
+if (!$connexion->isConnected()) {
+    $me = new User();
 
+    if (!$me->authenticate()) {
+        $_SESSION["error"] = "Échec de l'authentification";
+        header("Location: " . WEBSITE);
+        exit();
+    }
 }
 
 $userSQL = new UserSQL($sqlQuery);
@@ -25,22 +24,22 @@ $authorityInfo = $authoritySQL->getInfo($userInfo['authority_id']);
 
 
 $groupeInfo = false;
-if ($authorityInfo['authority_group_id']){
-	$groupSQL = new GroupSQL($sqlQuery);
-	$groupeInfo = $groupSQL->getInfo($authorityInfo['authority_group_id']);
+if ($authorityInfo['authority_group_id']) {
+    $groupSQL = new GroupSQL($sqlQuery);
+    $groupeInfo = $groupSQL->getInfo($authorityInfo['authority_group_id']);
 }
 
 $moduleSQL = new ModuleSQL($sqlQuery);
 
 $droit = $objectInstancier->get(Droit::class);
 
-if ( ! empty($module_name)) {
-	$moduleInfo = $moduleSQL->getInfoByName($module_name,$userInfo['authority_id']);
-	$droitModuleInfo = $moduleSQL->getInfoModuleAuthority($moduleInfo['id'],$userInfo['authority_id']);
-	$permUser = $moduleSQL->getInfoPerms($moduleInfo['id'],$connexion->getId());
-	
-	if (! $droit->canAccess($moduleInfo,$userInfo,$authorityInfo,$groupeInfo,$droitModuleInfo,$permUser,$droit_specific)){
-        $objectInstancier->get('S2lowRedirect')->redirect("/","Accès refusé");
+if (! empty($module_name)) {
+    $moduleInfo = $moduleSQL->getInfoByName($module_name, $userInfo['authority_id']);
+    $droitModuleInfo = $moduleSQL->getInfoModuleAuthority($moduleInfo['id'], $userInfo['authority_id']);
+    $permUser = $moduleSQL->getInfoPerms($moduleInfo['id'], $connexion->getId());
+
+    if (! $droit->canAccess($moduleInfo, $userInfo, $authorityInfo, $groupeInfo, $droitModuleInfo, $permUser, $droit_specific)) {
+        $objectInstancier->get('S2lowRedirect')->redirect("/", "Accès refusé");
     }
 }
 

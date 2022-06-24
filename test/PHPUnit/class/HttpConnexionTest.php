@@ -1,6 +1,7 @@
 <?php
 
-class HttpConnexionTest extends S2lowTestCase{
+class HttpConnexionTest extends S2lowTestCase
+{
     public function testEmptyInfoSslClientCert()
     {
         $standardLocation = $this->getMockBuilder(SessionWrapper::class)
@@ -21,12 +22,12 @@ class HttpConnexionTest extends S2lowTestCase{
 
         $certificateHandler->expects($this->once())->method('getInfo')->willReturn(false);
 
-        $httpConnexion = new HttpsConnexion($environnement,$certificateHandler);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $this->assertFalse($httpConnexion->getCertificateInfo());
-
     }
 
-    public function testGetCredentialsFromGet(){
+    public function testGetCredentialsFromGet()
+    {
 
         $standardLocation = $this->getMockBuilder(SessionWrapper::class)
             ->disableOriginalConstructor()
@@ -44,10 +45,10 @@ class HttpConnexionTest extends S2lowTestCase{
             ->disableOriginalConstructor()
             ->getMock();
 
-        $httpConnexion = new HttpsConnexion($environnement,$certificateHandler);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $credentials = $httpConnexion->getCredentialsFromPost();
 
-        $this->assertEquals("login",$credentials["login"]);
-        $this->assertEquals("password",$credentials["password"]);
+        $this->assertEquals("login", $credentials["login"]);
+        $this->assertEquals("password", $credentials["password"]);
     }
 }

@@ -1,36 +1,36 @@
 <?php
 
-class HeliosStorePESAllerWorkerTest extends S2lowTestCase {
-
-	use HeliosUtilitiesTestTrait;
-
-
-	public function testGetAllId(){
-		$transaction_id = $this->createTransaction();
-		$heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
-		$this->assertEquals([$transaction_id],$heliosStorePESAllerWorker->getAllId());
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public function testWork(){
-		$pesAllerStorage = $this->getMockBuilder(PesAllerStorage::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$pesAllerStorage
-
-			->method("storeNextFileById")
-			->willReturn(true);
-		$this->getObjectInstancier()->set(PesAllerStorage::class,$pesAllerStorage);
+class HeliosStorePESAllerWorkerTest extends S2lowTestCase
+{
+    use HeliosUtilitiesTestTrait;
 
 
-		$transaction_id = $this->createTransaction();
-		$heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
+    public function testGetAllId()
+    {
+        $transaction_id = $this->createTransaction();
+        $heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
+        $this->assertEquals([$transaction_id], $heliosStorePESAllerWorker->getAllId());
+    }
 
-		$heliosStorePESAllerWorker->work($transaction_id);
-		$this->assertTrue(true);
+    /**
+     * @throws Exception
+     */
+    public function testWork()
+    {
+        $pesAllerStorage = $this->getMockBuilder(PesAllerStorage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $pesAllerStorage
 
-	}
+            ->method("storeNextFileById")
+            ->willReturn(true);
+        $this->getObjectInstancier()->set(PesAllerStorage::class, $pesAllerStorage);
 
+
+        $transaction_id = $this->createTransaction();
+        $heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
+
+        $heliosStorePESAllerWorker->work($transaction_id);
+        $this->assertTrue(true);
+    }
 }

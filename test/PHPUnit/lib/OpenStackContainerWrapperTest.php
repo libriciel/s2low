@@ -12,8 +12,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\NullLogger;
 
-class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
-
+class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase
+{
     /**
      * @var MockObject
      */
@@ -27,7 +27,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             ->getMock();
     }
 
-    private function getTokenMock(bool $isExpired=false){
+    private function getTokenMock(bool $isExpired = false)
+    {
         $tokenMock = $this->getMockBuilder(Token::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -39,13 +40,15 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         return $tokenMock;
     }
 
-    private function getContainerMock(){
+    private function getContainerMock()
+    {
         return $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
 
-    private function getOpenStackContainerFetcherMock($expects,$willReturn){
+    private function getOpenStackContainerFetcherMock($expects, $willReturn)
+    {
         /** @var  $openStackContainerFetcherMock OpenStackContainerFetcher | MockObject */
         $openStackContainerFetcherMock = $this->getMockBuilder(OpenStackContainerFetcher::class)
             ->disableOriginalConstructor()
@@ -58,14 +61,15 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         return $openStackContainerFetcherMock;
     }
 
-    public function testExecuteCreateObject(){
+    public function testExecuteCreateObject()
+    {
         $method = 'createObject';
-        $willReturn=$this->getMockBuilder(StorageObject::class)
+        $willReturn = $this->getMockBuilder(StorageObject::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $options= ["options"];
+        $options = ["options"];
 
-        $methodCalled=$method;
+        $methodCalled = $method;
 
         $containerMock = $this->getContainerMock();
 
@@ -75,13 +79,13 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
 
         $openStackContainerFetcherMock = $this->getOpenStackContainerFetcherMock(
             $this->once(),
-            $this->returnValue([$this->getTokenMock(),$containerMock]
-            )
+            $this->returnValue([$this->getTokenMock(),$containerMock])
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
             new Logger("test"),
-        $this->mockManager
+            $this->mockManager
         );
 
         $this->assertEquals(
@@ -94,13 +98,14 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteDownload(){
+    public function testExecuteDownload()
+    {
         /** @var $streamInterfaceMock StreamInterface  */
         $streamInterfaceMock = $this->getMockBuilder(StreamInterface::class)
         ->disableOriginalConstructor()
         ->getMock();
 
-        $StorageObjetMock=$this->getMockBuilder(StorageObject::class)
+        $StorageObjetMock = $this->getMockBuilder(StorageObject::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -119,7 +124,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
             $this->returnValue([$this->getTokenMock(),$containerMock])
         );
 
-        $openStackContainerWrapper = new OpenStackContainerWrapper($openStackContainerFetcherMock,
+        $openStackContainerWrapper = new OpenStackContainerWrapper(
+            $openStackContainerFetcherMock,
             new NullLogger(),
             $this->mockManager
         );
@@ -134,9 +140,10 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteObjectExists(){
-        $willReturn= true;
-        $options="options";
+    public function testExecuteObjectExists()
+    {
+        $willReturn = true;
+        $options = "options";
 
         $containerMock = $this->getContainerMock();
 
@@ -157,8 +164,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         );
 
         $this->assertEquals(
-             $openStackContainerWrapper->objectExists($options),
-             $willReturn
+            $openStackContainerWrapper->objectExists($options),
+            $willReturn
         );
     }
 
@@ -166,10 +173,11 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteDelete(){
-        $options="options";
+    public function testExecuteDelete()
+    {
+        $options = "options";
 
-        $storageObjectNameMock=$this->getMockBuilder(StorageObject::class)
+        $storageObjectNameMock = $this->getMockBuilder(StorageObject::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -203,7 +211,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteFunctionOnContainerWithOutdatedToken(){
+    public function testExecuteFunctionOnContainerWithOutdatedToken()
+    {
 
         $openStackContainerFetcherMock = $this->getOpenStackContainerFetcherMock(
             $this->exactly(2),
@@ -237,7 +246,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testResetConnexion(){
+    public function testResetConnexion()
+    {
 
         $firstContainerMock = $this->getContainerMock();
 
@@ -283,12 +293,13 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteFailsOnce(){
+    public function testExecuteFailsOnce()
+    {
 
         $openStackContainerFetcherMock = $this->getOpenStackContainerFetcherMock(
             $this->exactly(1),
-            $this->onConsecutiveCalls($this->throwException(new BadMethodCallException("Exception1"))
-        ));
+            $this->onConsecutiveCalls($this->throwException(new BadMethodCallException("Exception1")))
+        );
 
         /** @var Logger|MockObject $logger */
         $logger = $this->getMockBuilder(Logger::class)
@@ -310,7 +321,8 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
      * @throws Exception
      */
 
-    public function testExecuteWithResetNeeded(){
+    public function testExecuteWithResetNeeded()
+    {
 
         $containerMock = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
@@ -319,7 +331,7 @@ class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase {
         $openStackContainerFetcherMock = $this->getOpenStackContainerFetcherMock(
             $this->exactly(1),
             $this->returnValue(["token",$containerMock])
-            );
+        );
 
         /** @var Logger|MockObject $logger */
         $logger = $this->getMockBuilder(Logger::class)

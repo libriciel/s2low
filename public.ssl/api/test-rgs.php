@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * * @api {get} /api/test-rgs.php Test RGS
  * @apiDescription Indique si le certificat de connexion est reconnu comme &eacute;tant RGS
@@ -12,12 +11,13 @@
  * @apiError (Error) {String} KO
  *
  */
-require_once( __DIR__ . "/../../init/init-www.php");
+
+require_once(__DIR__ . "/../../init/init-www.php");
 
 $rgsConnexion = new RgsConnexion();
-if (! $rgsConnexion->isRgsConnexion()){
-	echo "KO";
-	exit ;
+if (! $rgsConnexion->isRgsConnexion()) {
+    echo "KO";
+    exit ;
 }
 
 echo "OK";

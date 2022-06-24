@@ -2,25 +2,26 @@
 
 class HeliosAPIControllerTest extends S2lowTestCase
 {
-   use HeliosUtilitiesTestTrait {
-       createTransaction as createTransactionTrait;
-   }
+    use HeliosUtilitiesTestTrait {
+        createTransaction as createTransactionTrait;
+    }
 
-   private function getHeliosAPIController()
-   {
+    private function getHeliosAPIController()
+    {
         return $this->getObjectInstancier()->get(HeliosAPIController::class);
-   }
+    }
 
     /**
      * @return false|mixed
      * @throws Exception
      */
-   private function createTransaction(){
-       $transaction_id = $this->createTransactionTrait();
-       $sql = "UPDATE helios_transactions SET submission_date='2017-07-31T00:00:01' WHERE id=?";
-       $this->getSQLQuery()->query($sql,$transaction_id);
-       return $transaction_id;
-   }
+    private function createTransaction()
+    {
+        $transaction_id = $this->createTransactionTrait();
+        $sql = "UPDATE helios_transactions SET submission_date='2017-07-31T00:00:01' WHERE id=?";
+        $this->getSQLQuery()->query($sql, $transaction_id);
+        return $transaction_id;
+    }
 
     /**
      * @throws Exception
@@ -29,8 +30,8 @@ class HeliosAPIControllerTest extends S2lowTestCase
     {
         $this->createTransaction();
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
 
         $this->setAdminGroupAuthentication();
         ob_start();
@@ -49,9 +50,9 @@ class HeliosAPIControllerTest extends S2lowTestCase
     public function testNbCreatedPESByAuthoritiesAndMonthGroupProvided()
     {
         $this->createTransaction();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id','1');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
         $this->setSuperAdminAuthentication();
 
         ob_start();
@@ -71,9 +72,9 @@ class HeliosAPIControllerTest extends S2lowTestCase
     {
 
         $this->createTransaction();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month','7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year','2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id','1');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
+        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
         $this->setAdminGroupAuthentication();
         $sql = "UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1";
         $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);

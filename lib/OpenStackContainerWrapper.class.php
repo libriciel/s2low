@@ -7,7 +7,8 @@ use OpenStack\ObjectStore\v1\Models\StorageObject;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 
-class OpenStackContainerWrapper{
+class OpenStackContainerWrapper
+{
     /** @var Token */
     private $token;
     /** @var Container */
@@ -28,7 +29,7 @@ class OpenStackContainerWrapper{
         OpenStackContainerFetcher $openStackContainerFetcher,
         LoggerInterface $logger,
         OpenStackStateManager $openStackStateManager
-    ){
+    ) {
         $this->openStackStateManager = $openStackStateManager;
         $this->logger = $logger;
         $this->openStackContainerFetcher = $openStackContainerFetcher;
@@ -39,11 +40,12 @@ class OpenStackContainerWrapper{
      * @throws Exception
      */
 
-    private function getContainer(){
-        if($this->openStackStateManager->isResetNeeded()){
+    private function getContainer()
+    {
+        if ($this->openStackStateManager->isResetNeeded()) {
             $this->resetConnection();
         }
-        if((!isset($this->container)) || (!$this->hasValidToken())){
+        if ((!isset($this->container)) || (!$this->hasValidToken())) {
             $array = $this->openStackContainerFetcher->getNewTokenAndContainer();
             list($this->token,$this->container) = $array;
         }
@@ -54,17 +56,19 @@ class OpenStackContainerWrapper{
      * @return bool
      */
 
-    private function hasValidToken(){
+    private function hasValidToken()
+    {
         $hasValidToken = isset($this->token) && !$this->token->hasExpired();
-        if(!$hasValidToken){
+        if (!$hasValidToken) {
             $this->logger->info("[Openstack] Token expiré");
         }
         return ($hasValidToken);
     }
 
 
-    public function resetConnection(){
-        $this->logger->info( "[Openstack] Reset Connection");
+    public function resetConnection()
+    {
+        $this->logger->info("[Openstack] Reset Connection");
         list($this->token,$this->container) = [null,null];
     }
 
@@ -74,9 +78,10 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    public function createObject($options){
+    public function createObject($options)
+    {
         return $this->executeCommand(
-            function (Container $container,$options){
+            function (Container $container, $options) {
                 return $container->createObject($options);
             },
             $options
@@ -89,9 +94,10 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    public function download($options){
+    public function download($options)
+    {
         return $this->executeCommand(
-            function (Container $container,$options){
+            function (Container $container, $options) {
                 return $container->getObject($options)->download();
             },
             $options
@@ -104,9 +110,10 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    public function delete($options){
+    public function delete($options)
+    {
         return $this->executeCommand(
-            function (Container $container,$options){
+            function (Container $container, $options) {
                 $container->getObject($options)->delete();
                 return true;
             },
@@ -120,9 +127,10 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    public function objectExists($options){
+    public function objectExists($options)
+    {
         return $this->executeCommand(
-            function(Container $container,$options){
+            function (Container $container, $options) {
                 return $container->objectExists($options);
             },
             $options
@@ -136,8 +144,9 @@ class OpenStackContainerWrapper{
      * @throws PausingQueueException
      */
 
-    private function executeCommand( callable $function, $options){
-        try{
+    private function executeCommand(callable $function, $options)
+    {
+        try {
             $result = $function($this->getContainer(), $options);
             $this->openStackStateManager->declareSuccess();
             return $result;

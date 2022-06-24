@@ -33,16 +33,16 @@ $ftpService = new FTPService(
     $helios_ftp_passtrans_mode
 );
 
-if ( !in_array( $argc,[1,2]) || ($argc == 2 && $argv[1] != "testUpload") ){
-    echo "Erreur : ".$argv[1]."\n";
+if (!in_array($argc, [1,2]) || ($argc == 2 && $argv[1] != "testUpload")) {
+    echo "Erreur : " . $argv[1] . "\n";
     exit(-1);
 }
 
-$testUpload=false;
+$testUpload = false;
 
-if ($argc == 2 && $argv[1] == "testUpload" ){
+if ($argc == 2 && $argv[1] == "testUpload") {
     echo "test Upload actif\n";
-    $testUpload=true;
+    $testUpload = true;
 }
 
 $ftpService->connect();
@@ -50,7 +50,7 @@ $ftpService->connect();
 // WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
 //var_dump($ftpService->getFileNames("/depot"));
 
-if($testUpload){
+if ($testUpload) {
     $ftpService->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
     $command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
     echo "$command\n";

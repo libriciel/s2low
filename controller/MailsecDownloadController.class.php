@@ -1,57 +1,59 @@
 <?php
 
-class MailsecDownloadController extends Controller {
+class MailsecDownloadController extends Controller
+{
+    public const DEFAULT_ARCHIVE_NAME = 'mail.zip';
+    /**
+     * @return bool
+     * @throws RedirectException
+     * @throws UnrecoverableException
+     * @throws Exception
+     */
+    public function downloadAction()
+    {
+        $tmpFolder = new TmpFolder();
+        $tmp_folder = false;
 
-	const DEFAULT_ARCHIVE_NAME = 'mail.zip';
-	/**
-	 * @return bool
-	 * @throws RedirectException
-	 * @throws UnrecoverableException
-	 * @throws Exception
-	 */
-	public function downloadAction(){
-		$tmpFolder = new TmpFolder();
-		$tmp_folder = false;
-
-		$filename = $this->getRecuperateurGet()->get('filename');
-		$fn_download = $this->getRecuperateurGet()->get('root');
-
-
-		if (! $this->fileExists($fn_download,$filename)){
-			$this->redirectToErrorPage();
-		}
-
-		$mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
-		$mail_id = $mailTransactionSQL->getIdFromFnDownload($fn_download);
+        $filename = $this->getRecuperateurGet()->get('filename');
+        $fn_download = $this->getRecuperateurGet()->get('root');
 
 
-		$cloudStorage  = $this->getObjectInstancier()
-			->get(CloudStorageFactory::class)
-			->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-
-        try{
-            $filepath = $cloudStorage->getPath($mail_id);
-        }
-        catch (Exception $exception){
+        if (! $this->fileExists($fn_download, $filename)) {
             $this->redirectToErrorPage();
         }
 
-		if ($filename != self::DEFAULT_ARCHIVE_NAME){
-			$tmp_folder = $tmpFolder->create();
-			$zipArchive = new ZipArchive();
-			$zipArchive->open($filepath);
-            $filenameInZip = iconv('IBM437','UTF-8',
-                mb_convert_encoding($filename,"ISO-8859-9","UTF-8")
+        $mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
+        $mail_id = $mailTransactionSQL->getIdFromFnDownload($fn_download);
+
+
+        $cloudStorage  = $this->getObjectInstancier()
+            ->get(CloudStorageFactory::class)
+            ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+
+        try {
+            $filepath = $cloudStorage->getPath($mail_id);
+        } catch (Exception $exception) {
+            $this->redirectToErrorPage();
+        }
+
+        if ($filename != self::DEFAULT_ARCHIVE_NAME) {
+            $tmp_folder = $tmpFolder->create();
+            $zipArchive = new ZipArchive();
+            $zipArchive->open($filepath);
+            $filenameInZip = iconv(
+                'IBM437',
+                'UTF-8',
+                mb_convert_encoding($filename, "ISO-8859-9", "UTF-8")
             );     // HACK Fix passage en utf-8!!
 
-            echo bin2hex("é")."\n";
-            echo hex2bin("c3a9")."\n";
-            echo "é :\t".bin2hex("é")."\n";
-            echo "é :\t".bin2hex(iconv('IBM437','UTF-8',"é"))."\n";
-            echo "filename :\t\t".bin2hex($filename)."\n";
-            echo "filenameInZip :\t".bin2hex($filenameInZip)."\n";
+            echo bin2hex("é") . "\n";
+            echo hex2bin("c3a9") . "\n";
+            echo "é :\t" . bin2hex("é") . "\n";
+            echo "é :\t" . bin2hex(iconv('IBM437', 'UTF-8', "é")) . "\n";
+            echo "filename :\t\t" . bin2hex($filename) . "\n";
+            echo "filenameInZip :\t" . bin2hex($filenameInZip) . "\n";
 
-            $filepath = $tmp_folder."/".$filename;
+            $filepath = $tmp_folder . "/" . $filename;
             $contents = stream_get_contents($zipArchive->getStream($filenameInZip));
             file_put_contents(
                 $filepath,
@@ -59,41 +61,42 @@ class MailsecDownloadController extends Controller {
             );
 
             var_dump(scandir($tmp_folder));
-		}
+        }
 
-		$finfo = finfo_open(FILEINFO_MIME_TYPE|FILEINFO_MIME_ENCODING);
-		$mime_type = finfo_file($finfo, $filepath);
-		finfo_close($finfo);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE | FILEINFO_MIME_ENCODING);
+        $mime_type = finfo_file($finfo, $filepath);
+        finfo_close($finfo);
 
-		header_wrapper("Content-Type: $mime_type");
-		header_wrapper("Pragma: public");
-		header_wrapper("Content-Length: ".filesize($filepath));
-		header_wrapper("Content-Disposition: attachment; filename=\"$filename\"");
-		header_wrapper("Content-Description: File Transfert");
+        header_wrapper("Content-Type: $mime_type");
+        header_wrapper("Pragma: public");
+        header_wrapper("Content-Length: " . filesize($filepath));
+        header_wrapper("Content-Disposition: attachment; filename=\"$filename\"");
+        header_wrapper("Content-Description: File Transfert");
 
-		readfile($filepath);
+        readfile($filepath);
 
-		if ($filename != self::DEFAULT_ARCHIVE_NAME && $tmp_folder){
-			$tmpFolder->delete($tmp_folder);
-		}
-		exit_wrapper();
-		return true;
-	}
+        if ($filename != self::DEFAULT_ARCHIVE_NAME && $tmp_folder) {
+            $tmpFolder->delete($tmp_folder);
+        }
+        exit_wrapper();
+        return true;
+    }
 
-	/**
-	 * @throws RedirectException
-	 */
-	private function redirectToErrorPage(){
-		$this->redirect(WEBSITE."/modules/mail/?command=show&mail_emis_id=");
-	}
+    /**
+     * @throws RedirectException
+     */
+    private function redirectToErrorPage()
+    {
+        $this->redirect(WEBSITE . "/modules/mail/?command=show&mail_emis_id=");
+    }
 
-	private function fileExists($fn_download, $filename){
-		$mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
+    private function fileExists($fn_download, $filename)
+    {
+        $mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
 
-		if ($filename == self::DEFAULT_ARCHIVE_NAME ){
-			return $mailTransactionSQL->fnDownloadExists($fn_download);
-		}
-		return $mailTransactionSQL->fileExists($fn_download,$filename);
-	}
-
+        if ($filename == self::DEFAULT_ARCHIVE_NAME) {
+            return $mailTransactionSQL->fnDownloadExists($fn_download);
+        }
+        return $mailTransactionSQL->fileExists($fn_download, $filename);
+    }
 }

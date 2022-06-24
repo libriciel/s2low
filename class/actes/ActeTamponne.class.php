@@ -1,39 +1,40 @@
 <?php
 
-class ActeTamponne {
+class ActeTamponne
+{
+    /** @var  ActesTransactionsSQL */
+    private $actesTransactionsSQL;
 
-	/** @var  ActesTransactionsSQL */
-	private $actesTransactionsSQL;
+    /** @var  PDFStampWrapper */
+    private $pdfStampWrapper;
 
-	/** @var  PDFStampWrapper */
-	private $pdfStampWrapper;
+    /** @var S2lowLogger */
+    private $logger;
 
-	/** @var S2lowLogger */
-	private $logger;
-
-	public function __construct(
-	    ActesTransactionsSQL $actesTransactionsSQL,
+    public function __construct(
+        ActesTransactionsSQL $actesTransactionsSQL,
         PDFStampWrapper $pdfStampWrapper,
         S2lowLogger $logger
     ) {
-		$this->actesTransactionsSQL = $actesTransactionsSQL;
-		$this->pdfStampWrapper = $pdfStampWrapper;
-		$this->logger = $logger;
-	}
+        $this->actesTransactionsSQL = $actesTransactionsSQL;
+        $this->pdfStampWrapper = $pdfStampWrapper;
+        $this->logger = $logger;
+    }
 
-	public function tamponnerPDF($file_path,$transaction_id,$date_affichage = false){
+    public function tamponnerPDF($file_path, $transaction_id, $date_affichage = false)
+    {
 
-		$transactionInfo = $this->actesTransactionsSQL->getDateTampon($transaction_id);
+        $transactionInfo = $this->actesTransactionsSQL->getDateTampon($transaction_id);
 
         $date_reception = $transactionInfo['date'];
 
-        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id,4);
+        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id, 4);
 
         $arActes = $actesTransactionsStatusInfo['flux_retour'];
 
         $xml = simplexml_load_string($arActes);
 
-        if ($xml && $xml->asXML()){
+        if ($xml && $xml->asXML()) {
             $date_reception = strval($xml->attributes("http://www.interieur.gouv.fr/ACTES#v1.1-20040216")->DateReception);
         }
 
@@ -47,22 +48,21 @@ class ActeTamponne {
             $result =  $this->pdfStampWrapper->stamp($file_path, $pdfStampData);
             $this->logger->info("Tamponnage de l'acte $transaction_id");
             return $result;
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->logger->error("Impossible de tamponné l'acte $transaction_id : " . $e->getMessage());
             return file_get_contents($file_path);
         }
-	}
+    }
 
-	public function render($file_path,$transaction_id, $date_affichage = false){
-		$content = $this->tamponnerPDF($file_path,$transaction_id,$date_affichage);
-		$filename = basename($file_path);
-		header('Content-type: application/pdf');
-		header("Content-Disposition: attachment; filename=$filename");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-		header("Pragma: public");
-		echo $content;
-	}
-
-
+    public function render($file_path, $transaction_id, $date_affichage = false)
+    {
+        $content = $this->tamponnerPDF($file_path, $transaction_id, $date_affichage);
+        $filename = basename($file_path);
+        header('Content-type: application/pdf');
+        header("Content-Disposition: attachment; filename=$filename");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
+        header("Pragma: public");
+        echo $content;
+    }
 }

@@ -2,10 +2,10 @@
 
 require_once(__DIR__ . "/../init/init.php");
 
-if ($argc < 5){
-	echo "{$argv[0]} : Crée un utilisateur avec le rôle SUPER ADMIN\n";
-	echo "Usage : {$argv[0]} nom prenom email fichier_certificat_pem\n";
-	exit(-1);
+if ($argc < 5) {
+    echo "{$argv[0]} : Crée un utilisateur avec le rôle SUPER ADMIN\n";
+    echo "Usage : {$argv[0]} nom prenom email fichier_certificat_pem\n";
+    exit(-1);
 }
 
 $name = $argv[1];
@@ -24,13 +24,13 @@ $him->set("role", 'SADM');
 
 $him->set("certFilePath", $certificate);
 if (! $him->save()) {
-	echo "Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg() ." \n";
-	exit(-1);
+    echo "Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg() . " \n";
+    exit(-1);
 }
 
 $user_id = $him->getId();
 
 $userSQL = new UserSQL($sqlQuery);
-$userSQL->saveCertificateRGS2Etoiles($user_id,"");
+$userSQL->saveCertificateRGS2Etoiles($user_id, "");
 
 echo "Utilisateur créé avec succès";

@@ -1,39 +1,43 @@
 <?php
 
-class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
-
+class ActesEnvoiFichierWorkerTest extends S2lowTestCase
+{
     /** @var  TmpFolder */
     private $tmpFolder;
     private $tmp_dir;
 
-    protected function setUp() : void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set("actes_appli_trigramme","SLO");
+        $this->getObjectInstancier()->set("actes_appli_trigramme", "SLO");
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
-        $this->getObjectInstancier()->set(ActesFileSender::class,$actesFileSender);
+        $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
     }
 
-    protected function tearDown() : void {
+    protected function tearDown(): void
+    {
         parent::tearDown();
         $this->tmpFolder->delete($this->tmp_dir);
     }
 
-    public function testValidateAllEmpty(){
+    public function testValidateAllEmpty()
+    {
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
         $logs = $this->getLogRecords();
-        $this->assertMatchesRegularExpression("#Lancement du script#",$logs[0]['message']);
-        $this->assertMatchesRegularExpression("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#",$logs[1]['message']);
-        $this->assertMatchesRegularExpression("#Fin du script#",$logs[2]['message']);
+        $this->assertMatchesRegularExpression("#Lancement du script#", $logs[0]['message']);
+        $this->assertMatchesRegularExpression("#Envoie de 0 enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION#", $logs[1]['message']);
+        $this->assertMatchesRegularExpression("#Fin du script#", $logs[2]['message']);
     }
 
-    public function testEnvoiUneEnveloppe(){
+    public function testEnvoiUneEnveloppe()
+    {
         $transaction_id = $this->createTransaction(
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
-            __DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
+            __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
 
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
@@ -41,53 +45,55 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['last_status_id']);
+        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['status_id']);
+        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['status_id']);
         $this->assertEquals(
             "Transmis au MI",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
         $liste = $logsSQL->getLastLog();
-        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état transmis#",$liste['message']);
+        $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état transmis#", $liste['message']);
     }
 
-	public function testEnvoiUneEnveloppeMauvaisEtat(){
-		$transaction_id = $this->createTransaction(
-			ActesStatusSQL::STATUS_TRANSMIS,
-			__DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
-		);
+    public function testEnvoiUneEnveloppeMauvaisEtat()
+    {
+        $transaction_id = $this->createTransaction(
+            ActesStatusSQL::STATUS_TRANSMIS,
+            __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
+        );
 
-		$actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
-		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
-		$envelope_id = $transaction_info['envelope_id'];
+        $envelope_id = $transaction_info['envelope_id'];
 
-		$actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
+        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
 
-		$actesEnvoiFichierController->work($envelope_id);
+        $actesEnvoiFichierController->work($envelope_id);
 
 
-		$transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['last_status_id']);
-		$transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-		$this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS,$transaction_info['status_id']);
-		$this->assertEquals(
-			"Creation",
-			$transaction_info['message']
-		);
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
+        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['status_id']);
+        $this->assertEquals(
+            "Creation",
+            $transaction_info['message']
+        );
 
-		$this->assertEquals(
-			"La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
-			$this->getLogRecords()[0]['message']
-		);
-	}
+        $this->assertEquals(
+            "La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
+            $this->getLogRecords()[0]['message']
+        );
+    }
 
-    public function testEnvoiUneEnveloppeFailed(){
+    public function testEnvoiUneEnveloppeFailed()
+    {
         $transaction_id = $this->createTransaction(
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
-            __DIR__."/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
+            __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
         /** @var PHPUnit_Framework_MockObject_MockObject $actesFileSender */
         $actesFileSender = $this->getObjectInstancier()->get('ActesFileSender');
@@ -99,26 +105,27 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase {
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,$transaction_info['last_status_id']);
+        $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
 
-		$logs = $this->getLogRecords();
-        $this->assertMatchesRegularExpression("#Erreur du mock#",$logs[3]['message']);
+        $logs = $this->getLogRecords();
+        $this->assertMatchesRegularExpression("#Erreur du mock#", $logs[3]['message']);
     }
 
-    private function createTransaction($status,$archive_path){
+    private function createTransaction($status, $archive_path)
+    {
         $archive_name = basename($archive_path);
 
-        copy($archive_path,$this->tmp_dir."/$archive_name");
+        copy($archive_path, $this->tmp_dir . "/$archive_name");
 
-        $sql="INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql,basename($this->tmp_dir)."/$archive_name");
+        $sql = "INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID";
+        $envelope_id = $this->getSQLQuery()->queryOne($sql, basename($this->tmp_dir) . "/$archive_name");
 
 
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql,$envelope_id,$status,1,1,true);
+        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, true);
 
         $sql = "INSERT INTO actes_transactions_workflow(transaction_id, status_id, date, message, flux_retour) VALUES (?,?,now(),?,?)";
-        $this->getSQLQuery()->queryOne($sql,$transaction_id,$status,"Creation","");
+        $this->getSQLQuery()->queryOne($sql, $transaction_id, $status, "Creation", "");
         return $transaction_id;
     }
 }

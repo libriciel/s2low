@@ -1,18 +1,18 @@
 <?php
 
-class MailHeaderLegacy extends AbstractMailHeader Implements IMailHeader{
-
-    private function getFromField() : string
+class MailHeaderLegacy extends AbstractMailHeader implements IMailHeader
+{
+    private function getFromField(): string
     {
         return $this->fromMail;
     }
 
-    public function getFromEnveloppeAdressOption() : string
+    public function getFromEnveloppeAdressOption(): string
     {
         return "-f{$this->fromMail}";
     }
 
-    public function getHeader() : array
+    public function getHeader(): array
     {
         return array(
             'From'    => $this->getFromField(),

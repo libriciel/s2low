@@ -8,20 +8,18 @@
 
 if (! file_exists("/etc/s2low/DockerSettings.php")) {
     echo "DockerSettings n'existe pas : crÃ©ation Ã  partir des variables d'environnement\n";
-	$script = __DIR__ . "/generate-config.sh";
+    $script = __DIR__ . "/generate-config.sh";
 
-	`/bin/bash $script > /tmp/DockerSettings.php`;
+    `/bin/bash $script > /tmp/DockerSettings.php`;
 
-	require_once "/tmp/DockerSettings.php";
+    require_once "/tmp/DockerSettings.php";
 
     // Toujours sur phpstorm, y a un bug avec Ã§a...
-	//https://www.quora.com/How-do-I-fix-Class-PHPUnit_Util_Configuration-not-found-error-in-PHPUNIT-2
-	if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-		define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
-	}
+    //https://www.quora.com/How-do-I-fix-Class-PHPUnit_Util_Configuration-not-found-error-in-PHPUNIT-2
+    if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+        define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
+    }
 
-	exec("/bin/bash ". __DIR__."/create-directory-structure.sh");
-	return;
+    exec("/bin/bash " . __DIR__ . "/create-directory-structure.sh");
+    return;
 }
-
-

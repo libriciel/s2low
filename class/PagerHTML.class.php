@@ -1,23 +1,24 @@
-<?php 
+<?php
 
-class PagerHTML {
-	
-	public function getHTML($page_number,$nb_element_total,$nb_element_par_page){
-				
-		$nb_total_page = ceil($nb_element_total / $nb_element_par_page);
-		
-		
-		$page = array(1,2,3,$page_number  - 1 , $page_number , $page_number +1,$nb_total_page-2,$nb_total_page-1,$nb_total_page );
-		$page = array_unique($page);
-		sort($page);
-		foreach($page as $i => $nb_page){
-			if ($nb_page>$nb_total_page || $nb_page<=0){
-				unset($page[$i]);
-			}
-		}
-		$last_page = 0;	
-		ob_start();
-		?>
+class PagerHTML
+{
+    public function getHTML($page_number, $nb_element_total, $nb_element_par_page)
+    {
+
+        $nb_total_page = ceil($nb_element_total / $nb_element_par_page);
+
+
+        $page = array(1,2,3,$page_number  - 1 , $page_number , $page_number + 1,$nb_total_page - 2,$nb_total_page - 1,$nb_total_page );
+        $page = array_unique($page);
+        sort($page);
+        foreach ($page as $i => $nb_page) {
+            if ($nb_page > $nb_total_page || $nb_page <= 0) {
+                unset($page[$i]);
+            }
+        }
+        $last_page = 0;
+        ob_start();
+        ?>
                     <div id="display-items">
                         <h2>Afficher par page</h2>
                         <ul class="pagination pagination-sm">
@@ -26,7 +27,7 @@ class PagerHTML {
                                     <li class="disabled"><a href="#"><?php echo $val ?></a></li>
                                 <?php else : ?>
                                     <li>
-                                        <a href="<?php echo get_url_same_page(array("count" => $val,"page"=>1)) ?>"
+                                        <a href="<?php echo get_url_same_page(array("count" => $val,"page" => 1)) ?>"
                                                 title="Afficher <?php echo $val ?>  éléments par page">
                                                 <?php echo $val?>
                                         </a>
@@ -47,7 +48,6 @@ class PagerHTML {
                             <?php endif;?>
 
                             <?php foreach ($page as $i) : ?>
-
                                     <?php if ($last_page + 1 != $i) :?>
                                     <li class="disabled">
                                         <a href="#">...</a>
@@ -58,7 +58,7 @@ class PagerHTML {
                                     <li class="active">
                                         <a href="#" title="page courante"><?php echo $i ?></a>
                                     </li>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                     <li>
                                         <a href="<?php echo get_url_same_page(array("page" => $i)) ?>"
                                             title="Afficher la page <?php echo  $i ?>"> 
@@ -76,10 +76,9 @@ class PagerHTML {
                             <?php  endif;?>
                         </ul>
                     </div>
-		<?php 		
-		$html = ob_get_contents();
-		ob_end_clean();
-		return $html;
-	}
-	
+        <?php
+        $html = ob_get_contents();
+        ob_end_clean();
+        return $html;
+    }
 }

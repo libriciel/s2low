@@ -1,96 +1,90 @@
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
  <h1> Mail - Système de mail sécurisé</h1>
         <h2>Actions</h2>
- 	<div id="actions_area"> 
+    <div id="actions_area"> 
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
             <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
-	</div>
+    </div>
         <h2>Détail du message</h2>
 
-	<div id="list_area">
+    <div id="list_area">
             <table id="message-detail" class="data-table table table-bordered">
-            <?php 
+            <?php
             $mailToSize = 0;
             $mailCcSize = 0;
             $mailBccSize = 0;
-            foreach ($mailEmisArray as $mailEmis) 
-            { 
-                if ($mailEmis->getTypeEnvoi()=="mailTo")
-                {
+            foreach ($mailEmisArray as $mailEmis) {
+                if ($mailEmis->getTypeEnvoi() == "mailTo") {
                     $mailToSize++;
-                } 
-                else if ($mailEmis->getTypeEnvoi()=="mailCC") 
-                {
+                } elseif ($mailEmis->getTypeEnvoi() == "mailCC") {
                     $mailCcSize++;
-                } 
-                else if ($mailEmis->getTypeEnvoi()=="mailBCC") 
-                {
+                } elseif ($mailEmis->getTypeEnvoi() == "mailBCC") {
                     $mailBccSize++;
                 }
             }?>
-            <tr><th id="mailto" <?php if ($mailToSize > 1) echo 'rowspan="'.$mailToSize.'"'; ?>>A</th>
+            <tr><th id="mailto" <?php if ($mailToSize > 1) {
+                echo 'rowspan="' . $mailToSize . '"';
+                                } ?>>A</th>
             <?php
             $isFirstTo = true;
-            foreach ($mailEmisArray as $mailEmis) 
-            { 
-                if ($mailEmis->getTypeEnvoi()=="mailTo")
-                {
-                    if ($isFirstTo) 
-                    {
-                        $isFirstTo=false;
+            foreach ($mailEmisArray as $mailEmis) {
+                if ($mailEmis->getTypeEnvoi() == "mailTo") {
+                    if ($isFirstTo) {
+                        $isFirstTo = false;
                     } else {
                         echo '<tr>';
                     }
-                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
+                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
 
-                    if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
-                    else
+                    if ($mailEmis->getAck() == 't') {
+                        echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
+                    } else {
                         echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>';
+                    }
                 }
             }?>
-            <tr><th id="mailcc" <?php if ($mailCcSize > 1) echo 'rowspan="'.$mailCcSize.'"'; ?>>CC</th>
+            <tr><th id="mailcc" <?php if ($mailCcSize > 1) {
+                echo 'rowspan="' . $mailCcSize . '"';
+                                } ?>>CC</th>
             <?php
             $isFirstCc = true;
-            foreach ($mailEmisArray as $mailEmis) 
-            { 
-                if ($mailEmis->getTypeEnvoi()=="mailCC")
-                {
-                    if ($isFirstCc) 
-                    {
-                        $isFirstCc=false;
+            foreach ($mailEmisArray as $mailEmis) {
+                if ($mailEmis->getTypeEnvoi() == "mailCC") {
+                    if ($isFirstCc) {
+                        $isFirstCc = false;
                     } else {
                         echo '<tr>';
                     }
-                    
-                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
 
-                    if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
-                    else
-                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
+                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
+
+                    if ($mailEmis->getAck() == 't') {
+                        echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
+                    } else {
+                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>';
+                    }
                 }
             }?>
-            <tr><th id="mailbcc" <?php if ($mailBccSize > 1) echo 'rowspan="'.$mailBccSize.'"'; ?>>CCI</th>
+            <tr><th id="mailbcc" <?php if ($mailBccSize > 1) {
+                echo 'rowspan="' . $mailBccSize . '"';
+                                 } ?>>CCI</th>
             <?php
             $isFirstBcc = true;
-            foreach ($mailEmisArray as $mailEmis) 
-            { 
-                if ($mailEmis->getTypeEnvoi()=="mailBCC")
-                {
-                    if ($isFirstBcc) 
-                    {
-                        $isFirstBcc=false;
+            foreach ($mailEmisArray as $mailEmis) {
+                if ($mailEmis->getTypeEnvoi() == "mailBCC") {
+                    if ($isFirstBcc) {
+                        $isFirstBcc = false;
                     } else {
                         echo '<tr>';
                     }
-                    
-                    echo '<td>'.get_hecho($mailEmis->getEmail()).'';
-                    
-                    if ($mailEmis->getAck()=='t')
-                        echo '<span class="alert alert-info">Réception confirmée le '.$mailEmis->getAckDate().'</span></td></tr>';
-                    else
-                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>'; 
+
+                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
+
+                    if ($mailEmis->getAck() == 't') {
+                        echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
+                    } else {
+                        echo '<span class="alert alert-info">Pas de confirmation </span></td></tr>';
+                    }
                 }
             }?>
             <tr>
@@ -106,19 +100,17 @@
                 <td><?php hecho($mailTransaction->getMessage()); ?></td>
             </tr>
     </table>
-    <?php 
-    if ($mailIncludeFileArray)
-    {
-
+    <?php
+    if ($mailIncludeFileArray) {
         //C'est super dégeulasse...
-		/** @var CloudStorage $cloudStorage */
-		$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
-			->get(CloudStorageFactory::class)
-			->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-		$mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+        /** @var CloudStorage $cloudStorage */
+        $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+            ->get(CloudStorageFactory::class)
+            ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+        $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 
-		?>
+        ?>
             <h2>Pièces jointes&nbsp;:</h2>
             <table class="transactions_list table table-bordered table-striped">
                 <thead>
@@ -130,8 +122,7 @@
                     </tr>
                 </thead>
                 <tbody>
-            <?php foreach ($mailIncludeFileArray as $mailIncludeFile)
-                        {?>
+            <?php foreach ($mailIncludeFileArray as $mailIncludeFile) {?>
                     <tr>
                         <td headers="file"><?php echo $mailIncludeFile->getFileName(); ?></td>
                         <td headers="size"><?php echo $mailIncludeFile->getFileSize(); ?></td>
@@ -147,26 +138,22 @@
                     </tr>
                 </tbody> 
             </table> 
-	<?php  	}
-		else 
-		{?>
+    <?php   } else {?>
             <h2>Aucune pièce jointe</h2>
-	<?php } ?>	
-	<?php if ($mailErrors !=false) 
-	{
-		echo "<h3>L'envoi des messages a echoué</h3>";
-		for ($i=0;$i<count($mailErrors);$i++)
-		{ ?>
-			 <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
-			 	Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
-			 <dd id="mailError_<?php echo $i;  ?>" class="mailerror" style="display:none"> 
-			 <table class="transactions_list">
-			 	<td>Message retourné : </td>
-			 	<td><?php echo $mailErrors[$i]['message_retour']; ?> </td>
-			 </table>
-			</dd>
-	<?php
-		}
-	} ?>
+    <?php } ?>  
+    <?php if ($mailErrors != false) {
+        echo "<h3>L'envoi des messages a echoué</h3>";
+        for ($i = 0; $i < count($mailErrors); $i++) { ?>
+             <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
+                Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
+             <dd id="mailError_<?php echo $i;  ?>" class="mailerror" style="display:none"> 
+             <table class="transactions_list">
+                <td>Message retourné : </td>
+                <td><?php echo $mailErrors[$i]['message_retour']; ?> </td>
+             </table>
+            </dd>
+            <?php
+        }
+    } ?>
 
 </div>

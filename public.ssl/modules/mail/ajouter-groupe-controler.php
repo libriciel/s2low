@@ -1,11 +1,12 @@
-<?php 
+<?php
+
 require_once("include/init.php");
-if (! $me->isAuthorityAdmin()){
-  		exit;
-  	}
+if (! $me->isAuthorityAdmin()) {
+        exit;
+}
 $name = Helpers::getVarFromPost('name');
 
-if (! $name){
+if (! $name) {
     $_SESSION['error'] = "Le nom du groupe ne doit pas être vide !";
     header("Location: ajouter-groupe.php");
     exit;
@@ -13,15 +14,15 @@ if (! $name){
 
 $groupe = new GroupeMail();
 
-$id = $groupe->getGroupeIdFromName($name,$me->get('authority_id'));
-if ($id){
-	$_SESSION['error'] = "Ce groupe existe déjà !";
-	header("Location: index.php?command=annuaire");
-	exit;
+$id = $groupe->getGroupeIdFromName($name, $me->get('authority_id'));
+if ($id) {
+    $_SESSION['error'] = "Ce groupe existe déjà !";
+    header("Location: index.php?command=annuaire");
+    exit;
 }
 
-$groupe->set("authority_id",$me->get('authority_id'));
-$groupe->set('name',$name);
+$groupe->set("authority_id", $me->get('authority_id'));
+$groupe->set('name', $name);
 $groupe->save(false);
 
 $_SESSION['message_ok'] = "Groupe $name crée avec succès";

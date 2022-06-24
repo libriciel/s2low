@@ -1,5 +1,5 @@
 <?php
-require_once( __DIR__ . "/../../../init/init.php");
 
-$frontController->go("AdminUtilities","index");
+require_once(__DIR__ . "/../../../init/init.php");
 
+$frontController->go("AdminUtilities", "index");

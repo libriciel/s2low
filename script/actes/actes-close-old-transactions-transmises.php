@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__."/../../init/init.php";
+require_once __DIR__ . "/../../init/init.php";
 
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->setName("actes-close-old-transaction-transmise");

@@ -1,48 +1,52 @@
 <?php
 
-class ActesReceptionFichierWorker implements IWorker {
+class ActesReceptionFichierWorker implements IWorker
+{
+    public const QUEUE_NAME = 'actes-reception-fichier';
 
+    private $actesImapRetrieve;
+    private $workerScript;
 
-	const QUEUE_NAME = 'actes-reception-fichier';
+    public function __construct(
+        ActesImapRetrieve $actesImapRetrieve,
+        WorkerScript $workerScript
+    ) {
+        $this->actesImapRetrieve = $actesImapRetrieve;
+        $this->workerScript = $workerScript;
+    }
 
-	private $actesImapRetrieve;
-	private $workerScript;
+    public function getQueueName()
+    {
+        return self::QUEUE_NAME;
+    }
 
-	public function __construct(
-		ActesImapRetrieve $actesImapRetrieve,
-		WorkerScript $workerScript
-	) {
-		$this->actesImapRetrieve = $actesImapRetrieve;
-		$this->workerScript = $workerScript;
-	}
+    public function getData($id)
+    {
+        return $id;
+    }
 
-	public function getQueueName(){
-		return self::QUEUE_NAME;
-	}
+    public function getAllId()
+    {
+        return [1];
+    }
 
-	public function getData($id){
-		return $id;
-	}
+    /**
+     * @param $data
+     * @return void
+     * @throws Exception
+     */
+    public function work($data)
+    {
+        $this->actesImapRetrieve->retrieve();
+    }
 
-	public function getAllId(){
-		return [1];
-	}
+    public function getMutexName($data)
+    {
+        return $this->getQueueName();
+    }
 
-	/**
-	 * @param $data
-	 * @return void
-	 * @throws Exception
-	 */
-	public function work($data){
-		$this->actesImapRetrieve->retrieve();
-	}
-
-	public function getMutexName($data) {
-		return $this->getQueueName();
-	}
-
-	public function isDataValid($data) {
-		return true;
-	}
-
+    public function isDataValid($data)
+    {
+        return true;
+    }
 }

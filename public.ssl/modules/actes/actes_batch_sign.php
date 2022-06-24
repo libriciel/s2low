@@ -1,29 +1,29 @@
 <?php
-require_once( __DIR__ . "/../../../init/init-www-actes.php");
+require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
-if (! $moduleSQL->hasDroit($moduleInfo['id'],$connexion->getId(),'CS')){
-	Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", WEBSITE_SSL . "/modules/actes/index.php");
+if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {
+    Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 $liste_id = Helpers::getVarFromPost("liste_id");
 
-if (!$liste_id){
-	Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/actes/index.php");
+if (!$liste_id) {
+    Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/actes/index.php");
 }
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 $transaction_list = array();
 
-foreach ($liste_id as $transaction_id){
-	 $transactionInfo = $actesTransactionSQL->getInfo($transaction_id);
-	 if ($transactionInfo['authority_id'] != $userInfo['authority_id']){
-	 	Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/actes/index.php");
-	 }
-	 
-	 $tab_included_files = $actesIncludedFileSQL->getSendFile($transaction_id);
-	 $transactionInfo['file']= $tab_included_files[0];
-	 $transaction_list[] = $transactionInfo;
+foreach ($liste_id as $transaction_id) {
+     $transactionInfo = $actesTransactionSQL->getInfo($transaction_id);
+    if ($transactionInfo['authority_id'] != $userInfo['authority_id']) {
+        Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/actes/index.php");
+    }
+
+     $tab_included_files = $actesIncludedFileSQL->getSendFile($transaction_id);
+     $transactionInfo['file'] = $tab_included_files[0];
+     $transaction_list[] = $transactionInfo;
 }
 
 $menuHTML = new MenuHTML();
@@ -32,7 +32,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : Signature de plusieurs Actes");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -58,17 +58,16 @@ $html .= "<tbody>\n";
 $i = 0;
 
 foreach ($transaction_list as $transactionInfo) {
-	
-	$html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-	$html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser l'actes\">" . $transactionInfo['id'] . "</a></td>\n";
-	$html .= " <td headers=\"numero_interne_acte\">" . get_hecho($transactionInfo['number']) . "</td>\n";
-	$html .= " <td headers=\"objet_actes\">" . $transactionInfo['subject']. "</td>\n";
-	$html .= " <td headers=\"fichier_actes\">"; 
-	$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['file']['posted_filename']. "</a>";				
-	$html .= "</td>\n";
-	$html .= "</tr>\n";
+    $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
+    $html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser l'actes\">" . $transactionInfo['id'] . "</a></td>\n";
+    $html .= " <td headers=\"numero_interne_acte\">" . get_hecho($transactionInfo['number']) . "</td>\n";
+    $html .= " <td headers=\"objet_actes\">" . $transactionInfo['subject'] . "</td>\n";
+    $html .= " <td headers=\"fichier_actes\">";
+    $html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $transactionInfo['file']['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['file']['posted_filename'] . "</a>";
+    $html .= "</td>\n";
+    $html .= "</tr>\n";
 
-	$i = 1 - $i;
+    $i = 1 - $i;
 }
 $html .= "</tbody>\n";
 $html .= "</table>\n";
@@ -85,56 +84,56 @@ $libersignController->displayLibersignJS();
 
 ?>
 
-	<script>
-		$(window).load(function() {
-			$(document).ready(function () {
+    <script>
+        $(window).load(function() {
+            $(document).ready(function () {
 
-				$("#box_result").hide();
+                $("#box_result").hide();
 
-				var siginfos = [];
+                var siginfos = [];
 
-				<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-				siginfos.push({
-					hash: "<?php echo $transactionInfo['file']['sha1'] ?>",
-					format: "CMS"
-				});
-				<?php endforeach;?>
+                <?php foreach ($transaction_list as $i => $transactionInfo) : ?>
+                siginfos.push({
+                    hash: "<?php echo $transactionInfo['file']['sha1'] ?>",
+                    format: "CMS"
+                });
+                <?php endforeach;?>
 
-				$(".libersign").libersign({
-					iconType: "glyphicon",
-					signatureInformations: siginfos
-				}).on('libersign.sign', function (event, signatures) {
-					<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-					$("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
-					<?php endforeach;?>
-					$("#form_sign").submit();
-				});
+                $(".libersign").libersign({
+                    iconType: "glyphicon",
+                    signatureInformations: siginfos
+                }).on('libersign.sign', function (event, signatures) {
+                    <?php foreach ($transaction_list as $i => $transactionInfo) : ?>
+                    $("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
+                    <?php endforeach;?>
+                    $("#form_sign").submit();
+                });
 
-			});
-		});
-	</script>
+            });
+        });
+    </script>
 
-	<div id='box_signature' class='box' style="width:920px" >
-		<h2>Signature</h2>
-		<div class="libersign"></div>
-	</div>
+    <div id='box_signature' class='box' style="width:920px" >
+        <h2>Signature</h2>
+        <div class="libersign"></div>
+    </div>
 
-	<form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
-		<input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
-		<?php foreach($transaction_list as $i => $transactionInfo) : ?>
-			<input type='hidden' name='signature_id_<?php echo $i +1?>' value='<?php echo $transactionInfo['file']['id']?>' />
-			<input type='hidden' name='signature_<?php echo $i +1?>' id='signature_<?php echo $i + 1 ?>' value=''/>
-		<?php endforeach;?>
-	</form>
+    <form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+        <input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
+        <?php foreach ($transaction_list as $i => $transactionInfo) : ?>
+            <input type='hidden' name='signature_id_<?php echo $i + 1?>' value='<?php echo $transactionInfo['file']['id']?>' />
+            <input type='hidden' name='signature_<?php echo $i + 1?>' id='signature_<?php echo $i + 1 ?>' value=''/>
+        <?php endforeach;?>
+    </form>
 
-	<?php 	
-		$html.= ob_get_contents();
-		ob_end_clean();
+    <?php
+        $html .= ob_get_contents();
+        ob_end_clean();
 
-$doc->addBody($html);
+    $doc->addBody($html);
 
-$doc->closeContent();
-$doc->closeContainer();
+    $doc->closeContent();
+    $doc->closeContainer();
 
-$doc->buildFooter();
-$doc->display();
+    $doc->buildFooter();
+    $doc->display();

@@ -1,7 +1,7 @@
 <?php
 
-class PasswordHandler{
-
+class PasswordHandler
+{
     /** @var UserSQL  */
     private $userSQL;
 
@@ -10,16 +10,16 @@ class PasswordHandler{
         $this->userSQL = $userSQL;
     }
 
-    public function passwordMatchesHash(string $password,string $hash,int $id) : bool
+    public function passwordMatchesHash(string $password, string $hash, int $id): bool
     {
-        if($this->passwordIsMd5Encoded($hash)){
+        if ($this->passwordIsMd5Encoded($hash)) {
             $passwordMatchesHash = $this->passwordMatchesMd5Hash($password, $hash);
-            if($passwordMatchesHash) {
+            if ($passwordMatchesHash) {
                 $this->updatePasswordHash($id, $password);
             }
             return $passwordMatchesHash;
         }
-        return password_verify($password,$hash);
+        return password_verify($password, $hash);
     }
 
     /**

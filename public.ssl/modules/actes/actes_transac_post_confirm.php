@@ -1,57 +1,57 @@
 <?php
 
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
+require_once("../../../config/config.php");
+require_once(SITEROOT . '/class/include.class.php');
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 
-require_once( __DIR__ . "/../../../init/init-www-actes.php");
+require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $actionHtml = "";
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit ();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 
-if (!$module->isActive() || !$me->checkDroit($module->get("name"),'TT')) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'TT')) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $rgsConnexion = new RgsConnexion();
-if ( ! $rgsConnexion->isRgsConnexion()){
+if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}";
     header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-    exit ();
+    exit();
 }
 
 $id = Helpers :: getVarFromPost("id");
-if (empty($id) ){
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+if (empty($id)) {
+    $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit();
 }
 
 
 $trans = new ActesTransaction();
 $trans->setId($id);
-if ( ! $trans->init()) {
+if (! $trans->init()) {
     $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
     header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-    exit ();
+    exit();
 }
 
 $envelope = new ActesEnvelope($trans->get("envelope_id"));
@@ -61,12 +61,12 @@ $owner = new User($envelope->get("user_id"));
 $owner->init();
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser,"actes");
+$permission = new ModulePermission($serviceUser, "actes");
 
-if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+if (! $permission->canView($me, $owner)) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit();
 }
 
 $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
@@ -74,21 +74,21 @@ $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getP
 
 $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $info = $actesTransactionsSQL->getInfo($id);
-if($info['last_status_id'] != 17){
-	$_SESSION["error"] ="La transaction n'est pas dans le statut « En attente d'être posté»";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
-	exit ();
+if ($info['last_status_id'] != 17) {
+    $_SESSION["error"] = "La transaction n'est pas dans le statut « En attente d'être posté»";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    exit();
 }
 
-$actesTransactionsSQL->updateStatus($id,1,$msg);
+$actesTransactionsSQL->updateStatus($id, 1, $msg);
 
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJobByClassName(ActesAntivirusWorker::class,$id);
+$workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
 $actesScriptHelper = $objectInstancier->get(ActesScriptHelper::class);
-$msg4journal = $actesScriptHelper->getMessage($id,$msg);
+$msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false,$connexion->getId())) {
-	$msg .= "\nErreur de journalisation.\n";
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId())) {
+    $msg .= "\nErreur de journalisation.\n";
 }
 Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $id);

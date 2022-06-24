@@ -1,7 +1,7 @@
 <?php
 
-class PadesValidTest extends S2lowTestCase {
-
+class PadesValidTest extends S2lowTestCase
+{
     /**
      * @param string $returnString
      * @param string $lastHttpCode
@@ -35,7 +35,7 @@ class PadesValidTest extends S2lowTestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
+        $padesValid = new PadesValid("bli", $curlWrapperFactoryMock, $verifyPadesSignatureMock);
 
         return $padesValid;
     }
@@ -44,8 +44,7 @@ class PadesValidTest extends S2lowTestCase {
         array $callRepartition = [1,0],
         string $exceptionMessage = null,
         string $returnString = '{"signatures":["une signature"],"signed":true}'
-    )
-    {
+    ) {
 
         $curlWrapperMock = $this->getMockBuilder(CurlWrapper::class)
             ->disableOriginalConstructor()
@@ -64,7 +63,7 @@ class PadesValidTest extends S2lowTestCase {
             ->disableOriginalConstructor()
             ->getMock();
 
-        if(! is_null($exceptionMessage)){
+        if (! is_null($exceptionMessage)) {
             $verifyPadesSignatureMock->expects(
                 $this->exactly($callRepartition[0])
             )->method('validateSignature')->willThrowException(
@@ -84,7 +83,7 @@ class PadesValidTest extends S2lowTestCase {
             )->method('validateSignatureWithoutCertificateChecking');
         }
 
-        $padesValid = new PadesValid("bli",$curlWrapperFactoryMock,$verifyPadesSignatureMock);
+        $padesValid = new PadesValid("bli", $curlWrapperFactoryMock, $verifyPadesSignatureMock);
 
         return $padesValid;
     }
@@ -92,7 +91,8 @@ class PadesValidTest extends S2lowTestCase {
     /**
      * @throws Exception
      */
-    public function testValidateNotSigned(){
+    public function testValidateNotSigned()
+    {
 
         $returnString = '{"signatures":[],"signed":false}';
 
@@ -103,7 +103,7 @@ class PadesValidTest extends S2lowTestCase {
         $padesValid = $this->createPadesValidForExceptions($returnString, $lastHttpCode, $lastError, $lastOutput);
 
         $this->assertFalse(
-            $padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf")
+            $padesValid->validate(__DIR__ . "/fixtures/signature-pades/Courrier.pdf")
         );
     }
 
@@ -112,13 +112,13 @@ class PadesValidTest extends S2lowTestCase {
      * @throws RecoverableException
      */
     public function testgetPadesValidResultExceptions(
-                            $returnString,
-                            $lastError,
-                            $lastOutput,
-                            $lastHttpCode,
-                            $exceptionClass,
-                            $exceptionMessage
-    ){
+        $returnString,
+        $lastError,
+        $lastOutput,
+        $lastHttpCode,
+        $exceptionClass,
+        $exceptionMessage
+    ) {
 
         $padesValid = $this->createPadesValidForExceptions(
             $returnString,
@@ -129,10 +129,11 @@ class PadesValidTest extends S2lowTestCase {
 
         $this->expectException($exceptionClass);
         $this->expectExceptionMessage($exceptionMessage);
-        $padesValid->validate(__DIR__."/fixtures/signature-pades/Courrier.pdf");
+        $padesValid->validate(__DIR__ . "/fixtures/signature-pades/Courrier.pdf");
     }
 
-    public function provider(){
+    public function provider()
+    {
         return[
             ['{"signatures":[],"signed":true}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
             ['{"signatures":[]}',"","","",Exception::class,"Impossible de determiner si le fichier est signé"],
@@ -147,7 +148,8 @@ class PadesValidTest extends S2lowTestCase {
     /**
      * @throws RecoverableException
      */
-    public function testvalidate(){
+    public function testvalidate()
+    {
         $padesValid = $this->createPadesValidForValidation();
 
         $this->assertTrue(
@@ -155,23 +157,26 @@ class PadesValidTest extends S2lowTestCase {
         );
     }
 
-    public function testValidateCertificateChecking(){
+    public function testValidateCertificateChecking()
+    {
         $padesValid = $this->createPadesValidForValidation();
 
         $this->assertTrue(
-            $padesValid->validate("/vers/un/fichier",true)
+            $padesValid->validate("/vers/un/fichier", true)
         );
     }
 
-    public function testWithoutCertificateChecking(){
+    public function testWithoutCertificateChecking()
+    {
         $padesValid = $this->createPadesValidForValidation([0,1]);
 
         $this->assertTrue(
-            $padesValid->validate("/vers/un/fichier",false)
+            $padesValid->validate("/vers/un/fichier", false)
         );
     }
 
-    public function testExceptionThrowGetsThrough(){
+    public function testExceptionThrowGetsThrough()
+    {
         $padesValid = $this->createPadesValidForValidation(
             [1,0],
             "Une Exception"

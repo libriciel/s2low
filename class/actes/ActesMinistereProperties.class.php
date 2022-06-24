@@ -1,11 +1,10 @@
 <?php
 
-class ActesMinistereProperties {
-
-
-    const AUTHENTICATION_NONE = "NONE";
-    const AUTHENTICATION_BASIC = "BASIC";
-    const AUTHENTICATION_POST = "POST";
+class ActesMinistereProperties
+{
+    public const AUTHENTICATION_NONE = "NONE";
+    public const AUTHENTICATION_BASIC = "BASIC";
+    public const AUTHENTICATION_POST = "POST";
 
     public $url;
 
@@ -19,5 +18,4 @@ class ActesMinistereProperties {
     public $client_certificate_key_password;
 
     public $server_certificate_path;
-
 }

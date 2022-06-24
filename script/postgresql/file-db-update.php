@@ -1,5 +1,6 @@
 <?php
-require_once( __DIR__."/../../init/init.php");
+
+require_once(__DIR__ . "/../../init/init.php");
 
 # Ce script à utiliser en développement est utiliser pour mettre à jour les fichiers de définition de la base de données
 
@@ -8,5 +9,3 @@ require_once( __DIR__."/../../init/init.php");
 $postgreSQLController = $objectInstancier->get('PostgreSQLController');
 
 $postgreSQLController->saveDatabaseToFile();
-
-

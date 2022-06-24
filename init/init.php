@@ -1,61 +1,65 @@
 <?php
 
-require_once __DIR__."/../vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
-set_include_path( 	get_include_path() . PATH_SEPARATOR .
-					__DIR__. "/../lib/" . PATH_SEPARATOR .
-					__DIR__. "/../model/" . PATH_SEPARATOR .
-					__DIR__. "/../controller/" . PATH_SEPARATOR .
-					__DIR__ . "/../class/" . PATH_SEPARATOR . 
-					__DIR__ . "/../class/actes"  . PATH_SEPARATOR . 
-					__DIR__ . "/../class/helios"  . PATH_SEPARATOR . 
-					__DIR__ . "/../class/mailsec". PATH_SEPARATOR .
-                    __DIR__ . "/../public.ssl/modules/mail/lib". PATH_SEPARATOR
-					);
-					
-if ( ! function_exists('s2low_autoload')) {
-	function s2low_autoload($class_name) {
-		@ $result = include($class_name . '.class.php');
-		if ( ! $result ){
-			return false;
-		}
-		return true;
-	}
+set_include_path(get_include_path() . PATH_SEPARATOR .
+                    __DIR__ . "/../lib/" . PATH_SEPARATOR .
+                    __DIR__ . "/../model/" . PATH_SEPARATOR .
+                    __DIR__ . "/../controller/" . PATH_SEPARATOR .
+                    __DIR__ . "/../class/" . PATH_SEPARATOR .
+                    __DIR__ . "/../class/actes"  . PATH_SEPARATOR .
+                    __DIR__ . "/../class/helios"  . PATH_SEPARATOR .
+                    __DIR__ . "/../class/mailsec" . PATH_SEPARATOR .
+                    __DIR__ . "/../public.ssl/modules/mail/lib" . PATH_SEPARATOR);
+
+if (! function_exists('s2low_autoload')) {
+    function s2low_autoload($class_name)
+    {
+        @ $result = include($class_name . '.class.php');
+        if (! $result) {
+            return false;
+        }
+        return true;
+    }
 }
 
 spl_autoload_register('s2low_autoload');
 
 
-if (! function_exists('pcntl_async_signals')){
-	function pcntl_async_signals($on) {}
+if (! function_exists('pcntl_async_signals')) {
+    function pcntl_async_signals($on)
+    {
+    }
 }
 
-if (! function_exists('pcntl_signal')){
-	function pcntl_signal ($signo, $handler, $restart_syscalls = true) {}
+if (! function_exists('pcntl_signal')) {
+    function pcntl_signal($signo, $handler, $restart_syscalls = true)
+    {
+    }
 }
 
 
-if (! defined("SIGTERM")){
-	define('SIGTERM',15);
+if (! defined("SIGTERM")) {
+    define('SIGTERM', 15);
 }
 
-if (! defined("SIGINT")){
-	define('SIGINT',2);
+if (! defined("SIGINT")) {
+    define('SIGINT', 2);
 }
 
-require_once(__DIR__."/../config/config.php");
+require_once(__DIR__ . "/../config/config.php");
 
 //A cause du chargement d'objet à partir de la session ... BEURK !
-require_once(SITEROOT."/public.ssl/modules/mail/lib/Annuaire.class.php");
+require_once(SITEROOT . "/public.ssl/modules/mail/lib/Annuaire.class.php");
 
 require_once(SITEROOT . '/class/include.class.php');
 
 
-require_once(__DIR__."/../class/util.php");
+require_once(__DIR__ . "/../class/util.php");
 
 $sqlQuery = new SQLQuery(DB_DATABASE);
 $sqlQuery->setDatabaseHost(DB_HOST);
-$sqlQuery->setCredential(DB_USER,DB_PASSWORD);
+$sqlQuery->setCredential(DB_USER, DB_PASSWORD);
 $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
 
 $objectInstancier = new ObjectInstancier();
@@ -64,42 +68,40 @@ ObjectInstancierFactory::setObjectInstancier($objectInstancier);
 $logger = new Monolog\Logger("S2LOW");
 $logger->pushHandler(new Monolog\Handler\StreamHandler(LOG_FILE, LOG_LEVEL));
 $logger->pushProcessor(function ($record) {
-	$record['extra']['pid'] = getmypid();
-	return $record;
+    $record['extra']['pid'] = getmypid();
+    return $record;
 });
 
 $mailHandler = new Monolog\Handler\NativeMailerHandler(
-	[EMAIL_ADMIN_TECHNIQUE],
-	"Erreur critique sur ".WEBSITE,
-	TDT_FROM_EMAIL,
-	Monolog\Logger::CRITICAL
+    [EMAIL_ADMIN_TECHNIQUE],
+    "Erreur critique sur " . WEBSITE,
+    TDT_FROM_EMAIL,
+    Monolog\Logger::CRITICAL
 );
 $mailHandler->setEncoding('iso-8859-1');
 $logger->pushHandler($mailHandler);
 
 
-$objectInstancier->set('Monolog\Logger',$logger);
+$objectInstancier->set('Monolog\Logger', $logger);
 
 $objectInstancier->{'SQLQuery'} = $sqlQuery;
 
-$objectInstancier->set('Database',DatabasePool::getInstance());
+$objectInstancier->set('Database', DatabasePool::getInstance());
 
 if (isset($_SESSION)) {
     $objectInstancier->set("SessionWrapper", new SessionWrapper($_SESSION));
-    $environnement = new Environnement($_GET,$_POST,$_REQUEST,$_SESSION,$_SERVER);
-
+    $environnement = new Environnement($_GET, $_POST, $_REQUEST, $_SESSION, $_SERVER);
 } else {
     $session = array();
     $objectInstancier->set("SessionWrapper", new SessionWrapper($session));
-    $environnement = new Environnement($_GET,$_POST,$_REQUEST,$session,$_SERVER);
-
+    $environnement = new Environnement($_GET, $_POST, $_REQUEST, $session, $_SERVER);
 }
-$objectInstancier->set("Environnement",$environnement);
-$objectInstancier->set("website_ssl",WEBSITE_SSL);
-$objectInstancier->set("website",WEBSITE);
+$objectInstancier->set("Environnement", $environnement);
+$objectInstancier->set("website_ssl", WEBSITE_SSL);
+$objectInstancier->set("website", WEBSITE);
 
-$objectInstancier->set('database_json_definition_filepath',__DIR__."/../db/s2low.sql.json");
-$objectInstancier->set('database_sql_definition_filepath',__DIR__."/../db/s2low.sql");
+$objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
+$objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
 
 $openStackConfigActes = new OpenStackConfig();
 $openStackConfigActes->openstack_authentication_url_v3  = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
@@ -146,30 +148,30 @@ $openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SW
 $openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory($logger);
 $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
-$openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME,$openStackConfigActes);
-$openStackContainerStore->addConfiguration(PesAllerStorage::CONTAINER_NAME,$openStackConfigHelios);
-$openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME,$openStackConfigHeliosAcquit);
-$openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME,$openStackConfigHeliosRetour);
-$openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME,$openStackConfigMailsec);
+$openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME, $openStackConfigActes);
+$openStackContainerStore->addConfiguration(PesAllerStorage::CONTAINER_NAME, $openStackConfigHelios);
+$openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME, $openStackConfigHeliosAcquit);
+$openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME, $openStackConfigHeliosRetour);
+$openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME, $openStackConfigMailsec);
 
-$objectInstancier->set(OpenStackContainerStore::class,$openStackContainerStore);
-
-
-$objectInstancier->set("helios_files_upload_root",HELIOS_FILES_UPLOAD_ROOT);
-$objectInstancier->set("repertoirePesAllerSansTransaction",HELIOS_PESALLER_SANSTRANSACTION);
-$objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
-$objectInstancier->set("schema_pes_path",HELIOS_XSD_PATH);
-
-$objectInstancier->set("helios_responses_root",HELIOS_RESPONSES_ROOT);
+$objectInstancier->set(OpenStackContainerStore::class, $openStackContainerStore);
 
 
-$objectInstancier->set("actes_files_upload_root",ACTES_FILES_UPLOAD_ROOT);
-$objectInstancier->set("actes_appli_trigramme",ACTES_APPLI_TRIGRAMME);
-$objectInstancier->set("actes_appli_quadrigramme",ACTES_APPLI_QUADRIGRAMME);
+$objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
+$objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
+$objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
+$objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
 
-$objectInstancier->set("actes_ministere_acronyme",ACTES_MINISTERE_ACRONYME);
+$objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
 
-$objectInstancier->set("actes_dont_valid_signing_certificate",ACTES_DONT_VALID_SIGNING_CERTIFICATE);
+
+$objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+$objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
+$objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
+
+$objectInstancier->set("actes_ministere_acronyme", ACTES_MINISTERE_ACRONYME);
+
+$objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
 
 $actesMinistereProperties = new ActesMinistereProperties();
 
@@ -182,62 +184,62 @@ $actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
 $actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
 $actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
 $actesMinistereProperties->server_certificate_path = ACTES_MINISTERE_SERVER_CERTIFICATE_PATH;
-$objectInstancier->set('ActesMinistereProperties',$actesMinistereProperties);
+$objectInstancier->set('ActesMinistereProperties', $actesMinistereProperties);
 
 $actesImapProperties = new ActesImapProperties();
 $actesImapProperties->host = ACTES_IMAP_HOST;
 $actesImapProperties->port = ACTES_IMAP_PORT;
 $actesImapProperties->login = ACTES_IMAP_LOGIN;
 $actesImapProperties->password = ACTES_IMAP_PASSWORD;
-$objectInstancier->set('ActesImapProperties',$actesImapProperties);
+$objectInstancier->set('ActesImapProperties', $actesImapProperties);
 
-$objectInstancier->set('actes_response_tmp_local_path',ACTES_RESPONSE_TMP_LOCAL_PATH);
-$objectInstancier->set('actes_response_error_path',ACTES_RESPONSE_ERROR_PATH);
-$objectInstancier->set('actes_type_pj_is_mandatory',ACTES_TYPE_PJ_IS_MANDATORY);
+$objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
+$objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
+$objectInstancier->set('actes_type_pj_is_mandatory', ACTES_TYPE_PJ_IS_MANDATORY);
 
 
-$objectInstancier->set('mail_files_upload_root',MAIL_FILES_UPLOAD_ROOT);
+$objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
 
-$objectInstancier->set('pades_valid_url',PADES_VALID_URL);
-$objectInstancier->set('pdf_stamp_url',PDF_STAMP_URL);
-$objectInstancier->set('image_for_stamp',IMAGE_FOR_STAMP);
+$objectInstancier->set('pades_valid_url', PADES_VALID_URL);
+$objectInstancier->set('pdf_stamp_url', PDF_STAMP_URL);
+$objectInstancier->set('image_for_stamp', IMAGE_FOR_STAMP);
 
-$objectInstancier->set('rgs_validca_path',RGS_VALIDCA_PATH);
+$objectInstancier->set('rgs_validca_path', RGS_VALIDCA_PATH);
 
-$objectInstancier->set('mode_beanstalkd',MODE_BEANSTALKD);
-$objectInstancier->set('beanstalkd_server',BEANSTAKLD_SERVER);
-$objectInstancier->set('beanstalkd_port',BEANSTAKLD_PORT);
-$objectInstancier->set('antivirus_command',ANTIVIRUS_COMMAND);
-$objectInstancier->set('openssl_path',OPENSSL_PATH);
-$objectInstancier->set('extended_validca_path',EXTENDED_VALIDCA_PATH);
+$objectInstancier->set('mode_beanstalkd', MODE_BEANSTALKD);
+$objectInstancier->set('beanstalkd_server', BEANSTAKLD_SERVER);
+$objectInstancier->set('beanstalkd_port', BEANSTAKLD_PORT);
+$objectInstancier->set('antivirus_command', ANTIVIRUS_COMMAND);
+$objectInstancier->set('openssl_path', OPENSSL_PATH);
+$objectInstancier->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
 
-$objectInstancier->set('email_admin_technique',EMAIL_ADMIN_TECHNIQUE);
-$objectInstancier->set('tdt_from_email',TDT_FROM_EMAIL);
-$objectInstancier->set('log_level',LOG_LEVEL);
+$objectInstancier->set('email_admin_technique', EMAIL_ADMIN_TECHNIQUE);
+$objectInstancier->set('tdt_from_email', TDT_FROM_EMAIL);
+$objectInstancier->set('log_level', LOG_LEVEL);
 
-$objectInstancier->set('redis_mode',MODE_REDIS);
-$objectInstancier->set('redis_server',REDIS_SERVER);
-$objectInstancier->set('redis_port',REDIS_PORT);
+$objectInstancier->set('redis_mode', MODE_REDIS);
+$objectInstancier->set('redis_server', REDIS_SERVER);
+$objectInstancier->set('redis_port', REDIS_PORT);
 
-$objectInstancier->set('helios_ftp_server',HELIOS_FTP_SERVER);
-$objectInstancier->set('helios_ftp_passive_mode',HELIOS_FTP_PASSIVE_MODE);
-$objectInstancier->set('helios_ftp_passtrans_mode',HELIOS_FTP_PASSTRANS_MODE);
-$objectInstancier->set('helios_ftp_p_appli',HELIOS_FTP_P_APPLI);
-$objectInstancier->set('helios_ftp_port',HELIOS_FTP_PORT);
-$objectInstancier->set('helios_ftp_login',HELIOS_FTP_LOGIN);
-$objectInstancier->set('helios_ftp_password',HELIOS_FTP_PASSWORD);
-$objectInstancier->set('helios_ftp_response_server_path',HELIOS_FTP_RESPONSE_SERVER_PATH);
+$objectInstancier->set('helios_ftp_server', HELIOS_FTP_SERVER);
+$objectInstancier->set('helios_ftp_passive_mode', HELIOS_FTP_PASSIVE_MODE);
+$objectInstancier->set('helios_ftp_passtrans_mode', HELIOS_FTP_PASSTRANS_MODE);
+$objectInstancier->set('helios_ftp_p_appli', HELIOS_FTP_P_APPLI);
+$objectInstancier->set('helios_ftp_port', HELIOS_FTP_PORT);
+$objectInstancier->set('helios_ftp_login', HELIOS_FTP_LOGIN);
+$objectInstancier->set('helios_ftp_password', HELIOS_FTP_PASSWORD);
+$objectInstancier->set('helios_ftp_response_server_path', HELIOS_FTP_RESPONSE_SERVER_PATH);
 $objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
 $objectInstancier->set('helios_sending_destination', HELIOS_SENDING_DESTINATION);
 $objectInstancier->set('helios_sending_mode_demo', HELIOS_SENDING_MODE_DEMO);
 
-$objectInstancier->set('old_timestamp_token_directory',OLD_TIMESTAMP_TOKEN_DIRECTORY);
-$objectInstancier->set('timestamp_token_retention_nb_days',TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
+$objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
+$objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
 
 
-$objectInstancier->set(SigTermHandler::class,SigTermHandler::getInstance());
+$objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());
 
-if(USE_LEGACY_BORDEREAU_MODEL) {
+if (USE_LEGACY_BORDEREAU_MODEL) {
     $objectInstancier->set(
         IActesPdf::class,
         new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
@@ -249,18 +251,17 @@ if(USE_LEGACY_BORDEREAU_MODEL) {
     );
 }
 
-if(USE_LEGACY_SECURE_MAIL_FIELDS){
+if (USE_LEGACY_SECURE_MAIL_FIELDS) {
     $objectInstancier->set(
         MailHeader::class,
-        new MailHeaderLegacy(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
+        new MailHeaderLegacy(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
     );
 } else {
     $objectInstancier->set(
         MailHeader::class,
-        new MailHeader(MAIL_MESSAGE,MAIL_TEDETIS_FROM,MAIL_SECURE_DESCRIPTION)
-);
+        new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
+    );
 }
 
 
 $frontController = new FrontController($objectInstancier);
-

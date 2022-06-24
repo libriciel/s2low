@@ -13,36 +13,35 @@ class AnalysedOutput
      */
     private $nonBlockingErrors;
 
-    public function __construct(string $result = "", array $blockingErrors =[], array $nonBlockingErrors = []){
+    public function __construct(string $result = "", array $blockingErrors = [], array $nonBlockingErrors = [])
+    {
         $this->blockingErrors = $blockingErrors;
         $this->nonBlockingErrors = $nonBlockingErrors;
         $this->result = $result;
-
     }
 
-    public function hasBlockingErrors() : bool
+    public function hasBlockingErrors(): bool
     {
         return !empty($this->blockingErrors);
     }
 
-    public function getFirstBlockingErrorMessage() : string
+    public function getFirstBlockingErrorMessage(): string
     {
         return $this->blockingErrors[0];
     }
 
-    public function hasNonBlockingErrors() : bool
+    public function hasNonBlockingErrors(): bool
     {
         return !empty($this->blockingErrors);
     }
 
-    public function getNonBlockingErrors() : string
+    public function getNonBlockingErrors(): string
     {
         return $this->nonBlockingErrors[0];
     }
 
-    public function getResult() : string
+    public function getResult(): string
     {
         return $this->result;
     }
-
 }

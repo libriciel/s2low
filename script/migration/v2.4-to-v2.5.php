@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Faire passer le script rev919.sql
  * Faire passer le script v2.4-to-v2.5.php (ce script)
@@ -22,7 +21,7 @@ $id_cut_journal = 0;
 
 //A FAIRE AVANT : mise à jour de la base de données
 
-require_once( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 migration_log("Migration S2low 2.4 vers 2.5");
 
@@ -45,18 +44,19 @@ migration_log("[DONE]");
 
 migration_log("Suppression des lignes en trop dans logs_historique");
 $sql = "DELETE FROM logs_historique WHERE id > ?";
-$sqlQuery->query($sql,$id_cut_journal);
+$sqlQuery->query($sql, $id_cut_journal);
 migration_log("[DONE]");
 
 
 migration_log("Suppression des lignes en trop dans logs");
 $sql = "DELETE FROM logs WHERE id <= ?";
-$sqlQuery->query($sql,$id_cut_journal);
+$sqlQuery->query($sql, $id_cut_journal);
 migration_log("[DONE]");
 
 
 migration_log("Migration terminée");
 
-function migration_log($message){
-	echo date("Y-m-d H:i:s")." - $message\n";
+function migration_log($message)
+{
+    echo date("Y-m-d H:i:s") . " - $message\n";
 }

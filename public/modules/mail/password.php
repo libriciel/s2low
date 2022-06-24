@@ -1,14 +1,14 @@
-<?php 
+<?php
 
 require_once('../../../config/config.php');
 require_once(SITEROOT . '/class/include.class.php');
-require_once (MAIL_SITEROOT."/lib/MailLayout.class.php");
+require_once(MAIL_SITEROOT . "/lib/MailLayout.class.php");
 
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
-$mail_emis_id=Helpers::getVarFromGet("mail_emis_id");
+$mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
 
-$error_message = $_SESSION['last_error']??"";
+$error_message = $_SESSION['last_error'] ?? "";
 unset($_SESSION["last_error"]);
 
 $doc->DisplayHead();
@@ -23,7 +23,7 @@ $doc->DisplayHead();
         <p>Vous avez besoin d'un mot de passe pour voir le contenu du mail.</p>
     </div>
 
-    <?php if($error_message) : ?>
+    <?php if ($error_message) : ?>
         <div class="alert alert-danger">
             <strong><?php echo $error_message?></strong>
         </div>
@@ -52,5 +52,5 @@ $doc->DisplayHead();
 
 
 
-<?php 
+<?php
 $doc->DisplayFoot();

@@ -11,9 +11,7 @@
  *
  */
 
-
-
-require_once ( __DIR__."/../../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 
 
@@ -29,12 +27,10 @@ $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 
 $actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 
-foreach ($actes_list as $info){
-	if (preg_match("#Votre transfert d'archive a .t. accept. par la plate-forme#",$info['message'])){
-		echo "{$info['transaction_id']} : Mise à jour du status\n";
-		$actesTransactions->updateStatus($info['transaction_id'],13,"La transaction {$info['transaction_id']} a ete acceptee par le SAE : erreur sur le message precedent");
-		exit;
-	}
-
+foreach ($actes_list as $info) {
+    if (preg_match("#Votre transfert d'archive a .t. accept. par la plate-forme#", $info['message'])) {
+        echo "{$info['transaction_id']} : Mise à jour du status\n";
+        $actesTransactions->updateStatus($info['transaction_id'], 13, "La transaction {$info['transaction_id']} a ete acceptee par le SAE : erreur sur le message precedent");
+        exit;
+    }
 }
-

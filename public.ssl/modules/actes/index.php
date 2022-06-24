@@ -1,7 +1,7 @@
 <?php
 
-require_once( __DIR__ . "/../../../init/init-www-actes.php");
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
+require_once(__DIR__ . "/../../../init/init-www-actes.php");
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
 
 
 $recuperateur = new Recuperateur($_GET);
@@ -12,14 +12,14 @@ $ftype =  $recuperateur->get("type");
 $fnum =  $recuperateur->get("num");
 $objet = $recuperateur->get("objet");
 
-if (isset( $_GET['status']) && $_GET['status'] === '0'){
-	$fstatus = 0;
+if (isset($_GET['status']) && $_GET['status'] === '0') {
+    $fstatus = 0;
 } else {
-	$fstatus =  $recuperateur->get("status",'all');
+    $fstatus =  $recuperateur->get("status", 'all');
 }
 
 if ($fstatus != TransactionSQL::EN_COURS && $fstatus != "all" && ! is_numeric($fstatus)) {
-  $fstatus = TransactionSQL::EN_COURS;
+    $fstatus = TransactionSQL::EN_COURS;
 }
 
 $fmin_submission_date =  $recuperateur->get("min_submission_date");
@@ -27,29 +27,28 @@ $fmax_submission_date =  $recuperateur->get("max_submission_date");
 $fmin_ack_date = $recuperateur->get("min_ack_date");
 $fmax_ack_date =  $recuperateur->get("max_ack_date");
 
-$sortWay =   $recuperateur->get("sortway","desc");
-$order = $recuperateur->get('order','id');
-$page_number = $recuperateur->getInt('page',1);
-$taille_page =  $recuperateur->getInt('count',10);
+$sortWay =   $recuperateur->get("sortway", "desc");
+$order = $recuperateur->get('order', 'id');
+$page_number = $recuperateur->getInt('page', 1);
+$taille_page =  $recuperateur->getInt('count', 10);
 
 if ($ftype != "0" && empty($ftype)) {
-  $ftype = "1";
+    $ftype = "1";
 }
 
 $transactionSQL = new TransactionSQL($sqlQuery);
-if ($droit->isSuperAdmin($userInfo) ) { 
-	$transactionSQL->setAuthority($authority_filtre);
-}elseif ($droit->isAdmin($userInfo)){
-	$transactionSQL->setAuthority($userInfo['authority_id']);
+if ($droit->isSuperAdmin($userInfo)) {
+    $transactionSQL->setAuthority($authority_filtre);
+} elseif ($droit->isAdmin($userInfo)) {
+    $transactionSQL->setAuthority($userInfo['authority_id']);
 } else {
-	
- $serviceUser = new ServiceUser(DatabasePool::getInstance());
-  $collegues = $serviceUser->getMesCollegues($connexion->getId());
-  $collegue[] = $connexion->getId();
-  foreach($collegues as $info){
-  	$collegue[] =  $info['id_user'];
-  }
-  $transactionSQL->setUserId($collegue);  
+    $serviceUser = new ServiceUser(DatabasePool::getInstance());
+    $collegues = $serviceUser->getMesCollegues($connexion->getId());
+    $collegue[] = $connexion->getId();
+    foreach ($collegues as $info) {
+        $collegue[] =  $info['id_user'];
+    }
+    $transactionSQL->setUserId($collegue);
 }
 
 
@@ -62,15 +61,15 @@ $transactionSQL->setDateMaxSubmission($fmax_submission_date);
 $transactionSQL->setDateMinAck($fmin_ack_date);
 $transactionSQL->setDateMaxAck($fmax_ack_date);
 $transactionSQL->setObjet($objet);
-$transactionSQL->setOrder($order,$sortWay);
-$transactionSQL->setPageNumber($page_number,$taille_page);
+$transactionSQL->setOrder($order, $sortWay);
+$transactionSQL->setPageNumber($page_number, $taille_page);
 
 $envelopes = $transactionSQL->getAll();
 
-if ($droit->isSuperAdmin($userInfo)){
-	$nb_transactions = ($page_number+10)*$taille_page;
+if ($droit->isSuperAdmin($userInfo)) {
+    $nb_transactions = ($page_number + 10) * $taille_page;
 } else {
-	$nb_transactions = $transactionSQL->getNbTransaction();
+    $nb_transactions = $transactionSQL->getNbTransaction();
 }
 
 $transTypes = $transactionSQL->getTypes();
@@ -88,16 +87,16 @@ $pagerHTML  = new PagerHTML();
 $fancyDate = new FancyDate();
 $listeActesHTML = new ListeActesHTML();
 
-if ($droit->isSuperAdmin($userInfo)){
-	$listeActesHTML->addCollectivite($authoritySQL->getAll(),$authority_filtre);
+if ($droit->isSuperAdmin($userInfo)) {
+    $listeActesHTML->addCollectivite($authoritySQL->getAll(), $authority_filtre);
 } else {
-    if(! $droit->isGroupAdmin($userInfo) && ($permUser == 'RW' || $permUser == 'CS')) {
+    if (! $droit->isGroupAdmin($userInfo) && ($permUser == 'RW' || $permUser == 'CS')) {
         $listeActesHTML->addActionBox();
     }
 }
 
-$listeActesHTML->setCritere($transTypes,$ftype,$transNatures, $fnature,$status, $fstatus,$fnum,$objet);
-$listeActesHTML->setDate($fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date);
+$listeActesHTML->setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet);
+$listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date);
 
 $doc = new HTMLLayout();
 $doc->setTitle("Liste des transactions - ACTES - S²low");
@@ -107,16 +106,16 @@ $doc->addJavascript("/javascript/tedetis.js");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
-$doc->addBody($pagerHTML->getHTML($page_number,$nb_transactions,$taille_page));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 $doc->closeSideBar();
 $doc->openContent();
 
 ob_start();
 ?>
         <h1>ACTES - Dématérialisation du contrôle de légalité</h1>
-        <?php $listeActesHTML->display($envelopes);?>	
-<?php 			
+        <?php $listeActesHTML->display($envelopes);?>   
+<?php
 $html = ob_get_contents();
 ob_end_clean();
 

@@ -2,7 +2,6 @@
 
 class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
 {
-
     /**
      * @return string
      * @throws Exception
@@ -11,10 +10,10 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
     {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
-        mkdir($tmp_folder."/000000000/");
-        $actes_path = $tmp_folder."/000000000/test.tar.gz";
-        file_put_contents("$actes_path","foo");
-        $this->getObjectInstancier()->set('actes_files_upload_root',$tmp_folder);
+        mkdir($tmp_folder . "/000000000/");
+        $actes_path = $tmp_folder . "/000000000/test.tar.gz";
+        file_put_contents("$actes_path", "foo");
+        $this->getObjectInstancier()->set('actes_files_upload_root', $tmp_folder);
         return $actes_path;
     }
 
@@ -47,7 +46,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
             ->method("fileExistsOnCloud")
             ->willReturn($fileExistsOnCloud);
 
-        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class,$openStackSwiftWrapper);
+        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
     }
 
     /**
@@ -69,7 +68,8 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testWhenIsNotInCloud(){
+    public function testWhenIsNotInCloud()
+    {
         $actes_path = $this->createActesOnDisk();
         $this->mockOpenStack(false);
 
@@ -84,9 +84,10 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testWithManyFiles(){
+    public function testWithManyFiles()
+    {
         $actes_path = $this->createActesOnDisk();
-        file_put_contents(dirname($actes_path)."/foo","bar");
+        file_put_contents(dirname($actes_path) . "/foo", "bar");
         $this->mockOpenStack(true);
 
         $this->assertFileExists($actes_path);

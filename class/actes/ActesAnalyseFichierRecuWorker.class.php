@@ -1,50 +1,54 @@
 <?php
 
-class ActesAnalyseFichierRecuWorker implements IWorker {
+class ActesAnalyseFichierRecuWorker implements IWorker
+{
+    public const QUEUE_NAME = 'actes-analyse-fichier-recu';
 
 
-	const QUEUE_NAME = 'actes-analyse-fichier-recu';
+    private $actesAnalyseFichierRecuController;
 
+    public function __construct(
+        ActesAnalyseFichierRecuController $actesAnalyseFichierRecuController
+    ) {
+        $this->actesAnalyseFichierRecuController = $actesAnalyseFichierRecuController;
+    }
 
-	private $actesAnalyseFichierRecuController;
+    public function getQueueName()
+    {
+        return self::QUEUE_NAME;
+    }
 
-	public function __construct(
-		ActesAnalyseFichierRecuController $actesAnalyseFichierRecuController
-	) {
-		$this->actesAnalyseFichierRecuController = $actesAnalyseFichierRecuController;
-	}
+    public function getData($id)
+    {
+        return $id;
+    }
 
-	public function getQueueName(){
-		return self::QUEUE_NAME;
-	}
+    /**
+     * @return array|false|int[]
+     * @throws Exception
+     */
+    public function getAllId()
+    {
+        return $this->actesAnalyseFichierRecuController->getAllDirectory();
+    }
 
-	public function getData($id){
-		return $id;
-	}
+    /**
+     * @param $data
+     * @return void
+     * @throws Exception
+     */
+    public function work($data)
+    {
+        $this->actesAnalyseFichierRecuController->analyseOneFileMoveIfError($data);
+    }
 
-	/**
-	 * @return array|false|int[]
-	 * @throws Exception
-	 */
-	public function getAllId(){
-		return $this->actesAnalyseFichierRecuController->getAllDirectory();
-	}
+    public function getMutexName($data)
+    {
+        return sprintf("%s-%s", self::QUEUE_NAME, $data);
+    }
 
-	/**
-	 * @param $data
-	 * @return void
-	 * @throws Exception
-	 */
-	public function work($data){
-		$this->actesAnalyseFichierRecuController->analyseOneFileMoveIfError($data);
-	}
-
-	public function getMutexName($data) {
-		return sprintf("%s-%s",self::QUEUE_NAME,$data);
-	}
-
-	public function isDataValid($data) {
-		return true;
-	}
-
+    public function isDataValid($data)
+    {
+        return true;
+    }
 }

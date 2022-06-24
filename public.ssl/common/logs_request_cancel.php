@@ -1,6 +1,4 @@
 <?php
 
-require_once( __DIR__ . "/../../init/init.php");
-$frontController->go("Logs","cancel");
-
-
+require_once(__DIR__ . "/../../init/init.php");
+$frontController->go("Logs", "cancel");

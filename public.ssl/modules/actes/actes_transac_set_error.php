@@ -1,11 +1,11 @@
-<?php 
+<?php
 
-require_once(dirname(__FILE__)."/../../../init/init-www-actes.php");
+require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
 //require_once(__DIR__."/../../../class/actes/ActesTransactionsSQL.class.php");
 
-if (! $droit->isSuperAdmin($userInfo)){
-	header("Location: index.php");
-	exit;
+if (! $droit->isSuperAdmin($userInfo)) {
+    header("Location: index.php");
+    exit;
 }
 $recuperateur = new Recuperateur($_POST);
 
@@ -14,9 +14,9 @@ $id = $recuperateur->get('id');
 $actesScriptHelper  = $objectInstancier->get(ActesScriptHelper::class);
 
 $actesScriptHelper->updateStatus(
-	[$id],
-	ActesStatusSQL::STATUS_EN_ERREUR,
-	"Transaction passée manuellement en erreur"
+    [$id],
+    ActesStatusSQL::STATUS_EN_ERREUR,
+    "Transaction passée manuellement en erreur"
 );
 
 

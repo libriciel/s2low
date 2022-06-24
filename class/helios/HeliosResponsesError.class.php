@@ -1,59 +1,63 @@
 <?php
 
+class HeliosResponsesError
+{
+    private $directory_path ;
 
-class HeliosResponsesError {
+    public function __construct()
+    {
+        $this->setDirectoryPath(HELIOS_RESPONSES_ERROR_PATH);
+    }
 
-	private $directory_path ;
+    public function setDirectoryPath($directory_path)
+    {
+        $this->directory_path = $directory_path;
+    }
 
-	public function __construct() {
-		$this->setDirectoryPath(HELIOS_RESPONSES_ERROR_PATH);
-	}
+    public function getNbError()
+    {
+        $fi = new FilesystemIterator($this->directory_path, FilesystemIterator::SKIP_DOTS);
+        return iterator_count($fi);
+    }
 
-	public function setDirectoryPath($directory_path){
-		$this->directory_path = $directory_path;
-	}
+    public function getFilesystemIterator()
+    {
+        return new FilesystemIterator($this->directory_path, FilesystemIterator::SKIP_DOTS);
+    }
 
-	public function getNbError(){
-		$fi = new FilesystemIterator($this->directory_path, FilesystemIterator::SKIP_DOTS);
-		return iterator_count($fi);
-	}
+    public function getFilepath($filename)
+    {
 
-	public function getFilesystemIterator(){
-		return new FilesystemIterator($this->directory_path, FilesystemIterator::SKIP_DOTS);
-	}
+        $filepath = realpath($this->directory_path . "/" . $filename);
 
-	public function getFilepath($filename){
+        if (dirname($filepath) . "/" != $this->directory_path) {
+            throw new Exception("Impossible de lire le fichier.");
+        }
 
-		$filepath = realpath($this->directory_path."/".$filename);
+        if (! file_exists($filepath)) {
+            throw new Exception("Le fichier $filename n'existe pas.");
+        }
+        return $filepath;
+    }
 
-		if (dirname($filepath)."/" != $this->directory_path){
-			throw new Exception("Impossible de lire le fichier.");
-		}
+    public function display($filename)
+    {
+        $filepath = $this->getFilepath($filename);
+        if (filesize($filepath) == 0) {
+            throw new Exception("Le fichier $filename est vide.");
+        }
 
-		if (! file_exists($filepath)){
-			throw new Exception("Le fichier $filename n'existe pas.");
-		}
-		return $filepath;
-	}
+        $finfo = finfo_open(FILEINFO_MIME_TYPE | FILEINFO_MIME_ENCODING);
+        $mime_type = finfo_file($finfo, $filepath);
+        finfo_close($finfo);
 
-	public function display($filename){
-		$filepath = $this->getFilepath($filename);
-		if (filesize($filepath) == 0){
-			throw new Exception("Le fichier $filename est vide.");
-		}
+        header("Content-type: $mime_type;");
+        readfile($filepath);
+    }
 
-		$finfo = finfo_open(FILEINFO_MIME_TYPE|FILEINFO_MIME_ENCODING);
-		$mime_type = finfo_file($finfo, $filepath);
-		finfo_close($finfo);
-
-		header("Content-type: $mime_type;");
-		readfile($filepath);
-	}
-
-	public function delete($filename){
-		$filepath = $this->getFilepath($filename);
-		unlink($filepath);
-	}
-
-
+    public function delete($filename)
+    {
+        $filepath = $this->getFilepath($filename);
+        unlink($filepath);
+    }
 }

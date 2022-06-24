@@ -32,7 +32,8 @@
     "ext-pdo": "*",
     "ext-curl": "*",
     "ext-zlib": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "squizlabs/php_codesniffer": "^3.7"
   },
 
   "require-dev": {

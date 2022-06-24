@@ -1,6 +1,5 @@
 <?php
 
-
 namespace S2low\Command;
 
 use AuthoritySQL;
@@ -16,7 +15,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use User;
 use UserSQL;
-
 
 class ChangeMailDomainCommand extends Command
 {
@@ -40,8 +38,7 @@ class ChangeMailDomainCommand extends Command
         User $user,
         UserSQL $userSQL,
         AuthoritySQL $authoritySQL
-    )
-    {
+    ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->user = $user;
         $this->userSQL = $userSQL;
@@ -78,9 +75,11 @@ class ChangeMailDomainCommand extends Command
                 InputArgument::REQUIRED,
                 "the domain name that will be replaced"
             )
-            ->addArgument('target-domain-name',
+            ->addArgument(
+                'target-domain-name',
                 InputArgument::REQUIRED,
-                "the domain name that will replace domain-name-to-replace");
+                "the domain name that will replace domain-name-to-replace"
+            );
     }
 
     private function askIfNeeded(InputInterface $input, SymfonyStyle $io): bool
@@ -109,7 +108,7 @@ class ChangeMailDomainCommand extends Command
         $consoleHandler = new ConsoleHandler($output);
         $this->s2lowLogger->addHandler($consoleHandler);
 
-        try{
+        try {
             $authorities = $this->getAuthoritiesTomodify(
                 (int)$input->getArgument('group-id'),
                 $input->getArgument('domain-name-to-replace')
@@ -118,7 +117,7 @@ class ChangeMailDomainCommand extends Command
                 (int)$input->getArgument('group-id'),
                 $input->getArgument('domain-name-to-replace')
             );
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             $io->error($exception->getMessage());
             return 0;
         }
@@ -212,7 +211,7 @@ class ChangeMailDomainCommand extends Command
      */
     protected function displayChangesBeforeValidation(SymfonyStyle $io, $authorities, array $usersAndMails, $usersToModify): void
     {
-        $io->note("Modified Authorities : " . implode(" ; ",$authorities));
+        $io->note("Modified Authorities : " . implode(" ; ", $authorities));
         $io->table(
             ["user.id", "user.email (original)", "user.email (target)"],
             $usersAndMails

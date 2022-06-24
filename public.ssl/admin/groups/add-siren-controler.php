@@ -1,10 +1,10 @@
-<?php 
+<?php
 
-require_once( __DIR__ . "/../../../init/init-www.php");
+require_once(__DIR__ . "/../../../init/init-www.php");
 
-if (! $droit->isSuperAdmin($userInfo)){
-	header("Location: index.php");
-	exit;
+if (! $droit->isSuperAdmin($userInfo)) {
+    header("Location: index.php");
+    exit;
 }
 
 
@@ -13,23 +13,24 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->get("id");
 $siren = $recuperateur->get("siren");
 
-$siren = preg_replace("#\s#","",$siren);
+$siren = preg_replace("#\s#", "", $siren);
 
-$authorityGroup = new GroupSQL($sqlQuery);;
+$authorityGroup = new GroupSQL($sqlQuery);
+;
 
-if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))){
+if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))) {
     $_SESSION["error"] = "L'id fournie n'est pas un entier.";
     header("Location: " . WEBSITE_SSL);
     exit;
 }
 
-if(empty($authorityGroup->getInfo($id))){
+if (empty($authorityGroup->getInfo($id))) {
     $_SESSION["error"] = "Le groupe $id n'existe pas.";
     header("Location: " . WEBSITE_SSL);
     exit;
 }
 
-if (mb_strlen($siren) != 9){
+if (mb_strlen($siren) != 9) {
     $_SESSION["error"] = "Le siren ne semble  pas valide.";
     header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
     exit;
@@ -46,12 +47,12 @@ if (! $theSiren->isValid($siren)) {
 
 $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
-if ($authorityGroupSirenSQL->exist($id,$siren)){
-	$_SESSION["error"] = "Le siren existe déjà dans ce groupe";
-	header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
-	exit;
+if ($authorityGroupSirenSQL->exist($id, $siren)) {
+    $_SESSION["error"] = "Le siren existe déjà dans ce groupe";
+    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    exit;
 }
 
-$authorityGroupSirenSQL->add($id,$siren);
+$authorityGroupSirenSQL->add($id, $siren);
 $_SESSION["error"] = "Le siren a été ajouté";
 header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");

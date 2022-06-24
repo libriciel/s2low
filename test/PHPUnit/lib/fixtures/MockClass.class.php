@@ -1,6 +1,5 @@
 <?php
 
-class MockClass {
-	
-	
+class MockClass
+{
 }

@@ -7,36 +7,36 @@ require_once(SITEROOT . '/class/include.class.php');
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
-if ($me->isGroupAdminOrSuper() || ! $module->isActive()||!$me->checkDroit($module->get("name"),'CS')) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit();
+if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 if ($module->getParam("paper") == "on") {
-  $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-  header("Location: " . WEBSITE_SSL . "/modules/actes/");
-  exit();
+    $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/");
+    exit();
 }
 
 $rgsConnexion = new RgsConnexion();
-if (! $rgsConnexion->isRgsConnexion()){
-	$_SESSION["error"] = "Importer une enveloppe : votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
-	header("Location: " . WEBSITE_SSL . "/modules/actes/");
-	exit;
+if (! $rgsConnexion->isRgsConnexion()) {
+    $_SESSION["error"] = "Importer une enveloppe : votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/");
+    exit;
 }
 
 
@@ -73,9 +73,9 @@ $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" .
 $html .= "<h2>Import d'une enveloppe</h2>\n";
 $html .= "<form class=\"form-horizontal import-file-form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 $html .= "<div class=\"form-group\">";
-$html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum ".ACTES_ARCHIVE_MAX_SIZE." octets)</label>\n";
+$html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum " . ACTES_ARCHIVE_MAX_SIZE . " octets)</label>\n";
 $html .= "<div class=\"col-md-6\">";
-$html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"".ACTES_ARCHIVE_MAX_SIZE."\" />\n";
+$html .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"" . ACTES_ARCHIVE_MAX_SIZE . "\" />\n";
 $html .= "<input type=\"file\" id=\"enveloppe\" name=\"enveloppe\"/>";
 $html .= "</div>\n";
 $html .= "</div>\n";

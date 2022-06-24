@@ -1,54 +1,54 @@
 <?php
 
-require_once( __DIR__ . "/../../init/init-www-helios.php");
+require_once(__DIR__ . "/../../init/init-www-helios.php");
 
-if ($userInfo['role'] != 'SADM'){
-	$_SESSION["error"] = "Super admin only !";
-	header("Location: " . WEBSITE);
-	exit();
+if ($userInfo['role'] != 'SADM') {
+    $_SESSION["error"] = "Super admin only !";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 
 $helios_status = array(
-	1=>"Posté",
-	7 => "En traitement",
-	2=>"En attente de transmission",
-	3=>"Transmis"
+    1 => "Posté",
+    7 => "En traitement",
+    2 => "En attente de transmission",
+    3 => "Transmis"
 );
 
 $heliosTransactionsSQL = $objectInstancier->get('HeliosTransactionsSQL');
 
 $helios_nb_transaction_by_status = array();
-foreach($helios_status as $status_id => $status_libelle){
-	$helios_nb_transaction_by_status[$status_id] =  $heliosTransactionsSQL->getNbByStatus($status_id);
+foreach ($helios_status as $status_id => $status_libelle) {
+    $helios_nb_transaction_by_status[$status_id] =  $heliosTransactionsSQL->getNbByStatus($status_id);
 }
 
 $today = date("Y-m-d");
 
-$nb_transaction_transmise_hier = $heliosTransactionsSQL->getNbByStatusAndDate(3,$today);
+$nb_transaction_transmise_hier = $heliosTransactionsSQL->getNbByStatusAndDate(3, $today);
 
 $heliosResponsesError = new HeliosResponsesError();
 $helios_nb_responses_error = $heliosResponsesError->getNbError();
 
 
 $actes_status = array(
-    1=>"Posté",
-    2=>"En attente de transmission",
-    3=>"Transmis",
-    7=>"Document reçu",
+    1 => "Posté",
+    2 => "En attente de transmission",
+    3 => "Transmis",
+    7 => "Document reçu",
 );
 $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 
 $actes_nb_transaction_by_status = array();
-foreach($actes_status as $status_id => $status_libelle){
+foreach ($actes_status as $status_id => $status_libelle) {
     $actes_nb_transaction_by_status[$status_id] =  $actesTransactionsSQL->getNbByStatus($status_id);
 }
 
 $actesResponsesError = $objectInstancier->get('ActesResponsesError');
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
-$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3,date("Y-m-d H:i:s",strtotime("-4 hours")));
+$nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3, date("Y-m-d H:i:s", strtotime("-4 hours")));
 
 
 $menuHTML = new MenuHTML();
@@ -60,7 +60,7 @@ $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo,$modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
 $doc->closeSideBar();
 
 
@@ -68,8 +68,8 @@ $doc->openContent();
 
 ob_start();
 ?>
-	<div id="content">
-		<h1>Console d'administration</h1>
+    <div id="content">
+        <h1>Console d'administration</h1>
 
         <h2>Message d'urgence</h2>
 
@@ -83,7 +83,7 @@ ob_start();
                 <th>Nombre de transactions</th>
                 <th>&nbsp;</th>
             </tr>
-            <?php foreach($actes_nb_transaction_by_status as $status_id => $nb): ?>
+            <?php foreach ($actes_nb_transaction_by_status as $status_id => $nb) : ?>
                 <tr>
                     <td><?php echo $actes_status[$status_id]?></td>
                     <td><?php echo $nb?></td>
@@ -95,18 +95,18 @@ ob_start();
                     </td>
                 </tr>
             <?php endforeach ?>
-            <tr class="<?php echo $nb_actes_transmis_4hours_before?"danger":"success" ?>">
+            <tr class="<?php echo $nb_actes_transmis_4hours_before ? "danger" : "success" ?>">
                 <td>Actes transmis depuis plus de 4 heures</td>
-                <td><span class="label label-<?php echo $nb_actes_transmis_4hours_before?"danger":"success" ?>"><?php echo $nb_actes_transmis_4hours_before ?></span></td>
+                <td><span class="label label-<?php echo $nb_actes_transmis_4hours_before ? "danger" : "success" ?>"><?php echo $nb_actes_transmis_4hours_before ?></span></td>
                 <td>
                     <a href="/modules/actes/index.php?status=<?php echo 3 ?>" class="icon">
                         Liste
                     </a>
                 </td>
             </tr>
-            <tr class="<?php echo $actes_nb_responses_error?"danger":"success" ?>">
+            <tr class="<?php echo $actes_nb_responses_error ? "danger" : "success" ?>">
                 <td>Emails reçus depuis Actes en erreur</td>
-                <td><span class="label label-<?php echo $actes_nb_responses_error?"danger":"success" ?>"><?php echo $actes_nb_responses_error ?></span></td>
+                <td><span class="label label-<?php echo $actes_nb_responses_error ? "danger" : "success" ?>"><?php echo $actes_nb_responses_error ?></span></td>
                 <td>
                     <a href="/modules/actes/admin/responses-actes-error.php" >
                         Liste
@@ -118,52 +118,52 @@ ob_start();
 
 
 
-		<h2>Helios : Nombre de transactions en cours</h2>
-		<table  class="data-table table table-striped ">
-			<tr>
-				<th>Type</th>
-				<th>Nombre de transactions</th>
-				<th>&nbsp;</th>
-			</tr>
-			<?php foreach($helios_nb_transaction_by_status as $status_id => $nb): ?>
-				<tr>
-					<td><?php echo $helios_status[$status_id]?></td>
-					<td><?php echo $nb?></td>
-					<td>
+        <h2>Helios : Nombre de transactions en cours</h2>
+        <table  class="data-table table table-striped ">
+            <tr>
+                <th>Type</th>
+                <th>Nombre de transactions</th>
+                <th>&nbsp;</th>
+            </tr>
+            <?php foreach ($helios_nb_transaction_by_status as $status_id => $nb) : ?>
+                <tr>
+                    <td><?php echo $helios_status[$status_id]?></td>
+                    <td><?php echo $nb?></td>
+                    <td>
 
-						<a href="/modules/helios/index.php?status=<?php echo $status_id ?>" class="icon">
-							Liste
-						</a>
-					</td>
-				</tr>
-			<?php endforeach ?>
-			<tr class="<?php echo $nb_transaction_transmise_hier?"danger":"success" ?>">
-				<td>Transmise avant le <?php echo $today ?> (00h00)</td>
-				<td><span class="label label-<?php echo $nb_transaction_transmise_hier?"danger":"success" ?>"><?php echo $nb_transaction_transmise_hier ?></span></td>
-				<td>
-					<a href="/modules/helios/admin/transmis-non-acquitte.php" >
-						Liste
-					</a>
-				</td>
-			</tr>
-			<tr class="<?php echo $helios_nb_responses_error?"danger":"success" ?>">
-				<td>Fichiers reçus depuis Helios en erreur</td>
-				<td><span class="label label-<?php echo $helios_nb_responses_error?"danger":"success" ?>"><?php echo $helios_nb_responses_error ?></span></td>
-				<td>
-					<a href="/modules/helios/admin/responses-helios-error.php" >
-						Liste
-					</a>
-				</td>
-			</tr>
+                        <a href="/modules/helios/index.php?status=<?php echo $status_id ?>" class="icon">
+                            Liste
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            <tr class="<?php echo $nb_transaction_transmise_hier ? "danger" : "success" ?>">
+                <td>Transmise avant le <?php echo $today ?> (00h00)</td>
+                <td><span class="label label-<?php echo $nb_transaction_transmise_hier ? "danger" : "success" ?>"><?php echo $nb_transaction_transmise_hier ?></span></td>
+                <td>
+                    <a href="/modules/helios/admin/transmis-non-acquitte.php" >
+                        Liste
+                    </a>
+                </td>
+            </tr>
+            <tr class="<?php echo $helios_nb_responses_error ? "danger" : "success" ?>">
+                <td>Fichiers reçus depuis Helios en erreur</td>
+                <td><span class="label label-<?php echo $helios_nb_responses_error ? "danger" : "success" ?>"><?php echo $helios_nb_responses_error ?></span></td>
+                <td>
+                    <a href="/modules/helios/admin/responses-helios-error.php" >
+                        Liste
+                    </a>
+                </td>
+            </tr>
 
 
 
-		</table>
-	</div>
+        </table>
+    </div>
 
 <h2>Autres</h2>
 <div class="alert alert-warning">
-	Attention, page non optimisée qui ralentit le logiciel : <a href="stats.php">Statistiques</a>
+    Attention, page non optimisée qui ralentit le logiciel : <a href="stats.php">Statistiques</a>
 </div>
 
 <a href='/admin/stats-sae.php' class='btn  btn-primary'>Statistiques envoi SAE</a>

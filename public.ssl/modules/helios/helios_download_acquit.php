@@ -1,73 +1,73 @@
 <?php
 
 // Configuration
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
+require_once("../../../config/config.php");
+require_once(SITEROOT . '/class/include.class.php');
+require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("helios")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit ();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
-try{
-    $transaction_id = Helpers :: getIntFromGet("id",true);
-} catch (Exception $e){
+try {
+    $transaction_id = Helpers :: getIntFromGet("id", true);
+} catch (Exception $e) {
     $_SESSION["error"] = $e->getMessage();
     header("Location: " . WEBSITE_SSL);
-    exit ();
+    exit();
 }
 
 
-if (! $transaction_id){
-  $_SESSION["error"] = "Id non trouvé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+if (! $transaction_id) {
+    $_SESSION["error"] = "Id non trouvé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 
 $trans = new HeliosTransaction();
 
 if (isset($transaction_id) && ! empty($transaction_id)) {
-	$trans->setId($transaction_id);
-	if ($trans->init()) {//obtine inregistrarea ce corespunde
-		$owner = new User($trans->get("user_id")); //!!!!! din HeliosTransaction
-		$owner->init();
-	} else {
-		$_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-		header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-		exit();
-	}
+    $trans->setId($transaction_id);
+    if ($trans->init()) {//obtine inregistrarea ce corespunde
+        $owner = new User($trans->get("user_id")); //!!!!! din HeliosTransaction
+        $owner->init();
+    } else {
+        $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
+        header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+        exit();
+    }
 } else {
-	$_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-	exit();
+    $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
+    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    exit();
 }
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser,"helios");
+$permission = new ModulePermission($serviceUser, "helios");
 
-if ( ! $permission->canView($me,$owner)){
-	$_SESSION["error"] = "Accès refusé";
-	header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-	exit ();
+if (! $permission->canView($me, $owner)) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    exit();
 }
 
 
@@ -85,17 +85,15 @@ $owner->init();
 try {
     $pesAcquitCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
     $path = $pesAcquitCloudStorage->getPath($transaction_id);
-}
-catch (Exception $e){
+} catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();
     header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
-    exit ();
+    exit();
 }
 
 
 if (!$entity->sendAcquit(trim($filename))) {
-  $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();
+    $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();
   //header("Location: " . WEBSITE_SSL);
-  exit ();
+    exit();
 }
-

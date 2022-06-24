@@ -18,8 +18,8 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
         parent::setUp();
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('old_timestamp_token_directory',$tmp_folder);
-        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days',10);
+        $this->getObjectInstancier()->set('old_timestamp_token_directory', $tmp_folder);
+        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days', 10);
         $this->addFixtures();
     }
 
@@ -41,16 +41,16 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
 
         $logTimestampTokenGarbage->extractAndDelete(1);
 
-        $destination_file = $tmp_folder."/1977/02/01/".self::$LOG_ID_TO_DELETE.".pem";
+        $destination_file = $tmp_folder . "/1977/02/01/" . self::$LOG_ID_TO_DELETE . ".pem";
         $this->assertFileExists($destination_file);
-        $this->assertEquals('baz',file_get_contents($destination_file));
+        $this->assertEquals('baz', file_get_contents($destination_file));
         $info = $logsHistoriqueSQL->getInfo(self::$LOG_ID_TO_DELETE);
-        $this->assertEquals("bar",$info['message']);
-        $this->assertEquals("",$info['timestamp']);
+        $this->assertEquals("bar", $info['message']);
+        $this->assertEquals("", $info['timestamp']);
         $info = $logsHistoriqueSQL->getInfo(self::$LOG_ID_NOT_DELETE_LIMIT);
-        $this->assertEquals('baz',$info['timestamp']);
+        $this->assertEquals('baz', $info['timestamp']);
         $info = $logsHistoriqueSQL->getInfo(self::$LOG_ID_NOT_DELETE_DATE);
-        $this->assertEquals('baz',$info['timestamp']);
+        $this->assertEquals('baz', $info['timestamp']);
     }
 
     public function testInfo()
@@ -73,7 +73,7 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
                     'date' => '1977-02-01 00:00:00+01',
                     'timestamp' => 'baz',
                 ),
-        ),$info);
+        ), $info);
     }
 
     public function getLogHistoriqueSQL(): LogsHistoriqueSQL

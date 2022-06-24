@@ -9,5 +9,4 @@ class ModuleTest extends S2lowTestCase
         $module = new Module("0' UNION SELECT 'you','have been','hacked','0");
         $module->init();
     }
-
 }

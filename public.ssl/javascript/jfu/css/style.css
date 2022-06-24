@@ -11,76 +11,76 @@
 */
 
 /*body{
-	padding-top: 60px;
+    padding-top: 60px;
 }*/
 
 
 #resultUpload{
-	border: 1px solid black;
-	padding: 15px;
-	margin: 15px;
-	font-size: 12px;
+    border: 1px solid black;
+    padding: 15px;
+    margin: 15px;
+    font-size: 12px;
 }
 
 .ui-state-error{
-	border-color: #red;
+    border-color: #red;
 }
 
 .btn, .btn:hover, .btn-success, .btn-primary, .btn-warning, .btn-danger,.btn-success:hover, .btn-primary:hover, .btn-warning:hover, .btn-danger:hover{
-	text-shadow: none;
-	background-image: none;
-	border-radius: 0;
-	-moz-border-radius: 0;
+    text-shadow: none;
+    background-image: none;
+    border-radius: 0;
+    -moz-border-radius: 0;
 
-	border: 1px solid black;
-	background-color: #BBC7E1;
-	font-size: 10px;
-	font-weight: bold;
-	margin: 15px;
-	padding: 3px;
-	text-decoration: none;
-	color: black;
-	text-align: center;
-	font-family: Verdana,Arial,Helvetica,sans-serif;
+    border: 1px solid black;
+    background-color: #BBC7E1;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 15px;
+    padding: 3px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    font-family: Verdana,Arial,Helvetica,sans-serif;
 }
 
 a, a:hover, a:visited{
-	color: black;
+    color: black;
 }
 
 .fileinput-button, .fileinput-button:hover{
-	margin-right: 4px;
+    margin-right: 4px;
 }
 
 input{
-	border-color: inherit;
-	border-radius: 0;
-	-moz-border-radius: 0;
+    border-color: inherit;
+    border-radius: 0;
+    -moz-border-radius: 0;
 }
 
 input:focus{
-	border-color: inherit;
-	box-shadow: none;
+    border-color: inherit;
+    box-shadow: none;
 }
 
 .fileupload-buttonbar{
-	height: 60px;
+    height: 60px;
 }
 
 .span5{
-	height: 30px;
+    height: 30px;
 }
 
 .ui-state-valid{
-	border-color: #008000;
+    border-color: #008000;
 }
 
 .ui-state-error{
-	border-color: #CC0000;
+    border-color: #CC0000;
 }
 
 input, textarea, select, .uneditable-input {
-	padding: 0;
+    padding: 0;
 }
 
 td.preview{
@@ -112,10 +112,10 @@ td.manualdelete{
 
 
 .noMultipleSelect{
-	font-style: italic;
-	color: #ff5555;
+    font-style: italic;
+    color: #ff5555;
 }
 
 .noMultipleSelect a{
-	color: #ff0000;
+    color: #ff0000;
 }

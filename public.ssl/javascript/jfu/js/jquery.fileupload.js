@@ -210,10 +210,10 @@
             if (typeof options.formData === 'function') {
                 return options.formData(options.form);
             }
-			if ($.isArray(options.formData)) {
+            if ($.isArray(options.formData)) {
                 return options.formData;
             }
-			if (options.formData) {
+            if (options.formData) {
                 formData = [];
                 $.each(options.formData, function (name, value) {
                     formData.push({name: name, value: value});
@@ -782,7 +782,7 @@
                     files: $.each($.makeArray(e.target.files), that._normalizeFile),
                     fileInput: $(e.target),
                     form: $(e.target.form)
-                };
+            };
             if (!data.files.length) {
                 // If the files property is not available, the browser does not
                 // support the File API and we add a pseudo File object with
@@ -823,7 +823,7 @@
                         $.makeArray(dataTransfer && dataTransfer.files),
                         that._normalizeFile
                     )
-                };
+            };
             if (that._trigger('drop', e, data) === false ||
                     that._onAdd(e, data) === false) {
                 return false;

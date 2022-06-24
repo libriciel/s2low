@@ -32,20 +32,20 @@
                     <h1>Bienvenue sur la plate-forme S²LOW&nbsp;-&nbsp;ADULLACT</h1>
                     <h2 class="home">Offre S²LOW</h2>
                     <p class="home">
-						La plate-forme S²LOW permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales :
-						elle permet ainsi la transmission des actes aux préfectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministère de l'Intérieur,
-						ainsi que les transmissions d'information vers le Trésor Public
-						(états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
-						via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
-					<p class="home">
-						L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
-					</p>
+                        La plate-forme S²LOW permet aux collectivités la transmission dématérialisée d'information vers les administrations centrales :
+                        elle permet ainsi la transmission des actes aux préfectures via le protocole <a href="http://www.collectivites-locales.gouv.fr/actes-0">ACTES</a> mis en place par le ministère de l'Intérieur,
+                        ainsi que les transmissions d'information vers le Trésor Public
+                        (états de paye, titres de recette, mandats de dépenses et les factures, pièces justificatives des marchés publics)
+                        via le protocole <a href="http://www.collectivites-locales.gouv.fr/helios-lapplication-informatique-direction-generale-des-finances-publiques-dediee-au-secteur-local-0">HELIOS</a>.</p>
+                    <p class="home">
+                        L'accès aux services est réservé aux personnes autorisées disposant d'un <a href="http://faq.adullact.org/general/16-certificats-electroniques-et-dispositifs-de-teletransmission">certificat électronique</a> à cet effet.
+                    </p>
                     <?php
 
                     $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
-					/** @var MessageAdminSQL $messageAdminSQL */
-					$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
-					$messageAdmin = $messageAdminSQL->getPublishedMessage();
+                    /** @var MessageAdminSQL $messageAdminSQL */
+                    $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
                     if ($messageAdmin->message_id) {
                         $messageAdmin->displayMessage();
                     }
@@ -62,7 +62,7 @@
                         <div id="mention_partenaires">
                             <h2 class="home">Partenaires</h2>
                             <p class="home">
-								<a href="http://www.libriciel.fr/">LIBRICIEL SCOP S.A.</a>, financeur et mainteneur de la solution
+                                <a href="http://www.libriciel.fr/">LIBRICIEL SCOP S.A.</a>, financeur et mainteneur de la solution
                             </p>
                         </div>
                     </div>

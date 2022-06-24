@@ -4,7 +4,6 @@ use PHPUnit\Framework\TestCase;
 
 class XadesSignatureParserTest extends TestCase
 {
-
     /** @var XadesSignatureParser */
     private $XadesSignatureParser;
 
@@ -77,7 +76,6 @@ class XadesSignatureParserTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("SigningTime non trouvé pour NoTarget");
         $this->XadesSignatureParser->extractRawSigningTime($xml, 'NoTarget');
-
     }
 
     public function testWrongTargetSigningTime()

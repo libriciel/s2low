@@ -1,6 +1,5 @@
 <?php
 
-
 class DataForBordereauPDF
 {
     /** @var string  */
@@ -91,7 +90,7 @@ class DataForBordereauPDF
     public function setCycleVieTransaction($workflow, $status)
     {
         //traiter des requêtes
-        $cycle_table=[];
+        $cycle_table = [];
         foreach ($workflow as $stage) {
             $cycle_table[] = [
                 $status[$stage["status_id"]],
@@ -102,21 +101,24 @@ class DataForBordereauPDF
         $this->cycle_table = $cycle_table;
     }
 
-    public function setAddEmailNotificationField($addEmailNotificationField){
+    public function setAddEmailNotificationField($addEmailNotificationField)
+    {
         $this->addEmailNotificationField = $addEmailNotificationField;
     }
 
     /**
      * @return string
      */
-    private function getNotifieA(){
-        if (($this->broadcasted == 't') || ($this->addEmailNotificationField && $this->broadcastEmails) ) {
+    private function getNotifieA()
+    {
+        if (($this->broadcasted == 't') || ($this->addEmailNotificationField && $this->broadcastEmails)) {
             return "Notifiée à " . $this->broadcastEmails;
         }
         return "Non notifiée";
     }
 
-    public function setClassification($classification,$classificationString){
+    public function setClassification($classification, $classificationString)
+    {
         $this->classification = $classification;
 
         if ($classificationString) {
@@ -124,9 +126,10 @@ class DataForBordereauPDF
         }
     }
 
-    public function setDonneesTransaction(array $transactionComplement){
+    public function setDonneesTransaction(array $transactionComplement)
+    {
         $this->texteCollectivite = $transactionComplement["authority_name"];
-        $this->texteUtilisateur = $transactionComplement["name"]." ".$transactionComplement["givenname"];
+        $this->texteUtilisateur = $transactionComplement["name"] . " " . $transactionComplement["givenname"];
 
         $this->nature_description = $transactionComplement["nature_descr"] ?? "n/a";
 
@@ -138,15 +141,15 @@ class DataForBordereauPDF
             $transactionComplement["classification_string"]
         );
 
-        $this->arch_url = $transactionComplement["archive_url"] ? : "Non définie";;
+        $this->arch_url = $transactionComplement["archive_url"] ? : "Non définie";
+        ;
 
         $this->typeDeTransaction = $transactionComplement["type_str"];
 
         $this->numeroActe = $transactionComplement["number"];
         $this->dateDecision = $transactionComplement["decision_date"];
         $this->objet = $transactionComplement["subject"];
-        $this->presenceDocPapier = $transactionComplement["document_papier"]?"OUI":"NON";
+        $this->presenceDocPapier = $transactionComplement["document_papier"] ? "OUI" : "NON";
         $this->idUnique = $transactionComplement["unique_id"];
     }
-
 }

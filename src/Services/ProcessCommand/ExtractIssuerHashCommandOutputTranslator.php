@@ -6,11 +6,11 @@ use Symfony\Component\Process\Process;
 
 class ExtractIssuerHashCommandOutputTranslator implements ICommandOutputTranslator
 {
-    public function getCommandOutput(Process $process) : AnalysedOutput
+    public function getCommandOutput(Process $process): AnalysedOutput
     {
-        if(!$process->isSuccessful()){
-            return new AnalysedOutput("",["Certificat non valide : impossible d'extraire le issuer hash"]);
+        if (!$process->isSuccessful()) {
+            return new AnalysedOutput("", ["Certificat non valide : impossible d'extraire le issuer hash"]);
         }
-        return new AnalysedOutput(trim ($process->getOutput()));
+        return new AnalysedOutput(trim($process->getOutput()));
     }
 }

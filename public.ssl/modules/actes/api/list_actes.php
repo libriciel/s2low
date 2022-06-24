@@ -1,4 +1,4 @@
 <?php
 
-require_once(__DIR__."/../../../../init/init.php");
-$frontController->go("ActesAPI","listActes");
+require_once(__DIR__ . "/../../../../init/init.php");
+$frontController->go("ActesAPI", "listActes");

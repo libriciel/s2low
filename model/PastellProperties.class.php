@@ -1,10 +1,10 @@
 <?php
 
-class PastellProperties {
-
-    const DESTINATION_SAE = 'SAE';
-    const DESTINATION_GED = 'GED';
-    const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
+class PastellProperties
+{
+    private const DESTINATION_SAE = 'SAE';
+    private const DESTINATION_GED = 'GED';
+    private const MAX_ID = 2147483647; /* (signed) integer max size in PostgreSQL*/
 
     public $url;
     public $login;

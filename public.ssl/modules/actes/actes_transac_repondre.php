@@ -1,44 +1,44 @@
 <?php
 
-require_once ("../../../config/config.php");
-require_once (SITEROOT . '/class/include.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
-require_once (SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
+require_once("../../../config/config.php");
+require_once(SITEROOT . '/class/include.class.php');
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
+require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
 
 $batchMode = false;
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-  $_SESSION["error"] = "Erreur d'initialisation du module";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+    $_SESSION["error"] = "Erreur d'initialisation du module";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-  $_SESSION["error"] = "Échec de l'authentification";
-  header("Location: " . WEBSITE);
-  exit ();
+    $_SESSION["error"] = "Échec de l'authentification";
+    header("Location: " . WEBSITE);
+    exit();
 }
 
-if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"),'CS')) {
-  $_SESSION["error"] = "Accès refusé";
-  header("Location: " . WEBSITE_SSL);
-  exit ();
+if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
+    $_SESSION["error"] = "Accès refusé";
+    header("Location: " . WEBSITE_SSL);
+    exit();
 }
 
 if ($module->getParam("paper") == "on") {
-  $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-  header("Location: " . WEBSITE_SSL . "/modules/actes/");
-  exit ();
+    $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
+    header("Location: " . WEBSITE_SSL . "/modules/actes/");
+    exit();
 }
 
 $related_id = Helpers::getVarFromPost("id");
-if (!$related_id){
-	$related_id = Helpers::getVarFromGet("id");
+if (!$related_id) {
+    $related_id = Helpers::getVarFromGet("id");
 }
 
 $trans = new ActesTransaction($related_id);
@@ -47,18 +47,18 @@ $transactionTypes = $trans->get("transactionTypes");
 
 
 $typeReponse = array(
-3	=> array(4 => "Transmission de pièces complémentaires",
-			3 => "Refus explicite d'envoi de pièces complémentaires"
-			),
+3   => array(4 => "Transmission de pièces complémentaires",
+            3 => "Refus explicite d'envoi de pièces complémentaires"
+            ),
 4 => array(4 => "Lettre de justification de l'acte",
-			3 => "Rejet explicite d'une lettre d'observations")
+            3 => "Rejet explicite d'une lettre d'observations")
 );
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"".WEBSITE_SSL."/custom/styles/date-picker.css\" />");
-$doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<script src=\"".WEBSITE_SSL."/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . WEBSITE_SSL . "/custom/styles/date-picker.css\" />");
+$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
 
 
@@ -67,11 +67,11 @@ $type_pj_list = $actesTypePJSQL->getListByNature()[$trans->get('nature_code')];
 
 
 $option_pj = "";
-foreach($type_pj_list as $code_pj => $libelle_pj){
-	$option_pj.= "<option value='$code_pj'>$libelle_pj</option>";
+foreach ($type_pj_list as $code_pj => $libelle_pj) {
+    $option_pj .= "<option value='$code_pj'>$libelle_pj</option>";
 }
 
-$js =<<<EOJS
+$js = <<<EOJS
 <script type="text/javascript">
 //<![CDATA[
 var field_nb = 1;
@@ -203,9 +203,11 @@ $html .= "<h2>Réponse à un courrier</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
-$html .= $doc->getHTMLArrayline("Acte ", 
-	"<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId() . "\">"
-	 . $trans->get("number") . "</a>");
+$html .= $doc->getHTMLArrayline(
+    "Acte ",
+    "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId() . "\">"
+     . $trans->get("number") . "</a>"
+);
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
@@ -214,20 +216,22 @@ $html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action
 $html .= ", 'acte_pdf_file', 'Fichier PDF contenant la réponse', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 
-$html .= "<input type='hidden' name='id' value='".$related_id."'/>";
+$html .= "<input type='hidden' name='id' value='" . $related_id . "'/>";
 
-if ($trans->get("type") == 3 || $trans->get("type") == 4){
-    
-$html .= "  <div class=\"form-group\">\n";
-$html .= "  <label for=\"type_envoie\" class=\"control-label\"> Nature de l'envoi: </label>\n";
-$html .=  $doc->getHTMLSelect("type_envoie",$typeReponse[$trans->get("type")], 
-		Helpers :: getFromSession("type_envoie")) . "\n";
-$html .= " </div>";
+if ($trans->get("type") == 3 || $trans->get("type") == 4) {
+    $html .= "  <div class=\"form-group\">\n";
+    $html .= "  <label for=\"type_envoie\" class=\"control-label\"> Nature de l'envoi: </label>\n";
+    $html .=  $doc->getHTMLSelect(
+        "type_envoie",
+        $typeReponse[$trans->get("type")],
+        Helpers :: getFromSession("type_envoie")
+    ) . "\n";
+    $html .= " </div>";
 } else {
-	$html .= "<input type='hidden' name='type_envoie' value='1'/>";
+    $html .= "<input type='hidden' name='type_envoie' value='1'/>";
 }
 
-$html .= " <div class=\"form-group\">\n";    
+$html .= " <div class=\"form-group\">\n";
 $html .= "   <fieldset>\n";
 $html .= "   <div class=\"row-legend\">\n";
 $html .= "   <legend>Fichier PDF contenant la réponse :</legend></div>\n";
@@ -236,27 +240,27 @@ $html .= "       <div class=\"form-group \">\n";
 $html .= "         <label class=\"col-md-3  control-label\">Type de pièce jointe</label>";
 $html .= "          <div class=\"col-md-3\"><select class=\"select_type_pj\" id=\"actes_attachments_type\" name=\"type_acte\">";
 
-foreach($type_pj_list as $code_pj => $libelle_pj){
-	$html.= "<option value='$code_pj'>$libelle_pj</option>";
+foreach ($type_pj_list as $code_pj => $libelle_pj) {
+    $html .= "<option value='$code_pj'>$libelle_pj</option>";
 }
 
-$html .="</select></div>";
+$html .= "</select></div>";
 $html .= "       </div><br/>";
-$html .= "       <div class=\"form-group\">\n";  
+$html .= "       <div class=\"form-group\">\n";
 $html .= "         <label for=\"acte_pdf_file\" class=\" col-md-3  control-label\">Fichier PDF, JPG ou PNG : </label>\n";
 $html .= "         <div class=\"col-md-3\"><input type=\"file\" id=\"acte_pdf_file\" class=\"control-form\" name=\"acte_pdf_file\"/></div>\n";
 $html .= "       </div>\n";
 $html .= "   </fieldset>\n";
 $html .= " </div>\n";
 
-if ($trans->get("type") == 3) {  
-$html .= "<div class=\"form-group\">\n";    
-$html .= "  <fieldset>\n";
-$html .= "   <div class=\"row-legend\">\n";
-$html .= "  <legend>Pièces jointes supplémentaires : <a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
-$html .= "   <div id=\"attachments_fields\"></div>\n";
-$html .= " </fieldset>\n";  
-$html .= "</div>\n";
+if ($trans->get("type") == 3) {
+    $html .= "<div class=\"form-group\">\n";
+    $html .= "  <fieldset>\n";
+    $html .= "   <div class=\"row-legend\">\n";
+    $html .= "  <legend>Pièces jointes supplémentaires : <a href=\"#tedetis\" onclick=\"javascript:add_attachment_field();\" title=\"Ajouter un champ de sélection de fichier supplémentaire\">Ajouter un champ</a></legend></div>\n";
+    $html .= "   <div id=\"attachments_fields\"></div>\n";
+    $html .= " </fieldset>\n";
+    $html .= "</div>\n";
 }
 
 
@@ -272,4 +276,3 @@ $doc->closeContainer();
 $doc->buildFooter();
 
 $doc->display();
-?>
