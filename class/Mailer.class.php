@@ -4,6 +4,9 @@ require_once("Mail/RFC822.php");                    //Fixé plus tard
 require_once("PEAR.php");                           // Lors du remplacement par le mail Symfony
 require_once(SITEROOT . "/class/PearMail.class.php");
 
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
+
 class Mailer
 {
     private const FILESIZE_LIMIT =  10485760; /* 10 Mio */
@@ -51,14 +54,16 @@ class Mailer
 
     public function isValidMail($mail)
     {
-        $mail_RFC822 = new Mail_RFC822();
-        $lo_mail = $mail_RFC822->parseAddressList($mail, null, false);
-        if (PEAR::isError($lo_mail)) {
+        $validator = new EmailValidator();
+        return $validator->isValid($mail, new RFCValidation());
+        /*$mail_RFC822 = new Mail_RFC822();
+        $lo_mail = $mail_RFC822->parseAddressList($mail, NULL, FALSE);
+        if(PEAR::isError($lo_mail)){
             return false;
-        } elseif ($lo_mail[0]->host == 'localhost') {
+        } elseif ($lo_mail[0]->host=='localhost'){
             return false;
         }
-        return true;
+        return true;*/
     }
 
     public function sendMail($subject, $body)
