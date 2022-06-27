@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../ext/Parsedown.php";
-require_once __DIR__ . "/../ext/HTMLPurifier.standalone.php";
 
 class MessageAdmin
 {
