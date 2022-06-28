@@ -1,8 +1,6 @@
 <?php
 
 $debut = microtime(true);
-require_once(SITEROOT . 'class/XMLHelper.php');
-
 
 if (php_sapi_name() != 'cli') {
     session_start();

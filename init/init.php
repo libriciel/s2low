@@ -2,6 +2,14 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+if (! defined("SIGTERM")) {
+    define('SIGTERM', 15);
+}
+
+if (! defined("SIGINT")) {
+    define('SIGINT', 2);
+}
+
 require_once(__DIR__ . "/../config/config.php");
 
 require_once(SITEROOT . '/class/include.class.php');

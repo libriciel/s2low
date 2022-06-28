@@ -68,7 +68,7 @@ if (strtotime($decision_date) > time()) {
 $document_papier =  Helpers :: getVarFromPost("document_papier", true) ? 1 : 0;
 
 $subject = Helpers :: getVarFromPost("subject", true);
-$subject = mb_convert_encoding(cp1252_to_iso88591($subject), "UTF-8", "ISO-8859-1");  //HOTFIX pour passage UTF-8
+$subject = mb_convert_encoding(XMLHelper::cp1252_to_iso88591($subject), "UTF-8", "ISO-8859-1");  //HOTFIX pour passage UTF-8
 
 try {
     $batchFileId = Helpers :: getIntFromPost("batchfile", true);

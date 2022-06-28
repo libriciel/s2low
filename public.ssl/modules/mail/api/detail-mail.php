@@ -31,4 +31,5 @@ foreach ($detail['mail_emis'] as $emis) {
     echo "emis:" . $emis['email'] . ":" . $emis['type_envoi'] . ":" . ($emis['ack'] ? 't' : 'f') . ":" . $emis['ack_date'] . "\n";
 }
 echo "\n\n==message==\n\n";
-echo cp1252_to_iso88591($detail['message']);
+
+echo XMLHelper::cp1252_to_iso88591($detail['message']);
