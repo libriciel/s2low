@@ -1,7 +1,6 @@
 <?php
 
 $debut = microtime(true);
-require_once(SITEROOT . 'ext/mime_content_type.func.php');
 require_once(SITEROOT . 'class/XMLHelper.php');
 
 
