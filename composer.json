@@ -79,6 +79,9 @@
   "autoload-dev": {
     "psr-4": {
       "S2low\\Tests\\": "tests/"
-    }
+    },
+    "classmap": [
+      "test/PHPUnit"
+    ]
   }
 }
