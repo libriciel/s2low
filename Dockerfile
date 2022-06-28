@@ -12,7 +12,7 @@ COPY ./docker-resources/ /tmp/docker-resources/
 RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
 #Composer
-COPY ./composer.* /var/www/s2low/
+COPY ./ /var/www/s2low/
 RUN composer install
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
