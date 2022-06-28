@@ -1,6 +1,5 @@
 <?php
 
-
 class MessageAdmin
 {
     public const ETAT_EN_COURS_DE_REDACTION = 0;

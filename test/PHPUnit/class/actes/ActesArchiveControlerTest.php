@@ -1,6 +1,5 @@
 <?php
 
-
 class ActesArchiveControlerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

@@ -1,6 +1,5 @@
 <?php
 
-
 class ActesIncludedFile extends DataObject
 {
     protected $objectName = "actes_included_files";
