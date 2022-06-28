@@ -15,8 +15,6 @@
  *
  */
 
-require_once("Helpers.class.php");
-
 class DataObject
 {
     protected $id;

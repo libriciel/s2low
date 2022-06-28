@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../../public.ssl/modules/actes/class/ActesTransaction.class.php";
-require_once __DIR__ . "/IActesPdf.php";
-
 class ActesPdf implements IActesPdf
 {
     private const TEXTE_NOIR = [56, 55, 55];

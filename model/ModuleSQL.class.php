@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/UsersPermsSQL.class.php";
-
 class ModuleSQL extends SQL
 {
     public const ACTES_MODULE_NAME = 'actes';

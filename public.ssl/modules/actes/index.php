@@ -1,8 +1,6 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-
 
 $recuperateur = new Recuperateur($_GET);
 

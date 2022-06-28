@@ -13,8 +13,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/Mailer.class.php");
-
 function checkEmail($email, $antispam = false)
 {
 

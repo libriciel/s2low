@@ -1,8 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesEnvelope.class.php");
-
 
 class ActesIncludedFile extends DataObject
 {

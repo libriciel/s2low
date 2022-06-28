@@ -2,8 +2,6 @@
 
 require_once("../../../init/init.php");
 
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
-
 
 // Instanciation du module courant
 $module = new Module();

@@ -1,7 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class GroupeMail extends DataObject
 {
     protected $objectName = "mail_groupe";

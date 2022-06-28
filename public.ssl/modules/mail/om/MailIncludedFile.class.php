@@ -14,10 +14,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-require_once(SITEROOT . "/class/FileUploader.class.php");
-
-
 class MailIncludedFile extends DataObject
 {
     private $lastError;

@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../../../../../../public.ssl/modules/actes/class/ActesEnvelope.class.php";
-
 class ActesEnveloppeTest extends S2lowTestCase
 {
     public function testSendFileNotInit()

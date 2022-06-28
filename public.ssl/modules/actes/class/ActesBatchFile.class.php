@@ -15,8 +15,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class ActesBatchFile extends DataObject
 {
     protected $objectName = "actes_batch_files";

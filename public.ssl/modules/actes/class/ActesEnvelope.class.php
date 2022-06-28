@@ -1,9 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-require_once("ActesTransaction.class.php");
-require_once(SITEROOT . "/class/Trace.class.php");
-
 class ActesEnvelope extends DataObject
 {
     protected $objectName = "actes_envelopes";

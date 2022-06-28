@@ -15,8 +15,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class ActesClassification extends DataObject
 {
     protected $objectName = "actes_classification_requests";

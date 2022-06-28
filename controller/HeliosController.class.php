@@ -1,9 +1,5 @@
 <?php
 
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');
-
 class HeliosController extends Controller
 {
     private const MODULE_NAME = 'helios';

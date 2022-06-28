@@ -87,7 +87,6 @@ switch ($type) {
         break;
 
     case 'classification':
-        require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesClassification.class.php");
         $classifications = ActesClassification::getClassificationList($myAuthority->getId());
 
         $done = array();

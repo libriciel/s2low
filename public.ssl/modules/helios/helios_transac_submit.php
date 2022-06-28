@@ -2,8 +2,6 @@
 
 require_once("../../../init/init.php");
 require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
 
 $module = new Module();
 if (! $module->initByName("helios")) {

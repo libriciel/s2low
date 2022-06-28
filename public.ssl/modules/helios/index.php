@@ -2,10 +2,6 @@
 
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
-require_once(SITEROOT . '/class/helios/HeliosTransactionsListe.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransaction.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosTransactionWorkflow.class.php');
-
 $recuperateur = new Recuperateur($_GET);
 
 

@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../../../../../../public.ssl/modules/actes/class/ActesBatchFile.class.php";
-
-
 class ActesBatchFileTest extends S2lowTestCase
 {
     /**

@@ -15,8 +15,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class HeliosTransmissionWindow extends DataObject
 {
     protected $objectName = "helios_transmission_windows";

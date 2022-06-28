@@ -1,8 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../../../../public.ssl/modules/actes/class/ActesTransaction.class.php");
-
-
 class ActesPdfTest extends S2lowTestCase
 {
     public function testCreatePdf()

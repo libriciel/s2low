@@ -4,10 +4,6 @@ $tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable f
 
 require_once(__DIR__ . "/../../../config/config.php");
 require_once(__DIR__ . '/../../../class/include.class.php');
-require_once(__DIR__ . '/class/ActesEnvelope.class.php');
-require_once(__DIR__ . '/class/ActesClassification.class.php');
-require_once(__DIR__ . '/class/ActesBatch.class.php');
-require_once(__DIR__ . '/../../../class/FileUploader.class.php');
 
 $errorMsg = "";
 $extraRedirect = "";

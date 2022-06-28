@@ -16,7 +16,6 @@
  *
  */
 
-  require_once(SITEROOT . "class/Layout.class.php");
 class MailLayout extends HTMLLayout
 {
     public function DisplayHead()

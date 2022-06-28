@@ -19,8 +19,6 @@
 //dat
 //apelata metoda sa din index.php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class HeliosTransaction extends DataObject
 {
     protected $objectName = "helios_transactions";

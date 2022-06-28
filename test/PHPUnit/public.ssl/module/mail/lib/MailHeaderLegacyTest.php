@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../../../../../../public.ssl/modules/mail/lib/MailHeader.class.php";
-
 class MailHeaderLegacyTest extends S2lowTestCase
 {
     public function testDefaults()

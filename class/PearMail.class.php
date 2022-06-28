@@ -1,6 +1,6 @@
 <?php
 
-require_once("PEAR.php");
+require_once("PEAR.php");           //Fix lors de la migration vers Symfony
 require_once("Mail.php");
 require_once("Mail/mime.php");
 

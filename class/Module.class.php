@@ -4,9 +4,6 @@
 //gros potentiel pour accélerer le logiciel (EP)
 
 
-require_once("DataObject.class.php");
-
-
 //FIXME Les Module n'ont pas à être dans la base de données ....
 class Module extends DataObject
 {

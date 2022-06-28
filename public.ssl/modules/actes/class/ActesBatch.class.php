@@ -15,10 +15,6 @@
  *
  */
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-require_once(SITEROOT . "/class/Parapheur.class.php");
-require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesBatchFile.class.php");
-
 class ActesBatch extends DataObject
 {
     protected $objectName = "actes_batches";

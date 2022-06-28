@@ -16,7 +16,7 @@
 // Configuration
 require_once("../../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
-require_once("../class/HeliosRetour.class.php");
+
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("helios")) {

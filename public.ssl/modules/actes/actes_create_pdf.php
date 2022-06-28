@@ -3,9 +3,6 @@
 require_once("../../../config/config.php");
 require_once(SITEROOT . '/class/include.class.php');
 
-
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-
 $id = Helpers :: getVarFromGet("trans_id");
 
 if (empty($id)) {
