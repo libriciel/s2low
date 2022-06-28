@@ -2,8 +2,7 @@
 
 $tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
 
-require_once(__DIR__ . "/../../../config/config.php");
-require_once(__DIR__ . '/../../../class/include.class.php');
+require_once(__DIR__ . "/../../../init/init.php");
 
 $errorMsg = "";
 $extraRedirect = "";

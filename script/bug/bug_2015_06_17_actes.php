@@ -13,9 +13,7 @@ $date_debut_bug = "2015-05-01";
 $date_fin_bug = "2015-06-20";
 
 
-require_once(__DIR__ . "/../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/init/init.php');
+require_once(__DIR__ . "/../../init/init.php");
 
 
 

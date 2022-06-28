@@ -1,6 +1,6 @@
 <?php
 
-require_once("../config/config.php");
+require_once("../init/init.php");
 
 $doc = new HTMLLayout('xhtml_prerequis.tpl.php');
 

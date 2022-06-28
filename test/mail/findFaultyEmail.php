@@ -1,7 +1,6 @@
 <?php
 
-require_once(__DIR__ . "/../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once(__DIR__ . "/../../init/init.php");
 
 function checkAllEmail($emailtext)
 {

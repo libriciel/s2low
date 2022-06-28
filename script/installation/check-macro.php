@@ -6,7 +6,7 @@ require_once(__DIR__ . "/../../config/LoadLocalSettings.php");
 echo "récupération des constantes surchargées";
 $constantes_surchargee = get_defined_constants();
 
-require_once(__DIR__ . "/../../config/config.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 echo "récupération de toutes les constantes";
 $constantes_globales = get_defined_constants();

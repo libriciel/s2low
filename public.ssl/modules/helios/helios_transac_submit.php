@@ -1,7 +1,6 @@
 <?php
 
 require_once("../../../init/init.php");
-require_once(SITEROOT . '/class/include.class.php');
 
 $module = new Module();
 if (! $module->initByName("helios")) {

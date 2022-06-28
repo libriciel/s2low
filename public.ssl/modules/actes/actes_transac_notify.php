@@ -5,8 +5,7 @@
  *
  * NOTE : Ce script a l'air de faire partie de l'API (il prend en charge une liste d'id à notifier....) (EP) */
 
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once("../../../init/init.php");
 
 // Instanciation du module courant
 $module = new Module();

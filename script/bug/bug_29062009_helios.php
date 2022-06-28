@@ -6,8 +6,7 @@ exit;
 //08h32min22s à 18h16min27s
 
 
-require_once(dirname(__FILE__) . "/../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once(dirname(__FILE__) . "/../init/init.php");
 
 $db = DatabasePool::getInstance();
 

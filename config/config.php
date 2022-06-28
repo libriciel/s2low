@@ -866,6 +866,3 @@ if (! defined("TIMESTAMP_TOKEN_RETENTION_NB_DAYS")) {
 
 //Ceci doit toujours etre la fin du fichier
 require_once('config-static.php');
-//Bon ok c'est bizarre, mais c'est comme les script les plus vieux ne charge que config.php à la place de init.php
-//on fait en sorte que config.php charge init.php et réciproquement
-require_once(__DIR__ . "/../init/init.php");

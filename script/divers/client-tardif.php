@@ -2,9 +2,7 @@
 
 //Liste les clients qui utilisent S2low entre minuit et six heures du matin
 
-require_once(__DIR__ . "/../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/init/init.php');
+require_once(__DIR__ . "/../../init/init.php");
 
 
 class ConnexionTardiveSQL

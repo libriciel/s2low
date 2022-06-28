@@ -9,8 +9,7 @@
  *
  */
 
-require_once(__DIR__ . "/../../config/config.php");
-require_once(SITEROOT . '/init/init.php');
+require_once(__DIR__ . "/../../init/init.php");
 
 echo "Correction authority_id\n";
 $sql = "UPDATE logs SET authority_id=users.authority_id FROM users " .

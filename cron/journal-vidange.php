@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__) . "/../config/config.php");
+require_once(dirname(__FILE__) . "/../init/init.php");
 
 /** @var LogsController $logsController */
 $logsController = $objectInstancier->{'LogsController'};

@@ -1,7 +1,7 @@
 <?php
 
-require_once("../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once("../init/init.php");
+
 $me = new User();
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";

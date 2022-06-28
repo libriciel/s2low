@@ -11,7 +11,6 @@ $do = false;
 
 
 require_once(__DIR__ . "/../../init/init.php");
-require_once(SITEROOT . '/class/include.class.php');
 
 
 $sql = "SELECT DISTINCT atw1.transaction_id FROM actes_transactions_workflow atw1 " .
