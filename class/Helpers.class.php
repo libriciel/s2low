@@ -1,7 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/Trace.class.php");
-
 class Helpers
 {
     public static $last_error;

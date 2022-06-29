@@ -1,7 +1,7 @@
 <?php
 
-require_once("Mail/RFC822.php");
-require_once("PEAR.php");
+require_once("Mail/RFC822.php");                    //Fixé plus tard
+require_once("PEAR.php");                           // Lors du remplacement par le mail Symfony
 require_once(SITEROOT . "/class/PearMail.class.php");
 
 class Mailer

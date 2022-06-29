@@ -1,8 +1,5 @@
 <?php
 
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
-
-
 class ActesArchiveControlerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

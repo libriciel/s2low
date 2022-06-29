@@ -1,7 +1,6 @@
 <?php
 
-require_once("../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
+require_once("../../init/init.php");
 
 $me = new User();
 
@@ -87,7 +86,6 @@ switch ($type) {
         break;
 
     case 'classification':
-        require_once(SITEROOT . "/public.ssl/modules/actes/class/ActesClassification.class.php");
         $classifications = ActesClassification::getClassificationList($myAuthority->getId());
 
         $done = array();

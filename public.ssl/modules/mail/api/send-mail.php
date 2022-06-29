@@ -2,9 +2,6 @@
 
 require_once("../include/init.php");
 
-require_once("../controller/MailController.php");
-
-
 if (isset($_POST['password'])) {
     $_POST['psw1'] = $_POST['password'];
     $_POST['psw2'] = $_POST['password'];

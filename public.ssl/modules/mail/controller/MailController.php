@@ -1,9 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . "/../om/MailPeer.class.php");
-require_once(dirname(__FILE__) . "/../om/MailTransaction.class.php");
-require_once(dirname(__FILE__) . "/../lib/MailList.class.php");
-
 class MailController
 {
     private $MailMessageEmis = array ();
@@ -153,8 +149,6 @@ class MailController
         global $me;
         global $doc;
         global $module;
-        require_once(__DIR__ . "/../om/MailPeer.class.php");
-        require_once(__DIR__ . "/../om/MailAnnuaire.class.php");
 
         //fini de la tratement
         //affichier la page
@@ -170,10 +164,6 @@ class MailController
  */
     protected function executeShow()
     {
-        require_once(__DIR__ . "/../om/MailPeer.class.php");
-        require_once(__DIR__ . "/../om/MailMessageEmis.class.php");
-        require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
-        require_once(__DIR__ . "/../om/MailErrors.class.php");
         global $doc;
         $error = $this->SaveError();
      //traitement des information
@@ -285,10 +275,7 @@ class MailController
         //FIXME fonction trop grande ...
 
 
-        require_once(dirname(__FILE__) . "/../om/MailMessageEmis.class.php");
-        require_once(dirname(__FILE__) . "/../om/MailPeer.class.php");
         require_once(dirname(__FILE__) . "/../lib/mailfunction.php");
-        require_once(dirname(__FILE__) . "/../lib/MailUtil.class.php");
 
         global $me, $module;
 
@@ -362,7 +349,6 @@ class MailController
         $InputFileName = array();
         $FileNumber = Helpers :: getVarFromPost("FileNumber");
         if ($FileNumber != null) {
-            require_once(dirname(__FILE__) . "/../om/MailIncludedFile.class.php");
             for ($i = 1; $i <= $FileNumber; $i++) {
                // le nom de uploadFile pass par var _FILES
                // le nom de chaque file =uploadFile1, uploadFile2,,,,jusqu'à FileNumber
@@ -394,8 +380,6 @@ class MailController
             $now = date("Y-m-d H:i:s");
             $mailTransaction->set("fn_download", md5("mail" . $now) . mt_rand(0, mt_getrandmax()));
             $mailTransaction->save(false);
-
-            require_once(__DIR__ . "/../om/MailIncludedFile.class.php");
 
             // créer un repertoir de md5
             $newdir = MAIL_FILES_UPLOAD_ROOT . "/" . $mailTransaction->getFNDownload() . '/';
@@ -570,8 +554,6 @@ class MailController
  */
     protected function SaveError()
     {
-        require_once(MAIL_SITEROOT . "/lib/MailUtil.class.php");
-        require_once(MAIL_SITEROOT . "/om/MailErrors.class.php");
         $mailUtil = new MailUtil();
         $mailMessageArray = $mailUtil->GetMailMessage();
         if ($mailMessageArray == null) {
@@ -627,7 +609,6 @@ class MailController
 
     protected function executeSaveNewEmail()
     {
-        require_once(__DIR__ . "/../om/MailAnnuaire.class.php");
         global $me;
         global $doc;
         $emails = Helpers :: getVarFromPost("newMailAddress");

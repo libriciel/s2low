@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../../public.ssl/modules/actes/class/ActesTransaction.class.php";
-require_once __DIR__ . "/IActesPdf.php";
-
 class ActesPdfLegacy implements IActesPdf
 {
     /** @var string  */

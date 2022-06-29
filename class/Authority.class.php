@@ -6,9 +6,6 @@
  * Les méthodes de bases sont héritées de DataObject.
 */
 
-require_once("DataObject.class.php");
-require_once("Module.class.php");
-
 class Authority extends DataObject
 {
     protected $objectName = "authorities";

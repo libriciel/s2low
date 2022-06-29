@@ -1,8 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../../public.ssl/modules/actes/class/ActesEnvelope.class.php");
-require_once(__DIR__ . "/../../public.ssl/modules/actes/class/ActesClassification.class.php");
-
 class ActesClassificationCreation
 {
     /** @var  Authority */

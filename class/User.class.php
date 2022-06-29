@@ -1,8 +1,5 @@
 <?php
 
-require_once("DataObject.class.php");
-require_once("Authority.class.php");
-
 class User extends DataObject
 {
     public const PERM_MODIFICATION = "RW";

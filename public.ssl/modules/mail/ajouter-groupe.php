@@ -5,7 +5,6 @@ if (! $me->isAuthorityAdmin()) {
         exit;
 }
 
-require_once("lib/MailLayout.class.php");
 $doc = new MailLayout();
 $doc->disableError();
 $doc->setTitle("Gestion du carnet d'adresses");

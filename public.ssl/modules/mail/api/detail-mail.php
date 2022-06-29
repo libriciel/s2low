@@ -1,8 +1,6 @@
 <?php
 
 require_once("../include/init.php");
-require_once("../lib/MailList.class.php");
-require_once(MAIL_SITEROOT . "/om/MailTransaction.class.php");
 
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db, $me->getId());
@@ -33,4 +31,5 @@ foreach ($detail['mail_emis'] as $emis) {
     echo "emis:" . $emis['email'] . ":" . $emis['type_envoi'] . ":" . ($emis['ack'] ? 't' : 'f') . ":" . $emis['ack_date'] . "\n";
 }
 echo "\n\n==message==\n\n";
-echo cp1252_to_iso88591($detail['message']);
+
+echo XMLHelper::cp1252_to_iso88591($detail['message']);

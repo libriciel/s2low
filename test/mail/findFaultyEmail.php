@@ -1,11 +1,6 @@
 <?php
 
-require_once(__DIR__ . "/../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/class/Mailer.class.php');
-
-require_once(SITEROOT . "/public.ssl/modules/mail/controller/mailController.php");
-require_once(SITEROOT . "/public.ssl/modules/mail/lib/GroupeMail.class.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 function checkAllEmail($emailtext)
 {

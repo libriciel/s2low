@@ -6,12 +6,6 @@
  * PEV      10/08/2010 des problemes d'encodage sur les dates. Ligne 136, utf8_encode la date.
  */
 
-require_once(SITEROOT . "/class/FileUploader.class.php");
-require_once(SITEROOT . "/class/Mailer.class.php");
-require_once(SITEROOT . "/class/Database.class.php");
-
-require_once(dirname(__FILE__) . "/../om/MailAnnuaire.class.php");
-
 
 class Annuaire
 {

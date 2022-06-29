@@ -2,8 +2,6 @@
 
 require_once(__DIR__ . "/../init/init.php");
 
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->setName("actes-notification");
 $s2lowLogger->enableStdOut(true);

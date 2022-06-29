@@ -12,8 +12,13 @@ COPY ./docker-resources/ /tmp/docker-resources/
 RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
 #Composer
+
 COPY ./composer.* /var/www/s2low/
-RUN composer install
+RUN composer install --no-dev --no-autoloader && rm -rf /root/.composer/
+
+COPY ./ /var/www/s2low/
+RUN composer dump-autoload --no-dev --optimize
+
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/

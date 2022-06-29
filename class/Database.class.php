@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . "/Trace.class.php";
-require_once __DIR__ . "/DatabasePool.class.php";
-require_once __DIR__ . "/QueryResult.class.php";
-
 class Database
 {
     /** @var SQLQuery */

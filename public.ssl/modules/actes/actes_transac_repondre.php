@@ -1,10 +1,6 @@
 <?php
 
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesClassification.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesBatch.class.php');
+require_once("../../../init/init.php");
 
 $batchMode = false;
 

@@ -2,12 +2,7 @@
 
 $tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
 
-require_once(__DIR__ . "/../../../config/config.php");
-require_once(__DIR__ . '/../../../class/include.class.php');
-require_once(__DIR__ . '/class/ActesEnvelope.class.php');
-require_once(__DIR__ . '/class/ActesClassification.class.php');
-require_once(__DIR__ . '/class/ActesBatch.class.php');
-require_once(__DIR__ . '/../../../class/FileUploader.class.php');
+require_once(__DIR__ . "/../../../init/init.php");
 
 $errorMsg = "";
 $extraRedirect = "";
@@ -72,7 +67,7 @@ if (strtotime($decision_date) > time()) {
 $document_papier =  Helpers :: getVarFromPost("document_papier", true) ? 1 : 0;
 
 $subject = Helpers :: getVarFromPost("subject", true);
-$subject = mb_convert_encoding(cp1252_to_iso88591($subject), "UTF-8", "ISO-8859-1");  //HOTFIX pour passage UTF-8
+$subject = mb_convert_encoding(XMLHelper::cp1252_to_iso88591($subject), "UTF-8", "ISO-8859-1");  //HOTFIX pour passage UTF-8
 
 try {
     $batchFileId = Helpers :: getIntFromPost("batchfile", true);

@@ -15,8 +15,6 @@
  */
 
 require_once SITEROOT . '/class/include.class.php';
-require_once SITEROOT . "/class/PearMail.class.php";
-require_once __DIR__ . "/MailHeader.class.php";
 
 
 class MailUtil

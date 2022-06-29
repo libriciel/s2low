@@ -6,8 +6,6 @@
  */
 require_once(__DIR__ . "/../../init/init.php");
 
-require_once(__DIR__ . "/../../public.ssl/modules/actes/class/ActesEnvelope.class.php");
-
 
 $sql = "SELECT actes_envelopes.id, actes_transactions.id as transaction_id FROM actes_transactions_workflow  
 		JOIN actes_transactions ON actes_transactions_workflow.transaction_id=actes_transactions.id

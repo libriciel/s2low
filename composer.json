@@ -33,7 +33,8 @@
     "ext-curl": "*",
     "ext-zlib": "*",
     "ext-gd": "*",
-    "squizlabs/php_codesniffer": "^3.7"
+    "squizlabs/php_codesniffer": "^3.7",
+    "ezyang/htmlpurifier": "^4.14"
   },
 
   "require-dev": {
@@ -60,11 +61,27 @@
   "autoload": {
     "psr-4": {
       "S2low\\": "src/"
-    }
+    },
+    "classmap": [
+      "lib",
+      "model",
+      "controller",
+      "class",
+      "ext",
+      "public.ssl/modules/mail/lib",
+      "public.ssl/modules/mail/om",
+      "public.ssl/modules/mail/controller",
+      "public.ssl/modules/actes/class/",
+      "public.ssl/modules/helios/class/",
+      "docker-resources"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
       "S2low\\Tests\\": "tests/"
-    }
+    },
+    "classmap": [
+      "test/PHPUnit"
+    ]
   }
 }

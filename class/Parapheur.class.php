@@ -1,7 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__) . "/../config/config.php");
-require_once(SITEROOT . "/class/Trace.class.php");
+require_once(dirname(__FILE__) . "/../init/init.php");
+
 /**
     Cette classe ne fonctionne qui si on a défini les trois constante suivantes (qui sont des noms de fichiers)  :
     TIMESTAMPING_CERT => le fichier contenant le certificat au format PEM

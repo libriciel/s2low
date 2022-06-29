@@ -1,8 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
-
 class MailTransaction extends DataObject
 {
     public const STATUS_NO_CONFIRMATION = "aucune confirmation";

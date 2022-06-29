@@ -1,9 +1,7 @@
 <?php
 
 // Configuration
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/public.ssl/modules/helios/class/HeliosRetour.class.php');
+require_once("../../../init/init.php");
 
 // Instanciation du module courant
 $module = new Module();

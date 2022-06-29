@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../ext/FPDF.class.php";
-
 class ExtendPdf extends FPDF
 {
     public $widths;

@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/ActesCreator.php";
-
-
 class ActesSignaturesTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

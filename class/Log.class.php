@@ -1,8 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-require_once(SITEROOT . "/class/Parapheur.class.php");
-
 class Log extends DataObject
 {
     protected $objectName = "logs";

@@ -1,8 +1,7 @@
 <?php
 
 // Configuration
-require_once("../config/config.php");
-require_once(SITEROOT . '/class/Layout.class.php');
+require_once("../init/init.php");
 
 $doc = new HTMLLayout('xhtml_home.tpl.php');
 

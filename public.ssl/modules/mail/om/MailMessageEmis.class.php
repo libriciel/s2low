@@ -1,7 +1,5 @@
 <?php
 
-require_once(SITEROOT . "/class/DataObject.class.php");
-
 class MailMessageEmis extends DataObject
 {
     public const TYPE_MAIL_TO = "mailTo";

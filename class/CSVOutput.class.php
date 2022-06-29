@@ -1,6 +1,6 @@
 <?php
 
-class CSVoutput
+class CSVOutput
 {
     private const DEFAULT_OUTPUT_FILE = "php://output";
 

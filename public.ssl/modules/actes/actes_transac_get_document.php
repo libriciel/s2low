@@ -1,9 +1,6 @@
 <?php
 
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesEnvelope.class.php');
-require_once(SITEROOT . '/public.ssl/modules/actes/class/ActesTransaction.class.php');
+require_once("../../../init/init.php");
 
 header("Content-type: text/plain");
 

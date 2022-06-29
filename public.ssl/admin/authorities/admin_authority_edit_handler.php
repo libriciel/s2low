@@ -1,8 +1,6 @@
 <?php
 
-require_once("../../../config/config.php");
-require_once(SITEROOT . '/class/include.class.php');
-require_once(SITEROOT . '/class/Mailer.class.php');
+require_once("../../../init/init.php");
 
 $me = new User();
 
