@@ -1,15 +1,6 @@
 <?php
 
 require_once __DIR__ . "/../vendor/autoload.php";
-
-if (! defined("SIGTERM")) {
-    define('SIGTERM', 15);
-}
-
-if (! defined("SIGINT")) {
-    define('SIGINT', 2);
-}
-
 require_once(__DIR__ . "/../config/config.php");
 
 require_once(SITEROOT . '/class/include.class.php');
@@ -195,8 +186,9 @@ $objectInstancier->set('helios_sending_mode_demo', HELIOS_SENDING_MODE_DEMO);
 $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
 $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
 
-
-$objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());
+if (php_sapi_name() === 'cli') { // pcntl n'est actif qu'en mode CLI
+    $objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());
+}
 
 if (USE_LEGACY_BORDEREAU_MODEL) {
     $objectInstancier->set(
