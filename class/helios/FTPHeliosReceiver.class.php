@@ -27,23 +27,23 @@ class FTPHeliosReceiver implements Iterator
     /**
      * @throws \Exception
      */
-    public function current() : string
+    public function current(): string
     {
         $this->recupOneFile($this->filesToProcess[$this->index], $this->key());
         return $this->filesToProcess[$this->index];
     }
 
-    public function key() : int
+    public function key(): int
     {
         return $this->index;
     }
 
-    public function next() : void
+    public function next(): void
     {
         $this->index++;
     }
 
-    public function valid() : bool
+    public function valid(): bool
     {
         $valid = isset($this->filesToProcess[$this->key()]);
         if (!$valid) {
@@ -52,12 +52,12 @@ class FTPHeliosReceiver implements Iterator
         return $valid;
     }
 
-    public function rewind() : void
+    public function rewind(): void
     {
         $this->index = 0;
     }
 
-    private function isPesAller($filename) : bool
+    private function isPesAller($filename): bool
     {
         $isPesAller = preg_match("#^PESALR2_#", basename($filename));
         if ($isPesAller) {
