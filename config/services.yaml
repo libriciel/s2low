@@ -1,0 +1,7 @@
+# config/services.yaml
+services:
+  S2low\Legacy\LegacyRouteLoader:
+    tags: [routing.loader]
+
+  S2low\Controller\LegacyController:
+    public: true

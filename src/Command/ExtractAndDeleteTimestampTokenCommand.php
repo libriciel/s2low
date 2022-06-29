@@ -92,7 +92,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         return true;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
