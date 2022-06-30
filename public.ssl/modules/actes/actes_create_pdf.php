@@ -6,7 +6,7 @@ $id = Helpers :: getVarFromGet("trans_id");
 
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
@@ -39,7 +39,7 @@ $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
     $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
@@ -54,7 +54,7 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 

@@ -71,7 +71,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
-$html .= "<p id=\"back-helios-admin-btn\"><a href=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_windows.php\" class=\"btn btn-default\">Retour liste fenêtres</a></p>\n";
+$html .= "<p id=\"back-helios-admin-btn\"><a href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_windows.php\" class=\"btn btn-default\">Retour liste fenêtres</a></p>\n");
 $html .= "<h2>" . $modStr . " fenêtre";
 
 if ($mod) {
@@ -80,7 +80,7 @@ if ($mod) {
 
 $html .= "</h2>\n";
 $html .= "<p>Les heures de début et de fin de la fenêtre sont toujours arrondies à l'heure pleine la plus proche (10h, 15h...).</p>";
-$html .= "<form class=\"form-horizontal window-edit-form\" action=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de début', 'RisDate', 'window_start_hour', 'Heure de début', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n";
+$html .= "<form class=\"form-horizontal window-edit-form\" action=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de début', 'RisDate', 'window_start_hour', 'Heure de début', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n");
 
 if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
@@ -192,7 +192,7 @@ $html .= "</form>\n";
 
 if ($mod) {
     $html .= "<br />\n";
-    $html .= "<form action=\"" . WEBSITE_SSL . "/modules/helios/admin/helios_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette fenêtre de transmission ?')\" method=\"post\">\n";
+    $html .= "<form action=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette fenêtre de transmission ?')\" method=\"post\">\n");
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
     $html .= "<input type=\"submit\" value=\"Supprimer cette fenêtre\" class=\"btn btn-danger\" />\n";
     $html .= "</form>\n";

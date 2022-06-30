@@ -19,7 +19,7 @@ if ($me->isSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -28,16 +28,16 @@ $myAuthority = new Authority($me->get("authority_id"));
 $enveloppe = $_FILES["enveloppe"];
 
 if (! is_array($enveloppe) || count($enveloppe) <= 0) {
-    Helpers::returnAndExit(1, "Pas de fichier archive spécifié.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, "Pas de fichier archive spécifié.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 if (! is_uploaded_file($enveloppe["tmp_name"])) {
-    Helpers::returnAndExit(1, "Envoi de fichier incorrect.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, "Envoi de fichier incorrect.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()) {
-    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
+    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", Helpers::getLink("/modules/actes/"));
 }
 
 $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME, ACTES_APPLI_QUADRIGRAMME);
@@ -45,7 +45,7 @@ $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME, ACTES_APPLI_QUAD
 try {
     $actesNameArchive->verifNameOK($enveloppe['name']);
 } catch (Exception $e) {
-    Helpers:: returnAndExit(1, "L'archive n'a pas un nom valide : {$e->getMessage()}", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers:: returnAndExit(1, "L'archive n'a pas un nom valide : {$e->getMessage()}", Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 $env = new ActesEnvelope();
@@ -66,7 +66,7 @@ $env->set("destDir", $dest);
 if (($xmlTransFiles = $env->importArchiveFile($enveloppe["name"], $enveloppe["tmp_name"])) === false) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Création des transactions d'après les fichiers XML contenus dans l'enveloppe
@@ -85,7 +85,7 @@ foreach ($xmlTransFiles as $xmlFile) {
     if (! $trans->createFromXML($xmlFile)) {
         $env->purgeFiles();
         $env->deleteArchiveFile();
-        Helpers::returnAndExit(1, "Erreur d'importation transaction : " . $trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+        Helpers::returnAndExit(1, "Erreur d'importation transaction : " . $trans->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
     }
 
     $env->addTransaction($trans);
@@ -95,7 +95,7 @@ foreach ($xmlTransFiles as $xmlFile) {
         if (! $trans->isUnique($myAuthority->getId())) {
             $env->purgeFiles();
             $env->deleteArchiveFile();
-            Helpers::returnAndExit(1, "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.", WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+            Helpers::returnAndExit(1, "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
         }
     }
 
@@ -118,7 +118,7 @@ foreach ($xmlTransFiles as $xmlFile) {
 if (! $env->generateArchiveFile()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Vérification taille après regénération
@@ -126,7 +126,7 @@ if (! $env->generateArchiveFile()) {
 if (! $env->checkArchiveSize()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Purge des fichiers intermédiaires
@@ -142,7 +142,7 @@ if (! $env->save()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+    Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Enregistrement des transactions
@@ -165,7 +165,7 @@ foreach ($transacs as $trans) {
         $env->deleteArchiveFile();
         $env->delete();
 
-        Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+        Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
     }
 }
 
@@ -184,7 +184,7 @@ if (count($classifRequests) > 0) {
             $env->deleteArchiveFile();
             $env->delete();
 
-            Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_import.php");
+            Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
         }
     }
 }
@@ -211,4 +211,4 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 
 
 
-Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/index.php", $apiMsg);
+Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/index.php"), $apiMsg);

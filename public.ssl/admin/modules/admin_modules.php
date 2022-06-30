@@ -60,7 +60,7 @@ foreach ($modules as $module) {
     $html .= " <td headers=\"name\">" . $module["name"] . "</td>\n";
     $html .= " <td headers=\"description\">" . $module["description"] . "</td>\n";
     $html .= " <td headers=\"status\">" . $statusList[$module["status"]] . "</td>\n";
-    $html .= " <td  headers=\"actions\"><a href=\"" . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+    $html .= " <td  headers=\"actions\"><a href=\"" . Helpers::getLink("/admin/modules/admin_module_edit.php?id=" . $module["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n");
     $html .= "</tr>\n";
 }
 $html .= "</tbody>\n";

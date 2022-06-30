@@ -9,7 +9,7 @@ function sortir_atrc($message, $api)
         echo "KO : " . $message;
         exit;
     } else {
-        Helpers :: returnAndExit(1, $message, WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php?id=$related_id");
+        Helpers :: returnAndExit(1, $message, Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id"));
     }
 }
 
@@ -60,7 +60,7 @@ if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)) {
     Helpers :: returnAndExit(
         1,
         "Erreur lors de la réception du fichier : typologie absente",
-        WEBSITE_SSL . "/modules/actes/actes_transac_reponse.php?id=$related_id"
+        Helpers::getLink("/modules/actes/actes_transac_reponse.php?id=$related_id")
     );
 }
 
@@ -201,7 +201,7 @@ if (isset($acteAttachments)) {
                     Helpers :: returnAndExit(
                         1,
                         "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
-                        WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+                        Helpers::getLink("/modules/actes/actes_transac_add.php")
                     );
                 }
 
@@ -306,5 +306,5 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 if ($api) {
     echo "OK : id généré : " . $apiMsg;
 } else {
-    Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
+    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(), $apiMsg);
 }

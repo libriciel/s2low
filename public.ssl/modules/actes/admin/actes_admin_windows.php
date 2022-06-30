@@ -40,7 +40,7 @@ $doc->openContent();
 
 $html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n";
+$html .= "<a href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n");
 $html .= "<h2>Liste des fenêtres existantes</h2>\n";
 
 if (count($windows) > 0) {
@@ -63,7 +63,7 @@ if (count($windows) > 0) {
         $html .= " <td>" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
         $html .= " <td>" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
         $html .= " <td>" . $window["rate_limit"] . "</td>\n";
-        $html .= " <td><a href=\"" . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+        $html .= " <td><a href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n");
         $html .= "</tr>\n";
 
         $i = ($i + 1) % 2;

@@ -20,4 +20,4 @@ if (! $me->isSuper()) {
 $logger->critical("Test du déclenchement d'une erreur critique", ['user' => $me->getPrettyName(),'user_id' => $me->getId()]);
 
 $_SESSION["error"] = "Une erreur critique a été déclenchée. Envoi d'un mail à " . EMAIL_ADMIN_TECHNIQUE;
-header("Location: " . WEBSITE_SSL . "/admin/utilities/");
+header("Location: " . Helpers::getLink("/admin/utilities/"));

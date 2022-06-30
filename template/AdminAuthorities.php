@@ -90,7 +90,7 @@
             <td headers="fax"><?php hecho($authority_info["siren"]) ?></td>
             <td headers="actions">
                 <a href="admin_authority_edit.php?id=<?php echo $authority_info["id"] ?>" class="icon">
-                    <img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
+                    <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Modifier" />
                 </a>
             </td>
         </tr>

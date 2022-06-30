@@ -54,8 +54,8 @@ $doc->openContent();
 
 $html .= "<h1>Gestion des groupes de collectivités</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<a href=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n";
-$html .= "<a href=\"" . WEBSITE_SSL . "/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n";
+$html .= "<a href=\"" . Helpers::getLink("/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n");
+$html .= "<a href=\"" . Helpers::getLink("/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n");
 $html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
 $html .= "<form class=\"form form-horizontal\" action=\"admin_groups.php\" method=\"get\">\n";

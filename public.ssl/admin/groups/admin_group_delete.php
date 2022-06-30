@@ -28,7 +28,7 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/admin/groups/admin_groups.php");
+        header("Location: " . Helpers::getLink("/admin/groups/admin_groups.php"));
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression du groupe" . $group->getErrorMsg();
@@ -37,11 +37,11 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/admin/groups/admin_groups.php");
+        header("Location: " . Helpers::getLink("/admin/groups/admin_groups.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de groupe spécifié";
-    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_groups.php");
+    header("Location: " . Helpers::getLink("/admin/groups/admin_groups.php"));
     exit();
 }

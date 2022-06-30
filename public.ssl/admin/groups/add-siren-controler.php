@@ -32,7 +32,7 @@ if (empty($authorityGroup->getInfo($id))) {
 
 if (mb_strlen($siren) != 9) {
     $_SESSION["error"] = "Le siren ne semble  pas valide.";
-    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
@@ -40,7 +40,7 @@ $theSiren  = new Siren(new LuhnKey());
 
 if (! $theSiren->isValid($siren)) {
     $_SESSION["error"] = "Le siren ne semble  pas valide.";
-    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
@@ -49,10 +49,10 @@ $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id, $siren)) {
     $_SESSION["error"] = "Le siren existe déjà dans ce groupe";
-    header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+    header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
 $authorityGroupSirenSQL->add($id, $siren);
 $_SESSION["error"] = "Le siren a été ajouté";
-header("Location: " . WEBSITE_SSL . "/admin/groups/admin_group_edit.php?id=$id");
+header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));

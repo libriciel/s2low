@@ -133,7 +133,7 @@
                                 <td headers="object"> <?php hecho($MailTrans["objet"])?></td>
                                 <td headers="status"> <?php echo $MailTrans["status"] ?></td>   
                                 <td headers="date"> <?php echo $MailTrans["date_envoi"]?></td>
-                                <td headers="detail"><a href="index.php?command=show&trans_id=<?php echo $MailTrans["id"]; ?>"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail"></a></td>
+                                <td headers="detail"><a href="index.php?command=show&trans_id=<?php echo $MailTrans["id"]; ?>"><img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Afficher le détail"></a></td>
                             </tr>
                         </tbody>
                     </table>

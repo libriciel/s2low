@@ -65,7 +65,7 @@ $authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authorit
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 $doc->setTitle("Tedetis : " . $modStr . " collectivité");
 
@@ -85,11 +85,11 @@ if ($me->isGroupAdmin()) {
 $html .= "</h1>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    $html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivités</a></p>\n";
+    $html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivités</a></p>\n");
 }
 
 $html .= "<h2>" . $modStr . " collectivité</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax', 'email_mail_securise') . ")\">\n";
+$html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax', 'email_mail_securise') . ")\">\n");
 
 if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $authority->getId() . "\" />\n";
@@ -218,7 +218,7 @@ $html .= "  <div class=\"col-md-6 link-input\">\n";
 
 if ($me->isGroupAdminOrSuper()) {
     $html .= "  <input  class=\"form-control\" type=\"hidden\" id=\"authority_type\" name=\"authority_type_id\" value=\"" . $authority->get("authority_type_id") . "\" />\n";
-    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">";
+    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">");
 
     if ($authority->get("authority_type_id")) {
         $html .= $authority_type_name;
@@ -277,7 +277,7 @@ $html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\
 $html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">";
+    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">");
 
     if ($authority->getDeptDistrString()) {
         $html .= $authority->getDeptDistrString();
@@ -316,7 +316,7 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
 if ($actesConventions->hasConvention($id)) {
     $html .= "<div class=\"col-md-6 alert alert-info\">
-        <a href='" . WEBSITE_SSL . "/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>" .
+        <a href='" . Helpers::getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
             $actesConventions->getConventionFilename($id) .
         "</a></div>";
 } else {
@@ -404,8 +404,8 @@ $html .= "<br/>";
 $html .= "<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=" . $id . "'>Configurer les numéros SIRET »</a></div>";
 
 if ($me->isSuper()) {
-    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . WEBSITE_SSL . "/modules/actes/admin/actes_force_classifiction.php?authority_id=" . $id . "'>Envoyer une demande de classification</a></div>";
-    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . WEBSITE_SSL . "/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=" . $id . "'>Envoyer demande de classification vide</a></div>";
+    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . Helpers::getLink("/modules/actes/admin/actes_force_classifiction.php?authority_id=" . $id . "'>Envoyer une demande de classification</a></div>");
+    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . Helpers::getLink("/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=" . $id . "'>Envoyer demande de classification vide</a></div>");
 }
 if ($me->isGroupAdminOrSuper()) {
     $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivité</a></div>";

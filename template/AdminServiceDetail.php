@@ -24,7 +24,7 @@
     <?php else : ?>
         Aucun utilisateur n'est dans le groupe <em><?php hecho($groupe['name'])?></em>.
     <?php endif;?>
-    <p>Pour ajouter un utilisateur dans un groupe, allez sur la page de <a href='<?php echo WEBSITE_SSL?>/admin/users/admin_users.php'> gestion des utilisateurs</a>.
+    <p>Pour ajouter un utilisateur dans un groupe, allez sur la page de <a href='<?php echo Helpers::getLink("/admin/users/admin_users.php");?>'> gestion des utilisateurs</a>.
 </div>
 
 <h2>Groupe parent</h2>

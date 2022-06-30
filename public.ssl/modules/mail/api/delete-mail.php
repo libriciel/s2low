@@ -7,7 +7,7 @@ $mailList = new MailList($db, $me->getId());
 
 $id = Helpers::getVarFromGet("id");
 if (!$id) {
-    echo "Usage : " . WEBSITE_SSL . "/modules/mail/api/delete-mail.php?id=xxxx";
+    echo "Usage : " . Helpers::getLink("/modules/mail/api/delete-mail.php?id=xxxx");
     exit;
 }
 

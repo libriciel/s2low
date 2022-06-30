@@ -44,7 +44,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
     if (empty($id)) {
         $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-        header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
         exit();
     }
 
@@ -53,13 +53,13 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $trans->setId($id);
     if (! $trans->init()) {
         $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
         exit();
     }
 
     if ($trans->get('last_status_id') != 13) {
         $_SESSION["error"] = "Le fichier PES ne peut plus être signé à ce moment-là (status : " . $trans->get('last_status_id') . ")";
-        header("Location:  " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
+        header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
     }
 
 
@@ -98,7 +98,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
             $_SESSION["error"] .= "\nErreur de journalisation.";
         }
         $_SESSION["error"] = $msg;
-        header("Location:  " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
+        header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
         exit();
     }
 
@@ -111,8 +111,8 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
 if ($nb_signature > 1) {
     $_SESSION["error"] = "Les signatures ont été enregistrées";
-    header("Location:  " . WEBSITE_SSL . "/modules/helios/index.php");
+    header("Location:  " . Helpers::getLink("/modules/helios/index.php"));
 } else {
     $_SESSION["error"] = "La signature a été enregistrée";
-    header("Location:  " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$id");
+    header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
 }

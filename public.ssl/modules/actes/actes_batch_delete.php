@@ -36,7 +36,7 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->canAccess($mod
 try {
     $id = Helpers::getIntFromPost("id");
 } catch (Exception $e) {
-    Helpers::returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+    Helpers::returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/actes/actes_batch_handle.php"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -49,16 +49,16 @@ if (isset($id) && ! empty($id)) {
         $owner = new User($zeBatch->get("user_id"));
         $owner->init();
     } else {
-        Helpers::returnAndExit(1, "Erreur d'initialisation du lot.", WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+        Helpers::returnAndExit(1, "Erreur d'initialisation du lot.", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
     }
 } else {
-    Helpers::returnAndExit(1, "Pas d'identifiant de lot spécifié", WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+    Helpers::returnAndExit(1, "Pas d'identifiant de lot spécifié", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
 }
 
 // Vérification des permissions
 if (! $me->isSuper()) {
     if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ($me->getId() != $owner->getId())) {
-        Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+        Helpers::returnAndExit(1, "Accès refusé", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
     }
 }
 
@@ -69,7 +69,7 @@ if (! $zeBatch->delete()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+    Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_batch_handle.php"));
 } else {
     $msg = "Suppression du lot n°" . $zeBatch->getId() . ". Résultat ok.";
 
@@ -77,5 +77,5 @@ if (! $zeBatch->delete()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+    Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_batch_handle.php"));
 }

@@ -218,7 +218,7 @@ Document reçu le :  <?php echo $status_info['date'] ?>
         <?php endif; ?>
 
         <?php if ($add_url_recup && $last_status_id != -1) : ?>
-URL pour récupérer les fichiers : <?php $url = WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $transaction_info['id'];
+URL pour récupérer les fichiers : <?php $url = Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $transaction_info['id'];
 echo $url; ?>
         <?php endif; ?>
 

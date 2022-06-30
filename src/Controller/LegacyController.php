@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LegacyController
 {
-    public function loadLegacyScript(string $requestPath, string $legacyScript) : StreamedResponse
+    public function loadLegacyScript(string $requestPath, string $legacyScript): StreamedResponse
     {
         return new StreamedResponse(
             function () use ($requestPath, $legacyScript) {

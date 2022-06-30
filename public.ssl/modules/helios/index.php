@@ -231,15 +231,15 @@ ob_start();
                 Les transferts doivent se faire par les moyens classiques (non dématérialisé).
             </p>
         <?php else :  ?>
-            <a class="btn btn-primary" href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_fichier_import.php" >Importer un fichier</a>
+            <a class="btn btn-primary" href="<?php echo Helpers::getLink("/modules/helios/helios_fichier_import.php"); ?>" >Importer un fichier</a>
         <?php endif; ?>
     <?php endif; ?>
-    <a class="btn btn-primary" href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_retour.php" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
+    <a class="btn btn-primary" href="<?php echo Helpers::getLink("/modules/helios/helios_retour.php"); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
 </div>
 
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering-area');">Filtrage</h2>
 <div id="filtering-area">
-    <form  role="form" class="form-horizontal" action="<?php echo WEBSITE_SSL ?>/modules/helios/index.php" method="get">
+    <form  role="form" class="form-horizontal" action="<?php echo Helpers::getLink("/modules/helios/index.php"); ?>" method="get">
         <div class="form-group">
             <label class="col-md-3 control-label" for="status">État</label>
             <div class="col-md-3">
@@ -344,7 +344,7 @@ ob_start();
         </div>
         <div class="form-group">
             <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
-            <a href="<?php WEBSITE_SSL ?>/modules/helios/index.php" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
+            <a href="<?php echo Helpers::getLink("/modules/helios/index.php");?>" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
         </div>
     </form>
 </div>
@@ -355,7 +355,7 @@ ob_start();
 <?php if (count($envelopes) <= 0) : ?>
     Pas de transaction trouvée correspondant aux critères de filtrage.
 <?php else : ?>
-    <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_close.php" method="post">
+    <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo Helpers::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
         <table class="transactions_list">
             <table id="transaction-list" class="data-table table table-striped" summary="Ce tableau présente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios posté">
                 <caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
@@ -402,8 +402,8 @@ ob_start();
                                 <td><?php hecho($envelope['authority_name']) ?></td>
                             <?php endif; ?>
                             <td headers="action">
-                                <a href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_show.php?id=<?php echo $envelope["id"] ?>" class="icon">
-                                    <img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Afficher le détail" />
+                                <a href="<?php echo Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $envelope["id"]) ?>" class="icon">
+                                    <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Afficher le détail" />
                                 </a>
                             </td>
                         </tr>
@@ -430,7 +430,7 @@ ob_start();
 
 
     <?php   if (isset($sel_ok[13])) : ?>
-        <form id='form-sign' action="<?php echo WEBSITE_SSL ?>/modules/helios/helios_batch_sign.php" method="post">
+        <form id='form-sign' action="<?php echo Helpers::getLink("/modules/helios/helios_batch_sign.php"); ?>" method="post">
             <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
         </form>
         <script type='text/javascript'>

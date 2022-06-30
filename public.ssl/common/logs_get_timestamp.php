@@ -36,25 +36,25 @@ if (isset($id) && ! empty($id)) {
     $log->setId($id);
     if (! $log->init()) {
         $_SESSION["error"] = "Erreur lors de l'initialisation de l'entrée de journal.";
-        header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
+        header("Location: " . Helpers::getLink("/common/logs_view.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de log spécifié.";
-    header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
+    header("Location: " . Helpers::getLink("/common/logs_view.php"));
     exit();
 }
 
 // Vérification des permissions sur l'entrée de journal
 if (! $log->canView($me)) {
     $_SESSION["error"] = "Accès refusé.";
-    header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
+    header("Location: " . Helpers::getLink("/common/logs_view.php"));
     exit();
 }
 
 if (! $log->sendArchive()) {
     $_SESSION["error"] = "Erreur de récupération de l'entrée de log et de son horodatage.<br />" . $log->getErrorMsg();
-    header("Location: " . WEBSITE_SSL . "/common/logs_view.php");
+    header("Location: " . Helpers::getLink("/common/logs_view.php"));
 }
 
 exit();

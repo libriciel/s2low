@@ -9,16 +9,15 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
 {
-
     /**
      * @inheritDoc
      */
-    public function load(mixed $resource, string $type = null) : mixed
+    public function load(mixed $resource, string $type = null): mixed
     {
         $collection = new RouteCollection();
         $finder = new Finder();
         $finder->files()->name('*.php');
-        $baseDir = __DIR__."/../../public.ssl/";
+        $baseDir = __DIR__ . "/../../public.ssl/";
         $dirs = [
             "admin",
             "admin/authorities",
@@ -43,10 +42,10 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
             "modules/mail",
             "test"
         ];
-        foreach ($dirs as $dir){
+        foreach ($dirs as $dir) {
             $finder = new Finder();
             $finder->files()->name('*.php');
-            foreach ($finder->in($baseDir.$dir) as $legacyScriptFile) {
+            foreach ($finder->in($baseDir . $dir) as $legacyScriptFile) {
                 // This assumes all legacy files use ".php" as extension
                 $this->addRouteForFile($legacyScriptFile, $dir, $collection);
             }
@@ -55,7 +54,7 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
         $files = ["ident.php","login.php","logout.php","maintenance.php","pre-requis.php"];
         $dir = "/";
 
-        foreach ($files as $file){
+        foreach ($files as $file) {
             $finder = new Finder();
             $finder->files()->name($file);
             foreach ($finder->in($baseDir) as $legacyScriptFile) {
@@ -82,7 +81,7 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
     /**
      * @inheritDoc
      */
-    public function supports(mixed $resource, string $type = null) : bool
+    public function supports(mixed $resource, string $type = null): bool
     {
         return 'legacyroute' === $type;
     }

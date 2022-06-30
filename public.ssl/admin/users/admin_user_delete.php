@@ -43,7 +43,7 @@ if (isset($id) && ! empty($id)) {
 
     if (! $me->canEditUser($id)) {
         $_SESSION["error"] = "Accès refusé pour la suppression de cet utilisateur";
-        header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+        header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
         exit();
     } else {
         if ($him->delete()) {
@@ -53,7 +53,7 @@ if (isset($id) && ! empty($id)) {
             }
 
             $_SESSION["error"] = nl2br($msg);
-            header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+            header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
             exit();
         } else {
             $msg = "Erreur lors de la tentative de suppression de l'utilisateur\n" . $him->getErrorMsg();
@@ -62,12 +62,12 @@ if (isset($id) && ! empty($id)) {
             }
 
             $_SESSION["error"] = nl2br($msg);
-            header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+            header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
             exit();
         }
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant utilisateur spécifié";
-    header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+    header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
     exit();
 }

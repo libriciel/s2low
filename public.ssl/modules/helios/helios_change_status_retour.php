@@ -34,14 +34,14 @@ if (!$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGrou
 try {
     $retour_id = Helpers :: getIntFromGet("id");
 } catch (Exception $e) {
-    Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_retour.php");
+    Helpers :: returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/helios/helios_retour.php"));
 }
 if (isset($retour_id) && !empty($retour_id)) {
     if ($hr->changeStatus($retour_id, 1)) {
-        Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", WEBSITE_SSL . "/modules/helios/helios_retour.php");
+        Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", Helpers::getLink("/modules/helios/helios_retour.php"));
     } else {
-        Helpers :: returnAndExit(1, "Erreur lors du changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php");
+        Helpers :: returnAndExit(1, "Erreur lors du changement d'état", Helpers::getLink("/modules/helios/helios_retour.php"));
     }
 } else {
-    Helpers :: returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", WEBSITE_SSL . "/modules/helios/helios_retour.php");
+    Helpers :: returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", Helpers::getLink("/modules/helios/helios_retour.php"));
 }

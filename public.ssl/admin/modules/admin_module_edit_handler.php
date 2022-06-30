@@ -55,7 +55,7 @@ if (isset($id) && ! empty($id)) {
     $modules->setId($id);
     if (! $modules->init()) {
         $_SESSION["error"] = "Erreur lors de la modification de la collectivité";
-        header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_modules.php");
+        header("Location: " . Helpers::getLink("/admin/authorities/admin_modules.php"));
         exit();
     }
 }
@@ -85,7 +85,7 @@ if (! $modules->save()) {
     }
 
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . WEBSITE_SSL . "/admin/modules/admin_modules.php");
+    header("Location: " . Helpers::getLink("/admin/modules/admin_modules.php"));
     exit();
 } else {
     $msg = ($modules->isNew()) ? "Création" : "Modification";
@@ -95,7 +95,7 @@ if (! $modules->save()) {
     }
 
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . WEBSITE_SSL . "/admin/modules/admin_module_edit.php?id=" . $modules->getId());
+    header("Location: " . Helpers::getLink("/admin/modules/admin_module_edit.php?id=") . $modules->getId());
 }
 
 exit();

@@ -9,7 +9,7 @@ require_once(__DIR__ . "/../../init/init.php");
 
 function creationurl($idcoll, $status)
 {
-    $URL = WEBSITE_SSL . "/modules/helios/index.php?status=$status&num=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=$idcoll&nomFic=";
+    $URL = Helpers::getLink("/modules/helios/index.php?status=$status&num=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=$idcoll&nomFic=");
     return $URL;
 }
 

@@ -56,7 +56,7 @@ foreach ($list_siret as $siret) {
          $list_coll[$siret][$i]['id']=strval($coll['id']);
          $list_coll[$siret][$i]['name']=strval($coll['name']);
          */
-        $message .= strval($coll['name']) . " Acces direct a la gestion de ses SIRET : " . WEBSITE_SSL . "/admin/authorities/admin_authority_siret.php?id=" . strval($coll['id']) . "\n";
+        $message .= strval($coll['name']) . " Acces direct a la gestion de ses SIRET : " . Helpers::getLink("/admin/authorities/admin_authority_siret.php?id=" . strval($coll['id']) . "\n");
     }
     $message .= "\n -------------------------------------------------- \n";
 }

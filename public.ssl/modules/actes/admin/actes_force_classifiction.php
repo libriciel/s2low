@@ -24,5 +24,5 @@ $result = $classificationCreation->createEnveloppe($authority, null, $force);
 Helpers::returnAndExit(
     ! $result,
     $classificationCreation->getLastMessage(),
-    WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$authority_id"
+    Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$authority_id")
 );

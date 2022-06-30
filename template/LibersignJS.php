@@ -5,7 +5,7 @@
 
 ?>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.js"></script>
+<script src="<?php echo Helpers::getLink("/javascript/jqueryui/jquery-ui.min.js"); ?>"></script>
 
 <script>
 

@@ -75,7 +75,7 @@ if (! $me->isSuper() && $mod) {
     }
     if (! $canUserEdit) {
         $_SESSION["error"] = "Impossible de modifier cet utilisateur. Accés refusé.";
-        header("Location: " . WEBSITE_SSL . "/admin/users/admin_users.php");
+        header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
         exit();
     }
 }
@@ -189,7 +189,7 @@ $certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_et
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 $doc->addHeader('<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect.js"></script>');
@@ -305,7 +305,7 @@ ob_start();
         Expire le <?php echo $him->getCertificateExpirationDate(); ?>
         <?php if ($me->isSuper()) : ?>
             <br/>
-            <a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_download_cert.php?id=<?php echo $him->getId()?>">Télécharger</a>
+            <a href="<?php echo Helpers::getLink("/admin/users/admin_user_download_cert.php?id=" . $him->getId());?>">Télécharger</a>
         <?php endif ?>
     </div>
 

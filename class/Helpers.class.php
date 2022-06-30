@@ -637,4 +637,11 @@ class Helpers
         }
         return $result;
     }
+
+    public static function getLink(string $relativePath): string
+    {
+        $url = trim(WEBSITE_SSL, "/");
+        $relativePath = ltrim($relativePath, "/");
+        return $url . "/" . $relativePath;
+    }
 }
