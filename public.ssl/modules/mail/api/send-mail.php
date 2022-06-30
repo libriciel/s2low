@@ -9,7 +9,7 @@ if (isset($_POST['password'])) {
 
 $_POST['FileNumber'] = count($_FILES);
 
-$MailCtl = new MailController();
+$MailCtl = new MailController($me, $doc, $module, $myAuthority);
 ob_start();
 $mailId = $MailCtl->executeSend();
 ob_end_clean();

@@ -31,7 +31,7 @@ if (isset($_GET["command"])) {
 } else {
     $command = "";
 }
-$MailCtl = new MailController();
+$MailCtl = new MailController($me, $doc, $module, $myAuthority);
 $MailCtl->run($command);
 $doc->closeContent(true);
 $doc->closeContainer(true);

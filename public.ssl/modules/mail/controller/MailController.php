@@ -6,12 +6,21 @@ class MailController
     private $MailAnnuaireArray = array();
 
     private $lastError;
+    private User $me;
+    private MailLayout $doc;
+    private Module $module;
 
+    public function __construct(User $me, MailLayout $doc, Module $module, Authority $myAuthority)
+    {
+        $this->me = $me;
+        $this->doc = $doc;
+        $this->module = $module;
+        $this->myAuthority = $myAuthority;
+    }
 
     public function exitIfNotAdmin()
     {
-        global $me;
-        if (! $me->isAuthorityAdmin()) {
+        if (! $this->me->isAuthorityAdmin()) {
             exit;
         }
     }
@@ -65,9 +74,6 @@ class MailController
  */
     protected function executeList()
     {
-
-        global $me;
-        global $doc;
         $etat = "";
         $sujet = "";
         $SendDateFrom = "";
@@ -87,7 +93,7 @@ class MailController
      //contruit la filtre sql requete.
         $MailTransaction = new MailTransaction();
         if (!$search) {
-            $MailTransactions = MailPeer::mailList($MailTransaction, $me->getId());
+            $MailTransactions = MailPeer::mailList($MailTransaction, $this->me->getId());
         } else {
             $etat = Helpers :: getVarFromGet("etat");
 
@@ -104,7 +110,7 @@ class MailController
                 $_SESSION['last_error'] = $exception->getMessage();
             }
 
-            $cond = " user_id=" . $me->getId();
+            $cond = " user_id=" . $this->me->getId();
 
             if ($etat_string) {
                 $cond .= " and status='" . $etat_string . "'";
@@ -123,9 +129,9 @@ class MailController
             $MailTransactions = MailPeer::mailSearch($MailTransaction, $cond);
         }
 
-        $doc->buildPager($MailTransaction, true);
-        $doc->closeSideBar(true);
-        $doc->openContent(true);
+        $this->doc->buildPager($MailTransaction, true);
+        $this->doc->closeSideBar(true);
+        $this->doc->openContent(true);
         include __DIR__ . "/../template/list.php";
     }
 
@@ -146,14 +152,10 @@ class MailController
     protected function executeCreate()
     {
      //traitement des information
-        global $me;
-        global $doc;
-        global $module;
-
         //fini de la tratement
         //affichier la page
-        $doc->closeSideBar(true);
-        $doc->openContent(true);
+        $this->doc->closeSideBar(true);
+        $this->doc->openContent(true);
         include(__DIR__ . "/../template/create.php");
     }
 
@@ -164,7 +166,6 @@ class MailController
  */
     protected function executeShow()
     {
-        global $doc;
         $error = $this->SaveError();
      //traitement des information
         try {
@@ -187,18 +188,14 @@ class MailController
         $mailIncludeFileArray = MailPeer::GetIncludeFiles($trans_id);
     //fini de la tratement
      //affichier la page
-        $doc->closeSideBar(true);
-        $doc->openContent(true);
+        $this->doc->closeSideBar(true);
+        $this->doc->openContent(true);
         include __DIR__ . "/../template/show.php";
     }
 
     //HACK béquille pour transformer les mails ...
     public function explodeMail($mail)
     {
-
-        //BEURK....
-        global $me;
-
         $result = array();
         $lesMails = explode(",", $mail);
         foreach ($lesMails as $un_mail) {
@@ -210,9 +207,9 @@ class MailController
             if (preg_match('/(.*) \(groupe\)/', $un_mail, $matches)) {
                 $groupe_name = $matches[1];
                 $groupeMail = new GroupeMail();
-                $groupe_id = $groupeMail->getGroupeIdFromName($groupe_name, $me->get('authority_id'));
+                $groupe_id = $groupeMail->getGroupeIdFromName($groupe_name, $this->me->get('authority_id'));
                 if ($groupe_id) {
-                    $annuaire = MailPeer::GetAnnuaire($me->get('authority_id'), $groupe_id);
+                    $annuaire = MailPeer::GetAnnuaire($this->me->get('authority_id'), $groupe_id);
                     foreach ($annuaire as $personne) {
                         if ($personne['description']) {
                             $result[] = '"' . $personne['description'] . '" <' . $personne['mail_address'] . '>';
@@ -244,26 +241,24 @@ class MailController
 
     public function executeSendAndDisplayResult()
     {
-        global $doc;
         $result = $this->executeSend();
 
         if (! $result) {
             $returnMsg = $this->getLastError();
             ;
-                        $doc->closeSideBar(true);
-                        $doc->openContent(true);
+                        $this->doc->closeSideBar(true);
+                        $this->doc->openContent(true);
             include __DIR__ . "/../template/sendfailed.php";
         } else {
-                    $doc->closeSideBar(true);
-                    $doc->openContent(true);
+                    $this->doc->closeSideBar(true);
+                    $this->doc->openContent(true);
                     include __DIR__ . "/../template/send.php";
         }
     }
 
     public function logError()
     {
-        global $me, $module;
-        $result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError, 3, false, 'USER', $module->get("name"), $me);
+        $result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError, 3, false, 'USER', $this->module->get("name"), $this->me);
         if (! $result) {
             $this->lastError .= "\nErreur de journalisation.";
         }
@@ -276,8 +271,6 @@ class MailController
 
 
         require_once(dirname(__FILE__) . "/../lib/mailfunction.php");
-
-        global $me, $module;
 
         //HACK
         if (empty($_POST) && empty($_FILES)) {
@@ -339,7 +332,7 @@ class MailController
         // mail transaction faut absolutment inite avant tous les autre opération car tous les autre tableau need
         // mail transaction id.
         $mailTransaction = new MailTransaction();
-        $mailTransaction->newSave($me->getId());
+        $mailTransaction->newSave($this->me->getId());
         $Transaction_id = $mailTransaction->getId();
         $mailIncludedFiles = array();
 
@@ -365,14 +358,11 @@ class MailController
         }
          //----------------------
 
-        //TODO : MAL
-        global $myAuthority;
-
         $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
 
-        $mailHeader->setAuthorityName($myAuthority->get('name'));
-        $mailHeader->setFromMail($myAuthority->get('email_mail_securise'));
-        $mailHeader->setFromDescription($myAuthority->get('descr_mail_securise'));
+        $mailHeader->setAuthorityName($this->myAuthority->get('name'));
+        $mailHeader->setFromMail($this->myAuthority->get('email_mail_securise'));
+        $mailHeader->setFromDescription($this->myAuthority->get('descr_mail_securise'));
 
         $mailUtil = new MailUtil($mailHeader);
 
@@ -435,7 +425,7 @@ class MailController
             return false;
         }
         $msg = "Envoi de mail réussi.";
-        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $this->module->get("name"), $me)) {
             $this->lastError = "\nErreur de journalisation.";
 
             return false;
@@ -451,8 +441,6 @@ class MailController
  */
     protected function executeAnnuaire()
     {
-        global $me;
-        global $doc;
         $email = Helpers :: getVarFromPost("email");
 
 
@@ -468,7 +456,7 @@ class MailController
                 $annuaire = new MailAnnuaire();
                 $annuaire->set("mail_address", $email);
                 $annuaire->set("description", $description);
-                $annuaire->set("authority_id", $me->get('authority_id'));
+                $annuaire->set("authority_id", $this->me->get('authority_id'));
                 $annuaire->set("id", $id);
                 $annuaire->save(false);
             }
@@ -520,11 +508,11 @@ class MailController
             }
         }
 
-        $mailAnnuaireArray = MailPeer::GetAnnuaire($me->get('authority_id'), $groupe_id);
+        $mailAnnuaireArray = MailPeer::GetAnnuaire($this->me->get('authority_id'), $groupe_id);
         $groupe = new GroupeMail();
-        $groupeArray = $groupe->getGroupeByAuthorityId($me->get('authority_id'));
+        $groupeArray = $groupe->getGroupeByAuthorityId($this->me->get('authority_id'));
         $bd = DatabasePool::getInstance();
-        $annuaire = new Annuaire($bd, $me->get('authority_id'));
+        $annuaire = new Annuaire($bd, $this->me->get('authority_id'));
 
         if (!is_null($groupe_id) && !in_array($groupe_id, array_keys($groupeArray))) {
             $_SESSION['last_error'] = "Le group_id '$groupe_id' n'existe pas.";
@@ -539,8 +527,8 @@ class MailController
                 }
             }
         }
-                $doc->closeSideBar(true);
-                $doc->openContent(true);
+                $this->doc->closeSideBar(true);
+                $this->doc->openContent(true);
         include __DIR__ . "/../template/annuaire.php";
     }
 
@@ -582,7 +570,6 @@ class MailController
         if ($mail == null) {
             return false;
         }
-        global $me;
        //supprime le vircule a la fin.
        // le séparateur  is vircule
         $Emails = explode(",", $mail);
@@ -599,7 +586,7 @@ class MailController
 
                //vérifier le mail adress exist déjas ou pas
                //si non; met dans MailAnnuaireArray pour traiter aprés.
-                if (MailPeer::VerifierMailAnnuaire($Email, $me->get('authority_id')) == false) {
+                if (MailPeer::VerifierMailAnnuaire($Email, $this->me->get('authority_id')) == false) {
                     $this->MailAnnuaireArray[] = $Email;
                 }
             }
@@ -609,8 +596,6 @@ class MailController
 
     protected function executeSaveNewEmail()
     {
-        global $me;
-        global $doc;
         $emails = Helpers :: getVarFromPost("newMailAddress");
         $descriptions = Helpers :: getVarFromPost("newMailDescription");
         $maxLengh = count($emails);
@@ -618,13 +603,13 @@ class MailController
         echo $maxLengh;
         for ($i = 0; $i < $maxLengh; $i++) {
             $annuaire = new MailAnnuaire();
-            $annuaire->set("user_id", $me->getId());
+            $annuaire->set("user_id", $this->me->getId());
             $annuaire->set("mail_address", $emails[$i]);
             $annuaire->set("description", $descriptions[$i]);
             $annuaire->save(false);
         }
-        $doc->closeSideBar(true);
-        $doc->openContent(true);
+        $this->doc->closeSideBar(true);
+        $this->doc->openContent(true);
         include __DIR__ . "/../template/newemail.php";
     }
 }
