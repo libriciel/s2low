@@ -425,7 +425,7 @@ class MailController
             return false;
         }
         $msg = "Envoi de mail réussi.";
-        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $this->module->get("name"), $me)) {
+        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $this->module->get("name"), $this->me)) {
             $this->lastError = "\nErreur de journalisation.";
 
             return false;

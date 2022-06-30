@@ -176,7 +176,7 @@ class MailPeer
         global $me;
 
 
-        $mailTransaction = new mail_transaction($transId);
+        $mailTransaction = new mail_transaction($transId); //NE FONCTIONNE PLUS (JLG)
         $mailTransaction->init();
         $objet = $mailTransaction->getObjet();
 
