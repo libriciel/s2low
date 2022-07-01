@@ -49,7 +49,7 @@ $doc->openContent();
 
 
 $html .= "<h1>HELIOS - Signature de plusieurs PES</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n");
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 $html .= "<h2>Liste des fichiers à signer</h2>\n";
 
@@ -68,9 +68,9 @@ $i = 0;
 
 foreach ($transaction_list as $transactionInfo) {
     $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-    $html .= " <td headers=\"numero_acte\"><a href=\"" . Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser le PES\">" . $transactionInfo['id'] . "</a></td>\n");
+    $html .= " <td headers=\"numero_acte\"><a href=\"" . Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $transactionInfo['id']) . "\" title=\"Visualiser le PES\">" . $transactionInfo['id'] . "</a></td>\n";
     $html .= " <td headers=\"fichier_helios\">";
-    $html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $transactionInfo['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['filename'] . "</a>");
+    $html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $transactionInfo['id']) . "\" title=\"Télécharger le fichier\">" . $transactionInfo['filename'] . "</a>";
     $html .= "</td>\n";
     $html .= "</tr>\n";
 

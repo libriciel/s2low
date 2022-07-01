@@ -391,7 +391,7 @@ class Helpers
       // Remplacement des & par &amp; (XHTML)
         $args = preg_replace("/&/", "&amp;", $args);
 
-        $url = WEBSITE_SSL . $_SERVER["PHP_SELF"] . "?" . $args;
+        $url = Helpers::getLink($_SERVER["PHP_SELF"] . "?" . $args);
 
         return $url;
     }

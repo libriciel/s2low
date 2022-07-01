@@ -412,7 +412,7 @@ class DataObject
             $row = $result->get_next_row();
 
             // Nombre total d'enregistrements
-            $this->totalRecords = $row["total_count"];
+            $this->totalRecords = $row["total_count"] ?? 0; //Quickfix passage PHP 8
 
             // Nombre de pages en fonction du nombre d'items par page
             $this->pageNbr = ceil($this->totalRecords / $this->displayItems);

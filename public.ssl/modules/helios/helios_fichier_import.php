@@ -24,7 +24,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode &nbsp;papier&nbsp; actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/helios/"));
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -32,7 +32,7 @@ if ($module->getParam("paper") == "on") {
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
-    header("Location: " . Helpers::getLink("/modules/helios/"));
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -65,7 +65,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n");
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 ob_start();
 ?>
