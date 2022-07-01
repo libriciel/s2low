@@ -49,7 +49,7 @@ $doc->openContent();
 
 
 $html .= "<h1>HELIOS - Signature de plusieurs PES</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 $html .= "<h2>Liste des fichiers à signer</h2>\n";
 

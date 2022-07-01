@@ -65,7 +65,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 ob_start();
 ?>

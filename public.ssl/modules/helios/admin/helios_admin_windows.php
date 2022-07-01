@@ -54,7 +54,7 @@ $doc->openContent();
 
 $html = "<h1>Gestion des fenêtres de transmission</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<p><a href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_edit.php")."\" class=\"btn btn-primary\">Ajouter une fenêtre</a></p>\n";
+$html .= "<p><a href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_edit.php") . "\" class=\"btn btn-primary\">Ajouter une fenêtre</a></p>\n";
 $html .= "<h2>Liste des fenêtres existantes</h2>\n";
 
 if (count($windows) > 0) {

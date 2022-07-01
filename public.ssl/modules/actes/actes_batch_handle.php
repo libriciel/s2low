@@ -51,7 +51,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html .= "<h1>ACTES - Traitement par lots</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 if (! $me->isSuper() && $me->canEdit($module->get('name'))) {
     $html .= "<div id=\"actions_area\">\n";
     $html .= "<h2>Actions</h2>\n";

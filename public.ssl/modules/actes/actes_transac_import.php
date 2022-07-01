@@ -68,7 +68,7 @@ $doc->openContent();
 
 // Zone contenu
 $html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php")."\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'une enveloppe</h2>\n";
 $html .= "<form class=\"form-horizontal import-file-form\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n");
 $html .= "<div class=\"form-group\">";
