@@ -3,12 +3,14 @@
 namespace S2low\Tests\Legacy;
 
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use S2low\Legacy\LegacyRouteLoader;
 use Symfony\Component\Routing\RouteCollection;
 
-class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
+class LegacyRouteLoaderTests extends TestCase
 {
-    private $legacyRouteLoader;
+    private LegacyRouteLoader $legacyRouteLoader;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -21,10 +23,9 @@ class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
      */
     private function getAsVirtualFileSystem(array $directory): string
     {
-        $file_system = vfsStream::setup('/tmp', 444, $directory);
+        $file_system = vfsStream::setup('/tmp', 444, ["testDirectory" => $directory]);
 
-        $baseDirPath = $file_system->url() . "/testDirectory";
-        return $baseDirPath;
+        return $file_system->url() . "/testDirectory";
     }
 
     /**
@@ -33,7 +34,7 @@ class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
      * @return void
      * @dataProvider directoriesProvider
      */
-    public function testFindOneRoute(array $directory, int $numberOfRoutes)
+    public function testFindOneRoute(array $directory, int $numberOfRoutes): void
     {
         $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
             $this->getAsVirtualFileSystem($directory)
@@ -46,38 +47,32 @@ class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
         return [
             [
                 [
-                    "testDirectory" => [
-                        "test.php" => "<?php echo \"test\";?>"
-                    ]
+                    "test.php" => "<?php echo \"test\";?>"
                 ],
                 1   // Only one file, only one route
             ],
             [
                 [
-                    "testDirectory" => [
-                        "secondDirectory" => [
-                            "test2.php" => "<?php echo \"test2\";?>",
-                            "fileToExclude" => "I should'nt be here"
-                        ],
-                        "test.php" => "<?php echo \"test\";?>"
-                    ]
+                    "secondDirectory" => [
+                        "test2.php" => "<?php echo \"test2\";?>",
+                        "fileToExclude" => "I should'nt be here"
+                    ],
+                    "test.php" => "<?php echo \"test\";?>"
                 ],
                 2   // Three files, two routes : the file without php extension shouldn't be taken into account
             ],
             [
                 [
-                    "testDirectory" => [
-                        "secondDirectory" => [
-                            "index.php" => "<?php echo \"I should be retrieved\";?>",
-                            "toRetrieve2.php" => "I should be retrieved"
-                        ],
-                        "index.php" => "<?php echo \"I shouldn't be retrieved\";?>",
-                        "index.old.php" => "<?php echo \"I shouldn't be retrieved\";?>",
-                        "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
-                    ]
+                    "secondDirectory" => [
+                        "index.php" => "<?php echo \"I should be retrieved\";?>",
+                        "toRetrieve2.php" => "I should be retrieved"
+                    ],
+                    "index.php" => "<?php echo \"I shouldn't be retrieved\";?>",
+                    "index.old.php" => "<?php echo \"I shouldn't be retrieved\";?>",
+                    "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
                 ],
                 3 // Five files, three routes : the index.php and index.old.php shouldn't be taken into account.
-                  // The secondDirectory/index.php should
+                // The secondDirectory/index.php should.
             ]
 
         ];
@@ -86,9 +81,7 @@ class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
     public function testSimpleCollection()
     {
         $directory = [
-            "testDirectory" => [
-                "test.php" => "<?php echo \"test\";?>"
-            ]
+            "test.php" => "<?php echo \"test\";?>"
         ];
 
         $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
@@ -111,26 +104,25 @@ class LegacyRouteLoaderTests extends \PHPUnit\Framework\TestCase
     public function testComplexIndexStructure()
     {
         $directory = [
-            "testDirectory" => [
-                "secondDirectory" => [
-                    "index.php" => "<?php echo \"I should be retrieved\";?>",
-                    "toRetrieve2.php" => "I should be retrieved",
-                    "thirdDirectory" => [
-                        "index.php" => "<?php echo \"I should be retrieved\";?>"
-                    ]
-                ],
-                "index.php" => "<?php echo \"I shouldn't be retrieved\";?>",
-                "index.old.php" => "<?php echo \"I shouldn't be retrieved\";?>",
-                "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
-            ]
+            "secondDirectory" => [
+                "index.php" => "<?php echo \"I should be retrieved\";?>",
+                "toRetrieve2.php" => "I should be retrieved",
+                "thirdDirectory" => [
+                    "index.php" => "<?php echo \"I should be retrieved\";?>"
+                ]
+            ],
+            "index.php" => "<?php echo \"I shouldn't be retrieved\";?>",
+            "index.old.php" => "<?php echo \"I shouldn't be retrieved\";?>",
+            "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
         ];
-        $file_system = vfsStream::setup('/tmp', 444, $directory);
 
-        $legacyRouteLoader = new LegacyRouteLoader(null);
-        $filesArray = ($legacyRouteLoader)->findLegacyRoutes($file_system->url() . "/testDirectory");
+        $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
+            $this->getAsVirtualFileSystem($directory)
+        );
+
         $collection = new RouteCollection();
         foreach ($filesArray as $file) {
-            $legacyRouteLoader->addRouteForFile($file, $collection);
+            $this->legacyRouteLoader->addRouteForFile($file, $collection);
         }
         $this->assertEquals(
             [

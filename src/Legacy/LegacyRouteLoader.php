@@ -2,12 +2,12 @@
 
 namespace S2low\Legacy;
 
-use SplFileInfo;
+use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
+class LegacyRouteLoader extends Loader
 {
     public function findLegacyRoutes(string $baseDirPath): array
     {
@@ -23,7 +23,7 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
     /**
      * @inheritDoc
      */
-    public function load(mixed $resource, string $type = null): mixed
+    public function load(mixed $resource, string $type = null): RouteCollection
     {
         $phpFilesForStandardRoutes = $this->findLegacyRoutes(__DIR__ . "/../../public.ssl/");
 
@@ -58,7 +58,6 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
 
     /**
      * @param mixed $legacyScriptFile
-     * @param string $dir
      * @param \Symfony\Component\Routing\RouteCollection $collection
      * @return void
      */
