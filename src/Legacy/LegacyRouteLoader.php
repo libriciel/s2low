@@ -9,58 +9,28 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
 {
+    public function findLegacyRoutes(string $baseDirPath): array
+    {
+        $finder = new Finder();
+        $results = [];
+        foreach ($finder->files()->in($baseDirPath)->name("*.php") as $file) {
+            if (!in_array($file->getRelativePathname(), ["index.php","index.old.php"])) { // Pas réussi à le faire avec
+                $results[] = $file;                                                       // le finder seul ...
+            }
+        }
+        return $results;
+    }
     /**
      * @inheritDoc
      */
     public function load(mixed $resource, string $type = null): mixed
     {
+        $phpFilesForStandardRoutes = $this->findLegacyRoutes(__DIR__ . "/../../public.ssl/");
+
         $collection = new RouteCollection();
-        $finder = new Finder();
-        $finder->files()->name('*.php');
-        $baseDir = __DIR__ . "/../../public.ssl/";
-        $dirs = [
-            "admin",
-            "admin/authorities",
-            "admin/groups",
-            "admin/message",
-            "admin/modules",
-            "admin/services",
-            "admin/users",
-            "admin/utilities",
-            "api",
-            "common",
-            "custom/templates",
-            "modules/actes",
-            "modules/actes/admin",
-            "modules/actes/api",
-            "modules/actes/applet",
-            "modules/actes/class",
-            "modules/helios",
-            "modules/helios/admin",
-            "modules/helios/api",
-            "modules/helios/class",
-            "modules/mail",
-            "test"
-        ];
-        foreach ($dirs as $dir) {
-            $finder = new Finder();
-            $finder->files()->name('*.php');
-            foreach ($finder->in($baseDir . $dir) as $legacyScriptFile) {
-                // This assumes all legacy files use ".php" as extension
-                $this->addRouteForFile($legacyScriptFile, $dir, $collection);
-            }
-        }
 
-        $files = ["ident.php","login.php","logout.php","maintenance.php","pre-requis.php"];
-        $dir = "/";
-
-        foreach ($files as $file) {
-            $finder = new Finder();
-            $finder->files()->name($file);
-            foreach ($finder->in($baseDir) as $legacyScriptFile) {
-                // This assumes all legacy files use ".php" as extension
-                $this->addRouteForFile($legacyScriptFile, $dir, $collection);
-            }
+        foreach ($phpFilesForStandardRoutes as $phpFile) {
+                $this->addRouteForFile($phpFile, $collection);
         }
 
         $collection->add("homepage", new Route('/', [
@@ -92,15 +62,18 @@ class LegacyRouteLoader extends \Symfony\Component\Config\Loader\Loader
      * @param \Symfony\Component\Routing\RouteCollection $collection
      * @return void
      */
-    private function addRouteForFile(mixed $legacyScriptFile, string $dir, RouteCollection $collection): void
+    public function addRouteForFile(mixed $legacyScriptFile, RouteCollection $collection): void
     {
         $relativePathname = $legacyScriptFile->getRelativePathname();
         $shortFilename = basename($relativePathname, '.php');
-        $routeName = sprintf('app.legacy.%s', str_replace('/', '_', $dir . "/" . $shortFilename));
+        $routeName = sprintf(
+            'app_legacy_%s',
+            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . "/" . $shortFilename), "_")
+        );
 
-        $collection->add($routeName, new Route('/' . $dir . '/' . $relativePathname, [
+        $collection->add($routeName, new Route($relativePathname, [
             '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
-            'requestPath' => '/' . $dir . '/' . $relativePathname,
+            'requestPath' => $relativePathname,
             'legacyScript' => $legacyScriptFile->getPathname(),
         ]));
     }
