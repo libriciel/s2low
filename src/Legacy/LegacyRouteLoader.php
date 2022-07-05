@@ -9,7 +9,23 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteLoader extends Loader
 {
-    public function findLegacyRoutes(string $baseDirPath): array
+    /**
+     * @var string
+     */
+    private string $legacy_ssl_path;
+
+    public function __construct(string $project_dir, string $relative_legacy_ssl_path, string $env = null)
+    {
+        $this->legacy_ssl_path = $this->trimPathToAccomodateVFS("$project_dir/$relative_legacy_ssl_path");
+        parent::__construct($env);
+    }
+
+    private function trimPathToAccomodateVFS(string $path): string
+    {
+        return preg_replace("#(?<!vfs:)//#", "/", $path);
+    }
+
+    private function findLegacyRoutes(string $baseDirPath): array
     {
         $finder = new Finder();
         $results = [];
@@ -25,7 +41,7 @@ class LegacyRouteLoader extends Loader
      */
     public function load(mixed $resource, string $type = null): RouteCollection
     {
-        $phpFilesForStandardRoutes = $this->findLegacyRoutes(__DIR__ . "/../../public.ssl/");
+        $phpFilesForStandardRoutes = $this->findLegacyRoutes($this->legacy_ssl_path);
 
         $collection = new RouteCollection();
 
@@ -36,13 +52,13 @@ class LegacyRouteLoader extends Loader
         $collection->add("homepage", new Route('/', [
             '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
             'requestPath' => '/index.php',
-            'legacyScript' => "/var/www/s2low/public.ssl/index.old.php",
+            'legacyScript' => $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
         ]));
 
         $collection->add("homepage_full", new Route('/index.php', [
             '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
             'requestPath' => '/index.php',
-            'legacyScript' => "/var/www/s2low/public.ssl/index.old.php",
+            'legacyScript' => $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
         ]));
 
         return $collection;
@@ -61,7 +77,7 @@ class LegacyRouteLoader extends Loader
      * @param \Symfony\Component\Routing\RouteCollection $collection
      * @return void
      */
-    public function addRouteForFile(mixed $legacyScriptFile, RouteCollection $collection): void
+    private function addRouteForFile(mixed $legacyScriptFile, RouteCollection $collection): void
     {
         $relativePathname = $legacyScriptFile->getRelativePathname();
         $shortFilename = basename($relativePathname, '.php');
@@ -73,7 +89,7 @@ class LegacyRouteLoader extends Loader
         $collection->add($routeName, new Route($relativePathname, [
             '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
             'requestPath' => $relativePathname,
-            'legacyScript' => $legacyScriptFile->getPathname(),
+            'legacyScript' =>  $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname())
         ]));
     }
 }

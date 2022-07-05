@@ -14,18 +14,17 @@ class LegacyRouteLoaderTests extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->legacyRouteLoader = new LegacyRouteLoader(null);
     }
 
     /**
      * @param array $directory
      * @return string
      */
-    private function getAsVirtualFileSystem(array $directory): string
+    private function setUpVFSAndLegacyRoadLoader(array $directory): void
     {
         $file_system = vfsStream::setup('/tmp', 444, ["testDirectory" => $directory]);
-
-        return $file_system->url() . "/testDirectory";
+        $this->legacyRouteLoader = new LegacyRouteLoader($file_system->url(), "/testDirectory");
+        $this->fileSystem = $file_system;
     }
 
     /**
@@ -36,10 +35,9 @@ class LegacyRouteLoaderTests extends TestCase
      */
     public function testFindOneRoute(array $directory, int $numberOfRoutes): void
     {
-        $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
-            $this->getAsVirtualFileSystem($directory)
-        );
-        $this->assertEquals($numberOfRoutes, count($filesArray));
+        $this->setUpVFSAndLegacyRoadLoader($directory);
+        $collection = $this->legacyRouteLoader->load(null);
+        $this->assertEquals($numberOfRoutes, $collection->count());
     }
 
     public function directoriesProvider(): array
@@ -49,7 +47,7 @@ class LegacyRouteLoaderTests extends TestCase
                 [
                     "test.php" => "<?php echo \"test\";?>"
                 ],
-                1   // Only one file, only one route
+                3   // Only one file, only one route + 2 routes pour index.old.php
             ],
             [
                 [
@@ -59,7 +57,8 @@ class LegacyRouteLoaderTests extends TestCase
                     ],
                     "test.php" => "<?php echo \"test\";?>"
                 ],
-                2   // Three files, two routes : the file without php extension shouldn't be taken into account
+                4   // Three files, two routes for the files : the file without php extension shouldn't be taken into account
+                    // + 2 routes pour index.old.php
             ],
             [
                 [
@@ -68,11 +67,10 @@ class LegacyRouteLoaderTests extends TestCase
                         "toRetrieve2.php" => "I should be retrieved"
                     ],
                     "index.php" => "<?php echo \"I shouldn't be retrieved\";?>",
-                    "index.old.php" => "<?php echo \"I shouldn't be retrieved\";?>",
+                    "index.old.php" => "<?php echo \"I should be retrieved twice\";?>",
                     "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
                 ],
-                3 // Five files, three routes : the index.php and index.old.php shouldn't be taken into account.
-                // The secondDirectory/index.php should.
+                5 // Five files, Six routes (two for index.old.php)
             ]
 
         ];
@@ -84,14 +82,10 @@ class LegacyRouteLoaderTests extends TestCase
             "test.php" => "<?php echo \"test\";?>"
         ];
 
-        $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
-            $this->getAsVirtualFileSystem($directory)
-        );
+        $this->setUpVFSAndLegacyRoadLoader($directory);
 
-        $collection = new RouteCollection();
-        foreach ($filesArray as $file) {
-            $this->legacyRouteLoader->addRouteForFile($file, $collection);
-        }
+        $collection = $this->legacyRouteLoader->load(null);
+
         $this->assertEquals(
             [
                 '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
@@ -101,7 +95,7 @@ class LegacyRouteLoaderTests extends TestCase
         );
     }
 
-    public function testComplexIndexStructure()
+    public function testIndexesInComplexIndexStructure()
     {
         $directory = [
             "secondDirectory" => [
@@ -116,14 +110,26 @@ class LegacyRouteLoaderTests extends TestCase
             "toRetrieve.php" => "<?php echo \"I should be retrieved\";?>",
         ];
 
-        $filesArray = $this->legacyRouteLoader->findLegacyRoutes(
-            $this->getAsVirtualFileSystem($directory)
+        $this->setUpVFSAndLegacyRoadLoader($directory);
+
+        $collection = $this->legacyRouteLoader->load(null);
+
+        $this->assertEquals(
+            [
+                '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
+                'requestPath' => "/index.php",
+                'legacyScript' => 'vfs://tmp/testDirectory/index.old.php'],
+            $collection->get("homepage")->getDefaults(),
         );
 
-        $collection = new RouteCollection();
-        foreach ($filesArray as $file) {
-            $this->legacyRouteLoader->addRouteForFile($file, $collection);
-        }
+        $this->assertEquals(
+            [
+                '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
+                'requestPath' => "/index.php",
+                'legacyScript' => 'vfs://tmp/testDirectory/index.old.php'],
+            $collection->get("homepage_full")->getDefaults(),
+        );
+
         $this->assertEquals(
             [
                 '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
