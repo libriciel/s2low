@@ -5,16 +5,10 @@ namespace S2low\Tests\Legacy;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use S2low\Legacy\LegacyRouteLoader;
-use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteLoaderTests extends TestCase
 {
     private LegacyRouteLoader $legacyRouteLoader;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
 
     /**
      * @param array $directory
