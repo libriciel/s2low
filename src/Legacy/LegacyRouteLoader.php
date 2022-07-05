@@ -14,7 +14,7 @@ class LegacyRouteLoader extends Loader
         $finder = new Finder();
         $results = [];
         foreach ($finder->files()->in($baseDirPath)->name("*.php") as $file) {
-            if (!in_array($file->getRelativePathname(), ["index.php","index.old.php"])) { // Pas rÈussi ‡ le faire avec
+            if (!in_array($file->getRelativePathname(), ["index.php","index.old.php"])) { // Pas r√©ussi √† le faire avec
                 $results[] = $file;                                                       // le finder seul ...
             }
         }
