@@ -145,4 +145,11 @@ class LegacyRouteLoaderTests extends TestCase
             $collection->get("app_legacy_secondDirectory_thirdDirectory_index")->getDefaults(),
         );
     }
+
+    public function testSupportsLegacyRouteAndNothingElse()
+    {
+        $legacyRouteLoader = new LegacyRouteLoader("", "");
+        $this->assertTrue($legacyRouteLoader->supports(null, "legacyroute"));
+        $this->assertFalse($legacyRouteLoader->supports(null, "randomroute"));
+    }
 }
