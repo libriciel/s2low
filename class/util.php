@@ -12,7 +12,7 @@ function get_url_same_page(array $params)
 
 function legacy_encode_array($array)
 {
-             // migration UTF-8 : utilisé pour garder le même comportement de l'API
+             // migration UTF-8 : utilisÃ© pour garder le mÃªme comportement de l'API
     if (! is_array($array)) {
         return  (string) $array ?? '';
     }

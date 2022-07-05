@@ -4,7 +4,7 @@
 ?>
 <h1><?php hecho($title); ?></h1>
 <p id="back-transaction-btn">
-    <a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_sae.php?id=<?php hecho($authority_id) ?>" class="btn btn-default">Retour configuration SAE</a>
+    <a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_sae.php?id=$authority_id"); ?>" class="btn btn-default">Retour configuration SAE</a>
 </p>
 
 <h2>Actes <?php echo $pastellProperties->actes_send_auto ? "(mode automatique)" : ""?></h2>

@@ -68,7 +68,7 @@ if ($newmailnotif == 'on') {
 
 
 
-$form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id";
+$form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
 
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
@@ -88,7 +88,7 @@ if (isset($id) && ! empty($id)) {
     if (! $authority->init()) {
         exitOrDisplayError($api, "Erreur lors de la modification de la collectivité", $form_location);
     }
-    $form_location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=$id";
+    $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
 }
 
 
@@ -124,9 +124,9 @@ if (! $me->isGroupAdminOrSuper()) {
 $mailer = new Mailer();
 if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise, " "))) {
     if ($authority->isNew()) {
-        $location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
+        $location = Helpers::getLink("/admin/authorities/admin_authorities.php");
     } else {
-        $location = WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
+        $location = Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
     exitOrDisplayError($api, "L'email " . get_hecho($email_mail_securise) . " n'est pas valide.", $location);
 }
@@ -176,9 +176,9 @@ if (! $authority->save($savePerms)) {
     }
 
     if ($authority->isNew()) {
-        $location = WEBSITE_SSL . "/admin/authorities/admin_authorities.php";
+        $location = Helpers::getLink("/admin/authorities/admin_authorities.php");
     } else {
-        $location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId();
+        $location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
 
     exitOrDisplayError($api, nl2br($msg), $location);
@@ -197,7 +197,7 @@ if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
             exitOrDisplayError(
                 $api,
                 nl2br("Erreur lors de la sauvegarde de la convention (PDF attendu)"),
-                $location =  WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId()
+                $location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId()
             );
         }
     }
@@ -218,6 +218,6 @@ if ($api) {
     $jsonOutput->display(array('status' => 'ok','message' => $msg,'id' => $authority->getId()));
 } else {
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $authority->getId());
+    header("Location: " . Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId());
     exit;
 }

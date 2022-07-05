@@ -55,7 +55,7 @@ try {
     $filepath = $pesRetourCloudStorage->getPath($retourId);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : " . $e->getMessage();
-    header("Location: " . WEBSITE_SSL . "/modules/helios/helios_retour.php");
+    header("Location: " . Helpers::getLink("/modules/helios/helios_retour.php"));
     exit();
 }
 

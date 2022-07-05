@@ -34,7 +34,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 $id = intval(Helpers :: getVarFromGet("id"));
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
@@ -42,7 +42,7 @@ $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
     $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
@@ -58,7 +58,7 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
@@ -78,9 +78,9 @@ $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 $doc = new HTMLLayout();
 
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . WEBSITE_SSL . "/custom/styles/date-picker.css\" />");
+$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
 $doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 
 
 $doc->setTitle("Tedetis : visualisation d'une transaction");
@@ -91,7 +91,7 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html = "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+$html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n");
 
 $html .= "<h2>Visualisation d'une transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
@@ -102,10 +102,10 @@ if ($trans->get("type_reponse")) {
 }
 
 if ($me->isSuper()) {
-    $link_authority = WEBSITE_SSL . "admin/authorities/admin_authority_edit.php?id={$authority_info['id']}";
+    $link_authority = Helpers::getLink("admin/authorities/admin_authority_edit.php?id={$authority_info['id']}");
     $authority_td = "<a href='$link_authority'>" . get_hecho($authority_info['name']) . "</a>";
 
-    $link_user = WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $owner->getId();
+    $link_user = Helpers::getLink("/admin/users/admin_user_edit.php?id=") . $owner->getId();
     $user_td = "<a href='$link_user'>" . get_hecho($owner->get("givenname") . " " . $owner->get("name")) . "</a>";
 } else {
     $authority_td = get_hecho($authority_info['name']);
@@ -170,16 +170,16 @@ switch ($trans->get("type")) {
             foreach ($files as $file) {
                 $html .= $doc->getHTMLArrayline(
                     "Document reçu   ",
-                    "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>"
+                    "<a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>")
                 );
             }
 
             $related_trans = new ActesTransaction($related_trans->get("related_transaction_id"));
             $related_trans->init();
             $html .= $doc->getHTMLArrayline("Date de décision de l'acte initial   ", $related_trans->get("decision_date"));
-            $html .= $doc->getHTMLArrayline("Acte initial", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
+            $html .= $doc->getHTMLArrayline("Acte initial", "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>"));
         } else {
-            $html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>");
+            $html .= $doc->getHTMLArrayline("Acte ", "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("number") . "</a>"));
         }
 
 
@@ -189,7 +189,7 @@ switch ($trans->get("type")) {
         $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
         $related_trans->init();
 
-        $html .= $doc->getHTMLArrayline("Acte à annuler", "<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>");
+        $html .= $doc->getHTMLArrayline("Acte à annuler", "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>"));
         break;
 
     case 7:
@@ -248,7 +248,7 @@ if (is_array($files)) {
             if ($archiveDeleted) {
                 $html .=  $file["posted_filename"];
             } else {
-                $html .= $file["posted_filename"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>" ;
+                $html .= $file["posted_filename"] . "<br/><a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>") ;
                 $html .= "&nbsp;&nbsp;";
 
 
@@ -306,7 +306,7 @@ if (is_array($files)) {
         $html .= "<dd>";
 
         if (mb_strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
-            $html .= $file["name"] . "<br/><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>";
+            $html .= $file["name"] . "<br/><a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>");
         } else {
             $html .= $file["name"];
         }
@@ -315,7 +315,7 @@ if (is_array($files)) {
         $html .= "</dl>\n";
         if ($file['sign']) {
             $html .= "<dt>Signature</dt>";
-            $html .= "<dd><a href=\"" . WEBSITE_SSL . "/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>";
+            $html .= "<dd><a href=\"" . Helpers::getLink("/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>");
         }
 
         if ($file['code_pj']) {
@@ -334,10 +334,10 @@ if (is_array($files)) {
     $html .= "  <p>Pas de fichier trouvé</p>";
 }
 
-$html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . WEBSITE_SSL . "/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>";
+$html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>");
 
 if ($me->isSuper()) {
-    $link = WEBSITE_SSL . "/modules/actes/actes_transac_validate.php?transaction_id=$id";
+    $link = Helpers::getLink("/modules/actes/actes_transac_validate.php?transaction_id=$id");
     $html .= "<br/><a href='$link'>Validation de l'archive</a>";
 }
 
@@ -405,7 +405,7 @@ if (count($courrier) != 0) {
         $html .= "  <td headers=\"type\">" . $transactionTypes[$info["type"]] . "</td>\n";
         $html .= "  <td headers=\"sens\">" . $info["sens"] . "</td>\n";
         $html .= "  <td headers=\"actions\">
-  		<a href=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $id . "\"><img alt=\"pdf\" src=\"../../custom/images/erreur.png\"> </a></td>\n";
+  		<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $id . "\"><img alt=\"pdf\" src=\"../../custom/images/erreur.png\"> </a></td>\n");
         $html .= " </tr>\n";
     }
 
@@ -437,7 +437,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permissi
         $broadcast_email = explode(",", $broadcast_email);
 
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form class=\"form\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_notify.php\" method=\"post\">\n";
+        $actionHtml .= "<form class=\"form\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_notify.php\" method=\"post\">\n");
         $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Notifier la transaction\" />\n";
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"control-label\">Emission des documents sources : </label><input type=\"checkbox\" class=\"inline-checkbox\" name=\"send_sources\" checked='checked' />\n</div>\n";
 
@@ -469,7 +469,7 @@ if (!$trans->hasPendingCancelTrans()) {
     if ($trans->get("type") == 1 && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
         if ($trans->canValidate()) {
             $actionHtml .= "<div class=\"action\">\n";
-            $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
+            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n");
             $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
             $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
             $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
@@ -479,7 +479,7 @@ if (!$trans->hasPendingCancelTrans()) {
         }//fin if verfiie canValidate
 
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n");
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
@@ -495,7 +495,7 @@ if (!$trans->hasPendingCancelTrans()) {
 
     if ($trans->get("type") == 1 && in_array($transStatus, array(4,5,14,20)) && $trans->canValidate()) {
          $actionHtml .= "<div class=\"action\">\n";
-          $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n";
+          $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n");
           $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
           $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
           $actionHtml .= "<input type=\"submit\" id='button_send_sae' class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
@@ -526,7 +526,7 @@ if (!$trans->hasPendingCancelTrans()) {
 
 if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n");
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer au SAE\" /> (Attention, peut-être long)\n";
@@ -536,7 +536,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISS
 
 if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n";
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n");
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur le SAE\" /> \n";
@@ -550,7 +550,7 @@ if ($me->isSuper()) {
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n");
         $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
@@ -570,7 +570,7 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
         if ($module->getParam("paper") == "on") {
             $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode «&nbsp;papier&nbsp;» actif. Pas d'annulation possible.</label>";
         } else {
-            $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n";
+            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n");
             $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
             $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
             $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"btn btn-danger\" />\n";
@@ -585,7 +585,7 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
 // Boutons de réponse à un courrier
 
 if (in_array($transStatus, array(7,8,21)) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
-      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_repondre.php\" method=\"post\">\n";
+      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_repondre.php\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"btn btn-primary\" />\n";
@@ -593,7 +593,7 @@ if (in_array($transStatus, array(7,8,21)) && $trans->get("type") != 5  && $me->c
 }
 
 if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
-      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n";
+      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n");
       $actionHtml .= "<p>Valider &nbsp;:&nbsp;";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Poster ce document\" class=\"submit_button\" />\n";
@@ -601,17 +601,17 @@ if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
 }
 
 $actionHtml .= "<div class=\"action\">\n";
-$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" . WEBSITE_SSL . "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n";
+$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" . Helpers::getLink("/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n");
 $actionHtml .= "</div>\n</div>\n";
 
 if ($me->isSuper()) {
-       $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
       $actionHtml .= "</div></form>\n";
 
-      $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />\n";
@@ -620,13 +620,13 @@ if ($me->isSuper()) {
 
 
     if (in_array($transStatus, array(3,-1))  && $trans->get("type") == 1) {
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"submit\" value=\"Passer en attente de transmission\" class=\"btn btn-warning\" />\n";
         $actionHtml .= "</div></form>\n";
 
-        $actionHtml .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à Poster </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"1\" />\n";
@@ -693,7 +693,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
         <div class="libersign"></div>
     </div>
 
-    <form action='<?php echo WEBSITE_SSL?>modules/actes/actes_transac_sign.php' id='form_sign' method='post'>
+    <form action='<?php echo Helpers::getLink("modules/actes/actes_transac_sign.php")?>' id='form_sign' method='post'>
         <input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
         <input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
         <?php foreach ($tab_included_files as $i => $included_file) : ?>
@@ -709,7 +709,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
         $html .= ob_get_contents();
         ob_end_clean();
         $html .= "<h3>Ne plus signer</h3>";
-        $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signé. Êtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n";
+        $html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signé. Êtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n");
         $html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Ne plus signer l'acte et le poster</label>\n";
         $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $html .= "<input type=\"submit\" value=\"Télétransmettre sans signature\" class=\"btn btn-warning\" />\n";

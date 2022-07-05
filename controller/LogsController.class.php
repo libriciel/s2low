@@ -210,12 +210,11 @@ class LogsController extends Controller
 
             $user_info = $this->getObjectInstancier()->get('UserSQL')->getInfo($user_id_demandeur);
 
-            mail(
-                $user_info['email'],
-                "[S2LOW] Journal disponible",
-                "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
-                WEBSITE_SSL . "/common/logs_request_view.php\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n"
-            );
+            $messageMail = "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
+                Helpers::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";
+
+            mail($user_info['email'], "[S2LOW] Journal disponible", $messageMail);
+
             if ($sigtermHandler->isSigtermCalled()) {
                 break;
             }

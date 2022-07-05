@@ -1,0 +1,22 @@
+# config/services.yaml
+
+parameters:
+  app.relative_legacy_ssl_path: 'public.ssl/'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  S2low\:
+    resource: '../src/*'
+    exclude: '../src/{Kernel.php,Command}'
+
+  S2low\Legacy\LegacyRouteLoader:
+    tags: [routing.loader]
+    arguments:
+      $project_dir: '%kernel.project_dir%'
+      $relative_legacy_ssl_path: '%app.relative_legacy_ssl_path%'
+
+  S2low\Controller\LegacyController:
+    public: true

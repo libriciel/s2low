@@ -200,10 +200,10 @@ ob_start();?>
         <td headers="role"><?php echo $rolesList[$user["role"]]  ?></td>
         <td headers="status"><?php echo $statusList[$user["status"]] ?></td>
         <td headers="authority">
-            <a href="<?php echo WEBSITE_SSL ?>/admin/authorities/admin_authority_edit.php?id=<?php echo $user["authority_id"]  ?>"><?php hecho($user["authority_name"])?></a>
+            <a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $user["authority_id"]);  ?>"><?php hecho($user["authority_name"])?></a>
         </td>
         <td headers="actions">
-            <a href="<?php echo WEBSITE_SSL ?>/admin/users/admin_user_edit.php?id=<?php echo $user["id"] ?>" class="icon"><img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" /></a>
+            <a href="<?php echo Helpers::getLink("/admin/users/admin_user_edit.php?id=" . $user["id"]); ?>" class="icon"><img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Modifier" /></a>
         </td>
     </tr>
     <?php endforeach; ?>

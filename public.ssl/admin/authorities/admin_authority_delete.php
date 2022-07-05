@@ -44,7 +44,7 @@ if (isset($id) && ! empty($id)) {
 
     if ($me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_group_id"))) {
         $_SESSION["error"] = "Accès refusé pour la collectivité spécifiée";
-        header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
+        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     }
 
@@ -55,7 +55,7 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
+        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la collectivité<br />" . $authority->getErrorMsg();
@@ -64,11 +64,11 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
+        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de collectivité spécifié";
-    header("Location: " . WEBSITE_SSL . "/admin/authorities/admin_authorities.php");
+    header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
     exit();
 }

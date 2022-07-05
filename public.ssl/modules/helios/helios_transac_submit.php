@@ -27,7 +27,7 @@ if (! $module->isActive() || ! $me->checkDroit("helios", "TT")) {
 $id = Helpers :: getVarFromPost("id");
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -35,7 +35,7 @@ if (empty($id)) {
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if (! $currentStatusId != 14) {
     $_SESSION["error"] = "\nLa transaction n'est pas dans le bon état";
-    header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
+    header("Location: " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
 }
 
 $htw = new HeliosTransactionWorkflow();
@@ -51,7 +51,7 @@ if (!$htw->save(true)) {
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $_SESSION["error"] .= "\nErreur de journalisation.";
     }
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -67,4 +67,4 @@ if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name
 $workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id);
 
-Helpers :: returnAndExit(0, "Préparation de la télétransmission réusssie.", WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id);
+Helpers :: returnAndExit(0, "Préparation de la télétransmission réusssie.", Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);

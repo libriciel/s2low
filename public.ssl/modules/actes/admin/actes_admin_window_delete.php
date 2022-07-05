@@ -56,7 +56,7 @@ if (isset($id)) {
         $workerScript->rebuildQueue($worker);
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la fenêtre de transmission<br />" . $zeWin->getErrorMsg();
@@ -65,11 +65,11 @@ if (isset($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de fenêtre de transmission spécifié";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
+    header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
     exit();
 }

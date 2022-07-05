@@ -19,7 +19,7 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->checkDroit($mo
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -35,4 +35,4 @@ $result = $classificationCreation->createEnveloppe($myAuthority, $me);
 
 
 $transaction_id = $classificationCreation->getLastTransactionId();
-Helpers::returnAndExit(! $result, $classificationCreation->getLastMessage(), WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$transaction_id", $transaction_id);
+Helpers::returnAndExit(! $result, $classificationCreation->getLastMessage(), Helpers::getLink("/modules/actes/actes_transac_show.php?id=$transaction_id"), $transaction_id);

@@ -1,88 +1,43 @@
 <?php
 
-require_once("../init/init.php");
+// public/index.php
+use S2low\Kernel;
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\Debug;
+use Symfony\Component\HttpFoundation\Request;
 
-$me = new User();
-if (! $me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . WEBSITE);
-    exit();
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+(new Dotenv())->bootEnv(dirname(__DIR__) . '/.env');
+
+/*
+ * The kernel will always be available globally, allowing you to
+ * access it from your existing application and through it the
+ * service container. This allows for introducing new features in
+ * the existing application.
+ */
+global $kernel;
+
+if ($_SERVER['APP_DEBUG']) {
+    umask(0000);
+
+    Debug::enable();
 }
 
-/** @var MessageAdminSQL $messageAdminSQL */
-$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
-$messageAdmin = $messageAdminSQL->getPublishedMessage();
-
-$doc = new HTMLLayout();
-
-$myAuthority = new Authority($me->get("authority_id"));
-
-$doc->setTitle(WEBSITE_TITLE);
-
-$doc->openContainer();
-$doc->openSideBar();
-$doc->buildMenu($me);
-$doc->closeSideBar();
-$doc->openContent();
-
-$html = " <h1>Espace de télétransmission</h1>\n";
-$html .= "<p>Vous êtes connecté avec le rôle";
-
-if ($me->isSuper()) {
-    $html .= " de super administrateur";
-} elseif ($me->isGroupAdmin()) {
-    $myGroup = new Group($me->get("authority_group_id"));
-    $html .= " d'administrateur du groupe " . $myGroup->get("name");
-} elseif ($me->isAdmin()) {
-    $html .= " d'administrateur de la collectivité " . $myAuthority->get("name");
-} else {
-    $html .= " d'utilisateur de la collectivité " . $myAuthority->get("name");
+if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? $_ENV['TRUSTED_PROXIES'] ?? false) {
+    Request::setTrustedProxies(
+        explode(',', $trustedProxies),
+        Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO
+    );
 }
 
-$html .= ".<br />\n";
-
-$html .= "Le menu de gauche vous donne accès aux opérations permises par ce rôle.<br /><br />\n";
-$html .= "Le «&nbsp;Journal des événements&nbsp;» consigne l'ensemble des événements relatifs à vos opérations sur le site.<br /><br />";
-
-if (defined("HOTLINE_NUM")) {
-    $html .= "La hotline de support est disponible pour toute question au " . HOTLINE_NUM . ".<br /><br />\n";
+if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false) {
+    Request::setTrustedHosts([$trustedHosts]);
 }
 
-$html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
 
-
-
-if (defined("SUPPORT_URL")) {
-    $html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
-} elseif (defined("PHRASE_SUPPORT")) {
-    $html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
-} else {
-    $html .= " au <a href=\"mailto:" . WEBMASTER . "\">webmaster</a>";
-}
-
-$html .= ".<br />\n";
-
-$html .= "</p>\n";
-
-if ($messageAdmin->message_id) {
-    ob_start();
-    $messageAdmin->displayMessage();
-    $html .= ob_get_clean();
-}
-
-
-if ($me->isSuper()) {
-    $html .= "<h2>Fonctions super administrateur</h2>";
-    $html .= "<a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>";
-}
-
-
-
-$doc->addBody($html);
-
-$doc->closeContent();
-$doc->closeContainer();
-
-$doc->buildFooter();
-
-$doc->display();
+$kernel->terminate($request, $response);

@@ -38,10 +38,10 @@
                 <td><a href="mailto: <?php hecho($info['email']) ?>"><?php hecho($info['email']) ?></a></td>
                 <td><?php echo $roles_type_list[$info['role']] ?></td>
                 <td><?php echo $status_type_list[$info["status"]] ?></td>
-                <td><a href="<?php echo WEBSITE_SSL . "/admin/authorities/admin_authority_edit.php?id=" . $info["authority_id"] ?>"><?php hecho($info["authority_name"]) ?></a></td>
+                <td><a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $info["authority_id"]); ?>"><?php hecho($info["authority_name"]) ?></a></td>
                 <td>
-                    <a href="<?php echo WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" .  $info['id'] ?>" class="icon">
-                        <img src="<?php echo WEBSITE_SSL ?>/custom/images/erreur.png" alt="image_modif" title="Modifier" />
+                    <a href="<?php echo Helpers::getLink("/admin/users/admin_user_edit.php?id=" .  $info['id']); ?>" class="icon")>
+                        <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Modifier" />
                     </a>
                 </td>
             </tr>

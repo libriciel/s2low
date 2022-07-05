@@ -56,7 +56,7 @@ if (isset($id) && ! empty($id)) {
     $zeWin->setId($id);
     if (! $zeWin->init()) {
         $_SESSION["error"] = "Erreur lors de la modification de la fenêtre.";
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_windows.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     } else {
         $mod = true;
@@ -70,9 +70,9 @@ $window_end_stamp = ActesTransmissionWindow::roundDate($window_end_date, $window
 if ($window_start_stamp > $window_end_stamp) {
     $_SESSION["error"] = "La date de fin est antérieure à la date de début.";
     if ($zeWin->isNew()) {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $zeWin->getId());
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 }
@@ -85,9 +85,9 @@ if (($id = $zeWin->hasCollision()) !== false) {
     $_SESSION["error"] = "La fenêtre interfère avec une ou plusieurs fenêtres déjà définies&nbsp;:<br />\nFenêtre numéro " . implode(', ', $id);
 
     if ($zeWin->isNew()) {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $zeWin->getId());
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 }
@@ -101,9 +101,9 @@ if (! $zeWin->save()) {
     $_SESSION["error"] = nl2br($msg);
 
     if ($zeWin->isNew()) {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php");
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $zeWin->getId());
+        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 } else {
@@ -120,6 +120,6 @@ if (! $zeWin->save()) {
     $worker = $objectInstancier->get(ActesEnvoiFichierWorker::class);
     $workerScript->rebuildQueue($worker);
 
-    header("Location: " . WEBSITE_SSL . "/modules/actes/admin/actes_admin_window_edit.php?id=" . $zeWin->getId());
+    header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     exit();
 }

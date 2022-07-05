@@ -2,13 +2,13 @@
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {
-    Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", WEBSITE_SSL . "/modules/helios/index.php");
+    Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", Helpers::getLink("/modules/helios/index.php"));
 }
 
 $liste_id = Helpers::getVarFromPost("liste_id");
 
 if (!$liste_id) {
-    Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", WEBSITE_SSL . "/modules/helios/index.php");
+    Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", Helpers::getLink("/modules/helios/index.php"));
 }
 
 
@@ -23,7 +23,7 @@ foreach ($liste_id as $transaction_id) {
     try {
         $transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
         if ($transactionInfo['authority_id'] != $userInfo['authority_id']) {
-            Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction n°{$transactionInfo['id']}", WEBSITE_SSL . "/modules/helios/index.php");
+            Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction n°{$transactionInfo['id']}", Helpers::getLink("/modules/helios/index.php"));
         }
         $pesaller_path = $pesAllerRetriever->getPath($transactionInfo['sha1']);
         $signature = $heliosSignature->getInfoForSignature($pesaller_path);
@@ -32,7 +32,7 @@ foreach ($liste_id as $transaction_id) {
         $transactionInfo['isbordereau'] = $signature['isbordereau'];
         $transaction_list[] = $transactionInfo;
     } catch (Exception $e) {
-        Helpers::returnAndExit(1, "Impossible de signer la transaction $transaction_id : le fichier PES contient un bordereau qui n'a pas d'identifiant", WEBSITE_SSL . "/modules/helios/index.php");
+        Helpers::returnAndExit(1, "Impossible de signer la transaction $transaction_id : le fichier PES contient un bordereau qui n'a pas d'identifiant", Helpers::getLink("/modules/helios/index.php"));
     }
 }
 
@@ -49,7 +49,7 @@ $doc->openContent();
 
 
 $html .= "<h1>HELIOS - Signature de plusieurs PES</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . WEBSITE_SSL . "/modules/helios/\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 $html .= "<h2>Liste des fichiers à signer</h2>\n";
 
@@ -68,9 +68,9 @@ $i = 0;
 
 foreach ($transaction_list as $transactionInfo) {
     $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-    $html .= " <td headers=\"numero_acte\"><a href=\"" . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $transactionInfo['id'] . "\" title=\"Visualiser le PES\">" . $transactionInfo['id'] . "</a></td>\n";
+    $html .= " <td headers=\"numero_acte\"><a href=\"" . Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $transactionInfo['id']) . "\" title=\"Visualiser le PES\">" . $transactionInfo['id'] . "</a></td>\n";
     $html .= " <td headers=\"fichier_helios\">";
-    $html .= "<a href=\"" . WEBSITE_SSL . "/modules/helios/helios_download_file.php?id=" . $transactionInfo['id'] . "\" title=\"Télécharger le fichier\">" . $transactionInfo['filename'] . "</a>";
+    $html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $transactionInfo['id']) . "\" title=\"Télécharger le fichier\">" . $transactionInfo['filename'] . "</a>";
     $html .= "</td>\n";
     $html .= "</tr>\n";
 
@@ -136,7 +136,7 @@ $libersignController->displayLibersignJS();
         <div class="libersign"></div>
     </div>
 
-    <form action='<?php echo WEBSITE_SSL?>modules/helios/helios_transac_sign.php' id='form_sign' method='post'>
+    <form action='<?php echo Helpers::getLink("modules/helios/helios_transac_sign.php");?>' id='form_sign' method='post'>
         <input type='hidden' name='nb_signature'  value='<?php echo count($transaction_list)?>'/>
         <input type='hidden' name='id' id='form_sign_id' value='<?php echo 999 ?>'/>
 

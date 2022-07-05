@@ -31,10 +31,10 @@ $id = Helpers::getVarFromGet("id");
 $him = new User();
 $him->setId($id);
 if (! $him->init()) {
-    exitOrDisplayError($api, "Erreur lors de la modification de l'utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
+    exitOrDisplayError($api, "Erreur lors de la modification de l'utilisateur", Helpers::getLink("/admin/users/admin_users.php"));
 } else {
     if (! $me->canEditUser($id)) {
-        exitOrDisplayError($api, "Accès refusé pour la modification de cet utilisateur", WEBSITE_SSL . "/admin/users/admin_users.php");
+        exitOrDisplayError($api, "Accès refusé pour la modification de cet utilisateur", Helpers::getLink("/admin/users/admin_users.php"));
     }
 }
 
@@ -44,7 +44,7 @@ $user_info = $userSQL->getInfo($him->getId());
 $x509Certificate = new X509Certificate();
 $certificat_connexion_info = $x509Certificate->getInfo($user_info['certificate']);
 if ($userSQL->hasDoublon($him->getId(), $certificat_connexion_info, $user_info['login'], false)) {
-    exitOrDisplayError($api, "Impossible de supprimer le certificat car l'opération entrainerait des doublons", WEBSITE_SSL . "/admin/users/admin_user_edit.php?id={$him->getId()}");
+    exitOrDisplayError($api, "Impossible de supprimer le certificat car l'opération entrainerait des doublons", Helpers::getLink("/admin/users/admin_user_edit.php?id={$him->getId()}"));
 }
 $userSQL->deleteCertificateRGS2Etoiles($him->getId());
 
@@ -62,5 +62,5 @@ if ($api) {
 } else {
     $_SESSION["error"] = nl2br($msg);
     Helpers::purgeTempSession();
-    header("Location: " . WEBSITE_SSL . "/admin/users/admin_user_edit.php?id=" . $him->getId());
+    header("Location: " . Helpers::getLink("/admin/users/admin_user_edit.php?id=") . $him->getId());
 }

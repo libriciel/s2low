@@ -65,7 +65,7 @@ if (count($converted) > 0) {
 
 
 
-      //Helpers::returnAndExit(1, $zeBatch->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_batch_add.php");
+      //Helpers::returnAndExit(1, $zeBatch->getErrorMsg(), Helpers::getLink("/modules/actes/actes_batch_add.php"));
     } else {
         if (!$zeBatch->save()) {
             $msg = "Erreur lors de l'enregistrement du lot : " . $zeBatch->getErrorMsg();
@@ -74,7 +74,7 @@ if (count($converted) > 0) {
                 $msg .= "\nErreur de journalisation.";
             }
 
-    //      Helpers::returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_batch_add.php");
+    //      Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_batch_add.php"));
             $elvl = 1;
         } else {
             if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
@@ -93,7 +93,7 @@ if (count($converted) > 0) {
 
             $id = $zeBatch->getId();
             $msg = "Lot n&deg;" . $id . " cr&eacute;&eacute; avec succ&egrave;s.";
-         // Helpers::returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_batch_show.php?id=" . $zeBatch->getId(), $zeBatch->getId());
+         // Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_batch_show.php?id=") . $zeBatch->getId(), $zeBatch->getId());
         }
     }
 } else {

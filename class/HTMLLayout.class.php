@@ -2,12 +2,12 @@
 
 /**
  * \class HTMLLayout Layout.class.php
- * \brief Classe pour la génération de mise en page en HTML
- * \author Jérôme Schell <j.schell@alternancesoft.com>
+ * \brief Classe pour la gÃ©nÃ©ration de mise en page en HTML
+ * \author JÃ©rÃ´me Schell <j.schell@alternancesoft.com>
  * \date 17.02.2006
  *
  *
- * Cette classe fournit des méthodes pour la génération de mise en page en HTML
+ * Cette classe fournit des mÃ©thodes pour la gÃ©nÃ©ration de mise en page en HTML
  *
  * Modifications :
  * Auteur   Date       Commentaire
@@ -100,9 +100,9 @@ class HTMLLayout extends Layout
     }
 
     /**
-     * \brief Méthode permettant de construire un menu
-     * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
-     * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
+     * \brief MÃ©thode permettant de construire un menu
+     * \param $user objet (optionnel) : objet reprÃ©sentant l'utilisateur en cours pour personnalisation du menu
+     * \param $displayInline boolÃ©en (optionnel) : spÃ©cifie si le HTML doit Ãªtre affichÃ© (true) ou ajoutÃ© au corps du document (false, par dÃ©faut)
      */
     public function buildMenu(User $user = null, $displayInline = false)
     {
@@ -127,8 +127,8 @@ class HTMLLayout extends Layout
 
 
     /**
-     * \brief Méthode de construction du pied de page du document
-     * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
+     * \brief MÃ©thode de construction du pied de page du document
+     * \param $displayInline boolÃ©en (optionnel) : spÃ©cifie si le HTML doit Ãªtre affichÃ© (true) ou ajoutÃ© au corps du document (false, par dÃ©faut)
      */
     public function buildFooter($displayInline = false)
     {
@@ -146,7 +146,7 @@ class HTMLLayout extends Layout
         $versionning = VersionningFactory::getInstance();
         $versionningInfo = $versionning->getAllInfo();
 
-        $html .= "                    Offre S²LOW - <a href=\"" . WEBSITE_SSL . "/common/release_notes.php\">\n" .
+        $html .= "                    Offre SÂ²LOW - <a href=\"" . Helpers::getLink("/common/release_notes.php\">\n") .
             $versionningInfo['version-complete'] . "</a>\n";
         global $debut;
         if ($debut) {
@@ -163,9 +163,9 @@ class HTMLLayout extends Layout
     }
 
     /**
-     * \brief Méthode de construction de la zone de pagination
-     * \param $dataObj DataObject : objet représentant les données manipulées et contenant les informations de pagination
-     * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
+     * \brief MÃ©thode de construction de la zone de pagination
+     * \param $dataObj DataObject : objet reprÃ©sentant les donnÃ©es manipulÃ©es et contenant les informations de pagination
+     * \param $displayInline boolÃ©en (optionnel) : spÃ©cifie si le HTML doit Ãªtre affichÃ© (true) ou ajoutÃ© au corps du document (false, par dÃ©faut)
      */
     public function buildPager($dataObj, $displayInline = false)
     {
@@ -182,12 +182,12 @@ class HTMLLayout extends Layout
         $last_page = 0;
         $html = "            <div id=\"display-items\">\n";
 
-        // Nombre de résultats par page
+        // Nombre de rÃ©sultats par page
         $html .= "<h2>Afficher par page</h2>\n";
         $html .= "<ul class=\"pagination pagination-sm\">\n";
         foreach (array(10, 20, 50, 100) as $val) {
             if ($dataObj->get("displayItems") != $val) {
-                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
+                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " Ã©lÃ©ments par page\">" . $val . "</a></li>\n";
             } else {
                 $html .= "<li class=\"disabled\"><a href=\"#\">" . $val . "</a></li>\n";
             }
@@ -210,7 +210,7 @@ class HTMLLayout extends Layout
             $args = preg_replace("/&/", "&amp;", $args);
             $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
+            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page prÃ©cÃ©dente\">&laquo;</a></li>\n";
         } else {
             $html .= "<li class=\"disabled\"><a href=\"#\">&laquo;</a></li>\n";
         }
@@ -247,11 +247,11 @@ class HTMLLayout extends Layout
 
 
     /**
-     * \brief Méthode de construction d'un champ de formulaire de type select
-     * \param $name chaîne : Nom du champ de formulaire
-     * \param $data tableau : tableau ayant pour clef les valeurs et pour valeur les noms des entrées du select
-     * \param $selectedValue mixed : valeur actuelle du champ pour préselection
-     * \param $extraAttributes chaîne : chaîne de caractères contenant des attribut HTML à ajouter au select
+     * \brief MÃ©thode de construction d'un champ de formulaire de type select
+     * \param $name chaÃ®ne : Nom du champ de formulaire
+     * \param $data tableau : tableau ayant pour clef les valeurs et pour valeur les noms des entrÃ©es du select
+     * \param $selectedValue mixed : valeur actuelle du champ pour prÃ©selection
+     * \param $extraAttributes chaÃ®ne : chaÃ®ne de caractÃ¨res contenant des attribut HTML Ã  ajouter au select
      * \return Le code HTML du champ select
      * @deprecated
      */
@@ -279,10 +279,10 @@ class HTMLLayout extends Layout
 
 
     /**
-     * \brief Méthode de construction d'un champ de formulaire de type checkbox
-     * \param $name chaîne : Nom du champ de formulaire
-     * \param $value mixed : Valeur du champ, si évalué à "true" la checkbox sera précochée
-     * \param $extraAttributes chaîne : Attributs supplémentaires du champ HTML
+     * \brief MÃ©thode de construction d'un champ de formulaire de type checkbox
+     * \param $name chaÃ®ne : Nom du champ de formulaire
+     * \param $value mixed : Valeur du champ, si Ã©valuÃ© Ã  "true" la checkbox sera prÃ©cochÃ©e
+     * \param $extraAttributes chaÃ®ne : Attributs supplÃ©mentaires du champ HTML
      * \return Le code HTML du champ checkbox
      */
     public function getHTMLCheckbox($name, $value, $extraAttributes = "")
@@ -299,8 +299,8 @@ class HTMLLayout extends Layout
     }
 
     /**
-     * \brief Méthode de construction d'une ligne de tableau de liste d'attribut
-     * \param $name chaîne : Nom de l'attribut
+     * \brief MÃ©thode de construction d'une ligne de tableau de liste d'attribut
+     * \param $name chaÃ®ne : Nom de l'attribut
      * \param $value mixed : Valeur de l'attribut
      * \return Le code HTML de la ligne
      */
@@ -316,7 +316,7 @@ class HTMLLayout extends Layout
 
 
     /**
-     * \brief Méthode d'inclusion du message d'erreur stocké en session
+     * \brief MÃ©thode d'inclusion du message d'erreur stockÃ© en session
      */
     public function includeErrors()
     {
@@ -332,10 +332,10 @@ class HTMLLayout extends Layout
         ob_end_clean();
 
         //$this->addBody($html);
-        // Gros hack moisi à cause d'IE qui bug à l'affichage
-        // il faut "injecter" la zone d'erreur à l'intérieur de la zone "content"
-        //FIXME (EP), ce n'est pas un "bug" d'IE, la CSS ne défini la errorbox qu'a l'interieur du content
-        //FIXME c'est cette classe qui n'est pas très bien concu ...
+        // Gros hack moisi Ã  cause d'IE qui bug Ã  l'affichage
+        // il faut "injecter" la zone d'erreur Ã  l'intÃ©rieur de la zone "content"
+        //FIXME (EP), ce n'est pas un "bug" d'IE, la CSS ne dÃ©fini la errorbox qu'a l'interieur du content
+        //FIXME c'est cette classe qui n'est pas trÃ¨s bien concu ...
         $this->body = str_replace("role=\"main\">", "role=\"main\">\n" . $html, $this->body);
     }
 
@@ -373,7 +373,7 @@ class HTMLLayout extends Layout
 
 
     /**
-     * \brief Méthode générant l'affichage du document
+     * \brief MÃ©thode gÃ©nÃ©rant l'affichage du document
      */
 
     public function display()
@@ -381,7 +381,7 @@ class HTMLLayout extends Layout
         $this->includeErrors();
 
         if ($this->template) {
-            //Note EP 09/09/2015 : avant il y avait require_once, ce qui pour un template est ... spécial.
+            //Note EP 09/09/2015 : avant il y avait require_once, ce qui pour un template est ... spÃ©cial.
             //Du coup, ca passe pas les tests unitaire... je mets include, mais je sais pas ce que ca va donner...
             include(HTML_TEMPLATE_PATH . "/" . $this->template);
         } else {

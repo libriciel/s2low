@@ -194,7 +194,7 @@ class HelpersTest extends TestCase
     {
         $_SERVER["QUERY_STRING"] = "";
         $_SERVER["PHP_SELF"] = "";
-        $this->assertEquals(WEBSITE_SSL . "?foo=bar", Helpers::getURLWithParam(array('foo' => 'bar')));
+        $this->assertEquals(Helpers::getLink("?foo=bar"), Helpers::getURLWithParam(array('foo' => 'bar')));
     }
 
     public function testCreateDirTree()

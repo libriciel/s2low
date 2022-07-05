@@ -1,6 +1,6 @@
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jquery-1.11.3.min.js"></script>
-<script src="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="<?php echo WEBSITE_SSL ?>/javascript/jqueryui/jquery-ui.min.css" type="text/css" />
+<script src="<?php echo Helpers::getLink("/javascript/jquery-1.11.3.min.js"); ?>"></script>
+<script src="<?php echo Helpers::getLink("/javascript/jqueryui/jquery-ui.min.js"); ?>"></script>
+<link rel="stylesheet" href="<?php echo Helpers::getLink("/javascript/jqueryui/jquery-ui.min.css"); ?>" type="text/css" />
 
  <h1> Mail - Système de mail sécurisé</h1>
   <h2>Actions</h2>
@@ -30,7 +30,7 @@
           })
           .autocomplete({
               source: function( request, response ) {
-                  $.getJSON( "<?php echo WEBSITE_SSL ?>/modules/mail/liste-mail.php?", {
+                  $.getJSON( "<?php echo Helpers::getLink("/modules/mail/liste-mail.php?");?>", {
                       term: extractLast( request.term )
                   }, response );
 

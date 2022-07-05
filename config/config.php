@@ -229,7 +229,7 @@ if (!defined("VERIFICATION_SIREN")) {
 //Paramètre pour l'outil de signature Libersign
 
 if (!defined("LIBERSIGN_URL")) {
-        define("LIBERSIGN_URL", WEBSITE_SSL . "/libersign/");
+        define("LIBERSIGN_URL", Helpers::getLink("/libersign/"));
 }
 
 if (!defined("LIBERSIGN_HELP_URL")) {
@@ -237,7 +237,7 @@ if (!defined("LIBERSIGN_HELP_URL")) {
 }
 
 if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")) {
-    define("LIBERSIGN_EXTENSION_UPDATE_URL", WEBSITE_SSL . "/libersign/");
+    define("LIBERSIGN_EXTENSION_UPDATE_URL", Helpers::getLink("/libersign/"));
 }
 
 if (! defined("LIBERSIGN_INSTALLER")) {

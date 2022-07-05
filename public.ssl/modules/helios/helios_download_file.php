@@ -37,12 +37,12 @@ if (isset($transaction_id) && ! empty($transaction_id)) {
         $owner->init();
     } else {
         $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -51,7 +51,7 @@ $permission = new ModulePermission($serviceUser, "helios");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL . "/modules/helios/index.php");
+    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -72,7 +72,7 @@ try {
     $filepath = $pesAllerRetriever->getPath($sha1);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la récupération du fichier : " . $e->getMessage();
-    header("Location: " . WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=$transaction_id");
+    header("Location: " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));
     exit();
 }
 

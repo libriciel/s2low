@@ -72,7 +72,7 @@ ob_start();
 
     <p id="back-user-btn">
         <a
-            href="<?php echo WEBSITE_SSL ?>/modules/helios/helios_transac_show.php?id=<?php hecho($transaction_id) ?>"
+            href="<?php echo Helpers::getLink("modules/helios/helios_transac_show.php?id=$transaction_id") ?>"
             class="btn btn-default"
             title="Retour à la transaction"
             >

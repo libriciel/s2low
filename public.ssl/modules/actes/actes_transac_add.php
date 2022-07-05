@@ -26,7 +26,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/");
+    header("Location: " . Helpers::getLink("/modules/actes/"));
     exit();
 }
 
@@ -71,9 +71,9 @@ $trans = new ActesTransaction();
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . WEBSITE_SSL . "/custom/styles/date-picker.css\" />");
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 $doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
 
 $js = <<<EOJS
@@ -244,7 +244,7 @@ if (( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassificatio
         $html .= "<p>Pour forcer la récupération de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
     }
 
-    $html .= "<form action=\"" . WEBSITE_SSL . "/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n";
+    $html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n");
     $html .= "<div class=\"button_area\"><input class=\"submit_button btn btn-default\" type=\"submit\" value=\"Mise à jour classification\" /></div>\n";
     $html .= "</form>\n";
 }
@@ -257,7 +257,7 @@ $doc->openContent();
 
 // Zone contenu
 $html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()) {
@@ -273,7 +273,7 @@ if ($batchMode) {
     $html .= "Fichier courant&nbsp;: " . get_hecho($zeBatchFile->getDisplayName()) . "<br />\n</div>";
 }
 
-$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . WEBSITE_SSL . "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'";
+$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'");
 
 
 
@@ -296,7 +296,7 @@ $html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromS
 $html .= " </div>";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"classification_text\" class=\"control-label\">Classification : </label>\n";
-$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . WEBSITE_SSL . "/common/select_popup.php?type=classification', 'Selectattribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">";
+$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=classification', 'Selectattribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">");
 
 $classif1 = Helpers :: getFromSession("classif1", false);
 if (!empty($classif1)) {

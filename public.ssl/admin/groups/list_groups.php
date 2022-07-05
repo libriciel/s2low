@@ -38,7 +38,7 @@ ob_start();
 
     <h1>Groupes de collectivités</h1>
     <p id="back-transaction-btn">
-        <a href="<?php echo WEBSITE_SSL ?>/admin/groups/admin_groups.php" class="btn btn-default">Retour liste groupes</a>
+        <a href="<?php echo Helpers::getLink("/admin/groups/admin_groups.php"); ?>" class="btn btn-default">Retour liste groupes</a>
     </p>
 
     <table class="data-table table table-striped ">

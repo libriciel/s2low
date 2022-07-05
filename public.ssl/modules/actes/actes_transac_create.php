@@ -7,10 +7,10 @@ require_once(__DIR__ . "/../../../init/init.php");
 $errorMsg = "";
 $extraRedirect = "";
 if (empty($_POST)) {     // La taille est déterminée dans la conf apache par post_max_size, qui serait récupérable par ini_get_all()["post_max_size"]["local_value"] non par ACTES_ARCHIVE_MAX_SIZE.
-    Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 if ($tooManyAnnexes) {
-    Helpers :: returnAndExit(1, "Le nombre d'annexes est trop important (max : " . ini_get_all()["max_file_uploads"]["local_value"] . ")", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Le nombre d'annexes est trop important (max : " . ini_get_all()["max_file_uploads"]["local_value"] . ")", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Instanciation du module courant
@@ -30,14 +30,14 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->checkDroit($mod
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers :: returnAndExit(1, "Mode « papier » actif. Accès interdit.", WEBSITE_SSL . "/modules/actes/");
+    Helpers :: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
 
 $must_signed = Helpers::getVarFromPost("must_signed", true);
 
 $rgsConnexion = new RgsConnexion();
 if (! $must_signed && ! $rgsConnexion->isRgsConnexion()) {
-    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", WEBSITE_SSL . "/modules/actes/");
+    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", Helpers::getLink("/modules/actes/"));
 }
 
 
@@ -55,7 +55,7 @@ $number = Helpers :: getVarFromPost("number", true);
 
 // Vérification que le numéro respecte la regexp
 if (!preg_match(ActesTransaction::NUMBER_REGEXP, $number)) {
-    Helpers :: returnAndExit(1, "Le numéro n'est pas correct", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Le numéro n'est pas correct", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 $decision_date = Helpers :: getVarFromPost("decision_date", true);
@@ -135,7 +135,7 @@ if (isset($batchFileId) && is_numeric($batchFileId)) {
 
   // Les vérifs ont échouées
     if (!$batchMode) {
-        Helpers :: returnAndExit(1, "Échec de la transaction en mode lot.", WEBSITE_SSL . "/modules/actes/actes_batch_handle.php");
+        Helpers :: returnAndExit(1, "Échec de la transaction en mode lot.", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
     }
 }
 
@@ -209,7 +209,7 @@ $trans->set("broadcasted", 'FALSE');
 
 // Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
 if (!$trans->isUnique($myAuthority->getId())) {
-    Helpers :: returnAndExit(1, "Un acte portant le même numéro interne existe déjà dans la base de données.\nIl faut peut-être ajouter un suffixe au numéro.", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Un acte portant le même numéro interne existe déjà dans la base de données.\nIl faut peut-être ajouter un suffixe au numéro.", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Destination de création des fichiers
@@ -227,7 +227,7 @@ $fileImportError = false;
 $uploader = new FileUploader();
 
 if (!$batchMode && empty($actePDFFile)) {
-    Helpers:: returnAndExit(1, "Aucun fichier acte n'a été posté ", WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers:: returnAndExit(1, "Aucun fichier acte n'a été posté ", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Validation du type des fichiers uploadés
@@ -238,7 +238,7 @@ if (isset($actePDFFile) || $batchMode) {
         $acteFileName = $zeBatchFile->getDisplayName();
     } else {
         if (! $uploader->verifOK("acte_pdf_file")) {
-            Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " . $uploader->getLastError(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php");
+            Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " . $uploader->getLastError(), Helpers::getLink("/modules/actes/actes_transac_add.php"));
         }
         $acteFilePath = $actePDFFile["tmp_name"];
         $acteFileName = $actePDFFile["name"];
@@ -248,7 +248,7 @@ if (isset($actePDFFile) || $batchMode) {
         Helpers :: returnAndExit(
             1,
             "Erreur lors de la réception du fichier $acteFileName : typologie absente",
-            WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+            Helpers::getLink("/modules/actes/actes_transac_add.php")
         );
     }
 
@@ -296,7 +296,7 @@ if (isset($actePDFFile) || $batchMode) {
 // Fichiers des pièces jointes
 if (isset($acteAttachments)) {
     if (! $uploader->verifOKAll("acte_attachments")) {
-        Helpers :: returnAndExit(1, "Erreur lors de la réception du fichier : " . $uploader->getLastError(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+        Helpers :: returnAndExit(1, "Erreur lors de la réception du fichier : " . $uploader->getLastError(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
     }
 
     for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
@@ -308,7 +308,7 @@ if (isset($acteAttachments)) {
             Helpers :: returnAndExit(
                 1,
                 "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
-                WEBSITE_SSL . "/modules/actes/actes_transac_add.php"
+                Helpers::getLink("/modules/actes/actes_transac_add.php")
             );
         }
 
@@ -343,13 +343,13 @@ if (isset($acteAttachments)) {
 
 
 if ($fileImportError) {
-    Helpers :: returnAndExit(1, $errorMsg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, $errorMsg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Génération du fichier XML de l'acte
 $xml_name = $trans->getStdFileName($env, false);
 if (!$trans->generateMessageXMLFile($xml_name)) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 $env->addTransaction($trans);
@@ -361,20 +361,20 @@ $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 // Génération du fichier XML de l'enveloppe
 if (!$env->generateEnvelopeXMLFile($serialNumber)) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'enveloppe. " . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'enveloppe. " . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Création de l'archive .tar.gz
 if (!$env->generateArchiveFile()) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 if (!$env->checkArchiveSize()) {
-    Helpers :: returnAndExit(1, "la taille d'archive générée n'est pas conforme. filename=" . $env->get("file_path") . "\n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "la taille d'archive générée n'est pas conforme. filename=" . $env->get("file_path") . "\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 /*if (!$env->checkArchiveSanity()) {
-    Helpers :: returnAndExit(1, "L'archive générée porte des virus \n" . $env->getErrorMsg(), WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, "L'archive générée porte des virus \n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }*/
 
 
@@ -388,7 +388,7 @@ if (!$env->save()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 $trans->set("envelope_id", $env->getId());
@@ -406,7 +406,7 @@ if (!$trans->save()) {
 
     $env->deleteArchiveFile();
     $env->delete();
-    Helpers :: returnAndExit(1, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php" . $extraRedirect);
+    Helpers :: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 
@@ -457,8 +457,8 @@ if ($info_actes['last_status_id'] == ActesStatusSQL::STATUS_POSTE) {
 }
 
 if ($nextBatchFileId) {
-    Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_add.php?batchfile=" . $nextBatchFileId, $apiMsg);
+    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php?batchfile=") . $nextBatchFileId, $apiMsg);
 } else {
     Helpers :: purgeTempSession();
-    Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $trans->getId(), $apiMsg);
+    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(), $apiMsg);
 }

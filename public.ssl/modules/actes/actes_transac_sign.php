@@ -29,7 +29,7 @@ if (!$module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
 $nb_signature = Helpers::getVarFromPost("nb_signature");
 if ($nb_signature == 0) {
     $_SESSION["error"] = "Les signatures n'ont pas pu être récupérées";
-    header("Location:  " . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=$id");
+    header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id=$id"));
 }
 
 $actesSignature = $objectInstancier->get(ActesSignature::class);
@@ -70,13 +70,13 @@ try {
     }
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
-    header("Location:  " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
 }
 
 if (count($all_transaction_id) == 1) {
     $_SESSION["error"] = "La signature a été enregistrée";
-    header("Location:  " . WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id={$all_transaction_id[0]}");
+    header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id={$all_transaction_id[0]}"));
 } else {
     $_SESSION["error"] = "Les signatures ont été enregistrées";
-    header("Location:  " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
 }

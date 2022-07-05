@@ -1,0 +1,4 @@
+# config/packages/framework.yaml
+
+framework:
+  secret: '%env(APP_SECRET)%'

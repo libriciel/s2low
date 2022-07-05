@@ -78,7 +78,7 @@ class Authentification
         } catch (Exception $e) {
             $redirect = WEBSITE;
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
-                $redirect = WEBSITE_SSL . "/login.php";
+                $redirect = Helpers::getLink("/login.php");
             }
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
         }
@@ -101,7 +101,7 @@ class Authentification
         $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
 
         if (! in_array($user_id, $list_id)) {
-            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", WEBSITE_SSL . "/login.php");
+            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
         } // @codeCoverageIgnore
     }
 

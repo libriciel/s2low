@@ -47,7 +47,7 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL . "/modules/actes/index.php");
+    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 header("Content-type: text/plain");

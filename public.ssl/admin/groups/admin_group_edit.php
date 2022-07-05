@@ -41,7 +41,7 @@ if (! $me->isSuper()) {
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . WEBSITE_SSL . "/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 $doc->setTitle("Tedetis : " . $modStr . " groupe de collectivité");
 
@@ -53,10 +53,10 @@ $doc->openContent();
 
 $html .= "<h1>Gestion groupe de collectivités</h1>\n";
 
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . WEBSITE_SSL . "/admin/groups/admin_groups.php\" class=\"btn btn-default\">Retour liste groupes</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/admin/groups/admin_groups.php\" class=\"btn btn-default\">Retour liste groupes</a></p>\n");
 
 $html .= "<h2>" . $modStr . " groupe de collectivités</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/groups/admin_group_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $group->getValidationTrio('name', 'status') . ")\">\n";
+$html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/groups/admin_group_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $group->getValidationTrio('name', 'status') . ")\">\n");
 
 if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId() . "\" />\n";
@@ -94,7 +94,7 @@ $html .= "</div>\n";
 $html .= "</form>\n";
 
 if ($mod && $group->isEmpty($group->getId())) {
-    $html .= "<form action=\"" . WEBSITE_SSL . "/admin/groups/admin_group_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce groupe ?')\" method=\"post\">\n";
+    $html .= "<form action=\"" . Helpers::getLink("/admin/groups/admin_group_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce groupe ?')\" method=\"post\">\n");
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId() . "\" />\n";
     $html .= "<input type=\"submit\" value=\"Supprimer ce groupe\" class=\"btn btn-danger\" />\n";
     $html .= "</form>\n";
@@ -111,7 +111,7 @@ if ($api) {
 $html .= "<h2>Liste des SIREN autorisés pour ce groupe</h2>\n";
 
 if ($mod) {
-      $html .= "<form class=\"form form-horizontal\" action=\"" . WEBSITE_SSL . "/admin/groups/add-siren-controler.php\" method=\"post\">\n";
+      $html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/groups/add-siren-controler.php\" method=\"post\">\n");
       $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId() . "\" />\n";
       $html .= "<div class=\"form-group\">\n";
     $html .= "  <label for=\"add-siren\" class=\"col-md-3 control-label\">Ajouter un numéro SIREN</label>\n";

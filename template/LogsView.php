@@ -143,10 +143,10 @@
                         <?php echo nl2br(get_hecho($logEntry["message"])) ?>
                     </td>
                     <td headers="timestamp">
-                            <a href="<?php echo WEBSITE_SSL ?>/common/logs_get_timestamp.php?id=<?php echo $logEntry["id"] ?>"
+                            <a href="<?php echo Helpers::getLink("/common/logs_get_timestamp.php?id=" . $logEntry["id"]); ?>"
                                title="Télécharger une archive contenant l'entrée de journal n°<?php echo $logEntry["id"] ?> et sa signature"
                                class="icon">
-                                <img src="<?php echo WEBSITE_SSL ?>/custom/images/timestamping_icon.png" alt="timestamp" />
+                                <img src="<?php echo Helpers::getLink("/custom/images/timestamping_icon.png"); ?>" alt="timestamp" />
                             </a>
                     </td>
                 </tr>

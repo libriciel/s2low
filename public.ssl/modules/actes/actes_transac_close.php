@@ -42,7 +42,7 @@ if ($status == "valid") {
     $new_status_id = 19;
     $actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 } else {
-    Helpers::returnAndExit(1, "État incorrect.", WEBSITE_SSL . "/modules/actes/index.php");
+    Helpers::returnAndExit(1, "État incorrect.", Helpers::getLink("/modules/actes/index.php"));
 }
 
 
@@ -57,11 +57,11 @@ foreach ($liste_id as $id) {
         $owner = new User($trans->get("user_id"));
         $owner->init();
     } else {
-        Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", WEBSITE_SSL . "/modules/actes/index.php");
+        Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink("/modules/actes/index.php"));
     }
 
     if ($trans->get("type") != 1) {
-        Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $rel_trans->getId());
+        Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $rel_trans->getId());
     }
 
     if (! in_array($trans->get('last_status_id'), array(4,5,14,20,18))) {
@@ -91,7 +91,7 @@ foreach ($liste_id as $id) {
 
     // Vérification des permissions
     if ($status != 'sae' && (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->getId() == $envelope->get("user_id") && $me->checkDroit($module->get("name"), 'CS')))) {
-        Helpers::returnAndExit(1, "Accès refusé.", WEBSITE_SSL . "/modules/actes/index.php");
+        Helpers::returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));
     }
 
     if ($new_status_id == 19) {
@@ -122,9 +122,9 @@ foreach ($liste_id as $id) {
 }
 
 if (count($liste_id) == 1) {
-    $retour = WEBSITE_SSL . "/modules/actes/actes_transac_show.php?id=" . $liste_id[0];
+    $retour = Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $liste_id[0];
 } else {
-    $retour = WEBSITE_SSL . "/modules/actes/index.php";
+    $retour = Helpers::getLink("/modules/actes/index.php");
 }
 
 Helpers::returnAndExit($status, $sortie, $retour);

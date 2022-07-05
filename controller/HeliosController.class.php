@@ -48,14 +48,14 @@ class HeliosController extends Controller
         try {
             $id_transaction = $this->import($userId);
         } catch (Exception $e) {
-            Helpers :: returnAndExit(1, $e->getMessage(), WEBSITE_SSL . "/modules/helios/helios_fichier_import.php");
+            Helpers :: returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/helios/helios_fichier_import.php"));
         }
 
 
 
 
         $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-        Helpers :: returnAndExit(0, $msg, WEBSITE_SSL . "/modules/helios/helios_transac_show.php?id=" . $id_transaction);
+        Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id_transaction);
     }
 
     public function import($user_id)
