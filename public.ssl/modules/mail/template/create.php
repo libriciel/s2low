@@ -30,7 +30,7 @@
           })
           .autocomplete({
               source: function( request, response ) {
-                  $.getJSON( "<?php echo Helpers::getLink("/modules/mail/liste-mail.php?");?>, {
+                  $.getJSON( "<?php echo Helpers::getLink("/modules/mail/liste-mail.php?");?>", {
                       term: extractLast( request.term )
                   }, response );
 
