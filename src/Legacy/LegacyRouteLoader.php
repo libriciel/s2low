@@ -2,6 +2,7 @@
 
 namespace S2low\Legacy;
 
+use SplFileInfo;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Route;
@@ -25,16 +26,18 @@ class LegacyRouteLoader extends Loader
         return preg_replace("#(?<!vfs:)//#", "/", $path);
     }
 
-    private function findLegacyRoutes(string $baseDirPath): array
+    private function findLegacyRoutes(string $baseDirPath): Finder
     {
-        $finder = new Finder();
-        $results = [];
-        foreach ($finder->files()->in($baseDirPath)->name("*.php") as $file) {
-            if (!in_array($file->getRelativePathname(), ["index.php","index.old.php"])) { // Pas réussi à le faire avec
-                $results[] = $file;                                                       // le finder seul ...
-            }
-        }
-        return $results;
+        $excludedFiles = [
+            $this->trimPathToAccomodateVFS("$baseDirPath/index.php"),
+            $this->trimPathToAccomodateVFS("$baseDirPath/index.old.php")
+            ];
+        return (new Finder())->files()
+            ->in($baseDirPath)
+            ->name("*.php")
+            ->filter(function (SplFileInfo $file) use ($excludedFiles) {
+                return !in_array($file->getPathname(), $excludedFiles);
+            });
     }
     /**
      * @inheritDoc
@@ -72,11 +75,6 @@ class LegacyRouteLoader extends Loader
         return 'legacyroute' === $type;
     }
 
-    /**
-     * @param mixed $legacyScriptFile
-     * @param \Symfony\Component\Routing\RouteCollection $collection
-     * @return void
-     */
     private function addRouteForFile(mixed $legacyScriptFile, RouteCollection $collection): void
     {
         $relativePathname = $legacyScriptFile->getRelativePathname();
