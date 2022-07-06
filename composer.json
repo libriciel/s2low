@@ -37,7 +37,8 @@
     "squizlabs/php_codesniffer": "^3.7",
     "ezyang/htmlpurifier": "^4.14",
     "symfony/symfony": "6.1",
-    "egulias/email-validator": "^3.2"
+    "egulias/email-validator": "^3.2",
+    "masterminds/html5": "^2.7"
   },
 
   "require-dev": {

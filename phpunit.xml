@@ -23,4 +23,7 @@
       <directory>tests</directory>
     </testsuite>
   </testsuites>
+  <php>
+    <server name = "KERNEL_CLASS" value="S2low\Kernel" />
+  </php>
 </phpunit>

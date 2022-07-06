@@ -8,7 +8,7 @@ if (! $me->authenticate()) {
     header("Location: " . WEBSITE);
     exit();
 }
-
+$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 /** @var MessageAdminSQL $messageAdminSQL */
 $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
 $messageAdmin = $messageAdminSQL->getPublishedMessage();
@@ -84,5 +84,4 @@ $doc->closeContent();
 $doc->closeContainer();
 
 $doc->buildFooter();
-
 $doc->display();
