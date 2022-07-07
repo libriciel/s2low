@@ -18,11 +18,10 @@ class MailIntegrationTests extends WebTestCase
     }
 
 
-    public function testBasic(){
+    public function testBasic()
+    {
 
         $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-
-        $environment = $objectInstancier->get(\Environnement::class);
 
         $sqlQuery = $objectInstancier->get(\SQLQuery::class);
         $sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
@@ -44,17 +43,16 @@ class MailIntegrationTests extends WebTestCase
             $serverVariables
         );
         $environment = $objectInstancier->get(\Environnement::class);
-        foreach ($serverVariables as $key=>$serverVariable){        //Solution sale à deux problèmes :
-            $environment->server()->set($key,$serverVariable);      // 1/ L'object Instancier est setté *avant* les tests ...
+        foreach ($serverVariables as $key => $serverVariable) {        //Solution sale à deux problèmes :
+            $environment->server()->set($key, $serverVariable);      // 1/ L'object Instancier est setté *avant* les tests ...
         }                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        $crawler = $client->request('GET','/index.php');
+        $crawler = $client->request('GET', '/index.php');
         $this->assertMatchesRegularExpression(
             "#\<title\>Tiers de téléransmission multiprotocoles\<\/title\>#",
             $crawler->html()
-            );
+        );
         $this->assertResponseIsSuccessful();
         //$this->assertSelectorTextContains('h1', 'Hello World');
     }
-
 }
