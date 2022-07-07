@@ -3,6 +3,7 @@
 ## Évolution
 - Passage en PHP 8.1 / Ubuntu 22.04 et adaptation du code
 - Passage en UTF-8 et adaptation du code
+- Modification de la licence de Cecill version 2 vers AGPL version 3
 
 # 4.3.18 - 2022-06-13
 
