@@ -1,6 +1,7 @@
 {
   "name": "s2low/s2low",
   "version": "4.3.4",
+  "license": "AGPL-3.0-only",
   "require": {
     "symfony/filesystem": "*",
     "monolog/monolog": "^1.23",
