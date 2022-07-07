@@ -2,21 +2,27 @@
 
 namespace S2low\Tests\Services;
 
+use Environnement;
+use ObjectInstancier;
 use ObjectInstancierFactory;
+use PemCertificateFactory;
+use SQLQuery;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MailIntegrationTests extends WebTestCase
 {
-    private \ObjectInstancier $objectInstancier;
+    private ObjectInstancier $objectInstancier;
     /** @var \SQLQuery */
     private $sqlQuery;
+    private PemCertificateFactory $pemCertificateFactory;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
         $this->objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $this->sqlQuery = $this->objectInstancier->get(\SQLQuery::class);
-        $this->x509Utils = new \X509Certificate();
+        $this->sqlQuery = $this->objectInstancier->get(SQLQuery::class);
+        $this->pemCertificateFactory = new PemCertificateFactory();
     }
 
     public function setUp(): void
@@ -25,15 +31,9 @@ class MailIntegrationTests extends WebTestCase
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
     }
 
-    public function GetPemWithoutBegin($pem_data)
-    {
-        $begin = "CERTIFICATE-----";
-        $end = "-----END";
-        $pem_data = mb_substr($pem_data, mb_strpos($pem_data, $begin) + mb_strlen($begin));
-        $pem_data = trim(mb_substr($pem_data, 0, mb_strpos($pem_data, $end)));
-        return $pem_data;
-    }
-
+    /**
+     * @throws \Exception
+     */
     public function setUpUser(string $certificatPem, string $certificatHash)
     {
         $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
@@ -47,53 +47,12 @@ class MailIntegrationTests extends WebTestCase
         $this->sqlQuery->query($sql3);
     }
 
-
-    public function testAccessIndexWithRightCertificate()
-    {
-        list($certificatPem, $certificatHash, $certificatSansBegin) = $this->getCertificateParameters(
-            __DIR__ . "/../../test/api/Eric_Pommateau_RGS_2_etoiles.pem"
-        );
-
-        $this->setUpUser($certificatPem, $certificatHash);
-        $client = $this->setUpClient($certificatPem, $certificatSansBegin);                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        $crawler = $client->request('GET', '/index.php');
-        $this->assertMatchesRegularExpression(
-            "#\<title\>Tiers de téléransmission multiprotocoles\<\/title\>#",
-            $crawler->html()
-        );
-        $this->assertResponseIsSuccessful();
-    }
-
     /**
-     * @return void
-     * @throws \Exception
-     */
-    public function testAccessIndexWithWrongCertificate()
-    {
-        list($certificatPem, $certificatHash, $certificatSansBegin) = $this->getCertificateParameters(
-            __DIR__ . "/../../test/api/Eric_Pommateau_RGS_2_etoiles.pem"
-        );
-        list($WrongCertificatPem, $WrongCertificatHash, $WrongCertificatSansBegin) = $this->getCertificateParameters(
-            __DIR__ . "/../../test/PHPUnit/controller/fixtures/user1.pem"
-        );
-
-        $this->setUpUser($certificatPem, $certificatHash);
-
-        $client = $this->setUpClient($WrongCertificatPem, $WrongCertificatSansBegin);
-        $crawler = $client->request('GET', '/index.php');
-        $this->assertMatchesRegularExpression(
-            "#Le certificat n'est pas valide : aucun compte trouvé#",
-            $crawler->html()
-        );
-    }
-
-    /**
-     * @param bool|string $certificatPem
+     * @param string $certificatPem
      * @param string $certificatSansBegin
      * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
      */
-    private function setUpClient(string $certificatPem, string $certificatSansBegin): \Symfony\Bundle\FrameworkBundle\KernelBrowser
+    private function setUpClient(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
         $serverVariables = array(
             'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
@@ -108,7 +67,7 @@ class MailIntegrationTests extends WebTestCase
             $serverVariables
         );
         /** @var \Environnement $environment */
-        $environment = $this->objectInstancier->get(\Environnement::class);
+        $environment = $this->objectInstancier->get(Environnement::class);
         $environment->session()->set('id_login', null);              // L'environnement n'est pas RàZ entre deux tests !
         foreach ($serverVariables as $key => $serverVariable) {     //Solution sale à deux problèmes :
             $environment->server()->set($key, $serverVariable);     // 1/ L'object Instancier est setté *avant* les tests ...
@@ -117,14 +76,48 @@ class MailIntegrationTests extends WebTestCase
     }
 
     /**
-     * @return array
      * @throws \Exception
      */
-    private function getCertificateParameters(string $certificatePath): array
+    public function testAccessIndexWithRightCertificate()
     {
-        $certificatPem = file_get_contents($certificatePath);
-        $certificatHash = $this->x509Utils->getInfo($certificatPem)["certificate_hash"];
-        $certificatSansBegin = $this->GetPemWithoutBegin($certificatPem);
-        return array($certificatPem, $certificatHash, $certificatSansBegin);
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . "/../../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+        );
+
+        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
+
+        $crawler = $client->request('GET', '/index.php');
+        $this->assertMatchesRegularExpression(
+            "#<title>Tiers de téléransmission multiprotocoles</title>#",
+            $crawler->html()
+        );
+        $this->assertResponseIsSuccessful();
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function testAccessIndexWithWrongCertificate(): void
+    {
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . "/../../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+        );
+        $wrongCertificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . "/../../test/PHPUnit/controller/fixtures/user1.pem")
+        );
+
+        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+
+        $client = $this->setUpClient(
+            $wrongCertificatePem->getContent(),
+            $wrongCertificatePem->getContentStrippedFromBegin()
+        );
+        $crawler = $client->request('GET', '/index.php');
+        $this->assertMatchesRegularExpression(
+            "#Le certificat n'est pas valide : aucun compte trouvé#",
+            $crawler->html()
+        );
     }
 }
