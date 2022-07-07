@@ -53,6 +53,5 @@ class MailIntegrationTests extends WebTestCase
             $crawler->html()
         );
         $this->assertResponseIsSuccessful();
-        //$this->assertSelectorTextContains('h1', 'Hello World');
     }
 }
