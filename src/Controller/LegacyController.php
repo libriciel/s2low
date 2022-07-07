@@ -44,7 +44,11 @@ class LegacyController extends AbstractController
 
                 chdir(dirname($legacyScript));
 
-                require $legacyScript;
+                try {
+                    require $legacyScript;
+                } catch (\Exception $exception) {
+                    var_dump($exception->getMessage());
+                }
             }
         );
     }
