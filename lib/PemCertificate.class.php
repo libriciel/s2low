@@ -8,7 +8,6 @@ class PemCertificate
     private $dateValidFrom;
     /** @var DateTime  */
     private $dateValidTo;
-    private string $hash;
 
     public function __construct(string $content, array $x509)
     {
