@@ -5,7 +5,18 @@ class LegacyObjectsManager
     /**
      * @return array
      */
-    public static function getLegacyObjects(): array
+    public static function getLegacyObjectInstancier(): ObjectInstancier
+    {
+        if (!ObjectInstancierFactory::issetObjectInstancier()) {
+            self::setLegacyObjectInstancier();
+        }
+        return ObjectInstancierFactory::getObjetInstancier();
+    }
+
+    /**
+     * @return array
+     */
+    private static function setLegacyObjectInstancier(): void
     {
         if (TESTING_ENVIRONNEMENT) {
             $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
@@ -220,6 +231,7 @@ class LegacyObjectsManager
                 new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         }
-        return array($objectInstancier, $session, new FrontController($objectInstancier));
+
+        $objectInstancier->set('html', '');
     }
 }

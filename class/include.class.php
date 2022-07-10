@@ -58,9 +58,3 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
         sleep($seconds);
     }
 }
-
-
-//Cette variable est utilisée partout sans être initialisé...
-$html = "";
-
-$jsonOutput = new JSONoutput();
