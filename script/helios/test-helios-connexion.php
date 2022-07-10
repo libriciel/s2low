@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . "/../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
 
 $host = HELIOS_FTP_SERVER;
 $port = HELIOS_FTP_PORT;
