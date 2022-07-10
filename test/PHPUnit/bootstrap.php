@@ -11,23 +11,6 @@ define("TIMESTAMPING_PRIV_KEY_PASS", __DIR__ . "/fixtures/timestamp_certificates
 
 require_once(__DIR__ . "/../../init/init.php");
 
-/* Uniquement pour la mise à jour de la base de test...*/
-$sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-$sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
-$sqlQuery->setDatabaseHost(DB_HOST_TEST);
-$sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
-
-//$objectInstancier = new ObjectInstancier();
-/** @var ObjectInstancier $objectInstancier */
-$objectInstancier->set('SQLQuery', $sqlQuery);
-
-$postgreSQLControler = $objectInstancier->get('PostgreSQLController');
-
-$postgreSQLControler->alterDatabase(function ($message) {
-    echo $message . "\n";
-});
-
-
 /** @deprecated  */
 class PHPUnit_Framework_TestCase extends \PHPUnit\Framework\TestCase
 {

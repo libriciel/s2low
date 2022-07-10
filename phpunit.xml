@@ -22,7 +22,13 @@
       <directory>test/PHPUnit</directory>
       <directory>tests</directory>
     </testsuite>
+    <testsuite name="S2low_integration">
+      <directory>integration_tests</directory>
+    </testsuite>
   </testsuites>
+  <listeners>
+    <listener class="S2low\tests\Base\S2lowTestListener" file="./tests/Base/S2lowTestListener.php"/>
+  </listeners>
   <php>
     <server name = "KERNEL_CLASS" value="S2low\Kernel" />
   </php>

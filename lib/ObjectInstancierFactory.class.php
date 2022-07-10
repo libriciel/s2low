@@ -19,4 +19,9 @@ class ObjectInstancierFactory
     {
         return isset(self::$objetInstancier);
     }
+
+    public static function resetObjectInstancier(): void
+    {
+        self::$objetInstancier = null;
+    }
 }

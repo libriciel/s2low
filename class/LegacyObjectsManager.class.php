@@ -234,4 +234,9 @@ class LegacyObjectsManager
 
         $objectInstancier->set('html', '');
     }
+
+    public static function resetObjectInstancier()
+    {
+        ObjectInstancierFactory::resetObjectInstancier();
+    }
 }

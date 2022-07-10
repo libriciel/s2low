@@ -6,9 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MailIntegrationTest extends WebTestCase
 {
-    private ObjectInstancier $objectInstancier;
     /** @var \SQLQuery */
-    private $sqlQuery;
+    private SQLQuery $sqlQuery;
     private PemCertificateFactory $pemCertificateFactory;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
@@ -19,8 +18,14 @@ class MailIntegrationTest extends WebTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $this->sqlQuery = $this->objectInstancier->get(SQLQuery::class);
+        LegacyObjectsManager::resetObjectInstancier();
+        $_SESSION = [];
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
+        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
+        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+        $this->sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class,$this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
     }
@@ -56,17 +61,13 @@ class MailIntegrationTest extends WebTestCase
             'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
 
         );
-        $client = static::createClient(
+            foreach ($serverVariables as $key=>$value){
+                $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
+            }
+        return static::createClient(
             array(),
             $serverVariables
         );
-        /** @var \Environnement $environment */
-        //$environment = $this->objectInstancier->get(Environnement::class);
-        //$environment->session()->set('id_login', null);              // L'environnement n'est pas RàZ entre deux tests !
-        //foreach ($serverVariables as $key => $serverVariable) {     //Solution sale à deux problèmes :
-        //    $environment->server()->set($key, $serverVariable);     // 1/ L'object Instancier est setté *avant* les tests ...
-        //}                                                           // 2/ Le client ne modifie pas la variable _SERVER
-        return $client;
     }
 
     /**
@@ -81,6 +82,7 @@ class MailIntegrationTest extends WebTestCase
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
+        ObjectInstancierFactory::resetObjectInstancier();
         $crawler = $client->request('GET', '/index.php');
         $this->assertMatchesRegularExpression(
             "#<title>Tiers de téléransmission multiprotocoles</title>#",
@@ -103,6 +105,8 @@ class MailIntegrationTest extends WebTestCase
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+
+        ObjectInstancierFactory::resetObjectInstancier();
 
         $client = $this->setUpClient(
             $wrongCertificatePem->getContent(),

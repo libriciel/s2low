@@ -15,23 +15,6 @@ class LegacyController extends AbstractController
         $serverVariablesToSet['SCRIPT_NAME'] = $requestPath;
         $serverVariablesToSet['SCRIPT_FILENAME'] = $legacyScript;
 
-        /*if($this->getParameter('kernel.environment')==='test'){ // Le client Symfony ne fonctionne pas si ces variables ne sont pas set ...
-            foreach (                                                 // TODO : vérifier s'il faut
-                                                                      // 1/ modifier le chargement de l'environnement pour qu'il s'effectue plus tard
-                                                                      // 2/ supprimer
-                [                                                     // Ces variables sont set au bootstrap des tests unitaires TROP TOT
-                    'SSL_CLIENT_VERIFY',
-                    'SSL_CLIENT_S_DN',
-                    'SSL_CLIENT_I_DN',
-                    'SSL_CLIENT_CERT',
-                    'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION',
-                    'TESTING_CERTIFICATE_HASH'
-                ]
-                as $key){
-                $serverVariablesToSet[$key] = $request->server->get($key);
-            }
-        }*/
-
         return new StreamedResponse(
             function () use ($legacyScript, $serverVariablesToSet) {
                 //$_SERVER['PHP_SELF'] = $requestPath;
