@@ -14,6 +14,7 @@
     <file>./cron</file>
     <file>./docker-resources</file>
     <file>./init</file>
+    <file>./integration_tests</file>
     <file>./lib</file>
     <file>./model</file>
     <file>./public</file>

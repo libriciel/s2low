@@ -1,6 +1,5 @@
 <?php
 
-
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -25,7 +24,7 @@ class MailIntegrationTest extends WebTestCase
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
         $this->sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
-        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class,$this->sqlQuery);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
     }
@@ -61,9 +60,9 @@ class MailIntegrationTest extends WebTestCase
             'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
 
         );
-            foreach ($serverVariables as $key=>$value){
-                $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
-            }
+        foreach ($serverVariables as $key => $value) {
+            $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
+        }
         return static::createClient(
             array(),
             $serverVariables
