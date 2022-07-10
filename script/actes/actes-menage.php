@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier,$sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class]
+    );
 
 throw new Exception("Script désactivé pour le moment. Avec le stockage objet, on peut se poser la question du ménage...");
 

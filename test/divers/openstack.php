@@ -2,13 +2,13 @@
 
 require_once(__DIR__ . "/../../init/init.php");
 
+$openStackSwiftWrapper = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get(OpenStackSwiftWrapper::class);
+
 $file_content = mt_rand(0, mt_getrandmax());
 $filename = tempnam(sys_get_temp_dir(), "test_s2low_openstack_");
 echo "Création du fichier $filename\n";
 file_put_contents($filename, $file_content);
-
-/** @var OpenStackSwiftWrapper $openStackSwiftWrapper */
-$openStackSwiftWrapper = $objectInstancier->get("OpenStackSwiftWrapper");
 
 
 $debut = microtime(true) . "\n";

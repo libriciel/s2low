@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($pesAllerRetriever,$workerScript, $heliosTransactionSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [PesAllerRetriever::class, WorkerScript::class, HeliosTransactionsSQL::class]
+    );
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 // Instanciation du module courant
@@ -30,9 +34,6 @@ if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
 
 
 $nb_signature = Helpers :: getVarFromPost("nb_signature");
-
-/** @var PesAllerRetriever $pesAllerRetriever */
-$pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
 
 
 
@@ -85,7 +86,6 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     file_put_contents($new_file_path, $new_pes_content);
 
 
-    $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
     $heliosTransactionSQL->setTransactionInCloudRemove($id);
 
     $trans->set('sha1', $new_sha1);
@@ -104,7 +104,6 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
     $heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
 
-    $workerScript = $objectInstancier->get(WorkerScript::class);
     $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id);
     $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id);
 }

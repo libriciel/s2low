@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($objectInstancier, $html ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, 'html']
+    );
 
 $me = new User();
 

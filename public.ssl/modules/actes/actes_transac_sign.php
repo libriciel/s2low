@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($actesSignature, $actesTransactionsSQL, $actesEnvelopeSQL, $workerScript ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ActesSignature::class, ActesTransactionsSQL::class, ActesEnvelopeSQL::class, WorkerScript::class]
+    );
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
@@ -32,8 +36,6 @@ if ($nb_signature == 0) {
     header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id=$id"));
 }
 
-$actesSignature = $objectInstancier->get(ActesSignature::class);
-
 $all_transaction_id = array();
 
 try {
@@ -51,13 +53,10 @@ try {
 
         $verifyPKCS7Signature->verifyCertificate($signature);
 
-        $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
-        $actesEnvelopeSQL = $objectInstancier->get(ActesEnvelopeSQL::class);
         $actesEnvelopeSQL->setTransactionInCloudRemove($transaction_info['envelope_id']);
 
-        $workerScript = $objectInstancier->get(WorkerScript::class);
         $workerScript->putJobByClassName(
             ActesStoreEnveloppeWorker::class,
             $transaction_info['envelope_id']

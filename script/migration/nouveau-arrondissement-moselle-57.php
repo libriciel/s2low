@@ -1,9 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
-
-
-$sqlQuery = $objectInstancier->get(SQLQuery::class);
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if ($argc > 1 && $argv[1] == 'do') {
     $do = true;

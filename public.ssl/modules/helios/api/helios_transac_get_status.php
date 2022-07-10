@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $transId = (int) Helpers::getVarFromGet("transaction");
 

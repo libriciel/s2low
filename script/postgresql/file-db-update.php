@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$postgreSQLController = LegacyObjectsManager::getLegacyObjectInstancier()->get(PostgreSQLController::class);
 
 # Ce script à utiliser en développement est utiliser pour mettre à jour les fichiers de définition de la base de données
 

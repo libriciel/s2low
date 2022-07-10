@@ -1,6 +1,12 @@
 <?php
 
 require_once("init.php");
+
+list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+    );
+
 if (empty($droit_specific)) {
     $droit_specific = array();
 }

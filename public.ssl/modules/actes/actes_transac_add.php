@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($actesTypePJSQL, $html) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ActesTypePJSQL::class, 'html']
+    );
 
 // Instanciation du module courant
 $module = new Module();
@@ -54,9 +58,6 @@ if (isset($batchFileId) && is_numeric($batchFileId)) {
         }
     }
 }
-
-
-$actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
 
 
 $type_pj_list = json_encode($actesTypePJSQL->getAllByNature());

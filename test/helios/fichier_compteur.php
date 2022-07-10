@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $fc = new FichierCompteur("/tmp/fichier_compteur.txt");
 

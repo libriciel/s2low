@@ -1,5 +1,9 @@
 <?php
 require_once("../../../init/init.php");
+list($heliosSAEController, $pesAllerRetriever, $libersignController ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [HeliosSAEController::class, PesAllerRetriever::class, LibersignController::class]
+    );
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -212,7 +216,6 @@ if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
     $actionHtml .= "</div>\n</form>\n";
 }
 
-$heliosSAEController = $objectInstancier->get(HeliosSAEController::class);
 $status_cible_list = $heliosSAEController->getActionPossible($currentStatusId);
 foreach ($status_cible_list as $new_status_id) {
     $libelle_status = HeliosStatusSQL::getStatusLibelle($new_status_id);
@@ -276,13 +279,11 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"), 'CS')) {
 
     $heliosSignature = new HeliosSignature();
     try {
-        $pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
         $pesaller_path = $pesAllerRetriever->getPath($trans->get('sha1'));
         $signatureInfo = $heliosSignature->getInfoForSignature($pesaller_path);
         $id_pes = $signatureInfo['bordereau_id'];
 
         ob_start();
-        $libersignController = new LibersignController($objectInstancier);
         $libersignController->displayLibersignJS();
 
         ?>

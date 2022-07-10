@@ -2,6 +2,10 @@
 
 // Configuration
 require_once("../../../init/init.php");
+list($cloudStorageFactory,$heliosRetourSQL,$authoritySQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [CloudStorageFactory::class, HeliosRetourSQL::class, AuthoritySQL::class]
+    );
 
 // Instanciation du module courant
 $module = new Module();
@@ -28,10 +32,8 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 $retourId = Helpers :: getVarFromGet("id");
 
 // Vérification des permissions
-$heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
 $info = $heliosRetourSQL->getInfo($retourId);
 
-$authoritySQL = new AuthoritySQL($sqlQuery);
 $authtority_info = $authoritySQL->getInfo($info['authority_id']);
 
 if (! $me->isSuper()) {
@@ -51,7 +53,7 @@ $entity->init();
 $filename = $entity->get("filename");
 
 try {
-    $pesRetourCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESRetourCloudStorage::class);
+    $pesRetourCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESRetourCloudStorage::class);
     $filepath = $pesRetourCloudStorage->getPath($retourId);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : " . $e->getMessage();

@@ -8,6 +8,7 @@
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si le plus vieil acte ï¿½ l'ï¿½tat postï¿½ ï¿½ plus d'une heure
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Transaction actes a l etat transmis";

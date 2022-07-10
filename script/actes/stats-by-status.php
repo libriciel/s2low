@@ -8,6 +8,10 @@
 // la sortie est au format Influxdb
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class]
+    );
 $actesStatuts = $objectInstancier->get(ActesStatusSQL::class)->getAllStatus();
 
 if ($argc < 2) {

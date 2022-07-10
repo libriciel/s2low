@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";

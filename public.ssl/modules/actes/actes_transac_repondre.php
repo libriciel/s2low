@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($actesTypePJSQL, $html) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ActesTypePJSQL::class, 'html']
+    );
 
 $batchMode = false;
 
@@ -58,7 +62,6 @@ $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js
 
 
 
-$actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
 $type_pj_list = $actesTypePJSQL->getListByNature()[$trans->get('nature_code')];
 
 

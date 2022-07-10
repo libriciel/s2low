@@ -1,9 +1,11 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($actesTransactionSQL,$sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ActesTransactionsSQL::class, SQLQuery::class]
+    );
 
-
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
 $sql = "
 SELECT transaction_id FROM actes_transactions  

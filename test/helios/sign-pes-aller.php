@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 if (empty($argv[2])) {
     echo "Usage : {$argv[0]} entree.xml sortie.xml\n";
@@ -19,7 +20,7 @@ $xadesSignature = new XadesSignature(
     EXTENDED_VALIDCA_PATH,
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
+    (new VerifyPemCertificateFactory())->get(EXTENDED_VALIDCA_PATH)
 );
 
 $xadesSignatureProperties = new XadesSignatureProperties();

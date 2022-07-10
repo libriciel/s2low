@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
-
+$logger = LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
 $me = new User();
 

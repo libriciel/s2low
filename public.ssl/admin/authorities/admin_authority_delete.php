@@ -18,6 +18,7 @@
 
 // Configuration
 require_once("../../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 // Suppression collectivité désactivée
 header("Location: " . WEBSITE);

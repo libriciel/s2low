@@ -3,6 +3,7 @@
 //Liste les clients qui utilisent S2low entre minuit et six heures du matin
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 class ConnexionTardiveSQL

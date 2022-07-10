@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($authoritySQL,$s2lowLogger) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([AuthoritySQL::class,S2lowLogger::class]);
 
 $host = HELIOS_FTP_SERVER;
 $port = HELIOS_FTP_PORT;
@@ -12,7 +14,6 @@ $helios_sending_mode_demo = HELIOS_SENDING_MODE_DEMO;
 $helios_ftp_passive_mode = HELIOS_FTP_PASSIVE_MODE;
 $helios_ftp_passtrans_mode = HELIOS_FTP_PASSTRANS_MODE;
 
-$authoritySQL = $objectInstancier->get(AuthoritySQL::class);
 $authorityInfo = $authoritySQL->getInfo(2);
 $p_dest = $authorityInfo["helios_ftp_dest"];
 
@@ -23,6 +24,7 @@ $p_msg = $pesAller->getP_MSG($file_path);
 
 
 $ftpService = new FTPService(
+    $s2lowLogger,
     new FtpServiceWrapper(),
     $host,
     $port,

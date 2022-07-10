@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $filepath = $argv[1];
 

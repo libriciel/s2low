@@ -3,6 +3,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 //CONSTANTES------------------------------------------------------------------------------------------------------------
 const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
@@ -203,6 +204,7 @@ function areEquals($sirets1, $sirets2): bool
             return false;
         }
     }
+    return true;
 }
 
 foreach ($authorities as $id => $authority) {

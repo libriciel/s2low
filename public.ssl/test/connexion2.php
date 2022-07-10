@@ -2,8 +2,7 @@
 
 define("TESTING_ENVIRONNEMENT", true);
 require_once(__DIR__ . "/../../init/init.php");
-
-$authenfication = ObjectInstancierFactory::getObjetInstancier()->get('Authentification');
+$authenfication = LegacyObjectsManager::getLegacyObjectInstancier()->get(Authentification::class);
 
 $connexion_info = $authenfication->getAllConnexionInfo();
 

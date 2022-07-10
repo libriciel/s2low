@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 libxml_use_internal_errors(true);
 
 // Script charge de reanalyser les PES_RETOUR

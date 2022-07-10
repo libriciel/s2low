@@ -3,6 +3,7 @@
 //Liste des clients qui n'ont pas un certificat RGS
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
 

@@ -16,7 +16,7 @@ class LegacyObjectsManager
     /**
      * @return array
      */
-    private static function setLegacyObjectInstancier(): void
+    public static function setLegacyObjectInstancier(): void
     {
         if (TESTING_ENVIRONNEMENT) {
             $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
@@ -203,6 +203,7 @@ class LegacyObjectsManager
 
         $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
         $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
+
 
         if (php_sapi_name() === 'cli') { // pcntl n'est actif qu'en mode CLI
             $objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());

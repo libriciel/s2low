@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+    );
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 

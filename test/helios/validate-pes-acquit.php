@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
+
 $file_path = $argv[1];
 $schema_pes_path = HELIOS_XSD_PATH;
 

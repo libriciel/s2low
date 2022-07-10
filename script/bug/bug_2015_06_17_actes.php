@@ -14,6 +14,7 @@ $date_fin_bug = "2015-06-20";
 
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 

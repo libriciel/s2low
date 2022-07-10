@@ -15,6 +15,7 @@ function sortir_atrc($message, $api)
 
 // Configuration
 require_once("../../../init/init.php");
+$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 
 $api = Helpers::getVarFromGet("api");
@@ -298,8 +299,6 @@ if (!$trans->save()) {
     $apiMsg = $trans->getId() . "\n";
 }
 
-
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 
 

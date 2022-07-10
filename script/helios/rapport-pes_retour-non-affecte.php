@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+
 libxml_use_internal_errors(true);
 
 // Script charge de récuprer la liste distincte des SIRET des PES_RETOUR

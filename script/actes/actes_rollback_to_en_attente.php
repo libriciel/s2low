@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);

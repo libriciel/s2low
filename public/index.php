@@ -2,6 +2,7 @@
 
 // Configuration
 require_once("../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $doc = new HTMLLayout('xhtml_home.tpl.php');
 

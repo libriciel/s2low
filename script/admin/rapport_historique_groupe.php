@@ -1,8 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
-
-
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 function compte_actes($siren, $sqlQuery)
 {

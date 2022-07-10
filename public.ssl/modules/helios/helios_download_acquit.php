@@ -2,6 +2,7 @@
 
 // Configuration
 require_once("../../../init/init.php");
+$cloudStorageFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(CloudStorageFactory::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -81,7 +82,7 @@ $owner = new User($ownerId);
 $owner->init();
 
 try {
-    $pesAcquitCloudStorage = $objectInstancier->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
+    $pesAcquitCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
     $path = $pesAcquitCloudStorage->getPath($transaction_id);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();

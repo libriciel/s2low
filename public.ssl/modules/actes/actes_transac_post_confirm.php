@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($workerScript,$actesScriptHelper,$actesTransactionsSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class]
+    );
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
@@ -13,6 +17,8 @@ if (!$module->initByName("actes")) {
     header("Location: " . WEBSITE_SSL);
     exit();
 }
+
+$connexion = new Connexion();
 
 $me = new User();
 
@@ -70,7 +76,6 @@ if (! $permission->canView($me, $owner)) {
 $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
 
 
-$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $info = $actesTransactionsSQL->getInfo($id);
 if ($info['last_status_id'] != 17) {
     $_SESSION["error"] = "La transaction n'est pas dans le statut « En attente d'être posté»";
@@ -80,10 +85,8 @@ if ($info['last_status_id'] != 17) {
 
 $actesTransactionsSQL->updateStatus($id, 1, $msg);
 
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
-$actesScriptHelper = $objectInstancier->get(ActesScriptHelper::class);
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId())) {

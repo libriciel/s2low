@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../init/init.php");
+$logger = LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
 
 // Instanciation du module courant
