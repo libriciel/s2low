@@ -62,6 +62,7 @@ unit_test:
         COMPOSER_PROCESS_TIMEOUT: 9000
         DONT_RETRIEVE_VALIDCA: "true"
         XDEBUG_MODE: coverage
+        APP_ENV: test
     script:
         - cd /var/www/s2low/
         - composer test-cover
