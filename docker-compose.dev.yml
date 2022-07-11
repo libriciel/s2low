@@ -19,6 +19,7 @@ services:
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT:-10443}
             XDEBUG_ON: ${XDEBUG_ON:-true}
             XDEBUG_MODE: "coverage"
+            APP_ENV: dev
 
     db:
         environment:
