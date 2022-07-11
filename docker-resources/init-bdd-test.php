@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../init/init.php";
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $objectInstancierTest = new ObjectInstancier();
 $sqlQueryTest = new SQLQuery(DB_DATABASE_TEST);

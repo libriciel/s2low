@@ -2,6 +2,7 @@
 
 // include the composer autoloader
 require_once __DIR__ . "/../init/init.php";
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 
 use Mtdowling\Supervisor\EventListener;

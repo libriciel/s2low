@@ -3,8 +3,9 @@
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once __DIR__ . "/../../init/init.php";
+list( $s2lowLogger, $sqlQuery,$actesExport ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([S2lowLogger::class, SQLQuery::class,ActesExport::class]);
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();
 $s2lowLogger->setName("actes-export");
 
@@ -29,7 +30,7 @@ $min_transaction_date = $argv[2];
 $max_transaction_date = $argv[3];
 $tampon = $argv[4] ?? false;
 
-$actesExport = $objectInstancier->get(ActesExport::class);
+
 $actesExport->setTamponnerFichier($tampon);
 
 $sql = "SELECT authorities.siren,authorities.name,actes_transactions.authority_id,min(actes_transactions.id) as min_id,max(actes_transactions.id) as max_id,count(actes_transactions.id) as count FROM actes_transactions_workflow " .

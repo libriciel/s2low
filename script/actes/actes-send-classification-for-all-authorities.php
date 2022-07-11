@@ -7,6 +7,7 @@
  */
 
 require_once __DIR__ . "/../../init/init.php";
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 if ($argc == 2 && ((int)$argv[1] == 0)) {
     echo "Usage {$argv[0]} [departement]\n";

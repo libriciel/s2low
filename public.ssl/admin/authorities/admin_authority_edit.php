@@ -22,6 +22,7 @@ if (! $me->isAdmin()) {
 
 $id = Helpers::getVarFromGet("id");
 
+
 // Mode modification ou pas
 $mod = false;
 $authority = new Authority();
@@ -59,11 +60,14 @@ if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_
 
 /** @var ObjectInstancier $objectInstancier */
 /** @var AuthorityTypesSQL $authorityTypesSQL */
-$authorityTypesSQL = $objectInstancier->{'AuthorityTypesSQL'};
 
+$authorityTypesSQL = $objectInstancier->get(AuthorityTypesSQL::class);
 $authority_types_info = $authorityTypesSQL->getInfo($authority->get("authority_type_id"));
-$authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
-
+try {
+    $authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
+} catch (Exception $e) {
+    $authority_type_name = null;
+}
 
 /****************/
 
