@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../../../init/init.php";
-LegacyObjectsManager::setLegacyObjectInstancier();
+$mailSecuriseNotification = LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Services\MailSecurises\MailSecuriseNotification::class);
 
 $module = new Module();
 if (!$module->initByName("mail")) {

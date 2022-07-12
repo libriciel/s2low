@@ -39,7 +39,9 @@
     "symfony/symfony": "6.1",
     "egulias/email-validator": "^3.2",
     "masterminds/html5": "^2.7",
-    "symfony/monolog-bundle": "^3.8"
+    "symfony/monolog-bundle": "^3.8",
+    "symfony/mailer": "^6.1",
+    "symfony/twig-bundle": "^6.1"
   },
 
   "require-dev": {
