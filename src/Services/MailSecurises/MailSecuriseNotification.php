@@ -33,6 +33,7 @@ class MailSecuriseNotification
 
         foreach ($MailMessagesEmis as $mailMessageEmis) {
             $html = $this->twig->render('mail.html.twig', [
+                "subject" => $mailHeader->getHeader()['Subject'],
                 "id" => $mailMessageEmis->getId(),
                 "website" => WEBSITE,
                 "text" => $text,
