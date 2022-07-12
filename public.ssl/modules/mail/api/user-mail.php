@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . "/../include/init-module-mail.php");
+list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 $db = DatabasePool::getInstance();
 

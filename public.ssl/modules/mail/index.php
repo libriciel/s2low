@@ -1,6 +1,7 @@
 <?php
-
-require_once("include/init-module-mail.php");
+list($doc, $mailSecuriseNotification) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([MailLayout::class, \S2low\Services\MailSecurises\MailSecuriseNotification::class]);
+list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 //commencer traiter la layout normal correspond de le système.
 

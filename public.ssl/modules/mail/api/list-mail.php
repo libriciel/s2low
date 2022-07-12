@@ -1,5 +1,5 @@
 <?php
-require_once("../include/init-module-mail.php");
+list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db, $me->getId());
