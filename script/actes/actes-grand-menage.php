@@ -1,6 +1,8 @@
 <?php
 
-require_once(__DIR__ . "/../init/init.php");
+require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier, $logger) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get([ObjectInstancier::class, S2lowLogger::class]);
 
 $objectInstancier->set("Monolog\Logger", $logger->withName('ACTES-GRAND-MENAGE'));
 

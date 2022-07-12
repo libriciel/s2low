@@ -12,6 +12,7 @@ exit;
 
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../init/init.php";
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
 if ($argc < 1) {
     echo "Usage {$argv[0]} archive_path\n";

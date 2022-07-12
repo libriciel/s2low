@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($workerScript, $actesScriptHelper,$actesTransactionsSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class]
+    );
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
@@ -20,6 +24,7 @@ if (!$module->initByName("actes")) {
     return_error_api("Erreur d'intialisation du module");
 }
 
+$connexion = new Connexion();
 $me = new User();
 
 if (!$me->authenticate()) {
@@ -67,7 +72,6 @@ foreach ($id_list as $id) {
     }
 
     $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
-    $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
     $info = $actesTransactionsSQL->getInfo($id);
     if ($info['last_status_id'] != 17) {
@@ -76,10 +80,8 @@ foreach ($id_list as $id) {
 
     $actesTransactionsSQL->updateStatus($id, 1, $msg);
 
-    $workerScript = $objectInstancier->get(WorkerScript::class);
     $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
-    $actesScriptHelper = $objectInstancier->get(ActesScriptHelper::class);
     $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
     Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId());

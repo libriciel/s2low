@@ -3,6 +3,8 @@
 $tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
 
 require_once(__DIR__ . "/../../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([ObjectInstancier::class, SQLQuery::class]);
 
 $errorMsg = "";
 $extraRedirect = "";

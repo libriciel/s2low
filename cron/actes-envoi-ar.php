@@ -2,8 +2,11 @@
 <?php
 require_once(__DIR__ . "/../init/init.php");
 
+list($objectInstancier, $s2lowLogger) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class,S2lowLogger::class]
+    );
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->setName("actes-envoi-ar");
 $s2lowLogger->enableStdOut(true);
 

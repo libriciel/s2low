@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $debut = "2016-04-26";
 //$debut = "2008-04-26";

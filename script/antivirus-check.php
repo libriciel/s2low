@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../init/init.php");
+list($s2lowLogger, $antivirus) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [S2lowLogger::class, Antivirus::class]
+    );
 
 
 if ($argc < 2) {
@@ -11,8 +15,6 @@ if ($argc < 2) {
 
 $file_path = $argv[1];
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();
 
-$antivirus = $objectInstancier->get(Antivirus::class);
 $antivirus->checkArchiveSanity($file_path);

@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 require_once(__DIR__."/../init/init.php");
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
 use S2low\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

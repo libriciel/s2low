@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
+$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
 
 $me = new User();
 
@@ -37,8 +38,6 @@ if (! $him->init()) {
         exitOrDisplayError($api, "Accès refusé pour la modification de cet utilisateur", Helpers::getLink("/admin/users/admin_users.php"));
     }
 }
-
-$userSQL = new UserSQL($sqlQuery);
 
 $user_info = $userSQL->getInfo($him->getId());
 $x509Certificate = new X509Certificate();

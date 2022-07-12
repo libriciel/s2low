@@ -2,6 +2,8 @@
 
 require_once("../init/init.php");
 
+LegacyObjectsManager::setLegacyObjectInstancier();
+
 $doc = new HTMLLayout('xhtml_prerequis.tpl.php');
 
 

@@ -3,6 +3,7 @@
 //renvoi la liste des actes transmis sous la forme d'un CSV
 
 require_once(__DIR__ . "/../../init/init.php");
+list($sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 

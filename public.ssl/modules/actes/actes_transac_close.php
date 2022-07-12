@@ -3,6 +3,7 @@
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 require_once("../../../init/init.php");
+$actesPrepareEnvoiSAE = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -40,7 +41,6 @@ if ($status == "valid") {
     $new_status_id = 6;
 } elseif ($status == "sae") {
     $new_status_id = 19;
-    $actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 } else {
     Helpers::returnAndExit(1, "État incorrect.", Helpers::getLink("/modules/actes/index.php"));
 }

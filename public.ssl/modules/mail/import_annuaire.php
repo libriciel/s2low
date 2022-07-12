@@ -1,6 +1,6 @@
 <?php
 
-require_once("include/init.php");
+require_once("include/init-module-mail.php");
 if (! $me->isAuthorityAdmin()) {
         exit;
 }

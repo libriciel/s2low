@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
+list($jsonOutput,$authoritySQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, AuthoritySQL::class]);
 
 $me = new User();
 
@@ -37,7 +39,6 @@ if ($me->isGroupAdminOrSuper()) {
     $info_to_display = array_merge($info_to_display, array("authority_group_id","helios_ftp_dest"));
 }
 
-$authoritySQL = new AuthoritySQL($sqlQuery);
 $info = $authoritySQL->getInfo($id);
 
 foreach ($info_to_display as $i) {

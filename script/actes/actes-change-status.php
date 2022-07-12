@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($s2LowLogger,$actesStatutsSQL,$actesTransactions) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [S2lowLogger::class,ActesStatusSQL::class,ActesTransactionsSQL::class]
+    );
 
 function printStatus(array $actesStatuts)
 {
@@ -31,10 +35,9 @@ function checkChange($transaction_id, $status_id, ActesTransactionsSQL $actesTra
     return true;
 }
 
-$s2LowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2LowLogger->enableStdOut();
+$actesStatuts = $actesStatutsSQL->getAllStatus();
 
-$actesStatuts = $objectInstancier->get(ActesStatusSQL::class)->getAllStatus();
+$s2LowLogger->enableStdOut();
 
 if ($argc != 3) {
     $s2LowLogger->error("Nombre de paramètres incorrect. ( 2 Attendus, " . ($argc - 1) . " renseigné(s) )");
@@ -57,8 +60,6 @@ if (!array_key_exists($status_id, $actesStatuts)) {
     echo printStatus($actesStatuts);
     exit(-3);
 }
-
-$actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 
 if (!$actesTransactions->getInfo($transaction_id)) {
     $s2LowLogger->error("transaction_id incorrect : aucune transaction trouvée");

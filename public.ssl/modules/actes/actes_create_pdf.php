@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../init/init.php");
+$bordereauPdfGenerator = LegacyObjectsManager::getLegacyObjectInstancier()->get(BordereauPdfGenerator::class);
 
 $id = Helpers :: getVarFromGet("trans_id");
 
@@ -59,5 +60,4 @@ if (! $permission->canView($me, $owner)) {
 }
 
 //passer les paramètre
-$bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
 $bordereauPdfGenerator->generate($id, "acquittement.pdf", false);

@@ -6,6 +6,7 @@
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si tout va mal
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Transaction HELIOS a l etat attente";

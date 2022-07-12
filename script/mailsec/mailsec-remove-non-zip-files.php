@@ -12,8 +12,8 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once(__DIR__ . "/../../init/init.php");
+$s2lowLogger = LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();
 
 $confirm = ($argv[1] ?? false) === 'ok';

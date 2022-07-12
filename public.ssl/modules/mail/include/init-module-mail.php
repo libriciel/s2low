@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../../../init/init.php";
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $module = new Module();
 if (!$module->initByName("mail")) {

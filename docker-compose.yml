@@ -78,6 +78,8 @@ services:
 
             ACTES_ALWAYS_CAN_VALIDATE: ${ACTES_ALWAYS_CAN_VALIDATE:-false}
 
+            APP_ENV: prod
+
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
             - ${SERVER_SSL_CERTIFICAT:-app_certificate}:/etc/apache2/ssl/

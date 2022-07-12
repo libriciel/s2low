@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($objectInstancier, $html ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, 'html']
+    );
 
 $me = new User();
 
@@ -17,6 +21,7 @@ if (! $me->isAdmin()) {
 }
 
 $id = Helpers::getVarFromGet("id");
+
 
 // Mode modification ou pas
 $mod = false;
@@ -55,11 +60,14 @@ if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_
 
 /** @var ObjectInstancier $objectInstancier */
 /** @var AuthorityTypesSQL $authorityTypesSQL */
-$authorityTypesSQL = $objectInstancier->{'AuthorityTypesSQL'};
 
+$authorityTypesSQL = $objectInstancier->get(AuthorityTypesSQL::class);
 $authority_types_info = $authorityTypesSQL->getInfo($authority->get("authority_type_id"));
-$authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
-
+try {
+    $authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
+} catch (Exception $e) {
+    $authority_type_name = null;
+}
 
 /****************/
 

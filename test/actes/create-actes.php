@@ -1,10 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
-
 require_once __DIR__ . "/../PHPUnit/class/actes/ActesCreator.php";
-
-$actesCreator = $objectInstancier->get(ActesCreator::class);
+$actesCreator = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesCreator::class);
 
 $transaction_id = $actesCreator->createTransaction(
     ActesStatusSQL::STATUS_POSTE,

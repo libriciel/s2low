@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 
 if ($argc < 2) {

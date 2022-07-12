@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
+list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+    );
 
 
 $x509Certificate = new X509Certificate();

@@ -22,6 +22,7 @@ $id_cut_journal = 0;
 //A FAIRE AVANT : mise à jour de la base de données
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 migration_log("Migration S2low 2.4 vers 2.5");
 

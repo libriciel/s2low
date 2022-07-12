@@ -17,6 +17,10 @@
 
 // Configuration
 require_once("../../../../init/init.php");
+list($workerScript, $worker) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [WorkerScript::class,ActesEnvoiFichierWorker::class]
+    );
 
 // Instanciation du module courant
 $module = new Module();
@@ -116,8 +120,6 @@ if (! $zeWin->save()) {
     $_SESSION["error"] = nl2br($msg);
     Helpers::purgeTempSession();
 
-    $workerScript = $objectInstancier->get(WorkerScript::class);
-    $worker = $objectInstancier->get(ActesEnvoiFichierWorker::class);
     $workerScript->rebuildQueue($worker);
 
     header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());

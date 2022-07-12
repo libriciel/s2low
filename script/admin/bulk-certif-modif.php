@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 
 $user_id = 12745;

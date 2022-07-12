@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
+list($jsonOutput,$authorityGroupSirenSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, AuthorityGroupSirenSQL::class]);
 
 $me = new User();
 
@@ -33,7 +35,6 @@ if (VERIFICATION_SIREN) {
     }
 }
 
-$authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 if ($authorityGroupSirenSQL->exist($authority_group_id, $siren)) {
         $jsonOutput->displayErrorAndExit("siren deja present");
 }

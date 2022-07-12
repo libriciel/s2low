@@ -13,6 +13,7 @@
  */
 
 require_once("../../../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $retourId = Helpers :: getVarFromGet("id");
 

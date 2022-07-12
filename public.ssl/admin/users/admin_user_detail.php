@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../init/init.php");
+$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $x509Certificate = new X509Certificate();
 

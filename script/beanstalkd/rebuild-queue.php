@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../../init/init.php";
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
 $all = [
     ActesAntivirusWorker::class,

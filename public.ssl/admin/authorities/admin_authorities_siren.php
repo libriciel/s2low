@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../../init/init.php");
+$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $me = new User();
 

@@ -4,7 +4,7 @@ if (empty($_GET['term'])) {
     return;
 }
 
-require_once("include/init.php");
+require_once("include/init-module-mail.php");
 $debut = urldecode($_GET['term']);
 
 $bd = DatabasePool::getInstance();

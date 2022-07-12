@@ -1,16 +1,18 @@
 <?php
 
 require_once(__DIR__ . "/../init/init.php");
+list(    $s2lowRedirect ,$userSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [S2lowRedirect::class, UserSQL::class]
+    );
 
 $x509Certificate = new X509Certificate();
 $certificateInfo = $x509Certificate->retrieveClientInfo();
 
-
-$userSQL = new UserSQL($sqlQuery);
 $allUser = $userSQL->getInfoFromCertificateInfo($certificateInfo);
 
 if (! $allUser) {
-    $objectInstancier->get('S2lowRedirect')->redirect("/", "Certificat invalide");
+    $s2lowRedirect->redirect("/", "Certificat invalide");
 }
 
 $doc = new HTMLLayout();

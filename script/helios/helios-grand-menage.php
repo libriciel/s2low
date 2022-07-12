@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class]
+    );
 
 // supprime les fichier de plus de nb jours avec nb passé en parametre
 // mettre la chaine de caractère ok en second parametre pour faire la suppression

@@ -34,4 +34,25 @@ class PemCertificate
                     $this->dateValidFrom->format("d-M-Y H:i:s") . " - " . $this->dateValidTo->format("d-M-Y H:i:s"));
         }
     }
+
+    public function getDer()
+    {
+        return base64_decode($this->getContentStrippedFromBegin());
+    }
+
+    public function getHash()
+    {
+        return base64_encode(
+            openssl_digest($this->getDer(), UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG, true)
+        );
+    }
+
+    public function getContentStrippedFromBegin()
+    {
+        $begin = "CERTIFICATE-----";
+        $end = "-----END";
+        $pem_data = mb_substr($this->content, mb_strpos($this->content, $begin) + mb_strlen($begin));
+        $pem_data = trim(mb_substr($pem_data, 0, mb_strpos($pem_data, $end)));
+        return $pem_data;
+    }
 }

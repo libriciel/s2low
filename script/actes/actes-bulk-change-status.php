@@ -1,12 +1,14 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($s2LowLogger,$actesStatusSQL,$actesTransactions,$sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [S2lowLogger::class, ActesStatusSQL::class,ActesTransactionsSQL::class,SQLQuery::class]
+    );
 
-
-$s2LowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2LowLogger->enableStdOut();
 
-$actesStatus = $objectInstancier->get(ActesStatusSQL::class)->getAllStatus();
+$actesStatus = $actesStatusSQL->getAllStatus();
 
 
 if ($argc != 5) {
@@ -49,8 +51,6 @@ if ($response != "OUI\n") {
     echo "Annulé\n";
     exit(-2);
 }
-
-$actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 
 foreach ($transaction_info_list as $i => $transaction_info) {
     $actesTransactions->updateStatus($transaction_info['id'], $status_to, "Modification manuelle du statut");

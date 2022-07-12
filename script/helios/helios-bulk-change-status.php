@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class]
+    );
 
 
 $s2LowLogger = $objectInstancier->get(S2lowLogger::class);

@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier,$sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class]
+    );
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} authority_id\n";

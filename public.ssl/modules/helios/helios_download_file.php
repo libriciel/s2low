@@ -2,6 +2,7 @@
 
 // Configuration
 require_once("../../../init/init.php");
+$pesAllerRetriever = LegacyObjectsManager::getLegacyObjectInstancier()->get(PesAllerRetriever::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -68,7 +69,6 @@ $owner = new User($ownerId);
 $owner->init();
 
 try {
-    $pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
     $filepath = $pesAllerRetriever->getPath($sha1);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la récupération du fichier : " . $e->getMessage();

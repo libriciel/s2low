@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../init/init.php");
+$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -204,8 +205,6 @@ foreach ($transacs as $trans) {
     $apiMsg .= $trans->getId() . "\n";
 }
 
-
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 

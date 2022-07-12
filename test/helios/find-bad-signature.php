@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";
@@ -17,20 +18,20 @@ echo "Analyse de $nb_transaction fichiers\n";
 
 $error_list = array();
 
+$xadesSignature = new XadesSignature(
+    XMLSEC1_PATH,
+    new PKCS12(),
+    new X509Certificate(),
+    EXTENDED_VALIDCA_PATH,
+    new XadesSignatureParser(),
+    new PemCertificateFactory(),
+    (new VerifyPemCertificateFactory())->get(EXTENDED_VALIDCA_PATH)
+);
+
 foreach ($transactions_list as $num_transaction => $transaction_helios) {
     echo "Transaction {$transaction_helios['id']} ($num_transaction/$nb_transaction)\n";
     $pes_aller = HELIOS_FILES_UPLOAD_ROOT . "/{$transaction_helios['sha1']}";
     echo "Analyse du fichier : $pes_aller\n";
-
-    $xadesSignature = new XadesSignature(
-        XMLSEC1_PATH,
-        new PKCS12(),
-        new X509Certificate(),
-        EXTENDED_VALIDCA_PATH,
-        new XadesSignatureParser(),
-        new PemCertificateFactory(),
-        new VerifyPemCertificate(EXTENDED_VALIDCA_PATH)
-    );
 
     if (! $xadesSignature->isSigned($pes_aller)) {
         echo "Le fichier n'est pas signé\n";

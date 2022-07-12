@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__ . "/../init/init.php");
+$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
-
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->scriptByClassName(ActesPrepareSaeWorker::class, true, true);

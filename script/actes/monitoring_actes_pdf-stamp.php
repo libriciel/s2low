@@ -9,6 +9,7 @@
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si tout va mal
 require_once(__DIR__ . "/../../init/init.php");
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Apposition du cartouche";

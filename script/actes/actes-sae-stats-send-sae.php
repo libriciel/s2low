@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "SELECT authority_id,name,count(*) as count FROM actes_transactions " .

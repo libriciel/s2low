@@ -6,6 +6,7 @@
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si le plus vieil acte à l'état posté à plus d'une heure
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Transaction actes a l etat poste";

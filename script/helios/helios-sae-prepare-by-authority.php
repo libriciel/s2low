@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();

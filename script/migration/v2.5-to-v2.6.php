@@ -4,10 +4,12 @@
 // @deprecated en v5.0 ( NE PAS UTILISER ) ( A supprimer ? )
 
 require_once(__DIR__ . "/../../init/init.php");
+list($heliosTransactionSQL,$sqlQuery ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [HeliosTransactionsSQL::class, SQLQuery::class]
+    );
 
 libxml_use_internal_errors(true);
-
-$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 $sql = "SELECT authority_id,sha1,id,last_status_id FROM helios_transactions WHERE helios_transactions.xml_cod_col IS NULL";
 $transactions_list = $sqlQuery->query($sql);

@@ -2,6 +2,7 @@
 
 // Configuration
 require_once("../../../init/init.php");
+$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -178,7 +179,6 @@ if (! $trans->save()) {
     Helpers::purgeTempSession();
 
 
-    $workerScript = $objectInstancier->get(WorkerScript::class);
     $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 
 

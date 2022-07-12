@@ -3,6 +3,7 @@
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si tout va mal
 require_once __DIR__ . "/../../init/init.php";
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
 
 $filepath = '/var/www/s2low/test/TestPDF/Delib_LIBRICIEL.pdf';

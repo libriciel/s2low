@@ -1,6 +1,8 @@
 <?php
 
 require_once("../init/init.php");
+/** @var \MessageAdminSQL $messageAdminSQL */
+$messageAdminSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
 
 $me = new User();
 if (! $me->authenticate()) {
@@ -8,9 +10,6 @@ if (! $me->authenticate()) {
     header("Location: " . WEBSITE);
     exit();
 }
-
-/** @var MessageAdminSQL $messageAdminSQL */
-$messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
 $messageAdmin = $messageAdminSQL->getPublishedMessage();
 
 $doc = new HTMLLayout();
@@ -84,5 +83,4 @@ $doc->closeContent();
 $doc->closeContainer();
 
 $doc->buildFooter();
-
 $doc->display();

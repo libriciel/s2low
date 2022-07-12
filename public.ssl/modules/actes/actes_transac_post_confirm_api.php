@@ -1,6 +1,10 @@
 <?php
 
 require_once("../../../init/init.php");
+list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class]
+    );
 
 $actionHtml = "";
 
@@ -64,7 +68,6 @@ if (! $permission->canView($me, $owner)) {
 }
 
 $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
-$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $info = $actesTransactionsSQL->getInfo($id);
 if ($info['last_status_id'] != 17) {
@@ -72,10 +75,8 @@ if ($info['last_status_id'] != 17) {
 }
 
 $actesTransactionsSQL->updateStatus($id, 1, $msg);
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
-$actesScriptHelper = $objectInstancier->get(ActesScriptHelper::class);
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
 Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId());

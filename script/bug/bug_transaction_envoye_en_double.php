@@ -11,6 +11,7 @@ $do = false;
 
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "SELECT DISTINCT atw1.transaction_id FROM actes_transactions_workflow atw1 " .

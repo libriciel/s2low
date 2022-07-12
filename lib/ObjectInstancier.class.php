@@ -27,6 +27,15 @@ class ObjectInstancier
         return $this->objects[$name];
     }
 
+    public function getArray(array $names): array
+    {
+        $objects = [];
+        foreach ($names as $name) {
+            $objects[] = $this->get($name);
+        }
+        return $objects;
+    }
+
     public function unset_object($name)
     {
         unset($this->objects[$name]);

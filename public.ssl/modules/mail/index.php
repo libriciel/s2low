@@ -1,6 +1,6 @@
 <?php
 
-require_once("include/init.php");
+require_once("include/init-module-mail.php");
 
 //commencer traiter la layout normal correspond de le système.
 

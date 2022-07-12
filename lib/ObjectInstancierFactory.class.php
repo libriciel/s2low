@@ -14,4 +14,14 @@ class ObjectInstancierFactory
     {
         return self::$objetInstancier;
     }
+
+    public static function issetObjectInstancier(): bool
+    {
+        return isset(self::$objetInstancier);
+    }
+
+    public static function resetObjectInstancier(): void
+    {
+        self::$objetInstancier = null;
+    }
 }

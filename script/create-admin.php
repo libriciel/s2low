@@ -1,6 +1,8 @@
 <?php
 
 require_once(__DIR__ . "/../init/init.php");
+$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+
 
 if ($argc < 5) {
     echo "{$argv[0]} : Crée un utilisateur avec le rôle SUPER ADMIN\n";
@@ -30,7 +32,6 @@ if (! $him->save()) {
 
 $user_id = $him->getId();
 
-$userSQL = new UserSQL($sqlQuery);
 $userSQL->saveCertificateRGS2Etoiles($user_id, "");
 
 echo "Utilisateur créé avec succès";

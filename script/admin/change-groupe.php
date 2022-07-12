@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if ($argc < 3) {
     echo "{$argv[0]} : Déplace toutes les collectivités appartenant au groupe old_group_id vers le groupe new_group_id\n";

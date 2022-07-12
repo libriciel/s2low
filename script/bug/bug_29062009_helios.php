@@ -6,7 +6,8 @@ exit;
 //08h32min22s à 18h16min27s
 
 
-require_once(dirname(__FILE__) . "/../init/init.php");
+require_once(dirname(__FILE__) . "/../../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $db = DatabasePool::getInstance();
 
@@ -57,7 +58,7 @@ function getStatusName($status_id, $status_name)
     return $status_name;
 }
 
-function horodate($msg, $id_u)
+/*function horodate($msg, $id_u)           //Commenté car en erreur
 {
     $sql = "INSERT INTO logs(date,severity,module,issuer,user_id,visibilite,message,timestamp) VALUES ()";
-}
+}*/

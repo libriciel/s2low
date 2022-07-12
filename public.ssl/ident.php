@@ -2,6 +2,7 @@
 
 // Configuration
 require_once("../init/init.php");
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 unset($_SESSION['error']);
 

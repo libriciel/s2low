@@ -1,6 +1,10 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ObjectInstancier::class, SQLQuery::class ]
+    );
 
 /**
  * Appeller le script avec l'argument "do" permet de ne pas poser la question pour chaque transaction

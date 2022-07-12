@@ -5,6 +5,7 @@
  *
  */
 require_once(__DIR__ . "/../../init/init.php");
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "SELECT actes_envelopes.id, actes_transactions.id as transaction_id FROM actes_transactions_workflow  
