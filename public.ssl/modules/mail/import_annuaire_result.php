@@ -1,4 +1,7 @@
 <?php
+
+use Legacy\MailLayout;
+
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 if (! $me->isAuthorityAdmin()) {
         exit;

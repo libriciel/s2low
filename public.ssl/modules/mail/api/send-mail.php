@@ -1,7 +1,10 @@
 <?php
 
+use Legacy\MailLayout;
+use S2low\Services\MailSecurises\MailSecuriseNotification;
+
 list($doc, $mailerSecurise) = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([MailLayout::class, \S2low\Services\MailSecurises\MailSecuriseNotification::class]);
+    ->getArray([MailLayout::class, MailSecuriseNotification::class]);
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 if (isset($_POST['password'])) {
