@@ -6,6 +6,8 @@ fi;
 
 if [ ! -d /var/www/s2low/var ]
    then
-     touch /var/www/s2low/var;
+     mkdir /var/www/s2low/var;
+     mkdir /var/www/s2low/var/log;
+     mkdir /var/www/s2low/var/cache;
      chown -R www-data:www-data /var/www/s2low/var;
 fi;
