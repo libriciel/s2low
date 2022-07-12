@@ -41,7 +41,8 @@
     "masterminds/html5": "^2.7",
     "symfony/monolog-bundle": "^3.8",
     "symfony/mailer": "^6.1",
-    "symfony/twig-bundle": "^6.1"
+    "symfony/twig-bundle": "^6.1",
+    "doctrine/annotations": "^1.13"
   },
 
   "require-dev": {
@@ -67,7 +68,8 @@
   },
   "autoload": {
     "psr-4": {
-      "S2low\\": "src/"
+      "S2low\\": "src/",
+      "Legacy\\": "public.ssl/modules/mail/lib"
     },
     "classmap": [
       "lib",

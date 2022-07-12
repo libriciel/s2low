@@ -11,7 +11,7 @@ if (isset($_POST['password'])) {
 
 $_POST['FileNumber'] = count($_FILES);
 
-$MailCtl = new MailController($me, $doc, $module, $myAuthority,$mailerSecurise);
+$MailCtl = new MailController($me, $doc, $module, $myAuthority, $mailerSecurise);
 ob_start();
 $mailId = $MailCtl->executeSend();
 ob_end_clean();

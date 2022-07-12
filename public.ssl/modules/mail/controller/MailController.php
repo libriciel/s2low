@@ -7,10 +7,10 @@ class MailController
 
     private $lastError;
     private User $me;
-    private MailLayout $doc;
+    private $doc;
     private Module $module;
 
-    public function __construct(User $me, MailLayout $doc, Module $module, Authority $myAuthority, \S2low\Services\MailSecurises\MailSecuriseNotification $mailSecuriseNotification)
+    public function __construct(User $me, $doc, Module $module, Authority $myAuthority, \S2low\Services\MailSecurises\MailSecuriseNotification $mailSecuriseNotification)
     {
         $this->me = $me;
         $this->doc = $doc;
