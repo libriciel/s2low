@@ -1,8 +1,5 @@
 <?php
 
-require_once("../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
-
 $me = new User();
 
 if (! $me->authenticate()) {

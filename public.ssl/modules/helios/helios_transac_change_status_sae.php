@@ -1,6 +1,5 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-$frontController = LegacyObjectsManager::setLegacyObjectInstancier();
+$frontController = LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
 
 $frontController->go("HeliosSAE", "changeStatus");

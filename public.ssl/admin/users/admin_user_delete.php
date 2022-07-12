@@ -16,10 +16,6 @@
  *  JS   19.07.2006  Adaptation pour Tedetis
  */
 
-// Configuration
-require_once("../../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
-
 // Suppression utilisateur désactivée
 header("Location: " . WEBSITE);
 

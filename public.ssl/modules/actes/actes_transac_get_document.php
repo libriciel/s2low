@@ -1,8 +1,5 @@
 <?php
 
-require_once("../../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
-
 header("Content-type: text/plain");
 
 // Instanciation du module courant
