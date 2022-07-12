@@ -24,13 +24,3 @@ mkdir -p /data/log/
 
 chown -R www-data:www-data /data/tdt-workspace/
 chown -R www-data:www-data /data/log/
-
-if [ ! -d /var/www/s2low/.env ]
-   then touch /var/www/s2low/.env;
-fi;
-
-if [ ! -d /var/www/s2low/var ]
-   then
-     touch /var/www/s2low/var;
-     chown -R www-data:www-data /var/www/s2low/var;
-fi;

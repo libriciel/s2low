@@ -11,6 +11,8 @@ RUN /bin/bash /root/install-requirements.sh
 COPY ./docker-resources/ /tmp/docker-resources/
 RUN /bin/bash /tmp/docker-resources/docker-construction.sh
 
+# Create Symfony needs
+RUN /bin/bash /tmp/docker-resources/create-symfony-structure.sh
 #Composer
 
 COPY ./composer.* /var/www/s2low/
