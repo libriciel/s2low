@@ -63,8 +63,7 @@ unit_test:
         DONT_RETRIEVE_VALIDCA: "true"
         XDEBUG_MODE: coverage
         APP_ENV: test
-        SMTP_SERVER: mailsec
-        SMTP_PORT: 25
+        MAILER_DSN: smtp://mailsec:25?verify_peer=0
     script:
         - cd /var/www/s2low/
         - composer test-cover

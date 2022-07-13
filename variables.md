@@ -43,6 +43,7 @@
 | ------------------------------ | ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Application S²LOW|`SMTP_SERVER`|`mailsec`|Adresse du serveur SMTP pour pouvoir envoyer des mails. Elle sera utilisée pour la variable `IMAP_SERVER`|
 | Application S²LOW|`SMTP_PORT`|`25`|Port du serveur SMTP|
+| Application S²LOW|`MAILER_DSN`|`smtp://mailsec:25?verify_peer=0`|Adresse du serveur SMTP pour pouvoir envoyer des mails|
 | Application S²LOW|`PUBLISH_SIMULATEUR`|`false`|Permet d'ajouter une redirection web vers le simulateur depuis l'adresse `S2LOW_WEBSITE`/simulateur|
 | Application S²LOW|`LETSENCRYPT_DOMAIN`||Si la variable est présente, elle permet de créer un certificat `letsencrypt` et de lancer le renouvellement. La valeur doit être égale à `S2LOW_WEBSITE`|
 | Application S²LOW|`LETSENCRYPT_EMAIL`||Si la variable est présente, elle permet de créer un certificat `letsencrypt` et de lancer le renouvellement. La valeur doit être égale à `S2LOW_WEBSITE`|
