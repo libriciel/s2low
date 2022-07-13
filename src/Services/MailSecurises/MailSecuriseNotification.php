@@ -2,6 +2,8 @@
 
 namespace S2low\Services\MailSecurises;
 
+use IMailHeader;
+use MailHeader;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -24,7 +26,7 @@ class MailSecuriseNotification
         $this->twig = $twig;
     }
 
-    public function send(array $MailMessagesEmis, $password, \MailHeader $mailHeader, $send_password = false)
+    public function send(array $MailMessagesEmis, $password, IMailHeader $mailHeader, $send_password = false): bool
     {
         $text = $this->twig->render('mailtext.twig', [
             "texte" => MAIL_TEXT,
