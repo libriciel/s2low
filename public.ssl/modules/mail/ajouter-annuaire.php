@@ -1,5 +1,8 @@
 <?php
-require_once("include/init-module-mail.php");
+
+use Legacy\MailLayout;
+
+list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 if (! $me->isAuthorityAdmin()) {
         exit;
 }

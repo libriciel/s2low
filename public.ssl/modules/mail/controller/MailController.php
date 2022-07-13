@@ -7,15 +7,16 @@ class MailController
 
     private $lastError;
     private User $me;
-    private MailLayout $doc;
+    private $doc;
     private Module $module;
 
-    public function __construct(User $me, MailLayout $doc, Module $module, Authority $myAuthority)
+    public function __construct(User $me, $doc, Module $module, Authority $myAuthority, \S2low\Services\MailSecurises\MailSecuriseNotification $mailSecuriseNotification)
     {
         $this->me = $me;
         $this->doc = $doc;
         $this->module = $module;
         $this->myAuthority = $myAuthority;
+        $this->mailSecuriseNotification = $mailSecuriseNotification;
     }
 
     public function exitIfNotAdmin()
@@ -291,7 +292,7 @@ class MailController
         $subject = Helpers :: getVarFromPost("objet");
         $message = Helpers :: getVarFromPost("message");
         $message = str_replace("\r", "", $message);
-        $send_password = Helpers :: getVarFromPost("send_password");
+        $send_password = Helpers :: getVarFromPost("send_password") ?? false;
 
         if (! $mailTo) {
             $this->lastError = "Le destinataire est obligatoire";
@@ -411,7 +412,14 @@ class MailController
 
         $this->SaveMailEmis($mailBCC, $Transaction_id, "mailBCC");
 
-        if (!$mailUtil->sendMail($this->MailMessageEmis, $mailTransaction, $mailIncludedFiles, $send_password)) {
+        if (
+            !$this->mailSecuriseNotification->send(
+                $this->MailMessageEmis,
+                $mailTransaction->getPassword(),
+                $mailHeader,
+                $send_password === "on"
+            )
+        ) {
             $this->lastError = "Échec lors de l'envoi.";
             $this->logError();
             //traiter les messages d'échec.

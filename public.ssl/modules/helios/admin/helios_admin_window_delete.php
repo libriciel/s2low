@@ -15,10 +15,6 @@
  *
  */
 
-// Configuration
-require_once("../../../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
-
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("helios")) {

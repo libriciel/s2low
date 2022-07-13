@@ -1,0 +1,12 @@
+{# templates/mailtext.twig #}
+{{ texte }}
+
+{% if password %}
+
+
+{%  if send_password %}
+    Le mot de passe du document est : {{ password }}
+{%  else %}
+    Le document est protégé par un mot de passe.
+{% endif %}
+{% endif %}

@@ -16,6 +16,10 @@
  *
  */
 
+namespace Legacy;
+
+use HTMLLayout;
+
 class MailLayout extends HTMLLayout
 {
     public function DisplayHead()

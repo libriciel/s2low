@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <style>
+
+        *{
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            color: #333;
+        }
+
+        #main{
+            max-width: 600px;
+            padding: 20px 30px;
+            margin: auto;
+            background-color: rgba(50, 51, 141, 0.05);
+        }
+
+        body a{
+            color: #55bad6;
+            text-decoration: underline;
+        }
+
+
+        body h1{
+            margin:0;
+            color: #32338f;
+        }
+
+        body hr{
+            border-color: rgba(50, 51, 141, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <h1>{{ subject }}</h1>
+    <hr>
+    <div>
+        <p>{{ text | raw }}</p>
+        <a href="{{ website }}/modules/mail/?command=show&mail_emis_id={{ id }}">
+            Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
+        <p>Information de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.</p>
+        <p>Pour toute demande d'information, vous pouvez contacter l'expéditeur précisé dans le contenu du message sur la
+            plateforme sécurisée.</p>
+        <p>Ce mail vous est envoyé automatiquement par s²low.</p>
+    </div>
+</div>
+</body>
+</html>

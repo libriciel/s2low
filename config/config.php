@@ -636,7 +636,7 @@ if (!defined('MAIL_MESSAGE')) {
 if (!defined('MAIL_TEXT')) {
     define('MAIL_TEXT', "Bonjour,
 
-Un courrier recommandé avec d'éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l'ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
+Un courrier recommandé avec d’éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l’ADULLACT. Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : accés au courrier recommandé.");
 }
 
 if (!defined('USE_LEGACY_SECURE_MAIL_FIELDS')) {

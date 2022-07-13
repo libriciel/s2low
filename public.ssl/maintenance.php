@@ -15,10 +15,6 @@
  *
  */
 
-// Configuration
-require_once("../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
-
 $doc = new HTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);
