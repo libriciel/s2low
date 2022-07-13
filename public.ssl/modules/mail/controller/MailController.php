@@ -292,7 +292,7 @@ class MailController
         $subject = Helpers :: getVarFromPost("objet");
         $message = Helpers :: getVarFromPost("message");
         $message = str_replace("\r", "", $message);
-        $send_password = Helpers :: getVarFromPost("send_password");
+        $send_password = Helpers :: getVarFromPost("send_password") ?? false;
 
         if (! $mailTo) {
             $this->lastError = "Le destinataire est obligatoire";
@@ -412,7 +412,14 @@ class MailController
 
         $this->SaveMailEmis($mailBCC, $Transaction_id, "mailBCC");
 
-        if (!$this->mailSecuriseNotification->send($this->MailMessageEmis, $mailTransaction->getPassword(), $mailHeader, $send_password)) {
+        if (
+            !$this->mailSecuriseNotification->send(
+                $this->MailMessageEmis,
+                $mailTransaction->getPassword(),
+                $mailHeader,
+                $send_password === "on"
+            )
+        ) {
             $this->lastError = "Échec lors de l'envoi.";
             $this->logError();
             //traiter les messages d'échec.

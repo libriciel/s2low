@@ -31,6 +31,7 @@ class MailSecuriseNotification
         $text = $this->twig->render('mailtext.twig', [
             "texte" => MAIL_TEXT,
             "password" => $password,
+            "send_password" => $send_password
         ]);
 
         foreach ($MailMessagesEmis as $mailMessageEmis) {

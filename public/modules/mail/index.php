@@ -1,6 +1,9 @@
 <?php
 
+use Legacy\MailLayout;
+
 require_once('../../../init/init.php');
+LegacyObjectsManager::setLegacyObjectInstancier();
 
 $mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
 $password = Helpers::getVarFromPost("mdp");
