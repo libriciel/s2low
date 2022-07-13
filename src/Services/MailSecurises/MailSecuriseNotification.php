@@ -39,7 +39,7 @@ class MailSecuriseNotification
                 "subject" => $mailHeader->getHeader()['Subject'],
                 "id" => $mailMessageEmis->getId(),
                 "website" => WEBSITE,
-                "text" => $text,
+                "text" => nl2br($text),
                 "send_password" => $send_password
             ]);
 

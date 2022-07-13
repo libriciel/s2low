@@ -38,7 +38,7 @@
     <h1>{{ subject }}</h1>
     <hr>
     <div>
-        <p>{{ text }}</p>
+        <p>{{ text | raw }}</p>
         <a href="{{ website }}/modules/mail/?command=show&mail_emis_id={{ id }}">
             Confirmer la reception et lire le courrier en cliquant sur ce lien</a><br>
         <p>Information de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.</p>
