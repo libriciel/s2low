@@ -40,3 +40,9 @@ build:
 
 run:
 	$(DOCKER_COMPOSE) run web bash
+
+bash:
+	$(DOCKER_COMPOSE) exec web bash
+
+force-bash:
+	$(DOCKER_COMPOSE) run --entrypoint bash web

@@ -87,6 +87,9 @@ services:
             - ${TIMESTAMP_CERTIFICAT_PATH:-app_certificate_timestamp}:/etc/s2low/ssl/
             - ${LOG_PATH:-app_logs}:/data/log/
             - ${LETSENCRYPT_DATADIR:-letsencrypt_datadir}:/etc/letsencrypt
+        tmpfs:
+            - /var/run:mode=770,uid=${UID:-33},gid=${GID:-33}
+        user: "${UID:-33}:${GID:-33}"
 
 
     db:

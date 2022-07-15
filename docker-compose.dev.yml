@@ -6,7 +6,11 @@ services:
         build:
             context: .
             target: s2low_dev
-
+            args:
+                UID: ${UID:-33}
+                GID: ${GID:-33}
+                USERNAME: ${USERNAME:-www-data}
+                GROUPNAME: ${GROUPNAME:-www-data}
 
         volumes:
             - .:/var/www/s2low
