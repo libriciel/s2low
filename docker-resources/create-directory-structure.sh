@@ -20,7 +20,5 @@ mkdir -p /data/tdt-workspace/helios/temp && \
 mkdir -p /data/tdt-workspace/helios/ocre && \
 mkdir -p /data/tdt-workspace/logs-export && \
 mkdir -p /data/tdt-workspace/uploads/etat_civil && \
-mkdir -p /data/log/
 
-chown -R www-data:www-data /data/tdt-workspace/
-chown -R www-data:www-data /data/log/
+chown -R "${USERNAME}":"${GROUPNAME}" /data/tdt-workspace/

@@ -2,6 +2,14 @@
 
 set -e -x
 
+if [ ${GID} -ne 33 ] ; then
+  addgroup --gid "${GID}" "${GROUPNAME}"
+fi
+
+if [ ${UID} -ne 33 ] ; then
+  adduser --uid "${UID}" --gid "${GID}" --gecos "" --disabled-password "${USERNAME}"
+fi
+
 # Debian stuff
 
 export DEBIAN_FRONTEND=noninteractive
@@ -70,3 +78,5 @@ pear install mail mail_mime
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=/usr/local/bin
 mv /usr/local/bin/composer.phar /usr/local/bin/composer
+
+chmod u+s /usr/sbin/cron

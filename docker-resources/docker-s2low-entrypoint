@@ -3,7 +3,7 @@ set -e
 
 # TODO vérification de l'installation de composer ?
 
-/bin/bash /var/www/s2low/docker-resources/generate-config.sh > /etc/s2low/DockerSettings.php
+/bin/bash /var/www/s2low/docker-resources/generate-config.sh > /data/config/DockerSettings.php
 
 /bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh
 
@@ -13,11 +13,8 @@ mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 
 # Génération fichier ssmtp.conf
+# FIXME a supprimer une fois qu'on passe par Symfony
 /bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
-
-
-#TODO A mettre dans le dockerfile ?
-usermod -s /bin/bash www-data
 
 
 if [ "${PUBLISH_SIMULATEUR}" = true ] ; then
@@ -40,7 +37,6 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
 fi
 
 if [ -z "$DONT_RETRIEVE_VALIDCA" ] ; then
-
   # Ajout des ACs du ministère
   /usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
 fi
@@ -63,7 +59,5 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
       php /var/www/s2low/docker-resources/init-bdd-test.php
   fi
 fi
-#On remet le bon propriétaire sur le log slow.log
-chown -R www-data:www-data /data/log
 
 exec "$@"
