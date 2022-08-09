@@ -10,6 +10,7 @@ use MailInit;
 use Legacy\MailLayout;
 use S2low\Services\MailSecurises\MailSecuriseNotification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -20,12 +21,16 @@ class MailSecuriseController extends AbstractController
      * @var \S2low\Services\MailSecurises\MailSecuriseNotification
      */
     private MailSecuriseNotification $mailSecuriseNotification;
+    private \Module $module;
+    private \User $me;
+    private \Authority $myAuthority;
 
     public function __construct(MailLayout $mailLayout, MailSecuriseNotification $mailSecuriseNotification)
     {
         $this->doc = $mailLayout;
         $this->mailSecuriseNotification = $mailSecuriseNotification;
         LegacyObjectsManager::setLegacyObjectInstancier();
+        list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 
     /**
@@ -34,10 +39,8 @@ class MailSecuriseController extends AbstractController
      */
     public function handleRequest(): StreamedResponse
     {
-        list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
-//commencer traiter la layout normal correspond de le système.
-
+        //commencer traiter la layout normal correspond de le système.
         $api = Helpers:: getVarFromPost("api");
 
         $doc = $this->doc;
@@ -47,7 +50,7 @@ class MailSecuriseController extends AbstractController
 
         //commencer de distribuer des information.
         $command = $_GET["command"] ?? "";
-
+        list($me,$module,$myAuthority) = [$this->me,$this->module,$this->myAuthority];
         return new StreamedResponse(
             function () use ($api, $doc, $command, $me, $module, $myAuthority) {
                 try {
@@ -79,5 +82,31 @@ class MailSecuriseController extends AbstractController
                 }
             }
         );
+    }
+
+    /**
+     * @Route("/modules/mail/api/send-mail.php")
+     */
+    public function handleApiRequest(): Response
+    {
+
+        if (isset($_POST['password'])) {
+            $_POST['psw1'] = $_POST['password'];
+            $_POST['psw2'] = $_POST['password'];
+        }
+
+        $_POST['FileNumber'] = count($_FILES);
+
+        $MailCtl = new MailController($this->me, $this->doc, $this->module, $this->myAuthority, $this->mailSecuriseNotification);
+        ob_start();
+        $mailId = $MailCtl->executeSend();
+        ob_end_clean();
+
+        if ($mailId) {
+            return new Response( "OK:$mailId\n");
+        } else {
+            $erreur = $MailCtl->getLastError();
+            return new Response("ERROR:$erreur\n");
+        }
     }
 }

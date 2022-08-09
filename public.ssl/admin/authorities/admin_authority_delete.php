@@ -17,7 +17,8 @@
  */
 
 // Suppression collectivité désactivée
-header("Location: " . WEBSITE);
+//header("Location: " . WEBSITE);
+// if test mode
 
 $me = new User();
 

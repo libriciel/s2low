@@ -17,7 +17,8 @@
  */
 
 // Suppression utilisateur désactivée
-header("Location: " . WEBSITE);
+//header("Location: " . WEBSITE);
+// If test mode
 
 $me = new User();
 
