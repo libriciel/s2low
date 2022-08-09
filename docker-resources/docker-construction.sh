@@ -35,6 +35,8 @@ bash docker-resources/certificate/add-legacy-provider-to-openssl-v3.sh
 # Répertoire de configuration de S2low
 # Workspace
 mkdir -p /etc/apache2/ssl/
+chown -R "${USERNAME}":"${GROUPNAME}" /etc/apache2/ssl/
+
 mkdir -p /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
 
