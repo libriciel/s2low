@@ -40,9 +40,9 @@ chown -R "${USERNAME}":"${GROUPNAME}" /etc/apache2/ssl/
 mkdir -p /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
 
-mkdir -p /data/{config,tdt-workspace,log,run,lock}
+mkdir -p /data/{config,tdt-workspace,log,run,lock,certificate}
+mkdir -p /data/certificate/truststore
 chown -R "${USERNAME}":"${GROUPNAME}" /data/
-
 
 #Mise en ce place du systeme de recuperation des CRL et AC
 #TODO voir comment gérer la récupération du validca

@@ -11,6 +11,7 @@ services:
         ports:
             - "${WEB_HTTP_PORT:-10080}:80"
             - "${WEB_HTTPS_PORT:-10443}:443"
+        read_only: true
         environment:
             EMAIL_ADMIN_TECHNIQUE: ${EMAIL_ADMIN_TECHNIQUE:-test@libriciel.net}
             S2LOW_WEBSITE: ${S2LOW_WEBSITE:-localhost}
@@ -87,8 +88,15 @@ services:
             - ${TIMESTAMP_CERTIFICAT_PATH:-app_certificate_timestamp}:/etc/s2low/ssl/
             - ${LOG_PATH:-app_logs}:/data/log/
             - ${LETSENCRYPT_DATADIR:-letsencrypt_datadir}:/etc/letsencrypt
+            - ${GENERAL_TRUST_STORE:-general_trust_store}:/data/certificate/truststore/
         tmpfs:
             - /var/run:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /data/config:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /etc/apache2/sites-enabled:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /var/lib/apache2/site/enabled_by_admin:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /tmp:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /data/run:mode=770,uid=${UID:-33},gid=${GID:-33}
+            - /data/lock:mode=770,uid=${UID:-33},gid=${GID:-33}
         user: "${UID:-33}:${GID:-33}"
 
 
@@ -147,3 +155,4 @@ volumes:
     letsencrypt_datadir:
     app_logs:
     redis_datadir:
+    general_trust_store:

@@ -14,7 +14,7 @@ chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 
 # Génération fichier ssmtp.conf
 # FIXME a supprimer une fois qu'on passe par Symfony
-/bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
+# /bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
 
 
 if [ "${PUBLISH_SIMULATEUR}" = true ] ; then
@@ -22,6 +22,7 @@ if [ "${PUBLISH_SIMULATEUR}" = true ] ; then
 else
     a2dissite simulateur
 fi
+a2ensite s2low-apache-config.conf
 
 #TODO vérifier qu'il y a aussi LETSENCRYPT_EMAIL de définit
 #voir si on peu s'assurer que le dossier letsencrypt est un point de montage
@@ -35,10 +36,11 @@ if [ "$LETSENCRYPT_DOMAIN" ] ; then
     fi
 
 fi
+cp /etc/ssl/certs/* /data/certificate/truststore/
 
 if [ -z "$DONT_RETRIEVE_VALIDCA" ] ; then
   # Ajout des ACs du ministère
-  /usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /etc/ssl/certs/
+  /usr/local/bin/recup_ac_ministere.sh /etc/s2low/ssl/ /data/certificate/truststore/
 fi
 
 if [ -z "$DONT_INIT_DATABASE" ] ; then
