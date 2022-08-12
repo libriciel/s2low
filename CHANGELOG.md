@@ -8,7 +8,7 @@
 ## Suppression
 - les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT, OPENSIGN_TIMEOUT, ACTES_TYPE_PJ_IS_MANDATORY, DB_CLIENT_ENCODING
 - les constantes suivantes ont été supprimées, car elles étaient dépréciées : VERIFICATION_SIREN
-- les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker : XML_STARLET_PATH
+- les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker : XML_STARLET_PATH, MODE_BEANSTALKD
 
 # 4.3.18 - 2022-06-13
 

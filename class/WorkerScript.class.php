@@ -67,7 +67,7 @@ class WorkerScript
     public function script(IWorker $IWorker, $force_old_school_script = false)
     {
         $this->sigTermHandler = $this->sigTermHandlerFactory->getInstance();
-        if ($this->beanstalkdWrapper->isModeBeanstalked() && ! $force_old_school_script) {
+        if (! $force_old_school_script) {
             return $this->beanstalkdWorker($IWorker);
         } else {
             return $this->oldSchoolScript($IWorker);

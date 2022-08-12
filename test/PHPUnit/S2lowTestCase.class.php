@@ -56,7 +56,6 @@ abstract class S2lowTestCase extends TestCase
         $this->getObjectInstancier()->set("actes_appli_quadrigramme", "EACT");
         $this->getObjectInstancier()->set("actes_ministere_acronyme", "MI");
         $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
-        $this->getObjectInstancier()->set("mode_beanstalkd", false);
         $this->getObjectInstancier()->set("beanstalkd_server", false);
         $this->getObjectInstancier()->set("beanstalkd_port", false);
         $this->getObjectInstancier()->set('antivirus_command', 'ls');

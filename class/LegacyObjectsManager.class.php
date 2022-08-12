@@ -170,7 +170,6 @@ class LegacyObjectsManager
 
         $objectInstancier->set('rgs_validca_path', RGS_VALIDCA_PATH);
 
-        $objectInstancier->set('mode_beanstalkd', MODE_BEANSTALKD);
         $objectInstancier->set('beanstalkd_server', BEANSTAKLD_SERVER);
         $objectInstancier->set('beanstalkd_port', BEANSTAKLD_PORT);
         $objectInstancier->set('antivirus_command', ANTIVIRUS_COMMAND);

@@ -87,17 +87,6 @@ if (!defined('DB_DATABASE')) {
     define('DB_DATABASE', "s2lowdb");
 }
 
-/**
- * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
- *
- */
-if (!defined("MODE_BEANSTALKD")) {
-    /**
-     * @deprecated v4.2 => le mode BEANSTALKED est **obligatoire** à partir de la version 5.0.0 de s2low
-     */
-    define("MODE_BEANSTALKD", false);
-}
-
 if (!defined("BEANSTAKLD_SERVER")) {
     define("BEANSTAKLD_SERVER", "beanstalkd");
 }

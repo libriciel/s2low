@@ -87,8 +87,6 @@ define('EXPORT_LOGS_DIRECTORY','/data/tdt-workspace/logs-export/');
 
 define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-noreply@locahost}");
 
-define('MODE_BEANSTALKD',true);
-
 define("MODE_REDIS",true);
 define("REDIS_SERVER","${REDIS_SERVER:-redis}");
 define("REDIS_PORT","${REDIS_PORT:-6379}");
