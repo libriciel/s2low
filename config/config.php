@@ -95,27 +95,13 @@ if (!defined("BEANSTAKLD_PORT")) {
     define("BEANSTAKLD_PORT", "11300");
 }
 
-
-/**
- * Redis : le mode redis permet de faire un lock propre sur les files de traitement
- */
-if (!defined("MODE_REDIS")) {
-    /**
-     * @deprecated v4.2 => le mode REDIS est **obligatoire** à partir de la version 5.0.0 de s2low
-     */
-    define("MODE_REDIS", false);
-}
-
 if (!defined("REDIS_SERVER")) {
     define("REDIS_SERVER", "redis");
 }
 
 if (!defined("REDIS_PORT")) {
-    define("REDIS_PORT", "6379");
+    define("REDIS_PORT", 6379);
 }
-
-
-
 
 //D?finition de la connexion à la base de données pour les tests unitaires et les tests de validation
 if (!defined('DB_HOST_TEST')) {
@@ -132,10 +118,6 @@ if (!defined('DB_PASSWORD_TEST')) {
 
 if (!defined('DB_DATABASE_TEST')) {
     define('DB_DATABASE_TEST', "s2lowdbtest");
-}
-
-if (! defined('PHP_UNIT_AUTOLOADER')) {
-    define("PHP_UNIT_AUTOLOADER", "../pastell/ext/composer/vendor/autoload.php");
 }
 
 // Nombre d'élément affichés par défaut par page dans les listes

@@ -7,22 +7,15 @@ class RedisMutexWrapper
     /** @var int on mets 2* le TTR de la réponse beanstalked */
     private const DEFAULT_TIMEOUT = 120;
 
-    private $redis_mode;
     private $redis_server;
     private $redis_port;
 
     private $redisInstance;
 
-    public function __construct($redis_mode, $redis_server, $redis_port)
+    public function __construct($redis_server, $redis_port)
     {
-        $this->redis_mode = $redis_mode;
         $this->redis_server = $redis_server;
         $this->redis_port = $redis_port;
-    }
-
-    public function isRedisMode()
-    {
-        return $this->redis_mode;
     }
 
     public function getMutex($mutex_name, $timeout = self::DEFAULT_TIMEOUT)

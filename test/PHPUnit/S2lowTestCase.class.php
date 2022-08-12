@@ -63,9 +63,8 @@ abstract class S2lowTestCase extends TestCase
         $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
         $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
         $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('redis_mode', false);
         $this->getObjectInstancier()->set('redis_server', 'localhost');
-        $this->getObjectInstancier()->set('redis_port', '');
+        $this->getObjectInstancier()->set('redis_port', 6379);
 
         $get = array();
         $post = array();

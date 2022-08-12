@@ -180,7 +180,6 @@ class LegacyObjectsManager
         $objectInstancier->set('tdt_from_email', TDT_FROM_EMAIL);
         $objectInstancier->set('log_level', LOG_LEVEL);
 
-        $objectInstancier->set('redis_mode', MODE_REDIS);
         $objectInstancier->set('redis_server', REDIS_SERVER);
         $objectInstancier->set('redis_port', REDIS_PORT);
 
