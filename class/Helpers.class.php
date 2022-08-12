@@ -12,9 +12,13 @@ class Helpers
   */
     public static function getVarFromPost($name, $memorize = false)
     {
-        return Helpers::getVarFromRequest($name, "POST", $memorize);
-    }
+        $varFromRequest = Helpers::getVarFromRequest($name, "POST", $memorize);
 
+        if(Helpers::getVarFromRequest("api", "POST") ==1){
+            $varFromRequest = utf8_encode($varFromRequest);
+        }
+        return $varFromRequest;
+    }
     public static function getIntFromPost($name, $nullable = false)
     {
         return self::checkInt(

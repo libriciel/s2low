@@ -5,8 +5,7 @@ class JSONoutput
     public function displayErrorAndExit($Errormessage)
     {
         $result['status'] = 'error';
-        $result['error-message'] = $Errormessage;
-        ;
+        $result['error-message'] = $Errormessage;;
         $this->display($result);
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");
@@ -17,8 +16,7 @@ class JSONoutput
     public function displayAndExit($message)
     {
         $result['status'] = 'ok';
-        $result['message'] = $message;
-        ;
+        $result['message'] = $message;;
         $this->display($result);
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");
@@ -27,10 +25,9 @@ class JSONoutput
     }
 
 
-
     private function normalize($array)
     {
-        if (! is_array($array)) {
+        if (!is_array($array)) {
             return $array ?? "";
         }
         $result = array();
@@ -58,6 +55,6 @@ class JSONoutput
         //header("Content-type: application/json");
         header_wrapper("Content-type: text/plain");
         $array = $this->normalize($array);
-        echo json_encode($array);
+        echo utf8_decode(json_encode($array));
     }
 }

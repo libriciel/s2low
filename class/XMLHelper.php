@@ -4,7 +4,7 @@ class XMLHelper
 {
     public static function XML_escaping($text)
     {
-        $result = htmlspecialchars($text ?? "", ENT_NOQUOTES, "iso-8859-1");
+        $result = htmlspecialchars(utf8_decode($text) ?? "", ENT_NOQUOTES, "iso-8859-1");
         return $result;
     }
 

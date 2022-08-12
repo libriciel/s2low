@@ -2,11 +2,19 @@
 
 class Recuperateur
 {
-    private $tableauInput;
+    private array $tableauInput;
+    /**
+     * @var string[]
+     */
+    private array $thingsToDo;
 
     public function __construct(array $tableauInput)
     {
         $this->tableauInput = $tableauInput;
+        $this->thingsToDo = ["trim"];
+        if($this->get("api")){
+            $this->thingsToDo = ["utf8_encode","trim"];
+        }
     }
 
     public function getInt($name, $default = 0)
@@ -20,12 +28,21 @@ class Recuperateur
             return $default;
         }
         $value = $this->tableauInput[$name];
-        return $this->doSomethingOnValueOrArray("trim", $value);
+
+        return $this->doThingsOnValueOrArray($this->thingsToDo, $value);
     }
 
-    public function set($key, $value)
+    public function set($key, $value) : void
     {
         $this->tableauInput[$key] = $value;
+    }
+
+    private function doThingsOnValueOrArray(array $things,$valueOrArray)
+    {
+        foreach ($things as $something){
+            $valueOrArray = $this->doSomethingOnValueOrArray($something, $valueOrArray);
+        }
+        return $valueOrArray;
     }
 
     private function doSomethingOnValueOrArray($something, $valueOrArray)

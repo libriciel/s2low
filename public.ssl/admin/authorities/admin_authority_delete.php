@@ -16,9 +16,9 @@
  *
  */
 
-// Suppression collectivité désactivée
-//header("Location: " . WEBSITE);
-// if test mode
+// Suppression collectivité désactivée en production
+// TODO !!
+//    header("Location: " . WEBSITE);
 
 $me = new User();
 

@@ -146,4 +146,12 @@ class Database
     {
         return $this->sqlQuery->query($sql, $param);
     }
+
+    /**
+     * @return \PDO
+     */
+    public function getPdo() : PDO
+    {
+        return $this->sqlQuery->getPdo();
+    }
 }
