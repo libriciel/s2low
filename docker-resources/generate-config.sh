@@ -74,8 +74,6 @@ define("MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX","${MAILSEC_OPENSTACK_SWIFT_CON
 
 
 define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
-define("IMAP_LOGIN","${IMAP_LOGIN:-s2low-mailsec@s2low.docker.libriciel.fr}");
-define("IMAP_PASS","${IMAP_PASS:-s2low-mailsec}");
 
 #A vérifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');

@@ -125,12 +125,6 @@ if (!defined('DEFAULT_ITEMS_PER_PAGE')) {
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
 
-// Mode de l'application : dev ou prod
-if (!defined("MODE")) {
-        //define("MODE", "prod");
-        define("MODE", "dev");
-}
-
 // Emplacement certificat/clef privée pour l'horodatage des logs
 if (!defined('TIMESTAMPING_CERT')) {
         define('TIMESTAMPING_CERT', '/etc/s2low/ssl/s2low_timestamp_cert.pem');
@@ -505,15 +499,6 @@ if (! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")) {
     define("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY", false);
 }
 
-
-////////////////////////////////////////
-///// Paramètres module Etat Civil /////
-////////////////////////////////////////
-// Répertoire de stockage des fichiers envoyés par les utilisateurs
-if (!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')) {
-    define('ETAT_CIVIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'uploads/etat_civil');
-}
-
 ///////////////////////////////////
 ///// Paramètres module Mail  /////
 ///////////////////////////////////
@@ -528,16 +513,6 @@ if (!defined('MAIL_TEDETIS_FROM')) {
 
 if (!defined('MAIL_SECURE_DESCRIPTION')) {
     define('MAIL_SECURE_DESCRIPTION', "ne-pas-repondre");
-}
-
-#TODO probablement à supprimer...
-if (!defined('IMAP_LOGIN')) {
-    define('IMAP_LOGIN', 's2low-mailsec@s2low.docker.libriciel.fr');
-}
-
-#TODO probablement à supprimer...
-if (!defined('IMAP_PASS')) {
-    define('IMAP_PASS', 's2low-mailsec');
 }
 
 if (!defined('IMAP_SERVER')) {
