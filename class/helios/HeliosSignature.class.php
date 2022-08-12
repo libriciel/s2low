@@ -7,7 +7,8 @@ class HeliosSignature
 
     public function __construct(
         private string $xml_starlet_path = self::XML_STARLET_PATH
-    ){}
+    ) {
+    }
 
     private function checkRecetteOrDepense($xml)
     {

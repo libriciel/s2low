@@ -46,3 +46,10 @@ bash:
 
 force-bash:
 	$(DOCKER_COMPOSE) run --entrypoint bash web
+
+
+phpcs: docker-compose-up ## Check code style through docker-compose
+	$(DOCKER_COMPOSE_EXEC) phpcs
+
+phpcbf: docker-compose-up ## Fix all code style errors
+	$(DOCKER_COMPOSE_EXEC) phpcbf
