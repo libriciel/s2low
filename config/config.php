@@ -59,6 +59,12 @@ if (!defined('LOG_FILE')) {
     define('LOG_FILE', '/data/log/s2low.log');
 }
 
+// Constantes générales
+if (!defined('TRACE_FILE_PATH')) {
+    //TODO supprimer la classe Trace et utiliser le Logger principal
+    define('TRACE_FILE_PATH', '/data/log/slow.log');
+}
+
 if (!defined('LOG_LEVEL')) {
     define('LOG_LEVEL', Monolog\Logger::INFO);
 }
@@ -80,11 +86,6 @@ if (!defined('DB_PASSWORD')) {
 if (!defined('DB_DATABASE')) {
     define('DB_DATABASE', "s2lowdb");
 }
-
-if (!defined('DB_CLIENT_ENCODING')) {
-    define('DB_CLIENT_ENCODING', "UTF-8");
-}
-
 
 /**
  * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
@@ -178,11 +179,6 @@ if (!defined("OPENSSL_PATH")) {
         define("OPENSSL_PATH", "/usr/bin/openssl");
 }
 
-// Constantes générales
-if (!defined('TRACE_FILE_PATH')) {
-    //TODO supprimer la classe Trace et utiliser le Logger principal
-    define('TRACE_FILE_PATH', '/data/log/slow.log');
-}
 
 if (!defined('ANTIVIRUS_COMMAND')) {
         define('ANTIVIRUS_COMMAND', '/usr/bin/clamdscan');

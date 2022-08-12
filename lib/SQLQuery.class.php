@@ -6,7 +6,7 @@ class SQLQuery
     private const DEFAULT_HOST = "localhost";
     private const SLOW_QUERY_IN_MS = 2000;
 
-    private const CLIENT_ENCODING_DEFAULT = "LATIN9";
+    private const CLIENT_ENCODING_DEFAULT = "UTF-8";
 
     private $databaseName;
     private $host;

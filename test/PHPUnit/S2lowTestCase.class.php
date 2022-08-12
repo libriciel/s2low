@@ -95,7 +95,6 @@ abstract class S2lowTestCase extends TestCase
             self::$sqlQueryStatic = new SQLQuery(DB_DATABASE_TEST);
             self::$sqlQueryStatic->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
             self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
-            self::$sqlQueryStatic->setClientEncoding(DB_CLIENT_ENCODING);
         }
     }
 

@@ -22,12 +22,10 @@ class LegacyObjectsManager
             $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
             $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
             $sqlQuery->setDatabaseHost(DB_HOST_TEST);
-            $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
         } else {
             $sqlQuery = new SQLQuery(DB_DATABASE);
             $sqlQuery->setDatabaseHost(DB_HOST);
             $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
-            $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
         }
 
         $objectInstancier = new ObjectInstancier();
