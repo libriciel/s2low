@@ -246,7 +246,7 @@ if (isset($actePDFFile) || $batchMode) {
         $acteFileName = $actePDFFile["name"];
     }
 
-    if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)) {
+    if (empty($type_acte)) {
         Helpers :: returnAndExit(
             1,
             "Erreur lors de la réception du fichier $acteFileName : typologie absente",
@@ -306,7 +306,7 @@ if (isset($acteAttachments)) {
             continue;
         }
 
-        if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_pj[$i])) {
+        if (empty($type_pj[$i])) {
             Helpers :: returnAndExit(
                 1,
                 "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",

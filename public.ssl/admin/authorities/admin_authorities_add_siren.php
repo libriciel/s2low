@@ -29,10 +29,8 @@ if ($me->isSuper()) {
 
 $siren = Helpers::getVarFromGet("siren");
 $theSiren  = new Siren(new LuhnKey());
-if (VERIFICATION_SIREN) {
-    if (! $theSiren->isValid($siren)) {
-            $jsonOutput->displayErrorAndExit("siren non valide");
-    }
+if (! $theSiren->isValid($siren)) {
+        $jsonOutput->displayErrorAndExit("siren non valide");
 }
 
 if ($authorityGroupSirenSQL->exist($authority_group_id, $siren)) {

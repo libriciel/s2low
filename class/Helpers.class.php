@@ -396,6 +396,9 @@ class Helpers
         return $url;
     }
 
+    private const GENERATED_DIRS_PERMS = 0770;
+    private const GENERATED_FILES_PERMS = 0660;
+
   /**
    * \brief Méthode de création d'une arborescence de répertoire (sous ACTES_FILES_UPLOAD_ROOT par défaut)
    * \param $path chaîne : chemin absolu vers l'arborescence à créer
@@ -416,7 +419,7 @@ class Helpers
         }
 
         if (! file_exists($path)) {
-            if (! mkdir($path, GENERATED_DIRS_PERMS, true)) {
+            if (!mkdir($path, self::GENERATED_DIRS_PERMS, true) && !is_dir($path)) {
                 $t = Trace::getInstance();
                 $t->log("Impossible de créer le répertoire (mkdir failed): $path ", Trace::$TRACE_ERROR);
                 return false;
@@ -478,13 +481,13 @@ class Helpers
 
         if (file_exists($path)) {
             if (is_dir($path)) {
-                $r =  chmod($path, GENERATED_DIRS_PERMS);
+                $r =  chmod($path, self::GENERATED_DIRS_PERMS);
                 if (! $r) {
                     $t->log("Echec de l'attribution des droits : $path ", Trace::$TRACE_ERROR);
                 }
                 return $r;
             } elseif (is_file($path)) {
-                return chmod($path, GENERATED_FILES_PERMS);
+                return chmod($path, self::GENERATED_FILES_PERMS);
             }
         }
 

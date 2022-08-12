@@ -1,5 +1,6 @@
 <?php
 
+use Libriciel\LibActes\ArchiveValidator;
 use S2low\Services\PdfValidator;
 
 class ActesAnalyseFichierAEnvoyerWorker implements IWorker
@@ -15,7 +16,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $padesValid;
     private $workerScript;
     private $actes_dont_valid_signing_certificate;
-    private $actes_type_pj_is_mandatory;
     private $actesTypePJSQL;
     /** @var \S2low\Services\PdfValidator  */
     private $pdfValidator;
@@ -30,7 +30,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         PadesValid $padesValid,
         WorkerScript $workerScript,
         $actes_dont_valid_signing_certificate,
-        $actes_type_pj_is_mandatory,
         ActesTypePJSQL $actesTypePJSQL,
         PdfValidator $pdfValidator
     ) {
@@ -43,7 +42,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $this->padesValid = $padesValid;
         $this->workerScript = $workerScript;
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
-        $this->actes_type_pj_is_mandatory = $actes_type_pj_is_mandatory;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->pdfValidator = $pdfValidator;
     }
@@ -92,10 +90,10 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $must_validate_certificate = $this->mustValidateCertificate($transaction_ids);
 
-        $archive = new \Libriciel\LibActes\ArchiveValidator(
+        $archive = new ArchiveValidator(
             $this->actes_appli_trigramme,
             $this->actes_appli_quadrigramme,
-            $this->actes_type_pj_is_mandatory
+            true
         );
         $tmpFolder = new TmpFolder();
         $tmp_dir = $tmpFolder->create();
@@ -105,11 +103,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         try {
             try {
-                if ($this->actes_type_pj_is_mandatory) {
-                    // C'est pas très joli...
-                    $archive->setValidationTypologieByNature($this->actesTypePJSQL->getListByNature());
-                }
-
+                $archive->setValidationTypologieByNature($this->actesTypePJSQL->getListByNature());
                 $archive->validate(
                     $archive_path,
                     [1, 2, 3, 4, 5, 6],

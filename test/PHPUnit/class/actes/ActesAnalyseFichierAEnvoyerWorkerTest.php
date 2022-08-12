@@ -65,7 +65,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOne()
     {
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
@@ -255,7 +255,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['status_id']);
         $this->assertEquals(
-            "Enveloppe invalide : Problème sur 045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
+            "Enveloppe invalide : Problème sur 99_DE-045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
@@ -304,7 +304,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOneWithTypologieKOTypologieChecked()
     {
 
-        $this->getObjectInstancier()->set('actes_type_pj_is_mandatory', true);
         $actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
 
         $actesUpdateClassificationSQL->updateClassification(
@@ -336,7 +335,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOneWithTypologieOKTypologieNotChecked()
     {
-        $this->getObjectInstancier()->set('actes_type_pj_is_mandatory', false);
         $actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
 
         $actesUpdateClassificationSQL->updateClassification(
@@ -347,7 +345,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
         $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
 
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/bad/abc-TACT--000000000--20181024-4.tar.gz");
+        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/bad/abc-TACT--000000000--20181024-5.tar.gz");
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);

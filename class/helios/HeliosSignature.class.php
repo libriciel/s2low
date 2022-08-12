@@ -3,13 +3,11 @@
 class HeliosSignature
 {
     private const HASH_ALGORITHME = "sha256";
+    private const XML_STARLET_PATH = "/usr/bin/xmlstarlet";
 
-    private $xml_starlet_path;
-
-    public function __construct($xml_starlet_path = false)
-    {
-        $this->xml_starlet_path = $xml_starlet_path ?: XML_STARLET_PATH;
-    }
+    public function __construct(
+        private string $xml_starlet_path = self::XML_STARLET_PATH
+    ){}
 
     private function checkRecetteOrDepense($xml)
     {

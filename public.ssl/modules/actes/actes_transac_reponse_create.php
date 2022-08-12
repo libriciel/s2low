@@ -57,7 +57,7 @@ $related_trans->init();
 $type_acte = Helpers::getVarFromPost('type_acte', true);
 $type_pj = Helpers::getVarFromPost('type_pj', true);
 
-if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_acte)) {
+if (empty($type_acte)) {
     Helpers :: returnAndExit(
         1,
         "Erreur lors de la réception du fichier : typologie absente",
@@ -191,14 +191,7 @@ if (isset($acteAttachments)) {
     for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
         if (mb_strlen($acteAttachments["tmp_name"][$i])) {
             if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
-                // Sauvegarde dans la session pour réaffichage en cas d'erreur dans le formulaire
-                // Désactivé, de toute façon on ne peut pas préremplir un champ de type file
-                /*Helpers::putInSession("attachment_file" . ($i + 1), $acteAttachments["name"][$i]);
-                if (isset($acteAttachmentsSign["tmp_name"][$i]) {
-                Helpers::putInSession("attachment_sign_file" . ($i + 1), $acteAttachmentsSign["name"][$i]);
-                }*/
-
-                if (ACTES_TYPE_PJ_IS_MANDATORY && empty($type_pj[$i])) {
+                if (empty($type_pj[$i])) {
                     Helpers :: returnAndExit(
                         1,
                         "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",

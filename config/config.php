@@ -159,16 +159,6 @@ if (!defined("MODE")) {
         define("MODE", "dev");
 }
 
-
-// Permission des fichiers et répertoires générés
-if (MODE == "dev") {
-    define('GENERATED_DIRS_PERMS', 0777);
-    define('GENERATED_FILES_PERMS', 0666);
-} else {
-    define('GENERATED_DIRS_PERMS', 0770);
-    define('GENERATED_FILES_PERMS', 0660);
-}
-
 // Emplacement certificat/clef privée pour l'horodatage des logs
 if (!defined('TIMESTAMPING_CERT')) {
         define('TIMESTAMPING_CERT', '/etc/s2low/ssl/s2low_timestamp_cert.pem');
@@ -188,28 +178,9 @@ if (!defined("OPENSSL_PATH")) {
         define("OPENSSL_PATH", "/usr/bin/openssl");
 }
 
-//WDSL du service d'horodatage
-if (!defined("OPENSIGN_WSDL")) {
-        define("OPENSIGN_WSDL", "http://horodatage.services.adullact.org/opensign.wsdl");
-}
-
-//Autorité de certification qui a signé le certificat de l'horodateur (obligatoire à cause d'une limitation d'openssl)
-if (!defined("OPENSIGN_CA")) {
-        define("OPENSIGN_CA", __DIR__ . "/../data-exemple/root_ca.crt");
-}
-
-//Certificat de l'horodateur
-if (!defined("OPENSIGN_CRT")) {
-        define("OPENSIGN_CRT", __DIR__ . "/../data-exemple/ts.crt");
-}
-
-//Temps en seconde avant de considérer l'horodateur en timeout
-if (!defined("OPENSIGN_TIMEOUT")) {
-        define("OPENSIGN_TIMEOUT", 2);
-}
-
 // Constantes générales
 if (!defined('TRACE_FILE_PATH')) {
+    //TODO supprimer la classe Trace et utiliser le Logger principal
     define('TRACE_FILE_PATH', '/data/log/slow.log');
 }
 
@@ -221,13 +192,8 @@ if (!defined('TEDETIS_TMP_PATH')) {
         define('TEDETIS_TMP_PATH', '/tmp/');
 }
 
-if (!defined("VERIFICATION_SIREN")) {
-    /** @deprecated VERIFICATION_SIREN*/
-    define("VERIFICATION_SIREN", true);
-}
 
 //Paramètre pour l'outil de signature Libersign
-
 if (!defined("LIBERSIGN_URL")) {
         define("LIBERSIGN_URL", Helpers::getLink("/libersign/"));
 }
@@ -242,11 +208,6 @@ if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")) {
 
 if (! defined("LIBERSIGN_INSTALLER")) {
     define("LIBERSIGN_INSTALLER", "https://libersign.libriciel.fr/make.sh");
-}
-
-//Paramètre outils pour donner la forme canonique d'un document XML (C14N)
-if (!defined("XML_STARLET_PATH")) {
-    define("XML_STARLET_PATH", "/usr/bin/xmlstarlet");
 }
 
 //Paramètre outils de signature XML
@@ -367,11 +328,6 @@ if (!defined('ACTES_MAX_BATCH_UPLOAD_SIZE')) {
         define('ACTES_MAX_BATCH_UPLOAD_SIZE', 150 * 1024 * 1024);
 }
 
-
-if (!defined('ANTIVIRUS_TMP_PATH')) {
-        define('ANTIVIRUS_TMP_PATH', '/tmp/');
-}
-
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if (!defined('ACTES_TDT_MAIL_ADDRESS')) {
         define('ACTES_TDT_MAIL_ADDRESS', 's2low@s2low.docker.libriciel.fr');
@@ -422,14 +378,6 @@ if (!defined('ACTES_ALWAYS_CAN_VALIDATE')) {
 //Permet de ne jamais valider les certificats de signatures des actes
 if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')) {
     define('ACTES_DONT_VALID_SIGNING_CERTIFICATE', false);
-}
-
-//Le type de PJ est obligatoire, peut-être à partir du 08/06/2019
-if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")) {
-    //ACTES_TYPE_PJ_IS_MANDATORY == false => on vérifie que le code existe, si le code n'est pas fourni, on envoi quand même
-    //ACTES_TYPE_PJ_IS_MANDATORY == true => on vérifie que le code existe et qu'il correspond à la nature données, on bloque si pas de code
-
-    define("ACTES_TYPE_PJ_IS_MANDATORY", false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
 
 //L'ancienne notice permettait le choix en fonction de la nature et de la classification
