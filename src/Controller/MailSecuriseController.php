@@ -89,6 +89,9 @@ class MailSecuriseController extends AbstractController
      */
     public function handleApiRequest(): Response
     {
+        //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest
+        // On spécifie qu'on utilise bien l'API ...
+        $_POST["api"]=1;
 
         if (isset($_POST['password'])) {
             $_POST['psw1'] = $_POST['password'];
