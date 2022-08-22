@@ -14,7 +14,7 @@ class Helpers
     {
         $varFromRequest = Helpers::getVarFromRequest($name, "POST", $memorize);
 
-        if(Helpers::getVarFromRequest("api", "POST") ==1){
+        if (Helpers::getVarFromRequest("api", "POST") == 1) {
             $varFromRequest = utf8_encode($varFromRequest);
         }
         return $varFromRequest;

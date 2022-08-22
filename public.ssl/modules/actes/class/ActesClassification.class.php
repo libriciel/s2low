@@ -54,7 +54,7 @@ class ActesClassification extends DataObject
                 " ORDER BY request_date DESC, version_date DESC LIMIT 1";
 
             //$result = $this->db->select($sql);
-            $pdo =$this->db->getPdo();
+            $pdo = $this->db->getPdo();
 
             $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
             $stmt->execute([$authority_id]);

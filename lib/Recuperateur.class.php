@@ -12,7 +12,7 @@ class Recuperateur
     {
         $this->tableauInput = $tableauInput;
         $this->thingsToDo = ["trim"];
-        if($this->get("api")){
+        if ($this->get("api")) {
             $this->thingsToDo = ["utf8_encode","trim"];
         }
     }
@@ -32,14 +32,14 @@ class Recuperateur
         return $this->doThingsOnValueOrArray($this->thingsToDo, $value);
     }
 
-    public function set($key, $value) : void
+    public function set($key, $value): void
     {
         $this->tableauInput[$key] = $value;
     }
 
-    private function doThingsOnValueOrArray(array $things,$valueOrArray)
+    private function doThingsOnValueOrArray(array $things, $valueOrArray)
     {
-        foreach ($things as $something){
+        foreach ($things as $something) {
             $valueOrArray = $this->doSomethingOnValueOrArray($something, $valueOrArray);
         }
         return $valueOrArray;

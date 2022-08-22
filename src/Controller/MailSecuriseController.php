@@ -91,7 +91,7 @@ class MailSecuriseController extends AbstractController
     {
         //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest
         // On spécifie qu'on utilise bien l'API ...
-        $_POST["api"]=1;
+        $_POST["api"] = 1;
 
         if (isset($_POST['password'])) {
             $_POST['psw1'] = $_POST['password'];
@@ -106,7 +106,7 @@ class MailSecuriseController extends AbstractController
         ob_end_clean();
 
         if ($mailId) {
-            return new Response( "OK:$mailId\n");
+            return new Response("OK:$mailId\n");
         } else {
             $erreur = $MailCtl->getLastError();
             return new Response("ERROR:$erreur\n");

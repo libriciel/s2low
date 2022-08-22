@@ -143,9 +143,9 @@ class HeliosEnvoiControler
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
         }
-        try{
+        try {
             $this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id, $info_from_pes_aller);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $message = "Transaction $transaction_id : problème d'enregistrement du PES Aller. Cause probable : champ ";
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;

@@ -150,7 +150,7 @@ class Database
     /**
      * @return \PDO
      */
-    public function getPdo() : PDO
+    public function getPdo(): PDO
     {
         return $this->sqlQuery->getPdo();
     }
