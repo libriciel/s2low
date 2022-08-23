@@ -17,8 +17,9 @@
  */
 
 // Suppression collectivité désactivée en production
-// TODO !!
-//    header("Location: " . WEBSITE);
+if (MODE == "prod") {
+    header("Location: " . WEBSITE);
+}
 
 $me = new User();
 
