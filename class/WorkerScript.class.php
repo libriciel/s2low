@@ -67,11 +67,10 @@ class WorkerScript
     public function script(IWorker $IWorker, $force_old_school_script = false)
     {
         $this->sigTermHandler = $this->sigTermHandlerFactory->getInstance();
-        if ($this->beanstalkdWrapper->isModeBeanstalked() && ! $force_old_school_script) {
+        if (! $force_old_school_script) {
             return $this->beanstalkdWorker($IWorker);
-        } else {
-            return $this->oldSchoolScript($IWorker);
         }
+        return $this->oldSchoolScript($IWorker);
     }
 
     public function rebuildQueue(IWorker $IWorker)
@@ -101,14 +100,11 @@ class WorkerScript
             try {
                 $data = $job->getData();
                 $this->s2lowLogger->info("Travail en cours", [$data]);
-                if ($this->redisMutexWrapper->isRedisMode()) {
-                    $mutex = $this->redisMutexWrapper->getMutex($IWorker->getMutexName($data));
-                    $mutex->synchronized(function () use ($IWorker, $data) {
-                        $this->syncrhonizedWork($IWorker, $data);
-                    });
-                } else {
+
+                $mutex = $this->redisMutexWrapper->getMutex($IWorker->getMutexName($data));
+                $mutex->synchronized(function () use ($IWorker, $data) {
                     $this->syncrhonizedWork($IWorker, $data);
-                }
+                });
                 $queue->delete($job);
             } catch (Exception $e) {
                 $this->s2lowLogger->error(

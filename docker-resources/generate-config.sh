@@ -74,8 +74,6 @@ define("MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX","${MAILSEC_OPENSTACK_SWIFT_CON
 
 
 define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
-define("IMAP_LOGIN","${IMAP_LOGIN:-s2low-mailsec@s2low.docker.libriciel.fr}");
-define("IMAP_PASS","${IMAP_PASS:-s2low-mailsec}");
 
 #A vérifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
@@ -87,16 +85,12 @@ define('EXPORT_LOGS_DIRECTORY','/data/tdt-workspace/logs-export/');
 
 define('EMAIL_ADMIN_TECHNIQUE',"${EMAIL_ADMIN_TECHNIQUE:-noreply@locahost}");
 
-define('MODE_BEANSTALKD',true);
-
-define("MODE_REDIS",true);
 define("REDIS_SERVER","${REDIS_SERVER:-redis}");
-define("REDIS_PORT","${REDIS_PORT:-6379}");
+define("REDIS_PORT",${REDIS_PORT:-6379});
 
 define('ACTES_ALWAYS_CAN_VALIDATE',${ACTES_ALWAYS_CAN_VALIDATE:-false});
 
 define("ACTES_TYPE_PAR_NATURE",${ACTES_TYPE_PAR_NATURE:-true});
-define("ACTES_TYPE_PJ_IS_MANDATORY",${ACTES_TYPE_PJ_IS_MANDATORY:-true});
 
 define("USE_LEGACY_BORDEREAU_MODEL",${USE_LEGACY_BORDEREAU_MODEL:-true});
 

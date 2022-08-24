@@ -56,8 +56,6 @@ abstract class S2lowTestCase extends TestCase
         $this->getObjectInstancier()->set("actes_appli_quadrigramme", "EACT");
         $this->getObjectInstancier()->set("actes_ministere_acronyme", "MI");
         $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
-        $this->getObjectInstancier()->set("actes_type_pj_is_mandatory", false);
-        $this->getObjectInstancier()->set("mode_beanstalkd", false);
         $this->getObjectInstancier()->set("beanstalkd_server", false);
         $this->getObjectInstancier()->set("beanstalkd_port", false);
         $this->getObjectInstancier()->set('antivirus_command', 'ls');
@@ -65,9 +63,8 @@ abstract class S2lowTestCase extends TestCase
         $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
         $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
         $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('redis_mode', false);
         $this->getObjectInstancier()->set('redis_server', 'localhost');
-        $this->getObjectInstancier()->set('redis_port', '');
+        $this->getObjectInstancier()->set('redis_port', 6379);
 
         $get = array();
         $post = array();
@@ -96,7 +93,6 @@ abstract class S2lowTestCase extends TestCase
             self::$sqlQueryStatic = new SQLQuery(DB_DATABASE_TEST);
             self::$sqlQueryStatic->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
             self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
-            self::$sqlQueryStatic->setClientEncoding(DB_CLIENT_ENCODING);
         }
     }
 

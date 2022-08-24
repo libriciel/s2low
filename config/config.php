@@ -59,6 +59,12 @@ if (!defined('LOG_FILE')) {
     define('LOG_FILE', '/data/log/s2low.log');
 }
 
+// Constantes générales
+if (!defined('TRACE_FILE_PATH')) {
+    //TODO supprimer la classe Trace et utiliser le Logger principal
+    define('TRACE_FILE_PATH', '/data/log/slow.log');
+}
+
 if (!defined('LOG_LEVEL')) {
     define('LOG_LEVEL', Monolog\Logger::INFO);
 }
@@ -81,22 +87,6 @@ if (!defined('DB_DATABASE')) {
     define('DB_DATABASE', "s2lowdb");
 }
 
-if (!defined('DB_CLIENT_ENCODING')) {
-    define('DB_CLIENT_ENCODING', "UTF-8");
-}
-
-
-/**
- * Active le mode beanstakld : les jobs sont envoyés sur le serveur beanstakld
- *
- */
-if (!defined("MODE_BEANSTALKD")) {
-    /**
-     * @deprecated v4.2 => le mode BEANSTALKED est **obligatoire** à partir de la version 5.0.0 de s2low
-     */
-    define("MODE_BEANSTALKD", false);
-}
-
 if (!defined("BEANSTAKLD_SERVER")) {
     define("BEANSTAKLD_SERVER", "beanstalkd");
 }
@@ -105,27 +95,13 @@ if (!defined("BEANSTAKLD_PORT")) {
     define("BEANSTAKLD_PORT", "11300");
 }
 
-
-/**
- * Redis : le mode redis permet de faire un lock propre sur les files de traitement
- */
-if (!defined("MODE_REDIS")) {
-    /**
-     * @deprecated v4.2 => le mode REDIS est **obligatoire** à partir de la version 5.0.0 de s2low
-     */
-    define("MODE_REDIS", false);
-}
-
 if (!defined("REDIS_SERVER")) {
     define("REDIS_SERVER", "redis");
 }
 
 if (!defined("REDIS_PORT")) {
-    define("REDIS_PORT", "6379");
+    define("REDIS_PORT", 6379);
 }
-
-
-
 
 //D?finition de la connexion à la base de données pour les tests unitaires et les tests de validation
 if (!defined('DB_HOST_TEST')) {
@@ -144,29 +120,9 @@ if (!defined('DB_DATABASE_TEST')) {
     define('DB_DATABASE_TEST', "s2lowdbtest");
 }
 
-if (! defined('PHP_UNIT_AUTOLOADER')) {
-    define("PHP_UNIT_AUTOLOADER", "../pastell/ext/composer/vendor/autoload.php");
-}
-
 // Nombre d'élément affichés par défaut par page dans les listes
 if (!defined('DEFAULT_ITEMS_PER_PAGE')) {
         define('DEFAULT_ITEMS_PER_PAGE', 10);
-}
-
-// Mode de l'application : dev ou prod
-if (!defined("MODE")) {
-        //define("MODE", "prod");
-        define("MODE", "dev");
-}
-
-
-// Permission des fichiers et répertoires générés
-if (MODE == "dev") {
-    define('GENERATED_DIRS_PERMS', 0777);
-    define('GENERATED_FILES_PERMS', 0666);
-} else {
-    define('GENERATED_DIRS_PERMS', 0770);
-    define('GENERATED_FILES_PERMS', 0660);
 }
 
 // Emplacement certificat/clef privée pour l'horodatage des logs
@@ -188,30 +144,6 @@ if (!defined("OPENSSL_PATH")) {
         define("OPENSSL_PATH", "/usr/bin/openssl");
 }
 
-//WDSL du service d'horodatage
-if (!defined("OPENSIGN_WSDL")) {
-        define("OPENSIGN_WSDL", "http://horodatage.services.adullact.org/opensign.wsdl");
-}
-
-//Autorité de certification qui a signé le certificat de l'horodateur (obligatoire à cause d'une limitation d'openssl)
-if (!defined("OPENSIGN_CA")) {
-        define("OPENSIGN_CA", __DIR__ . "/../data-exemple/root_ca.crt");
-}
-
-//Certificat de l'horodateur
-if (!defined("OPENSIGN_CRT")) {
-        define("OPENSIGN_CRT", __DIR__ . "/../data-exemple/ts.crt");
-}
-
-//Temps en seconde avant de considérer l'horodateur en timeout
-if (!defined("OPENSIGN_TIMEOUT")) {
-        define("OPENSIGN_TIMEOUT", 2);
-}
-
-// Constantes générales
-if (!defined('TRACE_FILE_PATH')) {
-    define('TRACE_FILE_PATH', '/data/log/slow.log');
-}
 
 if (!defined('ANTIVIRUS_COMMAND')) {
         define('ANTIVIRUS_COMMAND', '/usr/bin/clamdscan');
@@ -221,13 +153,8 @@ if (!defined('TEDETIS_TMP_PATH')) {
         define('TEDETIS_TMP_PATH', '/tmp/');
 }
 
-if (!defined("VERIFICATION_SIREN")) {
-    /** @deprecated VERIFICATION_SIREN*/
-    define("VERIFICATION_SIREN", true);
-}
 
 //Paramètre pour l'outil de signature Libersign
-
 if (!defined("LIBERSIGN_URL")) {
         define("LIBERSIGN_URL", Helpers::getLink("/libersign/"));
 }
@@ -242,11 +169,6 @@ if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")) {
 
 if (! defined("LIBERSIGN_INSTALLER")) {
     define("LIBERSIGN_INSTALLER", "https://libersign.libriciel.fr/make.sh");
-}
-
-//Paramètre outils pour donner la forme canonique d'un document XML (C14N)
-if (!defined("XML_STARLET_PATH")) {
-    define("XML_STARLET_PATH", "/usr/bin/xmlstarlet");
 }
 
 //Paramètre outils de signature XML
@@ -367,11 +289,6 @@ if (!defined('ACTES_MAX_BATCH_UPLOAD_SIZE')) {
         define('ACTES_MAX_BATCH_UPLOAD_SIZE', 150 * 1024 * 1024);
 }
 
-
-if (!defined('ANTIVIRUS_TMP_PATH')) {
-        define('ANTIVIRUS_TMP_PATH', '/tmp/');
-}
-
 // Adresse életronique du TdT pour le retour des messages du MIAT
 if (!defined('ACTES_TDT_MAIL_ADDRESS')) {
         define('ACTES_TDT_MAIL_ADDRESS', 's2low@s2low.docker.libriciel.fr');
@@ -422,14 +339,6 @@ if (!defined('ACTES_ALWAYS_CAN_VALIDATE')) {
 //Permet de ne jamais valider les certificats de signatures des actes
 if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')) {
     define('ACTES_DONT_VALID_SIGNING_CERTIFICATE', false);
-}
-
-//Le type de PJ est obligatoire, peut-être à partir du 08/06/2019
-if (! defined("ACTES_TYPE_PJ_IS_MANDATORY")) {
-    //ACTES_TYPE_PJ_IS_MANDATORY == false => on vérifie que le code existe, si le code n'est pas fourni, on envoi quand même
-    //ACTES_TYPE_PJ_IS_MANDATORY == true => on vérifie que le code existe et qu'il correspond à la nature données, on bloque si pas de code
-
-    define("ACTES_TYPE_PJ_IS_MANDATORY", false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
 }
 
 //L'ancienne notice permettait le choix en fonction de la nature et de la classification
@@ -590,15 +499,6 @@ if (! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")) {
     define("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY", false);
 }
 
-
-////////////////////////////////////////
-///// Paramètres module Etat Civil /////
-////////////////////////////////////////
-// Répertoire de stockage des fichiers envoyés par les utilisateurs
-if (!defined('ETAT_CIVIL_FILES_UPLOAD_ROOT')) {
-    define('ETAT_CIVIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'uploads/etat_civil');
-}
-
 ///////////////////////////////////
 ///// Paramètres module Mail  /////
 ///////////////////////////////////
@@ -613,16 +513,6 @@ if (!defined('MAIL_TEDETIS_FROM')) {
 
 if (!defined('MAIL_SECURE_DESCRIPTION')) {
     define('MAIL_SECURE_DESCRIPTION', "ne-pas-repondre");
-}
-
-#TODO probablement à supprimer...
-if (!defined('IMAP_LOGIN')) {
-    define('IMAP_LOGIN', 's2low-mailsec@s2low.docker.libriciel.fr');
-}
-
-#TODO probablement à supprimer...
-if (!defined('IMAP_PASS')) {
-    define('IMAP_PASS', 's2low-mailsec');
 }
 
 if (!defined('IMAP_SERVER')) {

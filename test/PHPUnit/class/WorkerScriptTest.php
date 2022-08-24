@@ -2,6 +2,14 @@
 
 class WorkerScriptTest extends S2lowTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $beanstalkdWrapper = $this->getMockBuilder(BeanstalkdWrapper::class)->disableOriginalConstructor()->getMock();
+        $beanstalkdWrapper->method('put')->willReturn(true);
+        $this->getObjectInstancier()->set(BeanstalkdWrapper::class, $beanstalkdWrapper);
+    }
+
     public function testPutJob()
     {
         /** @var IWorker $IWorker */
@@ -19,7 +27,7 @@ class WorkerScriptTest extends S2lowTestCase
         /** @var IWorker $IWorker */
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
         $this->getObjectInstancier()->set('MockWorker', $IWorker);
-        $this->assertTrue($workerScript->scriptByClassName('MockWorker', false));
+        $this->assertTrue($workerScript->scriptByClassName('MockWorker', false, true));
     }
 
 
@@ -37,7 +45,7 @@ class WorkerScriptTest extends S2lowTestCase
         /** @var IWorker $IWorker */
 
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $this->assertTrue($workerScript->script($IWorker));
+        $this->assertTrue($workerScript->script($IWorker, true));
         $logs_records = $this->getLogRecords();
         $this->assertEquals("SIGTERM reçu", $logs_records[2]['message']);
     }
@@ -51,7 +59,7 @@ class WorkerScriptTest extends S2lowTestCase
         /** @var IWorker $IWorker */
 
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $this->assertFalse($workerScript->script($IWorker));
+        $this->assertFalse($workerScript->script($IWorker, true));
         $logs_records = $this->getLogRecords();
         $this->assertEquals("Erreur lors de l'execution du script : foo", $logs_records[1]['message']);
     }
@@ -104,7 +112,6 @@ class WorkerScriptTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $beanstalkdWrapper->method('isModeBeanstalked')->willReturn(true);
         $beanstalkdWrapper->method('getQueue')->willReturn($queue);
 
         $this->getObjectInstancier()->set(BeanstalkdWrapper::class, $beanstalkdWrapper);

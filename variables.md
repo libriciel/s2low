@@ -18,8 +18,6 @@
 |`HELIOS_FTP_PASSWORD`|`helios`|Mot de passe associé à l'utilisteur FTP|
 |`HELIOS_SENDING_DESTINATION`|`/entree/`|On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT||
 |`HELIOS_FTP_RESPONSE_SERVER_PATH`|`/sortie/`|On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE||
-|`IMAP_LOGIN`|`s2low-mailsec`|Nom de l'utilisateur pour les mails retour dans le cadre du module `mailsec`||
-|`IMAP_PASS`|`password`|Mot de passe du l'utilisateur `IMAP_LOGIN`||
 |`POSTGRES_HOST_TEST`|`dbtest`|Renseigne l'adresse du serveur PostgreSQL pour la base de données de tests|`DB_HOST_TEST`|
 |`POSTGRES_DB_TEST`|`s2lowdbtest`|Nom de la base de données de tests|`DB_DATABASE_TEST`|
 |`POSTGRES_USER_TEST`|`s2lowusertest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_USER_TEST`|

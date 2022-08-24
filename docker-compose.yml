@@ -100,10 +100,7 @@ services:
             - /var/www/s2low/ext/standalone:mode=770,uid=${UID:-33},gid=${GID:-33}
             - /var/www/s2low/var/cache:mode=770,uid=${UID:-33},gid=${GID:-33}
             - /var/www/s2low/var/log:mode=770,uid=${UID:-33},gid=${GID:-33}
-
-
         user: "${UID:-33}:${GID:-33}"
-
 
     db:
         image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5

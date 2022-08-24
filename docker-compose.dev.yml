@@ -49,7 +49,8 @@ services:
             - POSTGRES_DB=${POSTGRES_DATABASE_TEST:-tedetis}
         volumes:
             - ${POSTGRESQL_DATADIR_TEST:-db_datadir_test}:/var/lib/postgresql/data
-
+        ports:
+            - 15432:5432
     phppgadmin:
         image: keepitcool/phppgadmin
         networks:

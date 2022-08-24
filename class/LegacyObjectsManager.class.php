@@ -22,12 +22,10 @@ class LegacyObjectsManager
             $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
             $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
             $sqlQuery->setDatabaseHost(DB_HOST_TEST);
-            $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
         } else {
             $sqlQuery = new SQLQuery(DB_DATABASE);
             $sqlQuery->setDatabaseHost(DB_HOST);
             $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
-            $sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
         }
 
         $objectInstancier = new ObjectInstancier();
@@ -163,8 +161,6 @@ class LegacyObjectsManager
 
         $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
         $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
-        $objectInstancier->set('actes_type_pj_is_mandatory', ACTES_TYPE_PJ_IS_MANDATORY);
-
 
         $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
 
@@ -174,7 +170,6 @@ class LegacyObjectsManager
 
         $objectInstancier->set('rgs_validca_path', RGS_VALIDCA_PATH);
 
-        $objectInstancier->set('mode_beanstalkd', MODE_BEANSTALKD);
         $objectInstancier->set('beanstalkd_server', BEANSTAKLD_SERVER);
         $objectInstancier->set('beanstalkd_port', BEANSTAKLD_PORT);
         $objectInstancier->set('antivirus_command', ANTIVIRUS_COMMAND);
@@ -185,7 +180,6 @@ class LegacyObjectsManager
         $objectInstancier->set('tdt_from_email', TDT_FROM_EMAIL);
         $objectInstancier->set('log_level', LOG_LEVEL);
 
-        $objectInstancier->set('redis_mode', MODE_REDIS);
         $objectInstancier->set('redis_server', REDIS_SERVER);
         $objectInstancier->set('redis_port', REDIS_PORT);
 

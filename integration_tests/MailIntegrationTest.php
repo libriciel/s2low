@@ -23,7 +23,6 @@ class MailIntegrationTest extends WebTestCase
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        $this->sqlQuery->setClientEncoding(DB_CLIENT_ENCODING);
         ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
