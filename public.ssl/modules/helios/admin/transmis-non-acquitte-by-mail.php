@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../../../init/init-www-helios.php");
 
 if ($userInfo['role'] != 'SADM') {

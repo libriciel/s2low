@@ -1,5 +1,9 @@
 <?php
+
 /** @var MessageAdmin $messageAdmin */
+
+use S2lowLegacy\Model\MessageAdmin;
+
 ?>
 <h1>Message d'urgence</h1>
 

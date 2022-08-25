@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Model\LogsSQL;
+
 class LogTest extends S2lowTestCase
 {
     public function testNewEntry()
@@ -7,7 +10,7 @@ class LogTest extends S2lowTestCase
 
         Log::newEntry("TOTO", "message", 4);
 
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $last_log = $logsSQL->getLastLog();
 
         $this->assertEquals("message", $last_log['message']);
@@ -23,7 +26,7 @@ class LogTest extends S2lowTestCase
     {
         Log::newEntry("TOTO", "message", 4);
 
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $last_log = $logsSQL->getLastLog();
 
         $sql = "UPDATE logs SET message_horodate=NULL WHERE id=?";

@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+
 class ActesTransactionTest extends S2lowTestCase
 {
     /** @var  ActesTransaction */
@@ -221,7 +224,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testSave()
     {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
         $envelope_id = $actesEnvelopeSQL->create(1, "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
 
@@ -262,7 +265,7 @@ class ActesTransactionTest extends S2lowTestCase
 
         $transaction_id = $this->actesTransaction->getId();
 
-        $actesIncludedFileSQL = $this->getObjectInstancier()->get('ActesIncludedFileSQL');
+        $actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
         $file_list = $actesIncludedFileSQL->getAll($transaction_id);
         $this->assertEquals("99_AU", $file_list[2]['code_pj']);
         $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf", $file_list[2]['filename']);
@@ -280,7 +283,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testSaveWithIncorectTypologie()
     {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
         $envelope_id = $actesEnvelopeSQL->create(1, "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
 

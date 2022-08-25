@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosTransactionSQLTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

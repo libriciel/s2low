@@ -1,5 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\actes\ListeActesHTML;
+use S2lowLegacy\Class\actes\TransactionSQL;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Lib\FancyDate;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $recuperateur = new Recuperateur($_GET);

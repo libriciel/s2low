@@ -1,5 +1,16 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\MessageAdminSQL;
+
 class Controller
 {
     /**
@@ -65,7 +76,7 @@ class Controller
     /**
      * @return Environnement
      */
-    protected function getEnvironnement()
+    protected function getEnvironnement(): Environnement
     {
         return $this->objectInstancier->get(Environnement::class);
     }
@@ -276,7 +287,7 @@ class Controller
      */
     public function getSQLQuery()
     {
-        return $this->objectInstancier->get('SQLQuery');
+        return $this->objectInstancier->get(SQLQuery::class);
     }
 
     public function getObjectInstancier()
@@ -299,6 +310,6 @@ class Controller
      */
     protected function getMessageAdminSQL()
     {
-        return $this->getObjectInstancier()->get("MessageAdminSQL");
+        return $this->getObjectInstancier()->get(MessageAdminSQL::class);
     }
 }

@@ -1,5 +1,16 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesArchiveControler;
+use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesPdf;
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActeTamponne;
+use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\S2lowLogger;
+
 class ActesArchiveControlerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

@@ -1,7 +1,19 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker;
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
+use S2lowLegacy\Class\actes\ActesEnvoiSaeWorker;
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
+use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
+use S2lowLegacy\Class\IWorker;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\WorkerScript;
+
 require_once __DIR__ . "/../../init/init.php";
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier();
 
 $all = [
     ActesAntivirusWorker::class,

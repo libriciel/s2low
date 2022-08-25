@@ -4,8 +4,11 @@
 // Prend en paramÃ¨tre un statut
 
 // Sortie au format Influxdb
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 if ($argc < 2) {
         echo "il manque le statut a rechercher";

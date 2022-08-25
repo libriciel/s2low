@@ -1,10 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificate;
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+
 class VerifyPemCertificateTest extends S2lowTestCase
 {
     private const BASE_CERTIFICATES_DIR = __DIR__ . "/fixtures/certificats";
 
-    /** @var \VerifyPemCertificateFactory  */
+    /** @var VerifyPemCertificateFactory  */
     private $verifyPemCertificateFactory;
 
     public function setUp(): void

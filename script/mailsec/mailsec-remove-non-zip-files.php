@@ -8,11 +8,12 @@
  *
  */
 
+use S2lowLegacy\Class\S2lowLogger;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once(__DIR__ . "/../../init/init.php");
-$s2lowLogger = LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
+$s2lowLogger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
 $s2lowLogger->enableStdOut();
 

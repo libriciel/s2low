@@ -2,20 +2,20 @@
 
 namespace S2low\Services;
 
-use LogsHistoriqueSQL;
-use S2lowLogger;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Model\LogsHistoriqueSQL;
 use Symfony\Component\Filesystem\Filesystem;
 
 class LogTimestampTokenGarbage
 {
-    private $old_timestamp_token_directory;
-    private $timestamp_token_retention_nb_days;
-    private $logsHistoriqueSQL;
-    private $s2lowLogger;
+    private string $old_timestamp_token_directory;
+    private int $timestamp_token_retention_nb_days;
+    private LogsHistoriqueSQL $logsHistoriqueSQL;
+    private S2lowLogger $s2lowLogger;
 
     public function __construct(
-        $old_timestamp_token_directory,     //Quickfix PHP 8
-        $timestamp_token_retention_nb_days, //Quickfix PHP 8
+        string $old_timestamp_token_directory,     //Quickfix PHP 8
+        int $timestamp_token_retention_nb_days,     //Quickfix PHP 8
         LogsHistoriqueSQL $logsHistoriqueSQL,
         S2lowLogger $s2lowLogger
     ) {
@@ -106,7 +106,7 @@ class LogTimestampTokenGarbage
      */
     public function getTimestampTokenRetentionNbDays(): int
     {
-        return $this->timestamp_token_retention_nb_days;
+        return (int) $this->timestamp_token_retention_nb_days;
     }
 
     /**

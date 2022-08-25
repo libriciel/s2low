@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesSignature;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\TGZExtractor;
+use S2lowLegacy\Class\TmpFolder;
+
 class ActesSignaturesTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

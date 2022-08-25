@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailTransactionSQL;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\UnrecoverableException;
+
 class MailsecDownloadController extends Controller
 {
     public const DEFAULT_ARCHIVE_NAME = 'mail.zip';
@@ -46,10 +53,10 @@ class MailsecDownloadController extends Controller
                 mb_convert_encoding($filename, "ISO-8859-9", "UTF-8")
             );     // HACK Fix passage en utf-8!!
 
-            echo bin2hex("é") . "\n";
+            echo bin2hex("ï¿½") . "\n";
             echo hex2bin("c3a9") . "\n";
-            echo "é :\t" . bin2hex("é") . "\n";
-            echo "é :\t" . bin2hex(iconv('IBM437', 'UTF-8', "é")) . "\n";
+            echo "ï¿½ :\t" . bin2hex("ï¿½") . "\n";
+            echo "ï¿½ :\t" . bin2hex(iconv('IBM437', 'UTF-8', "ï¿½")) . "\n";
             echo "filename :\t\t" . bin2hex($filename) . "\n";
             echo "filenameInZip :\t" . bin2hex($filenameInZip) . "\n";
 

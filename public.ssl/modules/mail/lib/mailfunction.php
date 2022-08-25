@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\Mailer;
+
 /**
  * \class mailfunction.php
  * \brief Cette fichier fournie des fonctions utilitaires pour envoyer les emails.

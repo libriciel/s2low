@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 // Paramètre attendu id coll
 // Retourne la taille du dossier actes et la taille des flux PES

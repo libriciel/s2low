@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 header("Content-type: text/plain");
 
 // Instanciation du module courant

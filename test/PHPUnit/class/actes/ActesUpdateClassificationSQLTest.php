@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesTypePJSQL;
+use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class ActesUpdateClassificationSQLTest extends S2lowTestCase
 {
     /** @var  ActesUpdateClassificationSQL */
@@ -9,7 +14,7 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
+        $this->actesUpdateClassificationSQL = $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class);
         $this->classification_xml = file_get_contents(__DIR__ . "/../fixtures/classification.xml");
     }
 
@@ -29,13 +34,13 @@ class ActesUpdateClassificationSQLTest extends S2lowTestCase
             'Actes réglementaires',
             $this->actesUpdateClassificationSQL->getActeNature()[1]['descr']
         );
-        $authority_id = $this->getObjectInstancier()->get("AuthoritySQL")->getIdBySIREN("123456789");
+        $authority_id = $this->getObjectInstancier()->get(AuthoritySQL::class)->getIdBySIREN("123456789");
         $this->assertEquals(
             "Commande Publique",
             $this->actesUpdateClassificationSQL->getClassificationCode($authority_id)[0]['description']
         );
 
-        $actesTypePJSQL = $this->getObjectInstancier()->get('ActesTypePJSQL');
+        $actesTypePJSQL = $this->getObjectInstancier()->get(ActesTypePJSQL::class);
         $this->assertEquals(13, count($actesTypePJSQL->getAll()));
     }
 

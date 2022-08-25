@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\Recuperateur;
+
 class RecuperateurTest extends PHPUnit_Framework_TestCase
 {
     public function testGet()

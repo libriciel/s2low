@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 echo "Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu\n";

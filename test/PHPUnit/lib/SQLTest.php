@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\SQL;
+
 class SQLTest extends S2lowTestCase
 {
     /**
@@ -10,7 +12,7 @@ class SQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sqlSQL = $this->getMockForAbstractClass('SQL', array($this->getSQLQuery()));
+        $this->sqlSQL = $this->getMockForAbstractClass(SQL::class, array($this->getSQLQuery()));
     }
 
     public function testQuery()

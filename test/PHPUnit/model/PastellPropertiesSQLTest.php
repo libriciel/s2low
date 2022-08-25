@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 class PastellPropertiesSQLTest extends S2lowTestCase
 {
     public function testGetPastellProperties()

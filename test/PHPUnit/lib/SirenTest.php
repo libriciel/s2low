@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Lib\LuhnKey;
+use S2lowLegacy\Lib\Siren;
+
 class SirenTest extends PHPUnit_Framework_TestCase
 {
     public function get_data()

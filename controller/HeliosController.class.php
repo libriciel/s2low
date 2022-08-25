@@ -1,5 +1,22 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosRetourSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+use S2lowLegacy\Model\ModuleSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class HeliosController extends Controller
 {
     private const MODULE_NAME = 'helios';
@@ -17,7 +34,7 @@ class HeliosController extends Controller
      */
     private function getPesAllerRetriever()
     {
-        return $this->getObjectInstancier()->get("PesAllerRetriever");
+        return $this->getObjectInstancier()->get(PesAllerRetriever::class);
     }
 
     public function setHeliosMaxUploadSize($helios_max_upload_size)
@@ -61,7 +78,7 @@ class HeliosController extends Controller
     public function import($user_id)
     {
         /** @var RgsConnexion $rgsConnexion */
-        $rgsConnexion = $this->getObjectInstancier()->{'RgsConnexion'};
+        $rgsConnexion = $this->getObjectInstancier()->{RgsConnexion::class};
         if (! $rgsConnexion->isRgsConnexion()) {
             throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
         }

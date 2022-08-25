@@ -8,11 +8,15 @@
  *
  */
 
+use S2lowLegacy\Class\PastellWrapper;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 exit;
 
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);

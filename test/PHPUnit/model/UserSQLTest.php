@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
 class UserSQLTest extends S2lowTestCase
 {
     /**

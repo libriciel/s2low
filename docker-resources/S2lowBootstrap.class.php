@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\UserSQL;
+
 class S2lowBootstrap
 {
     private $sqlQuery;

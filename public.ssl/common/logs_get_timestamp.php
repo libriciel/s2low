@@ -15,6 +15,11 @@
  *
  */
 
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\User;
+
 $me = new User();
 
 if (! $me->authenticate()) {

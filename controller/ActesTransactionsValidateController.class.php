@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\PadesValid;
+use S2lowLegacy\Class\TGZExtractor;
+use S2lowLegacy\Class\TmpFolder;
+
 class ActesTransactionsValidateController extends Controller
 {
     /**
@@ -53,7 +60,7 @@ class ActesTransactionsValidateController extends Controller
 
         $tgzExtractor->extract($archive_path, '');
 
-        $padesValid = $this->getObjectInstancier()->get('PadesValid');
+        $padesValid = $this->getObjectInstancier()->get(PadesValid::class);
 
         $pades_result = [];
 

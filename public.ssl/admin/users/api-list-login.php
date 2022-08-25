@@ -1,7 +1,9 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\UserSQL;
+
+$userSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
 
 $me = new User();
 $certificateInfo = $me->getCertificateInfo();

@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Model\HeliosRetourSQL;
+
 class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
 {
     public function testChangeStatusAction()
@@ -9,7 +12,7 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
 
         $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml");
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id', $transaction_id);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
 
         $info = $heliosRetourSQL->getInfo($transaction_id);
         $this->assertEquals(0, $info['status']);
@@ -33,7 +36,7 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
 
         $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml");
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id', $transaction_id);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
 
         $info = $heliosRetourSQL->getInfo($transaction_id);
         $this->assertEquals(0, $info['status']);

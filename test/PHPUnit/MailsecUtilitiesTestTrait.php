@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+
 trait MailsecUtilitiesTestTrait
 {
     private $fn_download_payload = "fn_download_test";

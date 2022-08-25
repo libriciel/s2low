@@ -1,9 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use Legacy\MailLayout;
 
 require_once('../../../init/init.php');
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
 $password = Helpers::getVarFromPost("mdp");
@@ -48,7 +52,7 @@ $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 /** @var CloudStorage $cloudStorage */
-$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+$cloudStorage  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()
     ->get(CloudStorageFactory::class)
     ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
 

@@ -1,6 +1,8 @@
  <h1> Mail - Système de mail sécurisé</h1>
 
- <?php if (isset($_SESSION["last_message"])) : ?>
+ <?php use S2lowLegacy\Class\Helpers;
+
+ if (isset($_SESSION["last_message"])) : ?>
      <div class="alert alert-success" >
          <?php echo $_SESSION["last_message"]; ?>
      </div>

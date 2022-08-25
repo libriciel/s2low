@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\LuhnKey;
+use S2lowLegacy\Lib\Recuperateur;
+use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use S2lowLegacy\Model\GroupSQL;
+
 require_once(__DIR__ . "/../../../init/init-www.php");
 
 if (! $droit->isSuperAdmin($userInfo)) {

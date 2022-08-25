@@ -11,8 +11,12 @@
  *
  */
 
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class]
     );
@@ -27,7 +31,7 @@ $sql = "SELECT actes_transactions.id as transaction_id, actes_transactions_workf
 
 $actes_list = $sqlQuery->query($sql);
 
-$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+$objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
 
 $actesTransactions = $objectInstancier->get(ActesTransactionsSQL::class);
 

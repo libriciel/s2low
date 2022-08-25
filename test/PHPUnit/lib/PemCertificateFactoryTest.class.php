@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\PemCertificateFactory;
+
 class PemCertificateFactoryTest extends S2lowTestCase
 {
     public function testExceptionIsThrownWhenWrongCertificateIsParsed()

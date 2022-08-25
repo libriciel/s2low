@@ -11,6 +11,13 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function __construct(string $environment, bool $debug)
+    {
+        require_once(__DIR__ . "/../init/init.php");
+        \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+        parent::__construct($environment, $debug);
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');

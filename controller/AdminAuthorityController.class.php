@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\CSVOutput;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\AuthoritySQL;
+
 class AdminAuthorityController extends Controller
 {
     /**
@@ -15,7 +21,7 @@ class AdminAuthorityController extends Controller
 
         $this->verifAdmin($authority_id);
 
-        $actesConvention = $this->getObjectInstancier()->get("ActesConventions");
+        $actesConvention = $this->getObjectInstancier()->get(ActesConventions::class);
 
         $convention_filepath = $actesConvention->getConventionFilepath($authority_id);
 
@@ -58,7 +64,7 @@ class AdminAuthorityController extends Controller
             $result[] = $line;
         }
 
-        $csvOutput = $this->getObjectInstancier()->get("CSVOutput");
+        $csvOutput = $this->getObjectInstancier()->get(CSVOutput::class);
         $csvOutput->sendAttachment("collectivite.csv", $result);
 
         $this->controller_exit();

@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\XMLHelper;
+
 class ActesEnvelope extends DataObject
 {
     protected $objectName = "actes_envelopes";
@@ -814,8 +821,8 @@ class ActesEnvelope extends DataObject
             return false;
         }
 
-        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $actesRetriever = $objectInstancier->get('ActesRetriever');
+        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        $actesRetriever = $objectInstancier->get(ActesRetriever::class);
         $archive_path = $actesRetriever->getPath($this->file_path);
 
         if (! file_exists($archive_path)) {

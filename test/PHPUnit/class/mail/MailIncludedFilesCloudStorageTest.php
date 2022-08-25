@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\TmpFolder;
+
 class MailIncludedFilesCloudStorageTest extends S2lowTestCase
 {
     use MailsecUtilitiesTestTrait;

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\NounceSQL;
+
 class AuthenticationNounceController extends Controller
 {
     public function _actionAfter()
@@ -17,7 +19,7 @@ class AuthenticationNounceController extends Controller
             return false;
         }
         /** @var NounceSQL $nounceSQL */
-        $nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
+        $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
         $authority_id = $this->me->get('authority_id');
         $nounce = $nounceSQL->create($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $authority_id);
 

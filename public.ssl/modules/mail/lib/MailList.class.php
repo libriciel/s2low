@@ -2,6 +2,8 @@
 
 //Les classes MailPeer et MailTransaction ne sont pas utilisable pour gérer l'API... (EP)
 
+use S2lowLegacy\Class\Database;
+
 class MailList
 {
     private $db;

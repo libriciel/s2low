@@ -1,7 +1,14 @@
 <?php
 
-require_once("../../../init/init.php");
-$bordereauPdfGenerator = LegacyObjectsManager::getLegacyObjectInstancier()->get(BordereauPdfGenerator::class);
+use S2lowLegacy\Class\actes\BordereauPdfGenerator;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+
+$bordereauPdfGenerator = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(BordereauPdfGenerator::class);
 
 $id = Helpers :: getVarFromGet("trans_id");
 

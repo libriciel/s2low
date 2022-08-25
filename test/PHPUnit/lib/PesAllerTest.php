@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\PesAller;
+
 class PesAllerTest extends PHPUnit_Framework_TestCase
 {
     private $pesAller;

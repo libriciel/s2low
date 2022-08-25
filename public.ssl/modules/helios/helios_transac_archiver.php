@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 $recuperateur = new Recuperateur($_POST);

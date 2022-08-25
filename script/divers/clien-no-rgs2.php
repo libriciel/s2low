@@ -2,8 +2,11 @@
 
 //Liste des clients qui n'ont pas un certificat RGS
 
+use S2lowLegacy\Lib\RgsCertificate;
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
 

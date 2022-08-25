@@ -2,13 +2,16 @@
 
 namespace S2low\Controller;
 
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\MailInit;
 use Exception;
-use Helpers;
-use LegacyObjectsManager;
 use MailController;
-use MailInit;
 use Legacy\MailLayout;
 use S2low\Services\MailSecurises\MailSecuriseNotification;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -21,9 +24,9 @@ class MailSecuriseController extends AbstractController
      * @var \S2low\Services\MailSecurises\MailSecuriseNotification
      */
     private MailSecuriseNotification $mailSecuriseNotification;
-    private \Module $module;
-    private \User $me;
-    private \Authority $myAuthority;
+    private Module $module;
+    private User $me;
+    private Authority $myAuthority;
 
     public function __construct(MailLayout $mailLayout, MailSecuriseNotification $mailSecuriseNotification)
     {

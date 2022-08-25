@@ -1,7 +1,11 @@
 <?php
 
-require_once(__DIR__ . "/../init/init.php");
-list(    $s2lowRedirect ,$userSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\S2lowRedirect;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
+list(    $s2lowRedirect ,$userSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [S2lowRedirect::class, UserSQL::class]
     );

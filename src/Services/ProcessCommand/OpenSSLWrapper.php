@@ -2,6 +2,8 @@
 
 namespace S2low\Services\ProcessCommand;
 
+use S2lowLegacy\Class\RecoverableException;
+
 class OpenSSLWrapper
 {
     /**
@@ -20,7 +22,7 @@ class OpenSSLWrapper
     }
 
     /**
-     * @throws \RecoverableException
+     * @throws RecoverableException
      */
     public function verify(string $certificate_path, array $nonBlockingErrors, string $timestamp = null): void
     {
@@ -37,7 +39,7 @@ class OpenSSLWrapper
     }
 
     /**
-     * @throws \RecoverableException
+     * @throws RecoverableException
      */
     public function extractCertificateSN(string $path): string
     {

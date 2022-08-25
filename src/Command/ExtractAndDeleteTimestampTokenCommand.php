@@ -2,8 +2,8 @@
 
 namespace S2low\Command;
 
+use S2lowLegacy\Class\S2lowLogger;
 use S2low\Services\LogTimestampTokenGarbage;
-use S2lowLogger;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

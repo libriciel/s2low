@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SessionWrapper;
+use S2lowLegacy\Lib\SQLQuery;
 use PHPUnit\Framework\TestCase;
 
 abstract class S2lowTestCase extends TestCase
@@ -39,8 +44,8 @@ abstract class S2lowTestCase extends TestCase
         $_SERVER['SSL_CLIENT_CERT'] = "";
         $_SERVER["QUERY_STRING"] = "";
 
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
-        $this->getObjectInstancier()->__set('SQLQuery', $this->getSQLQuery());
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
         $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
         $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
 
@@ -72,12 +77,16 @@ abstract class S2lowTestCase extends TestCase
         $session = array();
         $server = array();
 
-        $this->getObjectInstancier()->set('Environnement', new Environnement($get, $post, $request, $session, $server));
-        $this->getObjectInstancier()->set("SessionWrapper", $this->getObjectInstancier()->get("Environnement")->session());
-        $this->getObjectInstancier()->set("Monolog\Logger", new  Monolog\Logger('PHPUNIT'));
+        $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server));
+        $this->getObjectInstancier()->set(SessionWrapper::class, $this->getObjectInstancier()->get(Environnement::class)->session());
+        $monologLogger = new  Monolog\Logger('PHPUNIT');
+        $this->getObjectInstancier()->set(Monolog\Logger::class, $monologLogger);
         $testHandler = new Monolog\Handler\TestHandler();
-        $this->getObjectInstancier()->set("Monolog\Handler\TestHandler", $testHandler);
-        $this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
+        $this->getObjectInstancier()->set(Monolog\Handler\TestHandler::class, $testHandler);
+        $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
+
+        // WARNING : PAS SUR DE LA MANIP
+        $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
         $this->getObjectInstancier()->set('helios_ftp_server', 'server');
         $this->getObjectInstancier()->set('helios_ftp_passive_mode', 'HELIOS_FTP_PASSIVE_MODE');
@@ -118,7 +127,7 @@ abstract class S2lowTestCase extends TestCase
      */
     public function getObjectInstancier()
     {
-        return  ObjectInstancierFactory::getObjetInstancier();
+        return  \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
     }
 
     /**
@@ -132,7 +141,7 @@ abstract class S2lowTestCase extends TestCase
     protected function setServerInfo(array $server_info)
     {
         foreach ($server_info as $key => $value) {
-            $this->getObjectInstancier()->get("Environnement")->server()->set($key, $value);
+            $this->getObjectInstancier()->get(Environnement::class)->server()->set($key, $value);
         }
     }
 
@@ -199,7 +208,7 @@ abstract class S2lowTestCase extends TestCase
 
     public function getLogRecords()
     {
-        $testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
         return $testHandler->getRecords();
     }
 

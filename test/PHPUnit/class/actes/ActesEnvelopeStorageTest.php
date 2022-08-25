@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Lib\OpenStackContainerStore;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ActesEnvelopeStorageTest extends S2lowTestCase
@@ -76,7 +80,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
-        $testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
         $this->assertEquals("File not exists $filename [PASS]", $testHandler->getRecords()[2][self::MESSAGE]);
     }
 
@@ -93,7 +97,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
-        $testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
         $this->assertTrue(file_exists($actes_files_upload_root . "/$filename"));
         $this->assertEquals("File $filename will be deleted if confirm is ok", $testHandler->getRecords()[3][self::MESSAGE]);
     }

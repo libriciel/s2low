@@ -2,15 +2,15 @@
 
 namespace S2low\Services;
 
+use S2lowLegacy\Class\RecoverableException;
+use S2lowLegacy\Class\S2lowLogger;
 use Exception;
-use RecoverableException;
-use S2lowLogger;
 use Symfony\Component\Process\Process;
 use UnexpectedValueException;
 
 class PdfValidator
 {
-    /** @var \S2lowLogger  */
+    /** @var S2lowLogger  */
     private $logger;
 
     public function __construct(S2lowLogger $logger)
@@ -19,8 +19,8 @@ class PdfValidator
     }
 
     /**
-     * @throws \RecoverableException
-     * @throws \UnexpectedValueException
+     * @throws RecoverableException
+     * @throws UnexpectedValueException
      */
     public function check(string $filepath): bool
     {

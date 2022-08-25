@@ -1,9 +1,12 @@
 <?php
 
-require_once(__DIR__ . "/../../init/init.php");
-$objectInstancier  = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-$heliosTransactionsSQL = $objectInstancier->get('HeliosTransactionsSQL');
+require_once(__DIR__ . "/../../init/init.php");
+$objectInstancier  = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+
+$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 
 
 $dh = opendir(HELIOS_FILES_UPLOAD_ROOT);

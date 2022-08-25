@@ -2,8 +2,10 @@
 
 //renvoi la liste des actes transmis sous la forme d'un CSV
 
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 

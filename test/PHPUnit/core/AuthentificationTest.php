@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\HttpsConnexion;
+use S2lowLegacy\Class\PasswordHandler;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\NounceSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class AuthentificationTest extends S2lowTestCase
 {
     /**
@@ -8,7 +16,7 @@ class AuthentificationTest extends S2lowTestCase
      */
     private function authenticateWith($expected)
     {
-        $authentification = $this->getObjectInstancier()->get('Authentification');
+        $authentification = $this->getObjectInstancier()->get(Authentification::class);
         $this->assertEquals($expected, $authentification->authenticate());
     }
 
@@ -56,7 +64,7 @@ class AuthentificationTest extends S2lowTestCase
     public function testManyCertLoginOk()
     {
         $this->setServerAdullactCertificate();
-        $this->getObjectInstancier()->get("Environnement")->session()->set('id_login', 2);
+        $this->getObjectInstancier()->get(Environnement::class)->session()->set('id_login', 2);
         $this->authenticateWith(2);
     }
 
@@ -157,7 +165,7 @@ class AuthentificationTest extends S2lowTestCase
         $this->setServerInfo([
             'SSL_CLIENT_VERIFY' => "FAILED",
         ]);
-        $this->getObjectInstancier()->get("Environnement")->session()->set('id_login', 2);
+        $this->getObjectInstancier()->get(Environnement::class)->session()->set('id_login', 2);
         $this->setExpectedException("Exception", "Message : La connexion n'a pas pu être établie");
         $this->authenticateWith(2);
     }
@@ -170,7 +178,7 @@ class AuthentificationTest extends S2lowTestCase
         $this->setServerInfo([
             'SSL_CLIENT_VERIFY' => "",
         ]);
-        $this->getObjectInstancier()->get("Environnement")->session()->set('id_login', 2);
+        $this->getObjectInstancier()->get(Environnement::class)->session()->set('id_login', 2);
         $this->setExpectedException("Exception", "Message : La connexion n'a pas pu être établie");
         $this->authenticateWith(2);
     }
@@ -189,7 +197,7 @@ class AuthentificationTest extends S2lowTestCase
      */
     public function testAuthenticationWithNounce()
     {
-        $nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
+        $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
         $nounce = $nounceSQL->create("alice", "alice", 1);
 
         $this->setServerInfo([
@@ -199,9 +207,9 @@ class AuthentificationTest extends S2lowTestCase
             'SSL_CLIENT_CERT' => "certificat"
         ]);
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('nounce', $nounce);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('login', 'alice');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('hash', hash("sha256", "alice:$nounce"));
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce"));
 
         $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
 
@@ -232,15 +240,15 @@ class AuthentificationTest extends S2lowTestCase
      */
     public function testAuthenticationWithNounceFailed()
     {
-        $nounceSQL = $this->getObjectInstancier()->get('NounceSQL');
+        $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
         $nounce = $nounceSQL->create("alice", "alice", 1);
 
         $this->setServerAdullactCertificate();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('nounce', $nounce);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('login', 'alice');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('hash', hash("sha256", "alice:$nounce:toto"));
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce:toto"));
 
-        $authentification = $this->getObjectInstancier()->get("Authentification");
+        $authentification = $this->getObjectInstancier()->get(Authentification::class);
         $this->setExpectedException("Exception", "La connexion n'a pas pu être établie");
         $authentification->authenticate();
     }
@@ -254,7 +262,7 @@ class AuthentificationTest extends S2lowTestCase
             'SSL_CLIENT_CERT' => file_get_contents(__DIR__ . "/fixtures/clean_pem.pem"),
         ]);
 
-        $authentification = $this->getObjectInstancier()->get("Authentification");
+        $authentification = $this->getObjectInstancier()->get(Authentification::class);
         $info = $authentification->getAllConnexionInfo();
 
         $this->assertEquals(array(

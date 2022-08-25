@@ -1,7 +1,17 @@
 <?php
 
-require_once("../../../init/init.php");
-list($pesAllerRetriever,$workerScript, $heliosTransactionSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\helios\HeliosSignature;
+use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
+list($pesAllerRetriever,$workerScript, $heliosTransactionSQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [PesAllerRetriever::class, WorkerScript::class, HeliosTransactionsSQL::class]
     );

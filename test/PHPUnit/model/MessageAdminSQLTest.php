@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Model\MessageAdmin;
+use S2lowLegacy\Model\MessageAdminSQL;
+
 class MessageAdminSQLTest extends S2lowTestCase
 {
     private const MESSAGE_TEST = "Ceci est un message";

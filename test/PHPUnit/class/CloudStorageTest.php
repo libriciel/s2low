@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use Monolog\Logger;
 use Symfony\Component\Finder\Finder;
 

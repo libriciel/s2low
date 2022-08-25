@@ -1,6 +1,9 @@
 <?php
 
 /* Quel bordel, des fois on appel config.php, des fois init.php. Je rajoute ca la a cause de Monolog */
+
+use S2lowLegacy\Class\Helpers;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 require_once(__DIR__ . "/LoadLocalSettings.php");

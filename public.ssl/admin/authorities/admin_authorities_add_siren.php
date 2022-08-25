@@ -1,7 +1,13 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-list($jsonOutput,$authorityGroupSirenSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\LuhnKey;
+use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+
+list($jsonOutput,$authorityGroupSirenSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([JSONoutput::class, AuthorityGroupSirenSQL::class]);
 
 $me = new User();

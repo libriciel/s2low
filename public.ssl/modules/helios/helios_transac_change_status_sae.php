@@ -1,5 +1,7 @@
 <?php
 
-$frontController = LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
+use S2lowLegacy\Lib\FrontController;
+
+$frontController = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
 
 $frontController->go("HeliosSAE", "changeStatus");

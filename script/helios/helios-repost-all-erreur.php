@@ -1,8 +1,14 @@
-
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class]
     );

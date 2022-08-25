@@ -1,7 +1,13 @@
 <?php
 
-require_once("../../../init/init.php");
-$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\X509Certificate;
+
+$jsonOutput = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $x509Certificate = new X509Certificate();
 

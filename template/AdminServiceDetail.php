@@ -1,3 +1,8 @@
+<?php
+
+use S2lowLegacy\Class\Helpers;
+
+?>
 
 <h1>Gestion du service <?php hecho($groupe['name']);?></h1>
 

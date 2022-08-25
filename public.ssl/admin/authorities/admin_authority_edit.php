@@ -1,7 +1,18 @@
 <?php
 
-require_once("../../../init/init.php");
-list($objectInstancier, $html ) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use S2lowLegacy\Model\AuthorityTypesSQL;
+use S2lowLegacy\Model\GroupSQL;
+
+list($objectInstancier, $html ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, 'html']
     );
@@ -297,7 +308,7 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= $authority->getDeptDistrString();
 }
 
-$actesConventions = $objectInstancier->get('ActesConventions');
+$actesConventions = $objectInstancier->get(ActesConventions::class);
 
 $html .= "  </div>\n";
 $html .= " </div>\n";

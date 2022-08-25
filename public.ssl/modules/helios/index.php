@@ -1,5 +1,16 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\helios\HeliosTransactionsListe;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 $recuperateur = new Recuperateur($_GET);

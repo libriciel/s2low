@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\CurlWrapper;
+use S2lowLegacy\Class\CurlWrapperFactory;
+use S2lowLegacy\Class\PadesValid;
+use S2lowLegacy\Class\RecoverableException;
+use S2lowLegacy\Class\VerifyPadesSignature;
+
 class PadesValidTest extends S2lowTestCase
 {
     /**

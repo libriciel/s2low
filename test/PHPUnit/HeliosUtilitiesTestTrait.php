@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+
 trait HeliosUtilitiesTestTrait
 {
     protected function createTransaction()

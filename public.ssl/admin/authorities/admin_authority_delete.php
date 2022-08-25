@@ -16,6 +16,12 @@
  *
  */
 
+// Suppression collectivité désactivée
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\User;
+
 // Suppression collectivité désactivée en production
 if (MODE == "prod") {
     header("Location: " . WEBSITE);

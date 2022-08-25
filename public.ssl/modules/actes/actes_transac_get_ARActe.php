@@ -1,5 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
 
 $recuperateur = new Recuperateur($_GET);

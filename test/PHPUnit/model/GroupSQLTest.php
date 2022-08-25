@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\GroupSQL;
+
 class GroupSQLTest extends S2lowTestCase
 {
     private const GROUPE_1_NAME = "Groupe de test";

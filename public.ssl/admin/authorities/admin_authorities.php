@@ -1,5 +1,4 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-$frontController = LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
+$frontController = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Lib\FrontController::class);
 $frontController->go("Admin", "authorities");

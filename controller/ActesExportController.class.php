@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\CSVOutput;
+use S2lowLegacy\Model\AuthoritySQL;
+
 class ActesExportController extends Controller
 {
     public const MAX_EXPORT_INTERVAL_IN_DAY = 400;
@@ -9,7 +14,7 @@ class ActesExportController extends Controller
         $this->verifAdmin();
         $this->{"title"} = "Actes - Export des informations";
         $this->setViewParameter('me', $this->me);
-        $authoritySQL = $this->getObjectInstancier()->get("AuthoritySQL");
+        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
 
         $date_debut = $this->getRecuperateurGet()->get('date_debut');
         $date_fin = $this->getRecuperateurGet()->get('date_fin');
@@ -58,14 +63,14 @@ class ActesExportController extends Controller
 
         $result = array();
 
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
         $envelope_list = $actesEnvelopeSQL->listEnveloppe($date_debut, $date_fin, $authority_id, $authority_group_id);
         foreach ($envelope_list as $envelope_info) {
             $line = array(
                 $envelope_info['id'],
                 $envelope_info['submission_date'],
                 basename($envelope_info['file_path']),
-                implode("\n", $this->getObjectInstancier()->get("ActesIncludedFileSQL")->getAllFilenameInEnvelope($envelope_info['id'])),
+                implode("\n", $this->getObjectInstancier()->get(ActesIncludedFileSQL::class)->getAllFilenameInEnvelope($envelope_info['id'])),
                 strval($envelope_info['siren']),
                 strval($envelope_info['department']),
                 strval($envelope_info['district']),
@@ -77,7 +82,7 @@ class ActesExportController extends Controller
             $result[] = $line;
         }
 
-        $csvOutput = $this->getObjectInstancier()->get("CSVOutput");
+        $csvOutput = $this->getObjectInstancier()->get(CSVOutput::class);
         $csvOutput->sendAttachment("actes.csv", $result);
 
         $this->controller_exit();

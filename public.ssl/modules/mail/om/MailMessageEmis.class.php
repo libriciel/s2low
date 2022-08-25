@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Log;
+
 class MailMessageEmis extends DataObject
 {
     public const TYPE_MAIL_TO = "mailTo";
@@ -32,7 +35,7 @@ class MailMessageEmis extends DataObject
      * @param string $email= mail address emis
      * @param int $mail_transaction_id
      * @param string $type_envois with 3 type : mailto, mailcc, mailbcc
-     * @return return true if save success; or false if failed.
+     * @return bool // return true if save success; or false if failed.
      */
     public function newSave($email, $mail_transaction_id, $type_envois)
     {

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\ExtendPdf;
+
 class ExtendPDFTest extends PHPUnit_Framework_TestCase
 {
     /**

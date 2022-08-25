@@ -3,7 +3,6 @@
 namespace S2low\Controller;
 
 use Exception;
-use LegacyObjectsManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -14,8 +13,6 @@ class LegacyController extends AbstractController
         $serverVariablesToSet['PHP_SELF'] = $requestPath;
         $serverVariablesToSet['SCRIPT_NAME'] = $requestPath;
         $serverVariablesToSet['SCRIPT_FILENAME'] = $legacyScript;
-
-        LegacyObjectsManager::setLegacyObjectInstancier();
 
         return new StreamedResponse(
             function () use ($legacyScript, $serverVariablesToSet) {

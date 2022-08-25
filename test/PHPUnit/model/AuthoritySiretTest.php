@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\AuthoritySiretSQL;
+
 class AuthoritySiretTest extends S2lowTestCase
 {
     private const SIRET_EXEMPLE = 49358727300035;

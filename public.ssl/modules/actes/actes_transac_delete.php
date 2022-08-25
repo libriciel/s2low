@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\TransactionSQL;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
 
 if (! $droit->isSuperAdmin($userInfo)) {

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\SimpleXMLWrapper;
+
 class SimpleXMLWrapperTest extends PHPUnit_Framework_TestCase
 {
     /**

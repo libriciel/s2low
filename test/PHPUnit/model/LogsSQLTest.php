@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Model\LogsSQL;
+
 class LogsSQLTest extends S2lowTestCase
 {
     /**

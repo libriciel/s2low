@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesScriptHelper;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
 //require_once(__DIR__."/../../../class/actes/ActesTransactionsSQL.class.php");
 

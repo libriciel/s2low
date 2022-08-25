@@ -1,9 +1,27 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\FileUploader;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Class\XMLHelper;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+
 $tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
 
-require_once(__DIR__ . "/../../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
 
 $errorMsg = "";

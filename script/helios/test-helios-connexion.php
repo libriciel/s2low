@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\helios\FTPService;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\FtpServiceWrapper;
+use S2lowLegacy\Lib\PesAller;
+use S2lowLegacy\Model\AuthoritySQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($authoritySQL,$s2lowLogger) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($authoritySQL,$s2lowLogger) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([AuthoritySQL::class,S2lowLogger::class]);
 
 $host = HELIOS_FTP_SERVER;

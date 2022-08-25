@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 /**
  * \class HeliosTransaction HeliosTransaction.class.php
  * \brief Cette classe permet de gérerer les transactions HELIOS
@@ -483,7 +487,7 @@ class HeliosTransaction extends DataObject
    *
    * @param string $author_filter
    * @param bool $transmitted
-   * @param boll $byMoth
+   * @param bool $byMoth
    * @param bool $byYear
    * @return int
    */

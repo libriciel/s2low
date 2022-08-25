@@ -1,4 +1,6 @@
-<script src="<?php echo Helpers::getLink("/javascript/jquery-1.11.3.min.js"); ?>"></script>
+<script src="<?php use S2lowLegacy\Class\Helpers;
+
+echo Helpers::getLink("/javascript/jquery-1.11.3.min.js"); ?>"></script>
 <script src="<?php echo Helpers::getLink("/javascript/jqueryui/jquery-ui.min.js"); ?>"></script>
 <link rel="stylesheet" href="<?php echo Helpers::getLink("/javascript/jqueryui/jquery-ui.min.css"); ?>" type="text/css" />
 

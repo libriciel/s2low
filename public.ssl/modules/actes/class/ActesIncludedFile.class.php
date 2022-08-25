@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\actes\ActeTamponne;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Trace;
+
 class ActesIncludedFile extends DataObject
 {
     protected $objectName = "actes_included_files";
@@ -108,8 +115,8 @@ class ActesIncludedFile extends DataObject
                 return false;
             }
 
-            $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-            $actesRetriever = $objectInstancier->get('ActesRetriever');
+            $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+            $actesRetriever = $objectInstancier->get(ActesRetriever::class);
             $envelope_path = $actesRetriever->getPath($this->envelope->get("file_path"));
 
             if (!file_exists($envelope_path)) {
@@ -139,7 +146,7 @@ class ActesIncludedFile extends DataObject
                 if ($path_parts['extension'] == 'pdf' && $this->tampon) {
                     $pathpdforig = $tmpDir . '/' . $this->filename;
 
-                    $acteTamponne = $objectInstancier->get("ActeTamponne");
+                    $acteTamponne = $objectInstancier->get(ActeTamponne::class);
                     $acteTamponne->render($pathpdforig, $this->get("transaction_id"), $this->date_affichage);
                 } elseif (!Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
                     $this->errorMsg .= "Erreur envoi fichier";

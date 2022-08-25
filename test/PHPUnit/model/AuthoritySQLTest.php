@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+
 class AuthoritySQLTest extends S2lowTestCase
 {
     /**

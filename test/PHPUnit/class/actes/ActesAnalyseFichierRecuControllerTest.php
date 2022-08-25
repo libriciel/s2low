@@ -1,5 +1,14 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Model\LogsSQL;
+
 class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 {
     private const TEST_ARCHIVE_MISILCL_PATH = __DIR__ . "/../fixtures/test-archive-MISILCL";
@@ -101,7 +110,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
             "#Reçu par le {$this->actes_ministere_acronyme} le#",
             $transaction_info['message']
         );
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $liste = $logsSQL->getLastLog();
         $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état acquittement reçu#", $liste['message']);
 
@@ -180,7 +189,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get('ActesTransactionsSQL');
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['last_status_id']);
@@ -210,7 +219,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-message-anomalie");
         $actesAnalyseFichierRecuController->analyseAll();
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get('ActesTransactionsSQL');
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
         $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transaction_info['last_status_id']);
@@ -310,7 +319,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
 
-        $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
         $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
         $this->assertEquals(1, $enveloppe_info['user_id']);
 
@@ -336,7 +345,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
 
-        $actesEnveloppeSQL = $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
         $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
         $this->assertEquals(1, $enveloppe_info['user_id']);
 

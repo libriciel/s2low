@@ -1,4 +1,9 @@
 <?php
+
+use S2lowLegacy\Class\actes\ActesStatistiques;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $actesStatistiques = new ActesStatistiques($sqlQuery);

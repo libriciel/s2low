@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class ]
     );

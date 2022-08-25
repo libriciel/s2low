@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Lib\RgsCertificate;
 use PHPUnit\Framework\TestCase;
 
 class RgsCertificateTest extends TestCase

@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Model\PastellProperties;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 class ActesPrepareSaeWorkerTest extends S2lowTestCase
 {
     private const FAKE_PASTELL_URL = "http://fakePastell/";

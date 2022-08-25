@@ -18,7 +18,7 @@
 
 namespace Legacy;
 
-use HTMLLayout;
+use S2lowLegacy\Class\HTMLLayout;
 
 class MailLayout extends HTMLLayout
 {

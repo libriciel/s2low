@@ -1,7 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\PKCS12;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Lib\XadesSignature;
+use S2lowLegacy\Lib\XadesSignatureParser;
+use S2lowLegacy\Lib\XadesSignatureProperties;
+
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 if (empty($argv[2])) {
     echo "Usage : {$argv[0]} entree.xml sortie.xml\n";

@@ -6,8 +6,10 @@
  * les collectivites presentes dans ce departement.
  */
 
+use S2lowLegacy\Class\actes\ActesClassificationCreation;
+
 require_once __DIR__ . "/../../init/init.php";
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 if ($argc == 2 && ((int)$argv[1] == 0)) {
     echo "Usage {$argv[0]} [departement]\n";

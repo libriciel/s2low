@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\ServiceUserSQL;
+
 class AdminServiceControllerTest extends S2lowTestCase
 {
     private const NOM_SERVICE = 'mon service';
@@ -58,16 +63,16 @@ class AdminServiceControllerTest extends S2lowTestCase
      */
     private function addService()
     {
-        $this->getObjectInstancier()->get("Environnement")->post()->set('name', self::NOM_SERVICE);
-        $this->getObjectInstancier()->get("Environnement")->post()->set('authority_id', 1);
-        $this->getObjectInstancier()->get("Environnement")->post()->set('api', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('name', self::NOM_SERVICE);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('authority_id', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', 1);
         $this->adminServiceController->addAction();
     }
 
     public function testListService()
     {
         $this->createService();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_id', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_id', 1);
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("exit() called");
         $this->expectOutputRegex("#\"name\":\"mon service\"#");
@@ -77,8 +82,8 @@ class AdminServiceControllerTest extends S2lowTestCase
     public function testAddUserAction()
     {
         $service_id = $this->createService();
-        $this->getObjectInstancier()->get("Environnement")->post()->set('id_user', 1);
-        $this->getObjectInstancier()->get("Environnement")->post()->set('id_service', $service_id);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_user', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service', $service_id);
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to");
         $this->adminServiceController->addUserAction();

@@ -1,5 +1,16 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificate;
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\PKCS12;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Lib\XadesSignature;
+use S2lowLegacy\Lib\XadesSignatureHasSignatureException;
+use S2lowLegacy\Lib\XadesSignatureNoIDException;
+use S2lowLegacy\Lib\XadesSignatureParser;
+use S2lowLegacy\Lib\XadesSignatureProperties;
+
 class XadesSignatureTest extends PHPUnit_Framework_TestCase
 {
     public function testSignFileNotExists()
@@ -12,7 +23,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
     /**
      * @param $file_to_sign
      * @return string
-     * @throws XadesSignatureHasSignatureException
+     * @throws XadesSignatureHasSignatureException|\S2lowLegacy\Lib\XadesSignatureNoIDException
      */
     private function sign($file_to_sign)
     {
@@ -90,7 +101,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
 
     public function testSignWithoutDocumentElementId()
     {
-        $this->setExpectedException("XadesSignatureNoIDException", "Le document XML ne contient pas d'Id");
+        $this->setExpectedException(XadesSignatureNoIDException::class, "Le document XML ne contient pas d'Id");
         $this->sign(__DIR__ . "/fixtures/test-no-id.xml");
     }
 
@@ -98,7 +109,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
     {
         $signed_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
         $xadesSignature = $this->getXadesSignature();
-        $this->setExpectedException("Exception", "Impossible de lire le certificat PKCS#12");
+        $this->setExpectedException(Exception::class, "Impossible de lire le certificat PKCS#12");
         $xadesSignature->sign(__DIR__ . "/fixtures/test.xml", __DIR__ . "/fixtures/robert_petitpoids.p12", "bad password", $signed_file, $this->getXadesSignatureProperties());
     }
 
@@ -146,7 +157,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
 
     public function testHasSignature()
     {
-        $this->expectException("XadesSignatureHasSignatureException");
+        $this->expectException(XadesSignatureHasSignatureException::class);
         $signed_file = $this->sign(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
         $this->verify($signed_file);
     }

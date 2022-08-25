@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\RgsConnexion;
 use PHPUnit\Framework\TestCase;
 
 class RgsConnexionTest extends TestCase

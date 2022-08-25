@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayout;
+
 $doc = new HTMLLayout('xhtml_prerequis.tpl.php');
 
 

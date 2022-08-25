@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\SessionWrapper;
+
 class SessionWrapperTest extends PHPUnit_Framework_TestCase
 {
     public function testSetGet()

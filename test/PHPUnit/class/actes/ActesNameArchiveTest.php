@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesNameArchive;
+
 class ActesNameArchiveTest extends PHPUnit_Framework_TestCase
 {
     private const ARCHIVE_NAME = "abc-TACT--123456789--20150729-1.tar.gz";

@@ -1,7 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ScriptSleeping;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier, $logger) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $logger) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->get([ObjectInstancier::class, S2lowLogger::class]);
 
 $objectInstancier->set("Monolog\Logger", $logger->withName('ACTES-GRAND-MENAGE'));

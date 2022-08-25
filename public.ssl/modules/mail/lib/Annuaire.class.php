@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Class\FileUploader;
+use S2lowLegacy\Class\Mailer;
+
 /**
  * Modifications :
  * Auteur   Date       Commentaire

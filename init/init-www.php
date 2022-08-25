@@ -1,8 +1,20 @@
 <?php
 
+use S2lowLegacy\Class\Connexion;
+use S2lowLegacy\Class\Droit;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\GroupSQL;
+use S2lowLegacy\Model\ModuleSQL;
+use S2lowLegacy\Model\UserSQL;
+
 require_once("init.php");
 
-list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
     );

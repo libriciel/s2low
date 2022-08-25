@@ -3,30 +3,30 @@
 namespace S2low\Tests\Services;
 
 use Exception;
-use LogsHistoriqueSQL;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2low\Services\LogTimestampTokenGarbage;
 use S2low\Tests\LogsHistoriqueSQLTrait;
 use S2lowTestCase;
-use TmpFolder;
+use S2lowLegacy\Class\TmpFolder;
 
 class LogTimestampTokenGarbageTest extends S2lowTestCase
 {
     use LogsHistoriqueSQLTrait;
 
+    private $old_timestamp_token_directory;
+    private int $timestamp_token_retention_nb_days = 10;
+
     public function setUp(): void
     {
         parent::setUp();
-        $tmpFolder = new TmpFolder();
-        $tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('old_timestamp_token_directory', $tmp_folder);
-        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days', 10);
+        $this->old_timestamp_token_directory =  (new TmpFolder())->create();
         $this->addFixtures();
     }
 
     public function tearDown(): void
     {
-        $tmpFolder = new TmpFolder();
-        $tmpFolder->delete($this->getObjectInstancier()->get('old_timestamp_token_directory'));
+        (new TmpFolder())->delete($this->old_timestamp_token_directory);
         parent::tearDown();
     }
 
@@ -35,8 +35,15 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
      */
     public function testExtractAndDelete()
     {
-        $logTimestampTokenGarbage = $this->getObjectInstancier()->get(LogTimestampTokenGarbage::class);
         $logsHistoriqueSQL = $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
+
+        $logTimestampTokenGarbage = new LogTimestampTokenGarbage(
+            $this->old_timestamp_token_directory,
+            $this->timestamp_token_retention_nb_days,
+            $logsHistoriqueSQL,
+            $this->getObjectInstancier()->get(S2lowLogger::class)
+        );
+
         $tmp_folder = $logTimestampTokenGarbage->getOldTimestampTokenDirectory();
 
         $logTimestampTokenGarbage->extractAndDelete(1);
@@ -55,7 +62,15 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
 
     public function testInfo()
     {
-        $logTimestampTokenGarbage = $this->getObjectInstancier()->get(LogTimestampTokenGarbage::class);
+        $logsHistoriqueSQL = $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
+
+        $logTimestampTokenGarbage = new LogTimestampTokenGarbage(
+            $this->old_timestamp_token_directory,
+            $this->timestamp_token_retention_nb_days,
+            $logsHistoriqueSQL,
+            $this->getObjectInstancier()->get(S2lowLogger::class)
+        );
+
         $info = $logTimestampTokenGarbage->getInfo(1);
         $this->assertEquals(array (
             'older-than' => 10,

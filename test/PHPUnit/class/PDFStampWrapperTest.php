@@ -1,12 +1,17 @@
 <?php
 
+use S2lowLegacy\Class\CurlWrapper;
+use S2lowLegacy\Class\CurlWrapperFactory;
+use S2lowLegacy\Class\PDFStampData;
+use S2lowLegacy\Class\PDFStampWrapper;
+
 class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
 {
     private function getCurlWrapperFactory($return_string)
     {
-        $curlWrapper = $this->getMockBuilder("CurlWrapper")->getMock();
+        $curlWrapper = $this->getMockBuilder(CurlWrapper::class)->getMock();
         $curlWrapper->method("get")->willReturn($return_string);
-        $curlWrapperFactory = $this->getMockBuilder("CurlWrapperFactory")->getMock();
+        $curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)->getMock();
         $curlWrapperFactory->method("getNewInstance")->willReturn($curlWrapper);
         /** @var CurlWrapperFactory $curlWrapperFactory */
         return $curlWrapperFactory;

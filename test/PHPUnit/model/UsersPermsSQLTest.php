@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\UsersPermsSQL;
+
 class UsersPermsSQLTest extends S2lowTestCase
 {
     /**

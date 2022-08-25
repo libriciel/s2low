@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesArchiveControler;
+use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\helios\HeliosPrepareSaeWorker;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class AdminStatsController extends Controller
 {
     public function _actionBefore($controller, $action)

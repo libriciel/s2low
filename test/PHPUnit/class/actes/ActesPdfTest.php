@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPdf;
+use S2lowLegacy\Class\actes\BordereauPdfGenerator;
+use S2lowLegacy\Class\actes\IActesPdf;
+
 class ActesPdfTest extends S2lowTestCase
 {
     public function testCreatePdf()

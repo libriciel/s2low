@@ -1,8 +1,13 @@
 <?php
 
-require_once("../init/init.php");
-/** @var \MessageAdminSQL $messageAdminSQL */
-$messageAdminSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\MessageAdminSQL;
+
+/** @var MessageAdminSQL $messageAdminSQL */
+$messageAdminSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
 
 $me = new User();
 if (! $me->authenticate()) {

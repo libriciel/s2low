@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\RedirectException;
+
 class AdminUtilitiesCertificateControllerTest extends S2lowTestCase
 {
     /**

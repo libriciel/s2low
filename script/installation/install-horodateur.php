@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\S2lowLogger;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($s2lowBootstrap, $s2lowLogger ) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($s2lowBootstrap, $s2lowLogger ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [S2lowLogger::class,S2lowBootstrap::class]
     );

@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosPrepareEnvoiSAETest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

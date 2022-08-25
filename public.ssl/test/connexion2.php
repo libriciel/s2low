@@ -1,8 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\User;
+
 define("TESTING_ENVIRONNEMENT", true);
-require_once(__DIR__ . "/../../init/init.php");
-$authenfication = LegacyObjectsManager::getLegacyObjectInstancier()->get(Authentification::class);
+$authenfication = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(Authentification::class);
 
 $connexion_info = $authenfication->getAllConnexionInfo();
 

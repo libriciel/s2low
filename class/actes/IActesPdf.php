@@ -1,5 +1,9 @@
 <?php
 
+namespace S2lowLegacy\Class\actes;
+
+use S2lowLegacy\Class\ExtendPdf;
+
 interface IActesPdf
 {
     public function initPage(ExtendPdf $pdf);

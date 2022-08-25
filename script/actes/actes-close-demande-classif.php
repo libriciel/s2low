@@ -1,7 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($actesTransactionSQL,$sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($actesTransactionSQL,$sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ActesTransactionsSQL::class, SQLQuery::class]
     );

@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\SQLQuery;
+
 class ActesApiControllerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
@@ -72,7 +77,7 @@ class ActesApiControllerTest extends S2lowTestCase
         $this->setUserAuthentification();
         $this->expectOutputRegex('#"number":"20170728C".*\{"result":"ok"\}\[\]#');
         $this->getActesAPIController()->listDocumentPrefectureAction();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('transaction_id', $transaction_id);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('transaction_id', $transaction_id);
         $this->getActesAPIController()->documentPrefectureMarkAsReadAction();
         $this->getActesAPIController()->listDocumentPrefectureAction();
     }
@@ -83,8 +88,8 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testNbCreatedActesByAuthoritiesAndMonth()
     {
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
 
         $this->setAdminGroupAuthentication();
         ob_start();
@@ -103,9 +108,9 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided()
     {
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
         $this->setSuperAdminAuthentication();
 
         ob_start();
@@ -125,9 +130,9 @@ class ActesApiControllerTest extends S2lowTestCase
     {
 
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
         $this->setAdminGroupAuthentication();
         $sql = "UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1";
         $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);

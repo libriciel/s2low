@@ -1,6 +1,12 @@
 <?php
 
 // Instanciation du module courant
+use S2lowLegacy\Class\actes\ActesClassificationCreation;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $module = new Module();
 if (! $module->initByName("actes")) {
     Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);

@@ -1,5 +1,11 @@
 <?php
+
 /** @var PastellProperties $pastellProperties */
+
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Model\PastellProperties;
 
 ?>
 <h1><?php hecho($title); ?></h1>

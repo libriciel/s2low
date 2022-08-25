@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\MailerFactory;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\GroupSQL;
+use S2lowLegacy\Model\ModuleSQL;
+
 class AdminUtilitiesController extends Controller
 {
     public function indexAction()
@@ -43,6 +50,7 @@ class AdminUtilitiesController extends Controller
         $result = ['recipient_ok' => [],'recipient_ko' => []];
 
         foreach ($recipients as $recipient) {
+            /** @var \S2lowLegacy\Class\Mailer $mailer*/
             $mailer = $this->getObjectInstancier()->get(MailerFactory::class)->getInstance();
             $mailer->addComplexRecipient($recipient);
 

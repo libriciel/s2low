@@ -15,6 +15,8 @@
  *
  */
 
+use S2lowLegacy\Class\HTMLLayout;
+
 $doc = new HTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);

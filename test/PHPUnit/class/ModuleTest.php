@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\Module;
+
 class ModuleTest extends S2lowTestCase
 {
     public function testSecurityHole()

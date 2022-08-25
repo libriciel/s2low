@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
+use S2lowLegacy\Class\helios\PesAllerStorage;
+
 class HeliosStorePESAllerWorkerTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

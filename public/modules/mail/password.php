@@ -1,9 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use Legacy\MailLayout;
 
 require_once('../../../init/init.php');
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);

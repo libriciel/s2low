@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPESValidation;
+
 class HeliosPESValidationTest extends PHPUnit_Framework_TestCase
 {
     public function testValidPesAller()

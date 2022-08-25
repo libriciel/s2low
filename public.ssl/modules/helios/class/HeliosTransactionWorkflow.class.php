@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+
 class HeliosTransactionWorkflow extends DataObject
 {
     protected $objectName = "helios_transactions_workflow";

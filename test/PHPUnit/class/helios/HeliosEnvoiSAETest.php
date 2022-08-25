@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
+use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+
 class HeliosEnvoiSAETest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

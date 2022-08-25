@@ -1,7 +1,12 @@
 <?php
 
-require_once("../../../init/init.php");
-$logger = LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\User;
+
+$logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
 
 // Instanciation du module courant

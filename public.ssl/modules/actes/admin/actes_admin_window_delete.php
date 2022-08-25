@@ -16,8 +16,14 @@
  */
 
 // Configuration
-require_once("../../../../init/init.php");
-list($workerScript, $worker) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+
+list($workerScript, $worker) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class,ActesEnvoiFichierWorker::class]
     );

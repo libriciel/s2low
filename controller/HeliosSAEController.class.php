@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\HeliosVerificationSAE;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosSAEController extends Controller
 {
     /**

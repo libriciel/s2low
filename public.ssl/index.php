@@ -7,7 +7,6 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-require_once(__DIR__ . "/../init/init.php");
 
 (new Dotenv())->bootEnv(dirname(__DIR__) . '/.env');
 

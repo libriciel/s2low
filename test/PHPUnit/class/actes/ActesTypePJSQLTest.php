@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesTypePJSQL;
+use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
+
 class ActesTypePJSQLTest extends S2lowTestCase
 {
     /**
@@ -7,7 +10,7 @@ class ActesTypePJSQLTest extends S2lowTestCase
      */
     public function testgetAllByNature()
     {
-        $actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
+        $actesUpdateClassificationSQL = $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class);
 
         $actesUpdateClassificationSQL->updateClassification(
             "123456789",
@@ -24,7 +27,7 @@ class ActesTypePJSQLTest extends S2lowTestCase
      */
     public function testgetListByNature()
     {
-        $actesUpdateClassificationSQL = $this->getObjectInstancier()->get("ActesUpdateClassificationSQL");
+        $actesUpdateClassificationSQL = $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class);
 
         $actesUpdateClassificationSQL->updateClassification(
             "123456789",

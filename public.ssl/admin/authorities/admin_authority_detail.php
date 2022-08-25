@@ -1,7 +1,13 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-list($jsonOutput,$authoritySQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Model\AuthoritySQL;
+
+list($jsonOutput,$authoritySQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([JSONoutput::class, AuthoritySQL::class]);
 
 $me = new User();

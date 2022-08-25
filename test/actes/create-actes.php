@@ -1,8 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
 require_once __DIR__ . "/../PHPUnit/class/actes/ActesCreator.php";
-$actesCreator = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesCreator::class);
+$actesCreator = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesCreator::class);
 
 $transaction_id = $actesCreator->createTransaction(
     ActesStatusSQL::STATUS_POSTE,

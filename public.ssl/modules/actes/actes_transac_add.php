@@ -1,7 +1,14 @@
 <?php
 
-require_once("../../../init/init.php");
-list($actesTypePJSQL, $html) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesTypePJSQL;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\User;
+
+list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ActesTypePJSQL::class, 'html']
     );

@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Model\ModuleSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class ModuleSQLTest extends S2lowTestCase
 {
     /**

@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\MailInit;
+use S2lowLegacy\Class\XMLHelper;
+
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 $db = DatabasePool::getInstance();

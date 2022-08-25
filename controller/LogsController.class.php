@@ -1,17 +1,30 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Lib\FancyDate;
+use S2lowLegacy\Lib\SigTermHandler;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\GroupSQL;
+use S2lowLegacy\Model\LogsHistoriqueSQL;
+use S2lowLegacy\Model\LogsRequestData;
+use S2lowLegacy\Model\LogsRequestSQL;
+use S2lowLegacy\Model\LogsSQL;
+use S2lowLegacy\Model\ModuleSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class LogsController extends Controller
 {
     /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
     {
-        return $this->getObjectInstancier()->get('LogsHistoriqueSQL');
+        return $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
     }
 
     /** @return LogsRequestSQL $logsRequestSQL */
     private function getLogsRequestSQL()
     {
-        return $this->getObjectInstancier()->get('LogsRequestSQL');
+        return $this->getObjectInstancier()->get(LogsRequestSQL::class);
     }
 
     public function viewAction()
@@ -22,8 +35,8 @@ class LogsController extends Controller
         $this->fmodule = $recuperateur->get("module");
         $this->fuser = $recuperateur->get("user");
         $this->fmessage = $recuperateur->get("message");
-        $logs_date_min  = $this->getObjectInstancier()->get('LogsSQL')->getMinDate();
-        $logs_history_date_max  = $this->getObjectInstancier()->get('LogsHistoriqueSQL')->getMaxDate();
+        $logs_date_min  = $this->getObjectInstancier()->get(LogsSQL::class)->getMinDate();
+        $logs_history_date_max  = $this->getObjectInstancier()->get(LogsHistoriqueSQL::class)->getMaxDate();
 
         $timestamp_max = 0; //Quickfix php 8
         if (!is_null($logs_history_date_max)) {
@@ -65,7 +78,7 @@ class LogsController extends Controller
 
         if ($this->date_debut < $logs_history_date_max) {
             if ($this->fauthority) {
-                $this->authority_info = $this->getObjectInstancier()->get('AuthoritySQL')->getInfo($this->fauthority);
+                $this->authority_info = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo($this->fauthority);
             }
 
             $this->fancyDate = new FancyDate();
@@ -129,7 +142,7 @@ class LogsController extends Controller
     public function vidange($nb_month_to_keep)
     {
         /** @var LogsHistoriqueSQL $logsHistoriqueSQL */
-        $logsHistoriqueSQL = $this->getObjectInstancier()->get('LogsHistoriqueSQL');
+        $logsHistoriqueSQL = $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
         $logsHistoriqueSQL->vidange($nb_month_to_keep);
     }
 
@@ -208,7 +221,7 @@ class LogsController extends Controller
 
             $user_id_demandeur = $request['user_id_demandeur'];
 
-            $user_info = $this->getObjectInstancier()->get('UserSQL')->getInfo($user_id_demandeur);
+            $user_info = $this->getObjectInstancier()->get(UserSQL::class)->getInfo($user_id_demandeur);
 
             $messageMail = "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
                 Helpers::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";

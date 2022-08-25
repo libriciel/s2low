@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\User;
+
 unset($_SESSION['error']);
 
 $me = new User();

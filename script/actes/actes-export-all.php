@@ -1,9 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesExport;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once __DIR__ . "/../../init/init.php";
-list( $s2lowLogger, $sqlQuery,$actesExport ) = LegacyObjectsManager::getLegacyObjectInstancier()
+list( $s2lowLogger, $sqlQuery,$actesExport ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([S2lowLogger::class, SQLQuery::class,ActesExport::class]);
 
 $s2lowLogger->enableStdOut();

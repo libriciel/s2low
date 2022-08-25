@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\ObjectInstancier;
+
 class ObjectInstancierTest extends PHPUnit_Framework_TestCase
 {
     public function testRecupValue()

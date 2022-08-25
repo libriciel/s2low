@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\MailInit;
+
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 if (! $me->isAuthorityAdmin()) {
         exit;

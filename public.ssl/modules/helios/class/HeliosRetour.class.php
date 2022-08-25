@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 class HeliosRetour extends DataObject
 {
     protected $objectName = "helios_retour";

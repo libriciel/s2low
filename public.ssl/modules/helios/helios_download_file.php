@@ -1,8 +1,16 @@
 <?php
 
 // Configuration
-require_once("../../../init/init.php");
-$pesAllerRetriever = LegacyObjectsManager::getLegacyObjectInstancier()->get(PesAllerRetriever::class);
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+
+$pesAllerRetriever = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(PesAllerRetriever::class);
 
 // Instanciation du module courant
 $module = new Module();

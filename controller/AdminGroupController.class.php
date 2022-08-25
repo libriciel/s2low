@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Lib\FileUploaderNG;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use S2lowLegacy\Model\GroupSQL;
+
 class AdminGroupController extends Controller
 {
     /**

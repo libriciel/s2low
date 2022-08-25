@@ -1,10 +1,9 @@
 <?php
 
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
+use S2lowLegacy\Lib\OpenStackContainerFetcher;
+use S2lowLegacy\Lib\OpenStackContainerWrapper;
+use S2lowLegacy\Lib\OpenStackStateManager;
 use Monolog\Logger;
-use OpenStack\Common\Error\BadResponseError;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\NounceSQL;
+
 class NounceSQLTest extends S2lowTestCase
 {
     /** @var  NounceSQL */
@@ -8,7 +10,7 @@ class NounceSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->nounceSQL = $this->getObjectInstancier()->{'NounceSQL'};
+        $this->nounceSQL = $this->getObjectInstancier()->{NounceSQL::class};
     }
 
     public function testGetNounce()

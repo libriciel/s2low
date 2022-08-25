@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosAPIController;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\SQLQuery;
+
 class HeliosAPIControllerTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait {
@@ -30,8 +34,8 @@ class HeliosAPIControllerTest extends S2lowTestCase
     {
         $this->createTransaction();
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
 
         $this->setAdminGroupAuthentication();
         ob_start();
@@ -50,9 +54,9 @@ class HeliosAPIControllerTest extends S2lowTestCase
     public function testNbCreatedPESByAuthoritiesAndMonthGroupProvided()
     {
         $this->createTransaction();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
         $this->setSuperAdminAuthentication();
 
         ob_start();
@@ -72,9 +76,9 @@ class HeliosAPIControllerTest extends S2lowTestCase
     {
 
         $this->createTransaction();
-        $this->getObjectInstancier()->get("Environnement")->get()->set('month', '7');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('year', '2017');
-        $this->getObjectInstancier()->get("Environnement")->get()->set('authority_group_id', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
         $this->setAdminGroupAuthentication();
         $sql = "UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1";
         $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);

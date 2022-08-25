@@ -1,7 +1,10 @@
 <?php
+
 /** @var $libersign_applet_url  */
 /** @var $libersign_help_url */
 /** @var  $libersign_extension_update_url */
+
+use S2lowLegacy\Class\Helpers;
 
 ?>
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>

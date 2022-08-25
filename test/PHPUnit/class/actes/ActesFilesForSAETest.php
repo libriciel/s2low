@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesFilesForSAE;
 use PHPUnit\Framework\TestCase;
 
 class ActesFilesForSAETest extends TestCase

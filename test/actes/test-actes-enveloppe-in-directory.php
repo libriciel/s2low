@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 
 $archive = new \Libriciel\LibActes\Archive();

@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\CurlWrapper;
+
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 
 $user_id = 12745;

@@ -1,4 +1,11 @@
 <?php
+
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {

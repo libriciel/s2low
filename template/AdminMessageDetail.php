@@ -1,6 +1,10 @@
 <?php
+
 /** @var MessageAdmin $messageAdmin */
 /** @var FancyDate $fancyDate */
+
+use S2lowLegacy\Lib\FancyDate;
+use S2lowLegacy\Model\MessageAdmin;
 
 ?>
 <h1>Message d'urgence</h1>

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosSignature;
+
 class HeliosSignatureTest extends PHPUnit_Framework_TestCase
 {
     public function testGetInfoForSignature()

@@ -2,8 +2,10 @@
 
 // Script chargÃ© de retourner le nombre de flux PES Ã  l'Ã©tat transmis depuis la veille
 // Sortie au format Influxdb
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $status_id = "3";
 $timestamp = date("Y-m-d");

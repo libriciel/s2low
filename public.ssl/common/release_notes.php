@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\ParsedownExtended;
+
 $me = new User();
 
 if (! $me->authenticate()) {

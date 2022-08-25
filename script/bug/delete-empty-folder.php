@@ -3,7 +3,7 @@
 use Symfony\Component\Finder\Finder;
 
 require_once __DIR__ . "/../../init/init.php";
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $i = 0;
 

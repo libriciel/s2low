@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\PagerHTML;
+
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 if ($userInfo['role'] != 'SADM') {

@@ -2,8 +2,8 @@
 
 namespace S2low\Tests;
 
-use LogsHistoriqueSQL;
-use LogsSQL;
+use S2lowLegacy\Model\LogsSQL;
+use S2lowLegacy\Model\LogsHistoriqueSQL;
 
 trait LogsHistoriqueSQLTrait
 {

@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\HeliosRetourSQL;
+
 class HeliosPESRetourChangeStatusController extends Controller
 {
     public function changeStatusAction()

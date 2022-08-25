@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use S2lowLegacy\Model\GroupSQL;
+
 class AdminGroupControllerTest extends S2lowTestCase
 {
     /** @var  AdminGroupController */
@@ -14,8 +18,8 @@ class AdminGroupControllerTest extends S2lowTestCase
     public function testDoEditActionQuote()
     {
         $this->setSuperAdminAuthentication();
-        $this->getObjectInstancier()->get("Environnement")->post()->set('id', 1);
-        $this->getObjectInstancier()->get("Environnement")->post()->set('name', "apo'strophe");
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('name', "apo'strophe");
 
         try {
             $this->adminGroupController->doEditAction();

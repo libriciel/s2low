@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Model\LogsRequestData;
+use S2lowLegacy\Model\LogsRequestSQL;
+
 class LogsRequestSQLTest extends S2lowTestCase
 {
     /** @var  LogsRequestData */

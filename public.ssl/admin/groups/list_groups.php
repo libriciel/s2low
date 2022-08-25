@@ -1,4 +1,10 @@
 <?php
+
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\User;
+
 require_once(__DIR__ . "/../../../init/init-www.php");
 
 $me = new User();

@@ -1,6 +1,14 @@
 <?php
 
 // Instanciation du module courant
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+
 $module = new Module();
 if (! $module->initByName("actes")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";

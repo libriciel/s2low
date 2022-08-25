@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\User;
+
 class UserTest extends S2lowTestCase
 {
     public function testGetIdFromCertData()

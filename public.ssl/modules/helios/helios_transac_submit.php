@@ -1,7 +1,14 @@
 <?php
 
-require_once("../../../init/init.php");
-list($workerScript, $heliosTransactionSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
+list($workerScript, $heliosTransactionSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class, HeliosTransactionsSQL::class]
     );
