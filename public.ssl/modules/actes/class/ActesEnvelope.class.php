@@ -291,7 +291,7 @@ class ActesEnvelope extends DataObject
         $xml .= " <actes:Emetteur>\n";
         $xml .= "  <actes:IDCL insee:SIREN=\"" . Helpers::escapeForXML($this->siren) . "\" actes:Departement=\"" . Helpers::escapeForXML($this->department) . "\" actes:Arrondissement=\"" . Helpers::escapeForXML($this->district) . "\" actes:Nature=\"" . Helpers::escapeForXML($this->authority_type_code) . "\"/>\n";
         $xml .= "  <actes:Referent>\n";
-        $xml .= "   <actes:Nom>" . XMLHelper::XML_escaping($this->name) . "</actes:Nom>\n";
+        $xml .= "   <actes:Nom>" . XMLHelper::convertToIsoAndEscape($this->name) . "</actes:Nom>\n";
         $xml .= "   <actes:Telephone>" . Helpers::escapeForXML($this->telephone) . "</actes:Telephone>\n";
         $xml .= "   <actes:Email>" . Helpers::escapeForXML($this->email) . "</actes:Email>\n";
         $xml .= "  </actes:Referent>\n";
