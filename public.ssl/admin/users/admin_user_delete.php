@@ -16,8 +16,10 @@
  *  JS   19.07.2006  Adaptation pour Tedetis
  */
 
-// Suppression utilisateur désactivée
-header("Location: " . WEBSITE);
+// Suppression utilisateur désactivée en production
+if (MODE == "prod") {
+    header("Location: " . WEBSITE);
+}
 
 $me = new User();
 

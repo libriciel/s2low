@@ -2,9 +2,9 @@
 
 class XMLHelper
 {
-    public static function XML_escaping($text)
+    public static function convertToIsoAndEscape(string $utf8_encoded_text)
     {
-        $result = htmlspecialchars($text ?? "", ENT_NOQUOTES, "iso-8859-1");
+        $result = htmlspecialchars(utf8_decode($utf8_encoded_text) ?? "", ENT_NOQUOTES, "iso-8859-1");
         return $result;
     }
 

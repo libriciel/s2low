@@ -143,7 +143,14 @@ class HeliosEnvoiControler
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
         }
-        $this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id, $info_from_pes_aller);
+        try {
+            $this->heliosTransactionsSQL->setInfoFromPESAller($transaction_id, $info_from_pes_aller);
+        } catch (Exception $e) {
+            $message = "Transaction $transaction_id : problème d'enregistrement du PES Aller en base de données.";
+            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+            return;
+        }
+
 
 
         $siret = $pes_xml->EnTetePES->IdColl['V'];

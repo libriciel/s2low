@@ -1,7 +1,7 @@
 <?php
 
 require_once("../../../init/init.php");
-$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
+$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $me = new User();
 

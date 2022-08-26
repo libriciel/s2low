@@ -88,7 +88,7 @@ services:
         networks:
             - services
         ports:
-            - 1080:80
+            - 1080:1080
 
     openstack:
         image: serverascode/swift-onlyone

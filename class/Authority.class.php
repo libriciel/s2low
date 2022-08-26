@@ -312,6 +312,30 @@ class Authority extends DataObject
             return false;
         }
 
+        $sql = "DELETE FROM helios_retour WHERE authority_id=?";
+
+        if (! $this->db->exec($sql, [$id])) {
+            $this->errorMsg = "Erreur lors de la suppression des PES Retour.";
+            $this->db->rollback();
+            return false;
+        }
+
+        $sql = "DELETE FROM authority_siret WHERE authority_id=?";
+
+        if (! $this->db->exec($sql, [$id])) {
+            $this->errorMsg = "Erreur lors de la suppression des SIRET.";
+            $this->db->rollback();
+            return false;
+        }
+
+        $sql = "DELETE FROM logs WHERE authority_id=?";
+
+        if (! $this->db->exec($sql, [$id])) {
+            $this->errorMsg = "Erreur lors de la suppression des logs.";
+            $this->db->rollback();
+            return false;
+        }
+
         $sql = "DELETE FROM modules_authorities WHERE authority_id=?";
 
         if (! $this->db->exec($sql, [$id])) {

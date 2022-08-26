@@ -714,7 +714,7 @@ class ActesTransaction extends DataObject
                 $xml .= " <actes:CodeMatiere" . $i . " actes:CodeMatiere=\"" . $this-> $var . "\"/>\n";
             }
         }
-        $xml .= " <actes:Objet>" . XMLHelper::XML_escaping(mb_convert_encoding($this->subject ?? "", "ISO-8859-1")) . "</actes:Objet>\n";
+        $xml .= " <actes:Objet>" . XMLHelper::convertToIsoAndEscape($this->subject ?? "") . "</actes:Objet>\n";
         $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
         $xml .= " <actes:Document>\n";
         $xml .= "  <actes:NomFichier>" . Helpers :: escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";

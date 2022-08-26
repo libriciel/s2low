@@ -27,10 +27,9 @@ class JSONoutput
     }
 
 
-
     private function normalize($array)
     {
-        if (! is_array($array)) {
+        if (!is_array($array)) {
             return $array ?? "";
         }
         $result = array();
@@ -53,11 +52,14 @@ class JSONoutput
         $this->display($result);
     }
 
-    public function display(array $array)
+    public function display(array $array, bool $compatibilityMode = true)
     {
-        //header("Content-type: application/json");
         header_wrapper("Content-type: text/plain");
         $array = $this->normalize($array);
-        echo json_encode($array);
+        $jsonResult = json_encode($array);
+        if ($compatibilityMode) {                        // L'API de la v4 sortait le JSON en ISO
+            $jsonResult = utf8_decode($jsonResult);    // On réalise donc la conversion pour
+        }                                              // garder la compatibilité.
+        echo $jsonResult;
     }
 }
