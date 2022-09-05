@@ -80,7 +80,7 @@ class S2lowBootstrap
 
         $him->set("name", "admin");
         $him->set("givenname", "admin");
-        $him->set("email", "noreply@libriciel.coop");
+        $him->set("email", "noreply@libriciel.net");
         $him->set("status", 1);
         $him->set("authority_id", $authority_id);
         $him->set("role", 'SADM');

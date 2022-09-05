@@ -24,15 +24,14 @@ else
 fi
 a2ensite s2low-apache-config.conf
 
-#TODO vérifier qu'il y a aussi LETSENCRYPT_EMAIL de définit
 #voir si on peu s'assurer que le dossier letsencrypt est un point de montage
-if [ "$LETSENCRYPT_DOMAIN" ] ; then
+if [ "${LETSENCRYPT_DOMAIN}" ] && [ "${LETSENCRYPT_EMAIL}" ]; then
     if [ -f "/etc/apache2/ssl/fullchain.pem" ] ; then
             certbot --logs-dir /data/log/ --work-dir /data/run --http-01-port 8080 renew
     else
-        certbot --http-01-port 8080 --logs-dir /data/log/ --work-dir /data/run --standalone --noninteractive --agree-to --preferred-challenges http -d ${LETSENCRYPT_DOMAIN} -m ${LETSENCRYPT_EMAIL} certonly
-        ln -s /etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/fullchain.pem /etc/apache2/ssl/
-        ln -s /etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/privkey.pem /etc/apache2/ssl/
+        certbot --http-01-port 8080 --logs-dir /data/log/ --work-dir /data/run --standalone --noninteractive --agree-to --preferred-challenges http -d "${LETSENCRYPT_DOMAIN}" -m "${LETSENCRYPT_EMAIL}" certonly
+        ln -s "/etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/fullchain.pem" /etc/apache2/ssl/
+        ln -s "/etc/letsencrypt/live/${LETSENCRYPT_DOMAIN}/privkey.pem" /etc/apache2/ssl/
     fi
 
 fi
@@ -45,19 +44,19 @@ fi
 
 if [ -z "$DONT_INIT_DATABASE" ] ; then
   #On attend que la base de données soit accessible avant de l'initialiser
-  if [ ! ${POSTGRES_HOST} ] ; then
+  if [ ! "${POSTGRES_HOST}" ] ; then
     POSTGRES_HOST="db"
   fi
 
   until nc -z -v -w30 ${POSTGRES_HOST} 5432
   do
-    echo "Waiting for database connection..."
+    echo 'Waiting for database connection...'
     sleep 5
   done
 
   php /var/www/s2low/docker-resources/init-docker.php
 
-  if [ "$POSTGRES_DATABASE_TEST" ]; then
+  if [ "${POSTGRES_DATABASE_TEST}" ]; then
       php /var/www/s2low/docker-resources/init-bdd-test.php
   fi
 fi

@@ -17,3 +17,5 @@ ext/standalone/HTMLPurifier/DefinitionCache
 .vscode
 var/
 coverage
+dump.sql
+dumptest.sql
