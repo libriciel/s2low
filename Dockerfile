@@ -5,7 +5,7 @@ ARG GID=33
 ARG USERNAME=www-data
 ARG GROUPNAME=www-data
 
-EXPOSE 443 80
+EXPOSE 8443 8080
 WORKDIR /var/www/s2low/
 
 # Install requirements

@@ -10,7 +10,7 @@ set -e
 # Pour HTMLPurifier qui marche pas sans son repertoire vide (et qui du coup est supprimé par git)
 # TODO dans le dockerfile ?
 mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
-chmod 777 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
+chmod 770 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
 
 # Génération fichier ssmtp.conf
 # FIXME a supprimer une fois qu'on passe par Symfony
