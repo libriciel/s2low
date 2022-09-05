@@ -16,9 +16,9 @@ services:
             - .:/var/www/s2low
         environment:
             POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST:-db_test}
-            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST:-tedetis}
-            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST:-tedetis}
-            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST:-tedetis}
+            POSTGRES_USER_TEST: ${POSTGRES_USER_TEST:-dbusertest}
+            POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST:-dbpasswordtest}
+            POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST:-s2lowtest}
             WEB_HTTP_PORT: ${WEB_HTTP_PORT:-10080}
             WEB_HTTPS_PORT: ${WEB_HTTPS_PORT:-10443}
             XDEBUG_ON: ${XDEBUG_ON:-true}
@@ -40,19 +40,20 @@ services:
 
 
     db_test:
-        image: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        image: registry.libriciel.fr/public/outils/postgres:14.5
         networks:
           - services
         environment:
-            - POSTGRES_USER=${POSTGRES_USER_TEST:-tedetis}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST:-tedetis}
-            - POSTGRES_DB=${POSTGRES_DATABASE_TEST:-tedetis}
+            - POSTGRES_USER=${POSTGRES_USER_TEST:-dbusertest}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST:-dbpasswordtest}
+            - POSTGRES_DB=${POSTGRES_DATABASE_TEST:-s2lowtest}
         volumes:
             - ${POSTGRESQL_DATADIR_TEST:-db_datadir_test}:/var/lib/postgresql/data
         ports:
             - 15432:5432
+
     phppgadmin:
-        image: keepitcool/phppgadmin
+        image: hubdocker.libriciel.fr/keepitcool/phppgadmin:5.1
         networks:
           - services
         environment:
@@ -64,7 +65,7 @@ services:
             - "${PHPPGADMIN_HTTP_PORT:-10001}:80"
 
     beanstalkd-console:
-        image: schickling/beanstalkd-console
+        image: hubdocker.libriciel.fr/schickling/beanstalkd-console:latest@sha256:950c8120986b536f1cdc431e28c8b7d6e5bada2a038a6fb5119d32323d41a76f
         networks:
             - services
         ports:
@@ -73,7 +74,7 @@ services:
             - beanstalkd:beanstalkd
 
     php-redis-admin:
-        image: faktiva/php-redis-admin
+        image: hubdocker.libriciel.fr/faktiva/php-redis-admin:latest@sha256:e7586bd4856fd462290cd1510110eacfd9edbc1944591e4d608e5ef804b302ee
         environment:
             - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
         ports:
@@ -84,14 +85,14 @@ services:
             - services
 
     maildev:
-        image: maildev/maildev
+        image: hubdocker.libriciel.fr/maildev/maildev:2.0.5
         networks:
             - services
         ports:
             - 1080:1080
 
     openstack:
-        image: serverascode/swift-onlyone
+        image: hubdocker.libriciel.fr/serverascode/swift-onlyone:latest@sha256:752d54d0e432c81b9aa6f3ef5e7c68945a798242b54a8ba016183cae3313dc55
         networks:
             - openstack
         volumes:

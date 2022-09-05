@@ -26,7 +26,7 @@ if (!defined("EMAIL_ADMIN")) {
 // Adresse email sur laquelle seront reçu les alertes critiques du système nécessitant une intervention immédiate
 // Possibilité de mettre plusieurs emails séparés par des virgules
 if (!defined("EMAIL_ADMIN_TECHNIQUE")) {
-    define("EMAIL_ADMIN_TECHNIQUE", "noreply@noreplyaaaaa.aaaa");
+    define("EMAIL_ADMIN_TECHNIQUE", "noreply@libriciel.net");
 }
 
 if (!defined("WEBSITE_TITLE")) {

@@ -1,9 +1,18 @@
 # 5.0.0
 
 ## Évolution
+
 - Passage en PHP 8.1 / Ubuntu 22.04 et adaptation du code
 - Passage en UTF-8 et adaptation du code
 - Modification de la licence de Cecill version 2 vers AGPL version 3
+- Docker : utilisation de Nexus pour tous les services
+- Docker : harmonisation des valeurs par défaut en s2low.docker.libriciel.net
+- Docker : changement des valeurs tedetis
+- Docker : script de migration des versions de PostgreSQL
+
+## Correction
+
+- CHANGELOG : corrections sur les sauts de lignes sous les (sous-)titres (markdownlint MD032)
 
 ## Suppression
 - les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT, 
@@ -16,6 +25,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.18 - 2022-06-13
 
 ## Correction
+
 - Empêcher l'envoi vers Pastell de doublons lors de l'archivage (module Helios) #355
 - Amélioration de la gestion du lancement des processus extérieurs #750
 - Suppression des fichiers temporaires générés lors de la vérification des signatures XADES #804
@@ -23,21 +33,26 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.17 - 2022-05-17
 
 ## Évolution
+
 - Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker 
 
 ## Correction
+
 - Rétablir le fonctionnement de la création de collectivité #803
 
 # 4.3.16 - 2022-05-09
 
 ## Évolution
+
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
 
 ## Correction
+
 - Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
 
 ## Sécurité
+
 - Correction d'une faille de sécurité #774
 - Correction d'une faille de sécurité #775
 - Correction d'une faille de sécurité #776
@@ -57,25 +72,30 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.15 - 2022-03-24
 
 # Évolution
+
 - Possibilité de poster les CompteFinancierUnique #772
 
 # 4.3.14 - 2022-03-21
 
 # Évolution
+
 - Prise en compte de la version 5.17 du schema XSD Pes Aller #762
 
 # 4.3.13 - 2022-03-08
 
 ## Correction
+
 - Correction d'un problème d'accès à l'annuaire #751
 
 # 4.3.12 - 2022-01-17
 
 ## Évolution
+
 - Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
 - Mise à jour du simulateur en 1.1.2 #748
 
 ## Correction
+
 - Corection d'une erreur sur helios-pes-acquit-menage #293
 - Correction d'une vulnérabilité #731
 - Correction d'une vulnérabilité #732
@@ -92,21 +112,25 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.11 - 2021-12-03
 
 ## Évolution
+
 - Remplacement des releases notes codées en dur par un affichage du Changelog #722
 - Création d'un worker pour récupérer les CRL #728
 
 ## Correction
+
 - Correction du répertoire de récupération des CRL dans le Docker #728
 - Ajout d'un timeout à l'envoi au SAE #713
 
 # 4.3.10 - 2021-10-11
 
 ## Correction
+
 - Correction de l'extraction des certificats comportant un saut de ligne en début ou fin depuis les flux helios #714
 
 # 4.3.9 - 2021-06-24
 
 ## Évolution
+
 - Ajout d'une API de statistique actes pour les admins de groupe #610
 - Prise en compte de la version 5.14 du schema XSD Pes Aller #696
 - Prise en compte de la date de la signature lors de la validation du certificat associé pour les actes #486
@@ -116,6 +140,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Ajout des nouveaux codes de nature de collectivité fournis par la DGCL #712
 
 ## Correction
+
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
@@ -123,20 +148,21 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.8 - 2021 04 07
 
 ## Correction
-- corriger l'identification par nounce #690
 
-## Evolution
+- corriger l'identification par nounce #690
 
 # 4.3.7 - 2021-03-23
 
 **Cette version demande une modification de la base de données**
 
 ## Correction
+
 - les scripts de supervision notifient le mail EMAIL_TECHNIQUE #680
 - permettre de traiter les messages liés à un acte même si le cloud n'est pas accessible #685
 - les actes dont l'archive est en erreur ne bloquent plus actes-notification.php #684
 
 ## Evolution
+
 - le script de supervision du service pades est compatible avec les codes retour Nagios #680
 - changement d'encodage du mot de passe
 
@@ -145,10 +171,12 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 **Cette version demande une modification de la base de données**
 
 ## Correction
+
 - ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
 - passage du temps minimum d'éxécution des WorkerScript de 1s vers 10s
 
 ## Evolution
+
 - déplacement des PES Aller non liés à une transaction dans le répertoire HELIOS_PESALLER_SANSTRANSACTION
 - création d'un groupe supervisor mailsec-menage contenant les scripts cloud des mails #245
 - Intéger la valeur du codcol dans le mail listant les transactions Helios restées à l'état transmis #675
@@ -158,6 +186,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 **Cette version demande une modification de la base de données**
 
 ## Correction
+
 - refactoring du ménage des actes envoyés sur le cloud
 - correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargé, supression des répertoires de base #666
 - ajout de la colonne pes_retour:not_available afin de faire fonctionner le versement dans le cloud
@@ -166,9 +195,9 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - retrait des script IWorkerAlwaysLaunch laissé au contrôle de supervisord
 
 ## Evolution
+
 - mise à jour de pades-valid vers 1.4.7 #223
 - sauvegarde des mails dont le corps est vide #644
-
 
 # 4.3.4 - 2020-11-17
 
@@ -187,20 +216,22 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 # 4.3.2 - 2020-11-02
 
 ## Evolution
+
 - limitation de la taille et du nombre des messages d'erreur lors d'une erreur d'envoi sur le cloud #615
 
 ## Ajout
+
 - Script bin/console log:timestamp-token-extract-and-delete qui permet de suprimer les timestamps de la table logs_historique après les avoir sauvegardés dans un répertoire 
 
 ## Correction
+
 - refactoring de la chaîne d'intégration continue
 
 # 4.3.1 - 2020-09-29
 
-
 ## Correction
-- Correction typo dans le init.php pour la variable helios_sending_mode_demo
 
+- Correction typo dans le init.php pour la variable helios_sending_mode_demo
 
 # 4.3.0 - 2020-09-16
 
@@ -209,12 +240,14 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Correction bug particulier pour les purges 
 
 ## Evolution
+
 - Ajout de la variable d'environnement HELIOS_FTP_PASSTRANS_MODE permettant d'utiliser le protocole PassTrans #623
 - Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
 
 # 4.2.3 - 2020-07-13
 
 ## Correction
+
 - Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
 - Les versements actes SAE n'était plus assurés (problème sur le bordereau) #639
 
@@ -243,17 +276,16 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 - Openstack : tentative de reconnexion lors d'une erreur #591
 
-
 ## Correction
 
 - Un bug empechait l'envoi correcte des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
 
-
 # 4.2.0 - 2020-03-09
 
-*Cette version nécessite une modification de la base de données*
+**Cette version nécessite une modification de la base de données**
 
 ## Evolution
+
 - Mise à jour du schéma XSD PES v2 en version 5.11
 - Amélioration du script de récupération des classification #535
 - Possibilité de dissocier les configuration cloud actes et PES (création de constante ACTES_OPENSTACK* et HELIOS_OPENSTACK*, rétrocompatible avec l'existant) #534
@@ -273,9 +305,10 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Un message d'erreur empêche d'uploader un PES aller vide #547
 - Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
 - Ajout d'un script permettant de changer le statut d'une transaction actes
-- OpenStack : Passage de l'Identity API # 2.0 à l'Identity API v3.0.  Toutes les constantes *_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par *_OPENSTACK_AUTHENTICATION_URL_V3 #574
+- OpenStack : Passage de l'Identity API # 2.0 à l'Identity API v3.0.  Toutes les constantes **_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par** _OPENSTACK_AUTHENTICATION_URL_V3 #574
  
 ## Correction
+
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
 - L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait en compte les messages 2-2)
 - Le script d'envoi des PES au SAE se limite au 100 premier PES afin d'éviter que le jeton de cloudwatt n'expire.
@@ -285,11 +318,12 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Actes :  gestion des cas ou l'enveloppe n'est trouvee ni en local ni dans le cloud #569
 
 ## Retrait
+
 - la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée
 
 # 4.1.0 - 2019-07-08
 
-*Cette version contient principalement des améliorations sur les versements SAE.*
+**Cette version contient principalement des améliorations sur les versements SAE.**
 
 ## Evolution
 
@@ -333,7 +367,6 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Ajout des statistiques d'envoi SAE Actes
 - Automatiser les versements sur le SAE en fonction d'un identifiant de transaction minimum et maximum #499
 
-
 ## Evolution
 
 - les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et 
@@ -353,14 +386,12 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 - Suppression de la classe maison Logger remplacée par S2lowLogger basé sur Monolog
 
-
 # 4.0.2 - 2019-04-09
 
 ## Correction
 
 - HOTFIX : correction du script de migration de base de données sur certain index récalcitrants
 - Oublie du typage des réponses aux réponses des préfectures (Courrier simple, lettre d'observations et demande de pièces complémentaires) #492
-
 
 # 4.0.1 - 2019-04-02
 
@@ -377,8 +408,6 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 ## Supression
 
 - Supression du Dockerfile PHP 5.5, des tests automatisé sur PHP 5.5 et de fait, supression effective de la compatibilité PHP 5.5
-
-
 
 # 4.0.0 - 2018-02-25
 
@@ -406,7 +435,6 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - Console d'administration, ajour des état SAE ~actes #431
 - Permettre le postage d'une transaction en mode synchrone ~actes #426
 - Prise en compte des PES acquit non valide et sans codcol 
-
 
 # 3.0.17 - 2018-11-20
 
@@ -442,6 +470,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - La typologie des pièces par défaut pour les contrat convention et avenant passe de 99_CO à 99_DC et 99_AT à 99_AR ~actes #423
 
 ## Ajouts
+
 - Ajout d'un lien vers http://dss.nowina.lu pour validation de signature #385
 - Validation des fichiers XML et des signatures PADES des actes pour le super admin ~helios  
 - Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
@@ -525,6 +554,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - Correction d'un changement subtil dans l'api mailsec (detail-mail : renvoi 1/0 au lieu de t/f)
 
 ## Evolution
+
 - actes-analyse-fichier-a-envoyer en mode beanstalked
 - ajout des fonction de l'API : admin/services/add-service-user.php, admin/services/list-service.php, admin/users/add-user-to-service.php  #350
 
@@ -592,15 +622,17 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
 
 ## Évolutions
+
 - les messages d'erreurs de la mise en cloud actes passe de critical à error (trop de faux positifs)
 
 ## Retraits
+
 - Suppression de helios_ftp_login et helios_ftp_password qui ne servent à rien (on prend les login/pass dans la macro) ~helios #159
 - Suppression de ext_siret, inutile depuis le nouveau traitement des PES Retour ~helios
 
 # 3.0.8 - 2018-04-18
 
-*Cette version nécessite une modification de la base de données*
+**Cette version nécessite une modification de la base de données**
 
 ## Corrections
 
@@ -616,6 +648,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 # 3.0.7 - 2018-04-10
 
 ## Corrections
+
 - Bug sur le traitement par lot (problème de sécurité sur chrome sur le mime-type du fichier javascript)
 
 # 3.0.6 - 2018-04-10
@@ -655,7 +688,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 # 3.0.5 - 2018-03-06
 
-*Cette version nécessite une modification de la base de données*
+**Cette version nécessite une modification de la base de données**
 
 ## Corrections
 
@@ -691,8 +724,6 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 - Docker : suppression des paquets pdfsam et pdftk
 - Suppression du fichier LocalSettings.php devenu inutile
-
-
 
 # 3.0.4 - 2018-02-21
 
@@ -764,10 +795,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - suppression de la memory_limit sur jour.php
 - optimisation script grand-ménage
 
-
-
 # 3.0.0-rc4 - 2017-11-24
-
 
 ## Corrections
 
@@ -792,11 +820,9 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - Mise à jour du schéma XSD des PES en version 5.5 (applicable dès fin novembre 2017)
 - Console admin Helios: ajout d'infos dans le mail des transactions à l'état transmis ~Helios #306
 
-
 ## Retrait
 
 - Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
-
 
 ## 3.0.0-rc3 - 2017-11-15
 
@@ -823,12 +849,13 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - L'import des SIREN ne fonctionnait qu'avec des fichiers Unix, ajout du support Windows et Mac OS #265
 
 ## Élements dépréciés
-- VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
+- VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
 ## 3.0.0-rc2
 
 ## Corrections
+
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
 - Typo #241
 - Modification libéllé réponse au message ministère ~Actes #194
@@ -836,7 +863,6 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - Correction d'un warning lors du post d'un acte hors 7-1 avec un fichier XML et une annexe XML ~Actes #251
 - Typo #250, #247, #255, #246, #245, #242, #248
 - MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
-
 
 ## 3.0.0-rc1 - 2017-09-18
 
@@ -916,16 +942,17 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 ## 2.6.6 - 2017-10-02
 
 ## Corrections
+
 - Prise en compte des cas où les PES_ALLER ne sont plus sur le serveur
-
-
 
 ## 2.6.5 - 2017-06-29
 
 ## Ajouts
+
 - Utilisation d'un stockage objet pour les PES Aller
 
 ## Corrections
+
 - Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde. ~mailsec
 - Suppression de l'autocomplete sur les mots de passe de la création d'utilisateur (bug Firefox)
 - Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR)) ~Actes
@@ -940,7 +967,6 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 ## 2.6.3 - 2017-06-09
 
-
 ## Évolutions
 
 - Mise à jour du schéma PES en version 5.3 ~Helios
@@ -948,52 +974,62 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 ## 2.6.2 - 2017-06-08
 
 ## Ajouts
+
 - script de monitoring des fichiers Actes et Helios restés trop longtemps dans un certain état ~Actes ~Helios
 
 ## Evolutions
+
 - création d'un pipeline d'intégration continue
 - les fichiers version.txt et revision.txt sont remplacé par manifest.txt géré automatiquement par gitlab
 - la nouvelle bannière introduite en version 2.5.0 devient la bannière par défaut
 - modification du système de mise à jour de la base de données.
 
 ## Corrections
+
 - correction de warning dans le code
 
 ## 2.6.1 - 2017-05-23
 
 ## Ajouts
+
 - le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~Administration
 
 ## Evolutions
+
 - migration du code source vers git
-
-
 
 # 2.6.0 - 2017-04-13
 
 ## Evolutions
+
 - Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur
 (NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
 - Le script de migration (script/migration/# 2.5-to-# 2.6.php) permet  de mettre à jour la base de données.
 
 # 2.6.3 - 2017-06-09
+
 - Mise à jour du schéma PES en version 5.3 ;
 
 # 2.6.2 - 2017-06-08
+
 - Version n'apportant pas d'évolution fonctionnelle ;
 
 # 2.6.1 - 2017-05-23
+
 - Administration : permettre l'ajout d'un message d'information pour les utilisateurs ;
 
 # 2.6.0 - 2016-10-27
+
 - Module ACTES : ajout d'une API pour déclencher la télétransmission d'un acte via RGS** partagé avec un couple identifiant/mot de passe ;
 - Module ACTES : une date doit toujours être indiquée dans le demande de classification ;
 - Administration : affichage de l'identifiant de l'utilisateur dans la partie "Gestion des utilisateurs" ;
 
 # 2.5.1 - 2016-10-27
+
 - Administration : ajout du département de la Mayotte
 
 # 2.5.0 - 2016-10-01
+
 - Modules ACTES : prise en compte des nouveaux mails d'acquittement du MI ;
 - Modules ACTES : possibilité d'ajouter la date d'affichage dans le tampon apposé par S²LOW ;
 - Modules ACTES : le système de notification par défaut, introduit en version 1.3.2, est désormais le seul utilisable ;
@@ -1005,11 +1041,13 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration : contrôle renforcé sur les adresses mails ;
 
 # 2.4.1 - 2016-05-24
+
 - Modules HELIOS : correction sur certains fichiers acquitement rejetés à tort 
 - Modules HELIOS : surveillance des fichiers d'acquittement non-intégrés et acquittement non-reçus 
 - Modules HELIOS : correction liste sur FTP différent en fonction du serveur
 
 # 2.4.0 - 2016-05-16
+
 - Module ACTES/HELIOS : système de versement global des transactions sur une période donnée par collectivité ; 
 - Module ACTES : partie JAVA - interdiction des numéros de moins de deux caractères ; 
 - Module ACTES: correction de l'expression régulière chargée de vérifier les numéros d actes ; 
@@ -1021,15 +1059,18 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Optimisation de la consultation du journal des événements.
 
 # 2.3.2 - 2016-04-18
+
 - HELIOS : Modification du schéma XSD : passage à la version 491.
 
-#2.3.1 - 2016-01-27
+# 2.3.1 - 2016-01-27
+
 - HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ; 
 - HELIOS : on ne vérifie plus les schémas XSD ; 
 - ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ; 
 - HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER.
 
 # 2.3 - 2015-12-05
+
 - Ensemble des pages : les champs recherche sur les collectivités ont été changés en select2 ; 
 - Optimisation du journal des événements ; 
 - Administration : les personnes partageant un certificat sont affichées par ordre alphabétique ; 
@@ -1061,6 +1102,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module Mails : correction bug ; sous IE, il n'était pas possible de saisir deux emails dans le même champ;
 
 # 2.2 - 2015-09-25
+
 - API : une nouvelle API permet de tester la connexion à la plate-forme S²LOW ;
 - Administration : l'authentification par certificat RGS* peut être couplée avec un RGS** ;
 - Administration : il ne peut plus y avoir d'espace dans l'adresse mail d'un utilisateur ;
@@ -1072,6 +1114,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module ACTES : correction bug : si l'antivirus n'était pas lancé, les flux ne pouvaient pas être analysés et ils passaient en erreur ;
 
 # 2.1.01 - 2015-06-23
+
 - Module HELIOS : correction bug : la signature HELIOS introduisait un ID dans les bordereaux ;
 - Module ACTES : correction bug : les signatures des transactions n'étaient plus incluses dans le cadre de la soumission d'une enveloppe complète ;
 - Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
@@ -1080,6 +1123,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module HELIOS : pour la signature en local, les PES sont signés au niveau bordereaux si ils ont des ID ;
 
 # 2.1 - 2015-06-08
+
 - Module HELIOS : correction bug : erreur d'import des fichiers dont les noms comportaient des caractères spéciaux ;
 - Module ACTES : correction bug : horodatage du nom de la personne déclenchant la télétransmission ;
 - Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
@@ -1088,6 +1132,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Optimisation de la base de données ;
 
 # 2.0 - 2015-05-05
+
 - Module HELIOS : prise en charge des XML complexes pour la signature ;
 - Module ACTES : correction bug : vérification que le fichier PDFTK existe ;
 - Module ACTES : correction bug : amélioration vérification des signatures lors de l'import des enveloppes ;
@@ -1105,6 +1150,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Passage sous PHP5.5 ;
 
 # 15.01 2014-12-17
+
  - Module MAILS : correction bug : si un destinataire est en double dans un même champ on obtient une page blanche ;
  - Module MAILS : correction bug : lors de l'ajout d'un contact, le champ description n'était pas pris en compte ;
  - Module MAILS : correction bug : le champ CCI n'était pas autocomplété ;
@@ -1122,6 +1168,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
  - Mise en place d'un fichier de configuration générique ;
 
 # 15 - 2014-08-05
+
 - Refonte globale de l'interface web pour être aux normes d'accessibilités ;
 - Passage sous Bootstrap v3 de l'interface web ;
 - Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;
@@ -1132,9 +1179,11 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module HELIOS : ajout de la signature électronique du flux PES_ALLER;
 
 # 14.01 - 2014-01-14
+
 - Module ACTES : correction bug : versement SEDA via Pastell en HTTPS;
 
 # 14 - 2013-11-09
+
 - Module MAIL : correction bug : problème d'encodage des API ;
 - Administration : versement au SAE via Pastell;
 - Module ACTES : versement par lot au SAE ;
@@ -1144,9 +1193,11 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module DIA : ajout du module ;
 
 # 13.2 - 2013-05-06
+
 - Module ACTES : nouveau système de notification d'acquittement pour les agents télétransmetteur
 
 # 13.1 - 2013-01-15
+
 - Module ACTES : correction bug : la variable pdfgenerate n'était pas correctement réinitialisée. Cela entrainait une erreur sur le PDF joint aux notifications automatiques ;
 - Module ACTES : correction bug : il est possible de filtrer les actes sur l'état "Refus d'envoi" ;
 - Module ACTES : correction bug : l'état "en cours" prend en compte les transactions aux états "Document reçu" et "Acquittement envoyé";
@@ -1160,6 +1211,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration : modification de l'API "Liste des collectivités". Il est possible de filtrer sur tout ou partie du SIREN ;
 
 # 13 - 2012-10-31
+
 - Module ACTES : correction bug : les PDFs optimisés sont pris en compte pour apposer le cartouche/tampon dans les mails de notifications ;
 - Module ACTES : correction bug : la supression des dossiers temporaires unzip doit être faite après avoir changé de répertoire courant pour éviter un NOTICE ;
 - Module ACTES : correction bug : les fichiers avec l'extension .PDF sont tamponnés ;
@@ -1181,6 +1233,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration : De nouvelles API permettent la gestion des collectivités, des utilisateurs, des groupes ;
 
 # 12.2 - 2012-06-01
+
 - Module ACTES : les PDFs optimisés sont pris en comptes pour apposer le cartouche/tampon
 - Module ACTES : les adresses mails par défaut ne sont plus décochables
 - Module ACTES : le bouton versement SEDA s'affiche uniquement lorsque la collectivité est paramétrée
@@ -1192,6 +1245,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module HELIOS : correction bug : le mot list est remplacé par liste
 
 # 12.1 - 2012-03-20
+
 - Module ACTES et MAIL : correction bug : modification des entêtes des mails envoyés pour ne plus avoir de BAD HEADER
 - Module HELIOS : correction bug : en cas d erreur lors de la transmis d un flux, un message indiquant le problème est fourni
 - Module MAIL : correction bug : modification du code HTML pour ne plus être détecté à tort comme du SPAM
@@ -1208,6 +1262,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration : modification des intitulés des champs SAE dans les paramètres des collectivités
 
 # 12 - 2011-11-16
+
 - Module ACTES : Correction bug : Informations complémentaires sur les réponses aux flux 3 et4
 - Module ACTES : Correction bug : Notifications à ne pas envoyer aux utilisateurs désactivés
 - Module ACTES : Correction bug : Notification automatiques bloquées
@@ -1241,6 +1296,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration: Les utilisateurs sont triés par ordre alphabétiques
 
 # 11 - 2012-11-16
+
 - Module ACTES : Intégration des flux ACTES 1.4
 - Module ACTES : Traitement par lot : les actes peuvent se situer dans des dossiers différents
 - Module ACTES : Les actes sont disponibles avec tampon indiquant la date d'envoi à la prefecture et de réception par celle-ci
@@ -1273,31 +1329,39 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module MAIL : Mise à jour de la documentation API
 
 # 10.8.3.7 - 2009-08-26
+
 - Hélios : corrections pour respecter l'API webservice
 
 # 10.8.3.6 - 2009-07-22
+
 - Hélios : rajout du SHA1 dans l'export CSV de fichiers reçus 
 
 # 10.8.3.5 2009-06-25
+
 - correction sur la verification de la taille de l'archive pour Actes
 - amélioration 297 : on affiche le numéro d'actes dans la liste des transactions en cours
 - amélioration 300 : verification de la validité du numéro SIREN
 
 # 10.8.3.3 - 2009-06-23
+
 - correction des bugs sur ACTES liés à une mauvaise configuration du serveur du MIOCT pour les collectivites Corses. (Bug 308)
 - correction sur Hélios de la methode de rappatriement du PES de rejet (Bug 302)
 - correction sur Hélios sur le PES ACK. On interrogeait pas le bon tag dans le XML. (Bug 301) 
 
 # 10.8.3.2 - 2009-06-15
+
 - modification de l'envoi des paramètres à l'applet de signature
 
 # (Servlet)10.8.3 - 2009-04-29
+
 - changement du mode de connexion utilisé pour le FTP vers la DGFIP 
 
 # 10.8.3.1 - 2009-03-19
+
 - modification du simulateur 
 
 # 10.8.3 - 2009-03-10
+
 - Servlet : corrigé la méthode de log
 - Module ACTES : Corrigé les bugs 265,267,268,269,274,275,276
 - Module HELIOS : Modifié la fonction pour se connecter au serveur FTP de la DGFIP
@@ -1305,29 +1369,35 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module Mail : Corrigé le bug 273
 
 # 10.8.1 - 2009-01-16
+
 - Module HELIOS : Création des APIs pour Helios
 - Module HELIOS : Modification du validateur XML
 
 # 10.8.0 - 2008-12-22
+
 - Module Helios  : Ajout du module Helios
 - Module ACTES : Mise à jour du module Acte et de son simulateur vers Acte 1.4(en test)
 
 # 10.7.1 - 2008-06-03
+
 - Module Mail  : Ajout du Module Mail
 - Module Admin : Corrigé des bugs Admin;(bug ID:209,196,146)
 - Module ACTES : Corrigé des bugs du module Actes;(bug ID:187,214, 218, 211, 194, 199,197, (219->190))
 
 ## Limitations connues
+
 - Module Actes - Les noms de fichiers transmis ne peuvent contenir de caractères '.
 - Module Actes - L'objet ne peut pas contenir le caractère spécial &.
 - Module Actes - Un administrateur de groupe ne peut modifier son profil. Il ne peut créer que des utilisateurs de sa collectivité.
 
 # 10.4 - 2007-12-13
+
 - Module ACTES : Fin de la suppression des archives dont toutes les enveloppes sont acquittées.
 - Module ACTES : Ajout de la possibilité d'associer des pièces jointes lors de la création d'une transaction à partir d'un lot
 - Module ACTES : Gestion évoluée des mails de notification d'acquittement
 
 # 10.2 - 2007-02-16
+
 - Implémentation administration 3 niveaux, ajout d'un nouveau rôle « Administrateur de groupe »
 - Ajout d'une adresse de messagerie pour diffusion d'informations dans les collectivités
 - Module ACTES : ajout possibilité de télécharger les fichiers des transactions (archive totale ou fichiers indépendants) pendant la durée de vie de la transaction
@@ -1339,11 +1409,13 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module ACTES : ajout possibilité de désactiver dans la configuration la limitation de une seule demande de classification par jour
 
 # 10.1 - 2006-10-27
+
 - Ajout possibilité de récupérer le fichier XML de la classification matières/sous-matières
 - Les deux premiers codes de classification matières/sous-matières sont obligatoires
 - Ajout authentification par login/password vers le ministère
 
 # 10 - 2006-10-01
+
 - Publication initiale
 - Support complet protocole Actes
 
