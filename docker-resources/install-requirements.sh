@@ -59,7 +59,6 @@ apt-get install -y  --no-install-recommends \
     #\
     #python-certbot-apache TODO : non dispo, doit-on supprimer ??
 
-
 rm -r /var/lib/apt/lists/*
 
 # Locale
