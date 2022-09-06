@@ -29,7 +29,7 @@ class Module extends DataObject
                          "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true)
                          );
 
-    private $moduleParams = null;
+    private array|null|false $moduleParams = null;
 
   /**
    * \brief Constructeur d'un module
@@ -111,7 +111,7 @@ class Module extends DataObject
             return false;
         }
 
-        if (count($this->moduleParams) > 0) {
+        if (!is_null($this->moduleParams) && count($this->moduleParams) > 0) {
             reset($this->moduleParams);
             foreach ($this->moduleParams as $param) {
                 $sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
