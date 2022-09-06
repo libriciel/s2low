@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\Mailer;
+use S2lowLegacy\Class\MailerFactory;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\RedirectException;
+
 class AdminUtilitiesControllerTest extends S2lowTestCase
 {
     public function testIndex()
@@ -15,12 +20,12 @@ class AdminUtilitiesControllerTest extends S2lowTestCase
     public function testdoSendAction()
     {
 
-        $mailer = $this->getMockBuilder("Mailer")->getMock();
+        $mailer = $this->getMockBuilder(Mailer::class)->getMock();
         $mailer->method('sendMail')->willReturn(true);
 
-        $mailerFactory = $this->getMockBuilder("MailerFactory")->getMock();
+        $mailerFactory = $this->getMockBuilder(MailerFactory::class)->getMock();
         $mailerFactory->method("getInstance")->willReturn($mailer);
-        $this->getObjectInstancier()->set("MailerFactory", $mailerFactory);
+        $this->getObjectInstancier()->set(MailerFactory::class, $mailerFactory);
 
         $this->setSuperAdminAuthentication();
 

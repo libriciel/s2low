@@ -1,7 +1,9 @@
 <?php
 
-require_once("../../../init/init.php");
-$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+
+$jsonOutput = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $me = new User();
 

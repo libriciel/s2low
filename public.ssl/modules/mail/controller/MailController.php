@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 class MailController
 {
     private $MailMessageEmis = array ();
@@ -359,7 +366,7 @@ class MailController
         }
          //----------------------
 
-        $mailHeader = ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
+        $mailHeader = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
 
         $mailHeader->setAuthorityName($this->myAuthority->get('name'));
         $mailHeader->setFromMail($this->myAuthority->get('email_mail_securise'));

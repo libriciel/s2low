@@ -15,6 +15,11 @@
  *  BF      26.07.2006  Modifications du handler
  */
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $me = new User();
 
 if (! $me->authenticate()) {

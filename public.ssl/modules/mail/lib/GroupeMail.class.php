@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+
 class GroupeMail extends DataObject
 {
     protected $objectName = "mail_groupe";

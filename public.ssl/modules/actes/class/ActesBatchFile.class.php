@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 /**
  * \class ActesBatchFile ActesBatchFile.class.php
  * \brief Cette classe permet de gérer les fichiers contenus dans les lots de transactions ACTES

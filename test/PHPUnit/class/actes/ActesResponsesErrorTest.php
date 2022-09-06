@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\TmpFolder;
+
 class ActesResponsesErrorTest extends S2lowTestCase
 {
     /**

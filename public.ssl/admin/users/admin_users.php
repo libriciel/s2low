@@ -1,6 +1,13 @@
 <?php
-require_once(__DIR__ . "/../../../init/init.php");
-$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
+
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+
+$jsonOutput = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $me = new User();
 

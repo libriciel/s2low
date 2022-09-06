@@ -1,4 +1,12 @@
 <?php
+
+use S2lowLegacy\Class\helios\HeliosSignature;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {
@@ -17,7 +25,7 @@ $transaction_list = array();
 
 $heliosSignature = new HeliosSignature();
 
-$pesAllerRetriever = $objectInstancier->get("PesAllerRetriever");
+$pesAllerRetriever = $objectInstancier->get(PesAllerRetriever::class);
 
 foreach ($liste_id as $transaction_id) {
     try {

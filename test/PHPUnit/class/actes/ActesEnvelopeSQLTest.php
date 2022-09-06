@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Lib\SQLQuery;
+
 class ActesEnvelopeSQLTest extends S2lowTestCase
 {
     /**
@@ -7,7 +10,7 @@ class ActesEnvelopeSQLTest extends S2lowTestCase
      */
     public function getActesEnvelopeSQL()
     {
-        return $this->getObjectInstancier()->get("ActesEnvelopeSQL");
+        return $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
     }
 
     public function testGetInfo()

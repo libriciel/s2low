@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../init/init-www.php");
 
 

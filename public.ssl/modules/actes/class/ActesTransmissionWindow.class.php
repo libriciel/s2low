@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 /**
  * \class ActesTransmissionWindow ActesTransmissionWindow.class.php
  * \brief Cette classe permet de gérer les fenêtres de transmission ACTES

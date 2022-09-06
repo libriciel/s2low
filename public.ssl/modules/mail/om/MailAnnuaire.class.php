@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+
 /**
  * \class MailAnnuaire  MailAnnuaire.class.php
  * \brief Cette classe permet de modeliser le tableau correspond de mail_annuraire

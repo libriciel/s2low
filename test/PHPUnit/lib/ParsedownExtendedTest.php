@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\ParsedownExtended;
+
 class ParsedownExtendedTest extends \PHPUnit\Framework\TestCase
 {
     public function testParsedown()

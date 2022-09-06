@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+use S2lowLegacy\Class\helios\HeliosResponsesError;
+use S2lowLegacy\Lib\Recuperateur;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosRetourSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../../../init/init-www-helios.php");
 
 if ($userInfo['role'] != 'SADM') {

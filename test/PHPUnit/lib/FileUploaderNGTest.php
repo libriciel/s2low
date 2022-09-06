@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\FileUploaderNG;
+
 class FileUploaderNGTest extends PHPUnit_Framework_TestCase
 {
     private const FILE_CONTENT = "Hello World!";

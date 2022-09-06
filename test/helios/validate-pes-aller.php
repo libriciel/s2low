@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPESValidation;
+
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 

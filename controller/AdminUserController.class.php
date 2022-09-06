@@ -1,5 +1,17 @@
 <?php
 
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\Recuperateur;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
 class AdminUserController extends Controller
 {
     /**
@@ -386,7 +398,7 @@ class AdminUserController extends Controller
 
         $this->user_id = $user_id;
 
-        $userSQL = $this->getObjectInstancier()->get("UserSQL");
+        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
 
         $x509Certificate = new X509Certificate();
 
@@ -435,7 +447,7 @@ class AdminUserController extends Controller
 
         $certificate_filepath = $files['certificat']['tmp_name'];
 
-        $userSQL = $this->getObjectInstancier()->get("UserSQL");
+        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
 
         $user_info = $userSQL->getInfo($user_id);
         $list = $userSQL->getListFromCertificateInfo($user_info['certificate_hash']);

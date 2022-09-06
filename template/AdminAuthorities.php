@@ -1,4 +1,9 @@
-<h1><?php hecho($titre) ?></h1>
+<?php
+
+use S2lowLegacy\Class\Helpers;
+
+?>
+    <h1><?php hecho($titre) ?></h1>
 
 <div id="actions-area">
     <h2>Actions</h2>

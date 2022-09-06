@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+
 class ActesCreator
 {
     private $actesTransactionsSQL;

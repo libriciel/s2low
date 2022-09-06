@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+
 class ActesTransactionsSQLTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

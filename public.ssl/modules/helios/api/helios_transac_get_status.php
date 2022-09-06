@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $transId = (int) Helpers::getVarFromGet("transaction");
 
 $transaction['id'] = $transId;

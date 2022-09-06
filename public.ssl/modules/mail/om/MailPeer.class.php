@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Log;
+
 /**
  * \class MailPeer  MailPeer.class.php
  * \brief Cette classe permet de traiter entre les tableaux

@@ -1,6 +1,19 @@
 <?php
-require_once("../../../init/init.php");
-list($heliosSAEController, $pesAllerRetriever, $libersignController ) = LegacyObjectsManager::getLegacyObjectInstancier()
+
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\helios\HeliosSignature;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\AuthoritySQL;
+
+list($heliosSAEController, $pesAllerRetriever, $libersignController ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [HeliosSAEController::class, PesAllerRetriever::class, LibersignController::class]
     );
@@ -66,7 +79,7 @@ if (! $permission->canView($me, $owner)) {
     exit();
 }
 
-$authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+$authoritySQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
 $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
 

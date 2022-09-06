@@ -15,6 +15,10 @@
  *
  */
 
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $me = new User();
 
 if (! $me->authenticate()) {

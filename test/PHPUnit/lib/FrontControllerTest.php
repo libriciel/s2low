@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 class FrontControllerTest extends PHPUnit_Framework_TestCase
 {
     public function testGo()
@@ -10,7 +14,7 @@ class FrontControllerTest extends PHPUnit_Framework_TestCase
         $request = array();
         $session = array();
         $server = array();
-        $objectInstancier->set("Environnement", new Environnement($get, $post, $request, $session, $server));
+        $objectInstancier->set(Environnement::class, new Environnement($get, $post, $request, $session, $server));
         $frontController = new FrontController($objectInstancier);
         require_once(__DIR__ . "/fixtures/MockController.class.php");
         $this->expectOutputString("<h1>Mock Mock Template</h1>");

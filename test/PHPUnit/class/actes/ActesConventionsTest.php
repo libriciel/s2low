@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\TmpFolder;
+
 class ActesConventionsTest extends S2lowTestCase
 {
     private $actes_files_upload_root;
@@ -17,7 +20,7 @@ class ActesConventionsTest extends S2lowTestCase
             $this->actes_files_upload_root
         );
 
-        $this->actesConventions = $this->getObjectInstancier()->get("ActesConventions");
+        $this->actesConventions = $this->getObjectInstancier()->get(ActesConventions::class);
     }
 
     protected function tearDown(): void

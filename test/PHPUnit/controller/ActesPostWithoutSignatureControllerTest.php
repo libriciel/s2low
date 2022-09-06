@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\RedirectException;
+
 class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

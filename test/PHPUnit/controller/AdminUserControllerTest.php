@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
 class AdminUserControllerTest extends S2lowTestCase
 {
     /**
@@ -261,7 +266,7 @@ class AdminUserControllerTest extends S2lowTestCase
     {
         $this->setSuperAdminAuthentication();
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('user_id', '2');
-        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController = $this->getObjectInstancier()->get(FrontController::class);
         $this->expectOutputRegex("#eric\+3@sigmalis.com#");
         $frontController->go("AdminUser", "list");
     }
@@ -269,7 +274,7 @@ class AdminUserControllerTest extends S2lowTestCase
     public function testDoBulkModifCertifActionNoUserId()
     {
         $this->setSuperAdminAuthentication();
-        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController = $this->getObjectInstancier()->get(FrontController::class);
         $frontController->go("AdminUser", "doBulkModifCertif");
         $this->assertEquals(
             "Aucun identifiant utilisateur n'a été présenté",
@@ -281,7 +286,7 @@ class AdminUserControllerTest extends S2lowTestCase
     {
         $this->setSuperAdminAuthentication();
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('user_id', '2');
-        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController = $this->getObjectInstancier()->get(FrontController::class);
         $frontController->go("AdminUser", "doBulkModifCertif");
         $this->assertEquals(
             "Vous devez confirmer la modification",
@@ -295,7 +300,7 @@ class AdminUserControllerTest extends S2lowTestCase
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('user_id', '2');
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('confirm', 'OUI');
 
-        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController = $this->getObjectInstancier()->get(FrontController::class);
         $frontController->go("AdminUser", "doBulkModifCertif");
         $this->assertEquals(
             "Vous devez fournir un certificat",
@@ -311,14 +316,14 @@ class AdminUserControllerTest extends S2lowTestCase
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('confirm', 'OUI');
         $_FILES['certificat'] = array('tmp_name' => $certificate_file);
 
-        $frontController = $this->getObjectInstancier()->get("FrontController");
+        $frontController = $this->getObjectInstancier()->get(FrontController::class);
         $frontController->go("AdminUser", "doBulkModifCertif");
         $this->assertEquals(
             "Certificat mis à jour",
             $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
         );
 
-        $userSQL = $this->getObjectInstancier()->get('UserSQL');
+        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
         $info = $userSQL->getInfo(2);
         $this->assertEquals($info['certificate'], file_get_contents($certificate_file));
 
@@ -335,7 +340,7 @@ class AdminUserControllerTest extends S2lowTestCase
 
         $this->adminUserController->doEditAction();
 
-        $userSQL = $this->getObjectInstancier()->get('UserSQL');
+        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
 
         $certificate_content = file_get_contents(__DIR__ . "/fixtures/user1.pem");
 

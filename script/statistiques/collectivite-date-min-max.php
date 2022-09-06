@@ -1,7 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\CSVOutput;
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "SELECT authorities.id,authorities.name,authorities.siren,department,authority_groups.name as group_name FROM authorities" .

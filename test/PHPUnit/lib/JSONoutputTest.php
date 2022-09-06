@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\JSONoutput;
+
 class JSONoutputTest extends PHPUnit_Framework_TestCase
 {
     /**

@@ -1,7 +1,19 @@
 <?php
 
-require_once("../../../init/init.php");
-list($actesSignature, $actesTransactionsSQL, $actesEnvelopeSQL, $workerScript ) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesSignature;
+use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPKCS7Signature;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\PemCertificateFactory;
+
+list($actesSignature, $actesTransactionsSQL, $actesEnvelopeSQL, $workerScript ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ActesSignature::class, ActesTransactionsSQL::class, ActesEnvelopeSQL::class, WorkerScript::class]
     );

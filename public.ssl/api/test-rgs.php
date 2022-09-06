@@ -12,6 +12,8 @@
  *
  */
 
+use S2lowLegacy\Class\RgsConnexion;
+
 require_once(__DIR__ . "/../../init/init-www.php");
 
 $rgsConnexion = new RgsConnexion();

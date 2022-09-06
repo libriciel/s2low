@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Class\DatabasePool;
+
 class QueryResultTest extends S2lowTestCase
 {
     /**

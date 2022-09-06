@@ -1,5 +1,14 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesVerifSaeWorker;
+use S2lowLegacy\Class\CurlWrapper;
+use S2lowLegacy\Class\CurlWrapperFactory;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 class ActesVerifSaeWorkerTest extends S2lowTestCase
 {
     private const FAKE_PASTELL_URL = "https://fakepastellurl/";

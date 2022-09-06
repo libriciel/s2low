@@ -1,7 +1,20 @@
 <?php
 
-require_once("../../../init/init.php");
-list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesScriptHelper;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Connexion;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+
+list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class]
     );

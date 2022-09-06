@@ -1,7 +1,7 @@
 <?php
 
 // Configuration
-require_once("../../../init/init.php");
+use S2lowLegacy\Class\User;
 
 $me = new User();
 

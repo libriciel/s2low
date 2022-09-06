@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosEnvoiControler;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosEnvoiControlerTest extends S2lowTestCase
 {
     private $last_string;
@@ -28,7 +35,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase
         mkdir($this->testStreamUrl . "/helios");
         $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl . "/helios/");
         $this->heliosController = new HeliosController($this->getObjectInstancier());
-        $this->heliosEnvoiControler = $this->getObjectInstancier()->get("HeliosEnvoiControler");
+        $this->heliosEnvoiControler = $this->getObjectInstancier()->get(HeliosEnvoiControler::class);
     }
 
     protected function tearDown(): void

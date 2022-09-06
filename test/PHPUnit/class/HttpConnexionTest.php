@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\HttpsConnexion;
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\SessionWrapper;
+use S2lowLegacy\Lib\X509Certificate;
+
 class HttpConnexionTest extends S2lowTestCase
 {
     public function testEmptyInfoSslClientCert()

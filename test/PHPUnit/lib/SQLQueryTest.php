@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+
 class SQLQueryTest extends PHPUnit_Framework_TestCase
 {
     /**

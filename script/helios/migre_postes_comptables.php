@@ -1,9 +1,9 @@
 #! /usr/bin/php
-
 <?php
 
-require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+use S2lowLegacy\Lib\SQLQuery;
+
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 //CONSTANTES------------------------------------------------------------------------------------------------------------
 const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [

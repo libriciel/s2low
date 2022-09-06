@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesVerifSaeWorker;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class ]
     );

@@ -16,6 +16,11 @@
  */
 
 // Instanciation du module courant
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $module = new Module();
 if (! $module->initByName("helios")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
@@ -53,7 +58,7 @@ $doc->buildMenu($me);
 $doc->closeSideBar();
 $doc->openContent();
 
-$html .= "<h1>Utilitaires - HELIOS</h1>\n";
+$html = "<h1>Utilitaires - HELIOS</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('export_area');\">Export liste transactions</h2>\n";
 $html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyées au ministère&nbsp;:<br />";
 $html .= "<a style=\"margin-left: 10px\" href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_transac_export.php") . "\">Télécharger le fichier</a></p>\n";

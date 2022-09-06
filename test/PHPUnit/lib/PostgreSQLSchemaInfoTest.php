@@ -1,11 +1,13 @@
 <?php
 
+use S2lowLegacy\Lib\PostgreSQLSchemaInfo;
+
 class PostgreSQLSchemaInfoTest extends S2lowTestCase
 {
     public function testGetDefinition()
     {
         /** @var PostgreSQLSchemaInfo $postreSQLSchemaInfo */
-        $postreSQLSchemaInfo = $this->getObjectInstancier()->get("PostgreSQLSchemaInfo");
+        $postreSQLSchemaInfo = $this->getObjectInstancier()->get(PostgreSQLSchemaInfo::class);
         $definition = $postreSQLSchemaInfo->getDatabaseDefinition();
         $this->assertContains('authorities_id_seq', $definition['sequence']);
         $this->assertEquals('integer', $definition['table']['authorities']['id']['data_type']);

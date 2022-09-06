@@ -1,10 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\Droit;
+
 class DroitTest extends S2lowTestCase
 {
     private function getDroit()
     {
-        return $this->getObjectInstancier()->get('Droit');
+        return $this->getObjectInstancier()->get(Droit::class);
     }
 
     public function testCanAccess()

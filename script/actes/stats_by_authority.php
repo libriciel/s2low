@@ -2,8 +2,10 @@
 
 //Script utilisÃ© pour la compta
 // Il compte pour actes et helios
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "select authority_groups.name,authority_group_id as id FROM users " .

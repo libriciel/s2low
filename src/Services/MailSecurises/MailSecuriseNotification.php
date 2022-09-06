@@ -3,7 +3,6 @@
 namespace S2low\Services\MailSecurises;
 
 use IMailHeader;
-use MailHeader;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;

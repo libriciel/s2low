@@ -14,7 +14,9 @@
  *
  */
 
-require_once SITEROOT . '/class/include.class.php';
+use S2lowLegacy\Class\Trace;
+
+require_once SITEROOT . '/class/include.php';
 
 
 class MailUtil

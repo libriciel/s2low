@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosResponsesError;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../../init/init-www-helios.php");
 
 if ($userInfo['role'] != 'SADM') {

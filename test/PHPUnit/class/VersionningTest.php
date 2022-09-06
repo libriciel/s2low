@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\VersionningFactory;
+
 class VersionningTest extends PHPUnit_Framework_TestCase
 {
     public function testVersion()

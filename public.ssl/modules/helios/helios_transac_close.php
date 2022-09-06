@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
 
 $liste_id = Helpers::getVarFromPost("liste_id");

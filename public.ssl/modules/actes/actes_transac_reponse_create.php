@@ -1,5 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+
 $errorMsg = "";
 
 function sortir_atrc($message, $api)
@@ -14,8 +24,7 @@ function sortir_atrc($message, $api)
 }
 
 // Configuration
-require_once("../../../init/init.php");
-$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 
 $api = Helpers::getVarFromGet("api");

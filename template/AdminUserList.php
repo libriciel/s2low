@@ -1,3 +1,9 @@
+<?php
+
+use S2lowLegacy\Class\Helpers;
+
+?>
+
 <h1><?php hecho($title) ?></h1>
 
 <p id="back-transaction-btn">

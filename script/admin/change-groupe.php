@@ -1,7 +1,12 @@
 <?php
 
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\GroupSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if ($argc < 3) {
     echo "{$argv[0]} : Déplace toutes les collectivités appartenant au groupe old_group_id vers le groupe new_group_id\n";

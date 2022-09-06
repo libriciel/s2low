@@ -1,3 +1,10 @@
+<?php
+
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+
+?>
+
 <h1>Statistiques d'envoi au SAE</h1>
 
 
@@ -7,7 +14,8 @@
 <table class="data-table table table-striped ">
 
 
-    <tr class="<?php echo $actes_nb_en_retard ? "danger" : "success" ?>">
+    <tr class="<?php
+    echo $actes_nb_en_retard ? "danger" : "success" ?>">
         <td>Actes en retard pour la de transmission au SAE </td>
         <td><span class="label label-<?php echo $actes_nb_en_retard ? "danger" : "success" ?>"><?php echo $actes_nb_en_retard ?></span></td>
         <td>&nbsp;</td>

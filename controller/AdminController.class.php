@@ -1,5 +1,16 @@
 <?php
 
+use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Lib\FancyDate;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\Siret;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\AuthorityTypesSQL;
+use S2lowLegacy\Model\GroupSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class AdminController extends Controller
 {
     public function _actionBefore($controller, $action)
@@ -129,7 +140,7 @@ class AdminController extends Controller
      */
     private function getSiret()
     {
-        return $this->getObjectInstancier()->Siret;
+        return $this->getObjectInstancier()->get(Siret::class);
     }
 
     public function authoritiesAction()
@@ -191,7 +202,7 @@ class AdminController extends Controller
         $recuperateur = $this->getRecuperateurGet();
         $this->{'offset'} = $recuperateur->getInt('offset', 0);
         $this->{'message_list'} = $this->getMessageAdminSQL()->getAll($this->{'offset'}, 100);
-        $this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+        $this->{'fancyDate'} = $this->getObjectInstancier()->get(FancyDate::class);
     }
 
     public function messageEditAction()
@@ -251,6 +262,6 @@ class AdminController extends Controller
         $recuperateur = $this->getRecuperateurGet();
         $message_id = $recuperateur->getInt('message_id');
         $this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
-        $this->{'fancyDate'} = $this->getObjectInstancier()->get('FancyDate');
+        $this->{'fancyDate'} = $this->getObjectInstancier()->get(FancyDate::class);
     }
 }

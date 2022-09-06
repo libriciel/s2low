@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\ServiceUserSQL;
+use S2lowLegacy\Model\UserSQL;
+
 class AdminServiceController extends Controller
 {
     private const ADMIN_SERVICE_URL = "/admin/services/admin_services.php";

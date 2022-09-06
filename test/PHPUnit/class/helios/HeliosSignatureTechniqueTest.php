@@ -1,5 +1,18 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPESValidation;
+use S2lowLegacy\Class\helios\HeliosSignatureTechnique;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\helios\UnrecoverableHeliosSignatureTechniqueException;
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\PKCS12;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Lib\XadesSignature;
+use S2lowLegacy\Lib\XadesSignatureParser;
+use S2lowLegacy\Lib\XadesSignatureProperties;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosSignatureTechniqueTest extends S2lowTestCase
 {
     private $transaction_id;
@@ -13,7 +26,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase
     private function importFile($pes_aller)
     {
         /** @var PesAllerRetriever $pesAllerRetriever */
-        $pesAllerRetriever = $this->getObjectInstancier()->get("PesAllerRetriever");
+        $pesAllerRetriever = $this->getObjectInstancier()->get(PesAllerRetriever::class);
         $filepath = $pesAllerRetriever->getPathForNonExistingFile(sha1_file($pes_aller));
 
         copy($pes_aller, $filepath);
@@ -53,7 +66,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase
     {
         $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         /** @var PesAllerRetriever $pesAllerRetriever */
-        $pesAllerRetriever = $this->getObjectInstancier()->get("PesAllerRetriever");
+        $pesAllerRetriever = $this->getObjectInstancier()->get(PesAllerRetriever::class);
         return new HeliosSignatureTechnique(
             $heliosTransactionSQL,
             "/tmp/",
@@ -97,7 +110,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase
     {
         $file = $this->getFilePathInHeliosUplload();
         file_put_contents($file, "toto");
-        $this->setExpectedException("UnrecoverableHeliosSignatureTechniqueException", "Le fichier a été modifé depuis son postage sur la plateforme");
+        $this->setExpectedException(UnrecoverableHeliosSignatureTechniqueException::class, "Le fichier a été modifé depuis son postage sur la plateforme");
         $this->sign();
     }
 
@@ -128,7 +141,7 @@ class HeliosSignatureTechniqueTest extends S2lowTestCase
     {
         $transaction_id = $this->importFile(__DIR__ . "/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml");
         $this->setExpectedException(
-            "UnrecoverableHeliosSignatureTechniqueException",
+            UnrecoverableHeliosSignatureTechniqueException::class,
             "La signature du fichier est invalide"
         );
         $this->getHeliosSignatureTechnique()->sign(

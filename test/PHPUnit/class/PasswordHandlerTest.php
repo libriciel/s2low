@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\PasswordHandler;
+use S2lowLegacy\Model\UserSQL;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PasswordHandlerTest extends S2lowTestCase

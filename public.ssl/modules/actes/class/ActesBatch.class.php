@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Trace;
+use S2lowLegacy\Class\User;
+
 /**
  * \class ActesBatch ActesBatch.class.php
  * \brief Cette classe permet de gérer les lots de transactions ACTES

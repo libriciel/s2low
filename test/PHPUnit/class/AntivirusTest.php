@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\Antivirus;
+use S2lowLegacy\Class\ShellCommand;
+
 class AntivirusTest extends S2lowSimpleTestCase
 {
     protected function setUp(): void

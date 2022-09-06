@@ -1,11 +1,14 @@
 <?php
 
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MailIntegrationTest extends WebTestCase
 {
-    /** @var \SQLQuery */
+    /** @var SQLQuery */
     private SQLQuery $sqlQuery;
     private PemCertificateFactory $pemCertificateFactory;
 
@@ -17,13 +20,13 @@ class MailIntegrationTest extends WebTestCase
     public function setUp(): void
     {
         parent::setUp();
-        LegacyObjectsManager::resetObjectInstancier();
+        \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
         $_SESSION = [];
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
+        \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
     }
@@ -80,7 +83,7 @@ class MailIntegrationTest extends WebTestCase
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        ObjectInstancierFactory::resetObjectInstancier();
+        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
         $crawler = $client->request('GET', '/index.php');
         $this->assertMatchesRegularExpression(
             "#<title>Tiers de téléransmission multiprotocoles</title>#",
@@ -104,7 +107,7 @@ class MailIntegrationTest extends WebTestCase
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        ObjectInstancierFactory::resetObjectInstancier();
+        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
 
         $client = $this->setUpClient(
             $wrongCertificatePem->getContent(),

@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
 
 if (! $droit->isSuperAdmin($userInfo)) {

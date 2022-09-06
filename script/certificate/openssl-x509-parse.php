@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\X509Certificate;
+
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $filepath = $argv[1];
 

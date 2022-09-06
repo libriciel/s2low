@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\PemCertificateFactory;
+
 class PemCertificateTest extends S2lowTestCase
 {
     public const BASE_CERTIFICATES_DIR = __DIR__ . "/../class/fixtures/certificats";

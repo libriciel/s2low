@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\User;
+
 class DataObjectTest extends S2lowTestCase
 {
     /**

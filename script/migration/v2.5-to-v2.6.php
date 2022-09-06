@@ -3,8 +3,11 @@
 /*Parcours toutes les transactions Helios et ajoute les info CodCol, CodBud et IdPost dans la base*/
 // @deprecated en v5.0 ( NE PAS UTILISER ) ( A supprimer ? )
 
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($heliosTransactionSQL,$sqlQuery ) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($heliosTransactionSQL,$sqlQuery ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [HeliosTransactionsSQL::class, SQLQuery::class]
     );

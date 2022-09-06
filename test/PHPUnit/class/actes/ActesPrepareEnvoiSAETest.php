@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+
 class ActesPrepareEnvoiSAETest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

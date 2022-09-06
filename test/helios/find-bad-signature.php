@@ -1,7 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\PKCS12;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Lib\XadesSignature;
+use S2lowLegacy\Lib\XadesSignatureParser;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";

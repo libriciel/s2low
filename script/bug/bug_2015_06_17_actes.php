@@ -9,12 +9,18 @@
  *
  */
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\TGZExtractor;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\SQLQuery;
+
 $date_debut_bug = "2015-05-01";
 $date_fin_bug = "2015-06-20";
 
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 

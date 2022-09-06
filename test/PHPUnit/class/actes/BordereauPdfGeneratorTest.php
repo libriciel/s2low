@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPdfLegacy;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\BordereauPdfGenerator;
+use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\TmpFolder;
+
 class BordereauPdfGeneratorTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

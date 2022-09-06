@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\helios\PesAllerStorage;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class PesAllerStorageTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

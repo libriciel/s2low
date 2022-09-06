@@ -1,3 +1,9 @@
+<?php
+
+use S2lowLegacy\Class\Helpers;
+
+?>
+
 <script src="/javascript/date-picker.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/custom/styles/date-picker.css" />
 <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>

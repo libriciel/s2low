@@ -1,0 +1,36 @@
+{% if last_status_id == -1 %}
+L'acte de référence interne {{ number }} est en erreur.
+{% elseif type == 1 %}
+L'acte de référence interne {{ number }} a été acquitté sous l'identifiant unique {{ unique_id }}.
+{% elseif type == 3 and last_status_id == 4 %}
+L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes {{ number }} a été acquitté.
+{% elseif type == 4 and last_status_id == 4 %}
+L'envoi de la lettre d'observation (ou du refus de réponse) concernant l'actes {{ number }} a été acquitté.
+{% elseif type == 6 and last_status_id == 4 %}
+L'annulation de l'acte {{ number }} a été acquittée.
+{% else %}
+Réception de document pour l'acte  {{ number }}
+{% endif %}
+
+
+Nature de l'Acte : {{ nature_descr }}
+
+Objet : {{ subject }}
+
+Décision du : {{ decision_date }}
+
+Transmise le :  {{ submission_date }}
+
+{% if last_status_id == 4 %}
+Accusé reçu le :  {{ date }}
+{% elseif last_status_id != -1 %}
+Document reçu le :  {{ date }}
+{% endif %}
+
+{% if add_url_recup and last_status_id != -1 %}
+URL pour récupérer les fichiers : {{ url }}
+{% endif %}
+
+{% if archive_url %}
+Archive disponible sur :{{ archive_url }}
+{% endif %}

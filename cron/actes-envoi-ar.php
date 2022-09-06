@@ -1,8 +1,13 @@
 #! /usr/bin/php
 <?php
+
+use S2lowLegacy\Class\actes\ActesEnvoiAR;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 require_once(__DIR__ . "/../init/init.php");
 
-list($objectInstancier, $s2lowLogger) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $s2lowLogger) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class,S2lowLogger::class]
     );

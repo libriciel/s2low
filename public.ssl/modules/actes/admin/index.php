@@ -1,9 +1,14 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\S2lowRedirect;
+
 require_once(dirname(__FILE__) . "/../../../../init/init-www-actes.php");
 
 if (! $droit->isSuperAdmin($userInfo)) {
-    $objectInstancier->get('S2lowRedirect')->redirect("/", "Accès refusé");
+    $objectInstancier->get(S2lowRedirect::class)->redirect("/", "Accès refusé");
 }
 
 

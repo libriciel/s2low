@@ -1,7 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesExport;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\S2lowLogger;
+
 require_once __DIR__ . "/../../init/init.php";
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier();
 
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();

@@ -2,12 +2,8 @@
 
 namespace S2low\Tests\Base;
 
-use LegacyObjectsManager;
-use ObjectInstancier;
-use ObjectInstancierFactory;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestListener;
-use SQLQuery;
+use S2lowLegacy\Lib\ObjectInstancier;
+use PostgreSQLController;
 use Throwable;
 
 class S2lowTestListener implements \PHPUnit\Framework\TestListener
@@ -39,12 +35,12 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         if ($suite->getName() === "S2low_integration") {
-            LegacyObjectsManager::resetObjectInstancier();
+            \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
         } elseif ($suite->getName() === "S2low") {
             /** @var ObjectInstancier $objectInstancier */
-            $objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()
+            $objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
                 ->get(ObjectInstancier::class);
-            $postgreSQLControler = $objectInstancier->get('PostgreSQLController');
+            $postgreSQLControler = $objectInstancier->get(PostgreSQLController::class);
 
             $postgreSQLControler->alterDatabase(function ($message) {
                 echo $message . "\n";

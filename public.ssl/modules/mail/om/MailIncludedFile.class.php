@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\FileUploader;
+
 /**
  * \class MailAnnuaire  MailIncludedFile.class.php
  * \brief Cette classe permet de modeliser le tableau correspond de MailIncludedFile

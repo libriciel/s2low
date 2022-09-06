@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $recuperateur = new Recuperateur($_POST);

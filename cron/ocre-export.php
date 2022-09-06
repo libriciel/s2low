@@ -1,8 +1,11 @@
 <?php
 
 /* Fichier a mettre sur S2low afin d'envoyer le fichier ocre */
+
+use S2lowLegacy\Lib\SigTermHandler;
+
 require_once(__DIR__ . "/../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 
 $dir_handle = opendir(HELIOS_OCRE_FILE_PATH);

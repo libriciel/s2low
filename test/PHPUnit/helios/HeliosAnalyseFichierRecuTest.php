@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosRetourSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 class HeliosAnalyseFichierRecuTest extends S2lowTestCase
 {
     private $helios_ftp_response_tmp_local_path;

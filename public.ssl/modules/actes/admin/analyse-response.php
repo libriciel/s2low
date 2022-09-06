@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
+use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\Recuperateur;
+
 require_once(__DIR__ . "/../../../../init/init-www-actes.php");
 
 if ($userInfo['role'] != 'SADM') {
@@ -11,7 +16,7 @@ if ($userInfo['role'] != 'SADM') {
 $recuperateur = new Recuperateur($_GET);
 $filename = $recuperateur->get('file');
 
-$actesResponsesError = $objectInstancier->get('ActesResponsesError');
+$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 
 $actesAnalyseFichierRecuController = $objectInstancier->get(ActesAnalyseFichierRecuController::class);
 

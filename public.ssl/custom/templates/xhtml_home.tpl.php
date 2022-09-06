@@ -1,4 +1,8 @@
-<?php echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
+<?php
+
+use S2lowLegacy\Model\MessageAdminSQL;
+
+echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
     <head>
@@ -42,9 +46,9 @@
                     </p>
                     <?php
 
-                    $objectInstancier  = ObjectInstancierFactory::getObjetInstancier();
+                    $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
                     /** @var MessageAdminSQL $messageAdminSQL */
-                    $messageAdminSQL = $objectInstancier->get('MessageAdminSQL');
+                    $messageAdminSQL = $objectInstancier->get(MessageAdminSQL::class);
                     $messageAdmin = $messageAdminSQL->getPublishedMessage();
                     if ($messageAdmin->message_id) {
                         $messageAdmin->displayMessage();

@@ -1,8 +1,9 @@
 <?php
 
 use GuzzleHttp\Exception\ConnectException;
+use S2lowLegacy\Lib\OpenStackStateManager;
+use S2lowLegacy\Lib\PausingQueueException;
 use Monolog\Logger;
-use OpenStack\Common\Error\BadResponseError;
 use Psr\Http\Message\RequestInterface;
 
 class OpenStackStateManagerTest extends S2lowTestCase

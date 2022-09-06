@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 class MailTransaction extends DataObject
 {
     public const STATUS_NO_CONFIRMATION = "aucune confirmation";

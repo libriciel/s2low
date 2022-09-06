@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Lib\XadesSignatureParser;
 use PHPUnit\Framework\TestCase;
 
 class XadesSignatureParserTest extends TestCase

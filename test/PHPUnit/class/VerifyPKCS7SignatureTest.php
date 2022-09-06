@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPKCS7Signature;
+use S2lowLegacy\Lib\PemCertificateFactory;
+
 class VerifyPKCS7SignatureTest extends S2lowTestCase
 {
     public function testRightFileWithSignature()

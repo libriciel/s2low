@@ -1,3 +1,8 @@
+<?php
+
+use S2lowLegacy\Model\LogsRequestData;
+
+?>
 <div id="content">
     <h1>Journal - Requête sur l'historique</h1>
     <p id="back-user-btn">

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosTransactionsListe;
+
 class HeliosTransactionsListeTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;

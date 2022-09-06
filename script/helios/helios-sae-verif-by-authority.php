@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\HeliosVerificationSaeWorker;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 
 if ($argc < 2) {

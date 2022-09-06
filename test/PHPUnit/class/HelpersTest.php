@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use PHPUnit\Framework\TestCase;
 
 class HelpersTest extends TestCase

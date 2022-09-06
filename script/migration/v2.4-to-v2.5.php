@@ -9,6 +9,8 @@
  */
 
 
+use S2lowLegacy\Lib\SQLQuery;
+
 exit;
 
 //Il est nécessaire de spécifier l'identifiant de la table log a partir de laquelle on va vider les lignes dans
@@ -22,7 +24,7 @@ $id_cut_journal = 0;
 //A FAIRE AVANT : mise à jour de la base de données
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 migration_log("Migration S2low 2.4 vers 2.5");
 

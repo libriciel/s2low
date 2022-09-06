@@ -1,6 +1,8 @@
 <?php
 
 //http://www.webozor.com/php/clef-de-luhn-ou-formule-de-luhn
+use S2lowLegacy\Lib\LuhnKey;
+
 class LuhnKeyTest extends PHPUnit_Framework_TestCase
 {
     /**

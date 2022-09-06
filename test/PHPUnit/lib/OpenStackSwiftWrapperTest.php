@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\CloudStorageException;
+use S2lowLegacy\Lib\OpenStackContainerStore;
+use S2lowLegacy\Lib\OpenStackContainerWrapper;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Lib\UnrecoverableException;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 

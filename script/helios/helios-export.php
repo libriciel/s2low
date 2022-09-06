@@ -1,7 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosExport;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once __DIR__ . "/../../init/init.php";
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier();
 
 $s2lowLogger = $objectInstancier->get(S2lowLogger::class);
 $s2lowLogger->enableStdOut();

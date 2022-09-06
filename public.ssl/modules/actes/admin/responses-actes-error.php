@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\PagerHTML;
+
 require_once(__DIR__ . "/../../../../init/init-www-actes.php");
 
 if ($userInfo['role'] != 'SADM') {
@@ -9,7 +14,7 @@ if ($userInfo['role'] != 'SADM') {
 }
 
 
-$actesResponsesError = $objectInstancier->get('ActesResponsesError');
+$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 $nb_responses_error = $actesResponsesError->getNbError();
 
 $errorFileIterator = $actesResponsesError->getFilesystemIterator();

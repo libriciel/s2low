@@ -1,7 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\Mailer;
+use S2lowLegacy\Class\User;
+
 require_once(__DIR__ . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 function checkAllEmail($emailtext)
 {

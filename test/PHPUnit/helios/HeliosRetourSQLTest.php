@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\HeliosRetourSQL;
+
 class HeliosRetourSQLTest extends S2lowTestCase
 {
     public function testAdd()

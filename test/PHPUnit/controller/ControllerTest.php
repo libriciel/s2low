@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\Recuperateur;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\SQLQuery;
+
 class ControllerTest extends S2lowTestCase
 {
     /**
@@ -44,7 +50,7 @@ class ControllerTest extends S2lowTestCase
 
     public function testRedirect()
     {
-        $this->setExpectedException("RedirectException", "Redirect to http://redirect_url with message : error message");
+        $this->setExpectedException(RedirectException::class, "Redirect to http://redirect_url with message : error message");
         $this->controller->redirect("http://redirect_url", "error message");
         $this->assertEquals("error message", $_SESSION['error']);
     }
@@ -109,22 +115,22 @@ class ControllerTest extends S2lowTestCase
 
     public function testGetRecuperateur()
     {
-        $this->assertInstanceOf("Recuperateur", $this->controller->getRecuperateurGet());
+        $this->assertInstanceOf(Recuperateur::class, $this->controller->getRecuperateurGet());
     }
 
     public function testGetRecuperateurPost()
     {
-        $this->assertInstanceOf("Recuperateur", $this->controller->getRecuperateurPost());
+        $this->assertInstanceOf(Recuperateur::class, $this->controller->getRecuperateurPost());
     }
 
     public function testGetSqlQuery()
     {
-        $this->assertInstanceOf("SQLQuery", $this->controller->getSQLQuery());
+        $this->assertInstanceOf(SQLQuery::class, $this->controller->getSQLQuery());
     }
 
     public function testRedirectSSL()
     {
-        $this->setExpectedException("RedirectException", "/toto/index.php?foo=bar");
+        $this->setExpectedException(RedirectException::class, "/toto/index.php?foo=bar");
         $this->controller->redirectSSL("/toto/index.php", "foo=bar");
     }
 
@@ -199,13 +205,13 @@ class ControllerTest extends S2lowTestCase
 
     public function testGetObjectInstancier()
     {
-        $this->assertInstanceOf("ObjectInstancier", $this->controller->getObjectInstancier());
+        $this->assertInstanceOf(ObjectInstancier::class, $this->controller->getObjectInstancier());
     }
 
     public function testDisplayErrorAndExitAPI()
     {
         $this->setAdminGroup2Authentication();
-        $this->getObjectInstancier()->get("Environnement")->post()->set('api', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', '1');
         $this->setExpectedException("Exception", "Exit");
         $this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
         $this->controller->verifAdmin(1);
@@ -213,7 +219,7 @@ class ControllerTest extends S2lowTestCase
 
     public function testIsApiCall()
     {
-        $this->getObjectInstancier()->get("Environnement")->get()->set('api', '1');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('api', '1');
         $this->assertTrue($this->controller->isApiCall());
     }
 }

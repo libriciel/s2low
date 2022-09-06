@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Lib\ObjectInstancier;
 use PHPUnit\Framework\TestCase;
 
 class S2lowSimpleTestCase extends TestCase
@@ -7,23 +8,23 @@ class S2lowSimpleTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
-        $this->getObjectInstancier()->set("Monolog\Logger", new  Monolog\Logger('PHPUNIT'));
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        $this->getObjectInstancier()->set(Monolog\Logger::class, new  Monolog\Logger('PHPUNIT'));
         $testHandler = new Monolog\Handler\TestHandler();
         $testHandler->setLevel(\Monolog\Logger::DEBUG);
-        $this->getObjectInstancier()->set("Monolog\Handler\TestHandler", $testHandler);
-        $this->getObjectInstancier()->get("Monolog\Logger")->pushHandler($testHandler);
+        $this->getObjectInstancier()->set(Monolog\Handler\TestHandler::class, $testHandler);
+        $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
     }
 
     public function getObjectInstancier()
     {
-        return ObjectInstancierFactory::getObjetInstancier();
+        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
     }
 
 
     public function getLogRecords()
     {
-        $testHandler = $this->getObjectInstancier()->get("Monolog\Handler\TestHandler");
+        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
         return $testHandler->getRecords();
     }
     /** @deprecated  */

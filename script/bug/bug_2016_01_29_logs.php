@@ -9,8 +9,10 @@
  *
  */
 
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 echo "Correction authority_id\n";
 $sql = "UPDATE logs SET authority_id=users.authority_id FROM users " .

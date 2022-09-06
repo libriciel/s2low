@@ -1,7 +1,24 @@
 <?php
 
-require_once("../../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesTypePJSQL;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
+
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
     );
@@ -9,7 +26,7 @@ list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstan
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 
-$actesTypePJSQL = $objectInstancier->get('ActesTypePJSQL');
+$actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
 
 $actionHtml = "";
 
@@ -76,7 +93,7 @@ $workflow = $trans->fetchWorkflow();
 $transactionTypes = $trans->get("transactionTypes") ;
 $transStatus = $trans->getCurrentStatus();
 
-$authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+$authoritySQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
 $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
 $doc = new HTMLLayout();

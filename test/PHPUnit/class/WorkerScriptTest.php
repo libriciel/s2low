@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\BeanstalkdWrapper;
+use S2lowLegacy\Class\IWorker;
+use S2lowLegacy\Class\SigTermHandlerFactory;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\SigTermHandler;
+
 class WorkerScriptTest extends S2lowTestCase
 {
     public function setUp(): void
@@ -78,7 +84,7 @@ class WorkerScriptTest extends S2lowTestCase
 
     public function testBeanstalked()
     {
-        $job = $this->getMockBuilder("Pheanstalk\Job")
+        $job = $this->getMockBuilder(Pheanstalk\Job::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -89,7 +95,7 @@ class WorkerScriptTest extends S2lowTestCase
 
     public function testBeanstalkedFailed()
     {
-        $job = $this->getMockBuilder("Pheanstalk\Job")
+        $job = $this->getMockBuilder(Pheanstalk\Job::class)
             ->disableOriginalConstructor()
             ->getMock();
         $job
@@ -103,7 +109,7 @@ class WorkerScriptTest extends S2lowTestCase
 
     private function runBeanstalkd($job)
     {
-        $queue = $this->getMockBuilder("\Pheanstalk\Pheanstalk")
+        $queue = $this->getMockBuilder(\Pheanstalk\Pheanstalk::class)
             ->disableOriginalConstructor()
             ->getMock();
         $queue->method('reserve')->will($this->onConsecutiveCalls($job, false));

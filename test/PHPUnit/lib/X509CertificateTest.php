@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\X509Certificate;
+
 class X509CertificateTest extends PHPUnit_Framework_TestCase
 {
     /**

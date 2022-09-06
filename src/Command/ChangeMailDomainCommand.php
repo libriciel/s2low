@@ -2,9 +2,10 @@
 
 namespace S2low\Command;
 
-use AuthoritySQL;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Class\S2lowLogger;
 use Exception;
-use S2lowLogger;
+use S2lowLegacy\Model\UserSQL;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,8 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use User;
-use UserSQL;
+use S2lowLegacy\Class\User;
 
 class ChangeMailDomainCommand extends Command
 {

@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\helios\FTPHeliosSender;
+use S2lowLegacy\Class\helios\FTPService;
+
 class FTPHeliosSenderClassTest extends S2lowTestCase
 {
     public function testSendPstMode()

@@ -1,6 +1,10 @@
 <?php
+
 /** @var array $info_list */
 /** @var array $status_list */
+
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+
 ?>
 <h1>Statistiques d'envoi au SAE - Helios </h1>
 <p id="back-transaction-btn">

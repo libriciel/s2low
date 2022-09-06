@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\RedirectException;
+
 class ActesPostWithoutSignatureController extends Controller
 {
     /**

@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\S2lowRedirect;
+use S2lowLegacy\Lib\SessionWrapper;
+
 class S2lowRedirectTest extends PHPUnit_Framework_TestCase
 {
     public function testRedirect()

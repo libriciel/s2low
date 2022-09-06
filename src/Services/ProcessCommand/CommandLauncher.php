@@ -2,6 +2,8 @@
 
 namespace S2low\Services\ProcessCommand;
 
+use S2lowLegacy\Class\RecoverableException;
+use Exception;
 use Symfony\Component\Process\Process;
 
 class CommandLauncher
@@ -11,18 +13,18 @@ class CommandLauncher
         $process = new Process($commmand);
         try {
             $process->run();
-        } catch (\Exception $exception) {
-            throw new \RecoverableException(get_class($this) . " : " . $exception->getMessage());
+        } catch (Exception $exception) {
+            throw new RecoverableException(get_class($this) . " : " . $exception->getMessage());
         }
 
         $commandOutput = $outputTranslator->getCommandOutput($process);
 
         if ($commandOutput->hasBlockingErrors()) {
-            throw new \Exception($commandOutput->getFirstBlockingErrorMessage());
+            throw new Exception($commandOutput->getFirstBlockingErrorMessage());
         }
 
         if ($commandOutput->hasNonBlockingErrors()) {
-            throw new \RecoverableException($commandOutput->getNonBlockingErrors());
+            throw new RecoverableException($commandOutput->getNonBlockingErrors());
         }
         return $commandOutput->getResult();
     }

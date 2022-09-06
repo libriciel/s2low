@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Log;
+
 exit;
 //Correction du bug survenu le 29/06/2009
 //La plateforme n'a pas convenablement horodaté l'ensemble des changement d'état
@@ -7,7 +10,7 @@ exit;
 
 
 require_once(dirname(__FILE__) . "/../../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $db = DatabasePool::getInstance();
 

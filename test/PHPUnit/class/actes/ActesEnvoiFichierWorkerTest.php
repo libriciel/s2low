@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
+use S2lowLegacy\Class\actes\ActesFileSender;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Model\LogsSQL;
+
 class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 {
     /** @var  TmpFolder */
@@ -42,7 +49,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
@@ -52,7 +59,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             "Transmis au MI",
             $transaction_info['message']
         );
-        $logsSQL = $this->getObjectInstancier()->get("LogsSQL");
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $liste = $logsSQL->getLastLog();
         $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état transmis#", $liste['message']);
     }
@@ -64,7 +71,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
         $envelope_id = $transaction_info['envelope_id'];
@@ -96,13 +103,13 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
         /** @var PHPUnit_Framework_MockObject_MockObject $actesFileSender */
-        $actesFileSender = $this->getObjectInstancier()->get('ActesFileSender');
+        $actesFileSender = $this->getObjectInstancier()->get(ActesFileSender::class);
 
         $actesFileSender->method("send")->willThrowException(new Exception("Erreur du mock"));
 
         $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->sendAllEnvelopes();
-        $actesTransactionsSQL = $this->getObjectInstancier()->get("ActesTransactionsSQL");
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);

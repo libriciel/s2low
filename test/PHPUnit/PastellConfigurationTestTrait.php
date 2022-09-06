@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\PastellWrapper;
+use S2lowLegacy\Class\PastellWrapperFactory;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 trait PastellConfigurationTestTrait
 {
     protected function configurePastell($authority_id = 1)
@@ -17,12 +25,12 @@ trait PastellConfigurationTestTrait
 
     protected function mockPastellFactory($id_d = "xyzt", $getLastErrorReturn = false)
     {
-        $pastell = $this->getMockBuilder('PastellWrapper')->disableOriginalConstructor()->getMock();
+        $pastell = $this->getMockBuilder(PastellWrapper::class)->disableOriginalConstructor()->getMock();
         $pastell->method('createActes')->willReturn($id_d);
         $pastell->method('createHelios')->willReturn($id_d);
         $pastell->method('getLastError')->willReturn($getLastErrorReturn);
         $pastell->method('sendSAE')->willReturn(true);
-        $pastellFactory = $this->getMockBuilder('PastellWrapperFactory')->disableOriginalConstructor()->getMock();
+        $pastellFactory = $this->getMockBuilder(PastellWrapperFactory::class)->disableOriginalConstructor()->getMock();
         $pastellFactory->method('getNewInstance')->willReturn($pastell);
         $this->getObjectInstancier()->set(PastellWrapperFactory::class, $pastellFactory);
     }

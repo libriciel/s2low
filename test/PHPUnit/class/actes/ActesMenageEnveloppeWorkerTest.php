@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackContainerStore;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+
 class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
 {
     /**

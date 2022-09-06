@@ -4,8 +4,11 @@
  * Les enveloppes de la collectivite 3847 posté le 22/11/2016 entre 16h02 et 16h09 ne sont plus accessibles...
  *
  */
+
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
 $sql = "SELECT actes_envelopes.id, actes_transactions.id as transaction_id FROM actes_transactions_workflow  

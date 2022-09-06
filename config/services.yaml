@@ -2,18 +2,28 @@
 
 parameters:
   app.relative_legacy_ssl_path: 'public.ssl/'
+  app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
+  app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Namespace s2low : contient le code développé après le passage en Symfony.
+# ---------------------------------------------------------------------------------------------------------------------
   S2low\:
     resource: '../src/*'
-    exclude: '../src/{Kernel.php,Command}'
+    exclude: '../src/Kernel.php'
+
+  S2low\Services\LogTimestampTokenGarbage:
+    arguments:
+      $old_timestamp_token_directory: '%app.old_timestamp_token_directory%'
+      $timestamp_token_retention_nb_days: '%app.timestamp_token_retention_nb_days%'
 
   S2low\Legacy\LegacyRouteLoader:
-    tags: [routing.loader]
+    tags: [ routing.loader ]
     arguments:
       $project_dir: '%kernel.project_dir%'
       $relative_legacy_ssl_path: '%app.relative_legacy_ssl_path%'
@@ -21,9 +31,336 @@ services:
   S2low\Controller\LegacyController:
     public: true
 
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Namespace Legacy : contient du code legacy correspondant au mail sécurisé
+  # Voué à être intégré dans le namespace S2lowLegacy
+  # ---------------------------------------------------------------------------------------------------------------------
   Legacy\:
     resource: '../public.ssl/modules/mail/lib/'
     exclude: '../public.ssl/modules/mail/lib/mailfunction.php'
     autowire: true
     autoconfigure: true
     public: true
+
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Namespace  S2lowLegacy : contient le code Legacy
+  # ---------------------------------------------------------------------------------------------------------------------
+
+  S2lowLegacy\Lib\:
+    resource: '../lib/*'
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  S2lowLegacy\SigTermHandler:
+    autowire: false #Utilisation de la constante SIGTERM
+
+  S2lowLegacy\Lib\Environnement:
+    autowire: false #Pas un service, doit être explicitement configuré
+
+
+  S2lowLegacy\Lib\OpenStackContainerFetcher:
+    autowire: false #Pas un service, est renvoyé par une factory
+
+  S2lowLegacy\Lib\OpenStackContainerWrapperFactory:
+    arguments:
+      $logger: '@monolog.logger.request'
+
+  S2lowLegacy\Lib\OpenStackSwiftWrapper:
+    arguments:
+      $logger: '@monolog.logger.request'
+
+  S2lowLegacy\Lib\ParsedownExtended:
+    autowire: false #doit être configuré explicitement
+
+  S2lowLegacy\Lib\PemCertificate:
+    autowire: false #pas un service
+
+  S2lowLegacy\Lib\Recuperateur:
+    autowire: false #pas un service
+
+  S2lowLegacy\Lib\RgsCertificate:
+    arguments:
+      $openssl_path: "todo"
+
+  S2lowLegacy\Lib\SQLQuery:
+    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Lib\SQLQuery']
+
+  S2lowLegacy\Lib\SessionWrapper:
+    autowire: false #Doit être configuré explicitement ?
+
+  S2lowLegacy\Lib\XadesSignature:
+    arguments:
+      $xmlsec1_path: "todo"
+
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
+  # ---------------------------------------------------------------------------------------------------------------------
+
+  S2lowLegacy\Model\:
+    resource: '../model/*'
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Sous Namespace  S2lowLegacy/Class
+  # ---------------------------------------------------------------------------------------------------------------------
+
+  S2lowLegacy\Class\:
+    resource: '../class/*'
+    exclude:
+      - '../class/include.php'
+      - '../class/util.php'
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  S2lowLegacy\Class\Antivirus:
+    arguments:
+      $antivirus_command: 'todo'
+
+  S2lowLegacy\Class\BeanstalkdWrapper:
+    arguments:
+      $beanstalkd_server: "todo"
+      $beanstalkd_port: "todo"
+
+  S2lowLegacy\Class\CloudStorage: #TODO : verify
+    autowire: false
+
+  S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
+    autowire: false
+
+  S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
+    autowire: false
+
+  S2lowLegacy\Class\Mail: #TODO Impossible pour l'instant ( chargé par PEAR )
+    autowire: false
+
+  S2lowLegacy\Class\Mailer: #TODO Impossible pour l'instant ( chargé par PEAR )
+    autowire: false
+
+  S2lowLegacy\Class\PearMail: #TODO Impossible pour l'instant ( chargé par PEAR )
+    autowire: false
+
+  S2lowLegacy\Class\ModulePermission: #Impossible : doit nécésairement être paramétré par module
+    autowire: false
+
+  S2lowLegacy\Class\OpensslTSWrapper:
+    arguments:
+      $opensslPath: "todo"
+
+  S2lowLegacy\Class\PDFStampWrapper:
+    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\PDFStampWrapper']
+
+  S2lowLegacy\Class\QueryResult:
+    autowire: false
+
+  S2lowLegacy\Class\PadesValid:
+    arguments:
+      $pades_valid_url: "todo"
+
+  S2lowLegacy\Class\RedisMutexWrapper:
+    arguments:
+      $redis_server: "todo"
+      $redis_port: "todo"
+
+  S2lowLegacy\Class\S2lowLogger:
+    arguments:
+      $logger: '@monolog.logger.request'
+
+  S2lowLegacy\Class\S2lowRedirect:
+    arguments:
+      $website_ssl: "todo"
+      $website: "todo"
+
+  S2lowLegacy\Class\TGZExtractor:
+    autowire: false #(pas un service)
+
+  S2lowLegacy\Class\VerifyPKCS7Signature:
+    arguments:
+      $authorized_ca_path: "todo"
+
+  S2lowLegacy\Class\VerifyPadesSignature:
+    arguments:
+      $rgs_validca_path: "todo"
+
+  S2lowLegacy\Class\VerifyPemCertificate:
+    arguments:
+      $authorized_ca_path: "todo"
+
+  S2lowLegacy\Class\Versionning:
+    autowire: false #Pas un service
+
+  S2lowLegacy\Class\XSDValidation:
+    arguments:
+      $xsdPath: "todo"
+
+  S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
+    arguments:
+      $actes_appli_trigramme: "todo"
+
+  S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
+    arguments:
+      $actes_response_tmp_local_path: "todo"
+      $actes_response_error_path: "todo"
+      $actes_files_upload_root: "todo"
+      $actes_ministere_acronyme: "todo"
+
+  S2lowLegacy\Class\actes\ActesArchive:
+    autowire: false #Pas un service ??
+
+  S2lowLegacy\Class\actes\ActesCloudStorage:
+    arguments:
+      $actes_files_upload_root: "todo"
+
+  S2lowLegacy\Class\actes\ActesConventions:
+     arguments:
+       $actes_files_upload_root: "todo"
+
+  S2lowLegacy\Class\actes\ActesEnvelopeStorage:
+    autowire: false
+    #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
+    #  $actes_files_upload_root: "fdsfdsfsdfs"
+
+  S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
+    arguments:
+      $actes_ministere_acronyme: "todo"
+
+  S2lowLegacy\Class\actes\ActesFiles:
+    arguments:
+      $root_workspace_path: "todo"
+
+  S2lowLegacy\Class\actes\ActesImapRetrieve:
+    arguments:
+      $actes_response_tmp_local_path: "todo"
+
+  S2lowLegacy\Class\Parapheur:
+    autowire: false #Initialisé avec les données à traiter ...
+
+  S2lowLegacy\Class\actes\ActesNameArchive:
+    arguments:
+      $trigramme: "todo"
+
+  S2lowLegacy\Class\actes\ActesNotification:
+    arguments:
+      $actes_appli_trigramme: "todo"
+
+  S2lowLegacy\Class\actes\ActesPdf:
+    autowire: true
+    public: true
+    arguments:
+      $img: "/var/www/s2low/public.ssl/custom/images/bandeau-s2low-190.jpg" #TODO : utiliser la variable d'env ?
+
+  S2lowLegacy\Class\actes\ActesPdfLegacy:
+    autowire: false # Pas utilisé en v5 ...
+
+  S2lowLegacy\Class\actes\BordereauPdfGenerator:
+    autowire: true
+    arguments:
+      $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
+      $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
+
+
+  S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
+    autowire: false #LOGGER !!!
+
+  S2lowLegacy\Class\actes\ActesResponsesError:
+    arguments:
+      $actes_response_error_path: "todo"
+
+  S2lowLegacy\Class\actes\ActesRetriever:
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\actes\ActesRetriever']
+    #arguments:
+    #  $actes_files_upload_root: "todo"
+
+  S2lowLegacy\Class\actes\ActesScriptHelper:
+    arguments:
+      $actes_appli_trigramme: "todo"
+
+  S2lowLegacy\Class\actes\ActesStatistiques:
+    autowire: false #Pas un service
+
+  S2lowLegacy\Class\helios\FTPHeliosReceiver:
+    arguments:
+      $helios_ftp_response_server_path: "todo"
+      $helios_ftp_response_tmp_local_path: "todo"
+
+  S2lowLegacy\Class\helios\FTPHeliosSender:
+    arguments:
+      $helios_ftp_passtrans_mode: "todo"
+      $helios_ftp_p_appli: "todo"
+      $helios_sending_destination: "todo"
+
+  S2lowLegacy\Class\helios\FTPService:
+    arguments:
+      $helios_ftp_server: "todo"
+      $helios_ftp_port: "todo"
+      $helios_ftp_login: "todo"
+      $helios_ftp_password: "todo"
+      $helios_sending_mode_demo: "todo"
+      $helios_ftp_passive_mode: "todo"
+      $helios_ftp_passtrans_mode: "todo"
+
+  S2lowLegacy\Class\helios\FichierCompteur:
+    arguments:
+      $file_path: "todo"
+
+  S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
+    arguments:
+      $schema_pes_path: "todo"
+      $email_admin_technique: "todo"
+      $tdt_from_email: "todo"
+
+  S2lowLegacy\Class\helios\HeliosEnvoiControler:
+    arguments:
+      $helios_files_upload_root: "todo"
+
+  S2lowLegacy\Class\helios\HeliosEnvoiSAE:
+    autowire: false #TODO : logger
+
+  S2lowLegacy\Class\helios\HeliosExport:
+    arguments:
+      $helios_responses_root: "todo"
+
+  S2lowLegacy\Class\helios\HeliosFiles:
+    arguments:
+      $helios_file_upload: "todo"
+
+  S2lowLegacy\Class\helios\HeliosPESValidation:
+    arguments:
+      $helios_xsd_path: "todo"
+
+  S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE:
+    autowire: false #TODO : logger
+
+  S2lowLegacy\Class\helios\HeliosSignatureTechnique:
+    arguments:
+      $helios_files_upload_root: "todo"
+
+  S2lowLegacy\Class\helios\HeliosVerificationSAE:
+    autowire: false #TODO: logger
+
+  S2lowLegacy\Class\helios\PESAcquitCloudStorage:
+    arguments:
+      $helios_responses_root: "todo"
+
+  S2lowLegacy\Class\helios\PESRetourCloudStorage:
+    arguments:
+      $helios_responses_root: "todo"
+
+  S2lowLegacy\Class\helios\PesAllerRetriever:
+    arguments:
+      $helios_files_upload_root: "todo"
+
+  S2lowLegacy\Class\helios\PesAllerStorage:
+    autowire: false # TODO : logger
+    #arguments:
+    #  $helios_files_upload_root: "todo"
+
+  S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
+    arguments:
+      $mail_files_upload_root: "todo"

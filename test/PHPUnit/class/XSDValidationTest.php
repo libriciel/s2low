@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\XSDValidation;
+
 class XSDValidationTest extends PHPUnit_Framework_TestCase
 {
     /**

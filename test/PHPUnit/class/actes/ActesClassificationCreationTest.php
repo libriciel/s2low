@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesClassificationCreation;
+use S2lowLegacy\Model\AuthoritySQL;
+
 class ActesClassificationCreationTest extends S2lowTestCase
 {
     public function testsendToAllAuthorities()

@@ -5,8 +5,11 @@
 
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si tout va mal
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 function creationurl($idcoll, $status)
 {

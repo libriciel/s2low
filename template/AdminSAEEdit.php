@@ -1,5 +1,9 @@
 <?php
+
     /** @var PastellProperties $pastellProperties */
+
+use S2lowLegacy\Model\PastellProperties;
+
 ?>
 <h1>Configuration de la connexion SAE</h1>
 <p id="back-transaction-btn">

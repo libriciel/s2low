@@ -1,4 +1,8 @@
 <?php
+
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+
 include("init-services.php");
 
 $authority_id = null;

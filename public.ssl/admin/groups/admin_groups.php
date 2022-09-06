@@ -1,7 +1,12 @@
 <?php
 
-require_once("../../../init/init.php");
-list($html, $jsonOutput) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\JSONoutput;
+
+list($html, $jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         ['html', JSONoutput::class]
     );

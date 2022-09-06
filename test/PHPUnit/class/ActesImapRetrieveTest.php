@@ -1,5 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesImapProperties;
+use S2lowLegacy\Class\actes\ActesImapRetrieve;
+use S2lowLegacy\Class\ImapMailBoxFactory;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\SigTermHandler;
+
 class ActesImapRetrieveTest extends S2lowSimpleTestCase
 {
     /**
@@ -115,12 +122,12 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
         $attachments->name = "foo-école.pdf";
         $attachments->filePath = __FILE__;
 
-        $incomingMail = $this->getMockBuilder('PhpImap\IncomingMail')->disableOriginalConstructor()->getMock();
+        $incomingMail = $this->getMockBuilder(PhpImap\IncomingMail::class)->disableOriginalConstructor()->getMock();
         $incomingMail->{'textHtml'} = $mailHtmlText;
         $incomingMail->method('getAttachments')->willReturn([$attachments]);
 
 
-        $mailBox = $this->getMockBuilder('PhpImap\Mailbox')->disableOriginalConstructor()->getMock();
+        $mailBox = $this->getMockBuilder(PhpImap\Mailbox::class)->disableOriginalConstructor()->getMock();
         $mailBox->method('searchMailbox')->willReturn([13]);
         $mailBox->method('getMail')->willReturn($incomingMail);
 

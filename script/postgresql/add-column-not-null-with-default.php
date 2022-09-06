@@ -5,8 +5,10 @@
  * on a ici un moyen d'ajouter une colonne sans aucun verrou
  */
 
+use S2lowLegacy\Lib\SQLQuery;
+
 require_once __DIR__ . "/../../init/init.php";
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if ($argc < 5) {
     echo "{$argv[0]} - create a not null column with a defaut value in the database\n";

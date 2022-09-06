@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\PadesValid;
+
 require_once __DIR__ . "/../../init/init.php";
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier();
 
 
 if ($argc < 2) {
@@ -10,7 +12,7 @@ if ($argc < 2) {
 }
 $filepath = $argv[1];
 
-$padesValid = $objectInstancier->get("PadesValid");
+$padesValid = $objectInstancier->get(PadesValid::class);
 
 try {
     $is_signed = $padesValid->validate($filepath);

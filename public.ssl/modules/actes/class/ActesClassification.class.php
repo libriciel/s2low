@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+
 /**
  * \class ActesClassification ActesClassification.class.php
  * \brief Cette classe permet de gérer les classifications matières/sous-matières

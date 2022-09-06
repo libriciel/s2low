@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Lib\LuhnKey;
+use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Lib\Siret;
+
 class SiretTest extends PHPUnit_Framework_TestCase
 {
     /**

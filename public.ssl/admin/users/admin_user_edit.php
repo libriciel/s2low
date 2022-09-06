@@ -1,7 +1,22 @@
 <?php
 
-require_once(__DIR__ . "/../../../init/init.php");
-list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = LegacyObjectsManager::getLegacyObjectInstancier()
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\JSONoutput;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\RgsCertificate;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
+list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
     );

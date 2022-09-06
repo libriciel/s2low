@@ -2,10 +2,12 @@
 
 namespace S2low\Tests\Command;
 
-use LogsHistoriqueSQL;
+use S2low\Kernel;
+use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2low\Command\ExtractAndDeleteTimestampTokenCommand;
 use S2low\Tests\LogsHistoriqueSQLTrait;
 use S2lowTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
@@ -19,13 +21,13 @@ class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
 
     public function testCommand()
     {
-        $this->addFixtures();
-        $this->getObjectInstancier()->set('old_timestamp_token_directory', "/tmp/");
-        $this->getObjectInstancier()->set('timestamp_token_retention_nb_days', 42);
-        $extractAndDeleteTimestampTokenCommand = $this->getObjectInstancier()
-            ->get(ExtractAndDeleteTimestampTokenCommand::class);
+        $kernel = new Kernel('test', true);
+        $application = new Application($kernel);
+
+        $extractAndDeleteTimestampTokenCommand = $application->find('log:timestamp-token-extract-and-delete');
+
         $commandTester = new CommandTester($extractAndDeleteTimestampTokenCommand);
         $commandTester->execute(['--force' => 'true','--limit' => '1']);
-        $this->assertStringContainsString("[OK] Done", $commandTester->getDisplay());
+        $this->assertStringContainsString("[OK]", $commandTester->getDisplay());
     }
 }

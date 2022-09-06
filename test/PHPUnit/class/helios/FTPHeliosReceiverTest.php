@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\helios\FTPHeliosReceiver;
+use S2lowLegacy\Class\helios\FTPService;
+use S2lowLegacy\Class\S2lowLogger;
+
 class FTPHeliosReceiverTest extends S2lowTestCase
 {
     public function testRetrieveEmptyRemoteDir()

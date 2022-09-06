@@ -3,8 +3,14 @@
 //Script charge de verifier l'etat des versements d'une collectivité donnée
 //Prend en parametre l'id de la collectivite
 
+use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
 
 function creationurl($idcoll, $status)

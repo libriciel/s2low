@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\DataObject;
+
 /**
  * \class MailErrors  MailErrors.class.php
  * \brief Cette classe permet de modeliser le tableau correspond de MailErrors

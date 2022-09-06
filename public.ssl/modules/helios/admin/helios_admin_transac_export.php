@@ -16,8 +16,12 @@
  */
 
 // Configuration
-require_once("../../../../init/init.php");
-LegacyObjectsManager::resetObjectInstancier();
+use S2lowLegacy\Class\CSVLayout;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
+\S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
 
 // Instanciation du module courant
 $module = new Module();

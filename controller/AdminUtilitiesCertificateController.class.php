@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\RgsCertificate;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\UserSQL;
+
 class AdminUtilitiesCertificateController extends Controller
 {
     public const SESSION_KEY = 'last_certificate_analyse';

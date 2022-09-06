@@ -1,6 +1,10 @@
 <?php
+
 /** @var array $info_list */
 /** @var array $status_list */
+
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+
 ?>
 <h1>Statistiques d'envoi au SAE - Actes </h1>
 <p id="back-transaction-btn">

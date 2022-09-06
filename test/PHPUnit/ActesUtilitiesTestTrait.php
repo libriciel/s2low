@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesAPIController;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
+
 /**
  * Created by PhpStorm.
  * User: eric

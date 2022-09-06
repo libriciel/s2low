@@ -1,5 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPKCS7Signature;
+use S2lowLegacy\Class\XMLHelper;
+use S2lowLegacy\Lib\PemCertificateFactory;
+
 class ActesTransaction extends DataObject
 {
     //Constante pour les messages 3 et 4

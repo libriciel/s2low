@@ -1,8 +1,10 @@
 <?php
 
 // Configuration
+use S2lowLegacy\Class\HTMLLayout;
+
 require_once("../init/init.php");
-LegacyObjectsManager::setLegacyObjectInstancier();
+\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $doc = new HTMLLayout('xhtml_home.tpl.php');
 

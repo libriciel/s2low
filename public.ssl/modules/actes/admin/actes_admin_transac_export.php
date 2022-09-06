@@ -1,6 +1,11 @@
 <?php
 
 // Instanciation du module courant
+use S2lowLegacy\Class\CSVLayout;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 $module = new Module();
 if (! $module->initByName("actes")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";

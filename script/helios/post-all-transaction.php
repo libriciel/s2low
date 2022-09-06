@@ -1,8 +1,13 @@
 <?php
 
 //Permet de poster toutes les transactions d'une collectivité qui sont dans l'état 14
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 if (empty($argv[1])) {
     echo "Usage {$argv[0]} authority_id\n";

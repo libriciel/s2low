@@ -1,5 +1,11 @@
 <?php
 
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Model\AuthoritySiretSQL;
+use S2lowLegacy\Model\HeliosRetourSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+use S2lowLegacy\Model\UsersPermsSQL;
+
 class HeliosControllerTest extends S2lowTestCase
 {
     /**
@@ -29,10 +35,10 @@ class HeliosControllerTest extends S2lowTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-        $rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
+        $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
         $rgsConnexion->method('isRgsConnexion')->willReturn(true);
 
-        $this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
+        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
         $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl);
 
         $this->setUserAuthentification();
@@ -299,10 +305,10 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testGetPostPESRetourWithoutRGS()
     {
-        $rgsConnexion = $this->getMockBuilder('RgsConnexion')->disableOriginalConstructor()->getMock();
+        $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
         $rgsConnexion->method('isRgsConnexion')->willReturn(false);
 
-        $this->getObjectInstancier()->{'RgsConnexion'} = $rgsConnexion;
+        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
         $this->expectOutputRegex("#<message>Votre certificat n'est pas RGS et ne vous permet donc pas de#");
         $this->setExpectedException("Exception", "exit() called");
         $this->heliosController->importAPIAction();

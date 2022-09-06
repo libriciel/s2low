@@ -1,5 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesExport;
+use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActeTamponne;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\UnrecoverableException;
+
 class ActesExportTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;

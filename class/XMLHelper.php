@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Class;
+
 class XMLHelper
 {
     public static function convertToIsoAndEscape(string $utf8_encoded_text)

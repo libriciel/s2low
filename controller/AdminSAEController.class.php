@@ -1,5 +1,17 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\helios\HeliosPrepareSaeWorker;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\PastellWrapperFactory;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+use S2lowLegacy\Model\PastellProperties;
+use S2lowLegacy\Model\PastellPropertiesSQL;
+
 class AdminSAEController extends Controller
 {
     public function _actionBefore($controller, $action)

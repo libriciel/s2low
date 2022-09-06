@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\PastellProperties;
+
 class AdminSAEControllerTest extends S2lowTestCase
 {
     public function testEditAction()
@@ -17,7 +22,7 @@ class AdminSAEControllerTest extends S2lowTestCase
 
         $authoritySQL->updateSAE(1, $pastellProperties);
 
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', 1);
 
         $adminServiceController->_actionBefore("AdminSAE", "edit");
         $adminServiceController->editAction();  //BUG ??
@@ -32,7 +37,7 @@ class AdminSAEControllerTest extends S2lowTestCase
     {
         $this->setSuperAdminAuthentication();
         $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
-        $this->getObjectInstancier()->get("Environnement")->get()->set('id', 1);
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', 1);
         $this->setExpectedException(Exception::class, "Redirect to");
         $adminServiceController->testAction();
     }

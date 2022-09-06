@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\MailInit;
+
 if (empty($_GET['term'])) {
     return;
 }

@@ -8,8 +8,12 @@
 
 //RETOURNE 0 si tout va bien
 //RETOURNE 2 si tout va mal
+use S2lowLegacy\Class\PDFStampData;
+use S2lowLegacy\Class\PDFStampWrapper;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 require_once(__DIR__ . "/../../init/init.php");
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Apposition du cartouche";
@@ -25,7 +29,7 @@ $pdfStampData->recu_prefecture_date = "2018-01-16 00:00:00";
 $pdfStampData->affichage_date = "2018-01-17 00:00:00";
 $pdfStampData->identifiant_unique = "034-491011698-20180116-TESTPDFSTAMP-DE";
 
-$pdfStampWrapper = $objectInstancier->get('PDFStampWrapper');
+$pdfStampWrapper = $objectInstancier->get(PDFStampWrapper::class);
 $result =  $pdfStampWrapper->stamp($origfile_path, $pdfStampData);
 file_put_contents($file_tampone, $result);
 

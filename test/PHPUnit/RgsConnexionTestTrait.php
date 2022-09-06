@@ -1,5 +1,8 @@
 <?php
 
+use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 trait RgsConnexionTestTrait
 {
     public function setRGS2stars()

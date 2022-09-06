@@ -1,9 +1,15 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
-require_once("../../../init/init.php");
-$actesPrepareEnvoiSAE = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
+$actesPrepareEnvoiSAE = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
 
 // Instanciation du module courant
 $module = new Module();

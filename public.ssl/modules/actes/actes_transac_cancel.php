@@ -1,8 +1,17 @@
 <?php
 
 // Configuration
-require_once("../../../init/init.php");
-$workerScript = LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
+use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\WorkerScript;
+
+$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 // Instanciation du module courant
 $module = new Module();

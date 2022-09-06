@@ -1,5 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
+
 $me = new User();
 
 if (! $me->authenticate()) {

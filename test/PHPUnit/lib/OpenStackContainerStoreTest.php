@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Lib\OpenStackConfig;
+use S2lowLegacy\Lib\OpenStackContainerStore;
+use S2lowLegacy\Lib\OpenStackContainerWrapper;
+use S2lowLegacy\Lib\OpenStackContainerWrapperFactory;
+use S2lowLegacy\Lib\UnrecoverableException;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class OpenStackContainerStoreTest extends S2lowTestCase

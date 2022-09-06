@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+
 class AuthorityGroupSirenSQLTest extends S2lowTestCase
 {
     /**

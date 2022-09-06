@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvoiSaeWorker;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\ObjectInstancier;
+
 require_once(__DIR__ . "/../../init/init.php");
-$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
+$objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
 
 if ($argc < 2) {

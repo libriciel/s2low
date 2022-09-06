@@ -16,6 +16,13 @@
  *  JS   19.07.2006  Adaptation pour Tedetis
  */
 
+// Suppression utilisateur désactivée
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\User;
+
+header("Location: " . WEBSITE);
+
 // Suppression utilisateur désactivée en production
 if (MODE == "prod") {
     header("Location: " . WEBSITE);

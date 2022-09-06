@@ -1,5 +1,10 @@
 <?php
 
+use S2lowLegacy\Lib\PostgreSQLDifference;
+use S2lowLegacy\Lib\PostgreSQLDifferenceToSQL;
+use S2lowLegacy\Lib\PostgreSQLSchemaInfo;
+use S2lowLegacy\Lib\SQLQuery;
+
 class PostgreSQLController
 {
     private $postgreSQLSchemaInfo;

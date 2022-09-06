@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\S2lowLogger;
+
 class S2lowLoggerTest extends S2lowTestCase
 {
     public function testAll()

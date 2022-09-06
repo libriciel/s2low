@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Lib\PKCS12;
+
 class PKCS12Test extends PHPUnit_Framework_TestCase
 {
     /**
