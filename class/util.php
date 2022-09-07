@@ -1,15 +1,5 @@
 <?php
 
-function get_url_same_page(array $params)
-{
-    $args = $_GET;
-    foreach ($params as $param => $value) {
-        $args[$param] = $value;
-    }
-    $url = $_SERVER["PHP_SELF"] . "?" . http_build_query($args);
-    return $url;
-}
-
 function legacy_encode_array($array)
 {
              // migration UTF-8 : utilisé pour garder le même comportement de l'API
