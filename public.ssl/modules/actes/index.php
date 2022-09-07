@@ -104,7 +104,7 @@ if ($droit->isSuperAdmin($userInfo)) {
 }
 
 $listeActesHTML->setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet);
-$listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date);
+$listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date, $fancyDate);
 
 $doc = new HTMLLayout();
 $doc->setTitle("Liste des transactions - ACTES - S²low");
