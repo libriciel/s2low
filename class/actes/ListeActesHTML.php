@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class\actes;
 
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\FancyDate;
 
 class ListeActesHTML
 {
@@ -21,6 +22,11 @@ class ListeActesHTML
     private $fstatus;
     private $fnum;
     private $objet;
+    /**
+     * @var \S2lowLegacy\Lib\FancyDate
+     */
+    private FancyDate $fancyDate;
+    private string $sortWay = "desc";
 
     public function addCollectivite($allCollectivite, $filtreAuthority)
     {
@@ -33,12 +39,13 @@ class ListeActesHTML
         $this->actionBox = true;
     }
 
-    public function setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date)
+    public function setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date, FancyDate $fancyDate)
     {
         $this->fmin_submission_date = $fmin_submission_date;
         $this->fmin_ack_date = $fmin_ack_date;
         $this->fmax_submission_date = $fmax_submission_date;
         $this->fmax_ack_date = $fmax_ack_date;
+        $this->fancyDate = $fancyDate;
     }
 
     public function setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet)
@@ -77,10 +84,13 @@ class ListeActesHTML
         }
     }
 
+    public function setSortWay(string $sortWay)
+    {
+        $this->sortWay = $sortWay;
+    }
+
     public function displayForm()
     {
-        global $transTypes, $ftype,$transNatures, $fnature,$status,
-            $fstatus,$fnum,$fmin_submission_date,$fmin_ack_date,$fmax_submission_date,$fmax_ack_date,$objet;
         ?>
         <?php if ($this->actionBox) : ?>
         <div id="actions_area">
@@ -100,47 +110,47 @@ class ListeActesHTML
             <div class="form-group">
                 <label for="type" class="col-md-3 control-label">Type de transaction</label>
                 <div class="col-md-3">
-                    <?php echo $this->getHTMLSelect("type", $transTypes, $ftype) ?>
+                    <?php $this->getHTMLSelect("type", $this->transTypes, $this->ftype) ?>
                 </div>
                 <label for="nature" class="col-md-3 control-label">Nature d'actes</label>
                 <div class="col-md-3">
-                    <?php echo $this->getHTMLSelect("nature", $transNatures, $fnature) ?>
+                    <?php $this->getHTMLSelect("nature", $this->transNatures, $this->fnature) ?>
                 </div>
             </div>
             <div class="form-group">
                 <label for="status" class="col-md-3 control-label">État</label>
                 <div class="col-md-3">
-                    <?php echo $this->getHTMLSelect("status", $status, $fstatus) ?>
+                    <?php $this->getHTMLSelect("status", $this->status, $this->fstatus) ?>
                 </div>
                 <label for="number" class="col-md-3 control-label">Le numéro contient</label>
                 <div class="col-md-3">
-                    <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php hecho($fnum) ?>" />
+                    <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php hecho($this->fnum) ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="object" class="col-md-offset-6 col-md-3 control-label">L'objet contient</label>
                 <div class="col-md-3">
-                    <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php hecho($objet) ?>" />
+                    <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php hecho($this->objet) ?>" />
                 </div>
             </div>
             <div class="form-group">
                 <label for="min_submission_date" class="col-md-3">Date de postage minimale</label>
                 <div class="col-md-3">
-                    <?php $this->datePicker($fmin_submission_date, 'min_submission_date') ?>
+                    <?php $this->datePicker($this->fmin_submission_date, 'min_submission_date') ?>
                 </div>
                 <label for="min_ack_date" class="col-md-3">Date d'acquittement minimale</label>
                 <div class="col-md-3">
-                    <?php $this->datePicker($fmin_ack_date, 'min_ack_date') ?>
+                    <?php $this->datePicker($this->fmin_ack_date, 'min_ack_date') ?>
                 </div>
             </div>
             <div class="form-group">
                 <label for="max_submission_date" class="col-md-3">Date de postage maximale</label>
                 <div class="col-md-3">
-                    <?php $this->datePicker($fmax_submission_date, 'max_submission_date') ?>
+                    <?php $this->datePicker($this->fmax_submission_date, 'max_submission_date') ?>
                 </div>
                 <label for="max_ack_date" class="col-md-3">Date d'acquittement maximale</label>
                 <div class="col-md-3">
-                    <?php $this->datePicker($fmax_ack_date, 'max_ack_date') ?>
+                    <?php $this->datePicker($this->fmax_ack_date, 'max_ack_date') ?>
                 </div>
             </div>
             <?php if ($this->allCollectivite) : ?>
@@ -180,7 +190,6 @@ class ListeActesHTML
 
     private function datePicker($date, $name)
     {
-        global $fancyDate;
         ?>
         <input id="<?php echo $name ?>" 
                 name="<?php echo $name ?>" 
@@ -194,7 +203,7 @@ class ListeActesHTML
             class="datepicker_link" 
             onclick="javascript:obj_<?php echo $name?>.toggleDatePicker(); return false;">
         <?php if ($date) : ?>
-            <?php echo $fancyDate->getDateFrancais($date); ?>
+            <?php echo $this->fancyDate->getDateFrancais($date); ?>
         <?php else : ?>
             Choisir une date
         <?php endif;?>
@@ -262,13 +271,12 @@ class ListeActesHTML
 
     public function displayEnvelope($envelope, $i)
     {
-        global $sortWay;
         ?>
             <dt>
                 <a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander btn btn-default btn-xs">-</a>
-                1 transaction de l'enveloppe n°<a href="<?php echo Helpers::getURLWithParam(array("order" => "id","sortway" => $sortWay == 'asc' ? 'desc' : 'asc')) ?>"
+                1 transaction de l'enveloppe n°<a href="<?php echo Helpers::getURLWithParam(array("order" => "id","sortway" => $this->sortWay == 'asc' ? 'desc' : 'asc')) ?>"
                                 title="Trier par identifiant"><?php echo $envelope["envelope_id"] ?></a> 
-                déposée le <a href="<?php echo Helpers::getURLWithParam(array("order" => "submission_date","sortway" => $sortWay == 'asc' ? 'desc' : 'asc')) ?>"
+                déposée le <a href="<?php echo Helpers::getURLWithParam(array("order" => "submission_date","sortway" => $this->sortWay == 'asc' ? 'desc' : 'asc')) ?>"
                                 title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
                 <?php if ($this->allCollectivite) : ?>
                     de la collectivité <?php hecho($envelope['authority_name']) ?>
