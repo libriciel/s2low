@@ -10,7 +10,9 @@ cp ./docker-resources/php/* /etc/php/8.1/apache2/conf.d/
 cp ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 cp ./docker-resources/clamav/clamd.conf /etc/clamav/
 
-cp ./docker-resources/apache/* /etc/apache2/sites-available/
+cp ./docker-resources/apache/site-available/*.conf /etc/apache2/sites-available/
+cp ./docker-resources/apache/conf-available/*.conf /etc/apache2/conf-available/
+
 cp ./docker-resources/supervisord/*.conf /etc/supervisor/conf.d/
 cp ./docker-resources/logrotate.d/*.conf /etc/logrotate.d/
 cp ./docker-resources/supervisord.conf /etc/supervisor/
