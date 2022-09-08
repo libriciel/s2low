@@ -35,18 +35,17 @@ start:  ## Start all services
 stop: ## Stop all services
 	$(DOCKER_COMPOSE) down
 
-build:
+build: ## Build the container
 	$(DOCKER_COMPOSE) build web
 
-run:
-	$(DOCKER_COMPOSE) run web bash
-
-bash:
+bash: ## Get a bash console from the running "web" docker
 	$(DOCKER_COMPOSE) exec web bash
 
-force-bash:
-	$(DOCKER_COMPOSE) run --entrypoint bash web
+run: ## Get a bash console from a fresh container
+	$(DOCKER_COMPOSE) run web bash
 
+force-bash: ## Force a bash console without running the entrypoint
+	$(DOCKER_COMPOSE) run --entrypoint bash web
 
 phpcs: docker-compose-up ## Check code style through docker-compose
 	$(DOCKER_COMPOSE_EXEC) phpcs
