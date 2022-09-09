@@ -165,7 +165,7 @@ class MailIntegrationTest extends WebTestCase
         );
 
         $this->assertMatchesRegularExpression(
-            "#Envoi OK : eric@sigmalis.com#",
+            "#eric@sigmalis.com#",
             \S2lowLegacy\Class\LegacyObjectsManager::getObject(\S2lowLegacy\Lib\Environnement::class)->session()->get("error")
         );
         $this->assertResponseRedirects("/admin/utilities/index.php");
