@@ -29,6 +29,7 @@ class MailIntegrationTest extends WebTestCase
         \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
+        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
     }
 
     /**
@@ -118,5 +119,55 @@ class MailIntegrationTest extends WebTestCase
             "#Le certificat n'est pas valide : aucun compte trouvé#",
             $crawler->html()
         );
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAdminUtilitiesControllerdoSendWithRightCertificateButNoData()
+    {
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+        );
+
+        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+
+        $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
+
+        \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+        $crawler = $client->request('GET', '/admin/utilities/admin_send_global_message.php');
+
+        $this->assertMatchesRegularExpression(
+            "#Redirecting to /admin/utilities/index.php#",
+            $crawler->html()
+        );
+        $this->assertResponseRedirects("/admin/utilities/index.php");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAdminUtilitiesControllerdoSendWithRightCertificateWithData()
+    {
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+        );
+
+        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+
+        $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());
+        $postData = [ 'module' => '1', "authority_group_id" => "1","subject" => "le subject","body" => "le body" ];
+
+        $crawler = $client->request(
+            'POST',
+            '/admin/utilities/admin_send_global_message.php',
+            $postData
+        );
+
+        $this->assertMatchesRegularExpression(
+            "#Envoi OK : eric@sigmalis.com#",
+            \S2lowLegacy\Class\LegacyObjectsManager::getObject(\S2lowLegacy\Lib\Environnement::class)->session()->get("error")
+        );
+        $this->assertResponseRedirects("/admin/utilities/index.php");
     }
 }

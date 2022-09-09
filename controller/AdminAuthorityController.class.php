@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\CSVOutput;
 use S2lowLegacy\Class\Helpers;

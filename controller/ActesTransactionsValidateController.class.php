@@ -1,5 +1,9 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
+use finfo;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;

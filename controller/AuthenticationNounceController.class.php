@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Model\NounceSQL;
 
 class AuthenticationNounceController extends Controller

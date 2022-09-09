@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Lib\FileUploaderNG;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\Siren;

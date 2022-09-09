@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\AdminGroupController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\GroupSQL;

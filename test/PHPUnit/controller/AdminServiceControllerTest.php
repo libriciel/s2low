@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Controller\AdminServiceController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\ServiceUserSQL;

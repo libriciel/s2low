@@ -1,5 +1,9 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Closure;
+use Exception;
 use S2lowLegacy\Lib\PostgreSQLDifference;
 use S2lowLegacy\Lib\PostgreSQLDifferenceToSQL;
 use S2lowLegacy\Lib\PostgreSQLSchemaInfo;

@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\helios\HeliosExport;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosExportTest extends S2lowTestCase

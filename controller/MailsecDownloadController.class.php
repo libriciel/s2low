@@ -1,11 +1,15 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\UnrecoverableException;
+use ZipArchive;
 
 class MailsecDownloadController extends Controller
 {

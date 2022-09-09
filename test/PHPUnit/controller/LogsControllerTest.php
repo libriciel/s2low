@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Controller\LogsController;
+
 class LogsControllerTest extends S2lowTestCase
 {
     public function testViewAction()

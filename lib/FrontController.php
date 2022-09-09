@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Lib;
 
-use Controller;
+use S2lowLegacy\Controller\Controller;
 
 class FrontController
 {
@@ -16,7 +16,7 @@ class FrontController
     public function go($controller, $action)
     {
 
-        $controllerName = "{$controller}Controller";
+        $controllerName = "S2lowLegacy\Controller\\{$controller}Controller";
         $actionName = "{$action}Action";
         /** @var Controller $controllerObject */
         $controllerObject = new $controllerName($this->objectInstancier);

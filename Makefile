@@ -52,3 +52,6 @@ phpcs: docker-compose-up ## Check code style through docker-compose
 
 phpcbf: docker-compose-up ## Fix all code style errors
 	$(DOCKER_COMPOSE_EXEC) phpcbf
+
+phpcbf: docker-compose-up ## Run unit test through docker-compsose with coverage
+	$(DOCKER_COMPOSE_EXEC) php vendor/bin/phpcbf

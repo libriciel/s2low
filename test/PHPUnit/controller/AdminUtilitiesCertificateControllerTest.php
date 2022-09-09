@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\AdminUtilitiesCertificateController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 

@@ -5,6 +5,7 @@ use S2lowLegacy\Class\helios\HeliosSignatureTechnique;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\helios\UnrecoverableHeliosSignatureTechniqueException;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PKCS12;
 use S2lowLegacy\Lib\X509Certificate;

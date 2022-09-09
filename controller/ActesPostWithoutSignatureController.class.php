@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;

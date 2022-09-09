@@ -3,7 +3,7 @@
 namespace S2low\Tests\Base;
 
 use S2lowLegacy\Lib\ObjectInstancier;
-use PostgreSQLController;
+use S2lowLegacy\Controller\PostgreSQLController;
 use Throwable;
 
 class S2lowTestListener implements \PHPUnit\Framework\TestListener

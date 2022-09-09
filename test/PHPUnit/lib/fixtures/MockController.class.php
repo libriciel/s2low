@@ -1,5 +1,9 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use S2lowLegacy\Controller\Controller;
+
 class MockController extends Controller
 {
     public function mockAction()

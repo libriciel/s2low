@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\AdminController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -107,7 +108,7 @@ class AdminControllerTest extends S2lowTestCase
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('siret', "06552185881996");
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', 1);
         $this->setSuperAdminAuthentication();
-        $adminController = $this->getObjectInstancier()->get("AdminController");
+        $adminController = $this->getObjectInstancier()->get(AdminController::class);
 
         $this->setExpectedException("Exception", "Exit");
         $this->expectOutputRegex("#Num\\\u00e9ro SIRET ajout\\\u00e9#");
