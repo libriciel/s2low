@@ -1,8 +1,9 @@
 <?php
 
-namespace S2lowLegacy\Class\actes;
+namespace S2lowLegacy\Controller;
 
-use S2lowLegacy\Controller\Controller;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller

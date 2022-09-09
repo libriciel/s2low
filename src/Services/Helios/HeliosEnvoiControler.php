@@ -1,8 +1,17 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
+use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
+use S2lowLegacy\Class\helios\FichierCompteur;
+use S2lowLegacy\Class\helios\FTPHeliosSender;
+use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
+use S2lowLegacy\Class\helios\HeliosSignatureTechnique;
+use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\helios\RecoverableHeliosSignatureTechniqueException;
+use S2lowLegacy\Class\helios\UnrecoverableHeliosSignatureTechniqueException;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
@@ -50,7 +59,8 @@ class HeliosEnvoiControler
         $helios_files_upload_root,
         Antivirus $antivirus,
         WorkerScript $workerScript,
-        FTPHeliosSender $FTPHeliosSender
+        FTPHeliosSender $FTPHeliosSender,
+        MailerSymfonyFactory $mailerSymfonyFactory
     ) {
         $this->sqlQuery = $sqlQuery;
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -62,6 +72,7 @@ class HeliosEnvoiControler
         $this->antivirus = $antivirus;
         $this->workerScript = $workerScript;
         $this->FTPHeliosSender = $FTPHeliosSender;
+        $this->mailerFactory = $mailerSymfonyFactory;
     }
 
     public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity)
@@ -181,8 +192,8 @@ class HeliosEnvoiControler
 
         $message = "Transaction $transaction_id dans la file d'attente";
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::ATTENTE, $message, $transactionInfo['user_id']);
-
-        $this->workerScript->putJobByClassName(HeliosEnvoiWorker::class, $transaction_id);
+        //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
+        $this->workerScript->putJobByQueueName(HeliosEnvoiWorker::QUEUE_NAME, $transaction_id);
         libxml_use_internal_errors(false);
     }
 
@@ -248,7 +259,9 @@ class HeliosEnvoiControler
                 $message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
                 Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $transactionInfo['user_id']);
                 echo $message . "\n";
-                mail(EMAIL_ADMIN, "Transaction Helios bloqué", $message, "From: " . TDT_FROM_EMAIL);
+                $mail = $this->mailerFactory->getInstance();
+                $mail->addRecipient(EMAIL_ADMIN);
+                $mail->sendMail("Transaction Helios bloqué", $message);
                 $this->heliosTransactionsSQL->setSendWarning($transaction_id);
             }
             return;
@@ -324,34 +337,6 @@ class HeliosEnvoiControler
             unlink($file_to_send);
         }
         unlink($file_path_with_complete_name);
-    }
-
-
-    //nom du fichier à envoyer de la forme PESALR2_idColl_date_numOrdre.xml avec :
-    //idColl : numéro siret de la collectivité,
-    //date : date d'envoi à Helios sous la forme AAMMJJ,
-    //numOrdr : numéro d'ordre d'envoi sur 3 chiffres.
-    public function sendAllTransactions()
-    {
-
-
-        $transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
-
-        $nb_file_send = 0;
-
-        echo "Il y a " . count($transaction_id_list) . " transactions à envoyer\n";
-
-        foreach ($transaction_id_list as $transaction_id) {
-            $this->sendOneTransaction($transaction_id);
-
-            $nb_file_send++;
-        }
-
-        if ($nb_file_send == 0 && count($transaction_id_list)) {
-            $message = "Le script helios-reception-envoi.php n'a pas envoyé de transactions sur les " . count($transaction_id_list) . " à poster !\n";
-            echo $message;
-            mail(EMAIL_ADMIN, "[ALERTE CRITIQUE] L'envoi des PES à la DGFiP ne fonctionne plus", $message, "From: " . TDT_FROM_EMAIL);
-        }
     }
 
     private function createCompleteName($siren)

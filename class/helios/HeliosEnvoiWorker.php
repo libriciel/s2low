@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use S2low\Services\Helios\HeliosEnvoiControler;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
