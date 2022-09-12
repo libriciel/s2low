@@ -22,3 +22,5 @@ mkdir -p /data/tdt-workspace/logs-export && \
 mkdir -p /data/tdt-workspace/uploads/etat_civil && \
 
 chown -R "${USERNAME}":"${GROUPNAME}" /data/tdt-workspace/
+
+mkdir -p /data/log/apache2/

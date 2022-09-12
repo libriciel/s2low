@@ -8,7 +8,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-apt-get install -y  --no-install-recommends php-xdebug
+apt-get install -y  --no-install-recommends php-xdebug vim
 
 rm -r /var/lib/apt/lists/*
 
