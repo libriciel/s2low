@@ -1,5 +1,8 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
 use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;

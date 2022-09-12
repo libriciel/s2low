@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\AdminSAEController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\AuthoritySQL;

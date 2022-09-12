@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Controller\AdminAuthorityController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 

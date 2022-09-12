@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\Recuperateur;

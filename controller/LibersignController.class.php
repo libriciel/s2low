@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 class LibersignController extends Controller
 {
     public function testAction()

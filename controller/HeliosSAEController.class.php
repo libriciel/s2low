@@ -1,5 +1,8 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;

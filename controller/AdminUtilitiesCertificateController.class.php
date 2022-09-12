@@ -1,5 +1,8 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\RgsCertificate;
 use S2lowLegacy\Lib\X509Certificate;

@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\AdminUserController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\FrontController;
 use S2lowLegacy\Lib\X509Certificate;

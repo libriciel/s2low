@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\helios\HeliosEnvoiControler;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;

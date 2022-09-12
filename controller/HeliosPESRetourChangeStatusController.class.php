@@ -1,5 +1,9 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use DOMDocument;
+use Exception;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\HeliosRetourSQL;

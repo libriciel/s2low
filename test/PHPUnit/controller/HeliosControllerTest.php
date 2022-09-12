@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;

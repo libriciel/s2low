@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use Controller;
+use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller

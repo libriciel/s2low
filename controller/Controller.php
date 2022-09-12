@@ -1,5 +1,8 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
+use Exception;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
@@ -311,5 +314,10 @@ class Controller
     protected function getMessageAdminSQL()
     {
         return $this->getObjectInstancier()->get(MessageAdminSQL::class);
+    }
+
+    public function getUser(): User
+    {
+        return $this->me;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\SQLQuery;
 
 trait MailsecUtilitiesTestTrait

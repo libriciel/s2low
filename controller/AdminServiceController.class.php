@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\ServiceUserSQL;

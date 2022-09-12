@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\UnrecoverableException;

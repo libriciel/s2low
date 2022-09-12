@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Controller;
+
 use S2lowLegacy\Class\actes\ActesArchiveControler;
 use S2lowLegacy\Class\actes\ActesPrepareSaeWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;

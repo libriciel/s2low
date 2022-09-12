@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 

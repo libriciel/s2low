@@ -45,6 +45,15 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy
   # ---------------------------------------------------------------------------------------------------------------------
+  S2lowLegacy\Controller\:
+    resource: '../controller/*'
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  S2lowLegacy\Controller\Controller:
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Controller\Controller' ]
 
   S2lowLegacy\Lib\:
     resource: '../lib/*'
@@ -56,7 +65,8 @@ services:
     autowire: false #Utilisation de la constante SIGTERM
 
   S2lowLegacy\Lib\Environnement:
-    autowire: false #Pas un service, doit être explicitement configuré
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\Environnement' ]
 
 
   S2lowLegacy\Lib\OpenStackContainerFetcher:
