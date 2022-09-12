@@ -50,5 +50,5 @@ force-bash: ## Force a bash console without running the entrypoint
 phpcs: docker-compose-up ## Check code style through docker-compose
 	$(DOCKER_COMPOSE_EXEC) phpcs
 
-phpcbf: docker-compose-up ## Run unit test through docker-compsose with coverage
-	$(DOCKER_COMPOSE_EXEC) php vendor/bin/phpcbf
+phpcbf: docker-compose-up ## Fix all code style errors
+	$(DOCKER_COMPOSE_EXEC) phpcbf
