@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use PDO;
 use S2lowLegacy\Lib\SQLQuery;
 
 class Database
@@ -152,9 +153,6 @@ class Database
         return $this->sqlQuery->query($sql, $param);
     }
 
-    /**
-     * @return \PDO
-     */
     public function getPdo(): PDO
     {
         return $this->sqlQuery->getPdo();
