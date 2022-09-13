@@ -66,7 +66,7 @@ class RapportHistoriqueCollectivite extends Command
         if ($actes[0]["sum"] > 0) {
             $factor = (int)(log($actes[0]["sum"], 1000));
             $units = 'BKMGTP';
-            $sizeactes = rapport_historique_collectivite . phpsprintf("%.2f", $actes[0]["sum"] / pow(1000, $factor));
+            $sizeactes = sprintf("%.2f", $actes[0]["sum"] / pow(1000, $factor));
 
             echo "taille actes : " . $sizeactes . " et nombre d'enveloppes : " . $actes[0]["count"] . "\n";
             $message .= "Taille totale des enveloppes actes : " . $sizeactes . " et nombre d'enveloppes " . $actes[0]["count"] . "\n";
@@ -81,7 +81,7 @@ class RapportHistoriqueCollectivite extends Command
         if ($helios[0]["sum"] > 0) {
             $factor = (int)(log($helios[0]["sum"], 1000));
             $units = 'BKMGTP';
-            $sizehelios = rapport_historique_collectivite . phpsprintf("%.2f", $helios[0]["sum"] / pow(1000, $factor));
+            $sizehelios = sprintf("%.2f", $helios[0]["sum"] / pow(1000, $factor));
 
             echo "taille helios : " . $sizehelios . " et nombre de fichiers : " . $helios[0]["count"] . "\n";
 
@@ -92,8 +92,8 @@ class RapportHistoriqueCollectivite extends Command
 
         $subject = "Rapport taille historique collectivite $namecoll";
         $mail = $this->mailerSymfonyFactory->getInstance();
-        $mail->addRecipient(EMAIL_ADMIN_TECHNIQUE);
-        $mail->sendMail($subject, $message);
+        $mail->addRecipient(EMAIL_ADMIN_TECHNIQUE); // L'envoi ne fonctionne pas
+        $mail->sendMail($subject, $message);                // avec EMAIL_ADMIN_TECHNIQUE = tedetis@localhost
         return 0;
     }
 }
