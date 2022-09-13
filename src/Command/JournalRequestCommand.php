@@ -2,6 +2,7 @@
 
 namespace S2low\Command;
 
+use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -25,13 +26,28 @@ class JournalRequestCommand extends Command
      * @var \S2lowLegacy\Model\LogsRequestSQL
      */
     private LogsRequestSQL $logsRequestSQL;
+    /**
+     * @var \S2low\Services\MailActesNotifications\MailerSymfonyFactory
+     */
+    private MailerSymfonyFactory $mailerSymfonyFactory;
+    /**
+     * @var \S2lowLegacy\Class\S2lowLogger
+     */
+    private S2lowLogger $logger;
+    /**
+     * @var \S2lowLegacy\Model\UserSQL
+     */
+    private UserSQL $userSQL;
 
-    public function __construct(LogsHistoriqueSQL $logsHistoriqueSQL, LogsRequestSQL $logsRequestSQL, UserSQL $userSQL, S2lowLogger $s2lowLogger)
+    public function __construct(
+        LogsHistoriqueSQL $logsHistoriqueSQL, LogsRequestSQL $logsRequestSQL, UserSQL $userSQL,
+        S2lowLogger $s2lowLogger, MailerSymfonyFactory $mailerSymfonyFactory)
     {
         $this->logsHistoriqueSQL = $logsHistoriqueSQL;
         $this->logsRequestSQL = $logsRequestSQL;
         $this->userSQL = $userSQL;
         $this->logger = $s2lowLogger;
+        $this->mailerSymfonyFactory = $mailerSymfonyFactory;
         parent::__construct();
     }
 
@@ -82,7 +98,9 @@ class JournalRequestCommand extends Command
             $messageMail = "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
                 Helpers::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";
 
-            mail($user_info['email'], "[S2LOW] Journal disponible", $messageMail);
+            $mail = $this->mailerSymfonyFactory->getInstance();
+            $mail->addRecipient($user_info['email']);
+            $mail->sendMail( "[S2LOW] Journal disponible", $messageMail);
 
             if ($sigtermHandler->isSigtermCalled()) {
                 break;
