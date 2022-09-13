@@ -89,5 +89,15 @@ class LegacyRouteLoader extends Loader
             'requestPath' => $relativePathname,
             'legacyScript' =>  $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname())
         ]));
+
+        $collection->add($routeName . "doubleslash", new Route(
+            "/{slash}/" . $relativePathname,
+            [
+            '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
+            'requestPath' => $relativePathname,
+            'legacyScript' =>  $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname())
+            ],
+            ["slash" => "\/?"]
+        ));
     }
 }
