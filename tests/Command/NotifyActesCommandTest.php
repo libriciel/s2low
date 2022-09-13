@@ -23,6 +23,7 @@ class NotifyActesCommandTest extends KernelTestCase
         $commandTester->execute([
             // pass arguments to the helper
             'minimumExecutionTime' => '0',
+            '--silent' => true
 
             // prefix the key with two dashes when passing options,
             // e.g: '--some-option' => 'option_value',

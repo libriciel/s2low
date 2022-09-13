@@ -40,9 +40,12 @@ class JournalRequestCommand extends Command
     private UserSQL $userSQL;
 
     public function __construct(
-        LogsHistoriqueSQL $logsHistoriqueSQL, LogsRequestSQL $logsRequestSQL, UserSQL $userSQL,
-        S2lowLogger $s2lowLogger, MailerSymfonyFactory $mailerSymfonyFactory)
-    {
+        LogsHistoriqueSQL $logsHistoriqueSQL,
+        LogsRequestSQL $logsRequestSQL,
+        UserSQL $userSQL,
+        S2lowLogger $s2lowLogger,
+        MailerSymfonyFactory $mailerSymfonyFactory
+    ) {
         $this->logsHistoriqueSQL = $logsHistoriqueSQL;
         $this->logsRequestSQL = $logsRequestSQL;
         $this->userSQL = $userSQL;
@@ -100,7 +103,7 @@ class JournalRequestCommand extends Command
 
             $mail = $this->mailerSymfonyFactory->getInstance();
             $mail->addRecipient($user_info['email']);
-            $mail->sendMail( "[S2LOW] Journal disponible", $messageMail);
+            $mail->sendMail("[S2LOW] Journal disponible", $messageMail);
 
             if ($sigtermHandler->isSigtermCalled()) {
                 break;
