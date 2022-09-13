@@ -142,4 +142,9 @@ class DatabaseTest extends S2lowTestCase
         $this->setExpectedException(Exception::class, 'toto');
         $this->database->select("SELECT toto");
     }
+
+    public function testGetPDO()
+    {
+        self::assertInstanceOf(PDO::class, $this->database->getPdo());
+    }
 }
