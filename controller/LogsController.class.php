@@ -201,48 +201,6 @@ class LogsController extends Controller
         $this->redirect("/common/logs_request_view.php");
     }
 
-    public function doRequest()
-    {
-        $all_request = $this->getLogsRequestSQL()->getAllByState(LogsRequestData::STATE_ASKING);
-        echo count($all_request) . " requêtes en attente...";
-        $sigtermHandler = SigTermHandler::getInstance();
-        foreach ($all_request as $request) {
-            echo "Traitement de la requête {$request['id']}\n";
-            $logsRequestData = new LogsRequestData();
-            $logsRequestData->date_debut = $request['date_debut'];
-            $logsRequestData->date_fin = $request['date_fin'];
-            $logsRequestData->authority_group_id = $request['authority_group_id'];
-            $logsRequestData->authority_id = $request['authority_id'];
-            $logsRequestData->user_id = $request['user_id'];
-            $logsRequestData->user_id_demandeur = $request['user_id_demandeur'];
-
-            $output_filename = EXPORT_LOGS_DIRECTORY . "/{$request['id']}.csv";
-
-            $this->getLogsHistoriqueSQL()->request($logsRequestData, $output_filename);
-            $this->getLogsRequestSQL()->setAvailable($request['id']);
-
-            $user_id_demandeur = $request['user_id_demandeur'];
-
-            $user_info = $this->getObjectInstancier()->get(UserSQL::class)->getInfo($user_id_demandeur);
-
-            $messageMail = "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
-                Helpers::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";
-
-            mail($user_info['email'], "[S2LOW] Journal disponible", $messageMail);
-
-            if ($sigtermHandler->isSigtermCalled()) {
-                break;
-            }
-        }
-
-        $old_request = $this->getLogsRequestSQL()->getOldRequest();
-        foreach ($old_request as $request) {
-            echo "Suppresion de la requête {$request['id']}\n";
-            $this->getLogsRequestSQL()->forceDelete($request['id']);
-            unlink(EXPORT_LOGS_DIRECTORY . "/{$request['id']}.csv");
-        }
-    }
-
     public function requestDownloadAction()
     {
         $recuperateur = $this->getRecuperateurGet();
