@@ -1,6 +1,6 @@
 <?php
 
-namespace S2low\Tests\Legacy;
+namespace S2low\Legacy;
 
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
