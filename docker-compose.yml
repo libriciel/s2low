@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
     web:
         image: registry.libriciel.fr:443/public/plateforme/s2low:canary
@@ -84,9 +82,9 @@ services:
 
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
+            - ${LOG_PATH:-app_logs}:/data/log/
             - ${SERVER_SSL_CERTIFICAT:-app_certificate}:/etc/apache2/ssl/
             - ${TIMESTAMP_CERTIFICAT_PATH:-app_certificate_timestamp}:/etc/s2low/ssl/
-            - ${LOG_PATH:-app_logs}:/data/log/
             - ${LETSENCRYPT_DATADIR:-letsencrypt_datadir}:/etc/letsencrypt
             - ${GENERAL_TRUST_STORE:-general_trust_store}:/data/certificate/truststore/
         tmpfs:
@@ -100,7 +98,6 @@ services:
             - /var/www/s2low/ext/standalone:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/cache:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/log:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
-            - /var/www/s2low/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
         user: "${UID:-33}:${GID:-33}"
 
     db:
@@ -123,11 +120,15 @@ services:
         image: registry.libriciel.fr/public/outils/pades-valid:1.4.8
         networks:
           - services
+        environment:
+            JAVA_OPTS: "-Xmx512M"
+        mem_limit: 768M
 
     pdf-stamp:
         image: registry.libriciel.fr/public/signature/pdf-stamp:2.6.0
         networks:
           - services
+        mem_limit: 512M
 
     redis:
         image: hubdocker.libriciel.fr/redis:7.0.4

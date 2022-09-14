@@ -113,11 +113,16 @@ services:
   # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
   # ---------------------------------------------------------------------------------------------------------------------
 
+
   S2lowLegacy\Model\:
     resource: '../model/*'
     autowire: true
     autoconfigure: true
     public: true
+
+  S2lowLegacy\Model\MessageAdminSQL:
+    arguments:
+      $cachePath: "/var/run/htmlpurifier"
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Class

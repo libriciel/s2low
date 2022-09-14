@@ -99,3 +99,5 @@ chown "${USERNAME}":"${GROUPNAME}" /var/lib/apache2/site/enabled_by_admin/
 # Pour la récup des certif FIXME à déplacer dans /data
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/ssl/certs/
+
+mkdir /var/run/htmlpurifier/

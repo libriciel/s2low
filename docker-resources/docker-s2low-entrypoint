@@ -7,11 +7,6 @@ set -e
 
 /bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh
 
-# Pour HTMLPurifier qui marche pas sans son repertoire vide (et qui du coup est supprimé par git)
-# TODO dans le dockerfile ?
-mkdir -p /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
-chmod 770 /var/www/s2low/ext/standalone/HTMLPurifier/DefinitionCache/Serializer
-
 # Génération fichier ssmtp.conf
 # FIXME a supprimer une fois qu'on passe par Symfony
 # /bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
