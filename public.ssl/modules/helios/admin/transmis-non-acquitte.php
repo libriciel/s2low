@@ -15,7 +15,7 @@ if ($userInfo['role'] != 'SADM') {
 
 
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-$heliosTransactionsSQL = $objectInstancier->{'HeliosTransactionsSQL'};
+$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 $transactions_list = $heliosTransactionsSQL->getNonAcquitte();
 
 
