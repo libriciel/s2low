@@ -1,0 +1,79 @@
+<?php
+
+//Script charge de verifier que le plus vieil acte à l'état poste
+//n'a pas plus de 30 minutes
+
+//RETOURNE 0 si tout va bien
+//RETOURNE 2 si le plus vieil acte à l'état posté à plus d'une heure
+
+namespace S2low\Command\Helios;
+
+use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2lowLegacy\Lib\SQLQuery;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class MonitoringHeliosPoste extends Command
+{
+    /**
+     * @var \S2low\Services\MailActesNotifications\MailerSymfonyFactory
+     */
+    private MailerSymfonyFactory $mailerSymfonyFactory;
+    /**
+     * @var \S2lowLegacy\Lib\SQLQuery
+     */
+    private SQLQuery $sqlQuery;
+
+    public function __construct(SQLQuery $SQLQuery, MailerSymfonyFactory $mailerSymfonyFactory)
+    {
+        $this->sqlQuery = $SQLQuery;
+        $this->mailerSymfonyFactory = $mailerSymfonyFactory;
+        parent::__construct();
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('helios:monitoring-helios-poste-sup20min')
+            ->setDescription(
+                "helios:monitoring-helios-poste-sup20min"
+            );
+    }
+
+    public function execute(InputInterface $input, OutputInterface $output): int
+    {
+
+        $email = EMAIL_ADMIN_TECHNIQUE;
+        $subject = "Transaction HELIOS a l etat poste";
+
+        $retour = 0;
+        $message = "OK";
+        $limit = 10;
+        $last_status = "1";
+        $timestamp = time() - (20 * 60);
+        $sql = "SELECT count(*) " .
+            "FROM helios_transactions " .
+            "WHERE helios_transactions.last_status_id = '" . $last_status . "' " .
+            "AND DATE_TRUNC('minute',helios_transactions.submission_date) < DATE_TRUNC('minute',TIMESTAMP '" . date("Y-m-d H:i:s", $timestamp) . "')";
+
+#echo "$sql \n";
+
+        $nb_transac = $this->sqlQuery->queryOne($sql);
+
+#echo "$nb_transac \n";
+
+
+        if ($nb_transac > $limit) {
+            $message = "CRITICAL";
+            $retour = 2;
+            $mailMessage = "ATTENTION : $nb_transac transactions a etat poste sur S2LOW depuis plus de 20 minutes. La limite est a $limit helios a etat poste.";
+            $mail = $this->mailerSymfonyFactory->getInstance();
+            $mail->addRecipient($email);
+            $mail->sendMail($subject, $mailMessage);
+        }
+
+        echo "$message - $nb_transac etat poste de plus de 20 min\n";
+        exit($retour);
+    }
+}

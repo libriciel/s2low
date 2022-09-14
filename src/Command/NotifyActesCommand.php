@@ -8,6 +8,7 @@ use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
 
@@ -21,7 +22,6 @@ class NotifyActesCommand extends Command
         $this->actesNotification = $actesNotification;
         $this->logger = $s2lowLogger;
         $this->logger->setName("actes-notification");
-        $this->logger->enableStdOut();
         parent::__construct();
     }
 
@@ -37,18 +37,27 @@ class NotifyActesCommand extends Command
                 InputArgument::OPTIONAL,
                 "minimum execution time",
                 10
+            )
+            ->addOption(
+                'silent',
+                's',
+                InputOption::VALUE_NONE,
+                "disable screen output"
             );
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $start = time();
-        $this->logger->info("Debut " . date("Y-m-d H:i:s", $start));
         if (!is_numeric($input->getArgument('minimumExecutionTime'))) {
             throw new UnexpectedValueException("minimumExecutionTime should be an integer");
         }
         $min_exec_time = (int)$input->getArgument('minimumExecutionTime');
-
+        $this->logger->enableStdOut(false);
+        if (! $input->getOption('silent')) {
+            $this->logger->enableStdOut();
+        }
+        $start = time();
+        $this->logger->info("Debut " . date("Y-m-d H:i:s", $start));
         try {
             $this->actesNotification->sendAutomaticNotification();
         } catch (Exception $e) {
