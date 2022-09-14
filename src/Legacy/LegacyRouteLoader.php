@@ -2,7 +2,6 @@
 
 namespace S2low\Legacy;
 
-use S2low\Tests\Legacy\LegacyRouteCollection;
 use SplFileInfo;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Finder\Finder;
