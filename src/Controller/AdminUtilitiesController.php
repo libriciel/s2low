@@ -4,6 +4,7 @@ namespace S2low\Controller;
 
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\UserToEmailAdressConverter;
 use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Model\ModuleSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,15 +23,21 @@ class AdminUtilitiesController extends AbstractController
      * @var \S2lowLegacy\Model\ModuleSQL
      */
     private ModuleSQL $moduleSQL;
+    /**
+     * @var \S2lowLegacy\Class\UserToEmailAdressConverter
+     */
+    private UserToEmailAdressConverter $userToEmailAdressConverter;
 
     public function __construct(
         Controller $legacyController,
         ModuleSQL $moduleSQL,
-        MailerSymfonyFactory $mailerFactory
+        MailerSymfonyFactory $mailerFactory,
+        UserToEmailAdressConverter $userToEmailAdressConverter
     ) {
         $this->legacyController = $legacyController;
         $this->moduleSQL = $moduleSQL;
         $this->mailerFactory = $mailerFactory;
+        $this->userToEmailAdressConverter = $userToEmailAdressConverter;
     }
 
     protected function redirectLegacy(string $url, string $message): RedirectResponse
@@ -66,24 +73,26 @@ class AdminUtilitiesController extends AbstractController
             return $this->redirectLegacy('/admin/utilities/index.php', 'Module incorrect spécifié.');
         }
 
-        if (!$recipients = $this->moduleSQL->getUsers($module_id, $authority_group_id)) {
+        if (!$recipientUsers = $this->moduleSQL->getUsers($module_id, $authority_group_id)) {
             return $this->redirectLegacy('/admin/utilities/index.php', 'Récupération destinataire impossible.');
         }
 
         $result = ['recipient_ok' => [], 'recipient_ko' => []];
 
-        foreach ($recipients as $recipient) {
+        foreach ($recipientUsers as $recipientUser) {
             $mailer = $this->mailerFactory->getInstance();
-            $mailer->addComplexRecipient($recipient);
+            $mailer->addRecipient(
+                $this->userToEmailAdressConverter->getNormalizedEmailAdresse($recipientUser)
+            );
 
             if ($mailer->sendMail($subject, $body)) {
-                $result['recipient_ok'][] = $recipient['email'];
+                $result['recipient_ok'][] = $recipientUser['email'];
             } else {
-                $result['recipient_ko'][] = $recipient['email'];
+                $result['recipient_ko'][] = $recipientUser['email'];
             }
         }
 
-        $msg = 'Envoi de message aux ' . count($recipients) . " utilisateurs du module {$module_info['name']}.\n Résultat :\n";
+        $msg = 'Envoi de message aux ' . count($recipientUsers) . " utilisateurs du module {$module_info['name']}.\n Résultat :\n";
         $msg .= 'Envoi OK : ' . implode(', ', $result['recipient_ok']) . "\n";
         $msg .= 'Envoi KO : ' . implode(', ', $result['recipient_ko']) . "\n";
 

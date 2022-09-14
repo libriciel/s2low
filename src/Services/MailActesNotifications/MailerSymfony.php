@@ -2,10 +2,13 @@
 
 namespace S2low\Services\MailActesNotifications;
 
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use Exception;
 use S2lowLegacy\Class\Mailer;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 class MailerSymfony extends Mailer
@@ -57,6 +60,29 @@ class MailerSymfony extends Mailer
             }
         }
 
+        return true;
+    }
+
+    public function addRecipient($recipient)
+    {
+        if (! $this->isValidMail($recipient)) {
+            return false;
+        }
+        $this->recipients[] = $recipient;
+        return true;
+    }
+
+    public function isValidMail(string $eMailAdress)
+    {
+        try {
+            $eMailAdress = Address::create($eMailAdress);
+        } catch (Exception $exception) {
+            return false;
+        }
+        $domain = explode('@', $eMailAdress->getAddress())[1];
+        if ($domain == "localhost") {
+            return false;
+        }
         return true;
     }
 }
