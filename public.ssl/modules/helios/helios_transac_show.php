@@ -11,6 +11,8 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Controller\HeliosSAEController;
+use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Model\AuthoritySQL;
 
 list($heliosSAEController, $pesAllerRetriever, $libersignController ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()

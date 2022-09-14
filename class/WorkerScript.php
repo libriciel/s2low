@@ -61,11 +61,32 @@ class WorkerScript
         return $this->beanstalkdWrapper->put($worker->getQueueName(), $data);
     }
 
+    //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
+    // Evite d'avoir à l'instancier
+    public function putJobByQueueName($queueName, $data)
+    {
+        return $this->beanstalkdWrapper->put($queueName, $data);
+    }
+
     public function scriptByClassName($workerClassName, $log_enable_stdout = true, $force_old_school_script = false)
     {
         /** @var IWorker $worker */
         $worker = $this->objectInstancier->get($workerClassName);
 
+        return $this->scriptWithLogs($worker, $log_enable_stdout, $force_old_school_script);
+    }
+
+    /**
+     * @param \S2lowLegacy\Class\IWorker $worker
+     * @param mixed $log_enable_stdout
+     * @param mixed $force_old_school_script
+     * @return bool
+     */
+    public function scriptWithLogs(
+        IWorker $worker,
+        bool $log_enable_stdout = true,
+        bool $force_old_school_script = false
+    ): bool {
         $this->s2lowLogger->setName($worker->getQueueName() . "-script");
         $this->s2lowLogger->enableStdOut($log_enable_stdout);
         return $this->script($worker, $force_old_school_script);

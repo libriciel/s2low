@@ -1,14 +1,18 @@
 <?php
 
+namespace S2low\Tests;
+
+use Exception;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use TestEnvironmentManager;
 
-abstract class S2lowTestCase extends TestCase
+abstract class S2lowSymfonyWebTestCase extends WebTestCase
 {
     protected $backupGlobalsBlacklist = array('sqlQuery');
 
-    private TestEnvironmentManager $testEnvironmentManager;
+    private $testEnvironnementManager;
 
     /**
      * @throws Exception
@@ -17,8 +21,11 @@ abstract class S2lowTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->testEnvironmentManager = new TestEnvironmentManager();
-        $this->testEnvironmentManager->setUp();
+        self::bootKernel();
+        $this->container = static::getContainer();
+
+        $this->testEnvironnementManager = new TestEnvironmentManager();
+        $this->testEnvironnementManager->setUp();
     }
 
     /**
@@ -26,7 +33,7 @@ abstract class S2lowTestCase extends TestCase
      */
     public function getObjectInstancier()
     {
-        return  $this->testEnvironmentManager->getObjectInstancier();
+        return  $this->testEnvironnementManager->getObjectInstancier();
     }
 
     /**
@@ -34,48 +41,43 @@ abstract class S2lowTestCase extends TestCase
      */
     public function getSQLQuery()
     {
-        return $this->testEnvironmentManager->getSQLQuery();
-    }
-
-    protected function setServerInfo(array $server_info)
-    {
-        return $this->testEnvironmentManager->setServerInfo($server_info);
+        return $this->testEnvironnementManager->getSQLQuery();
     }
 
     public function setSuperAdminAuthentication()
     {
-        $this->testEnvironmentManager->setSuperAdminAuthentication();
+        $this->testEnvironnementManager->setSuperAdminAuthentication();
     }
 
     public function setAdminGroupAuthentication()
     {
-        $this->testEnvironmentManager->setAdminGroupAuthentication();
+        $this->setAdminGroupAuthentication();
     }
 
     public function setAdminGroup2Authentication()
     {
-        $this->testEnvironmentManager->setAdminGroup2Authentication();
+        $this->setAdminGroup2Authentication();
     }
 
 
     public function setAdminColAuthentication()
     {
-        $this->testEnvironmentManager->setAdminColAuthentication();
+        $this->setAdminColAuthentication();
     }
 
     public function setAdminCol2Authentication()
     {
-        $this->testEnvironmentManager->setAdminCol2Authentication();
+        $this->setAdminCol2Authentication();
     }
 
     public function setUserAuthentification()
     {
-        $this->testEnvironmentManager->setUserAuthentification();
+        $this->setUserAuthentification();
     }
 
     public function getLogRecords()
     {
-        return $this->testEnvironmentManager->getLogRecords();
+        return $this->testEnvironnementManager->getLogRecords();
     }
 
     public function assertLogMessage($expected_message, $num_log = 0)

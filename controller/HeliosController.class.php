@@ -174,7 +174,8 @@ class HeliosController extends Controller
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
         $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id_transaction);
         if ($state == HeliosTransactionsSQL::POSTE) {
-            $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id_transaction);
+            //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
+            $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id_transaction);
         }
         return $id_transaction;
     }

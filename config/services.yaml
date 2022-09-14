@@ -4,6 +4,7 @@ parameters:
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
+  app.helios_files_upload_root: '/data/tdt-workspace/helios/sending/'    #TODO : utiliser les variables d'environnement
 
 services:
   _defaults:
@@ -21,6 +22,10 @@ services:
     arguments:
       $old_timestamp_token_directory: '%app.old_timestamp_token_directory%'
       $timestamp_token_retention_nb_days: '%app.timestamp_token_retention_nb_days%'
+
+  S2low\Services\Helios\HeliosEnvoiControler:
+    arguments:
+      $helios_files_upload_root: '%app.helios_files_upload_root%'
 
   S2low\Legacy\LegacyRouteLoader:
     tags: [ routing.loader ]
@@ -128,8 +133,8 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    arguments:
-      $antivirus_command: 'todo'
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\Antivirus']
 
   S2lowLegacy\Class\BeanstalkdWrapper:
     arguments:
@@ -207,6 +212,10 @@ services:
   S2lowLegacy\Class\XSDValidation:
     arguments:
       $xsdPath: "todo"
+
+  S2lowLegacy\Class\WorkerScript:
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\WorkerScript' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     arguments:
@@ -300,10 +309,8 @@ services:
       $helios_ftp_response_tmp_local_path: "todo"
 
   S2lowLegacy\Class\helios\FTPHeliosSender:
-    arguments:
-      $helios_ftp_passtrans_mode: "todo"
-      $helios_ftp_p_appli: "todo"
-      $helios_sending_destination: "todo"
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\helios\FTPHeliosSender']
 
   S2lowLegacy\Class\helios\FTPService:
     arguments:
@@ -324,10 +331,6 @@ services:
       $schema_pes_path: "todo"
       $email_admin_technique: "todo"
       $tdt_from_email: "todo"
-
-  S2lowLegacy\Class\helios\HeliosEnvoiControler:
-    arguments:
-      $helios_files_upload_root: "todo"
 
   S2lowLegacy\Class\helios\HeliosEnvoiSAE:
     autowire: false #TODO : logger
@@ -363,8 +366,8 @@ services:
       $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
-    arguments:
-      $helios_files_upload_root: "todo"
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
 
   S2lowLegacy\Class\helios\PesAllerStorage:
     autowire: false # TODO : logger

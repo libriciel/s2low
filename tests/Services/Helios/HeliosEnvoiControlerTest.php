@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosEnvoiControler;
+use S2low\Services\Helios\HeliosEnvoiControler;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\HeliosController;
@@ -8,7 +8,7 @@ use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosEnvoiControlerTest extends S2lowTestCase
+class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 {
     private $last_string;
 
@@ -36,7 +36,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase
         mkdir($this->testStreamUrl . "/helios");
         $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl . "/helios/");
         $this->heliosController = new HeliosController($this->getObjectInstancier());
-        $this->heliosEnvoiControler = $this->getObjectInstancier()->get(HeliosEnvoiControler::class);
+        $this->heliosEnvoiControler = $this->getContainer()->get(HeliosEnvoiControler::class);
     }
 
     protected function tearDown(): void
@@ -63,7 +63,7 @@ class HeliosEnvoiControlerTest extends S2lowTestCase
      */
     private function validatePesAller($filename)
     {
-        $pes_aller = __DIR__ . "/../../helios/fixtures/{$filename}";
+        $pes_aller = __DIR__ . "/../../../test/PHPUnit/helios/fixtures/{$filename}";
         copy($pes_aller, $this->testStreamUrl . "/helios/" . sha1_file($pes_aller));
         $id_t = $this->heliosController->importFile(8, $pes_aller, "pes_aller.xml");
         ob_start();

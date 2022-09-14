@@ -92,5 +92,10 @@
     "classmap": [
       "test/PHPUnit"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "symfony/flex": false
+    }
   }
 }
