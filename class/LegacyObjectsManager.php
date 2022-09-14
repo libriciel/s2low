@@ -26,6 +26,7 @@ use MailHeaderLegacy;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use S2lowLegacy\Model\MessageAdmin;
 
 class LegacyObjectsManager
 {
@@ -254,6 +255,8 @@ class LegacyObjectsManager
                 new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         }
+
+        $objectInstancier->set('cachePath', "/var/run/htmlpurifier");
 
         $objectInstancier->set('html', '');
     }

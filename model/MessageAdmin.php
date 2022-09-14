@@ -16,6 +16,7 @@ class MessageAdmin
     public const NIVEAU_WARNING = 2;
     public const NIVEAU_DANGER = 3;
 
+    private const DEFAULT_CACHE_PATH = "/var/run/htmlpurifier";
 
     public $message_id;
     public $titre;
@@ -33,11 +34,21 @@ class MessageAdmin
     public $user_publieur_name;
     public $user_retireur_name;
 
+    public $cachePath;
+
+    public function __construct(
+        $cachePath = self::DEFAULT_CACHE_PATH
+    ) {
+        $this->cachePath = $cachePath;
+    }
+
     public function getMessage()
     {
         $parsedown = new Parsedown();
         $result = $parsedown->parse($this->message);
         $purifyconfig = HTMLPurifier_Config::createDefault();
+
+        $purifyconfig->set('Cache.SerializerPath', $this->cachePath);
         $HTMLPurifier = new HTMLPurifier($purifyconfig);
         $result = $HTMLPurifier->purify($result);
         return $result;

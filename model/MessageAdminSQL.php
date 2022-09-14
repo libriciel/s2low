@@ -4,9 +4,20 @@ namespace S2lowLegacy\Model;
 
 use Exception;
 use S2lowLegacy\Lib\SQL;
+use S2lowLegacy\Lib\SQLQuery;
 
 class MessageAdminSQL extends SQL
 {
+    private $cachePath;
+
+    public function __construct(
+        SQLQuery $sqlQuery,
+        $cachePath,
+    ) {
+        parent::__construct($sqlQuery);
+        $this->cachePath = $cachePath;
+    }
+
     /**
      * @param $offset
      * @param $limit
@@ -30,7 +41,7 @@ class MessageAdminSQL extends SQL
 
     private function getMessageFromInfo($message_info)
     {
-        $message = new MessageAdmin();
+        $message = new MessageAdmin($this->cachePath);
         if ($message_info) {
             $message->message_id = $message_info['id'];
             $message->niveau = $message_info['niveau'];

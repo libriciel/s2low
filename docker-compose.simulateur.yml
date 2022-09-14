@@ -1,6 +1,4 @@
 # For all environnements except production
-version: '3.7'
-
 services:
   simulateur:
     image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3
