@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Group;
@@ -137,8 +138,7 @@ if (! $me->isGroupAdminOrSuper()) {
 
 
 //Vérification de l'email de la collectivité pour le module mail sec
-$mailer = new Mailer();
-if ($email_mail_securise && (  ! $mailer->isValidMail($email_mail_securise) || mb_strstr($email_mail_securise, " "))) {
+if ($email_mail_securise && (  ! MailerSymfony::isValidMail($email_mail_securise) || mb_strstr($email_mail_securise, " "))) {
     if ($authority->isNew()) {
         $location = Helpers::getLink("/admin/authorities/admin_authorities.php");
     } else {

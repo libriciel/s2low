@@ -72,7 +72,7 @@ class MailerSymfony extends Mailer
         return true;
     }
 
-    public function isValidMail(string $eMailAdress)
+    public static function isValidMail(string $eMailAdress)
     {
         try {
             $eMailAdress = Address::create($eMailAdress);

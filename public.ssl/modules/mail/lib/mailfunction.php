@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\Mailer;
 
 /**
@@ -32,7 +33,6 @@ function checkEmail($email, $antispam = false)
 }
 function checkAllEmail($emailtext)
 {
-    $mailer = new Mailer();
     // $emailtext=substr($emailtext,0,-1);
    // le séparateur  is vircule
     $mails = explode(",", $emailtext);
@@ -40,7 +40,7 @@ function checkAllEmail($emailtext)
         $mail = str_replace("[", "<", $mail);
         $mail = str_replace("]", ">", $mail);
         if ($mail != null) {
-            if ($mailer->isValidMail($mail) == false) {
+            if (!MailerSymfony::isValidMail($mail)) {
                 return false;
             }
         }
