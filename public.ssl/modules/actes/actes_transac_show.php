@@ -12,6 +12,8 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Controller\ActesSAEController;
+use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Lib\FrontController;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
