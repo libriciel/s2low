@@ -3,6 +3,7 @@
 namespace S2low\Controller;
 
 use Exception;
+use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,16 +15,19 @@ class HeliosAdminController extends AbstractController
      */
     private HeliosTransactionsSQL $heliosTransactionsSQL;
 
-    public function __construct(HeliosTransactionsSQL $heliosTransactionsSQL)
-    {
+    public function __construct(
+        HeliosTransactionsSQL $heliosTransactionsSQL,
+        MailerSymfonyFactory $mailerSymfonyFactory
+    ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
+        $this->mailerSymfonyFactory = $mailerSymfonyFactory;
     }
 
     /**
      * @Route("/modules/helios/admin/transmis-non-acquitte-by-mail.php",name="app_modules_helios_admin_transmis_non_acquitte_by_mail")
      * @throws Exception
      */
-    public function transmisNonAcquitteParMail()
+    public function transmisNonAcquitteParMail(): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         require_once(__DIR__ . '/../../init/init-www-helios.php');
 
@@ -53,7 +57,9 @@ class HeliosAdminController extends AbstractController
         $content = ob_get_contents();
         ob_end_clean();
 
-        mail($userInfo['email'], $subject, $content);
+        $mail = $this->mailerSymfonyFactory->getInstance();
+        $mail->addRecipient($userInfo['email']);
+        $mail->sendMail($subject, $content);
 
         $_SESSION['error'] = "Mail envoye a {$userInfo['email']}";
         return parent::redirect("transmis-non-acquitte.php");
