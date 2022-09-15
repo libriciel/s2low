@@ -22,6 +22,11 @@ IMAP_LOGIN, IMAP_PASS
 - les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker : 
 XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
+# 4.3.19 - 
+
+## Sécurité
+- Correction de failles de sécurité #799
+
 # 4.3.18 - 2022-06-13
 
 ## Correction
