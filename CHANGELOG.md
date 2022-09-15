@@ -27,6 +27,9 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 ## Sécurité
 - Correction de failles de sécurité #799
 
+## Correction
+- Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
+
 # 4.3.18 - 2022-06-13
 
 ## Correction
