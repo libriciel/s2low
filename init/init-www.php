@@ -12,8 +12,6 @@ use S2lowLegacy\Model\GroupSQL;
 use S2lowLegacy\Model\ModuleSQL;
 use S2lowLegacy\Model\UserSQL;
 
-require_once("init.php");
-
 list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
