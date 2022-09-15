@@ -251,6 +251,10 @@ if (!defined('ACTES_MINISTERE_SERVER_CERTIFICATE_PATH')) {
     define('ACTES_MINISTERE_SERVER_CERTIFICATE_PATH', '');
 }
 
+if (!defined('MAILER_DSN')) {
+    define('MAILER_DSN', 'smtp://maildev:1025?verify_peer=0');
+}
+
 if (!defined('ACTES_IMAP_HOST')) {
     define('ACTES_IMAP_HOST', 'mail');
 }

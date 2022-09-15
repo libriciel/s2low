@@ -70,8 +70,7 @@ class LegacyObjectsManager
             return $record;
         });
 
-        //TODO : rajouter la variable d'environnement
-        $transport = Transport::fromDsn("smtp://maildev:1025?verify_peer=0");
+        $transport = Transport::fromDsn(MAILER_DSN);
         $mailer = new \Symfony\Component\Mailer\Mailer($transport);
         $email = (new Email())
             ->addFrom(TDT_FROM_EMAIL)
