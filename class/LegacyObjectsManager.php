@@ -23,10 +23,13 @@ use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\SQLQuery;
 use MailHeader;
 use MailHeaderLegacy;
-use Monolog\Handler\NativeMailerHandler;
+use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use S2lowLegacy\Model\MessageAdmin;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mime\Email;
 
 class LegacyObjectsManager
 {
@@ -67,13 +70,14 @@ class LegacyObjectsManager
             return $record;
         });
 
-        $mailHandler = new NativeMailerHandler(
-            [EMAIL_ADMIN_TECHNIQUE],
-            "Erreur critique sur " . WEBSITE,
-            TDT_FROM_EMAIL,
-            Logger::CRITICAL
-        );
-        $mailHandler->setEncoding('iso-8859-1');
+        $transport = Transport::fromDsn(MAILER_DSN);
+        $mailer = new \Symfony\Component\Mailer\Mailer($transport);
+        $email = (new Email())
+            ->addFrom(TDT_FROM_EMAIL)
+            ->addTo(EMAIL_ADMIN_TECHNIQUE);
+
+        $mailHandler = new SymfonyMailerHandler($mailer, $email, Logger::CRITICAL);
+
         $logger->pushHandler($mailHandler);
 
 

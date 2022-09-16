@@ -7,11 +7,6 @@ set -e
 
 /bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh
 
-# Génération fichier ssmtp.conf
-# FIXME a supprimer une fois qu'on passe par Symfony
-# /bin/bash /var/www/s2low/docker-resources/generate-msmtp.conf.sh > /etc/msmtprc
-
-
 if [ "${PUBLISH_SIMULATEUR}" = true ] ; then
     a2ensite simulateur
 else

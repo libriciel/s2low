@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Mailer;
@@ -58,8 +59,7 @@ class Annuaire
         if (isset($ligne_array[2])) {
             $groupe_name = trim($ligne_array[2]);
         }
-        $mailer = new Mailer();
-        if (! $mailer->isValidMail($email)) {
+        if (! MailerSymfony::isValidMail($email)) {
             $this->tabError[] = $ligne;
             return false;
         }

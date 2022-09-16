@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\Mailer;
 use S2lowLegacy\Class\User;
 
@@ -8,13 +9,12 @@ require_once(__DIR__ . "/../../init/init.php");
 
 function checkAllEmail($emailtext)
 {
-    $mailer = new Mailer();
     $mails = explode(",", $emailtext);
     foreach ($mails as $mail) {
         $mail = str_replace("[", "<", $mail);
         $mail = str_replace("]", ">", $mail);
         if ($mail != null) {
-            if ($mailer->isValidMail($mail) == false) {
+            if (!MailerSymfony::isValidMail($mail)) {
                 echo $mail;
                 return false;
             }

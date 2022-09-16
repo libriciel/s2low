@@ -13,7 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class ActesNotificationsTest extends S2lowTestCase
+class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 {
     /**
      * @var MockObject|Mailer
@@ -50,7 +50,7 @@ class ActesNotificationsTest extends S2lowTestCase
         $this->tmpFolderPath = $this->tmpFolder->create();
 
 
-        $loader = new FilesystemLoader(__DIR__ . "/../../../../templates");
+        $loader = new FilesystemLoader(__DIR__ . "/../../../templates");
         $twig = new Environment($loader);
 
         $this->getObjectInstancier()->set("pdf_stamp_url", "");
@@ -75,7 +75,7 @@ class ActesNotificationsTest extends S2lowTestCase
      */
     public function testNotify()
     {
-        copy(__DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
 
         $this->mailer
             ->method('addRecipient')
@@ -116,7 +116,7 @@ class ActesNotificationsTest extends S2lowTestCase
      */
     public function testNotifyWithWrongZipWillSendMailAnyway()
     {
-        copy(__DIR__ . "/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
         $this->mailer->expects($this->exactly(3))->method('sendMail');
 
         $this->actesNotification->sendAutomaticNotification();
@@ -127,7 +127,7 @@ class ActesNotificationsTest extends S2lowTestCase
      */
     public function testNotifyWithWrongZipWillnotAddFiles()
     {
-        copy(__DIR__ . "/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
         $this->mailer->expects($this->never())->method('addFile');
 
         $this->actesNotification->sendAutomaticNotification();
@@ -138,7 +138,7 @@ class ActesNotificationsTest extends S2lowTestCase
      */
     public function testNotifyWithWrongZipWillLogErrors()
     {
-        copy(__DIR__ . "/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
         $this->mailer->expects($this->never())->method('addFile');
 
         $this->actesNotification->sendAutomaticNotification();

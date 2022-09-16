@@ -85,13 +85,6 @@ chown "${USERNAME}": /data/log/apache2
 
 usermod -s /bin/bash www-data
 
-# FIXME a supprimer après qu'on utilisera que les mail symfony
-touch /etc/msmtprc
-chown "${USERNAME}":"${GROUPNAME}" /etc/msmtprc
-
-touch /var/log/msmtprc
-chown "${USERNAME}":"${GROUPNAME}" /var/log/msmtprc
-
 # Pour le simulateur...
 chown "${USERNAME}":"${GROUPNAME}" /etc/apache2/sites-enabled/
 chown "${USERNAME}":"${GROUPNAME}" /var/lib/apache2/site/enabled_by_admin/

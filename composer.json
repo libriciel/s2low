@@ -4,7 +4,7 @@
   "license": "AGPL-3.0-only",
   "require": {
     "symfony/filesystem": "*",
-    "monolog/monolog": "^1.23",
+    "monolog/monolog": "*",
     "mtdowling/supervisor-event": "^1.0",
     "pda/pheanstalk": "^3.1",
     "symfony/process": "*",

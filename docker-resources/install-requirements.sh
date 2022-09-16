@@ -27,7 +27,6 @@ apt-get install -y  --no-install-recommends \
     libpq-dev \
     locales \
     logrotate \
-    msmtp \
     sudo \
     supervisor \
     xmlsec1 \
@@ -71,8 +70,6 @@ dpkg-reconfigure -f noninteractive tzdata
 
 # Fix specific problem with Debian/libcurl/let'encrypt  https://serverfault.com/a/1079226
 sed -i '/^mozilla\/DST_Root_CA_X3/s/^/!/' /etc/ca-certificates.conf && update-ca-certificates -f
-
-pear install mail mail_mime
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php --install-dir=/usr/local/bin
