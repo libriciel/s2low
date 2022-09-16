@@ -1,3 +1,8 @@
+# 4.3.19 - 
+
+## Sécurité
+- Correction de failles de sécurité #799
+
 # 4.3.18 - 2022-06-13
 
 ## Correction
