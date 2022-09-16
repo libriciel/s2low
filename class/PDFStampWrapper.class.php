@@ -50,7 +50,7 @@ class PDFStampWrapper {
                     'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
                 ),
                 array(
-                    'title' => 'Affiché le',
+                    'title' => 'Publié le',
                     'value' => $date_affichage,
                     'logo' => array(
                         'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),

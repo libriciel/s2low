@@ -281,7 +281,7 @@ $html .= " <tbody>\n";
 						   id="datepicker_<?php echo $name?>_link"
 						   class="datepicker_link"
 						   onclick="javascript:obj_<?php echo $name?>.toggleDatePicker(); return false;">
-								(date d'affichage)
+								(date de publication)
 						</a>
 						<div class="date_picker" style="display: none;" id="datepicker_<?php echo $name?>_calendar">
 						</div>
