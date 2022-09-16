@@ -208,23 +208,22 @@ class XadesSignature {
 
 		$signatureNodeList = $xml->xpath($xpath);
 		if (!$signatureNodeList) {
-            throw new Exception("Impossible d'extraire les signatures");
+            throw new Exception("Impossible d'extraire les entités \<signatures\>");
 		}
 
 		foreach ($signatureNodeList as $signatureNode) {
 			$id = $signatureNode->attributes()->Id;
 			if (!$id) {
-                throw new Exception("Impossible d'extraire la signature");
+                throw new Exception("Impossible d'extraire l'attribut Id de l'entité \<Signature\>");
 			}
-			$node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
-			$node_id = ltrim($node_id, "#");
-			if (!$node_id) {
-                throw new Exception("Impossible d'extraire la signature");
-			}
-			$xpath = "//*[@Id='$node_id']";
+            $signature_node_URI = $this->getSignature_node_URI($signatureNode);
+            if(empty($signature_node_URI)){
+                throw new Exception("Impossible d'extraire l'URI de l'entité \<signature\> d'Id $id");
+            }
+            $xpath = "//*[@Id='$signature_node_URI']";
 			$element = $xml->xpath($xpath);
 			if (count($element) != 1) {
-                throw new Exception("Impossible d'extraire la signature");
+                throw new Exception("Impossible d'extraire l'entité \<SignedProperties\> d'Id $signature_node_URI");
 			}
 			$element = $element[0];
 			$name = $element->getName();
@@ -289,6 +288,22 @@ class XadesSignature {
 		}
 		$xml->asXML($xml_file_result);
 	}
+
+    /**
+     * @param $signatureNode
+     * @return string
+     * @throws \Exception
+     */
+    private function getSignature_node_URI($signatureNode): string
+    {
+        foreach ($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference as $reference){
+            $uri = strval($reference->attributes()->URI);
+            if(!empty($uri)){
+                return ltrim($uri, "#");
+            }
+        }
+        return "";
+    }
 }
 
 class XadesSignatureHasSignatureException extends Exception{}
