@@ -1,11 +1,11 @@
-# 4.3.19 - 
+# 4.3.19 - 19/09/2022
 
 ## Sécurité
 - Correction de failles de sécurité #799
 
 ## Correction
 - Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
-- Corriger la vérification des signatures avec plusieurs <Reference> #825
+- Corriger la vérification des signatures avec une URI vide #825
 - Correction de l'affichage des options du traitement d'actes par lot #823
 
 # 4.3.18 - 2022-06-13
