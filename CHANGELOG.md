@@ -5,6 +5,7 @@
 
 ## Correction
 - Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
+- Corriger la vérification des signatures avec plusieurs <Reference> #825
 
 # 4.3.18 - 2022-06-13
 
