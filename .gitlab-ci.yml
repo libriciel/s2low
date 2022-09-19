@@ -94,19 +94,17 @@ deploy_app:
     only:
         - master
     variables:
-        PAYLOAD: "payload={\"text\": \"[s2low.test.libriciel.fr](https://s2low.test.libriciel.fr) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
-
+        PAYLOAD: "payload={\"text\": \"[s2low-5-0.dev.libriciel.net](https://s2low-5-0.dev.libriciel.net) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
     script:
         - eval $(ssh-agent -s)
         - ssh-add <(echo "$SSH_PRIVATE_KEY")
         - mkdir -p ~/.ssh
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - scp ./docker-compose.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file
-        - scp ./docker-compose.simulateur.yml s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-compose.override.yml
-        - echo "$STAGING_ENV_FILE_CONTENT" > /tmp/.env
-        - scp /tmp/.env s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/
-        - scp ./docker-resources/Dockerfile* ./docker-resources/docker_postgres.sh s2low@s2low.test.libriciel.fr:/data/s2low/docker-file/docker-resources
-        - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /data/s2low/docker-file/  && docker-compose pull && docker-compose up -d"
+        - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
+        - scp ./docker-compose.simulateur.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
+        - echo "$DEV_ENV_FILE" > /tmp/.env
+        - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
+        - ssh -tt s2low@s2low.test.libriciel.fr "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /opt/s2low/ && docker-compose pull && docker-compose up -d"
         - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
 
 deploy_ftp:
