@@ -18,6 +18,10 @@ services:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
 
+  S2low\Command\RebuildQueueCommand:
+    arguments:
+      - !tagged_iterator s2low.queue_rebuilding_worker
+
   S2low\Services\LogTimestampTokenGarbage:
     arguments:
       $old_timestamp_token_directory: '%app.old_timestamp_token_directory%'
@@ -188,8 +192,8 @@ services:
       $redis_port: "todo"
 
   S2lowLegacy\Class\S2lowLogger:
-    arguments:
-      $logger: '@monolog.logger.request'
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\S2lowLogger' ]
 
   S2lowLegacy\Class\S2lowRedirect:
     arguments:
@@ -222,9 +226,41 @@ services:
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\WorkerScript' ]
 
+  S2lowLegacy\Class\actes\ActesAntivirusWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesAntivirusWorker' ]
+
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
-    arguments:
-      $actes_appli_trigramme: "todo"
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker' ]
+
+  S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiFichierWorker' ]
+
+  S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker' ]
+
+  S2lowLegacy\Class\actes\ActesEnvoiSaeWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiSaeWorker' ]
+
+  S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+
+  S2lowLegacy\Class\helios\HeliosEnvoiWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+
+  S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:
+    tags: ['s2low.queue_rebuilding_worker']
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
     arguments:
@@ -248,10 +284,6 @@ services:
     autowire: false
     #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
     #  $actes_files_upload_root: "fdsfdsfsdfs"
-
-  S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
-    arguments:
-      $actes_ministere_acronyme: "todo"
 
   S2lowLegacy\Class\actes\ActesFiles:
     arguments:
