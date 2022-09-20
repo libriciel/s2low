@@ -26,6 +26,10 @@ RUN composer install --no-dev --no-autoloader && rm -rf /root/.composer/
 COPY ./ /var/www/s2low/
 RUN composer dump-autoload --no-dev --optimize
 
+# install npm packages
+RUN npm install
+RUN npx webpack --config webpack.config.js
+
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/

@@ -19,3 +19,6 @@ var/
 coverage
 dump.sql
 dumptest.sql
+dist/
+node_modules/
+public.ssl/jsmodules/

@@ -159,6 +159,9 @@ services:
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
     autowire: false
 
+  S2lowLegacy\Class\DatePicker: # TODO :verify
+    autowire: false
+
   S2lowLegacy\Class\Mail: #TODO Impossible pour l'instant ( chargé par PEAR )
     autowire: false
 

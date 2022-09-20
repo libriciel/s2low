@@ -52,3 +52,9 @@ phpcs: docker-compose-up ## Check code style through docker-compose
 
 phpcbf: docker-compose-up ## Fix all code style errors
 	$(DOCKER_COMPOSE_EXEC) phpcbf
+
+npminstall: docker-compose-up ## Install npm modules
+	$(DOCKER_COMPOSE_EXEC) npm install
+
+webpack: docker-compose-up ## Compile webpack assets
+	$(DOCKER_COMPOSE_EXEC) npx webpack --config webpack.config.js

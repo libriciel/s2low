@@ -2,6 +2,7 @@
 
 // Instanciation du module courant
 use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
@@ -43,21 +44,12 @@ $doc->openContent();
 $css = '';
 $js = '';
 
-
+//<script type=\"text/javascript\" src=\"".Helpers::getLink("/jsmodules/jquery.js")."\"></script>\n
 $js .= "
-<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/vendor/jquery.ui.widget.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/tmpl.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/load-image.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/canvas-to-blob.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/bootstrap.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/bootstrap-image-gallery.min.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.iframe-transport.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.fileupload.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.fileupload-fp.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.fileupload-ui.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/locale.js\"></script>\n
-    <script type=\"text/javascript\" src=\"/javascript/jfu/js/main.js.php\"></script>\n
+    <script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>
+    <script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryfileupload.js") . "\"></script>\n
+    <script  type=\"text/javascript\" src=\"/javascript/jfu/js/locale.js\"></script>\n
+    <script  type=\"text/javascript\" src=\"/javascript/jfu/js/main.js.php\"></script>\n
     <!--[if gte IE 8]><script type=\"text-javascript\" src=\"/javascript/jfu/js/cors/jquery.xdr-transport.js\"></script><![endif]-->\n
 
 ";

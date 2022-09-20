@@ -91,8 +91,8 @@ $doc = new HTMLLayout();
 $doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
 
-$doc->addHeader('<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>');
-$doc->addHeader('<script type="text/javascript" src="/javascript/zselect.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
 

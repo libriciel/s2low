@@ -7,6 +7,7 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\DatePicker;
 
 list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
@@ -79,10 +80,9 @@ $trans = new ActesTransaction();
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
-$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
 
 $js = <<<EOJS
 <script type="text/javascript">
@@ -296,8 +296,6 @@ if ($batchMode) {
     $html .= "<input type=\"hidden\" name=\"batchfile\" value=\"" . $zeBatchFile->getId() . "\" />\n";
 }
 
-$decision_date = Helpers :: getFromSession("decision_date");
-
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"nature_code\" class=\"control-label\"> Nature de l'acte : </label>\n";
 $html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code"), "id='nature_code'") ;
@@ -339,23 +337,16 @@ $html .= get_hecho($number) . "\" size=\"30\" maxlength=\"15\" title=\"15 caract
 $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la décision : </label>\n";
-$html .= "    <input id=\"decision_date\" class=\"form-control\" name=\"decision_date\" type=\"hidden\" value=\"" . $decision_date . "\"/>\n";
-$html .= "    <script type=\"text/javascript\">\n";
-$html .= "    //<![CDATA[\n";
-$html .= "    obj_decision_date = new DatePicker('decision_date', 'fr');\n";
-$html .= "    //]]>\n";
-$html .= "    </script>\n";
 
-$html .= "    <a class=\"form-control\" href=\"#datepicker\" id=\"datepicker_decision_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_decision_date.toggleDatePicker(); return false;\">";
+$decision_date = Helpers :: getFromSession("decision_date");
 
+$date = "";
 if ($decision_date) {
-    $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date));
-} else {
-    $html .= "Choisir une date";
+    $date = strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date));
 }
-$html .= "</a>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_decision_date_calendar\"></div>\n";
-$html .= "   </div>\n";
+
+$datePicker = new DatePicker("decision_date", $date);
+$html .= $datePicker->show();
 
 $document_papier_checked = Helpers :: getFromSession("document_papier") ? 'checked="checked"' : "";
 

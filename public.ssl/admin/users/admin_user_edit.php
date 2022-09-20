@@ -210,8 +210,8 @@ $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
-$doc->addHeader('<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>');
-$doc->addHeader('<script type="text/javascript" src="/javascript/zselect.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
 
