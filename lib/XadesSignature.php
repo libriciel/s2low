@@ -228,26 +228,15 @@ class XadesSignature
 
         $signatureNodeList = $xml->xpath($xpath);
         if (!$signatureNodeList) {
-            throw new Exception("Impossible d'extraire les signatures");
+            throw new Exception("Impossible d'extraire les entités \<signatures\>");
         }
 
         foreach ($signatureNodeList as $signatureNode) {
             $id = $signatureNode->attributes()->Id;
             if (!$id) {
-                throw new Exception("Impossible d'extraire la signature");
+                throw new Exception("Impossible d'extraire l'attribut Id de l'entité \<Signature\>");
             }
-            $node_id = strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI);
-            $node_id = ltrim($node_id, "#");
-            if (!$node_id) {
-                throw new Exception("Impossible d'extraire la signature");
-            }
-            $xpath = "//*[@Id='$node_id']";
-            $element = $xml->xpath($xpath);
-            if (count($element) != 1) {
-                throw new Exception("Impossible d'extraire la signature");
-            }
-            $element = $element[0];
-            $name = $element->getName();
+            $signedElementRootName = $this->getSignedElementRootName($signatureNode, $xml);
 
             $signingTime = $this->xadesSignatureParser->extractXadesSigningTime($xml, strval($id));
 
@@ -277,7 +266,7 @@ class XadesSignature
                 unlink($file);
             }
 
-            if (!$this->verifyIntern($xml_file_signed, $name, $id, $signingTime)) {
+            if (!$this->verifyIntern($xml_file_signed, $signedElementRootName, $id, $signingTime)) {
                 throw new Exception("Impossible d'affirmer que la signature correspond au fichier");
             }
         }
@@ -309,5 +298,33 @@ class XadesSignature
             unset($tab[0]);
         }
         $xml->asXML($xml_file_result);
+    }
+
+    /**
+     * @param $signatureNode
+     * @param $id
+     * @param $xml
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getSignedElementRootName($signatureNode, $xml)
+    {
+        $signature_node_URI =
+            ltrim(
+                strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI),
+                "#"
+            );
+
+        if (empty($signature_node_URI)) {           // Si l'URI n'est pas sp�cifi�e dans le premier noeud r�f�rence,
+            return $xml->getName();                 // on prend en compte l'entit� racine du XML
+        }
+        $xpath = "//*[@Id='$signature_node_URI']";
+        $element = $xml->xpath($xpath);
+        if (count($element) != 1) {
+            throw new Exception("Impossible d'extraire l'entit� \<SignedProperties\> d'Id $signature_node_URI");
+        }
+        $element = $element[0];
+        $name = $element->getName();
+        return $name;
     }
 }
