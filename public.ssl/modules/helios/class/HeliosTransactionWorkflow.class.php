@@ -121,7 +121,7 @@ class HeliosTransactionWorkflow extends DataObject
 
         $sql = "SELECT status_id FROM helios_transactions_workflow atw WHERE date = ( SELECT MAX(date) FROM helios_transactions_workflow atw2 WHERE atw2.transaction_id = atw.transaction_id) AND transaction_id = ? ORDER BY atw.id DESC LIMIT 1";
 
-        $result = $db->select($sql,[$transaction_id]);
+        $result = $db->select($sql, [$transaction_id]);
 
         if (!$result->isError() && $result->num_row() == 1) {
             $row = $result->get_next_row();

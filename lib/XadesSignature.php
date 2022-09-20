@@ -312,7 +312,8 @@ class XadesSignature
         $signature_node_URI =
             ltrim(
                 strval($signatureNode->children(self::NS_DS_URI)->SignedInfo->Reference->attributes()->URI),
-                "#");
+                "#"
+            );
 
         if (empty($signature_node_URI)) {           // Si l'URI n'est pas sp�cifi�e dans le premier noeud r�f�rence,
             return $xml->getName();                 // on prend en compte l'entit� racine du XML
