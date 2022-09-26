@@ -104,7 +104,7 @@ deploy_app:
         - scp ./docker-compose.simulateur.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
         - echo "$DEV_ENV_FILE" > /tmp/.env
         - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-        - ssh -tt s2low@s2low-5-0.dev.libriciel.net "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /opt/s2low/ && docker-compose pull && docker-compose up -d"
+        - ssh -tt s2low@s2low-5-0.dev.libriciel.net "docker login -u gitlab-ci-token -p '$CI_JOB_TOKEN' $CI_REGISTRY && cd /opt/s2low/ && docker compose pull && docker compose up -d"
         - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
 
 deploy_ftp:
