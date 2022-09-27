@@ -15,6 +15,7 @@
 - CHANGELOG : corrections sur les sauts de lignes sous les (sous-)titres (markdownlint MD032)
 
 ## Suppression
+
 - les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT, 
 OPENSIGN_TIMEOUT, ACTES_TYPE_PJ_IS_MANDATORY, DB_CLIENT_ENCODING, PHP_UNIT_AUTOLOADER, MODE, ETAT_CIVIL_FILES_UPLOAD_ROOT,
 IMAP_LOGIN, IMAP_PASS

@@ -7,7 +7,7 @@ services:
             args:
                 UID: ${UID:-33}
                 GID: ${GID:-33}
-                USERNAME: ${USERNAME:-www-data}
+                USERNAME: ${USER_NAME:-www-data} #USERNAME est en général dans l'environnement pris avant le .env
                 GROUPNAME: ${GROUPNAME:-www-data}
 
         volumes:
