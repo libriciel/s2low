@@ -83,7 +83,10 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
         $last_status_info = $actesTransactionSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE, $last_status_info['status_id']);
         $this->assertEquals($exepected_message, $last_status_info['message']);
-        $this->assertEquals(file_get_contents(__DIR__ . "/fixtures/reply.xml"), $last_status_info['flux_retour']);
+        $this->assertEquals(
+            file_get_contents(__DIR__ . "/fixtures/reply.xml"),
+            stream_get_contents($last_status_info['flux_retour'])
+        );
     }
 
     /**
@@ -200,7 +203,10 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
         $last_status_info = $actesTransactionSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE, $last_status_info['status_id']);
         $this->assertEquals($exepected_message, $last_status_info['message']);
-        $this->assertEquals(file_get_contents(__DIR__ . "/fixtures/reply-refus-sae.xml"), $last_status_info['flux_retour']);
+        $this->assertEquals(
+            file_get_contents(__DIR__ . "/fixtures/reply-refus-sae.xml"),
+            stream_get_contents($last_status_info['flux_retour'])
+        );
     }
 
 

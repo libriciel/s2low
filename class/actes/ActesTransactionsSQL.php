@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use PDO;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Model\ModuleSQL;
 
@@ -51,11 +52,19 @@ class ActesTransactionsSQL extends SQL
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0
 
         $date = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message,flux_retour) " .
-                " VALUES( ? , ? , ? , ? ,?) RETURNING ID";
+        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) " .
+                " VALUES( ? , ? , ? , ? ) RETURNING ID";
 
-        $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message, $flux_retour);
+        $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message);
 
+        if (!empty($flux_retour)) {
+            $sql = "UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?";
+            $pdo = $this->getSQLQuery()->getPdo();
+            $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
+            $stmt->bindParam(1, $flux_retour, PDO::PARAM_LOB);
+            $stmt->bindParam(2, $id);
+            $stmt->execute();
+        }
         $sql = "UPDATE actes_transactions SET last_status_id=? " .
                 " WHERE id=?";
 
