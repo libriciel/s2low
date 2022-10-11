@@ -333,7 +333,7 @@ class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase
         $result = $postgreSQLDifference->getDifference(array(), $s2low_definition);
         $result = $this->postgreSQLDifferenceToSQL->getSQL($result);
         $this->assertContains("CREATE SEQUENCE actes_batches_id_seq;", $result);
-        $this->assertContains("CREATE INDEX atw_tid_idx ON actes_transactions_workflow USING btree (transaction_id);", $result);
+        $this->assertContains("CREATE INDEX atw_tid_idx ON public.actes_transactions_workflow USING btree (transaction_id);", $result);
         $this->assertContains("ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);", $result);
     }
 }
