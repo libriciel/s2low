@@ -47,7 +47,7 @@ unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
     services:
-        - name: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        - name: registry.libriciel.fr/public/outils/postgres:14.5
           alias: postgres
     variables:
         XDEBUG_ON: "true"
@@ -113,7 +113,7 @@ deploy_ftp:
       - tags
     image : "$CONTAINER_IMAGE"
     services:
-        - name: gitlab.libriciel.fr:4567/docker/postgres:9.6.5
+        - name: registry.libriciel.fr/public/outils/postgres:14.5
           alias: postgres
 
     variables:
