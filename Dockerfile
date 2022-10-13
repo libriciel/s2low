@@ -26,10 +26,6 @@ RUN composer install --no-dev --no-autoloader && rm -rf /root/.composer/
 COPY ./ /var/www/s2low/
 RUN composer dump-autoload --no-dev --optimize
 
-# install npm packages
-RUN npm install
-RUN npx webpack --config webpack.config.js
-
 ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 
 COPY --chown=www-data:www-data ./ /var/www/s2low/
@@ -54,5 +50,16 @@ ARG GROUPNAME=www-data
 USER root
 RUN /bin/bash /tmp/docker-resources/install-dev-requirements.sh
 USER "${USERNAME}"
+
+FROM node:18-slim as node_modules
+WORKDIR /var/www/s2low/
+COPY package*.json ./
+RUN pwd
+RUN ls -l
+RUN npm install
+COPY webpack.config.js ./
+COPY src_js/ ./src_js/
+RUN ls -l
+RUN npx webpack --config webpack.config.js
 
 FROM s2low_base as s2low_prod

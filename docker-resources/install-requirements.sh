@@ -54,9 +54,7 @@ apt-get install -y  --no-install-recommends \
     php-dev \
     php-redis \
     php-pdo \
-    php-intl \
-    nodejs \
-    npm
+    php-intl
     #\
     #python-certbot-apache TODO : non dispo, doit-on supprimer ??
 
@@ -78,7 +76,4 @@ php composer-setup.php --install-dir=/usr/local/bin
 mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
 chmod u+s /usr/sbin/cron
-
-#Change cache location to a writable directory
-npm config set cache var/.npm --global
 
