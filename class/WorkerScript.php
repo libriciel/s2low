@@ -51,21 +51,21 @@ class WorkerScript
 
     public function putJob(IWorker $IWorker, $data)
     {
-        return $this->beanstalkdWrapper->put($IWorker->getQueueName(), $data);
+        return $this->beanstalkdWrapper->put($IWorker->getQueueName(), $data, $this->getDelay(get_class($IWorker)));
     }
 
     public function putJobByClassName($workerClassName, $data)
     {
         /** @var IWorker $worker */
         $worker = $this->objectInstancier->get($workerClassName);
-        return $this->beanstalkdWrapper->put($worker->getQueueName(), $data);
+        return $this->beanstalkdWrapper->put($worker->getQueueName(), $data, $this->getDelay($workerClassName));
     }
 
     //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
     // Evite d'avoir à l'instancier
     public function putJobByQueueName($queueName, $data)
     {
-        return $this->beanstalkdWrapper->put($queueName, $data);
+        return $this->beanstalkdWrapper->put($queueName, $data, $this->getDelay($queueName));
     }
 
     public function scriptByClassName($workerClassName, $log_enable_stdout = true, $force_old_school_script = false)
@@ -235,5 +235,21 @@ class WorkerScript
                 /* Nothing to do*/
             }
         }
+    }
+
+    /**
+     * @param \S2lowLegacy\Class\IWorker $IWorker
+     * @return int|string
+     */
+    private function getDelay(string $IWorkerClassName): string|int
+    {
+        try {
+            $delay = $IWorkerClassName::PHEANSTALK_DELAY;
+        } catch (Exception $exception) {
+            $delay = PheanstalkInterface::DEFAULT_DELAY;
+        } catch (\Error $error) {
+            $delay = PheanstalkInterface::DEFAULT_DELAY;
+        }
+        return $delay;
     }
 }
