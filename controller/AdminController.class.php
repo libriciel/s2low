@@ -157,7 +157,7 @@ class AdminController extends Controller
         $this->fname = $recuperateur->get("name");
         $this->fgroup = $recuperateur->get("group");
         $this->api = $recuperateur->get("api");
-        $this->fsiren = $recuperateur->get("siren");
+        $this->fsiren = preg_replace("#\s#", "", $recuperateur->get("siren"));
         $this->fsiret = $recuperateur->get("siret");
         $this->count = $recuperateur->get("count") ?: 10;
         $this->page_number = $recuperateur->getInt('page', 1);
