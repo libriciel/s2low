@@ -63,3 +63,9 @@ RUN ls -l
 RUN npx webpack --config webpack.config.js
 
 FROM s2low_base as s2low_prod
+WORKDIR /var/www/s2low/
+ARG USERNAME=www-data
+ARG GROUPNAME=www-data
+RUN pwd
+COPY --chown=${USERNAME}:${GROUPNAME} --from=node_modules /var/www/s2low/node_modules/ /node_modules
+COPY --chown=${USERNAME}:${GROUPNAME} --from=node_modules /var/www/s2low/public.ssl/jsmodules/ ./public.ssl/jsmodules

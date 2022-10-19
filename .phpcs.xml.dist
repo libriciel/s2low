@@ -36,7 +36,7 @@
     <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
     <exclude-pattern>test/PHPUnit/bootstrap.php</exclude-pattern>
     <exclude-pattern>./src_js</exclude-pattern>
-    <exclude-pattern>./public.ssl/jsmodules/*.js</exclude-pattern>
+    <exclude-pattern>./public.ssl/jsmodules/*</exclude-pattern>
     <exclude-pattern>./webpack.config.js</exclude-pattern>
     <exclude-pattern>composer-setup.php</exclude-pattern>
     <exclude-pattern>./node_modules</exclude-pattern>

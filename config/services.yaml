@@ -145,6 +145,9 @@ services:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Class\Antivirus']
 
+  S2lowLegacy\Class\BatchUploadHandler:
+    autowire: false
+
   S2lowLegacy\Class\BeanstalkdWrapper:
     arguments:
       $beanstalkd_server: "todo"

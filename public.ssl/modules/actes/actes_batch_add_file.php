@@ -24,15 +24,20 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($modu
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$description = Helpers::getVarFromPost("intitule");
-$num_prefix = Helpers::getVarFromPost("prefixe");
+$batchId = Helpers::getIntFromPost("batch_id");
 
-$zeBatch = new ActesBatch();
+$zeBatch = new ActesBatch($batchId, true);
+$zeBatch->init();
+$zeBatch->initStorage();
 
-$zeBatch->set("description", $description);
-$zeBatch->set("num_prefix", $num_prefix);
-$zeBatch->set("user_id", $me->getId());
+$upload_handler = new \S2lowLegacy\Class\BatchUploadHandler(
+    $zeBatch,
+    [
+    'accept_file_types' => '/\.(pdf)$/i',
+    'print_response' => false,
+    'upload_dir' => ACTES_BATCHES_UPLOAD_ROOT . "/"
+    ]
+);
 
-$zeBatch->save();
-
-header("Location: " . Helpers::getLink("/modules/actes/actes_batch_manage_files.php?id=") . $zeBatch->getId());
+echo json_encode($upload_handler->get_response());
+return 0;

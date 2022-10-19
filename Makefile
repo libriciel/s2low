@@ -17,6 +17,8 @@ composer-install: ## Run composer install
 
 clean: ## Clear and remove dependencies
 	rm -rf  vendor
+	rm -rf /node_modules/*
+	rm -rf public.ssl/jsmodules/*
 
 test: phpunit  ## Run all tests (code style, unit test, ...)
 

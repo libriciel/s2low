@@ -68,14 +68,16 @@ class ActesBatch extends DataObject
   /** @var ActesBatchFile[] */
     protected $batchFiles;
     protected $unprocessedBatchFiles;
+    private bool $asNew;
 
     /**
      * Constructeur d'un lot
      * ActesBatch constructor.
      * @param bool|int $id Numéro d'identifiant d'un lot existant avec lequel initialiser l'objet
      */
-    public function __construct($id = false)
+    public function __construct($id = false, bool $asNew = false)
     {
+        $this->asNew = $asNew;
         parent :: __construct($id);
     }
 
@@ -553,8 +555,12 @@ class ActesBatch extends DataObject
             return false;
         }
 
+        if (is_null($this->batchFiles)) {
+            $this->batchFiles = [];
+        }
+
         foreach ($this->batchFiles as $batchFile) {
-            if ($new) {
+            if ($new || $this->asNew) {
                 $batchFile->set("batch_id", $this->id);
                 $batchFile->set("storage_dir", $this->storage_dir);
             }
