@@ -64,8 +64,9 @@ $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../../templates');
 $twig = new \Twig\Environment($loader);
 
 $html .= $twig->render('batch_creator.html.twig', [
-        "userid" => $me->getId()
-    ]);
+    "userid" => $me->getId(),
+    "website_ssl" => WEBSITE_SSL
+]);
 
 
 $html .= "</div>";
