@@ -2,7 +2,7 @@
 $(document).ready(function () {
 
 
-    $(".zselect_authorities").pastell_zselect('Sélectionnez une collectivité');
+    $(".zselect_authorities").select2();
 
 
 });
@@ -11,7 +11,7 @@ $(document).ready(function () {
 (function ( $ ) {
     $.fn.pastell_zselect = function (placeholder_str) {
         this.each(function () {
-            $(this).zelect({
+            $(this).select2({
                 placeholder: $('<i>').text(placeholder_str),
                 renderItem: function (item, term) {
                     return $('<span>').text(item.label);

@@ -116,7 +116,7 @@ class ActesBatchFile extends DataObject
    */
     public function putTempFileInStorageDir()
     {
-        if (! move_uploaded_file($this->tmpFile, $this->getAbsoluteFilePath())) {
+        if (! rename($this->tmpFile, $this->getAbsoluteFilePath())) {
             return false;
         }
 
@@ -144,6 +144,9 @@ class ActesBatchFile extends DataObject
         if ($this->isNew()) {
             if (empty($this->storage_dir) || empty($this->tmpFile) || empty($this->tmpName)) {
                 $this->errorMsg = "Informations manquantes pour la création du fichier de lot.";
+                var_dump($this->storage_dir);
+                var_dump($this->tmpFile);
+                var_dump($this->tmpName);
                 return false;
             }
 

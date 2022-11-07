@@ -11,24 +11,6 @@
 
 /*global window */
 
-
-window.locale = {
-    "fileupload": {
-        "errors": {
-            "maxFileSize": "La taille maximum du fichier est dépassée.",
-            "minFileSize": "Le taille minimum du fichier n'est pas atteinte.",
-            "acceptFileTypes": "Type de fichier non autorisé",
-            "maxNumberOfFiles": "Nombre maximum de fichiers dépassé",
-            "uploadedBytes": "La taille des fichiers envoyés est dépassée.",
-            "emptyResult": "Aucun retour."
-        },
-        "error": "Erreur",
-        "start": "Envoyer",
-        "cancel": "Annuler",
-        "destroy": "Supprimer"
-    }
-};
-
 /*window.locale = {
     "fileupload": {
         "errors": {

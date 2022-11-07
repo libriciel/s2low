@@ -18,7 +18,7 @@ $type = Helpers::getVarFromGet("type", true);
 $myAuthority = new Authority($me->get("authority_id"));
 
 $doc = new HTMLLayout("xhtml_simple.tpl.php");
-$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
 
 $doc->setTitle("Tedetis : sélection attribut");
 

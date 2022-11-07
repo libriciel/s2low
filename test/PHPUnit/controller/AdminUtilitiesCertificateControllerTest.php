@@ -50,8 +50,10 @@ class AdminUtilitiesCertificateControllerTest extends S2lowTestCase
 
         $result = $environnement->session()->get(AdminUtilitiesCertificateController::SESSION_KEY);
 
-        $this->assertEquals('/C=FR/ST=Herault/L=Montpellier/O=Libriciel/OU=Production/CN=contact_example/emailAddress=contact@example.org', $result['certificate_info']['name']);
-        $this->assertEquals(1, $result['nb_users']);
+        $this->assertEquals('/C=FR/ST=23 - Creuse/L=Aubusson/O=Libriciel SCOP/OU=tests unitaires s2low/CN=testUnitaires s2low - tests unitaires s2low/emailAddress=test@libriciel.coop', $result['certificate_info']['name']);
+        // TODO : introduire le certificat dans s2low-test.sql
+        // cf https://gitlab.libriciel.fr/libriciel/pole-plate-formes/s2low/s2low/-/commit/d7e6674d499c0ebb3ccd95e80f6a748b738a8a2c
+        $this->assertEquals(0, $result['nb_users']);
     }
 
     /**

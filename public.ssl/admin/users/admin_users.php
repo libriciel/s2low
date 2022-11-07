@@ -118,9 +118,9 @@ $doc->openContent();
 
 ob_start();?>
 
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script> 
-<script type="text/javascript" src="/javascript/zselect.js"></script>   
-<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
+<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js")?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/select2.js")?>"></script>
+<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
 
 <h1><?php echo $title; ?></h1>

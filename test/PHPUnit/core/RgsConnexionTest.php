@@ -47,9 +47,9 @@ class RgsConnexionTest extends TestCase
     {
         $server[self::SSL_CLIENT_VERIFY] = self::SUCCESS;
         $server[self::SSL_CLIENT_CERT] = file_get_contents(__DIR__ . "/../controller/fixtures/contact@example.org.pem");
-        $server[self::SSL_CLIENT_CERT_CHAIN_0] = file_get_contents(__DIR__ . "/../controller/fixtures/ca_users_chaine.pem");
+        $server[self::SSL_CLIENT_CERT_CHAIN_0] = file_get_contents(__DIR__ . "/../controller/fixtures/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
         $this->rgsConnexion->setServerGlobal($server);
-        $this->rgsConnexion->setRgsValidCaPath(__DIR__ . "/../controller/fixtures/validca");
+        $this->rgsConnexion->setRgsValidCaPath(__DIR__ . "/../controller/fixtures/validcaLibriciel");
         $this->assertTrue($this->rgsConnexion->isRgsConnexion());
     }
 

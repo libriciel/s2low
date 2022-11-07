@@ -76,3 +76,4 @@ php composer-setup.php --install-dir=/usr/local/bin
 mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
 chmod u+s /usr/sbin/cron
+

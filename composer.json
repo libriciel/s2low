@@ -42,7 +42,8 @@
     "symfony/monolog-bundle": "^3.8",
     "symfony/mailer": "^6.1",
     "symfony/twig-bundle": "^6.1",
-    "doctrine/annotations": "^1.13"
+    "doctrine/annotations": "^1.13",
+    "twig/twig": "^3.4"
   },
 
   "require-dev": {

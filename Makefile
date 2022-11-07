@@ -17,6 +17,8 @@ composer-install: ## Run composer install
 
 clean: ## Clear and remove dependencies
 	rm -rf  vendor
+	rm -rf /node_modules/*
+	rm -rf public.ssl/jsmodules/*
 
 test: phpunit  ## Run all tests (code style, unit test, ...)
 
@@ -52,3 +54,11 @@ phpcs: docker-compose-up ## Check code style through docker-compose
 
 phpcbf: docker-compose-up ## Fix all code style errors
 	$(DOCKER_COMPOSE_EXEC) phpcbf
+
+npm-install: docker-compose-up ## Install npm modules
+	$(DOCKER_COMPOSE_EXEC) npm install
+
+webpack: docker-compose-up ## Compile webpack assets
+	$(DOCKER_COMPOSE_EXEC) npx webpack --config webpack.config.js
+
+install: composer-install npm-install webpack

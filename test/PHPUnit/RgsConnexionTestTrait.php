@@ -9,7 +9,7 @@ trait RgsConnexionTestTrait
     {
         $server['SSL_CLIENT_VERIFY'] = "SUCCESS";
         $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/controller/fixtures/contact@example.org.pem");
-        $server['SSL_CLIENT_CERT_CHAIN_0'] = file_get_contents(__DIR__ . "/controller/fixtures/ca_users_chaine.pem");
+        $server['SSL_CLIENT_CERT_CHAIN_0'] = file_get_contents(__DIR__ . "/controller/fixtures/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
 
         $rgsConnexion = $this->getObjectInstancier()->get(RgsConnexion::class);
 

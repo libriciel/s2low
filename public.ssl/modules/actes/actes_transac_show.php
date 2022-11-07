@@ -102,7 +102,7 @@ $doc = new HTMLLayout();
 
 
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
-$doc->addHeader("<script type=\"text/javascript\" src=\"/javascript/jfu/js/jquery.min.js\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 
 
@@ -526,7 +526,7 @@ if (!$trans->hasPendingCancelTrans()) {
           $actionHtml .= "</div>\n";
         ob_start();
         ?>
-        <script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js"); ?>"></script>
 
         <script>
 

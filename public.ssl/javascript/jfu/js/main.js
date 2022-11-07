@@ -19,7 +19,7 @@ $(function () {
     $('#fileupload').fileupload({
 //      forceIframeTransport: true,
         add: function (e, data) {
-            $.blueimpUI.fileupload.prototype.options.add.call(this, e, data);
+            $.blueimp.fileupload.prototype.options.add.call(this, e, data);
             $(this).find('.template-upload').each(function () {
                 var first = $(this).parent().children().first();
                 var firstData;
@@ -67,10 +67,10 @@ $(function () {
             } else {
                 var msg = '';
                 if (!verif.intitule) {
-                    msg += 'Le champ "Intitulé du lot" est vide.';
+                    msg += 'Le champ "Intitulï¿½ du lot" est vide.';
                 }
                 if (!verif.prefix) {
-                    msg += '\nLe champ "Préfixe des numéros internes" est vide.';
+                    msg += '\nLe champ "Prï¿½fixe des numï¿½ros internes" est vide.';
                 }
                 if (!verif.noErrorFiles) {
                     msg += '\nDes fichiers ne sont pas valides. Veuillez les supprimer de la liste avant l\'envoi.';
@@ -113,10 +113,10 @@ $(function () {
             var resultUpload = $('<div></div>').html(msg).attr('id', 'resultUpload').css('text-align', 'center').attr('class','alert alert-success');
             $('#fileupload').before(resultUpload);
 
-            //on masque la liste des fichiers et on affiche une nouvelle liste (contournement du bug d affichage des fichiers envoyés si on en supprime un de la liste avant l envoi)
+            //on masque la liste des fichiers et on affiche une nouvelle liste (contournement du bug d affichage des fichiers envoyï¿½s si on en supprime un de la liste avant l envoi)
 
             if (lvl != 1) {
-                var labelfilelist = $('<span>Liste des fichiers envoyés : </span>');
+                var labelfilelist = $('<span>Liste des fichiers envoyï¿½s : </span>');
                 var filelist = $('<ul></ul>');
                 jQuery.each(obj, function (key, value) {
                     var isfile = false;

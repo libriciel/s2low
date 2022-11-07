@@ -6,7 +6,7 @@ use S2lowLegacy\Class\Helpers;
 
 <script src="/javascript/date-picker.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/custom/styles/date-picker.css" />
-<script type="text/javascript" src="/javascript/jfu/js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js");?>"></script>
 
 
 <h1><?php echo $h1_title ?></h1>
