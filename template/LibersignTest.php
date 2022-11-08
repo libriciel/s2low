@@ -1,6 +1,9 @@
 <?php
 
 /** @var LibersignController $libersignController  */
+
+use S2lowLegacy\Controller\LibersignController;
+
 ?>
 <h1>Test de Libersign</h1>
 
@@ -8,7 +11,7 @@
 
 
 <script>
-    $(window).load(function() {
+    $(window).on('load',function() {
 
         $(document).ready(function () {
 

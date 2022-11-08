@@ -5,6 +5,7 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Controller\LibersignController;
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
@@ -92,7 +93,7 @@ $libersignController->displayLibersignJS();
 ?>
 
     <script>
-        $(window).load(function() {
+        $(window).on('load',function() {
             $(document).ready(function () {
 
                 $("#box_result").hide();

@@ -5,6 +5,7 @@ use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 require_once(__DIR__ . "/../../../init/init-www-helios.php");
@@ -101,7 +102,7 @@ $libersignController->displayLibersignJS();
 ?><div class='action'>
 
     <script>
-        $(window).load(function() {
+        $(window).on('load',function() {
 
             $(document).ready(function () {
 
