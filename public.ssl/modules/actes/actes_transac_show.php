@@ -682,7 +682,7 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
     ?>
 
     <script>
-        $(window).load(function() {
+        $(window).on('load',function() {
 
             $(document).ready(function () {
 

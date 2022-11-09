@@ -304,7 +304,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"), 'CS')) {
         ?>
 
         <script>
-            $(window).load(function() {
+            $(window).on('load',function() {
 
                 $(document).ready(function () {
 
