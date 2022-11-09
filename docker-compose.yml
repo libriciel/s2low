@@ -125,7 +125,7 @@ services:
         mem_limit: 768M
 
     pdf-stamp:
-        image: registry.libriciel.fr/public/signature/pdf-stamp:2.6.0
+        image: registry.libriciel.fr/public/signature/pdf-stamp:2.4.5
         networks:
           - services
         mem_limit: 512M
