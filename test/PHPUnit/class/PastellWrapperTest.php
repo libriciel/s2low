@@ -26,6 +26,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         );
 
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 34;
 
 
@@ -42,6 +43,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $curlWrapperFactory = $this->getCurlWrapperFactory("not_in_json");
 
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
@@ -62,6 +64,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         );
 
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
@@ -82,6 +85,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         );
 
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
@@ -102,6 +106,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         );
 
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -122,6 +127,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             ''
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -148,6 +154,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             '{"id_e":12}'
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -173,6 +180,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             ''
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -196,6 +204,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             '{"id_e":12}'
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -217,6 +226,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             '{"id_e":12}'
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -251,6 +261,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             '{"id_e":12}'
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -269,6 +280,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             ''
         );
         $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
         $pastellProperties->id_e = 35;
         $pastellProperties->login = "toto";
 
@@ -285,7 +297,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
             ->method("get")
             ->will(
                 $this->returnCallback(function ($in) use ($return_list_entite, $return_create_document, $recuperation_fichier) {
-                    if ($in == '/list-entite.php') {
+                    if ($in == 'url/list-entite.php') {
                         return $return_list_entite;
                     }
                     if (preg_match("#create-document.php#", $in)) {
@@ -321,5 +333,22 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
          * @var CurlWrapperFactory $curlWrapperFactory
          */
         return $curlWrapperFactory;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testTestConnexionWithoutURL()
+    {
+        $curlWrapperFactory = $this->getCurlWrapperFactory(
+            '[{"id_e":"34","denomination":"FORMATION ERIC","siren":"000000000","type":"collectivite","centre_de_gestion":"0","entite_mere":"0"}]'
+        );
+
+        $pastellProperties = new PastellProperties();
+
+        $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("URL Pastell non configurée");
+        $pastellWrapper->testConnexion();
     }
 }

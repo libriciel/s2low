@@ -93,6 +93,10 @@ class PastellWrapper
      */
     public function testConnexion()
     {
+        if (!$this->pastellProperties->url) {
+            throw new Exception("URL Pastell non configurée");
+        }
+
         $data = $this->callAPI("list-entite.php");
         foreach ($data as $entite) {
             if ($entite['id_e'] == $this->pastellProperties->id_e) {
