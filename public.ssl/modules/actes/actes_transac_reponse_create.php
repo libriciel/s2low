@@ -96,19 +96,19 @@ $actePDFFile = $_FILES["acte_pdf_file"];
 if (isset($_FILES["acte_pdf_file_sign"])) {
     $actePDFFileSign = $_FILES["acte_pdf_file_sign"];
 } else {
-    $actePDFFileSign = false;
+    $actePDFFileSign = [];
 }
 
 if (isset($_FILES["acte_attachments"])) {
     $acteAttachments = $_FILES["acte_attachments"];
 } else {
-    $acteAttachments = false;
+    $acteAttachments = ["tmp_name" => []];
 }
 
 if (isset($_FILES["acte_attachments_sign"])) {
     $acteAttachmentsSign = $_FILES["acte_attachments_sign"];
 } else {
-    $acteAttachmentsSign = false;
+    $acteAttachmentsSign = [];
 }
 
 $env = new ActesEnvelope();
