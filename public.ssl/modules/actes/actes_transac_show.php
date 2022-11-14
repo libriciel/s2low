@@ -103,6 +103,7 @@ $doc = new HTMLLayout();
 
 $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 
 
