@@ -1,1 +1,1 @@
-10  2   *   *   *   %USERNAME%  /usr/local/bin/php /var/www/s2low/script/installation/maj-libersign.php  >> /data/log/maj-libersign.log 2>&1
+10  2   *   *   *   %USERNAME%  /usr/bin/php /var/www/s2low/script/installation/maj-libersign.php  >> /data/log/maj-libersign.log 2>&1

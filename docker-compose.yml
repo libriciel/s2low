@@ -98,6 +98,7 @@ services:
             - /var/www/s2low/ext/standalone:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/cache:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/log:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
+            - /var/www/parapheur/libersign:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
         user: "${UID:-33}:${GID:-33}"
 
     db:
