@@ -1,6 +1,7 @@
 <?php
 
 use S2low\Services\MailActesNotifications\MailerSymfony;
+use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Group;
@@ -204,7 +205,7 @@ if (! $authority->save($savePerms)) {
 if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
     $fileUploader = new FileUploader();
     if ($fileUploader->verifOK('convention_actes')) {
-        $actesConventions = $objectInstancier->get("ActesConventions");
+        $actesConventions = $objectInstancier->get(ActesConventions::class);
 
         $finfo = new finfo();
         if ($finfo->file($_FILES['convention_actes']['tmp_name'], FILEINFO_MIME_TYPE) == 'application/pdf') {
