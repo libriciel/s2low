@@ -21,8 +21,6 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-\S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
-
 // Instanciation du module courant
 $module = new Module();
 if (! $module->initByName("helios")) {
