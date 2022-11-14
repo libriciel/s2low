@@ -11,7 +11,8 @@ use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
-$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+[$workerScript, $actesClassificationCodesSQL] = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([WorkerScript::class,\S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
 
 // Instanciation du module courant
 $module = new Module();
@@ -93,7 +94,7 @@ foreach ($xmlTransFiles as $xmlFile) {
     $trans->set("authority_id", $me->get("authority_id"));
 
 
-    if (! $trans->createFromXML($xmlFile)) {
+    if (! $trans->createFromXML($xmlFile, $actesClassificationCodesSQL)) {
         $env->purgeFiles();
         $env->deleteArchiveFile();
         Helpers::returnAndExit(1, "Erreur d'importation transaction : " . $trans->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));

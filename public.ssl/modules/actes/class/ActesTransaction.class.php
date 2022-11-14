@@ -886,8 +886,9 @@ class ActesTransaction extends DataObject
    * \brief Méthode d'importation d'un fichier XML de description d'une transaction
    * \param $xmlFile chaîne : Chemin vers le fichier XML de description (relatif à ACTES_FILES_UPLOAD_ROOT)
    * \return True en cas de succès, false sinon
+   * TODO : refactorer pour éviter l'import de $actesClassificationCodesSQL ...
   */
-    public function createFromXML($xmlFile)
+    public function createFromXML($xmlFile, ActesClassificationCodesSQL $actesClassificationCodesSQL)
     {
 
 
@@ -949,8 +950,6 @@ class ActesTransaction extends DataObject
 
                 $this->classification_date = Helpers :: getFromXMLElt($actesItems->ClassificationDateVersion);
 
-                global $sqlQuery;
-                $actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
                 $classification_description = $actesClassificationCodesSQL->getDescription($this->get("authority_id"), $classification);
                 $this->set("classification_string", $classification_description);
 
@@ -1036,7 +1035,7 @@ class ActesTransaction extends DataObject
                     return false;
                 }
 
-                $related_trans = new ActesTransaction($related_id);
+                $related_trans = new ActesTransaction($this->related_id);
                 if (!$related_trans->init()) {
                     $this->errorMsg = "Erreur d'initialisation de la transaction de référence.";
                     return false;
