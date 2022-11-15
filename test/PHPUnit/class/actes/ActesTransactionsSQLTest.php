@@ -108,6 +108,19 @@ class ActesTransactionsSQLTest extends S2lowTestCase
     /**
      * @throws Exception
      */
+    public function testUpdateClassification()
+    {
+        $transaction_id = $this->createTransaction('14');
+        $message = "test update classification";
+        $flux_retour = file_get_contents(__DIR__ . '/../fixtures/classification.xml');
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, 1, $message, $flux_retour);
+        $info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id, 1);
+        $this->assertEquals("test update classification", $info['message']);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testgetByStatusSinceDate()
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
