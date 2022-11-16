@@ -167,11 +167,11 @@ class ActesNotification
         if (!$err) {
             $this->logger->info("$email invalide !");
         }
-
         $status_info = $this->actesTransactionsSQL->getStatusInfo($transactionInfo['id'], 4);
-        if ($status_info) {
+        $flux_retour = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transactionInfo['id'], 4);
+        if ($status_info && $flux_retour) {
             $ar_actes_filename = "{$transactionInfo['unique_id']}-{$transactionInfo['type']}-{$transactionInfo['id']}-reponse.xml";
-            $mailer->addStringAsFile($ar_actes_filename, $status_info['flux_retour']);
+            $mailer->addStringAsFile($ar_actes_filename, $flux_retour['flux_retour']);
 
             $bordereauPdf = $this->bordereauPdfGenerator
                 ->generate($transactionInfo['id'], "bordereau_acquittement.pdf", true, "S");

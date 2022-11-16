@@ -35,7 +35,7 @@ class ActeTamponne
 
         $date_reception = $transactionInfo['date'];
 
-        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id, 4);
+        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction_id, 4);
 
         $arActes = $actesTransactionsStatusInfo['flux_retour'];
 
