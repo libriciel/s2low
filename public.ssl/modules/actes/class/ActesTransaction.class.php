@@ -1126,7 +1126,7 @@ class ActesTransaction extends DataObject
 
             if ($type == 'acte' && $this->type == 1) {
                 if (! in_array($ext, array('pdf','xml'))) {
-                    $this->errorMsg = "Le fichier de l'acte «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF ou XML requis.";
+                    $this->errorMsg = "Le fichier de l'acte \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF ou XML requis.";
                     return false;
                 }
 
@@ -1142,12 +1142,12 @@ class ActesTransaction extends DataObject
                 }
             } elseif ($type == "acte") {
                 if (! in_array($ext, array('pdf','jpg','png','xml'))) {
-                    $this->errorMsg = "Le fichier de réponse «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
+                    $this->errorMsg = "Le fichier de réponse \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF, XML, PNG ou JPEG requis.";
                     return false;
                 }
             } elseif ($type == "attachment") {
                 if (! in_array($ext, array('pdf','jpg','png','xml'))) {
-                    $this->errorMsg = "Le fichier attaché «&nbsp;" . basename($name) . "&nbsp;» est de type «&nbsp;" . $mimeType . "&nbsp;». Fichier PDF, XML, PNG ou JPEG requis.";
+                    $this->errorMsg = "Le fichier attaché \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF, XML, PNG ou JPEG requis.";
                     return false;
                 }
 
