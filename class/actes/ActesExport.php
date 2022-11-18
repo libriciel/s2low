@@ -162,12 +162,11 @@ class ActesExport
             }
             $this->s2lowLogger->debug("[COPIE OK] $file_name -> $destination_path");
         }
-
-        $status_info = $this->actesTransactionsSQL->getStatusInfo(
+        $status_info = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour(
             $transaction_info['id'],
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU
         );
-        if ($status_info['flux_retour']) {
+        if (isset($status_info['flux_retour']) && $status_info['flux_retour']) {
             $acquit_filepath = $directory . "/ACK_{$directory_name}.xml";
             $filesystem->dumpFile($acquit_filepath, $status_info['flux_retour']);
             $this->s2lowLogger->debug("[DUMP OK] $acquit_filepath");

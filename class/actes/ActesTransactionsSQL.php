@@ -25,6 +25,26 @@ class ActesTransactionsSQL extends SQL
         return $this->queryOne($sql, $id, $status);
     }
 
+    public function getStatusInfoWithFluxRetour($id, $status)
+    {
+        $sql = "SELECT flux_retour,transaction_id FROM actes_transactions_workflow WHERE transaction_id=? AND status_id=?";
+
+        $pdo = $this->getSQLQuery()->getPdo();
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id,$status]);
+        $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
+        $stmt->bindColumn(2, $transaction_id, PDO::PARAM_INT);
+        $stmt->fetch(PDO::FETCH_BOUND);
+        if (is_null($flux_retour)) {
+            return ["flux_retour" => null,"transaction_id" => null];
+        }
+        $flux_retour_contents = stream_get_contents($flux_retour);
+        fclose($flux_retour);
+
+        return ["flux_retour" => $flux_retour_contents,"transaction_id" => $transaction_id];
+    }
+
     public function getLastStatusInfo($id)
     {
         $sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date DESC,id DESC LIMIT 1";

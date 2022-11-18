@@ -64,8 +64,7 @@ if (! $permission->canView($me, $owner)) {
 
 $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
-
-$info = $actesTransactionSQL->getStatusInfo($id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+$info = $actesTransactionSQL->getStatusInfoWithFluxRetour($id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
 if (! $info) {
     $_SESSION['error'] = "Cette transaction n'existe pas";

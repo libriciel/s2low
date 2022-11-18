@@ -13,7 +13,7 @@ class ActeTamponneTest extends S2lowTestCase
         $transactionInfo = array('submission_date' => '2016-12-12','date' => 'toto','unique_id' => 'hhhh','flux_retour' => '<toto></toto>');
         $actesTransactionsSQL->method('getInfo')->willReturn($transactionInfo);
         $actesTransactionsSQL->method('getDateTampon')->willReturn($transactionInfo);
-        $actesTransactionsSQL->method('getStatusInfo')->willReturn(['flux_retour' => "<test></test>"]);
+        $actesTransactionsSQL->method('getStatusInfoWithFluxRetour')->willReturn(['flux_retour' => "<test></test>"]);
 
         /** @var  ActesTransactionsSQL $actesTransactionsSQL */
         $acteTamponne = new ActeTamponne($actesTransactionsSQL, new PDFStampWrapper("", __DIR__ . "/../../../../public.ssl/custom/images/s2low-stamp.png"), $this->getObjectInstancier()->get(S2lowLogger::class));

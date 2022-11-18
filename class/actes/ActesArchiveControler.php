@@ -205,9 +205,9 @@ class ActesArchiveControler
             $actesFilesForSAE->annexe[] = ['filename' => $file['posted_filename'],'filepath' => $tmp_folder . '/' . $file['filename'],'type_pj' => $file['code_pj']];
         }
 
-        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfo($transaction_id, 4);
+        $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction_id, 4);
 
-        if (! $actesTransactionsStatusInfo['flux_retour']) {
+        if (is_null($actesTransactionsStatusInfo['flux_retour'])) {
             throw new UnrecoverableException("L'AR acte n'est pas disponible");
         }
 
@@ -233,7 +233,7 @@ class ActesArchiveControler
                 $filename = $actesFile[0]['filename'];
                 $posted_filename = $actesFile[0]['posted_filename'];
                 array_shift($actesFile);
-                $status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'], 8);
+                $status_info =  $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction['id'], 8);
             } else {
                 //Transaction retour
                 $echange_prefecture_type[] = $transaction['type'] . 'R';
@@ -242,12 +242,12 @@ class ActesArchiveControler
                 $posted_filename = $actesFile[1]['posted_filename'];
                 array_shift($actesFile);
                 array_shift($actesFile);
-                $status_info =  $this->actesTransactionsSQL->getStatusInfo($transaction['id'], 11);
+                $status_info =  $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction['id'], 11);
             }
             $tgzExtractor->extract($file_to_send, $filename);
             $echange_prefecture[] = array($tmp_folder . "/" . $filename,$posted_filename);
 
-            if ($status_info && $status_info['flux_retour']) {
+            if (isset($status_info['flux_retour']) && $status_info['flux_retour']) {
                 $ar_name = "AR-" . $status_info['transaction_id'] . ".xml";
                 file_put_contents($tmp_folder . "/$ar_name", $status_info['flux_retour']);
                 $echange_prefecture_ar[] = array($tmp_folder . "/$ar_name",$ar_name);
