@@ -30,6 +30,7 @@ services:
             SMTP_SERVER: ${SMTP_SERVER:-mailsec}
             SMTP_PORT: ${SMTP_PORT:-25}
             MAILER_DSN: ${MAILER_DSN:-smtp://mailsec:25?verify_peer=0}
+            TDT_FROM_EMAIL: ${TDT_FROM_EMAIL:-Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>}
             PUBLISH_SIMULATEUR: ${PUBLISH_SIMULATEUR:-true}
             ACTES_OPENSTACK_AUTHENTICATION_URL_V3: ${ACTES_OPENSTACK_AUTHENTICATION_URL_V3:-}
             ACTES_OPENSTACK_USERNAME: ${ACTES_OPENSTACK_USERNAME:-}
