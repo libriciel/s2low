@@ -121,7 +121,7 @@ $broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
 
 
 if ($broadcast_string) {
-    $broadcast_emails = implode($broadcast_string, ",");
+    $broadcast_emails = implode(",", $broadcast_string);
 } else {
     $broadcast_emails = false;
 }
