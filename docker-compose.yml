@@ -1,3 +1,5 @@
+name: s2low
+
 services:
     web:
         image: registry.libriciel.fr:443/public/plateforme/s2low:canary
