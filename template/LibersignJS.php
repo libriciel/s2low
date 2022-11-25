@@ -8,6 +8,7 @@ use S2lowLegacy\Class\Helpers;
 
 ?>
 <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js");?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jqueryui.js");?>"></script>
 
 <script>
 
