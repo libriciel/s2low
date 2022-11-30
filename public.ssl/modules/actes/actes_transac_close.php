@@ -31,10 +31,13 @@ if (! $me->isGroupAdminOrSuper() && (!$module->isActive() || !$me->checkDroit($m
 
 $liste_id = array ();
 
+
 if (Helpers::getVarFromPost("id") != null) {
     $liste_id[] = Helpers::getVarFromPost("id");
 } else {
-    $liste_id = Helpers::getVarFromPost("liste_id");
+    if (Helpers::getVarFromPost("liste_id") != null) {
+        $liste_id = Helpers::getVarFromPost("liste_id");
+    }
 }
 
 $status = Helpers::getVarFromPost("status");
