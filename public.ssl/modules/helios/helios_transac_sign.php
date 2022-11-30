@@ -112,10 +112,10 @@ for ($i = 1; $i <= $nb_signature; $i++) {
         exit();
     }
 
-    $heliosTransactionSQL->updateStatus($id, 1, "Fichier signé");
+    $heliosTransactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, "Fichier signé");
 
     $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id);
-    $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id);
+    $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 }
 
 if ($nb_signature > 1) {
