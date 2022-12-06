@@ -9,7 +9,7 @@
             enctype="multipart/form-data"
             data-max-file-size="{{ actes_max_batch_upload_site }}"
     >
-        <input id="jfu_user_id" type="hidden" name="batch_id" value="{{ batch_id }}"/>
+        <input id="jfu_batch_id" type="hidden" name="batch_id" value="{{ batch_id }}"/>
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
         <noscript
         ><input
@@ -28,7 +28,7 @@
             </span>
                 <button type="submit" class="btn btn-primary start">
                     <i class="glyphicon glyphicon-upload"></i>
-                    <span>Créer le lot</span>
+                    <span>Charger les fichiers</span>
                 </button>
                 <!-- on commente les boutons de remise a zero et de suppression ainsi que la case a cocher dans le haut du formulaire (ceux qui permettent les actions pour toute la liste de fichiers)
                 <button type="reset" class="btn btn-warning cancel">
@@ -67,6 +67,7 @@
         </table>
     </form>
     </div>
+    <div id="jfu_batch_link"></div>
 </div>
 <!-- The blueimp Gallery widget -->
 <div
@@ -176,11 +177,11 @@
               </td>
               <td>
                   {% if (file.deleteUrl) { %}
-                      <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                      <!--<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                           <i class="glyphicon glyphicon-trash"></i>
                           <span>Delete</span>
                       </button>
-                      <input type="checkbox" name="delete" value="1" class="toggle">
+                      <input type="checkbox" name="delete" value="1" class="toggle"> -->
                   {% } else { %}
                       <button class="btn btn-warning cancel">
                           <i class="glyphicon glyphicon-ban-circle"></i>
@@ -192,7 +193,3 @@
       {% } %}
       {% endverbatim %}
     </script>
-<!--<script type=\"text/javascript\" src="./../../jsmodules/jquery.js"></script>
-<script type="text/javascript" src="./../../jsmodules/jqueryfileupload.js"></script>
-<script src="./../../javascript/simplestjfu.js"></script>-->
-<!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
