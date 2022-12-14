@@ -15,6 +15,7 @@ use S2low\Services\PdfValidator;
 class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 {
     public const QUEUE_NAME = "actes-analyze-fichier-a-envoyer";
+    public const PHEANSTALK_DELAY = 360;
 
     private $actes_appli_trigramme;
     private $actes_appli_quadrigramme;
