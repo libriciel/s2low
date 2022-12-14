@@ -61,7 +61,7 @@ class PDFStampWrapper
                     'logo' => array(
                         'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),
                         "width" =>  60,
-                        "marginRight" =>  30
+                        "marginRight" =>  20
                     )
                 ),
                 array(
