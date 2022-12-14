@@ -35,4 +35,6 @@ $zeBatch->set("user_id", $me->getId());
 
 $zeBatch->save();
 
-header("Location: " . Helpers::getLink("/modules/actes/actes_batch_manage_files.php?id=") . $zeBatch->getId());
+header("Content-Type: application/json");
+echo json_encode(["id" => $zeBatch->getId()]);
+exit();
