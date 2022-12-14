@@ -4,6 +4,7 @@
     <head>
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="robots" content="noindex">
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />

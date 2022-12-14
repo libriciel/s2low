@@ -57,21 +57,12 @@ class MailsecDownloadController extends Controller
                 mb_convert_encoding($filename, "ISO-8859-9", "UTF-8")
             );     // HACK Fix passage en utf-8!!
 
-            echo bin2hex("�") . "\n";
-            echo hex2bin("c3a9") . "\n";
-            echo "� :\t" . bin2hex("�") . "\n";
-            echo "� :\t" . bin2hex(iconv('IBM437', 'UTF-8', "�")) . "\n";
-            echo "filename :\t\t" . bin2hex($filename) . "\n";
-            echo "filenameInZip :\t" . bin2hex($filenameInZip) . "\n";
-
             $filepath = $tmp_folder . "/" . $filename;
             $contents = stream_get_contents($zipArchive->getStream($filenameInZip));
             file_put_contents(
                 $filepath,
                 $contents
             );
-
-            var_dump(scandir($tmp_folder));
         }
 
         $finfo = finfo_open(FILEINFO_MIME_TYPE | FILEINFO_MIME_ENCODING);
@@ -83,6 +74,7 @@ class MailsecDownloadController extends Controller
         header_wrapper("Content-Length: " . filesize($filepath));
         header_wrapper("Content-Disposition: attachment; filename=\"$filename\"");
         header_wrapper("Content-Description: File Transfert");
+        header_wrapper("X-Robots-Tag: noindex");
 
         readfile($filepath);
 

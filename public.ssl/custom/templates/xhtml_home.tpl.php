@@ -8,11 +8,11 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
     <head>
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="robots" content="noindex">
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
         <script src="<?php echo WEBSITE ?>/javascript/utils.js" type="text/javascript"></script>
-
         <?php echo $this->header ?>
     </head>
     <body>
