@@ -1,6 +1,7 @@
 # For all environnements except production
 services:
   db:
+    restart: unless-stopped
     image: registry.libriciel.fr/public/outils/postgres:14.5
     networks:
       - services
@@ -12,6 +13,7 @@ services:
       - ${POSTGRESQL_DATADIR:-db_datadir}:/var/lib/postgresql/data
 
   simulateur:
+    restart: unless-stopped
     image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3
     networks:
       - dgfip
@@ -27,6 +29,7 @@ services:
       MAIL_FROM: "dgcl@${MAILNAME:-mail}"
 
   ftp:
+    restart: unless-stopped
     image: hubdocker.libriciel.fr/mcreations/ftp:latest@sha256:e7ee07afb36cc3c14ec33036de211bf633b2c26d9e3d1ce19a018de81109e894
     networks:
       - dgfip
@@ -39,6 +42,7 @@ services:
       - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
 
   mail:
+    restart: unless-stopped
     image: registry.libriciel.fr/public/outils/imap-devel:1.1
     networks:
       - services
@@ -48,6 +52,7 @@ services:
       - MAIL_PASS=${ACTES_IMAP_PASSWORD:-password}
 
   mailsec:
+    restart: unless-stopped
     image: registry.libriciel.fr/public/outils/mail-master:2.1.0
     networks:
       - services
