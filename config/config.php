@@ -522,10 +522,6 @@ if (!defined('MAIL_SECURE_DESCRIPTION')) {
     define('MAIL_SECURE_DESCRIPTION', "ne-pas-repondre");
 }
 
-if (!defined('IMAP_SERVER')) {
-    define('IMAP_SERVER', 'mailsec');
-}
-
 if (!defined('MAIL_MESSAGE')) {
     define('MAIL_MESSAGE', "Vous avez reçu un courrier recommandé par S2LOW");
 }
