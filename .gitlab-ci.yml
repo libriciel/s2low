@@ -101,7 +101,7 @@ deploy_app:
         - mkdir -p ~/.ssh
         - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-        - scp ./docker-compose.simulateur.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
+        - scp ./docker-compose.test.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
         - echo "$DEV_ENV_FILE" > /tmp/.env
         - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
         - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"

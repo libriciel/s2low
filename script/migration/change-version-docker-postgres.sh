@@ -105,7 +105,7 @@ loginfo 'Toutes les informations sont récupérées. Passage au dump...'
 
 if [ ${DB_TEST_ENABLE} ]
 then
-    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f docker-compose.simulateur.yml -f docker-compose.dev.yml"
+    DOCKER_COMPOSE="${DOCKER_COMPOSE} -f docker-compose.test.yml -f docker-compose.dev.yml"
 fi
 
 # Dump de la base de données
@@ -150,8 +150,8 @@ docker exec -it ${CONTAINER_DB_NAME} psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} 
 loginfo 'Récupération des informations concernant le service db-test'
 if [ ${DB_TEST_ENABLE} ]
 then
-    POSTGRES_DBTEST=$(docker-compose -f docker-compose.dev.yml -f docker-compose.yml -f docker-compose.simulateur.yml config db_test | grep POSTGRES_DB | sed -e 's/POSTGRES_DB: //' | tr -d ' ')
-    POSTGRES_USERTEST=$(docker-compose -f docker-compose.dev.yml -f docker-compose.yml -f docker-compose.simulateur.yml config db_test | grep POSTGRES_USER | sed -e 's/POSTGRES_USER: //' | tr -d ' ')
+    POSTGRES_DBTEST=$(docker-compose -f docker-compose.dev.yml -f docker-compose.yml -f docker-compose.test.yml config db_test | grep POSTGRES_DB | sed -e 's/POSTGRES_DB: //' | tr -d ' ')
+    POSTGRES_USERTEST=$(docker-compose -f docker-compose.dev.yml -f docker-compose.yml -f docker-compose.test.yml config db_test | grep POSTGRES_USER | sed -e 's/POSTGRES_USER: //' | tr -d ' ')
     DIRPOSTGRESTEST=$(docker inspect ${CONTAINER_DBTEST_NAME} | jq '.[].Mounts[] | select(.Destination == "/var/lib/postgresql/data") | .Source' | sed -e 's/\"//g')
 
     logdebug "Postgres db : ${POSTGRES_DBTEST}"

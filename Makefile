@@ -2,7 +2,7 @@ DOCKER=docker
 PASTELL_PATH=/var/www/pastell
 EXEC_NODE=$(DOCKER) run --rm --volume ${PWD}:$(PASTELL_PATH) -it node:14-slim
 EXEC_COMPOSER=$(DOCKER) run --rm --volume ${PWD}:/app --volume ${HOME}/.composer:/tmp -it composer:2
-DOCKER_COMPOSE=docker compose -f docker-compose.yml -f docker-compose.simulateur.yml -f docker-compose.dev.yml
+DOCKER_COMPOSE=docker compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.dev.yml
 DOCKER_COMPOSE_EXEC=$(DOCKER_COMPOSE) exec web
 DOCKER_COMPOSE_UP=$(DOCKER_COMPOSE)  up -d
 

@@ -1,5 +1,16 @@
 # For all environnements except production
 services:
+  db:
+    image: registry.libriciel.fr/public/outils/postgres:14.5
+    networks:
+      - services
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-s2lowuserpg}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-s2lowpwdpg}
+      - POSTGRES_DB=${POSTGRES_DB:-s2lowdb}
+    volumes:
+      - ${POSTGRESQL_DATADIR:-db_datadir}:/var/lib/postgresql/data
+
   simulateur:
     image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3
     networks:
