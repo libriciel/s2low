@@ -69,7 +69,6 @@ services:
 
             ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN:-mail@s2low.docker.libriciel.net}
             ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
-            MAILNAME: ${MAILNAME:-mail}
 
             USE_LEGACY_BORDEREAU_MODEL: ${USE_LEGACY_BORDEREAU_MODEL-false}
             USE_LEGACY_SECURE_MAIL_FIELDS: ${USE_LEGACY_SECURE_MAIL_FIELDS-true}
