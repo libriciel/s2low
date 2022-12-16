@@ -351,4 +351,78 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $this->expectExceptionMessage("URL Pastell non configurée");
         $pastellWrapper->testConnexion();
     }
+
+    public function testgetModifDocumentInfoWithoutClassificationString()
+    {
+        $curlWrapperFactory = $this->getCurlWrapperFactory(
+            ''
+        );
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
+        $pastellProperties->id_e = 35;
+        $pastellProperties->login = "toto";
+
+        $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
+
+
+        $this->assertEquals(
+            $pastellWrapper->getModifDocumentInfo(
+                "1",
+                ['nature_code' => 4,
+                'number' => 12,
+                'subject' => 'test',
+                'decision_date' => '2018-10-22',
+                'classification' => '3.1']
+            ),
+            [
+                'id_e' => 35,
+                'id_d' => '1',
+                'acte_nature' => 4,
+                'numero_de_lacte' => 12,
+                'objet' => 'test',
+                'date_de_lacte' => '2018-10-22',
+                'classification' => '3.1',
+                'envoi_sae' => 1,
+                'has_bordereau' => 1
+            ]
+        );
+    }
+
+    public function testgetModifDocumentInfoWithClassificationString()
+    {
+        $curlWrapperFactory = $this->getCurlWrapperFactory(
+            ''
+        );
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
+        $pastellProperties->id_e = 35;
+        $pastellProperties->login = "toto";
+
+        $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
+
+
+        $this->assertEquals(
+            $pastellWrapper->getModifDocumentInfo(
+                "1",
+                ['nature_code' => 4,
+                    'number' => 12,
+                    'subject' => 'test',
+                    'decision_date' => '2018-10-22',
+                    'classification' => '3.1',
+                    'classification_string' => 'test'
+                ]
+            ),
+            [
+                'id_e' => 35,
+                'id_d' => '1',
+                'acte_nature' => 4,
+                'numero_de_lacte' => 12,
+                'objet' => 'test',
+                'date_de_lacte' => '2018-10-22',
+                'classification' => '3.1 - test',
+                'envoi_sae' => 1,
+                'has_bordereau' => 1
+            ]
+        );
+    }
 }

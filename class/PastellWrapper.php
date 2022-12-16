@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use S2lowLegacy\Class\actes\ClassificationString;
 use S2lowLegacy\Model\PastellProperties;
 
 class PastellWrapper
@@ -124,18 +125,8 @@ class PastellWrapper
         }
 
         $id_d = $result['id_d'];
-        $info = array(  'id_e' => $this->pastellProperties->id_e,
-                        'id_d' => $id_d,
-                        'acte_nature' => $transactionInfo['nature_code'],
-                        'numero_de_lacte' => $transactionInfo['number'],
-                        'objet' => $transactionInfo['subject'],
-                        'date_de_lacte' => date("Y-m-d", strtotime($transactionInfo['decision_date'])),
-                        'classification' => $transactionInfo['classification'],
-                        'envoi_sae' => 1,
-                        'has_bordereau' => 1
-        );
 
-        $this->callAPI("modif-document.php", $info);
+        $this->callAPI("modif-document.php", $this->getModifDocumentInfo($id_d, $transactionInfo));
         return $id_d;
     }
 
@@ -370,5 +361,27 @@ class PastellWrapper
     {
         $info = array('id_e' => $this->pastellProperties->id_e,'id_d' => $id_d,'action' => 'verif-sae');
         return $this->callAPI("action.php", $info);
+    }
+
+    /**
+     * @param mixed $id_d
+     * @param $transactionInfo
+     * @return array
+     */
+    public function getModifDocumentInfo(mixed $id_d, $transactionInfo): array
+    {
+        $classification = new ClassificationString($transactionInfo);
+
+        $info = array('id_e' => $this->pastellProperties->id_e,
+            'id_d' => $id_d,
+            'acte_nature' => $transactionInfo['nature_code'],
+            'numero_de_lacte' => $transactionInfo['number'],
+            'objet' => $transactionInfo['subject'],
+            'date_de_lacte' => date("Y-m-d", strtotime($transactionInfo['decision_date'])),
+            'classification' => $classification->get(),
+            'envoi_sae' => 1,
+            'has_bordereau' => 1
+        );
+        return $info;
     }
 }
