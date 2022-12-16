@@ -38,6 +38,7 @@ services:
 
 
     db_test:
+        restart: unless-stopped
         image: registry.libriciel.fr/public/outils/postgres:14.5
         networks:
           - services
@@ -51,6 +52,7 @@ services:
             - 15432:5432
 
     phppgadmin:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/keepitcool/phppgadmin:5.1
         networks:
           - services
@@ -63,6 +65,7 @@ services:
             - "${PHPPGADMIN_HTTP_PORT:-10001}:80"
 
     beanstalkd-console:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/schickling/beanstalkd-console:latest@sha256:950c8120986b536f1cdc431e28c8b7d6e5bada2a038a6fb5119d32323d41a76f
         networks:
             - services
@@ -72,6 +75,7 @@ services:
             - beanstalkd:beanstalkd
 
     php-redis-admin:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/faktiva/php-redis-admin:latest@sha256:e7586bd4856fd462290cd1510110eacfd9edbc1944591e4d608e5ef804b302ee
         environment:
             - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
@@ -83,6 +87,7 @@ services:
             - services
 
     maildev:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/maildev/maildev:2.0.5
         networks:
             - services
@@ -90,6 +95,7 @@ services:
             - 1080:1080
 
     openstack:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/serverascode/swift-onlyone:latest@sha256:752d54d0e432c81b9aa6f3ef5e7c68945a798242b54a8ba016183cae3313dc55
         networks:
             - openstack

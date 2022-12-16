@@ -2,6 +2,7 @@ name: s2low
 
 services:
     web:
+        restart: unless-stopped
         image: registry.libriciel.fr:443/public/plateforme/s2low:canary
         networks:
           - openstack
@@ -105,11 +106,13 @@ services:
         user: "${UID:-33}:${GID:-33}"
 
     clamav:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/clamav/clamav:0.105
         networks:
           - services
 
     pades-valid:
+        restart: unless-stopped
         image: registry.libriciel.fr/public/outils/pades-valid:1.4.8
         networks:
           - services
@@ -118,12 +121,14 @@ services:
         mem_limit: 768M
 
     pdf-stamp:
+        restart: unless-stopped
         image: registry.libriciel.fr/public/signature/pdf-stamp:2.4.5
         networks:
           - services
         mem_limit: 512M
 
     redis:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/redis:7.0.4
         restart: always
         volumes:
@@ -133,6 +138,7 @@ services:
             - services
 
     beanstalkd:
+        restart: unless-stopped
         image: hubdocker.libriciel.fr/schickling/beanstalkd:latest@sha256:19a928e3563973219e44f6c29df2a71103c7db894692ae94b7d0760837877e73
         restart: always
         networks:
