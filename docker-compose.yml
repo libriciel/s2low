@@ -104,17 +104,6 @@ services:
             - /var/www/parapheur/libersign:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
         user: "${UID:-33}:${GID:-33}"
 
-    db:
-        image: registry.libriciel.fr/public/outils/postgres:14.5
-        networks:
-          - services
-        environment:
-            - POSTGRES_USER=${POSTGRES_USER:-s2lowuserpg}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-s2lowpwdpg}
-            - POSTGRES_DB=${POSTGRES_DB:-s2lowdb}
-        volumes:
-            - ${POSTGRESQL_DATADIR:-db_datadir}:/var/lib/postgresql/data
-
     clamav:
         image: hubdocker.libriciel.fr/clamav/clamav:0.105
         networks:
