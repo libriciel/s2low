@@ -75,9 +75,6 @@ define("MAILSEC_OPENSTACK_REGION","${MAILSEC_OPENSTACK_REGION}");
 define("MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX","${MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX}");
 
 
-
-define("IMAP_SERVER","${SMTP_SERVER:-mailsec}");
-
 #A vérifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
 define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
