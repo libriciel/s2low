@@ -25,6 +25,7 @@ class DataForBordereauPDF
      */
     private $broadcastEmails;
     private $addEmailNotificationField;
+    /** @var ClassificationString */
     private $classification;
     private $arch_url;
     private $typeDeTransaction;
@@ -62,7 +63,7 @@ class DataForBordereauPDF
             ["Date de la décision :",$this->dateDecision],
             ["Objet :",$this->objet],
             ["Documents papiers complémentaires :",$this->presenceDocPapier],
-            ["Classification matières/sous-matières :",$this->classification],
+            ["Classification matières/sous-matières :",$this->classification->get()],
             ["Identifiant unique :",$this->idUnique],
             ["URL d'archivage :",$this->arch_url],
             ["Notification :",$this->getNotifieA()]
@@ -121,14 +122,6 @@ class DataForBordereauPDF
         return "Non notifiée";
     }
 
-    public function setClassification($classification, $classificationString)
-    {
-        $this->classification = $classification;
-
-        if ($classificationString) {
-            $this->classification .= " - $classificationString";
-        }
-    }
 
     public function setDonneesTransaction(array $transactionComplement)
     {
@@ -140,10 +133,8 @@ class DataForBordereauPDF
         $this->broadcasted = $transactionComplement["broadcasted"];
         $this->broadcastEmails = $transactionComplement["broadcast_emails"];
 
-        $this->setClassification(
-            $transactionComplement["classification"],
-            $transactionComplement["classification_string"]
-        );
+        $this->classification = new ClassificationString($transactionComplement);
+
 
         $this->arch_url = $transactionComplement["archive_url"] ? : "Non définie";
         ;
