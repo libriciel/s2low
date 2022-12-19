@@ -71,8 +71,14 @@ services:
             MAILSEC_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION:-}
             MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
+            ACTES_TDT_MAIL_ADDRESS: ${ACTES_TDT_MAIL_ADDRESS:-s2low@s2low.docker.libriciel.fr}
             ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN:-mail@s2low.docker.libriciel.net}
             ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
+            ACTES_IMAP_HOST: ${ACTES_IMAP_HOST:-mail}
+            ACTES_IMAP_PORT: ${ACTES_IMAP_PORT:-143}
+
+            ACTES_APPLI_TRIGRAMME: ${ACTES_APPLI_TRIGRAMME:-abc}
+            ACTES_APPLI_QUADRIGRAMME: ${ACTES_APPLI_QUADRIGRAMME:-TACT}
 
             USE_LEGACY_BORDEREAU_MODEL: ${USE_LEGACY_BORDEREAU_MODEL-false}
             USE_LEGACY_SECURE_MAIL_FIELDS: ${USE_LEGACY_SECURE_MAIL_FIELDS-true}
@@ -130,7 +136,6 @@ services:
     redis:
         restart: unless-stopped
         image: hubdocker.libriciel.fr/redis:7.0.4
-        restart: always
         volumes:
             - ${REDIS_VOLUME:-redis_datadir}:/data
         command: redis-server --appendonly yes
@@ -140,7 +145,6 @@ services:
     beanstalkd:
         restart: unless-stopped
         image: hubdocker.libriciel.fr/schickling/beanstalkd:latest@sha256:19a928e3563973219e44f6c29df2a71103c7db894692ae94b7d0760837877e73
-        restart: always
         networks:
             - services
 networks:

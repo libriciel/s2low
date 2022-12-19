@@ -36,8 +36,12 @@ define("TDT_FROM_EMAIL","${TDT_FROM_EMAIL:-Tiers de télétransmission <s2low@s2
 
 define('ACTES_TDT_MAIL_ADDRESS', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
+define('ACTES_IMAP_PORT', "${ACTES_IMAP_PORT:-143}");
 define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
+
+define('ACTES_APPLI_TRIGRAMME', "${ACTES_APPLI_TRIGRAMME:-abc}");
+define('ACTES_APPLI_QUADRIGRAMME', "${ACTES_APPLI_QUADRIGRAMME:-TACT}");
 
 define("ACTES_OPENSTACK_AUTHENTICATION_URL_V3","${ACTES_OPENSTACK_AUTHENTICATION_URL_V3:-https://auth.cloud.ovh.net/v3}");
 define("ACTES_OPENSTACK_USERNAME","${ACTES_OPENSTACK_USERNAME}");
