@@ -417,8 +417,10 @@ $html .= ($mod) ? "Valider les modifications" : "Ajouter la collectivité";
 $html .= "</button></div>\n";
 $html .= "</form>\n";
 
+if ($me->isSuper()) {
+    $html .= "<div><a class=\"btn btn-primary\" href='admin_authority_sae.php?id=" . $id . "'>Configurer la connexion SAE »</a></div>";
+}
 
-$html .= "<div><a class=\"btn btn-primary\" href='admin_authority_sae.php?id=" . $id . "'>Configurer la connexion SAE »</a></div>";
 $html .= "<br/>";
 $html .= "<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=" . $id . "'>Configurer les numéros SIRET »</a></div>";
 
