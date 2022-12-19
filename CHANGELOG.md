@@ -16,19 +16,21 @@
 
 ## Suppression
 
-- les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT, 
+- les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT,
 OPENSIGN_TIMEOUT, ACTES_TYPE_PJ_IS_MANDATORY, DB_CLIENT_ENCODING, PHP_UNIT_AUTOLOADER, MODE, ETAT_CIVIL_FILES_UPLOAD_ROOT,
 IMAP_LOGIN, IMAP_PASS
 - les constantes suivantes ont été supprimées, car elles étaient dépréciées : VERIFICATION_SIREN
-- les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker : 
+- les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker :
 XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 # 4.3.19 - 2022-09-19
 
 ## Sécurité
+
 - Correction de failles de sécurité #799
 
 ## Correction
+
 - Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
 - Corriger la vérification des signatures avec une URI vide #825
 - Correction de l'affichage des options du traitement d'actes par lot #823
