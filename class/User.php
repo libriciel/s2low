@@ -563,6 +563,8 @@ class User extends DataObject
             return false;
         }
 
+        $new = !isset($this->id);
+
         if (! $this->db->begin()) {
             $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
             return false;
@@ -593,6 +595,16 @@ class User extends DataObject
                       $this->db->rollback();
                       return false;
                 }
+            }
+        }
+
+        // Reset login / Password
+        if (!$new && empty($this->login) && empty($this->password)) {
+            $sql = "UPDATE users SET login ='', password='' WHERE id = " . $this->id;
+            if (! $this->db->exec($sql)) {
+                $this->errorMsg = "Erreur lors du reset du login/mot de passe.";
+                $this->db->rollback();
+                return false;
             }
         }
 

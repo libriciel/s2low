@@ -122,6 +122,10 @@ class AdminUserController extends Controller
             $certificate_rgs_2_etoiles_clean_content = false;
         }
 
+        if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) { // Normalement, login devrait être vide ...
+            $login = '';                                       // On s'en assure pour éviter un doublon
+        }
+
         if ($this->userSQL->hasDoublon($user_id, $certificat_connexion_info, $login, $certificate_rgs_2_etoiles_clean_content)) {
             throw new Exception("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
         }
@@ -239,6 +243,10 @@ class AdminUserController extends Controller
             $him->set("password", password_hash($password, PASSWORD_DEFAULT));
         }
 
+        if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) {   // Normalement, login et password devraient être nulls ...
+            $him->set('login', '');                              // On les reset si on demande à changer de méthode d'authentification
+            $him->set('password', '');
+        }
 
         // Le groupe d'appartenance pour un administrateur de groupe
         if ($me->isSuper()) {
