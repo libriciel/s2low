@@ -21,6 +21,7 @@ class FtpServiceWrapper
 
     public function pasv($ftp, bool $pasv)
     {
+        ftp_set_option($ftp, FTP_USEPASVADDRESS, false);
         return ftp_pasv($ftp, $pasv);
     }
 
