@@ -90,7 +90,8 @@ $twig = new \Twig\Environment($loader);
 $html .= $twig->render('jfu.html.twig', [
     "userid" => $me->getId(),
     "batch_id" => '',
-    "actes_max_batch_upload_site" => ACTES_MAX_BATCH_UPLOAD_SIZE
+    "actes_max_batch_upload_site" => ACTES_MAX_BATCH_UPLOAD_SIZE,
+    "website_ssl" => WEBSITE_SSL
 ]);
 
 $html .=    "<script type=\"text/javascript\">\n";
