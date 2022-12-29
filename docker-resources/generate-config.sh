@@ -34,7 +34,7 @@ define("HELIOS_FTP_RESPONSE_SERVER_PATH","${HELIOS_FTP_RESPONSE_SERVER_PATH:-/so
 define("MAILER_DSN","${MAILER_DSN:-smtp://maildev:1025?verify_peer=0}");
 define("TDT_FROM_EMAIL","${TDT_FROM_EMAIL:-Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>}");
 
-define('ACTES_TDT_MAIL_ADDRESS', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
+define('ACTES_TDT_MAIL_ADDRESS', "${ACTES_TDT_MAIL_ADDRESS:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
 define('ACTES_IMAP_PORT', "${ACTES_IMAP_PORT:-143}");
 define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
