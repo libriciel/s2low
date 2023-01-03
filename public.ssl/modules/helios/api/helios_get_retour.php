@@ -12,9 +12,16 @@
  *
  */
 
+use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+list($cloudStorageFactory) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [CloudStorageFactory::class]
+    );
 
 $retourId = Helpers :: getVarFromGet("id");
 
@@ -60,6 +67,10 @@ try {
         $msg = "retour id n'est pas correcte";
         throw new Exception('KO');
     }
+
+    $pesRetourCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESRetourCloudStorage::class);
+    $pesRetourCloudStorage->getPath($retourId); // Permet de récupérer le fichier s'il est dans le cloud
+
     if (!$entity->sendfile($filename)) {
         $msg = "Erreur d'envoi du fichier " . HELIOS_RESPONSES_ROOT . $filename . " : " . $entity->getErrorMsg();
         throw new Exception('KO');
