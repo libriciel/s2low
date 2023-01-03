@@ -93,11 +93,14 @@ class OpenStackSwiftWrapper
                 throw new CloudStorageException("$filepath_on_cloud non trouvé dans $container_name");
             }
         }
-
         $stream = $containerWrapper->download($filepath_on_cloud);
 
         $this->fileSystem->dumpFile($filepath_local, $stream);
 
+        if (filesize($filepath_local) == 0) {
+            unlink($filepath_local);
+            throw new CloudStorageException("Erreur lors du téléchargement");
+        }
         $this->logger->info("Retrieve [$container_name] $filepath_on_cloud to $filepath_local");
     }
 
