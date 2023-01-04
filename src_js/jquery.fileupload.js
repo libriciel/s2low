@@ -52,14 +52,19 @@ $(function () {
         //singleFileUploads: false,
         acceptFileTypes: /(\.|\/)(pdf)$/i,
         submit: function (e, data) {
+            console.log("submit, jfu_batch_id "+$('#jfu_batch_id').val()+', jfu_batch_request '+$('#jfu_batch_request').val());
             // Si non, faire une demande de batch
             if($('#jfu_batch_id').val() != ''){   // Un requete a déja été faite
                 //TODO : comment vérifier les fichiers pour éviter les non-pdf??
+                console.log("Soumission OK, Batch "+$('#jfu_batch_id').val());
                 return true;
             }
-            if($('#jfu_batch_id').val() == ''){   // Aucune requete n'a été faite
+
+            if($('#jfu_batch_request').val() != 1 && $('#jfu_batch_id').val() == ''){   // Aucune requete n'est en cours ni finie
+                console.log("Soumission KO, aucune requete finie ");
                 //TODO : comment vérifier les fichiers pour éviter les non-pdf??
                 //TODO : bloquer le submit
+                $('#jfu_batch_request').val(1);
                 $.post('actes_batch_create.php',
                     {
                         description: $('#jfu_intitule').val(),
@@ -70,10 +75,17 @@ $(function () {
                         let text = "<a href ='"+link_to_batch+"' class=\"btn btn-primary\">Traiter le lot "+batch_id+"</a>";
                         $('#jfu_batch_id').val(result["id"]);
                         $('#jfu_batch_link').html(text);
+                        $('#jfu_batch_request').val(0);
                         // TODO : débloquer le submit
                         data.submit();
                     }
                 );
+                return false;
+            }
+
+            if($('#jfu_batch_request').val() == 1){                      // Une requete est en cours
+                console.log("Soumission KO, requete en cours");
+                setTimeout(()=>{data.submit();},"1000");     // On resoumet plus tard
                 return false;
             }
         }
