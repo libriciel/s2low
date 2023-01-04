@@ -110,4 +110,10 @@ define("USE_LEGACY_BORDEREAU_MODEL",${USE_LEGACY_BORDEREAU_MODEL:-true});
 define("USE_LEGACY_SECURE_MAIL_FIELDS",${USE_LEGACY_SECURE_MAIL_FIELDS:-true});
 define("MAIL_TEDETIS_FROM","${MAIL_TEDETIS_FROM:-s2low@s2low.docker.libriciel.fr}");
 define("MAIL_SECURE_DESCRIPTION","${MAIL_SECURE_DESCRIPTION}");
+define("MAIL_MESSAGE","${MAIL_MESSAGE:-Vous avez reçu un courrier recommandé par S2LOW}");
+define("MAIL_TEXT","${MAIL_TEXT:-Bonjour,
+
+Un courrier recommandé avec d’éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l’ADULLACT. 
+Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : 
+accés au courrier recommandé.}");
 EOF
