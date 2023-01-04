@@ -25,7 +25,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($modu
 }
 
 $description = Helpers::getVarFromPost("intitule");
-$num_prefix = Helpers::getVarFromPost("prefixe");
+$num_prefix = Helpers::getVarFromPost("num_prefix");
 
 $zeBatch = new ActesBatch();
 
