@@ -22,6 +22,7 @@ IMAP_LOGIN, IMAP_PASS
 - les constantes suivantes ont été supprimées, car elles étaient dépréciées : VERIFICATION_SIREN
 - les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker :
 XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
+- Desactive le lancement de l'export OCRE par supervisor
 
 # 4.3.19 - 2022-09-19
 
