@@ -15,6 +15,7 @@ class DatePicker
         $this->datePickerOptions["altField"] =  "#$name";
         if ($defaultDate) {
             $this->datePickerOptions["defaultDate"] = "new Date($defaultDate)";
+            $this->datePickerOptions["gotoCurrent"] = "true";
         } else {
             $this->inputDefaultValue = "value = \"Choisir une date\"";
         }
