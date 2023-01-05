@@ -31,7 +31,7 @@ fi;
 echo "Le certificat du site n'a pas été trouvé, on en génère un"
 
 V3_EXT_PATH=/tmp/$$_v3.ext
-sed "s/%PASTELL_HOST_NAME%/${SITE_HOST_NAME}/" ${SCRIPT_BASE}/v3.ext > ${V3_EXT_PATH}
+sed "s/%SITE_HOST_NAME%/${SITE_HOST_NAME}/" ${SCRIPT_BASE}/v3.ext > ${V3_EXT_PATH}
 
 
 CSR_TEMP_PATH=/tmp/$$_csr.pem

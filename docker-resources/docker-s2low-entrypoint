@@ -51,4 +51,12 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
   fi
 fi
 
+#Si la variable OPENSTACK_ENABLE n'existe pas il faut la définir sinon supervisor retournera une erreur
+#je sais ce que ça coute, pour mémoire https://stackoverflow.com/a/34212572
+if [ ! "${OPENSTACK_ENABLE}" ]
+then
+  echo '🚨 la variable OPENSTACK_ENABLE devrait être dans le docker-compose !'
+  export OPENSTACK_ENABLE=false
+fi
+
 exec "$@"
