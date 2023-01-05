@@ -340,12 +340,7 @@ $html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la dé
 
 $decision_date = Helpers :: getFromSession("decision_date");
 
-$date = "";
-if ($decision_date) {
-    $date = strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($decision_date));
-}
-
-$datePicker = new DatePicker("decision_date", $date);
+$datePicker = new DatePicker("decision_date", $decision_date);
 $html .= $datePicker->show();
 
 $document_papier_checked = Helpers :: getFromSession("document_papier") ? 'checked="checked"' : "";
