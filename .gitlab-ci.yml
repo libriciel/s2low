@@ -22,7 +22,7 @@ variables:
     POSTGRES_DB: s2lowdb
     POSTGRES_USER: s2lowuser
     POSTGRES_PASSWORD: s2lowpassword
-
+    PRODUCT: s2low
 build:
   stage: build
   tags:
@@ -83,55 +83,52 @@ quality:
     - cd /var/www/s2low
     - /sonar-scanner -Dsonar.login=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
 
-
 security_scan:
   allow_failure: true
   before_script:
     - cp .trivyignore /
 
+publish_container_to_registry:
+  before_script:
+    - date=$(date)
+    - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.txt
+    - sed -i "s/%BUILD_DATE%/$date/" ./manifest.txt
+    - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
+
+publish_to_nexus:
+  stage: deploy
+  only:
+    - tags
+  needs: [ "publish_container_to_registry" ]
+  variables:
+    DIRECTORY_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}
+    TARBALL_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}.tar.gz
+    PAYLOAD: "payload={\"text\": \"[S2low] Création de la version [$CI_COMMIT_REF_NAME](https://nexus.libriciel.fr/repository/ls-raw/public/plateforme/s2low/${TARBALL_NAME})\"}"
+  script:
+    - mkdir -p ${DIRECTORY_NAME}
+    - sed -e "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml >  ${DIRECTORY_NAME}/docker-compose.yml
+    - cp ./.env.dist ${DIRECTORY_NAME}/.env.dist
+    - tar cvzf ${TARBALL_NAME} ${DIRECTORY_NAME}
+    - curl -v -u ${REGISTRY_CONTAINER_USER}:${REGISTRY_CONTAINER_PASSWORD} --upload-file ${TARBALL_NAME} https://nexus.libriciel.fr/repository/ls-raw/public/plateforme/s2low/${TARBALL_NAME}
+    - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
+  artifacts:
+    paths:
+      - ${TARBALL_NAME}
+
 deploy_app:
-    stage: staging
-    only:
-        - master
-    variables:
-        PAYLOAD: "payload={\"text\": \"[s2low-5-0.dev.libriciel.net](https://s2low-5-0.dev.libriciel.net) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
-    script:
-        - eval $(ssh-agent -s)
-        - ssh-add <(echo "$SSH_PRIVATE_KEY")
-        - mkdir -p ~/.ssh
-        - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-        - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-        - scp ./docker-compose.test.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
-        - echo "$DEV_ENV_FILE" > /tmp/.env
-        - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-        - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
-        - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
-
-deploy_ftp:
-    stage: production
-    only:
-      - tags
-    image : "$CONTAINER_IMAGE"
-    services:
-        - name: registry.libriciel.fr/public/outils/postgres:14.5
-          alias: postgres
-
-    variables:
-        TARBALL_NAME: s2low-${CI_COMMIT_REF_NAME}.tar.gz
-        PAYLOAD: "payload={\"text\": \"[s2low] Création de la version [$CI_COMMIT_REF_NAME](http://ressources.libriciel.fr/s2low/s2low-${CI_COMMIT_REF_NAME}.tar.gz)\"}"
-        XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: s2lowuser
-        POSTGRES_PASSWORD_TEST: s2lowpassword
-        POSTGRES_DB_TEST: s2lowdb
-        POSTGRES_DATABASE_TEST: s2lowdb
-        POSTGRES_HOST_TEST: postgres
-        POSTGRES_HOST: postgres
-        S2LOW_WEBSITE: "localhost"
-    before_script:
-        - apt-get -qq update && apt-get -yqq install openssh-client lftp
-        - mkdir -p ~/.ssh
-        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    script:
-        - cd /var/www/ && tar cvzf /tmp/${TARBALL_NAME} s2low
-        - lftp -p 2222 -u "s2low","${RESSOURCE_LIBRICIEL_FTP_PASSWD}"  "sftp://ressources.libriciel.fr/s2low" -e "put /tmp/${TARBALL_NAME}"
-        - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
+  stage: staging
+  only:
+    - master
+  variables:
+    PAYLOAD: "payload={\"text\": \"[s2low-5-0.dev.libriciel.net](https://s2low-5-0.dev.libriciel.net) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
+  script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
+    - scp ./docker-compose.test.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
+    - echo "$DEV_ENV_FILE" > /tmp/.env
+    - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
+    - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
+    - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
