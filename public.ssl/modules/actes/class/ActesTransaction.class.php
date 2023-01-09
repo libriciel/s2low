@@ -368,15 +368,21 @@ class ActesTransaction extends DataObject
     public function getFluxRetour($status_id)
     {
         $sql = "SELECT flux_retour FROM actes_transactions_workflow" .
-                " WHERE transaction_id = " . $this->id .
-                " AND status_id = $status_id";
-        $result = $this->db->select($sql);
+                " WHERE transaction_id = ? AND status_id = ?";
 
-        if (!$result->isError()) {
-            $row = $result->get_next_row();
-            return $row["flux_retour"];
+        $pdo = $this->db->getPdo();
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$this->id,$status_id]);
+        $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
+        $stmt->fetch(PDO::FETCH_BOUND);
+        if (is_null($flux_retour)) {
+            return false;
         }
-        return false;
+        $flux_retour_contents = stream_get_contents($flux_retour);
+        fclose($flux_retour);
+
+        return $flux_retour_contents;
     }
 
   /**
