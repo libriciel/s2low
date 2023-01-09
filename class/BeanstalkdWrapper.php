@@ -22,8 +22,12 @@ class BeanstalkdWrapper
         $this->logger = $s2lowLogger;
     }
 
-    public function put($queue_name, $data, $delay = PheanstalkInterface::DEFAULT_DELAY)
-    {
+    public function put(
+        $queue_name,
+        $data,
+        $delay = PheanstalkInterface::DEFAULT_DELAY,
+        $ttr = PheanstalkInterface::DEFAULT_TTR
+    ) {
         $queue = "undefined";
         try {
             $queue = new Pheanstalk($this->beanstalkd_server, $this->beanstalkd_port);
@@ -31,7 +35,7 @@ class BeanstalkdWrapper
                 $data,
                 PheanstalkInterface::DEFAULT_PRIORITY,
                 $delay,
-                self::DEFAULT_TTR
+                $ttr
             );
         } catch (Exception $e) {
             $this->logger->critical(
