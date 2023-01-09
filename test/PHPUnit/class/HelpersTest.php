@@ -181,6 +181,11 @@ class HelpersTest extends TestCase
         $this->assertEquals("14 septembre 2015 à 07h22min42s", Helpers::getDateFromBDDDate("2015-09-14 07:22:42", true));
     }
 
+    public function testGetDateFromBDDBeginningOfYear()
+    {
+        $this->assertEquals("1 janvier 2022 à 00h00min00s", Helpers::getDateFromBDDDate("2022-01-01 00:00:00", true));
+    }
+
     public function testGetANSIDateFromBDDDate()
     {
         $this->assertEquals("2015-09-14", Helpers::getANSIDateFromBDDDate("2015-09-14 07:22:42"));

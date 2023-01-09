@@ -343,7 +343,7 @@ class Helpers
         if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
             $myDateTime = new DateTime();
             $myDateTime->setTimestamp($timestamp);
-            $pattern = "d MMMM YYYY";//"j F Y";
+            $pattern = "d MMMM yyyy";//"j F Y";
 
             if ($with_hours) {
                 $pattern = $pattern . " à " . "HH'h'mm'min'ss's'";
