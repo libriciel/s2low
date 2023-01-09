@@ -8,14 +8,23 @@ class DatePicker
     private array $datePickerOptions = ["altFormat" => 'yy-mm-dd',"dateFormat" => 'dd MM yy'];
     private string $inputDefaultValue = "";
 
+    private string $hidenInputDefaultValue = "";
 
-    public function __construct(string $name, string $defaultDate = null)
+
+    public function __construct(string $name, ?string $ansiDate = "")
     {
+        $dateInLetters = "";
+        if ($ansiDate) {
+            $dateInLetters = strftime("%d %B %Y", Helpers :: ansiDateToTimestamp($ansiDate));
+        }
+
         $this->name = $name;
         $this->datePickerOptions["altField"] =  "#$name";
-        if ($defaultDate) {
-            $this->datePickerOptions["defaultDate"] = "new Date($defaultDate)";
-            $this->datePickerOptions["gotoCurrent"] = "true";
+        if ($ansiDate) {
+            $this->inputDefaultValue = "value = \"$dateInLetters\"";
+            $this->hidenInputDefaultValue = "value = \"$ansiDate\"";
+            $this->datePickerOptions["defaultDate"] = "new Date($ansiDate)";
+            $this->datePickerOptions["gotoCurrent"] = true;
         } else {
             $this->inputDefaultValue = "value = \"Choisir une date\"";
         }
@@ -27,7 +36,7 @@ class DatePicker
         $datePickerName = "datepicker_$this->name";
         $html = "<script>$(function() {\$(\"#$datePickerName\").datepicker($options);});</script>";
         $html .= "<input type=\"text\" class=\"form-control\" $this->inputDefaultValue name=\"$datePickerName\" id=\"$datePickerName\">";
-        $html .= "<input type=\"hidden\" id=\"$this->name\" name=\"$this->name\" />\n";
+        $html .= "<input type=\"hidden\" id=\"$this->name\" name=\"$this->name\" $this->hidenInputDefaultValue />\n";
         return $html;
     }
 }
