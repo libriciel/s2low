@@ -51,21 +51,36 @@ class WorkerScript
 
     public function putJob(IWorker $IWorker, $data)
     {
-        return $this->beanstalkdWrapper->put($IWorker->getQueueName(), $data, $this->getDelay(get_class($IWorker)));
+        return $this->beanstalkdWrapper->put(
+            $IWorker->getQueueName(),
+            $data,
+            PheanstalkInterface::DEFAULT_DELAY,
+            $this->getTTR(get_class($IWorker))  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
+        );                                      // to process
     }
 
     public function putJobByClassName($workerClassName, $data)
     {
         /** @var IWorker $worker */
         $worker = $this->objectInstancier->get($workerClassName);
-        return $this->beanstalkdWrapper->put($worker->getQueueName(), $data, $this->getDelay($workerClassName));
+        return $this->beanstalkdWrapper->put(
+            $worker->getQueueName(),
+            $data,
+            PheanstalkInterface::DEFAULT_DELAY,
+            $this->getTTR($workerClassName)  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
+        );                                   // to process
     }
 
     //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
     // Evite d'avoir à l'instancier
     public function putJobByQueueName($queueName, $data)
     {
-        return $this->beanstalkdWrapper->put($queueName, $data, $this->getDelay($queueName));
+        return $this->beanstalkdWrapper->put(
+            $queueName,
+            $data,
+            PheanstalkInterface::DEFAULT_DELAY,
+            $this->getTTR($queueName)  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
+        );                             // to process
     }
 
     public function scriptByClassName($workerClassName, $log_enable_stdout = true, $force_old_school_script = false)
@@ -241,14 +256,14 @@ class WorkerScript
      * @param \S2lowLegacy\Class\IWorker $IWorker
      * @return int|string
      */
-    private function getDelay(string $IWorkerClassName): string|int
+    private function getTTR(string $IWorkerClassName): string|int
     {
         try {
-            $delay = $IWorkerClassName::PHEANSTALK_DELAY;
+            $delay = $IWorkerClassName::PHEANSTALK_TTR;
         } catch (Exception $exception) {
-            $delay = PheanstalkInterface::DEFAULT_DELAY;
+            $delay = PheanstalkInterface::DEFAULT_TTR;
         } catch (\Error $error) {
-            $delay = PheanstalkInterface::DEFAULT_DELAY;
+            $delay = PheanstalkInterface::DEFAULT_TTR;
         }
         return $delay;
     }
