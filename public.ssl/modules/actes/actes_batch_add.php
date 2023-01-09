@@ -63,6 +63,9 @@ $html .= $twig->render('batch_creator.html.twig', [
 
 $html .= "<script>
 $(document).ready(function(){
+    $('#jfu_batch_id').val('');     // RàZ des traces d'un éventuel batch
+    $('#jfu_batch_request').val(0); // et d'une éventuelle requête
+    
     $('#fileupload').css('display', 'none');
     
     $('#batchformsubmit').click(function() {
@@ -76,6 +79,7 @@ $(document).ready(function(){
             }
             $('#batchproperties input').attr('readonly', 'readonly');
             $('#batchformsubmit').prop('disabled',true);
+            $('#batchformsubmit').hide();
             $('#fileupload').css('display', 'contents');
     });
 });
