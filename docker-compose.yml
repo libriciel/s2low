@@ -72,7 +72,7 @@ services:
             MAILSEC_OPENSTACK_REGION: ${HELIOS_ACQUIT_OPENSTACK_REGION:-}
             MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX: ${HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX:-}
 
-            ACTES_TDT_MAIL_ADDRESS: ${ACTES_TDT_MAIL_ADDRESS:-s2low@s2low.docker.libriciel.fr}
+            ACTES_TDT_MAIL_ADDRESS: ${ACTES_TDT_MAIL_ADDRESS:-mail@s2low.docker.libriciel.net}
             ACTES_IMAP_LOGIN: ${ACTES_IMAP_LOGIN:-mail@s2low.docker.libriciel.net}
             ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
             ACTES_IMAP_HOST: ${ACTES_IMAP_HOST:-mail}
