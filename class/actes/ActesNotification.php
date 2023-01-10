@@ -185,11 +185,13 @@ class ActesNotification
         }
 
         $mailContent = $this->getMailContent($transactionInfo, $add_url_recup);
-
+        $mailText = $this->twig->render('mailtextenotificationacte.twig', $mailContent);
+        $mailHtml = $this->twig->render('mailnotificationacte.html.twig', $mailContent);
         $authority_info = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
-        $mailer->sendMail(
+        $mailer->sendMailWithHtml(
             "[{$authority_info['name']}] Notification concernant l'acte " . $transactionInfo['number'],
-            $mailContent
+            $mailText,
+            $mailHtml
         );
 
         $message_log =
@@ -210,7 +212,7 @@ class ActesNotification
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\LoaderError
      */
-    private function getMailContent($transaction_info, $add_url_recup): bool|string
+    private function getMailContent($transaction_info, $add_url_recup): array
     {
 
         $last_status_id = $transaction_info['last_status_id'];
@@ -223,7 +225,7 @@ class ActesNotification
 
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
 
-        return $this->twig->render('mailtextenotificationacte.twig', [
+        return [
             "last_status_id" => $last_status_id,
             "number" => $transaction_info['number'],
             "type" => $transaction_info['type'],
@@ -236,7 +238,7 @@ class ActesNotification
             "date" => $status_info['date'],
             "submission_date" => $envelope_info['submission_date'],
             "add_url_recup" => $add_url_recup
-        ]);
+        ];
     }
 
 
