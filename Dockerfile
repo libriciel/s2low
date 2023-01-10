@@ -31,9 +31,7 @@ ENV PATH="${PATH}:/var/www/s2low/vendor/bin/"
 COPY --chown=www-data:www-data ./ /var/www/s2low/
 RUN chown ${USERNAME}:${GROUPNAME} /var/www/s2low/
 
-#Ajoute droit d'execution sur script monitor ipsec
-RUN chmod +x /var/www/s2low/script/divers/ipsec-monitor.sh && \
-    ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
+RUN ln -s /var/www/parapheur/libersign /var/www/s2low/public.ssl/libersign
 
 USER "${USERNAME}"
 
