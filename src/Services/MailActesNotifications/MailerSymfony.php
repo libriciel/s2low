@@ -29,38 +29,7 @@ class MailerSymfony extends Mailer
      */
     public function sendMail($subject, $body)
     {
-        assert(!!$subject);
-        assert(!!$body);
-        assert(!!$this->recipients);
-
-        foreach ($this->recipients as $recipient) {
-            $email = (new Email())
-                ->from(TDT_FROM_EMAIL)
-                ->to($recipient)
-                ->subject($subject)
-                ->text($body);
-
-            foreach ($this->fichier as $file) {
-                if (filesize($file) < self::FILESIZE_LIMIT) {
-                    $email->attachFromPath($file);
-                }
-            }
-
-            foreach ($this->dataAsFile as $dataAsFile) {
-                $email->attach($dataAsFile['data'], $dataAsFile['filename'], 'application/octet-stream');
-            }
-            try {
-                $this->mailer->send($email);
-            } catch (TransportExceptionInterface $e) {
-                $this->lastError = "[TransportExceptionInterface] Erreur lors de l'envoi d'un message vers $recipient : " . $e->getMessage() ;
-                return false;
-            } catch (Exception $e) {
-                $this->lastError = "Erreur lors de l'envoi d'un message vers $recipient : " . $e->getMessage() ;
-                return false;
-            }
-        }
-
-        return true;
+        return $this->sendMailWithHtml($subject, $body);
     }
 
     public function addRecipient($recipient)
@@ -83,6 +52,51 @@ class MailerSymfony extends Mailer
         if ($domain == "localhost") {
             return false;
         }
+        return true;
+    }
+
+    /**
+     * @param $subject
+     * @param $body
+     * @return bool|void
+     */
+    public function sendMailWithHtml($subject, $body, $html = null)
+    {
+        assert(!!$subject);
+        assert(!!$body);
+        assert(!!$this->recipients);
+
+        foreach ($this->recipients as $recipient) {
+            $email = (new Email())
+                ->from(TDT_FROM_EMAIL)
+                ->to($recipient)
+                ->subject($subject)
+                ->text($body);
+
+            if (!is_null($html)) {
+                $email->html($html);
+            }
+
+            foreach ($this->fichier as $file) {
+                if (filesize($file) < self::FILESIZE_LIMIT) {
+                    $email->attachFromPath($file);
+                }
+            }
+
+            foreach ($this->dataAsFile as $dataAsFile) {
+                $email->attach($dataAsFile['data'], $dataAsFile['filename'], 'application/octet-stream');
+            }
+            try {
+                $this->mailer->send($email);
+            } catch (TransportExceptionInterface $e) {
+                $this->lastError = "[TransportExceptionInterface] Erreur lors de l'envoi d'un message vers $recipient : " . $e->getMessage();
+                return false;
+            } catch (Exception $e) {
+                $this->lastError = "Erreur lors de l'envoi d'un message vers $recipient : " . $e->getMessage();
+                return false;
+            }
+        }
+
         return true;
     }
 }

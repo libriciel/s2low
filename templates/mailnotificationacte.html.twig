@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <style>
+
+        *{
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            color: #333;
+        }
+
+        #main{
+            max-width: 600px;
+            padding: 20px 30px;
+            margin: auto;
+            background-color: rgba(50, 51, 141, 0.05);
+        }
+
+        body a{
+            color: #55bad6;
+            text-decoration: underline;
+        }
+
+
+        body h1{
+            margin:0;
+            color: #32338f;
+        }
+
+        body hr{
+            border-color: rgba(50, 51, 141, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <h1>    {% if last_status_id == -1 %}
+                L'acte de référence interne {{ number }} est en erreur.
+            {% elseif type == 1 %}
+                L'acte de référence interne {{ number }} a été acquitté sous l'identifiant unique {{ unique_id }}.
+            {% elseif type == 3 and last_status_id == 4 %}
+                L'envoi de pièces complémentaires (ou du refus explicite) concernant l'actes {{ number }} a été acquitté.
+            {% elseif type == 4 and last_status_id == 4 %}
+                L'envoi de la lettre d'observation (ou du refus de réponse) concernant l'actes {{ number }} a été acquitté.
+            {% elseif type == 6 and last_status_id == 4 %}
+                L'annulation de l'acte {{ number }} a été acquittée.
+            {% else %}
+                Réception de document pour l'acte  {{ number }}
+            {% endif %}</h1>
+    <hr>
+    <div>
+
+        <table>
+            <tbody>
+            <tr>
+                <td> Nature de l'Acte</td>
+                <td>{{ nature_descr }}</td>
+            </tr>
+            <tr>
+                <td> Objet</td>
+                <td>{{ subject }}</td>
+            </tr>
+            <tr>
+                <td> Décision du</td>
+                <td>{{ decision_date }}</td>
+            </tr>
+            <tr>
+                <td>Transmise le</td>
+                <td>{{ submission_date }}</td>
+            </tr>
+            {% if last_status_id == 4 %}
+                <tr>
+                    <td>Accusé reçu le</td>
+                    <td>{{ date }}</td>
+                </tr>
+            {% elseif last_status_id != -1 %}
+                <tr>
+                    <td>Document reçu le</td>
+                    <td>{{ date }}</td>
+                </tr>
+            {% endif %}
+            {% if add_url_recup and last_status_id != -1 %}
+                <tr>
+                    <td>URL pour récupérer les fichiers</td>
+                    <td><a href = "{{ url }}">{{ url }}</a></td>
+                </tr>
+            {% endif %}
+            {% if archive_url %}
+                <tr>
+                    <td>Archive disponible sur</td>
+                    <td><a href = "{{ archive_url }}">{{ archive_url }}</a></td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+            <p></p>
+        <p>Information de sécurité : tous les documents ont été testés par l'anti-virus CLAMAV.</p>
+        <p>Pour toute demande d'information, vous pouvez contacter l'expéditeur précisé dans le contenu du message sur la
+            plateforme sécurisée.</p>
+        <p>Ce mail vous est envoyé automatiquement par s²low.</p>
+    </div>
+</div>
+</body>
+</html>

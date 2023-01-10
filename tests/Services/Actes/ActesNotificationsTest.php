@@ -117,7 +117,7 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
     public function testNotifyWithWrongZipWillSendMailAnyway()
     {
         copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
-        $this->mailer->expects($this->exactly(3))->method('sendMail');
+        $this->mailer->expects($this->exactly(3))->method('sendMailWithHtml');
 
         $this->actesNotification->sendAutomaticNotification();
     }
