@@ -150,6 +150,18 @@ class AdminUserControllerTest extends S2lowTestCase
         $this->adminUserController->doEditAction();
     }
 
+    public function testPasswordsDontMatchButCertOnly()
+    {
+        $this->setDataOk();
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('password', 'ku9eiBae');
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('password', 'Ce6vohya');
+        $this->getObjectInstancier()->get(Environnement::class)->post()->set('auth_method', UserSQL::IDENT_METHOD_CERT_ONLY);
+        $_POST['password'] = "ku9eiBae";
+        $_POST['password2'] = "Ce6vohya";
+        $this->adminUserController->doEditAction();
+        $this->noAssertion();
+    }
+
     public function testNoConnexionCertificate()
     {
         $this->setDataOk();

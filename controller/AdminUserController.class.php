@@ -174,6 +174,18 @@ class AdminUserController extends Controller
         $authority_group_id = $this->getEnvironnement()->post()->get('authority_group_id');
         Helpers::putInSession("authority_group_id", $authority_group_id);
 
+        $new_id = $this->getEnvironnement()->post()->get('new_id');
+        Helpers::putInSession("new_id", $new_id);
+
+        $auth_method = $this->getEnvironnement()->post()->get('auth_method');
+        Helpers::putInSession("auth_method", $auth_method);
+
+        if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) {      // Normalement, login et password devraient être vides ...
+            $this->getEnvironnement()->post()->set('login', '');
+            $this->getEnvironnement()->post()->set('password', ''); // On les reset au cas ou il y a un effet de cache du nav.
+            $this->getEnvironnement()->post()->set('password2', '');
+        }
+
         $login = $this->getEnvironnement()->post()->get('login');
         Helpers::putInSession("login", $login);
 
@@ -182,12 +194,6 @@ class AdminUserController extends Controller
 
         $password2 = $this->getEnvironnement()->post()->get('password2');
         Helpers::putInSession("password2", $password2);
-
-        $new_id = $this->getEnvironnement()->post()->get('new_id');
-        Helpers::putInSession("new_id", $new_id);
-
-        $auth_method = $this->getEnvironnement()->post()->get('auth_method');
-        Helpers::putInSession("auth_method", $auth_method);
 
         $certificate = $_FILES['certificate'] ?? [];
 
@@ -243,9 +249,9 @@ class AdminUserController extends Controller
             $him->set("password", password_hash($password, PASSWORD_DEFAULT));
         }
 
-        if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) {   // Normalement, login et password devraient être nulls ...
-            $him->set('login', '');                              // On les reset si on demande à changer de méthode d'authentification
-            $him->set('password', '');
+        if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) {
+            $him->set('login', '');                              // On reset login et password si on demande à changer
+            $him->set('password', '');                           // de méthode d'authentification
         }
 
         // Le groupe d'appartenance pour un administrateur de groupe
