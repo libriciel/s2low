@@ -75,6 +75,6 @@ if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name
     $msg .= "\nErreur de journalisation.";
 }
 
-$workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id);
+$workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 
 Helpers :: returnAndExit(0, "Préparation de la télétransmission réusssie.", Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
