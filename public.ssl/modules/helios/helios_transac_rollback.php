@@ -29,9 +29,9 @@ $transactionSQL->setInfoFromPESAller($id, array(
     'id_post' => null
 ));
 
-
+/** @var WorkerScript $workerScript */
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $id);
+$workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 
 
 $_SESSION['error'] = $message;
