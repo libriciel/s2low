@@ -94,3 +94,4 @@ chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/ssl/certs/
 
 mkdir /var/run/htmlpurifier/
+chown -R "${USERNAME}":"${GROUPNAME}" /var/run/htmlpurifier/

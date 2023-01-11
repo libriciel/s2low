@@ -1,28 +1,34 @@
 #! /bin/bash
 
 # Création de l'arborescence du workspace
-mkdir -p /data/tdt-workspace/actes && \
-mkdir -p /data/tdt-workspace/helios && \
-mkdir -p /data/tdt-workspace/mail && \
-mkdir -p /data/tdt-workspace/uploads && \
-mkdir -p /data/tdt-workspace/dia && \
-mkdir -p /data/tdt-workspace/actes/uploads && \
-mkdir -p /data/tdt-workspace/actes/batchs && \
-mkdir -p /data/tdt-workspace/actes/response_tmp && \
-mkdir -p /data/tdt-workspace/actes/response_error && \
-mkdir -p /data/tdt-workspace/helios/sending-tmp && \
-mkdir -p /data/tdt-workspace/helios/sending && \
-mkdir -p /data/tdt-workspace/helios/response && \
-mkdir -p /data/tdt-workspace/helios/response_tmp && \
-mkdir -p /data/tdt-workspace/helios/response_error && \
-mkdir -p /data/tdt-workspace/helios/orphelins && \
-mkdir -p /data/tdt-workspace/helios/temp && \
-mkdir -p /data/tdt-workspace/helios/ocre && \
-mkdir -p /data/tdt-workspace/logs-export && \
-mkdir -p /data/tdt-workspace/uploads/etat_civil && \
+DIRECTORIES=("/data/tdt-workspace/actes" \
+"/data/tdt-workspace/helios" \
+"/data/tdt-workspace/mail" \
+"/data/tdt-workspace/uploads" \
+"/data/tdt-workspace/dia" \
+"/data/tdt-workspace/actes/uploads" \
+"/data/tdt-workspace/actes/batchs" \
+"/data/tdt-workspace/actes/response_tmp" \
+"/data/tdt-workspace/actes/response_error" \
+"/data/tdt-workspace/helios/sending-tmp" \
+"/data/tdt-workspace/helios/sending" \
+"/data/tdt-workspace/helios/response_tmp" \
+"/data/tdt-workspace/helios/response" \
+"/data/tdt-workspace/helios/response_error" \
+"/data/tdt-workspace/helios/orphelins" \
+"/data/tdt-workspace/helios/temp" \
+"/data/tdt-workspace/helios/ocre" \
+"/data/tdt-workspace/logs-export" \
+"/data/tdt-workspace/uploads/etat_civil" \
+"/data/log/apache2/" \
+"/var/run/htmlpurifier/")
 
-chown -R "${USERNAME}":"${GROUPNAME}" /data/tdt-workspace/
+echo "Création/modification des répertoires nécessaires "$(id -u):$(id -g)
 
-mkdir -p /data/log/apache2/
+for DIRECTORY in ${DIRECTORIES[@]};
+do
+  echo "Traitement de $DIRECTORY"
+  mkdir -p $DIRECTORY
+  chown $(id -u):$(id -g) $DIRECTORY
+done
 
-mkdir -p /var/run/htmlpurifier/
