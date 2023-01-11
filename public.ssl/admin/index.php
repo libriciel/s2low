@@ -107,7 +107,8 @@ ob_start();
                 <td>Actes transmis depuis plus de 4 heures</td>
                 <td><span class="label label-<?php echo $nb_actes_transmis_4hours_before ? "danger" : "success" ?>"><?php echo $nb_actes_transmis_4hours_before ?></span></td>
                 <td>
-                    <a href="/modules/actes/index.php?status=<?php echo 3 ?>" class="icon">
+                    <?php $maxSubmissionDate = (new DateTime())->modify('-4 hours')->format("Y-m-dTh:m:s")?>
+                    <a href="/modules/actes/index.php?status=<?php echo 3 ?>&max_submission_date=<?php echo $maxSubmissionDate?>" class="icon">
                         Liste
                     </a>
                 </td>
