@@ -13,6 +13,12 @@
 ## Correction
 
 - CHANGELOG : corrections sur les sauts de lignes sous les (sous-)titres (markdownlint MD032)
+- Le libellé a été ajouté à la classification envoyée vers pastell #807
+- Téléchargement depuis le cloud si un PES retour demandé par API n'est pas présent en local #709
+- Prise en compte de l'erreur de téléchargement depuis le cloud résultant en un fichier vide #819
+- Ajout d'un noindex sur toutes les pages pour éviter l'indexation par les moteurs de recherche #875
+- Permettre de mettre des espaces dans la recherche des collectivité par SIREN #867
+- Prise en compte du délai de 4 heures dans le lien "Actes transmis depuis plus de 4 heures" de la console d'administration #852
 
 ## Suppression
 
