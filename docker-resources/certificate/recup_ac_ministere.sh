@@ -40,8 +40,8 @@ ln -sfn "$DIR1"/serveur-1e.pem
 c_rehash .
 
 
-echo "Ajout des AC du Ministère dans /etc/ssl/certs"
-cd /etc/ssl/certs
-ln -sfn "$DIR1"/ac-racine-mi.pem
-ln -sfn "$DIR1"/serveur-1e.pem
-c_rehash .
+# echo "Ajout des AC du Ministère dans /etc/ssl/certs"
+# cd /etc/ssl/certs
+# ln -sfn "$DIR1"/ac-racine-mi.pem
+# ln -sfn "$DIR1"/serveur-1e.pem
+# c_rehash .

@@ -192,6 +192,10 @@ if (! defined("EXTENDED_VALIDCA_PATH")) {
     define("EXTENDED_VALIDCA_PATH", "/etc/s2low/ssl/validca/");
 }
 
+//Emplacement où se trouve les AC de /etc/ssl/certs et celles du Ministere
+if (! defined("TRUSTSTORE_PATH")) {
+    define("TRUSTSTORE_PATH", "/data/certificate/truststore/");
+}
 
 //Permet de définir le nombre de mois pendant lequelle un enregistrement est gardé dans la table logs avant
 //d'être déposé dans la table logs_historique
