@@ -61,6 +61,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
         $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
         $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
+        $this->getObjectInstancier()->set('trustore_path', TRUSTSTORE_PATH);
         $this->getObjectInstancier()->set('redis_server', 'localhost');
         $this->getObjectInstancier()->set('redis_port', 6379);
 

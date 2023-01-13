@@ -9,11 +9,14 @@ use S2lowLegacy\Lib\X509Certificate;
 class ActesFileSender
 {
     private $actesMinistereProperties;
+    private string $truststorePath;
 
     public function __construct(
-        ActesMinistereProperties $actesMinistereProperties
+        ActesMinistereProperties $actesMinistereProperties,
+        $trustore_path
     ) {
         $this->actesMinistereProperties = $actesMinistereProperties;
+        $this->truststorePath = $trustore_path;
     }
 
     public function send($filepath)
@@ -25,6 +28,7 @@ class ActesFileSender
         if (mb_substr($url, 0, 5) == 'https') {
             $curlWrapper->setProperties(CURLOPT_SSL_VERIFYHOST, 0);
             $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
+            $curlWrapper->setProperties(CURLOPT_CAPATH, $this->truststorePath);
         }
 
         if ($this->actesMinistereProperties->authentification_type == ActesMinistereProperties::AUTHENTICATION_POST) {

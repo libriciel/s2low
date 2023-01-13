@@ -298,6 +298,10 @@ services:
     arguments:
       $root_workspace_path: "todo"
 
+  S2lowLegacy\Class\actes\ActesFileSender:
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
+
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
       $actes_response_tmp_local_path: "todo"
