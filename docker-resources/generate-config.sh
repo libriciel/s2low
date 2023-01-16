@@ -9,6 +9,7 @@ cat <<EOF
 
 define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}${S2LOW_URL_PATH:-}/");
 define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}${S2LOW_URL_PATH:-}/");
+define("OPERATEUR_DE_TELETRANSMISSION","${OPERATEUR_DE_TELETRANSMISSION:-Libriciel SCOP}");
 define("IMAGE_FOR_STAMP","${IMAGE_FOR_STAMP:-/var/www/s2low/public.ssl/custom/images/s2low-stamp.png}");
 define('DB_HOST', "${POSTGRES_HOST:-db}");
 define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
@@ -43,6 +44,7 @@ define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
 define('ACTES_APPLI_NAME', "${ACTES_APPLI_NAME:-TACT}");
 define('ACTES_APPLI_TRIGRAMME', "${ACTES_APPLI_TRIGRAMME:-abc}");
 define('ACTES_APPLI_QUADRIGRAMME', "${ACTES_APPLI_QUADRIGRAMME:-TACT}");
+define('ACTES_MAIL_BACKUP', "${ACTES_MAIL_BACKUP:-}");
 
 define('ACTES_MINISTERE_URL', "${ACTES_MINISTERE_URL:-http://simulateur/Simulateur/actesPost}");
 define('ACTES_MINISTERE_AUTHENTICATION', "${ACTES_MINISTERE_AUTHENTICATION:-NONE}");

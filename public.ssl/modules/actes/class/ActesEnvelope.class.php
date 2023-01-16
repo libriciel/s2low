@@ -312,7 +312,7 @@ class ActesEnvelope extends DataObject
             foreach ($emails as $email) {
                 $xml .= "  <actes:Email>" . $email . "</actes:Email>\n";
             }
-            if (defined("ACTES_MAIL_BACKUP")) {
+            if (defined("ACTES_MAIL_BACKUP") && !empty(ACTES_MAIL_BACKUP)) {
                 $xml .= "  <actes:Email>" . ACTES_MAIL_BACKUP . "</actes:Email>\n";
             }
             $xml .= " </actes:AdressesRetour>\n";
