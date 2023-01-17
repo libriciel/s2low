@@ -31,6 +31,13 @@ class ActesFileSender
             $curlWrapper->setProperties(CURLOPT_CAPATH, $this->truststorePath);
         }
 
+        if ($this->actesMinistereProperties->adapt_protocol) {
+            $curlWrapper->setProperties(
+                CURLOPT_SSL_CIPHER_LIST,
+                'DEFAULT@SECLEVEL=0 !LOW !MEDIUM !RC4 !aNULL !eNULL !LOW !MD5 !EXP AES256-SHA '
+            );
+        }
+
         if ($this->actesMinistereProperties->authentification_type == ActesMinistereProperties::AUTHENTICATION_POST) {
             $url .= "?user={$this->actesMinistereProperties->login}&password={$this->actesMinistereProperties->password}";
         }

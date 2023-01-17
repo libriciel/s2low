@@ -183,6 +183,7 @@ class LegacyObjectsManager
         $actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
         $actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
         $actesMinistereProperties->server_certificate_path = ACTES_MINISTERE_SERVER_CERTIFICATE_PATH;
+        $actesMinistereProperties->adapt_protocol = ACTES_MINISTERE_ADAPT_PROTOCOL;
         $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
         $actesImapProperties = new ActesImapProperties();
