@@ -20,4 +20,6 @@ class ActesMinistereProperties
     public $client_certificate_key_password;
 
     public $server_certificate_path;
+
+    public $adapt_protocol;
 }
