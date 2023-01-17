@@ -71,7 +71,7 @@ if ($status !== false) {
     echo "OK\n" . $status . "\n";
     echo $zeTrans->getFluxRetour($status);
     if ($status == -1) {
-        echo $zeTrans->getCurrentMesssage();
+        echo mb_convert_encoding($zeTrans->getCurrentMesssage(), 'ISO-8859-1');
     }
 } else {
     echo "KO\nErreur consultation statut.";
