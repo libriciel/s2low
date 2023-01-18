@@ -41,6 +41,10 @@ chown -R "${USERNAME}":"${GROUPNAME}" /etc/apache2/ssl/
 
 mkdir -p /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
+mkdir -p /etc/s2low/ssl/validca
+chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/validca
+mkdir -p /etc/s2low/ssl/validcargs
+chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/validcargs
 
 mkdir -p /data/{config,tdt-workspace,log,run,lock,certificate}
 mkdir -p /data/certificate/truststore

@@ -179,11 +179,19 @@ if (!defined("XMLSEC1_PATH")) {
     define("XMLSEC1_PATH", "/usr/bin/xmlsec1");
 }
 
+if (! defined("ALWAYS_USE_EXTENDED_VALIDCA")) {
+    define("ALWAYS_USE_EXTENDED_VALIDCA", true);
+}
+
 //Emplacement d'un répertoire contenant le "hasher" des autorités de certification RGS
 //voir "man c_rehash" pour le "hasher"
 //Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
 if (! defined("RGS_VALIDCA_PATH")) {
-    define("RGS_VALIDCA_PATH", "/etc/s2low/ssl/validca/");
+    $pathToRgsValidca = "/etc/s2low/ssl/validcargs/";
+    if (ALWAYS_USE_EXTENDED_VALIDCA) {
+        $pathToRgsValidca = "/etc/s2low/ssl/validca/";
+    }
+    define("RGS_VALIDCA_PATH", $pathToRgsValidca);
 }
 
 //Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
