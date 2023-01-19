@@ -181,9 +181,9 @@ class Helpers
             }
 
             if ($apiMsg) {
-                echo $apiMsg . "\n";
+                echo mb_convert_encoding($apiMsg, 'ISO-8859-1') . "\n";
             } elseif (! empty($msg)) {
-                hecho($msg . "\n");
+                echo mb_convert_encoding(get_hecho($msg), 'ISO-8859-1') . "\n";
             }
         } else {
             if ($redirect) {
