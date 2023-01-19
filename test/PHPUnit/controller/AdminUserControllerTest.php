@@ -84,7 +84,7 @@ class AdminUserControllerTest extends S2lowTestCase
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', 1);
         $_POST['api'] = 1;
         $this->setExpectedException("Exception", "Aucune information de certificat trouvée");
-        $this->expectOutputRegex("#KO\nAucune information de certificat trouvée#");
+        $this->expectOutputRegex(utf8_decode("#KO\nAucune information de certificat trouvée#"));
         $this->adminUserController->doEditAction();
     }
 
