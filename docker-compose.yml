@@ -105,7 +105,8 @@ services:
 
             ACTES_ALWAYS_CAN_VALIDATE: ${ACTES_ALWAYS_CAN_VALIDATE:-false}
 
-            APP_ENV: prod
+            APP_ENV: ${APP_ENV:-prod}
+            APP_DEBUG: ${APP_DEBUG:-false}
 
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace

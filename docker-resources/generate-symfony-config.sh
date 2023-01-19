@@ -1,0 +1,10 @@
+#! /bin/bash
+set -e
+
+# Utiliser pour creer un fichier de settings symfony en fonction des variables d'environnement (envoye par Docker)
+#TODO : integrer les variables WEB_HTTP_PORT et WEB_HTTPS_PORT
+
+cat <<EOF
+APP_ENV=${APP_ENV:-test}
+APP_DEBUG=${APP_DEBUG:-true}
+EOF
