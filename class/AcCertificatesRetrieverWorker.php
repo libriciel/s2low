@@ -6,6 +6,7 @@ class AcCertificatesRetrieverWorker implements IWorker
 {
     public const QUEUE_NAME = 'certificates-retriever';
     private const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
+    private const COMMAND_APACHE = "apachectl graceful";
 
     public function __construct(S2lowLogger $logger)
     {
@@ -50,6 +51,11 @@ class AcCertificatesRetrieverWorker implements IWorker
         }
         foreach ($output as $outputLine) {
             $this->logger->$logger($outputLine);
+        }
+        if ($logger == "info") {
+            $outputApache = null;
+            $retvalApache = null;
+            exec(self::COMMAND_APACHE, $output, $retval);
         }
     }
 
