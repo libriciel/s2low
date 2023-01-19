@@ -2,8 +2,9 @@
 set -e
 
 # TODO vérification de l'installation de composer ?
-
+echo "Génération des fichiers de configuration"
 /bin/bash /var/www/s2low/docker-resources/generate-config.sh > /data/config/DockerSettings.php
+/bin/bash /var/www/s2low/docker-resources/generate-symfony-config.sh > /data/config/.env
 
 /bin/bash /var/www/s2low/docker-resources/create-directory-structure.sh
 
