@@ -23,6 +23,7 @@ variables:
     POSTGRES_USER: s2lowuser
     POSTGRES_PASSWORD: s2lowpassword
     PRODUCT: s2low
+
 build:
   stage: build
   tags:
@@ -31,6 +32,19 @@ build:
     - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --target s2low_dev --pull -t ${CONTAINER_IMAGE} .
+    - docker push ${CONTAINER_IMAGE}
+
+# Utiliser lors de la pose d'un tag pour que la construction n'utilise pas le cache
+build_no_cache:
+  stage: build
+  only:
+    - tags
+  tags:
+    - docker-build
+  script:
+    - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
+    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
+    - docker build --no-cache --target s2low_dev --pull -t ${CONTAINER_IMAGE} .
     - docker push ${CONTAINER_IMAGE}
 
 lint:
