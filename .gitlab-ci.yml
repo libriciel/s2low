@@ -1,8 +1,8 @@
 include:
 
   - project: "libriciel/integration-continue/templates"
-    ref: master
-    file: '/publish-container-to-registry.yml'
+    ref: publish-container-to-registry-1.2.0
+    file: 'jobs/publish-container-to-registry/publish-container-to-registry.yml'
 
   - project: "libriciel/integration-continue/templates"
     ref: master
@@ -26,6 +26,8 @@ variables:
 
 build:
   stage: build
+  except:
+    - tags
   tags:
     - docker-build
   script:
@@ -102,7 +104,7 @@ security_scan:
   before_script:
     - cp .trivyignore /
 
-publish_container_to_registry:
+publish-container-to-registry:
   before_script:
     - date=$(date)
     - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.txt
@@ -113,7 +115,7 @@ publish_to_nexus:
   stage: deploy
   only:
     - tags
-  needs: [ "publish_container_to_registry" ]
+  needs: [ "publish-container-to-registry" ]
   variables:
     DIRECTORY_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}
     TARBALL_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}.tar.gz
