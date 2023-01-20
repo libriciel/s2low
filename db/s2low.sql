@@ -75,7 +75,8 @@ CREATE TABLE actes_classification_requests (
     request_date timestamp with time zone,
     requested_by integer,
     version_date timestamp with time zone,
-    xml_data bytea
+    xml_data bytea,
+    xml_data_texte text
 );
 CREATE TABLE actes_envelope_serials (
     id integer DEFAULT nextval('actes_envelope_serials_id_seq'::regclass) NOT NULL,
@@ -157,7 +158,8 @@ CREATE TABLE actes_transactions_workflow (
     status_id integer,
     date timestamp with time zone,
     message character varying(512),
-    flux_retour bytea
+    flux_retour bytea,
+    flux_retour_texte text
 );
 CREATE TABLE actes_transmission_window_hours (
     id integer DEFAULT nextval('actes_transmission_window_hours_id_seq'::regclass) NOT NULL,
@@ -562,37 +564,37 @@ ALTER TABLE mail_errors ADD CONSTRAINT mail_errors_pkey PRIMARY KEY (id);
 ALTER TABLE users_perms ADD CONSTRAINT users_perms_pkey PRIMARY KEY (id);
 ALTER TABLE mail_transaction ADD CONSTRAINT mail_transaction_pkey PRIMARY KEY (id);
 ALTER TABLE logs ADD CONSTRAINT logs_pkey PRIMARY KEY (id);
-ALTER TABLE actes_status ADD CONSTRAINT actes_status_pkey PRIMARY KEY (id);
 ALTER TABLE actes_envelopes ADD CONSTRAINT actes_envelopes_pkey PRIMARY KEY (id);
-ALTER TABLE actes_classification_requests ADD CONSTRAINT actes_classification_requests_pkey PRIMARY KEY (id);
+ALTER TABLE actes_transmission_windows ADD CONSTRAINT actes_transmission_windows_pkey PRIMARY KEY (id);
 ALTER TABLE actes_envelope_serials ADD CONSTRAINT actes_envelope_serials_pkey PRIMARY KEY (id);
+ALTER TABLE actes_status ADD CONSTRAINT actes_status_pkey PRIMARY KEY (id);
 ALTER TABLE actes_classification_codes ADD CONSTRAINT actes_classification_codes_pkey PRIMARY KEY (id);
 ALTER TABLE helios_transmission_window_hours ADD CONSTRAINT helios_transmission_window_hours_pkey PRIMARY KEY (id);
 ALTER TABLE actes_transactions ADD CONSTRAINT actes_transactions_pkey PRIMARY KEY (id);
 ALTER TABLE helios_status ADD CONSTRAINT helios_status_pkey PRIMARY KEY (id);
-ALTER TABLE actes_transmission_windows ADD CONSTRAINT actes_transmission_windows_pkey PRIMARY KEY (id);
-ALTER TABLE authority_types ADD CONSTRAINT authority_types_pkey PRIMARY KEY (id);
 ALTER TABLE actes_batches ADD CONSTRAINT actes_batches_pkey PRIMARY KEY (id);
-ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_pkey PRIMARY KEY (id);
+ALTER TABLE authority_types ADD CONSTRAINT authority_types_pkey PRIMARY KEY (id);
 ALTER TABLE dia_transactions_workflow ADD CONSTRAINT dia_transactions_workflow_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transactions ADD CONSTRAINT helios_transactions_pkey PRIMARY KEY (id);
+ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_pkey PRIMARY KEY (id);
 ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_pkey PRIMARY KEY (id);
-ALTER TABLE message_admin ADD CONSTRAINT message_admin_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transactions ADD CONSTRAINT helios_transactions_pkey PRIMARY KEY (id);
 ALTER TABLE actes_included_files ADD CONSTRAINT actes_included_files_pkey PRIMARY KEY (id);
-ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_pkey PRIMARY KEY (id);
+ALTER TABLE message_admin ADD CONSTRAINT message_admin_pkey PRIMARY KEY (id);
 ALTER TABLE modules ADD CONSTRAINT modules_pkey PRIMARY KEY (id);
-ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_pkey PRIMARY KEY (id);
 ALTER TABLE actes_transmission_window_hours ADD CONSTRAINT actes_transmission_window_hours_pkey PRIMARY KEY (id);
-ALTER TABLE dia_transactions ADD CONSTRAINT dia_transactions_pkey PRIMARY KEY (id);
+ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 ALTER TABLE actes_natures ADD CONSTRAINT actes_natures_pkey PRIMARY KEY (id);
-ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_pkey PRIMARY KEY (id);
+ALTER TABLE dia_transactions ADD CONSTRAINT dia_transactions_pkey PRIMARY KEY (id);
 ALTER TABLE nounce ADD CONSTRAINT nounce_pkey PRIMARY KEY (id);
-ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_pkey PRIMARY KEY (id);
+ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_pkey PRIMARY KEY (id);
 ALTER TABLE authorities ADD CONSTRAINT authorities_pkey PRIMARY KEY (id);
-ALTER TABLE helios_transactions_workflow ADD CONSTRAINT helios_transactions_workflow_pkey PRIMARY KEY (id);
+ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_pkey PRIMARY KEY (id);
 ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_pkey PRIMARY KEY (id);
-ALTER TABLE mail_annuaire ADD CONSTRAINT mail_annuaire_pkey PRIMARY KEY (id);
+ALTER TABLE helios_transactions_workflow ADD CONSTRAINT helios_transactions_workflow_pkey PRIMARY KEY (id);
 ALTER TABLE actes_transactions_workflow ADD CONSTRAINT actes_transactions_workflow_pkey PRIMARY KEY (id);
+ALTER TABLE mail_annuaire ADD CONSTRAINT mail_annuaire_pkey PRIMARY KEY (id);
+ALTER TABLE actes_classification_requests ADD CONSTRAINT actes_classification_requests_pkey PRIMARY KEY (id);
 ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_pkey PRIMARY KEY (id);
 ALTER TABLE authority_departments ADD CONSTRAINT authority_departments_pkey PRIMARY KEY (id);
 ALTER TABLE helios_transmission_windows ADD CONSTRAINT helios_transmission_windows_pkey PRIMARY KEY (id);

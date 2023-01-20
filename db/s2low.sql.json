@@ -204,6 +204,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "xml_data_texte": {
+                "data_type": "text",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
             }
         },
         "actes_envelope_serials": {
@@ -623,6 +629,12 @@
             },
             "flux_retour": {
                 "data_type": "bytea",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
+            },
+            "flux_retour_texte": {
+                "data_type": "text",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
@@ -2368,18 +2380,6 @@
                 "confkey": []
             }
         },
-        "actes_classification_requests": {
-            "actes_classification_requests_pkey": {
-                "conname": "actes_classification_requests_pkey",
-                "contype": "p",
-                "conrelname": "actes_classification_requests",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
         "actes_envelope_serials": {
             "actes_envelope_serials_pkey": {
                 "conname": "actes_envelope_serials_pkey",
@@ -2555,6 +2555,18 @@
                 "conname": "actes_transactions_workflow_pkey",
                 "contype": "p",
                 "conrelname": "actes_transactions_workflow",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "actes_classification_requests": {
+            "actes_classification_requests_pkey": {
+                "conname": "actes_classification_requests_pkey",
+                "contype": "p",
+                "conrelname": "actes_classification_requests",
                 "conkey": [
                     "id"
                 ],
