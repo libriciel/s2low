@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.1 - 2023-01-22
+
+- Ajout d'un Makefile de production pour gérer les règles iptables pour l'accès DGFip
+- Modification de la valeur par défaut du P_DEST pour le protocole Helios
+
 ## 5.0.0 - 2023-01-20
 
 ### Évolution
