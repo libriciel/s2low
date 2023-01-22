@@ -124,6 +124,7 @@ publish_to_nexus:
     - mkdir -p ${DIRECTORY_NAME}
     - sed -e "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml >  ${DIRECTORY_NAME}/docker-compose.yml
     - cp ./.env.dist ${DIRECTORY_NAME}/.env.dist
+    - cp ./docker-resources/Makefile ${DIRECTORY_NAME}/Makefile
     - tar cvzf ${TARBALL_NAME} ${DIRECTORY_NAME}
     - curl -v -u ${REGISTRY_CONTAINER_USER}:${REGISTRY_CONTAINER_PASSWORD} --upload-file ${TARBALL_NAME} https://nexus.libriciel.fr/repository/ls-raw/public/plateforme/s2low/${TARBALL_NAME}
     - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
