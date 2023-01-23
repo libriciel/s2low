@@ -7,4 +7,7 @@ set -e
 cat <<EOF
 APP_ENV=${APP_ENV:-test}
 APP_DEBUG=${APP_DEBUG:-true}
+
+MAILER_DSN="${MAILER_DSN:-smtp://maildev:1025?verify_peer=0}"
+
 EOF
