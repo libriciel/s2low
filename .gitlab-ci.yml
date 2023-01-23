@@ -5,8 +5,8 @@ include:
     file: 'jobs/publish-container-to-registry/publish-container-to-registry.yml'
 
   - project: "libriciel/integration-continue/templates"
-    ref: master
-    file: '/security-check.yml'
+    ref:  security-check-1.0.0
+    file: 'jobs/security-check/security-check.yml'
 
 stages:
     - build
@@ -99,10 +99,13 @@ quality:
     - cd /var/www/s2low
     - /sonar-scanner -Dsonar.login=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
 
-security_scan:
+security-check:
   allow_failure: true
   before_script:
     - cp .trivyignore /
+  variables:
+    TRIVY_IMAGE_OPTIONS: "--security-checks vuln"
+    TRIVY_IMAGE_TIMEOUT: 10m
 
 publish-container-to-registry:
   before_script:
