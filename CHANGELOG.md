@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.0.x - 2023-mm-jj
+
+### Correction
+
+- Changement de la mémoire allouée au service pdf-stamp #980
+
+## 5.0.2 - 2023-01-23
+
+### Suppression
+
+- Le protocole TLSv1.3 est désactivé sur Apache2 pour rester compatible avec les certificat RGS**.
+
 ## 5.0.1 - 2023-01-22
 
 - Ajout d'un Makefile de production pour gérer les règles iptables pour l'accès DGFip
@@ -168,7 +180,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Correction
 
-- Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698  
+- Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
 
@@ -876,7 +888,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 - VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
 
-## 3.0.0-rc2
+## 3.0.0-rc2
 
 ### Corrections
 
