@@ -4,6 +4,7 @@
 
 ### Évolutions
 - Intégrer la purge des flux hélios dans supervisor #753
+- Utilisation de timeout pour limiter les blocages des scripts lancés par supervisor #979
 
 ### Corrections
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013

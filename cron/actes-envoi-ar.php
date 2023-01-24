@@ -20,6 +20,7 @@ $s2lowLogger->info("Debut " . date("Y-m-d H:i:s", $start));
 $min_exec_time = 10;
 
 try {
+    /** @var ActesEnvoiAR $actesEnvoiAR */
     $actesEnvoiAR = $objectInstancier->get(ActesEnvoiAR::class);
     $actesEnvoiAR->sendAllAR();
 } catch (Exception $e) {
