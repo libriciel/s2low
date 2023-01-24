@@ -149,7 +149,7 @@ services:
         image: registry.libriciel.fr/public/signature/pdf-stamp:2.4.5
         networks:
           - services
-        mem_limit: 512M
+        mem_limit: 2G
 
     redis:
         restart: unless-stopped
