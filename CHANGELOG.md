@@ -6,6 +6,7 @@
 
 - Changement de la mémoire allouée au service pdf-stamp #980
 - Modification du répertoire de la configuration Symfony pour les scripts #978
+- Correction de la lecture du DN des certificats #981
 
 ## 5.0.2 - 2023-01-23
 
