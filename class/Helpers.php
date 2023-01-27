@@ -16,7 +16,7 @@ class Helpers
         /* On ne test volontairement pas l'existence pour singer le comportement précédent */
         $result  = $_FILES[$name];
 
-        if ((Helpers::getVarFromRequest("api", "POST") == 1) ) {
+        if ((Helpers::getVarFromRequest("api", "POST") == 1)) {
             $result['name'] = utf8_encode($result['name']);
         }
         return $result;
