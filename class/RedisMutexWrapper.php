@@ -8,7 +8,7 @@ use Redis;
 class RedisMutexWrapper
 {
     /** @var int on mets 2* le TTR de la réponse beanstalked */
-    private const DEFAULT_TIMEOUT = 120;
+    private const DEFAULT_TIMEOUT = 60 * 5;
 
     private $redis_server;
     private $redis_port;

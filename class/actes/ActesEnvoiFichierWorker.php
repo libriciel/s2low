@@ -11,7 +11,7 @@ use S2lowLegacy\Lib\SigTermHandler;
 class ActesEnvoiFichierWorker implements IWorker
 {
     public const QUEUE_NAME = "actes-envoi-fichier";
-
+    public const PHEANSTALK_TTR = 60 * 5;
 
     private $actesTransactionsSQL;
     private $logger;

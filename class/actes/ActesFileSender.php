@@ -22,6 +22,7 @@ class ActesFileSender
     public function send($filepath)
     {
         $curlWrapper = new CurlWrapper();
+        $curlWrapper->setTimeout(60, 60 * 3);
 
         $url = $this->actesMinistereProperties->url;
 
