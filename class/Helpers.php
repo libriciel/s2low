@@ -11,6 +11,17 @@ class Helpers
 {
     public static $last_error;
 
+    public static function getFiles($name)
+    {
+        /* On ne test volontairement pas l'existence pour singer le comportement précédent */
+        $result  = $_FILES[$name];
+
+        if ((Helpers::getVarFromRequest("api", "POST") == 1) ) {
+            $result['name'] = utf8_encode($result['name']);
+        }
+        return $result;
+    }
+
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête POST
    * \param $name chaîne : nom de la variable à récupérer
