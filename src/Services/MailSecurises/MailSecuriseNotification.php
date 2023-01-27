@@ -37,7 +37,7 @@ class MailSecuriseNotification
             $html = $this->twig->render('mail.html.twig', [
                 "subject" => $mailHeader->getHeader()['Subject'],
                 "id" => $mailMessageEmis->getId(),
-                "website" => WEBSITE,
+                "website_mail" => WEBSITE_MAIL,
                 "text" => nl2br($text),
                 "send_password" => $send_password
             ]);

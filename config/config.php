@@ -44,6 +44,10 @@ if (!defined('WEBSITE_SSL')) {
         define('WEBSITE_SSL', "https://s2low.docker.libriciel.fr/");
 }
 
+if (!defined('WEBSITE_MAIL')) {
+    define('WEBSITE_MAIL', "https://mail.s2low.docker.libriciel.fr/");
+}
+
 if (!defined('WEBMASTER')) {
         define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
 }

@@ -98,6 +98,7 @@ class LegacyObjectsManager
         $objectInstancier->set(Environnement::class, $environnement);
         $objectInstancier->set("website_ssl", WEBSITE_SSL);
         $objectInstancier->set("website", WEBSITE);
+        $objectInstancier->set("website_mail", WEBSITE_MAIL);
 
         $objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
         $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
