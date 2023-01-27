@@ -6,7 +6,8 @@
 
 - Changement de la mémoire allouée au service pdf-stamp #980
 - Modification du répertoire de la configuration Symfony pour les scripts #978
-- Correction de la lecture du DN des certificats #981
+- Correction de la lecture du DN des certificats #981 
+- Si le nom de la collectivité contenait un accent, il était impossible signer les PES directement avec Libersign
 
 ## 5.0.2 - 2023-01-23
 
