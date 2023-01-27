@@ -266,16 +266,10 @@ class User extends DataObject
         }
 
         // Si l'utilisateur est authentifié par certificat
-        $this->issuer_dn = "";
-        foreach ($tab['issuer'] as $key => $val) {
-            $this->issuer_dn .= "/" . $key . "=" . $val;
-        }
+        $this->issuer_dn = $this->getDn($tab['issuer']);
 
         // Si l'utilisateur est authentifié par certificat
-        $this->subject_dn = "";
-        foreach ($tab['subject'] as $key => $val) {
-            $this->subject_dn .= "/" . $key . "=" . $val;
-        }
+        $this->subject_dn = $this->getDn($tab['subject']);
 
         $x509Certificate = new X509Certificate();
         $this->certificate_hash = $x509Certificate->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
@@ -856,5 +850,25 @@ class User extends DataObject
     public function getNbDaysBeforeCertificatExpire()
     {
         return floor(($this->getCertificateExpirationTime() - time()) / 86400);
+    }
+
+    /**
+     * @param $issuer
+     * @return string
+     */
+    public function getDn($issuer): string
+    {
+        $dn = "";
+        foreach ($issuer as $key => $val) {
+            if (is_string($val)) {
+                $dn .= "/" . $key . "=" . $val;
+            }
+            if (is_array($val)) {
+                foreach ($val as $value) {
+                    $dn .= "/" . $key . "=" . $value;
+                }
+            }
+        }
+        return $dn;
     }
 }
