@@ -17,20 +17,14 @@ class NotConnectedController extends AbstractController
      */
     public function handleRequest(): Response
     {
-        $me = new User();
-
-        $certificateInfo = $me->getCertificateInfo();
-        $subject = $certificateInfo['subject'];
-
         return new StreamedResponse(
-            function () use ($subject) {
+            function () {
                 $doc = new HTMLLayout();
 
                 $doc->setTitle(WEBSITE_TITLE);
                 $doc->openContainer();
                 $doc->openContent();
-                $doc->afficheErrors();
-                $doc->addBody("<h1>Diagnostic de connexion</h1><p>$subject</p>");
+                $doc->addBody("<h1>Echec de connexion</h1><p>Si vous avez été redirigé vers cette page, le certificat présenté ne permet pas l'authentification sur la plateforme.</p>");
                 $doc->closeContent();
                 $doc->closeContainer();
                 $doc->buildFooter();
