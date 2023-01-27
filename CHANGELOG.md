@@ -6,7 +6,7 @@
 
 - Les mails sécurisés passent désormais par HTTPS
 - Correction d'un problème d'accent dans le nom des fichiers actes.
-
+- Le pager ne fonctionnait pas sur le mail sécurisé
 
 ## 5.0.3 - 2023-01-27
 

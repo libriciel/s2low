@@ -137,6 +137,10 @@ class MailController
             $MailTransactions = MailPeer::mailSearch($MailTransaction, $cond);
         }
 
+        # 🤮 VERY VERY UGLY 🤮
+        # Needed by the pager
+        $_SERVER['PHP_SELF'] = '/modules/mail/index.php';
+
         $this->doc->buildPager($MailTransaction, true);
         $this->doc->closeSideBar(true);
         $this->doc->openContent(true);
