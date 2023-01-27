@@ -94,21 +94,23 @@ try {
     Helpers :: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL);
 }
 
+
+
 if (isset($_FILES['acte_pdf_file'])) {
-    $actePDFFile = $_FILES["acte_pdf_file"];
+    $actePDFFile = Helpers::getFiles('acte_pdf_file');
 } else {
     $actePDFFile = false;
 }
 
 if (isset($_FILES["acte_pdf_file_sign"])) {
-    $actePDFFileSign = $_FILES["acte_pdf_file_sign"];
+    $actePDFFileSign = Helpers::getFiles('acte_pdf_file_sign');
 }
 
 if (isset($_FILES["acte_attachments"])) {
-    $acteAttachments = $_FILES["acte_attachments"];
+    $acteAttachments = Helpers::getFiles("acte_attachments");
 }
 if (isset($_FILES["acte_attachments_sign"])) {
-    $acteAttachmentsSign = $_FILES["acte_attachments_sign"];
+    $acteAttachmentsSign = Helpers::getFiles("acte_attachments_sign");
 }
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);

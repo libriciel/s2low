@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.4 - 2023-01-27
+
+- Correction d'un problème d'accent dans le nom des fichiers actes.
+
 ## 5.0.3 - 2023-01-27
 
 ### Correction
