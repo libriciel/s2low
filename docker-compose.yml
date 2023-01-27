@@ -120,7 +120,7 @@ services:
             - /data/config:mode=770,uid=${UID:-33},gid=${GID:-33},size=5M
             - /etc/apache2/sites-enabled:mode=770,uid=${UID:-33},gid=${GID:-33},size=5M
             - /var/lib/apache2/site/enabled_by_admin:mode=770,uid=${UID:-33},gid=${GID:-33},size=5M
-            - /tmp:mode=770,uid=${UID:-33},gid=${GID:-33},size=4G
+            - /tmp:mode=770,uid=${UID:-33},gid=${GID:-33},size=8G
             - /data/run:mode=770,uid=${UID:-33},gid=${GID:-33},size=10M
             - /data/lock:mode=770,uid=${UID:-33},gid=${GID:-33},size=10M
             - /var/www/s2low/ext/standalone:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
