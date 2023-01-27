@@ -319,7 +319,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"), 'CS')) {
                         pespolicydesc: "Politique de signature Helios de la DGFiP",
                         pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E=",
                         pesspuri: "https://www.collectivites-locales.gouv.fr/files/files/finances_locales/dematerialisation/ps_helios_dgfip.pdf",
-                        pescity: "<?php hecho($authorityInfo->get('city'))?>",
+                        pescity: "<?php hecho(utf8_decode($authorityInfo->get('city')))?>",
                         pespostalcode: "<?php hecho($authorityInfo->get('postal_code'))?>",
                         pescountryname: "France",
                         pesclaimedrole: "Ordonnateur",
