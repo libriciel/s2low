@@ -11,7 +11,7 @@ require_once(__DIR__ . "/../../init/init-www-helios.php");
 
 if ($userInfo['role'] != 'SADM') {
     $_SESSION["error"] = "Super admin only !";
-    header("Location: " . WEBSITE);
+    header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 

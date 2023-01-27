@@ -36,7 +36,7 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
         $sortie = "";
 
         if (!$me->authenticate()) {
-            Helpers :: returnAndExit(1, "Échec de l'authentification", WEBSITE);
+            Helpers :: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
         }
 
 // Un super admin ne peut pas accéder à cette page

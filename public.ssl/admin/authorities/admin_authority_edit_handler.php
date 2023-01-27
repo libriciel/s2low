@@ -38,7 +38,7 @@ function exitOrDisplayError($api, $erreur_msg, $location)
 }
 
 if (! $me->authenticate()) {
-    exitOrDisplayError($api, "Échec de l'authentification", WEBSITE);
+    exitOrDisplayError($api, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
 if (! $me->isAdmin()) {

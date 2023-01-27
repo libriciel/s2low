@@ -55,7 +55,7 @@ class HeliosController extends Controller
 
         $me = new User();
         if (!$me->authenticate()) {
-            $this->redirectSSL(WEBSITE, "Échec de l'authentification");
+            $this->redirectSSL(Helpers::getLink("connexion-status"), "Échec de l'authentification");
         }
 
         $userId = $me->getId();

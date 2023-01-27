@@ -22,7 +22,7 @@ $me = new User();
 $sortie = "";
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
 if (! $me->isGroupAdminOrSuper() && (!$module->isActive() || !$me->checkDroit($module->get("name"), 'CS'))) {

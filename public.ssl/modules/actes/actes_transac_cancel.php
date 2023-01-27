@@ -22,7 +22,7 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
 // Un super admin ne peut pas accéder à cette page

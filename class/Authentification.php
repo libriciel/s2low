@@ -83,7 +83,7 @@ class Authentification
                 throw new Exception("La connexion n'a pas pu être établie");
             } // @codeCoverageIgnore
         } catch (Exception $e) {
-            $redirect = WEBSITE;
+            $redirect = Helpers::getLink("connexion-status");
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
                 $redirect = Helpers::getLink("/login.php");
             }
@@ -102,7 +102,7 @@ class Authentification
         try {
             $connexion_info = $this->getAllConnexionInfo();
         } catch (Exception $e) {
-            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", WEBSITE);
+            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("connexion-status"));
         } // @codeCoverageIgnore
 
         $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
