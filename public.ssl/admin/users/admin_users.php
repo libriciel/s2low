@@ -13,7 +13,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Echec de l'authentification";
-    header("Location: " . WEBSITE);
+    header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 

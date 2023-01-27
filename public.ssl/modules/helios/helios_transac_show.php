@@ -31,7 +31,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Éhec de l'authentification";
-    header("Location: " . WEBSITE);
+    header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 

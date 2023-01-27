@@ -23,7 +23,7 @@ if (! $module->initByName("actes")) {
 $me = new User();
 
 if (! $me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", WEBSITE);
+    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
 if ($me->isSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {

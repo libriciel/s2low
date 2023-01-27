@@ -11,7 +11,7 @@ class UserPermission
 
         if (! $me->authenticate()) {
             $_SESSION["error"] = "Échec de l'authentification";
-            header("Location: " . WEBSITE);
+            header("Location: " . Helpers::getLink("connexion-status"));
             exit();
         }
 
