@@ -1,10 +1,10 @@
 # Changelog
 
-## 5.0.5 - 2023-01-27
+## 5.0.5 - 2023-01-30
 
 ### Correction
-- Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache
-- Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL
+- Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache #987
+- Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL #988
 
 ## 5.0.4 - 2023-01-27
 
@@ -14,6 +14,11 @@
 - Correction d'un problème d'accent dans le nom des fichiers actes.
 - Le pager ne fonctionnait pas sur le mail sécurisé
 - Redirection de la page d'accueil pour éviter une boucle de redirection
+
+### Limitations connues
+
+- Les mails envoyés avant le passage sur S2LOW_WEBSITE_MAIL ne s'affichent pas correctement
+- Les ressources js et css ne sont pas correctement chargées depuis S2LOW_WEBSITE_MAIL
 
 ## 5.0.3 - 2023-01-27
 
