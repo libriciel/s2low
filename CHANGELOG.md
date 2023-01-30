@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.5 - 2023-01-27
+
+### Correction
+- Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache
+- Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL
+
 ## 5.0.4 - 2023-01-27
 
 ### Correction

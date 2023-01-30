@@ -5,17 +5,17 @@
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="robots" content="noindex">
-        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/bootstrap-theme.min.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_bs.css" />
-        <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE ?>/custom/styles/style_mail.css" />
-        <script src="<?php echo WEBSITE ?>/javascript/utils.js" type="text/javascript"></script>
+        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="/custom/styles/style_bs.css" />
+        <link rel="stylesheet" type="text/css" href="/custom/styles/style_mail.css" />
+        <script src="/javascript/utils.js" type="text/javascript"></script>
         <?php echo $this->header ?>
     </head>
     <body>
         <div id="bandeau_s2low" class="container">
             <a href='<?php echo WEBSITE ?>'>
-                <img src="<?php echo WEBSITE ?>/custom/images/bandeau_s2low.jpg"  />
+                <img src="/custom/images/bandeau_s2low.jpg"  />
             </a>
         </div>
 
