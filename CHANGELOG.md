@@ -1,8 +1,15 @@
 # Changelog
 
+## 5.0.x - AAAA-MM-JJ
+
+### Évolution
+
+- Ajout du script pour les statistiques de groupes  #992
+
 ## 5.0.5 - 2023-01-30
 
 ### Correction
+
 - Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache #987
 - Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL #988
 
@@ -26,7 +33,7 @@
 
 - Changement de la mémoire allouée au service pdf-stamp #980
 - Modification du répertoire de la configuration Symfony pour les scripts #978
-- Correction de la lecture du DN des certificats #981 
+- Correction de la lecture du DN des certificats #981
 - Si le nom de la collectivité contenait un accent, il était impossible signer les PES directement avec Libersign
 
 ## 5.0.2 - 2023-01-23
