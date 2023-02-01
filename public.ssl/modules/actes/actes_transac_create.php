@@ -107,10 +107,10 @@ if (isset($_FILES["acte_pdf_file_sign"])) {
 }
 
 if (isset($_FILES["acte_attachments"])) {
-    $acteAttachments = Helpers::getFiles("acte_attachments");
+    $acteAttachments = Helpers::getFilesFromArray("acte_attachments");
 }
 if (isset($_FILES["acte_attachments_sign"])) {
-    $acteAttachmentsSign = Helpers::getFiles("acte_attachments_sign");
+    $acteAttachmentsSign = Helpers::getFilesFromArray("acte_attachments_sign");
 }
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);
