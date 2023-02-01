@@ -22,6 +22,20 @@ class Helpers
         return $result;
     }
 
+
+    public static function getFilesFromArray($name)
+    {
+        /* On ne test volontairement pas l'existence pour singer le comportement précédent */
+        $results  = $_FILES[$name];
+
+        if ((Helpers::getVarFromRequest("api", "POST") == 1)) {
+            foreach ($results['name'] as $key => $result) {
+                 $results['name'][$key] = utf8_encode($result);
+            }
+        }
+        return $results;
+    }
+
   /**
    * \brief Méthode renvoyant une variable récupérée depuis une requête POST
    * \param $name chaîne : nom de la variable à récupérer

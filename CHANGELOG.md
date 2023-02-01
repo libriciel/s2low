@@ -5,17 +5,22 @@
 ### Évolution
 
 - Ajout du script pour les statistiques de groupes  #992
+- Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
 
 ## 5.0.5 - 2023-01-30
 
-### Correction
+### Corrections
 
 - Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache #987
 - Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL #988
 
+### Limitations connues
+
+- Les pièces jointes des actes ajoutées par l'API ne sont pas correctement prises en compte #991
+
 ## 5.0.4 - 2023-01-27
 
-### Correction
+### Corrections
 
 - Les mails sécurisés passent désormais par HTTPS
 - Correction d'un problème d'accent dans le nom des fichiers actes.
@@ -29,7 +34,7 @@
 
 ## 5.0.3 - 2023-01-27
 
-### Correction
+### Corrections
 
 - Changement de la mémoire allouée au service pdf-stamp #980
 - Modification du répertoire de la configuration Symfony pour les scripts #978
@@ -38,7 +43,7 @@
 
 ## 5.0.2 - 2023-01-23
 
-### Suppression
+### Suppressions
 
 - Le protocole TLSv1.3 est désactivé sur Apache2 pour rester compatible avec les certificat RGS**.
 
@@ -49,7 +54,7 @@
 
 ## 5.0.0 - 2023-01-20
 
-### Évolution
+### Évolutions
 
 - Passage en PHP 8.1 / Ubuntu 22.04 et adaptation du code
 - Passage en UTF-8 et adaptation du code
@@ -59,7 +64,7 @@
 - Docker : changement des valeurs tedetis
 - Docker : script de migration des versions de PostgreSQL
 
-### Correction
+### Corrections
 
 - CHANGELOG : corrections sur les sauts de lignes sous les (sous-)titres (markdownlint MD032)
 - Le libellé a été ajouté à la classification envoyée vers pastell #807
@@ -69,7 +74,7 @@
 - Permettre de mettre des espaces dans la recherche des collectivité par SIREN #867
 - Prise en compte du délai de 4 heures dans le lien "Actes transmis depuis plus de 4 heures" de la console d'administration #852
 
-### Suppression
+### Suppressions
 
 - les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT,
 OPENSIGN_TIMEOUT, ACTES_TYPE_PJ_IS_MANDATORY, DB_CLIENT_ENCODING, PHP_UNIT_AUTOLOADER, MODE, ETAT_CIVIL_FILES_UPLOAD_ROOT,
@@ -85,7 +90,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 - Correction de failles de sécurité #799
 
-### Correction
+### Corrections
 
 - Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
 - Corriger la vérification des signatures avec une URI vide #825
@@ -93,7 +98,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.18 - 2022-06-13
 
-### Correction
+### Corrections
 
 - Empêcher l'envoi vers Pastell de doublons lors de l'archivage (module Helios) #355
 - Amélioration de la gestion du lancement des processus extérieurs #750
@@ -101,22 +106,22 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.17 - 2022-05-17
 
-### Évolution
+### Évolutions
 
 - Passage de php:7.2-apache-stretch vers ubuntu:18.04 pour l'image de base Docker
 
-### Correction
+### Corrections
 
 - Rétablir le fonctionnement de la création de collectivité #803
 
 ## 4.3.16 - 2022-05-09
 
-### Évolution
+### Évolutions
 
 - Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
 
-### Correction
+### Corrections
 
 - Utilisation de l'heure générée par le serveur applicatif pour créer les nonces #791
 
@@ -140,30 +145,30 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.15 - 2022-03-24
 
-### Évolution
+### Évolutions
 
 - Possibilité de poster les CompteFinancierUnique #772
 
 ## 4.3.14 - 2022-03-21
 
-### Évolution
+### Évolutions
 
 - Prise en compte de la version 5.17 du schema XSD Pes Aller #762
 
 ## 4.3.13 - 2022-03-08
 
-### Correction
+### Corrections
 
 - Correction d'un problème d'accès à l'annuaire #751
 
 ## 4.3.12 - 2022-01-17
 
-### Évolution
+### Évolutions
 
 - Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
 - Mise à jour du simulateur en 1.1.2 #748
 
-### Correction
+### Corrections
 
 - Corection d'une erreur sur helios-pes-acquit-menage #293
 - Correction d'une vulnérabilité #731
@@ -180,25 +185,25 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.11 - 2021-12-03
 
-### Évolution
+### Évolutions
 
 - Remplacement des releases notes codées en dur par un affichage du Changelog #722
 - Création d'un worker pour récupérer les CRL #728
 
-### Correction
+### Corrections
 
 - Correction du répertoire de récupération des CRL dans le Docker #728
 - Ajout d'un timeout à l'envoi au SAE #713
 
 ## 4.3.10 - 2021-10-11
 
-### Correction
+### Corrections
 
 - Correction de l'extraction des certificats comportant un saut de ligne en début ou fin depuis les flux helios #714
 
 ## 4.3.9 - 2021-06-24
 
-### Évolution
+### Évolutions
 
 - Ajout d'une API de statistique actes pour les admins de groupe #610
 - Prise en compte de la version 5.14 du schema XSD Pes Aller #696
@@ -208,7 +213,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Explicitation de l'erreur rencontrée lors de la vérification de la signature dans le cas Xades Pes aller #707
 - Ajout des nouveaux codes de nature de collectivité fournis par la DGCL #712
 
-### Correction
+### Corrections
 
 - Correction du mail sécurisé pour diminuer les risques d'être classé comme spam #698
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
@@ -216,7 +221,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.8 - 2021 04 07
 
-### Correction
+### Corrections
 
 - corriger l'identification par nounce #690
 
@@ -224,7 +229,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 **Cette version demande une modification de la base de données**
 
-### Correction
+### Corrections
 
 - les scripts de supervision notifient le mail EMAIL_TECHNIQUE #680
 - permettre de traiter les messages liés à un acte même si le cloud n'est pas accessible #685
@@ -239,7 +244,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 **Cette version demande une modification de la base de données**
 
-### Correction
+### Corrections
 
 - ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
 - passage du temps minimum d'éxécution des WorkerScript de 1s vers 10s
@@ -254,7 +259,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 **Cette version demande une modification de la base de données**
 
-### Correction
+### Corrections
 
 - refactoring du ménage des actes envoyés sur le cloud
 - correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargé, supression des répertoires de base #666
@@ -277,7 +282,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.3.3 - 2020-11-06
 
-### Correction
+### Corrections
 
 - refactoring de la gestion des services pour éviter des failles de sécurité potentielles #657
 - refactoring DataObject pour utilisation de requête préparé afin de combler des failles de sécurité potentielles
@@ -292,19 +297,19 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 - Script bin/console log:timestamp-token-extract-and-delete qui permet de suprimer les timestamps de la table logs_historique après les avoir sauvegardés dans un répertoire
 
-### Correction
+### Corrections
 
 - refactoring de la chaîne d'intégration continue
 
 ## 4.3.1 - 2020-09-29
 
-### Correction
+### Corrections
 
 - Correction typo dans le init.php pour la variable helios_sending_mode_demo
 
 ## 4.3.0 - 2020-09-16
 
-### Correction
+### Corrections
 
 - Correction bug particulier pour les purges
 
@@ -315,7 +320,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.2.3 - 2020-07-13
 
-### Correction
+### Corrections
 
 - Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
 - Les versements actes SAE n'était plus assurés (problème sur le bordereau) #639
@@ -335,7 +340,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Amélioration de la construction du docker
 - Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
 
-### Correction
+### Corrections
 
 - Permettre la récupération dans le cloud des fichiers comportant deux // #628
 
@@ -345,7 +350,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 - Openstack : tentative de reconnexion lors d'une erreur #591
 
-### Correction
+### Corrections
 
 - Un bug empechait l'envoi correcte des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
 
@@ -376,7 +381,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Ajout d'un script permettant de changer le statut d'une transaction actes
 - OpenStack : Passage de l'Identity API # 2.0 à l'Identity API v3.0.  Toutes les constantes **_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par** _OPENSTACK_AUTHENTICATION_URL_V3 #574
 
-### Correction
+### Corrections
 
 - Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
 - L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait en compte les messages 2-2)
@@ -406,7 +411,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Ajout de bouton sur les transactions actes et helios permettant d'envoyer et de vérifier les données sur le SAE (pour le superadmin)
 - Ajout de statistiques pour l'envoi au SAE (actes/helios)
 
-### Correction
+### Corrections
 
 - Le rebuild-queue n'est plus nécessaire en cas de défaillance des serveurs de la DGCL #501
 - le script de récupération des ar du sae échouait si le message d'erreur du SAE dépassait 512 octets #498
@@ -414,7 +419,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.0.3 - 2019-06-03
 
-### Correction
+### Corrections
 
 - Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490
 - Réintroduction de la possibilité de déclencher manuellement une notification #494
@@ -450,13 +455,13 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - La méthode d'authentification avec certificat utilisateur + certificat RGS** est déprécié et il n'est plus possible
 de la sélectionner lors de la création ou de la modification d'un utilisateur. #491
 
-### Suppression
+### Suppressions
 
 - Suppression de la classe maison Logger remplacée par S2lowLogger basé sur Monolog
 
 ## 4.0.2 - 2019-04-09
 
-### Correction
+### Corrections
 
 - HOTFIX : correction du script de migration de base de données sur certain index récalcitrants
 - Oublie du typage des réponses aux réponses des préfectures (Courrier simple, lettre d'observations et demande de pièces complémentaires) #492
@@ -615,7 +620,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ## 3.0.13 - 2018-06-28
 
-### Correction
+### Corrections
 
 - Lorsque le service pades-valid est down, on ne passe plus la transaction en erreur ~actes
 - Le mode beanstalked ne prenait pas en compte les transactions en attente d'être posté.
@@ -628,7 +633,7 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ## 3.0.12 - 2018-06-05
 
-### Correction
+### Corrections
 
 - Erreur d'échapement provoquant le non fonctionnement de actes_transac_get_status.php
 
