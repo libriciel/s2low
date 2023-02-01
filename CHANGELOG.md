@@ -2,10 +2,14 @@
 
 ## 5.0.x - AAAA-MM-JJ
 
-### Évolution
+### Évolutions
 
 - Ajout du script pour les statistiques de groupes  #992
+
+### Corrections
 - Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
+- Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php #993
+- Permettre de configurer ACTES_COMMON_BROADCAST_EMAILS #994
 
 ## 5.0.5 - 2023-01-30
 
