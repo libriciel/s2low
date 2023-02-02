@@ -11,24 +11,24 @@ class Helpers
 {
     public static $last_error;
 
-    public static function getFiles($name)
+    public static function getFiles($name, bool $allowGetApiCall = false)
     {
         /* On ne test volontairement pas l'existence pour singer le comportement précédent */
         $result  = $_FILES[$name];
 
-        if ((Helpers::getVarFromRequest("api", "POST") == 1)) {
+        if (self::isApiCall($allowGetApiCall)) {
             $result['name'] = utf8_encode($result['name']);
         }
         return $result;
     }
 
 
-    public static function getFilesFromArray($name)
+    public static function getFilesFromArray($name, bool $allowGetApiCall = false)
     {
         /* On ne test volontairement pas l'existence pour singer le comportement précédent */
         $results  = $_FILES[$name];
 
-        if ((Helpers::getVarFromRequest("api", "POST") == 1)) {
+        if (self::isApiCall($allowGetApiCall)) {
             foreach ($results['name'] as $key => $result) {
                  $results['name'][$key] = utf8_encode($result);
             }
@@ -42,15 +42,30 @@ class Helpers
    * \param $memorize booléen (optionnel) : Détermine si la variable doit être enregistré dans la session
    * \return La valeur de la variable ou null si la variable est introuvable
   */
-    public static function getVarFromPost($name, $memorize = false)
+    public static function getVarFromPost($name, $memorize = false, bool $allowGetApiCall = false)
     {
         $varFromRequest = Helpers::getVarFromRequest($name, "POST", $memorize);
 
-        if ((Helpers::getVarFromRequest("api", "POST") == 1) && !is_array($varFromRequest)) {
+        if (self::isApiCall($allowGetApiCall) && !is_array($varFromRequest)) {
             $varFromRequest = utf8_encode($varFromRequest);
         }
         return $varFromRequest;
     }
+
+    /**
+     * @param bool $allowGetApi
+     * @return bool
+     */
+    private static function isApiCall(bool $allowGetApi = false): bool
+    {
+        // La présence de allowGetApi est un hotfix
+        // returnAndExit considère que l'on utilise l'API à partir du moment ou api est spécifiée à 1 dans post
+        // ou à 1 dans get mais pas à 0 dans post.
+        $apiIsSetByPost = Helpers::getVarFromRequest("api", "POST") == 1;
+        $apiIsSetByGet = Helpers::getVarFromRequest("api", "GET") == 1;
+        return ($apiIsSetByPost || ($apiIsSetByGet && $allowGetApi));
+    }
+
     public static function getIntFromPost($name, $nullable = false)
     {
         return self::checkInt(

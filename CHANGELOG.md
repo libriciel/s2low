@@ -10,6 +10,7 @@
 - Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
 - Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php #993
 - Permettre de configurer ACTES_COMMON_BROADCAST_EMAILS #994
+- Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php pour assurer la rétrocompatibilité avec la v4.3 #993
 
 ## 5.0.5 - 2023-01-30
 

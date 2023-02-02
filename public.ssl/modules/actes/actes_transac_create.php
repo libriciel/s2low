@@ -86,7 +86,7 @@ if (strtotime($decision_date) > time()) {
 
 $document_papier =  Helpers :: getVarFromPost("document_papier", true) ? 1 : 0;
 
-$subject = Helpers :: getVarFromPost("subject", true);
+$subject = Helpers :: getVarFromPost("subject", true, true);
 
 try {
     $batchFileId = Helpers :: getIntFromPost("batchfile", true);
@@ -97,20 +97,20 @@ try {
 
 
 if (isset($_FILES['acte_pdf_file'])) {
-    $actePDFFile = Helpers::getFiles('acte_pdf_file');
+    $actePDFFile = Helpers::getFiles('acte_pdf_file', true);
 } else {
     $actePDFFile = false;
 }
 
 if (isset($_FILES["acte_pdf_file_sign"])) {
-    $actePDFFileSign = Helpers::getFiles('acte_pdf_file_sign');
+    $actePDFFileSign = Helpers::getFiles('acte_pdf_file_sign', true);
 }
 
 if (isset($_FILES["acte_attachments"])) {
-    $acteAttachments = Helpers::getFilesFromArray("acte_attachments");
+    $acteAttachments = Helpers::getFilesFromArray("acte_attachments", true);
 }
 if (isset($_FILES["acte_attachments_sign"])) {
-    $acteAttachmentsSign = Helpers::getFilesFromArray("acte_attachments_sign");
+    $acteAttachmentsSign = Helpers::getFilesFromArray("acte_attachments_sign", true);
 }
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);
