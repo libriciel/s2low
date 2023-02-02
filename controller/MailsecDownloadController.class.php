@@ -58,7 +58,16 @@ class MailsecDownloadController extends Controller
             );     // HACK Fix passage en utf-8!!
 
             $filepath = $tmp_folder . "/" . $filename;
-            $contents = stream_get_contents($zipArchive->getStream($filenameInZip));
+            $stream = $zipArchive->getStream($filenameInZip);   // Certains fichiers ont été compressés avant
+                                                                // le passage en UTF-8.
+            if (!$stream) {                                       // D'autres non.
+                $stream = $zipArchive->getStream($filename);
+            }
+
+            if (!$stream) {
+                throw new Exception("Impossible de télécharger ce fichier. Essayez de télécharger l'archive.");
+            }
+            $contents = stream_get_contents($stream);
             file_put_contents(
                 $filepath,
                 $contents
