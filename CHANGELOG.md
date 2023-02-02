@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.x - AAAA-MM-JJ
+## 5.0.6 - 2023-02-02
 
 ### Évolutions
 
@@ -8,10 +8,9 @@
 
 ### Corrections
 - Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
-- Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php #993
 - Permettre de configurer ACTES_COMMON_BROADCAST_EMAILS #994
 - Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php pour assurer la rétrocompatibilité avec la v4.3 #993
-- Prendre en charge l'encodage UTF-8 dans les noms de pièces jointes des mails #540
+- Prendre en charge l'encodage UTF-8 dans les noms de pièces jointes des mails #995
 
 ## 5.0.5 - 2023-01-30
 
@@ -23,6 +22,7 @@
 ### Limitations connues
 
 - Les pièces jointes des actes ajoutées par l'API ne sont pas correctement prises en compte #991
+- Certaines pièces joindes des mails ne s'ouvrent pas #995
 
 ## 5.0.4 - 2023-01-27
 
