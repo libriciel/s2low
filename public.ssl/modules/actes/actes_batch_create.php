@@ -5,6 +5,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\User;
 
+/** @var S2lowLogger $logger */
 $logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
 
 
@@ -24,7 +25,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($modu
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$description = Helpers::getVarFromPost("intitule");
+$description = Helpers::getVarFromPost("description");
 $num_prefix = Helpers::getVarFromPost("num_prefix");
 
 $zeBatch = new ActesBatch();

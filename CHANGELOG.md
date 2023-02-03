@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.7 - 2023-02-XX
+
+### Corrections
+- Correction de l'ordre et de la description du traitement par lots #997
+
 ## 5.0.6 - 2023-02-02
 
 ### Évolutions
