@@ -1,9 +1,13 @@
 # Changelog
 
-## 5.0.7 - 2023-02-XX
+## 5.0.7 - 2023-02-06
 
 ### Corrections
 - Correction de l'ordre et de la description du traitement par lots #997
+
+### Évolutions
+
+- Changement d'ordre des virtuahost pour les applications ne supportant pas le SNI #998
 
 ## 5.0.6 - 2023-02-02
 
@@ -12,6 +16,7 @@
 - Ajout du script pour les statistiques de groupes  #992
 
 ### Corrections
+
 - Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
 - Permettre de configurer ACTES_COMMON_BROADCAST_EMAILS #994
 - Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php pour assurer la rétrocompatibilité avec la v4.3 #993
