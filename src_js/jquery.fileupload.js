@@ -49,6 +49,7 @@ $(function () {
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload({
         multipart: true,
+        sequentialUploads: true,
         //singleFileUploads: false,
         acceptFileTypes: /(\.|\/)(pdf)$/i,
         submit: function (e, data) {
