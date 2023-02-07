@@ -17,11 +17,15 @@ class HeliosTransactionsSQL extends SQL
     public const REFUSER = 6;
     public const EN_TRAITEMENT = 7;
     public const INFORMATION_DISPONIBLE = 8;
+
+    public const ENVOYER_AU_SAE = 9;
     public const ACCEPTE_SAE = 10;
     public const REFUSER_SAE = 11;
     public const ATTENTE_POSTEE = 14;
     public const ATTENTE_SIGNEE = 13;
 
+    public const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
+    public const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
     private const SEND_WARNING_AFTER_SECOND = 172800;
 
     private const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
@@ -354,7 +358,7 @@ class HeliosTransactionsSQL extends SQL
         return $this->query($sql, $authority_id, $min_transaction_id, $max_trasaction_id);
     }
 
-    public function getTransactionToPrepareToSAE($nb_days = 15, $authority_id = 0, $is_auto = true, array $status = [HeliosStatusSQL::INFORMATION_DISPONIBLE])
+    public function getTransactionToPrepareToSAE($nb_days = 15, $authority_id = 0, $is_auto = true, array $status = [HeliosTransactionsSQL::INFORMATION_DISPONIBLE])
     {
 
         $status_list = implode(",", $status);
@@ -389,6 +393,48 @@ class HeliosTransactionsSQL extends SQL
         return $this->queryOneCol($sql, $data);
     }
 
+    public function getTransactionsToSendToSAE($limit = 100, $is_auto = true)
+    {
+
+        $blockingStatuses = [
+            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            HeliosTransactionsSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+            HeliosTransactionsSQL::REFUSER_SAE
+        ];
+
+        $statusToSend = HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE;
+
+        $statusesToConsider = array_merge($blockingStatuses, [$statusToSend]);
+
+        $blockingStatusesFormatted = implode(",", $blockingStatuses);
+        $statusesToConsiderFormatted = implode(",", $statusesToConsider);
+
+        $module_id = $this->queryOne("SELECT id FROM modules WHERE name=?", "helios");
+
+        $sql = "SELECT id FROM (
+                    SELECT 
+                        DISTINCT(helios_transactions.id),
+               ROW_NUMBER () OVER (PARTITION BY helios_transactions.authority_id ORDER BY CASE
+                        WHEN helios_transactions.last_status_id IN($blockingStatusesFormatted) THEN 1
+                        ELSE 2
+                    END,
+                    helios_transactions.id) AS Rank,
+                    last_status_id
+                    FROM helios_transactions
+            JOIN authorities ON authorities.id=helios_transactions.authority_id
+            JOIN authority_pastell_config ON authority_pastell_config.authority_id=authorities.id
+            AND helios_transactions.id >= authority_pastell_config.transaction_id_min
+            AND helios_transactions.id <= authority_pastell_config.transaction_id_max
+            WHERE authority_pastell_config.module_id = $module_id
+            AND helios_transactions.last_status_id IN ($statusesToConsiderFormatted)";
+
+        if ($is_auto) {
+            $sql .= "AND authority_pastell_config.is_auto='t'";
+        }
+
+        $sql .=  " ORDER BY helios_transactions.id ) AS Temp WHERE Rank <= ? AND last_status_id = $statusToSend";
+        return $this->queryOneCol($sql, $limit);
+    }
 
     public function getNbByStatusAndAuthority($status_id, $authority_id)
     {

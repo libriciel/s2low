@@ -235,6 +235,110 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         );
     }
 
+    public function testGetTransactionToSendToArchive()
+    {
+        $this->configurePastell();
+        $transaction_id = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $this->assertEquals(
+            [$transaction_id],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE(100)
+        );
+    }
+
+    public function testGetTransactionToSendToArchiveWithLimit()
+    {
+        $this->configurePastell();
+        $transaction_id1 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id1,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $transaction_id2 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id2,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $this->assertEquals(
+            [$transaction_id1],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE(1)
+        );
+        $this->assertEquals(
+            [$transaction_id1,$transaction_id2],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE()
+        );
+    }
+
+    public function testGetTransactionToSendToArchiveWithAlreadyEnoughWaiting()
+    {
+        $this->configurePastell();
+        $transaction_id1 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id1,
+            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            "test"
+        );
+        $transaction_id2 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id2,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $this->assertEquals(
+            [],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE(1)
+        );
+        $this->assertEquals(
+            [$transaction_id2],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE()
+        );
+    }
+
+    public function testGetTransactionToSendToArchiveWithTwoAuthorities()
+    {
+        $this->configurePastell();
+        $this->configurePastell(2);
+
+        $transaction_id1_1 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id1_1,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $transaction_id1_2 = $this->createTransaction();
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id1_2,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $transaction_id2_1 = $this->createTransaction(2);
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id2_1,
+            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            "test"
+        );
+        $transaction_id2_2 = $this->createTransaction(2);
+        $this->heliosTransactionSQL->updateStatus(
+            $transaction_id2_2,
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            "test"
+        );
+        $this->assertEquals(
+            [$transaction_id1_1],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE(1)
+        );
+        $this->assertEquals(
+            [$transaction_id1_1,$transaction_id1_2,$transaction_id2_2],
+            $this->heliosTransactionSQL->getTransactionsToSendToSAE()
+        );
+    }
+
     public function testSetPesAcquitAvailable()
     {
         $transaction_id = $this->createTransaction();

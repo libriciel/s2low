@@ -41,12 +41,7 @@ class HeliosEnvoiSaeWorker implements IWorker
     public function getAllId()
     {
         return array_slice(
-            $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
-                HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
-                0,
-                true,
-                [HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE]
-            ),
+            $this->heliosTransactionsSQL->getTransactionsToSendToSAE(),
             0,
             self::MAX_TRANSACTION_TO_SEND
         );

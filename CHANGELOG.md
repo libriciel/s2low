@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.8 -
+
+### Évolutions
+
+- Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité
+
 ## 5.0.7 - 2023-02-06
 
 ### Corrections
