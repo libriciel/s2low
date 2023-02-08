@@ -137,6 +137,12 @@ class HeliosEnvoiControler
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
         }
+
+        if (strlen($info_from_pes_aller['cod_col']) > 3) {
+            $message = "Transaction $transaction_id : Le CodCol est trop long";
+            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+            return;
+        }
         $verifyPemFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,

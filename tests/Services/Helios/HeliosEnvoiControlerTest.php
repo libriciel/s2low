@@ -87,6 +87,17 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->assertEquals("Transaction $id_t : ce fichier n'est pas encodé en ISO-8859-1", $last_status_info['message']);
     }
 
+    public function testCodCollTropLong()
+    {
+        $id_t = $this->validatePesAller("pes_aller_CodColTropLong.xml");
+
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getInfo($id_t);
+        $this->assertEquals(HeliosStatusSQL::ERREUR, $info['last_status_id']);
+        $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals("Transaction $id_t : Le CodCol est trop long", $last_status_info['message']);
+    }
+
     /**
      * @throws Exception
      */
