@@ -68,7 +68,7 @@ $nature_code = Helpers :: getVarFromPost("nature_code", true);
 $en_attente = Helpers :: getVarFromPost("en_attente", true);
 
 for ($i = 1; $i <= 5; $i++) {
-    ${ "classif" . $i } = Helpers :: getVarFromPost("classif" . $i, true);
+    ${ "classif" . $i } = Helpers :: getIntFromPost("classif" . $i, true, true);
 }
 
 $number = Helpers :: getVarFromPost("number", true);

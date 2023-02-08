@@ -66,10 +66,10 @@ class Helpers
         return ($apiIsSetByPost || ($apiIsSetByGet && $allowGetApi));
     }
 
-    public static function getIntFromPost($name, $nullable = false)
+    public static function getIntFromPost($name, $nullable = false, bool $memorize = false)
     {
         return self::checkInt(
-            Helpers::getVarFromRequest($name, "POST"),
+            Helpers::getVarFromRequest($name, "POST", $memorize),
             $nullable,
             $name
         );
@@ -663,7 +663,11 @@ class Helpers
         if (is_null($var) && $nullable) {
             return $var;
         }
+        if ($var === "" && $nullable) {
+            return "";
+        }
         if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
+            var_dump($var);
             throw new UnexpectedValueException("$name n'est pas un entier");
         }
         return $var;

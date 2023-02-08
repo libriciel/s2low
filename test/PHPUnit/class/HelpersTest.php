@@ -352,19 +352,21 @@ class HelpersTest extends TestCase
      * @return void
      */
 
-    public function testCheckInt($var, $nullable)
+    public function testCheckInt($varEntree, $varSortie, $nullable)
     {
         $this->assertEquals(
-            $var,
-            Helpers::checkInt($var, $nullable, "test")
+            $varSortie,
+            Helpers::checkInt($varEntree, $nullable, "test")
         );
     }
 
     public function checkIntProvider()
     {
         return [
-            ["1",false],
-            [null,true]
+            ["1","1",false],
+            ["0","0",false],
+            [null,null, true],
+            ["","",true]
         ];
     }
 

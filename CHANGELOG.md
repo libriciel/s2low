@@ -12,10 +12,15 @@
 - Passer par l'antivirus un acte créé avec "signer avant d’envoyer" puis "déposer sans signature" #755
 - Homogénéisation de la valeur par défaut de USE_LEGACY_SECURE_MAIL_FIELDS à false #938
 - Ajouter un message d'erreur lorsque le CodCol d'un PES Aller est trop long #821
+- Verifier que les paramètres d'entrée de la classification sur actes_transac_create.php sont des entiers #668
 
 ### Suppressions
 
 - Suppression de la constante ACTES_TYPE_PAR_NATURE #608
+=======
+### Corrections
+
+>>>>>>> 240e18b6 (Les paramètres d'entrée de la classification doivent être des entiers)
 
 ## 5.0.7 - 2023-02-06
 
