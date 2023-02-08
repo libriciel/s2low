@@ -8,9 +8,14 @@
 - Mise à jour de la bibiliothèque tdt-lib-actes
 
 ### Corrections
+
 - Passer par l'antivirus un acte créé avec "signer avant d’envoyer" puis "déposer sans signature" #755
 - Homogénéisation de la valeur par défaut de USE_LEGACY_SECURE_MAIL_FIELDS à false #938
 - Ajouter un message d'erreur lorsque le CodCol d'un PES Aller est trop long #821
+
+### Suppressions
+
+- Suppression de la constante ACTES_TYPE_PAR_NATURE #608
 
 ## 5.0.7 - 2023-02-06
 

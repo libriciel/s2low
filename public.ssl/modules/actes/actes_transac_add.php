@@ -72,7 +72,6 @@ $type_pj_list = json_encode($actesTypePJSQL->getAllByNature());
 $type_pj_list_matiere1 = json_encode($actesTypePJSQL->getAllByNatureMatiere1());
 $type_pj_default = json_encode($actesTypePJSQL->getAllDefaultNature());
 $type_pj_list_par_nature = json_encode($actesTypePJSQL->getListByNature());
-$actes_type_par_nature = ACTES_TYPE_PAR_NATURE ? "true" : "false";
 
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
@@ -152,52 +151,8 @@ $(function(){
   }
   
   var setTypePJ = function(selector){
-      if (actes_type_par_nature){
           console.log(selector);
           return setTypePJParNature(selector);
-      }
-      selector.empty();
-      var nature_code = $("#nature_code").val();
-      var matiere1 = $("#classif1").val();
-      var matiere2 = $("#classif2").val();
-      if (nature_code && matiere1 && matiere2){
-          if (nature_code in type_pj && matiere1 in type_pj[nature_code] && matiere2 in type_pj[nature_code][matiere1]){
-          
-              $.each(type_pj[nature_code][matiere1][matiere2], function(key, value) {   
-               selector
-                 .append($("<option></option>")
-                            .attr("value",key)
-                            .text(value)); 
-              });
-          }
-     }
-     
-     if (nature_code in type_pj_matiere1 && matiere1 in type_pj_matiere1[nature_code]){
-           $.each(type_pj_matiere1[nature_code][matiere1], function(key, value) {   
-               selector
-                 .append($("<option></option>")
-                            .attr("value",key)
-                            .text(value)); 
-              });
-     }
-     
-     
-     if (nature_code){
-          $.each(type_pj_default[nature_code],function(key,value){
-              selector
-                 .append($("<option></option>")
-                            .attr("value",key)
-                            .text(value)); 
-          });
-     }
-      selector
-             .append($("<option></option>")
-                        .attr("value","99_AU")
-                        .text("Autre document"));
-      selector
-             .append($("<option></option>")
-                        .attr("value","99_SE")
-                        .text("Fichier de signature électronique"));
   };
 
 
@@ -207,13 +162,10 @@ $(function(){
   var type_pj_default = $type_pj_default;
   var type_pj_matiere1 = $type_pj_list_matiere1;
   var type_pj_liste_par_nature = $type_pj_list_par_nature
-  var actes_type_par_nature = $actes_type_par_nature;
   
   var selector_onchange =  "#nature_code, #classification_text";
  
-  if (actes_type_par_nature){
-      selector_onchange = "#nature_code";      
-  }
+  selector_onchange = "#nature_code";      
   
   $(selector_onchange).on('change', function() {
 		$(".select_type_pj").each(function(){				   

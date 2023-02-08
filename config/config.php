@@ -372,15 +372,6 @@ if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')) {
     define('ACTES_DONT_VALID_SIGNING_CERTIFICATE', false);
 }
 
-//L'ancienne notice permettait le choix en fonction de la nature et de la classification
-//la nouvelle notice à compter du 08/06/2019 permet le choix en fonction de la nature uniquement et supprime le code 99_AU pour les actes hors de la nature autre.
-if (! defined("ACTES_TYPE_PAR_NATURE")) {
-    //ACTES_TYPE_PAR_NATURE == false => on filtre les types par natures et classfication et on ajoute 99_AU systématiquement
-    //ACTES_TYPE_PAR_NATURE == true => on filtre uniquement par nature
-
-    define("ACTES_TYPE_PAR_NATURE", false); // A compter du 08/06/2019, il faudrait le supprimer et modifier le code comme si cette valeur ne pouvait valoir que true
-}
-
 //Permet d'utiliser le modèle de bordereau à l'ancienne
 if (!defined("USE_LEGACY_BORDEREAU_MODEL")) {
     define("USE_LEGACY_BORDEREAU_MODEL", true);
