@@ -197,28 +197,6 @@ class HeliosEnvoiControler
         libxml_use_internal_errors(false);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function validateAllTransactions()
-    {
-        try {
-            $this->antivirus->isAlive();
-        } catch (Exception $e) {
-            echo $e->getMessage() . "\n";
-            return;
-        }
-
-        $transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
-        $sigtermHandler = SigTermHandler::getInstance();
-        foreach ($transaction_id_list as $transaction_id) {
-            if ($sigtermHandler->isSigtermCalled()) {
-                break;
-            }
-            $this->validateOneTransaction($transaction_id);
-        }
-    }
-
     private function isInIso8859($pes_content)
     {
         $first_line = mb_substr($pes_content, 0, 50);

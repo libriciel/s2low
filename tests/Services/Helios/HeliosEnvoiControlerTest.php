@@ -67,7 +67,7 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         copy($pes_aller, $this->testStreamUrl . "/helios/" . sha1_file($pes_aller));
         $id_t = $this->heliosController->importFile(8, $pes_aller, "pes_aller.xml");
         ob_start();
-        $this->heliosEnvoiControler->validateAllTransactions();
+        $this->heliosEnvoiControler->validateOneTransaction($id_t);
         $this->last_string = ob_get_contents();
         ob_end_clean();
         return $id_t;
