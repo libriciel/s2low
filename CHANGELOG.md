@@ -1,11 +1,14 @@
 # Changelog
 
-## 5.0.8 -
+## 5.0.8 - XXXX-XX-XX
 
 ### Évolutions
 
 - Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité
 - Mise à jour de la bibiliothèque tdt-lib-actes
+
+### Corrections
+- Passer par l'antivirus un acte créé avec "signer avant d’envoyer" puis "déposer sans signature" #755
 
 ## 5.0.7 - 2023-02-06
 
