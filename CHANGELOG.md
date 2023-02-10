@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité
+- Mise à jour de la bibiliothèque tdt-lib-actes
 
 ## 5.0.7 - 2023-02-06
 
