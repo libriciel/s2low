@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
-use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\RgsConnexion;
@@ -48,13 +48,13 @@ class ActesPostWithoutSignatureController extends Controller
         }
 
         $message = "La transaction $transaction_id a été posté sans signature";
-        $workerClassName = ActesAnalyseFichierAEnvoyerWorker::class;
+        $workerClassName = ActesAntivirusWorker::class;
 
 
         $actesTransactionSQL->updateStatus($transaction_id, ActesStatusSQL::STATUS_POSTE, $message);
 
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $workerScript->putJobByClassName($workerClassName, $transaction_info['envelope_id']);
+        $workerScript->putJobByClassName($workerClassName, $transaction_id);
 
         $this->redirect("/modules/actes/actes_transac_show.php?id=$transaction_id", $message);
     }
