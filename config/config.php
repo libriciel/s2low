@@ -557,7 +557,7 @@ Un courrier recommandé avec d’éventuelles pièces jointes vous a été trans
 }
 
 if (!defined('USE_LEGACY_SECURE_MAIL_FIELDS')) {
-    define('USE_LEGACY_SECURE_MAIL_FIELDS', true);
+    define('USE_LEGACY_SECURE_MAIL_FIELDS', false);
 }
 /*************************
  * Paramètre module DIA
