@@ -4,8 +4,8 @@
 
 ### Évolutions
 
-- Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité
-- Mise à jour de la bibiliothèque tdt-lib-actes
+- Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité #575
+- Mise à jour de la bibiliothèque tdt-lib-actes #1003
 
 ### Corrections
 
