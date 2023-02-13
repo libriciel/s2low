@@ -137,6 +137,12 @@ class HeliosEnvoiControler
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
         }
+
+        if (strlen($info_from_pes_aller['cod_col']) > 3) {
+            $message = "Transaction $transaction_id : Le CodCol est trop long";
+            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+            return;
+        }
         $verifyPemFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
@@ -195,28 +201,6 @@ class HeliosEnvoiControler
         //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
         $this->workerScript->putJobByQueueName(HeliosEnvoiWorker::QUEUE_NAME, $transaction_id);
         libxml_use_internal_errors(false);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function validateAllTransactions()
-    {
-        try {
-            $this->antivirus->isAlive();
-        } catch (Exception $e) {
-            echo $e->getMessage() . "\n";
-            return;
-        }
-
-        $transaction_id_list = $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
-        $sigtermHandler = SigTermHandler::getInstance();
-        foreach ($transaction_id_list as $transaction_id) {
-            if ($sigtermHandler->isSigtermCalled()) {
-                break;
-            }
-            $this->validateOneTransaction($transaction_id);
-        }
     }
 
     private function isInIso8859($pes_content)

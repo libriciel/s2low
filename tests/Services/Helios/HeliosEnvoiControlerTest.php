@@ -67,7 +67,7 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         copy($pes_aller, $this->testStreamUrl . "/helios/" . sha1_file($pes_aller));
         $id_t = $this->heliosController->importFile(8, $pes_aller, "pes_aller.xml");
         ob_start();
-        $this->heliosEnvoiControler->validateAllTransactions();
+        $this->heliosEnvoiControler->validateOneTransaction($id_t);
         $this->last_string = ob_get_contents();
         ob_end_clean();
         return $id_t;
@@ -85,6 +85,17 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->assertEquals(HeliosStatusSQL::ERREUR, $info['last_status_id']);
         $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
         $this->assertEquals("Transaction $id_t : ce fichier n'est pas encodé en ISO-8859-1", $last_status_info['message']);
+    }
+
+    public function testCodCollTropLong()
+    {
+        $id_t = $this->validatePesAller("pes_aller_CodColTropLong.xml");
+
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getInfo($id_t);
+        $this->assertEquals(HeliosStatusSQL::ERREUR, $info['last_status_id']);
+        $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals("Transaction $id_t : Le CodCol est trop long", $last_status_info['message']);
     }
 
     /**
