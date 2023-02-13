@@ -9,6 +9,7 @@
 
 ### Corrections
 - Passer par l'antivirus un acte créé avec "signer avant d’envoyer" puis "déposer sans signature" #755
+- Homogénéisation de la valeur par défaut de USE_LEGACY_SECURE_MAIL_FIELDS à false #938
 
 ## 5.0.7 - 2023-02-06
 
