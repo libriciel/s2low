@@ -119,7 +119,7 @@ $authorityInfo->init();
 
 
 $html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
-$html .= "<h2>Visualisation de transactions d'un fichier</h2>\n";
+$html .= "<h2>Détails de la transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id));
