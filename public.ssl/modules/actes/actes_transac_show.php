@@ -117,7 +117,7 @@ $doc->openContent();
 
 $html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n");
 
-$html .= "<h2>Visualisation d'une transaction</h2>\n";
+$html .= "<h2>Détails de la transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
