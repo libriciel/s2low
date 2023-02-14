@@ -475,34 +475,6 @@ if (!defined('HELIOS_GENERATED_FILE_PERMISSION')) {
     define('HELIOS_GENERATED_FILE_PERMISSION', '0644');
 }
 
-if (!defined('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE')) {
-    define('HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE', 'Rôle invalide à configurer');
-}
-
-if (! defined('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME')) {
-    define('HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME', 'France');
-}
-
-if (! defined('HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE')) {
-    define('HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE', '34000');
-}
-
-if (! defined('HELIOS_SIGNATURE_PLATEFORME_CITY')) {
-    define('HELIOS_SIGNATURE_PLATEFORME_CITY', 'Montpellier');
-}
-
-if (!defined('HELIOS_PLATEFORME_CERTIFICATE_P12')) {
-    define('HELIOS_PLATEFORME_CERTIFICATE_P12', __DIR__ . "/../data-exemple/plateforme-cert.p12");
-}
-
-if (! defined('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD')) {
-    define('HELIOS_PLATEFORME_CERTIFICATE_PASSWORD', 'robert_petitpoids');
-}
-
-if (!defined("HELIOS_ENABLE_SIGNATURE_TECHNIQUE")) {
-    define("HELIOS_ENABLE_SIGNATURE_TECHNIQUE", false);
-}
-
 if (!defined("HELIOS_OCRE_FILE_PATH")) {
     define("HELIOS_OCRE_FILE_PATH", HELIOS_FILES_ROOT . "ocre/");
 }

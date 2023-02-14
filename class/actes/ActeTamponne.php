@@ -37,7 +37,7 @@ class ActeTamponne
 
         $actesTransactionsStatusInfo = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction_id, 4);
 
-        $arActes = $actesTransactionsStatusInfo['flux_retour'];
+        $arActes = $actesTransactionsStatusInfo['flux_retour'] ?: '';
 
         $xml = simplexml_load_string($arActes);
 

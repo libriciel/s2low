@@ -132,6 +132,44 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
     /**
      * @throws Exception
      */
+    public function testChangedPesAller()
+    {
+        $pes_aller = __DIR__ . "/../../../test/PHPUnit/helios/fixtures/pes_aller_ok.xml";
+        copy($pes_aller, $this->testStreamUrl . "/helios/" . sha1_file($pes_aller));
+        $id_t = $this->heliosController->importFile(8, $pes_aller, "pes_aller.xml");
+        $pes_aller_change = __DIR__ . "/../../../test/PHPUnit/helios/fixtures/pes_aller.xml";
+        copy($pes_aller_change, $this->testStreamUrl . "/helios/" . sha1_file($pes_aller));
+        ob_start();
+        $this->heliosEnvoiControler->validateOneTransaction($id_t);
+        ob_end_clean();
+
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(-1, $info['status_id']);
+        $this->assertMatchesRegularExpression("#Le fichier a été modifé depuis son postage sur la plateforme#", $info['message']);
+    }
+
+    public function testSigneNoID()
+    {
+        $id_t = $this->validatePesAller("/../../class/fixtures/pes_no_id.xml");
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(HeliosTransactionsSQL::ATTENTE, $info['status_id']);
+        $this->assertMatchesRegularExpression("#Transaction $id_t dans la file d'attente#", $info['message']);
+    }
+
+    public function testDejaSigneBadSignature()
+    {
+        $id_t = $this->validatePesAller("/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml");
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(-1, $info['status_id']);
+        $this->assertMatchesRegularExpression("#La signature du fichier est invalide#", $info['message']);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testSendSamePESAller()
     {
         $this->sendSamePESAllerFailed();

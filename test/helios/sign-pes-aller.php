@@ -39,8 +39,8 @@ $xadesSignatureProperties->claimedRole = "Test Tiers de télétransmission";
 
 $xadesSignature->sign(
     $xml_file,
-    HELIOS_PLATEFORME_CERTIFICATE_P12,
-    HELIOS_PLATEFORME_CERTIFICATE_PASSWORD,
+    __DIR__ . '/../../data-exemple/plateforme-cert.p12',
+    'robert_petitpoids',
     $output,
     $xadesSignatureProperties
 );
