@@ -105,7 +105,7 @@
 <div class="panel panel-default">
   <div class="panel-body">
   <?php if ($this->me->isSuper()) :?>
-    <small>Exemple de numéro SIRET valide : <?php hecho($siret_exemple)?></small>
+    <small>Exemple de numéro SIRET valide : <?php hecho($siret_exemple->getValue())?></small>
   <?php else :?>
     <small>Seul un super admin peut modifier cette liste.</small>
   <?php endif;?>

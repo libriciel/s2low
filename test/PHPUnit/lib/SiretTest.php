@@ -9,35 +9,35 @@ class SiretTest extends PHPUnit_Framework_TestCase
     /**
      * @var Siret
      */
-    private $siret;
+    private $siretFactory;
 
     public function setUp(): void
     {
-        $this->siret = new Siret(new LuhnKey(), new Siren(new LuhnKey()));
+        $this->siretFactory = new \S2lowLegacy\Lib\SiretFactory(new LuhnKey(), new \S2lowLegacy\Lib\SirenFactory(new LuhnKey()));
     }
 
     public function testGood()
     {
-        $this->assertTrue($this->siret->isValid("49358727300035"));
+        $this->assertTrue($this->siretFactory->get("49358727300035")->isValid());
     }
 
     public function testBad()
     {
-        $this->assertFalse($this->siret->isValid("49358727300036"));
+        $this->assertFalse($this->siretFactory->get("49358727300036")->isValid());
     }
 
     public function testBadNotASiren()
     {
-        $this->assertFalse($this->siret->isValid("49358727400033"));
+        $this->assertFalse($this->siretFactory->get("49358727400033")->isValid());
     }
 
     public function testBadLength()
     {
-        $this->assertFalse($this->siret->isValid("493587273"));
+        $this->assertFalse($this->siretFactory->get("493587273")->isValid());
     }
 
     public function testGenerate()
     {
-        $this->assertTrue($this->siret->isValid($this->siret->generate()));
+        $this->assertTrue($this->siretFactory->get($this->siretFactory->generate()->getValue())->isValid());
     }
 }

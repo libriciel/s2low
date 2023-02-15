@@ -9,21 +9,22 @@ class Siren
 
     private $luhnKey;
 
-    public function __construct(LuhnKey $luhnKey)
+    public function __construct(LuhnKey $luhnKey, $value)
     {
         $this->luhnKey = $luhnKey;
+        $this->value = preg_replace('/\s+/', '', $value);
     }
 
-    public function isValid($siren)
+    public function isValid()
     {
-        if (mb_strlen($siren) != self::LENGTH) {
+        if (mb_strlen($this->value) != self::LENGTH) {
             return false;
         }
-        return $this->luhnKey->isValid($siren);
+        return $this->luhnKey->isValid($this->value);
     }
 
-    public function generate()
+    public function getValue(): string
     {
-        return $this->luhnKey->generateValidNumber(self::LENGTH);
+        return $this->value;
     }
 }
