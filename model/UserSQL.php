@@ -83,15 +83,6 @@ class UserSQL extends SQL
         return $roleTypes[$role];
     }
 
-    public function getDIAUser($authority_id)
-    {
-        $sql = "SELECT users.id as user_id FROM users " .
-                " JOIN users_perms ON users.id = users_perms.user_id " .
-                " JOIN modules ON users_perms.module_id = modules.id " .
-                " WHERE authority_id=? AND users_perms.perm='RW' AND modules.name='dia'";
-        return $this->query($sql, $authority_id);
-    }
-
     public function getIdentificationMethod($user_id)
     {
         $info = $this->getInfo($user_id);

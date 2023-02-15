@@ -28,12 +28,6 @@ class AuthoritySQL extends SQL
         return $this->queryOne($sql, $siren);
     }
 
-    public function getBySIRET($siret)
-    {
-        $sql = "SELECT id FROM authorities where dia_siret=?";
-        return $this->queryOne($sql, $siret);
-    }
-
     public function getAll()
     {
         $result = array();

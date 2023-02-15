@@ -28,12 +28,6 @@ class AuthoritySQLTest extends S2lowTestCase
         $this->assertEquals(1, $id);
     }
 
-    public function testGetBySiret()
-    {
-        $info = $this->authoritySQL->getBySIRET("42");
-        $this->assertFalse($info);
-    }
-
     public function testGetAll()
     {
         $info = $this->authoritySQL->getAll();

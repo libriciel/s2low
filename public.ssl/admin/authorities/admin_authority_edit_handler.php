@@ -76,8 +76,6 @@ $helios_do_not_verify_nom_fic_unicity =
 $newmailnotif = "on";
 
 
-$dia_siret = Helpers::getVarFromPost("dia_siret");
-
 if ($newmailnotif == 'on') {
     $newmailnotif = 'true';
 } else {
@@ -172,7 +170,6 @@ $authority->set("fax", $fax);
 $authority->set("email_mail_securise", $email_mail_securise);
 $authority->set("descr_mail_securise", $descr_mail_securise);
 $authority->set("new_notification", $newmailnotif);
-$authority->set("dia_siret", $dia_siret);
 
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {

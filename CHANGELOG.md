@@ -5,6 +5,7 @@
 ### Suppressions
 
 - Supression du code et des macros correspondant à la signature technique #584
+- Suppression du module DIA #1002
 
 ## 5.0.8 - 2023-02-13
 
