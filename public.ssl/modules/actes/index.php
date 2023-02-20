@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\actes\ListeActesHTML;
 use S2lowLegacy\Class\actes\TransactionSQL;
 use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
@@ -108,8 +109,8 @@ $listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission
 
 $doc = new HTMLLayout();
 $doc->setTitle("Liste des transactions - ACTES - S²low");
-$doc->addCSS("/custom/styles/date-picker.css");
-$doc->addJavascript("/javascript/date-picker.js");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
 $doc->addJavascript("/javascript/tedetis.js");
 
 $doc->openContainer();

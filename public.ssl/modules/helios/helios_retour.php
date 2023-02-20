@@ -1,6 +1,7 @@
 <?php
 
 // Instanciation du module courant
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
@@ -88,10 +89,8 @@ $etat = array(
 $envelops = $HR->getDocumentList($where);
 
 $doc = new HTMLLayout();
-$doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
-
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
@@ -140,40 +139,17 @@ $html .= " /></div>\n</div>\n";
 //date minimale de postage
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-3\" for=\"min_submission_date\">Date de réception minimale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"min_submission_date\" name=\"min_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmin_submission_date) . "\"/>\n";
-$html .= "    <script type=\"text/javascript\">\n";
-$html .= "    //<![CDATA[\n";
-$html .= "    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');\n";
-$html .= "    //]]>\n";
-$html .= "    </script>\n";
-
-$html .= "    <a href=\"#datepicker\" id=\"datepicker_min_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_min_submission_date.toggleDatePicker(); return false;\">";
-
-if ($fmin_submission_date) {
-    $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date));
-} else {
-    $html .= "Choisir une date";
-}
-$html .= "</a>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_min_submission_date_calendar\"></div></div>\n";
+$html .= "<div class=\"col-md-3\">";
+$datePickerMin = new DatePicker('min_submission_date', $fmin_submission_date);
+$html .= $datePickerMin->show();
+$html .= "</div>\n";
 
 $html .= "<label class=\"col-md-3\" for=\"max_submission_date\">Date de réception maximale</label>\n";
-$html .= "<div class=\"col-md-3\"><input id=\"max_submission_date\" name=\"max_submission_date\" type=\"hidden\" value=\"" . get_hecho($fmax_submission_date) . "\"/>\n";
-$html .= "    <script type=\"text/javascript\">\n";
-$html .= "    //<![CDATA[\n";
-$html .= "    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');\n";
-$html .= "    //]]>\n";
-$html .= "    </script>\n";
+$html .= "<div class=\"col-md-3\">";
+$datePickerMax = new DatePicker('max_submission_date', $fmax_submission_date);
+$html .= $datePickerMax->show();
 
-$html .= "    <a href=\"#datepicker\" id=\"datepicker_max_submission_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_max_submission_date.toggleDatePicker(); return false;\">";
-
-if ($fmax_submission_date) {
-    $html .= strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date));
-} else {
-    $html .= "Choisir une date";
-}
-$html .= "</a>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_max_submission_date_calendar\"></div></div>\n</div>\n";
+$html .= "</div>\n</div>\n";
 
 
 //colectivitïvité  pour superuser

@@ -1,0 +1,39 @@
+{#tampon_date est le nom du hidden input auquel se réfère le datePicker#}
+
+<script type="text/javascript">
+    $(function() {
+        $('#tampon_date').datepicker();
+        $('#datepicker_tampon_date_link').click(function (e) {
+            $('#tampon_date').datepicker("show");
+            e.preventDefault();
+        });
+    });
+</script>
+
+<a href="#datepicker"
+   id="datepicker_tampon_date_link"
+   class="datepicker_link"
+   >
+    (date de publication)
+</a>
+
+<div class="date_picker" style="display: none;" id="datepicker_tampon_date_calendar"></div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".telecharger_tampon").click(function () {
+            const date_split = $("#tampon_date").val().split("/")
+            var day = date_split[0];
+            var month = date_split[1];
+            var year = date_split[2];
+            var dateString = year+"/"+month+"/"+day;
+            alert(dateString);
+            var href = $(this).attr('href')  + "&date_affichage=" + dateString;
+            $(this).attr('href',href);
+        });
+        $("#tampon_date").datepicker().on("input change", function (e) {
+            document.getElementById("datepicker_tampon_date_link").innerHTML = $("#tampon_date").val();
+        });
+    })
+</script>

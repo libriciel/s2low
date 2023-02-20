@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Lib\FancyDate;
 
@@ -190,27 +191,8 @@ class ListeActesHTML
 
     private function datePicker($date, $name)
     {
-        ?>
-        <input id="<?php echo $name ?>" 
-                name="<?php echo $name ?>" 
-                type="hidden" 
-                value="<?php hecho($date) ?>"/>
-        <script type="text/javascript">
-        obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
-        </script>
-        <a href="#datepicker" 
-            id="datepicker_<?php echo $name?>_link" 
-            class="datepicker_link" 
-            onclick="javascript:obj_<?php echo $name?>.toggleDatePicker(); return false;">
-        <?php if ($date) : ?>
-            <?php echo $this->fancyDate->getDateFrancais($date); ?>
-        <?php else : ?>
-            Choisir une date
-        <?php endif;?>
-        </a>
-        <div class="date_picker" style="display: none;" id="datepicker_<?php echo $name?>_calendar">
-        </div>
-        <?php
+        $datePicker = new DatePicker($name, $date);
+        echo $datePicker->show();
     }
 
     public function displayList($envelopes)

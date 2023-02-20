@@ -15,12 +15,14 @@
  */
 
 // Configuration
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+$html = LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
 
 // Instanciation du module courant
 $module = new Module();
@@ -63,8 +65,8 @@ if (isset($id) && ! empty($id)) {
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
-$doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
 $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
 $doc->setTitle("Gestion des fenêtres module HELIOS");
@@ -91,11 +93,6 @@ if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
 }
 
-// Début de la fenêtre
-$html .= "<div class=\"form-group\">\n";
-$html .= "    <label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
-$html .= "    <div class=\"col-md-8\">\n";
-
 $start_date = Helpers::getFromSession("window_start_date");
 $start_hour = Helpers::getFromSession("window_start_hour");
 if (empty($start_date) && $mod) {
@@ -110,35 +107,15 @@ if (empty($end_date) && $mod) {
     $end_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
 }
 
-$html .= "    <input id=\"window_start_date\" name=\"window_start_date\" type=\"hidden\" value=\"" . $start_date . "\"/>\n";
-$html .= "    <input id=\"window_start_hour\" name=\"window_start_hour\" type=\"hidden\" value=\"" . $start_hour . "\"/>\n";
-$html .= "    <script type=\"text/javascript\">\n";
-$html .= "    //<![CDATA[\n";
-$html .= "    obj_window_start_date = new DatePicker('window_start_date', 'fr');\n";
-$html .= "    obj_window_start_hour = new TimePicker('window_start_hour', 'fr');\n";
-$html .= "    obj_window_start_hour.enableSeconds();\n";
-$html .= "    //]]>\n";
-$html .= "    </script>\n";
-
-$html .= "    <span class=\"form-control\"><a href=\"#datepicker\" id=\"datepicker_window_start_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_start_date.toggleDatePicker(); return false;\">";
-
-if ($start_date) {
-    $html .= strftime("%e %B %Y", Helpers::ansiDateToTimestamp($start_date));
-} else {
-    $html .= "[&nbsp;Choisir une date&nbsp;]";
-}
-$html .= "</a> à ";
-$html .= "<a href=\"#timepicker\" id=\"timepicker_window_start_hour_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_start_hour.toggleTimePicker(); return false;\">";
-
-if ($start_hour) {
-    $html .= Helpers::getPrettyHours($start_hour);
-} else {
-    $html .= "[&nbsp;Choisir une heure&nbsp;]";
-}
-
-$html .= "</a>\n</span>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_window_start_date_calendar\"></div>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"timepicker_window_start_hour_clock\"></div>\n";
+// Début de la fenêtre
+$html .= "<div class=\"form-group\">\n";
+$html .= "<label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
+$html .= "<div class=\"col-md-8\">\n";
+$html .= "<span class=\"form-inline\">";
+$html .= (new DatePicker("window_start_date", "", "form-inline"))->show();
+$html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_start_hour\" name=\"window_start_hour\"></input>";
+$html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_start_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$start_hour'}); });</script>";
+$html .= "</span>\n";
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 
@@ -146,35 +123,11 @@ $html .= "   </div>\n";
 $html .= "<div class=\"form-group\">\n";
 $html .= "    <label class=\"col-md-4 control-label\">Fin de la fenêtre</label>\n";
 $html .= "    <div class=\"col-md-8\">\n";
-$html .= "    <input id=\"window_end_date\" name=\"window_end_date\" type=\"hidden\" value=\"" . $end_date . "\"/>\n";
-$html .= "    <input id=\"window_end_hour\" name=\"window_end_hour\" type=\"hidden\" value=\"" . $end_hour . "\"/>\n";
-$html .= "    <script type=\"text/javascript\">\n";
-$html .= "    //<![CDATA[\n";
-$html .= "    obj_window_end_date = new DatePicker('window_end_date', 'fr');\n";
-$html .= "    obj_window_end_hour = new TimePicker('window_end_hour', 'fr');\n";
-$html .= "    obj_window_end_hour.enableSeconds();\n";
-$html .= "    //]]>\n";
-$html .= "    </script>\n";
-
-$html .= "    <span class=\"form-control\"><a href=\"#datepicker\" id=\"datepicker_window_end_date_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_end_date.toggleDatePicker(); return false;\">";
-
-if ($end_date) {
-    $html .= strftime("%e %B %Y", Helpers::ansiDateToTimestamp($end_date));
-} else {
-    $html .= "[&nbsp;Choisir une date&nbsp;]";
-}
-$html .= "</a> à ";
-$html .= "<a href=\"#timepicker\" id=\"timepicker_window_end_hour_link\" class=\"datepicker_link\" onclick=\"javascript:obj_window_end_hour.toggleTimePicker(); return false;\">";
-
-if ($start_hour) {
-    $html .= Helpers::getPrettyHours($end_hour);
-} else {
-    $html .= "[&nbsp;Choisir une heure&nbsp;]";
-}
-
-$html .= "</a>\n</span>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"datepicker_window_end_date_calendar\"></div>\n";
-$html .= "    <div class=\"date_picker\" style=\"display: none;\" id=\"timepicker_window_end_hour_clock\"></div>\n";
+$html .= "<span class=\"form-inline\">";
+$html .= (new DatePicker("window_end_date", "", "form-inline"))->show();
+$html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_end_hour\" name=\"window_end_hour\" ></input>";
+$html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_end_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$end_hour'}); });</script>";
+$html .= "</span>\n";
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 

@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\helios\HeliosTransactionsListe;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
@@ -189,9 +190,8 @@ $pagerHTML  = new PagerHTML();
 $doc = new HTMLLayout();
 $doc->addHeader($js);
 
-$doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />");
-
+$doc->addHeader("<script src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
 $doc->setTitle("Tedetis : module helios");
 
 $doc->openContainer();
@@ -265,68 +265,22 @@ ob_start();
         <div class="form-group">
             <label class="col-md-3" for="min_submission_date">Date de postage minimale</label>
             <div class="col-md-3">
-                <input id="min_submission_date" name="min_submission_date" type="hidden" value="<?php hecho($fmin_submission_date) ?>"/>
-                <script type="text/javascript">
-                    obj_min_submission_date = new DatePicker('min_submission_date', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_min_submission_date_link" class="datepicker_link" onclick="javascript:obj_min_submission_date.toggleDatePicker(); return false">
-                    <?php if ($fmin_submission_date) : ?>
-                        <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_submission_date)); ?>
-                    <?php else : ?>
-                        Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_min_submission_date_calendar"></div>
+                <?php echo (new DatePicker("min_submission_date", $fmin_submission_date))->show() ?>
+                
             </div>
             <label class="col-md-3" for="min_ack_date">Date d'acquittement minimale</label>
             <div class="col-md-3">
-                <input id="min_ack_date" name="min_ack_date" type="hidden" value="<?php hecho($fmin_ack_date) ?>" />
-                <script type="text/javascript">
-                    obj_min_ack_date = new DatePicker('min_ack_date', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_min_ack_date_link" class="datepicker_link" onclick="javascript:obj_min_ack_date.toggleDatePicker(); return false;">
-                    <?php if ($fmin_ack_date) : ?>
-                        <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmin_ack_date)); ?>
-                    <?php else : ?>
-                      Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_min_ack_date_calendar">
-                </div>
+                <?php echo (new DatePicker("min_ack_date", $fmin_ack_date))->show() ?>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3" for="max_submission_date">Date de postage maximale</label>
             <div class="col-md-3">
-                <input id="max_submission_date" name="max_submission_date" type="hidden" value="<?php hecho($fmax_submission_date) ?>"/>
-                <script type="text/javascript">
-                    obj_max_submission_date = new DatePicker('max_submission_date', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_max_submission_date_link" class="datepicker_link" onclick="javascript:obj_max_submission_date.toggleDatePicker(); return false;">
-                    <?php if ($fmax_submission_date) :?>
-                        <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_submission_date)); ?>
-                    <?php else : ?>
-                        Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_max_submission_date_calendar">
-                </div>
+                <?php echo (new DatePicker("max_submission_date", $fmax_submission_date))->show() ?>
             </div>
             <label class="col-md-3" for="max_ack_date">Date d'acquittement maximale</label>
             <div class="col-md-3">
-                <input id="max_ack_date" name="max_ack_date" type="hidden" value="<?php hecho($fmax_ack_date) ?>" />
-                <script type="text/javascript">
-                    obj_max_ack_date = new DatePicker('max_ack_date', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_max_ack_date_link" class="datepicker_link" onclick="javascript:obj_max_ack_date.toggleDatePicker(); return false;">
-                    <?php if ($fmax_ack_date) :?>
-                        <?php echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($fmax_ack_date)); ?>
-                    <?php else : ?>
-                      Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_max_ack_date_calendar">
-                </div>
+                <?php echo (new DatePicker("max_ack_date", $fmax_ack_date))->show() ?>
             </div>
         </div>
         <div class="form-group">

@@ -19,6 +19,8 @@ use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
@@ -27,6 +29,8 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
 
 require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
+$loader = new FilesystemLoader(__DIR__ . '/../../../templates');
+$twig = new Environment($loader);
 
 $actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
 
@@ -101,10 +105,8 @@ $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 $doc = new HTMLLayout();
 
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 
 
 $doc->setTitle("Tedetis : visualisation d'une transaction");
@@ -280,7 +282,6 @@ if (is_array($files)) {
                 foreach ($workflow as $stage) {
                     if ($stage['status_id'] == 4) {
                         if ($file["mimetype"] == "application/pdf") {
-                            $name = "tampon_date";
                             $date = date("Y-m-d");
 
                             ob_start();
@@ -289,35 +290,15 @@ if (is_array($files)) {
 
                         <a class='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
                         [Télécharger le fichier tamponné]</a>
-                        <input id="<?php echo $name ?>" type="hidden">
+                        <input id="tampon_date" type="hidden">
 
-                            <?php if ($file_num == 1) : ?>
-                        <script type="text/javascript">
-                            obj_<?php echo $name?> = new DatePicker('<?php echo $name?>', 'fr');
-                        </script>
-                        <a href="#datepicker"
-                           id="datepicker_<?php echo $name?>_link"
-                           class="datepicker_link"
-                           onclick="javascript:obj_<?php echo $name?>.toggleDatePicker(); return false;">
-                                (date de publication)
-                        </a>
-                        <div class="date_picker" style="display: none;" id="datepicker_<?php echo $name?>_calendar">
-                        </div>
-
-
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $(".telecharger_tampon").click(function () {
-                                    var href = $(this).attr('href')  + "&date_affichage=" + $("#tampon_date").val();
-                                    $(this).attr('href',href);
-                                });
-                            })
-                        </script>
-
-                            <?php endif; ?>
                             <?php
                             $html .= ob_get_contents();
                             ob_end_clean();
+                            if ($file_num == 1) {
+                                # On ajoute le datepicker
+                                $html .= $twig->render('telechargement_fichier_tamponne.twig', []);
+                            }
                         }
                     }
                 }

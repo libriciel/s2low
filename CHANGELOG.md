@@ -11,6 +11,7 @@
 - Mise à jour d'un certificat utilisé par les tests unitaires #1132
 - Remonter plus finement les erreurs de récupération de flux depuis le serveur DGFiP #1130
 - Correction d'erreurs remontées par la CI #1135
+- Mise à jour des composants javascript TimePicker et DatePicker #999
 
 ### Évolutions
 

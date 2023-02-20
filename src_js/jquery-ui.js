@@ -41,6 +41,9 @@ require('jquery-ui/themes/base/datepicker.css');
 require('jquery-ui/ui/i18n/datepicker-fr');
 $.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
 
+require('jquery-timepicker/jquery.timepicker');
+require('jquery-timepicker/jquery.timepicker.css');
+
 require('jquery-ui/ui/widgets/dialog.js');
 require('jquery-ui/themes/base/dialog.css');
 

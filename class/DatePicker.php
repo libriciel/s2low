@@ -11,12 +11,14 @@ class DatePicker
     private string $hidenInputDefaultValue = "";
 
 
-    public function __construct(string $name, ?string $ansiDate = "")
+    public function __construct(string $name, ?string $ansiDate = "", string $class = "form-control")
     {
         $dateInLetters = "";
         if ($ansiDate) {
             $dateInLetters = strftime("%d %B %Y", Helpers :: ansiDateToTimestamp($ansiDate));
         }
+
+        $this->class = $class;
 
         $this->name = $name;
         $this->datePickerOptions["altField"] =  "#$name";
@@ -35,7 +37,7 @@ class DatePicker
         $options = json_encode($this->datePickerOptions);
         $datePickerName = "datepicker_$this->name";
         $html = "<script>$(function() {\$(\"#$datePickerName\").datepicker($options);});</script>";
-        $html .= "<input type=\"text\" class=\"form-control\" $this->inputDefaultValue name=\"$datePickerName\" id=\"$datePickerName\">";
+        $html .= "<input type=\"text\" class=\"$this->class\" $this->inputDefaultValue name=\"$datePickerName\" id=\"$datePickerName\">";
         $html .= "<input type=\"hidden\" id=\"$this->name\" name=\"$this->name\" $this->hidenInputDefaultValue />\n";
         return $html;
     }
