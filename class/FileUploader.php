@@ -78,10 +78,10 @@ class FileUploader
             return false;
         }
 
-        $this->extension = mb_strtolower(mb_substr($this->fileName, strrpos($this->fileName, ".") + 1));
+        $this->extension = mb_strtolower(mb_substr($this->fileName, mb_strrpos($this->fileName, ".") + 1));
 
         if (in_array($this->extension, $this->forbidenExtension)) {
-            $this->lastError = "Le fichier " . $this->filename . " contient une extension interdite";
+            $this->lastError = "Le fichier " . $this->fileName . " contient une extension interdite";
             return false;
         }
 

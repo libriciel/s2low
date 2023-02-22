@@ -6,6 +6,10 @@
 
 - Remonter les messages d'erreur d'analyse des fichiers reçus du ministère #1009
 
+### Corrections
+
+- Prendre correctement en compte les accents dans les noms des pièces jointes des mails sécurisés #1008
+
 ### Suppressions
 
 - Supression du code et des macros correspondant à la signature technique #584
