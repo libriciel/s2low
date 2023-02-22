@@ -667,7 +667,6 @@ class Helpers
             return "";
         }
         if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
-            var_dump($var);
             throw new UnexpectedValueException("$name n'est pas un entier");
         }
         return $var;

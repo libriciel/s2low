@@ -400,10 +400,6 @@ services:
   S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE:
     autowire: false #TODO : logger
 
-  S2lowLegacy\Class\helios\HeliosSignatureTechnique:
-    arguments:
-      $helios_files_upload_root: "todo"
-
   S2lowLegacy\Class\helios\HeliosVerificationSAE:
     autowire: false #TODO: logger
 

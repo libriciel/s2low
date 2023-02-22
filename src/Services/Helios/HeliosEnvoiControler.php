@@ -7,11 +7,8 @@ use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\FTPHeliosSender;
 use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
-use S2lowLegacy\Class\helios\HeliosSignatureTechnique;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
-use S2lowLegacy\Class\helios\RecoverableHeliosSignatureTechniqueException;
-use S2lowLegacy\Class\helios\UnrecoverableHeliosSignatureTechniqueException;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
@@ -19,12 +16,10 @@ use Exception;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PesAller;
 use S2lowLegacy\Lib\PKCS12;
-use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
-use S2lowLegacy\Lib\XadesSignatureProperties;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -153,27 +148,29 @@ class HeliosEnvoiControler
             new PemCertificateFactory(),
             $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
         );
-        $heliosSignatureTechnique = new HeliosSignatureTechnique(
-            $this->heliosTransactionsSQL,
-            $this->helios_files_upload_root,
-            $xadesSignature,
-            $this->pesAllerRetriever,
-            HELIOS_ENABLE_SIGNATURE_TECHNIQUE
-        );
-        $xadesSignatureProperties = new XadesSignatureProperties();
-        $xadesSignatureProperties->claimedRole = HELIOS_SIGNATURE_PLATEFORME_CLAIMED_ROLE;
-        $xadesSignatureProperties->countryName = HELIOS_SIGNATURE_PLATEFORME_COUNTRY_NAME;
-        $xadesSignatureProperties->postalCode = HELIOS_SIGNATURE_PLATEFORME_POSTAL_CODE;
-        $xadesSignatureProperties->city = HELIOS_SIGNATURE_PLATEFORME_CITY;
 
-        try {
-            $heliosSignatureTechnique->sign($transaction_id, HELIOS_PLATEFORME_CERTIFICATE_P12, HELIOS_PLATEFORME_CERTIFICATE_PASSWORD, $xadesSignatureProperties);
-        } catch (UnrecoverableHeliosSignatureTechniqueException $exception) {
-            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $exception->getMessage(), $transactionInfo['user_id']);
+        if (sha1_file($file_path) != $transactionInfo['sha1']) {
+            $this->updateStatus(
+                $transaction_id,
+                HeliosTransactionsSQL::ERREUR,
+                "Le fichier a été modifé depuis son postage sur la plateforme",
+                $transactionInfo['user_id']
+            );
             return;
-        } catch (RecoverableHeliosSignatureTechniqueException $exception) {
-            $this->updateStatus($transaction_id, HeliosTransactionsSQL::POSTE, $exception->getMessage(), $transactionInfo['user_id']);
-            return;
+        }
+
+        if ($xadesSignature->isSigned($file_path)) {
+            try {
+                $xadesSignature->verify($file_path);
+            } catch (Exception $exception) {
+                $this->updateStatus(
+                    $transaction_id,
+                    HeliosTransactionsSQL::ERREUR,
+                    "La signature du fichier est invalide : " . $exception->getMessage(),
+                    $transactionInfo['user_id']
+                );
+                return;
+            }
         }
         $authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 

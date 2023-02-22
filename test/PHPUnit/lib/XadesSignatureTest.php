@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -63,7 +64,7 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
      * @throws XadesSignatureHasSignatureException
      * @dataProvider filesProvider
      */
-    public function testSign(string $filename)
+    public function testSign(string $filename, bool $isPes)
     {
         $signed_file = $this->sign($filename);
         $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
@@ -82,14 +83,19 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
             new PemCertificateFactory(),
             $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
         );
+        if ($isPes) {
+            $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);      //Test we the signed file is
+            $validationResult = $heliosPESValidation->validate(file_get_contents($signed_file));
+            $this->assertTrue($validationResult);// still a Pes file
+        }
         $xadesSignature->verify($signed_file); //Test no exception is thrown
         $this->assertTrue(true);
     }
 
     public function filesProvider()
     {
-        yield "with minimal file" => [__DIR__ . "/fixtures/test.xml"];
-        yield "with PES file" => [__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml"];
+        yield "with minimal file" => [__DIR__ . "/fixtures/test.xml",false];
+        yield "with PES file" => [__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml",true];
     }
 
     private function verify($file_to_verify)
