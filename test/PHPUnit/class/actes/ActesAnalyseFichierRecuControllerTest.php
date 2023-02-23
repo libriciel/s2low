@@ -182,6 +182,28 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
+    public function testEnveloppeAnomalieAvecErreur()
+    {
+        $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-message-anomalie-avec-erreur");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
+        $actesAnalyseFichierRecuController->analyseOneFileMoveIfError("test");
+
+        $logs = $this->getLogRecords();
+        $this->assertMatchesRegularExpression(
+            "#The value '2' is not accepted by the pattern '\[0-9\]\{3\}'#",
+            $logs[1][S2lowLogger::MESSAGE]
+        );
+        $this->assertMatchesRegularExpression(
+            "#Déplacement du répertoire test#",
+            $logs[3][S2lowLogger::MESSAGE]
+        );
+        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
+        $this->assertTrue(in_array("test", scandir("{$this->tmp_dir2}")));
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testMessageMetierAnomalie()
     {
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-message-anomalie");

@@ -2,6 +2,10 @@
 
 ## 5.0.9 - 2023-0X-XX
 
+### Évolutions
+
+- Remonter les messages d'erreur d'analyse des fichiers reçus du ministère #1009
+
 ### Suppressions
 
 - Supression du code et des macros correspondant à la signature technique #584
