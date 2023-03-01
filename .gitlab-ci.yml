@@ -104,7 +104,7 @@ security-check:
   before_script:
     - cp .trivyignore /
   variables:
-    TRIVY_IMAGE_OPTIONS: "--security-checks vuln"
+    TRIVY_IMAGE_OPTIONS: "--scanners vuln"
     TRIVY_IMAGE_TIMEOUT: 10m
 
 publish-container-to-registry:
