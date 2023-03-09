@@ -388,28 +388,6 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= " </div>\n";
 }
 
-/*$html .= " <div class=\"form-group\">\n";
-$html .= "  <label class=\"control-label col-md-4\">Nouveau système de notification</label>\n";
-$html .= "  <input type=\"checkbox\" name=\"newnotif\" value=\"on\" ";
-if ($authority->get("new_notification") != 'f')
-        $html .= " checked=\"checked\"";
-
-$html .= "/>";
-$html .= " </div>\n";
-*/
-
-if ($authority->getModulePermByName("dia") && $me->isAdmin()) {
-    $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label class=\"control-label col-md-4\">Numéro SIRET pour la réception des DIA</label>\n";
-    $html .= "  <div class=\"col-md-6\">";
-    $html .= "  <input type=\"text\" name=\"dia_siret\" value=\"" . get_hecho($authority->get("dia_siret")) . "\" size=\"30\" maxlength=\"60\" />";
-    $html .= " </div>\n";
-}
-
-
-
-
-
 $html .= "</div>\n";
 $html .= "<div class=\"form-group\"> <button type=\"submit\" class=\"col-md-offset-4 col-md-6 btn btn-default\">";
 

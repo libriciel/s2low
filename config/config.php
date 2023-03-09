@@ -522,28 +522,6 @@ Un courrier recommandé avec d’éventuelles pièces jointes vous a été trans
 if (!defined('USE_LEGACY_SECURE_MAIL_FIELDS')) {
     define('USE_LEGACY_SECURE_MAIL_FIELDS', false);
 }
-/*************************
- * Paramètre module DIA
- */
-
-//Répertoire pour les DIA utilisé dans S²low
-if (!defined("DIA_UPLOAD_PATH")) {
-    define("DIA_UPLOAD_PATH", WORKSPACE_DIRECTORY . "dia/upload");
-}
-
-//Répertoire pour les DIA reçu via PEC/PRESTO
-if (!defined("DIA_DELIVERY_PATH")) {
-    define("DIA_DELIVERY_PATH", WORKSPACE_DIRECTORY . "dia/delivery");
-}
-
-//Répertoire pour les envois vers PEC/PRESTO
-if (!defined("DIA_TO_PRESTO")) {
-    define("DIA_TO_PRESTO", WORKSPACE_DIRECTORY . "dia/to-presto");
-}
-
-if (!defined("DIA_UPSTART_TOUCH_FILE")) {
-    define("DIA_UPSTART_TOUCH_FILE", '/tmp/dia-upstart');
-}
 
 if (! defined("TESTING_ENVIRONNEMENT")) {
     define("TESTING_ENVIRONNEMENT", false);

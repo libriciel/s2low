@@ -18,8 +18,6 @@
         "authority_groups_id_seq",
         "authority_pastell_config_id_seq",
         "authority_siret_id_seq",
-        "dia_transactions_id_seq",
-        "dia_transactions_workflow_id_seq",
         "helios_retour_id_seq",
         "helios_transactions_id_seq",
         "helios_transactions_workflow_id_seq",
@@ -887,12 +885,6 @@
                 "is_nullable": "YES",
                 "column_default": "false"
             },
-            "dia_siret": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            },
             "pastell_url": {
                 "data_type": "character varying",
                 "character_maximum_length": 1024,
@@ -1118,100 +1110,6 @@
                 "column_default": null
             },
             "description": {
-                "data_type": "character varying",
-                "character_maximum_length": 512,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "dia_transactions": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('dia_transactions_id_seq'::regclass)"
-            },
-            "user_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": null
-            },
-            "filename": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "NO",
-                "column_default": null
-            },
-            "file_size": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "submission_date": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "last_status_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "accuse_enregistrement": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "NO",
-                "column_default": null
-            },
-            "accuse_non_preemption": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "message_id": {
-                "data_type": "character varying",
-                "character_maximum_length": 1024,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "message_xml": {
-                "data_type": "text",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            }
-        },
-        "dia_transactions_workflow": {
-            "id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "NO",
-                "column_default": "nextval('dia_transactions_workflow_id_seq'::regclass)"
-            },
-            "transaction_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "status_id": {
-                "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "date": {
-                "data_type": "timestamp with time zone",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "message": {
                 "data_type": "character varying",
                 "character_maximum_length": 512,
                 "is_nullable": "YES",
@@ -2670,18 +2568,6 @@
                 "confkey": []
             }
         },
-        "dia_transactions": {
-            "dia_transactions_pkey": {
-                "conname": "dia_transactions_pkey",
-                "contype": "p",
-                "conrelname": "dia_transactions",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
         "helios_retour": {
             "helios_retour_authority_id": {
                 "conname": "helios_retour_authority_id",
@@ -3335,30 +3221,6 @@
                 "conname": "authority_siret_pkey",
                 "contype": "p",
                 "conrelname": "authority_siret",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
-        "dia_transactions_workflow": {
-            "dia_transactions_workflow_transaction_id_fk": {
-                "conname": "dia_transactions_workflow_transaction_id_fk",
-                "contype": "f",
-                "conrelname": "dia_transactions_workflow",
-                "conkey": [
-                    "transaction_id"
-                ],
-                "confrelname": "dia_transactions",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "dia_transactions_workflow_pkey": {
-                "conname": "dia_transactions_workflow_pkey",
-                "contype": "p",
-                "conrelname": "dia_transactions_workflow",
                 "conkey": [
                     "id"
                 ],

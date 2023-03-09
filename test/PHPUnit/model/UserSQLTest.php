@@ -44,11 +44,6 @@ class UserSQLTest extends S2lowTestCase
         $this->assertEquals("Super administrateur", $this->userSQL->getRoleStr("SADM"));
     }
 
-    public function testGetDIAUser()
-    {
-        $this->assertEmpty($this->userSQL->getDIAUser(1));
-    }
-
     public function testGetIdentificationMethode()
     {
         $this->assertEquals(UserSQL::IDENT_METHOD_CERT_ONLY, $this->userSQL->getIdentificationMethod(1));
