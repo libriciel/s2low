@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("RENDER_STARTING_TIME")) {
+    define("RENDER_STARTING_TIME", microtime(true));
+}
 $debut = microtime(true);
 
 if (php_sapi_name() != 'cli') {

@@ -154,9 +154,9 @@ class HTMLLayout extends Layout
 
         $html .= "                    Offre S²LOW - <a href=\"" . Helpers::getLink("/common/release_notes.php\">\n") .
             $versionningInfo['version-complete'] . "</a>\n";
-        global $debut;
-        if ($debut) {
-            $html .= " - " . round(1000 * (microtime(true) - $debut)) . " ms\n";
+
+        if (defined(RENDER_STARTING_TIME)) {
+            $html .= " - " . round(1000 * (microtime(true) - RENDER_STARTING_TIME)) . " ms\n";
         }
 
         $html .= "            </div>\n        </footer>\n";

@@ -9,6 +9,7 @@
 ### Corrections
 
 - Prendre correctement en compte les accents dans les noms des pièces jointes des mails sécurisés #1008
+- Afficher le temps de chargement des pages #976
 
 ### Suppressions
 
