@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Libriciel\LibActes\Utils\XSDValidationException;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -145,6 +146,10 @@ class ActesAnalyseFichierRecuController
 
         try {
             $archiveData = $archive->getArchiveDataFromFolder($rep_path);
+        } catch (XSDValidationException $e) {
+            $message = $e->getMessage() . ' ' . implode(";", $e->displayValidationErrors());
+            $this->s2lowLogger->error($message);
+            throw new Exception($message);
         } catch (Exception $e) {
             if ($this->isMulticanalResponse($rep_path)) {
                 $this->s2lowLogger->info("Message de réponse à un multicanal");

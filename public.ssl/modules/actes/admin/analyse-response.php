@@ -1,5 +1,6 @@
 <?php
 
+use Libriciel\LibActes\Utils\XSDValidationException;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\TmpFolder;
@@ -30,6 +31,8 @@ try {
     $actesAnalyseFichierRecuController->analyseOneFile($filepath);
     $tmpDir = new TmpFolder();
     $tmpDir->delete($filepath);
+} catch (XSDValidationException $e) {
+    $_SESSION['error'] = $message = $e->getMessage() . ' ' . implode(";", $e->displayValidationErrors());
 } catch (Exception $e) {
     $_SESSION['error'] = $e->getMessage();
 }
