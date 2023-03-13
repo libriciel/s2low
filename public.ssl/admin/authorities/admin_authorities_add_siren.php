@@ -5,10 +5,11 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\LuhnKey;
 use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Lib\SirenFactory;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 
-list($jsonOutput,$authorityGroupSirenSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([JSONoutput::class, AuthorityGroupSirenSQL::class]);
+list($jsonOutput,$authorityGroupSirenSQL,$sirenFactory) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, AuthorityGroupSirenSQL::class, SirenFactory::class]);
 
 $me = new User();
 
@@ -32,17 +33,16 @@ if ($me->isSuper()) {
 } else {
         $authority_group_id = $me->get("authority_group_id");
 }
-
-$siren = Helpers::getVarFromGet("siren");
-$theSiren  = new Siren(new LuhnKey());
-if (! $theSiren->isValid($siren)) {
+/** @var Siren $theSiren */
+$theSiren  = $sirenFactory->get(Helpers::getVarFromGet("siren"));
+if (! $theSiren->isValid()) {
         $jsonOutput->displayErrorAndExit("siren non valide");
 }
 
-if ($authorityGroupSirenSQL->exist($authority_group_id, $siren)) {
+if ($authorityGroupSirenSQL->exist($authority_group_id, $theSiren->getValue())) {
         $jsonOutput->displayErrorAndExit("siren deja present");
 }
-$authorityGroupSirenSQL->add($authority_group_id, $siren);
+$authorityGroupSirenSQL->add($authority_group_id, $theSiren->getValue());
 $result['status'] = 'ok';
 $result['message'] = 'ajout reussi';
 $jsonOutput->display($result);

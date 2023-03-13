@@ -81,6 +81,12 @@ services:
   S2lowLegacy\Lib\OpenStackContainerFetcher:
     autowire: false #Pas un service, est renvoyé par une factory
 
+  S2lowLegacy\Lib\Siren:
+    autowire: false #Pas un service, est renvoyé par une factory
+
+  S2lowLegacy\Lib\Siret:
+    autowire: false #Pas un service, est renvoyé par une factory
+
   S2lowLegacy\Lib\OpenStackContainerWrapperFactory:
     arguments:
       $logger: '@monolog.logger.request'

@@ -5,6 +5,7 @@ namespace S2lowLegacy\Controller;
 use S2lowLegacy\Lib\FileUploaderNG;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\Siren;
+use S2lowLegacy\Lib\SirenFactory;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\GroupSQL;
 
@@ -34,7 +35,7 @@ class AdminGroupController extends Controller
 
         $authorityGroupSirenSQL = $this->getObjectInstancier()->get(AuthorityGroupSirenSQL::class);
 
-        $theSiren  = $this->getObjectInstancier()->get(Siren::class);
+        $theSirenFactory  = $this->getObjectInstancier()->get(SirenFactory::class);
 
         $fileUploaderNG = $this->getObjectInstancier()->get(FileUploaderNG::class);
 
@@ -44,10 +45,10 @@ class AdminGroupController extends Controller
             $this->setMessage("Le fichier SIREN n'a pas été analysé car il n'est pas au bon format");
             $this->redirect("/admin/groups/admin_group_edit.php?id=$id");
         }
-        foreach (preg_split('/\n|\r\n?/', $file_content) as $siren) {
-            $siren = preg_replace('/\s+/', '', $siren);
-            if ($theSiren->isValid($siren)) {
-                $authorityGroupSirenSQL->add($id, $siren);
+        foreach (preg_split('/\n|\r\n?/', $file_content) as $sirenTextValue) {
+            $siren = $theSirenFactory->get($sirenTextValue);
+            if ($siren->isValid()) {
+                $authorityGroupSirenSQL->add($id, $siren->getValue());
             }
         }
 

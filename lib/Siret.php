@@ -9,33 +9,28 @@ class Siret
     private $siren;
     private $luhnKey;
 
-    public function __construct(LuhnKey $luhnKey, Siren $siren)
+    public function __construct(LuhnKey $luhnKey, $value, Siren $siren)
     {
         $this->luhnKey = $luhnKey;
+        $this->value = $value;
         $this->siren = $siren;
     }
 
-    public function isValid($siret)
+    public function isValid()
     {
-        if (mb_strlen($siret) != self::LENGTH) {
+        if (mb_strlen($this->value) != self::LENGTH) {
             return false;
         }
 
-        $siren = mb_substr($siret, 0, Siren::LENGTH);
-        if (! $this->siren->isValid($siren)) {
+        if (! $this->siren->isValid()) {
             return false;
         }
 
-        return $this->luhnKey->isValid($siret);
+        return $this->luhnKey->isValid($this->value);
     }
 
-
-    public function generate()
+    public function getValue()
     {
-        $siren = $this->luhnKey->generateValidNumber(Siren::LENGTH);
-        for ($i = 0; $i < 4; $i++) {
-            $siren .= mt_rand(0, 9);
-        }
-        return $this->luhnKey->getValidNumberWithBegin($siren);
+        return $this->value;
     }
 }

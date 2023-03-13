@@ -7,7 +7,9 @@ use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\RedirectException;
+use S2lowLegacy\Lib\SirenFactory;
 use S2lowLegacy\Lib\Siret;
+use S2lowLegacy\Lib\SiretFactory;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
@@ -61,7 +63,7 @@ class AdminController extends Controller
             $this->controller_exit();
         } //@codeCoverageIgnore
 
-        $this->siret_exemple = $this->getSiret()->generate();
+        $this->siret_exemple = $this->getSiretFactory()->generate();
         $this->title = "Numéros SIRET - {$this->authority_info['name']}";
     }
 
@@ -73,7 +75,7 @@ class AdminController extends Controller
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurPost();
         $authority_id = $recuperateur->getInt('authority_id');
-        $siret = $recuperateur->get('siret');
+        $siret = $this->getSiretFactory()->get($recuperateur->get('siret'));
 
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authority_info = $authoritySQL->getInfo($authority_id);
@@ -82,12 +84,12 @@ class AdminController extends Controller
         } // @codeCoverageIgnore
 
 
-        if (! $this->getSiret()->isValid($siret)) {
-            $this->displayErrorAndExit("Le numéro SIRET n'est pas valide", "/admin/authorities/admin_authority_siret.php?id=$authority_id&siret=$siret");
+        if (! $siret->isValid()) {
+            $this->displayErrorAndExit("Le numéro SIRET n'est pas valide", "/admin/authorities/admin_authority_siret.php?id=$authority_id&siret={$siret->getValue()}");
         } // @codeCoverageIgnore
 
         $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
-        $authoritySiret->add($authority_id, $siret);
+        $authoritySiret->add($authority_id, $siret->getValue());
         $this->displayAndExit("Numéro SIRET ajouté", "/admin/authorities/admin_authority_siret.php?id=$authority_id");
     }
     // @codeCoverageIgnore
@@ -141,9 +143,14 @@ class AdminController extends Controller
     /**
      * @return Siret
      */
-    private function getSiret()
+    private function getSiretFactory(): SiretFactory
     {
-        return $this->getObjectInstancier()->get(Siret::class);
+        return $this->getObjectInstancier()->get(SiretFactory::class);
+    }
+
+    private function getSirenFactory(): SirenFactory
+    {
+        return $this->getObjectInstancier()->get(SirenFactory::class);
     }
 
     public function authoritiesAction()
@@ -157,7 +164,7 @@ class AdminController extends Controller
         $this->fname = $recuperateur->get("name");
         $this->fgroup = $recuperateur->get("group");
         $this->api = $recuperateur->get("api");
-        $this->fsiren = preg_replace("#\s#", "", $recuperateur->get("siren"));
+        $this->fsiren = $this->getSirenFactory()->get($recuperateur->get("siren"))->getValue();
         $this->fsiret = $recuperateur->get("siret");
         $this->count = $recuperateur->get("count") ?: 10;
         $this->page_number = $recuperateur->getInt('page', 1);
