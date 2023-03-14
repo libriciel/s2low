@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Remonter les messages d'erreur d'analyse des fichiers reçus du ministère #1009
+- Mise à jour du schéma XSD des actes #1007
 
 ### Corrections
 
