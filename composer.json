@@ -25,7 +25,7 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "ext-json": "^8.1",
-    "libriciel/tdt-lib-actes": "^2.0.1",
+    "libriciel/tdt-lib-actes": "^2.0.2",
     "ext-dom": "*",
     "erusev/parsedown": "^1.7",
     "ext-pgsql": "*",
