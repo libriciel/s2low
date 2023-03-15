@@ -113,6 +113,7 @@ services:
 
             APP_ENV: ${APP_ENV:-prod}
             APP_DEBUG: ${APP_DEBUG:-false}
+            USE_PROD_NOTIFICATIONS: ${USE_PROD_NOTIFICATIONS:-true}
 
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace

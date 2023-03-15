@@ -34,6 +34,7 @@ class ActesNotification
      * @var \Twig\Environment
      */
     private Environment $twig;
+    private bool $useProdNotifications;
 
     /**
      * @param \S2lowLegacy\Class\actes\ActesTransactionsSQL $actesTransactionsSQL
@@ -57,7 +58,8 @@ class ActesNotification
         $actes_appli_trigramme,
         ActesRetriever $actesRetriever,
         BordereauPdfGenerator $bordereauPdfGenerator,
-        Environment $twigEnvironment
+        Environment $twigEnvironment,
+        $use_prod_notifications
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->acteTamponne = $acteTamponne;
@@ -69,6 +71,7 @@ class ActesNotification
         $this->actesRetriever = $actesRetriever;
         $this->bordereauPdfGenerator = $bordereauPdfGenerator;
         $this->twig = $twigEnvironment;
+        $this->useProdNotifications = $use_prod_notifications;
     }
 
     /**
@@ -120,7 +123,9 @@ class ActesNotification
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
 
         $defaultBroadcastEmail = explode(',', $authority_info['default_broadcast_email'] ?? '');
-        $brodcastEmail = explode(',', $transaction_info['broadcast_emails']);
+
+        $broadcast_emails = $transaction_info['broadcast_emails'] ?? '';
+        $brodcastEmail = explode(',', $broadcast_emails);
         $brodcastEmail = array_diff($brodcastEmail, $defaultBroadcastEmail);
 
         $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
@@ -144,7 +149,7 @@ class ActesNotification
             $this->actesTransactionsSQL->setAutoBroadcasted($transaction_info['id']);
         }
 
-        if ($transaction_info['broadcast_emails']) {
+        if ($broadcast_emails) {
             foreach ($brodcastEmail as $email) {
                 $this->sendMail($transaction_info, $email, $transaction_info['broadcast_send_sources'] == 1, false, $fichiers_tamponnees);
             }
@@ -183,13 +188,16 @@ class ActesNotification
                 }
             }
         }
-
-        $mailContent = $this->getMailContent($transactionInfo, $add_url_recup);
+        $mailContent = $this->getMailContent($transactionInfo, $add_url_recup, $this->useProdNotifications);
         $mailText = $this->twig->render('mailtextenotificationacte.twig', $mailContent);
         $mailHtml = $this->twig->render('mailnotificationacte.html.twig', $mailContent);
         $authority_info = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
+        $mailSubject = "[{$authority_info['name']}] Notification concernant l'acte " . $transactionInfo['number'];
+        if (!$this->useProdNotifications) {
+            $mailSubject = "[SIMULATION] $mailSubject";
+        }
         $mailer->sendMailWithHtml(
-            "[{$authority_info['name']}] Notification concernant l'acte " . $transactionInfo['number'],
+            $mailSubject,
             $mailText,
             $mailHtml
         );
@@ -212,7 +220,7 @@ class ActesNotification
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\LoaderError
      */
-    private function getMailContent($transaction_info, $add_url_recup): array
+    private function getMailContent($transaction_info, $add_url_recup, $useProdNotifications): array
     {
 
         $last_status_id = $transaction_info['last_status_id'];
@@ -237,7 +245,8 @@ class ActesNotification
             "archive_url" => $transaction_info['archive_url'],
             "date" => $status_info['date'],
             "submission_date" => $envelope_info['submission_date'],
-            "add_url_recup" => $add_url_recup
+            "add_url_recup" => $add_url_recup,
+            "isProd" => $useProdNotifications
         ];
     }
 

@@ -100,6 +100,8 @@ class LegacyObjectsManager
         $objectInstancier->set("website", WEBSITE);
         $objectInstancier->set("website_mail", WEBSITE_MAIL);
 
+        $objectInstancier->set("use_prod_notifications", USE_PROD_NOTIFICATIONS);
+
         $objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
         $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
 

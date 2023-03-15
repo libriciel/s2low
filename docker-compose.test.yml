@@ -1,5 +1,9 @@
 # For all environnements except production
 services:
+  web:
+    environment:
+      USE_PROD_NOTIFICATIONS: ${USE_PROD_NOTIFICATIONS:-false}
+
   db:
     restart: unless-stopped
     image: registry.libriciel.fr/public/outils/postgres:14.5

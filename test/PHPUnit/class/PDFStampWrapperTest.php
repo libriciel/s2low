@@ -22,7 +22,11 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
      */
     public function testStamp()
     {
-        $pdfStampWrapper = new PDFStampWrapper("http://pdf-stamp/", __DIR__ . "/../../../public.ssl/custom/images/s2low-stamp.png");
+        $pdfStampWrapper = new PDFStampWrapper(
+            "http://pdf-stamp/",
+            __DIR__ . "/../../../public.ssl/custom/images/s2low-stamp.png",
+            new \S2lowLegacy\Class\PdfStampMessages(false)
+        );
         $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory("test"));
         $pdfStampData = new PDFStampData();
         $pdfStampData->identifiant_unique = "toto";

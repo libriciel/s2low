@@ -99,6 +99,9 @@
         <p>Pour toute demande d'information, vous pouvez contacter l'expéditeur précisé dans le contenu du message sur la
             plateforme sécurisée.</p>
         <p>Ce mail vous est envoyé automatiquement par s²low.</p>
+        {% if not isProd %}
+            <p><b>ATTENTION : Ce mail est issu d'une plate-forme de test/dev/formation. Il n'a aucune valeur légale.</b></p>
+        {% endif %}
     </div>
 </div>
 </body>

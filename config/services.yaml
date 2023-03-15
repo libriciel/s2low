@@ -5,7 +5,10 @@ parameters:
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
   app.helios_files_upload_root: '/data/tdt-workspace/helios/sending/'    #TODO : utiliser les variables d'environnement
-
+  app.default_use_prod_notifications: false
+  app.use_prod_notifications: '%env(bool:default:app.default_use_prod_notifications:USE_PROD_NOTIFICATIONS)%'
+  app.default_actes_appli_trigramme: 'abc'
+  app.actes_appli_trigramme: '%env(default:app.default_actes_appli_trigramme:ACTES_APPLI_TRIGRAMME)%'
 services:
   _defaults:
     autowire: true
@@ -180,6 +183,9 @@ services:
   S2lowLegacy\Class\PearMail: #TODO Impossible pour l'instant ( chargé par PEAR )
     autowire: false
 
+  S2lowLegacy\Class\PdfStampMessages:
+    autowire: false
+
   S2lowLegacy\Class\ModulePermission: #Impossible : doit nécésairement être paramétré par module
     autowire: false
 
@@ -321,7 +327,8 @@ services:
 
   S2lowLegacy\Class\actes\ActesNotification:
     arguments:
-      $actes_appli_trigramme: "todo"
+      $actes_appli_trigramme: "%app.actes_appli_trigramme%"
+      $use_prod_notifications: "%app.use_prod_notifications%"
 
   S2lowLegacy\Class\actes\ActesPdf:
     autowire: true
