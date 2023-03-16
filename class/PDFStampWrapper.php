@@ -11,12 +11,17 @@ class PDFStampWrapper
 
     /** @var CurlWrapperFactory */
     private $curlWrapperFactory;
+    /**
+     * @var \S2lowLegacy\Class\PdfStampMessages
+     */
+    private PdfStampMessages $pdfStampMessage;
 
-    public function __construct($pdf_stamp_url, $image_for_stamp)
+    public function __construct($pdf_stamp_url, $image_for_stamp, PdfStampMessages $pdfStampMessages)
     {
         $this->pdf_stamp_url = $pdf_stamp_url;
         $this->image_for_stamp = $image_for_stamp;
         $this->setCurlWrapperFactory(new CurlWrapperFactory());
+        $this->pdfStampMessage = $pdfStampMessages;
     }
 
     public function setCurlWrapperFactory(CurlWrapperFactory $curlWrapperFactory)
@@ -48,15 +53,15 @@ class PDFStampWrapper
             ),
             'rows' => array(
                 array(
-                    'title' => 'Envoyé en préfecture le',
+                    'title' => $this->pdfStampMessage->getMessageEnvoi(),
                     'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
                 ),
                 array(
-                    'title' => 'Reçu en préfecture le',
+                    'title' => $this->pdfStampMessage->getMessageReception(),
                     'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
                 ),
                 array(
-                    'title' => 'Publié le',
+                    'title' => $this->pdfStampMessage->getMessagePublication(),
                     'value' => $date_affichage,
                     'logo' => array(
                         'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),

@@ -34,3 +34,7 @@ URL pour récupérer les fichiers : {{ url }}
 {% if archive_url %}
 Archive disponible sur :{{ archive_url }}
 {% endif %}
+
+{% if not isProd %}
+ATTENTION : Ce mail est issu d'une plate-forme de test/dev/formation. Il n'a aucune valeur légale.
+{% endif %}

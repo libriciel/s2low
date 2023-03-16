@@ -22,6 +22,7 @@ services:
             XDEBUG_MODE: "coverage"
             APP_ENV: ${APP_ENV:-dev}
             APP_DEBUG: ${APP_DEBUG:-true}
+            USE_PROD_NOTIFICATIONS: ${USE_PROD_NOTIFICATIONS:-false}
 
     db:
         environment:

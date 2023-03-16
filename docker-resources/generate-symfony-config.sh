@@ -10,4 +10,5 @@ APP_DEBUG=${APP_DEBUG:-true}
 
 MAILER_DSN="${MAILER_DSN:-smtp://maildev:1025?verify_peer=0}"
 
+ACTES_APPLI_TRIGRAMME=${ACTES_APPLI_TRIGRAMME:-abc}
 EOF
