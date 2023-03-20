@@ -13,6 +13,7 @@
 - Prendre correctement en compte les accents dans les noms des pièces jointes des mails sécurisés #1008
 - Afficher le temps de chargement des pages #976
 - Homogénéiser le contrôle des espaces pour les siren #691
+- Remplacement de la constante ALWAYS_USE_EXTENDED_VALIDCA par ONLY_USE_VALIDCARGS #1012
 
 ### Suppressions
 
