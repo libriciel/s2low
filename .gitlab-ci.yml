@@ -1,12 +1,7 @@
 include:
-
-  - project: "libriciel/integration-continue/templates"
-    ref: publish-container-to-registry-1.2.0
-    file: 'jobs/publish-container-to-registry/publish-container-to-registry.yml'
-
-  - project: "libriciel/integration-continue/templates"
-    ref:  security-check-1.0.0
-    file: 'jobs/security-check/security-check.yml'
+  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/publish-compose-to-nexus@0.1.3.yaml?token=r2-9c1cd1c167.yml'
+  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/publish-container-to-registry@1.2.0.yaml?token=r2-bec2c06726.yml'
+  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/security-check@1.2.0.yaml?token=r2-de7bd52aa1.yml'
 
 stages:
     - build
@@ -103,9 +98,6 @@ security-check:
   allow_failure: true
   before_script:
     - cp .trivyignore /
-  variables:
-    TRIVY_IMAGE_OPTIONS: "--scanners vuln"
-    TRIVY_IMAGE_TIMEOUT: 10m
 
 publish-container-to-registry:
   before_script:
@@ -114,26 +106,15 @@ publish-container-to-registry:
     - sed -i "s/%BUILD_DATE%/$date/" ./manifest.txt
     - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
 
-publish_to_nexus:
-  stage: deploy
-  only:
-    - tags
-  needs: [ "publish-container-to-registry" ]
+publish-compose-to-nexus:
   variables:
-    DIRECTORY_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}
-    TARBALL_NAME: ${PRODUCT}-${CI_COMMIT_REF_NAME}.tar.gz
-    PAYLOAD: "payload={\"text\": \"[S2low] Création de la version [$CI_COMMIT_REF_NAME](https://nexus.libriciel.fr/repository/ls-raw/public/plateforme/s2low/${TARBALL_NAME})\"}"
-  script:
-    - mkdir -p ${DIRECTORY_NAME}
-    - sed -e "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml >  ${DIRECTORY_NAME}/docker-compose.yml
-    - cp ./.env.dist ${DIRECTORY_NAME}/.env.dist
-    - cp ./docker-resources/Makefile ${DIRECTORY_NAME}/Makefile
-    - tar cvzf ${TARBALL_NAME} ${DIRECTORY_NAME}
-    - curl -v -u ${REGISTRY_CONTAINER_USER}:${REGISTRY_CONTAINER_PASSWORD} --upload-file ${TARBALL_NAME} https://nexus.libriciel.fr/repository/ls-raw/public/plateforme/s2low/${TARBALL_NAME}
-    - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
-  artifacts:
-    paths:
-      - ${TARBALL_NAME}
+    INPUT_DIRECTORY: ./
+  before_script:
+    - mv docker-resources docker-resources-orig
+    - mkdir docker-resources
+    - mv docker-resources-orig/Makefile docker-resources/
+    - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml
+  needs: [ "publish-container-to-registry" ]
 
 deploy_app:
   stage: staging
