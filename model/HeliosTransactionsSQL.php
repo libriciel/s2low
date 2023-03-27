@@ -26,6 +26,8 @@ class HeliosTransactionsSQL extends SQL
 
     public const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
     public const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
+
+    public const DETRUITE = 22;
     private const SEND_WARNING_AFTER_SECOND = 172800;
 
     private const WORKFLOW_MESSAGE_MAX_LENGTH = 512;
@@ -120,10 +122,25 @@ class HeliosTransactionsSQL extends SQL
         $this->query($sql, $archive_url, $transaction_id);
     }
 
-    public function getTransactionToDelete()
+    public function getTransactionToDelete()    //TODO : il semblerait que ce ne soit pas utilisé ?
     {
         $sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=6";
         return $this->query($sql);
+    }
+
+    public function getTransactionsADetruire($date)
+    {
+        $sql = 'SELECT helios_transactions.id FROM helios_transactions_workflow 
+    JOIN helios_transactions ON helios_transactions_workflow.transaction_id=helios_transactions.id 
+                                    AND helios_transactions_workflow.status_id = helios_transactions.last_status_id 
+    WHERE helios_transactions_workflow.date < ? AND helios_transactions_workflow.status_id IN (?,?) ';
+
+        return $this->queryOneCol(
+            $sql,
+            $date,
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+            HeliosTransactionsSQL::ERREUR
+        );
     }
 
     public function updateLastStatusId()

@@ -71,6 +71,32 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $this->assertEquals($this->transaction_id, $transaction_list[0]['id']);
     }
 
+    public function testGetTransationsADetruireAjd()   // Les transactions crées aujourd'hui ne peuvent pas être détruites ajd
+    {
+        $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, "test");
+        $transaction_list = $this->heliosTransactionSQL->getTransactionsADetruire(
+            (new DateTime())->format("Y-m-d")
+        );
+        $this->assertEmpty($transaction_list);
+    }
+
+    public function testGetTransationsADetruireDemain() // Les transactions créés aujourd'hui seront à détruire demain
+    {
+        $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, "test");
+        $transaction_list = $this->heliosTransactionSQL->getTransactionsADetruire(
+            (new DateTime())->modify("+1 day")->format("Y-m-d")
+        );
+        $this->assertEquals($this->transaction_id, $transaction_list[0]);
+    }
+
+    public function testGetTransationsMauvaisEtat() //Les transactions dans un état autre que Erreur ou Info Disponible ne
+    {
+                                               // doivent pas être détruites
+        $this->assertEmpty($this->heliosTransactionSQL->getTransactionsADetruire(
+            (new DateTime())->modify("+1 day")->format("Y-m-d")
+        ));
+    }
+
     public function testUpdateLastStatusId()
     {
         $this->expectOutputString("{$this->transaction_id} : " . HeliosTransactionsSQL::POSTE . "\n");

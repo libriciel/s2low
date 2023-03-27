@@ -36,8 +36,8 @@
 
   <IdPost V="034000"/>
   <IdColl V="12345678912345"/>
-  <CodCol V="123"/>
-  <CodBud V="12"/>
+  <CodCol V="400"/>
+  <CodBud V="01"/>
   <LibelleColBud V="COMMUNE"/>
  </EnTetePES>
  <PES_DepenseAller>
