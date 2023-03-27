@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.3.10 - 
+
+### Corrections
+- Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
+
 ## 5.0.9 - 2023-03-21
 
 ### Évolutions

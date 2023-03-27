@@ -56,13 +56,13 @@ class PastellWrapper
 
         if ($http_verb != 'PATCH') {
             foreach ($postData as $name => $value) {
-                $curl_wrapper->addPostData($name, $value);
+                $curl_wrapper->addPostData($name, utf8_decode($value));
             }
         } else {
             $curl_wrapper->setProperties(CURLOPT_POSTFIELDS, http_build_query($postData));
         }
         foreach ($postFile as $field => $file_info) {
-            $curl_wrapper->addPostFile($field, $file_info[0], $file_info[1]);
+            $curl_wrapper->addPostFile($field, $file_info[0], utf8_decode($file_info[1]));
         }
 
         if ($http_verb == 'PATCH') {

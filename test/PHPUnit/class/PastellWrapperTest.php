@@ -144,6 +144,42 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testCreateActesWithAccents()
+    {
+        $curlWrapperFactory = $this->getCurlWrapperFactory(
+            ''
+        );
+        /** @var \PHPUnit\Framework\MockObject\MockObject | CurlWrapper $curlWrapper */
+        $curlWrapper =  $curlWrapperFactory->getNewInstance();
+
+        $curlWrapper->method("addPostData")->withConsecutive(
+            ["id_e","35"],
+            ["id_d","42"],
+            ["acte_nature","4"],
+            ["numero_de_lacte","12"],
+            ["objet",utf8_decode("testéöà")],
+            ["date_de_lacte","2018-10-22"],
+            ["classification","3.1"]
+        );
+
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
+        $pastellProperties->id_e = 35;
+        $pastellProperties->login = "toto";
+
+        $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
+        $this->assertEquals(
+            42,
+            $pastellWrapper->createActes([
+                'nature_code' => 4,
+                'number' => 12,
+                'subject' => 'testéöà',
+                'decision_date' => '2018-10-22',
+                'classification' => '3.1'
+            ])
+        );
+    }
+
     /**
      * @throws Exception
      */
