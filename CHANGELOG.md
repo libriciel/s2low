@@ -8,6 +8,10 @@
 ### Corrections
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
 
+### Evolutions 
+
+- Prise en compte de la version 5.20 du schema XSD Pes Aller #1025
+
 ## 5.0.9 - 2023-03-21
 
 ### Évolutions

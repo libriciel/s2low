@@ -1,0 +1,21 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\NS_Marche\r0
+2
+11
+15:Class_MarcheAller.xsd|1|18408cca996|46d6|8a0a9397|ec836994dc4711ec89ea5254005216c0|0
+1c:Class_ModificationMarche.xsd|1|17b2a2f1088|31c5|74b597c6|1447a85bbe7711e989b800163e0c063e|0
+19:Class_DonneeExecution.xsd|1|17b2a2f0695|b36|afabab14|aab4cfa778c811ea8faf00163e0c063e|0
+10:CommunMarche.xsd|1|18408cca948|5a88|2b5bf4b8|522e57629f8611ecbc255254005216c0|0
+20:Class_ModificationConcession.xsd|1|17b2a2f067d|afc|ee46b4b0|7f31ba01a9af11e78db500163e0c063e|0
+1c:Class_VentilationMontant.xsd|1|18408cca929|3d55|51eb30a2|ecd3699cdc4711ec89ea5254005216c0|0
+14:Class_Concession.xsd|1|18408cca977|2149|44c159b3|e9e03c7acd4011ecbbae5254005216c0|0
+13:PES_MarcheAller.xsd|1|17b2a2f0696|b42|5d1a7dd7|1557a87bbe7711e989b800163e0c063e|0
+1d:Class_OperateurEconomique.xsd|1|18408cca996|504f|96a07c98|9a70687d8db111ec84c55254005216c0|0
+12:Class_Garantie.xsd|1|17b2a2f103b|5f0|e629ebef|aaf4cfaf78c811ea8faf00163e0c063e|0
+f:Class_PJRef.xsd|1|17b2a2f103a|9cc|49af5366|b94c9cc14e6411ea860600163e0c063e|0
+12:Class_Acheteur.xsd|1|17b2a2f1043|955|a42f2acc|8461bac5a9af11e78db500163e0c063e|0
+19:Class_IndiceReference.xsd|1|17b2a2f0688|936|84c7eb19|8001ba1da9af11e78db500163e0c063e|0
+18:Class_BancaireMarche.xsd|1|17b2a2f1070|1a26|45a7c5c6|a7a99559d0b411e99e3800163e0c063e|0
+1d:Class_ConditionsExecution.xsd|1|18408cca919|3977|cc2c90ca|ed1369a4dc4711ec89ea5254005216c0|0
+19:Class_Concessionnaire.xsd|1|18408cca948|d67|6e888280|9ab068858db111ec84c55254005216c0|0
+17:Class_LieuExecution.xsd|1|17b2a2f0690|633|c1891886|80b1ba39a9af11e78db500163e0c063e|0

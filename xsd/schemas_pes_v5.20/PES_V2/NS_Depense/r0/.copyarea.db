@@ -1,0 +1,10 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\NS_Depense\r0
+2
+6
+11:CommunDepense.xsd|1|17b2a2ef5cb|38bf|997b329e|3c7a2935def711e6939800163e0c063e|0
+14:PES_DepenseAller.xsd|1|17b2a2ef5dc|128a|79d00e33|6665edad8ece11e595a300163e0c063f|0
+1a:Class_LigneMandatAller.xsd|1|18408cca5af|3f64|8a6586a8|6fc8fb28dc4811ec8aaa5254005216c0|0
+15:Class_MandatAller.xsd|1|17b2a2ef5b2|1e06|bb7235c6|4d34d1d05f3f11eb8c1500163e0c063e|0
+1f:Class_BordereauDepenseAller.xsd|1|17b2a2ef5a1|cfe|e65c6516|61e8352f78c811ea8f4400163e0c063e|0
+16:Class_TiersDepense.xsd|1|18408cca86e|13ed|e66cbbb3|05a5729bc49f11eca44e5254005216c0|0

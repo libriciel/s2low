@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TBancaire">
+    <xs:annotation>
+      <xs:documentation>Le bloc CpteBancaire représente les information bancaires.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="IdPayInt" type="Base_Alphanum4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale du pays.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+Si valorisation la valeur doit être connue et valide sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.
+La balise IdPayInt est obligatoirement valorisée si IdBancInt est servie. Si la balise IdPayInt n'est pas valorisée alors qu'IdBancInt l'est, rejet du bordereau contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdBancInt" type="Base_Alphanum11" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale de la banque.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+Si valorisation la valeur doit être connue et valide sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.
+La balise IdBancInt est obligatoirement valorisée si IdPayInt est servie. Si la balise IdBancInt n'est pas valorisée alors qu'IdPayInt l'est, rejet du bordereau contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeEtab" type="Base_Alphanum5">
+            <xs:annotation>
+              <xs:documentation>Code de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du bordereau qui comprend le tiers qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeGuic" type="Base_Alphanum5_Light">
+            <xs:annotation>
+              <xs:documentation>Code du guichet de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du bordereau qui comprend le tiers qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdCpte" type="Base_Texte11">
+            <xs:annotation>
+              <xs:documentation>Numéro du compte du client de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du bordereau qui comprend le tiers qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CleRib" type="Base_Num2_Light">
+            <xs:annotation>
+              <xs:documentation>Clé RIB du compte client.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du bordereau qui comprend le tiers qui porte ce RIB incomplet ou erroné .</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="BIC" type="Base_Texte11BIC" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Bank International Code.
+Tous les caractères alphabétiques du BIC doivent être en majuscules, sinon rejet du flux.
+Doit être un code connu et valide
+sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau
+La balise est obligatoire pour toute domiciliation à l'étranger, sinon rejet du bordereau.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IBAN" type="Base_Texte34IBAN">
+            <xs:annotation>
+              <xs:documentation>International Bank Account Number
+Tous les caractères alphabétiques de l'IBAN doivent être en majuscules, sinon rejet du flux.
+Doit être complet et valide sinon rejet du bordereau ou de l'ensemble des PPEM du bordereau.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="LibBanc" type="Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé de l'établissement bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TitCpte" type="Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Nom du titulaire du compte client.
+Cette zone reprend la désignation du titulaire du compte à créditer telle qu'elle est précisée sur le relevé d'identité bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteBanc" type="Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour des éléments de la domiciliation bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
