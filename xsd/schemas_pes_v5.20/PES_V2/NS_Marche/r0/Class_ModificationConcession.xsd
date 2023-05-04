@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TModificationsConcession">
+    <xs:annotation>
+      <xs:documentation>Modifications d'un contrat de concession.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ModificationConcession" type="TModificationConcession" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Modifications d'un contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TModificationConcession">
+    <xs:annotation>
+      <xs:documentation>Tous les ans, l'autorité concédante publie les données d'exécution jusqu'à la fin du contrat de concession. Ces données ne sont transmises qu'à partir de la première année et non pas lors de la publication initiale des données faisant suite à la notification.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ObjetModification" type="cm:Base_Texte256">
+        <xs:annotation>
+          <xs:documentation>Description synthétique de la modification apportée au contrat de concession (ex : Modification du concessionnaire. Nouveau concessionnaire : xxxxxxxSAS).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DatePublicationDonneesModification" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de publication des données incluant la modification apportée au contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DateSignatureModification" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de signature de la modification au contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DureeMois" type="cm:Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nouvelle durée exprimée en mois (valeur arrondie au nombre supérieur).
+Obligatoire si la modification porte sur la durée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValeurGlobale" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nouvelle valeur globale du contrat de concession.
+Obligatoire en cas de modification de la valeur globale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

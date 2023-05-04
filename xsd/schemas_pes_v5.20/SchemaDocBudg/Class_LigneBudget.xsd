@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:z="odm:enrichissement" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+<!--   <xs:include schemaLocation="Class_PJReference.xsd" /> -->
+  <xs:include schemaLocation="CommunBudget.xsd" />
+  <xs:complexType name="TLigneBudget">
+    <xs:annotation>
+      <xs:documentation>Lignes du documents budgétaire : Nature, fonction, opération…</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Groupe" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom des groupes .
+Balise exploitée dans Hélios pour le Compte Financier Unique</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ChapitreFonction" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Chapitre Fonction (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegroupFonction" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Fonction de regroupement (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ChapitreNature" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Chapitre Nature (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegroupNature" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nature de regroupement (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Nature" type="Base_ChaineNum30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte par nature.
+Ne doit contenir que des chiffres.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Code" type="Base_ChaineNum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de convention de l'opération pour compte de tiers.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibCpte" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du compte. Cette zone permet le cas échéant de personnaliser le strict libellé du compte par nature et d'y adjoindre un complément d'information.
+Dans le cas d'une opération sur compte de tiers ou une opération d'équipement, indication du libellé de cette opération.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Fonction" type="Base_ChaineNum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte par fonction. Cette zone n'est servie que pour les collectivités de plus de 3500 habitants et pour les collectivités en comptabilité M14 ayant voté le budget par fonction. Pour les communes votant par nature, cette zone comporte obligatoirement la référence fonctionnelle la plus détaillée conforme à la liste des codes fonctionnels. Si la zone "contrôle fonction" est servie, la fonction doit être servie. Zone concernant seulement les collectivités utilisant l'instruction M14, M52, M57 et M71.
+Ne doit contenir que des chiffres.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Operation" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte opération. Zone renseignée à chaque fois que la collectivité a spécifié les crédits au niveau de l'opération d'investissement. Le code opération doit être servi lorsque la zone "contrôle opération" est servie. Zone concernant seulement les collectivités utilisant l'instruction M14, M4x, M52, M57, M61, M71 et M832.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoOpe" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Information de l'opération (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ContNat" type="Base_ChaineNum12" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Contrôle compte budgétaire. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution. Zone non utilisée en M21.
+Ne doit contenir que des chiffres.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ArtSpe" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code article spécialisé. Zone permettant d'identifier les articles spécialisés. Zone non utilisée en M21. Valeurs 0=non spécialisé, 1=spécialisé. Par défaut sur 0.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ContFon" type="Base_ChaineNum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Contrôle fonction. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution. Zone non utilisée en M21.
+Ne doit contenir que des chiffres.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ContOp" type="Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Contrôle opération. Zone destinée à recevoir le niveau de vote des crédits. Le niveau décrit doit être soit identique soit plus agrégé que le niveau d'exécution. Zone non utilisée en M21.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodRD" type="TCodRD" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code recette / dépense. Cette zone permet de déterminer le sens (recette - dépense) du crédit concerné. Valeurs: R=recette, D=dépense.
+Cette balise devient obligatoire si NatDec est différente de 10.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtBudgPrec" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant du budget précédent</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtRARPrec" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant des restes à réaliser N-1 repris au BP, BS, DM.
+Si au moins une balise MtRARPrec est présente et valorisée avec un montant supérieur à 0, alors Hélios considère que le budget intègre les restes à réaliser.
+Hélios considère le montant des restes à réaliser (RAR). Dans Hélios, au moins une des deux balises MtRARPrec ou MtPrev doit être valorisée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPropNouv" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant « Propositions nouvelles »
+Non pris en compte dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPrev" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant signé des prévisions budgétaires.
+Dans Hélios, au moins une des deux balises MtRARPrec ou MtPrev doit être valorisée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CredOuv" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Crédits ouverts à l'article</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtReal" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant signé des réalisations budgétaires. Optionnel (uniquement pour le compte Administratif et CFU)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtRAR3112" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>RAR présenté au compte administratif et au CFU (peut être utilisé dans les BP, BS, et DM et est utilisé au comptes administratif ainsi qu'au CFU).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TxReal3112" type="Base_Pourcentage" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Pourcentage de réalisation Réalisations / Prévisions x 100 _Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OpBudg" type="TOpBudg" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cette zone permet d'isoler les opérations d'ordre budgétaire. Valeurs: 0=opération réelle ou mixte, 1=opération d'ordre,T=total. Par défaut valeur 0.
+Cette balise devient obligatoire si NatDec est différente de 10 et dans ce cas doit prendre les valeurs 0 ou 1.
+Cette balise est exploitée dans Hélios.
+Pour le CFU : Exclusion des groupes GRECOPCT et GDEPOPCT pour lesquels cette balise n'est pas valorisée avec la valeur « T »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypOpBudg" type="TTypOpBudg" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Cette zone permet de déterminer si une opération d'ordre est effectuée à l'intérieur d'une même section ou bien de section à section.
+Cette balise est exploitée dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OpeCpteTiers" type="Base_ChaineNum10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de convention de l'opération pour compte de tiers.
+Ne peut contenir que des chiffres.
+Hélios concatène ce numéro d'opération pour compte de tiers à la suite de la valeur portée par la balise Nature, et à la suite de la valeur portée par la balise ContNat.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtSup" type="TMontant_Sup" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Cette balise peut être multiple.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaracSup" type="TCarac_Sup" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Voir description nomenclature (DescNomenclature.xml) pour connaître les codes des différentes caractéristiques en fonction du document budgétaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypNumCpteTiers" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Si le champ OpeCpteTiers est alimenté, on alimente le champ TypNumCpteTiers -Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypNumCpteTiersCourt" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Si le champ OpeCpteTiers est alimenté, on alimente le champ TypNumCpteTiersCourt – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OperationEtAPCP" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Opération - APCP (pour totalisation) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoAPCP" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Information de l'APCP (pour totalisation) – Balise utilisée dans le CFU : Exclusion des groupes GDEPINVOP_PAR_INFOAPCP pour lesquels cette balise n'est pas valorisée avec la valeur « T »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="APCP" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code de l'APCP (pour totalisation) -Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FonctionOperation" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Si le budget est voté par fonction et si la balise Operation est alimentée – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtOpeCumul" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant pour les opérations entre comptes de tiers – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ProdChaRat" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Pour les opérations entre comptes de tiers – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+            <xs:element name="MtPrevCalcul" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant voté ou présenté au vote – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtCumulDM" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Budget total (Délibération précédente et délibération en cours. Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CredAnnules" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Crédits annulés (CredOuv-MtReal-MtRAR3112)
+Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtCumul" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Total Montant RAR N-1 et Montant Voté (MtRARPrec + MtPrev) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtCumulCA" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Total Montant RAR 3112 et Montant Réalisé (MtRAR3112 + MtReal) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtMdtTitreEmis" type="Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Mandats et titres émis (hors charges et produits rattachés) – Balise non exploitée dans Hélios</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="calculated" use="optional" fixed="true">
+      <xs:annotation>
+        <xs:documentation>Permet d'indiquer si une ligne est une ligne calculée ou non. Toutes les lignes de totalisation doivent porter cet attribut.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="generator" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>Permet d'indiquer quel composant a généré cette ligne. A n'utiliser qu'a des fins de debug</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="id" type="xs:ID" use="optional">
+      <xs:annotation>
+        <xs:documentation>Permet de spécifier un ID pour la ligne. A n'utiliser qu'a des fins de debug</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
