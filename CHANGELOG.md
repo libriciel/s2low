@@ -104,6 +104,9 @@
 
 ## 5.0.27 - 2024-02-21
 
+### Évolutions
+- Permettre de réanalyser un PES Acquit #1026
+
 ### Corrections
 
 - Correction de la signature d'actes #1124
