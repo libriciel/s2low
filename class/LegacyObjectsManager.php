@@ -233,6 +233,8 @@ class LegacyObjectsManager
         $objectInstancier->set('helios_sending_destination', HELIOS_SENDING_DESTINATION);
         $objectInstancier->set('helios_sending_mode_demo', HELIOS_SENDING_MODE_DEMO);
 
+        $objectInstancier->set('helios_retention_fichiers_nb_jours', HELIOS_RETENTION_FICHIERS_NB_JOURS);
+
         $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
         $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
 

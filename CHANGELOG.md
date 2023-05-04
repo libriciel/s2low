@@ -2,6 +2,9 @@
 
 ## 5.3.10 - 
 
+### Évolutions
+- Intégrer la purge des flux hélios dans supervisor #753
+
 ### Corrections
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
 

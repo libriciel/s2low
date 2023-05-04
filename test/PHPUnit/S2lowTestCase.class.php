@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use PHPUnit\Framework\TestCase;
@@ -66,6 +67,16 @@ abstract class S2lowTestCase extends TestCase
     public function setAdminCol2Authentication()
     {
         $this->testEnvironmentManager->setAdminCol2Authentication();
+    }
+
+    /**
+     * @return void
+     */
+    public function setRGSAuthentification(): void
+    {
+        $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
+        $rgsConnexion->method('isRgsConnexion')->willReturn(true);
+        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
     }
 
     public function setUserAuthentification()

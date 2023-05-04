@@ -162,6 +162,21 @@ services:
       $beanstalkd_server: "todo"
       $beanstalkd_port: "todo"
 
+  S2lowLegacy\Class\helios\HeliosFilesFactory:
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  S2lowLegacy\Class\helios\HeliosFilesNames:
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  S2lowLegacy\Class\helios\HeliosSAEDateManager:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
 

@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -36,10 +37,8 @@ class HeliosControllerTest extends S2lowTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-        $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
-        $rgsConnexion->method('isRgsConnexion')->willReturn(true);
+        $this->setRGSAuthentification();
 
-        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
         $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl);
 
         $this->setUserAuthentification();

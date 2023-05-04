@@ -115,6 +115,9 @@ services:
             APP_DEBUG: ${APP_DEBUG:-false}
             USE_PROD_NOTIFICATIONS: ${USE_PROD_NOTIFICATIONS:-true}
 
+            HELIOS_PURGE_ENABLE: ${HELIOS_PURGE_ENABLE:-false}
+            HELIOS_RETENTION_FICHIERS_NB_JOURS: ${HELIOS_RETENTION_FICHIERS_NB_JOURS:-3650000}
+
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
             - ${LOG_PATH:-app_logs}:/data/log/
