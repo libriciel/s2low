@@ -54,7 +54,8 @@ apt-get install -y  --no-install-recommends \
     php-dev \
     php-redis \
     php-pdo \
-    php-intl
+    php-intl \
+    php-ssh2
     #\
     #python-certbot-apache TODO : non dispo, doit-on supprimer ??
 

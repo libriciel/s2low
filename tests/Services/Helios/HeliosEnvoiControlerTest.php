@@ -10,8 +10,6 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 {
-    private $last_string;
-
     private $testStreamUrl;
 
     /** @var  HeliosController */
@@ -36,7 +34,37 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         mkdir($this->testStreamUrl . "/helios");
         $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl . "/helios/");
         $this->heliosController = new HeliosController($this->getObjectInstancier());
-        $this->heliosEnvoiControler = $this->getContainer()->get(HeliosEnvoiControler::class);
+        $this->heliosEnvoiControler = new HeliosEnvoiControler(
+            $this->getContainer()->get(\S2lowLegacy\Lib\SQLQuery::class),
+            $this->getContainer()->get(\S2lowLegacy\Class\helios\PesAllerRetriever::class),
+            "helios_files_upload_root",
+            $this->getContainer()->get(\S2lowLegacy\Class\Antivirus::class),
+            $this->getContainer()->get(\S2lowLegacy\Class\WorkerScript::class),
+            new \S2low\Services\Helios\FTPHeliosSenderFactory(
+                $this->getContainer()->get(\S2low\Services\Helios\HeliosConnectionBuilder::class),
+                "helios_ftp_appli"
+            ),
+            $this->getContainer()->get(\S2low\Services\MailActesNotifications\MailerSymfonyFactory::class),
+            new \S2low\Services\Helios\HeliosConnectionsConfigurationManager(
+                "helios_ftp_server",
+                "helios_ftp_port",
+                "helios_ftp_login",
+                "helios_ftp_password",
+                "helios_ftp_response_server_path",
+                "helios_sending_destination",
+                "helios_ftp_passtrans_mode",
+                true,
+                "helios_ftp_server2",
+                "helios_ftp_port2",
+                "helios_ftp_login2",
+                "helios_ftp_password2",
+                "helios_ftp_passtrans_mode2",
+                true,
+                "helios_ftp_response_server_path2",
+                "helios_sending_destination2",
+                new \S2low\Services\Helios\FTPConnection\FullConfigurationBuilder()
+            )
+        );
     }
 
     protected function tearDown(): void

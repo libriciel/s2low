@@ -3,7 +3,7 @@
 namespace S2low\Command;
 
 use LogicException;
-use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
+use S2low\Services\Helios\HeliosEnvoiWorker;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 
@@ -17,18 +17,18 @@ class HeliosEnvoiCommand extends Command
      */
     private WorkerScript $workerScript;
     /**
-     * @var \S2lowLegacy\Class\helios\HeliosEnvoiWorker
+     * @var \S2low\Services\Helios\HeliosEnvoiWorker
      */
     private HeliosEnvoiWorker $heliosEnvoiWorker;
 
     /**
      * @param \S2lowLegacy\Class\WorkerScript $workerScript
-     * @param \S2lowLegacy\Class\helios\HeliosEnvoiWorker $heliosEnvoiWorker
+     * @param \S2low\Services\Helios\HeliosEnvoiWorker $heliosReceptionWorkerFactory
      */
-    public function __construct(WorkerScript $workerScript, HeliosEnvoiWorker $heliosEnvoiWorker)
+    public function __construct(WorkerScript $workerScript, HeliosEnvoiWorker $heliosReceptionWorkerFactory)
     {
         $this->workerScript = $workerScript;
-        $this->heliosEnvoiWorker = $heliosEnvoiWorker;
+        $this->heliosEnvoiWorker = $heliosReceptionWorkerFactory;
         parent::__construct();
     }
 

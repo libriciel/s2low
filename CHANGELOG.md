@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.11 - 2023-
+
+### Évolutions
+- Permettre la connection à Passtrans #1024
+
 ## 5.0.10 - 2023-05-17
 
 ### Évolutions

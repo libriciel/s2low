@@ -1,10 +1,10 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
-use S2low\Services\Helios\HeliosEnvoiControler;
-use S2lowLegacy\Class\IWorker;
 use Exception;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosEnvoiWorker implements IWorker

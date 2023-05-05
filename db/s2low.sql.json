@@ -920,6 +920,12 @@
                 "character_maximum_length": 256,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "helios_use_passtrans": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": "false"
             }
         },
         "authority_departments": {
@@ -3132,42 +3138,6 @@
                 "confkey": []
             }
         },
-        "authorities": {
-            "authorities_authority_type_id_fk": {
-                "conname": "authorities_authority_type_id_fk",
-                "contype": "f",
-                "conrelname": "authorities",
-                "conkey": [
-                    "authority_type_id"
-                ],
-                "confrelname": "authority_types",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "authorities_authority_group_id_fk": {
-                "conname": "authorities_authority_group_id_fk",
-                "contype": "f",
-                "conrelname": "authorities",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "authorities_pkey": {
-                "conname": "authorities_pkey",
-                "contype": "p",
-                "conrelname": "authorities",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
         "nounce": {
             "authority_id_fk": {
                 "conname": "authority_id_fk",
@@ -3332,6 +3302,42 @@
                 "conkey": [
                     "id_user",
                     "id_service"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "authorities": {
+            "authorities_authority_type_id_fk": {
+                "conname": "authorities_authority_type_id_fk",
+                "contype": "f",
+                "conrelname": "authorities",
+                "conkey": [
+                    "authority_type_id"
+                ],
+                "confrelname": "authority_types",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "authorities_authority_group_id_fk": {
+                "conname": "authorities_authority_group_id_fk",
+                "contype": "f",
+                "conrelname": "authorities",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "authorities_pkey": {
+                "conname": "authorities_pkey",
+                "contype": "p",
+                "conrelname": "authorities",
+                "conkey": [
+                    "id"
                 ],
                 "confrelname": null,
                 "confkey": []

@@ -2,18 +2,15 @@
 
 namespace S2low\Services\Helios;
 
+use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
-use S2lowLegacy\Class\helios\FTPHeliosSender;
-use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
-use Exception;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PesAller;
 use S2lowLegacy\Lib\PKCS12;
@@ -46,8 +43,12 @@ class HeliosEnvoiControler
     private $antivirus;
 
     private $workerScript;
-    /** @var FTPHeliosSender  */
-    private $FTPHeliosSender;
+    /** @var FTPHeliosSenderFactory  */
+    private $FTPHeliosSenderFactory;
+    /**
+     * @var \S2low\Services\Helios\HeliosConnectionsConfigurationManager
+     */
+    private HeliosConnectionsConfigurationManager $heliosConnectionsConfigurationManager;
 
     public function __construct(
         SQLQuery $sqlQuery,
@@ -55,8 +56,9 @@ class HeliosEnvoiControler
         $helios_files_upload_root,
         Antivirus $antivirus,
         WorkerScript $workerScript,
-        FTPHeliosSender $FTPHeliosSender,
-        MailerSymfonyFactory $mailerSymfonyFactory
+        FTPHeliosSenderFactory $FTPHeliosSenderFactory,
+        MailerSymfonyFactory $mailerSymfonyFactory,
+        HeliosConnectionsConfigurationManager $heliosConnectionsConfigurationManager
     ) {
         $this->sqlQuery = $sqlQuery;
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -67,8 +69,9 @@ class HeliosEnvoiControler
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->antivirus = $antivirus;
         $this->workerScript = $workerScript;
-        $this->FTPHeliosSender = $FTPHeliosSender;
+        $this->FTPHeliosSenderFactory = $FTPHeliosSenderFactory;
         $this->mailerFactory = $mailerSymfonyFactory;
+        $this->heliosConnectionsConfigurationManager = $heliosConnectionsConfigurationManager;
     }
 
     public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity)
@@ -309,7 +312,9 @@ class HeliosEnvoiControler
         }
 
         try {
-            $this->FTPHeliosSender->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
+            $this->FTPHeliosSenderFactory
+                ->get($this->heliosConnectionsConfigurationManager->get($authorityInfo["helios_use_passtrans"]))
+                ->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
         } catch (Exception $e) {
             echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : " . $e->getMessage() . "\n";
             unlink($file_path_with_complete_name);

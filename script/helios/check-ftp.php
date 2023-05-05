@@ -2,7 +2,7 @@
 
 // Script permettant de tester l'accÃ¨s au serveur FTP de la DGFiP
 // Sortie au format Influxdb
-use S2lowLegacy\Class\helios\FTPHeliosSender;
+use S2low\Services\Helios\FTPHeliosSender;
 
 require_once(__DIR__ . "/../../init/init.php");
 \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();

@@ -9,6 +9,24 @@ parameters:
   app.use_prod_notifications: '%env(bool:default:app.default_use_prod_notifications:USE_PROD_NOTIFICATIONS)%'
   app.default_actes_appli_trigramme: 'abc'
   app.actes_appli_trigramme: '%env(default:app.default_actes_appli_trigramme:ACTES_APPLI_TRIGRAMME)%'
+  app.helios_ftp_p_appli: '%env(HELIOS_FTP_P_APPLI)%'
+  app.helios_ftp_server: '%env(HELIOS_FTP_SERVER)%'
+  app.helios_ftp_port: '%env(HELIOS_FTP_PORT)%'
+  app.helios_ftp_passive_mode: '%env(HELIOS_FTP_PASSIVE_MODE)%'
+  app.helios_ftp_passtrans_mode: '%env(HELIOS_FTP_PASSTRANS_MODE)%'
+  app.helios_ftp_login: '%env(HELIOS_FTP_LOGIN)%'
+  app.helios_ftp_password: '%env(HELIOS_FTP_PASSWORD)%'
+  app.helios_ftp_response_server_path: '%env(HELIOS_FTP_RESPONSE_SERVER_PATH)%'
+  app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
+  app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
+  app.helios_passtrans_server: '%env(HELIOS_PASSTRANS_SERVER)%'
+  app.helios_passtrans_port: '%env(HELIOS_PASSTRANS_PORT)%'
+  app.helios_passtrans_passive_mode: '%env(HELIOS_PASSTRANS_PASSIVE_MODE)%'
+  app.helios_passtrans_passtrans_mode: '%env(HELIOS_PASSTRANS_PASSTRANS_MODE)%'
+  app.helios_passtrans_login: '%env(HELIOS_PASSTRANS_LOGIN)%'
+  app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
+  app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
+  app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
 services:
   _defaults:
     autowire: true
@@ -287,10 +305,10 @@ services:
   S2lowLegacy\Class\actes\ClassificationString:
     autowire: false
 
-  S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker:
+  S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker:  #TODO : migrer vers le namespace Symfony
     tags: ['s2low.queue_rebuilding_worker']
 
-  S2lowLegacy\Class\helios\HeliosEnvoiWorker:
+  S2low\Services\Helios\HeliosEnvoiWorker:
     tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:
@@ -381,24 +399,35 @@ services:
   S2lowLegacy\Class\actes\ActesStatistiques:
     autowire: false #Pas un service
 
-  S2lowLegacy\Class\helios\FTPHeliosReceiver:
+  S2low\Services\Helios\FTPHeliosReceiverFactory:
     arguments:
-      $helios_ftp_response_server_path: "todo"
-      $helios_ftp_response_tmp_local_path: "todo"
+      $helios_ftp_response_tmp_local_path: "%app.helios_ftp_response_tmp_local_path%"
 
-  S2lowLegacy\Class\helios\FTPHeliosSender:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\helios\FTPHeliosSender']
+  S2low\Services\Helios\FTPHeliosSenderFactory:
+    arguments:
+      $helios_ftp_p_appli: "%app.helios_ftp_p_appli%"
+
+  S2low\Services\Helios\HeliosConnectionsConfigurationManager:
+    arguments:
+      $helios_ftp_server: "%app.helios_ftp_server%"
+      $helios_ftp_port: "%app.helios_ftp_port%"
+      $helios_ftp_login: "%app.helios_ftp_login%"
+      $helios_ftp_password: "%app.helios_ftp_password%"
+      $helios_ftp_response_server_path: "%app.helios_ftp_response_server_path%"
+      $helios_sending_destination: "%app.helios_sending_destination%"
+      $helios_ftp_passtrans_mode: "%app.helios_ftp_passtrans_mode%"
+      $helios_ftp_passive_mode: "%app.helios_ftp_passive_mode%"
+      $helios_passtrans_server: "%app.helios_passtrans_server%"
+      $helios_passtrans_port: "%app.helios_passtrans_port%"
+      $helios_passtrans_login: "%app.helios_passtrans_login%"
+      $helios_passtrans_password: "%app.helios_passtrans_password%"
+      $helios_passtrans_passtrans_mode: "%app.helios_passtrans_passtrans_mode%"
+      $helios_passtrans_passive_mode: "%app.helios_passtrans_passive_mode%"
+      $helios_passtrans_sending_destination: "%app.helios_passtrans_sending_destination%"
+      $helios_passtrans_response_server_path: "%app.helios_passtrans_response_server_path%"
 
   S2lowLegacy\Class\helios\FTPService:
-    arguments:
-      $helios_ftp_server: "todo"
-      $helios_ftp_port: "todo"
-      $helios_ftp_login: "todo"
-      $helios_ftp_password: "todo"
-      $helios_sending_mode_demo: "todo"
-      $helios_ftp_passive_mode: "todo"
-      $helios_ftp_passtrans_mode: "todo"
+    autowire: false
 
   S2lowLegacy\Class\helios\FichierCompteur:
     arguments:
