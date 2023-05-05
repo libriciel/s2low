@@ -14,6 +14,8 @@ class WorkerScript
     private const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
     private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
+    private const NB_MAX_JOBS_TRAITES = 100; // uniquement pour le mode beanstalked
+
     private $s2lowLogger;
     private $beanstalkdWrapper;
     private $redisMutexWrapper;
@@ -137,6 +139,7 @@ class WorkerScript
 
         $this->sigTermHandler->setExitOnSignal(true);
 
+        $nbJobsTraités = 0;
         while ($job = $queue->reserve()) {
             $this->sigTermHandler->setExitOnSignal(false);
             $data = "undefined";
@@ -149,6 +152,11 @@ class WorkerScript
                     $this->syncrhonizedWork($IWorker, $data);
                 });
                 $queue->delete($job);
+                $nbJobsTraités++;
+                if ($nbJobsTraités >= self::NB_MAX_JOBS_TRAITES) {
+                    $this->s2lowLogger->info("Exit after $nbJobsTraités jobs executed");
+                    return true;
+                }
             } catch (Exception $e) {
                 $this->s2lowLogger->error(
                     $e->getMessage(),

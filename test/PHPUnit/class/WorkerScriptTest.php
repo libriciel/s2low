@@ -1,7 +1,9 @@
 <?php
 
+use malkusch\lock\mutex\PHPRedisMutex;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\IWorker;
+use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -93,6 +95,18 @@ class WorkerScriptTest extends S2lowTestCase
         $this->assertEquals("Travail en cours", $logs_records[1]['message']);
     }
 
+    public function testBeanstalkedisLimited()
+    {
+        $job = $this->getMockBuilder(Pheanstalk\Job::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->assertTrue($this->runBeanstalkd($job, 200));
+        $logs_records = $this->getLogRecords();
+        $this->assertEquals("Exit after 100 jobs executed", $logs_records[101]['message']);
+        $this->assertArrayNotHasKey(102, $logs_records);
+    }
+
     public function testBeanstalkedFailed()
     {
         $job = $this->getMockBuilder(Pheanstalk\Job::class)
@@ -107,20 +121,36 @@ class WorkerScriptTest extends S2lowTestCase
         $this->assertEquals("foo", $logs_records[1]['message']);
     }
 
-    private function runBeanstalkd($job)
+    private function runBeanstalkd($job, $numberOfJobs = 1)
     {
         $queue = $this->getMockBuilder(\Pheanstalk\Pheanstalk::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $queue->method('reserve')->will($this->onConsecutiveCalls($job, false));
+
+        $jobQueue = array_fill(0, $numberOfJobs, $job);
+        $jobQueue[] = false;
+
+        $queue->method('reserve')->will($this->onConsecutiveCalls(...$jobQueue));
 
         $beanstalkdWrapper = $this->getMockBuilder(BeanstalkdWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
 
+        $redisWrapper = $this->getMockBuilder(RedisMutexWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mutexMock = $this->getMockBuilder(PHPRedisMutex::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $redisWrapper->method('getMutex')->willReturn($mutexMock);
+
         $beanstalkdWrapper->method('getQueue')->willReturn($queue);
 
         $this->getObjectInstancier()->set(BeanstalkdWrapper::class, $beanstalkdWrapper);
+        $this->getObjectInstancier()->set(RedisMutexWrapper::class, $redisWrapper);
+
         $IWorker = $this->getMockForAbstractClass(IWorker::class);
         $IWorker->method("getData")->willReturn([1]);
         /** @var IWorker $IWorker */
