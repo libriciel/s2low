@@ -527,6 +527,10 @@ if (! defined("TESTING_ENVIRONNEMENT")) {
     define("TESTING_ENVIRONNEMENT", false);
 }
 
+if (! defined("USE_PROD_NOTIFICATIONS")) {
+    define("USE_PROD_NOTIFICATIONS", false);
+}
+
 ## Configuration OpenStack (facultative)
 
 if (! defined("OPENSTACK_AUTHENTICATION_URL_V3")) {
