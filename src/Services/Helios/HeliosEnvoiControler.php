@@ -10,6 +10,7 @@ use S2lowLegacy\Class\helios\HeliosEnvoiWorker;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
@@ -82,6 +83,12 @@ class HeliosEnvoiControler
         $transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
         $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+
+        if (!$file_path) {
+            $message = "Transaction $transaction_id : fichier non trouvé en local ou sur le cloud";
+            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+            return;
+        }
 
         $pes_content = file_get_contents($file_path);
         if (! $pes_content) {
