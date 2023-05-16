@@ -10,6 +10,7 @@
 ### Corrections
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
 - Gérer le cas ou le fichier PES Aller n'est pas trouvé #1028
+- Allonger le délai minimum entre deux passage de récupération FTP à 4 minutes #1018
 
 ## 5.0.9 - 2023-03-21
 
