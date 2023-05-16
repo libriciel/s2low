@@ -62,5 +62,6 @@ class HeliosEnvoiCommand extends Command
     protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
     {
         $this->workerScript->scriptWithLogs($this->heliosEnvoiWorker);
+        return 0;
     }
 }
