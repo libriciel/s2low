@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<actes:AnomalieActe xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" >
+  <actes:Date>2017-07-01</actes:Date>
+  <actes:Nature>ERREUR2</actes:Nature>
+  <actes:Detail>Ca ne fonctionne pas</actes:Detail>
+  <actes:ActeRecu actes:Date="2017-07-01" actes:NumeroInterne="20170721D" actes:CodeNatureActe="3">
+    <actes:CodeMatiere1 actes:CodeMatiere="2" />
+    <actes:CodeMatiere2 actes:CodeMatiere="2" />
+    <actes:Objet>TESTD</actes:Objet>
+    <actes:ClassificationDateVersion>2017-07-13</actes:ClassificationDateVersion>
+    <actes:Document>
+      <actes:NomFichier>034-000000000-20170701-20170721D-AI-1-1_1.pdf</actes:NomFichier>
+    </actes:Document>
+    <actes:Annexes actes:Nombre="0" />
+  </actes:ActeRecu>
+  <actes:ClassificationDateVersionEnCours>2008-12-31</actes:ClassificationDateVersionEnCours>
+</actes:AnomalieActe>
+
+

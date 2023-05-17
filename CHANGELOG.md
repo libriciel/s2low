@@ -1,11 +1,12 @@
 # Changelog
 
-## 5.0.10 - 2024-05-16
+## 5.0.10 - 2024-05-17
 
 ### Évolutions
 - Intégrer la purge des flux hélios dans supervisor #753
 - Utilisation de timeout pour limiter les blocages des scripts lancés par supervisor #979
 - Prise en compte de la version 5.20 du schema XSD Pes Aller #1025
+- Adaptation du schéma XSD des actes à la réalité de l'envoi par la DGCL #1017
 
 ### Corrections
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
