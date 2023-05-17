@@ -140,6 +140,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         return $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, true, '20170721D', 1);
     }
 
+
     /**
      * @throws Exception
      */
@@ -182,16 +183,31 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testEnveloppeAnomalieAvecErreur()
+    public function testEnveloppeAnomalieAvecErreur()   //La DGCL renvoie des enveloppes de ce type...
     {
+                                                   // Elles doivent donc passer même s'il faut modifier le XSD
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-message-anomalie-avec-erreur");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseOneFileMoveIfError("test");
 
         $logs = $this->getLogRecords();
         $this->assertMatchesRegularExpression(
-            "#The value '2' is not accepted by the pattern '\[0-9\]\{3\}'#",
-            $logs[1][S2lowLogger::MESSAGE]
+            "#Anomalie trouvé pour l'acte : 20170721D#",
+            $logs[2][S2lowLogger::MESSAGE]
+        );
+    }
+
+    public function testEnveloppeAnomalieAvecErreurMalPresentee()   //La DGCL renvoie des enveloppes de ce type...
+    {
+                                                   // Elles doivent donc passer même s'il faut modifier le XSD
+        $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-message-anomalie-avec-erreur-mal-presentee");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
+        $actesAnalyseFichierRecuController->analyseOneFileMoveIfError("test");
+
+        $logs = $this->getLogRecords();
+        $this->assertMatchesRegularExpression(
+            "#ERREUR2' is not a valid value of the local atomic type#",
+            $logs[2][S2lowLogger::MESSAGE]
         );
         $this->assertMatchesRegularExpression(
             "#Déplacement du répertoire test#",
@@ -200,7 +216,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
         $this->assertTrue(in_array("test", scandir("{$this->tmp_dir2}")));
     }
-
     /**
      * @throws Exception
      */
