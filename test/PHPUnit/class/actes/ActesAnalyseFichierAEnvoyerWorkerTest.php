@@ -1,12 +1,18 @@
 <?php
 
+use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
+use S2lowLegacy\Class\actes\ArchiveValidatorFactory;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
 
 require_once __DIR__ . "/ActesCreator.php";
@@ -33,7 +39,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 
     private function getActesAnalysFichierAEnvoyerWorker()
     {
-        return  $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
+        return $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
     }
 
     protected function tearDown(): void
@@ -145,7 +151,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     }
 
 
-
     /**
      * @throws Exception
      */
@@ -223,7 +228,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getSQLQuery()->query($sql, "4", "1.1", $transaction_id);
         }
 
-        return ['envelope_id' => $envelope_id,'transaction_id' => $transaction_id];
+        return ['envelope_id' => $envelope_id, 'transaction_id' => $transaction_id];
     }
 
     /**
@@ -359,5 +364,40 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
+    }
+
+    public function testErrorIsHandled()
+    {
+        $archiveValidator = $this->getMockBuilder(\Libriciel\LibActes\ArchiveValidator::class)->disableOriginalConstructor()->getMock();
+        $archiveValidator->method('validate')->willThrowException(new Error('oupsie'));
+
+        $archiveValidatorFactory = $this->getMockBuilder(ArchiveValidatorFactory::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $archiveValidatorFactory->method('get')->willReturn($archiveValidator);
+
+        $worker = new ActesAnalyseFichierAEnvoyerWorker(
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->getObjectInstancier()->get('actes_appli_trigramme'),
+            $this->getObjectInstancier()->get('actes_appli_quadrigramme'),
+            $this->getObjectInstancier()->get(ActesScriptHelper::class),
+            $this->getObjectInstancier()->get(PadesValid::class),
+            $this->getObjectInstancier()->get(WorkerScript::class),
+            $this->getObjectInstancier()->get('actes_dont_valid_signing_certificate'),
+            $this->getObjectInstancier()->get(ActesTypePJSQL::class),
+            $this->getObjectInstancier()->get(PdfValidator::class),
+            $archiveValidatorFactory
+        );
+
+        $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+
+        $worker->work($data['envelope_id']);
+
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $transaction_info = $actesTransactionsSQL->getInfo($data['transaction_id']);
+        $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['last_status_id']);
+        $statusInfo = $actesTransactionsSQL->getLastTransactionWorkflowInfo($data['transaction_id']);
+        $this->assertEquals("Enveloppe invalide : oupsie", $statusInfo['message']);
     }
 }

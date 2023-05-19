@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Error;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
@@ -21,7 +22,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $actes_appli_quadrigramme;
     private $actesTransactionsSQL;
     private $logger;
-    private $actesEnvelopeSQL;
     private $actesScriptHelper;
     private $padesValid;
     private $workerScript;
@@ -29,11 +29,14 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $actesTypePJSQL;
     /** @var \S2low\Services\PdfValidator  */
     private $pdfValidator;
+    /**
+     * @var \S2lowLegacy\Class\actes\ArchiveValidatorFactory
+     */
+    private ArchiveValidatorFactory $archiveValidatorFactory;
 
     public function __construct(
         S2lowLogger $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
-        ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
         $actes_appli_quadrigramme,
         ActesScriptHelper $actesScriptHelper,
@@ -41,19 +44,20 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         WorkerScript $workerScript,
         $actes_dont_valid_signing_certificate,
         ActesTypePJSQL $actesTypePJSQL,
-        PdfValidator $pdfValidator
+        PdfValidator $pdfValidator,
+        ArchiveValidatorFactory $archiveValidatorFactory
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
-        $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesScriptHelper = $actesScriptHelper;
         $this->padesValid = $padesValid;
         $this->workerScript = $workerScript;
         $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->pdfValidator = $pdfValidator;
+        $this->archiveValidatorFactory = $archiveValidatorFactory;
     }
 
     public function getQueueName()
@@ -100,7 +104,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $must_validate_certificate = $this->mustValidateCertificate($transaction_ids);
 
-        $archive = new ArchiveValidator(
+        $archive = $this->archiveValidatorFactory->get(
             $this->actes_appli_trigramme,
             $this->actes_appli_quadrigramme,
             true
@@ -121,6 +125,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
                 );
             } catch (Exception $e) {
                 throw new Exception($e->getMessage(), $e->getCode(), $e);
+            } catch (Error $error) {
+                throw new Exception($error->getMessage(), $error->getCode(), $error);
             }
             $this->validatePades($archive_path, $tmp_dir, $must_validate_certificate);
         } catch (RecoverableException $e) {
