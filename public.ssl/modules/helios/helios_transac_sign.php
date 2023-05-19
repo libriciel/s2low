@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\helios\HeliosSignature;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;

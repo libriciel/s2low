@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios;
 
 use Exception;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
@@ -26,8 +27,6 @@ use ZipArchive;
 
 class HeliosEnvoiControler
 {
-    private const P_APPLI = "GHELPES2";
-
     private $sqlQuery;
     private $heliosTransactionsSQL;
     private $authoritySQL;
@@ -38,38 +37,35 @@ class HeliosEnvoiControler
 
     private $pesAllerRetriever;
 
-    private $helios_files_upload_root;
-
     private $antivirus;
 
     private $workerScript;
-    /** @var FTPHeliosSenderFactory  */
-    private $FTPHeliosSenderFactory;
     /**
-     * @var \S2low\Services\Helios\HeliosConnectionsConfigurationManager
+     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager
      */
-    private HeliosConnectionsConfigurationManager $heliosConnectionsConfigurationManager;
+    private DGFiPConnectionsManager $heliosConnectionsConfigurationManager;
+    /**
+     * @var \S2low\Services\MailActesNotifications\MailerSymfonyFactory
+     */
+    private MailerSymfonyFactory $mailerFactory;
 
     public function __construct(
         SQLQuery $sqlQuery,
         PesAllerRetriever $pesAllerRetriever,
-        $helios_files_upload_root,
         Antivirus $antivirus,
         WorkerScript $workerScript,
-        FTPHeliosSenderFactory $FTPHeliosSenderFactory,
         MailerSymfonyFactory $mailerSymfonyFactory,
-        HeliosConnectionsConfigurationManager $heliosConnectionsConfigurationManager
+        DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
+        FichierCompteur $fichierCompteur
     ) {
         $this->sqlQuery = $sqlQuery;
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
         $this->authoritySQL = new AuthoritySQL($sqlQuery);
-        $this->fichierCompteur = new FichierCompteur(HELIOS_COUNTER_FILE);
+        $this->fichierCompteur = $fichierCompteur;
         $this->heliosTransmissionWindowsSQL = new HeliosTransmissionWindowsSQL($sqlQuery);
         $this->pesAllerRetriever = $pesAllerRetriever;
-        $this->helios_files_upload_root = $helios_files_upload_root;
         $this->antivirus = $antivirus;
         $this->workerScript = $workerScript;
-        $this->FTPHeliosSenderFactory = $FTPHeliosSenderFactory;
         $this->mailerFactory = $mailerSymfonyFactory;
         $this->heliosConnectionsConfigurationManager = $heliosConnectionsConfigurationManager;
     }
@@ -80,6 +76,9 @@ class HeliosEnvoiControler
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function validateOneTransaction($transaction_id)
     {
         libxml_use_internal_errors(true);
@@ -205,8 +204,13 @@ class HeliosEnvoiControler
 
         $message = "Transaction $transaction_id dans la file d'attente";
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::ATTENTE, $message, $transactionInfo['user_id']);
+
         //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
-        $this->workerScript->putJobByQueueName(HeliosEnvoiWorker::QUEUE_NAME, $transaction_id);
+
+        $this->workerScript->putJobByQueueName(
+            HeliosEnvoiWorker::getQueueNameParametre($authorityInfo['helios_use_passtrans']),
+            $transaction_id
+        );
         libxml_use_internal_errors(false);
     }
 
@@ -237,7 +241,10 @@ class HeliosEnvoiControler
         Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $user_id);
     }
 
-    public function sendOneTransaction($transaction_id)
+    /**
+     * @throws \Exception
+     */
+    public function sendOneTransaction($transaction_id, bool $usePasstrans)
     {
         $file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 
@@ -312,9 +319,14 @@ class HeliosEnvoiControler
         }
 
         try {
-            $this->FTPHeliosSenderFactory
-                ->get($this->heliosConnectionsConfigurationManager->get($authorityInfo["helios_use_passtrans"]))
-                ->sendFile($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
+            if ($authorityInfo["helios_use_passtrans"] != $usePasstrans) {
+                $message = "Transaction $transaction_id : la transaction a été aiguillée sur la mauvaise file passtrans";
+                $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+                unlink($file_path_with_complete_name);
+                return;
+            }
+            $this->heliosConnectionsConfigurationManager
+                ->get($usePasstrans)->sendFileOnUniqueConnection($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
         } catch (Exception $e) {
             echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : " . $e->getMessage() . "\n";
             unlink($file_path_with_complete_name);

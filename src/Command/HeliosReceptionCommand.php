@@ -7,6 +7,8 @@ use S2low\Services\Helios\HeliosReceptionWorkerFactory;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  *
@@ -14,22 +16,22 @@ use Symfony\Component\Console\Input\InputOption;
 class HeliosReceptionCommand extends Command
 {
     /**
-     * @var \S2lowLegacy\Class\WorkerScript
+     * @var WorkerScript
      */
     private WorkerScript $workerScript;
     /**
-     * @var \S2low\Services\Helios\HeliosReceptionWorkerFactory
+     * @var HeliosReceptionWorkerFactory
      */
     private HeliosReceptionWorkerFactory $heliosReceptionWorkerFactory;
 
     /**
-     * @param \S2lowLegacy\Class\WorkerScript $workerScript
-     * @param \S2low\Services\Helios\HeliosReceptionWorkerFactory $heliosEnvoiWorker
+     * @param WorkerScript $workerScript
+     * @param HeliosReceptionWorkerFactory $heliosEnvoiWorkerFactory
      */
-    public function __construct(WorkerScript $workerScript, HeliosReceptionWorkerFactory $heliosEnvoiWorker)
+    public function __construct(WorkerScript $workerScript, HeliosReceptionWorkerFactory $heliosEnvoiWorkerFactory)
     {
         $this->workerScript = $workerScript;
-        $this->heliosReceptionWorkerFactory = $heliosEnvoiWorker;
+        $this->heliosReceptionWorkerFactory = $heliosEnvoiWorkerFactory;
         parent::__construct();
     }
 
@@ -65,7 +67,7 @@ class HeliosReceptionCommand extends Command
      *
      * @see setCode()
      */
-    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->workerScript->setMinExecutionTimeInSeconds(240);
         $this->workerScript->scriptWithLogs(

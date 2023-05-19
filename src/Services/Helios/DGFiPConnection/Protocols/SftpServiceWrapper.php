@@ -1,11 +1,21 @@
 <?php
 
-namespace S2lowLegacy\Lib;
+namespace S2low\Services\Helios\DGFiPConnection\Protocols;
 
 use Exception;
 
+/**
+ * Permet de mocker les retours des fonctions ssh2 et autres utilisées pour la connection sftp
+ * pour faciliter les tests unitaires
+ */
 class SftpServiceWrapper
 {
+    /**
+     * @param $host
+     * @param $port
+     * @return resource
+     * @throws Exception
+     */
     public function connect($host, $port)
     {
         $connection = ssh2_connect($host, $port);
@@ -16,11 +26,13 @@ class SftpServiceWrapper
         return $connection;
     }
 
-    public function sslConnect($host, $port, $timeout)
-    {
-        // TODO: Implement sslConnect() method.
-    }
-
+    /**
+     * @param $ftp
+     * @param $login
+     * @param $password
+     * @return resource
+     * @throws Exception
+     */
     public function login($ftp, $login, $password)
     {
         if (ssh2_auth_password($ftp, $login, $password)) {
@@ -35,17 +47,7 @@ class SftpServiceWrapper
         return $sftp;
     }
 
-    public function pasv($ftp, bool $pasv)
-    {
-        // TODO: Implement pasv() method.
-    }
-
-    public function chdir($ftp, $remotePath)
-    {
-        // TODO: Implement chdir() method.
-    }
-
-    public function nlist($ftp, $baseFtpDirectory = "./")  // ATTENTION !!!! le $ftp correspond au $sftp
+    public function nlist($ftp, $baseFtpDirectory = './')  // ATTENTION !!!! le $ftp correspond au $sftp
     {
         $sftp_fd = intval($ftp);
 
@@ -61,7 +63,15 @@ class SftpServiceWrapper
         return $entries;
     }
 
-    public function get($ftp, $tmp_file, $remoteFile, $mode = FTP_ASCII)
+    /**
+     * @param $ftp
+     * @param $tmp_file
+     * @param $remoteFile
+     * @param int $mode
+     * @return void
+     * @throws Exception
+     */
+    public function get($ftp, $tmp_file, $remoteFile, int $mode = FTP_ASCII): void
     {
         $sftp_fd = intval($ftp);
 
@@ -79,23 +89,14 @@ class SftpServiceWrapper
         fclose($stream);
     }
 
-    public function delete($ftp, $file)
-    {
-        // TODO: Implement delete() method.
-    }
-
-    public function close($ftp)
-    {
-        ssh2_disconnect($ftp);
-        // TODO: Implement close() method.
-    }
-
-    public function raw($ftp, $command)
-    {
-        // TODO: Implement raw() method.
-    }
-
-    public function put($ftp, $remoteFile, $localFile)
+    /**
+     * @param $ftp
+     * @param $remoteFile
+     * @param $localFile
+     * @return void
+     * @throws Exception
+     */
+    public function put($ftp, $remoteFile, $localFile): void
     {
         $sftp_fd = intval($ftp);
         // https://stackoverflow.com/questions/8840883/how-to-list-files-of-a-directory-in-an-other-server-using-ssh2
@@ -113,5 +114,14 @@ class SftpServiceWrapper
             throw new Exception("[SFTP] Impossible d'envoyer les données de $localFile vers $path$remoteFile");
         }
         fclose($stream);
+    }
+
+    /**
+     * @param $ftp
+     * @return void
+     */
+    public function close($ftp): void
+    {
+        ssh2_disconnect($ftp);
     }
 }

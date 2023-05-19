@@ -431,8 +431,8 @@ if (!defined('HELIOS_FTP_PASSIVE_MODE')) {
     define('HELIOS_FTP_PASSIVE_MODE', false);
 }
 
-if (!defined('HELIOS_FTP_PASSTRANS_MODE')) {
-    define('HELIOS_FTP_PASSTRANS_MODE', "FTP_SIM");
+if (!defined('HELIOS_FTP_CONNECTION_MODE')) {
+    define('HELIOS_FTP_CONNECTION_MODE', "SIMULATEUR");
 }
 
 if (!defined('HELIOS_FTP_PORT')) {
@@ -456,7 +456,7 @@ if (!defined('HELIOS_FTP_RESPONSE_SERVER_PATH')) {
 }
 
 if (!defined('HELIOS_PASSTRANS_SERVER')) {
-    define('HELIOS_PASSTRANS_SERVER', 'UNDEFINED');
+    define('HELIOS_PASSTRANS_SERVER', 'ftp_passtrans');
 }
 
 if (!defined('HELIOS_PASSTRANS_PORT')) {
@@ -467,16 +467,16 @@ if (!defined('HELIOS_PASSTRANS_PASSIVE_MODE')) {
     define('HELIOS_PASSTRANS_PASSIVE_MODE', false);
 }
 
-if (!defined('HELIOS_PASSTRANS_PASSTRANS_MODE')) {
-    define('HELIOS_PASSTRANS_PASSTRANS_MODE', "FTP_SIM");
+if (!defined('HELIOS_PASSTRANS_CONNECTION_MODE')) {
+    define('HELIOS_PASSTRANS_CONNECTION_MODE', "SIMULATEUR");
 }
 
 if (!defined('HELIOS_PASSTRANS_LOGIN')) {
-    define('HELIOS_PASSTRANS_LOGIN', 'UNDEFINED');
+    define('HELIOS_PASSTRANS_LOGIN', 'helios');
 }
 
 if (!defined('HELIOS_PASSTRANS_PASSWORD')) {
-    define('HELIOS_PASSTRANS_PASSWORD', 'UNDEFINED');
+    define('HELIOS_PASSTRANS_PASSWORD', 'helios');
 }
 
 if (!defined('HELIOS_PASSTRANS_SENDING_DESTINATION')) {

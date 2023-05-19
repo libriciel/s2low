@@ -1,11 +1,10 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
-use S2low\Services\Helios\HeliosEnvoiControler;
+use Exception;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\WorkerScript;
-use Exception;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
@@ -63,6 +62,6 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
     public function isDataValid($data)
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
-        return $status_id == HeliosStatusSQL::POSTE;
+        return $status_id == HeliosTransactionsSQL::POSTE;
     }
 }

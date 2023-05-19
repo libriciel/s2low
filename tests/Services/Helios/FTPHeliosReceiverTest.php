@@ -2,9 +2,8 @@
 
 namespace S2low\Tests\Services\Helios;
 
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\FTPHeliosReceiver;
-use S2low\Services\Helios\HeliosConnection;
-use S2low\Services\Helios\HeliosConnectionBuilder;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowTestCase;
 
@@ -15,7 +14,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        $ftpHeliosConnection = $this->getMockBuilder(\S2low\Services\Helios\HeliosConnection::class)
+        $ftpHeliosConnection = $this->getMockBuilder(\S2low\Services\Helios\DGFiPConnection\DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -45,7 +44,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        $heliosConnection = $this->getMockBuilder(\S2low\Services\Helios\HeliosConnection::class)
+        $heliosConnection = $this->getMockBuilder(\S2low\Services\Helios\DGFiPConnection\DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -82,8 +81,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->method("info")
             ->with("PESALR2_File : PES ALLER ignoré");
 
-        /** @var HeliosConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
-        $heliosConnection = $this->getMockBuilder(HeliosConnection::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -118,8 +117,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->method("info")
             ->with("0 : File récupéré : ECHEC");
 
-        /** @var HeliosConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
-        $heliosConnection = $this->getMockBuilder(HeliosConnection::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -152,8 +151,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  S2lowLogger | \PHPUnit\Framework\MockObject\MockObject $s2lowLogger */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        /** @var HeliosConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
-        $heliosConnection = $this->getMockBuilder(HeliosConnection::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 

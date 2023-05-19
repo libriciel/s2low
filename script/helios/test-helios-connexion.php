@@ -1,13 +1,15 @@
 <?php
 
-use S2low\Services\Helios\HeliosConnectionBuilder;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
+use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
+use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Lib\FtpServiceWrapper;
 use S2lowLegacy\Lib\PesAller;
 use S2lowLegacy\Model\AuthoritySQL;
 
 require_once(__DIR__ . "/../../init/init.php");
-list($authoritySQL,$s2lowLogger) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($authoritySQL,$s2lowLogger) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([AuthoritySQL::class,S2lowLogger::class]);
 
 $host = HELIOS_FTP_SERVER;
@@ -16,9 +18,8 @@ $login = HELIOS_FTP_LOGIN;
 $password = HELIOS_FTP_PASSWORD;
 $remoteSendPath = HELIOS_SENDING_DESTINATION;
 $remoteRetrievePath = HELIOS_FTP_RESPONSE_SERVER_PATH;
-//$helios_sending_mode_demo = HELIOS_SENDING_MODE_DEMO;
 $helios_ftp_passive_mode = HELIOS_FTP_PASSIVE_MODE;
-$helios_ftp_passtrans_mode = HELIOS_FTP_PASSTRANS_MODE;
+$helios_ftp_passtrans_mode = HELIOS_FTP_CONNECTION_MODE;
 
 $authorityInfo = $authoritySQL->getInfo(2);
 $p_dest = $authorityInfo["helios_ftp_dest"];
@@ -28,15 +29,6 @@ $file_path = __DIR__ . "/../../test/PHPUnit/helios/fixtures/pes_acquit.xml";
 $pesAller = new PesAller();
 $p_msg = $pesAller->getP_MSG($file_path);
 
-
-$heliosConnectionBuilder = new HeliosConnectionBuilder(
-    $s2lowLogger,
-    new \S2low\Services\Helios\FTPConnection\ActiveConnectionFactory(
-        new FtpServiceWrapper(),
-        new \S2lowLegacy\Lib\SftpServiceWrapper(),
-        $s2lowLogger
-    )
-);
 
 if (!in_array($argc, [1,2]) || ($argc == 2 && $argv[1] != "testUpload")) {
     echo "Erreur : " . $argv[1] . "\n";
@@ -50,8 +42,12 @@ if ($argc == 2 && $argv[1] == "testUpload") {
     $testUpload = true;
 }
 
-$configuration = (new \S2low\Services\Helios\FTPConnection\FullConfigurationBuilder())
-    ->generateConfiguration(
+$DGFiPConnection = (new DGFiPConnectionBuilder(
+    new FtpServiceWrapper(),
+    new SftpServiceWrapper(),
+    $s2lowLogger
+))
+    ->get(
         $host,
         $port,
         $login,
@@ -59,25 +55,21 @@ $configuration = (new \S2low\Services\Helios\FTPConnection\FullConfigurationBuil
         $helios_ftp_passtrans_mode,
         $helios_ftp_passive_mode,
         $remoteSendPath,
-        $remoteRetrievePath
+        $remoteRetrievePath,
+        "THELPES2"
     );
 
-$heliosConnection = $heliosConnectionBuilder->connect($configuration);
+$DGFiPConnection->connect();
 
 // WTF : lancer cette fonction empêche de lancer le sendOneFile apres ...
 //var_dump($ftpService->getFileNames("/depot"));
 
 if ($testUpload) {
-    /*$heliosConnection->setPassiveMode(HELIOS_FTP_PASSIVE_MODE);
-    $command = "site meta P_DEST={$p_dest};P_APPLI=THELPES2;P_MSG=$p_msg";
-    echo "$command\n";
-    $heliosConnection->sendRawCommand($command);
-    $heliosConnection->sendOneFile($remoteSendPath, $file_path);*/
-    $heliosConnection->sendOneFileWithProperties($p_dest, $p_msg, "THELPES2", $remoteSendPath, $file_path);
+    $DGFiPConnection->sendOneFileWithProperties($p_dest, $p_msg, "THELPES2");
 }
 
-var_dump($heliosConnection->getFileNames());
+var_dump($DGFiPConnection->getFileNames());
 
-var_dump($heliosConnection->getFileNames());
+var_dump($DGFiPConnection->getFileNames());
 
-$heliosConnection->disconnect();
+$DGFiPConnection->disconnect();

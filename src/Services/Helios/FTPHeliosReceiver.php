@@ -4,26 +4,27 @@ namespace S2low\Services\Helios;
 
 use Exception;
 use Iterator;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2lowLegacy\Class\S2lowLogger;
 
+/**
+ *
+ */
 class FTPHeliosReceiver implements Iterator
 {
-    private $localPath;
+    private string $localPath;
     private $filesToProcess = [];
     private $index = 0;
     private $s2lowLogger;
     /**
-     * @var \S2low\Services\Helios\HeliosConnection|null
+     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnection|null
      */
-    private HeliosConnection $heliosConnection;
-    /**
-     * @var \S2low\Services\Helios\HeliosConnectionsConfigurationManager
-     */
+    private ?DGFiPConnection $heliosConnection;
 
     public function __construct(
         S2lowLogger $s2lowLogger,
-        HeliosConnection $heliosConnection,
-        $helios_ftp_response_tmp_local_path
+        DGFiPConnection $heliosConnection,
+        string $helios_ftp_response_tmp_local_path
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->heliosConnection = $heliosConnection;
@@ -65,7 +66,7 @@ class FTPHeliosReceiver implements Iterator
 
     private function isPesAller($filename): bool
     {
-        $isPesAller = preg_match("#^PESALR2_#", basename($filename));
+        $isPesAller = str_starts_with(basename($filename), "PESALR2_");
         if ($isPesAller) {
             $this->s2lowLogger->info("$filename : PES ALLER ignoré");
         }
@@ -73,11 +74,11 @@ class FTPHeliosReceiver implements Iterator
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function retrieveNames()
+    public function retrieveNames(): void
     {
-
+        $this->heliosConnection->connect();                     //TODO : MOCHE !!
         $all_file = $this->heliosConnection->getFileNames();
         $this->filesToProcess = [];
 
@@ -99,7 +100,7 @@ class FTPHeliosReceiver implements Iterator
         $this->s2lowLogger->info($i . " : " . $file . " récupéré : " . ($ftp_get_result ? "SUCCES" : "ECHEC")) ;
     }
 
-    public function finTraitement()
+    public function finTraitement(): void
     {
         $this->heliosConnection->disconnect();
     }

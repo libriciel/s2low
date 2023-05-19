@@ -4,16 +4,15 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use S2low\Services\Helios\FTPConnection\ConnectionConfiguration;
-use S2low\Services\Helios\FTPConnection\ActiveConnectionFactory;
-use S2low\Services\Helios\FTPConnection\FullConfiguration;
-use S2low\Services\Helios\FTPConnection\FullConfigurationBuilder;
-use S2low\Services\Helios\HeliosConnectionBuilder;
-use S2low\Services\Helios\HeliosConnectionsConfigurationManager;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
+use S2low\Services\Helios\DGFiPConnection\FTPConnection;
+use S2low\Services\Helios\DGFiPConnection\Protocols\FtpConnectionWrapper;
+use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
+use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
-use S2lowLegacy\Lib\FtpServiceWrapper;
-use S2lowLegacy\Lib\SftpServiceWrapper;
 use S2lowTestCase;
 
 /**
@@ -29,6 +28,10 @@ class FTPServiceTest extends S2lowTestCase
      * @var SftpServiceWrapper|MockObject
      */
     private SftpServiceWrapper|MockObject $sftpServiceWrapperMock;
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|(\S2low\Services\Helios\DGFiPConnection\FTPConnection&\PHPUnit\Framework\MockObject\MockObject)
+     */
+    private MockObject|FTPConnection $ftpConnectionMock;
 
     /**
      * @param int|string $dataName
@@ -41,40 +44,31 @@ class FTPServiceTest extends S2lowTestCase
         /** @var MockObject | FtpServiceWrapper $ftpServiceWrapperMock */
         $this->ftpServiceWrapperMock = $this->getMockBuilder(FtpServiceWrapper::class)->getMock();
         $this->sftpServiceWrapperMock = $this->getMockBuilder(SftpServiceWrapper::class)->getMock();
-    }
-
-    /**
-     * @return HeliosConnectionBuilder
-     */
-    public function getHeliosConnectionBuilder(): HeliosConnectionBuilder
-    {
-        $ftpConnectionFactory = new ActiveConnectionFactory(
-            $this->ftpServiceWrapperMock,
-            $this->sftpServiceWrapperMock,
-            $this->getObjectInstancier()->get(S2lowLogger::class),
-        );
-        return new HeliosConnectionBuilder(
-            $this->getObjectInstancier()->get(S2lowLogger::class),
-            $ftpConnectionFactory
-        );
+        $this->ftpConnectionMock = $this->getMockBuilder(FtpConnectionWrapper::class)
+            ->disableOriginalConstructor()->getMock();
     }
 
     /**
      * @param bool $isPassive
      * @param string $PasstransMode
-     * @return ConnectionConfiguration
+     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnection
      */
-    public function getConnectionConfiguration(bool $isPassive, string $PasstransMode): FullConfiguration
+    public function getDGFiPConnection(bool $isPassive, string $PasstransMode): DGFiPConnection
     {
-        return ( new FullConfigurationBuilder() )->generateConfiguration(
+        return ( new DGFiPConnectionBuilder(
+            $this->ftpServiceWrapperMock,
+            $this->sftpServiceWrapperMock,
+            $this->getObjectInstancier()->get(S2lowLogger::class)
+        ) )->get(
             'helios_ftp_server',
-            'helios_ftp_port',
+            1024,
             'helios_ftp_login',
             'helios_ftp_password',
             $PasstransMode,
             $isPassive,
             'sending_destination',
             'response_server_path',
+            'p_appli'
         );
     }
 
@@ -84,9 +78,9 @@ class FTPServiceTest extends S2lowTestCase
     public function connectionProvider(): array
     {
         return [
-            ['FTP_SIMULATEUR', 'connect'],
-            ['FTP_GATEWAY', 'connect'],
-            ['FTPS_PASSTRANS', 'sslConnect']
+            [ DGFiPConnectionMode::SIMULATEUR, 'connect'],
+            [ DGFiPConnectionMode::GATEWAY, 'connect'],
+            [ DGFiPConnectionMode::PASSTRANS_FTPS, 'sslConnect']
         ];
     }
 
@@ -102,15 +96,23 @@ class FTPServiceTest extends S2lowTestCase
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method($connectFunction)
-            ->with('helios_ftp_server', 'helios_ftp_port', 90)
-            ->willReturn('ftp');
+            ->with('helios_ftp_server', 1024, 90)
+            ->willReturn($this->ftpConnectionMock);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('login')
-            ->with('ftp', 'helios_ftp_login', 'helios_ftp_password')
-            ->willReturn('login');
-        $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(false, $heliosFtpPasstransMode)
+            ->with($this->ftpConnectionMock, 'helios_ftp_login', 'helios_ftp_password')
+            ->willReturn(true);
+        $connection = $this->getDGFiPConnection(false, $heliosFtpPasstransMode);
+        $connection->connect();
+    }
+
+    public function testURL()
+    {
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::SIMULATEUR);
+        $this->assertEquals(
+            'FTP://helios_ftp_login:helios_ftp_password@helios_ftp_server [Actif].[MODE DEMO]',
+            $connection->getURL()
         );
     }
 
@@ -135,21 +137,20 @@ class FTPServiceTest extends S2lowTestCase
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('connect')
-            ->with('helios_ftp_server', 'helios_ftp_port', 90)
-            ->willReturn('ftp');
+            ->with('helios_ftp_server', 1024, 90)
+            ->willReturn($this->ftpConnectionMock);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('login')
-            ->with('ftp', 'helios_ftp_login', 'helios_ftp_password')
-            ->willReturn('login');
+            ->with($this->ftpConnectionMock, 'helios_ftp_login', 'helios_ftp_password')
+            ->willReturn(true);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('pasv')
-            ->with('ftp', $isPasv)
-            ->willReturn('login');
-        $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration($isPasv, 'FTP_GATEWAY')
-        );
+            ->with($this->ftpConnectionMock, $isPasv)
+            ->willReturn(true);
+        $connection = $this->getDGFiPConnection($isPasv, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
     }
 
     /**
@@ -161,13 +162,12 @@ class FTPServiceTest extends S2lowTestCase
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('connect')
-            ->with('helios_ftp_server', 'helios_ftp_port', 90)
+            ->with('helios_ftp_server', 1024, 90)
             ->willReturn(false);
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Impossible de se connecter au serveur helios_ftp_server:helios_ftp_port');
-        $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(false, 'FTP_GATEWAY')
-        );
+        $this->expectExceptionMessage('Impossible de se connecter au serveur helios_ftp_server:1024');
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
     }
 
     /**
@@ -179,18 +179,17 @@ class FTPServiceTest extends S2lowTestCase
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('connect')
-            ->with('helios_ftp_server', 'helios_ftp_port', 90)
-            ->willReturn('ftp');
+            ->with('helios_ftp_server', 1024, 90)
+            ->willReturn($this->ftpConnectionMock);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('login')
-            ->with('ftp', 'helios_ftp_login', 'helios_ftp_password')
+            ->with($this->ftpConnectionMock, 'helios_ftp_login', 'helios_ftp_password')
             ->willReturn(false);
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Impossible de se connecter avec le login helios_ftp_login');
-        $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(false, 'FTP_GATEWAY')
-        );
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
     }
 
     /**
@@ -199,8 +198,8 @@ class FTPServiceTest extends S2lowTestCase
     public function demoProvider(): array
     {
         return [
-            ['FTP_GATEWAY', './'],
-            ['FTP_SIMULATEUR', '.']
+            [ DGFiPConnectionMode::GATEWAY, './'],
+            [ DGFiPConnectionMode::SIMULATEUR, '.']
         ];
     }
     /**
@@ -215,22 +214,20 @@ class FTPServiceTest extends S2lowTestCase
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('chdir')
-            ->with('ftp', 'response_server_path')
+            ->with($this->ftpConnectionMock, 'response_server_path')
             ->willReturn(true);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method('nlist')
-            ->with('ftp', $currentDirectorySyntax)
+            ->with($this->ftpConnectionMock, $currentDirectorySyntax)
             ->willReturn(['file1', 'file2']);
 
-        $heliosConnectionBuilder = $this->getHeliosConnectionBuilder();
-        $heliosConnection = $heliosConnectionBuilder->connect(
-            $this->getConnectionConfiguration(false, $heliosFtpPasstransMode)
-        );
+        $connection = $this->getDGFiPConnection(false, $heliosFtpPasstransMode);
+        $connection->connect();
         $this->assertEquals(
             ['file1', 'file2'],
-            $heliosConnection->getFileNames()
+            $connection->getFileNames()
         );
     }
 
@@ -241,13 +238,13 @@ class FTPServiceTest extends S2lowTestCase
     {
         $this->ftpServiceWrapperMock
             ->method('connect')
-            ->willReturn('ftp');
+            ->willReturn($this->ftpConnectionMock);
         $this->ftpServiceWrapperMock
             ->method('sslConnect')
-            ->willReturn('ftp');
+            ->willReturn($this->ftpConnectionMock);
         $this->ftpServiceWrapperMock
             ->method('login')
-            ->willReturn('login');
+            ->willReturn(true);
     }
 
     /**
@@ -266,11 +263,9 @@ class FTPServiceTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Impossible d\'aller sur le répertoire distant response_server_path');
 
-        $heliosConnectionBuilder = $this->getHeliosConnectionBuilder();
-        $heliosConnection = $heliosConnectionBuilder->connect(
-            $this->getConnectionConfiguration(false, 'FTP_GATEWAY')
-        );
-        $heliosConnection->getFileNames();
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->getFileNames();
     }
 
     /**
@@ -289,20 +284,19 @@ class FTPServiceTest extends S2lowTestCase
             ->method('nlist')
             ->willReturn(false);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Impossible de lister le contenu du répertoire distant response_server_path');
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, 'FTP_GATEWAY'));
-
-        $heliosConnection->getFileNames();
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->getFileNames();
     }
 
     public function demoProvider2()
     {
         return [
-            ['FTP_SIMULATEUR', self::once()],          // En mode demo, c'est s2low qui demande la suppression du fichier
-            ['FTP_GATEWAY', self::never()]         // Sinon, c'est le serveur DGFip qui supprime après téléchargement
+            [ DGFiPConnectionMode::SIMULATEUR , self::once()],          // En mode demo, c'est s2low qui demande la suppression du fichier
+            [DGFiPConnectionMode::GATEWAY, self::never()]         // Sinon, c'est le serveur DGFip qui supprime après téléchargement
         ];
     }
     /**
@@ -316,10 +310,10 @@ class FTPServiceTest extends S2lowTestCase
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("get")
+            ->method('get')
             ->willReturnCallback(function ($ftp, $tmp_file, $remoteFile) {
                 $content = 'file contents';
-                $fp = fopen("$tmp_file", "wb");
+                $fp = fopen("$tmp_file", 'wb');
                 fwrite($fp, $content);
                 fclose($fp);
                 return true;
@@ -330,18 +324,17 @@ class FTPServiceTest extends S2lowTestCase
             ->method('delete')
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(false, $heliosFtpPasstransMode)
-        );
+        $connection = $this->getDGFiPConnection(false, $heliosFtpPasstransMode);
+        $connection->connect();
 
         $tmpFolder = new TmpFolder();
         $tmpDir = $tmpFolder->create();
 
         $this->assertTrue(
-            $heliosConnection->retrieveFile("file", "$tmpDir/")
+            $connection->retrieveFile('file', "$tmpDir/")
         );
         $this->assertEquals(
-            "file contents",
+            'file contents',
             file_get_contents("$tmpDir/file")
         );
 
@@ -353,15 +346,13 @@ class FTPServiceTest extends S2lowTestCase
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("close")
-            ->with("ftp")
+            ->method('close')
+            ->with($this->ftpConnectionMock)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(true, "FTP_GATEWAY")
-        );
-
-        $heliosConnection->disconnect();
+        $connection = $this->getDGFiPConnection(true, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->disconnect();
     }
 
     public function testSendRawCommand()
@@ -369,22 +360,22 @@ class FTPServiceTest extends S2lowTestCase
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects(self::exactly(3))
-            ->method("raw")
+            ->method('raw')
             ->withConsecutive(
-                ["ftp", "site P_DEST p_dest"],
-                ["ftp","site P_APPLI p_appli"],
-                ["ftp","site P_MSG p_msg"]
+                [$this->ftpConnectionMock, 'site P_DEST p_dest'],
+                [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
+                [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
-            ->willReturn([200,"Yay"]);
+            ->willReturn([200, 'Yay']);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method("put")
-            ->with("ftp", "sending_destinationfile_to_send", "file_to_send", FTP_BINARY)
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_to_send', 'file_to_send', FTP_BINARY)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(true, "FTP_GATEWAY"));
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_to_send"); //sendRawCommand("commande de test");
+        $connection = $this->getDGFiPConnection(true, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
     public function testSendRawCommandWithErrorDemoMode()
@@ -392,24 +383,24 @@ class FTPServiceTest extends S2lowTestCase
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects(self::exactly(3))
-            ->method("raw")
+            ->method('raw')
             ->withConsecutive(
-                ["ftp", "site P_DEST p_dest"],
-                ["ftp","site P_APPLI p_appli"],
-                ["ftp","site P_MSG p_msg"]
+                [$this->ftpConnectionMock, 'site P_DEST p_dest'],
+                [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
+                [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
             ->willReturn([400,"I'm a teapot"]); // En mode démo, l'erreur ne pertubera pas l'envoi ...
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
-            ->with("ftp", "sending_destinationfile_to_send", "file_to_send", FTP_BINARY)
+            ->method('put')
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_to_send', 'file_to_send', FTP_BINARY)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()->connect(
-            $this->getConnectionConfiguration(true, "FTP_SIMULATEUR")
-        );
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_to_send"); //sendRawCommand("commande de test");
+        $connection = $this->getDGFiPConnection(true, DGFiPConnectionMode::SIMULATEUR);
+        $connection->connect();
+
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
     public function testSendRawCommandWithError()
@@ -417,45 +408,46 @@ class FTPServiceTest extends S2lowTestCase
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("raw")
-            ->with("ftp", "site P_DEST p_dest")
+            ->method('raw')
+            ->with($this->ftpConnectionMock, 'site P_DEST p_dest')
             ->willReturn([418,"I'm a teapot"]);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, "FTP_GATEWAY"));
-        $this->expectException(\Exception::class);
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage("[FAILED] Send FTP raw command
 site P_DEST p_dest
 ********** RESULT *******
 418
 I'm a teapot
 ******** END RESULT ************");
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_to_send"); //sendRawCommand("commande de test");
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
-    public function testSendOneFile()   //TODO
+    public function testSendOneFile()
     {
         $this->setupConnection();
 
         $this->ftpServiceWrapperMock
             ->expects(self::exactly(3))
-            ->method("raw")
+            ->method('raw')
             ->withConsecutive(
-                ["ftp", "site P_DEST p_dest"],
-                ["ftp","site P_APPLI p_appli"],
-                ["ftp","site P_MSG p_msg"]
+                [$this->ftpConnectionMock, 'site P_DEST p_dest'],
+                [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
+                [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
             ->willReturn([200,"Yay"]);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
             ->method("put")
-            ->with("ftp", "sending_destinationfile_path", "file_path", FTP_BINARY)
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, "FTP_GATEWAY"));
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_path");
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
     public function testSendOneFileWithError()  //TODO
@@ -464,26 +456,26 @@ I'm a teapot
 
         $this->ftpServiceWrapperMock
             ->expects(self::exactly(3))
-            ->method("raw")
+            ->method('raw')
             ->withConsecutive(
-                ["ftp", "site P_DEST p_dest"],
-                ["ftp","site P_APPLI p_appli"],
-                ["ftp","site P_MSG p_msg"]
+                [$this->ftpConnectionMock, 'site P_DEST p_dest'],
+                [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
+                [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
             ->willReturn([200,"Yay"]);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
-            ->with("ftp", "sending_destinationfile_path", "file_path", FTP_BINARY)
+            ->method('put')
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
             ->willReturn(false);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, "FTP_GATEWAY"));
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("Erreur lors de l'envoi du fichier file_path vers le serveur FTP");
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_path");
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Erreur lors de l\'envoi du fichier file_path vers le serveur FTP');
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
     public function testConfigureFilePropertiesPasstrans()  //TODO
@@ -492,19 +484,19 @@ I'm a teapot
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("raw")
-            ->with("ftp", "site meta P_DEST=p_dest;P_APPLI=p_appli;P_MSG=p_msg")
-            ->willReturn(["200","cool cool cool"]);
+            ->method('raw')
+            ->with($this->ftpConnectionMock, 'site meta P_DEST=p_dest;P_APPLI=p_appli;P_MSG=p_msg')
+            ->willReturn(['200', 'cool cool cool']);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
-            ->with("ftp", "sending_destinationfile_path", "file_path", FTP_BINARY)
+            ->method('put')
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, "FTPS_PASSTRANS"));
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_path");
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::PASSTRANS_FTPS);
+        $connection->connect();
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
     public function testConfigureFilePropertiesNotPasstrans()   //TODO
@@ -513,18 +505,44 @@ I'm a teapot
         $this->setupConnection();
         $this->ftpServiceWrapperMock
             ->expects($this->exactly(3))
-            ->method("raw")
-            ->withConsecutive(["ftp","site P_DEST p_dest"], ["ftp","site P_APPLI p_appli"], ["ftp","site P_MSG p_msg"])
-            ->willReturn(["200","cool cool cool"]);
+            ->method('raw')
+            ->withConsecutive([$this->ftpConnectionMock, 'site P_DEST p_dest'], [$this->ftpConnectionMock,"site P_APPLI p_appli"], [$this->ftpConnectionMock,"site P_MSG p_msg"])
+            ->willReturn(['200', 'cool cool cool']);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
-            ->with("ftp", "sending_destinationfile_path", "file_path", FTP_BINARY)
+            ->method('put')
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
             ->willReturn(true);
 
-        $heliosConnection = $this->getHeliosConnectionBuilder()
-            ->connect($this->getConnectionConfiguration(false, "FTP_GATEWAY"));
-        $heliosConnection->sendOneFileWithProperties("p_dest", "p_msg", "p_appli", "file_path");
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+        $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
+    }
+    public function testsendFileOnUniqueConnection()
+    {
+        $this->setupConnection();
+
+        $this->ftpServiceWrapperMock
+            ->expects(self::once())
+            ->method('connect');
+        $this->ftpServiceWrapperMock
+            ->expects($this->exactly(3))
+            ->method('raw')
+            ->withConsecutive([$this->ftpConnectionMock, 'site P_DEST p_dest'], [$this->ftpConnectionMock,'site P_APPLI p_appli'], [$this->ftpConnectionMock,'site P_MSG p_msg'])
+            ->willReturn(['200', 'cool cool cool']);
+        $this->ftpServiceWrapperMock
+            ->expects(self::once())
+            ->method('close')
+            ->willReturn(true)
+        ;
+        $this->ftpServiceWrapperMock
+            ->expects(self::once())
+            ->method('put')
+            ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
+            ->willReturn(true);
+
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->sendFileOnUniqueConnection('p_dest', 'p_msg', 'file_path');
     }
 }

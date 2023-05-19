@@ -3,9 +3,12 @@
 namespace S2low\Command;
 
 use LogicException;
-use S2low\Services\Helios\HeliosEnvoiWorker;
+use S2low\Services\Helios\HeliosEnvoiWorkerFactory;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  *
@@ -13,22 +16,22 @@ use Symfony\Component\Console\Command\Command;
 class HeliosEnvoiCommand extends Command
 {
     /**
-     * @var \S2lowLegacy\Class\WorkerScript
+     * @var WorkerScript
      */
     private WorkerScript $workerScript;
     /**
-     * @var \S2low\Services\Helios\HeliosEnvoiWorker
+     * @var HeliosEnvoiWorkerFactory
      */
-    private HeliosEnvoiWorker $heliosEnvoiWorker;
+    private HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory;
 
     /**
-     * @param \S2lowLegacy\Class\WorkerScript $workerScript
-     * @param \S2low\Services\Helios\HeliosEnvoiWorker $heliosReceptionWorkerFactory
+     * @param WorkerScript $workerScript
+     * @param HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory
      */
-    public function __construct(WorkerScript $workerScript, HeliosEnvoiWorker $heliosReceptionWorkerFactory)
+    public function __construct(WorkerScript $workerScript, HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory)
     {
         $this->workerScript = $workerScript;
-        $this->heliosEnvoiWorker = $heliosReceptionWorkerFactory;
+        $this->heliosEnvoiWorkerFactory = $heliosEnvoiWorkerFactory;
         parent::__construct();
     }
 
@@ -41,6 +44,12 @@ class HeliosEnvoiCommand extends Command
             ->setName('cron:helios-envoi')
             ->setDescription(
                 "Envoi des flux vers la DGFiP"
+            )
+            ->addOption(
+                'usePasstrans',
+                null,
+                InputOption::VALUE_NONE,
+                'Doit-on utiliser Passtrans à la place de la gateway ?'
             );
     }
 
@@ -55,13 +64,14 @@ class HeliosEnvoiCommand extends Command
      * @return int 0 if everything went fine, or an exit code
      *
      * @throws LogicException When this abstract method is not implemented
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      *
      * @see setCode()
      */
-    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->workerScript->scriptWithLogs($this->heliosEnvoiWorker);
+        $this->workerScript->scriptWithLogs($this->heliosEnvoiWorkerFactory->get(
+            $input->getOption('usePasstrans')
+        ));
         return 0;
     }
 }

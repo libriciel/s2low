@@ -7,7 +7,6 @@ use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
-use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\helios\PesAllerStorage;
@@ -15,6 +14,7 @@ use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\OpenStackConfig;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapperFactory;
@@ -26,9 +26,7 @@ use MailHeaderLegacy;
 use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use S2lowLegacy\Model\MessageAdmin;
 use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
 use Symfony\Component\Mime\Email;
 
 class LegacyObjectsManager
@@ -39,10 +37,10 @@ class LegacyObjectsManager
     public static function getLegacyObjectInstancier(): ObjectInstancier
     {
 
-        if (!\S2lowLegacy\Lib\ObjectInstancierFactory::issetObjectInstancier()) {
+        if (!ObjectInstancierFactory::issetObjectInstancier()) {
             self::setLegacyObjectInstancier();
         }
-        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        return ObjectInstancierFactory::getObjetInstancier();
     }
 
     /**
@@ -60,8 +58,8 @@ class LegacyObjectsManager
             $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
         }
 
-        $objectInstancier = new \S2lowLegacy\Lib\ObjectInstancier();
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
+        $objectInstancier = new ObjectInstancier();
+        ObjectInstancierFactory::setObjectInstancier($objectInstancier);
 
         $logger = new Logger("S2LOW");
         $logger->pushHandler(new StreamHandler(LOG_FILE, LOG_LEVEL));
@@ -104,6 +102,8 @@ class LegacyObjectsManager
 
         $objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
         $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
+
+        $objectInstancier->set('helios_counter_file', HELIOS_COUNTER_FILE);
 
         $openStackConfigActes = new OpenStackConfig();
         $openStackConfigActes->openstack_authentication_url_v3 = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
@@ -221,29 +221,9 @@ class LegacyObjectsManager
         $objectInstancier->set('redis_server', REDIS_SERVER);
         $objectInstancier->set('redis_port', REDIS_PORT);
 
-        $objectInstancier->set('helios_ftp_p_appli', HELIOS_FTP_P_APPLI);
-
-        $objectInstancier->set('helios_ftp_server', HELIOS_FTP_SERVER);
-        $objectInstancier->set('helios_ftp_port', HELIOS_FTP_PORT);
-        $objectInstancier->set('helios_ftp_passive_mode', HELIOS_FTP_PASSIVE_MODE);
-        $objectInstancier->set('helios_ftp_passtrans_mode', HELIOS_FTP_PASSTRANS_MODE);
-        $objectInstancier->set('helios_ftp_login', HELIOS_FTP_LOGIN);
-        $objectInstancier->set('helios_ftp_password', HELIOS_FTP_PASSWORD);
-        $objectInstancier->set('helios_ftp_response_server_path', HELIOS_FTP_RESPONSE_SERVER_PATH);
         $objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
-        $objectInstancier->set('helios_sending_destination', HELIOS_SENDING_DESTINATION);
 
         $objectInstancier->set('helios_retention_fichiers_nb_jours', HELIOS_RETENTION_FICHIERS_NB_JOURS);
-
-        $objectInstancier->set('helios_passtrans_server', HELIOS_PASSTRANS_SERVER);
-        $objectInstancier->set('helios_passtrans_port', HELIOS_PASSTRANS_PORT);
-        $objectInstancier->set('helios_passtrans_passive_mode', HELIOS_PASSTRANS_PASSIVE_MODE);
-        $objectInstancier->set('helios_passtrans_passtrans_mode', HELIOS_PASSTRANS_PASSTRANS_MODE);
-        $objectInstancier->set('helios_passtrans_login', HELIOS_PASSTRANS_LOGIN);
-        $objectInstancier->set('helios_passtrans_password', HELIOS_PASSTRANS_PASSWORD);
-        $objectInstancier->set('helios_passtrans_sending_destination', HELIOS_PASSTRANS_SENDING_DESTINATION);
-        $objectInstancier->set('helios_passtrans_response_server_path', HELIOS_PASSTRANS_RESPONSE_SERVER_PATH);
-
 
         $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
         $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
@@ -284,7 +264,7 @@ class LegacyObjectsManager
 
     public static function resetObjectInstancier()
     {
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
+        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     /**
@@ -292,9 +272,9 @@ class LegacyObjectsManager
      */
     public static function getObject(string $className)
     {
-        if (!\S2lowLegacy\Lib\ObjectInstancierFactory::issetObjectInstancier()) {
-            throw new \RuntimeException("ObjectInstancier not test");
+        if (!ObjectInstancierFactory::issetObjectInstancier()) {
+            throw new RuntimeException("ObjectInstancier not test");
         }
-        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get($className);
+        return ObjectInstancierFactory::getObjetInstancier()->get($className);
     }
 }

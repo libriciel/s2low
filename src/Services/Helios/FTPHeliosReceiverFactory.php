@@ -2,38 +2,34 @@
 
 namespace S2low\Services\Helios;
 
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2lowLegacy\Class\S2lowLogger;
 
+/**
+ * Permet de genérer des FTPHeliosReceiver configurées pour se connecter en utilisant la configuration Passtrans
+ * ou non Passtrans
+ */
 class FTPHeliosReceiverFactory
 {
     /**
      * @var \S2lowLegacy\Class\S2lowLogger
      */
     private S2lowLogger $s2lowLogger;
-    /**
-     * @var \S2low\Services\Helios\HeliosConnectionBuilder
-     */
-    private HeliosConnectionBuilder $FTPService;
+
     private mixed $localPath;
     /**
-     * @var \S2low\Services\Helios\HeliosConnectionsConfigurationManager
+     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager
      */
-    private HeliosConnectionsConfigurationManager $connectionsConfigurationManager;
-    /**
-     * @var \S2low\Services\Helios\HeliosConnectionBuilder
-     */
-    private HeliosConnectionBuilder $heliosConnectionBuilder;
+    private DGFiPConnectionsManager $connectionsConfigurationManager;
 
 
     public function __construct(
         S2lowLogger $s2lowLogger,
-        HeliosConnectionsConfigurationManager $connectionsConfigurationManager,
-        HeliosConnectionBuilder $heliosConnectionBuilder,
+        DGFiPConnectionsManager $connectionsConfigurationManager,
         $helios_ftp_response_tmp_local_path
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->connectionsConfigurationManager = $connectionsConfigurationManager;
-        $this->heliosConnectionBuilder = $heliosConnectionBuilder;
         $this->localPath = $helios_ftp_response_tmp_local_path;
     }
 
@@ -42,9 +38,7 @@ class FTPHeliosReceiverFactory
 
         return new FTPHeliosReceiver(
             $this->s2lowLogger,
-            $this->heliosConnectionBuilder->connect(
-                $this->connectionsConfigurationManager->get($usePasstrans)
-            ),
+            $this->connectionsConfigurationManager->get($usePasstrans),
             $this->localPath
         );
     }
