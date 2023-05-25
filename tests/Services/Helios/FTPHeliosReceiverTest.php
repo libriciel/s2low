@@ -1,8 +1,11 @@
 <?php
 
-use S2lowLegacy\Class\helios\FTPHeliosReceiver;
-use S2lowLegacy\Class\helios\FTPService;
+namespace S2low\Tests\Services\Helios;
+
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
+use S2low\Services\Helios\FTPHeliosReceiver;
 use S2lowLegacy\Class\S2lowLogger;
+use S2lowTestCase;
 
 class FTPHeliosReceiverTest extends S2lowTestCase
 {
@@ -11,21 +14,18 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
-        $ftpService = $this->getMockBuilder(FTPService::class)
+        $ftpHeliosConnection = $this->getMockBuilder(\S2low\Services\Helios\DGFiPConnection\DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpService->expects($this->once())->method("connect");
-        $ftpService->expects($this->once())
+        $ftpHeliosConnection->expects($this->once())
             ->method("getFileNames")
-            ->with("response_server_path")
+            ->with()
             ->willReturn([]);
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,
-            $ftpService,
-            "response_server_path",
+            $ftpHeliosConnection,
             "tmp_local_path"
         );
 
@@ -44,25 +44,22 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
-        $ftpService = $this->getMockBuilder(FTPService::class)
+        $heliosConnection = $this->getMockBuilder(\S2low\Services\Helios\DGFiPConnection\DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpService->expects($this->once())->method("connect");
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("getFileNames")
-            ->with("response_server_path")
+            ->with()
             ->willReturn(["File"]);
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("retrieveFile")
             ->with("File", "tmp_local_path")
             ->willReturn(true);
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,
-            $ftpService,
-            "response_server_path",
+            $heliosConnection, //$heliosConnectionBuilder,
             "tmp_local_path"
         );
 
@@ -80,27 +77,25 @@ class FTPHeliosReceiverTest extends S2lowTestCase
     {
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
-        $s2lowLogger->expects($this->exactly(2))
+        $s2lowLogger->expects($this->once())
             ->method("info")
-            ->withConsecutive(["Remote_path : response_server_path"], ["PESALR2_File : PES ALLER ignoré"]);
+            ->with("PESALR2_File : PES ALLER ignoré");
 
-        /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
-        $ftpService = $this->getMockBuilder(FTPService::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpService->expects($this->once())->method("connect");
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("getFileNames")
-            ->with("response_server_path")
+            ->with()
             ->willReturn(["PESALR2_File"]);
-        $ftpService->expects($this->never())
+        $heliosConnection->expects($this->never())
             ->method("retrieveFile");
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,
-            $ftpService,
-            "response_server_path",
+            $heliosConnection,
             "tmp_local_path"
         );
 
@@ -118,28 +113,26 @@ class FTPHeliosReceiverTest extends S2lowTestCase
     {
         /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
-        $s2lowLogger->expects($this->exactly(2))
+        $s2lowLogger->expects($this->once())
             ->method("info")
-            ->withConsecutive(["Remote_path : response_server_path"], ["0 : File récupéré : ECHEC"]);
+            ->with("0 : File récupéré : ECHEC");
 
-        /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
-        $ftpService = $this->getMockBuilder(FTPService::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpService->expects($this->once())->method("connect");
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("getFileNames")
-            ->with("response_server_path")
+            ->with()
             ->willReturn(["File"]);
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("retrieveFile")
             ->willReturn(false);
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,
-            $ftpService,
-            "response_server_path",
+            $heliosConnection,
             "tmp_local_path"
         );
 
@@ -155,28 +148,26 @@ class FTPHeliosReceiverTest extends S2lowTestCase
 
     public function testRetrieveMultipleFiles()
     {
-        /** @var  $s2lowLogger S2lowLogger | \PHPUnit\Framework\MockObject\MockObject */
+        /** @var  S2lowLogger | \PHPUnit\Framework\MockObject\MockObject $s2lowLogger */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        /** @var $ftpService FTPService | \PHPUnit\Framework\MockObject\MockObject */
-        $ftpService = $this->getMockBuilder(FTPService::class)
+        /** @var DGFiPConnection | \PHPUnit\Framework\MockObject\MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpService->expects($this->once())->method("connect");
-        $ftpService->expects($this->once())
+        $heliosConnection->expects($this->once())
             ->method("getFileNames")
-            ->with("response_server_path")
-            ->willReturn(["File1","File2"]);
-        $ftpService->expects($this->exactly(2))
+            ->with()
+            ->willReturn(["File1", "File2"]);
+        $heliosConnection->expects($this->exactly(2))
             ->method("retrieveFile")
-            ->withConsecutive(["File1","tmp_local_path"], ["File2","tmp_local_path"])
+            ->withConsecutive(["File1", "tmp_local_path"], ["File2", "tmp_local_path"])
             ->willReturn(true);
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,
-            $ftpService,
-            "response_server_path",
+            $heliosConnection,
             "tmp_local_path"
         );
 
@@ -187,6 +178,6 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             $retrievedNames[] = $retrievedName;
         }
 
-        $this->assertEquals($retrievedNames, ["File1","File2"]);
+        $this->assertEquals($retrievedNames, ["File1", "File2"]);
     }
 }

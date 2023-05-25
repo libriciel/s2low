@@ -3,9 +3,11 @@
 namespace S2low\Command;
 
 use LogicException;
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use  Symfony\Component\Console\Output\OutputInterface;
 
 /**
  *
@@ -13,29 +15,31 @@ use Symfony\Component\Console\Command\Command;
 class HeliosAnalyseFichierAEnvoyer extends Command
 {
     /**
-     * @var \S2lowLegacy\Class\WorkerScript
+     * @var WorkerScript
      */
     private WorkerScript $workerScript;
     /**
-     * @var \S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker
+     * @var  HeliosAnalyseFichierAEnvoyerWorker
      */
     private HeliosAnalyseFichierAEnvoyerWorker $heliosAnalyseFichierAEnvoyer;
 
     /**
-     * @param \S2lowLegacy\Class\WorkerScript $workerScript
-     * @param \S2lowLegacy\Class\helios\HeliosEnvoiWorker $heliosEnvoiWorker
+     * @param WorkerScript $workerScript
+     * @param HeliosAnalyseFichierAEnvoyerWorker $analyseFichierAEnvoyerWorkerFactory
      */
-    public function __construct(WorkerScript $workerScript, HeliosAnalyseFichierAEnvoyerWorker $analyseFichierAEnvoyerWorker)
-    {
+    public function __construct(
+        WorkerScript $workerScript,
+        HeliosAnalyseFichierAEnvoyerWorker $analyseFichierAEnvoyerWorkerFactory
+    ) {
         $this->workerScript = $workerScript;
-        $this->heliosAnalyseFichierAEnvoyer = $analyseFichierAEnvoyerWorker;
+        $this->heliosAnalyseFichierAEnvoyer = $analyseFichierAEnvoyerWorkerFactory;
         parent::__construct();
     }
 
     /**
      * Configures the current command.
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('cron:helios-analyse-fichier-a-envoyer')
@@ -59,8 +63,9 @@ class HeliosAnalyseFichierAEnvoyer extends Command
      *
      * @see setCode()
      */
-    protected function execute(\Symfony\Component\Console\Input\InputInterface $input, \Symfony\Component\Console\Output\OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->workerScript->scriptWithLogs($this->heliosAnalyseFichierAEnvoyer);
+        $this->workerScript->scriptWithLogs($this->heliosAnalyseFichierAEnvoyer, false);
+        return 0;
     }
 }

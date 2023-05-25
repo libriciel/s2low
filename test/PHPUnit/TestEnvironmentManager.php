@@ -85,11 +85,6 @@ class TestEnvironmentManager
         // WARNING : PAS SUR DE LA MANIP
         $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
-        $this->getObjectInstancier()->set('helios_ftp_server', 'server');
-        $this->getObjectInstancier()->set('helios_ftp_passive_mode', 'HELIOS_FTP_PASSIVE_MODE');
-        $this->getObjectInstancier()->set('helios_ftp_port', 'HELIOS_FTP_PORT');
-        $this->getObjectInstancier()->set('helios_ftp_login', 'HELIOS_FTP_LOGIN');
-        $this->getObjectInstancier()->set('helios_ftp_password', 'HELIOS_FTP_PASSWORD');
         $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
     }
 

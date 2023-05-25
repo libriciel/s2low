@@ -55,7 +55,7 @@ INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 INSERT INTO authority_groups VALUES (2, 'second groupe', 1);
 INSERT INTO authority_types VALUES (1, NULL, 'Région');
 INSERT INTO authority_types VALUES (11, 1, 'Conseil régional');
-INSERT INTO authorities VALUES (1, 11, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO authorities VALUES (1, 11, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, 'helios_ftp_password', 'helios_ftp_login', 'helios_ftp_dest', NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO authorities VALUES (2, NULL, 1, 'Saint-Andre de Corcy', NULL, NULL, '999999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, '-----BEGIN CERTIFICATE-----
 MIIFeTCCA2ECAQgwDQYJKoZIhvcNAQEFBQAwgYoxCzAJBgNVBAYTAkZSMQ8wDQYD
@@ -127,10 +127,10 @@ YNN6Z4fNWGHPgI7R6w==
 ', 'hash_adullact_identification');
 INSERT INTO users VALUES (5, 'eric+5@sigmalis.com', 'adullact_user', 'adullact_user', 'Durand', 'Daniel', NULL, 'USER', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'hash_adullact_user');
 INSERT INTO users VALUES (6, 'eric+6@sigmalis.com', 'admin_col2', 'admin_col2', 'Eon', 'Eric', NULL, 'ADM', 2, 1, NULL, NULL, NULL, NULL, 1, NULL, NULL, '', 'hash_admin_col2');
-INSERT INTO users VALUES (7, 'eric+7@sigmalis.com', 'admin_groupe', 'admin_groupe', 'François', 'Frédéric', NULL, 'GADM', 2, 1, NULL, NULL, NULL, NULL, 1, NULL, NULL, '', 'hash_admin_groupe');
-INSERT INTO users VALUES (8, 'eric+8@sigmalis.com', 'user_col1', 'user_col1', 'Georges', 'Gérard', NULL, 'USER', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'hash_user_col1');
+INSERT INTO users VALUES (7, 'eric+7@sigmalis.com', 'admin_groupe', 'admin_groupe', 'Franï¿½ois', 'Frï¿½dï¿½ric', NULL, 'GADM', 2, 1, NULL, NULL, NULL, NULL, 1, NULL, NULL, '', 'hash_admin_groupe');
+INSERT INTO users VALUES (8, 'eric+8@sigmalis.com', 'user_col1', 'user_col1', 'Georges', 'Gï¿½rard', NULL, 'USER', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'hash_user_col1');
 INSERT INTO users VALUES (9, 'eric+9@sigmalis.com', 'admin_col1', 'admin_col1', 'Dupont', 'Alice', NULL, 'ADM', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'admin_col1');
-INSERT INTO users VALUES (10, 'eric+10@sigmalis.com', 'admin_groupe2', 'admin_groupe2', 'François', 'Frédéric', NULL, 'GADM', 2, 1, NULL, NULL, NULL, NULL, 2, NULL, NULL, '', 'hash_admin_groupe2');
+INSERT INTO users VALUES (10, 'eric+10@sigmalis.com', 'admin_groupe2', 'admin_groupe2', 'Franï¿½ois', 'Frï¿½dï¿½ric', NULL, 'GADM', 2, 1, NULL, NULL, NULL, NULL, 2, NULL, NULL, '', 'hash_admin_groupe2');
 INSERT INTO users VALUES (11, 'eric+11@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau2', 'Eric2', NULL, 'SADM', 1, 1, '-----BEGIN CERTIFICATE-----
 MIIFeTCCA2ECAQgwDQYJKoZIhvcNAQEFBQAwgYoxCzAJBgNVBAYTAkZSMQ8wDQYD
 VQQIDAZGcmFuY2UxDTALBgNVBAcMBEx5b24xETAPBgNVBAoMCFNpZ21hbGlzMSYw

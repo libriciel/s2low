@@ -1,11 +1,12 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
+use Exception;
+use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
-use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
 
 class HeliosReceptionWorker implements IWorker

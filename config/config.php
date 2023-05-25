@@ -422,10 +422,6 @@ if (!defined("HELIOS_SENDING_DESTINATION")) {
     define("HELIOS_SENDING_DESTINATION", "/entree/");
 }
 
-if (!defined("HELIOS_SENDING_MODE_DEMO")) {
-    define("HELIOS_SENDING_MODE_DEMO", true);
-}
-
 //Pour le script de récupération des enveloppe Helios
 if (!defined('HELIOS_FTP_SERVER')) {
     define('HELIOS_FTP_SERVER', 'ftp');
@@ -435,8 +431,8 @@ if (!defined('HELIOS_FTP_PASSIVE_MODE')) {
     define('HELIOS_FTP_PASSIVE_MODE', false);
 }
 
-if (!defined('HELIOS_FTP_PASSTRANS_MODE')) {
-    define('HELIOS_FTP_PASSTRANS_MODE', false);
+if (!defined('HELIOS_FTP_CONNECTION_MODE')) {
+    define('HELIOS_FTP_CONNECTION_MODE', "SIMULATEUR");
 }
 
 if (!defined('HELIOS_FTP_PORT')) {
@@ -457,6 +453,38 @@ if (!defined('HELIOS_FTP_PASSWORD')) {
 
 if (!defined('HELIOS_FTP_RESPONSE_SERVER_PATH')) {
     define('HELIOS_FTP_RESPONSE_SERVER_PATH', '/sortie/');
+}
+
+if (!defined('HELIOS_PASSTRANS_SERVER')) {
+    define('HELIOS_PASSTRANS_SERVER', 'ftp_passtrans');
+}
+
+if (!defined('HELIOS_PASSTRANS_PORT')) {
+    define('HELIOS_PASSTRANS_PORT', '21');
+}
+
+if (!defined('HELIOS_PASSTRANS_PASSIVE_MODE')) {
+    define('HELIOS_PASSTRANS_PASSIVE_MODE', false);
+}
+
+if (!defined('HELIOS_PASSTRANS_CONNECTION_MODE')) {
+    define('HELIOS_PASSTRANS_CONNECTION_MODE', "SIMULATEUR");
+}
+
+if (!defined('HELIOS_PASSTRANS_LOGIN')) {
+    define('HELIOS_PASSTRANS_LOGIN', 'helios');
+}
+
+if (!defined('HELIOS_PASSTRANS_PASSWORD')) {
+    define('HELIOS_PASSTRANS_PASSWORD', 'helios');
+}
+
+if (!defined('HELIOS_PASSTRANS_SENDING_DESTINATION')) {
+    define('HELIOS_PASSTRANS_SENDING_DESTINATION', '/entree/');
+}
+
+if (!defined('HELIOS_PASSTRANS_RESPONSE_SERVER_PATH')) {
+    define('HELIOS_PASSTRANS_RESPONSE_SERVER_PATH', '/sortie/');
 }
 
 if (!defined('HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH')) {

@@ -186,6 +186,16 @@ class HeliosTransactionsSQL extends SQL
         return $this->queryOneCol($sql, $data);
     }
 
+    public function getIdsByStatusAndPasstrans($status_id, bool $helios_use_passtrans)
+    {
+        $sql = "SELECT  helios_transactions.id FROM helios_transactions " .
+            " JOIN authorities ON authorities.id=helios_transactions.authority_id " .
+            " WHERE last_status_id=? AND  helios_use_passtrans =?";
+
+        $sql .= " ORDER BY id";
+        return $this->queryOneCol($sql, [$status_id,$helios_use_passtrans ? "true" : "false"]);
+    }
+
     public function getIdByNomFicAndCodCol($nomFic, $cod_col)
     {
         $sql = "SELECT id FROM helios_transactions WHERE xml_nomfic = ? AND xml_cod_col=?";

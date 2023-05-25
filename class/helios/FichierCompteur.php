@@ -6,9 +6,9 @@ class FichierCompteur
 {
     private $file_path;
 
-    public function __construct($file_path)
+    public function __construct($helios_counter_file)
     {
-        $this->file_path = $file_path;
+        $this->file_path = $helios_counter_file;
     }
 
     public function getNumero()

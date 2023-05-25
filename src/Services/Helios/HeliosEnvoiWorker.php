@@ -1,34 +1,33 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
-use S2low\Services\Helios\HeliosEnvoiControler;
-use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\WorkerScript;
 use Exception;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
+class HeliosEnvoiWorker implements IWorker
 {
-    public const QUEUE_NAME = 'helios-analyse-fichier-a-envoyer';
+    public const QUEUE_NAME = 'helios-envoi';
 
 
     private $heliosEnvoiControler;
     private $heliosTransactionsSQL;
-    private $workerScript;
 
     public function __construct(
         HeliosEnvoiControler $heliosEnvoiControler,
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        WorkerScript $workerScript
+        bool $usePasstrans
     ) {
         $this->heliosEnvoiControler = $heliosEnvoiControler;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
+        $this->usePasstrans = $usePasstrans;
     }
 
     public function getQueueName()
     {
-        return self::QUEUE_NAME;
+        return $this->getQueueNameParametre($this->usePasstrans);
     }
 
     public function getData($id)
@@ -40,9 +39,12 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
      * @return array|false|int[]
      * @throws Exception
      */
-    public function getAllId()
+    public function getAllId()  //TODO : ajouter Passtrans
     {
-        return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
+        return $this->heliosTransactionsSQL->getIdsByStatusAndPasstrans(
+            HeliosTransactionsSQL::ATTENTE,
+            $this->usePasstrans
+        );
     }
 
     /**
@@ -52,7 +54,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
      */
     public function work($data)
     {
-        $this->heliosEnvoiControler->validateOneTransaction($data);
+        $this->heliosEnvoiControler->sendOneTransaction($data, $this->usePasstrans);
     }
 
     public function getMutexName($data)
@@ -63,6 +65,14 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
     public function isDataValid($data)
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
-        return $status_id == HeliosStatusSQL::POSTE;
+        return $status_id == HeliosStatusSQL::ATTENTE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQueueNameParametre($usePasstrans): string
+    {
+        return self::QUEUE_NAME . ($usePasstrans ? '-passtrans' : '');
     }
 }

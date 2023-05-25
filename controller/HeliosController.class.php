@@ -4,7 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use DOMDocument;
 use Exception;
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;

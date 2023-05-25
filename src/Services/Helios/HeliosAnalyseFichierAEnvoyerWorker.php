@@ -1,23 +1,25 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2low\Services\Helios;
 
-use S2low\Services\Helios\HeliosEnvoiControler;
-use S2lowLegacy\Class\IWorker;
 use Exception;
+use S2lowLegacy\Class\IWorker;
+use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosEnvoiWorker implements IWorker
+class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
 {
-    public const QUEUE_NAME = 'helios-envoi';
+    public const QUEUE_NAME = 'helios-analyse-fichier-a-envoyer';
 
 
     private $heliosEnvoiControler;
     private $heliosTransactionsSQL;
+    private $workerScript;
 
     public function __construct(
         HeliosEnvoiControler $heliosEnvoiControler,
-        HeliosTransactionsSQL $heliosTransactionsSQL
+        HeliosTransactionsSQL $heliosTransactionsSQL,
+        WorkerScript $workerScript
     ) {
         $this->heliosEnvoiControler = $heliosEnvoiControler;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
@@ -39,7 +41,7 @@ class HeliosEnvoiWorker implements IWorker
      */
     public function getAllId()
     {
-        return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::ATTENTE);
+        return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
     }
 
     /**
@@ -49,7 +51,7 @@ class HeliosEnvoiWorker implements IWorker
      */
     public function work($data)
     {
-        $this->heliosEnvoiControler->sendOneTransaction($data);
+        $this->heliosEnvoiControler->validateOneTransaction($data);
     }
 
     public function getMutexName($data)
@@ -60,6 +62,6 @@ class HeliosEnvoiWorker implements IWorker
     public function isDataValid($data)
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
-        return $status_id == HeliosStatusSQL::ATTENTE;
+        return $status_id == HeliosTransactionsSQL::POSTE;
     }
 }

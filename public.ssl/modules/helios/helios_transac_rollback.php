@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;

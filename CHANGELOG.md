@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.11 - 2023-
+
+### Évolutions
+- Permettre la connection à Passtrans #1024
+
 ## 5.0.10 - 2023-05-17
 
 ### Évolutions
@@ -384,7 +389,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Evolution
 
-- Ajout de la variable d'environnement HELIOS_FTP_PASSTRANS_MODE permettant d'utiliser le protocole PassTrans #623
+- Ajout de la variable d'environnement HELIOS_FTP_CONNECTION_MODE permettant d'utiliser le protocole PassTrans #623
 - Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
 
 ## 4.2.3 - 2020-07-13

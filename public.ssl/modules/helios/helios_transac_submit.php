@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
