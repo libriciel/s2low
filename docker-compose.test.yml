@@ -67,12 +67,12 @@ services:
     networks:
       - dgfip
     environment:
-      FTP_USER: ${HELIOS_FTP_LOGIN:-helios}
-      FTP_PASS: ${HELIOS_FTP_PASSWORD:-helios}
+      FTP_USER: ${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}
+      FTP_PASS: ${HELIOS_PASSTRANS_PASSWORD:-helios-passtrans}
       PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
       PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
     volumes:
-      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
+      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}/
 
   mail:
     restart: unless-stopped
