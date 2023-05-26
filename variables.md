@@ -1,39 +1,46 @@
 # Variables d'environnement du docker
 
 ## Pour l'application S²LOW
-| Nom de la variable | valeur par defaut | Description |  Nom de la variable interne (si différente) |
-| ------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------ |
-|`S2LOW_WEBSITE`|`s2low.docker.libriciel.fr`|Définie l'URL de l'application|`WEBSITE` et `WEBSITE_SSL`|
-|`POSTGRES_HOST`|`db`|Renseigne l'adresse du serveur PostgreSQL|`DB_HOST`|
-|`POSTGRES_DB`|`s2lowdb`|Nom de la base de données|`DB_DATABASE`|
-|`POSTGRES_USER`|`s2lowuser`|Nom de l'utilisateur d'accès à la base de données|`DB_USER`|
-|`POSTGRES_PASSWORD`|`s2lowpassword`|Mot de passe de l'utilisateur `POSTGRES_USER` |`DB_PASSWORD`|
-|`HELIOS_FTP_SERVER`|`ftp`|Définié l'adresse du serveur FTP||
-|`HELIOS_FTP_PORT`|`21`|Spécifie le port du serveur FTP||
-|`HELIOS_FTP_PASSIVE_MODE`|`false`|Permet d'indiquer si l'on doit être en mode passif sur le serveur FTP||
-|`HELIOS_FTP_LOGIN`|`helios`|Nom de l'utilisateur sur le serveur FTP||
-|`HELIOS_SENDING_MODE_DEMO`|true|Utilise le mode démo (= mode simulateur)||
-|`HELIOS_FTP_CONNECTION_MODE`|false|Utilise le protocole PassTrans||
-|`HELIOS_FTP_P_APPLI`|`THELPES2`|identifiant CFT des flux HELIOS||
-|`HELIOS_FTP_PASSWORD`|`helios`|Mot de passe associé à l'utilisteur FTP|
-|`HELIOS_SENDING_DESTINATION`|`/entree/`|On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT||
-|`HELIOS_FTP_RESPONSE_SERVER_PATH`|`/sortie/`|On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE||
-|`POSTGRES_HOST_TEST`|`dbtest`|Renseigne l'adresse du serveur PostgreSQL pour la base de données de tests|`DB_HOST_TEST`|
-|`POSTGRES_DB_TEST`|`s2lowdbtest`|Nom de la base de données de tests|`DB_DATABASE_TEST`|
-|`POSTGRES_USER_TEST`|`s2lowusertest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_USER_TEST`|
-|`POSTGRES_PASSWORD_TEST`|`s2lowpasswordtest`|Nom de l'utilisateur d'accès à la base de données de tests|`DB_PASSWORD_TEST`|
-|`OPENSTACK_AUTHENTICATION_URL_V3`|`https://auth.cloud.ovh.net/v3`|URL de l'API Openstack pour le stockage objet des PESv2|
-|`OPENSTACK_USERNAME`||Indique le nom de l'utilisateur pour les API Openstack `OPENSTACK_AUTHENTICATION_URL_V3`|
-|`OPENSTACK_PASSWORD`||Mot de passe de l'utilisateur `OPENSTACK_USERNAME`|
-|`OPENSTACK_TENANT`|`0750189044_S2LOWDEV`|Tenant dans lequel seront stockés les objets|
-|`OPENSTACK_REGION`|`fr1`|Région du datacenter de l'API Openstack|
-|`OPENSTACK_SWIFT_CONTAINER_PREFIX`|`s2low_dev_`|Préfix pour les containers des stockages objets|
-|`PADES_VALID_URL`|`http://pades-valid:8080`|URL d'accès au service de validation des PDF PADES||
-|`PDF_STAMP_URL`|`http://pdf-stamp:8080`|URL d'accès au service d'application du tampon sur un PDF|
-|`ACTES_TDT_MAIL_ADDRESS`|`s2low@s2low.docker.libriciel.fr`|Permet d'indiquer l'adresse mail retour pour les ACK du MI. Cette adresse est définie par la variable `MAIL_ADRESS` dans le container `mail`/`ACTES_IMAP_HOST`|
-|`ACTES_IMAP_HOST`|`mail`|Permet d'indiquer l'adresse du serveur de mails pour les retour des ACK du MI.|
-|`ACTES_IMAP_LOGIN`|`s2low@s2low.docker.libriciel.fr`|Identifiant de l'utilisateur correspondant à l'adresse mail retour des ACK du MI. Par défaut, cela doit correspondre à la valeur `MAIL_ADDRESS` du container `mail`.|
-|`ACTES_IMAP_PASSWORD`|`password`|Mot de passe de l'utilisateur `ACTES_IMAP_LOGIN`|
+| Nom de la variable                      | valeur par defaut                 | Description                                                                                                                                                          |  Nom de la variable interne (si différente) |
+|-----------------------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------| ------------------------------ |
+| `S2LOW_WEBSITE`                         | `s2low.docker.libriciel.fr`       | Définie l'URL de l'application                                                                                                                                       |`WEBSITE` et `WEBSITE_SSL`|
+| `POSTGRES_HOST`                         | `db`                              | Renseigne l'adresse du serveur PostgreSQL                                                                                                                            |`DB_HOST`|
+| `POSTGRES_DB`                           | `s2lowdb`                         | Nom de la base de données                                                                                                                                            |`DB_DATABASE`|
+| `POSTGRES_USER`                         | `s2lowuser`                       | Nom de l'utilisateur d'accès à la base de données                                                                                                                    |`DB_USER`|
+| `POSTGRES_PASSWORD`                     | `s2lowpassword`                   | Mot de passe de l'utilisateur `POSTGRES_USER`                                                                                                                        |`DB_PASSWORD`|
+| `HELIOS_FTP_P_APPLI`                    | `THELPES2`                        | identifiant CFT des flux HELIOS                                                                                                                                      ||
+| `HELIOS_FTP_SERVER`                     | `ftp`                             | Défini l'adresse du serveur FTP utilisé pour l'envoi non Passtrans                                                                                                                                     ||
+| `HELIOS_FTP_PORT`                       | `21`                              | Spécifie le port du serveur FTP                                                                                                                                      ||
+| `HELIOS_FTP_PASSIVE_MODE`               | `false`                           | Permet d'indiquer si l'on doit être en mode passif sur le serveur FTP                                                                                                ||
+| `HELIOS_FTP_LOGIN`                      | `helios`                          | Nom de l'utilisateur sur le serveur FTP                                                                                                                              ||
+| `HELIOS_FTP_PASSWORD`                   | `helios`                          | Mot de passe associé à l'utilisteur FTP                                                                                                                              |
+| `HELIOS_FTP_CONNECTION_MODE`            | `SIMULATEUR`                      | Utilise un des modes de connexion parmi `SIMULATEUR`, `GATEWAY`, `PASSTRANS_SFTP`, `PASSTRANS_FTPS`                                                                  ||
+| `HELIOS_SENDING_DESTINATION`            | `/entree/`                        | On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT                                                                                    ||
+| `HELIOS_FTP_RESPONSE_SERVER_PATH`       | `/sortie/`                        | On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE                                                                          ||
+| `HELIOS_PASSTRANS_SERVER`               | `ftp_passtrans`                   | Défini l'adresse du serveur Passtrans                                                                                                                                     ||
+| `HELIOS_PASSTRANS_PORT`                 | `21`                              | Spécifie le port du serveur Passtrans                                                                                                                                      ||
+| `HELIOS_PASSTRANS_PASSIVE_MODE`         | `false`                           | Permet d'indiquer si l'on doit être en mode passif sur le serveur Passtrans                                                                                                ||
+| `HELIOS_PASSTRANS_LOGIN`                | `helios-passtrans`                | Nom de l'utilisateur sur le serveur Passtrans                                                                                                                              ||
+| `HELIOS_PASSTRANS_PASSWORD`             | `helios-passtrans`                | Mot de passe associé à l'utilisteur Passtrans                                                                                                                              |
+| `HELIOS_PASSTRANS_CONNECTION_MODE`      | `SIMULATEUR`                      | Utilise un des modes de connexion parmi `SIMULATEUR`, `GATEWAY`, `PASSTRANS_SFTP`, `PASSTRANS_FTPS`                                                                  ||
+| `HELIOS_PASSTRANS_SENDING_DESTINATION`  | `/entree/`                        | On spécifie le répertoire où l'application dépose les PES_ALLER/PES_RETOUR_ACQUIT                                                                                    ||
+| `HELIOS_PASSTRANS_RESPONSE_SERVER_PATH` | `/sortie/`                        | On spécifie le répertoire où l'application récupère les PES_ACQUIT, PES_RETOUR et flux OCRE                                                                          ||
+| `POSTGRES_HOST_TEST`                    | `dbtest`                          | Renseigne l'adresse du serveur PostgreSQL pour la base de données de tests                                                                                           |`DB_HOST_TEST`|
+| `POSTGRES_DB_TEST`                      | `s2lowdbtest`                     | Nom de la base de données de tests                                                                                                                                   |`DB_DATABASE_TEST`|
+| `POSTGRES_USER_TEST`                    | `s2lowusertest`                   | Nom de l'utilisateur d'accès à la base de données de tests                                                                                                           |`DB_USER_TEST`|
+| `POSTGRES_PASSWORD_TEST`                | `s2lowpasswordtest`               | Nom de l'utilisateur d'accès à la base de données de tests                                                                                                           |`DB_PASSWORD_TEST`|
+| `OPENSTACK_AUTHENTICATION_URL_V3`       | `https://auth.cloud.ovh.net/v3`   | URL de l'API Openstack pour le stockage objet des PESv2                                                                                                              |
+| `OPENSTACK_USERNAME`                    |                                   | Indique le nom de l'utilisateur pour les API Openstack `OPENSTACK_AUTHENTICATION_URL_V3`                                                                             |
+| `OPENSTACK_PASSWORD`                    |                                   | Mot de passe de l'utilisateur `OPENSTACK_USERNAME`                                                                                                                   |
+| `OPENSTACK_TENANT`                      | `0750189044_S2LOWDEV`             | Tenant dans lequel seront stockés les objets                                                                                                                         |
+| `OPENSTACK_REGION`                      | `fr1`                             | Région du datacenter de l'API Openstack                                                                                                                              |
+| `OPENSTACK_SWIFT_CONTAINER_PREFIX`      | `s2low_dev_`                      | Préfix pour les containers des stockages objets                                                                                                                      |
+| `PADES_VALID_URL`                       | `http://pades-valid:8080`         | URL d'accès au service de validation des PDF PADES                                                                                                                   ||
+| `PDF_STAMP_URL`                         | `http://pdf-stamp:8080`           | URL d'accès au service d'application du tampon sur un PDF                                                                                                            |
+| `ACTES_TDT_MAIL_ADDRESS`                | `s2low@s2low.docker.libriciel.fr` | Permet d'indiquer l'adresse mail retour pour les ACK du MI. Cette adresse est définie par la variable `MAIL_ADRESS` dans le container `mail`/`ACTES_IMAP_HOST`       |
+| `ACTES_IMAP_HOST`                       | `mail`                            | Permet d'indiquer l'adresse du serveur de mails pour les retour des ACK du MI.                                                                                       |
+| `ACTES_IMAP_LOGIN`                      | `s2low@s2low.docker.libriciel.fr` | Identifiant de l'utilisateur correspondant à l'adresse mail retour des ACK du MI. Par défaut, cela doit correspondre à la valeur `MAIL_ADDRESS` du container `mail`. |
+| `ACTES_IMAP_PASSWORD`                   | `password`                        | Mot de passe de l'utilisateur `ACTES_IMAP_LOGIN`                                                                                                                     |
 
 
 ### Pour la configuration système
