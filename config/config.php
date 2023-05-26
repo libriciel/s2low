@@ -472,11 +472,11 @@ if (!defined('HELIOS_PASSTRANS_CONNECTION_MODE')) {
 }
 
 if (!defined('HELIOS_PASSTRANS_LOGIN')) {
-    define('HELIOS_PASSTRANS_LOGIN', 'helios');
+    define('HELIOS_PASSTRANS_LOGIN', 'helios-passtrans');
 }
 
 if (!defined('HELIOS_PASSTRANS_PASSWORD')) {
-    define('HELIOS_PASSTRANS_PASSWORD', 'helios');
+    define('HELIOS_PASSTRANS_PASSWORD', 'helios-passtrans');
 }
 
 if (!defined('HELIOS_PASSTRANS_SENDING_DESTINATION')) {
