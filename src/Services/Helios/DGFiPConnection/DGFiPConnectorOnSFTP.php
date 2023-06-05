@@ -94,7 +94,7 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
         string $file_to_send
     ): void {
         $filename = basename($file_to_send);
-        $passtransFileName = "$p_dest%$pAppli%$filename";
+        $passtransFileName = "$p_dest%%$pAppli%%$filename";
         $this->activeSFTPConnection->put("$destinationDirectory/$passtransFileName", $file_to_send);
     }
 
