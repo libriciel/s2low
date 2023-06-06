@@ -11,9 +11,10 @@ $connection = $sftpServiceWrapper->connect(
     HELIOS_PASSTRANS_PORT
 );
 
-$sftp = $sftpServiceWrapper->login($connection, HELIOS_PASSTRANS_LOGIN, HELIOS_PASSTRANS_PASSWORD);
+$sftpServiceWrapper->login($connection, HELIOS_PASSTRANS_LOGIN, HELIOS_PASSTRANS_PASSWORD);
 
-$entries = $sftpServiceWrapper->nlist($sftp, "depot");
+//var_dump($sftp->sftp_errors);
+$entries = $sftpServiceWrapper->nlist($connection, "depot");
 var_dump($entries);
 
 /*if ($testUpload) {
@@ -21,11 +22,11 @@ var_dump($entries);
     $destination = "MHPCE11";
     $application = "THELPES2";
     $filename = basename($file_path);
-    $passtransFileName = "$destination%%$application%%$filename";
-    $sftpServiceWrapper->put($sftp, "depot/$passtransFileName", $file_path);
+    $passtransFileName = "$destination%%$application%%1#2#3";
+    $sftpServiceWrapper->put($connection, "/depot/$passtransFileName", $file_path);
 }*/
 
-$entries = $sftpServiceWrapper->nlist($sftp, "depot");
+$entries = $sftpServiceWrapper->nlist($connection, "depot");
 
 var_dump($entries);
 

@@ -120,4 +120,12 @@ class DGFiPConnectionMode
         }
         return true;
     }
+
+    /**
+     * @return string
+     */
+    public function getMode(): string
+    {
+        return $this->mode;
+    }
 }

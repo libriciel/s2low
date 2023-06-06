@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios\DGFiPConnection\Protocols;
 
 use Exception;
+use phpseclib3\Net\SFTP;
 
 /**
  * Permet de mocker les retours des fonctions ssh2 et autres utilisées pour la connection sftp
@@ -13,115 +14,90 @@ class SftpServiceWrapper
     /**
      * @param $host
      * @param $port
-     * @return resource
+     * @return \phpseclib3\Net\SFTP
      * @throws Exception
      */
-    public function connect($host, $port)
+    public function connect($host, $port): SFTP // TODO : handle timeout !!
     {
-        $connection = ssh2_connect($host, $port);
-        if (! $connection) {
-            throw new Exception("Could not connect to $host on port $port.");
-        }
-
-        return $connection;
+        return new SFTP($host, $port);
     }
 
     /**
-     * @param $ftp
-     * @param $login
-     * @param $password
-     * @return resource
-     * @throws Exception
+     * @param \phpseclib3\Net\SFTP $sftp
+     * @param string $login
+     * @param string $password
+     * @return void
+     * @throws \Exception
      */
-    public function login($ftp, $login, $password)
+    public function login(SFTP $sftp, string $login, string $password): void
     {
-        if (ssh2_auth_password($ftp, $login, $password)) {
-            echo "Authentication Successful!\n";
-        } else {
-            throw new Exception("Impossible d'authentifier l'utilisateur $login");
+        if (!$sftp->login($login, $password)) {
+            throw new Exception('Impossible de se connecter au serveur SFTP');   //TODO : trouver l'exception adéquate
         }
-        $sftp = ssh2_sftp($ftp);
-        if (!$sftp) {
-            throw new Exception("Erreur lors de l'authentification");
-        }
-        return $sftp;
-    }
-
-    public function nlist($ftp, $baseFtpDirectory = './')  // ATTENTION !!!! le $ftp correspond au $sftp
-    {
-        $sftp_fd = intval($ftp);
-
-// https://stackoverflow.com/questions/8840883/how-to-list-files-of-a-directory-in-an-other-server-using-ssh2
-        $path = "ssh2.sftp://$sftp_fd/$baseFtpDirectory";
-        $handle = opendir($path);
-
-        $entries = [];
-        while (false != ($entry = readdir($handle))) {
-            $entries[] = $entry;
-        }
-
-        return $entries;
     }
 
     /**
-     * @param $ftp
+     * @param \phpseclib3\Net\SFTP $SFTP
+     * @param string $baseFtpDirectory
+     * @return bool|array
+     * @throws \Exception
+     */
+    public function nlist(SFTP $SFTP, string $baseFtpDirectory = './'): bool|array
+    {
+        $nlist = $SFTP->nlist($baseFtpDirectory);
+        if (!$nlist) {
+            throw new Exception("[nlist] Impossible d'obtenir le contenu de $baseFtpDirectory");
+        }
+        return array_diff($nlist, ['.', '..']);
+    }
+
+    /**
+     * @param \phpseclib3\Net\SFTP $ftp
      * @param $tmp_file
      * @param $remoteFile
      * @param int $mode
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function get($ftp, $tmp_file, $remoteFile, int $mode = FTP_ASCII): void
+    public function get(SFTP $ftp, $tmp_file, $remoteFile, int $mode = FTP_ASCII): void
     {
-        $sftp_fd = intval($ftp);
-
-// https://stackoverflow.com/questions/8840883/how-to-list-files-of-a-directory-in-an-other-server-using-ssh2
-
-        $path = "ssh2.sftp://$sftp_fd/$remoteFile";
-        $stream = fopen("$path", 'r');
-        if (!$stream) {
-            throw new Exception("[SFTP] Impossible d'ouvrir le fichier distant : $path");
+        $result = $ftp->get($remoteFile, $tmp_file);
+        if (!$result) {
+            throw new Exception("[SFTP] Impossible d'ouvrir le fichier distant : $remoteFile");
         }
-        $length = filesize($path);
-        stream_set_chunk_size($stream, 1024 * 1024);
-        $contents = fread($stream, $length);
-        file_put_contents($tmp_file, $contents);
-        fclose($stream);
     }
 
     /**
-     * @param $ftp
+     * @param \phpseclib3\Net\SFTP $ftp
      * @param $remoteFile
      * @param $localFile
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
-    public function put($ftp, $remoteFile, $localFile): void
+    public function put(SFTP $ftp, $remoteFile, $localFile): void
     {
-        $sftp_fd = intval($ftp);
-        // https://stackoverflow.com/questions/8840883/how-to-list-files-of-a-directory-in-an-other-server-using-ssh2
-        $path = "ssh2.sftp://$sftp_fd/./";
-        $stream = fopen("$path$remoteFile", 'w');
-        var_dump("$path$remoteFile");
-        if (!$stream) {
-            throw new Exception("[SFTP] Impossible d'ouvrir le fichier distant : $path$remoteFile");
+        if (!$ftp->put($remoteFile, $localFile, SFTP::SOURCE_LOCAL_FILE)) {
+            var_dump($ftp->getErrors());
+            throw new Exception("Unable to put $remoteFile on $localFile"); //TODO : find correct exception
         }
-        $dataToSend = file_get_contents($localFile);
-        if ($dataToSend === false) {
-            throw new Exception("[SFTP] Impossible d'ouvrir le fichier local $localFile");
-        }
-        if (fwrite($stream, $dataToSend) === false) {
-            throw new Exception("[SFTP] Impossible d'envoyer les données de $localFile vers $path$remoteFile");
-        }
-        fclose($stream);
     }
 
     /**
-     * @param $ftp
+     * @param \phpseclib3\Net\SFTP $ftp
      * @return void
      */
-    public function close($ftp): void
+    public function close(SFTP $ftp): void
     {
-        ssh2_disconnect($ftp);
+        $ftp->disconnect();
+    }
+
+    /**
+     * @param \phpseclib3\Net\SFTP $ftp
+     * @param string $remote_path
+     * @return bool
+     */
+    public function chdir(SFTP $ftp, string $remote_path): bool
+    {
+        return $ftp->chdir($remote_path);
     }
 }

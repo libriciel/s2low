@@ -202,7 +202,8 @@ class HeliosEnvoiControler
         $authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
         $authoritySiret->add($transactionInfo['authority_id'], $siret);
 
-        $message = "Transaction $transaction_id dans la file d'attente";
+        $usePasstransMsg = $authorityInfo['helios_use_passtrans'] ? " [Passtrans]" : "";
+        $message = "Transaction $transaction_id dans la file d'attente" . $usePasstransMsg;
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::ATTENTE, $message, $transactionInfo['user_id']);
 
         //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
@@ -333,7 +334,8 @@ class HeliosEnvoiControler
             return;
         }
 
-        $message = "Transaction $transaction_id transmise au serveur.";
+        $passtransMessage = $usePasstrans ? " [Passtrans]" : "";
+        $message = "Transaction $transaction_id transmise au serveur." . $passtransMessage;
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, $message, $transactionInfo['user_id']);
 
         $this->heliosTransmissionWindowsSQL->addFile($transactionInfo['file_size']);

@@ -139,8 +139,9 @@ $accessHelios = 0;
 
 
 if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
+    $ftpLabel = "HELIOS" . ($authority->get('helios_use_passtrans') ? " [Passtrans]" : "") . " ftp Dest";
     $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label class=\"control-label col-md-4\">HELIOS ftp Dest</label>\n";
+    $html .= "  <label class=\"control-label col-md-4\">$ftpLabel</label>\n";
     $html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";
     $html .= " </div>\n";
 }

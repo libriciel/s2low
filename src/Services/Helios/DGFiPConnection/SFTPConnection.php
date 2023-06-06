@@ -2,6 +2,7 @@
 
 namespace S2low\Services\Helios\DGFiPConnection;
 
+use phpseclib3\Net\SFTP;
 use RuntimeException;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
 
@@ -19,13 +20,10 @@ class SFTPConnection
      */
     private SftpServiceWrapper $sftpServiceWrapper;
     /**
-     * @var resource
+     * @var \phpseclib3\Net\SFTP
      */
-    private $connection;
-    /**
-     * @var resource
-     */
-    private $sftp;
+    private SFTP $connection;
+
 
     /**
      * @param string $host
@@ -49,20 +47,9 @@ class SFTPConnection
     }
 
     /**
-     * @return resource
+     * @return \phpseclib3\Net\SFTP
      */
-    private function getSftp()
-    {
-        if (!isset($this->sftp)) {
-            throw new RuntimeException('Non connecté (sftp)');
-        }
-        return $this->sftp;
-    }
-
-    /**
-     * @return resource
-     */
-    private function getConnection()
+    private function getConnection(): SFTP
     {
         if (!isset($this->connection)) {
             throw new RuntimeException('Non connecté (connection)');
@@ -74,19 +61,22 @@ class SFTPConnection
      * @return void
      * @throws \Exception
      */
-    public function connect(): void
+    public function connect(): void // TODO : add timeout ?
     {
         $this->connection = $this->sftpServiceWrapper->connect($this->host, $this->port);
-        $this->sftp = $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
+        $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
+        //$this->connection = $this->sftpServiceWrapper->connect($this->host, $this->port);
+        //$this->sftp = $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
     }
 
     /**
      * @param string $directory
      * @return bool|array
+     * @throws \Exception
      */
     public function nlist(string $directory): bool|array
     {
-        return $this->sftpServiceWrapper->nlist($this->getSftp(), $directory);
+        return $this->sftpServiceWrapper->nlist($this->getConnection(), $directory);
     }
 
     /**
@@ -97,7 +87,7 @@ class SFTPConnection
      */
     public function get(string $tmp_file, $remoteFile): bool
     {
-        $this->sftpServiceWrapper->get($this->getSftp(), $tmp_file, $remoteFile);
+        $this->sftpServiceWrapper->get($this->getConnection(), $tmp_file, $remoteFile);
         return true;
     }
 
@@ -109,7 +99,7 @@ class SFTPConnection
      */
     public function put(string $remoteFile, string $file_to_send): bool
     {
-        $this->sftpServiceWrapper->put($this->getSftp(), $remoteFile, $file_to_send);
+        $this->sftpServiceWrapper->put($this->getConnection(), $remoteFile, $file_to_send);
         return true;
     }
 
@@ -128,5 +118,14 @@ class SFTPConnection
     public function getURL(): string
     {
         return "ssh2.sftp://$this->login:$this->password@$this->host";
+    }
+
+    /**
+     * @param string $remote_path
+     * @return bool
+     */
+    public function chdir(string $remote_path): bool
+    {
+        return $this->sftpServiceWrapper->chdir($this->getConnection(), $remote_path);
     }
 }

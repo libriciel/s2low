@@ -43,6 +43,8 @@ services:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
 
+
+
   S2low\Services\LogTimestampTokenGarbage:
     arguments:
       $old_timestamp_token_directory: '%app.old_timestamp_token_directory%'
@@ -325,7 +327,7 @@ services:
   S2lowLegacy\Class\actes\ClassificationString:
     autowire: false
 
-  S2lowLegacy\Class\helios\HeliosAnalyseFichierAEnvoyerWorker:  #TODO : migrer vers le namespace Symfony
+  S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:

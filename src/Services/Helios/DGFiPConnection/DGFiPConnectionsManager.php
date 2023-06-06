@@ -31,6 +31,26 @@ class DGFiPConnectionsManager
      */
     private DGFiPConnectionBuilder $fullConfigurationBuilder;
 
+    /**
+     * @param string $helios_ftp_p_appli
+     * @param string $helios_ftp_server
+     * @param int $helios_ftp_port
+     * @param string $helios_ftp_login
+     * @param string $helios_ftp_password
+     * @param string $helios_ftp_response_server_path
+     * @param string $helios_sending_destination
+     * @param string $helios_ftp_connection_mode
+     * @param bool $helios_ftp_passive_mode
+     * @param string $helios_passtrans_server
+     * @param string $helios_passtrans_port
+     * @param string $helios_passtrans_login
+     * @param string $helios_passtrans_password
+     * @param string $helios_passtrans_connection_mode
+     * @param bool $helios_passtrans_passive_mode
+     * @param string $helios_passtrans_sending_destination
+     * @param string $helios_passtrans_response_server_path
+     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder $fullConfigurationBuilder
+     */
     public function __construct(
         string $helios_ftp_p_appli,
         string $helios_ftp_server,
@@ -42,7 +62,7 @@ class DGFiPConnectionsManager
         string $helios_ftp_connection_mode,
         bool $helios_ftp_passive_mode,
         string $helios_passtrans_server,
-        string $helios_passtrans_port,
+        int $helios_passtrans_port,
         string $helios_passtrans_login,
         string $helios_passtrans_password,
         string $helios_passtrans_connection_mode,
@@ -71,10 +91,14 @@ class DGFiPConnectionsManager
         $this->fullConfigurationBuilder = $fullConfigurationBuilder;
     }
 
-    public function get(bool $usePasstrans): DGFiPConnection
+    /**
+     * @param bool $usePasstrans
+     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration
+     */
+    public function getDGFipConnectionConfiguration(bool $usePasstrans): DGFiPConnectionConfiguration
     {
         if (! $usePasstrans) {
-            return $this->fullConfigurationBuilder->get(
+            return new DGFiPConnectionConfiguration(
                 $this->host,
                 $this->port,
                 $this->login,
@@ -86,7 +110,7 @@ class DGFiPConnectionsManager
                 $this->helios_ftp_p_appli
             );
         }
-        return $this->fullConfigurationBuilder->get(
+        return new DGFiPConnectionConfiguration(
             $this->passtrans_server,
             $this->passtrans_port,
             $this->passtrans_login,
@@ -97,5 +121,25 @@ class DGFiPConnectionsManager
             $this->passtrans_response_server_path,
             $this->helios_ftp_p_appli
         );
+    }
+
+    /**
+     * @param bool $usePasstrans
+     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnection
+     */
+    public function get(bool $usePasstrans): DGFiPConnection
+    {
+        return $this->getFromConfiguration(
+            $this->getDGFipConnectionConfiguration($usePasstrans)
+        );
+    }
+
+    /**
+     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration $configuration
+     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnection
+     */
+    public function getFromConfiguration(DGFiPConnectionConfiguration $configuration): DGFiPConnection
+    {
+        return $this->fullConfigurationBuilder->get($configuration);
     }
 }
