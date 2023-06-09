@@ -6,6 +6,7 @@ use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
 use S2low\Services\Helios\DGFiPConnection\FTPConnection;
 use S2low\Services\Helios\DGFiPConnection\Protocols\FtpConnectionWrapper;
@@ -55,11 +56,7 @@ class FTPServiceTest extends S2lowTestCase
      */
     public function getDGFiPConnection(bool $isPassive, string $PasstransMode): DGFiPConnection
     {
-        return ( new DGFiPConnectionBuilder(
-            $this->ftpServiceWrapperMock,
-            $this->sftpServiceWrapperMock,
-            $this->getObjectInstancier()->get(S2lowLogger::class)
-        ) )->get(
+        $configuration = new DGFiPConnectionConfiguration(
             'helios_ftp_server',
             1024,
             'helios_ftp_login',
@@ -69,6 +66,13 @@ class FTPServiceTest extends S2lowTestCase
             'sending_destination',
             'response_server_path',
             'p_appli'
+        );
+        return ( new DGFiPConnectionBuilder(
+            $this->ftpServiceWrapperMock,
+            $this->sftpServiceWrapperMock,
+            $this->getObjectInstancier()->get(S2lowLogger::class)
+        ) )->get(
+            $configuration
         );
     }
 

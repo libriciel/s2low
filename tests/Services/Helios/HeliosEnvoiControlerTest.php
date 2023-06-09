@@ -2,6 +2,8 @@
 
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
+use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\HeliosEnvoiControler;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
@@ -64,13 +66,13 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
                 "std_password",
                 "std_response_server_path",
                 "std_sending_destination",
-                "std_mode",
+                DGFiPConnectionMode::GATEWAY,
                 true,
                 "passtrans_server",
                 1982,
                 "passtrans_login",
                 "passtrans_password",
-                "passtrans_mode",
+                DGFiPConnectionMode::PASSTRANS_SFTP,
                 true,
                 "passtrans_sending_destination",
                 "passtrans_response_server_path",
@@ -377,15 +379,17 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 
         $this->dgfipConnectionBuilderMock->expects($this->once())->method('get')
             ->with(
-                'std_server',
-                1982,
-                'std_login',
-                'std_password',
-                'std_mode',
-                true,
-                'std_sending_destination',
-                'std_response_server_path',
-                'helios_ftp_p_appli'
+                new DGFiPConnectionConfiguration(
+                    'std_server',
+                    1982,
+                    'std_login',
+                    'std_password',
+                    DGFiPConnectionMode::GATEWAY,
+                    true,
+                    'std_sending_destination',
+                    'std_response_server_path',
+                    'helios_ftp_p_appli'
+                )
             )->willReturn($dgfipConnection);
         $dgfipConnection->expects($this->once())->method("sendFileOnUniqueConnection")
             ->with(
@@ -424,9 +428,22 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $dgfipConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()->getMock();
 
-        $this->dgfipConnectionBuilderMock->method('get')
-            ->with('passtrans_server', 1982, 'passtrans_login', 'passtrans_password', 'passtrans_mode', true, 'passtrans_sending_destination', 'passtrans_response_server_path', 'helios_ftp_p_appli')->willReturn($dgfipConnection);
-        $dgfipConnection->method("sendFileOnUniqueConnection")->with('helios_ftp_dest', 'PES#123#034000#12', "/data/tdt-workspace/helios/sending-tmp//PESALR2_123456789_" . date("ymd") . "_001.xml");
+        $this->dgfipConnectionBuilderMock->expects($this->once())->method('get')
+            ->with(
+                new DGFiPConnectionConfiguration(
+                    'passtrans_server',
+                    1982,
+                    'passtrans_login',
+                    'passtrans_password',
+                    DGFiPConnectionMode::PASSTRANS_SFTP,
+                    true,
+                    'passtrans_sending_destination',
+                    'passtrans_response_server_path',
+                    'helios_ftp_p_appli'
+                )
+            )
+            ->willReturn($dgfipConnection);
+        $dgfipConnection->expects($this->once())->method("sendFileOnUniqueConnection")->with('helios_ftp_dest', 'PES#123#034000#12', "/data/tdt-workspace/helios/sending-tmp//PESALR2_123456789_" . date("ymd") . "_001.xml");
         ob_start();
         $this->heliosEnvoiControler->sendOneTransaction($id_t, true);
         ob_end_clean();
@@ -435,7 +452,7 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->assertEquals(HeliosTransactionsSQL::TRANSMIS, $info['last_status_id']);
         $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
         $this->assertEquals(
-            "Transaction $id_t transmise au serveur.",
+            "Transaction $id_t transmise au serveur. [Passtrans]",
             $last_status_info['message']
         );
     }

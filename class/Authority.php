@@ -29,6 +29,7 @@ class Authority extends DataObject
     protected $district;
     protected $telephone;
     protected $fax;
+    protected $helios_use_passtrans;
 
     private $modulesPerms = null;
 
@@ -57,6 +58,7 @@ class Authority extends DataObject
                         "new_notification" => array("descr" => "Nouveau systeme de notification", "type" => "boolean", "mandatory" => false),
                         "sae_wsdl" => array("descr" => '','type' => 'isString','mandatory' => false,'unique' => false),
                         "helios_do_not_verify_nom_fic_unicity" => array("descr" => '','type' => 'isBool','mandatory' => false,'unique' => false),
+                        "helios_use_passtrans" => array("descr" => '','type' => 'isBool','mandatory' => true,'unique' => false)
                          );
 
 

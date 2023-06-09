@@ -40,59 +40,55 @@ class DGFiPConnectionBuilder
     }
 
     /**
-     * @param string $server adresse ou ip du serveur auquel se connecter
-     * @param string $port port du serveur auquel se connecter
-     * @param string $login login de l'utilisateur
-     * @param string $password password
-     * @param string $connectionMode Mode de connection parmi SIMULATEUR, GATEWAY, PASSTRANS_SFTP, PASSTRANS_FTPS
-     * @param bool $passiveMode
-     * @param string $sendingDestination répertoire sur le FTP ou les fichiers seront envoyés
-     * @param string $responseServerPath répertoire sur le FTP réponses seront recherchés
-     * @param string $helios_ftp_p_appli identifiant CFT des flux HELIOS
+     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration $configuration
      * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnection
      */
-    public function get(
-        string $server,
-        string $port,
-        string $login,
-        string $password,
-        string $connectionMode,
-        bool $passiveMode,
-        string $sendingDestination,
-        string $responseServerPath,
-        string $helios_ftp_p_appli
-    ): DGFiPConnection {
-        $mode = new DGFiPConnectionMode($connectionMode);
-
-        if ($mode->getProtocol()->usesFTPConnection()) {
-            $connection = new FTPConnection(
-                $mode->getProtocol(),
-                $server,
-                $port,
-                $login,
-                $password,
-                $passiveMode,
-                $this->ftpServiceWrapper
-            );
-            $DGFiPConnector = new DGFiPConnectorOnFTP(
-                $mode->getCurrentDirectory(),
-                $mode->getDeleteAfterDownload(),
-                $mode->getCheckFtpRawCommandsReturn(),
-                $mode->isUsePasstransFTPS(),
-                $mode->getModeDemoWarning(),
-                $connection
-            );
-        } else {
-            $connection = new SFTPConnection($server, $port, $login, $password, $this->sftpServiceWrapper);
-            $DGFiPConnector = new DGFiPConnectorOnSFTP($connection);
-        }
+    public function get(DGFiPConnectionConfiguration $configuration): DGFiPConnection
+    {
+        $DGFiPConnector = $this->getConnector($configuration);
 
         return new DGFiPConnection(
             $this->s2lowLogger,
             $DGFiPConnector,
-            $responseServerPath,
-            $sendingDestination,
-            $helios_ftp_p_appli
+            $configuration->getResponseServerPath(),
+            $configuration->getSendingDestination(),
+            $configuration->getHeliosFtpAppli()
         );
+    }
+
+    /**
+     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration $configuration
+     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnectorOnFTP|\S2low\Services\Helios\DGFiPConnection\DGFiPConnectorOnSFTP
+     */
+    public function getConnector(DGFiPConnectionConfiguration $configuration): DGFiPConnectorOnSFTP|DGFiPConnectorOnFTP
+    {
+        if ($configuration->getMode()->getProtocol()->usesFTPConnection()) {
+            $connection = new FTPConnection(
+                $configuration->getMode()->getProtocol(),
+                $configuration->getServer(),
+                $configuration->getPort(),
+                $configuration->getLogin(),
+                $configuration->getPassword(),
+                $configuration->isPassiveMode(),
+                $this->ftpServiceWrapper
+            );
+            return new DGFiPConnectorOnFTP(
+                $configuration->getMode()->getCurrentDirectory(),
+                $configuration->getMode()->getDeleteAfterDownload(),
+                $configuration->getMode()->getCheckFtpRawCommandsReturn(),
+                $configuration->getMode()->isUsePasstransFTPS(),
+                $configuration->getMode()->getModeDemoWarning(),
+                $connection
+            );
+        }
+
+        $connection = new SFTPConnection(
+            $configuration->getServer(),
+            $configuration->getPort(),
+            $configuration->getLogin(),
+            $configuration->getPassword(),
+            $this->sftpServiceWrapper
+        );
+        return new DGFiPConnectorOnSFTP($connection);
     }
 }

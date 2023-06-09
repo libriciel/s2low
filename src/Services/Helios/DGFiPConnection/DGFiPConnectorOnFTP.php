@@ -122,7 +122,6 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
      */
     public function deleteIfNeedBe($file): void
     {
-        var_dump($this->deleteAfterDownload);
         if ($this->deleteAfterDownload) {
             $this->getConnection()->delete($file);
         }
