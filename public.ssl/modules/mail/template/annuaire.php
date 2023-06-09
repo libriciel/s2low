@@ -83,6 +83,7 @@ endif;?>
                         <li><a class="btn btn-primary btn-xs" href="supprimer-groupe.php?groupe_id=<?php echo $groupe_id?>">Supprimer le groupe</a></li>
                     <?php endif;?>      
                         <li><a class="btn btn-primary btn-xs" href="import_annuaire_result.php">Importer</a></li>
+                        <li><a class="btn btn-primary btn-xs" href="export_contacts.php">[Beta] Exporter les contacts</a></li>
                     </ul>    
                     <h2> Actions sur les contacts sélectionnés </h2>
                     <ul>
