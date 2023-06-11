@@ -6,6 +6,9 @@
 - Permettre la connection à Passtrans #1024
 - Permettre l'export du carnet d'adresse d'une collectivité #1033
 
+### Corrections
+- Récuperer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
+
 ## 5.0.10 - 2023-05-17
 
 ### Évolutions
