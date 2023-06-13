@@ -27,14 +27,12 @@ $contacts = $sqlQuery->query($sqlMails, $me->get('authority_id'));
 header("Content-Type: text/csv");
 header("Content-Disposition: attachment; filename=contacts.csv");
 
-echo "adresse mail;description;groupes\n";
-
 foreach ($contacts as $contact) {
     $lineToPrint = $contact['mail_address'] . ';' . $contact['description'];
     $groupes = $sqlQuery->query($sqlGroupes, $contact["id"]);
 
     foreach ($groupes as $groupe) {
-        $lineToPrint = $lineToPrint . ';' . $groupe['name'];
+        $lineToPrint = $lineToPrint . ';"' . $groupe['name'] . '"';
     }
     echo $lineToPrint . "\n";
 }
