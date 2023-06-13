@@ -10,6 +10,7 @@
 ### Corrections
 - Récuperer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
 - Remplacement des scripts check-ftp.php et test-helios-connection.php par helios-analyse-fichier-a-envoyer#1035
+- Encodage en ISO-8859-1 des erreurs remontées lors de l'import d'un flux helios pour rétrocompatibilité avec Pastell #1001
 
 ### Sécurité
 
