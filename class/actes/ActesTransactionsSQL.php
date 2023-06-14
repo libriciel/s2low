@@ -32,17 +32,17 @@ class ActesTransactionsSQL extends SQL
         $pdo = $this->getSQLQuery()->getPdo();
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id,$status]);
+        $stmt->execute([$id, $status]);
         $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
         $stmt->bindColumn(2, $transaction_id, PDO::PARAM_INT);
         $stmt->fetch(PDO::FETCH_BOUND);
         if (is_null($flux_retour)) {
-            return ["flux_retour" => null,"transaction_id" => null];
+            return ["flux_retour" => null, "transaction_id" => null];
         }
         $flux_retour_contents = stream_get_contents($flux_retour);
         fclose($flux_retour);
 
-        return ["flux_retour" => $flux_retour_contents,"transaction_id" => $transaction_id];
+        return ["flux_retour" => $flux_retour_contents, "transaction_id" => $transaction_id];
     }
 
     public function getLastStatusInfo($id)
@@ -61,7 +61,7 @@ class ActesTransactionsSQL extends SQL
     public function setArchiveURL($transaction_id, $archive_url)
     {
         $sql = "UPDATE actes_transactions SET archive_url=? " .
-                " WHERE id=?";
+            " WHERE id=?";
         $this->query($sql, $archive_url, $transaction_id);
     }
 
@@ -73,7 +73,7 @@ class ActesTransactionsSQL extends SQL
 
         $date = date("Y-m-d H:i:s");
         $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) " .
-                " VALUES( ? , ? , ? , ? ) RETURNING ID";
+            " VALUES( ? , ? , ? , ? ) RETURNING ID";
 
         $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message);
 
@@ -86,7 +86,7 @@ class ActesTransactionsSQL extends SQL
             $stmt->execute();
         }
         $sql = "UPDATE actes_transactions SET last_status_id=? " .
-                " WHERE id=?";
+            " WHERE id=?";
 
         $this->query($sql, $status_id, $transaction_id);
         return $id;
@@ -95,7 +95,7 @@ class ActesTransactionsSQL extends SQL
     public function getArchiveFStatus($status_id, $authority_id = 0)
     {
         $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-                " WHERE last_status_id=? " ;
+            " WHERE last_status_id=? ";
         $data = [$status_id];
         if ($authority_id) {
             $sql .= " AND authority_id= ? ";
@@ -128,7 +128,7 @@ class ActesTransactionsSQL extends SQL
     public function getTransactionIdFromStatus($status_id, $antivirus_check = true)
     {
         $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-                " WHERE last_status_id=? AND antivirus_check=?";
+            " WHERE last_status_id=? AND antivirus_check=?";
         return $this->queryOneCol($sql, $status_id, $antivirus_check);
     }
 
@@ -154,8 +154,8 @@ class ActesTransactionsSQL extends SQL
     public function getByStatusSinceDate($status_id, $date_status)
     {
         $sql = "SELECT DISTINCT actes_transactions.id FROM actes_transactions " .
-                " JOIN actes_transactions_workflow ON actes_transactions.id = actes_transactions_workflow.transaction_id AND actes_transactions.last_status_id=actes_transactions_workflow.status_id " .
-                " WHERE last_status_id=? AND date<?";
+            " JOIN actes_transactions_workflow ON actes_transactions.id = actes_transactions_workflow.transaction_id AND actes_transactions.last_status_id=actes_transactions_workflow.status_id " .
+            " WHERE last_status_id=? AND date<?";
         return $this->queryOneCol($sql, $status_id, $date_status);
     }
 
@@ -163,9 +163,9 @@ class ActesTransactionsSQL extends SQL
     public function getEnvelopeToDelete()
     {
         $sql = "SELECT  actes_envelopes.*,actes_transactions.id as transaction_id, actes_transactions.user_id " .
-                " FROM actes_transactions " .
-                " JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
-                " WHERE last_status_id=13 OR last_status_id = 6";
+            " FROM actes_transactions " .
+            " JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
+            " WHERE last_status_id=13 OR last_status_id = 6";
         return $this->query($sql);
     }
 
@@ -184,9 +184,9 @@ class ActesTransactionsSQL extends SQL
             $all_id[] = $transaction['id'];
         }
         $sql = "SELECT max(date) " .
-                " FROM actes_transactions_workflow " .
-                " WHERE status_id IN (4,11,7) " .
-                " AND transaction_id IN (" . implode(",", $all_id) . ")";
+            " FROM actes_transactions_workflow " .
+            " WHERE status_id IN (4,11,7) " .
+            " AND transaction_id IN (" . implode(",", $all_id) . ")";
         return $this->queryOne($sql);
     }
 
@@ -194,8 +194,8 @@ class ActesTransactionsSQL extends SQL
     {
         $result = array();
         $sql = "SELECT * " .
-                " FROM actes_transactions " .
-                " WHERE related_transaction_id=?";
+            " FROM actes_transactions " .
+            " WHERE related_transaction_id=?";
         foreach ($this->query($sql, $id) as $line) {
             $result[] = $line;
             $result = array_merge($result, $this->getRelatedTransaction($line['id']));
@@ -212,10 +212,10 @@ class ActesTransactionsSQL extends SQL
     public function getDateTampon($id)
     {
         $sql = "SELECT actes_envelopes.submission_date, actes_transactions_workflow.date, actes_transactions.unique_id FROM actes_transactions, actes_envelopes, actes_transactions_workflow " .
-                " WHERE actes_transactions.envelope_id = actes_envelopes.id " .
-                " AND actes_transactions.id = ? " .
-                " AND actes_transactions_workflow.transaction_id = actes_transactions.id " .
-                " AND actes_transactions_workflow.status_id=?";
+            " WHERE actes_transactions.envelope_id = actes_envelopes.id " .
+            " AND actes_transactions.id = ? " .
+            " AND actes_transactions_workflow.transaction_id = actes_transactions.id " .
+            " AND actes_transactions_workflow.status_id=?";
         return $this->queryOne($sql, $id, 4);
     }
 
@@ -258,6 +258,44 @@ class ActesTransactionsSQL extends SQL
         return $this->queryOne($sql, $id);
     }
 
+    /**
+     * @param $dateStatusCible
+     * @param int $status_origine
+     * @param int $status_cible
+     * @return array
+     * Retourne le nombre de transactions passés de $status_origine à $status_cible depuis $dateStatusCible
+     * Cette fonction peut être perturbée par les modifications manuelles de status.
+     */
+    public function getStatusTransitionStatistics($dateStatusCible, int $status_origine, int $status_cible): array
+    {
+        $sql = "
+    SELECT 
+  COUNT(atw_cible.transaction_id) AS nb_transactions_cible, 
+  AVG(atw_cible.date - atw_origine.date) AS delai_de_transmission_moyen 
+FROM 
+  actes_transactions_workflow AS atw_cible
+  INNER JOIN actes_transactions_workflow AS atw_origine ON atw_cible.transaction_id = atw_origine.transaction_id 
+WHERE 
+  atw_cible.date > ? 
+  AND atw_cible.status_id = ? 
+  AND atw_origine.status_id = ?";
+
+        $results = $this->query($sql, $dateStatusCible, $status_origine, $status_cible);
+        return [$results[0]["nb_transactions_cible"], $results[0]["delai_de_transmission_moyen"]];
+    }
+
+    /**
+     * @param $date_status_cible
+     * @return float
+     */
+    public function getNbPostesDepuis($date_status_cible): float
+    {
+        $sql = "SELECT COUNT(id) AS nb_post_par_min FROM actes_transactions_workflow WHERE date > ? AND status_id=1; ";
+
+        $results = $this->query($sql, $date_status_cible);
+        return $results[0]["nb_post_par_min"];
+    }
+
     public function getNbTransactionByMonth()
     {
         $sql = "SELECT count(*) as nb,date_trunc('month', submission_date) as month  FROM actes_transactions " .
@@ -272,7 +310,7 @@ class ActesTransactionsSQL extends SQL
     {
         $sql = "SELECT actes_transactions.id from actes_transactions " .
             " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
-            " WHERE siren=? AND number=? AND type=? " ;
+            " WHERE siren=? AND number=? AND type=? ";
 
         if ($type_reponse_not_null) {
             $sql .= " AND type_reponse IS NOT NULL ";
@@ -316,7 +354,6 @@ class ActesTransactionsSQL extends SQL
     }
 
 
-
     public function create($envelope_id, $status, $user_id, $authority_id)
     {
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id) VALUES (?,?,?,?) RETURNING ID;";
@@ -334,7 +371,6 @@ class ActesTransactionsSQL extends SQL
 
         $sql2 = "SELECT short_descr FROM actes_natures WHERE id=?";
         $nature = $this->queryOne($sql2, $info['nature_code']);
-
 
 
         if (!is_null($info['decision_date'])) {
@@ -378,7 +414,7 @@ class ActesTransactionsSQL extends SQL
     public function setAutoBroadcasted($transactionId)
     {
         $sql = "UPDATE actes_transactions SET auto_broadcasted = TRUE " .
-            " WHERE actes_transactions.id = ?" ;
+            " WHERE actes_transactions.id = ?";
         $this->query($sql, $transactionId);
     }
 
@@ -446,7 +482,7 @@ class ActesTransactionsSQL extends SQL
             $data[] = $authority_id;
         }
 
-        $sql .=  " ORDER BY at.id ";
+        $sql .= " ORDER BY at.id ";
         return $this->queryOneCol($sql, $data);
     }
 
@@ -472,6 +508,7 @@ class ActesTransactionsSQL extends SQL
 
         return $this->queryOneCol($sql, $limit);
     }
+
     public function getTransactionToSendSAE($status_id = ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE, $is_auto = true)
     {
         $sql = "SELECT at.id FROM actes_transactions AS at " .
@@ -480,10 +517,10 @@ class ActesTransactionsSQL extends SQL
             " WHERE authority_pastell_config.module_id = 1 ";
 
         if ($is_auto) {
-            $sql .= " AND authority_pastell_config.is_auto='t' " ;
+            $sql .= " AND authority_pastell_config.is_auto='t' ";
         }
 
-            $sql .= " AND at.last_status_id = ?  " .
+        $sql .= " AND at.last_status_id = ?  " .
             " ORDER BY at.id ";
 
         return $this->queryOneCol(
@@ -545,8 +582,8 @@ class ActesTransactionsSQL extends SQL
         $sql = "SELECT authorities.id,authorities.name, COUNT(actes_transactions) As nb_transactions FROM authorities " .
             " INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id " .
             " WHERE  authorities.authority_group_id =  ? " .
-                " AND actes_transactions.decision_date >= ? " .
-                " AND actes_transactions.decision_date <= ? " .
+            " AND actes_transactions.decision_date >= ? " .
+            " AND actes_transactions.decision_date <= ? " .
             " GROUP BY authorities.id,authorities.name " .
             " ORDER BY authorities.name";
         $count = $this->query($sql, $authority_group_id, $min_date, $max_date);
