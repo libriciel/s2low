@@ -53,13 +53,13 @@ try {
 
 $name = Helpers::getVarFromPost("name");
 $siren = Helpers::getVarFromPost("siren");
-$authorityGroupId = Helpers::getVarFromPost("authority_group_id");
+$authorityGroupId = Helpers::getIntFromPost("authority_group_id");
 $agreement = Helpers::getVarFromPost("agreement");
 $email = Helpers::getVarFromPost("email");
 $defaultbroadcastEmail = Helpers::getVarFromPost("default_broadcast_email");
 $broadcastEmail = Helpers::getVarFromPost("broadcast_email");
 $status = Helpers::getVarFromPost("status");
-$authorityTypeId = Helpers::getVarFromPost("authority_type_id");
+$authorityTypeId = Helpers::getIntFromPost("authority_type_id");
 $address = Helpers::getVarFromPost("address");
 $postalCode = Helpers::getVarFromPost("postal_code");
 $city = Helpers::getVarFromPost("city");

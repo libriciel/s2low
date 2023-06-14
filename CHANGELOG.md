@@ -10,6 +10,10 @@
 - Récuperer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
 - Remplacement des scripts check-ftp.php et test-helios-connection.php par helios-analyse-fichier-a-envoyer#1035
 
+### Sécurité
+
+- Correction de failles de sécurité #799
+
 ## 5.0.10 - 2023-05-17
 
 ### Évolutions
