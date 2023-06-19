@@ -110,6 +110,25 @@ class TestDGFiPConnectionCommand extends Command
                 null,
                 InputOption::VALUE_NONE,
                 'List Available files on response_server_path'
+            )
+            ->addOption(
+                'pathToFileToUpload',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to file to upload',
+                __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_acquit.xml'
+            )
+            ->addOption(
+                'p_dest',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'p_dest',
+                'VHQCE31'
+            )
+            ->addOption(
+                'pAppli',
+                null,
+                InputOption::VALUE_REQUIRED
             );
     }
 
@@ -177,14 +196,28 @@ class TestDGFiPConnectionCommand extends Command
         }
 
         if ($input->getOption('testUpload')) {
-            $file_path = __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_acquit.xml';
-            $p_dest = "VHICE21";
+            $file_path = $input->getOption('pathToFileToUpload');
+            if (! file_exists($file_path)) {
+                throw new \Exception("fichier $file_path non trouvé");
+            }
+            $p_dest = $input->getOption('p_dest');
+            $pAppli = $input->getOption('pAppli') ?? $defaultConfiguration->getHeliosFtpAppli();
+
             $pesAller = new PesAller();
             $p_msg = $pesAller->getP_MSG($file_path);
+
+            $io->title("Envoi de  de {$file_path}\n");
+            $io->definitionList(
+                "Paramètres",
+                ["p_dest" => $p_dest],
+                ["pAppli" => $pAppli],
+                ["p_msg" => $p_msg]
+            );
+
             $connector->sendOneFileWithProperties(
                 $p_dest,
                 $p_msg,
-                "THELPES2",
+                $pAppli,
                 $overridenConfiguration->getSendingDestination(),
                 $file_path
             );
