@@ -134,12 +134,7 @@ class HeliosControllerTest extends S2lowTestCase
     {
         unset($_FILES);
         //$this->expectedError("Échec lors du téléchargement du fichier"); //BUG ??!! Le comportement semble normal
-        $this->expectedError(
-            mb_convert_encoding(
-                "Aucune enveloppe trouv\ée : la taille de l'enveloppe d\épasse probablement la taille maximum",
-                'ISO-8859-1'
-            )
-        );
+        $this->expectedError("Aucune enveloppe trouv\ée : la taille de l'enveloppe d\épasse probablement la taille maximum");
         $this->importAPI();
     }
 
@@ -157,9 +152,7 @@ class HeliosControllerTest extends S2lowTestCase
     {
         $tmp_file = $this->testStreamUrl . "/pes_aller_not_exist.xml";
         $_FILES['enveloppe']['tmp_name'] = $tmp_file;
-        $this->expectedError(
-            mb_convert_encoding('Échec lors du téléchargement du fichier', 'ISO-8859-1')
-        );
+        $this->expectedError('Échec lors du téléchargement du fichier');
         $this->importAPI();
     }
 
@@ -179,10 +172,10 @@ class HeliosControllerTest extends S2lowTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-        $this->expectedError(mb_convert_encoding("Le fichier présenté est vide \(0 octet\)", 'ISO-8859-1'));
+        $this->expectedError("Le fichier pr\ésent\é est vide \(0 octet\)");
         $this->importAPI();
         $this->assertMatchesRegularExpression(
-            mb_convert_encoding("#Le fichier présenté est vide \(0 octet\)#", 'ISO-8859-1'),
+            "#Le fichier pr\ésent\é est vide \(0 octet\)#",
             $this->getActualOutput()
         );
     }
@@ -197,9 +190,7 @@ class HeliosControllerTest extends S2lowTestCase
         $this->expectOutputRegex("#<resultat>OK</resultat>#");
         $this->importAPI();
         file_put_contents($tmp_file, file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
-        $this->expectOutputRegex(
-            "#" . mb_convert_encoding("doublon détecté. Ce fichier a déjà été posté.", 'ISO-8859-1') . "\<#"
-        );
+        $this->expectOutputRegex("#doublon d\étect\é. Ce fichier a d\éj\à \ét\é post\é.\<#");
         $this->importAPI();
     }
 
@@ -210,9 +201,7 @@ class HeliosControllerTest extends S2lowTestCase
     public function testMaxSize()
     {
         $this->heliosController->setHeliosMaxUploadSize(0);
-        $this->expectedError(
-            mb_convert_encoding("Taille de fichier supérieure à la limite autorisée", 'ISO-8859-1')
-        );
+        $this->expectedError("Taille de fichier supérieure à la limite autorisée");
         $this->importAPI();
     }
 
