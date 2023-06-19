@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.11 - 2023-
+## 5.0.11 - 2023-06-19
 
 ### Évolutions
 - Permettre la connection à Passtrans #1024
