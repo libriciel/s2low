@@ -8,7 +8,7 @@
 - Mettre à disposition un script de monitoring des analyses et envois actes et helios #793
 
 ### Corrections
-- Récuperer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
+- Récupérer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
 - Remplacement des scripts check-ftp.php et test-helios-connection.php par helios-analyse-fichier-a-envoyer#1035
 
 ### Sécurité
