@@ -63,16 +63,14 @@ services:
 
   ftp_passtrans:
     restart: unless-stopped
-    image: hubdocker.libriciel.fr/mcreations/ftp:latest@sha256:e7ee07afb36cc3c14ec33036de211bf633b2c26d9e3d1ce19a018de81109e894
+    image: atmoz/sftp
     networks:
       - dgfip
-    environment:
-      FTP_USER: ${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}
-      FTP_PASS: ${HELIOS_PASSTRANS_PASSWORD:-helios-passtrans}
-      PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
-      PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
+    ports:
+      - ${HELIOS_PASSTRANS_PORT}:22
     volumes:
-      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}/
+      - ${SIMULATEUR_PASSTRANS_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/home/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}
+    command: ${HELIOS_PASSTRANS_LOGIN}:${HELIOS_PASSTRANS_PASSWORD}:1001
 
   mail:
     restart: unless-stopped
