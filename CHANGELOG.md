@@ -3,7 +3,7 @@
 ## 5.0.11 - 2023-06-19
 
 ### Évolutions
-- Permettre la connection à Passtrans #1024
+- Permettre la connexion à Passtrans #1024
 - Permettre l'export du carnet d'adresse d'une collectivité #1033
 - Mettre à disposition un script de monitoring des analyses et envois actes et helios #793
 
