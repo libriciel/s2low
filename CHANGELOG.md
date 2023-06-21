@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.12 -
+
+### Corrections
+- Permettre à nouveau à l'administrateur de groupes de créer des collectivités #1044
+
 ## 5.0.11 - 2023-06-19
 
 ### Évolutions
@@ -14,6 +19,10 @@
 ### Sécurité
 
 - Correction de failles de sécurité #799
+
+### Limitations connues
+
+- L'administrateur de groupe ne peut plus créer de collectivités
 
 ## 5.0.10 - 2023-05-17
 

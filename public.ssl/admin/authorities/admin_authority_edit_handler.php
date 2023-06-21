@@ -53,7 +53,7 @@ try {
 
 $name = Helpers::getVarFromPost("name");
 $siren = Helpers::getVarFromPost("siren");
-$authorityGroupId = Helpers::getIntFromPost("authority_group_id");
+$authorityGroupId = Helpers::getIntFromPost("authority_group_id", true);
 $agreement = Helpers::getVarFromPost("agreement");
 $email = Helpers::getVarFromPost("email");
 $defaultbroadcastEmail = Helpers::getVarFromPost("default_broadcast_email");
