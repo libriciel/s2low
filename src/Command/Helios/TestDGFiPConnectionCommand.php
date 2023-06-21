@@ -196,6 +196,7 @@ class TestDGFiPConnectionCommand extends Command
         }
 
         if ($input->getOption('testUpload')) {
+            $start_time = microtime(true);
             $file_path = $input->getOption('pathToFileToUpload');
             if (! file_exists($file_path)) {
                 throw new \Exception("fichier $file_path non trouvé");
@@ -221,6 +222,9 @@ class TestDGFiPConnectionCommand extends Command
                 $overridenConfiguration->getSendingDestination(),
                 $file_path
             );
+            $end_time = microtime(true);
+            $execution_time = ($end_time - $start_time);
+            $io->comment(filesize($file_path)." envoyé en ".$execution_time."secondes");
         }
 
         $connector->close();
