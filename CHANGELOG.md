@@ -2,6 +2,9 @@
 
 ## 5.0.12 -
 
+### Évolutions
+- Ajouter le volume de transaction au monitoring Helios #1048
+
 ### Corrections
 - Permettre à nouveau à l'administrateur de groupes de créer des collectivités #1044
 
