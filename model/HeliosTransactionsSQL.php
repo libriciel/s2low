@@ -598,7 +598,7 @@ WHERE
   AND tw_cible.status_id = ? 
   AND tw_origine.status_id = ?";
 
-        $results = $this->query($sql, $dateStatusCible, $status_origine, $status_cible);
+        $results = $this->query($sql, $dateStatusCible, $status_cible, $status_origine);
         return [
             $results[0]["nb_transactions_cible"],
             $results[0]["delai_de_transmission_moyen"],
