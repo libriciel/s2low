@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.12 -
+## 5.0.12 - 2023-06-23
 
 ### Évolutions
 - Ajouter le volume de transaction au monitoring Helios #1048
