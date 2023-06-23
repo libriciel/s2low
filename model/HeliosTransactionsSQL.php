@@ -587,28 +587,37 @@ class HeliosTransactionsSQL extends SQL
         $sql = "
     SELECT 
   COUNT(tw_cible.transaction_id) AS nb_transactions_cible, 
-  AVG(tw_cible.date - tw_origine.date) AS delai_de_transmission_moyen 
+  AVG(tw_cible.date - tw_origine.date) AS delai_de_transmission_moyen,
+  SUM(file_size) AS volume_transaction
 FROM 
   helios_transactions_workflow AS tw_cible
   INNER JOIN helios_transactions_workflow AS tw_origine ON tw_cible.transaction_id = tw_origine.transaction_id 
+  INNER JOIN helios_transactions ON helios_transactions.id = tw_cible.transaction_id
 WHERE 
   tw_cible.date > ? 
   AND tw_cible.status_id = ? 
   AND tw_origine.status_id = ?";
 
         $results = $this->query($sql, $dateStatusCible, $status_origine, $status_cible);
-        return [$results[0]["nb_transactions_cible"], $results[0]["delai_de_transmission_moyen"]];
+        return [
+            $results[0]["nb_transactions_cible"],
+            $results[0]["delai_de_transmission_moyen"],
+            $results[0]["volume_transaction"]
+        ];
     }
 
     /**
      * @param $date_status_cible
-     * @return float
+     * @return array
      */
-    public function getNbPostesDepuis($date_status_cible): float
+    public function getNbPostesDepuis($date_status_cible): array
     {
-        $sql = "SELECT COUNT(id) AS nb_post_par_min FROM helios_transactions_workflow WHERE date > ? AND status_id=1; ";
+        $sql = "SELECT COUNT(helios_transactions.id) AS nb_post_par_min, SUM(file_size) AS volume_transaction 
+                    FROM helios_transactions_workflow
+                    INNER JOIN helios_transactions ON helios_transactions.id = helios_transactions_workflow.transaction_id
+                    WHERE date > ? AND status_id=1; ";
 
         $results = $this->query($sql, $date_status_cible);
-        return $results[0]["nb_post_par_min"];
+        return [$results[0]["nb_post_par_min"],$results[0]["volume_transaction"]];
     }
 }
