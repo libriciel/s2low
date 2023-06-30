@@ -40,6 +40,9 @@ stop: ## Stop all services
 build: ## Build the container
 	$(DOCKER_COMPOSE) build web
 
+build-webpack: ## Build the node container
+	$(DOCKER_COMPOSE) build webpack
+
 bash: ## Get a bash console from the running "web" docker
 	$(DOCKER_COMPOSE) exec web bash
 
@@ -56,9 +59,9 @@ phpcbf: docker-compose-up ## Fix all code style errors
 	$(DOCKER_COMPOSE_EXEC) phpcbf
 
 npm-install: docker-compose-up ## Install npm modules
-	$(DOCKER_COMPOSE_EXEC) npm install
+	$(DOCKER_COMPOSE) run -it webpack npm install
 
 webpack: docker-compose-up ## Compile webpack assets
-	$(DOCKER_COMPOSE_EXEC) npx webpack --config webpack.config.js
+	$(DOCKER_COMPOSE) run -it webpack npx webpack --config webpack.config.js
 
 install: composer-install npm-install webpack

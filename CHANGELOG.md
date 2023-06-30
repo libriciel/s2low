@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.13 -
+
+### Évolutions
+- Créer un container pour webpack #1053
+
 ## 5.0.12 - 2023-06-23
 
 ### Évolutions
