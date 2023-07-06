@@ -4,6 +4,7 @@ namespace S2low\Command;
 
 use LogicException;
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,23 +16,23 @@ use  Symfony\Component\Console\Output\OutputInterface;
 class HeliosAnalyseFichierAEnvoyer extends Command
 {
     /**
-     * @var WorkerScript
+     * @var WorkerRunnerBuilder
      */
-    private WorkerScript $workerScript;
+    private WorkerRunnerBuilder $workerRunnerBuilder;
     /**
      * @var  HeliosAnalyseFichierAEnvoyerWorker
      */
     private HeliosAnalyseFichierAEnvoyerWorker $heliosAnalyseFichierAEnvoyer;
 
     /**
-     * @param WorkerScript $workerScript
+     * @param \S2lowLegacy\Class\WorkerRunnerBuilder $workerRunnerBuilder
      * @param HeliosAnalyseFichierAEnvoyerWorker $analyseFichierAEnvoyerWorkerFactory
      */
     public function __construct(
-        WorkerScript $workerScript,
+        WorkerRunnerBuilder $workerRunnerBuilder,
         HeliosAnalyseFichierAEnvoyerWorker $analyseFichierAEnvoyerWorkerFactory
     ) {
-        $this->workerScript = $workerScript;
+        $this->workerRunnerBuilder = $workerRunnerBuilder;
         $this->heliosAnalyseFichierAEnvoyer = $analyseFichierAEnvoyerWorkerFactory;
         parent::__construct();
     }
@@ -65,7 +66,8 @@ class HeliosAnalyseFichierAEnvoyer extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->workerScript->scriptWithLogs($this->heliosAnalyseFichierAEnvoyer, false);
+        $worker = $this->workerRunnerBuilder->scriptWithLogs($this->heliosAnalyseFichierAEnvoyer, false);
+        $worker->work();
         return 0;
     }
 }

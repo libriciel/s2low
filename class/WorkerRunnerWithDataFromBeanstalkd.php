@@ -1,0 +1,126 @@
+<?php
+
+namespace S2lowLegacy\Class;
+
+use Exception;
+use Pheanstalk\PheanstalkInterface;
+use S2lowLegacy\Class\BeanstalkdWrapper;
+use S2lowLegacy\Class\CloudStorageException;
+use S2lowLegacy\Class\IWorker;
+use S2lowLegacy\Class\RecoverableException;
+use S2lowLegacy\Class\RedisMutexWrapper;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\PausingQueueException;
+use S2lowLegacy\Lib\SigTermHandler;
+use S2lowLegacy\Lib\UnrecoverableException;
+
+class WorkerRunnerWithDataFromBeanstalkd
+{
+    private const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
+    private const NB_MAX_JOBS_TRAITES = 100; // uniquement pour le mode beanstalked
+    /**
+     * @var \S2lowLegacy\Class\IWorker
+     */
+    private IWorker $worker;
+    /**
+     * @var \S2lowLegacy\Class\BeanstalkdWrapper
+     */
+    private BeanstalkdWrapper $beanstalkdWrapper;
+    /**
+     * @var \S2lowLegacy\Class\S2lowLogger
+     */
+    private S2lowLogger $s2lowLogger;
+    /**
+     * @var \S2lowLegacy\Lib\SigTermHandler
+     */
+    private SigTermHandler $sigTermHandler;
+    /**
+     * @var \S2lowLegacy\Class\RedisMutexWrapper
+     */
+    private RedisMutexWrapper $redisMutexWrapper;
+
+    public function __construct(
+        IWorker $worker,
+        BeanstalkdWrapper $beanstalkdWrapper,
+        S2lowLogger $s2lowLogger,
+        SigTermHandler $sigTermHandler,
+        RedisMutexWrapper $redisMutexWrapper
+    ) {
+        $this->worker = $worker;
+        $this->beanstalkdWrapper = $beanstalkdWrapper;
+        $this->s2lowLogger = $s2lowLogger;
+        $this->sigTermHandler = $sigTermHandler;
+        $this->redisMutexWrapper = $redisMutexWrapper;
+    }
+
+    /**
+     * @param IWorker $IWorker
+     * @param $data
+     * @throws CloudStorageException
+     * @throws PausingQueueException
+     * @throws RecoverableException
+     * @throws UnrecoverableException
+     */
+    private function syncrhonizedWork(IWorker $IWorker, $data)
+    {
+        $this->s2lowLogger->debug("Entree section critique");
+        if ($IWorker->isDataValid($data)) {
+            $IWorker->work($data);
+        } else {
+            $this->s2lowLogger->info("Le travail n'est plus à faire, abandon", [$data]);
+        }
+        $this->s2lowLogger->debug("Sortie section critique");
+    }
+    public function work()
+    {
+
+        $queue = $this->beanstalkdWrapper->getQueue($this->worker->getQueueName());
+        $this->s2lowLogger->info("Démarrage en mode beanstalkd");
+
+        $this->sigTermHandler->setExitOnSignal(true);
+
+        $nbJobsTraités = 0;
+        while ($job = $queue->reserve()) {
+            $this->sigTermHandler->setExitOnSignal(false);
+            $data = "undefined";
+            try {
+                $data = $job->getData();
+                $this->s2lowLogger->info("Travail en cours", [$data]);
+
+                $mutex = $this->redisMutexWrapper->getMutex($this->worker->getMutexName($data));
+                $workerToUse = $this->worker;
+                $mutex->synchronized(function () use ($workerToUse, $data) {
+                    $this->syncrhonizedWork($workerToUse, $data);
+                });
+                $queue->delete($job);
+                $nbJobsTraités++;
+                if ($nbJobsTraités >= self::NB_MAX_JOBS_TRAITES) {
+                    $this->s2lowLogger->info("Exit after $nbJobsTraités jobs executed");
+                    return true;
+                }
+            } catch (Exception $e) {
+                $this->s2lowLogger->error(
+                    $e->getMessage(),
+                    [$data,$e->getTraceAsString()]
+                );
+                if ($e instanceof PausingQueueException) {
+                    $seconds = $e->getTimeToWait();
+                    $this->s2lowLogger->info("Pausing queue for $seconds seconds");
+                    sleep($seconds);
+                }
+                $queue->release(
+                    $job,
+                    PheanstalkInterface::DEFAULT_PRIORITY,
+                    self::QUEUE_DELAY_RETRY_IN_SECONDS
+                );
+                continue;
+            }
+            if ($this->sigTermHandler->isSigtermCalled()) {
+                $this->s2lowLogger->info("Exit on signal (after traitement)" . $this->sigTermHandler->getLastSigNo());
+                return true;
+            }
+            $this->sigTermHandler->setExitOnSignal(true);
+        }
+        return true;
+    }
+}

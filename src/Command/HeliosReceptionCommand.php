@@ -4,6 +4,8 @@ namespace S2low\Command;
 
 use LogicException;
 use S2low\Services\Helios\HeliosReceptionWorkerFactory;
+use S2lowLegacy\Class\WorkerRunnerBuilder;
+use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,21 +18,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 class HeliosReceptionCommand extends Command
 {
     /**
-     * @var WorkerScript
+     * @var WorkerRunnerBuilder
      */
-    private WorkerScript $workerScript;
+    private WorkerRunnerBuilder $workerRunnerBuilder;
     /**
      * @var HeliosReceptionWorkerFactory
      */
     private HeliosReceptionWorkerFactory $heliosReceptionWorkerFactory;
 
     /**
-     * @param WorkerScript $workerScript
+     * @param WorkerScript $workerRunnerBuilder
      * @param HeliosReceptionWorkerFactory $heliosEnvoiWorkerFactory
      */
-    public function __construct(WorkerScript $workerScript, HeliosReceptionWorkerFactory $heliosEnvoiWorkerFactory)
+    public function __construct(WorkerRunnerBuilder $workerRunnerBuilder, HeliosReceptionWorkerFactory $heliosEnvoiWorkerFactory)
     {
-        $this->workerScript = $workerScript;
+        $this->workerRunnerBuilder = $workerRunnerBuilder;
         $this->heliosReceptionWorkerFactory = $heliosEnvoiWorkerFactory;
         parent::__construct();
     }
@@ -69,13 +71,14 @@ class HeliosReceptionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->workerScript->setMinExecutionTimeInSeconds(240);
-        $this->workerScript->scriptWithLogs(
+        $worker = $this->workerRunnerBuilder->scriptWithLogs(
             $this->heliosReceptionWorkerFactory->get($input->getOption('usePasstrans')),
             false,
-            true
+            WorkerRunnerWithDataFromDB::class
         );
 
+        $worker->setMinExecutionTimeInSeconds(240);
+        $worker->work();
         return 0;
     }
 }

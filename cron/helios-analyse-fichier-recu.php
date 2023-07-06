@@ -1,10 +1,12 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
-use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\WorkerRunnerBuilder;
 
 require_once(__DIR__ . "/../init/init.php");
-/** @var WorkerScript $workerScript */
-$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+/** @var WorkerRunnerBuilder $workerBuilder */
+[$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([WorkerRunnerBuilder::class,HeliosAnalyseFichierRecuWorker::class]);
 
-$workerScript->scriptByClassName(HeliosAnalyseFichierRecuWorker::class);
+$workerBuilder->scriptWithLogs($worker)->work();
