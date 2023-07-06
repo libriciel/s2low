@@ -5,6 +5,9 @@
 ### Évolutions
 - Créer un container pour webpack #1053
 
+### Suppressions
+- Suppression de Libersign 1 #1053
+
 ## 5.0.12 - 2023-06-23
 
 ### Évolutions

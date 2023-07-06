@@ -61,9 +61,7 @@ chmod +x /usr/local/bin/wait-for-certificates.sh
 
 # Pour libersign
 mkdir -p /var/www/parapheur/libersign
-cd /var/www/parapheur/libersign/
-wget https://ressources.libriciel.fr/s2low/libersign_v1_compat.tgz
-tar xvzf libersign_v1_compat.tgz
+
 cd /tmp/
 
 # Module Apache
