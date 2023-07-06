@@ -3,27 +3,38 @@
 ## 5.0.13 -
 
 ### Évolutions
+
 - Créer un container pour webpack #1053
 
 ### Suppressions
+
 - Suppression de Libersign 1 #1053
+
+### Corrections
+
+- Correction dans .env.dist #1051
+- Correction markdownlint dans CHANGELOG
 
 ## 5.0.12 - 2023-06-23
 
 ### Évolutions
+
 - Ajouter le volume de transaction au monitoring Helios #1048
 
 ### Corrections
+
 - Permettre à nouveau à l'administrateur de groupes de créer des collectivités #1044
 
 ## 5.0.11 - 2023-06-19
 
 ### Évolutions
+
 - Permettre la connexion à Passtrans #1024
 - Permettre l'export du carnet d'adresse d'une collectivité #1033
 - Mettre à disposition un script de monitoring des analyses et envois actes et helios #793
 
 ### Corrections
+
 - Récupérer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
 - Remplacement des scripts check-ftp.php et test-helios-connection.php par helios-analyse-fichier-a-envoyer#1035
 
@@ -38,12 +49,14 @@
 ## 5.0.10 - 2023-05-17
 
 ### Évolutions
+
 - Intégrer la purge des flux hélios dans supervisor #753
 - Utilisation de timeout pour limiter les blocages des scripts lancés par supervisor #979
 - Prise en compte de la version 5.20 du schema XSD Pes Aller #1025
 - Adaptation du schéma XSD des actes à la réalité de l'envoi par la DGCL #1017
 
 ### Corrections
+
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
 - Gérer le cas ou le fichier PES Aller n'est pas trouvé #1028
 - Allonger à 4 minutes le délai minimum entre deux passages de récupération FTP #1018
@@ -91,6 +104,7 @@
 ## 5.0.7 - 2023-02-06
 
 ### Corrections
+
 - Correction de l'ordre et de la description du traitement par lots #997
 
 ### Évolutions
