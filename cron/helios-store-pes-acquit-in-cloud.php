@@ -2,14 +2,17 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosStorePESAcquitWorker;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\WorkerScript;
 
 require_once(__DIR__ . "/../init/init.php");
-/** @var WorkerScript $workerScript */
-$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+/** @var \S2lowLegacy\Class\WorkerRunnerBuilder $workerBuilder */
+[$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([WorkerRunnerBuilder::class,HeliosStorePESAcquitWorker::class]);
 
-$workerScript->scriptByClassName(
-    HeliosStorePESAcquitWorker::class,
+$workerBuilder->scriptWithLogs(
+    $worker,
     true,
-    true
-);
+    \S2lowLegacy\Class\WorkerRunnerWithDataFromDB::class
+)->work();

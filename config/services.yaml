@@ -27,6 +27,10 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
+  app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)'
+  app.beanstalkd_port: '%env(BEANSTAKLD_PORT)'
+  app.redis_server: '%env(REDIS_SERVER)'
+  app.redis_port: '%env(REDIS_PORT)'
 services:
   _defaults:
     autowire: true
@@ -199,8 +203,8 @@ services:
 
   S2lowLegacy\Class\BeanstalkdWrapper:
     arguments:
-      $beanstalkd_server: "todo"
-      $beanstalkd_port: "todo"
+      $beanstalkd_server: "%app.beanstalkd_server%"
+      $beanstalkd_port: "%app.beanstalkd_port%"
 
   S2lowLegacy\Class\helios\HeliosFilesFactory:
     autowire: false
@@ -261,8 +265,8 @@ services:
 
   S2lowLegacy\Class\RedisMutexWrapper:
     arguments:
-      $redis_server: "todo"
-      $redis_port: "todo"
+      $redis_server: "%app.redis_server%"
+      $redis_port: "%app.redis_port%"
 
   S2lowLegacy\Class\S2lowLogger:
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
@@ -290,6 +294,12 @@ services:
 
   S2lowLegacy\Class\Versionning:
     autowire: false #Pas un service
+
+  S2lowLegacy\Class\WorkerRunnerWithDataFromDB:
+    autowire: false
+
+  S2lowLegacy\Class\WorkerRunnerWithDataFromBeanstalkd:
+    autowire: false
 
   S2lowLegacy\Class\XSDValidation:
     arguments:

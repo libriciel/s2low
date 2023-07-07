@@ -2,11 +2,15 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosMenageWorker;
-use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\WorkerRunnerBuilder;
 
 require_once(__DIR__ . "/../init/init.php");
-/** @var WorkerScript $workerScript */
-$workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
+/** @var \S2lowLegacy\Class\WorkerRunnerBuilder $workerBuilder */
+[$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([WorkerRunnerBuilder::class,HeliosMenageWorker::class]);
 
-$workerScript->setMinExecutionTimeInSeconds(10);
-$workerScript->scriptByClassName(HeliosMenageWorker::class, true, true);
+$worker = $workerBuilder->scriptWithLogs($worker, true, WorkerRunnerWithDataFromDB::class);
+$worker->setMinExecutionTimeInSeconds(10);
+$worker->work();
