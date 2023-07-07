@@ -14,6 +14,7 @@
 
 - Correction dans .env.dist #1051
 - Correction markdownlint dans CHANGELOG
+- Permettre à nouveau à l'administrateur de collectivité de modifier sa collectivité #1044
 
 ## 5.0.12 - 2023-06-23
 
@@ -24,6 +25,10 @@
 ### Corrections
 
 - Permettre à nouveau à l'administrateur de groupes de créer des collectivités #1044
+
+### Limitations connues
+
+- L'administrateur de collectivité ne peut plus modifier sa collectivité
 
 ## 5.0.11 - 2023-06-19
 
@@ -45,6 +50,7 @@
 ### Limitations connues
 
 - L'administrateur de groupe ne peut plus créer de collectivités
+- L'administrateur de collectivité ne peut plus modifier sa collectivité
 
 ## 5.0.10 - 2023-05-17
 
