@@ -1,6 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
@@ -64,10 +67,13 @@ if (! $transaction['status']) {
 
 $transaction['resultat'] = "OK";
 $status_averifier = array("4","6","8");
-if (in_array($transaction['status'], $status_averifier)) {
-    $filename = $zeTrans->getAcquitFilenameForId($transId);
-    if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null) {
-        $transaction['status'] = '3';
+
+$cloudStorage = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
+
+if (in_array($transaction['status'], $status_averifier)) {  #TODO : on garde ce comportement pour respecter le legacy
+    if (!$cloudStorage->getPath($transaction['id'])) {      # Mais l'état 3 n'est pas logique en cas d'absence du PES
+        $transaction['status'] = '3';                       # Acquit ...
     }
 }
 
