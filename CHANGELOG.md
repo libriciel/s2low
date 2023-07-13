@@ -6,6 +6,7 @@
 
 - Permettre de régler le nombre de processus helios-envoi et helios-envoi-passtrans #1055
 - Créer un container pour webpack #1053
+- Permettre de distinguer dans la commande stats:monitoring-metier les envois Gateway et Passtrans #1057
 
 ### Suppressions
 

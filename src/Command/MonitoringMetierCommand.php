@@ -81,6 +81,43 @@ class MonitoringMetierCommand extends Command
             HeliosTransactionsSQL::INFORMATION_DISPONIBLE
         );
 
+        list($nbHeliosPostesPar15Min_pt,$volumePoste_pt) =
+            $this->heliosTransactionsSQL->getNbPostesDepuis($date_status_cible, true);
+
+        list(
+            $nbHeliosEnAttentePar15Min_pt,
+            $delaiHeliosPosteEnAttente_pt,
+            $volumeEnAttente_pt
+            ) = $this->heliosTransactionsSQL->getStatusTransitionStatistics(
+                $date_status_cible,
+                HeliosTransactionsSQL::POSTE,
+                HeliosTransactionsSQL::ATTENTE,
+                true
+            );
+
+
+        list(
+            $nbHeliosTransmisPar15Min_pt,
+            $delaiHeliosEnAttenteTransmis_pt,
+            $volumeTransmis_helios_pt
+            ) = $this->heliosTransactionsSQL->getStatusTransitionStatistics(
+                $date_status_cible,
+                HeliosTransactionsSQL::ATTENTE,
+                HeliosTransactionsSQL::TRANSMIS,
+                true
+            );
+
+        list(
+            $nbHeliosAcquittementPar15Min_pt,
+            $delaiHeliosTransmisAcquittement_pt,
+            $volumeAcquite_pt
+            ) = $this->heliosTransactionsSQL->getStatusTransitionStatistics(
+                $date_status_cible,
+                HeliosTransactionsSQL::TRANSMIS,
+                HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+                true
+            );
+
         $resultats = [
             "nbPostesParMin" => $nbPostesParMin,
             "nbEnAttenteParMin" => $nbEnAttenteParMin,
@@ -101,6 +138,17 @@ class MonitoringMetierCommand extends Command
             "delaiHeliosPosteEnAttente" => $delaiHeliosPosteEnAttente,
             "delaiHeliosEnAttenteTransmis" => $delaiHeliosEnAttenteTransmis,
             "delaiHeliosTransmisAcquittement" => $delaiHeliosTransmisAcquittement,
+
+            "nbHeliosEnAttenteParMin_pt" => $nbHeliosEnAttentePar15Min_pt,
+            "nbHeliosTransmisParMin_pt" => $nbHeliosTransmisPar15Min_pt,
+            "nbHeliosAcquittesParMin_pt" => $nbHeliosAcquittementPar15Min_pt,
+            "volumePosteParMin_pt" => $volumePoste_pt,
+            "volumeEnAttenteParMin_pt" => $volumeEnAttente_pt,
+            "volumeTransmisParMin_pt" => $volumeTransmis_helios_pt,
+
+            "delaiHeliosPosteEnAttente_pt" => $delaiHeliosPosteEnAttente_pt,
+            "delaiHeliosEnAttenteTransmis_pt" => $delaiHeliosEnAttenteTransmis_pt,
+            "delaiHeliosTransmisAcquittement_pt" => $delaiHeliosTransmisAcquittement_pt,
         ];
 
         echo json_encode($resultats);
