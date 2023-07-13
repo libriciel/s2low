@@ -27,10 +27,10 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
-  app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)'
-  app.beanstalkd_port: '%env(BEANSTAKLD_PORT)'
-  app.redis_server: '%env(REDIS_SERVER)'
-  app.redis_port: '%env(REDIS_PORT)'
+  app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)%'
+  app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
+  app.redis_server: '%env(REDIS_SERVER)%'
+  app.redis_port: '%env(REDIS_PORT)%'
 services:
   _defaults:
     autowire: true
