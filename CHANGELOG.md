@@ -17,6 +17,7 @@
 - Correction markdownlint dans CHANGELOG
 - Permettre à nouveau à l'administrateur de collectivité de modifier sa collectivité #1044
 - Récupérer le PesAcquit depuis le cloud lors d'un appel de helios_transac_get_status #1045
+- Ajout de LIBERSIGN_INSTALLER dans docker-compose.yml #1015
 
 ## 5.0.12 - 2023-06-23
 
