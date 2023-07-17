@@ -582,8 +582,12 @@ class HeliosTransactionsSQL extends SQL
      * Retourne le nombre de transactions passés de $status_origine à $status_cible depuis $dateStatusCible
      * Cette fonction peut être perturbée par les modifications manuelles de status.
      */
-    public function getStatusTransitionStatistics($dateStatusCible, int $status_origine, int $status_cible): array
-    {
+    public function getStatusTransitionStatistics(
+        $dateStatusCible,
+        int $status_origine,
+        int $status_cible,
+        bool $isPasstrans = false
+    ): array {
         $sql = "
     SELECT 
   COUNT(tw_cible.transaction_id) AS nb_transactions_cible, 
@@ -593,12 +597,21 @@ FROM
   helios_transactions_workflow AS tw_cible
   INNER JOIN helios_transactions_workflow AS tw_origine ON tw_cible.transaction_id = tw_origine.transaction_id 
   INNER JOIN helios_transactions ON helios_transactions.id = tw_cible.transaction_id
+  INNER JOIN authorities ON helios_transactions.authority_id = authorities.id
 WHERE 
   tw_cible.date > ? 
   AND tw_cible.status_id = ? 
-  AND tw_origine.status_id = ?";
+  AND tw_origine.status_id = ?
+AND authorities.helios_use_passtrans = ?
+  ";
 
-        $results = $this->query($sql, $dateStatusCible, $status_cible, $status_origine);
+        $results = $this->query(
+            $sql,
+            $dateStatusCible,
+            $status_cible,
+            $status_origine,
+            $isPasstrans ? "TRUE" : "FALSE"
+        );
         return [
             $results[0]["nb_transactions_cible"],
             $results[0]["delai_de_transmission_moyen"],
@@ -610,14 +623,15 @@ WHERE
      * @param $date_status_cible
      * @return array
      */
-    public function getNbPostesDepuis($date_status_cible): array
+    public function getNbPostesDepuis($date_status_cible, bool $isPasstrans = false): array
     {
         $sql = "SELECT COUNT(helios_transactions.id) AS nb_post_par_min, SUM(file_size) AS volume_transaction 
                     FROM helios_transactions_workflow
                     INNER JOIN helios_transactions ON helios_transactions.id = helios_transactions_workflow.transaction_id
-                    WHERE date > ? AND status_id=1; ";
+                    INNER JOIN authorities ON helios_transactions.authority_id = authorities.id
+                    WHERE date > ? AND status_id=1 AND authorities.helios_use_passtrans = ?; ";
 
-        $results = $this->query($sql, $date_status_cible);
+        $results = $this->query($sql, $date_status_cible, $isPasstrans ? "TRUE" : "FALSE");
         return [$results[0]["nb_post_par_min"],$results[0]["volume_transaction"]];
     }
 }
