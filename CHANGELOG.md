@@ -5,6 +5,7 @@
 ### Corrections
 
 - Correction du worker actes-menage-enveloppe.php #1051
+- Utilisation du logger dans les crons helios-envoi et helios-analyse-fichier-a-envoyer #1061
 
 ## 5.0.13 - 2023-07-18
 

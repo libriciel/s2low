@@ -10,6 +10,7 @@ use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\SQLQuery;
@@ -78,7 +79,8 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
                 "passtrans_response_server_path",
                 $this->dgfipConnectionBuilderMock
             ),
-            new FichierCompteur($this->counterDir . '/counter.txt')
+            new FichierCompteur($this->counterDir . '/counter.txt'),
+            $this->getContainer()->get(S2lowLogger::class),
         );
     }
 
