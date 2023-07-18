@@ -20,11 +20,6 @@ apt-get install -y  --no-install-recommends \
     clamdscan \
     cron \
     git \
-    libc-client-dev \
-    libjpeg-dev \
-    libkrb5-dev \
-    libpng-dev \
-    libpq-dev \
     locales \
     logrotate \
     sudo \
@@ -51,11 +46,11 @@ apt-get install -y  --no-install-recommends \
     redis-tools \
     php-mbstring \
     curl \
-    php-dev \
     php-redis \
     php-pdo \
     php-intl \
-    php-ssh2
+    php-ssh2 \
+    file
     #\
     #python-certbot-apache TODO : non dispo, doit-on supprimer ??
 
