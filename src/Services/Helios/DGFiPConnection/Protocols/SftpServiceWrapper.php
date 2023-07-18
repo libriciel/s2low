@@ -78,7 +78,7 @@ class SftpServiceWrapper
     {
         if (!$ftp->put($remoteFile, $localFile, SFTP::SOURCE_LOCAL_FILE)) {
             var_dump($ftp->getErrors());
-            throw new Exception("Unable to put $remoteFile on $localFile"); //TODO : find correct exception
+            throw new Exception("Unable to put $localFile on $remoteFile");
         }
     }
 

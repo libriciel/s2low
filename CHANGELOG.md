@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.14 - 2023-07-18
+
+### Corrections
+
+- Correction du worker actes-menage-enveloppe.php #1051
+
 ## 5.0.13 - 2023-07-18
 
 ### Évolutions
@@ -23,6 +29,10 @@
 ### Sécurité
 
 - Correction de failles de sécurité #799
+
+### Limitations connues
+
+- Le worker actes-menage-enveloppe.php ne se lance plus
 
 ## 5.0.12 - 2023-06-23
 
