@@ -4,13 +4,25 @@ use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var ActesResponsesError $actesResponsesError */
 
-if ($userInfo['role'] != 'SADM') {
+[$init,$heliosTransactionsSQL,$actesTransactionsSQL,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class ]
+    );
+
+$init->initHelios();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
@@ -24,7 +36,7 @@ $helios_status = array(
     3 => "Transmis"
 );
 
-$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
+
 
 $helios_nb_transaction_by_status = array();
 foreach ($helios_status as $status_id => $status_libelle) {
@@ -45,15 +57,12 @@ $actes_status = array(
     3 => "Transmis",
     7 => "Document reçu",
 );
-$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
-
 
 $actes_nb_transaction_by_status = array();
 foreach ($actes_status as $status_id => $status_libelle) {
     $actes_nb_transaction_by_status[$status_id] =  $actesTransactionsSQL->getNbByStatus($status_id);
 }
 
-$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
 $nb_actes_transmis_4hours_before = $actesTransactionsSQL->getNbByStatusAndDate(3, date("Y-m-d H:i:s", strtotime("-4 hours")));
@@ -68,7 +77,7 @@ $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 
 

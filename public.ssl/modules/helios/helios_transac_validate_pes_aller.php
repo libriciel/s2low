@@ -4,6 +4,8 @@ use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -14,16 +16,26 @@ use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var HeliosTransactionsSQL $heliosTransactionSQL */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var string $html */
 
-if (! $droit->isSuperAdmin($userInfo)) {
+list($init, $pesAllerRetriever, $heliosTransactionsSQL,$pesAllerRetriever,$html ) =
+    LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [ Initialisation::class, PesAllerRetriever::class, HeliosTransactionsSQL::class,PesAllerRetriever::class, 'html']
+    );
+
+$init->initHelios();
+
+if (! $init->userIsSuperAdmin()) {
     header("Location: index.php");
     exit;
 }
 
-$me = new User();
-
-if (!$me->authenticate()) {
+if (!$init->getUser()->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . WEBSITE);
     exit();
@@ -32,11 +44,9 @@ if (!$me->authenticate()) {
 $recuperateur = new Recuperateur($_GET);
 $transaction_id = $recuperateur->getInt('id');
 
-$heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
-
 $info = $heliosTransactionsSQL->getInfo($transaction_id);
 
-$pesAllerRetriever = $objectInstancier->get(PesAllerRetriever::class);
+
 $filename = $pesAllerRetriever->getPath($info['sha1']);
 
 $pes_content = file_get_contents($filename);
@@ -77,7 +87,7 @@ $doc->addBody("<div class=\"container\"><div class=\"row\">");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu($init->getUser());
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -2,25 +2,32 @@
 
 use S2lowLegacy\Class\actes\ActesStatistiques;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesStatistiques $actesStatistiques */
 
-$actesStatistiques = new ActesStatistiques($sqlQuery);
+[$init,$actesStatistiques] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,ActesStatistiques::class]
+    );
 
+$init->initActes();
 
 $title = "Statistiques de transmission des enveloppes ";
-if ($droit->isSuperAdmin($userInfo)) {
+if ($init->userIsSuperAdmin()) {
     $title .= " pour l'ensemble des collectivités";
-} elseif ($droit->isGroupAdmin($userInfo)) {
-    $title .= "pour le groupe " . $groupeInfo["name"];
-    $actesStatistiques->setGroup($userInfo['authority_group_id']);
-} elseif ($droit->isAuthorityAdmin($userInfo)) {
-    $title .= " pour la collectivité " . $authorityInfo["name"];
-    $actesStatistiques->setAuthority($userInfo['authority_id']);
+} elseif ($init->userIsGroupAdmin()) {
+    $title .= "pour le groupe " . $init->getGroupe()['name'];
+    $actesStatistiques->setGroup($init->getUserInfo()['authority_group_id']);
+} elseif ($init->userIsAuthorityAdmin()) {
+    $title .= " pour la collectivité " . $init->getAuthorityInfo()['name'];
+    $actesStatistiques->setAuthority($init->getUserInfo()['authority_id']);
 } else {
-    $title .= " pour l'utilisateur " . $userInfo['pretty_name'];
-    $actesStatistiques->setUser($connexion->getId());
+    $title .= " pour l'utilisateur " . $init->getUserInfo()['pretty_name'];
+    $actesStatistiques->setUser($init->getUserId());
 }
 
 $statInfo = $actesStatistiques->getInfo();
@@ -38,7 +45,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Statistiques - ACTES - S²low");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -3,12 +3,23 @@
 use Libriciel\LibActes\Utils\XSDValidationException;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesResponsesError $actesResponsesError */
+/** @var ActesAnalyseFichierRecuController $actesAnalyseFichierRecuController */
 
-if ($userInfo['role'] != 'SADM') {
+[$init,$actesResponsesError,$actesAnalyseFichierRecuController] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class, ActesResponsesError::class,ActesAnalyseFichierRecuController::class ]
+    );
+
+$init->initActes();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
@@ -16,11 +27,6 @@ if ($userInfo['role'] != 'SADM') {
 
 $recuperateur = new Recuperateur($_GET);
 $filename = $recuperateur->get('file');
-
-$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
-
-$actesAnalyseFichierRecuController = $objectInstancier->get(ActesAnalyseFichierRecuController::class);
-
 
 $_SESSION['error'] = "";
 

@@ -2,20 +2,27 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
-use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
+/** @var Initialisation $init */
+/** @var SQLQuery $sqlQuery */
+[$init,$sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class, SQLQuery::class ]
+    );
 
-$me = new User();
+$init->init();
 
-if (! $me->authenticate()) {
+if (! $init->getUser()->authenticate()) {
     $_SESSION["error"] = "Ehec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isSuper()) {
+if (! $init->getUser()->isSuper()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -35,7 +42,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Configuration de la connexion SAE - S²low");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 $doc->openContent();
 

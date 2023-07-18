@@ -1,11 +1,20 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesResponsesError $actesResponsesError */
+[$init,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,ActesResponsesError::class ]
+    );
 
-if ($userInfo['role'] != 'SADM') {
+$init->initActes();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
@@ -15,8 +24,6 @@ $recuperateur = new Recuperateur($_GET);
 
 $filename = $recuperateur->get('file');
 
-
-$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 
 try {
     $actesResponsesError->delete($filename);

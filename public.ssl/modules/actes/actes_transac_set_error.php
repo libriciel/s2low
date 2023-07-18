@@ -2,20 +2,26 @@
 
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
-//require_once(__DIR__."/../../../class/actes/ActesTransactionsSQL.class.php");
+/** @var Initialisation $init */
+/** @var ActesScriptHelper $actesScriptHelper */
+list($init, $actesScriptHelper ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class, ActesScriptHelper::class]
+    );
 
-if (! $droit->isSuperAdmin($userInfo)) {
+$init->initActes();
+
+if (! $init->userIsSuperAdmin()) {
     header("Location: index.php");
     exit;
 }
 $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
-
-$actesScriptHelper  = $objectInstancier->get(ActesScriptHelper::class);
 
 $actesScriptHelper->updateStatus(
     [$id],

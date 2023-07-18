@@ -6,6 +6,8 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
@@ -14,12 +16,16 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
-list($workerScript,$actesScriptHelper,$actesTransactionsSQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var Initialisation $init */
+/** @var WorkerScript $workerScript */
+/** @var ActesScriptHelper $actesScriptHelper */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+list($init, $workerScript,$actesScriptHelper,$actesTransactionsSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class]
+        [Initialisation::class, WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+$init->initActes();
 
 $actionHtml = "";
 

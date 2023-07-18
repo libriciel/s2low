@@ -4,12 +4,23 @@ use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var WorkerScript $workerScript */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+list($init, $workerScript,$actesTransactionSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class, WorkerScript::class, ActesTransactionsSQL::class]
+    );
 
-if (! $droit->isSuperAdmin($userInfo)) {
+$init->initActes();
+
+
+if (! $init->userIsSuperAdmin()) {
     header("Location: index.php");
     exit;
 }
@@ -36,14 +47,10 @@ switch ($status_id) {
         exit;
 }
 
-
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
-
 $actesTransactionSQL->updateStatus($id, $status_id, $message);
 
 $info = $actesTransactionSQL->getInfo($id);
 
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByClassName($workerClassName, $info['envelope_id']);
 
 $_SESSION['error'] = $message;

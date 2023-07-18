@@ -3,13 +3,20 @@
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesPrepareEnvoiSAE $actesPrepareEnvoiSAE */
+[$init,$actesPrepareEnvoiSAE] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,ActesPrepareEnvoiSAE::class]
+    );
 
-$actesPrepareEnvoiSAE = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
+$init->initActes();
 
 // Instanciation du module courant
 $module = new Module();
@@ -70,7 +77,7 @@ foreach ($liste_id as $id) {
     }
 
     if ($trans->get("type") != 1) {
-        Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $rel_trans->getId());
+        Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être cloturé.", Helpers::getLink("/modules/actes/index.php"));
     }
 
     if (! in_array($trans->get('last_status_id'), array(4,5,14,20,18))) {

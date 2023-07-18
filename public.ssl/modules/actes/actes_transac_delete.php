@@ -1,12 +1,21 @@
 <?php
 
 use S2lowLegacy\Class\actes\TransactionSQL;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var TransactionSQL $transactionSQL */
+[$init,$transactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,TransactionSQL::class]
+    );
 
-if (! $droit->isSuperAdmin($userInfo)) {
+$init->initActes();
+
+if (! $init->userIsSuperAdmin()) {
     header("Location: index.php");
     exit;
 }
@@ -14,13 +23,13 @@ $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
 
-$transactionSQL = new TransactionSQL($sqlQuery);
+
 $transactionSQL->delete($id);
 
 $msg = "La transaction $id a été éradiquée ....";
 
 
-if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module_name, null, $userInfo['id'])) {
+if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $init->getModuleName(), null, $init->getUserId())) {
     $msg .= "\nErreur de journalisation.";
 }
 

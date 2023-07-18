@@ -1,11 +1,27 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosResponsesError;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosResponsesError $heliosResponsesError */
 
-if ($userInfo['role'] != 'SADM') {
+[
+    $init,
+    $heliosResponsesError,
+] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [
+            Initialisation::class,
+            HeliosResponsesError::class,
+        ]
+    );
+
+$init->initHelios();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();

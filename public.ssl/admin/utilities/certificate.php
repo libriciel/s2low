@@ -1,20 +1,24 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
+/** @var Initialisation $init */
+$init = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get(Initialisation::class);
 
+$init->init();
 
-$me = new User();
-
-if (! $me->authenticate()) {
+if (! $init->getUser()->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isSuper()) {
+if (! $init->getUser()->isSuper()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();

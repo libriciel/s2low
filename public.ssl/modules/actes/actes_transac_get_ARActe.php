@@ -4,13 +4,22 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesTransactionsSQL $actesTransactionSQL */
+[$init,$actesTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,ActesTransactionsSQL::class]
+    );
+
+$init->initActes();
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -24,15 +33,13 @@ if (!$module->initByName("actes")) {
     exit();
 }
 
-$me = new User();
-
-if (!$me->authenticate()) {
+if (!$init->getUser()->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
+if (!$module->isActive() || !$init->getUser()->canAccess($module->get("name"))) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -55,14 +62,12 @@ $owner->init();
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser, "actes");
 
-if (! $permission->canView($me, $owner)) {
+if (! $permission->canView($init->getUser(), $owner)) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . Helpers::getLink("/modules/actes/index.php"));
     exit();
 }
 
-
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
 $info = $actesTransactionSQL->getStatusInfoWithFluxRetour($id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 

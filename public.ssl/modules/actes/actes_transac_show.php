@@ -8,6 +8,8 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
@@ -20,15 +22,21 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var \S2lowLegacy\Class\Initialisation $init */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var AuthoritySQL $authoritySQL */
+/** @var ActesIncludedFileSQL $actesIncludedFileSQL */
+/** @var ActesTypePJSQL $actesTypePJSQL */
+/** @var ActesSAEController $actesSAEController */
+/** @var LibersignController $libersignController */
+
+list( $init,$actesTransactionsSQL, $authoritySQL,$actesIncludedFileSQL,$actesTypePJSQL,$actesSAEController,$libersignController) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+        [ Initialisation::class,ActesTransactionsSQL::class, AuthoritySQL::class,ActesIncludedFileSQL::class,ActesTypePJSQL::class,ActesSAEController::class,LibersignController::class]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+$init->initActes();
 
-
-$actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
 
 $actionHtml = "";
 
@@ -512,9 +520,7 @@ if (!$trans->hasPendingCancelTrans()) {
         $actionHtml .= "</div>\n";
     }//fin if qui verifie type == 1 et status == 4
 
-    $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
     $transactionsInfo = $actesTransactionsSQL->getInfo($trans->getId());
-    $authoritySQL = new AuthoritySQL($sqlQuery);
     $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
     if ($trans->get("type") == 1 && in_array($transStatus, array(4,5,14,20)) && $trans->canValidate()) {
@@ -569,7 +575,6 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
 }
 
 if ($me->isSuper()) {
-    $actesSAEController = $objectInstancier->get(ActesSAEController::class);
     $status_cible_list = $actesSAEController->getActionPossible($transStatus);
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
@@ -667,12 +672,11 @@ if (isset($actionHtml)) {
 
 
 if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
-    $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
     $tab_included_files = $actesIncludedFileSQL->getSendFile($id);
 
 
     $tab_included_files = array_slice($tab_included_files, 0, 1);
-    $libersignController = new LibersignController($objectInstancier);
+
 
 
     $html .= "<h2>Signature de l'acte</h2>";

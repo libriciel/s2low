@@ -2,15 +2,49 @@
 
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+/** @var HeliosResponsesError $heliosResponsesError */
+/** @var HeliosTransactionsSQL $heliosTransactionSQL */
+/** @var AuthoritySQL $authoritySQL */
+/** @var HeliosRetourSQL $heliosRetourSQL */
+/** @var AuthoritySiretSQL $authoritySiretSQL */
+/** @var HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu */
 
-if ($userInfo['role'] != 'SADM') {
+[
+    $init,
+    $heliosTransactionsSQL,
+    $heliosResponsesError,
+    $heliosTransactionSQL,
+    $authoritySQL,
+    $heliosRetourSQL,
+    $authoritySiretSQL,
+    $heliosAnalyseFichierRecu
+] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [
+            Initialisation::class,
+            HeliosTransactionsSQL::class,
+            HeliosResponsesError::class,
+            HeliosTransactionsSQL::class,
+            AuthoritySQL::class,
+            HeliosRetourSQL::class,
+            AuthoritySiretSQL::class,
+            HeliosAnalyseFichierRecu::class
+        ]
+    );
+
+$init->initHelios();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
@@ -19,13 +53,7 @@ if ($userInfo['role'] != 'SADM') {
 $recuperateur = new Recuperateur($_GET);
 $filename = $recuperateur->get('file');
 
-$heliosResponsesError = new HeliosResponsesError();
-$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
-$authoritySQL = new AuthoritySQL($sqlQuery);
-$heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
-$authoritySiretSQL = new AuthoritySiretSQL($sqlQuery);
 
-$heliosAnalyseFichierRecu = $objectInstancier->get(HeliosAnalyseFichierRecu::class);
 
 
 $_SESSION['error'] = "";

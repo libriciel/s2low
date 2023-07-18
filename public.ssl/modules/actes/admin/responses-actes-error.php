@@ -2,19 +2,26 @@
 
 use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 
-require_once(__DIR__ . "/../../../../init/init-www-actes.php");
+/** @var Initialisation $init */
+/** @var ActesResponsesError $actesResponsesError */
+[$init,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,ActesResponsesError::class ]
+    );
 
-if ($userInfo['role'] != 'SADM') {
+$init->initActes();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
 }
 
-
-$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 $nb_responses_error = $actesResponsesError->getNbError();
 
 $errorFileIterator = $actesResponsesError->getFilesystemIterator();
@@ -30,7 +37,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 
 $doc->closeSideBar();
 

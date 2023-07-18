@@ -4,6 +4,8 @@ namespace S2low\Controller;
 
 use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,9 +31,14 @@ class HeliosAdminController extends AbstractController
      */
     public function transmisNonAcquitteParMail(): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        require_once(__DIR__ . '/../../init/init-www-helios.php');
+        /** @var Initialisation $init */        //TODO : déplacer vers les services
 
-        if ($userInfo['role'] != 'SADM') {
+        $init = LegacyObjectsManager::getLegacyObjectInstancier()
+                ->get(Initialisation::class);
+
+        $init->initHelios();
+
+        if (!$init->userIsSuperAdmin()) {
             $_SESSION["error"] = "Super admin only !";
             return parent::redirect(WEBSITE);
         }
@@ -58,10 +65,10 @@ class HeliosAdminController extends AbstractController
         ob_end_clean();
 
         $mail = $this->mailerSymfonyFactory->getInstance();
-        $mail->addRecipient($userInfo['email']);
+        $mail->addRecipient($init->getUserInfo()['email']);
         $mail->sendMail($subject, $content);
 
-        $_SESSION['error'] = "Mail envoye a {$userInfo['email']}";
+        $_SESSION['error'] = "Mail envoye a {$init->getUserInfo()['email']}";
         return parent::redirect("transmis-non-acquitte.php");
     }
 }

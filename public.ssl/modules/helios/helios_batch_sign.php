@@ -4,13 +4,24 @@ use S2lowLegacy\Class\helios\HeliosSignature;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var string $html */
+/** @var LibersignController $libersignController */
 
-if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {
+[ $init,$heliosTransactionSQL,$pesAllerRetriever,$html,$libersignController ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosTransactionsSQL::class,PesAllerRetriever::class, 'html',LibersignController::class]);
+
+$init->initHelios();
+
+if (! $init->userCanSign()) {
     Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", Helpers::getLink("/modules/helios/index.php"));
 }
 
@@ -20,18 +31,14 @@ if (!$liste_id) {
     Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", Helpers::getLink("/modules/helios/index.php"));
 }
 
-
-$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $transaction_list = array();
 
 $heliosSignature = new HeliosSignature();
 
-$pesAllerRetriever = $objectInstancier->get(PesAllerRetriever::class);
-
 foreach ($liste_id as $transaction_id) {
     try {
         $transactionInfo = $heliosTransactionSQL->getInfo($transaction_id);
-        if ($transactionInfo['authority_id'] != $userInfo['authority_id']) {
+        if ($transactionInfo['authority_id'] != $init->getUserInfo()['authority_id']) {
             Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaction n°{$transactionInfo['id']}", Helpers::getLink("/modules/helios/index.php"));
         }
         $pesaller_path = $pesAllerRetriever->getPath($transactionInfo['sha1']);
@@ -52,7 +59,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : Signature de plusieurs fichier PES");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -96,7 +103,6 @@ $html .= "<h3>Signature des fichiers PES</h3>";
 
 
 ob_start();
-$libersignController = new LibersignController($objectInstancier);
 $libersignController->displayLibersignJS();
 
 ?><div class='action'>
@@ -117,8 +123,8 @@ $libersignController->displayLibersignJS();
                     pespolicydesc: "Politique de signature Helios de la DGFiP",
                     pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E=",
                     pesspuri: "https://www.collectivites-locales.gouv.fr/files/files/finances_locales/dematerialisation/ps_helios_dgfip.pdf",
-                    pescity: "<?php hecho($authorityInfo['city'])?>",
-                    pespostalcode: "<?php hecho($authorityInfo['postal_code'])?>",
+                    pescity: "<?php hecho($init->getAuthorityInfo()['city'])?>",
+                    pespostalcode: "<?php hecho($init->getAuthorityInfo()['postal_code'])?>",
                     pescountryname: "France",
                     pesclaimedrole: "Ordonnateur",
                     pesencoding: "iso-8859-1",

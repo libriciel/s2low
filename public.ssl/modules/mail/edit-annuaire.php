@@ -1,13 +1,19 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailAnnuaireSQL;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../init/init-www-mailsec.php");
+/** @var Initialisation $init */
+[$init,$mailAnnuaireSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, MailAnnuaireSQL::class]);
 
-if (! $droit->isAuthorityAdmin($userInfo)) {
+$init->initMailSec();
+
+if (! $init->userIsAuthorityAdmin()) {
     exit;
 }
 $recuperateur = new Recuperateur($_GET);
@@ -15,8 +21,6 @@ $menuHTML = new MenuHTML();
 
 $id = $recuperateur->getInt('id');
 
-
-$mailAnnuaireSQL = new MailAnnuaireSQL($sqlQuery);
 $info = $mailAnnuaireSQL->getInfo($id);
 
 if (! $info) {
@@ -29,7 +33,7 @@ $doc->setTitle(($id ? "Edition" : "Ajout") . " d'un contact de l'annuaire - Mail
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 $doc->openContent();
 

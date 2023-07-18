@@ -1,12 +1,20 @@
 <?php
 
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosTransactionsSQL $transactionSQL $ */
 
-if (! $droit->isSuperAdmin($userInfo)) {
+[ $init,$transactionSQL ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosTransactionsSQL::class]);
+
+$init->initHelios();
+
+if (! $init->userIsSuperAdmin()) {
     header("Location: index.php");
     exit;
 }
@@ -14,12 +22,11 @@ $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
 
-$transactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $transactionSQL->delete($id);
 
 $msg = "La transaction $id a été éradiquée ....";
 
-if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module_name, null, $userInfo['id'])) {
+if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $init->getModuleName(), null, $init->getUserInfo()['id'])) {
     $msg .= "\nErreur de journalisation.";
 }
 

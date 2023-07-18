@@ -1,22 +1,22 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
-use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
+/** @var Initialisation $init */
+$init = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
 
-
-$me = new User();
-
-if (! $me->authenticate()) {
+if (! $init->getUser()->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isSuper()) {
+if (! $init->getUser()->isSuper()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -45,7 +45,7 @@ $doc->setTitle("Liste des certificats - S²low");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -1,16 +1,25 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosPrepareEnvoiSAE $heliosArchiveControler */
+/** @var string $html */
+
+[ $init, $heliosArchiveControler, $html ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosPrepareEnvoiSAE::class,  'html']);
+
+$init->initHelios();
 
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$heliosArchiveControler = $objectInstancier->get(HeliosPrepareEnvoiSAE::class);
-$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($connexion->getId(), $id);
+
+$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($init->getUserId(), $id);
 
 if (! $id_d) {
     $_SESSION['error'] = "Erreur: " . $heliosArchiveControler->getLastError();
@@ -22,7 +31,7 @@ $msg = "Programmation de l'envoi de la transaction $id à Pastell";
 
 $_SESSION['error'] = $msg;
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "helios", false, $connexion->getId())) {
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "helios", false, $init->getUserId())) {
     $_SESSION['error'] .= "\nErreur de journalisation.\n";
 }
 

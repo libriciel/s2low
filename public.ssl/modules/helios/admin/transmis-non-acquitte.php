@@ -1,13 +1,20 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../../init/init-www-helios.php");
+/** @var Initialisation $init */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+[ $init,$heliosTransactionsSQL ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosTransactionsSQL::class ]);
 
-if ($userInfo['role'] != 'SADM') {
+$init->initHelios();
+
+if (!$init->userIsSuperAdmin()) {
     $_SESSION["error"] = "Super admin only !";
     header("Location: " . WEBSITE);
     exit();
@@ -15,7 +22,7 @@ if ($userInfo['role'] != 'SADM') {
 
 
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
+
 $transactions_list = $heliosTransactionsSQL->getNonAcquitte();
 
 
@@ -29,7 +36,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($init->getUserInfo(), $init->getModulesInfo()));
 
 $doc->closeSideBar();
 
