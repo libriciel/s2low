@@ -10,6 +10,7 @@ use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -48,6 +49,10 @@ class HeliosEnvoiControler
      * @var \S2low\Services\MailActesNotifications\MailerSymfonyFactory
      */
     private MailerSymfonyFactory $mailerFactory;
+    /**
+     * @var \S2lowLegacy\Class\S2lowLogger
+     */
+    private S2lowLogger $logger;
 
     public function __construct(
         SQLQuery $sqlQuery,
@@ -56,7 +61,8 @@ class HeliosEnvoiControler
         WorkerScript $workerScript,
         MailerSymfonyFactory $mailerSymfonyFactory,
         DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
-        FichierCompteur $fichierCompteur
+        FichierCompteur $fichierCompteur,
+        S2lowLogger $logger
     ) {
         $this->sqlQuery = $sqlQuery;
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -68,6 +74,7 @@ class HeliosEnvoiControler
         $this->workerScript = $workerScript;
         $this->mailerFactory = $mailerSymfonyFactory;
         $this->heliosConnectionsConfigurationManager = $heliosConnectionsConfigurationManager;
+        $this->logger = $logger;
     }
 
     public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity)
@@ -237,7 +244,7 @@ class HeliosEnvoiControler
 
     private function updateStatus($transaction_id, $status_id, $message, $user_id)
     {
-        echo $message . "\n";
+        $this->logger->info($message);
         $this->heliosTransactionsSQL->updateStatus($transaction_id, $status_id, $message);
         Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $user_id);
     }
@@ -249,18 +256,18 @@ class HeliosEnvoiControler
     {
         $file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 
-        echo "Préparation de l'envoi de la transaction $transaction_id\n";
+        $this->logger->info("Préparation de l'envoi de la transaction $transaction_id\n");
         $transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
         if (! $this->heliosTransmissionWindowsSQL->canSend($transactionInfo['file_size'])) {
-            echo "La fenêtre d'envoie est pleine \n";
+            $this->logger->info("La fenêtre d'envoie est pleine \n");
             if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)) {
                 $message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
                 Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $transactionInfo['user_id']);
-                echo $message . "\n";
+                $this->logger->info($message);
                 $mail = $this->mailerFactory->getInstance();
                 $mail->addRecipient(EMAIL_ADMIN);
-                $mail->sendMail("Transaction Helios bloqué", $message);
+                $mail->sendMail("Transaction Helios bloquée", $message);
                 $this->heliosTransactionsSQL->setSendWarning($transaction_id);
             }
             return;
@@ -270,20 +277,20 @@ class HeliosEnvoiControler
 
         $completeName = $this->createCompleteName($transactionInfo['siren']);
         $this->heliosTransactionsSQL->setCompleteName($transaction_id, $completeName);
-        echo "Nom du fichier à envoyer : $completeName\n";
+        $this->logger->info("Nom du fichier à envoyer : $completeName");
 
         $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
 
         $file_path_with_complete_name = $file_sending_repository . "/" . $completeName;
         if (! copy($file_path, $file_path_with_complete_name)) {
-            echo "Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name";
+            $this->logger->error("Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name");
             return;
         }
         if (HELIOS_ZIP_BEFORE_SEND) {
             $file_to_send = $file_sending_repository . "/" . $transactionInfo['sha1'] . ".zip";
             $zipArchive = new ZipArchive();
             if (! $zipArchive->open($file_to_send, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)) {
-                echo "Transaction $transaction_id: Impossible d'ouvrir $file_to_send";
+                $this->logger->error("Transaction $transaction_id: Impossible d'ouvrir $file_to_send");
                 return;
             }
             $zipArchive->addFile($file_path_with_complete_name, $completeName);
@@ -329,7 +336,7 @@ class HeliosEnvoiControler
             $this->heliosConnectionsConfigurationManager
                 ->get($usePasstrans)->sendFileOnUniqueConnection($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
         } catch (Exception $e) {
-            echo "Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : " . $e->getMessage() . "\n";
+            $this->logger->error("Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : " . $e->getMessage());
             unlink($file_path_with_complete_name);
             return;
         }
