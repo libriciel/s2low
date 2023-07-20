@@ -10,8 +10,11 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 class HeliosEnvoiWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-envoi';
-
-
+    public const PHEANSTALK_TTR = 3600;         // Si la vitesse de transfert est lente, un flux peut prendre bcp
+                                                // de temps à envoyer ... On veut que le job reste reserved
+                                                // Le risque est que le traitement du tube soit bloqué, mais comme on a
+                                                // plusieurs Worker, ça devrait être ok.
+                                                // Idéalement, on ferait un job.touch , mais je ne vois pas comment ...
     private $heliosEnvoiControler;
     private $heliosTransactionsSQL;
 
