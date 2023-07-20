@@ -75,12 +75,21 @@ class WorkerRunnerWithDataFromBeanstalkd
     {
 
         $queue = $this->beanstalkdWrapper->getQueue($this->worker->getQueueName());
-        $this->s2lowLogger->info("Démarrage en mode beanstalkd");
+        $this->s2lowLogger->info("Démarrage de {$this->worker->getQueueName()} en mode beanstalkd");
 
         $this->sigTermHandler->setExitOnSignal(true);
 
         $nbJobsTraités = 0;
-        while ($job = $queue->reserve()) {
+        $nbIterationsAVide = 0;                          // On va relancer périodiquement le worker
+        while ($nbIterationsAVide < 10) {                // Si aucun job, toutes les 10 iterations
+            $job = $queue->reserve(30);           // On attend au max 30s un job dispo
+                                                         // Ce qui fait une boucle à vide de 5 minutes
+            if (!$job) {                                 // Et on logge si aucun job disponible.
+                $nbIterationsAVide++;
+                $this->s2lowLogger->info("Aucun job à traiter.");
+                continue;
+            }
+
             $this->sigTermHandler->setExitOnSignal(false);
             $data = "undefined";
             try {
@@ -117,7 +126,7 @@ class WorkerRunnerWithDataFromBeanstalkd
             }
             if ($this->sigTermHandler->isSigtermCalled()) {
                 $this->s2lowLogger->info("Exit on signal (after traitement)" . $this->sigTermHandler->getLastSigNo());
-                return true;
+                break;
             }
             $this->sigTermHandler->setExitOnSignal(true);
         }
