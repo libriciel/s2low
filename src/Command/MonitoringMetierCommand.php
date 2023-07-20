@@ -2,6 +2,7 @@
 
 namespace S2low\Command;
 
+use S2low\Services\Helios\HeliosEnvoiWorkerFactory;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\BeanstalkdWrapper;
@@ -29,10 +30,12 @@ class MonitoringMetierCommand extends Command
         ActesTransactionsSQL $actesTransactionsSQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         BeanstalkdWrapper $beanstalkdWrapper,
+        HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->beanstalkdWrapper = $beanstalkdWrapper;
+        $this->heliosEnvoiWorkerFactory = $heliosEnvoiWorkerFactory;
         parent::__construct();
     }
 
@@ -162,15 +165,38 @@ class MonitoringMetierCommand extends Command
 
         $tubeStats = $this->beanstalkdWrapper->getQueue('helios-envoi')->statsTube('helios-envoi');
 
-        $resultats['current-jobs-urgent'] = $tubeStats['current-jobs-urgent'];
-        $resultats['current-jobs-ready'] = $tubeStats['current-jobs-ready'];
-        $resultats['current-jobs-reserved'] = $tubeStats['current-jobs-reserved'];
-        $resultats['current-jobs-delayed'] = $tubeStats['current-jobs-delayed'];
-        $resultats['current-jobs-buried'] = $tubeStats['current-jobs-buried'];
-        $resultats['total-jobs'] = $tubeStats['total-jobs'];
-        $resultats['current-using'] = $tubeStats['current-using'];
-        $resultats['current-watching'] = $tubeStats['current-watching'];
-        $resultats['current-waiting'] = $tubeStats['current-waiting'];
+        $resultats['current-jobs-urgent'] = (int) $tubeStats['current-jobs-urgent'];
+        $resultats['current-jobs-ready'] = (int) $tubeStats['current-jobs-ready'];
+        $resultats['current-jobs-reserved'] = (int) $tubeStats['current-jobs-reserved'];
+        $resultats['current-jobs-delayed'] = (int) $tubeStats['current-jobs-delayed'];
+        $resultats['current-jobs-buried'] = (int) $tubeStats['current-jobs-buried'];
+        $resultats['total-jobs'] = (int) $tubeStats['total-jobs'];
+        $resultats['current-using'] = (int)$tubeStats['current-using'];
+        $resultats['current-watching'] = (int) $tubeStats['current-watching'];
+        $resultats['current-waiting'] = (int) $tubeStats['current-waiting'];
+
+        $heliosEnvoiWorkerGateway = $this->heliosEnvoiWorkerFactory->get(false);
+        $nbIdToSendGateway = count($heliosEnvoiWorkerGateway->getAllId());
+
+        $resultats['nbIdToSendGateway'] = $nbIdToSendGateway;
+
+        $tubeStatsPT = $this->beanstalkdWrapper->getQueue('helios-envoi-passtrans')
+            ->statsTube('helios-envoi-passtrans');
+
+        $resultats['current-jobs-urgent-passtrans'] = (int) $tubeStatsPT['current-jobs-urgent'];
+        $resultats['current-jobs-ready-passtrans'] = (int) $tubeStatsPT['current-jobs-ready'];
+        $resultats['current-jobs-reserved-passtrans'] = (int) $tubeStatsPT['current-jobs-reserved'];
+        $resultats['current-jobs-delayed-passtrans'] = (int) $tubeStatsPT['current-jobs-delayed'];
+        $resultats['current-jobs-buried-passtrans'] = (int) $tubeStatsPT['current-jobs-buried'];
+        $resultats['total-jobs-passtrans'] = (int) $tubeStatsPT['total-jobs'];
+        $resultats['current-using-passtrans'] = (int)$tubeStatsPT['current-using'];
+        $resultats['current-watching-passtrans'] = (int) $tubeStatsPT['current-watching'];
+        $resultats['current-waiting-passtrans'] = (int) $tubeStatsPT['current-waiting'];
+
+        $heliosEnvoiWorkerPasstrans = $this->heliosEnvoiWorkerFactory->get(true);
+        $nbIdToSendGateway = count($heliosEnvoiWorkerPasstrans->getAllId());
+
+        $resultats['nbIdToSendPasstrans'] = $nbIdToSendGateway;
 
         echo json_encode($resultats);
         return 0;
