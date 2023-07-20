@@ -4,6 +4,7 @@ namespace S2low\Command;
 
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,11 +20,19 @@ class MonitoringMetierCommand extends Command
      * @var \S2lowLegacy\Model\HeliosTransactionsSQL
      */
     private HeliosTransactionsSQL $heliosTransactionsSQL;
+    /**
+     * @var \S2lowLegacy\Class\BeanstalkdWrapper
+     */
+    private BeanstalkdWrapper $beanstalkdWrapper;
 
-    public function __construct(ActesTransactionsSQL $actesTransactionsSQL, HeliosTransactionsSQL $heliosTransactionsSQL)
-    {
+    public function __construct(
+        ActesTransactionsSQL $actesTransactionsSQL,
+        HeliosTransactionsSQL $heliosTransactionsSQL,
+        BeanstalkdWrapper $beanstalkdWrapper,
+    ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
+        $this->beanstalkdWrapper = $beanstalkdWrapper;
         parent::__construct();
     }
 
@@ -150,6 +159,18 @@ class MonitoringMetierCommand extends Command
             "delaiHeliosEnAttenteTransmis_pt" => $delaiHeliosEnAttenteTransmis_pt,
             "delaiHeliosTransmisAcquittement_pt" => $delaiHeliosTransmisAcquittement_pt,
         ];
+
+        $tubeStats = $this->beanstalkdWrapper->getQueue('helios-envoi')->statsTube('helios-envoi');
+
+        $resultats['current-jobs-urgent'] = $tubeStats['current-jobs-urgent'];
+        $resultats['current-jobs-ready'] = $tubeStats['current-jobs-ready'];
+        $resultats['current-jobs-reserved'] = $tubeStats['current-jobs-reserved'];
+        $resultats['current-jobs-delayed'] = $tubeStats['current-jobs-delayed'];
+        $resultats['current-jobs-buried'] = $tubeStats['current-jobs-buried'];
+        $resultats['total-jobs'] = $tubeStats['total-jobs'];
+        $resultats['current-using'] = $tubeStats['current-using'];
+        $resultats['current-watching'] = $tubeStats['current-watching'];
+        $resultats['current-waiting'] = $tubeStats['current-waiting'];
 
         echo json_encode($resultats);
         return 0;

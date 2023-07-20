@@ -2,6 +2,10 @@
 
 ## 5.0.15 -
 
+### Évolutions
+
+- Ajout du monitoring des jobs présents dans la file 'helios-reception' #1046
+
 ### Corrections 
 
 - Eviter les messages beanstalkd 'socket timed out' #1046
