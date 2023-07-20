@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.15 -
+
+### Corrections 
+
+- Eviter les messages beanstalkd 'socket timed out' #1046
+
 ## 5.0.14 - 2023-07-18
 
 ### Corrections
