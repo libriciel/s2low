@@ -2,6 +2,12 @@
 
 ## 5.0.15 - 2023-07-20
 
+### Corrections
+
+- Sur la file helios-envoi, éviter les messages beanstalkd 'The last XXX seconds were executed outside of the lock' #627
+
+## 5.0.15 - 2023-07-20
+
 ### Évolutions
 
 - Ajout du monitoring des jobs présents dans la file 'helios-reception' #1046
