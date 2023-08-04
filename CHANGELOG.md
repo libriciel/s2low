@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.17 - 2023-08-04
+
+### Évolutions
+
+- Prise en compte de la version 5.21 du schema XSD Pes Aller modifié par la DGFiP #762
+
 ## 5.0.16 - 2023-07-20
 
 ### Corrections

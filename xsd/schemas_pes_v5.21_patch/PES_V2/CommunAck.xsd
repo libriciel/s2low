@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- Regles de codifications communes au PES -->
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TDomaineAck">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0">
+            <xs:annotation>
+              <xs:documentation>Technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Signature technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Signature globale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="3">
+            <xs:annotation>
+              <xs:documentation>Signature Bordereau</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="4">
+            <xs:annotation>
+              <xs:documentation>PJ</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="5">
+            <xs:annotation>
+              <xs:documentation>Dépense</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="6">
+            <xs:annotation>
+              <xs:documentation>Recette</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="7">
+            <xs:annotation>
+              <xs:documentation>Rôle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="8">
+            <xs:annotation>
+              <xs:documentation>Budget</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="9">
+            <xs:annotation>
+              <xs:documentation>Etat Actif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Etat Passif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Facture</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="99">
+            <xs:annotation>
+              <xs:documentation>Paramétrage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNumAnoAck">
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ERREUR_CONNECTION_IMPOSSIBLE_A_LA_BASE" />
+          <xs:enumeration value="ERREUR_ENCODING" />
+          <xs:enumeration value="ERREUR_FLUX_VIDE" />
+          <xs:enumeration value="ERREUR_SCHEMA_INCOMPLET" />
+          <xs:enumeration value="ERREUR_CODIFICATION" />
+          <xs:enumeration value="ERREUR_CODIQUE" />
+          <xs:enumeration value="ERREUR_SIRET" />
+          <xs:enumeration value="ERREUR_CODE_COLLECTIVITE_BUDGET" />
+          <xs:enumeration value="ERREUR_VERSION_PES" />
+          <xs:enumeration value="ERREUR_VERSION_PJ" />
+          <xs:enumeration value="ERREUR_SIGNATURE_INVALIDE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_ILLISIBLE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_INCOMPLETE" />
+          <xs:enumeration value="ERREUR_DOUBLON_BORDEREAU" />
+          <xs:enumeration value="ERREUR_DOUBLON_PIECE" />
+          <xs:enumeration value="ERREUR_DOUBLON_LIGNE" />
+          <xs:enumeration value="ERREUR_DOUBLON_PJ" />
+          <xs:enumeration value="ERREUR_PES_PARAM" />
+          <xs:enumeration value="ERREUR_PES_SIGNATURE" />
+          <xs:enumeration value="ERREUR_PES_PARAM_SIGNATURE" />
+          <xs:enumeration value="ERREUR_CERTIFICAT" />
+          <xs:enumeration value="ERREUR_TIMEOUT" />
+          <xs:enumeration value="ERREUR_TAILLE_BORDEREAUX" />
+          <xs:enumeration value="ERREUR_TAILLE_PIECE" />
+          <xs:enumeration value="ERREUR_TAILLE_LIGNE" />
+          <xs:enumeration value="ERREUR_PJ_SIGNEE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_EXTERNE" />
+          <xs:enumeration value="ERREUR_AUTRE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INVALIDE" />
+          <xs:enumeration value="ERREUR_MONTANT_TVA_ZERO_NEGATIF" />
+          <xs:enumeration value="ERREUR_PJ" />
+          <xs:enumeration value="ERREUR_CUMUL_MONTANTS" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INVALIDE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_ILLISIBLE" />
+          <xs:enumeration value="ERREUR_SIGNATURE_BORDEREAU_INCOMPLETE" />
+		  <xs:enumeration value="GXML_TIERS_ASAP_ABSENT_OU_ERRONE" />
+		<xs:enumeration value="GXML_SEQ_DECOUPAGE_INCOH" />
+		<xs:enumeration value="GXML_CIVILITE_PRENOM_ABS" />
+		<xs:enumeration value="GXML_NON_AUTORIS_EDITION_ASAP_FCT" />
+		<xs:enumeration value="GXML_BLOC_ADRESSE_EMETTEUR_ABSENT" />
+		<xs:enumeration value="GXML_BALISE_DEBFACT_INTERDITE_HORS_M21_M22" />
+		<xs:enumeration value="GXML_BALISE_FINFACT_INTERDITE_HORS_M21_M22" />
+		<xs:enumeration value="GXML_TITRE_NON_MONO_DEBITEUR" />
+		<xs:enumeration value="GXML_TYPNAT_TIT_NON_ELIG_ASAP" />
+		<xs:enumeration value="GXML_TITRE_SANS_REFERENCE_PJ" />
+		<xs:enumeration value="GXML_RCE_ERREUR_PES_PARAM" />
+		<xs:enumeration value="GXML_DEP_ERREUR_PES_PARAM" />
+		<xs:enumeration value="GXML_PES_PJ_ERREUR_PES_PARAM" />
+		<xs:enumeration value="GXML_FINESS_INVALIDE" />
+		<xs:enumeration value="GXML_FINESS_A_TORT" />
+		<xs:enumeration value="GXML_SIGNATURE_ABSENTE" />
+		<xs:enumeration value="GXML_SIGNATURE_NON_AUT" />
+		<xs:enumeration value="GXML_DEP_FLUX_NON_PARAM" />
+		<xs:enumeration value="GXML_CLE_IBAN_ERR" />
+		<xs:enumeration value="GXML_DOM_IBAN_ERR" />
+		<xs:enumeration value="GXML_ID_NAT_TIERS_ABS" />
+		<xs:enumeration value="GXML_CAT_NAT_TIERS_INCOH" />
+		<xs:enumeration value="GXML_DDN_MALADE_A_TORT" />
+		<xs:enumeration value="GXML_TAILLE_MAX_QUANTITE" />
+		<xs:enumeration value="GXML_BALISE_QUANTITE_PAS_SERVI" />
+		<xs:enumeration value="GXML_BUDGET_BLOQUE_TRF" />
+		<xs:enumeration value="GXML_TIT_CPTE_BANC_NON_RENSEIGNE" />
+		<xs:enumeration value="GXML_IBAN_ETRANGER_INTERDIT" />
+		<xs:enumeration value="GXML_BALISE_UNITE1_SANS_QUANTITE" />
+		<xs:enumeration value="GXML_ANCIEN_ICS_NON_VALIDE" />
+		<xs:enumeration value="GXML_PIECE_ORIG_ABS" />
+		<xs:enumeration value="GXML_MONTANT_TVA_PRESENT_A_TORT" />
+		<xs:enumeration value="GXML_MONTANT_TVA_ABSENT_A_TORT" />
+		<xs:enumeration value="GXML_ERR_TECH_SERVICE" />
+		<xs:enumeration value="GXML_PC_INEXISTANT" />
+		<xs:enumeration value="GXML_BC_INEXISTANT" />
+		<xs:enumeration value="GXML_BC_NON_ACTIF" />
+		<xs:enumeration value="GXML_SIRET_INVALIDE" />
+		<xs:enumeration value="GXML_NON_AUTORIS_EDITION_ASAP" />
+		<xs:enumeration value="GXML_BUD_FLUX_NON_PARAM" />
+		<xs:enumeration value="GXML_BUD_DOC_NON_AUT" />
+		<xs:enumeration value="GXML_DOUBLON_NUM_PIECE" />
+		<xs:enumeration value="GXML_DOUBLON_NUM_LIGNE_PIECE" />
+		<xs:enumeration value="GXML_ADRESSE2_EMETTEUR_ABSENT" />
+		<xs:enumeration value="GXML_OPERATION_NOMENCLATURE_INCOMP" />
+		<xs:enumeration value="GXML_ABSENCE_CODE_PAYS" />
+		<xs:enumeration value="GXML_COMPTE_FONCTION_ABSENT" />
+		<xs:enumeration value="GXML_RESIDENCE_EMETTEUR_ERRONE" />
+		<xs:enumeration value="GXML_CODE_TIPI_DEBITEUR_ABSENT" />
+		<xs:enumeration value="GXML_ADRESSE_TIPI_DEBITEUR_ABSENT" />
+		<xs:enumeration value="GXML_DONNEE_SIGN_ABSENTE" />
+		<xs:enumeration value="GXML_ADR1_CENTRE_ENCAISS_PRESENTE" />
+		<xs:enumeration value="GXML_ADR2_CENTRE_ENCAISS_PRESENTE" />
+		<xs:enumeration value="GXML_ADR2_CENTRE_FIN_PUBL_ABSENTE" />
+		<xs:enumeration value="GXML_TIERS_ASAP_RESIDENCE_ERRONE" />
+		<xs:enumeration value="GXML_FORM_BANC_ERR" />
+		<xs:enumeration value="GXML_REF_BANC_CENT_FIN_PUBL_ERR" />
+		<xs:enumeration value="GXML_BLOC_ADRESSE_DEBITEUR_ABSENT" />
+		<xs:enumeration value="GXML_ADRESSE2_DEBITEUR_ABSENT" />
+		<xs:enumeration value="GXML_CODE_PAYS_DEBITEUR_ABSENT" />
+		<xs:enumeration value="GXML_ID_PAYS_BANC_NON_RENSEIGNE" />
+		<xs:enumeration value="GXML_ID_BANC_INT_NON_RENSEIGNE" />
+		<xs:enumeration value="GXML_RIB_NON_VALIDE" />
+		<xs:enumeration value="GXML_BICIBAN_NON_VALIDE" />
+		<xs:enumeration value="GXML_DONNEES_ASAP_POSITIVE" />
+		<xs:enumeration value="GXML_MONT_TVA_ASAP_POSITIVE" />
+		<xs:enumeration value="GXML_REF_TITRE_ABSENTE" />
+		<xs:enumeration value="GXML_LIGNEOPT_ABSENTE" />
+		<xs:enumeration value="GXML_CUMUL_ANNUEL_ABS" />
+		<xs:enumeration value="GXML_TYPE_NAT_PIECE_INCOMP" />
+		<xs:enumeration value="GXML_COMPTE_FONCTION_A_TORT" />
+		<xs:enumeration value="GXML_OPERATION_A_TORT" />
+		<xs:enumeration value="GXML_OPERATION_INCORRECTE" />
+		<xs:enumeration value="GXML_DOM_BANCAIRE_ABSENTE" />
+		<xs:enumeration value="GXML_COMPTE_TVA_A_TORT" />
+		<xs:enumeration value="GXML_PIECE_ORIG_INCOMP" />
+		<xs:enumeration value="GXML_EXERCICE_PIECE_ORIG_INCOMP" />
+		<xs:enumeration value="GXML_NUMLIG_PIECE_ORIG_INCOMP" />
+		<xs:enumeration value="GXML_GED_FLUX_NON_PARAM" />
+		<xs:enumeration value="GXML_ID_UNIQUE_DEJA_INT" />
+		<xs:enumeration value="GXML_DOM_BANCAIRE_A_TORT" />
+		<xs:enumeration value="GXML_NUM_SS_PRESENT_A_TORT" />
+		<xs:enumeration value="GXML_CLE_ID_NAT_TIERS_INVALIDE" />
+		<xs:enumeration value="GXML_DDN_MALADE_ABS" />
+		<xs:enumeration value="GXML_TYPE_EMPLOYEUR_A_TORT" />
+		<xs:enumeration value="GXML_TYPE_BORD_PIECE_INCOMP" />
+		<xs:enumeration value="GXML_BALISE_MOD_RECOUV_ABS" />
+		<xs:enumeration value="GXML_MAX_LIGNE_FACT_INDIV" />
+		<xs:enumeration value="GXML_PJ_ABSENTE" />
+		<xs:enumeration value="GXML_BALISE_REF_BDF_ABS" />
+		<xs:enumeration value="GXML_TYPE_ID_NAT_TIERS_ABS" />
+		<xs:enumeration value="GXML_NUM_ROLE_INCOMPAT_TYPE_PIECE" />
+		<xs:enumeration value="GXML_NUMERO_BORDEREAU_DEJA_PRESENT" />
+		<xs:enumeration value="GXML_CIVILITE_PRENOM_A_TORT" />
+		<xs:enumeration value="GXML_PIECE_ORIG_A_TORT" />
+		<xs:enumeration value="GXML_FINESS_GEO_A_TORT" />
+		<xs:enumeration value="GXML_FINESS_GEO_ERRONE" />
+		<xs:enumeration value="GXML_CODE_ETABLISSEMENT_A_TORT" />
+		<xs:enumeration value="GXML_DATE_MAJO_ABSENTE" />
+		<xs:enumeration value="GXML_DATE_MAJO_A_TORT" />
+		<xs:enumeration value="GXML_TAUX_MAJO_ABSENT" />
+		<xs:enumeration value="GXML_TAUX_MAJO_A_TORT" />
+		<xs:enumeration value="GXML_MT_TVA_BORD_NON_VALORISE" />
+		<xs:enumeration value="GXML_REF_BANC_TIERS_ABSENTES" />
+		<xs:enumeration value="GXML_EGAL_ASS_DEBIT_UTIL_A_TORT" />
+		<xs:enumeration value="GXML_NATURE_AYANT_DROIT_A_TORT" />
+		<xs:enumeration value="GXML_NUM_CONVENTION_ABSENT" />
+		<xs:enumeration value="GXML_BUD_PROJBUD_TRUE" />
+		<xs:enumeration value="GXML_RCE_FLUX_NON_PARAM" />
+		<xs:enumeration value="GXML_ORMC_MON_DEBITEUR" />
+		<xs:enumeration value="GXML_LIGNE_TITRE_PREL_IDENTIQUE" />
+		<xs:enumeration value="GXML_LIGNE_TITRE_REF_BANCAIRE_IDENTIQUE" />
+		<xs:enumeration value="GXML_DATE_FIN_FACT_INCOH" />
+		<xs:enumeration value="GXML_DATE_DEB_FACT_INCOH" />
+		<xs:enumeration value="GXML_BUD_NUMDEC_ABSENT" />
+		<xs:enumeration value="GXML_CODE_OPERATION_A_TORT" />
+		<xs:enumeration value="GXML_INFO_PRELEVEMENT_A_TORT" />
+		<xs:enumeration value="GXML_SEQ_PRES_INCOMPATIBLE" />
+		<xs:enumeration value="GXML_ANCIEN_BANQUE_IBAN_EXCLUSIF" />
+		<xs:enumeration value="GXML_BUD_MTPREV_ABSENT" />
+		<xs:enumeration value="GXML_FLUX_PES_RETOUR_NON_TROUVE" />
+		<xs:enumeration value="GXML_FLUX_PES_RETOUR_DEJA_ACQUITTE" />
+		<xs:enumeration value="GXML_BALISE_UNITE2_SANS_QUANTIT2" />
+		<xs:enumeration value="GXML_MNT_FCT_INF_EDITION_TIP" />
+		<xs:enumeration value="GXML_CODE_PAYS_ERRONE" />
+		<xs:enumeration value="GXML_BALISE_REF_BDF_ERRONEE" />
+		<xs:enumeration value="GXML_MODALITES_CONTEST_NON_RENSG" />
+		<xs:enumeration value="GXML_PLS_FACTURES_REF_TITRE_IDENTIQUE" />
+		<xs:enumeration value="GXML_CODE_PAYS_INCONNU" />
+		<xs:enumeration value="GXML_FORMAT_BANCAIRE_INTERDIT" />
+		<xs:enumeration value="GXML_BLOC_ADRESSE_DESTINATAIRE_ABSENT" />
+		<xs:enumeration value="GXML_ADRESSE2_DESTINATAIRE_ABSENT" />
+		<xs:enumeration value="GXML_ABSENCE_CODE_PAYS_DESTINAIRE" />
+		<xs:enumeration value="GXML_CODE_PAYS_ERRONE_DESTINATAIRE" />
+		<xs:enumeration value="GXML_NUM_SEQUENCE_ATTENDUE_MCH" />
+		<xs:enumeration value="GXML_PREMIER_FLUX_NON_SEQ_UN" />
+		<xs:enumeration value="GXML_PREMIER_FLUX_MCH_NON_CORR" />
+		<xs:enumeration value="GXML_ACHETEURS_NON_DISTINCTS" />
+		<xs:enumeration value="GXML_ACHETEUR_BC_NON_ACTIF" />
+		<xs:enumeration value="GXML_OPERATEURS_NON_DISTINCTS" />
+		<xs:enumeration value="GXML_NUM_SS_TRAITANT_NON_DISTINCT" />
+		<xs:enumeration value="GXML_TYPE_GROUPT_INCOMPATIBLE" />
+		<xs:enumeration value="GXML_TYPE_NB_ENTREP_INCOMPATIBLE" />
+		<xs:enumeration value="GXML_MTT_EST_MCH_INF_MTT_NOTIF" />
+		<xs:enumeration value="GXML_ACHT_NON_ACHT_MARCHE" />
+		<xs:enumeration value="GXML_DISC_MTT_ACHT_EST_MTT_NOT" />
+		<xs:enumeration value="GXML_TITULAIRE_NON_OPERATEUR" />
+		<xs:enumeration value="GXML_TIT_ACHT_NON_DISTINCTS" />
+		<xs:enumeration value="GXML_SST_NON_OPERATEUR" />
+		<xs:enumeration value="GXML_SST_TIT_NON_DISTINCTS" />
+		<xs:enumeration value="GXML_SIRET_OPERATEUR_INVALIDE" />
+		<xs:enumeration value="GXML_CLE_BIC_IBAN_ERRONEE" />
+		<xs:enumeration value="GXML_BIC_ABS_DOM_BANC_NON_FR" />
+		<xs:enumeration value="GXML_SIRET_EMETTEUR_ABSENT_REF" />
+		<xs:enumeration value="GXML_SIRET_DESTINATAIRE_ABST_REF" />
+		<xs:enumeration value="GXML_STRUCT_PUB_EMET_NON_ACTIVE" />
+		<xs:enumeration value="GXML_CODE_SERVICE_DEST_INCONNU" />
+		<xs:enumeration value="GXML_STRUCT_PUB_DEST_NON_ACTIVE" />
+		<xs:enumeration value="GXML_DELAI_GARANTIE_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_VENTIL_ACHT_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_SIRET_ID_ACCORD_CADRE_ABS" />
+		<xs:enumeration value="GXML_NUM_SEQUENCE_ATTENDUE_CCN" />
+		<xs:enumeration value="GXML_PREMIER_FLUX_CCN_NON_SEQ_UN" />
+		<xs:enumeration value="GXML_PREMIER_FLUX_CCN_NON_CORR" />
+		<xs:enumeration value="GXML_SIRET_CONCESSIONNAIRE_INVALIDE" />
+		<xs:enumeration value="GXML_DOUBLON_CONCESSIONNAIRE" />
+		<xs:enumeration value="GXML_FCT_DEB_NON_PHYS_SUR_ASAP_PATIENTS" />
+		<xs:enumeration value="GXML_BLOC_LIGNE_FACTURE_INCOHERENT" />
+		<xs:enumeration value="GXML_LIGNE_FACTURE_TOTAL_A_PAYER_ABSENTS" />
+		<xs:enumeration value="GXML_DOSSIER_LIGNE_FACTURE_PATIENT_ABSENTS" />
+		<xs:enumeration value="GXML_TIP_A_TORT_POUR_ASAP_PATIENTS" />
+		<xs:enumeration value="GXML_NON_MALADE_SUR_ASAP_PATIENTS" />
+		<xs:enumeration value="GXML_DEB_PHYS_ABSENT_SUR_ASAP_PATIENTS" />
+		<xs:enumeration value="GXML_PLUSIEURS_MALADES" />
+		<xs:enumeration value="GXML_ACTIVATION_ASAP_PATIENT" />
+		<xs:enumeration value="GXML_ASAP_ORMC_FICH_PJ_PAS_PDF" />
+		<xs:enumeration value="GXML_ASAP_ORMC_NB_PAGE_MAX_DEPASSE" />
+		<xs:enumeration value="GXML_ASAP_ORMC_PDS_PJ_MAX_DEPASSE" />
+		<xs:enumeration value="GXML_ASAP_ORMC_FORMAT_PAYSAGE" />
+		<xs:enumeration value="GXML_CFU_COND_EXER_PAS_PARAM" />
+		<xs:enumeration value="GXML_CFU_REFCOMPTA_ABSENT" />
+		<xs:enumeration value="GXML_CFU_EXERCICE_CLOS" />
+		<xs:enumeration value="GXML_CFU_ORDO_PAS_XML" />
+		<xs:enumeration value="GXML_CFU_ANNEXES_PAS_PDF" />
+		<xs:enumeration value="GXML_BA_MULTI_BUDGET_A_TORT" />
+		<xs:enumeration value="GXML_ASAP_ORMC_CODE_EDITION_NON_AUTORISE" />
+		<xs:enumeration value="GXML_ASAP_ORMC_ABSENCE_REF_PJ" />
+		<xs:enumeration value="GXML_ASAP_ORMC_A_EDITER_NON_DISPO" />
+		<xs:enumeration value="GXML_BUD_INCOHERENCE_PJ" />
+		<xs:enumeration value="GXML_CODE_RD_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_OPE_BUDG_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_MONTANT_RESTANT_DU_ABSENT" />
+		<xs:enumeration value="GXML_MONTANT_AVANCE_ABSENT" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_A_TORT" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_HORS_METROPOLE" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_EN_METROPOLE" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_PAYS_INCONNU" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_DEPARTEMENT_INCONNU" />
+		<xs:enumeration value="GXML_LIEU_DE_NAISS_COMMUNE_INCONNUE" />
+		<xs:enumeration value="GXML_DISC_ACCORD_CADRE_ID_MAR" />
+		<xs:enumeration value="GXML_FORMAT_ID_TIERS_INCORRECT" />
+		<xs:enumeration value="GXML_CREANC_NON_PHY_NFP_A_TORT" />
+		<xs:enumeration value="GXML_DEBITEUR_NON_PHY_NFP_A_TORT" />
+		<xs:enumeration value="GXML_ABSENCE_DEBITEUR_PRINCIPAL" />
+		<xs:enumeration value="GXML_EMPLOYEUR_MULTIPLE" />
+		<xs:enumeration value="GXML_MALADE_MULTIPLE" />
+		<xs:enumeration value="GXML_ASSURE_MULTIPLE" />
+		<xs:enumeration value="GXML_MAR_ID_NB_CARACTERE" />
+		<xs:enumeration value="GXML_DISC_MTT_ACHT_OPER" />
+		<xs:enumeration value="GXML_DISC_MTT_MCH_ACHT" />
+		<xs:enumeration value="GXML_DISC_MTT_ACTU_ACHT_OPER" />
+		<xs:enumeration value="GXML_DISC_MTT_ACTU_MCH_ACHT" />
+		<xs:enumeration value="GXML_BUD_GROUPE_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_ACHETEUR_BA_NON_AUTORISE" />
+		<xs:enumeration value="GXML_ACHETEUR_BR_NON_AUTORISE" />
+		<xs:enumeration value="GXML_NUM_ENGAGEMENT_OBLIGATOIRE" />
+		<xs:enumeration value="GXML_PJ_JUSTIFICATIVE_VIDE" />
+		<xs:enumeration value="GXML_ID_MARCHE_INCOHERENT" />
+		<xs:enumeration value="GXML_MONTANT_VENTIL_MARCHE_MANDAT_INCOHERENT" />
+		<xs:enumeration value="GXML_MONTANT_VENTIL_MARCHE_TITRE_INCOHERENT" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
