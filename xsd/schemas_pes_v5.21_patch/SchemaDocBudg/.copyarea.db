@@ -1,0 +1,21 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\SchemaDocBudg
+2
+11
+f:Simple_Type.xsd|1|1894aa15adc|2c72|2fe43d98|e88c6cb8fb8711eb8bcc525400473d7b|0
+6:xmlenc|2|0|0|0|80252c978ed011e590ae00163e0c063f|0
+7:xmldsig|2|0|0|0|7fe52c7f8ed011e590ae00163e0c063f|0
+10:CommunBudget.xsd|1|1894aa15acc|37e3|dc257052|d0c182a88af911eb8fbc525400473d7b|0
+15:Class_PJReference.xsd|1|1894aa15aad|79e|46047336|a5896e10d3f411e6958100163e0c063f|0
+10:Class_Budget.xsd|1|1894aa15a90|330a|1031edef|6b3225bfb6da11ea8a7a525400473d7b|0
+5:xades|2|0|0|0|7f952c678ed011e590ae00163e0c063f|0
+13:Class_Signature.xsd|1|1894aa15aad|42c|e44658f7|988532b78ed011e590ae00163e0c063f|0
+a:readme.txt|1|1894aa15adc|2a2|f19bdc8b|8f6530478ed011e590ae00163e0c063f|0
+14:Class_Scellement.xsd|1|1894aa15aad|775|5dc68c51|53b47e2fa4a611ea96f5525400473d7b|0
+10:CommunAnnexe.xsd|1|1894aa15aad|395|6b86175d|d08182a08af911eb8fbc525400473d7b|0
+16:DocumentBudgetaire.xsd|1|1894aa15adc|290|b57de385|8ef530278ed011e590ae00163e0c063f|0
+11:Class_Annexes.xsd|1|1894aa15a80|2de|87bdf593|d14182b88af911eb8fbc525400473d7b|0
+15:Class_LigneBudget.xsd|1|1894aa15aad|4100|b15d0e72|b8dacf288dba11ec9223525400473d7b|0
+b:schemas.xml|1|1894aa15adc|b694|e5018979|8fa530578ed011e590ae00163e0c063f|0
+1c:Class_DocumentBudgetaire.xsd|1|1894aa15aad|1ed7|d0534bb1|d18182c08af911eb8fbc525400473d7b|0
+b:Rapport.xsd|1|1894aa15adc|1d1|af079f20|6cf225ffb6da11ea8a7a525400473d7b|0
