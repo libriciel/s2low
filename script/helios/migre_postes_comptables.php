@@ -15,7 +15,8 @@ const CORRESPONDANCE_POSTE_COMPTABLE_FTP = [
     "SL2M" => "MHPCE21",
     "SL3M" => "MHPCE31",
     "SL4M" => "MHPCE41",
-    "SL5M" => "MHPCE51"
+    "SL5M" => "MHPCE51",
+    "SL7V" => "VHPCE71"
 ];
 
 const COL = [
@@ -226,19 +227,11 @@ foreach ($authorities as $id => $authority) {
         if ($execute) {
             $sqlQuery->query(
                 "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
-                $collectivite["SlCible"],
+                CORRESPONDANCE_POSTE_COMPTABLE_FTP[$authority["SlCible"]],
                 $id
             );
         }
         echo $action . " : OK\n";
-
-        if ($execute) {
-            $sqlQuery->query(
-                "UPDATE authorities SET helios_ftp_dest=? WHERE id=?",
-                CORRESPONDANCE_POSTE_COMPTABLE_FTP[$collectivite["SlCible"]],
-                $id
-            );
-        }
     } catch (Exception $e) {
         echo "$action : KO : " . $e->getMessage() . "\n";
     }

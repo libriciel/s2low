@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.17 -
+
+### Corrections
+
+- Correction du script permettant de migrer les postes comptables #1069
+
 ## 5.0.17 - 2023-08-04
 
 ### Évolutions
