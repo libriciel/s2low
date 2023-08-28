@@ -34,6 +34,8 @@ if (
         &&
         ((int)$argv[1] > 0) && ((int)$argv[1] < 1000)
 ) {
+    $departement = (int)$argv[1];
+
     $actesClassificationCreation = new ActesClassificationCreation();
     $actesClassificationCreation->sendToAllAuthorities($departement);
 }
