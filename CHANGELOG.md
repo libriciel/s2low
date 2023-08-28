@@ -5,6 +5,7 @@
 ### Corrections
 
 - Correction du script permettant de migrer les postes comptables #1069
+- Correction de l'encodage de api-list-login.php #1073
 
 ## 5.0.17 - 2023-08-04
 
