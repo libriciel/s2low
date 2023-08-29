@@ -1,12 +1,15 @@
 # Changelog
 
-## 5.0.17 -
+## 5.0.18 -
 
 ### Corrections
 
 - Correction du script permettant de migrer les postes comptables #1069
 - Correction de l'encodage de api-list-login.php #1073
 - Permettre de prendre en compte le département dans le script actes-send-classification-for-all-authorities-php #1070
+
+### Évolutions
+- Permettre de désactiver helios-reception-passtrans #1068
 
 ## 5.0.17 - 2023-08-04
 
