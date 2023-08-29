@@ -7,6 +7,7 @@
 - Correction du script permettant de migrer les postes comptables #1069
 - Correction de l'encodage de api-list-login.php #1073
 - Permettre de prendre en compte le département dans le script actes-send-classification-for-all-authorities-php #1070
+- Empêcher une erreur de bloquer un cron #1067
 
 ### Évolutions
 - Permettre de désactiver helios-reception-passtrans #1068

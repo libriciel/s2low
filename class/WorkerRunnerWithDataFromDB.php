@@ -49,7 +49,7 @@ class WorkerRunnerWithDataFromDB
             $seconds = $e->getTimeToWait();
             $this->s2lowLogger->info("Pausing queue for $seconds seconds");
             sleep($seconds);
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $message = $e->getMessage();
             $this->s2lowLogger->critical(
                 "Erreur lors de l'execution du script : " . $message,
