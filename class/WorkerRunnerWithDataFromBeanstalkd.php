@@ -107,7 +107,7 @@ class WorkerRunnerWithDataFromBeanstalkd
                     $this->s2lowLogger->info("Exit after $nbJobsTraités jobs executed");
                     return true;
                 }
-            } catch (Exception $e) {
+            } catch (\Throwable $e) {
                 $this->s2lowLogger->error(
                     $e->getMessage(),
                     [$data,$e->getTraceAsString()]
