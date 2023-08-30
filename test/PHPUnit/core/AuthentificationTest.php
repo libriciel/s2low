@@ -16,6 +16,7 @@ class AuthentificationTest extends S2lowTestCase
      */
     private function authenticateWith($expected)
     {
+        /** @var Authentification $authentification */
         $authentification = $this->getObjectInstancier()->get(Authentification::class);
         $this->assertEquals($expected, $authentification->authenticate());
     }
@@ -222,7 +223,7 @@ class AuthentificationTest extends S2lowTestCase
 
         $environment = $this->getObjectInstancier()->get(Environnement::class);
 
-        $httpsConnexion = new HttpsConnexion($environment, $certHandler);
+        $httpsConnexion = new HttpsConnexion($environment, $certHandler, true);
 
         $authentification = new Authentification(
             $environment,
