@@ -27,7 +27,7 @@ class HttpConnexionTest extends S2lowTestCase
 
         $certificateHandler->expects($this->once())->method('getInfo')->willReturn(false);
 
-        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler, true);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $this->assertFalse($httpConnexion->getCertificateInfo());
     }
 
@@ -50,7 +50,7 @@ class HttpConnexionTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler, true);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $credentials = $httpConnexion->getCredentialsFromPost();
 
         $this->assertEquals("login", $credentials["login"]);

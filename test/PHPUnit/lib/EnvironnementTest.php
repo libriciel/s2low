@@ -13,7 +13,7 @@ class EnvironnementTest extends PHPUnit_Framework_TestCase
         $request = array();
         $session = array();
         $server = array();
-        $environnement = new Environnement($get, $post, $request, $session, $server);
+        $environnement = new Environnement($get, $post, $request, $session, $server, false);
         $this->assertInstanceOf(SessionWrapper::class, $environnement->session());
         $this->assertInstanceOf(Recuperateur::class, $environnement->get());
         $this->assertInstanceOf(Recuperateur::class, $environnement->post());

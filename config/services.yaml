@@ -226,6 +226,11 @@ services:
       $beanstalkd_server: "%app.beanstalkd_server%"
       $beanstalkd_port: "%app.beanstalkd_port%"
 
+  S2lowLegacy\Class\EncodingManager:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\helios\HeliosFilesFactory:
     autowire: false
     autoconfigure: false

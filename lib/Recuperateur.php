@@ -10,11 +10,11 @@ class Recuperateur
      */
     private array $thingsToDo;
 
-    public function __construct(array $tableauInput)
+    public function __construct(array $tableauInput, bool $forceConversionFromIso = false)
     {
         $this->tableauInput = $tableauInput;
         $this->thingsToDo = ["trim"];
-        if ($this->get("api")) {
+        if ($this->get("api") || $forceConversionFromIso) {
             $this->thingsToDo = ["utf8_encode","trim"];
         }
     }

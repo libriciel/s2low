@@ -2,10 +2,32 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\NounceSQL;
 
 class AuthenticationNounceController extends Controller
 {
+    /**
+     * @var \S2lowLegacy\Model\NounceSQL
+     */
+    private NounceSQL $nounceSQL;
+    /**
+     * @var \S2lowLegacy\Lib\Environnement
+     */
+    private Environnement $environnement;
+
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     */
+    public function __construct(
+        ObjectInstancier $objectInstancier,
+    ) {
+        $this->nounceSQL = $objectInstancier->get(NounceSQL::class);
+        $this->environnement = $objectInstancier->get(Environnement::class);
+        parent::__construct($objectInstancier);
+    }
+
     public function _actionAfter()
     {
         /* Nothing to do*/
@@ -14,16 +36,19 @@ class AuthenticationNounceController extends Controller
     public function getAction()
     {
         $this->verifUser();
-        if (empty($_SERVER['PHP_AUTH_USER'])) {
+        if (empty($this->environnement->server()->get('PHP_AUTH_USER'))) {
             header("HTTP/1.1 401 Unauthorized");
             header('WWW-Authenticate: Basic realm="API S2low"');
             echo "La fonction n'est utilisable qu'avec un login+mot de passe HTTP";
             return false;
         }
-        /** @var NounceSQL $nounceSQL */
-        $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
+
         $authority_id = $this->me->get('authority_id');
-        $nounce = $nounceSQL->create($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $authority_id);
+        $nounce = $this->nounceSQL->create(
+            $this->environnement->server()->get('PHP_AUTH_USER'),
+            $this->environnement->server()->get('PHP_AUTH_PW'),
+            $authority_id
+        );
 
         echo json_encode(array('nounce' => $nounce));
 

@@ -110,16 +110,18 @@ class User extends DataObject
         return  $row['nb'];
     }
 
-  /**
-   * \brief Méthode d'authentification de l'utilisateur
-   * \return true si succès, false sinon
-   *
-   * Cette méthode vérifie qu'un utilisateur est bien autorisé à se connecter au système.
-   * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
-   * et initialiser les données de l'utilisateur.
-  */
+    /**
+     * \brief Méthode d'authentification de l'utilisateur
+     * \return true si succès, false sinon
+     *
+     * Cette méthode vérifie qu'un utilisateur est bien autorisé à se connecter au système.
+     * Elle se base sur les données du certificat présenté au serveur Web pour authentifier
+     * et initialiser les données de l'utilisateur.
+     * @throws \Exception
+     */
     public function authenticate(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
     {
+    /** @var \S2lowLegacy\Class\Authentification $authenfication */
         $authenfication = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(Authentification::class);
         $this->id = $authenfication->authenticate($authentProcess);
 

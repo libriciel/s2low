@@ -10,13 +10,13 @@ class Environnement
     private $serverWrapper;
     private $sessionWrapper;
 
-    public function __construct($get, $post, $request, &$session, $server)
+    public function __construct($get, $post, $request, &$session, $server, bool $forceConversionFromIso = false)
     {
-        $this->getWrapper = new Recuperateur($get);
-        $this->postWrapper = new Recuperateur($post);
-        $this->requestWrapper = new Recuperateur($request);
+        $this->getWrapper = new Recuperateur($get, $forceConversionFromIso);
+        $this->postWrapper = new Recuperateur($post, $forceConversionFromIso);
+        $this->requestWrapper = new Recuperateur($request, $forceConversionFromIso);
         $this->sessionWrapper = new SessionWrapper($session);
-        $this->serverWrapper = new Recuperateur($server);
+        $this->serverWrapper = new Recuperateur($server, $forceConversionFromIso);
     }
 
     public function session()
