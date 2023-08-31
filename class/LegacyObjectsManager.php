@@ -81,6 +81,8 @@ class LegacyObjectsManager
 
         $objectInstancier->set(Logger::class, $logger);
 
+        $objectInstancier->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
+
         $objectInstancier->{SQLQuery::class} = $sqlQuery;  //WARNING !! Pas certain de la manip
 
         $objectInstancier->set(Database::class, DatabasePool::getInstance());

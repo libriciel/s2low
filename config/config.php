@@ -76,6 +76,10 @@ if (!defined('LOG_LEVEL')) {
     define('LOG_LEVEL', Monolog\Logger::INFO);
 }
 
+if (!defined('CONVERT_API_LOGINS_FROM_ISO')) {
+    define('CONVERT_API_LOGINS_FROM_ISO', false);
+}
+
 
 // Paramètres base de données
 if (!defined('DB_HOST')) {

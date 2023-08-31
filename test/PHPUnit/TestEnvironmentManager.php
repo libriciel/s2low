@@ -82,6 +82,8 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
         $this->getObjectInstancier()->get(Logger::class)->pushHandler($testHandler);
 
+        $this->getObjectInstancier()->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
+
         // WARNING : PAS SUR DE LA MANIP
         $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
