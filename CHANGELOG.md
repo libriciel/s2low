@@ -1,6 +1,7 @@
 # Changelog
 
-## 5.0.18 RC 1 - 2023-08-29
+
+## 5.0.20 RC 1 - 2023-08-29
 
 ### Corrections
 
@@ -12,6 +13,18 @@
 
 ### Évolutions
 - Permettre de désactiver helios-reception-passtrans #1068
+
+## 5.0.19 - 2023-09-12
+
+### Corrections
+
+- Mise à jour de la version de pades-valid afin de corriger un problème de vérification de signature
+
+## 5.0.18 - 2023-09-07
+
+### Évolutions
+
+- Ajout de la directive ACTES_IMAP_OPTIONS permettant de modifier les options de connexion à un serveur IMAP #1082
 
 ## 5.0.17 - 2023-08-04
 
