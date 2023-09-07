@@ -295,6 +295,11 @@ if (!defined('ACTES_IMAP_PASSWORD')) {
     define('ACTES_IMAP_PASSWORD', 'password');
 }
 
+if (!defined('ACTES_IMAP_OPTIONS')) {
+    // Si la valeur par défaut ne fonctionne pas, on peut essayer : /imap/ssl/novalidate-cert
+    define('ACTES_IMAP_OPTIONS', '/imap/notls/novalidate-cert');
+}
+
 // Nom de l'application vis à vis du MIAT
 if (!defined('ACTES_APPLI_NAME')) {
         define('ACTES_APPLI_NAME', 'TACT');
