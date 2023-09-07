@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.18 - 2023-09-07
+
+### Évolutions
+
+- Ajout de la directive ACTES_IMAP_OPTIONS permettant de modifier les options de connexion à un serveur IMAP #1082
+
 ## 5.0.17 - 2023-08-04
 
 ### Évolutions

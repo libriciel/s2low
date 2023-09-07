@@ -28,7 +28,10 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
         $logs = $this->getLogRecords();
 
-        $this->assertMatchesRegularExpression("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression(
+            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
+            $logs[1][S2lowLogger::MESSAGE]
+        );
         $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
@@ -89,7 +92,10 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
         $logs = $this->getLogRecords();
 
-        $this->assertMatchesRegularExpression("#Connection au serveur IMAP#", $logs[1][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression(
+            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
+            $logs[1][S2lowLogger::MESSAGE]
+        );
         $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
@@ -111,7 +117,13 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
     private function getImapProperties()
     {
-        return new ActesImapProperties();
+        $actesImapProperties = new ActesImapProperties();
+        $actesImapProperties->host = 'mail.example.com';
+        $actesImapProperties->port = 993;
+        $actesImapProperties->imap_options = '/imap/ssl';
+        $actesImapProperties->login = 'login';
+        $actesImapProperties->password = 'password';
+        return $actesImapProperties;
     }
 
     private function getImapMailBoxFactory($mailHtmlText = "mon texte html")

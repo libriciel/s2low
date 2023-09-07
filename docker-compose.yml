@@ -92,6 +92,7 @@ services:
             ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
             ACTES_IMAP_HOST: ${ACTES_IMAP_HOST:-mail}
             ACTES_IMAP_PORT: ${ACTES_IMAP_PORT:-143}
+            ACTES_IMAP_OPTIONS: ${ACTES_IMAP_OPTIONS:-/imap/notls/novalidate-cert}
 
             ACTES_MINISTERE_URL: ${ACTES_MINISTERE_URL:-http://simulateur/Simulateur/actesPost}
             ACTES_MINISTERE_AUTHENTICATION: ${ACTES_MINISTERE_AUTHENTICATION:-NONE}

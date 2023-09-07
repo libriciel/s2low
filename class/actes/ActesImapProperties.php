@@ -8,4 +8,5 @@ class ActesImapProperties
     public $port;
     public $login;
     public $password;
+    public $imap_options;
 }
