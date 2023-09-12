@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.19 - 2023-09-12
+
+### Corrections
+
+- Mise à jour de la version de pades-valid afin de corriger un problème de vérification de signature
+
 ## 5.0.18 - 2023-09-07
 
 ### Évolutions
