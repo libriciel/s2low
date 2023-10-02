@@ -8,7 +8,7 @@
 use S2lowLegacy\Lib\SQLQuery;
 
 require_once(__DIR__ . "/../../init/init.php");
-list($sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 $email = EMAIL_ADMIN_TECHNIQUE;
 $subject = "Transaction actes a l etat en attente";
