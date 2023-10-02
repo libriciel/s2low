@@ -196,6 +196,7 @@ class LegacyObjectsManager
         $actesImapProperties->port = ACTES_IMAP_PORT;
         $actesImapProperties->login = ACTES_IMAP_LOGIN;
         $actesImapProperties->password = ACTES_IMAP_PASSWORD;
+        $actesImapProperties->imap_options = ACTES_IMAP_OPTIONS;
         $objectInstancier->set(ActesImapProperties::class, $actesImapProperties);
 
         $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);

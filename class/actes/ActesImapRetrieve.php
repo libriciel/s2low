@@ -44,7 +44,15 @@ class ActesImapRetrieve
     public function retrieve()
     {
         $this->logger->info("Debut du script");
-        $this->logger->info("Connection au serveur IMAP {$this->actesImapProperties->host}");
+        $this->logger->info(
+            sprintf(
+                "Connexion au serveur IMAP %s:%d%s avec l'utilisateur %s",
+                $this->actesImapProperties->host,
+                $this->actesImapProperties->port,
+                $this->actesImapProperties->imap_options,
+                $this->actesImapProperties->login
+            )
+        );
 
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();

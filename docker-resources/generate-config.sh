@@ -38,6 +38,7 @@ define('ACTES_IMAP_HOST', "${ACTES_IMAP_HOST:-mail}");
 define('ACTES_IMAP_PORT', "${ACTES_IMAP_PORT:-143}");
 define('ACTES_IMAP_LOGIN', "${ACTES_IMAP_LOGIN:-s2low@s2low.docker.libriciel.fr}");
 define('ACTES_IMAP_PASSWORD', "${ACTES_IMAP_PASSWORD:-password}");
+define('ACTES_IMAP_OPTIONS', "${ACTES_IMAP_OPTIONS:-/imap/notls/novalidate-cert}");
 
 define('ACTES_APPLI_NAME', "${ACTES_APPLI_NAME:-TACT}");
 define('ACTES_APPLI_TRIGRAMME', "${ACTES_APPLI_TRIGRAMME:-abc}");

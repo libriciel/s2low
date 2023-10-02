@@ -94,6 +94,7 @@ services:
             ACTES_IMAP_PASSWORD: ${ACTES_IMAP_PASSWORD:-password}
             ACTES_IMAP_HOST: ${ACTES_IMAP_HOST:-mail}
             ACTES_IMAP_PORT: ${ACTES_IMAP_PORT:-143}
+            ACTES_IMAP_OPTIONS: ${ACTES_IMAP_OPTIONS:-/imap/notls/novalidate-cert}
 
             ACTES_MINISTERE_URL: ${ACTES_MINISTERE_URL:-http://simulateur/Simulateur/actesPost}
             ACTES_MINISTERE_AUTHENTICATION: ${ACTES_MINISTERE_AUTHENTICATION:-NONE}
@@ -159,7 +160,8 @@ services:
 
     pades-valid:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/outils/pades-valid:1.4.8
+        image: registry.libriciel.fr/public/signature/pades-valid:1.4.9
+
         networks:
           - services
         environment:
