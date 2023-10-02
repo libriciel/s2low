@@ -13,7 +13,7 @@ if (! $droit->isSuperAdmin($userInfo)) {
 }
 $recuperateur = new Recuperateur($_POST);
 
-$id = $recuperateur->get('id');
+$id = $recuperateur->getInt('id');
 $message = $recuperateur->get('message');
 
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);

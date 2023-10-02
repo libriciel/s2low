@@ -11,6 +11,8 @@
 - Empêcher une erreur de bloquer un cron #1067
 - Permettre de convertir les login/mot de passe de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
 - Correction du script monitoring_actes_pdf-stamp.php #1087
+- Correction de failles de sécurité #1088
+
 
 ### Évolutions
 - Permettre de désactiver helios-reception-passtrans #1068

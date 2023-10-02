@@ -24,14 +24,14 @@ class GroupeMail extends DataObject
     public function addUser($id)
     {
         assert(!!$this->id);
-        $sql = "SELECT * FROM mail_user_groupe WHERE id_user = $id AND id_groupe = " . $this->id;
-        $result = $this->db->select($sql);
+        $sql = "SELECT * FROM mail_user_groupe WHERE id_user = ? AND id_groupe = ?";
+        $result = $this->db->select($sql, [$id,$this->id]);
         if ($result->num_row() != 0) {
             return;
         }
 
-        $sql = "INSERT INTO mail_user_groupe(id_user,id_groupe) VALUES ($id," . $this->id . ")";
-        $this->db->exec($sql);
+        $sql = "INSERT INTO mail_user_groupe(id_user,id_groupe) VALUES (?, ?)";
+        $this->db->exec($sql, [$id,$this->id]);
     }
 
     public function removeUser($id)

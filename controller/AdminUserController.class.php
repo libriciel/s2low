@@ -440,7 +440,7 @@ class AdminUserController extends Controller
         $me = new User();
         $me->authenticate();
 
-        $user_id = $this->getRecuperateurPost()->get('user_id');
+        $user_id = $this->getRecuperateurPost()->getInt('user_id');
         if (! $user_id) {
             $this->redirect("/", "Aucun identifiant utilisateur n'a été présenté");
         }
