@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.21 - 2023-10-
+## 5.0.21 - 2023-10-03
 
 ## Évolutions
 - Mise à jour du certificat du serveur DGCL #1085
