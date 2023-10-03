@@ -30,7 +30,7 @@ echo "Copie des certificats dans $DIR1"
 
 wget -N https://ressources.libriciel.fr/s2low/certificat-mi-chaine.pem
 wget -N https://ressources.libriciel.fr/s2low/ac-racine-mi.pem
-wget -N https://ressources.libriciel.fr/s2low/serveur-1e.pem
+wget -N https://ressources.libriciel.fr/s2low/ac-serveur-auth-v1.pem
 
 cd "$DIR2" || exit 5;
 
