@@ -1,18 +1,18 @@
 #! /bin/bash
 
 SITE_HOST_NAME=$1
-
-CREATED_FILE_PATH=/etc/apache2/ssl
-
-PRIVKEY_PATH=${CREATED_FILE_PATH}/privkey.pem
-CERTIFICATE_PATH=${CREATED_FILE_PATH}/fullchain.pem
+PRIVKEY_PATH=$2
+CERTIFICATE_PATH=$3
 
 if [ -z ${SITE_HOST_NAME} ]
 then
-echo "Usage $0 hostname"
+echo "Usage $0 hostname privKeyFilename fullchainFilename"
 echo "Génère une clé et un certificat auto-signé utilisable dans un navigateur pour du test/développement"
 exit -1
 fi
+
+#TODO : vérifier le nombre de paramètres
+#TODO : vérifier que $2 et $3 sont bien des chemins vers des fichiers ?!
 
 SCRIPT_BASE=$(dirname $0)
 

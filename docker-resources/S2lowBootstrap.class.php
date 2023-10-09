@@ -19,7 +19,18 @@ class S2lowBootstrap
     {
         $this->log("Initialisation de S2low");
         try {
-            $this->installCertificate();
+            // Ajout du certificat domaine s2low
+            $this->installSelfSignedCertificateIfNoneExists(
+                $this->getHostname(),
+                "privkey.pem",
+                "fullchain.pem"
+            );
+            // Ajout du certificat domaine mailsec
+            $this->installSelfSignedCertificateIfNoneExists(
+                $this->getMailHostname(),
+                "mailsec_privkey.pem",
+                "mailsec_fullchain.pem"
+            );
             $this->installHorodateur();
             $this->installLibersign();
             $this->sqlQuery->waitStarting(function ($m) {
@@ -33,28 +44,43 @@ class S2lowBootstrap
         }
     }
 
-    private function installCertificate()
-    {
-        if (file_exists("/etc/apache2/ssl/privkey.pem")) {
-            $this->log("Le certificat du site est déjà présent.");
+    /**
+     * @param string $hostname
+     * @param string $privKeyFilename
+     * @param string $fullchainFilename
+     * @return void
+     * @throws \Exception
+     */
+    public function installSelfSignedCertificateIfNoneExists(
+        string $hostname,
+        string $privKeyFilename,
+        string $fullchainFilename,
+        string $letsencryptPath = "/etc/letsencrypt/live",
+        string $apacheSSLPath = "/etc/apache2/ssl"
+    ): void {
+        #TODO : pouvoir utiliser cette fonction pour le certificat du domaine s2low ET du domaine mail sec
+
+        if (file_exists("$apacheSSLPath/$privKeyFilename")) {
+            $this->log("Le certificat du site $hostname est déjà présent.");
             return;
         }
 
-        $hostname = $this->getHostname();
+        $letsencrypt_cert_path = "$letsencryptPath/$hostname";
+        $letsencryptPrivKeyFullPath = "$letsencrypt_cert_path/$privKeyFilename";
+        $letsencryptFullchainFullPath = "$letsencrypt_cert_path/{$fullchainFilename}";
+        $apachePrivKeyFullPath = "$apacheSSLPath/$privKeyFilename";
+        $apacheFullChainFullPath = "$apacheSSLPath/$fullchainFilename";
 
-        $letsencrypt_cert_path = "/etc/letsencrypt/live/$hostname";
-        $privkey_path  = "$letsencrypt_cert_path/privkey.pem";
-        $cert_path  = "$letsencrypt_cert_path/fullchain.pem";
-        if (file_exists($privkey_path)) {
+        if (file_exists($letsencryptPrivKeyFullPath)) {
             $this->log("Certificat letsencrypt trouvé !");
-            symlink($privkey_path, "/etc/apache2/ssl/privkey.pem");
-            symlink($cert_path, "/etc/apache2/ssl/fullchain.pem");
+            symlink($letsencryptPrivKeyFullPath, $apachePrivKeyFullPath);
+            symlink($letsencryptFullchainFullPath, $apacheFullChainFullPath);
             return;
         }
 
         $script = __DIR__ . "/../docker-resources/certificate/generate-key-pair.sh";
 
-        exec("$script $hostname", $output, $return_var);
+        exec("$script $hostname $apachePrivKeyFullPath $apacheFullChainFullPath", $output, $return_var);
         $this->log(implode("\n", $output));
         if ($return_var != 0) {
             throw new Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
@@ -91,7 +117,7 @@ class S2lowBootstrap
         $him->set("role", 'SADM');
 
         $him->set("certFilePath", __DIR__ . "/certificate/demosuper.pem");
-        if (! $him->save()) {
+        if (!$him->save()) {
             throw new Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
         }
 
@@ -110,7 +136,7 @@ class S2lowBootstrap
         foreach ($all as $table => $table_definition) {
             foreach ($table_definition as $line) {
                 $sql = "SELECT * " .
-                        " FROM $table WHERE id=?";
+                    " FROM $table WHERE id=?";
                 if ($this->sqlQuery->queryOne($sql, $line['id'])) {
                     continue;
                 }
@@ -196,5 +222,10 @@ class S2lowBootstrap
     private function getHostname()
     {
         return parse_url(WEBSITE_SSL, PHP_URL_HOST);
+    }
+
+    private function getMailHostname()
+    {
+        return parse_url(WEBSITE_MAIL, PHP_URL_HOST);
     }
 }
