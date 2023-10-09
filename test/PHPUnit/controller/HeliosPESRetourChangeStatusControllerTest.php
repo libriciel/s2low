@@ -11,7 +11,7 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
         $this->setUserAuthentification();
         $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
 
-        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml");
+        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml", 10, "sha1");
 
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
 
@@ -35,7 +35,7 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
         $this->setAdminCol2Authentication();
         $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
 
-        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml");
+        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml", 10, "sha1");
 
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
 

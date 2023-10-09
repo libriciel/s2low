@@ -227,6 +227,45 @@ class CloudStorage
     }
 
     /**
+     * @param int $object_id
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function getSize(int $object_id): array|bool
+    {
+
+        $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
+        if (! $file_path_on_disk) {
+            return false;
+        }
+        if (file_exists($file_path_on_disk)) {
+            return [ filesize($file_path_on_disk), sha1_file($file_path_on_disk) ];
+        }
+
+        throw new Exception("[getSize] Cloud not yet implemented !!");
+        //TODO vérifier l'implémentation depuis le cloud pour les plateformes Adullact et JVS
+        //TODO : permettre de récupérer aussi le sha1 !
+        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+
+        try {
+            $this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
+
+            $result = $this->openStackSwiftWrapper->getFileSize(
+                $this->iCloudStorable->getContainerName(),
+                $file_path_on_disk,
+                $file_path_on_cloud
+            );
+        } catch (Exception $e) {
+            $this->logger->error(
+                "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
+                $e->getTrace()
+            );
+            throw new Exception($e);
+        }
+
+        return $result;
+    }
+    /**
      * @param $file
      * @return array|string|string[]|null
      */
