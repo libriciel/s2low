@@ -76,7 +76,7 @@ class HeliosRetour extends DataObject
     public static function getRetourHistory()
     {
 
-        $sql = "SELECT hr.filename, hr.date, hr.siren";
+        $sql = "SELECT hr.filename, hr.date, hr.siren, hr.file_size, hr.sha1";
         $sql .= " FROM helios_retour hr";
 
         $sql .= " ORDER BY hr.date DESC";

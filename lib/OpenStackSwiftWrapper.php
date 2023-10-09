@@ -105,6 +105,32 @@ class OpenStackSwiftWrapper
     }
 
     /**
+     * @param $container_name
+     * @param $filepath_local
+     * @param $filepath_on_cloud
+     * @return mixed
+     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Lib\PausingQueueException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
+    private function getFileSizeFromCloud($container_name, $filepath_local, $filepath_on_cloud = '')
+    {
+        throw new Exception('getFileSizeFromCloud pas encore implémenté');
+        if (! $filepath_on_cloud) {
+            $filepath_on_cloud = basename($filepath_local);
+        }
+
+        $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
+        if (preg_match('#//+#', $filepath_on_cloud) && ! $containerWrapper->objectExists($filepath_on_cloud)) {
+            $filepath_on_cloud = preg_replace('#/+#', '/', $filepath_on_cloud);
+            if (!$containerWrapper->objectExists($filepath_on_cloud)) {
+                throw new CloudStorageException("$filepath_on_cloud non trouvé dans $container_name");
+            }
+        }
+        return $containerWrapper->getFileSize($filepath_on_cloud);
+    }
+
+    /**
      * Si nécessaire, récupère et copie le fichier depuis OpenStack vers le système de fichier local
      * @param $container_name : Le nom du container au sens swift
      * @param $filepath_local : Le chemin local du fichier à récupérer
@@ -121,6 +147,23 @@ class OpenStackSwiftWrapper
         return $filepath_local;
     }
 
+    /**
+     * Si nécessaire, récupère et copie le fichier depuis OpenStack vers le système de fichier local
+     * @param $container_name : Le nom du container au sens swift
+     * @param $filepath_local : Le chemin local du fichier à récupérer
+     * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
+     * @return mixed
+     * @throws UnrecoverableException|PausingQueueException
+     */
+
+    public function getFileSize($container_name, $filepath_local, $filepath_on_cloud = '')
+    {
+        if ($this->fileSystem->exists($filepath_local)) {
+            return [ filesize($filepath_local), sha1_file($filepath_local) ];
+        }
+        throw new Exception('[getFileSize]getFileSizeFromCloud non encore implémenté');
+        return  $this->getFileSizeFromCloud($container_name, $filepath_local, $filepath_on_cloud);
+    }
     /**
      * @param $container_name
      * @param $filepath

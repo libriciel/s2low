@@ -1,9 +1,10 @@
 # Changelog
 
-## 5.0.22 - 2023-10-XX
+## 5.0.22 - RC1 - 2023-10-09
 
 ## Évolutions
 - Permettre d'utiliser letsencrypt pour le domaine mail sécurisé #1090
+- Ajouter la taille et le sha1 du PES Retour à l'export CSV #1091
 
 ## 5.0.21 - 2023-10-03
 

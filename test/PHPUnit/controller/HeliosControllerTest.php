@@ -259,7 +259,7 @@ class HeliosControllerTest extends S2lowTestCase
     public function testGetPESRetourListAction()
     {
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $heliosRetourSQL->add(1, "123456789", "toto.xml");
+        $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
 
         $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#<nom>toto.xml</nom>#");
@@ -275,7 +275,7 @@ class HeliosControllerTest extends S2lowTestCase
     {
         $this->setAdminColAuthentication();
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $heliosRetourSQL->add(1, "123456789", "toto.xml");
+        $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
 
         $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#<nom>toto.xml</nom>#");
@@ -291,7 +291,7 @@ class HeliosControllerTest extends S2lowTestCase
     {
         $this->setAdminCol2Authentication();
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $heliosRetourSQL->add(1, "123456789", "toto.xml");
+        $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
 
         $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#^((?!toto.xml).)*$#s");

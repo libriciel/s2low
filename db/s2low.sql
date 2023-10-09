@@ -268,7 +268,8 @@ CREATE TABLE helios_retour (
     siret character(14),
     sha1 character varying(256),
     is_in_cloud boolean DEFAULT false NOT NULL,
-    not_available boolean DEFAULT false NOT NULL
+    not_available boolean DEFAULT false NOT NULL,
+    file_size integer
 );
 CREATE TABLE helios_status (
     id integer NOT NULL,

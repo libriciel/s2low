@@ -178,7 +178,9 @@ class HeliosAnalyseFichierRecu
                 $this->traitementNack($basename, $xml);
                 break;
             case 'pes_retour':
-                $this->traitementPESRetour($basename, $xml);
+                $size = filesize($file_path);
+                $sha1 = sha1_file($file_path);
+                $this->traitementPESRetour($basename, $xml, $size, $sha1);
                 break;
             case 'validation_error':
                 $this->traitementErreur($basename, $xml);
@@ -338,7 +340,7 @@ class HeliosAnalyseFichierRecu
      * @param SimpleXMLElement $xml
      * @throws Exception
      */
-    private function traitementPESRetour($basename, SimpleXMLElement $xml)
+    private function traitementPESRetour($basename, SimpleXMLElement $xml, int $size, string $sha1)
     {
         $siret = strval($xml->EnTetePES->IdColl['V']);
 
@@ -352,7 +354,7 @@ class HeliosAnalyseFichierRecu
         }
         $authority_id = $authority_list[0]['authority_id'];
 
-        $this->heliosRetourSQL->add($authority_id, $siret, $basename);
+        $this->heliosRetourSQL->add($authority_id, $siret, $basename, $size, $sha1);
     }
 
     private function sendMailToAdmin($subject, $msg)

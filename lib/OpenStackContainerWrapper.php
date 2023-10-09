@@ -109,6 +109,23 @@ class OpenStackContainerWrapper
 
     /**
      * @param $options
+     * @return StreamInterface
+     * @throws PausingQueueException
+     */
+
+    public function getFileSize($options)
+    {
+        throw new Exception("getFileSize non encore implémenté");
+        return $this->executeCommand(
+            function (Container $container, $options) {
+                return $container->getObject($options)->download()->getSize();
+            },
+            $options
+        );
+    }
+
+    /**
+     * @param $options
      * @return mixed
      * @throws PausingQueueException
      */

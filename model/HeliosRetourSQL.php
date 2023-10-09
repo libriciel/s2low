@@ -9,12 +9,12 @@ class HeliosRetourSQL extends SQL
     public const STATUS_NON_LU = 0;
     public const STATUS_LU = 1;
 
-    public function add($authority_id, $siret, $filename)
+    public function add($authority_id, $siret, $filename, int $size, string $sha1)
     {
         $siren = mb_substr($siret, 0, 9);
-        $sql = "INSERT INTO helios_retour(authority_id, siren, filename, status, date,siret) " .
-                " VALUES ( ?,?,?,0,now(),?) returning id";
-        return $this->queryOne($sql, $authority_id, $siren, $filename, $siret);
+        $sql = "INSERT INTO helios_retour(authority_id, siren, filename, status, date,siret,file_size,sha1) " .
+                " VALUES ( ?,?,?,0,now(),?,?,?) returning id";
+        return $this->queryOne($sql, $authority_id, $siren, $filename, $siret, $size, $sha1);
     }
 
     public function getInfo($helios_retour_id)
@@ -46,6 +46,18 @@ class HeliosRetourSQL extends SQL
     {
         $sql = "SELECT id FROM helios_retour WHERE is_in_cloud=FALSE ORDER BY id";
         return $this->queryOneCol($sql);
+    }
+
+    public function getAllPESRetour()
+    {
+        $sql = "SELECT id,is_in_cloud,not_available FROM helios_retour";
+        return $this->query($sql);
+    }
+
+    public function setSize(int $id, int $filesize, string $hash)
+    {
+        $sql = "UPDATE helios_retour SET file_size= ?, sha1 = ? WHERE id=?";
+        $this->query($sql, $filesize, $hash, $id);
     }
 
     public function getFilename($helios_retour_id)

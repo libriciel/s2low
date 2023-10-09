@@ -50,7 +50,7 @@ $history = HeliosRetour::getRetourHistory();
 
 
 $doc = new CSVLayout();
-$doc->addHeader("Date de reception;Heure de recetpion;Nom du fichier transmis;SIREN de la collectivite destinataire;Empreinte sha1");
+$doc->addHeader("Date de reception;Heure de recetpion;Nom du fichier transmis;SIREN de la collectivite destinataire;Empreinte sha1; Taille du fichier");
 
 if (count($history) > 0) {
     foreach ($history as $env) {
@@ -66,7 +66,8 @@ if (count($history) > 0) {
       // SIREN de la collectivité
         $entry[] = $env["siren"];
 
-      //$entry [] =$env["sha1"];
+        $entry [] = $env["sha1"];
+        $entry [] = $env["file_size"];
         $doc->addLine($entry);
     }
 }

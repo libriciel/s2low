@@ -8,7 +8,7 @@ class HeliosRetourSQLTest extends S2lowTestCase
     {
         $siret = "12345678900035";
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt");
+        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt", 10, "sha1");
         $info = $heliosRetourSQL->getInfo($helios_retour_id);
         $this->assertEquals($siret, $info['siret']);
     }
@@ -17,8 +17,8 @@ class HeliosRetourSQLTest extends S2lowTestCase
     {
         $siret = "12345678900035";
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt");
-        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "titi.txt");
+        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt", 10, "sha1");
+        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "titi.txt", 10, "sha1");
         $info = $heliosRetourSQL->getInfo($helios_retour_id);
         $this->assertEquals($siret, $info['siret']);
     }
@@ -27,7 +27,7 @@ class HeliosRetourSQLTest extends S2lowTestCase
     {
         $siret = "12345678900035";
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt");
+        $helios_retour_id = $heliosRetourSQL->add(1, $siret, "toto.txt", 10, "sha1");
         $info = $heliosRetourSQL->getInfoFromFilename(1, "toto.txt");
         $this->assertEquals($siret, $info['siret']);
     }

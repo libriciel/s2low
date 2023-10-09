@@ -1182,6 +1182,12 @@
                 "character_maximum_length": null,
                 "is_nullable": "NO",
                 "column_default": "false"
+            },
+            "file_size": {
+                "data_type": "integer",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": null
             }
         },
         "helios_status": {
