@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.22 - 2023-10-XX
+
+## Évolutions
+- Permettre d'utiliser letsencrypt pour le domaine mail sécurisé #1090
+
 ## 5.0.21 - 2023-10-03
 
 ## Évolutions
