@@ -3,6 +3,7 @@
 namespace S2low\Services\ProcessCommand;
 
 use S2lowLegacy\Class\RecoverableException;
+use Exception;
 
 class OpenSSLWrapper
 {
@@ -49,6 +50,9 @@ class OpenSSLWrapper
         );
     }
 
+    /**
+     * @throws RecoverableException
+     */
     public function extractHash(string $path): string
     {
         return $this->commandLauncher->launch(
@@ -57,11 +61,45 @@ class OpenSSLWrapper
         );
     }
 
+    /**
+     * @throws RecoverableException
+     */
     public function checkSNIsInCRL(string $crlPath, string $serialNumber): void
     {
         $this->commandLauncher->launch(
             ["openssl","crl","-in",$crlPath,"-text","-noout"],
             new CheckSnInCRLCommandOutputTranslator($serialNumber)
+        );
+    }
+
+    /**
+     * @param string $signatureFileName
+     * @return string
+     * @throws Exception
+     */
+    public function getCertificateFromPKCS7Signature(string $signatureFileName): string
+    {
+        return $this->commandLauncher->launchFromString(
+            "openssl pkcs7 -in $signatureFileName -print_certs | openssl x509",
+            new CertificateFromPKCS7CommandOutputTranslator()
+        );
+    }
+
+    /**
+     * @param $signature_file
+     * @param $file_path
+     * @return void
+     * @throws Exception
+     */
+    public function checkFileContentCorrespondsToSignature($signature_file, $file_path): string
+    {
+        # On ne va pas vérifier le certificat (option -noverify)
+        # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
+        # Au niveau de la date et de la chaine de certification, on va se reposer sur
+        # la fonction précédente
+        return $this->commandLauncher->launchFromString(
+            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path}",
+            new FileContentCorrespondsToSignatureChecker()
         );
     }
 }

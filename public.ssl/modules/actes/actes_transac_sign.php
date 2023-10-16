@@ -56,14 +56,16 @@ try {
         $signature_id = Helpers::getVarFromPost("signature_id_$i");
         $transaction_id = $actesSignature->setSignature($signature_id, $signature);
         $all_transaction_id[] = $transaction_id;
-        /** Vérifier la signature ici */
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             RGS_VALIDCA_PATH,
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                RGS_VALIDCA_PATH,
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
-
-        $verifyPKCS7Signature->verifyCertificate($signature);
+        $verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 

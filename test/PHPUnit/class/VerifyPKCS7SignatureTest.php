@@ -1,23 +1,36 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPKCS7SignatureTest extends S2lowTestCase
 {
+    #-------Test des signatures----------------------------------------------------------------------------------------
+    # Signature g�n�r�e selon https://stackoverflow.com/questions/56013953/how-to-verify-a-file-and-a-p7s-detached-signature-with-openssl
+    #------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @throws Exception
+     */
     public function testRightFileWithSignature()
     {
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                __DIR__ . "/fixtures/signaturesPKCS7/ac",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
 
         $this->assertTrue(
-            $verifyPKCS7Signature->verify(
-                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
-                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
+            $verifyPKCS7Signature->verifySignature(
+                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+                [],
+                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf"
             )
         );
     }
@@ -27,14 +40,19 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                __DIR__ . "/fixtures/signaturesPKCS7/ac",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("La vérification de la signature a échoué");
-        $verifyPKCS7Signature->verify(
-            __DIR__ . "/fixtures/toto.txt",
-            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
+        $verifyPKCS7Signature->verifySignature(
+            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            [],
+            __DIR__ . "/fixtures/toto.txt"
         );
     }
 
@@ -43,14 +61,19 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/",
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                __DIR__ . "/",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(" unable to get local issuer certificate");
-        $verifyPKCS7Signature->verify(
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
-            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s")
+        $verifyPKCS7Signature->verifySignature(
+            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            [],
+            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf"
         );
     }
 
@@ -75,18 +98,26 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                __DIR__ . "/fixtures/signaturesPKCS7/ac",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
-        $verifyPKCS7Signature->verify(
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+        $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            [],
+            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             $dateTime
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function getWrongDate(): array
     {
         return [
@@ -101,30 +132,64 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     /**
      * @dataProvider getGoodDate
+     * @throws Exception
      */
 
     public function testGoodDateIsTakenIntoAccount(DateTime $dateTime)
     {
+        $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
+
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
-            new PemCertificateFactory()
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                __DIR__ . "/fixtures/signaturesPKCS7/ac",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
         );
 
         $this->assertTrue(
-            $verifyPKCS7Signature->verify(
-                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
-                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            $verifyPKCS7Signature->verifySignature(
+                file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
+                [],
+                "$baseSignatureDir/test_pdf.pdf",
                 $dateTime
             )
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function getGoodDate(): array
     {
         return [
             [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validité crl
             [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
         ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testverifyCertificate()
+    {
+        $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
+        $verificator = new VerifyPKCS7Signature(
+            "$baseSignatureDir/ac/",
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory(),
+            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+                "$baseSignatureDir/ac/",
+                new \S2low\Services\ProcessCommand\CommandLauncher()
+            )
+        );
+
+        $verificator->verifySignature(
+            file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
+        );
+        $this->addToAssertionCount(1);
     }
 }

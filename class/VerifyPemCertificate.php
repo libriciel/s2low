@@ -3,13 +3,14 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 
 class VerifyPemCertificate
 {
     # extracted from https://github.com/openssl
     # Mise en correspondance de  openssl/crypto/x509/x509_txt.c
     # et https://docs.huihoo.com/doxygen/openssl/1.0.1c/crypto_2x509_2x509__vfy_8h.html
-    public const CERTIFICATE_CHAIN_ERRORS = array (
+    public const CERTIFICATE_CHAIN_ERRORS = array(
         2,  # unable to get issuer certificate
         3,  # unable to get certificate CRL
         18, # self signed certificate
@@ -17,7 +18,7 @@ class VerifyPemCertificate
         20, # unable to get local issuer certificate
         21, # unable to verify the first certificate
     );
-    /** @var string  */
+    /** @var string */
     private $authorized_ca_path;
     /**
      * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
