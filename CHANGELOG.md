@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.23 - 2023-10-19
+
+### Sécurité
+
+- Mise à jour des CipherSuites #1095
+
 ## 5.0.22 - 2023-10-09
 
 ## Évolutions
