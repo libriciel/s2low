@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Controller\HeliosAPIController;
+use S2low\Controller\Legacy\HeliosAPIController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;
 

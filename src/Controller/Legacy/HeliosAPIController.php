@@ -1,12 +1,26 @@
 <?php
 
-namespace S2lowLegacy\Controller;
+namespace S2low\Controller\Legacy;
 
+use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
-class HeliosAPIController extends Controller
+class HeliosAPIController extends AbstractController
 {
+    public function __construct(
+        HeliosTransactionsSQL $heliosTransactionsSQL,
+        AuthoritySQL $authoritySQL,
+        LegacyControllerActions $legacyControllerActions
+    )
+    {
+        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
+        $this->authoritySQL = $authoritySQL;
+        $this->legacyControllerActions = $legacyControllerActions;
+    }
+
     public function _actionAfter()
     {
         /* Nothing to do*/
@@ -14,16 +28,19 @@ class HeliosAPIController extends Controller
 
     private function getHeliosTransactionsSQL()
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        return $this->heliosTransactionsSQL;
     }
 
 
+    /**
+     * @Route("/modules/helios/api/nb_pes_aller_by_authorities_and_date.php", name="app_modules_helios_api_nb_pes_aller_by_authorities_and_date")
+     * @return bool
+     */
     public function nbCreatedPesAllerByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
         $authority_id = intval($this->me->get("authority_id"));
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
-        $authorityInfo = $authoritySQL->getInfo($authority_id);
+        $authorityInfo = $this->authoritySQL->getInfo($authority_id);
         $authority_group_id = $authorityInfo['authority_group_id'];
 
         if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt("authority_group_id")) {
