@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.24 - 2023-XX-XX
+
+## Évolutions
+- Permettre de configurer SSLCipherSuite par une variable d'environnement #1098
+
 ## 5.0.23 - 2023-10-19
 
 ### Sécurité
