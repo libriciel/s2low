@@ -3,9 +3,12 @@
 
 ## 5.0.25 - 2023-11-
 
+## Évolutions
+- Permettre de configurer SSLProtocol par une variable d'environnement #1109
+
 ### Corrections
 
-- Correction de la vérification des signatures détachées lors de l'import d'enveloppes #1069
+- Correction de la vérification des signatures détachées lors de l'import d'enveloppes #1110
 
 ## 5.0.24 - 2023-10-24
 
