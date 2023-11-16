@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
@@ -977,9 +979,17 @@ class ActesTransaction extends DataObject
                         $verifyPKCS7Signature = new VerifyPKCS7Signature(
                             RGS_VALIDCA_PATH,
                             new VerifyPemCertificateFactory(),
-                            new PemCertificateFactory()
+                            new PemCertificateFactory(),
+                            new OpenSSLWrapper(
+                                RGS_VALIDCA_PATH,
+                                new CommandLauncher()
+                            )
                         );
-                        $verifyPKCS7Signature->verify($this->rootDir . "/" . $actePath, $actesItems->Document->Signature);
+                        $verifyPKCS7Signature->verifySignature(
+                            $actesItems->Document->Signature,
+                            [],
+                            $this->rootDir . "/" . $actePath
+                        );
                     } catch (Exception $e) {
                         $this->errorMsg = $e->getMessage();
                         return false;

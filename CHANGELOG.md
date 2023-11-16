@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 5.0.25 - 2023-11-
+
+### Corrections
+
+- Correction de la vérification des signatures détachées lors de l'import d'enveloppes #1069
+
 ## 5.0.24 - 2023-10-24
 
 ## Évolutions
