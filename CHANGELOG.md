@@ -1,7 +1,7 @@
 # Changelog
 
 
-## 5.0.25 - 2023-11-
+## 5.0.25 - 2023-11-30
 
 ## Évolutions
 - Permettre de configurer SSLProtocol par une variable d'environnement #1109
