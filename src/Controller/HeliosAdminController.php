@@ -4,6 +4,7 @@ namespace S2low\Controller;
 
 use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2lowLegacy\Lib\PesAller;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,10 +18,12 @@ class HeliosAdminController extends AbstractController
 
     public function __construct(
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        MailerSymfonyFactory $mailerSymfonyFactory
+        MailerSymfonyFactory $mailerSymfonyFactory,
+        string $helios_ftp_p_appli
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->mailerSymfonyFactory = $mailerSymfonyFactory;
+        $this->pAppli = $helios_ftp_p_appli;
     }
 
     /**
@@ -36,22 +39,53 @@ class HeliosAdminController extends AbstractController
             return parent::redirect(WEBSITE);
         }
 
-        $transactions_list = $this->heliosTransactionsSQL->getNonAcquitte();
+        $transactions_list_Gateway = $this->heliosTransactionsSQL->getNonAcquitteWithPasstransStatus(
+            false,
+            date("Y-m-d")
+        );
+        $transactions_list_Passtrans = $this->heliosTransactionsSQL->getNonAcquitteWithPasstransStatus(
+            false,
+            date("Y-m-d")
+        );
 
-        ob_start();
-        if (! $transactions_list) {
+
+        if (count($transactions_list_Gateway) && count($transactions_list_Passtrans)) {
             $subject =  "Aucune transaction n est reste en transmis";
         } else {
-            $subject = count($transactions_list) . " transactions sont reste a l'etat transmis.";
+            $transactionsTransmises = count($transactions_list_Gateway) + count($transactions_list_Passtrans);
+            $subject = $transactionsTransmises . " transactions sont restees a l'etat transmis.";
         }
 
+        ob_start();
         $output = fopen("php://output", "w");
 
-        foreach ($transactions_list as $line) {
+        echo "Gateway \n";
+        foreach ($transactions_list_Gateway as $line) {
             unset($line['id']);
             unset($line['filename']);
+            unset($line['sha1']);
             fputcsv($output, $line);
         }
+
+        echo "Passtrans \n";
+        foreach ($transactions_list_Passtrans as $line) {
+            unset($line['id']);
+            unset($line['filename']);
+            $p_dest = $line['helios_ftp_dest'];
+            $pAppli = $this->pAppli;
+
+            $p_msg = (new PesAller())->getP_MSGFromParameters(
+                $line['xml_cod_col'],
+                $line['xml_id_post'],
+                $line['xml_cod_bud']
+            );
+
+            $hash = $line['sha1'];
+
+            $line['passtransFileName'] = "$p_dest%%$pAppli%%$p_msg%%$hash";
+            fputcsv($output, $line);
+        }
+
         fclose($output);
 
         $content = ob_get_contents();

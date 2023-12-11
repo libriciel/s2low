@@ -372,4 +372,27 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $heliosTransactionsSQL->setPesAcquitAvailable($transaction_id, true);
         $this->assertTrue($heliosTransactionsSQL->isPesAcquitAvailable($transaction_id));
     }
+
+    public function testgetNonAcquitteWithGateway()
+    {
+        $this->heliosTransactionSQL->updateStatus($this->transaction_id, 3, "test");
+        $this->assertEquals(
+            $this->heliosTransactionSQL->getNonAcquitteWithPasstransStatus(
+                false,
+                "2030-12-12"
+            )[0]['id'],
+            $this->transaction_id
+        );
+    }
+
+    public function testgetNonAcquitteWithPasstrans()
+    {
+        $this->assertEquals(
+            $this->heliosTransactionSQL->getNonAcquitteWithPasstransStatus(
+                true,
+                date("Y-m-d", strtotime('tomorrow'))
+            ),
+            []
+        );
+    }
 }

@@ -87,6 +87,10 @@ services:
   S2low\Controller\LegacyController:
     public: true
 
+  S2low\Controller\HeliosAdminController:
+    arguments:
+      $helios_ftp_p_appli: '%app.helios_ftp_p_appli%'
+
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace Legacy : contient du code legacy correspondant au mail sécurisé
   # Voué à être intégré dans le namespace S2lowLegacy
