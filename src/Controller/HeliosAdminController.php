@@ -44,7 +44,7 @@ class HeliosAdminController extends AbstractController
             date("Y-m-d")
         );
         $transactions_list_Passtrans = $this->heliosTransactionsSQL->getNonAcquitteWithPasstransStatus(
-            false,
+            true,
             date("Y-m-d")
         );
 
