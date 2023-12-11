@@ -316,6 +316,17 @@ class HeliosTransactionsSQL extends SQL
         return $this->query($sql, $today);
     }
 
+    public function getNonAcquitteWithPasstransStatus(bool $usePasstrans, string $dateToday)
+    {
+        $sql = "SELECT helios_transactions.id, helios_transactions.filename, xml_nomfic,helios_transactions.submission_date,helios_ftp_dest,xml_id_post,xml_cod_bud,xml_cod_col,sha1 FROM helios_transactions " .
+            " JOIN authorities ON authorities.id=helios_transactions.authority_id " .
+            " WHERE last_status_id=3 AND helios_transactions.submission_date < ? " .
+            " AND helios_use_passtrans = ? " .
+            " ORDER BY submission_date DESC ";
+
+        return $this->query($sql, $dateToday, intval($usePasstrans));
+    }
+
     public function getNbTransactionByMonth()
     {
         $sql = "SELECT count(*) as nb,date_trunc('month', submission_date) as month  FROM helios_transactions " .

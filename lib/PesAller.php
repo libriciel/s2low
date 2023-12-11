@@ -24,6 +24,17 @@ class PesAller
         if (! $cod_bud) {
             throw new Exception("La balise EnTetePES/CodBud n'est pas présente ou est vide");
         }
+        return $this->getP_MSGFromParameters($cod_col, $id_post, $cod_bud);
+    }
+
+    /**
+     * @param string $cod_col
+     * @param string $id_post
+     * @param string $cod_bud
+     * @return string
+     */
+    public function getP_MSGFromParameters(string $cod_col, string $id_post, string $cod_bud): string
+    {
         return "PES#" . $cod_col . "#" . $id_post . "#" . $cod_bud;
     }
 }

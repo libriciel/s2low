@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.26 - 2023-12-11
+
+# Évolutions
+- Différencier les modes d'envois dans le mail des transmis non acquittés #1114
 
 ## 5.0.25 - 2023-11-30
 
