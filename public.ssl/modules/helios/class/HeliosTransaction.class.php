@@ -153,7 +153,7 @@ class HeliosTransaction extends DataObject
         return true;
     }
 
-  /**
+    /**
    * \brief Méthode permettant de fixer la valeur d'un attribut
    * \param $name chaîne : Nom de l'attribut
    * \param $val : valeur de l'attribut
@@ -169,97 +169,6 @@ class HeliosTransaction extends DataObject
         }
         parent :: set($name, $val);
     }
-
-  //added
-  /**
-     * \brief Méthode permettant d'obtenir l'id d'une transaction à partir du nom de fichier
-     * \param $name chaîne : Nom du fichier
-     * \return id si okay, si non false
-    */
-    public function get_IdTransaction($filename)
-    {
-
-        $sql = "SELECT id FROM helios_transactions" . " WHERE filename=?";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql, [$filename]);
-
-        if (!$result->isError()) {
-            $row = $result->get_next_row();
-            return $row["id"];
-        } else {
-            return false;
-        }
-    }
-
-  //added
-  /*
-   * \brief Méthode pour obtenir toutes les transactions pour un utilisateur (idUser) donné
-   *
-   */
-    public function getAllTransactionsForAUser_1($userID)
-    {
-        $t1 = "helios_transactions";
-        $t2 = "helios_transactions_workflow";
-        $t3 = "helios_status";
-
-        $sql = "SELECT user_id, transaction_id, filename, name, date ";
-        $sql .= " FROM " . $t1 . "," . $t2 . "," . $t3 . " ";
-        $sql .= " WHERE " . $t1 . ".id=" . $t2 . ".transaction_id AND " . $t1 . ".user_id=" . $userID;
-        $sql .= " AND " . $t2 . ".status_id=" . $t3 . ".id";
-
-        $result = $this->db->select($sql);
-
-        if (!$result->isError() && $result->num_row() > 0) {
-            $this->allStatus = $result->get_all_rows();
-        }
-        return $allStatus;
-    }
-
-    public static function getAllTransactionsForAUser($userID)
-    {
-        $t1 = "helios_transactions";
-        $t2 = "helios_transactions_workflow";
-        $t3 = "helios_status";
-
-        $sql = "SELECT transaction_id, filename, name, date ";
-        $sql .= " FROM " . $t1 . "," . $t2 . "," . $t3 . " ";
-        $sql .= " WHERE " . $t1 . ".id=" . $t2 . ".transaction_id AND " . $t1 . ".user_id=" . $userID;
-        $sql .= " AND " . $t2 . ".status_id=" . $t3 . ".id";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql);
-
-        if (!$result->isError()) {
-            return $result->get_all_rows();
-        }
-
-        return false;
-    }
-
-  /**
-    * \brief Méthode d'obtention de la liste des enveloppes et tous leurs attributs
-    * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-    * \return Tableau des enveloppes
-    */
-    public function getDocumentList($cond = "")
-    {
-        $tmp = "";
-        if (
-            !$this->pagerInit(
-                'DISTINCT helios_transactions.id,  helios_transactions.last_status_id, helios_transactions.user_id, helios_transactions.filename, authorities.name as authority_name ',
-                ' helios_transactions LEFT JOIN users ON helios_transactions.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id ',
-                $cond
-            )
-        ) {
-            return false;
-        }
-
-        return $this->data;
-    }
-
 
   /*
    * \brief Méthode d'obtention du nom d efichier qui correponde à une transaction
@@ -310,40 +219,6 @@ class HeliosTransaction extends DataObject
         } else {
             return false;
         }
-    }
-
-
-
-  //de testat!!!!!
-  //la mine: ActesEnvelope -> HeliosTransaction si ActesTransaction-> HeliosTransactionWorkFlow
-
-  /**
-   * \brief Méthode d'obtention de la liste des ids de transactions pour un fichier
-   * \param $id integer : Identifiant du fichier est l'id de la trasnaction
-   * \return Tableau d'objet HeliosTransaction correspondant au fichier
-  */
-    public static function getTransactionsForFichier($id)
-    {
-        $transac = array ();
-
-        if (!empty($id)) {
-            $sql = "SELECT helios_transactions_workflow.id FROM helios_transactions_workflow WHERE helios_transactions_workflow.transaction_id = " . $id;
-
-            $db = DatabasePool :: getInstance();
-
-            $result = $db->select($sql);
-
-            if (!$result->isError()) {
-                while ($row = $result->get_next_row()) {
-                    $obj = new HeliosTransactionWorkflow($row["id"]); //cred!!!!=> obtine inregistrarea completa
-                    if ($obj->init()) {
-                        $transac[] = $obj;
-                    }
-                }
-            }
-        }
-
-        return $transac;
     }
 
   /**
@@ -480,97 +355,5 @@ class HeliosTransaction extends DataObject
             }
         }
         return $trans;
-    }
-
-  /**
-   * this function is due to calculate the number of the transaction effective, return the number of the transactions.
-   *
-   * @param string $author_filter
-   * @param bool $transmitted
-   * @param bool $byMoth
-   * @param bool $byYear
-   * @return int
-   */
-    public static function countTransactions($author_filter = null, $transmitted = false, $byMoth = false, $byYear = false)
-    {
-        $sql = "SELECT DISTINCT ht.id FROM users,helios_transactions ht,helios_transactions_workflow htw where ht.id=htw.transaction_id AND users.id=ht.user_id ";
-
-
-        if ($author_filter != null) {
-            $sql .= $author_filter;
-        }
-        if ($transmitted) {
-            //3 = transmis
-            $sql .= " AND htw.status_id=3";
-        }
-        if ($byMoth) {
-            $sql .= " AND ht.submission_date >='" . date('Y-m-01 00:00:00') . "'";
-        } elseif ($byYear) {
-            $sql .= " AND ht.submission_date >='" . date('Y-01-01 00:00:00') . "'";
-        }
-
-        $db = DatabasePool::getInstance();
-
-        $result = $db->select($sql);
-
-        $trans = 0;
-        if (! $result->isError()) {
-            while ($row = $result->get_next_row()) {
-                $trans++;
-            }
-        }
-        return $trans;
-    }
-
-  /**
-   * this function is due to connecte with db for the information of every transaction. and calculate the volume of the tranactions selected.
-   *
-   * @param string $author_filter
-   * @param bool $transmitted
-   * @param bool $byMoth
-   * @param bool $byYear
-   * @return int size of all transaction.
-   */
-    public static function countTransactionVol($author_filter, $transmitted = false, $byMoth = false, $byYear = false)
-    {
-
-        $sql = "SELECT DISTINCT ht.id, ht.file_size FROM users,helios_transactions ht,helios_transactions_workflow htw where ht.id=htw.transaction_id AND users.id=ht.user_id ";
-
-        if ($author_filter != null) {
-            $sql .= $author_filter;
-        }
-        if ($transmitted) {
-            //3 = transmis
-            $sql .= " AND htw.status_id=3";
-        }
-        if ($byMoth) {
-            $sql .= " AND ht.submission_date >='" . date('Y-m-01 00:00:00') . "'";
-        } elseif ($byYear) {
-            $sql .= " AND ht.submission_date >='" . date('Y-01-01 00:00:00') . "'";
-        }
-        $db = DatabasePool::getInstance();
-
-        $result = $db->select($sql);
-
-        $trans = 0;
-        if (! $result->isError()) {
-            while ($row = $result->get_next_row()) {
-                $trans += $row["file_size"];
-            }
-        }
-        return $trans;
-    }
-
-    public function CheckDuplicate()
-    {
-        $sql = "select sha1 FROM helios_transactions WHERE sha1=?";
-
-        $db = DatabasePool::getInstance();
-
-        $result = $db->select($sql, [$this->sha1]);
-        if (! $result->isError() && $result->get_next_row()) {
-            return true;
-        }
-        return false;
     }
 }

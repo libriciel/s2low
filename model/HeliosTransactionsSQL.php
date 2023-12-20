@@ -645,4 +645,84 @@ AND authorities.helios_use_passtrans = ?
         $results = $this->query($sql, $date_status_cible, $isPasstrans ? "TRUE" : "FALSE");
         return [$results[0]["nb_post_par_min"],$results[0]["volume_transaction"]];
     }
+
+    /**
+     * @param string|null $author_filter
+     * @param bool $transmitted
+     * @param bool $byMoth
+     * @param bool $byYear
+     * @return string
+     */
+    private function getWhereCondition(?string $author_filter, bool $transmitted, bool $byMoth, bool $byYear): string
+    {
+        $conditions = [];
+
+        if ($author_filter != null) {
+            // TODO : supprimer le AND de $author_filter
+            $conditions[] = $author_filter;
+        }
+        if ($transmitted) {
+            //3 = transmis
+            //TODO : utiliser les constantes ...
+            $conditions[] = "helios_transactions_workflow.status_id=3";
+        }
+        if ($byMoth) {
+            $conditions[] = "helios_transactions.submission_date >='" . date('Y-m-01 00:00:00') . "'";
+        } elseif ($byYear) {
+            $conditions[] = "helios_transactions.submission_date >='" . date('Y-01-01 00:00:00') . "'";
+        }
+
+        if (empty($conditions)) {
+            return '';
+        }
+        return " WHERE " . implode(' AND ', $conditions);
+    }
+
+    /**
+     * this function is due to calculate the number of the transaction effective, return the number of the transactions.
+     *
+     * @param string $author_filter
+     * @param bool $transmitted
+     * @param bool $byMoth
+     * @param bool $byYear
+     * @return int
+     * @throws \Exception
+     */
+    public function countTransactions($author_filter = null, $transmitted = false, $byMoth = false, $byYear = false): int
+    {
+        $sql = "SELECT COUNT ( DISTINCT helios_transactions.id ) AS nbtransactions FROM users " .
+            " INNER JOIN helios_transactions ON users.id = helios_transactions.user_id " .
+            " INNER JOIN helios_transactions_workflow ON helios_transactions.id = helios_transactions_workflow.transaction_id" .
+            " INNER JOIN authorities ON helios_transactions.authority_id = authorities.id";
+
+        $sql .= $this->getWhereCondition($author_filter, $transmitted, $byMoth, $byYear);
+
+        return $this->query($sql)[0]['nbtransactions'];
+    }
+
+    /**
+     * this function is due to connecte with db for the information of every transaction. and calculate the volume of the tranactions selected.
+     *
+     * @param string $author_filter
+     * @param bool $transmitted
+     * @param bool $byMoth
+     * @param bool $byYear
+     * @return int size of all transaction.
+     * @throws \Exception
+     */
+    public function countTransactionVol(
+        ?string $author_filter = null,
+        bool $transmitted = false,
+        bool $byMoth = false,
+        bool $byYear = false
+    ): int {
+        $sql = "SELECT SUM ( helios_transactions.file_size ) AS voltransactions  FROM users " .
+            " INNER JOIN helios_transactions ON users.id = helios_transactions.user_id " .
+            " INNER JOIN helios_transactions_workflow ON helios_transactions.id = helios_transactions_workflow.transaction_id" .
+            " INNER JOIN authorities ON helios_transactions.authority_id = authorities.id";
+
+        $sql .= $this->getWhereCondition($author_filter, $transmitted, $byMoth, $byYear);
+
+        return $this->query($sql)[0]['voltransactions'] ?? 0;
+    }
 }
