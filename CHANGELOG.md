@@ -5,15 +5,18 @@
 ### Corrections
 
 - Correction de la signature d'actes #1124
+- Installer Libersign par défaut #1078
 
 ## 5.0.26 - 2023-12-11
 
 # Évolutions
+
 - Différencier les modes d'envois dans le mail des transmis non acquittés #1114
 
 ## 5.0.25 - 2023-11-30
 
 ## Évolutions
+
 - Permettre de configurer SSLProtocol par une variable d'environnement #1109
 
 ### Corrections
@@ -23,6 +26,7 @@
 ## 5.0.24 - 2023-10-24
 
 ## Évolutions
+
 - Permettre de configurer SSLCipherSuite par une variable d'environnement #1098
 
 ## 5.0.23 - 2023-10-19
@@ -34,6 +38,7 @@
 ## 5.0.22 - 2023-10-09
 
 ## Évolutions
+
 - Permettre d'utiliser letsencrypt pour le domaine mail sécurisé #1090
 - Ajouter la taille et le sha1 du PES Retour à l'export CSV #1091
 - Correction du script actes_admin_transac_export.php #1093
@@ -41,6 +46,7 @@
 ## 5.0.21 - 2023-10-03
 
 ## Évolutions
+
 - Mise à jour du certificat du serveur DGCL #1085
 
 ## 5.0.20 - 2023-10-02
@@ -57,6 +63,7 @@
 
 
 ### Évolutions
+
 - Permettre de désactiver helios-reception-passtrans #1068
 
 ## 5.0.19 - 2023-09-12

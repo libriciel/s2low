@@ -13,7 +13,7 @@ define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_H
 define("WEBSITE_MAIL","https://${S2LOW_WEBSITE_MAIL:-mail.s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}/");
 define("OPERATEUR_DE_TELETRANSMISSION","${OPERATEUR_DE_TELETRANSMISSION:-Libriciel SCOP}");
 define("IMAGE_FOR_STAMP","${IMAGE_FOR_STAMP:-/var/www/s2low/public.ssl/custom/images/s2low-stamp.png}");
-define("LIBERSIGN_INSTALLER","${LIBERSIGN_INSTALLER}");
+define("LIBERSIGN_INSTALLER","${LIBERSIGN_INSTALLER-https://libersign.libriciel.fr/make.sh}");
 define('DB_HOST', "${POSTGRES_HOST:-db}");
 define('DB_USER', "${POSTGRES_USER:-s2lowuser}");
 define('DB_PASSWORD', "${POSTGRES_PASSWORD:-s2lowpassword}");
