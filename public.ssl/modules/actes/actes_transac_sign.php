@@ -8,6 +8,7 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\WorkerScript;
@@ -45,7 +46,7 @@ if (!$module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
 $nb_signature = Helpers::getVarFromPost("nb_signature");
 if ($nb_signature == 0) {
     $_SESSION["error"] = "Les signatures n'ont pas pu être récupérées";
-    header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id=$id"));
+    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
 }
 
 $all_transaction_id = array();
@@ -83,6 +84,9 @@ try {
     }
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
+    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
+} catch (Throwable $e) {
+    $_SESSION["error"] = "[ Throwable ] Erreur lors de la signature : " . $e->getMessage();
     header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
 }
 

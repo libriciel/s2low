@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.27
+
+### Corrections
+
+- Correction de la signature d'actes #1124
+
 ## 5.0.26 - 2023-12-11
 
 # Évolutions
