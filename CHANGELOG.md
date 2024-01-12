@@ -6,16 +6,17 @@
 
 - Correction de la signature d'actes #1124
 - Installer Libersign par défaut #1078
+- Correction des statistiques Helios pour l'administrateur de groupe #1119
 
 ## 5.0.26 - 2023-12-11
 
-# Évolutions
+### Évolutions
 
 - Différencier les modes d'envois dans le mail des transmis non acquittés #1114
 
 ## 5.0.25 - 2023-11-30
 
-## Évolutions
+### Évolutions
 
 - Permettre de configurer SSLProtocol par une variable d'environnement #1109
 
@@ -25,7 +26,7 @@
 
 ## 5.0.24 - 2023-10-24
 
-## Évolutions
+### Évolutions
 
 - Permettre de configurer SSLCipherSuite par une variable d'environnement #1098
 
@@ -37,7 +38,7 @@
 
 ## 5.0.22 - 2023-10-09
 
-## Évolutions
+### Évolutions
 
 - Permettre d'utiliser letsencrypt pour le domaine mail sécurisé #1090
 - Ajouter la taille et le sha1 du PES Retour à l'export CSV #1091
@@ -45,7 +46,7 @@
 
 ## 5.0.21 - 2023-10-03
 
-## Évolutions
+### Évolutions
 
 - Mise à jour du certificat du serveur DGCL #1085
 

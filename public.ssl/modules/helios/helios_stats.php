@@ -3,9 +3,15 @@
 // Instanciation du module courant
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+$heliosTransactionsSQL = LegacyObjectsManager::getObject(HeliosTransactionsSQL::class);
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -34,30 +40,30 @@ $myAuthority = new Authority($me->get("authority_id"));
 // Récupération de la liste des enveloppes en fonction de l'utilisateur en cours
 $author_filter = "";
 if ($me->isAuthorityAdmin()) {
-    $author_filter = "AND users.authority_id=" . $me->get("authority_id");
-} elseif ($me->isGroupAdmin()) { //---- corrige bug 209 par TAN ajoute le statistique de group admin
-    $author_filter = " AND users.authority_group_id=" . $me->get("authority_group_id");
+    $author_filter = "users.authority_id=" . $me->get("authority_id");
+} elseif ($me->isGroupAdmin()) {
+    $author_filter = "authorities.authority_group_id=" . $me->get("authority_group_id");
 } elseif (! $me->isAdmin()) {
-    $author_filter = " AND users.id=" . $me->getId();
+    $author_filter = "users.id=" . $me->getId();
 }
 
 // Transactions depuis toujours
-$allTrans = HeliosTransaction::countTransactions($author_filter);
-$allTransmitted = HeliosTransaction::countTransactions($author_filter, true);
-$allVol = HeliosTransaction::countTransactionVol($author_filter);
-$allVolTransmitted =  HeliosTransaction::countTransactionVol($author_filter, true);
+$allTrans = $heliosTransactionsSQL->countTransactions($author_filter);
+$allTransmitted = $heliosTransactionsSQL->countTransactions($author_filter, true);
+$allVol = $heliosTransactionsSQL->countTransactionVol($author_filter);
+$allVolTransmitted =  $heliosTransactionsSQL->countTransactionVol($author_filter, true);
 
 // Transactions du mois
-$monthTrans = HeliosTransaction::countTransactions($author_filter, false, true);
-$monthTransmitted = HeliosTransaction::countTransactions($author_filter, true, true);
-$monthVol = HeliosTransaction::countTransactionVol($author_filter, false, true);
-$monthVolTransmitted = HeliosTransaction::countTransactionVol($author_filter, true, true);
+$monthTrans = $heliosTransactionsSQL->countTransactions($author_filter, false, true);
+$monthTransmitted = $heliosTransactionsSQL->countTransactions($author_filter, true, true);
+$monthVol = $heliosTransactionsSQL->countTransactionVol($author_filter, false, true);
+$monthVolTransmitted = $heliosTransactionsSQL->countTransactionVol($author_filter, true, true);
 
 // transactions de l'année
-$yearTrans = HeliosTransaction::countTransactions($author_filter, false, false, true);
-$yearTransmitted = HeliosTransaction::countTransactions($author_filter, true, false, true);
-$yearVol = HeliosTransaction::countTransactionVol($author_filter, false, false, true);
-$yearVolTransmitted = HeliosTransaction::countTransactionVol($author_filter, true, false, true);
+$yearTrans = $heliosTransactionsSQL->countTransactions($author_filter, false, false, true);
+$yearTransmitted = $heliosTransactionsSQL->countTransactions($author_filter, true, false, true);
+$yearVol = $heliosTransactionsSQL->countTransactionVol($author_filter, false, false, true);
+$yearVolTransmitted = $heliosTransactionsSQL->countTransactionVol($author_filter, true, false, true);
 
 $doc = new HTMLLayout();
 

@@ -12,6 +12,7 @@ services:
 
         volumes:
             - .:/var/www/s2low
+            - /data/s2low-dev/coverage/:/opt/phpstorm-coverage
         environment:
             POSTGRES_HOST_TEST: ${POSTGRES_HOST_TEST:-db_test}
             POSTGRES_USER_TEST: ${POSTGRES_USER_TEST:-dbusertest}
