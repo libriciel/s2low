@@ -23,6 +23,7 @@ class ActesAntivirusTest extends S2lowTestCase
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
         $this->tmp_dir = $this->tmpFolder->create();
+        /** @var \ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
         $this->transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,

@@ -4,6 +4,8 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 
 require_once(__DIR__ . "/../../init/init.php");
 require_once __DIR__ . "/../PHPUnit/class/actes/ActesCreator.php";
+
+/** @var \ActesCreator $actesCreator */
 $actesCreator = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesCreator::class);
 
 $transaction_id = $actesCreator->createTransaction(

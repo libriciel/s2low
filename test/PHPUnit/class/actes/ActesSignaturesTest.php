@@ -21,6 +21,7 @@ class ActesSignaturesTest extends S2lowTestCase
         $tmpFolder = new TmpFolder();
 
         $tmp_dir = $tmpFolder->create();
+        /** @var \ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         $transaction_id = $actesCreator->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $tmp_dir);

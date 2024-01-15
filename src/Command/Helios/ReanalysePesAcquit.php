@@ -8,6 +8,7 @@ use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Component\Console\Command\Command;
@@ -17,16 +18,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ReanalysePesAcquit extends Command
 {
+    private $pesAcquitCloudStorage;
+    /**
+     * @var \S2lowLegacy\Class\WorkerScript
+     */
+    private WorkerScript $workerScript;
+    private string $helios_ftp_response_tmp_local_path;
+
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
     public function __construct(WorkerScript $workerScript)
     {
-        $cloudStorageFactory = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(CloudStorageFactory::class);
-        $this-> pesAcquitCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
+        //TODO : utiliser l'instanciation Symfony
+        $this-> pesAcquitCloudStorage = LegacyObjectsManager::getLegacyObjectInstancier()
+                                            ->get(CloudStorageFactory::class)
+                                            ->getInstanceByClassName(PESAcquitCloudStorage::class);
         $this->workerScript = $workerScript;
-        $this->helios_ftp_response_tmp_local_path = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get("helios_ftp_response_tmp_local_path");
-            //$helios_ftp_response_tmp_local_path;
+        $this->helios_ftp_response_tmp_local_path = LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get("helios_ftp_response_tmp_local_path");
         parent::__construct();
     }
 
@@ -50,8 +60,8 @@ class ReanalysePesAcquit extends Command
 
         $path = $this->pesAcquitCloudStorage->getPath($transaction_id);
         if (empty($path)) {
-            echo "[$transaction_id] Path vide, ignoré\n";
-            return 0;
+            $output->writeln("<error>[$transaction_id] Path vide, ignoré</error>");
+            return -1;
         }
         $filename = basename($path);
         $destination = $this->helios_ftp_response_tmp_local_path . "/$filename";

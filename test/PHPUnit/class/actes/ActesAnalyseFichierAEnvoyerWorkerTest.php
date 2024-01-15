@@ -212,6 +212,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     private function createOneTransaction($archivepath, $is_marche_public = false)
     {
+        /** @var \ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
         $transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
