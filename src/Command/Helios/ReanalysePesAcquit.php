@@ -59,13 +59,14 @@ class ReanalysePesAcquit extends Command
         $transaction_id = $input->getArgument('transaction-id');
 
         $path = $this->pesAcquitCloudStorage->getPath($transaction_id);
+
         if (empty($path)) {
-            $output->writeln("<error>[$transaction_id] Path vide, ignoré</error>");
+            $output->writeln("<error>[$transaction_id] Path $path vide, ignoré</error>");
             return -1;
         }
         $filename = basename($path);
         $destination = $this->helios_ftp_response_tmp_local_path . "/$filename";
-        echo "[$transaction_id] Copie de $path vers $destination\n";
+        $output->writeln("[$transaction_id] Copie de $path vers $destination\n");
 
         copy($path, $destination);
         $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $filename);
