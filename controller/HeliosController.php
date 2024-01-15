@@ -114,7 +114,7 @@ class HeliosController extends Controller
         try {
             $SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
         } catch (Exception $e) {
-            throw new Exception("Échec lors du téléchargement du fichier");
+            throw new Exception("Échec lors du téléchargement du fichier ( Impossible de calculer le sha1 )");
         }
 
         if ($heliosTransactionSQL->isDuplicate($SHA1)) {
@@ -125,10 +125,10 @@ class HeliosController extends Controller
         try {
             $pes_aller_original_name = $_FILES['enveloppe']['name'];
             if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
-                throw new Exception("Échec lors du téléchargement du fichier");
+                throw new Exception("Échec lors du téléchargement du fichier (Impossible de déplacer le fichier)");
             }
         } catch (Exception $e) {
-            throw new Exception("Échec lors du téléchargement du fichier");
+            throw new Exception("Échec lors du téléchargement du fichier : " . $e->getMessage());
         }
         return $this->importFile($user_id, $pes_aller_destination, $pes_aller_original_name);
     }

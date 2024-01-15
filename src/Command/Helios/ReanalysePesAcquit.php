@@ -61,7 +61,7 @@ class ReanalysePesAcquit extends Command
         $path = $this->pesAcquitCloudStorage->getPath($transaction_id);
 
         if (empty($path)) {
-            $output->writeln("<error>[$transaction_id] Path $path vide, ignoré</error>");
+            $output->writeln("<error>[$transaction_id] Path \'$path\' vide, ignoré</error>");
             return -1;
         }
         $filename = basename($path);
